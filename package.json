@@ -6,5 +6,14 @@
   "repository": "https://gitlab.launchbadge.com/hedera/hedera-sdk-js",
   "author": "Launchbadge <contact@launchbadge.com>",
   "license": "NONE",
-  "private": true
+  "private": true,
+  "scripts": {
+    "prepare": "./compile-protos.sh"
+  },
+  "dependencies": {
+    "@types/google-protobuf": "^3.2.7",
+    "google-protobuf": "^3.6.1",
+    "grpc-web": "^1.0.6",
+    "tweetnacl": "^1.0.1"
+  }
 }

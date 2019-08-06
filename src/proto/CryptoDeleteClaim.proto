@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package proto;
+
+option java_package = "com.hedera.hashgraph.sdk.proto";
+option java_multiple_files = true;
+
+import "BasicTypes.proto";
+
+/* Delete a claim hash that was attached to the given account. This transaction is valid if signed by all the keys used for transfers out of the account. It is also valid if signed by any single ThresholdKeys in the deleteKeys list for this hash. See CryptoAddClaimTransaction for more information about claim hashes. */
+message CryptoDeleteClaimTransactionBody {
+    AccountID accountIDToDeleteFrom = 1; // The account ID that should have a claim deleted
+    bytes hashToDelete = 2; // The hash in the claim to delete (a SHA-384 hash, 48 bytes)
+}
