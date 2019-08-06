@@ -12,6 +12,10 @@ import {Transaction} from "./generated/Transaction_pb";
 import {TransactionBody} from "./generated/TransactionBody_pb";
 import {Timestamp} from "./generated/Timestamp_pb";
 import {Duration} from "./generated/Duration_pb";
+import {Response} from "./generated/Response_pb";
+import {TransactionResponse} from "./generated/TransactionResponse_pb";
+import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
+import {TransactionReceipt} from "./generated/TransactionReceipt_pb";
 
 export type AccountId = { shard: number, realm: number, account: number };
 
@@ -41,8 +45,9 @@ export class Client {
         createBody.setKey(protoKey);
         createBody.setInitialbalance(initialBalance);
 
+        const txnId = newTxnId(this.operator.account);
         const txnBody = new TransactionBody();
-        txnBody.setTransactionid(newTxnId(this.operator.account));
+        txnBody.setTransactionid(txnId);
         txnBody.setCryptocreateaccount(createBody);
         txnBody.setTransactionvalidduration(newDurationSeconds(120));
         txnBody.setNodeaccountid(nodeAccountID);
@@ -59,12 +64,26 @@ export class Client {
             this.service.createAccount(txn, null,(err, response) => {
                 if (err) {
                     reject(err);
+                } else if (isPrecheckCodeOk(response)) {
+                    resolve(response);
                 } else {
-                    response
+
                 }
-            })));
+            })))
+            .then(() => this.waitForReceipt(txnId))
+            .then();
+    }
+
+    private getReceipt(txnId: TransactionID): Promise<TransactionReceipt> {
+
+    }
+
+    private async waitForReceipt(txnId: TransactionID): Promise<TransactionReceipt> {
+
     }
 }
+
+function waitForReceipt()
 
 function getProtoAccountId({ shard, realm, account }: AccountId): AccountID {
     const acctId = new AccountID();
@@ -107,4 +126,14 @@ function addSignature(txn: Transaction, { key, signature }) {
     sigPair.setEd25519(signature);
     sigMap.addSigpair(sigPair);
     txn.setSigmap(sigMap);
+}
+
+function isPrecheckCodeOk(resp: TransactionResponse): boolean {
+    switch (resp.getNodetransactionprecheckcode()) {
+        case ResponseCodeEnum.SUCCESS:
+        case ResponseCodeEnum.OK:
+            return true;
+        default:
+            return false;
+    }
 }
