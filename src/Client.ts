@@ -1,5 +1,4 @@
 import * as nacl from "tweetnacl";
-import {CryptoCreateTransactionBody} from "./generated/CryptoCreate_pb";
 import {
     AccountID,
     Key,
@@ -7,14 +6,17 @@ import {
     SignaturePair,
     TransactionID
 } from "./generated/BasicTypes_pb";
-import {Transaction} from "./generated/Transaction_pb";
-import {TransactionBody} from "./generated/TransactionBody_pb";
-import {Timestamp} from "./generated/Timestamp_pb";
+import {TransactionReceipt} from "./generated/TransactionReceipt_pb";
+import {TransactionGetReceiptQuery} from "./generated/TransactionGetReceipt_pb";
+import {Query} from "./generated/Query_pb";
 import {Duration} from "./generated/Duration_pb";
 import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
-import {TransactionReceipt} from "./generated/TransactionReceipt_pb";
-import {Query} from "./generated/Query_pb";
-import {TransactionGetReceiptQuery} from "./generated/TransactionGetReceipt_pb";
+import {Timestamp} from "./generated/Timestamp_pb";
+import {Transaction} from "./generated/Transaction_pb";
+import {CryptoCreateTransactionBody} from "./generated/CryptoCreate_pb";
+import {TransactionBody} from "./generated/TransactionBody_pb";
+import {decodeKey} from "./Keys";
+import {CryptoServiceClient} from "./generated/CryptoService_pb_service";
 
 export type AccountId = { shard: number, realm: number, account: number };
 
@@ -130,7 +132,9 @@ export class Client {
         while (true) {
             const receipt = await this.getReceipt(txnId);
 
-            if ([ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK].indexOf(receipt.getStatus()) > 0) {
+            // typecast required or we get a mismatching union type error
+            if (([ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK] as number[])
+                .indexOf(receipt.getStatus()) > 0) {
                 const delay = Math.floor(receiptRetryDelayMs
                     * Math.random() * (Math.pow(2, attempt) - 1));
 
@@ -201,7 +205,7 @@ function addSignature(txn: Transaction, { key, signature }) {
     txn.setSigmap(sigMap);
 }
 
-function isPrecheckCodeOk(code: ResponseCodeEnum, unknownOk = false): boolean {
+function isPrecheckCodeOk(code: number, unknownOk = false): boolean {
     switch (code) {
         case ResponseCodeEnum.SUCCESS:
         case ResponseCodeEnum.OK:

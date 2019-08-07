@@ -16,13 +16,15 @@
     "@types/google-protobuf": "^3.2.7",
     "bip39": "^3.0.2",
     "google-protobuf": "^3.6.1",
-    "grpc-web": "^1.0.6",
+    "@improbable-eng/grpc-web": "0.11.0",
     "tweetnacl": "^1.0.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.17",
     "jest": "^24.8.0",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.5.3"
+    "typescript": "^3.5.3",
+    "ts-protoc-gen": "^0.10.0",
+    "@improbable-eng/grpc-web-node-http-transport": "0.11.0"
   }
 }

@@ -1,11 +1,17 @@
 #!/bin/sh
 
-export PATH=./bin/linux/:$PATH
-export OUT_DIR=src/generated
+# Path to this plugin, Note this must be an abolsute path on Windows (see #15)
+PROTOC_GEN_TS_PATH="./node_modules/.bin/protoc-gen-ts"
 
-rm -rf ${OUT_DIR:?}/*
-mkdir -p $OUT_DIR
+# Directory to write generated code to (.js and .d.ts files)
+OUT_DIR="./src/generated"
 
-protoc --proto_path=src/proto src/proto/* \
---js_out=import_style=commonjs:$OUT_DIR \
---grpc-web_out=import_style=typescript,mode=grpcwebtext:$OUT_DIR
+rm -rf src/generated
+mkdir -p src/generated
+
+protoc \
+    --plugin="protoc-gen-ts=${PROTOC_GEN_TS_PATH}" \
+    --js_out="import_style=commonjs,binary:${OUT_DIR}" \
+    --ts_out="service=true:${OUT_DIR}" \
+    -I "src/proto" \
+    src/proto/*

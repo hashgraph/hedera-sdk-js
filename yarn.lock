@@ -139,6 +139,18 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@improbable-eng/grpc-web-node-http-transport@0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@improbable-eng/grpc-web-node-http-transport/-/grpc-web-node-http-transport-0.11.0.tgz#556cb7334d1a9fe88e913d357fa6244c3a1495b0"
+  integrity sha512-W4px5VQaXL+IXXW2RCceD/JARYHPArTclChP71+nFTvjWl2zGab22rOp3U8HsX7IXOSTl/BHvg2BOT6BRTqhaA==
+
+"@improbable-eng/grpc-web@0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@improbable-eng/grpc-web/-/grpc-web-0.11.0.tgz#c9d4097b4a947384e3dc0234299d910668a6e7ad"
+  integrity sha512-SS2YP6iHyZ7TSSuCShnSo9xJyUkNZHEhEPJpTSUcNoULe1LuLEk52OKHY+VW9XB0qXstejpHgZq2Hx+69PThiw==
+  dependencies:
+    browser-headers "^0.4.0"
+
 "@jest/console@^24.7.1":
   version "24.7.1"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.7.1.tgz#32a9e42535a97aedfe037e725bd67e954b459545"
@@ -3468,7 +3480,7 @@ ts-jest@^24.0.2:
     semver "^5.5"
     yargs-parser "10.x"
 
-ts-protoc-gen@~0.10.0:
+ts-protoc-gen@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/ts-protoc-gen/-/ts-protoc-gen-0.10.0.tgz#f708d99be59ad0be6bdce6f4fe893ec41757d2c9"
   integrity sha512-EEbgDWNHK3CvcNhmib94I4HMO23qLddjLRdXW8EUE11VJxbi3n5J0l2DiX/L1pijOaPTkbEoRK+zQinKgKGqsw==
