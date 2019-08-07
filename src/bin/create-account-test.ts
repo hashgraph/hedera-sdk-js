@@ -7,7 +7,12 @@ const client = new Client({
     key: 'PRIVATE KEY HERE DONT COMMIT'
 });
 
-client.createAccount().then(
+const { publicKey, keyString, mnemonic } = generateKeyAndMnemonic();
+
+console.log("key:", keyString);
+console.log("mnemonic:", mnemonic);
+
+client.createAccount(publicKey).then(
     account => console.log(account),
     error => console.log(error)
 );

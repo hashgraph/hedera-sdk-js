@@ -1,4 +1,3 @@
-import {CryptoServiceClient} from "./generated/CryptoServiceServiceClientPb";
 import * as nacl from "tweetnacl";
 import {CryptoCreateTransactionBody} from "./generated/CryptoCreate_pb";
 import {
@@ -19,7 +18,7 @@ import {TransactionGetReceiptQuery} from "./generated/TransactionGetReceipt_pb";
 
 export type AccountId = { shard: number, realm: number, account: number };
 
-export type Operator = { account: AccountId, key: String };
+export type Operator = { account: AccountId, key: string };
 
 const nodeAccountID = getProtoAccountId({ shard: 0, realm: 0, account: 3 });
 const maxTxnFee = 10_000_000; // new testnet charges about 8M
@@ -45,15 +44,20 @@ export class Client {
         this.service = new CryptoServiceClient("http://localhost:11205")
     }
 
-    createAccount(initialBalance = 100_000): Promise<{ account: AccountId, key: String }> {
-        const { secretKey, publicKey } = nacl.sign.keyPair();
-
+    createAccount(publicKey: Uint8Array, initialBalance = 100_000): Promise<{ account: AccountId }> {
         const protoKey = new Key();
         protoKey.setEd25519(publicKey);
 
         const createBody = new CryptoCreateTransactionBody();
         createBody.setKey(protoKey);
         createBody.setInitialbalance(initialBalance);
+        // 30 days, default recommended
+        createBody.setAutorenewperiod(newDurationSeconds(30 * 86400));
+        // Default to maximum values for record thresholds. Without this records would be
+        // auto-created whenever a send or receive transaction takes place for this new account. This should
+        // be an explicit ask.
+        createBody.setReceiverecordthreshold(Number.MAX_SAFE_INTEGER);
+        createBody.setSendrecordthreshold(Number.MAX_SAFE_INTEGER);
 
         const txnId = newTxnId(this.operatorAcct);
         const txnBody = new TransactionBody();
@@ -68,8 +72,8 @@ export class Client {
         const txn = new Transaction();
         txn.setBodybytes(bodyBytes);
 
-        const signature = nacl.sign(bodyBytes, this.operatorSecretKey);
-        addSignature(txn, { key: publicKey, signature });
+        const signature = nacl.sign.detached(bodyBytes, this.operatorSecretKey);
+        addSignature(txn, { key: this.operatorPubKey, signature });
 
         return new Promise(((resolve, reject) =>
             this.service.createAccount(txn, null,(err, response) => {
@@ -87,7 +91,7 @@ export class Client {
             })))
             .then(() => this.waitForReceipt(txnId, txnBody.getTransactionvalidduration()))
             .then(receipt => (
-                { account: getMyAccountId(receipt.getAccountid()), key: encodeKey(secretKey) }
+                { account: getMyAccountId(receipt.getAccountid()) }
             ));
     }
 
@@ -209,40 +213,6 @@ function isPrecheckCodeOk(code: ResponseCodeEnum, unknownOk = false): boolean {
     }
 }
 
-// we could go through the whole BS of producing a DER-encoded structure but it's quite simple
-// for Ed25519 keys and we don't have to shell out to a potentially broken lib
-// https://github.com/PeculiarVentures/pvutils/issues/8
-const ed25519KeyPrefix = '302e020100300506032b657004220420';
-
-function encodeKey(privateKey: Uint8Array): String {
-    return privateKey.reduce((prev, val) => {
-        if (val < 16) {
-            prev += '0';
-        }
-        return prev + val.toString(16);
-    }, ed25519KeyPrefix);
-}
-
-function decodeKey(privateKey: String): Uint8Array {
-    if (privateKey.length !== 96 || !privateKey.startsWith(ed25519KeyPrefix)) {
-        throw "invalid private key: " + privateKey;
-    }
-
-    const decodedHex = new Uint8Array(32);
-    for (let i = 0; i < 32; i += 1) {
-        const start = 32 + i * 2;
-        decodedHex[i] = Number.parseInt(privateKey.slice(start, start + 2),16);
-    }
-
-    return decodedHex;
-}
-
 function setTimeoutAwaitable(timeoutMs: number): Promise<undefined> {
     return new Promise(resolve => setTimeout(resolve, timeoutMs));
 }
-
-/**
- * NOTE: these are not part of the public API and may have breaking changes
- * in semver-compatible versions.
- */
-export const __testExports = { encodeKey, decodeKey };
