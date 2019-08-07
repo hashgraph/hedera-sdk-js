@@ -8,12 +8,21 @@
   "license": "NONE",
   "private": true,
   "scripts": {
-    "prepare": "./compile-protos.sh"
+    "prepare": "./compile-protos.sh",
+    "test": "jest"
   },
   "dependencies": {
     "@types/google-protobuf": "^3.2.7",
+    "asn1js": "^2.0.26",
     "google-protobuf": "^3.6.1",
     "grpc-web": "^1.0.6",
+    "pvutils": "^1.0.17",
     "tweetnacl": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.17",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.3"
   }
 }

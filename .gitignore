@@ -1,3 +1,5 @@
 src/generated
 node_modules/
 yarn-error*
+
+src/**/*.js*
