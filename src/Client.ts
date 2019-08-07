@@ -17,9 +17,6 @@ import {TransactionReceipt} from "./generated/TransactionReceipt_pb";
 import {Query} from "./generated/Query_pb";
 import {TransactionGetReceiptQuery} from "./generated/TransactionGetReceipt_pb";
 
-import * as asn1js from "asn1js";
-import * as pvutils from "pvutils";
-
 export type AccountId = { shard: number, realm: number, account: number };
 
 export type Operator = { account: AccountId, key: String };
@@ -66,7 +63,7 @@ export class Client {
         const txn = new Transaction();
         txn.setBodybytes(bodyBytes);
 
-        const signature = nacl.sign(bodyBytes, secretKey);
+        const signature = nacl.sign(bodyBytes, decodeKey(this.operator.key));
         addSignature(txn, { key: publicKey, signature });
 
         return new Promise(((resolve, reject) =>
@@ -207,27 +204,36 @@ function isPrecheckCodeOk(code: ResponseCodeEnum, unknownOk = false): boolean {
     }
 }
 
-const ed25519Identifier = getSequence(new asn1js.ObjectIdentifier({ value: '1.3.101.112' }));
+// we could go through the whole BS of producing a DER-encoded structure but it's quite simple
+// for Ed25519 keys and we don't have to shell out to a potentially broken lib
+// https://github.com/PeculiarVentures/pvutils/issues/8
+const ed25519KeyPrefix = '302e020100300506032b657004220420';
 
 function encodeKey(privateKey: Uint8Array): String {
-    // this double-encoding is *apparently* necessary.
-    const keyString = new asn1js.OctetString({ valueHex: privateKey.buffer }).toBER();
-
-    const keySeq = getSequence(
-        new asn1js.Integer({ value : 0 }),
-        ed25519Identifier,
-        new asn1js.OctetString({ valueHex: keyString }),
-    );
-
-    return pvutils.bufferToHexCodes(keySeq.toBER());
+    return privateKey.reduce((prev, val) => {
+        if (val < 16) {
+            prev += '0';
+        }
+        return prev + val.toString(16);
+    }, ed25519KeyPrefix);
 }
 
-function getSequence(...value: Object[]): asn1js.Sequence {
-    return new asn1js.Sequence({ value });
+function decodeKey(privateKey: String): Uint8Array {
+    if (privateKey.length !== 96 || !privateKey.startsWith(ed25519KeyPrefix)) {
+        throw "invalid private key: " + privateKey;
+    }
+
+    const decodedHex = new Uint8Array(32);
+    for (let i = 0; i < 32; i += 1) {
+        const start = 32 + i * 2;
+        decodedHex[i] = Number.parseInt(privateKey.slice(start, start + 2),16);
+    }
+
+    return decodedHex;
 }
 
 function setTimeoutAwaitable(timeoutMs: number): Promise<undefined> {
     return new Promise(resolve => setTimeout(resolve, timeoutMs));
 }
 
-export const _testExports = !!__TEST__ ? { encodeKey } : {};
+export const _testExports = !!__TEST__ ? { encodeKey, decodeKey } : {};

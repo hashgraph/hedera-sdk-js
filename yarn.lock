@@ -488,13 +488,6 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-asn1js@^2.0.26:
-  version "2.0.26"
-  resolved "https://registry.yarnpkg.com/asn1js/-/asn1js-2.0.26.tgz#0a6d435000f556a96c6012969d9704d981b71251"
-  integrity sha512-yG89F0j9B4B0MKIcFyWWxnpZPLaNTjCj4tkE3fjbAoo0qmpGw0PYYqSbX/4ebnd9Icn8ZgK4K1fvDyEtW1JYtQ==
-  dependencies:
-    pvutils latest
-
 assert-plus@1.0.0, assert-plus@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-1.0.0.tgz#f12e0f3c5d77b0b1cdd9146942e4e96c1e4dd525"
@@ -2772,11 +2765,6 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
-
-pvutils@^1.0.17, pvutils@latest:
-  version "1.0.17"
-  resolved "https://registry.yarnpkg.com/pvutils/-/pvutils-1.0.17.tgz#ade3c74dfe7178944fe44806626bd2e249d996bf"
-  integrity sha512-wLHYUQxWaXVQvKnwIDWFVKDJku9XDCvyhhxoq8dc5MFdIlRenyPI9eSfEtcvgHgD7FlvCyGAlWgOzRnZD99GZQ==
 
 qs@~6.5.2:
   version "6.5.2"

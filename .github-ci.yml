@@ -1,0 +1,10 @@
+image: node:12-alpine
+
+test:
+  script:
+    - yarn
+    - yarn test
+
+cache:
+  paths:
+    - node_modules/
