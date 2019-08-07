@@ -1,4 +1,4 @@
-import { _testExports } from '../src/Client';
+import { __testExports } from '../src/Client';
 
 const key = Uint8Array.of(
     -37, 72, 75, -126, -114, 100, -78, -40, -15, 44, -29, -64, -96, -23, 58, 11, -116, -50,
@@ -7,9 +7,9 @@ const key = Uint8Array.of(
 const keyStr = '302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10';
 
 test('encodeKey produces correctly encoded string', () => {
-    expect(_testExports.encodeKey(key)).toEqual(keyStr);
+    expect(__testExports.encodeKey(key)).toEqual(keyStr);
 });
 
 test('decodeKey returns correct value', () => {
-    expect(_testExports.decodeKey(keyStr)).toEqual(key);
+    expect(__testExports.decodeKey(keyStr)).toEqual(key);
 });

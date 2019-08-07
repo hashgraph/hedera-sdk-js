@@ -3,3 +3,5 @@ node_modules/
 yarn-error*
 
 src/**/*.js*
+
+src/bin/create-account-test.js

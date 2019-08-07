@@ -21,8 +21,6 @@ export type AccountId = { shard: number, realm: number, account: number };
 
 export type Operator = { account: AccountId, key: String };
 
-declare const __TEST__: boolean;
-
 const nodeAccountID = getProtoAccountId({ shard: 0, realm: 0, account: 3 });
 const maxTxnFee = 10_000_000; // new testnet charges about 8M
 
@@ -30,12 +28,19 @@ const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
 export class Client {
-    private operator: Operator;
+    private operatorAcct: AccountId;
+    private operatorSecretKey: Uint8Array;
+    private operatorPubKey: Uint8Array;
 
     private service: CryptoServiceClient;
 
     constructor(operator: Operator) {
-        this.operator = operator;
+        this.operatorAcct = operator.account;
+        const decodedKey = decodeKey(operator.key);
+
+        ({ secretKey: this.operatorSecretKey, publicKey: this.operatorPubKey }
+            = nacl.sign.keyPair.fromSeed(decodedKey));
+
         // TODO: figure out how to switch this with the real proxy
         this.service = new CryptoServiceClient("http://localhost:11205")
     }
@@ -50,7 +55,7 @@ export class Client {
         createBody.setKey(protoKey);
         createBody.setInitialbalance(initialBalance);
 
-        const txnId = newTxnId(this.operator.account);
+        const txnId = newTxnId(this.operatorAcct);
         const txnBody = new TransactionBody();
         txnBody.setTransactionid(txnId);
         txnBody.setCryptocreateaccount(createBody);
@@ -63,7 +68,7 @@ export class Client {
         const txn = new Transaction();
         txn.setBodybytes(bodyBytes);
 
-        const signature = nacl.sign(bodyBytes, decodeKey(this.operator.key));
+        const signature = nacl.sign(bodyBytes, this.operatorSecretKey);
         addSignature(txn, { key: publicKey, signature });
 
         return new Promise(((resolve, reject) =>
@@ -236,4 +241,8 @@ function setTimeoutAwaitable(timeoutMs: number): Promise<undefined> {
     return new Promise(resolve => setTimeout(resolve, timeoutMs));
 }
 
-export const _testExports = !!__TEST__ ? { encodeKey, decodeKey } : {};
+/**
+ * NOTE: these are not part of the public API and may have breaking changes
+ * in semver-compatible versions.
+ */
+export const __testExports = { encodeKey, decodeKey };
