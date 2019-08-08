@@ -14,12 +14,11 @@ const client = new Client({
     key: 'PRIVATE KEY HERE'
 });
 
-const { publicKey, keyString, mnemonic } = generateKeyAndMnemonic();
+(async function() {
+    const { publicKey, keyString, mnemonic } = await generateKeyAndMnemonic();
 
-console.log("key:", keyString);
-console.log("mnemonic:", mnemonic);
+    console.log("key:", keyString);
+    console.log("mnemonic:", mnemonic);
 
-client.createAccount(publicKey).then(
-    account => console.log(account),
-    error => console.log(error)
-);
+    console.log(await client.createAccount(publicKey));
+})();

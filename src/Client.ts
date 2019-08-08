@@ -1,4 +1,3 @@
-import * as nacl from "tweetnacl";
 import {
     AccountID,
     Key,
@@ -15,8 +14,11 @@ import {Timestamp} from "./generated/Timestamp_pb";
 import {Transaction} from "./generated/Transaction_pb";
 import {CryptoCreateTransactionBody} from "./generated/CryptoCreate_pb";
 import {TransactionBody} from "./generated/TransactionBody_pb";
-import {decodeKey} from "./Keys";
+import {decodeKeyPair, encodeKey} from "./Keys";
 import {CryptoServiceClient} from "./generated/CryptoService_pb_service";
+
+import * as crypto from 'crypto';
+import {KeyObject} from "crypto";
 
 export type AccountId = { shard: number, realm: number, account: number };
 
@@ -30,25 +32,24 @@ const receiptRetryDelayMs = 500;
 
 export class Client {
     private operatorAcct: AccountId;
-    private operatorSecretKey: Uint8Array;
-    private operatorPubKey: Uint8Array;
+    private operatorPrivateKey: KeyObject;
+    private operatorPubKey: KeyObject;
 
     private service: CryptoServiceClient;
 
     constructor(operator: Operator) {
         this.operatorAcct = operator.account;
-        const decodedKey = decodeKey(operator.key);
 
-        ({ secretKey: this.operatorSecretKey, publicKey: this.operatorPubKey }
-            = nacl.sign.keyPair.fromSeed(decodedKey));
+        ({ privateKey: this.operatorPrivateKey, publicKey: this.operatorPubKey } =
+            decodeKeyPair(operator.key));
 
         // TODO: figure out how to switch this with the real proxy
         this.service = new CryptoServiceClient("http://localhost:11205")
     }
 
-    createAccount(publicKey: Uint8Array, initialBalance = 100_000): Promise<{ account: AccountId }> {
+    createAccount(publicKey: KeyObject, initialBalance = 100_000): Promise<{ account: AccountId }> {
         const protoKey = new Key();
-        protoKey.setEd25519(publicKey);
+        protoKey.setEd25519(encodeKey(publicKey));
 
         const createBody = new CryptoCreateTransactionBody();
         createBody.setKey(protoKey);
@@ -74,7 +75,7 @@ export class Client {
         const txn = new Transaction();
         txn.setBodybytes(bodyBytes);
 
-        const signature = nacl.sign.detached(bodyBytes, this.operatorSecretKey);
+        const signature = crypto.sign(null, bodyBytes, this.operatorPrivateKey);
         addSignature(txn, { key: this.operatorPubKey, signature });
 
         return new Promise(((resolve, reject) =>
@@ -199,7 +200,7 @@ function newDurationSeconds(seconds: number): Duration {
 function addSignature(txn: Transaction, { key, signature }) {
     const sigMap = txn.getSigmap() || new SignatureMap();
     const sigPair = new SignaturePair();
-    sigPair.setPubkeyprefix(key);
+    sigPair.setPubkeyprefix(encodeKey(key));
     sigPair.setEd25519(signature);
     sigMap.addSigpair(sigPair);
     txn.setSigmap(sigMap);

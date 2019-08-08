@@ -1,43 +1,40 @@
+import * as crypto from 'crypto';
+import * as util from 'util';
+
 import * as bip39 from "bip39";
-import * as nacl from "tweetnacl";
+import {KeyObject, KeyPairKeyObjectResult} from "crypto";
 
-// we could go through the whole BS of producing a DER-encoded structure but it's quite simple
-// for Ed25519 keys and we don't have to shell out to a potentially broken lib
-// https://github.com/PeculiarVentures/pvutils/issues/8
-const ed25519KeyPrefix = '302e020100300506032b657004220420';
-
-export function encodeKey(privateKey: Uint8Array): string {
-    return privateKey.reduce((prev, val) => {
-        if (val < 16) {
-            prev += '0';
-        }
-        return prev + val.toString(16);
-    }, ed25519KeyPrefix);
+export function encodeKey(key: KeyObject): Buffer {
+    return key.export({
+        format: 'der',
+        type: key.type == 'private' ? 'pkcs8' : 'spki'
+    });
 }
 
-export function decodeKey(privateKey: string): Uint8Array {
-    if (privateKey.length !== 96 || !privateKey.startsWith(ed25519KeyPrefix)) {
-        throw "invalid private key: " + privateKey;
-    }
+export function decodeKeyPair(pkeyStr: string): KeyPairKeyObjectResult {
+    const privateKey = crypto.createPrivateKey({
+        key: Buffer.from(pkeyStr, 'hex'),
+        type: 'pkcs8',
+        format: 'der',
+    });
 
-    const decodedHex = new Uint8Array(32);
-    for (let i = 0; i < 32; i += 1) {
-        const start = 32 + i * 2;
-        decodedHex[i] = Number.parseInt(privateKey.slice(start, start + 2), 16);
-    }
+    const publicKey = crypto.createPublicKey(privateKey);
 
-    return decodedHex;
+    return { privateKey, publicKey };
 }
+
+const generateKeyPair = util.promisify(crypto.generateKeyPair);
 
 /**
  * Generate a new Ed25519 private/public keypair with DER-encoded private key string and
  * BIP39 mnemonic string
  */
-export function generateKeyAndMnemonic(): { secretKey: Uint8Array, publicKey: Uint8Array, keyString: string, mnemonic: string } {
-        const keyPair = nacl.sign.keyPair();
-        const secretOnly = keyPair.secretKey.slice(0, 32);
-        const keyString = encodeKey(secretOnly);
-        const mnemonic = bip39.entropyToMnemonic(Buffer.from(secretOnly));
+export async function generateKeyAndMnemonic(): Promise<{ privateKey: KeyObject, publicKey: KeyObject, keyString: string, mnemonic: string }> {
+    // @ts-ignore @types/node doesn't think the 'ed25519' param is supported
+    const keyPair = await generateKeyPair('ed25519');
 
-        return { ...keyPair, keyString, mnemonic };
+    const keyBytes = encodeKey(keyPair.privateKey);
+    const mnemonic = bip39.entropyToMnemonic(keyBytes.slice(16));
+
+    return { ...keyPair, keyString: keyBytes.toString('hex'), mnemonic };
 }
