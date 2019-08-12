@@ -205,6 +205,7 @@ function addSignature(txn: Transaction, { key, signature }) {
     const sigMap = txn.getSigmap() || new SignatureMap();
     const sigPair = new SignaturePair();
     // the `crypto` module doesn't provide a way to get the raw public key which Hedera wants
+    // fortunately the DER encoded representation is 44 bytes where the last 32 are our raw pub key
     sigPair.setPubkeyprefix(encodeKey(key).slice(12));
     sigPair.setEd25519(signature);
     sigMap.addSigpair(sigPair);
