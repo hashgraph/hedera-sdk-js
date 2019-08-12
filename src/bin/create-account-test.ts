@@ -8,10 +8,15 @@ import {NodeHttpTransport} from "@improbable-eng/grpc-web-node-http-transport/li
 
 grpc.setDefaultTransport(NodeHttpTransport());
 
+const key = process.env['OPERATOR_KEY'];
+
+if (typeof key !== 'string') {
+    throw new Error('missing env var OPERATOR_KEY');
+}
+
 const client = new Client({
     account: { shard: 0, realm: 0, account: 2 },
-    // DO NOT COMMIT THIS LINE
-    key: 'PRIVATE KEY HERE'
+    key
 });
 
 (async function() {

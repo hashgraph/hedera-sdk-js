@@ -38,6 +38,10 @@ export class Client {
     private service: CryptoServiceClient;
 
     constructor(operator: Operator) {
+        if (typeof operator.key !== 'string') {
+            throw new Error('missing operator key');
+        }
+
         this.operatorAcct = operator.account;
 
         ({ privateKey: this.operatorPrivateKey, publicKey: this.operatorPubKey } =
@@ -200,7 +204,8 @@ function newDurationSeconds(seconds: number): Duration {
 function addSignature(txn: Transaction, { key, signature }) {
     const sigMap = txn.getSigmap() || new SignatureMap();
     const sigPair = new SignaturePair();
-    sigPair.setPubkeyprefix(encodeKey(key));
+    // the `crypto` module doesn't provide a way to get the raw public key which Hedera wants
+    sigPair.setPubkeyprefix(encodeKey(key).slice(12));
     sigPair.setEd25519(signature);
     sigMap.addSigpair(sigPair);
     txn.setSigmap(sigMap);
