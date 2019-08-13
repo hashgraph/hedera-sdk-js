@@ -26,6 +26,7 @@ import {
 } from "./generated/CryptoTransfer_pb";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {CryptoGetAccountBalanceQuery} from "./generated/CryptoGetAccountBalance_pb";
+import {QueryHeader} from "./generated/QueryHeader_pb";
 
 export type AccountId = { shard: number, realm: number, account: number };
 
@@ -105,27 +106,7 @@ export class Client {
      * @param amount
      */
     transferCryptoTo(recipient: AccountId, amount: number | BigInt): Promise<TransactionId> {
-        if (typeof amount === 'bigint' && (amount >= 2n ** 63n) || (amount < -(2n ** 63n))) {
-            throw new Error('`amount` as bigint must be in the range [-2^63, 2^63)');
-        } else if (typeof amount === 'number' && !Number.isSafeInteger(amount)) {
-            throw new Error('`amount` as number must be in the range [-2^53, 2^53 - 1)');
-        }
-
-        const acctAmt = new AccountAmount();
-        acctAmt.setAccountid(getProtoAccountId(recipient));
-        // @ts-ignore protobuf js support doesn't actually care
-        acctAmt.setAmount(String(amountStr));
-
-        const transfers = new TransferList();
-        transfers.addAccountamounts(acctAmt);
-
-        const transferBody = new CryptoTransferTransactionBody();
-        transferBody.setTransfers(transfers);
-
-        const [txnId, txnBody] = this.newTxnBody();
-        txnBody.setCryptotransfer(transferBody);
-
-        const txn = this.newSignedTxn(txnBody);
+        const [txnId, txnBody, txn] = this.newTransferTxn(getProtoAccountId(recipient), amount);
 
         return handlePrecheck((handler) => this.service.cryptoTransfer(txn, null, handler))
             .then(() => this.waitForReceipt(txnId, txnBody.getTransactionvalidduration()))
@@ -135,6 +116,10 @@ export class Client {
     getAccountBalance(): Promise<number | BigInt> {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
         balanceQuery.setAccountid(getProtoAccountId(this.operatorAcct));
+
+        const queryHeader = new QueryHeader();
+        queryHeader.setPayment(this.newTransferTxn(nodeAccountID, 0)[2]);
+        balanceQuery.setHeader(queryHeader);
 
         const query = new Query();
         query.setCryptogetaccountbalance(balanceQuery);
@@ -177,6 +162,43 @@ export class Client {
         addSignature(txn, { key: this.operatorPubKey, signature });
 
         return txn;
+    }
+
+    /**
+     * Create and sign a CryptoTransferTransaction for submission a la carte or as payment for a
+     * query.
+     *
+     * @param recipient
+     * @param amount
+     */
+    private newTransferTxn(recipient: AccountID, amount: number | BigInt): [TransactionID, TransactionBody, Transaction] {
+        if (typeof amount === 'bigint' && (amount >= 2n ** 63n) || (amount < -(2n ** 63n))) {
+            throw new Error('`amount` as bigint must be in the range [-2^63, 2^63)');
+        } else if (typeof amount === 'number' && !Number.isSafeInteger(amount)) {
+            throw new Error('`amount` as number must be in the range [-2^53, 2^53 - 1)');
+        }
+
+        const recvAmt = new AccountAmount();
+        recvAmt.setAccountid(recipient);
+        recvAmt.setAmount(String(amount));
+
+        const sendAmt = new AccountAmount();
+        sendAmt.setAccountid(getProtoAccountId(this.operatorAcct));
+        sendAmt.setAmount(String(-amount));
+
+        const transfers = new TransferList();
+        transfers.addAccountamounts(recvAmt);
+        transfers.addAccountamounts(sendAmt);
+
+        const transferBody = new CryptoTransferTransactionBody();
+        transferBody.setTransfers(transfers);
+
+        const [txnId, txnBody] = this.newTxnBody();
+        txnBody.setCryptotransfer(transferBody);
+
+        const txn = this.newSignedTxn(txnBody);
+
+        return [txnId, txnBody, txn];
     }
 
     private getReceipt(txnId: TransactionID): Promise<TransactionReceipt> {
