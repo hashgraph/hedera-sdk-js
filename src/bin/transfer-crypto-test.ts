@@ -5,6 +5,7 @@ import {generateKeyAndMnemonic} from "../Keys";
 
 import {grpc} from "@improbable-eng/grpc-web";
 import {NodeHttpTransport} from "@improbable-eng/grpc-web-node-http-transport/lib";
+import {log} from "util";
 
 grpc.setDefaultTransport(NodeHttpTransport());
 
@@ -20,10 +21,7 @@ const client = new Client({
 });
 
 (async function() {
-    const { publicKey, keyString, mnemonic } = await generateKeyAndMnemonic();
-
-    console.log("key:", keyString);
-    console.log("mnemonic:", mnemonic);
-
-    console.log(await client.createAccount(publicKey));
+     console.log('balance before transfer', await client.getAccountBalance());
+     await client.transferCryptoTo({ shard: 0, realm: 0, account: 3 }, 10_000);
+     console.log('balance after transfer', await client.getAccountBalance());
 })();

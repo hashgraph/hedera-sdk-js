@@ -15,12 +15,25 @@ import {Transaction} from "./generated/Transaction_pb";
 import {CryptoCreateTransactionBody} from "./generated/CryptoCreate_pb";
 import {TransactionBody} from "./generated/TransactionBody_pb";
 import {decodeKeyPair, encodeKey} from "./Keys";
-import {CryptoServiceClient} from "./generated/CryptoService_pb_service";
+import {CryptoServiceClient, ServiceError} from "./generated/CryptoService_pb_service";
 
 import * as crypto from 'crypto';
-import {KeyObject} from "crypto";
+import {KeyObject} from 'crypto';
+import {
+    AccountAmount,
+    CryptoTransferTransactionBody,
+    TransferList
+} from "./generated/CryptoTransfer_pb";
+import {TransactionResponse} from "./generated/TransactionResponse_pb";
+import {CryptoGetAccountBalanceQuery} from "./generated/CryptoGetAccountBalance_pb";
 
 export type AccountId = { shard: number, realm: number, account: number };
+
+export type TransactionId = {
+    account: AccountId,
+    validStartSeconds: number,
+    validStartNanos: number,
+};
 
 export type Operator = { account: AccountId, key: string };
 
@@ -31,6 +44,7 @@ const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
 export class Client {
+    public readonly operator;
     private operatorAcct: AccountId;
     private operatorPrivateKey: KeyObject;
     private operatorPubKey: KeyObject;
@@ -43,6 +57,8 @@ export class Client {
         }
 
         this.operatorAcct = operator.account;
+
+        this.operator = operator;
 
         ({ privateKey: this.operatorPrivateKey, publicKey: this.operatorPubKey } =
             decodeKeyPair(operator.key));
@@ -66,15 +82,93 @@ export class Client {
         createBody.setReceiverecordthreshold(Number.MAX_SAFE_INTEGER);
         createBody.setSendrecordthreshold(Number.MAX_SAFE_INTEGER);
 
+        const [txnId, txnBody] = this.newTxnBody();
+
+        txnBody.setCryptocreateaccount(createBody);
+
+        const txn = this.newSignedTxn(txnBody);
+
+        return handlePrecheck((handler) => this.service.createAccount(txn, null, handler))
+            .then(() => this.waitForReceipt(txnId, txnBody.getTransactionvalidduration()))
+            .then(receipt => (
+                { account: getMyAccountId(receipt.getAccountid()) }
+            ));
+    }
+
+    /**
+     * Transfer the given amount from the operator account to the given recipient.
+     *
+     * Note that `number` can only represent exact integers in the range`[-2^53, 2^53)`.
+     * To represent exact values higher than this you should use the ESNext type `BigInt` instead.
+     *
+     * @param recipient
+     * @param amount
+     */
+    transferCryptoTo(recipient: AccountId, amount: number | BigInt): Promise<TransactionId> {
+        if (typeof amount === 'bigint' && (amount >= 2n ** 63n) || (amount < -(2n ** 63n))) {
+            throw new Error('`amount` as bigint must be in the range [-2^63, 2^63)');
+        } else if (typeof amount === 'number' && !Number.isSafeInteger(amount)) {
+            throw new Error('`amount` as number must be in the range [-2^53, 2^53 - 1)');
+        }
+
+        const acctAmt = new AccountAmount();
+        acctAmt.setAccountid(getProtoAccountId(recipient));
+        // @ts-ignore protobuf js support doesn't actually care
+        acctAmt.setAmount(String(amountStr));
+
+        const transfers = new TransferList();
+        transfers.addAccountamounts(acctAmt);
+
+        const transferBody = new CryptoTransferTransactionBody();
+        transferBody.setTransfers(transfers);
+
+        const [txnId, txnBody] = this.newTxnBody();
+        txnBody.setCryptotransfer(transferBody);
+
+        const txn = this.newSignedTxn(txnBody);
+
+        return handlePrecheck((handler) => this.service.cryptoTransfer(txn, null, handler))
+            .then(() => this.waitForReceipt(txnId, txnBody.getTransactionvalidduration()))
+            .then(() => getMyTxnId(txnId));
+    }
+
+    getAccountBalance(): Promise<number | BigInt> {
+        const balanceQuery = new CryptoGetAccountBalanceQuery();
+        balanceQuery.setAccountid(getProtoAccountId(this.operatorAcct));
+
+        const query = new Query();
+        query.setCryptogetaccountbalance(balanceQuery);
+
+        return new Promise((resolve, reject) => {
+            this.service.cryptoGetBalance(query, null, ((err, response) => {
+                if (err != null) {
+                    reject(err);
+                } else {
+                    const balanceResponse = response.getCryptogetaccountbalance();
+                    const precheckCode = balanceResponse.getHeader().getNodetransactionprecheckcode();
+
+                    if (isPrecheckCodeOk(precheckCode)) {
+                        resolve(BigInt(response.getCryptogetaccountbalance().getBalance()));
+                    } else {
+                        reject(new Error(reversePrecheck(precheckCode)));
+                    }
+                }
+            }));
+        });
+    }
+
+    private newTxnBody(): [TransactionID, TransactionBody] {
         const txnId = newTxnId(this.operatorAcct);
         const txnBody = new TransactionBody();
         txnBody.setTransactionid(txnId);
-        txnBody.setCryptocreateaccount(createBody);
         txnBody.setTransactionvalidduration(newDurationSeconds(120));
         txnBody.setNodeaccountid(nodeAccountID);
         txnBody.setTransactionfee(maxTxnFee);
+        return [txnId, txnBody];
+    }
 
-        const bodyBytes = txnBody.serializeBinary();
+    private newSignedTxn(body: TransactionBody): Transaction {
+        const bodyBytes = body.serializeBinary();
 
         const txn = new Transaction();
         txn.setBodybytes(bodyBytes);
@@ -82,24 +176,7 @@ export class Client {
         const signature = crypto.sign(null, bodyBytes, this.operatorPrivateKey);
         addSignature(txn, { key: this.operatorPubKey, signature });
 
-        return new Promise(((resolve, reject) =>
-            this.service.createAccount(txn, null,(err, response) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    const precheck = response.getNodetransactionprecheckcode();
-
-                    if (isPrecheckCodeOk(precheck, true)) {
-                        resolve(response);
-                    } else {
-                        reject(precheck);
-                    }
-                }
-            })))
-            .then(() => this.waitForReceipt(txnId, txnBody.getTransactionvalidduration()))
-            .then(receipt => (
-                { account: getMyAccountId(receipt.getAccountid()) }
-            ));
+        return txn;
     }
 
     private getReceipt(txnId: TransactionID): Promise<TransactionReceipt> {
@@ -119,7 +196,7 @@ export class Client {
                     if (isPrecheckCodeOk(precheck)) {
                         resolve(getReceipt.getReceipt());
                     } else {
-                        reject(precheck);
+                        reject(new Error(reversePrecheck(precheck)));
                     }
                 }
             })
@@ -147,12 +224,29 @@ export class Client {
                     throw "timed out waiting for consensus on transaction ID: " + txnId.toObject();
                 }
             } else if (receipt.getStatus() !== ResponseCodeEnum.SUCCESS) {
-                throw receipt.getStatus();
+                throw new Error(reversePrecheck(receipt.getStatus()));
             } else {
                 return receipt;
             }
         }
     }
+}
+
+function handlePrecheck(withHandler: (handler: (error: ServiceError | null, response: TransactionResponse | null) => void) => void): Promise<TransactionResponse> {
+    return new Promise(((resolve, reject) =>
+        withHandler((err, response) => {
+            if (err) {
+                reject(err);
+            } else {
+                const precheck = response.getNodetransactionprecheckcode();
+
+                if (isPrecheckCodeOk(precheck, true)) {
+                    resolve(response);
+                } else {
+                    reject(new Error(reversePrecheck(precheck)));
+                }
+            }
+        })));
 }
 
 function getProtoAccountId({ shard, realm, account }: AccountId): AccountID {
@@ -168,6 +262,14 @@ const getMyAccountId = (accountId: AccountID): AccountId => (
         shard: accountId.getShardnum(),
         realm: accountId.getRealmnum(),
         account: accountId.getAccountnum()
+    }
+);
+
+const getMyTxnId = (txnId: TransactionID): TransactionId => (
+    {
+        account: getMyAccountId(txnId.getAccountid()),
+        validStartSeconds: txnId.getTransactionvalidstart().getSeconds(),
+        validStartNanos: txnId.getTransactionvalidstart().getNanos(),
     }
 );
 
@@ -191,7 +293,7 @@ function newTxnId(accountId: AccountId): TransactionID {
     return txnId;
 }
 
-function timestampToMs(timestamp: Timestamp) {
+function timestampToMs(timestamp: Timestamp): number {
     return timestamp.getSeconds() * 1000 + Math.floor(timestamp.getNanos() / 1_000_000);
 }
 
@@ -223,6 +325,11 @@ function isPrecheckCodeOk(code: number, unknownOk = false): boolean {
             return false;
     }
 }
+
+const reversePrechecks: { [code: number]: string } = Object.entries(ResponseCodeEnum)
+    .reduce((map, [name, code]) => ({ ...map, [code]: name }), {});
+
+const reversePrecheck = (code: number): string => reversePrechecks[code] || `unknown precheck code: ${code}`;
 
 function setTimeoutAwaitable(timeoutMs: number): Promise<undefined> {
     return new Promise(resolve => setTimeout(resolve, timeoutMs));
