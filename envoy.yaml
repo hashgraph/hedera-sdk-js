@@ -4,6 +4,21 @@
 #    socket_address: { address: 0.0.0.0, port_value: 9901 }
 
 static_resources:
+  clusters:
+    - name: echo_service
+      connect_timeout: 0.25s
+      type: logical_dns
+      http2_protocol_options: {}
+      lb_policy: round_robin
+
+      # Hedera Endpoint Selection
+
+      # If running the Hedera testnet locally
+      # hosts: [{ socket_address: { address: localhost, port_value: 50211 }}]
+
+      # If connecting to the official testnet
+      hosts: [{ socket_address: { address: 0.testnet.hedera.com, port_value: 50211 }}]
+
   listeners:
   - name: listener_0
     address:
@@ -35,11 +50,3 @@ static_resources:
           - name: envoy.grpc_web
           - name: envoy.cors
           - name: envoy.router
-  clusters:
-  - name: echo_service
-    connect_timeout: 0.25s
-    type: logical_dns
-    http2_protocol_options: {}
-    lb_policy: round_robin
-    # hosts: [{ socket_address: { address: localhost, port_value: 50211 }}]
-    hosts: [{ socket_address: { address: 0.testnet.hedera.com, port_value: 50211 }}]
