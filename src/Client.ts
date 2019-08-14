@@ -1,3 +1,4 @@
+import * as nacl from "tweetnacl";
 import {
     AccountID,
     Key,
@@ -14,7 +15,7 @@ import {Timestamp} from "./generated/Timestamp_pb";
 import {Transaction} from "./generated/Transaction_pb";
 import {CryptoCreateTransactionBody} from "./generated/CryptoCreate_pb";
 import {TransactionBody} from "./generated/TransactionBody_pb";
-import {decodeKeyPair, encodeKey} from "./Keys";
+import {decodeKey, encodeKey} from "./Keys";
 import {CryptoServiceClient, ServiceError} from "./generated/CryptoService_pb_service";
 
 import * as crypto from 'crypto';
@@ -45,10 +46,10 @@ const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
 export class Client {
-    public readonly operator;
+    public readonly operator: Operator;
     private operatorAcct: AccountId;
-    public readonly operatorPrivateKey: KeyObject;
-    public readonly operatorPublicKey: KeyObject;
+    public readonly operatorPrivateKey: Uint8Array;
+    public readonly operatorPublicKey: Uint8Array;
 
     private service: CryptoServiceClient;
 
@@ -58,19 +59,20 @@ export class Client {
         }
 
         this.operatorAcct = operator.account;
+        const decodedKey = decodeKey(operator.key);
 
         this.operator = operator;
 
-        ({ privateKey: this.operatorPrivateKey, publicKey: this.operatorPublicKey } =
-            decodeKeyPair(operator.key));
+        ({ secretKey: this.operatorPrivateKey, publicKey: this.operatorPublicKey }
+            = nacl.sign.keyPair.fromSeed(decodedKey));
 
         // TODO: figure out how to switch this with the real proxy
         this.service = new CryptoServiceClient("http://localhost:11205")
     }
 
-    createAccount(publicKey: KeyObject, initialBalance = 100_000): Promise<{ account: AccountId }> {
+    createAccount(publicKey: Uint8Array, initialBalance = 100_000): Promise<{ account: AccountId }> {
         const protoKey = new Key();
-        protoKey.setEd25519(encodeKey(publicKey));
+        protoKey.setEd25519(publicKey);
 
         const createBody = new CryptoCreateTransactionBody();
         createBody.setKey(protoKey);
@@ -158,7 +160,7 @@ export class Client {
         const txn = new Transaction();
         txn.setBodybytes(bodyBytes);
 
-        const signature = crypto.sign(null, bodyBytes, this.operatorPrivateKey);
+        const signature = nacl.sign.detached(bodyBytes, this.operatorPrivateKey);
         addSignature(txn, { key: this.operatorPublicKey, signature });
 
         return txn;
@@ -328,9 +330,7 @@ function newDurationSeconds(seconds: number): Duration {
 function addSignature(txn: Transaction, { key, signature }) {
     const sigMap = txn.getSigmap() || new SignatureMap();
     const sigPair = new SignaturePair();
-    // the `crypto` module doesn't provide a way to get the raw public key which Hedera wants
-    // fortunately the DER encoded representation is 44 bytes where the last 32 are our raw pub key
-    sigPair.setPubkeyprefix(encodeKey(key).slice(12));
+    sigPair.setPubkeyprefix(key);
     sigPair.setEd25519(signature);
     sigMap.addSigpair(sigPair);
     txn.setSigmap(sigMap);
