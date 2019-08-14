@@ -47,8 +47,8 @@ const receiptRetryDelayMs = 500;
 export class Client {
     public readonly operator;
     private operatorAcct: AccountId;
-    private readonly operatorPrivateKey: KeyObject;
-    private readonly operatorPublicKey: KeyObject;
+    public readonly operatorPrivateKey: KeyObject;
+    public readonly operatorPublicKey: KeyObject;
 
     private service: CryptoServiceClient;
 
