@@ -9,7 +9,7 @@ OUT_DIR="./src/generated"
 rm -rf src/generated
 mkdir -p src/generated
 
-echo "$CWD"
+echo "current working dir: $PWD"
 
 protoc \
     --plugin="protoc-gen-ts=${PROTOC_GEN_TS_PATH}" \
