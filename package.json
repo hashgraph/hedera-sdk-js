@@ -12,6 +12,7 @@
     "test": "jest",
     "create-account-test": "node src/bin/create-account-test.js"
   },
+  "files": ["src/**"],
   "dependencies": {
     "@types/google-protobuf": "^3.2.7",
     "@types/node": "12.7.1",
