@@ -47,8 +47,8 @@ const receiptRetryDelayMs = 500;
 export class Client {
     public readonly operator;
     private operatorAcct: AccountId;
-    private operatorPrivateKey: KeyObject;
-    private operatorPubKey: KeyObject;
+    private readonly operatorPrivateKey: KeyObject;
+    private readonly operatorPublicKey: KeyObject;
 
     private service: CryptoServiceClient;
 
@@ -61,7 +61,7 @@ export class Client {
 
         this.operator = operator;
 
-        ({ privateKey: this.operatorPrivateKey, publicKey: this.operatorPubKey } =
+        ({ privateKey: this.operatorPrivateKey, publicKey: this.operatorPublicKey } =
             decodeKeyPair(operator.key));
 
         // TODO: figure out how to switch this with the real proxy
@@ -159,7 +159,7 @@ export class Client {
         txn.setBodybytes(bodyBytes);
 
         const signature = crypto.sign(null, bodyBytes, this.operatorPrivateKey);
-        addSignature(txn, { key: this.operatorPubKey, signature });
+        addSignature(txn, { key: this.operatorPublicKey, signature });
 
         return txn;
     }
