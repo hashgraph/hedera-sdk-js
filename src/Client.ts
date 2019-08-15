@@ -45,9 +45,8 @@ const maxTxnFee = 10_000_000; // new testnet charges about 8M
 const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
-const hbarMaxBigint = BigInt(1) << BigInt(64) - BigInt(1);
-const hbarMaxSignedBigint = BigInt(1) << BigInt(63) - BigInt(1);
-const hbarMinSignedBigint = -hbarMaxSignedBigint - BigInt(1);
+const tinybarMaxSignedBigint = BigInt(1) << BigInt(63) - BigInt(1);
+const tinybarMinSignedBigint = -tinybarMaxSignedBigint - BigInt(1);
 
 export class Client {
     public readonly operator: Operator;
@@ -178,7 +177,7 @@ export class Client {
      * @param amount
      */
     private newTransferTxn(recipient: AccountID, amount: number | BigInt): [TransactionID, TransactionBody, Transaction] {
-        if (typeof amount === 'bigint' && (amount > hbarMaxSignedBigint || amount < hbarMinSignedBigint)) {
+        if (typeof amount === 'bigint' && (amount > tinybarMaxSignedBigint || amount < tinybarMinSignedBigint)) {
             throw new Error('`amount` as bigint must be in the range [-2^63, 2^63)');
         } else if (typeof amount === 'number' && !Number.isSafeInteger(amount)) {
             throw new Error('`amount` as number must be in the range [-2^53, 2^53 - 1)');
