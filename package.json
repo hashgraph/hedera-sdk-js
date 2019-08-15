@@ -12,7 +12,7 @@
     "test": "jest",
     "create-account-test": "node src/bin/create-account-test.js"
   },
-  "files": ["src/**"],
+  "files": ["src/**", "index.ts"],
   "dependencies": {
     "@types/google-protobuf": "^3.2.7",
     "bip39": "^3.0.2",
