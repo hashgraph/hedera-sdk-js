@@ -10,6 +10,8 @@ for f in hedera-protobuf/src/main/proto/*; do
   echo "$temp" | tr -d '\r' > "$f"
 done
 
+git apply patches/*.patch || exit 1
+
 rm -rf src/proto
 
 cp -R hedera-protobuf/src/main/proto src
