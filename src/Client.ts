@@ -28,6 +28,7 @@ import {
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {CryptoGetAccountBalanceQuery} from "./generated/CryptoGetAccountBalance_pb";
 import {QueryHeader} from "./generated/QueryHeader_pb";
+import {grpc} from "@improbable-eng/grpc-web";
 
 export type AccountId = { shard: number, realm: number, account: number };
 
@@ -94,10 +95,10 @@ export class Client {
 
         const txn = this.newSignedTxn(txnBody);
 
-        return handlePrecheck((handler) => this.service.createAccount(txn, null, handler))
-            .then(() => this.waitForReceipt(txnId, txnBody.getTransactionvalidduration()))
+        return handlePrecheck((handler) => this.service.createAccount(txn, new grpc.Metadata(), handler))
+            .then(() => this.waitForReceipt(txnId, orThrow(txnBody.getTransactionvalidduration())))
             .then(receipt => (
-                { account: getMyAccountId(receipt.getAccountid()) }
+                { account: getMyAccountId(orThrow(receipt.getAccountid())) }
             ));
     }
 
@@ -113,8 +114,8 @@ export class Client {
     transferCryptoTo(recipient: AccountId, amount: number | BigInt): Promise<TransactionId> {
         const [txnId, txnBody, txn] = this.newTransferTxn(getProtoAccountId(recipient), amount);
 
-        return handlePrecheck((handler) => this.service.cryptoTransfer(txn, null, handler))
-            .then(() => this.waitForReceipt(txnId, txnBody.getTransactionvalidduration()))
+        return handlePrecheck((handler) => this.service.cryptoTransfer(txn, new grpc.Metadata(), handler))
+            .then(() => this.waitForReceipt(txnId, orThrow(txnBody.getTransactionvalidduration())))
             .then(() => getMyTxnId(txnId));
     }
 
@@ -130,15 +131,16 @@ export class Client {
         query.setCryptogetaccountbalance(balanceQuery);
 
         return new Promise((resolve, reject) => {
-            this.service.cryptoGetBalance(query, null, ((err, response) => {
+            this.service.cryptoGetBalance(query, new grpc.Metadata(), ((err, response) => {
                 if (err != null) {
                     reject(err);
-                } else {
-                    const balanceResponse = response.getCryptogetaccountbalance();
-                    const precheckCode = balanceResponse.getHeader().getNodetransactionprecheckcode();
+                } else if (response) {
+                    const balanceResponse = orThrow(response.getCryptogetaccountbalance());
+                    const precheckCode = orThrow(balanceResponse.getHeader())
+                        .getNodetransactionprecheckcode();
 
                     if (isPrecheckCodeOk(precheckCode)) {
-                        resolve(BigInt(response.getCryptogetaccountbalance().getBalance()));
+                        resolve(BigInt(balanceResponse.getBalance()));
                     } else {
                         reject(new Error(reversePrecheck(precheckCode)));
                     }
@@ -213,12 +215,12 @@ export class Client {
         query.setTransactiongetreceipt(receiptQuery);
 
         return new Promise(((resolve, reject) => {
-            this.service.getTransactionReceipts(query, null, (err, response) => {
+            this.service.getTransactionReceipts(query, new grpc.Metadata(), (err, response) => {
                 if (err) {
                     reject(err);
-                } else {
-                    const getReceipt = response.getTransactiongetreceipt();
-                    const precheck = getReceipt.getHeader().getNodetransactionprecheckcode();
+                } else if (response) {
+                    const getReceipt = orThrow(response.getTransactiongetreceipt());
+                    const precheck = orThrow(getReceipt.getHeader()).getNodetransactionprecheckcode();
 
                     if (isPrecheckCodeOk(precheck)) {
                         resolve(getReceipt.getReceipt());
@@ -231,7 +233,7 @@ export class Client {
     }
 
     private async waitForReceipt(txnId: TransactionID, validDuration: Duration): Promise<TransactionReceipt> {
-        const validStartMs = timestampToMs(txnId.getTransactionvalidstart());
+        const validStartMs = timestampToMs(orThrow(txnId.getTransactionvalidstart()));
         const validUntilMs = validStartMs + validDuration.getSeconds() * 1000;
 
         await setTimeoutAwaitable(receiptInitialDelayMs);
@@ -259,12 +261,20 @@ export class Client {
     }
 }
 
+function orThrow<T>(val?: T): T {
+    if (val !== null && val !== undefined) {
+        return val;
+    }
+
+    throw new Error('expected value not to be null');
+}
+
 function handlePrecheck(withHandler: (handler: (error: ServiceError | null, response: TransactionResponse | null) => void) => void): Promise<TransactionResponse> {
     return new Promise(((resolve, reject) =>
         withHandler((err, response) => {
             if (err) {
                 reject(err);
-            } else {
+            } else if (response) {
                 const precheck = response.getNodetransactionprecheckcode();
 
                 if (isPrecheckCodeOk(precheck, true)) {
@@ -294,9 +304,9 @@ const getMyAccountId = (accountId: AccountID): AccountId => (
 
 const getMyTxnId = (txnId: TransactionID): TransactionId => (
     {
-        account: getMyAccountId(txnId.getAccountid()),
-        validStartSeconds: txnId.getTransactionvalidstart().getSeconds(),
-        validStartNanos: txnId.getTransactionvalidstart().getNanos(),
+        account: getMyAccountId(orThrow(txnId.getAccountid())),
+        validStartSeconds: orThrow(txnId.getTransactionvalidstart()).getSeconds(),
+        validStartNanos: orThrow(txnId.getTransactionvalidstart()).getNanos(),
     }
 );
 
@@ -330,7 +340,7 @@ function newDurationSeconds(seconds: number): Duration {
     return duration;
 }
 
-function addSignature(txn: Transaction, { key, signature }) {
+function addSignature(txn: Transaction, { key, signature }: { key: Uint8Array, signature: Uint8Array }) {
     const sigMap = txn.getSigmap() || new SignatureMap();
     const sigPair = new SignaturePair();
     sigPair.setPubkeyprefix(key);
