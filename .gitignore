@@ -2,6 +2,5 @@ src/generated
 node_modules/
 yarn-error*
 
-src/**/*.js*
-
-src/bin/create-account-test.js
+# ignores javascript files compiled from typescript
+**/*.js*
