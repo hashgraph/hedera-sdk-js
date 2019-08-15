@@ -5,7 +5,7 @@ package proto;
 import "Timestamp.proto";
 import "Duration.proto";
 
-option java_package = "com.hedera.hashgraph.sdk.proto";
+option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
 /* Each shard has a nonnegative shard number. Each realm within a given shard has a nonnegative realm number (that number might be reused in other shards). And each account, file, and smart contract instance within a given realm has a nonnegative number (which might be reused in other realms). Every account, file, and smart contract instance is within exactly one realm. So a FileID is a triplet of numbers, like 0.1.2 for entity number 2 within realm 1  within shard 0.  Each realm maintains a single counter for assigning numbers,  so if there is a file with ID 0.1.2, then there won't be an account or smart  contract instance with ID 0.1.2.
@@ -166,7 +166,13 @@ enum HederaFunctionality {
     CryptoCreate = 27; // crypto create account
     SystemDelete = 28; // system delete file
     SystemUndelete = 29; // system undelete file
-    ContractDelete =30; // delete contract
+    ContractDelete = 30; // delete contract
+    Freeze = 31; // freeze
+    CreateTransactionRecord = 32; // Create Tx Record
+    CryptoAccountAutoRenew = 33; // Crypto Auto Renew
+    ContractAutoRenew = 34; // Contract Auto Renew
+    getVersion = 35; //Get Version
+    TransactionGetReceipt = 36; // Transaction Get Receipt
 }
 
 /* The different components used for fee calculation */
@@ -177,8 +183,8 @@ message FeeComponents {
     int64 constant = 3; // A constant determined by the business to calculate the fees
     int64 bpt = 4; // Bytes per transaction
     int64 vpt = 5; // Verifications per transaction
-    int64 rbs = 6; // Ram byte seconds
-    int64 sbs = 7; // Storage byte seconds
+    int64 rbh = 6; // Ram byte seconds
+    int64 sbh = 7; // Storage byte seconds
     int64 gas = 8; // Gas for the contract execution
     int64 tv = 9; // Transaction value (crypto transfers amount, tv is in tiny bars divided by 1000, rounded down)
     int64 bpr = 10; // Bytes per response
@@ -216,6 +222,7 @@ message NodeAddress {
     bytes ipAddress = 1; // The ip address of the Node with separator & octets
     int32 portno = 2; // The port number of the grpc server for the node
     bytes memo = 3; // The memo field of the node
+    string RSA_PubKey = 4; // The RSA public key of the node.
 }
 
 /* Gives the node addresses in the address book */
@@ -224,4 +231,3 @@ message NodeAddressBook {
 }
 	
 	
-

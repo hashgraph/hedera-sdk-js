@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package proto;
 
-option java_package = "com.hedera.hashgraph.sdk.proto";
+option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
 import "BasicTypes.proto";
@@ -19,4 +19,3 @@ message ContractUpdateTransactionBody {
     FileID fileID = 8; // The file ID of file containing the smart contract byte code. A copy will be made and held by the contract instance, and have the same expiration time as the instance. The file is referenced one of two ways:
     string memo = 9; // The memo associated with the contract (max 100 bytes)
 }
-

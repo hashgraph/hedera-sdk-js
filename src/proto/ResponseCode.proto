@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package proto;
 
-option java_package = "com.hedera.hashgraph.sdk.proto";
+option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
 enum ResponseCodeEnum {
@@ -117,4 +117,12 @@ enum ResponseCodeEnum {
   INVALID_RECEIVE_RECORD_THRESHOLD=86; // attempt to set negative receive record threshold
   INVALID_SEND_RECORD_THRESHOLD=87; // attempt to set negative send record threshold
   ACCOUNT_IS_NOT_GENESIS_ACCOUNT = 88; // Special Account Operations should be performed by only Genesis account, return this code if it is not Genesis Account
+  PAYER_ACCOUNT_UNAUTHORIZED = 89; // The fee payer account doesn't have permission to submit such Transaction
+  INVALID_FREEZE_TRANSACTION_BODY = 90; // FreezeTransactionBody is invalid
+  FREEZE_TRANSACTION_BODY_NOT_FOUND = 91; // FreezeTransactionBody does not exist
+  TRANSFER_LIST_SIZE_LIMIT_EXCEEDED = 92; //Exceeded the number of accounts (both from and to) allowed for crypto transfer list
+  RESULT_SIZE_LIMIT_EXCEEDED = 93; // Smart contract result size greater than specified maxResultSize
+  NOT_SPECIAL_ACCOUNT = 94; //The payer account is not a special account(account 0.0.55)
+  CONTRACT_NEGATIVE_GAS = 95; // Negative gas was offered in smart contract call
+  CONTRACT_NEGATIVE_VALUE = 96; // Negative value / initial balance was specified in a smart contract call / create
 }

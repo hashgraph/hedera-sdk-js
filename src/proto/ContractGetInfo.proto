@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package proto;
 
-option java_package = "com.hedera.hashgraph.sdk.proto";
+option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
 import "Timestamp.proto";
@@ -33,4 +33,3 @@ message ContractGetInfoResponse {
 
     ContractInfo contractInfo = 2; // the information about this contract instance (a state proof can be generated for this)
 }
-

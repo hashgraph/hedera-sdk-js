@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package proto;
 
-option java_package = "com.hedera.hashgraph.sdk.proto";
+option java_package = "com.hederahashgraph.service.proto.java";
 
 import "TransactionResponse.proto";
 import "Query.proto";
@@ -28,5 +28,9 @@ service SmartContractService {
     rpc getTxRecordByContractID (Query) returns (Response); // Retrieves a contract(using contract ID) by submitting the query. The grpc server returns the Response
 
     rpc deleteContract (Transaction) returns (TransactionResponse); //Delete a contract instance(mark as deleted until it expires), and transfer hbars to the specified account. The grpc server returns the TransactionResponse
+
+    rpc systemDelete (Transaction) returns (TransactionResponse); // Deletes a smart contract by submitting the transaction when the account has admin privileges on the file. The grpc server returns the TransactionResponse
+
+    rpc systemUndelete (Transaction) returns (TransactionResponse); // UnDeletes a smart contract by submitting the transaction when the account has admin privileges on the file. The grpc server returns the TransactionResponse
 
     }

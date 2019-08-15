@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package proto;
 
-option java_package = "com.hedera.hashgraph.sdk.proto";
+option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
 import "Timestamp.proto";
@@ -18,10 +18,10 @@ message TransactionRecord {
     Timestamp consensusTimestamp = 3; // The consensus timestamp (or null if didn't reach consensus yet)
     TransactionID transactionID = 4; // The ID of the transaction this record represents
     string memo = 5; // The memo that was submitted as part of the transaction (max 100 bytes)
-    uint64 transactionFee = 6; // The transaction fee in the transaction
+    uint64 transactionFee = 6; // The actual transaction fee charged, not the original transactionFee value from TransactionBody
     oneof body {
         ContractFunctionResult contractCallResult = 7; // Record of the value returned by the smart contract function (if it completed and didn't fail) from ContractCallTransaction
         ContractFunctionResult contractCreateResult = 8; // Record of the value returned by the smart contract constructor (if it completed and didn't fail) from ContractCreateTransaction
-		TransferList transferList = 9; // Record of results of a CryptoTransferTransaction
     }
+    TransferList transferList = 10; // All hbar transfers as a result of this transaction, such as fees, or transfers performed by the transaction, or by a smart contract it calls, or by the creation of threshold records that it triggers.
 }

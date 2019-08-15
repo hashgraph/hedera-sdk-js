@@ -187,6 +187,7 @@ export class Client {
 
         const recvAmt = new AccountAmount();
         recvAmt.setAccountid(recipient);
+        // IF YOU GET A TYPE ERROR HERE IT MEANS THE PROTOBUFS LOST THEIR JSTYPE ANNOTATIONS
         recvAmt.setAmount(String(amount));
 
         const sendAmt = new AccountAmount();

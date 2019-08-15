@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package proto;
 
-option java_package = "com.hedera.hashgraph.sdk.proto";
+option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
 import "BasicTypes.proto";
@@ -22,5 +22,3 @@ message CryptoGetAccountRecordsResponse {
     AccountID accountID = 2; // The account that this record is for
     repeated TransactionRecord records = 3; // List of records, each with CryptoRecordBody as their body
 }
-
-
