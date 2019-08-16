@@ -94,7 +94,7 @@ async function keyFromEntropy(entropy: Uint8Array): Promise<KeyPair> {
     }
 
     const seed = await deriveSeed(entropy);
-    const { secretKey: privateKey, publicKey } = nacl.sign.keyPair.fromSeed(seed);
+    const { secretKey: privateKey, publicKey } = nacl.sign.keyPair.fromSeed(new Uint8Array(seed));
 
     return { privateKey, publicKey };
 }

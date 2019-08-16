@@ -29,7 +29,15 @@ const mnemonic = 'inmate flip alley wear offer often piece magnet surge toddler 
 const mnemonicKey = '302e020100300506032b6570042204203988e39bb91007f3bedcb47b0d9384463ba7d922d74d1306f7a4c8a2881fac9e';
 const decodedKey = decodePrivateKey(mnemonicKey);
 
-test('recoverFromMnemonic generates correct private key', () => {
-     return expect(keyFromMnemonic(mnemonic))
-         .resolves.toEqual(decodedKey);
+test('recoverFromMnemonic generates correct private key', async () => {
+    let key;
+
+    try {
+         key = await keyFromMnemonic(mnemonic);
+    } catch (e) {
+        // to get actual stack trace before Promise mangles it
+        throw e;
+    }
+
+    expect(key).toEqual(decodedKey);
 });
