@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 
 import {Client} from "../Client";
-import {generateKeyAndMnemonic} from "../Keys";
 
 import {grpc} from "@improbable-eng/grpc-web";
 import {NodeHttpTransport} from "@improbable-eng/grpc-web-node-http-transport/lib";
-import {log} from "util";
 
 grpc.setDefaultTransport(NodeHttpTransport());
 

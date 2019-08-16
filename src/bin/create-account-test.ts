@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import {Client} from "../Client";
-import {generateKeyAndMnemonic} from "../Keys";
+import {generateMnemonic} from "../Keys";
 
 import {grpc} from "@improbable-eng/grpc-web";
 import {NodeHttpTransport} from "@improbable-eng/grpc-web-node-http-transport/lib";
@@ -20,7 +20,8 @@ const client = new Client({
 });
 
 (async function() {
-    const { publicKey, keyString, mnemonic } = await generateKeyAndMnemonic();
+    const { mnemonic, generateKey } = generateMnemonic();
+    const { publicKey, keyString } = await generateKey();
 
     console.log("privateKey:", keyString);
     console.log("mnemonic:", mnemonic);
