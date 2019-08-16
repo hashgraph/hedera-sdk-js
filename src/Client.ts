@@ -9,8 +9,8 @@ import {QueryHeader} from "./generated/QueryHeader_pb";
 
 import {getMyAccountId, getProtoAccountId, handleQueryPrecheck, reqDefined} from "./util";
 import {ProtobufMessage} from "@improbable-eng/grpc-web/dist/typings/message";
-import AccountCreateTransaction from "./account/AccountCreateTransaction";
-import CryptoTransferTransaction from "./account/CryptoTransferTransaction";
+import {AccountCreateTransaction} from "./account/AccountCreateTransaction";
+import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
 
 import * as nacl from 'tweetnacl';
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
