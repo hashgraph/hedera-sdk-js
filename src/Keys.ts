@@ -60,8 +60,6 @@ export type KeyResult = {
     publicKey: Uint8Array,
     /** DER encoded private key for use with `decodeKey()` */
     keyString: string,
-    /** 24-word mnemonic */
-    mnemonic: string
 }
 
 export type KeyPair = {
@@ -69,17 +67,32 @@ export type KeyPair = {
     publicKey: Uint8Array
 };
 
+export type MnemonicResult = {
+    mnemonic: string,
+    /** Lazily generate the key */
+    generateKey: () => Promise<KeyResult>;
+}
+
+/** Generate a random mnemonic */
+export function generateMnemonic(): MnemonicResult {
+    const entropy = nacl.randomBytes(32);
+    const mnemonic = bip39.entropyToMnemonic(Buffer.from(entropy));
+    return { mnemonic, generateKey: () => generateKey(entropy) };
+}
+
 /**
  * Generate a new Ed25519 private/public keypair with DER-encoded private key string and
  * BIP39 mnemonic string
  */
-export async function generateKeyAndMnemonic(): Promise<KeyResult> {
-    const entropy = nacl.randomBytes(32);
-    const mnemonic = bip39.entropyToMnemonic(Buffer.from(entropy));
+export async function generateKey(entropy: Uint8Array): Promise<KeyResult> {
+    if (entropy.length !== 32) {
+        throw new Error('generating an ed25519 key requires 32 bytes of entropy');
+    }
+
     const keyPair = await keyFromEntropy(entropy);
     const keyString = encodePrivateKey(keyPair.privateKey);
 
-    return { ...keyPair, keyString, mnemonic };
+    return { ...keyPair, keyString };
 }
 
 /** Recover a keypair from a mnemonic sentence */

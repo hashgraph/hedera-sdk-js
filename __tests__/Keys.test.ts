@@ -1,4 +1,10 @@
-import {encodePrivateKey, decodePrivateKey, keyFromMnemonic, encodePublicKey} from '../src/Keys';
+import {
+    encodePrivateKey,
+    decodePrivateKey,
+    keyFromMnemonic,
+    encodePublicKey,
+    generateMnemonic
+} from '../src/Keys';
 
 const privKey = Uint8Array.of(
     -37, 72, 75, -126, -114, 100, -78, -40, -15, 44, -29, -64, -96, -23, 58, 11, -116, -50,
@@ -40,4 +46,12 @@ test('recoverFromMnemonic generates correct private key', async () => {
     }
 
     expect(key).toEqual(decodedKey);
+});
+
+test('generateMnemonic produces a recoverable private key', async () => {
+    const mnemonic = generateMnemonic();
+
+    const {privateKey, publicKey} = await mnemonic.generateKey();
+    const key2 = await keyFromMnemonic(mnemonic.mnemonic);
+    expect({ privateKey, publicKey }).toEqual(key2);
 });
