@@ -9,15 +9,15 @@ import {log} from "util";
 
 grpc.setDefaultTransport(NodeHttpTransport());
 
-const key = process.env['OPERATOR_KEY'];
+const privateKey = process.env['OPERATOR_KEY'];
 
-if (typeof key !== 'string') {
+if (!privateKey) {
     throw new Error('missing env var OPERATOR_KEY');
 }
 
 const client = new Client({
     account: { shard: 0, realm: 0, account: 2 },
-    key
+    privateKey
 });
 
 (async function() {

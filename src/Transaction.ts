@@ -81,16 +81,21 @@ export default class Transaction {
         return this.addSignature({ signature, publicKey });
     }
 
-    execute(): Promise<TransactionId> {
+    async execute(): Promise<TransactionId> {
         const sigMap = this.inner.getSigmap();
 
         if (!sigMap || sigMap.getSigpairList().length === 0) {
-            this.sign(this.client.operatorPrivateKey);
+            const signResult = this.client.operatorSigner(this.inner.getBodybytes_asU8());
+            const signature: Uint8Array = signResult instanceof Promise
+                ? await signResult
+                : signResult;
+
+            this.addSignature({ signature, publicKey: this.client.operatorPublicKey });
         }
 
-        return this.client.unaryCall(this.inner, this.method)
-            .then(handlePrecheck)
-            .then(() => getMyTxnId(this.txnId));
+        handlePrecheck(await this.client.unaryCall(this.inner, this.method));
+
+        return this.getTransactionId();
     }
 
     async executeForReceipt(): Promise<TransactionReceipt> {

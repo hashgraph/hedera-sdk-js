@@ -8,21 +8,21 @@ import {NodeHttpTransport} from "@improbable-eng/grpc-web-node-http-transport/li
 
 grpc.setDefaultTransport(NodeHttpTransport());
 
-const key = process.env['OPERATOR_KEY'];
+const privateKey = process.env['OPERATOR_KEY'];
 
-if (typeof key !== 'string') {
+if (!privateKey) {
     throw new Error('missing env var OPERATOR_KEY');
 }
 
 const client = new Client({
     account: { shard: 0, realm: 0, account: 2 },
-    key
+    privateKey
 });
 
 (async function() {
     const { publicKey, keyString, mnemonic } = await generateKeyAndMnemonic();
 
-    console.log("key:", keyString);
+    console.log("privateKey:", keyString);
     console.log("mnemonic:", mnemonic);
 
     console.log(await client.createAccount(publicKey));

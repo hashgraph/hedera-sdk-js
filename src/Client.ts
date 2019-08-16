@@ -11,7 +11,8 @@ import {getMyAccountId, getProtoAccountId, handleQueryPrecheck, reqDefined} from
 import {ProtobufMessage} from "@improbable-eng/grpc-web/dist/typings/message";
 import AccountCreateTransaction from "./account/AccountCreateTransaction";
 import CryptoTransferTransaction from "./account/CryptoTransferTransaction";
-import {Response} from "./generated/Response_pb";
+
+import * as nacl from 'tweetnacl';
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import Code = grpc.Code;
 
@@ -23,7 +24,17 @@ export type TransactionId = {
     validStartNanos: number,
 };
 
-export type Operator = { account: AccountId, key: string };
+export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
+
+export type PrivateKey = { privateKey: string };
+export type PubKeyAndSigner = {
+    publicKey: Uint8Array,
+    signer: Signer,
+};
+
+export type SigningOpts = PrivateKey | PubKeyAndSigner;
+
+export type Operator = { account: AccountId } & SigningOpts;
 
 export const nodeAccountID = { shard: 0, realm: 0, account: 3 };
 const maxTxnFee = 10_000_000; // new testnet charges about 8M
@@ -31,23 +42,24 @@ const maxTxnFee = 10_000_000; // new testnet charges about 8M
 export class Client {
     public readonly operator: Operator;
     private operatorAcct: AccountId;
-    public readonly operatorPrivateKey: Uint8Array;
+    public readonly operatorSigner: Signer;
     public readonly operatorPublicKey: Uint8Array;
 
     // TODO: figure out how to switch this with the real proxy
     private readonly host: string = "http://localhost:11205";
 
     constructor(operator: Operator) {
-        if (typeof operator.key !== 'string') {
-            throw new Error('missing operator key');
-        }
-
-        this.operatorAcct = operator.account;
-        const keyPair = decodePrivateKey(operator.key);
-
         this.operator = operator;
+        this.operatorAcct = operator.account;
 
-        ({ privateKey: this.operatorPrivateKey, publicKey: this.operatorPublicKey } = keyPair);
+        if ((operator as PrivateKey).privateKey) {
+            const { privateKey, publicKey } = decodePrivateKey((operator as PrivateKey).privateKey);
+            this.operatorSigner = (msg) => nacl.sign(msg, privateKey);
+            this.operatorPublicKey = publicKey;
+        } else {
+            ({ publicKey: this.operatorPublicKey, signer: this.operatorSigner } =
+                (operator as PubKeyAndSigner));
+        }
     }
 
     createAccount(publicKey: Uint8Array, initialBalance = 100_000): Promise<{ account: AccountId }> {
