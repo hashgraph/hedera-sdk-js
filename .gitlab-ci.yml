@@ -3,6 +3,8 @@ image: node:12-alpine
 test:
   before_script:
     - apk add protobuf protobuf-dev
+    - node --version
+    - yarn --version
   script:
     - yarn
     - yarn test
