@@ -109,29 +109,14 @@ export interface GetHeader {
     getHeader(): ResponseHeader | undefined;
 }
 
-export function handleTxnPrecheck(resp: TransactionResponse): TransactionResponse {
-    const precheck = resp.getNodetransactionprecheckcode();
-
-    if (isPrecheckCodeOk(precheck, true)) {
-        return resp;
-    } else {
-        throw new Error(reversePrecheck(precheck));
-    }
-}
-
 export function handleQueryPrecheck<T extends GetHeader>(getBody: (r: Response) => T | undefined): (r: undefined | Response) => T {
     return (resp) => {
-        const body = getBody(resp);
+        const body = reqDefined(
+            getBody(reqDefined(resp, 'missing Response')),
+            'missing body from Response'
+        );
 
-        if (body === undefined) {
-            throw new Error('missing body type from Response');
-        }
-
-        const header = body.getHeader();
-
-        if (header === undefined) {
-            throw new Error('missing header from Response');
-        }
+        const header = reqDefined(body.getHeader(), 'missing header from Response');
 
         const precheck = header.getNodetransactionprecheckcode();
 
@@ -140,6 +125,17 @@ export function handleQueryPrecheck<T extends GetHeader>(getBody: (r: Response) 
         } else {
             throw new Error(reversePrecheck(precheck));
         }
+    }
+}
+
+export function handlePrecheck(resp_: TransactionResponse | undefined): TransactionResponse {
+    const resp = reqDefined(resp_, 'missing TransactionResponse');
+    const precheck = resp.getNodetransactionprecheckcode();
+
+    if (isPrecheckCodeOk(precheck, true)) {
+        return resp;
+    } else {
+        throw new Error(reversePrecheck(precheck));
     }
 }
 
@@ -152,4 +148,12 @@ export function checkNumber(amount: number | BigInt) {
     } else if (typeof amount === 'number' && !Number.isSafeInteger(amount)) {
         throw new Error('`amount` as number must be in the range [-2^53, 2^53 - 1)');
     }
+}
+
+export function reqDefined<T>(val: T | undefined, msg: string): T {
+    if (val === undefined) {
+        throw new Error(msg);
+    }
+
+    return val;
 }

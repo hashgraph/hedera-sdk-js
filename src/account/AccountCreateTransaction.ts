@@ -5,10 +5,11 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 import {CryptoCreateTransactionBody} from "../generated/CryptoCreate_pb";
 import {Client} from "../Client";
-import {newDuration} from "../util";
+import {checkNumber, newDuration} from "../util";
 import {Key} from "../generated/BasicTypes_pb";
+import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
-export class AccountCreateTransaction extends TransactionBuilder {
+export default class AccountCreateTransaction extends TransactionBuilder {
     private body: CryptoCreateTransactionBody;
 
     constructor(client: Client) {
@@ -20,10 +21,10 @@ export class AccountCreateTransaction extends TransactionBuilder {
         // 30 days, default recommended
         this.setAutoRenewPeriod(30 * 86400);
         // Default to maximum values for record thresholds. Without this records would be
-        // auto-created whenever a send or receive transaction takes place for this new account. This should
-        // be an explicit ask.
-        body.setReceiverecordthreshold(Number.MAX_SAFE_INTEGER);
-        body.setSendrecordthreshold(Number.MAX_SAFE_INTEGER);
+        // auto-created whenever a send or receive transaction takes place for this new account.
+        // This should be an explicit ask.
+        this.setReceiveRecordThreshold(Number.MAX_SAFE_INTEGER);
+        this.setSendRecordThreshold(Number.MAX_SAFE_INTEGER);
     }
 
     setKey(publicKey: Uint8Array): this {
@@ -39,10 +40,34 @@ export class AccountCreateTransaction extends TransactionBuilder {
     }
 
     setInitialBalance(balance: number | BigInt): this {
-
+        checkNumber(balance);
+        this.body.setInitialbalance(String(balance));
+        return this;
     }
 
-    get method(): grpc.MethodDefinition<Transaction, TransactionResponse> {
+    setReceiveRecordThreshold(threshold: number): this {
+        checkNumber(threshold);
+        this.body.setReceiverecordthreshold(threshold);
+        return this;
+    }
+
+    setSendRecordThreshold(threshold: number): this {
+        checkNumber(threshold);
+        this.body.setSendrecordthreshold(threshold);
+        return this;
+    }
+
+    get method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
         return CryptoService.createAccount;
+    }
+
+    doValidate(): void {
+        if (!this.body.hasKey()) {
+            throw new Error('AccountCreateTransaction requires setKey()');
+        }
+
+        if (BigInt(this.body.getInitialbalance()) === BigInt(0)) {
+            throw new Error('AccountCreateTransaction must have nonzero setInitialBalance')
+        }
     }
 }

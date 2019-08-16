@@ -2,29 +2,24 @@ import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {TransactionBody} from "./generated/TransactionBody_pb";
 import {Client, TransactionId} from "./Client";
 import {SignatureMap, SignaturePair, TransactionID} from "./generated/BasicTypes_pb";
-import * as crypto from "crypto";
-import {KeyObject} from "crypto";
-import {encodeKey} from "./Keys";
+import * as nacl from "tweetnacl";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {TransactionReceipt} from "./generated/TransactionReceipt_pb";
 import {CryptoService} from "./generated/CryptoService_pb_service";
 import {
     getMyTxnId,
-    isPrecheckCodeOk,
+    handlePrecheck,
+    handleQueryPrecheck,
+    orThrow, reqDefined,
     reversePrecheck,
-    timestampToMs,
     setTimeoutAwaitable,
-    handleQueryPrecheck, orThrow
+    timestampToMs
 } from "./util";
 import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
-import {
-    TransactionGetReceiptQuery,
-    TransactionGetReceiptResponse
-} from "./generated/TransactionGetReceipt_pb";
+import {TransactionGetReceiptQuery} from "./generated/TransactionGetReceipt_pb";
 import {Query} from "./generated/Query_pb";
-import {Response} from "./generated/Response_pb";
-import {ResponseHeader} from "./generated/ResponseHeader_pb";
+import {Message} from "google-protobuf";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
@@ -32,7 +27,7 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
  */
 export type SignatureAndKey = {
     signature: Uint8Array,
-    publicKey: KeyObject
+    publicKey: Uint8Array,
 };
 
 const receiptInitialDelayMs = 1000;
@@ -49,8 +44,8 @@ export default class Transaction {
     constructor(client: Client, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>) {
         this.client = client;
         this.inner = inner;
-        this.txnId = body.getTransactionid();
-        this.validDurationSeconds = body.getTransactionvalidduration().getSeconds();
+        this.txnId = orThrow(body.getTransactionid());
+        this.validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
         this.method = method;
     }
 
@@ -64,17 +59,14 @@ export default class Transaction {
         return this.addSignature(await signer(this.inner.getBodybytes_asU8()));
     }
 
+    getTransactionId(): TransactionId {
+        return getMyTxnId(this.txnId);
+    }
+
     addSignature({ signature, publicKey }: SignatureAndKey): this {
         const sigPair = new SignaturePair();
-
-        // @ts-ignore FIXME TS defs don't have ed25519 yet
-        if (publicKey.asymmetricKeyType === 'ed25519') {
-            sigPair.setEd25519(signature);
-        } else {
-            throw new Error('unsupported signature type: ' + publicKey.asymmetricKeyType);
-        }
-
-        sigPair.setPubkeyprefix(encodeKey(publicKey));
+        sigPair.setPubkeyprefix(publicKey);
+        sigPair.setEd25519(signature);
 
         const sigMap = this.inner.getSigmap() || new SignatureMap();
         sigMap.addSigpair(sigPair);
@@ -83,19 +75,19 @@ export default class Transaction {
         return this;
     }
 
-    sign(privateKey: KeyObject): this {
-        // @ts-ignore FIXME Typescript definitions don't include ed25519 yet
-        if (privateKey.type !== 'private' || privateKey.asymmetricKeyType !== 'ed25519') {
-            throw new Error('`privateKey` must be an ed25519 private key')
-        }
-
-        const signature = crypto.sign(null, this.inner.getBodybytes_asU8(), privateKey);
-        const publicKey = crypto.createPublicKey(privateKey);
-
+    sign(privateKey: Uint8Array): this {
+        const signature = nacl.sign(this.inner.getBodybytes_asU8(), privateKey);
+        const { publicKey } = nacl.sign.keyPair.fromSecretKey(privateKey);
         return this.addSignature({ signature, publicKey });
     }
 
     execute(): Promise<TransactionId> {
+        const sigMap = this.inner.getSigmap();
+
+        if (!sigMap || sigMap.getSigpairList().length === 0) {
+            this.sign(this.client.operatorPrivateKey);
+        }
+
         return this.client.unaryCall(this.inner, this.method)
             .then(handlePrecheck)
             .then(() => getMyTxnId(this.txnId));
@@ -113,12 +105,12 @@ export default class Transaction {
         query.setTransactiongetreceipt(receiptQuery);
 
         return this.client.unaryCall(query, CryptoService.getTransactionReceipts)
-            .then(handleQueryPrecheck(Response.prototype.getTransactiongetreceipt))
+            .then(handleQueryPrecheck((resp) => resp.getTransactiongetreceipt()))
             .then((receipt) => orThrow(receipt.getReceipt()));
     }
 
     private async waitForReceipt(): Promise<TransactionReceipt> {
-        const validStartMs = timestampToMs(this.txnId.getTransactionvalidstart());
+        const validStartMs = timestampToMs(orThrow(this.txnId.getTransactionvalidstart()));
         const validUntilMs = validStartMs + this.validDurationSeconds * 1000;
 
         await setTimeoutAwaitable(receiptInitialDelayMs);
@@ -135,7 +127,8 @@ export default class Transaction {
                     * Math.random() * (Math.pow(2, attempt) - 1));
 
                 if (validStartMs + delay > validUntilMs) {
-                    throw "timed out waiting for consensus on transaction ID: " + txnId.toObject();
+                    throw "timed out waiting for consensus on transaction ID: "
+                        + this.txnId.toObject();
                 }
             } else if (receipt.getStatus() !== ResponseCodeEnum.SUCCESS) {
                 throw new Error(reversePrecheck(receipt.getStatus()));
@@ -143,5 +136,9 @@ export default class Transaction {
                 return receipt;
             }
         }
+    }
+
+    toProto(): Transaction_ {
+        return Message.cloneMessage(this.inner);
     }
 }
