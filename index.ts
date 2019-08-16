@@ -1,2 +1,5 @@
 export {Client} from './src/Client';
-export {encodeKey, decodeKey, generateKeyAndMnemonic} from './src/Keys';
+export {
+    encodePrivateKey, encodePublicKey, decodePrivateKey,
+    generateKeyAndMnemonic, keyFromMnemonic
+} from './src/Keys';

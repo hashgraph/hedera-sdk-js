@@ -15,7 +15,7 @@ import {Timestamp} from "./generated/Timestamp_pb";
 import {Transaction} from "./generated/Transaction_pb";
 import {CryptoCreateTransactionBody} from "./generated/CryptoCreate_pb";
 import {TransactionBody} from "./generated/TransactionBody_pb";
-import {decodeKey, encodeKey} from "./Keys";
+import {decodePrivateKey, encodePrivateKey} from "./Keys";
 import {CryptoServiceClient, ServiceError} from "./generated/CryptoService_pb_service";
 
 import * as crypto from 'crypto';
@@ -63,12 +63,11 @@ export class Client {
         }
 
         this.operatorAcct = operator.account;
-        const decodedKey = decodeKey(operator.key);
+        const keyPair = decodePrivateKey(operator.key);
 
         this.operator = operator;
 
-        ({ secretKey: this.operatorPrivateKey, publicKey: this.operatorPublicKey }
-            = nacl.sign.keyPair.fromSeed(decodedKey));
+        ({ privateKey: this.operatorPrivateKey, publicKey: this.operatorPublicKey } = keyPair);
 
         // TODO: figure out how to switch this with the real proxy
         this.service = new CryptoServiceClient("http://localhost:11205")
