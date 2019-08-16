@@ -1,6 +1,7 @@
 src/generated
 node_modules/
 yarn-error*
+.npmrc
 
 # ignores javascript files compiled from typescript
 **/*.js*

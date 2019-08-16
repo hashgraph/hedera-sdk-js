@@ -6,7 +6,6 @@
   "repository": "https://gitlab.launchbadge.com/hedera/hedera-sdk-js",
   "author": "Launchbadge <contact@launchbadge.com>",
   "license": "NONE",
-  "private": true,
   "scripts": {
     "prepare": "./compile-protos.sh && tsc",
     "test": "jest",
@@ -27,5 +26,8 @@
     "typescript": "^3.5.3",
     "ts-protoc-gen": "^0.10.0",
     "@improbable-eng/grpc-web-node-http-transport": "0.11.0"
+  },
+  "publishConfig": {
+    "@launchbadge:registry": "https://gitlab.launchbadge.com/api/v4/projects/73/packages/npm/"
   }
 }
