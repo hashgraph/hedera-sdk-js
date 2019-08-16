@@ -14,7 +14,7 @@ import {decodePrivateKey, encodePrivateKey} from "./Keys";
 
 import {grpc} from "@improbable-eng/grpc-web";
 
-import {ServiceError} from "./generated/CryptoService_pb_service";
+import {CryptoService, ServiceError} from "./generated/CryptoService_pb_service";
 
 import * as crypto from 'crypto';
 import {KeyObject} from 'crypto';
@@ -28,6 +28,7 @@ import {CryptoGetAccountBalanceQuery} from "./generated/CryptoGetAccountBalance_
 import {QueryHeader} from "./generated/QueryHeader_pb";
 
 import {
+    checkNumber,
     getMyAccountId,
     getMyTxnId,
     getProtoAccountId,
@@ -39,6 +40,7 @@ import {
 import {ProtobufMessage} from "@improbable-eng/grpc-web/dist/typings/message";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import Code = grpc.Code;
+import {AccountCreateTransaction} from "./account/AccountCreateTransaction";
 
 export type AccountId = { shard: number, realm: number, account: number };
 
@@ -52,9 +54,6 @@ export type Operator = { account: AccountId, key: string };
 
 const nodeAccountID = getProtoAccountId({ shard: 0, realm: 0, account: 3 });
 const maxTxnFee = 10_000_000; // new testnet charges about 8M
-
-const tinybarMaxSignedBigint = BigInt(1) << BigInt(63) - BigInt(1);
-const tinybarMinSignedBigint = -tinybarMaxSignedBigint - BigInt(1);
 
 export class Client {
     public readonly operator: Operator;
@@ -79,25 +78,14 @@ export class Client {
     }
 
     createAccount(publicKey: Uint8Array, initialBalance = 100_000): Promise<{ account: AccountId }> {
-        const protoKey = new Key();
-        protoKey.setEd25519(publicKey);
 
-        const createBody = new CryptoCreateTransactionBody();
-        createBody.setKey(protoKey);
-        createBody.setInitialbalance(initialBalance);
-        // 30 days, default recommended
-        createBody.setAutorenewperiod(newDurationSeconds(30 * 86400));
-        // Default to maximum values for record thresholds. Without this records would be
-        // auto-created whenever a send or receive transaction takes place for this new account. This should
-        // be an explicit ask.
-        createBody.setReceiverecordthreshold(Number.MAX_SAFE_INTEGER);
-        createBody.setSendrecordthreshold(Number.MAX_SAFE_INTEGER);
+        return new AccountCreateTransaction(this)
+            .setKey(publicKey)
+            .setInitialBalance(initialBalance)
+            .build()
+            .executeForReceipt()
+            .then((receipt));
 
-        const [txnId, txnBody] = this.newTxnBody();
-
-        txnBody.setCryptocreateaccount(createBody);
-
-        const txn = this.newSignedTxn(txnBody);
 
         return handlePrecheck((handler) => this.service.createAccount(txn, new grpc.Metadata(), handler))
             .then(() => this.waitForReceipt(txnId, orThrow(txnBody.getTransactionvalidduration())))
@@ -134,6 +122,9 @@ export class Client {
         const query = new Query();
         query.setCryptogetaccountbalance(balanceQuery);
 
+        return this.unaryCall(query, CryptoService.cryptoGetBalance)
+            .then()
+
         return new Promise((resolve, reject) => {
             this.service.cryptoGetBalance(query, new grpc.Metadata(), ((err, response) => {
                 if (err != null) {
@@ -153,7 +144,7 @@ export class Client {
         });
     }
 
-    public unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage, M extends UnaryMethodDefinition<Rq, Rs>>(request: Rq, method: M): Promise<Rs> {
+    public unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs> {
         return new Promise((resolve, reject) => grpc.unary(method, {
             host: this.host,
             request,
@@ -198,11 +189,7 @@ export class Client {
      * @param amount
      */
     private newTransferTxn(recipient: AccountID, amount: number | BigInt): [TransactionID, TransactionBody, Transaction] {
-        if (typeof amount === 'bigint' && (amount > tinybarMaxSignedBigint || amount < tinybarMinSignedBigint)) {
-            throw new Error('`amount` as bigint must be in the range [-2^63, 2^63)');
-        } else if (typeof amount === 'number' && !Number.isSafeInteger(amount)) {
-            throw new Error('`amount` as number must be in the range [-2^53, 2^53 - 1)');
-        }
+        checkNumber(amount);
 
         const recvAmt = new AccountAmount();
         recvAmt.setAccountid(recipient);
@@ -236,23 +223,6 @@ function orThrow<T>(val?: T): T {
     }
 
     throw new Error('expected value not to be null');
-}
-
-function handlePrecheck(withHandler: (handler: (error: ServiceError | null, response: TransactionResponse | null) => void) => void): Promise<TransactionResponse> {
-    return new Promise(((resolve, reject) =>
-        withHandler((err, response) => {
-            if (err) {
-                reject(err);
-            } else if (response) {
-                const precheck = response.getNodetransactionprecheckcode();
-
-                if (isPrecheckCodeOk(precheck, true)) {
-                    resolve(response);
-                } else {
-                    reject(new Error(reversePrecheck(precheck)));
-                }
-            }
-        })));
 }
 
 function addSignature(txn: Transaction, { key, signature }) {

@@ -9,9 +9,19 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {TransactionReceipt} from "./generated/TransactionReceipt_pb";
 import {CryptoService} from "./generated/CryptoService_pb_service";
-import {getMyTxnId, isPrecheckCodeOk, reversePrecheck, timestampToMs, setTimeoutAwaitable} from "./util";
+import {
+    getMyTxnId,
+    isPrecheckCodeOk,
+    reversePrecheck,
+    timestampToMs,
+    setTimeoutAwaitable,
+    handleQueryPrecheck, orThrow
+} from "./util";
 import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
-import {TransactionGetReceiptQuery} from "./generated/TransactionGetReceipt_pb";
+import {
+    TransactionGetReceiptQuery,
+    TransactionGetReceiptResponse
+} from "./generated/TransactionGetReceipt_pb";
 import {Query} from "./generated/Query_pb";
 import {Response} from "./generated/Response_pb";
 import {ResponseHeader} from "./generated/ResponseHeader_pb";
@@ -96,15 +106,15 @@ export default class Transaction {
         return this.waitForReceipt()
     }
 
-    private getReceipt(): Promise<TransactionReceipt> {
+    private async getReceipt(): Promise<TransactionReceipt> {
         const receiptQuery = new TransactionGetReceiptQuery();
         receiptQuery.setTransactionid(this.txnId);
         const query = new Query();
         query.setTransactiongetreceipt(receiptQuery);
 
         return this.client.unaryCall(query, CryptoService.getTransactionReceipts)
-            .then(handlePaymentPrecheck(Response.prototype.getTransactiongetreceipt))
-            .then((receptResponse) => receptResponse.getReceipt());
+            .then(handleQueryPrecheck(Response.prototype.getTransactiongetreceipt))
+            .then((receipt) => orThrow(receipt.getReceipt()));
     }
 
     private async waitForReceipt(): Promise<TransactionReceipt> {
@@ -134,31 +144,4 @@ export default class Transaction {
             }
         }
     }
-}
-
-function handlePrecheck(response: TransactionResponse): TransactionResponse {
-    const precheck = response.getNodetransactionprecheckcode();
-
-    if (isPrecheckCodeOk(precheck, true)) {
-        return response;
-    } else {
-        throw new Error(reversePrecheck(precheck));
-    }
-}
-
-interface SubResponse {
-    getHeader(): ResponseHeader;
-}
-
-function handlePaymentPrecheck<Sr extends SubResponse>(getSubResponse: (Response) => Sr): (Response) => Sr {
-    return (response) => {
-        const subResponse = getSubResponse(response);
-        const precheck = subResponse.getHeader().getNodetransactionprecheckcode();
-
-        if (isPrecheckCodeOk(precheck)) {
-            return subResponse;
-        } else {
-            throw new Error(reversePrecheck(precheck));
-        }
-    };
 }
