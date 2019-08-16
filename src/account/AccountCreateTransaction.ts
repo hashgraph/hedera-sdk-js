@@ -9,7 +9,7 @@ import {checkNumber, newDuration} from "../util";
 import {Key} from "../generated/BasicTypes_pb";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
-export default class AccountCreateTransaction extends TransactionBuilder {
+export class AccountCreateTransaction extends TransactionBuilder {
     private body: CryptoCreateTransactionBody;
 
     constructor(client: Client) {

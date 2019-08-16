@@ -11,7 +11,7 @@ import {
 } from "../generated/CryptoTransfer_pb";
 import {checkNumber, getProtoAccountId, reqDefined} from "../util";
 
-export default class CryptoTransferTransaction extends TransactionBuilder {
+export class CryptoTransferTransaction extends TransactionBuilder {
     private readonly body: CryptoTransferTransactionBody;
 
     constructor(client: Client) {

@@ -1,6 +1,6 @@
 import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {TransactionBody} from "./generated/TransactionBody_pb";
-import {Client, TransactionId} from "./Client";
+import {Client, Signer, TransactionId} from "./Client";
 import {SignatureMap, SignaturePair, TransactionID} from "./generated/BasicTypes_pb";
 import * as nacl from "tweetnacl";
 import {grpc} from "@improbable-eng/grpc-web";
@@ -33,7 +33,7 @@ export type SignatureAndKey = {
 const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
-export default class Transaction {
+export class Transaction {
     private client: Client;
 
     private inner: Transaction_;
@@ -47,16 +47,6 @@ export default class Transaction {
         this.txnId = orThrow(body.getTransactionid());
         this.validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
         this.method = method;
-    }
-
-    /**
-     * Given the transaction body bytes, asynchronously return a signature and associated public
-     * key.
-     *
-     * @param signer
-     */
-    async signWith(signer: (bodyBytes: Uint8Array) => Promise<SignatureAndKey>): Promise<this> {
-        return this.addSignature(await signer(this.inner.getBodybytes_asU8()));
     }
 
     getTransactionId(): TransactionId {
@@ -81,16 +71,28 @@ export default class Transaction {
         return this.addSignature({ signature, publicKey });
     }
 
+    /**
+     * Given the transaction body bytes, asynchronously return a signature and associated public
+     * key.
+     *
+     * @param publicKey the public key that can be used to verify the returned signature
+     * @param signer
+     */
+    async signWith(publicKey: Uint8Array, signer: Signer): Promise<this> {
+        const signResult = signer(this.inner.getBodybytes_asU8());
+        const signature: Uint8Array = signResult instanceof Promise
+            ? await signResult
+            : signResult;
+
+        this.addSignature({ signature, publicKey });
+        return this;
+    }
+
     async execute(): Promise<TransactionId> {
         const sigMap = this.inner.getSigmap();
 
         if (!sigMap || sigMap.getSigpairList().length === 0) {
-            const signResult = this.client.operatorSigner(this.inner.getBodybytes_asU8());
-            const signature: Uint8Array = signResult instanceof Promise
-                ? await signResult
-                : signResult;
-
-            this.addSignature({ signature, publicKey: this.client.operatorPublicKey });
+            await this.signWith(this.client.operatorPublicKey, this.client.operatorSigner);
         }
 
         handlePrecheck(await this.client.unaryCall(this.inner, this.method));

@@ -1,7 +1,7 @@
 import {AccountId, Client, nodeAccountID, TransactionId} from "./Client";
 import {TransactionBody} from "./generated/TransactionBody_pb";
 import {getProtoAccountId, getProtoTxnId, newDuration, newTxnId} from "./util";
-import Transaction from "./Transaction";
+import {Transaction} from "./Transaction";
 import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
