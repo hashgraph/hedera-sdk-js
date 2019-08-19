@@ -2,6 +2,7 @@ import * as bip39 from "bip39";
 import * as nacl from "tweetnacl";
 import * as crypto from 'crypto';
 import * as util from 'util';
+import {AccountId} from "./Client";
 
 // we could go through the whole BS of producing a DER-encoded structure but it's quite simple
 // for Ed25519 keys and we don't have to shell out to a potentially broken lib
@@ -126,14 +127,43 @@ async function deriveSeed(entropy: Uint8Array): Promise<Uint8Array> {
 }
 
 export type Keystore = {
+    version: 1,
     crypto: {
-
+        /** hex-encoded ciphertext */
+        ciphertext: string,
+        /** hex-encoded initialization vector */
+        cipherparams: { iv: string },
+        /** cipher being used */
+        cipher: 'aes-128-ctr',
+        /** key derivation function being used */
+        kdf: 'pbkdf2',
+        /** params for key derivation function */
+        kdfparams: {
+            /** derived key length */
+            dkLen: number,
+            /** hex-encoded salt */
+            salt: string,
+            /** iteration count */
+            c: number,
+            /** hash function */
+            prf: 'hmac-sha256'
+        },
+        /** hex-encoded HMAC-SHA384 */
+        mac: string,
     }
 }
 
-export async function createKeystore(privateKey: Uint8Array, passphrase: string): Promise<Keystore> {
-    // all values taken from https://github.com/ethereumjs/ethereumjs-wallet/blob/de3a92e752673ada1d78f95cf80bc56ae1f59775/src/index.ts#L25
-    const key = await pbkdf2(passphrase, nacl.randomBytes(32), 262144, 32, 'sha256');
+export
+
+// all values taken from https://github.com/ethereumjs/ethereumjs-wallet/blob/de3a92e752673ada1d78f95cf80bc56ae1f59775/src/index.ts#L25
+const dkLen = 32;
+const c = 262144;
+const saltLen = 32;
+
+export async function createKeystore(privateKey: Uint8Array, passphrase: string): Promise<Uint8Array> {
+    const salt = crypto.randomBytes(saltLen);
+
+    const key = await pbkdf2(passphrase, salt, c, dkLen, 'sha256');
 
     const iv = crypto.randomBytes(16);
 
@@ -143,4 +173,31 @@ export async function createKeystore(privateKey: Uint8Array, passphrase: string)
     const cipherText = Buffer.concat([cipher.update(privateKey), cipher.final()]);
 
     const mac = crypto.createHmac('sha384', key.slice(16)).update(cipherText).digest();
+
+    const keystore: Keystore = {
+        version: 1,
+        crypto: {
+            ciphertext: cipherText.toString('hex'),
+            cipherparams: { iv: iv.toString('hex') },
+            cipher: 'aes-128-ctr',
+            kdf: 'pbkdf2',
+            kdfparams: {
+                dkLen,
+                salt: salt.toString('hex'),
+                c,
+                prf: 'hmac-sha256'
+            },
+            mac: mac.toString('hex')
+        },
+    };
+
+    return Buffer.from(JSON.stringify(keystore));
+}
+
+export async function loadKeystore(keystoreBytes: Uint8Array): Promise<KeyResult> {
+    const keystore: Keystore = JSON.parse(Buffer.from(keystoreBytes).toString());
+
+    if (keystore.version !== 1) {
+        throw new Error ('unsupported keystore version: ' + keystore.version);
+    }
 }
