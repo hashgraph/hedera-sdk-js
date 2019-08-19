@@ -116,7 +116,7 @@ async function keyFromEntropy(entropy: Uint8Array): Promise<KeyPair> {
 // duplicating what is done here:
 // https://github.com/hashgraph/hedera-keygen-java/blob/master/src/main/java/com/hedera/sdk/keygen/CryptoUtils.java#L43
 async function deriveSeed(entropy: Uint8Array): Promise<Uint8Array> {
-    const password = Buffer.concat([entropy, Uint8Array.of(-1, -1, -1, -1, -1, -1, -1, -1)]);
+    const password = Buffer.concat([entropy, Buffer.of(-1, -1, -1, -1, -1, -1, -1, -1)]);
     const salt = Buffer.of(-1);
 
     return pbkdf2(password, salt, 2048, 32, 'sha512');
