@@ -8,5 +8,5 @@ export {Transaction} from './src/Transaction';
 export {
     encodePrivateKey, encodePublicKey, decodePrivateKey,
     generateKey, generateMnemonic, keyFromMnemonic,
-    loadKeystore, createKeystore
+    loadKeystore, createKeystore, KeyMismatchException
 } from './src/Keys';

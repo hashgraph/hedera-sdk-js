@@ -153,6 +153,16 @@ export type Keystore = {
     }
 }
 
+export class KeyMismatchException extends Error {
+    readonly hmac: string;
+    readonly expectedHmac: string;
+    constructor(hmac: Buffer, expectedHmac: Buffer) {
+        super('key mismatch when loading from keystore');
+        this.hmac = hmac.toString('hex');
+        this.expectedHmac = expectedHmac.toString('hex');
+    }
+}
+
 const hmacAlgo = 'sha384';
 export async function createKeystore(privateKey: Uint8Array, passphrase: string): Promise<Uint8Array> {
     // all values taken from https://github.com/ethereumjs/ethereumjs-wallet/blob/de3a92e752673ada1d78f95cf80bc56ae1f59775/src/index.ts#L25
@@ -220,7 +230,7 @@ export async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string
     const verifyHmac = crypto.createHmac(hmacAlgo, key.slice(16)).update(cipherBytes).digest();
 
     if (!hmac.equals(verifyHmac)) {
-        throw new Error(`differing HMAC for private key: ${mac} != ${verifyHmac.toString('hex')}`);
+        throw new KeyMismatchException(hmac, verifyHmac);
     }
 
     const decipher = crypto.createDecipheriv(cipher, key.slice(0, 16), ivBytes);
