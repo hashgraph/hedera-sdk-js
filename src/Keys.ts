@@ -153,14 +153,11 @@ export type Keystore = {
     }
 }
 
-export
-
-// all values taken from https://github.com/ethereumjs/ethereumjs-wallet/blob/de3a92e752673ada1d78f95cf80bc56ae1f59775/src/index.ts#L25
-const dkLen = 32;
-const c = 262144;
-const saltLen = 32;
-
 export async function createKeystore(privateKey: Uint8Array, passphrase: string): Promise<Uint8Array> {
+    // all values taken from https://github.com/ethereumjs/ethereumjs-wallet/blob/de3a92e752673ada1d78f95cf80bc56ae1f59775/src/index.ts#L25
+    const dkLen = 32;
+    const c = 262144;
+    const saltLen = 32;
     const salt = crypto.randomBytes(saltLen);
 
     const key = await pbkdf2(passphrase, salt, c, dkLen, 'sha256');
@@ -194,10 +191,32 @@ export async function createKeystore(privateKey: Uint8Array, passphrase: string)
     return Buffer.from(JSON.stringify(keystore));
 }
 
-export async function loadKeystore(keystoreBytes: Uint8Array): Promise<KeyResult> {
+export async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string): Promise<KeyPair> {
     const keystore: Keystore = JSON.parse(Buffer.from(keystoreBytes).toString());
 
     if (keystore.version !== 1) {
         throw new Error ('unsupported keystore version: ' + keystore.version);
     }
+
+    const { ciphertext, cipherparams: { iv }, cipher, kdf, kdfparams: { dkLen, salt, c, prf }, mac }
+        = keystore.crypto;
+
+    if (kdf !== 'pbkdf2') {
+        throw new Error('unsupported key derivation function: ' + kdf);
+    }
+
+    if (prf !== 'hmac-sha256') {
+        throw new Error('unsupported key derivation hash function: ' + prf);
+    }
+
+    const saltBytes = Buffer.from(salt, 'hex');
+    const ivBytes = Buffer.from(iv, 'hex');
+    const cipherBytes = Buffer.from(ciphertext, 'hex');
+
+    const key = await pbkdf2(passphrase, saltBytes, c, dkLen, 'sha256');
+    const decipher = crypto.createDecipheriv(cipher, key.slice(0, 16), ivBytes);
+    const privateKeyBytes = Buffer.concat([decipher.update(cipherBytes), decipher.final()]);
+
+    const { secretKey: privateKey, publicKey } = nacl.sign.keyPair.fromSecretKey(privateKeyBytes);
+    return { privateKey, publicKey };
 }
