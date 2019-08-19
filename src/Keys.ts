@@ -217,6 +217,7 @@ export async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string
     const decipher = crypto.createDecipheriv(cipher, key.slice(0, 16), ivBytes);
     const privateKeyBytes = Buffer.concat([decipher.update(cipherBytes), decipher.final()]);
 
-    const { secretKey: privateKey, publicKey } = nacl.sign.keyPair.fromSecretKey(privateKeyBytes);
+    // `Buffer instanceof Uint8Array` doesn't work in Jest because the prototype chain is different
+    const { secretKey: privateKey, publicKey } = nacl.sign.keyPair.fromSecretKey(Uint8Array.from(privateKeyBytes));
     return { privateKey, publicKey };
 }

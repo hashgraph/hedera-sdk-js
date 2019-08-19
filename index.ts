@@ -7,5 +7,6 @@ export {Transaction} from './src/Transaction';
 
 export {
     encodePrivateKey, encodePublicKey, decodePrivateKey,
-    generateKey, generateMnemonic, keyFromMnemonic
+    generateKey, generateMnemonic, keyFromMnemonic,
+    loadKeystore, createKeystore
 } from './src/Keys';
