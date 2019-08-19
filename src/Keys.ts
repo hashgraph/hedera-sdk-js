@@ -153,6 +153,7 @@ export type Keystore = {
     }
 }
 
+const hmacAlgo = 'sha384';
 export async function createKeystore(privateKey: Uint8Array, passphrase: string): Promise<Uint8Array> {
     // all values taken from https://github.com/ethereumjs/ethereumjs-wallet/blob/de3a92e752673ada1d78f95cf80bc56ae1f59775/src/index.ts#L25
     const dkLen = 32;
@@ -169,7 +170,7 @@ export async function createKeystore(privateKey: Uint8Array, passphrase: string)
 
     const cipherText = Buffer.concat([cipher.update(privateKey), cipher.final()]);
 
-    const mac = crypto.createHmac('sha384', key.slice(16)).update(cipherText).digest();
+    const mac = crypto.createHmac(hmacAlgo, key.slice(16)).update(cipherText).digest();
 
     const keystore: Keystore = {
         version: 1,
@@ -214,6 +215,14 @@ export async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string
     const cipherBytes = Buffer.from(ciphertext, 'hex');
 
     const key = await pbkdf2(passphrase, saltBytes, c, dkLen, 'sha256');
+
+    const hmac = Buffer.from(mac, 'hex');
+    const verifyHmac = crypto.createHmac(hmacAlgo, key.slice(16)).update(cipherBytes).digest();
+
+    if (!hmac.equals(verifyHmac)) {
+        throw new Error(`differing HMAC for private key: ${mac} != ${verifyHmac.toString('hex')}`);
+    }
+
     const decipher = crypto.createDecipheriv(cipher, key.slice(0, 16), ivBytes);
     const privateKeyBytes = Buffer.concat([decipher.update(cipherBytes), decipher.final()]);
 
