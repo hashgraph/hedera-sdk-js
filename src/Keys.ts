@@ -75,7 +75,7 @@ export type MnemonicResult = {
 
 /** Generate a random mnemonic */
 export function generateMnemonic(): MnemonicResult {
-    const entropy = nacl.randomBytes(32);
+    const entropy = crypto.randomBytes(32);
     const mnemonic = bip39.entropyToMnemonic(Buffer.from(entropy));
     return { mnemonic, generateKey: () => generateKey(entropy) };
 }
@@ -123,4 +123,24 @@ async function deriveSeed(entropy: Uint8Array): Promise<Uint8Array> {
     const salt = Uint8Array.of(-1);
 
     return pbkdf2(password, salt, 2048, 32, 'sha512');
+}
+
+export type Keystore = {
+    crypto: {
+
+    }
+}
+
+export async function createKeystore(privateKey: Uint8Array, passphrase: string): Promise<Keystore> {
+    // all values taken from https://github.com/ethereumjs/ethereumjs-wallet/blob/de3a92e752673ada1d78f95cf80bc56ae1f59775/src/index.ts#L25
+    const key = await pbkdf2(passphrase, nacl.randomBytes(32), 262144, 32, 'sha256');
+
+    const iv = crypto.randomBytes(16);
+
+    // AES-128-CTR with the first half of the derived key and a random IV
+    const cipher = crypto.createCipheriv('aes-128-ctr', key.slice(0, 16), iv);
+
+    const cipherText = Buffer.concat([cipher.update(privateKey), cipher.final()]);
+
+    const mac = crypto.createHmac('sha384', key.slice(16)).update(cipherText).digest();
 }
