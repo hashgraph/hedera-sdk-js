@@ -3,8 +3,13 @@ import {
     decodePrivateKey,
     keyFromMnemonic,
     encodePublicKey,
-    generateMnemonic
+    generateMnemonic,
+    generateKey,
+    createKeystore,
+    loadKeystore
 } from '../src/Keys';
+
+import * as nacl from 'tweetnacl';
 
 const privKey = Uint8Array.of(
     -37, 72, 75, -126, -114, 100, -78, -40, -15, 44, -29, -64, -96, -23, 58, 11, -116, -50,
@@ -54,4 +59,13 @@ test('generateMnemonic produces a recoverable private key', async () => {
     const {privateKey, publicKey} = await mnemonic.generateKey();
     const key2 = await keyFromMnemonic(mnemonic.mnemonic);
     expect({ privateKey, publicKey }).toEqual(key2);
+});
+
+test('createKeystore() and loadKeystore() function properly', async () => {
+    const passphrase = 'asdf1234';
+    const { secretKey: privateKey, publicKey } = nacl.sign.keyPair();
+    const keystoreBytes = await createKeystore(privateKey, passphrase);
+    const loadedKeypair = await loadKeystore(keystoreBytes, passphrase);
+
+    expect(loadedKeypair).toEqual({ privateKey, publicKey });
 });
