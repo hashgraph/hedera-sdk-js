@@ -11,7 +11,8 @@ const ed25519PrivKeyPrefix = '302e020100300506032b657004220420';
 const ed25519PubKeyPrefix = '302a300506032b6570032100';
 
 export const encodePrivateKey = (privateKey: Uint8Array): string =>
-    encodeHex(privateKey, ed25519PrivKeyPrefix);
+    // only encode the private portion of the private key
+    encodeHex(privateKey.slice(0, 32), ed25519PrivKeyPrefix);
 
 export const encodePublicKey = (publicKey: Uint8Array): string =>
     encodeHex(publicKey, ed25519PubKeyPrefix);
@@ -22,6 +23,7 @@ export function decodePrivateKey(keyStr: string): KeyPair {
     }
 
     const { secretKey: privateKey, publicKey } =
+        // fromSeed takes the private key bytes and calculates the public key
         nacl.sign.keyPair.fromSeed(decodeHex(keyStr.slice(32)));
 
     return { privateKey, publicKey };
