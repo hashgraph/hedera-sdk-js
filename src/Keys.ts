@@ -19,7 +19,7 @@ export const encodePublicKey = (publicKey: Uint8Array): string =>
 
 export function decodePrivateKey(keyStr: string): KeyPair {
     if (keyStr.length !== 96 || !keyStr.startsWith(ed25519PrivKeyPrefix)) {
-        throw "invalid private key: " + keyStr;
+        throw new Error("invalid private key: " + keyStr);
     }
 
     const { secretKey: privateKey, publicKey } =
@@ -27,6 +27,14 @@ export function decodePrivateKey(keyStr: string): KeyPair {
         nacl.sign.keyPair.fromSeed(decodeHex(keyStr.slice(32)));
 
     return { privateKey, publicKey };
+}
+
+export function decodePublicKey(keyStr: string): Uint8Array {
+    if (keyStr.length !== 88 || !keyStr.startsWith(ed25519PubKeyPrefix)) {
+        throw new Error("invalid public key: " + keyStr);
+    }
+
+    return decodeHex(keyStr.slice(24));
 }
 
 function encodeHex(bytes: Uint8Array, prefix: string): string {
