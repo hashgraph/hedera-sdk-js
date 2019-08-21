@@ -10,6 +10,48 @@ import {AccountId} from "./Client";
 const ed25519PrivKeyPrefix = '302e020100300506032b657004220420';
 const ed25519PubKeyPrefix = '302a300506032b6570032100';
 
+export class Ed25519PublicKey {
+    private readonly keyData: Uint8Array;
+
+    constructor(keyData: Uint8Array) {
+        if (keyData.length !== nacl.sign.publicKeyLength) {
+            throw new Error('invalid public key');
+        }
+
+        this.keyData = keyData;
+    }
+
+    static fromString(keyStr: string): Ed25519PublicKey {
+        return new Ed25519PublicKey(decodePublicKey(keyStr));
+    }
+
+    toString(): string {
+        return encodePublicKey(this.keyData);
+    }
+}
+
+export class Ed25519PrivateKey {
+    private readonly keyData: Uint8Array;
+    public readonly publicKey: Ed25519PublicKey;
+
+    constructor({ privateKey, publicKey }: KeyPair) {
+        this.keyData = privateKey;
+        this.publicKey = new Ed25519PublicKey(publicKey);
+    }
+
+    static fromString(keyStr: string): Ed25519PrivateKey {
+        return new Ed25519PrivateKey(decodePrivateKey(keyStr));
+    }
+
+    sign(msg: Uint8Array): Uint8Array {
+        return nacl.sign(msg, this.keyData);
+    }
+
+    toString(): string {
+        return encodePrivateKey(this.keyData);
+    }
+}
+
 export const encodePrivateKey = (privateKey: Uint8Array): string =>
     // only encode the private portion of the private key
     encodeHex(privateKey.slice(0, 32), ed25519PrivKeyPrefix);
