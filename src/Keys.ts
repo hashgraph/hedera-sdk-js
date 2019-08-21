@@ -95,7 +95,7 @@ export function generateMnemonic(): MnemonicResult {
  * Generate a new Ed25519 private/public keypair with DER-encoded private key string and
  * BIP39 mnemonic string
  */
-export async function generateKey(entropy: Uint8Array): Promise<KeyResult> {
+export async function generateKey(entropy: Uint8Array = crypto.randomBytes(32)): Promise<KeyResult> {
     if (entropy.length !== 32) {
         throw new Error('generating an ed25519 key requires 32 bytes of entropy');
     }
