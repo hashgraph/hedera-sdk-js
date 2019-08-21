@@ -6,7 +6,9 @@ export {CryptoTransferTransaction} from './src/account/CryptoTransferTransaction
 export {Transaction} from './src/Transaction';
 
 export {
-    encodePrivateKey, encodePublicKey, decodePrivateKey,
+    encodePrivateKey, encodePublicKey,
+    decodePrivateKey, decodePublicKey,
     generateKey, generateMnemonic, keyFromMnemonic,
-    loadKeystore, createKeystore, KeyMismatchException
+    loadKeystore, createKeystore,
+    KeyMismatchException
 } from './src/Keys';
