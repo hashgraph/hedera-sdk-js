@@ -7,7 +7,7 @@
   "author": "Launchbadge <contact@launchbadge.com>",
   "license": "NONE",
   "scripts": {
-    "prepare": "./compile-protos.sh && tsc",
+    "prepare": "scripts/compile-protos.sh && tsc",
     "test": "jest",
     "create-account-test": "node src/bin/create-account-test.js"
   },
