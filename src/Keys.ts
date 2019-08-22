@@ -3,6 +3,7 @@ import * as nacl from "tweetnacl";
 import * as crypto from 'crypto';
 import * as util from 'util';
 import {AccountId} from "./Client";
+import {Key} from "./generated/BasicTypes_pb";
 
 // we could go through the whole BS of producing a DER-encoded structure but it's quite simple
 // for Ed25519 keys and we don't have to shell out to a potentially broken lib
@@ -12,6 +13,7 @@ const ed25519PubKeyPrefix = '302a300506032b6570032100';
 
 export class Ed25519PublicKey {
     private readonly keyData: Uint8Array;
+    private asString: string | null = null;
 
     constructor(keyData: Uint8Array) {
         if (keyData.length !== nacl.sign.publicKeyLength) {
@@ -22,25 +24,72 @@ export class Ed25519PublicKey {
     }
 
     static fromString(keyStr: string): Ed25519PublicKey {
-        return new Ed25519PublicKey(decodePublicKey(keyStr));
+        if (keyStr.length !== 88 || !keyStr.startsWith(ed25519PubKeyPrefix)) {
+            throw new Error("invalid public key: " + keyStr);
+        }
+
+        return new Ed25519PublicKey(decodeHex(keyStr.slice(24)));
     }
 
     toString(): string {
-        return encodePublicKey(this.keyData);
+        if (this.asString === null) {
+            this.asString = encodeHex(this.keyData, ed25519PubKeyPrefix);
+        }
+
+        return this.asString;
+    }
+
+    toProtoKey(): Key {
+        const key = new Key();
+        key.setEd25519(this.keyData);
+        return key;
     }
 }
 
 export class Ed25519PrivateKey {
     private readonly keyData: Uint8Array;
     public readonly publicKey: Ed25519PublicKey;
+    private asString: string | null = null;
 
     constructor({ privateKey, publicKey }: KeyPair) {
+        if (privateKey.length !== nacl.sign.secretKeyLength) {
+            throw new Error('invalid private key');
+        }
+
         this.keyData = privateKey;
         this.publicKey = new Ed25519PublicKey(publicKey);
     }
 
+    private static fromSeed(seed: Uint8Array): Ed25519PrivateKey {
+        const { secretKey: privateKey, publicKey } =
+            // fromSeed takes the private key bytes and calculates the public key
+            nacl.sign.keyPair.fromSeed(seed);
+
+        return new Ed25519PrivateKey({ privateKey, publicKey });
+    }
+
     static fromString(keyStr: string): Ed25519PrivateKey {
-        return new Ed25519PrivateKey(decodePrivateKey(keyStr));
+        if (keyStr.length !== 96 || !keyStr.startsWith(ed25519PrivKeyPrefix)) {
+            throw new Error("invalid private key: " + keyStr);
+        }
+
+        return this.fromSeed(decodeHex(keyStr.slice(32)));
+    }
+
+    static async fromMnemonic(mnemonic: string): Promise<Ed25519PrivateKey> {
+        return this.generate(decodeHex(bip39.mnemonicToEntropy(mnemonic)));
+    }
+
+    static async fromKeystore(keystore: Uint8Array, passphrase: string): Promise<Ed25519PrivateKey> {
+        return new Ed25519PrivateKey(await loadKeystore(keystore, passphrase));
+    }
+
+    static async generate(entropy: Uint8Array = crypto.randomBytes(32)): Promise<Ed25519PrivateKey> {
+        if (entropy.length !== 32) {
+            throw new Error('generating an ed25519 key requires 32 bytes of entropy');
+        }
+
+        return this.fromSeed(await deriveSeed(entropy));
     }
 
     sign(msg: Uint8Array): Uint8Array {
@@ -48,35 +97,17 @@ export class Ed25519PrivateKey {
     }
 
     toString(): string {
-        return encodePrivateKey(this.keyData);
-    }
-}
+        if (this.asString === null) {
+            // only encode the private portion of the private key
+            this.asString = encodeHex(this.keyData.slice(0, 32), ed25519PrivKeyPrefix);
+        }
 
-export const encodePrivateKey = (privateKey: Uint8Array): string =>
-    // only encode the private portion of the private key
-    encodeHex(privateKey.slice(0, 32), ed25519PrivKeyPrefix);
-
-export const encodePublicKey = (publicKey: Uint8Array): string =>
-    encodeHex(publicKey, ed25519PubKeyPrefix);
-
-export function decodePrivateKey(keyStr: string): KeyPair {
-    if (keyStr.length !== 96 || !keyStr.startsWith(ed25519PrivKeyPrefix)) {
-        throw new Error("invalid private key: " + keyStr);
+        return this.asString;
     }
 
-    const { secretKey: privateKey, publicKey } =
-        // fromSeed takes the private key bytes and calculates the public key
-        nacl.sign.keyPair.fromSeed(decodeHex(keyStr.slice(32)));
-
-    return { privateKey, publicKey };
-}
-
-export function decodePublicKey(keyStr: string): Uint8Array {
-    if (keyStr.length !== 88 || !keyStr.startsWith(ed25519PubKeyPrefix)) {
-        throw new Error("invalid public key: " + keyStr);
+    createKeystore(passphrase: string): Promise<Uint8Array> {
+        return createKeystore(this.keyData, passphrase);
     }
-
-    return decodeHex(keyStr.slice(24));
 }
 
 function encodeHex(bytes: Uint8Array, prefix: string): string {
@@ -106,15 +137,6 @@ function decodeHex(hex: String): Uint8Array {
 
 const pbkdf2 = util.promisify(crypto.pbkdf2);
 
-export type KeyResult = {
-    /** Private key used to sign transactions */
-    privateKey: Uint8Array,
-    /** Public key to send to the network */
-    publicKey: Uint8Array,
-    /** DER encoded private key for use with `decodeKey()` */
-    keyString: string,
-}
-
 export type KeyPair = {
     privateKey: Uint8Array,
     publicKey: Uint8Array
@@ -123,47 +145,14 @@ export type KeyPair = {
 export type MnemonicResult = {
     mnemonic: string,
     /** Lazily generate the key */
-    generateKey: () => Promise<KeyResult>;
+    generateKey: () => Promise<Ed25519PrivateKey>;
 }
 
 /** Generate a random mnemonic */
 export function generateMnemonic(): MnemonicResult {
     const entropy = crypto.randomBytes(32);
     const mnemonic = bip39.entropyToMnemonic(Buffer.from(entropy));
-    return { mnemonic, generateKey: () => generateKey(entropy) };
-}
-
-/**
- * Generate a new Ed25519 private/public keypair with DER-encoded private key string;
- *
- * @param entropy the 32 random bytes to seed the private key; optional.
- */
-export async function generateKey(entropy: Uint8Array = crypto.randomBytes(32)): Promise<KeyResult> {
-    if (entropy.length !== 32) {
-        throw new Error('generating an ed25519 key requires 32 bytes of entropy');
-    }
-
-    const keyPair = await keyFromEntropy(entropy);
-    const keyString = encodePrivateKey(keyPair.privateKey);
-
-    return { ...keyPair, keyString };
-}
-
-/** Recover a keypair from a mnemonic sentence */
-export async function keyFromMnemonic(mnemonic: string): Promise<KeyPair> {
-    const entropy = decodeHex(bip39.mnemonicToEntropy(mnemonic));
-    return keyFromEntropy(entropy);
-}
-
-async function keyFromEntropy(entropy: Uint8Array): Promise<KeyPair> {
-    if (entropy.length !== 32) {
-        throw Error('entropy length must be 32 bytes');
-    }
-
-    const seed = await deriveSeed(entropy);
-    const { secretKey: privateKey, publicKey } = nacl.sign.keyPair.fromSeed(new Uint8Array(seed));
-
-    return { privateKey, publicKey };
+    return { mnemonic, generateKey: () => Ed25519PrivateKey.generate(entropy) };
 }
 
 // duplicating what is done here:
@@ -213,7 +202,7 @@ export class KeyMismatchException extends Error {
 }
 
 const hmacAlgo = 'sha384';
-export async function createKeystore(privateKey: Uint8Array, passphrase: string): Promise<Uint8Array> {
+async function createKeystore(privateKey: Uint8Array, passphrase: string): Promise<Uint8Array> {
     // all values taken from https://github.com/ethereumjs/ethereumjs-wallet/blob/de3a92e752673ada1d78f95cf80bc56ae1f59775/src/index.ts#L25
     const dkLen = 32;
     const c = 262144;
@@ -251,7 +240,7 @@ export async function createKeystore(privateKey: Uint8Array, passphrase: string)
     return Buffer.from(JSON.stringify(keystore));
 }
 
-export async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string): Promise<KeyPair> {
+async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string): Promise<KeyPair> {
     const keystore: Keystore = JSON.parse(Buffer.from(keystoreBytes).toString());
 
     if (keystore.version !== 1) {

@@ -1,17 +1,12 @@
 import {
-    encodePrivateKey,
-    decodePrivateKey,
-    keyFromMnemonic,
-    encodePublicKey,
     generateMnemonic,
-    generateKey,
     createKeystore,
-    loadKeystore, decodePublicKey
+    loadKeystore,
 } from '../src/Keys';
 
 import * as nacl from 'tweetnacl';
 
-const privKey = Uint8Array.of(
+const privKeyBytes = Uint8Array.of(
     -37, 72, 75, -126, -114, 100, -78, -40, -15, 44, -29, -64, -96, -23, 58, 11, -116, -50,
     122, -15, -69, -113, 57, -55, 119, 50, 57, 68, -126, 83, -114, 16);
 
@@ -23,16 +18,21 @@ const pubKey = Uint8Array.of(
 
 const pubKeyStr = '302a300506032b6570032100e0c8ec2758a5879ffac226a13c0c516b799e72e35141a0dd828f94d37988a4b7';
 
-test('encodePrivateKey produces correctly encoded string', () => {
-    expect(encodePrivateKey(privKey)).toEqual(privKeyStr);
+describe('Ed25519PrivateKey', () => {
+    test('toString() produces correctly encoded string', () => {
+        const
+        expect(encodePrivateKey(privKeyBytes)).toEqual(privKeyStr);
+    });
 });
+
+
 
 test('encodePublicKey produces correctly encoded string', () => {
     expect(encodePublicKey(pubKey)).toEqual(pubKeyStr);
 });
 
 test('decodePrivateKey returns correct value', () => {
-    expect(decodePrivateKey(privKeyStr).privateKey.slice(0, 32)).toEqual(privKey);
+    expect(decodePrivateKey(privKeyStr).privateKey.slice(0, 32)).toEqual(privKeyBytes);
 });
 
 test('decodePublicKey returns correct value', () => {
@@ -41,9 +41,9 @@ test('decodePublicKey returns correct value', () => {
 
 test('encodePrivateKey is the reciprocal of decodePrivateKey', () => {
     expect(encodePrivateKey(decodePrivateKey(privKeyStr).privateKey)).toEqual(privKeyStr);
-    expect(decodePrivateKey(encodePrivateKey(privKey))).toEqual({
+    expect(decodePrivateKey(encodePrivateKey(privKeyBytes))).toEqual({
         // tweetnacl produces the expanded private key with the public key concatenated
-        privateKey: Uint8Array.of(...privKey, ...pubKey), publicKey: pubKey
+        privateKey: Uint8Array.of(...privKeyBytes, ...pubKey), publicKey: pubKey
     });
 });
 
