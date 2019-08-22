@@ -70,7 +70,7 @@ export class Ed25519PrivateKey {
         // noinspection SuspiciousTypeOfGuard
         const { secretKey: privateKey, publicKey } =
             // fromSeed takes the private key bytes and calculates the public key
-            nacl.sign.keyPair.fromSeed(bytes instanceof Uint8Array ? bytes: Uint8Array.from(bytes));
+            nacl.sign.keyPair.fromSeed(bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes));
 
         return new Ed25519PrivateKey({ privateKey, publicKey });
     }
