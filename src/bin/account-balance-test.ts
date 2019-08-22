@@ -15,13 +15,11 @@ if (!privateKey) {
 
 const client = new Client({
     operator: {
-        account: { shard: 0, realm: 0, account: 2 },
+        account: {shard: 0, realm: 0, account: 2},
         privateKey
     }
 });
 
 (async function () {
-    console.log('balance before transfer', await client.getAccountBalance());
-    await client.transferCryptoTo({ shard: 0, realm: 0, account: 3 }, 10_000);
-    console.log('balance after transfer', await client.getAccountBalance());
+    console.log('account balance', await client.getAccountBalance());
 })();

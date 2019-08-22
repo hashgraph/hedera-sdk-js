@@ -15,12 +15,14 @@ if (!privateKey) {
 }
 
 const client = new Client({
-    account: { shard: 0, realm: 0, account: 2 },
-    privateKey
+    operator: {
+        account: {shard: 0, realm: 0, account: 2},
+        privateKey
+    }
 });
 
-(async function() {
-    const { mnemonic, generateKey } = generateMnemonic();
+(async function () {
+    const {mnemonic, generateKey} = generateMnemonic();
     const privateKey = await generateKey();
 
     console.log("privateKey:", privateKey);

@@ -36,6 +36,11 @@ export type SigningOpts = PrivateKey | PubKeyAndSigner;
 
 export type Operator = { account: AccountId } & SigningOpts;
 
+export type Config = {
+    url?: string,
+    operator: Operator,
+}
+
 export const nodeAccountID = { shard: 0, realm: 0, account: 3 };
 const maxTxnFee = 10_000_000; // new testnet charges about 8M
 
@@ -45,10 +50,11 @@ export class Client {
     public readonly operatorSigner: Signer;
     public readonly operatorPublicKey: Ed25519PublicKey;
 
-    // TODO: figure out how to switch this with the real proxy
-    private readonly host: string = "http://localhost:11205";
+    private readonly url: string;
 
-    constructor(operator: Operator) {
+    // default url is our publicly hosted proxy to 0.testnet.hedera.com:50211
+    constructor({ url = "http://167.71.244.32:11205", operator }: Config) {
+        this.url = url;
         this.operator = operator;
         this.operatorAcct = operator.account;
 
@@ -118,7 +124,7 @@ export class Client {
 
     public unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs> {
         return new Promise((resolve, reject) => grpc.unary(method, {
-            host: this.host,
+            host: this.url,
             request,
             onEnd: (response) => {
                 if (response.status === Code.OK) {
