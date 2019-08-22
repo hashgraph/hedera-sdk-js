@@ -8,6 +8,7 @@ import {Client} from "../Client";
 import {checkNumber, newDuration} from "../util";
 import {Key} from "../generated/BasicTypes_pb";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
+import {Ed25519PublicKey} from "../Keys";
 
 export class AccountCreateTransaction extends TransactionBuilder {
     private body: CryptoCreateTransactionBody;
@@ -27,10 +28,8 @@ export class AccountCreateTransaction extends TransactionBuilder {
         this.setSendRecordThreshold(Number.MAX_SAFE_INTEGER);
     }
 
-    setKey(publicKey: Uint8Array): this {
-        const protoKey = new Key();
-        protoKey.setEd25519(publicKey);
-        this.body.setKey(protoKey);
+    setKey(publicKey: Ed25519PublicKey): this {
+        this.body.setKey(publicKey.toProtoKey());
         return this;
     }
 

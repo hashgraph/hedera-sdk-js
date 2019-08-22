@@ -1,5 +1,5 @@
 import {Query} from "./generated/Query_pb";
-import {decodePrivateKey} from "./Keys";
+import {Ed25519PrivateKey, Ed25519PublicKey} from "./Keys";
 
 import {grpc} from "@improbable-eng/grpc-web";
 
@@ -28,7 +28,7 @@ export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
 export type PrivateKey = { privateKey: string };
 export type PubKeyAndSigner = {
-    publicKey: Uint8Array,
+    publicKey: Ed25519PublicKey,
     signer: Signer,
 };
 
@@ -43,7 +43,7 @@ export class Client {
     public readonly operator: Operator;
     private operatorAcct: AccountId;
     public readonly operatorSigner: Signer;
-    public readonly operatorPublicKey: Uint8Array;
+    public readonly operatorPublicKey: Ed25519PublicKey;
 
     // TODO: figure out how to switch this with the real proxy
     private readonly host: string = "http://localhost:11205";
@@ -53,16 +53,16 @@ export class Client {
         this.operatorAcct = operator.account;
 
         if ((operator as PrivateKey).privateKey) {
-            const { privateKey, publicKey } = decodePrivateKey((operator as PrivateKey).privateKey);
-            this.operatorSigner = (msg) => nacl.sign(msg, privateKey);
-            this.operatorPublicKey = publicKey;
+            const privateKey = Ed25519PrivateKey.fromString((operator as PrivateKey).privateKey);
+            this.operatorSigner = (msg) => privateKey.sign(msg);
+            this.operatorPublicKey = privateKey.publicKey;
         } else {
             ({ publicKey: this.operatorPublicKey, signer: this.operatorSigner } =
                 (operator as PubKeyAndSigner));
         }
     }
 
-    createAccount(publicKey: Uint8Array, initialBalance = 100_000): Promise<{ account: AccountId }> {
+    createAccount(publicKey: Ed25519PublicKey, initialBalance = 100_000): Promise<{ account: AccountId }> {
         return new AccountCreateTransaction(this)
             .setKey(publicKey)
             .setInitialBalance(initialBalance)

@@ -31,6 +31,10 @@ export class Ed25519PublicKey {
         return new Ed25519PublicKey(decodeHex(keyStr.slice(24)));
     }
 
+    toBytes(): Uint8Array {
+        return this.keyData.slice();
+    }
+
     toString(): string {
         if (this.asString === null) {
             this.asString = encodeHex(this.keyData, ed25519PubKeyPrefix);
@@ -41,14 +45,15 @@ export class Ed25519PublicKey {
 
     toProtoKey(): Key {
         const key = new Key();
-        key.setEd25519(this.keyData);
+        // copy the key bytes so they can't modify them through this object
+        key.setEd25519(this.toBytes());
         return key;
     }
 }
 
 export class Ed25519PrivateKey {
     private readonly keyData: Uint8Array;
-    public readonly publicKey: Ed25519PublicKey;
+    readonly publicKey: Ed25519PublicKey;
     private asString: string | null = null;
 
     constructor({ privateKey, publicKey }: KeyPair) {
@@ -76,14 +81,37 @@ export class Ed25519PrivateKey {
         return this.fromSeed(decodeHex(keyStr.slice(32)));
     }
 
+    /**
+     * Recover a key from a 24-word mnemonic string.
+     *
+     * There is no corresponding `toMnemonic()` as the mnemonic cannot be recovered from the key.
+     *
+     * Instead, you must generate a mnemonic and a corresponding key in that order with
+     * `generateMnemonic()`.
+     *
+     * @link generateMnemonic
+     */
     static async fromMnemonic(mnemonic: string): Promise<Ed25519PrivateKey> {
         return this.generate(decodeHex(bip39.mnemonicToEntropy(mnemonic)));
     }
 
+    /**
+     * Recover a private key from a keystore blob previously created by `.createKeystore()`.
+     *
+     * @param keystore the keystore blob
+     * @param passphrase the passphrase used to create the keystore
+     * @throws KeyMismatchException if the passphrase is incorrect or the hash fails to validate
+     * @link createKeystore
+     */
     static async fromKeystore(keystore: Uint8Array, passphrase: string): Promise<Ed25519PrivateKey> {
         return new Ed25519PrivateKey(await loadKeystore(keystore, passphrase));
     }
 
+    /**
+     * Generate a private key from 32 bytes of entropy.
+     *
+     * @param entropy the entropy to use; defaults to 32 cryptographically random bytes
+     */
     static async generate(entropy: Uint8Array = crypto.randomBytes(32)): Promise<Ed25519PrivateKey> {
         if (entropy.length !== 32) {
             throw new Error('generating an ed25519 key requires 32 bytes of entropy');
@@ -92,6 +120,7 @@ export class Ed25519PrivateKey {
         return this.fromSeed(await deriveSeed(entropy));
     }
 
+    /** Sign the given message with this key. */
     sign(msg: Uint8Array): Uint8Array {
         return nacl.sign(msg, this.keyData);
     }
@@ -99,12 +128,19 @@ export class Ed25519PrivateKey {
     toString(): string {
         if (this.asString === null) {
             // only encode the private portion of the private key
-            this.asString = encodeHex(this.keyData.slice(0, 32), ed25519PrivKeyPrefix);
+            this.asString = encodeHex(this.keyData.subarray(0, 32), ed25519PrivKeyPrefix);
         }
 
         return this.asString;
     }
 
+    /**
+     * Create a keystore blob with a given passphrase.
+     *
+     * The key can be recovered later with `fromKeystore()`.
+     *
+     * @link fromKeystore
+     */
     createKeystore(passphrase: string): Promise<Uint8Array> {
         return createKeystore(this.keyData, passphrase);
     }
@@ -142,13 +178,20 @@ export type KeyPair = {
     publicKey: Uint8Array
 };
 
+/** result of `generateMnemonic()` */
 export type MnemonicResult = {
     mnemonic: string,
     /** Lazily generate the key */
     generateKey: () => Promise<Ed25519PrivateKey>;
 }
 
-/** Generate a random mnemonic */
+/**
+ * Generate a random 24-word mnemonic.
+ *
+ * If you are happy with the mnemonic produced you can call `.generateKey()` on the returned object.
+ *
+ * **NOTE:** Mnemonics must be saved separately as they cannot be later recovered from a given key.
+ */
 export function generateMnemonic(): MnemonicResult {
     const entropy = crypto.randomBytes(32);
     const mnemonic = bip39.entropyToMnemonic(Buffer.from(entropy));
