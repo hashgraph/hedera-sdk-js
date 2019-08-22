@@ -32,8 +32,8 @@ export abstract class TransactionBuilder {
         return this;
     }
 
-    setTransactionFee(fee: number): this {
-        this.inner.setTransactionfee(fee);
+    setTransactionFee(fee: number | BigInt): this {
+        this.inner.setTransactionfee(String(fee));
         return this;
     }
 
@@ -51,7 +51,7 @@ export abstract class TransactionBuilder {
             throw new Error('missing ID for transaction');
         }
 
-        if (this.inner.getTransactionfee() === 0) {
+        if (this.inner.getTransactionfee() === '0') {
             throw new Error('Every transaction requires setTransactionFee(). '
                 + 'This is only a maximum; the actual fee assessed may be lower.')
         }
