@@ -26,7 +26,8 @@ export type TransactionId = {
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
-export type PrivateKey = { privateKey: string };
+/** If `privateKey` is a string it will be parsed as an `Ed25519PrivateKey` */
+export type PrivateKey = { privateKey: Ed25519PrivateKey | string };
 export type PubKeyAndSigner = {
     publicKey: Ed25519PublicKey,
     signer: Signer,
@@ -58,8 +59,11 @@ export class Client {
         this.operator = operator;
         this.operatorAcct = operator.account;
 
-        if ((operator as PrivateKey).privateKey) {
-            const privateKey = Ed25519PrivateKey.fromString((operator as PrivateKey).privateKey);
+        const maybePrivateKey = (operator as PrivateKey).privateKey;
+        if (maybePrivateKey) {
+            const privateKey = maybePrivateKey instanceof Ed25519PrivateKey
+                ? maybePrivateKey
+                : Ed25519PrivateKey.fromString(maybePrivateKey);
             this.operatorSigner = (msg) => privateKey.sign(msg);
             this.operatorPublicKey = privateKey.publicKey;
         } else {
