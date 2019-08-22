@@ -39,9 +39,10 @@ for a very long time.)
 Since `update-protos.sh` will inevitably clobber these modifications, it has the feature of
 automatically applying patches defined in `patches` to the files in `src/protos` after overwriting.
 These patch files have the original filename and extension and then an additional `.patch` 
-extension.
+extension, e.g. `src/protos/CryptoCreate.proto` has a patch file at the path 
+`patches/CryptoCreate.proto.patch`.
 
-If you find a new file needs to be modified, you can make the modification in `src/protos`, and 
+If you find a **new** file needs to be modified, you can make the modification in `src/protos`, and 
 **before committing it**, run the following:
 
 ```shell script
@@ -50,3 +51,7 @@ $ git diff src/proto/[proto file] > patches/[proto file].patch
 
 Then check-in the `.patch` file that was created and commit it as well as the change to the Protobuf
 file. Your modification will then be preserved across `update-protos.sh` runs.
+
+If you need to add modifications to an existing patch file, you need to recreate the patch file
+that contains both existing modifications as well as new modifications. If you run into this and
+don't know how to proceed, don't be afraid to ask for help.
