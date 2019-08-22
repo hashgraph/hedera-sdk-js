@@ -21,10 +21,10 @@ const client = new Client({
 
 (async function() {
     const { mnemonic, generateKey } = generateMnemonic();
-    const { publicKey, keyString } = await generateKey();
+    const privateKey = await generateKey();
 
-    console.log("privateKey:", keyString);
+    console.log("privateKey:", privateKey);
     console.log("mnemonic:", mnemonic);
 
-    console.log(await client.createAccount(publicKey));
+    console.log(await client.createAccount(privateKey.publicKey));
 })();

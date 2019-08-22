@@ -7,8 +7,5 @@ export {Transaction} from './src/Transaction';
 
 export {
     Ed25519PrivateKey, Ed25519PublicKey,
-    decodePrivateKey, decodePublicKey,
-    generateKey, generateMnemonic, keyFromMnemonic,
-    loadKeystore, createKeystore,
-    KeyMismatchException
+    generateMnemonic, KeyMismatchException
 } from './src/Keys';

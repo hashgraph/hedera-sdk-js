@@ -56,7 +56,7 @@ export class Ed25519PrivateKey {
     readonly publicKey: Ed25519PublicKey;
     private asString: string | null = null;
 
-    constructor({ privateKey, publicKey }: KeyPair) {
+    private constructor({ privateKey, publicKey }: RawKeyPair) {
         if (privateKey.length !== nacl.sign.secretKeyLength) {
             throw new Error('invalid private key');
         }
@@ -65,20 +65,21 @@ export class Ed25519PrivateKey {
         this.publicKey = new Ed25519PublicKey(publicKey);
     }
 
-    private static fromSeed(seed: Uint8Array): Ed25519PrivateKey {
+    static fromBytes(bytes: Uint8Array): Ed25519PrivateKey {
         const { secretKey: privateKey, publicKey } =
             // fromSeed takes the private key bytes and calculates the public key
-            nacl.sign.keyPair.fromSeed(seed);
+            nacl.sign.keyPair.fromSeed(bytes);
 
         return new Ed25519PrivateKey({ privateKey, publicKey });
     }
 
+    /** Recover a key from a hex-encoded DER structure */
     static fromString(keyStr: string): Ed25519PrivateKey {
         if (keyStr.length !== 96 || !keyStr.startsWith(ed25519PrivKeyPrefix)) {
             throw new Error("invalid private key: " + keyStr);
         }
 
-        return this.fromSeed(decodeHex(keyStr.slice(32)));
+        return this.fromBytes(decodeHex(keyStr.slice(32)));
     }
 
     /**
@@ -117,12 +118,18 @@ export class Ed25519PrivateKey {
             throw new Error('generating an ed25519 key requires 32 bytes of entropy');
         }
 
-        return this.fromSeed(await deriveSeed(entropy));
+        return this.fromBytes(await deriveSeed(entropy));
     }
 
     /** Sign the given message with this key. */
     sign(msg: Uint8Array): Uint8Array {
         return nacl.sign(msg, this.keyData);
+    }
+
+    toBytes(): Uint8Array {
+        // copy the bytes so they can't be modified accidentally
+        // only copy the private key portion since that's what we're expecting on the other end
+        return this.keyData.slice(0, 32);
     }
 
     toString(): string {
@@ -173,8 +180,10 @@ function decodeHex(hex: String): Uint8Array {
 
 const pbkdf2 = util.promisify(crypto.pbkdf2);
 
-export type KeyPair = {
+export type RawKeyPair = {
+    /** 32-byte raw Ed25519 private key */
     privateKey: Uint8Array,
+    /** 32-byte raw Ed25519 public key */
     publicKey: Uint8Array
 };
 
@@ -283,7 +292,7 @@ async function createKeystore(privateKey: Uint8Array, passphrase: string): Promi
     return Buffer.from(JSON.stringify(keystore));
 }
 
-async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string): Promise<KeyPair> {
+async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string): Promise<RawKeyPair> {
     const keystore: Keystore = JSON.parse(Buffer.from(keystoreBytes).toString());
 
     if (keystore.version !== 1) {
