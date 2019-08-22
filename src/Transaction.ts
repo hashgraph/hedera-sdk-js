@@ -21,13 +21,14 @@ import {TransactionGetReceiptQuery} from "./generated/TransactionGetReceipt_pb";
 import {Query} from "./generated/Query_pb";
 import {Message} from "google-protobuf";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
+import {Ed25519PrivateKey, Ed25519PublicKey} from "./Keys";
 
 /**
  * Signature/public key pairs are passed around as objects
  */
 export type SignatureAndKey = {
     signature: Uint8Array,
-    publicKey: Uint8Array,
+    publicKey: Ed25519PublicKey,
 };
 
 const receiptInitialDelayMs = 1000;
@@ -55,7 +56,7 @@ export class Transaction {
 
     addSignature({ signature, publicKey }: SignatureAndKey): this {
         const sigPair = new SignaturePair();
-        sigPair.setPubkeyprefix(publicKey);
+        sigPair.setPubkeyprefix(publicKey.toBytes());
         sigPair.setEd25519(signature);
 
         const sigMap = this.inner.getSigmap() || new SignatureMap();
@@ -65,10 +66,11 @@ export class Transaction {
         return this;
     }
 
-    sign(privateKey: Uint8Array): this {
-        const signature = nacl.sign(this.inner.getBodybytes_asU8(), privateKey);
-        const { publicKey } = nacl.sign.keyPair.fromSecretKey(privateKey);
-        return this.addSignature({ signature, publicKey });
+    sign(privateKey: Ed25519PrivateKey): this {
+        return this.addSignature({
+            signature: privateKey.sign(this.inner.getBodybytes_asU8()),
+            publicKey: privateKey.publicKey
+        });
     }
 
     /**
@@ -78,7 +80,7 @@ export class Transaction {
      * @param publicKey the public key that can be used to verify the returned signature
      * @param signer
      */
-    async signWith(publicKey: Uint8Array, signer: Signer): Promise<this> {
+    async signWith(publicKey: Ed25519PublicKey, signer: Signer): Promise<this> {
         const signResult = signer(this.inner.getBodybytes_asU8());
         const signature: Uint8Array = signResult instanceof Promise
             ? await signResult
