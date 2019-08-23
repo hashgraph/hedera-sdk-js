@@ -86,7 +86,7 @@ $ sudo apt-get install protobuf-compiler libprotobuf-dev
 This SDK talks to Hedera Hashgraph through [the gRPC-Web protocol] which allows it to function
 in a browser. By default, the SDK points to a public free proxy that connects through to
 `0.testnet.hedera.com:50211`. If you want to change this endpoint or simply host your own proxy,
-a script to easy start an Envoy proxy in Docker is provided:
+a script to easily start an Envoy proxy in Docker is provided:
 
 ```shell script
 # this script assumes that `envoy.yaml` is in the current working directory
