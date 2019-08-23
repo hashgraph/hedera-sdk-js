@@ -55,7 +55,7 @@ await client.transferCryptoTo({ shard: 0, realm: 0, account: ___ }, 10_000_000);
 import {Ed25519PrivateKey} from "@hashgraph/sdk";
 
 // generate a new, cryptographically random private key
-const privateKey = await Ed25519PublicKey.generate();
+const privateKey = await Ed25519PrivateKey.generate();
 const publicKey = privateKey.publicKey;
 
 // second parameter is optional initial balance for new account, transferred from operator account
