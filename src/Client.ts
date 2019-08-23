@@ -53,8 +53,9 @@ export class Client {
 
     private readonly url: string;
 
-    // default url is our publicly hosted proxy to 0.testnet.hedera.com:50211
-    constructor({ url = "http://167.71.244.32:11205", operator }: Config) {
+    // default url is a proxy to 0.testnet.hedera.com:50211 generously hosted by MyHederaWallet.com
+    // mainnet proxy to come later; this url may change accordingly
+    constructor({ url = "https://grpc-web.myhederawallet.com", operator }: Config) {
         this.url = url;
         this.operator = operator;
         this.operatorAcct = operator.account;

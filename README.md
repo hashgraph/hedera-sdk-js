@@ -1,24 +1,103 @@
-### Prerequisites
+# Hedera Hashgraph Javascript/Typescript SDK
 
-You must have the official Protobufs compiler, `protoc`, installed:
+> The Javascript/Typescript SDK for interacting with [Hedera Hashgraph]: the official distributed consensus
+> platform built using the hashgraph consensus algorithm for fast, fair and secure
+> transactions. Hedera enables and empowers developers to build an entirely new
+> class of decentralized applications.
+
+[Hedera Hashgraph]: https://hedera.com/
+
+## Usage
+
+This SDK supports both running in the browser (with Webpack) and in Node.
+
+(Code examples using `await` assume an `async` context.)
+
+#### Installation
+```shell script
+# with NPM
+$ npm install --save @hashgraph/sdk
+# with Yarn
+$ yarn add @hashgraph/sdk
+```
+
+#### Creating a client
+```typescript
+import {Client} from "@hashgraph/sdk";
+
+const client = new Client({ 
+    // this key defaults to this url, a public free proxy to the Hedera public testnet
+    // generously hosted by MyHederaWallet.com
+    url: "https://grpc-web.myhederawallet.com",
+    operator: {
+        // the account which signs transactions and query payments by default
+        account: { shard: 0, realm: 0, account: ___ },
+        // the private key used to sign the transactions, either encoded as a string
+        // or as an `Ed25519PrivateKey` type 
+        privateKey: "..."
+    },
+});
+```
+
+#### Checking your balance
+```typescript
+console.log('current account balance:', await client.getAccountBalance());
+```
+
+#### Sending a transfer
+```typescript
+// the amount parameter can either be a `number` or an ESNext `BigInt` type
+await client.transferCryptoTo({ shard: 0, realm: 0, account: ___ }, 10_000_000);
+```
+
+#### Creating a new Account
+```typescript
+import {Ed25519PrivateKey} from "@hashgraph/sdk";
+
+// generate a new, cryptographically random private key
+const privateKey = await Ed25519PrivateKey.generate();
+
+// second parameter is optional initial balance for new account, transferred from operator account
+const newAccount = await client.createAccount(privateKey, 10_000_000);
+
+console.log('new account: ', newAccount, ' private key: ', privateKey.toString());
+```
+
+## Development
+
+To build the SDK from source, you must have the official Protobufs compiler, `protoc`, installed:
 
 Arch (with Pikaur):
 ```shell script
+# Pacman
+$ sudo pacman -S protobuf
+# with Pikaur
 $ pikaur -S protobuf
 ```
 
-(Optional) Start the Hedera testnet image (ask someone for a copy):
+Ubuntu/Debian:
 ```shell script
-$ docker run --name hedera --network host testnet
+# libprotobuf-dev contains the Protobuf definitions for standard types
+$ sudo apt-get install protobuf-compiler libprotobuf-dev
 ```
 
-You also need an Envoy HTTP proxy running (optionally change the endpoint in `envoy.yaml`):
+### Hosting your own Envoy Proxy
+
+This SDK talks to Hedera Hashgraph through [the gRPC-Web protocol] which allows it to function
+in a browser. By default, the SDK points to a public free proxy that connects through to
+`0.testnet.hedera.com:50211`. If you want to change this endpoint or simply host your own proxy,
+a script to easy start an Envoy proxy in Docker is provided:
+
 ```shell script
 # this script assumes that `envoy.yaml` is in the current working directory
 $ ./scripts/start-envoy.sh
 ```
 
-### Updating Protobufs
+You can modify the endpoint to connect to in `envoy.yaml`.
+
+[the gRPC-Web protocol]: https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-WEB.md
+
+#### Updating Protobufs
 If the protobuf files are ever found to be out of sync, you can update them easily as follows:
 ```shell script
 $ ./scripts/update-protos.sh
@@ -27,7 +106,7 @@ $ ./scripts/update-protos.sh
 This will temporarily clone https://github.com/hashgraph/hedera-protobuf and copy the protobufs from
 there.
 
-### NOTE: some Protobufs have to be manually patched
+#### NOTE: some Protobufs have to be manually patched
 In most places where `sint64` or `uint64` is used in the protobufs, they have to be patched
 to annotate these fields as `[jstype=JS_STRING]` or the Protobufs-JS library will try to decode
 them as JS `number` types which can only represent exact integers in the range `[-2^53, 2^53 - 1]`.
@@ -52,6 +131,22 @@ $ git diff src/proto/[proto file] > patches/[proto file].patch
 Then check-in the `.patch` file that was created and commit it as well as the change to the Protobuf
 file. Your modification will then be preserved across `update-protos.sh` runs.
 
-If you need to add modifications to an existing patch file, you need to recreate the patch file
+If you need to add modifications to an **existing** patch file, you need to recreate the patch file
 that contains both existing modifications as well as new modifications. If you run into this and
 don't know how to proceed, don't be afraid to ask for help.
+
+### LICENSE
+
+Copyright 2019 Hedera Hashgraph LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

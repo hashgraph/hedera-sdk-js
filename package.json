@@ -1,11 +1,11 @@
 {
-  "name": "hedera-sdk-js",
+  "name": "@hashgraph/sdk",
   "version": "0.1.0",
   "description": "Typescript SDK for the Hedera Hashgraph network API",
   "main": "index.js",
   "repository": "https://gitlab.launchbadge.com/hedera/hedera-sdk-js",
   "author": "Launchbadge <contact@launchbadge.com>",
-  "license": "NONE",
+  "license": "Apache-2.0",
   "scripts": {
     "prepare": "scripts/compile-protos.sh && tsc",
     "test": "jest",
