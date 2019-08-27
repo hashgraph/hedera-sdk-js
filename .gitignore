@@ -4,4 +4,8 @@ yarn-error*
 .npmrc
 
 # ignores javascript files compiled from typescript
-**/*.js*
+index-web.js
+index-node.js
+src/**/*.js
+**/*.js.map
+**/*.d.ts

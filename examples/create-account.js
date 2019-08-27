@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import {Client, generateMnemonic} from "@hashgraph/sdk";
+const {Client, generateMnemonic} = require("@hashgraph/sdk");
 
 const privateKey = process.env['OPERATOR_KEY'];
 

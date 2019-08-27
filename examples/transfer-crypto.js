@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import {Client} from "@hashgraph/sdk";
+const {Client} = require("@hashgraph/sdk");
 
 const privateKey = process.env['OPERATOR_KEY'];
 
