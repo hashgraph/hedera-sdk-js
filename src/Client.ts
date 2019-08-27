@@ -77,6 +77,7 @@ export class Client {
         return new AccountCreateTransaction(this)
             .setKey(publicKey)
             .setInitialBalance(initialBalance)
+            .setTransactionFee(10_000_000)
             .build()
             .executeForReceipt()
             .then((receipt) => ({

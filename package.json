@@ -2,16 +2,20 @@
   "name": "@hashgraph/sdk",
   "version": "0.1.0",
   "description": "Typescript SDK for the Hedera Hashgraph network API",
-  "main": "index.js",
+  "main": "index-node.js",
+  "browser": "index-web.js",
   "repository": "https://gitlab.launchbadge.com/hedera/hedera-sdk-js",
   "author": "Launchbadge <contact@launchbadge.com>",
   "license": "Apache-2.0",
   "scripts": {
     "prepare": "scripts/compile-protos.sh && tsc",
     "test": "jest",
-    "create-account-test": "node src/bin/create-account-test.js"
+    "create-account-test": "node examples/create-account.js"
   },
-  "files": ["src/**", "index.ts"],
+  "files": [
+    "src/**",
+    "index-*.*"
+  ],
   "dependencies": {
     "@types/google-protobuf": "^3.2.7",
     "bip39": "^3.0.2",

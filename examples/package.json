@@ -1,0 +1,17 @@
+{
+  "name": "hashgraph-sdk-examples",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "prepare": "tsc",
+    "create-account": "create-account.js",
+    "get-account-balance": "get-account-balance.js",
+    "transfer-crypto": "transfer-crypto.js"
+  },
+  "dependencies": {
+    "@hashgraph/sdk": "file:../"
+  },
+  "devDependencies": {
+    "typescript": "^3.5.3"
+  }
+}
