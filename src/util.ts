@@ -6,6 +6,7 @@ import {AccountId, TransactionId} from "./Client";
 import {ResponseHeader} from "./generated/ResponseHeader_pb";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";
+import BigNumber from "bignumber.js";
 
 export function orThrow<T>(val?: T): T {
     if (val === undefined || val === null) {
@@ -15,7 +16,7 @@ export function orThrow<T>(val?: T): T {
     return val;
 }
 
-export function getProtoTxnId({account, validStartSeconds, validStartNanos}: TransactionId): TransactionID {
+export function getProtoTxnId({ account, validStartSeconds, validStartNanos }: TransactionId): TransactionID {
     const txnId = new TransactionID();
     txnId.setAccountid(getProtoAccountId(account));
 
@@ -74,10 +75,10 @@ export function isPrecheckCodeOk(code: number, unknownOk = false): boolean {
 }
 
 const reversePrechecks: { [code: number]: string } = Object.entries(ResponseCodeEnum)
-    .reduce((map, [name, code]) => ({...map, [code]: name}), {});
+    .reduce((map, [name, code]) => ({ ...map, [code]: name }), {});
 export const reversePrecheck = (code: number): string => reversePrechecks[code] || `unknown precheck code: ${code}`;
 
-export function getProtoAccountId({shard, realm, account}: AccountId): AccountID {
+export function getProtoAccountId({ shard, realm, account }: AccountId): AccountID {
     const acctId = new AccountID();
     acctId.setShardnum(shard);
     acctId.setRealmnum(realm);
@@ -138,12 +139,12 @@ export function handlePrecheck(resp_: TransactionResponse | undefined): Transact
     }
 }
 
-const tinybarMaxSignedBigint = BigInt(1) << BigInt(63) - BigInt(1);
-const tinybarMinSignedBigint = -tinybarMaxSignedBigint - BigInt(1);
+const maxTinybarBignum = new BigNumber(2).pow(63).minus(1);
+const minTinybarBignum = new BigNumber(2).pow(63).negated();
 
-export function checkNumber(amount: number | BigInt): void {
-    if (typeof amount === 'bigint' && (amount > tinybarMaxSignedBigint || amount < tinybarMinSignedBigint)) {
-        throw new Error('`amount` as bigint must be in the range [-2^63, 2^63)');
+export function checkNumber(amount: number | BigNumber): void {
+    if (amount instanceof BigNumber && (!amount.isInteger() || amount.gt(maxTinybarBignum) || amount.lt(minTinybarBignum))) {
+        throw new Error('`amount` as BigNumber must be an integer in the range [-2^63, 2^63)');
     } else if (typeof amount === 'number' && !Number.isSafeInteger(amount)) {
         throw new TypeError('`amount` as number must be in the range [-2^53, 2^53 - 1)');
     }
