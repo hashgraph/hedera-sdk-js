@@ -1,3 +1,5 @@
+[![NPM](https://img.shields.io/npm/l/@hashgraph/sdk)](https://www.npmjs.com/package/@hashgraph/sdk)
+
 # Hedera Hashgraph Javascript/Typescript SDK
 
 > The Javascript/Typescript SDK for interacting with [Hedera Hashgraph]: the official distributed consensus
