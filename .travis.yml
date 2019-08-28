@@ -1,0 +1,18 @@
+language: node
+node_js:
+  - 11.15.0
+
+cache: yarn
+
+before_install:
+  - sudo apt-get install -y protobuf-compiler libprotobuf-dev
+
+addons:
+  apt:
+    update: true
+
+before_script:
+  - yarn
+
+script:
+  - yarn test
