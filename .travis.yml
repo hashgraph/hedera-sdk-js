@@ -1,0 +1,21 @@
+# needed to get a protobuf-compiler that supports Protobufs v3
+dist: bionic
+
+language: node_js
+node_js:
+  - 11.15.0
+
+cache: yarn
+
+addons:
+  apt:
+    update: true
+    packages:
+      - protobuf-compiler
+      - libprotobuf-dev
+
+before_script:
+  - yarn
+
+script:
+  - yarn test
