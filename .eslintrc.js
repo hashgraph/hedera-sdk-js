@@ -12,6 +12,10 @@ module.exports = {
     "plugin:unicorn/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
+  globals: {
+    // FIXME remove in bignumber.js refactor
+    "BigInt": "readonly"
+  },
   parserOptions: {
     parser: "@typescript-eslint/parser"
   },
@@ -21,8 +25,8 @@ module.exports = {
       webpack: {},
       typescript: {
         alwaysTryTypes: true
-      }
-    }
+      },
+    },
   },
   rules: {
     // Managed through prettier
@@ -46,6 +50,9 @@ module.exports = {
     "unicorn/filename-case": "off",
     "unicorn/prevent-abbreviations": "off",
 
+    // FIXME: remove in bignumber.js PR
+    "compat/compat": "warn",
+
     // Typescript
     "no-var": "error",
     "prefer-const": "error",
@@ -56,7 +63,10 @@ module.exports = {
     "@typescript-eslint/ban-types": "error",
     "@typescript-eslint/camelcase": "error",
     "@typescript-eslint/class-name-casing": "error",
-    "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/explicit-function-return-type": [
+        // @abonander: return types of closures should be apparent from context
+        "error", { allowExpressions: true }
+    ],
     "@typescript-eslint/explicit-member-accessibility": "error",
     "@typescript-eslint/interface-name-prefix": "error",
     "@typescript-eslint/member-delimiter-style": "error",
@@ -68,7 +78,8 @@ module.exports = {
     "@typescript-eslint/no-namespace": "error",
     "@typescript-eslint/no-parameter-properties": "error",
     "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/no-use-before-define": "error",
+    // @abonander: I prefer putting implementation details later in the file
+    "@typescript-eslint/no-use-before-define": ["error", { functions: false }],
     "@typescript-eslint/no-var-requires": "error",
     "@typescript-eslint/prefer-namespace-keyword": "error",
     "@typescript-eslint/type-annotation-spacing": "error"

@@ -20,45 +20,46 @@ const mnemonic = 'inmate flip alley wear offer often piece magnet surge toddler 
 const mnemonicKey = '302e020100300506032b6570042204203988e39bb91007f3bedcb47b0d9384463ba7d922d74d1306f7a4c8a2881fac9e';
 
 describe('Ed25519PrivateKey', () => {
-    test('toString() produces correctly encoded string', () => {
+    it('toString() produces correctly encoded string', () => {
         const privateKey = Ed25519PrivateKey.fromBytes(privKeyBytes);
-        expect(privateKey.toString()).toEqual(privKeyStr);
+        expect(privateKey.toString()).toStrictEqual(privKeyStr);
     });
 
-    test('publicKey is the same', () => {
+    it('publicKey is the same', () => {
         const privateKey = Ed25519PrivateKey.fromBytes(privKeyBytes);
-        expect(privateKey.publicKey.toBytes()).toEqual(pubKeyBytes);
+        expect(privateKey.publicKey.toBytes()).toStrictEqual(pubKeyBytes);
     });
 
-    test('fromString returns correct value', () => {
+    it('fromString returns correct value', () => {
         const privateKey = Ed25519PrivateKey.fromString(privKeyStr);
-        expect(privateKey.toBytes()).toEqual(privKeyBytes);
+        expect(privateKey.toBytes()).toStrictEqual(privKeyBytes);
     });
 
-    test('fromMnemonic() produces correct value', async () => {
+    it('fromMnemonic() produces correct value', async () => {
         const decodedKey = Ed25519PrivateKey.fromString(mnemonicKey);
         let key;
 
+        // eslint-disable-next-line no-useless-catch
         try {
             key = await Ed25519PrivateKey.fromMnemonic(mnemonic);
-        } catch (e) {
+        } catch (error) {
             // to get actual stack trace before Promise mangles it
-            throw e;
+            throw error;
         }
 
-        expect(key.toBytes()).toEqual(decodedKey.toBytes());
+        expect(key.toBytes()).toStrictEqual(decodedKey.toBytes());
     });
 });
 
 describe('Ed25519PublicKey', function () {
-    test('toString() produces correctly encoded string', () => {
+    it('toString() produces correctly encoded string', () => {
         const publicKey = new Ed25519PublicKey(pubKeyBytes);
-        expect(publicKey.toString()).toEqual(pubKeyStr);
+        expect(publicKey.toString()).toStrictEqual(pubKeyStr);
     });
 
-    test('fromString returns correct value', () => {
+    it('fromString returns correct value', () => {
         const publicKey = Ed25519PublicKey.fromString(pubKeyStr);
-        expect(publicKey.toBytes()).toEqual(pubKeyBytes);
+        expect(publicKey.toBytes()).toStrictEqual(pubKeyBytes);
     });
 });
 
@@ -67,7 +68,7 @@ test('generateMnemonic produces a recoverable private key', async () => {
 
     const key1 = await mnemonic.generateKey();
     const key2 = await Ed25519PrivateKey.fromMnemonic(mnemonic.mnemonic);
-    expect(key1.toBytes()).toEqual(key2.toBytes());
+    expect(key1.toBytes()).toStrictEqual(key2.toBytes());
 });
 
 test('createKeystore() and loadKeystore() function properly', async () => {
@@ -76,5 +77,5 @@ test('createKeystore() and loadKeystore() function properly', async () => {
     const keystoreBytes = await key1.createKeystore(passphrase);
     const key2 = await Ed25519PrivateKey.fromKeystore(keystoreBytes, passphrase);
 
-    expect(key1.toBytes()).toEqual(key2.toBytes());
+    expect(key1.toBytes()).toStrictEqual(key2.toBytes());
 });

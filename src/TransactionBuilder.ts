@@ -22,31 +22,31 @@ export abstract class TransactionBuilder {
         this.inner.setTransactionvalidduration(newDuration(120));
     }
 
-    setTransactionId(id: TransactionId): this {
+    public setTransactionId(id: TransactionId): this {
         this.inner.setTransactionid(getProtoTxnId(id));
         return this;
     }
 
-    setTransactionValidDuration(seconds: number): this {
+    public setTransactionValidDuration(seconds: number): this {
         this.inner.setTransactionvalidduration(newDuration(Math.min(seconds, maxValidDuration)));
         return this;
     }
 
-    setTransactionFee(fee: number | BigInt): this {
+    public setTransactionFee(fee: number | BigInt): this {
         this.inner.setTransactionfee(String(fee));
         return this;
     }
 
-    setNodeAccountId(nodeAccountId: AccountId): this {
+    public setNodeAccountId(nodeAccountId: AccountId): this {
         this.inner.setNodeaccountid(getProtoAccountId(nodeAccountId));
         return this;
     }
 
-    abstract get method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
+    public abstract get method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
     protected abstract doValidate(): void;
 
-    validate(): void {
+    public validate(): void {
         if (!this.inner.hasTransactionid()) {
             throw new Error('missing ID for transaction');
         }
@@ -59,7 +59,7 @@ export abstract class TransactionBuilder {
         this.doValidate();
     }
 
-    build(): Transaction {
+    public build(): Transaction {
         if (!this.inner.hasTransactionid()) {
             this.inner.setTransactionid(newTxnId(this.client.operator.account));
         }

@@ -4,12 +4,14 @@ module.exports = {
     },
     extends: ["plugin:jest/all"],
     rules: {
-        "jest/prefer-expect-assertions": "warn",
+        // @abonander: this seems redundant to me;
+        // eslint will complain if a test doesn't contain assertions
+        "jest/prefer-expect-assertions": "off",
         "jest/lowercase-name": [
             "error",
             {
                 ignore: ["describe"]
             }
-        ]
+        ],
     }
 };
