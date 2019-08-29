@@ -128,7 +128,7 @@ export class Transaction {
 
             // typecast required or we get a mismatching union type error
             if (([ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK] as number[])
-                .indexOf(receipt.getStatus()) >= 0) {
+                .includes(receipt.getStatus())) {
                 const delay = Math.floor(receiptRetryDelayMs
                     * Math.random() * (2 ** attempt - 1));
 
