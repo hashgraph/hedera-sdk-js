@@ -1,6 +1,7 @@
 # needed to get a protobuf-compiler that supports Protobufs v3
 dist: bionic
-language: node
+
+language: node_js
 node_js:
   - 11.15.0
 
