@@ -1,4 +1,6 @@
-[![NPM](https://img.shields.io/npm/l/@hashgraph/sdk)](https://www.npmjs.com/package/@hashgraph/sdk)
+[![Build Status](https://travis-ci.org/hashgraph/hedera-sdk-js.svg?branch=master)](https://travis-ci.org/hashgraph/hedera-sdk-js)
+[![npm](https://img.shields.io/npm/v/@hashgraph/sdk)](https://www.npmjs.com/package/@hashgraph/sdk)
+![NPM](https://img.shields.io/npm/l/@hashgraph/sdk)
 
 # Hedera Hashgraph Javascript/Typescript SDK
 
