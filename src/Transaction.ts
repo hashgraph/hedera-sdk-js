@@ -123,9 +123,7 @@ export class Transaction {
 
         await setTimeoutAwaitable(receiptInitialDelayMs);
 
-        const attempt = 0;
-
-        for(;;) {
+        for(let attempt = 0;/* loop will exit when transaction expires */; attempt += 1) {
             const receipt = await this.getReceipt();
 
             // typecast required or we get a mismatching union type error
