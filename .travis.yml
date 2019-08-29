@@ -6,12 +6,12 @@ node_js:
 
 cache: yarn
 
-before_install:
-  - sudo apt-get install -y protobuf-compiler libprotobuf-dev
-
 addons:
   apt:
     update: true
+    packages:
+      - protobuf-compiler
+      - libprotobuf-dev
 
 before_script:
   - yarn
