@@ -128,14 +128,16 @@ export class Transaction {
 
             // typecast required or we get a mismatching union type error
             if (([ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK] as number[])
-                .indexOf(receipt.getStatus()) > 0) {
+                .indexOf(receipt.getStatus()) >= 0) {
                 const delay = Math.floor(receiptRetryDelayMs
                     * Math.random() * (2 ** attempt - 1));
 
-                if (validStartMs + delay > validUntilMs) {
+                if (Date.now() + delay > validUntilMs) {
                     throw "timed out waiting for consensus on transaction ID: "
                         + this.txnId.toObject();
                 }
+
+                await setTimeoutAwaitable(delay);
             } else if (receipt.getStatus() !== ResponseCodeEnum.SUCCESS) {
                 throw new Error(reversePrecheck(receipt.getStatus()));
             } else {
