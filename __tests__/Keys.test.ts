@@ -19,6 +19,8 @@ const pubKeyStr = '302a300506032b6570032100e0c8ec2758a5879ffac226a13c0c516b799e7
 const mnemonic = 'inmate flip alley wear offer often piece magnet surge toddler submit right radio absent pear floor belt raven price stove replace reduce plate home';
 const mnemonicKey = '302e020100300506032b6570042204203988e39bb91007f3bedcb47b0d9384463ba7d922d74d1306f7a4c8a2881fac9e';
 
+const passphrase = 'asdf1234';
+
 describe('Ed25519PrivateKey', () => {
     it('toString() produces correctly encoded string', () => {
         const privateKey = Ed25519PrivateKey.fromBytes(privKeyBytes);
@@ -49,6 +51,14 @@ describe('Ed25519PrivateKey', () => {
 
         expect(key.toBytes()).toStrictEqual(decodedKey.toBytes());
     });
+
+    it('createKeystore() creates loadable keystores', async () => {
+        const key1 = Ed25519PrivateKey.fromBytes(privKeyBytes);
+        const keystoreBytes = await key1.createKeystore(passphrase);
+        const key2 = await Ed25519PrivateKey.fromKeystore(keystoreBytes, passphrase);
+
+        expect(key1.toBytes()).toStrictEqual(key2.toBytes());
+    });
 });
 
 describe('Ed25519PublicKey', function () {
@@ -71,11 +81,4 @@ test('generateMnemonic produces a recoverable private key', async () => {
     expect(key1.toBytes()).toStrictEqual(key2.toBytes());
 });
 
-test('createKeystore() and loadKeystore() function properly', async () => {
-    const passphrase = 'asdf1234';
-    const key1 = await Ed25519PrivateKey.generate();
-    const keystoreBytes = await key1.createKeystore(passphrase);
-    const key2 = await Ed25519PrivateKey.fromKeystore(keystoreBytes, passphrase);
 
-    expect(key1.toBytes()).toStrictEqual(key2.toBytes());
-});
