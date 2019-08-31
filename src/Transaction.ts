@@ -123,21 +123,21 @@ export class Transaction {
 
         await setTimeoutAwaitable(receiptInitialDelayMs);
 
-        const attempt = 0;
-
-        for(;;) {
+        for(let attempt = 0;/* loop will exit when transaction expires */; attempt += 1) {
             const receipt = await this.getReceipt();
 
             // typecast required or we get a mismatching union type error
             if (([ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK] as number[])
-                .indexOf(receipt.getStatus()) > 0) {
+                .includes(receipt.getStatus())) {
                 const delay = Math.floor(receiptRetryDelayMs
                     * Math.random() * (2 ** attempt - 1));
 
-                if (validStartMs + delay > validUntilMs) {
+                if (Date.now() + delay > validUntilMs) {
                     throw "timed out waiting for consensus on transaction ID: "
                         + this.txnId.toObject();
                 }
+
+                await setTimeoutAwaitable(delay);
             } else if (receipt.getStatus() !== ResponseCodeEnum.SUCCESS) {
                 throw new Error(reversePrecheck(receipt.getStatus()));
             } else {
