@@ -7,5 +7,6 @@ yarn-error*
 index-web.js
 index-node.js
 src/**/*.js
+__tests__/**/*.js
 **/*.js.map
 **/*.d.ts

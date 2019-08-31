@@ -2,7 +2,6 @@ import * as bip39 from "bip39";
 import * as nacl from "tweetnacl";
 import * as crypto from 'crypto';
 import * as util from 'util';
-import {AccountId} from "./Client";
 import {Key} from "./generated/BasicTypes_pb";
 
 // we could go through the whole BS of producing a DER-encoded structure but it's quite simple
@@ -15,7 +14,7 @@ export class Ed25519PublicKey {
     private readonly keyData: Uint8Array;
     private asString: string | null = null;
 
-    constructor(keyData: Uint8Array) {
+    public constructor(keyData: Uint8Array) {
         if (keyData.length !== nacl.sign.publicKeyLength) {
             throw new Error('invalid public key');
         }
@@ -23,7 +22,7 @@ export class Ed25519PublicKey {
         this.keyData = keyData;
     }
 
-    static fromString(keyStr: string): Ed25519PublicKey {
+    public static fromString(keyStr: string): Ed25519PublicKey {
         if (keyStr.length !== 88 || !keyStr.startsWith(ed25519PubKeyPrefix)) {
             throw new Error("invalid public key: " + keyStr);
         }
@@ -31,11 +30,11 @@ export class Ed25519PublicKey {
         return new Ed25519PublicKey(decodeHex(keyStr.slice(24)));
     }
 
-    toBytes(): Uint8Array {
+    public toBytes(): Uint8Array {
         return this.keyData.slice();
     }
 
-    toString(): string {
+    public toString(): string {
         if (this.asString === null) {
             this.asString = encodeHex(this.keyData, ed25519PubKeyPrefix);
         }
@@ -43,7 +42,7 @@ export class Ed25519PublicKey {
         return this.asString;
     }
 
-    toProtoKey(): Key {
+    public toProtoKey(): Key {
         const key = new Key();
         // copy the key bytes so they can't modify them through this object
         key.setEd25519(this.toBytes());
@@ -53,7 +52,7 @@ export class Ed25519PublicKey {
 
 export class Ed25519PrivateKey {
     private readonly keyData: Uint8Array;
-    readonly publicKey: Ed25519PublicKey;
+    public readonly publicKey: Ed25519PublicKey;
     private asString: string | null = null;
 
     private constructor({ privateKey, publicKey }: RawKeyPair) {
@@ -65,7 +64,7 @@ export class Ed25519PrivateKey {
         this.publicKey = new Ed25519PublicKey(publicKey);
     }
 
-    static fromBytes(bytes: Uint8Array): Ed25519PrivateKey {
+    public static fromBytes(bytes: Uint8Array): Ed25519PrivateKey {
         // this check is necessary because Jest breaks the prototype chain of Uint8Array
         // noinspection SuspiciousTypeOfGuard
         const { secretKey: privateKey, publicKey } =
@@ -76,7 +75,7 @@ export class Ed25519PrivateKey {
     }
 
     /** Recover a key from a hex-encoded DER structure */
-    static fromString(keyStr: string): Ed25519PrivateKey {
+    public static fromString(keyStr: string): Ed25519PrivateKey {
         if (keyStr.length !== 96 || !keyStr.startsWith(ed25519PrivKeyPrefix)) {
             throw new Error("invalid private key: " + keyStr);
         }
@@ -94,7 +93,7 @@ export class Ed25519PrivateKey {
      *
      * @link generateMnemonic
      */
-    static async fromMnemonic(mnemonic: string): Promise<Ed25519PrivateKey> {
+    public static async fromMnemonic(mnemonic: string): Promise<Ed25519PrivateKey> {
         return this.generate(decodeHex(bip39.mnemonicToEntropy(mnemonic)));
     }
 
@@ -106,7 +105,7 @@ export class Ed25519PrivateKey {
      * @throws KeyMismatchException if the passphrase is incorrect or the hash fails to validate
      * @link createKeystore
      */
-    static async fromKeystore(keystore: Uint8Array, passphrase: string): Promise<Ed25519PrivateKey> {
+    public static async fromKeystore(keystore: Uint8Array, passphrase: string): Promise<Ed25519PrivateKey> {
         return new Ed25519PrivateKey(await loadKeystore(keystore, passphrase));
     }
 
@@ -115,7 +114,7 @@ export class Ed25519PrivateKey {
      *
      * @param entropy the entropy to use; defaults to 32 cryptographically random bytes
      */
-    static async generate(entropy: Uint8Array = crypto.randomBytes(32)): Promise<Ed25519PrivateKey> {
+    public static async generate(entropy: Uint8Array = crypto.randomBytes(32)): Promise<Ed25519PrivateKey> {
         if (entropy.length !== 32) {
             throw new Error('generating an ed25519 key requires 32 bytes of entropy');
         }
@@ -124,17 +123,17 @@ export class Ed25519PrivateKey {
     }
 
     /** Sign the given message with this key. */
-    sign(msg: Uint8Array): Uint8Array {
+    public sign(msg: Uint8Array): Uint8Array {
         return nacl.sign(msg, this.keyData);
     }
 
-    toBytes(): Uint8Array {
+    public toBytes(): Uint8Array {
         // copy the bytes so they can't be modified accidentally
         // only copy the private key portion since that's what we're expecting on the other end
         return this.keyData.slice(0, 32);
     }
 
-    toString(): string {
+    public toString(): string {
         if (this.asString === null) {
             // only encode the private portion of the private key
             this.asString = encodeHex(this.keyData.subarray(0, 32), ed25519PrivKeyPrefix);
@@ -150,7 +149,7 @@ export class Ed25519PrivateKey {
      *
      * @link fromKeystore
      */
-    createKeystore(passphrase: string): Promise<Uint8Array> {
+    public createKeystore(passphrase: string): Promise<Uint8Array> {
         return createKeystore(this.keyData, passphrase);
     }
 }
@@ -164,9 +163,9 @@ function encodeHex(bytes: Uint8Array, prefix: string): string {
     }, prefix);
 }
 
-function decodeHex(hex: String): Uint8Array {
+function decodeHex(hex: string): Uint8Array {
     if (hex.length % 2 != 0) {
-        throw Error('hex code must be even length');
+        throw new Error('hex code must be even length');
     }
 
     const byteLen = hex.length / 2;
@@ -184,14 +183,14 @@ const pbkdf2 = util.promisify(crypto.pbkdf2);
 
 export type RawKeyPair = {
     /** 32-byte raw Ed25519 private key */
-    privateKey: Uint8Array,
+    privateKey: Uint8Array;
     /** 32-byte raw Ed25519 public key */
-    publicKey: Uint8Array
+    publicKey: Uint8Array;
 };
 
 /** result of `generateMnemonic()` */
 export type MnemonicResult = {
-    mnemonic: string,
+    mnemonic: string;
     /** Lazily generate the key */
     generateKey: () => Promise<Ed25519PrivateKey>;
 }
@@ -219,36 +218,36 @@ async function deriveSeed(entropy: Uint8Array): Promise<Uint8Array> {
 }
 
 export type Keystore = {
-    version: 1,
+    version: 1;
     crypto: {
         /** hex-encoded ciphertext */
-        ciphertext: string,
+        ciphertext: string;
         /** hex-encoded initialization vector */
-        cipherparams: { iv: string },
+        cipherparams: { iv: string };
         /** cipher being used */
-        cipher: 'aes-128-ctr',
+        cipher: 'aes-128-ctr';
         /** key derivation function being used */
-        kdf: 'pbkdf2',
+        kdf: 'pbkdf2';
         /** params for key derivation function */
         kdfparams: {
             /** derived key length */
-            dkLen: number,
+            dkLen: number;
             /** hex-encoded salt */
-            salt: string,
+            salt: string;
             /** iteration count */
-            c: number,
+            c: number;
             /** hash function */
-            prf: 'hmac-sha256'
-        },
+            prf: 'hmac-sha256';
+        };
         /** hex-encoded HMAC-SHA384 */
-        mac: string,
-    }
+        mac: string;
+    };
 }
 
 export class KeyMismatchException extends Error {
-    readonly hmac: string;
-    readonly expectedHmac: string;
-    constructor(hmac: Buffer, expectedHmac: Buffer) {
+    private readonly hmac: string;
+    private readonly expectedHmac: string;
+    public constructor(hmac: Buffer, expectedHmac: Buffer) {
         super('key mismatch when loading from keystore');
         this.hmac = hmac.toString('hex');
         this.expectedHmac = expectedHmac.toString('hex');

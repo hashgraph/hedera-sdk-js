@@ -12,16 +12,16 @@ import {ProtobufMessage} from "@improbable-eng/grpc-web/dist/typings/message";
 import {AccountCreateTransaction} from "./account/AccountCreateTransaction";
 import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
 
-import * as nacl from 'tweetnacl';
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import Code = grpc.Code;
+import UnaryOutput = grpc.UnaryOutput;
 
-export type AccountId = { shard: number, realm: number, account: number };
+export type AccountId = { shard: number; realm: number; account: number };
 
 export type TransactionId = {
-    account: AccountId,
-    validStartSeconds: number,
-    validStartNanos: number,
+    account: AccountId;
+    validStartSeconds: number;
+    validStartNanos: number;
 };
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
@@ -29,8 +29,8 @@ export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 /** If `privateKey` is a string it will be parsed as an `Ed25519PrivateKey` */
 export type PrivateKey = { privateKey: Ed25519PrivateKey | string };
 export type PubKeyAndSigner = {
-    publicKey: Ed25519PublicKey,
-    signer: Signer,
+    publicKey: Ed25519PublicKey;
+    signer: Signer;
 };
 
 export type SigningOpts = PrivateKey | PubKeyAndSigner;
@@ -38,16 +38,15 @@ export type SigningOpts = PrivateKey | PubKeyAndSigner;
 export type Operator = { account: AccountId } & SigningOpts;
 
 export type Config = {
-    url?: string,
-    operator: Operator,
+    url?: string;
+    operator: Operator;
 }
 
 export const nodeAccountID = { shard: 0, realm: 0, account: 3 };
-const maxTxnFee = 10_000_000; // new testnet charges about 8M
 
 export class Client {
     public readonly operator: Operator;
-    private operatorAcct: AccountId;
+    private readonly operatorAcct: AccountId;
     public readonly operatorSigner: Signer;
     public readonly operatorPublicKey: Ed25519PublicKey;
 
@@ -55,7 +54,7 @@ export class Client {
 
     // default url is a proxy to 0.testnet.hedera.com:50211 generously hosted by MyHederaWallet.com
     // mainnet proxy to come later; this url may change accordingly
-    constructor({ url = "https://grpc-web.myhederawallet.com", operator }: Config) {
+    public constructor({ url = "https://grpc-web.myhederawallet.com", operator }: Config) {
         this.url = url;
         this.operator = operator;
         this.operatorAcct = operator.account;
@@ -65,7 +64,7 @@ export class Client {
             const privateKey = maybePrivateKey instanceof Ed25519PrivateKey
                 ? maybePrivateKey
                 : Ed25519PrivateKey.fromString(maybePrivateKey);
-            this.operatorSigner = (msg) => privateKey.sign(msg);
+            this.operatorSigner = (msg): Uint8Array => privateKey.sign(msg);
             this.operatorPublicKey = privateKey.publicKey;
         } else {
             ({ publicKey: this.operatorPublicKey, signer: this.operatorSigner } =
@@ -73,7 +72,7 @@ export class Client {
         }
     }
 
-    createAccount(publicKey: Ed25519PublicKey, initialBalance = 100_000): Promise<{ account: AccountId }> {
+    public createAccount(publicKey: Ed25519PublicKey, initialBalance = 100_000): Promise<{ account: AccountId }> {
         return new AccountCreateTransaction(this)
             .setKey(publicKey)
             .setInitialBalance(initialBalance)
@@ -96,7 +95,7 @@ export class Client {
      * @param recipient
      * @param amount
      */
-    transferCryptoTo(recipient: AccountId, amount: number | BigInt): Promise<TransactionId> {
+    public transferCryptoTo(recipient: AccountId, amount: number | BigInt): Promise<TransactionId> {
         const txn = new CryptoTransferTransaction(this)
             .addSender(this.operatorAcct, amount)
             .addRecipient(recipient, amount)
@@ -106,7 +105,7 @@ export class Client {
         return txn.executeForReceipt().then(() => txn.getTransactionId());
     }
 
-    getAccountBalance(): Promise<BigInt> {
+    public getAccountBalance(): Promise<BigInt> {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
         balanceQuery.setAccountid(getProtoAccountId(this.operatorAcct));
 
@@ -132,9 +131,8 @@ export class Client {
         return new Promise((resolve, reject) => grpc.unary(method, {
             host: this.url,
             request,
-            onEnd: (response) => {
-                if (response.status === Code.OK) {
-                    // @ts-ignore TS thinks `response.message` is a generic `ProtobufMessage`
+            onEnd: (response: UnaryOutput<Rs>) => {
+                if (response.status === Code.OK && response.message) {
                     resolve(response.message);
                 } else {
                     reject(new Error(response.statusMessage));

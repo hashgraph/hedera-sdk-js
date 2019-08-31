@@ -4,7 +4,6 @@ import {Duration} from "./generated/Duration_pb";
 import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
 import {AccountId, TransactionId} from "./Client";
 import {ResponseHeader} from "./generated/ResponseHeader_pb";
-import {Transaction} from "./generated/Transaction_pb";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";
 
@@ -54,7 +53,7 @@ export function timestampToMs(timestamp: Timestamp): number {
 
 export function newDuration(seconds: number): Duration {
     if (!Number.isSafeInteger(seconds)) {
-        throw new Error('duration cannot have fractional seconds')
+        throw new TypeError('duration cannot have fractional seconds')
     }
 
     const duration = new Duration();
@@ -142,11 +141,11 @@ export function handlePrecheck(resp_: TransactionResponse | undefined): Transact
 const tinybarMaxSignedBigint = BigInt(1) << BigInt(63) - BigInt(1);
 const tinybarMinSignedBigint = -tinybarMaxSignedBigint - BigInt(1);
 
-export function checkNumber(amount: number | BigInt) {
+export function checkNumber(amount: number | BigInt): void {
     if (typeof amount === 'bigint' && (amount > tinybarMaxSignedBigint || amount < tinybarMinSignedBigint)) {
         throw new Error('`amount` as bigint must be in the range [-2^63, 2^63)');
     } else if (typeof amount === 'number' && !Number.isSafeInteger(amount)) {
-        throw new Error('`amount` as number must be in the range [-2^53, 2^53 - 1)');
+        throw new TypeError('`amount` as number must be in the range [-2^53, 2^53 - 1)');
     }
 }
 

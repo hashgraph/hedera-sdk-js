@@ -2,7 +2,6 @@ import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {TransactionBody} from "./generated/TransactionBody_pb";
 import {Client, Signer, TransactionId} from "./Client";
 import {SignatureMap, SignaturePair, TransactionID} from "./generated/BasicTypes_pb";
-import * as nacl from "tweetnacl";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {TransactionReceipt} from "./generated/TransactionReceipt_pb";
@@ -11,7 +10,7 @@ import {
     getMyTxnId,
     handlePrecheck,
     handleQueryPrecheck,
-    orThrow, reqDefined,
+    orThrow,
     reversePrecheck,
     setTimeoutAwaitable,
     timestampToMs
@@ -27,8 +26,8 @@ import {Ed25519PrivateKey, Ed25519PublicKey} from "./Keys";
  * Signature/public key pairs are passed around as objects
  */
 export type SignatureAndKey = {
-    signature: Uint8Array,
-    publicKey: Ed25519PublicKey,
+    signature: Uint8Array;
+    publicKey: Ed25519PublicKey;
 };
 
 const receiptInitialDelayMs = 1000;
@@ -37,12 +36,12 @@ const receiptRetryDelayMs = 500;
 export class Transaction {
     private client: Client;
 
-    private inner: Transaction_;
-    private txnId: TransactionID;
-    private validDurationSeconds: number;
-    private method: UnaryMethodDefinition<Transaction_, TransactionResponse>;
+    private readonly inner: Transaction_;
+    private readonly txnId: TransactionID;
+    private readonly validDurationSeconds: number;
+    private readonly method: UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
-    constructor(client: Client, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>) {
+    public constructor(client: Client, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>) {
         this.client = client;
         this.inner = inner;
         this.txnId = orThrow(body.getTransactionid());
@@ -50,11 +49,11 @@ export class Transaction {
         this.method = method;
     }
 
-    getTransactionId(): TransactionId {
+    public getTransactionId(): TransactionId {
         return getMyTxnId(this.txnId);
     }
 
-    addSignature({ signature, publicKey }: SignatureAndKey): this {
+    public addSignature({ signature, publicKey }: SignatureAndKey): this {
         const sigPair = new SignaturePair();
         sigPair.setPubkeyprefix(publicKey.toBytes());
         sigPair.setEd25519(signature);
@@ -66,7 +65,7 @@ export class Transaction {
         return this;
     }
 
-    sign(privateKey: Ed25519PrivateKey): this {
+    public sign(privateKey: Ed25519PrivateKey): this {
         return this.addSignature({
             signature: privateKey.sign(this.inner.getBodybytes_asU8()),
             publicKey: privateKey.publicKey
@@ -80,7 +79,7 @@ export class Transaction {
      * @param publicKey the public key that can be used to verify the returned signature
      * @param signer
      */
-    async signWith(publicKey: Ed25519PublicKey, signer: Signer): Promise<this> {
+    public async signWith(publicKey: Ed25519PublicKey, signer: Signer): Promise<this> {
         const signResult = signer(this.inner.getBodybytes_asU8());
         const signature: Uint8Array = signResult instanceof Promise
             ? await signResult
@@ -90,7 +89,7 @@ export class Transaction {
         return this;
     }
 
-    async execute(): Promise<TransactionId> {
+    public async execute(): Promise<TransactionId> {
         const sigMap = this.inner.getSigmap();
 
         if (!sigMap || sigMap.getSigpairList().length === 0) {
@@ -102,7 +101,7 @@ export class Transaction {
         return this.getTransactionId();
     }
 
-    async executeForReceipt(): Promise<TransactionReceipt> {
+    public async executeForReceipt(): Promise<TransactionReceipt> {
         await this.execute();
         return this.waitForReceipt()
     }
@@ -124,16 +123,16 @@ export class Transaction {
 
         await setTimeoutAwaitable(receiptInitialDelayMs);
 
-        let attempt = 0;
+        const attempt = 0;
 
-        while (true) {
+        for(;;) {
             const receipt = await this.getReceipt();
 
             // typecast required or we get a mismatching union type error
             if (([ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK] as number[])
                 .indexOf(receipt.getStatus()) > 0) {
                 const delay = Math.floor(receiptRetryDelayMs
-                    * Math.random() * (Math.pow(2, attempt) - 1));
+                    * Math.random() * (2 ** attempt - 1));
 
                 if (validStartMs + delay > validUntilMs) {
                     throw "timed out waiting for consensus on transaction ID: "
@@ -147,7 +146,7 @@ export class Transaction {
         }
     }
 
-    toProto(): Transaction_ {
+    public toProto(): Transaction_ {
         return Message.cloneMessage(this.inner);
     }
 }
