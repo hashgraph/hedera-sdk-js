@@ -6,6 +6,7 @@ import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
+import BigNumber from "bignumber.js";
 
 /**
  * Max duration of transactions on the network is 2 minutes
@@ -32,7 +33,7 @@ export abstract class TransactionBuilder {
         return this;
     }
 
-    public setTransactionFee(fee: number | BigInt): this {
+    public setTransactionFee(fee: number | BigNumber): this {
         this.inner.setTransactionfee(String(fee));
         return this;
     }

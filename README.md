@@ -50,7 +50,7 @@ console.log('current account balance:', await client.getAccountBalance());
 
 #### Sending a transfer
 ```typescript
-// the amount parameter can either be a `number` or an ESNext `BigInt` type
+// the amount parameter can either be a `number` or a bignumber.js type
 await client.transferCryptoTo({ shard: 0, realm: 0, account: ___ }, 10_000_000);
 ```
 

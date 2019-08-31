@@ -10,6 +10,7 @@ import {
     TransferList
 } from "../generated/CryptoTransfer_pb";
 import {checkNumber, getProtoAccountId, reqDefined} from "../util";
+import BigNumber from "bignumber.js";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
     private readonly body: CryptoTransferTransactionBody;
@@ -31,15 +32,15 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         }
 
         const sum = amts.reduce(
-            (lastSum, acctAmt) => lastSum + BigInt(acctAmt.getAmount()),
-            BigInt(0));
+            (lastSum, acctAmt) => lastSum.plus(acctAmt.getAmount()),
+            new BigNumber(0));
 
-        if (sum !== BigInt(0)) {
+        if (!sum.isZero()) {
             throw new Error('CryptoTransferTransaction must have zero sum; got: ' + sum);
         }
     }
 
-    addSender(accountId: AccountId, amount: number | BigInt): this {
+    addSender(accountId: AccountId, amount: number | BigNumber): this {
         if (amount < 0) {
             throw new Error('amount for addSender() must be nonnegative');
         }
@@ -47,7 +48,7 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         return this.addTransfer(accountId, -amount);
     }
 
-    addRecipient(accountId: AccountId, amount: number | BigInt): this {
+    addRecipient(accountId: AccountId, amount: number | BigNumber): this {
         if (amount < 0) {
             throw new Error('amount for addRecipient() must be nonnegative');
         }
@@ -55,7 +56,7 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         return this.addTransfer(accountId, amount);
     }
 
-    addTransfer(accountId: AccountId, amount: number | BigInt): this {
+    addTransfer(accountId: AccountId, amount: number | BigNumber): this {
         checkNumber(amount);
 
         const transfers = this.body.getTransfers() || new TransferList();

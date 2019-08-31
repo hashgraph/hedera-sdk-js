@@ -9,6 +9,7 @@ import {checkNumber, newDuration} from "../util";
 import {Key} from "../generated/BasicTypes_pb";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import {Ed25519PublicKey} from "../Keys";
+import BigNumber from "bignumber.js";
 
 export class AccountCreateTransaction extends TransactionBuilder {
     private body: CryptoCreateTransactionBody;
@@ -38,7 +39,7 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    setInitialBalance(balance: number | BigInt): this {
+    setInitialBalance(balance: number | BigNumber): this {
         checkNumber(balance);
         this.body.setInitialbalance(String(balance));
         return this;
@@ -65,7 +66,7 @@ export class AccountCreateTransaction extends TransactionBuilder {
             throw new Error('AccountCreateTransaction requires setKey()');
         }
 
-        if (BigInt(this.body.getInitialbalance()) === BigInt(0)) {
+        if (new BigNumber(this.body.getInitialbalance()).isZero()) {
             throw new Error('AccountCreateTransaction must have nonzero setInitialBalance')
         }
     }

@@ -1,3 +1,5 @@
+export {BigNumber} from "bignumber.js";
+
 export {Client} from './src/Client';
 
 export {AccountCreateTransaction} from './src/account/AccountCreateTransaction';

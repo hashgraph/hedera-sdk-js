@@ -12,10 +12,6 @@ module.exports = {
     "plugin:unicorn/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
-  globals: {
-    // FIXME remove in bignumber.js refactor
-    "BigInt": "readonly"
-  },
   parserOptions: {
     parser: "@typescript-eslint/parser"
   },
@@ -50,8 +46,7 @@ module.exports = {
     "unicorn/filename-case": "off",
     "unicorn/prevent-abbreviations": "off",
 
-    // FIXME: remove in bignumber.js PR
-    "compat/compat": "warn",
+    "compat/compat": "error",
 
     // Typescript
     "no-var": "error",

@@ -14,6 +14,7 @@ import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
 
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import Code = grpc.Code;
+import BigNumber from "bignumber.js";
 import UnaryOutput = grpc.UnaryOutput;
 
 export type AccountId = { shard: number; realm: number; account: number };
@@ -90,12 +91,12 @@ export class Client {
      * Transfer the given amount from the operator account to the given recipient.
      *
      * Note that `number` can only represent exact integers in the range`[-2^53, 2^53)`.
-     * To represent exact values higher than this you should use the ESNext type `BigInt` instead.
+     * To represent exact values higher than this you should use the `BigNumber` type instead.
      *
      * @param recipient
      * @param amount
      */
-    public transferCryptoTo(recipient: AccountId, amount: number | BigInt): Promise<TransactionId> {
+    public transferCryptoTo(recipient: AccountId, amount: number | BigNumber): Promise<TransactionId> {
         const txn = new CryptoTransferTransaction(this)
             .addSender(this.operatorAcct, amount)
             .addRecipient(recipient, amount)
@@ -105,7 +106,7 @@ export class Client {
         return txn.executeForReceipt().then(() => txn.getTransactionId());
     }
 
-    public getAccountBalance(): Promise<BigInt> {
+    public getAccountBalance(): Promise<BigNumber> {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
         balanceQuery.setAccountid(getProtoAccountId(this.operatorAcct));
 
@@ -124,7 +125,7 @@ export class Client {
 
         return this.unaryCall(query, CryptoService.cryptoGetBalance)
             .then(handleQueryPrecheck((resp) => resp.getCryptogetaccountbalance()))
-            .then((response) => BigInt(response.getBalance()));
+            .then((response) => new BigNumber(response.getBalance()));
     }
 
     public unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs> {
