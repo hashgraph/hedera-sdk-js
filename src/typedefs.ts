@@ -5,3 +5,9 @@ export type TransactionId = {
     validStartSeconds: number;
     validStartNanos: number;
 };
+
+export type FileId = {
+    shard: number;
+    realm: number;
+    file: number;
+};

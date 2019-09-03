@@ -8,7 +8,7 @@ import {
     CryptoTransferTransactionBody,
     TransferList
 } from "../generated/CryptoTransfer_pb";
-import {checkNumber, getProtoAccountId, reqDefined} from "../util";
+import {checkNumber, getProtoAccountId} from "../util";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 
@@ -23,22 +23,22 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         this.inner.setCryptotransfer(this.body);
     }
 
-    protected doValidate(): void {
-        const missingTransfers = 'CryptoTransferTransaction must have at least one transfer';
-        const transfers = reqDefined(this.body.getTransfers(), missingTransfers);
+    protected doValidate(errors: string[]): void {
+        const transfers = this.body.getTransfers();
+
+        if (!transfers || transfers.getAccountamountsList().length === 0) {
+            errors.push('CryptoTransferTransaction must have at least one transfer');
+            return;
+        }
 
         const amts = transfers.getAccountamountsList();
-
-        if (amts.length === 0) {
-            throw new Error(missingTransfers);
-        }
 
         const sum = amts.reduce(
             (lastSum, acctAmt) => lastSum.plus(acctAmt.getAmount()),
             new BigNumber(0));
 
         if (!sum.isZero()) {
-            throw new Error('CryptoTransferTransaction must have zero sum; got: ' + sum);
+            errors.push('CryptoTransferTransaction must have zero sum; got: ' + sum);
         }
     }
 

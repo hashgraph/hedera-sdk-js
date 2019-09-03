@@ -1,4 +1,4 @@
-import {AccountID, TransactionID} from "./generated/BasicTypes_pb";
+import {AccountID, KeyList, TransactionID} from "./generated/BasicTypes_pb";
 import {Timestamp} from "./generated/Timestamp_pb";
 import {Duration} from "./generated/Duration_pb";
 import {AccountId, TransactionId} from "./typedefs";
@@ -7,6 +7,7 @@ import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";
 import BigNumber from "bignumber.js";
 import {throwIfExceptional} from "./errors";
+import {PublicKey} from "./Keys";
 
 export function orThrow<T>(val?: T, msg = 'value must not be null'): T {
     if (val === undefined || val === null) {
@@ -50,6 +51,21 @@ export function newTxnId(accountId: AccountId): TransactionID {
 
 export function timestampToMs(timestamp: Timestamp): number {
     return timestamp.getSeconds() * 1000 + Math.floor(timestamp.getNanos() / 1_000_000);
+}
+
+export function dateToTimestamp(date: Date, nanosCorrection = 0): Timestamp {
+    const seconds = Math.floor(date.getTime() / 1000);
+    const nanos = (date.getTime() % 1000 * 1e6) + nanosCorrection;
+
+    if (!Number.isSafeInteger(nanos) || nanos < 0 || nanos >= 1e9) {
+        throw new Error(`nanoseconds + correction out of range: 0 <= ${nanos} < 1e9`)
+    }
+
+    const timestamp = new Timestamp();
+    timestamp.setSeconds(seconds);
+    timestamp.setNanos(nanos);
+
+    return timestamp;
 }
 
 export function newDuration(seconds: number): Duration {
@@ -134,4 +150,16 @@ export function reqDefined<T>(val: T | undefined, msg: string): T {
     }
 
     return val;
+}
+
+export interface GetSetKeys {
+    getKeys(): KeyList | undefined;
+    setKeys(keys: KeyList | undefined): void;
+}
+
+export function addKey(keyContainer: GetSetKeys, key: PublicKey) {
+    const keyList = keyContainer.getKeys() || new KeyList();
+    keyContainer.setKeys(keyList);
+
+    keyList.addKeys(key.toProtoKey());
 }

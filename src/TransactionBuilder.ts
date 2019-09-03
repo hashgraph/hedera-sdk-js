@@ -15,6 +15,8 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
  */
 const maxValidDuration = 120;
 
+const withErrors = Symbol();
+
 export abstract class TransactionBuilder {
     private client: BaseClient;
     private nodeAccountId?: AccountId;
@@ -56,7 +58,7 @@ export abstract class TransactionBuilder {
 
     public abstract get method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
-    protected abstract doValidate(): void;
+    protected abstract doValidate(errors: string[]): void;
 
     protected getNode(): Node {
         if (!this.node) {
@@ -69,21 +71,27 @@ export abstract class TransactionBuilder {
     }
 
     public validate(): void {
+        const errors = [];
+
         if (!this.inner.hasTransactionid()) {
-            throw new Error('missing ID for transaction');
+            errors.push('missing ID for transaction');
         }
 
         if (this.inner.getTransactionfee() === '0') {
-            throw new Error('Every transaction requires setTransactionFee(). '
+            errors.push('Every transaction requires setTransactionFee(). '
                 + 'This is only a maximum; the actual fee assessed may be lower.')
         }
 
         // strings are UTF-16, max 100 bytes
         if (this.inner.getMemo().length * 2 > 100) {
-            throw new Error('memo may not be longer than 100 bytes');
+            errors.push('memo may not be longer than 100 bytes');
         }
 
-        this.doValidate();
+        this.doValidate(errors);
+
+        if (errors.length > 0) {
+            throw ValidationError[withErrors](this.constructor.name, errors);
+        }
     }
 
     public build(): Transaction {
@@ -106,5 +114,15 @@ export abstract class TransactionBuilder {
         txn.setBodybytes(this.inner.serializeBinary());
 
         return Transaction[newTxn](this.client, url, txn, this.inner, this.method);
+    }
+}
+
+export class ValidationError extends Error {
+    private constructor(message: string) {
+        super(message);
+    }
+
+    public static [withErrors](className: string, errors: string[]): ValidationError {
+        return new ValidationError(`${className} failed validation:\n${errors.join("\n")}`);
     }
 }

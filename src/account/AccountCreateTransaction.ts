@@ -60,13 +60,13 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return CryptoService.createAccount;
     }
 
-    doValidate(): void {
+    doValidate(errors: string[]): void {
         if (!this.body.hasKey()) {
-            throw new Error('AccountCreateTransaction requires setKey()');
+            errors.push('AccountCreateTransaction requires setKey()');
         }
 
         if (new BigNumber(this.body.getInitialbalance()).isZero()) {
-            throw new Error('AccountCreateTransaction must have nonzero setInitialBalance')
+            errors.push('AccountCreateTransaction must have nonzero setInitialBalance');
         }
     }
 }
