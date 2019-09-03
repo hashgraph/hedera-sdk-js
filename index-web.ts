@@ -8,6 +8,6 @@ export {CryptoTransferTransaction} from './src/account/CryptoTransferTransaction
 export {Transaction} from './src/Transaction';
 
 export {
-    Ed25519PrivateKey, Ed25519PublicKey,
+    Ed25519PrivateKey, Ed25519PublicKey, ThresholdKey, PublicKey,
     generateMnemonic, KeyMismatchException
 } from './src/Keys';

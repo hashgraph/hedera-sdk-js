@@ -1,6 +1,4 @@
-import {
-    generateMnemonic, Ed25519PrivateKey, Ed25519PublicKey,
-} from '../src/Keys';
+import {Ed25519PrivateKey, Ed25519PublicKey, generateMnemonic, ThresholdKey,} from '../src/Keys';
 
 // key from hedera-sdk-java tests, not used anywhere
 const privKeyBytes = Uint8Array.of(
@@ -61,7 +59,7 @@ describe('Ed25519PrivateKey', () => {
     });
 });
 
-describe('Ed25519PublicKey', function () {
+describe('Ed25519PublicKey', () => {
     it('toString() produces correctly encoded string', () => {
         const publicKey = new Ed25519PublicKey(pubKeyBytes);
         expect(publicKey.toString()).toStrictEqual(pubKeyStr);
@@ -70,6 +68,28 @@ describe('Ed25519PublicKey', function () {
     it('fromString returns correct value', () => {
         const publicKey = Ed25519PublicKey.fromString(pubKeyStr);
         expect(publicKey.toBytes()).toStrictEqual(pubKeyBytes);
+    });
+});
+
+describe('ThresholdKey', () => {
+    it('requires at least as many keys as its threshold', async () => {
+        const key1 = await Ed25519PrivateKey.generate();
+        const key2 = await Ed25519PrivateKey.generate();
+        const key3 = await Ed25519PrivateKey.generate();
+
+        const thresholdKey = new ThresholdKey(3);
+
+        expect(() => thresholdKey.toProtoKey())
+            .toThrow("ThresholdKey must have at least one key");
+
+        thresholdKey.addAll(key1.publicKey, key2.publicKey);
+
+        expect(() => thresholdKey.toProtoKey())
+            .toThrow('ThresholdKey must have at least as many keys as threshold: 3; # of keys currently: 2');
+
+        thresholdKey.add(key3.publicKey);
+
+        expect(() => thresholdKey.toProtoKey()).not.toThrow();
     });
 });
 

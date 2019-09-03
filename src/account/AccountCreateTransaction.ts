@@ -6,9 +6,8 @@ import {CryptoService} from "../generated/CryptoService_pb_service";
 import {CryptoCreateTransactionBody} from "../generated/CryptoCreate_pb";
 import {Client} from "../Client";
 import {checkNumber, newDuration} from "../util";
-import {Key} from "../generated/BasicTypes_pb";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import {Ed25519PublicKey} from "../Keys";
+import {PublicKey} from "../Keys";
 import BigNumber from "bignumber.js";
 
 export class AccountCreateTransaction extends TransactionBuilder {
@@ -29,7 +28,7 @@ export class AccountCreateTransaction extends TransactionBuilder {
         this.setSendRecordThreshold(Number.MAX_SAFE_INTEGER);
     }
 
-    setKey(publicKey: Ed25519PublicKey): this {
+    setKey(publicKey: PublicKey): this {
         this.body.setKey(publicKey.toProtoKey());
         return this;
     }

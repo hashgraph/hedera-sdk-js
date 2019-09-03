@@ -2,7 +2,7 @@ import * as bip39 from "bip39";
 import * as nacl from "tweetnacl";
 import * as crypto from 'crypto';
 import * as util from 'util';
-import {Key} from "./generated/BasicTypes_pb";
+import {Key, KeyList, ThresholdKey as ThresholdKeyProto} from "./generated/BasicTypes_pb";
 
 // we could go through the whole BS of producing a DER-encoded structure but it's quite simple
 // for Ed25519 keys and we don't have to shell out to a potentially broken lib
@@ -10,7 +10,7 @@ import {Key} from "./generated/BasicTypes_pb";
 const ed25519PrivKeyPrefix = '302e020100300506032b657004220420';
 const ed25519PubKeyPrefix = '302a300506032b6570032100';
 
-export class Ed25519PublicKey {
+export class Ed25519PublicKey implements PublicKey {
     private readonly keyData: Uint8Array;
     private asString: string | null = null;
 
@@ -154,6 +154,52 @@ export class Ed25519PrivateKey {
     }
 }
 
+export interface PublicKey {
+    toProtoKey(): Key;
+}
+
+export class ThresholdKey implements PublicKey {
+    private readonly threshold: number;
+    private readonly keys: Key[] = [];
+
+    public constructor(threshold: number) {
+        this.threshold = threshold;
+    }
+
+    public add(key: PublicKey): this {
+        this.keys.push(key.toProtoKey());
+        return this;
+    }
+
+    public addAll(...keys: PublicKey[]): this {
+        this.keys.push(...keys.map((key) => key.toProtoKey()));
+        return this;
+    }
+
+    public toProtoKey(): Key {
+        if (this.keys.length === 0) {
+            throw new Error("ThresholdKey must have at least one key");
+        }
+
+        if (this.threshold > this.keys.length) {
+            throw new Error('ThresholdKey must have at least as many keys as threshold: '
+                             +`${this.threshold}; # of keys currently: ${this.keys.length}`);
+        }
+
+        const keyList = new KeyList();
+        keyList.setKeysList(this.keys);
+
+        const thresholdKey = new ThresholdKeyProto();
+        thresholdKey.setThreshold(this.threshold);
+        thresholdKey.setKeys(keyList);
+
+        const protoKey = new Key();
+        protoKey.setThresholdkey(thresholdKey);
+
+        return protoKey;
+    }
+}
+
 function encodeHex(bytes: Uint8Array, prefix: string): string {
     return bytes.reduce((prev, val) => {
         if (val < 16) {
@@ -247,6 +293,7 @@ export type Keystore = {
 export class KeyMismatchException extends Error {
     private readonly hmac: string;
     private readonly expectedHmac: string;
+
     public constructor(hmac: Buffer, expectedHmac: Buffer) {
         super('key mismatch when loading from keystore');
         this.hmac = hmac.toString('hex');
@@ -255,6 +302,7 @@ export class KeyMismatchException extends Error {
 }
 
 const hmacAlgo = 'sha384';
+
 async function createKeystore(privateKey: Uint8Array, passphrase: string): Promise<Uint8Array> {
     // all values taken from https://github.com/ethereumjs/ethereumjs-wallet/blob/de3a92e752673ada1d78f95cf80bc56ae1f59775/src/index.ts#L25
     const dkLen = 32;
@@ -297,7 +345,7 @@ async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string): Prom
     const keystore: Keystore = JSON.parse(Buffer.from(keystoreBytes).toString());
 
     if (keystore.version !== 1) {
-        throw new Error ('unsupported keystore version: ' + keystore.version);
+        throw new Error('unsupported keystore version: ' + keystore.version);
     }
 
     const { ciphertext, cipherparams: { iv }, cipher, kdf, kdfparams: { dkLen, salt, c, prf }, mac }
