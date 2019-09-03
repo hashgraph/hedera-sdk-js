@@ -3,7 +3,6 @@ import {Ed25519PrivateKey, Ed25519PublicKey} from "./Keys";
 
 import {grpc} from "@improbable-eng/grpc-web";
 
-import {CryptoService} from "./generated/CryptoService_pb_service";
 import {CryptoGetAccountBalanceQuery} from "./generated/CryptoGetAccountBalance_pb";
 import {QueryHeader} from "./generated/QueryHeader_pb";
 
@@ -11,11 +10,9 @@ import {getMyAccountId, getProtoAccountId, handleQueryPrecheck, reqDefined} from
 import {ProtobufMessage} from "@improbable-eng/grpc-web/dist/typings/message";
 import {AccountCreateTransaction} from "./account/AccountCreateTransaction";
 import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
-
-import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import Code = grpc.Code;
 import BigNumber from "bignumber.js";
-import UnaryOutput = grpc.UnaryOutput;
+import {CryptoService} from "./generated/CryptoService_pb_service";
+import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 export type AccountId = { shard: number; realm: number; account: number };
 
@@ -38,25 +35,28 @@ export type SigningOpts = PrivateKey | PubKeyAndSigner;
 
 export type Operator = { account: AccountId } & SigningOpts;
 
-export type Config = {
-    url?: string;
+export type Nodes = {
+    [url: string]: AccountId;
+} | Node[];
+
+/** A URL,AccountID pair identifying a Node */
+export type Node = [string, AccountId];
+
+export type ClientConfig = {
+    nodes?: Nodes;
     operator: Operator;
-}
+};
 
-export const nodeAccountID = { shard: 0, realm: 0, account: 3 };
-
-export class Client {
+export abstract class BaseClient {
     public readonly operator: Operator;
     private readonly operatorAcct: AccountId;
     public readonly operatorSigner: Signer;
     public readonly operatorPublicKey: Ed25519PublicKey;
 
-    private readonly url: string;
+    protected readonly nodes: Node[];
 
-    // default url is a proxy to 0.testnet.hedera.com:50211 generously hosted by MyHederaWallet.com
-    // mainnet proxy to come later; this url may change accordingly
-    public constructor({ url = "https://grpc-web.myhederawallet.com", operator }: Config) {
-        this.url = url;
+    public constructor(nodes: Nodes, operator: Operator) {
+        this.nodes = Array.isArray(nodes) ? nodes : Object.entries(nodes);
         this.operator = operator;
         this.operatorAcct = operator.account;
 
@@ -110,6 +110,8 @@ export class Client {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
         balanceQuery.setAccountid(getProtoAccountId(this.operatorAcct));
 
+        const [url, nodeAccountID] = this.randomNode();
+
         const paymentTxn = new CryptoTransferTransaction(this)
             .addSender(this.operatorAcct, 0)
             .addRecipient(nodeAccountID, 0)
@@ -123,22 +125,24 @@ export class Client {
         const query = new Query();
         query.setCryptogetaccountbalance(balanceQuery);
 
-        return this.unaryCall(query, CryptoService.cryptoGetBalance)
+        return this.unaryCall(url, query, CryptoService.cryptoGetBalance)
             .then(handleQueryPrecheck((resp) => resp.getCryptogetaccountbalance()))
             .then((response) => new BigNumber(response.getBalance()));
     }
 
-    public unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs> {
-        return new Promise((resolve, reject) => grpc.unary(method, {
-            host: this.url,
-            request,
-            onEnd: (response: UnaryOutput<Rs>) => {
-                if (response.status === Code.OK && response.message) {
-                    resolve(response.message);
-                } else {
-                    reject(new Error(response.statusMessage));
-                }
-            }
-        }));
+    public randomNode(): Node {
+        return this.nodes[Math.floor(Math.random() * this.nodes.length)];
     }
+
+    public getNode(node: string | AccountId): Node {
+        const maybeNode = this.nodes.find(([url, accountId]) => url === node || accountId === node);
+
+        if (maybeNode) {
+            return maybeNode;
+        }
+
+        throw new Error(`could not find node: ${node}`);
+    }
+
+    public abstract unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs>;
 }

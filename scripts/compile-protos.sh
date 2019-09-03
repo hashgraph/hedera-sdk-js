@@ -8,6 +8,6 @@ mkdir -p src/generated
 
 protoc \
     --js_out="import_style=commonjs,binary:${OUT_DIR}" \
-    --ts_out="service=true:${OUT_DIR}" \
+    --ts_out="service=grpc-web:${OUT_DIR}" \
     -I "src/proto" \
     src/proto/*

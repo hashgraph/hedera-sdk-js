@@ -1,11 +1,10 @@
 import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {TransactionBody} from "./generated/TransactionBody_pb";
-import {Client, Signer, TransactionId} from "./Client";
+import {BaseClient, Signer, TransactionId} from "./BaseClient";
 import {SignatureMap, SignaturePair, TransactionID} from "./generated/BasicTypes_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {TransactionReceipt} from "./generated/TransactionReceipt_pb";
-import {CryptoService} from "./generated/CryptoService_pb_service";
 import {
     getMyTxnId,
     handlePrecheck,
@@ -19,8 +18,9 @@ import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
 import {TransactionGetReceiptQuery} from "./generated/TransactionGetReceipt_pb";
 import {Query} from "./generated/Query_pb";
 import {Message} from "google-protobuf";
-import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import {Ed25519PrivateKey, Ed25519PublicKey} from "./Keys";
+import {CryptoService} from "./generated/CryptoService_pb_service";
+import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
  * Signature/public key pairs are passed around as objects
@@ -34,15 +34,17 @@ const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
 export class Transaction {
-    private client: Client;
+    private readonly client: BaseClient;
 
+    private readonly url: string;
     private readonly inner: Transaction_;
     private readonly txnId: TransactionID;
     private readonly validDurationSeconds: number;
     private readonly method: UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
-    public constructor(client: Client, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>) {
+    public constructor(client: BaseClient, url: string, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>) {
         this.client = client;
+        this.url = url;
         this.inner = inner;
         this.txnId = orThrow(body.getTransactionid());
         this.validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
@@ -96,7 +98,7 @@ export class Transaction {
             await this.signWith(this.client.operatorPublicKey, this.client.operatorSigner);
         }
 
-        handlePrecheck(await this.client.unaryCall(this.inner, this.method));
+        handlePrecheck(await this.client.unaryCall(this.url, this.inner, this.method));
 
         return this.getTransactionId();
     }
@@ -112,7 +114,7 @@ export class Transaction {
         const query = new Query();
         query.setTransactiongetreceipt(receiptQuery);
 
-        return this.client.unaryCall(query, CryptoService.getTransactionReceipts)
+        return this.client.unaryCall(this.url, query, CryptoService.getTransactionReceipts)
             .then(handleQueryPrecheck((resp) => resp.getTransactiongetreceipt()))
             .then((receipt) => orThrow(receipt.getReceipt()));
     }

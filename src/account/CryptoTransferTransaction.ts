@@ -2,8 +2,7 @@ import {TransactionBuilder} from "../TransactionBuilder";
 import {Transaction} from "../generated/Transaction_pb";
 import {TransactionResponse} from "../generated/TransactionResponse_pb";
 import {grpc} from "@improbable-eng/grpc-web";
-import {CryptoService} from "../generated/CryptoService_pb_service";
-import {AccountId, Client} from "../Client";
+import {AccountId, BaseClient} from "../BaseClient";
 import {
     AccountAmount,
     CryptoTransferTransactionBody,
@@ -11,11 +10,12 @@ import {
 } from "../generated/CryptoTransfer_pb";
 import {checkNumber, getProtoAccountId, reqDefined} from "../util";
 import BigNumber from "bignumber.js";
+import {CryptoService} from "../generated/CryptoService_pb_service";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
     private readonly body: CryptoTransferTransactionBody;
 
-    constructor(client: Client) {
+    constructor(client: BaseClient) {
         super(client);
         this.body = new CryptoTransferTransactionBody();
         this.inner.setCryptotransfer(this.body);

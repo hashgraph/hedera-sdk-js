@@ -16,7 +16,7 @@ const client = new Client({
 });
 
 (async function () {
-    console.log('balance before transfer', await client.getAccountBalance());
+    console.log('balance before transfer:', (await client.getAccountBalance()).toString());
     await client.transferCryptoTo({ shard: 0, realm: 0, account: 3 }, 10000);
-    console.log('balance after transfer', await client.getAccountBalance());
+    console.log('balance after transfer:', (await client.getAccountBalance()).toString());
 })();

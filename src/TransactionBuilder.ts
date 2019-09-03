@@ -1,12 +1,12 @@
-import {AccountId, Client, nodeAccountID, TransactionId} from "./Client";
+import {AccountId, BaseClient, Node, TransactionId} from "./BaseClient";
 import {TransactionBody} from "./generated/TransactionBody_pb";
 import {getProtoAccountId, getProtoTxnId, newDuration, newTxnId} from "./util";
 import {Transaction} from "./Transaction";
 import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
-import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import BigNumber from "bignumber.js";
+import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
  * Max duration of transactions on the network is 2 minutes
@@ -14,10 +14,13 @@ import BigNumber from "bignumber.js";
 const maxValidDuration = 120;
 
 export abstract class TransactionBuilder {
-    private client: Client;
+    private client: BaseClient;
+    private nodeAccountId?: AccountId;
     protected readonly inner: TransactionBody;
 
-    protected constructor (client: Client) {
+    private node?: Node;
+
+    protected constructor (client: BaseClient) {
         this.client = client;
         this.inner = new TransactionBody();
         this.inner.setTransactionvalidduration(newDuration(120));
@@ -39,6 +42,7 @@ export abstract class TransactionBuilder {
     }
 
     public setNodeAccountId(nodeAccountId: AccountId): this {
+        this.nodeAccountId = nodeAccountId;
         this.inner.setNodeaccountid(getProtoAccountId(nodeAccountId));
         return this;
     }
@@ -46,6 +50,16 @@ export abstract class TransactionBuilder {
     public abstract get method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
     protected abstract doValidate(): void;
+
+    protected getNode(): Node {
+        if (!this.node) {
+            this.node = this.nodeAccountId
+                ? this.client.getNode(this.nodeAccountId)
+                : this.client.randomNode();
+        }
+
+        return this.node;
+    }
 
     public validate(): void {
         if (!this.inner.hasTransactionid()) {
@@ -69,6 +83,7 @@ export abstract class TransactionBuilder {
             this.setTransactionValidDuration(maxValidDuration);
         }
 
+        const [url, nodeAccountID] = this.getNode();
         if (!this.inner.hasNodeaccountid()) {
             this.setNodeAccountId(nodeAccountID);
         }
@@ -78,6 +93,6 @@ export abstract class TransactionBuilder {
         const txn = new Transaction_();
         txn.setBodybytes(this.inner.serializeBinary());
 
-        return new Transaction(this.client, txn, this.inner, this.method);
+        return new Transaction(this.client, url, txn, this.inner, this.method);
     }
 }

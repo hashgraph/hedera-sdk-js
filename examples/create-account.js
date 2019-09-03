@@ -19,7 +19,7 @@ const client = new Client({
     const {mnemonic, generateKey} = generateMnemonic();
     const privateKey = await generateKey();
 
-    console.log("privateKey:", privateKey);
+    console.log("privateKey:", privateKey.toString());
     console.log("mnemonic:", mnemonic);
 
     console.log(await client.createAccount(privateKey.publicKey));
