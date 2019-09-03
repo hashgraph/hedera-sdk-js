@@ -93,12 +93,12 @@ describe('ThresholdKey', () => {
     });
 });
 
-test('generateMnemonic produces a recoverable private key', async () => {
-    const mnemonic = generateMnemonic();
+describe("generateMnemonic", () => {
+    it('generateMnemonic produces a recoverable private key', async () => {
+        const mnemonic = generateMnemonic();
 
-    const key1 = await mnemonic.generateKey();
-    const key2 = await Ed25519PrivateKey.fromMnemonic(mnemonic.mnemonic);
-    expect(key1.toBytes()).toStrictEqual(key2.toBytes());
+        const key1 = await mnemonic.generateKey();
+        const key2 = await Ed25519PrivateKey.fromMnemonic(mnemonic.mnemonic);
+        expect(key1.toBytes()).toStrictEqual(key2.toBytes());
+    });
 });
-
-
