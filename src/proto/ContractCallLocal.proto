@@ -27,13 +27,13 @@ message ContractFunctionResult {
     repeated ContractLoginfo logInfo = 6; // the log info for events returned by the function
 }
 
-/* Call a function of the given smart contract instance, giving it functionParameters as its inputs. It can use the given amount of gas, and any unspent gas will be refunded to the paying account.
+/* Call a function of the given smart contract instance, giving it functionParameters as its inputs. It will consume the entire given amount of gas.
  *
  * This is performed locally on the particular node that the client is communicating with. It cannot change the state of the contract instance (and so, cannot spend anything from the instance's cryptocurrency account). It will not have a consensus timestamp. It cannot generate a record or a receipt. The response will contain the output returned by the function call.  This is useful for calling getter functions, which purely read the state and don't change it. It is faster and cheaper than a normal call, because it is purely local to a single  node. */
 message ContractCallLocalQuery {
-    QueryHeader header = 1; // standard info sent from client to node, including the signed payment, and what kind of response is requested (cost, state proof, both, or neither).
+    QueryHeader header = 1; // standard info sent from client to node, including the signed payment, and what kind of response is requested (cost, state proof, both, or neither). The payment must cover the fees and all of the gas offered.
     ContractID contractID = 2; // the contract instance to call, in the format used in transactions
-    int64 gas = 3; // the amount of gas to use for the call
+    int64 gas = 3; // the amount of gas to use for the call. All of the gas offered will be charged for.
     bytes functionParameters = 4; // which function to call, and the parameters to pass to the function
     int64 maxResultSize = 5; // max number of bytes that the result might include. The run will fail if it would have returned more than this number of bytes.
 }
