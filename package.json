@@ -16,7 +16,7 @@
   "files": [
     "src/**",
     "index-*.*",
-    "exports.js"
+    "exports.*"
   ],
   "dependencies": {
     "@improbable-eng/grpc-web": "0.11.0",
