@@ -301,10 +301,10 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@launchbadge/eslint-config@^0.11.5":
-  version "0.11.5"
-  resolved "https://registry.yarnpkg.com/@launchbadge/eslint-config/-/eslint-config-0.11.5.tgz#333f4305f2f533435ef539436a798adc2f061402"
-  integrity sha512-6HheRhkR/GMPU2pxbUQje2R0EUk4JS1DidnKAdBuum/EgM87P+m2N7Syj4djLNHfybiRELHIzGIJQ98LhT83Dg==
+"@launchbadge/eslint-config@^0.11.6":
+  version "0.11.6"
+  resolved "https://registry.yarnpkg.com/@launchbadge/eslint-config/-/eslint-config-0.11.6.tgz#f6aa4c921bcd975fa22e5e1a140da0cee02cd0fb"
+  integrity sha512-ZkgSBDWopAddhejGoAvrByPfBpXN4YBhZJp0iVJDcl6hDHWMITq7OkPXS54wT85xtDa+lpCA+BnNl2xW798uuw==
   dependencies:
     "@lwc/eslint-plugin-lwc" "^0.7.0"
     "@typescript-eslint/eslint-plugin" "^2.1.0"
