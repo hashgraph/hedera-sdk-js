@@ -12,15 +12,9 @@ import {AccountCreateTransaction} from "./account/AccountCreateTransaction";
 import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "./generated/CryptoService_pb_service";
+
+import {AccountId, TransactionId} from "./typedefs";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-
-export type AccountId = { shard: number; realm: number; account: number };
-
-export type TransactionId = {
-    account: AccountId;
-    validStartSeconds: number;
-    validStartNanos: number;
-};
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
