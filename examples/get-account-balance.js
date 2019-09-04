@@ -16,5 +16,5 @@ const client = new Client({
 });
 
 (async function () {
-    console.log('account balance', await client.getAccountBalance());
+    console.log('account balance:', (await client.getAccountBalance()).toString());
 })();
