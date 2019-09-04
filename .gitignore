@@ -6,6 +6,7 @@ yarn-error*
 # ignores javascript files compiled from typescript
 index-web.js
 index-node.js
+exports.js
 src/**/*.js
 __tests__/**/*.js
 **/*.js.map
