@@ -19,21 +19,21 @@
   ],
   "dependencies": {
     "@improbable-eng/grpc-web": "0.11.0",
-    "@types/google-protobuf": "^3.2.7",
+    "@types/google-protobuf": "^3.7.1",
     "bignumber.js": "^9.0.0",
     "bip39": "^3.0.2",
-    "google-protobuf": "^3.6.1",
+    "google-protobuf": "^3.9.1",
     "grpc": "^1.23.3",
     "tweetnacl": "^1.0.1"
   },
   "devDependencies": {
-    "@launchbadge/eslint-config": "^0.11.0",
-    "@types/jest": "^24.0.17",
-    "eslint": "^6.2.2",
-    "jest": "^24.8.0",
+    "@launchbadge/eslint-config": "^0.11.5",
+    "@types/jest": "^24.0.18",
+    "eslint": "^6.3.0",
+    "jest": "^24.9.0",
     "ts-jest": "^24.0.2",
     "ts-protoc-gen": "^0.11.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.6.2"
   },
   "publishConfig": {
     "@launchbadge:registry": "https://gitlab.launchbadge.com/api/v4/projects/73/packages/npm/"
