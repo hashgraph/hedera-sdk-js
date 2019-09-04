@@ -2,7 +2,7 @@ import {AccountID, TransactionID} from "./generated/BasicTypes_pb";
 import {Timestamp} from "./generated/Timestamp_pb";
 import {Duration} from "./generated/Duration_pb";
 import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
-import {AccountId, TransactionId} from "./BaseClient";
+import {AccountId, TransactionId} from "./typedefs";
 import {ResponseHeader} from "./generated/ResponseHeader_pb";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";

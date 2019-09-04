@@ -1,6 +1,7 @@
 import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {TransactionBody} from "./generated/TransactionBody_pb";
-import {BaseClient, Signer, TransactionId} from "./BaseClient";
+import {BaseClient, Signer} from "./BaseClient";
+import {TransactionId} from './typedefs';
 import {SignatureMap, SignaturePair, TransactionID} from "./generated/BasicTypes_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
