@@ -4,7 +4,6 @@ import {Ed25519PrivateKey} from "../src/Keys";
 import {AccountCreateTransaction} from "../src/account/AccountCreateTransaction";
 import {Transaction} from "../src/Transaction";
 import ProtobufMessage = grpc.ProtobufMessage;
-import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 const privateKey = Ed25519PrivateKey.fromString('302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10');
 
@@ -19,7 +18,7 @@ class MockClient extends BaseClient {
         );
     }
 
-    public unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(_url: string, _request: Rq, _method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs> {
+    public unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(): Promise<Rs> {
         throw new Error('should not be called');
     }
 }
