@@ -6,7 +6,7 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {CryptoGetAccountBalanceQuery} from "./generated/CryptoGetAccountBalance_pb";
 import {QueryHeader} from "./generated/QueryHeader_pb";
 
-import {getMyAccountId, getProtoAccountId, handleQueryPrecheck, reqDefined} from "./util";
+import {getProtoAccountId, getSdkAccountId, handleQueryPrecheck, reqDefined} from "./util";
 import {ProtobufMessage} from "@improbable-eng/grpc-web/dist/typings/message";
 import {AccountCreateTransaction} from "./account/AccountCreateTransaction";
 import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
@@ -75,7 +75,7 @@ export abstract class BaseClient {
             .build()
             .executeForReceipt()
             .then((receipt) => ({
-                account: getMyAccountId(
+                account: getSdkAccountId(
                     reqDefined(receipt.getAccountid(),
                         'missing account ID from receipt: ' + receipt)),
             }));
@@ -129,13 +129,18 @@ export abstract class BaseClient {
     }
 
     public getNode(node: string | AccountId): Node {
-        const maybeNode = this.nodes.find(([url, accountId]) => url === node || accountId === node);
+        const maybeNode = this.nodes.find(([url, accountId]) => url === node || (
+            typeof node === 'object'
+                && accountId.account == node.account
+                && accountId.realm === node.realm
+                && accountId.shard == node.shard
+        ));
 
         if (maybeNode) {
             return maybeNode;
         }
 
-        throw new Error(`could not find node: ${node}`);
+        throw new Error(`could not find node: ${JSON.stringify(node)}`);
     }
 
     public abstract unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs>;

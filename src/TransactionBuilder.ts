@@ -49,6 +49,11 @@ export abstract class TransactionBuilder {
         return this;
     }
 
+    public setMemo(memo: string): this {
+        this.inner.setMemo(memo);
+        return this;
+    }
+
     public abstract get method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
     protected abstract doValidate(): void;
@@ -71,6 +76,11 @@ export abstract class TransactionBuilder {
         if (this.inner.getTransactionfee() === '0') {
             throw new Error('Every transaction requires setTransactionFee(). '
                 + 'This is only a maximum; the actual fee assessed may be lower.')
+        }
+
+        // strings are UTF-16, max 100 bytes
+        if (this.inner.getMemo().length * 2 > 100) {
+            throw new Error('memo may not be longer than 100 bytes');
         }
 
         this.doValidate();

@@ -8,9 +8,9 @@ import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";
 import BigNumber from "bignumber.js";
 
-export function orThrow<T>(val?: T): T {
+export function orThrow<T>(val?: T, msg = 'value must not be null'): T {
     if (val === undefined || val === null) {
-        throw new Error('value must not be null');
+        throw new Error(msg);
     }
 
     return val;
@@ -86,16 +86,16 @@ export function getProtoAccountId({ shard, realm, account }: AccountId): Account
     return acctId;
 }
 
-export const getMyAccountId = (accountId: AccountID): AccountId => (
+export const getSdkAccountId = (accountId: AccountID): AccountId => (
     {
         shard: accountId.getShardnum(),
         realm: accountId.getRealmnum(),
         account: accountId.getAccountnum()
     }
 );
-export const getMyTxnId = (txnId: TransactionID): TransactionId => (
+export const getSdkTxnId = (txnId: TransactionID): TransactionId => (
     {
-        account: getMyAccountId(orThrow(txnId.getAccountid())),
+        account: getSdkAccountId(orThrow(txnId.getAccountid())),
         validStartSeconds: orThrow(txnId.getTransactionvalidstart()).getSeconds(),
         validStartNanos: orThrow(txnId.getTransactionvalidstart()).getNanos(),
     }

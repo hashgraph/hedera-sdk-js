@@ -7,7 +7,8 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {TransactionReceipt} from "./generated/TransactionReceipt_pb";
 import {
-    getMyTxnId,
+    getSdkAccountId,
+    getSdkTxnId,
     handlePrecheck,
     handleQueryPrecheck,
     orThrow,
@@ -21,6 +22,9 @@ import {Query} from "./generated/Query_pb";
 import {Message} from "google-protobuf";
 import {Ed25519PrivateKey, Ed25519PublicKey} from "./Keys";
 import {CryptoService} from "./generated/CryptoService_pb_service";
+import {SmartContractService} from "./generated/SmartContractService_pb_service";
+import {FileService} from "./generated/FileService_pb_service";
+import {FreezeService} from "./generated/FreezeService_pb_service";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
@@ -37,23 +41,37 @@ const receiptRetryDelayMs = 500;
 export class Transaction {
     private readonly client: BaseClient;
 
-    private readonly url: string;
+    private readonly nodeUrl: string;
     private readonly inner: Transaction_;
     private readonly txnId: TransactionID;
     private readonly validDurationSeconds: number;
     private readonly method: UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
-    public constructor(client: BaseClient, url: string, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>) {
+    public constructor(client: BaseClient, nodeUrl: string, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>) {
         this.client = client;
-        this.url = url;
+        this.nodeUrl = nodeUrl;
         this.inner = inner;
         this.txnId = orThrow(body.getTransactionid());
         this.validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
         this.method = method;
     }
 
+    public static fromBytes(client: BaseClient, bytes: Uint8Array): Transaction {
+        const inner = Transaction_.deserializeBinary(bytes);
+        const body = TransactionBody.deserializeBinary(inner.getBodybytes_asU8());
+
+        const nodeAccountId = getSdkAccountId(
+            orThrow(body.getNodeaccountid(), 'transaction missing node account ID'));
+
+        const [url] = client.getNode(nodeAccountId);
+
+        const method = methodFromTxn(body);
+
+        return new Transaction(client, url, inner, body, method);
+    }
+
     public getTransactionId(): TransactionId {
-        return getMyTxnId(this.txnId);
+        return getSdkTxnId(this.txnId);
     }
 
     public addSignature({ signature, publicKey }: SignatureAndKey): this {
@@ -99,7 +117,7 @@ export class Transaction {
             await this.signWith(this.client.operatorPublicKey, this.client.operatorSigner);
         }
 
-        handlePrecheck(await this.client.unaryCall(this.url, this.inner, this.method));
+        handlePrecheck(await this.client.unaryCall(this.nodeUrl, this.inner, this.method));
 
         return this.getTransactionId();
     }
@@ -115,7 +133,7 @@ export class Transaction {
         const query = new Query();
         query.setTransactiongetreceipt(receiptQuery);
 
-        return this.client.unaryCall(this.url, query, CryptoService.getTransactionReceipts)
+        return this.client.unaryCall(this.nodeUrl, query, CryptoService.getTransactionReceipts)
             .then(handleQueryPrecheck((resp) => resp.getTransactiongetreceipt()))
             .then((receipt) => orThrow(receipt.getReceipt()));
     }
@@ -152,4 +170,51 @@ export class Transaction {
     public toProto(): Transaction_ {
         return Message.cloneMessage(this.inner);
     }
+
+    public toBytes(): Uint8Array {
+        return this.inner.serializeBinary();
+    }
+}
+
+function methodFromTxn(inner: TransactionBody): UnaryMethodDefinition<Transaction_, TransactionResponse> {
+    switch (inner.getDataCase()) {
+        case TransactionBody.DataCase.CONTRACTCALL:
+            return SmartContractService.contractCallMethod;
+        case TransactionBody.DataCase.CONTRACTCREATEINSTANCE:
+            return SmartContractService.createContract;
+        case TransactionBody.DataCase.CONTRACTUPDATEINSTANCE:
+            return SmartContractService.updateContract;
+        case TransactionBody.DataCase.CONTRACTDELETEINSTANCE:
+            return SmartContractService.deleteContract;
+        case TransactionBody.DataCase.CRYPTOADDCLAIM:
+            return CryptoService.addClaim;
+        case TransactionBody.DataCase.CRYPTOCREATEACCOUNT:
+            return CryptoService.createAccount;
+        case TransactionBody.DataCase.CRYPTODELETE:
+            return CryptoService.cryptoDelete;
+        case TransactionBody.DataCase.CRYPTODELETECLAIM:
+            return CryptoService.deleteClaim;
+        case TransactionBody.DataCase.CRYPTOTRANSFER:
+            return CryptoService.cryptoTransfer;
+        case TransactionBody.DataCase.CRYPTOUPDATEACCOUNT:
+            return CryptoService.updateAccount;
+        case TransactionBody.DataCase.FILEAPPEND:
+            return FileService.appendContent;
+        case TransactionBody.DataCase.FILECREATE:
+            return FileService.createFile;
+        case TransactionBody.DataCase.FILEDELETE:
+            return FileService.deleteFile;
+        case TransactionBody.DataCase.FILEUPDATE:
+            return FileService.updateFile;
+        case TransactionBody.DataCase.SYSTEMDELETE:
+            return SmartContractService.systemDelete;
+        case TransactionBody.DataCase.SYSTEMUNDELETE:
+            return SmartContractService.systemUndelete;
+        case TransactionBody.DataCase.FREEZE:
+            return FreezeService.freeze;
+        case TransactionBody.DataCase.DATA_NOT_SET:
+            throw new Error('transaction body missing');
+    }
+
+    throw new Error('unsupported body case:' + inner.getDataCase().toString());
 }
