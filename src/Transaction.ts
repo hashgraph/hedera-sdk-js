@@ -12,7 +12,6 @@ import {
     handlePrecheck,
     handleQueryPrecheck,
     orThrow,
-    reversePrecheck,
     setTimeoutAwaitable,
     timestampToMs
 } from "./util";
@@ -25,6 +24,7 @@ import {CryptoService} from "./generated/CryptoService_pb_service";
 import {SmartContractService} from "./generated/SmartContractService_pb_service";
 import {FileService} from "./generated/FileService_pb_service";
 import {FreezeService} from "./generated/FreezeService_pb_service";
+import {HederaError} from "./errors";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
@@ -160,7 +160,7 @@ export class Transaction {
 
                 await setTimeoutAwaitable(delay);
             } else if (receipt.getStatus() !== ResponseCodeEnum.SUCCESS) {
-                throw new Error(reversePrecheck(receipt.getStatus()));
+                throw new HederaError(receipt.getStatus());
             } else {
                 return receipt;
             }
