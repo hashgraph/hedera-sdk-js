@@ -23,11 +23,18 @@ export class Ed25519PublicKey implements PublicKey {
     }
 
     public static fromString(keyStr: string): Ed25519PublicKey {
-        if (keyStr.length !== 88 || !keyStr.startsWith(ed25519PubKeyPrefix)) {
-            throw new Error("invalid public key: " + keyStr);
+        switch (keyStr.length) {
+            case 64:
+                return new Ed25519PublicKey(decodeHex(keyStr));
+            case 88:
+                if (keyStr.startsWith(ed25519PubKeyPrefix)){
+                    return new Ed25519PublicKey(decodeHex(keyStr.slice(24)));
+                }
+                break;
+            default:
         }
 
-        return new Ed25519PublicKey(decodeHex(keyStr.slice(24)));
+        throw new Error("invalid public key: " + keyStr);
     }
 
     public toBytes(): Uint8Array {
@@ -67,20 +74,41 @@ export class Ed25519PrivateKey {
     public static fromBytes(bytes: Uint8Array): Ed25519PrivateKey {
         // this check is necessary because Jest breaks the prototype chain of Uint8Array
         // noinspection SuspiciousTypeOfGuard
-        const { secretKey: privateKey, publicKey } =
-            // fromSeed takes the private key bytes and calculates the public key
-            nacl.sign.keyPair.fromSeed(bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes));
+        const bytesArray = bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
+        let keypair;
+
+        switch (bytes.length) {
+            case 32:
+                // fromSeed takes the private key bytes and calculates the public key
+                keypair = nacl.sign.keyPair.fromSeed(bytesArray);
+                break;
+            case 64:
+                // priv + pub key pair
+                keypair = nacl.sign.keyPair.fromSecretKey(bytesArray);
+                break;
+            default:
+                throw new Error("invalid private key");
+        }
+
+        const { secretKey: privateKey, publicKey } = keypair;
 
         return new Ed25519PrivateKey({ privateKey, publicKey });
     }
 
     /** Recover a key from a hex-encoded DER structure */
     public static fromString(keyStr: string): Ed25519PrivateKey {
-        if (keyStr.length !== 96 || !keyStr.startsWith(ed25519PrivKeyPrefix)) {
-            throw new Error("invalid private key: " + keyStr);
+        switch (keyStr.length) {
+            case 64: // lone private key
+            case 128: // private key + public key
+                return Ed25519PrivateKey.fromBytes(decodeHex(keyStr));
+            case 96:
+                if (keyStr.startsWith(ed25519PrivKeyPrefix)) {
+                    return this.fromBytes(decodeHex(keyStr.slice(32)));
+                }
+                break;
+            default:
         }
-
-        return this.fromBytes(decodeHex(keyStr.slice(32)));
+        throw new Error("invalid private key: " + keyStr);
     }
 
     /**
