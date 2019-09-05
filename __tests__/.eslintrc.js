@@ -13,5 +13,6 @@ module.exports = {
                 ignore: ["describe"]
             }
         ],
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
     }
 };
