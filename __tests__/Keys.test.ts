@@ -20,6 +20,8 @@ const rawPubKeyStr = 'e0c8ec2758a5879ffac226a13c0c516b799e72e35141a0dd828f94d379
 const mnemonic = 'inmate flip alley wear offer often piece magnet surge toddler submit right radio absent pear floor belt raven price stove replace reduce plate home';
 const mnemonicKey = '302e020100300506032b6570042204203988e39bb91007f3bedcb47b0d9384463ba7d922d74d1306f7a4c8a2881fac9e';
 
+const derivedKeyStr = '302e020100300506032b657004220420c45464f3730a37c79521c270104bfda4a46c12b79af7433ffffac158691fd782';
+
 const passphrase = 'asdf1234';
 
 describe('Ed25519PrivateKey', () => {
@@ -65,6 +67,12 @@ describe('Ed25519PrivateKey', () => {
         const key2 = await Ed25519PrivateKey.fromKeystore(keystoreBytes, passphrase);
 
         expect(key1.toBytes()).toStrictEqual(key2.toBytes());
+    });
+
+    it('derive() produces correct value', () => {
+        const key1 = Ed25519PrivateKey.fromBytes(privKeyBytes);
+        const key2 = key1.derive({ account: 0, index: 0, change: 0 });
+        expect(key2.toString()).toStrictEqual(derivedKeyStr);
     });
 });
 

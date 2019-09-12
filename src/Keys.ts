@@ -2,13 +2,27 @@ import * as bip39 from "bip39";
 import * as nacl from "tweetnacl";
 import * as crypto from 'crypto';
 import * as util from 'util';
+import * as bip32 from 'bip32';
 import {Key, KeyList, ThresholdKey as ThresholdKeyProto} from "./generated/BasicTypes_pb";
+import {orThrow} from "./util";
 
 // we could go through the whole BS of producing a DER-encoded structure but it's quite simple
 // for Ed25519 keys and we don't have to shell out to a potentially broken lib
 // https://github.com/PeculiarVentures/pvutils/issues/8
 const ed25519PrivKeyPrefix = '302e020100300506032b657004220420';
 const ed25519PubKeyPrefix = '302a300506032b6570032100';
+
+/**
+ * BIP-44 key derivation options as described here:
+ * https://github.com/bitcoin/bips/blob/33e6283/bip-0044.mediawiki#account
+ *
+ * `purpose = "44"` and `coin = "3030" (Hedera HBAR)` are hardcoded.
+ */
+export type DeriveOpts = {
+    account: number;
+    change: number;
+    index: number;
+}
 
 export class Ed25519PublicKey implements PublicKey {
     private readonly keyData: Uint8Array;
@@ -27,7 +41,7 @@ export class Ed25519PublicKey implements PublicKey {
             case 64:
                 return new Ed25519PublicKey(decodeHex(keyStr));
             case 88:
-                if (keyStr.startsWith(ed25519PubKeyPrefix)){
+                if (keyStr.startsWith(ed25519PubKeyPrefix)) {
                     return new Ed25519PublicKey(decodeHex(keyStr.slice(24)));
                 }
                 break;
@@ -150,6 +164,26 @@ export class Ed25519PrivateKey {
         return this.fromBytes(await deriveSeed(entropy));
     }
 
+    /**
+     * Derive a new private key using [BIP32] as specified by [BIP44].
+     *
+     * `purpose = "44"` and `coin = "3030" (Hedera HBAR)` are hardcoded.
+     *
+     * [BIP32]: https://github.com/bitcoin/bips/blob/33e6283/bip-0032.mediawiki
+     * [BIP44]: https://github.com/bitcoin/bips/blob/33e6283/bip-0044.mediawiki
+     */
+    public derive({ account, change, index }: DeriveOpts): Ed25519PrivateKey {
+        return Ed25519PrivateKey.fromBytes(
+            orThrow(
+                bip32.fromSeed(Buffer.from(this.keyData.subarray(0, 32)))
+                // BIP44 specifies "purpose", "cointype" and "account" should be marked "hardened"
+                // for BIP32 derivation
+                    .derivePath(`m/44'/3030'/${account}'/${change}/${index}`)
+                    .privateKey
+            )
+        );
+    }
+
     /** Sign the given message with this key. */
     public sign(msg: Uint8Array): Uint8Array {
         return nacl.sign(msg, this.keyData);
@@ -211,7 +245,7 @@ export class ThresholdKey implements PublicKey {
 
         if (this.threshold > this.keys.length) {
             throw new Error('ThresholdKey must have at least as many keys as threshold: '
-                             +`${this.threshold}; # of keys currently: ${this.keys.length}`);
+                + `${this.threshold}; # of keys currently: ${this.keys.length}`);
         }
 
         const keyList = new KeyList();
