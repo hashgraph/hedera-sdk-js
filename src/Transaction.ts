@@ -140,11 +140,12 @@ export class Transaction {
 
     private async waitForReceipt(): Promise<TransactionReceipt> {
         const validStartMs = timestampToMs(orThrow(this.txnId.getTransactionvalidstart()));
-        const validUntilMs = validStartMs + this.validDurationSeconds * 1000;
+        // set timeout at max valid duration
+        const validUntilMs = validStartMs + 120000;
 
         await setTimeoutAwaitable(receiptInitialDelayMs);
 
-        for(let attempt = 0;/* loop will exit when transaction expires */; attempt += 1) {
+        for (let attempt = 0;/* loop will exit when transaction expires */; attempt += 1) {
             const receipt = await this.getReceipt();
 
             // typecast required or we get a mismatching union type error
@@ -154,8 +155,8 @@ export class Transaction {
                     * Math.random() * (2 ** attempt - 1));
 
                 if (Date.now() + delay > validUntilMs) {
-                    throw "timed out waiting for consensus on transaction ID: "
-                        + this.txnId.toObject();
+                    throw new Error("timed out waiting for consensus on transaction ID: "
+                        + this.txnId.toObject());
                 }
 
                 await setTimeoutAwaitable(delay);
