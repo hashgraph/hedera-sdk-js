@@ -2,9 +2,9 @@ import * as bip39 from "bip39";
 import * as nacl from "tweetnacl";
 import * as crypto from 'crypto';
 import * as util from 'util';
-import * as bip32 from 'bip32';
 import {Key, KeyList, ThresholdKey as ThresholdKeyProto} from "./generated/BasicTypes_pb";
-import {orThrow} from "./util";
+
+const pbkdf2 = util.promisify(crypto.pbkdf2);
 
 // we could go through the whole BS of producing a DER-encoded structure but it's quite simple
 // for Ed25519 keys and we don't have to shell out to a potentially broken lib
@@ -74,7 +74,8 @@ export class Ed25519PublicKey implements PublicKey {
 export class Ed25519PrivateKey {
     private readonly keyData: Uint8Array;
     public readonly publicKey: Ed25519PublicKey;
-    private asString: string | null = null;
+    private asString?: string;
+    private chainCode?: Uint8Array;
 
     private constructor({ privateKey, publicKey }: RawKeyPair) {
         if (privateKey.length !== nacl.sign.secretKeyLength) {
@@ -85,6 +86,11 @@ export class Ed25519PrivateKey {
         this.publicKey = new Ed25519PublicKey(publicKey);
     }
 
+    /**
+     * Recover a private key from its raw bytes form.
+     *
+     * This key will _not_ support child key derivation.
+     */
     public static fromBytes(bytes: Uint8Array): Ed25519PrivateKey {
         // this check is necessary because Jest breaks the prototype chain of Uint8Array
         // noinspection SuspiciousTypeOfGuard
@@ -109,7 +115,11 @@ export class Ed25519PrivateKey {
         return new Ed25519PrivateKey({ privateKey, publicKey });
     }
 
-    /** Recover a key from a hex-encoded DER structure */
+    /**
+     * Recover a key from a hex-encoded string.
+     *
+     * This key will _not_ support child key derivation.
+     */
     public static fromString(keyStr: string): Ed25519PrivateKey {
         switch (keyStr.length) {
             case 64: // lone private key
@@ -126,21 +136,46 @@ export class Ed25519PrivateKey {
     }
 
     /**
-     * Recover a key from a 24-word mnemonic string.
+     * Recover a key from a 24-word mnemonic.
      *
      * There is no corresponding `toMnemonic()` as the mnemonic cannot be recovered from the key.
      *
      * Instead, you must generate a mnemonic and a corresponding key in that order with
      * `generateMnemonic()`.
      *
+     * This key *will* support deriving child keys with `.derive()`.
+     *
+     * @param mnemonic the mnemonic, either as a string separated by spaces or as a 24-element array
+     * @param passphrase the passphrase to protect the private key with
+     *
      * @link generateMnemonic
      */
-    public static async fromMnemonic(mnemonic: string): Promise<Ed25519PrivateKey> {
-        return this.generate(decodeHex(bip39.mnemonicToEntropy(mnemonic)));
+    public static async fromMnemonic(mnemonic: string | string[], passphrase?: string): Promise<Ed25519PrivateKey> {
+        const input = Array.isArray(mnemonic) ? mnemonic.join(' ') : mnemonic;
+        const salt = `mnemonic${passphrase || ''}`;
+        const seed = await pbkdf2(input, salt, 2048, 64, 'sha512');
+
+        const hmac = crypto.createHmac('sha512', 'ed25519 seed');
+        hmac.update(seed);
+
+        const digest = hmac.digest();
+
+        let keyBytes: Uint8Array = digest.subarray(0, 32);
+        let chainCode: Uint8Array = digest.subarray(32);
+
+        for (const index of [44, 3030, 0, 0]) {
+            ({ keyBytes, chainCode } = deriveChildKey(keyBytes, chainCode, index));
+        }
+
+        const key = Ed25519PrivateKey.fromBytes(keyBytes);
+        key.chainCode = chainCode;
+        return key;
     }
 
     /**
      * Recover a private key from a keystore blob previously created by `.createKeystore()`.
+     *
+     * This key will _not_ support child key derivation.
      *
      * @param keystore the keystore blob
      * @param passphrase the passphrase used to create the keystore
@@ -152,36 +187,36 @@ export class Ed25519PrivateKey {
     }
 
     /**
-     * Generate a private key from 32 bytes of entropy.
+     * Generate a new, cryptographically random private key.
      *
-     * @param entropy the entropy to use; defaults to 32 cryptographically random bytes
+     * This key will _not_ support child key derivation.
      */
-    public static async generate(entropy: Uint8Array = crypto.randomBytes(32)): Promise<Ed25519PrivateKey> {
-        if (entropy.length !== 32) {
-            throw new Error('generating an ed25519 key requires 32 bytes of entropy');
-        }
-
-        return this.fromBytes(await deriveSeed(entropy));
+    public static async generate(): Promise<Ed25519PrivateKey> {
+        return this.fromBytes(crypto.randomBytes(32));
     }
 
     /**
-     * Derive a new private key using [BIP32] as specified by [BIP44].
+     * Derive a new private key at the given wallet index.
      *
-     * `purpose = "44"` and `coin = "3030" (Hedera HBAR)` are hardcoded.
+     * Only currently supported for keys created with `fromMnemonic()`; other keys will throw
+     * an error.
      *
-     * [BIP32]: https://github.com/bitcoin/bips/blob/33e6283/bip-0032.mediawiki
-     * [BIP44]: https://github.com/bitcoin/bips/blob/33e6283/bip-0044.mediawiki
+     * You can check if a key supports derivation with `.supportsDerivation`
      */
-    public derive({ account, change, index }: DeriveOpts): Ed25519PrivateKey {
-        return Ed25519PrivateKey.fromBytes(
-            orThrow(
-                bip32.fromSeed(Buffer.from(this.keyData.subarray(0, 32)))
-                // BIP44 specifies "purpose", "cointype" and "account" should be marked "hardened"
-                // for BIP32 derivation
-                    .derivePath(`m/44'/3030'/${account}'/${change}/${index}`)
-                    .privateKey
-            )
-        );
+    public derive(index: number): Ed25519PrivateKey {
+        if (!this.chainCode) {
+            throw new Error('this Ed25519 private key does not support key derivation');
+        }
+
+        const { keyBytes, chainCode } = deriveChildKey(this.keyData.subarray(0, 32), this.chainCode, index);
+        const key = Ed25519PrivateKey.fromBytes(keyBytes);
+        key.chainCode = chainCode;
+        return key;
+    }
+
+    /** Check if this private key supports deriving child keys */
+    public get supportsDerivation(): boolean {
+        return !!this.chainCode;
     }
 
     /** Sign the given message with this key. */
@@ -196,7 +231,7 @@ export class Ed25519PrivateKey {
     }
 
     public toString(): string {
-        if (this.asString === null) {
+        if (!this.asString) {
             // only encode the private portion of the private key
             this.asString = encodeHex(this.keyData.subarray(0, 32), ed25519PrivKeyPrefix);
         }
@@ -209,11 +244,32 @@ export class Ed25519PrivateKey {
      *
      * The key can be recovered later with `fromKeystore()`.
      *
+     * Note that this will not retain the ancillary data used for deriving child keys,
+     * thus `.derive()` on the restored key will throw even if this instance supports derivation.
+     *
      * @link fromKeystore
      */
     public createKeystore(passphrase: string): Promise<Uint8Array> {
         return createKeystore(this.keyData, passphrase);
     }
+}
+
+/** SLIP-10/BIP-32 child key derivation */
+function deriveChildKey(parentKey: Uint8Array, chainCode: Uint8Array, index: number): { keyBytes: Uint8Array; chainCode: Uint8Array } {
+    const hmac = crypto.createHmac('SHA512', chainCode);
+    const input = new Uint8Array(37);
+    // 0x00 + parentKey + index(BE)
+    input[0] = 0;
+    input.set(parentKey, 1);
+    new DataView(input.buffer).setUint32(33, index, false);
+    // set the index to hardened
+    input[33] = input[33] | 128;
+
+    hmac.update(input);
+
+    const digest = hmac.digest();
+
+    return { keyBytes: digest.subarray(0, 32), chainCode: digest.subarray(32) }
 }
 
 export interface PublicKey {
@@ -287,8 +343,6 @@ function decodeHex(hex: string): Uint8Array {
     return decodedHex;
 }
 
-const pbkdf2 = util.promisify(crypto.pbkdf2);
-
 export type RawKeyPair = {
     /** 32-byte raw Ed25519 private key */
     privateKey: Uint8Array;
@@ -299,8 +353,8 @@ export type RawKeyPair = {
 /** result of `generateMnemonic()` */
 export type MnemonicResult = {
     mnemonic: string;
-    /** Lazily generate the key */
-    generateKey: () => Promise<Ed25519PrivateKey>;
+    /** Lazily generate the key, providing an optional passphrase to protect it with */
+    generateKey: (passphrase?: string) => Promise<Ed25519PrivateKey>;
 }
 
 /**
@@ -311,18 +365,8 @@ export type MnemonicResult = {
  * **NOTE:** Mnemonics must be saved separately as they cannot be later recovered from a given key.
  */
 export function generateMnemonic(): MnemonicResult {
-    const entropy = crypto.randomBytes(32);
-    const mnemonic = bip39.entropyToMnemonic(Buffer.from(entropy));
-    return { mnemonic, generateKey: () => Ed25519PrivateKey.generate(entropy) };
-}
-
-// duplicating what is done here:
-// https://github.com/hashgraph/hedera-keygen-java/blob/master/src/main/java/com/hedera/sdk/keygen/CryptoUtils.java#L43
-async function deriveSeed(entropy: Uint8Array): Promise<Uint8Array> {
-    const password = Buffer.concat([Buffer.from(entropy), Buffer.of(-1, -1, -1, -1, -1, -1, -1, -1)]);
-    const salt = Buffer.of(-1);
-
-    return pbkdf2(password, salt, 2048, 32, 'sha512');
+    const mnemonic = bip39.generateMnemonic();
+    return { mnemonic, generateKey: (passphrase) => Ed25519PrivateKey.fromMnemonic(mnemonic, passphrase) };
 }
 
 export type Keystore = {

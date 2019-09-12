@@ -23,7 +23,6 @@
     "@types/google-protobuf": "^3.7.1",
     "bignumber.js": "^9.0.0",
     "bip32": "^2.0.4",
-    "bip39": "^3.0.2",
     "google-protobuf": "^3.9.1",
     "grpc": "^1.23.3",
     "tweetnacl": "^1.0.1"
