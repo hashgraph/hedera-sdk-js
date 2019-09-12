@@ -1,12 +1,12 @@
 import {AccountID, TransactionID} from "./generated/BasicTypes_pb";
 import {Timestamp} from "./generated/Timestamp_pb";
 import {Duration} from "./generated/Duration_pb";
-import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
 import {AccountId, TransactionId} from "./typedefs";
 import {ResponseHeader} from "./generated/ResponseHeader_pb";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";
 import BigNumber from "bignumber.js";
+import {throwIfExceptional} from "./errors";
 
 export function orThrow<T>(val?: T, msg = 'value must not be null'): T {
     if (val === undefined || val === null) {
@@ -62,22 +62,6 @@ export function newDuration(seconds: number): Duration {
     return duration;
 }
 
-export function isPrecheckCodeOk(code: number, unknownOk = false): boolean {
-    switch (code) {
-        case ResponseCodeEnum.SUCCESS:
-        case ResponseCodeEnum.OK:
-            return true;
-        case ResponseCodeEnum.UNKNOWN:
-            return unknownOk;
-        default:
-            return false;
-    }
-}
-
-const reversePrechecks: { [code: number]: string } = Object.entries(ResponseCodeEnum)
-    .reduce((map, [name, code]) => ({ ...map, [code]: name }), {});
-export const reversePrecheck = (code: number): string => reversePrechecks[code] || `unknown precheck code: ${code}`;
-
 export function getProtoAccountId({ shard, realm, account }: AccountId): AccountID {
     const acctId = new AccountID();
     acctId.setShardnum(shard);
@@ -120,11 +104,8 @@ export function handleQueryPrecheck<T extends GetHeader>(getBody: (r: Response) 
 
         const precheck = header.getNodetransactionprecheckcode();
 
-        if (isPrecheckCodeOk(precheck)) {
-            return body;
-        } else {
-            throw new Error(reversePrecheck(precheck));
-        }
+        throwIfExceptional(precheck);
+        return body;
     }
 }
 
@@ -132,11 +113,8 @@ export function handlePrecheck(resp_: TransactionResponse | undefined): Transact
     const resp = reqDefined(resp_, 'missing TransactionResponse');
     const precheck = resp.getNodetransactionprecheckcode();
 
-    if (isPrecheckCodeOk(precheck, true)) {
-        return resp;
-    } else {
-        throw new Error(reversePrecheck(precheck));
-    }
+    throwIfExceptional(precheck);
+    return resp;
 }
 
 const maxTinybarBignum = new BigNumber(2).pow(63).minus(1);

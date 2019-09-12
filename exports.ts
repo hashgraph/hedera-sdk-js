@@ -11,6 +11,8 @@ export {CryptoTransferTransaction} from './src/account/CryptoTransferTransaction
 
 export {Transaction} from './src/Transaction';
 
+export {HederaError, ResponseCodeEnum, ResponseCode, getResponseCodeName} from './src/errors';
+
 export {
     Ed25519PrivateKey, Ed25519PublicKey, ThresholdKey, PublicKey,
     generateMnemonic, KeyMismatchException
