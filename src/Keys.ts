@@ -258,8 +258,9 @@ export class Ed25519PrivateKey {
 
 /** SLIP-10/BIP-32 child key derivation */
 function deriveChildKey(parentKey: Uint8Array, chainCode: Uint8Array, index: number): { keyBytes: Uint8Array; chainCode: Uint8Array } {
-    const hmac = crypto.createHmac('SHA512', chainCode);
-    const input = new Uint8Array(37);
+    // webpack version of crypto complains if input types are not `Buffer`
+    const hmac = crypto.createHmac('SHA512', Buffer.from(chainCode));
+    const input = Buffer.alloc(37);
     // 0x00 + parentKey + index(BE)
     input[0] = 0;
     input.set(parentKey, 1);
