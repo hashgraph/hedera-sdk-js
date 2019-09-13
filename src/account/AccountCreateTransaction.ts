@@ -19,8 +19,8 @@ export class AccountCreateTransaction extends TransactionBuilder {
         this.body = body;
         this.inner.setCryptocreateaccount(body);
 
-        // 30 days, default recommended
-        this.setAutoRenewPeriod(30 * 86400);
+        // 90 days, required
+        this.setAutoRenewPeriod(7890000);
         // Default to maximum values for record thresholds. Without this records would be
         // auto-created whenever a send or receive transaction takes place for this new account.
         // This should be an explicit ask.
