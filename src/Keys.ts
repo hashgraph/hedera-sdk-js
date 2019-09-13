@@ -369,7 +369,8 @@ export type MnemonicResult = {
  * **NOTE:** Mnemonics must be saved separately as they cannot be later recovered from a given key.
  */
 export function generateMnemonic(): MnemonicResult {
-    const mnemonic = bip39.generateMnemonic();
+    // 256-bit entropy gives us 24 words
+    const mnemonic = bip39.generateMnemonic(256);
     return { mnemonic, generateKey: (passphrase) => Ed25519PrivateKey.fromMnemonic(mnemonic, passphrase) };
 }
 

@@ -145,8 +145,13 @@ describe('ThresholdKey', () => {
     });
 });
 
-describe("generateMnemonic", () => {
-    it('generateMnemonic produces a recoverable private key', async () => {
+describe("generateMnemonic()", () => {
+    it('produces a 24-word mnemonic', () => {
+        const mnemonic = generateMnemonic();
+        expect(mnemonic.mnemonic.split(' ')).toHaveLength(24);
+    });
+
+    it('produces a recoverable private key', async () => {
         const mnemonic = generateMnemonic();
 
         const key1 = await mnemonic.generateKey();
