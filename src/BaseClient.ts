@@ -41,6 +41,10 @@ export type ClientConfig = {
     operator: Operator;
 };
 
+export const randomNode = Symbol();
+export const getNode = Symbol();
+export const unaryCall = Symbol();
+
 export abstract class BaseClient {
     public readonly operator: Operator;
     private readonly operatorAcct: AccountId;
@@ -49,7 +53,7 @@ export abstract class BaseClient {
 
     protected readonly nodes: Node[];
 
-    public constructor(nodes: Nodes, operator: Operator) {
+    protected constructor(nodes: Nodes, operator: Operator) {
         this.nodes = Array.isArray(nodes) ? nodes : Object.entries(nodes);
         this.operator = operator;
         this.operatorAcct = operator.account;
@@ -104,7 +108,7 @@ export abstract class BaseClient {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
         balanceQuery.setAccountid(getProtoAccountId(this.operatorAcct));
 
-        const [url, nodeAccountID] = this.randomNode();
+        const [url, nodeAccountID] = this[randomNode]();
 
         const paymentTxn = new CryptoTransferTransaction(this)
             .addSender(this.operatorAcct, 0)
@@ -119,16 +123,16 @@ export abstract class BaseClient {
         const query = new Query();
         query.setCryptogetaccountbalance(balanceQuery);
 
-        return this.unaryCall(url, query, CryptoService.cryptoGetBalance)
+        return this[unaryCall](url, query, CryptoService.cryptoGetBalance)
             .then(handleQueryPrecheck((resp) => resp.getCryptogetaccountbalance()))
             .then((response) => new BigNumber(response.getBalance()));
     }
 
-    public randomNode(): Node {
+    public [randomNode](): Node {
         return this.nodes[Math.floor(Math.random() * this.nodes.length)];
     }
 
-    public getNode(node: string | AccountId): Node {
+    public [getNode](node: string | AccountId): Node {
         const maybeNode = this.nodes.find(([url, accountId]) => url === node || (
             typeof node === 'object'
                 && accountId.account == node.account
@@ -143,5 +147,5 @@ export abstract class BaseClient {
         throw new Error(`could not find node: ${JSON.stringify(node)}`);
     }
 
-    public abstract unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs>;
+    public abstract [unaryCall]<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs>;
 }
