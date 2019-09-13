@@ -1,4 +1,5 @@
 import {Ed25519PrivateKey, Ed25519PublicKey, generateMnemonic, ThresholdKey,} from '../src/Keys';
+import * as nacl from "tweetnacl";
 
 // key from hedera-sdk-java tests, not used anywhere
 const privKeyBytes = Uint8Array.of(
@@ -38,6 +39,8 @@ const androidWalletPrivKey = 'c284c25b3a1458b59423bc289e83703b125c8eefec4d5aa1b3
 const androidWalletKeyBytes = Uint8Array.from(Buffer.from(androidWalletPrivKey, 'hex'));
 const androidWalletPrivKeyBytes = androidWalletKeyBytes.subarray(0, 32);
 const androidWalletPubKeyBytes = androidWalletKeyBytes.subarray(32);
+
+const signTestData = Uint8Array.from(Buffer.from('this is the test data to sign', 'utf8'));
 
 const passphrase = 'asdf1234';
 
@@ -100,11 +103,18 @@ describe('Ed25519PrivateKey', () => {
         expect(iosChildKey.toBytes()).toStrictEqual(iosWalletPrivKeyBytes);
         expect(iosChildKey.publicKey.toBytes()).toStrictEqual(iosWalletPubKeyBytes);
 
+        const iosSignature = iosChildKey.sign(signTestData);
+        // `.open()` returns the unsigned data
+        expect(nacl.sign.open(iosSignature, iosChildKey.publicKey.toBytes())).toStrictEqual(signTestData);
+
         const androidKey = await Ed25519PrivateKey.fromMnemonic(androidWalletMnemonic);
         const androidChildKey = androidKey.derive(0);
 
         expect(androidChildKey.toBytes()).toStrictEqual(androidWalletPrivKeyBytes);
         expect(androidChildKey.publicKey.toBytes()).toStrictEqual(androidWalletPubKeyBytes);
+
+        const androidSignature = androidChildKey.sign(signTestData);
+        expect(nacl.sign.open(androidSignature, androidChildKey.publicKey.toBytes())).toStrictEqual(signTestData);
     });
 });
 
