@@ -1,4 +1,10 @@
-import {Ed25519PrivateKey, Ed25519PublicKey, generateMnemonic, ThresholdKey,} from '../src/Keys';
+import {
+    Ed25519PrivateKey,
+    Ed25519PublicKey,
+    generateMnemonic,
+    KeyMismatchException,
+    ThresholdKey,
+} from '../src/Keys';
 import * as nacl from "tweetnacl";
 
 // key from hedera-sdk-java tests, not used anywhere
@@ -94,6 +100,11 @@ describe('Ed25519PrivateKey', () => {
         const key2 = await Ed25519PrivateKey.fromKeystore(keystoreBytes, passphrase);
 
         expect(key1.toBytes()).toStrictEqual(key2.toBytes());
+
+        // keystore with the wrong password should reject with a `KeyMismatchException`
+        await expect(Ed25519PrivateKey.fromKeystore(keystoreBytes, 'some random password'))
+            .rejects
+            .toBeInstanceOf(KeyMismatchException);
     });
 
     it('derive() produces correct value', async () => {
