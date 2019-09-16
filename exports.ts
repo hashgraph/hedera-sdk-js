@@ -15,7 +15,7 @@ export {HederaError, ResponseCodeEnum, ResponseCode, getResponseCodeName} from '
 
 export {
     Ed25519PrivateKey, Ed25519PublicKey, ThresholdKey, PublicKey,
-    generateMnemonic, KeyMismatchException
+    generateMnemonic, KeyMismatchException, MnemonicResult
 } from './src/Keys';
 
 export * from './src/typedefs';
