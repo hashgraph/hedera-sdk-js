@@ -48,6 +48,21 @@ export function throwIfExceptional(code: ResponseCode, unknownOk = false): void 
     }
 }
 
+export class ValidationError extends Error {
+    public constructor(className: string, errors: string[]) {
+        super(`${className} failed validation:\n${errors.join('\n')}`);
+    }
+}
+
+export class MaxPaymentExceededException extends Error {
+    public readonly queryCost: BigNumber;
+
+    constructor(queryCost: BigNumber, maxQueryCost: BigNumber) {
+        super(`query cost ${queryCost} exceeds max set on client: ${maxQueryCost}`);
+        this.queryCost = queryCost;
+    }
+}
+
 export class TinybarValueError extends Error {
     public readonly amount: BigNumber;
 
