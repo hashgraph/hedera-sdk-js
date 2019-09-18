@@ -4,10 +4,11 @@ import {TransactionResponse} from "../generated/TransactionResponse_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {CryptoCreateTransactionBody} from "../generated/CryptoCreate_pb";
 import {BaseClient} from "../BaseClient";
-import {checkNumber, newDuration} from "../util";
+import {checkNumber, newDuration, toPositiveTinybarString} from "../util";
 import {PublicKey} from "../Keys";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "../generated/CryptoService_pb_service";
+import {Hbar} from "../Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 export class AccountCreateTransaction extends TransactionBuilder {
@@ -38,9 +39,8 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    setInitialBalance(balance: number | BigNumber): this {
-        checkNumber(balance);
-        this.body.setInitialbalance(String(balance));
+    setInitialBalance(balance: number | BigNumber | Hbar): this {
+        this.body.setInitialbalance(toPositiveTinybarString(balance));
         return this;
     }
 

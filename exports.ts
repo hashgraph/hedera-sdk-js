@@ -19,3 +19,5 @@ export {
 } from './src/Keys';
 
 export * from './src/typedefs';
+
+export {Hbar, HbarUnit, hbarUnits, hbarUnitSymbols} from './src/Hbar';

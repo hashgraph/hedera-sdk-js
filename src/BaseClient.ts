@@ -14,6 +14,7 @@ import BigNumber from "bignumber.js";
 import {CryptoService} from "./generated/CryptoService_pb_service";
 
 import {AccountId, TransactionId} from "./typedefs";
+import {Hbar} from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
@@ -94,7 +95,7 @@ export abstract class BaseClient {
      * @param recipient
      * @param amount
      */
-    public transferCryptoTo(recipient: AccountId, amount: number | BigNumber): Promise<TransactionId> {
+    public transferCryptoTo(recipient: AccountId, amount: number | BigNumber | Hbar): Promise<TransactionId> {
         const txn = new CryptoTransferTransaction(this)
             .addSender(this.operatorAcct, amount)
             .addRecipient(recipient, amount)
