@@ -1,6 +1,12 @@
 import {BaseClient, getNode, Node, randomNode} from "./BaseClient";
 import {TransactionBody} from "./generated/TransactionBody_pb";
-import {getProtoAccountId, getProtoTxnId, newDuration, newTxnId} from "./util";
+import {
+    getProtoAccountId,
+    getProtoTxnId,
+    newDuration,
+    newTxnId,
+    toPositiveTinybarString
+} from "./util";
 import {newTxn, Transaction} from "./Transaction";
 import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {grpc} from "@improbable-eng/grpc-web";
@@ -8,6 +14,7 @@ import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import BigNumber from "bignumber.js";
 
 import {AccountId, TransactionId} from "./typedefs";
+import {Hbar} from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
@@ -38,8 +45,8 @@ export abstract class TransactionBuilder {
         return this;
     }
 
-    public setTransactionFee(fee: number | BigNumber): this {
-        this.inner.setTransactionfee(String(fee));
+    public setTransactionFee(fee: number | BigNumber | Hbar): this {
+        this.inner.setTransactionfee(toPositiveTinybarString(fee));
         return this;
     }
 

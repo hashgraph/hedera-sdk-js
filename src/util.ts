@@ -7,6 +7,7 @@ import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";
 import BigNumber from "bignumber.js";
 import {throwIfExceptional} from "./errors";
+import {Hbar} from "./Hbar";
 
 export function orThrow<T>(val?: T, msg = 'value must not be null'): T {
     if (val === undefined || val === null) {
@@ -125,6 +126,33 @@ export function checkNumber(amount: number | BigNumber): void {
         throw new Error('`amount` as BigNumber must be an integer in the range [-2^63, 2^63)');
     } else if (typeof amount === 'number' && !Number.isSafeInteger(amount)) {
         throw new TypeError('`amount` as number must be in the range [-2^53, 2^53 - 1)');
+    }
+}
+
+export function toTinybarString(amount: number | BigNumber | Hbar): string {
+    if (amount instanceof Hbar) {
+        return String(amount.asTinybar());
+    } else {
+        checkNumber(amount);
+        return String(amount);
+    }
+}
+
+export function toPositiveTinybarString(amount: number | BigNumber | Hbar): string {
+    if (amount instanceof Hbar) {
+        if (amount.isNegative()) {
+            throw new Error(`amount must not be negative: ${amount.asTinybar()}`)
+        }
+
+        return String(amount.asTinybar());
+    } else {
+        checkNumber(amount);
+
+        if ((amount instanceof BigNumber && amount.isNegative()) || amount < 0) {
+            throw new Error(`amount must not be negative: ${amount}`)
+        }
+
+        return String(amount);
     }
 }
 

@@ -8,11 +8,12 @@ import {
     CryptoTransferTransactionBody,
     TransferList
 } from "../generated/CryptoTransfer_pb";
-import {checkNumber, getProtoAccountId, reqDefined} from "../util";
+import {getProtoAccountId, reqDefined, toTinybarString} from "../util";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 
 import {AccountId} from "../typedefs";
+import {Hbar} from "../Hbar";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
     private readonly body: CryptoTransferTransactionBody;
@@ -42,31 +43,33 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         }
     }
 
-    addSender(accountId: AccountId, amount: number | BigNumber): this {
-        if (amount < 0) {
-            throw new Error('amount for addSender() must be nonnegative');
-        }
+    addSender(accountId: AccountId, amount: number | BigNumber | Hbar): this {
+        if (amount instanceof Hbar || amount instanceof BigNumber) {
+            if (amount.isNegative()) {
+                throw new Error('sending amount may not be negative');
+            }
 
-        return this.addTransfer(accountId, -amount);
+            return this.addTransfer(accountId, amount.negated());
+        } else {
+            if (amount < 0) {
+                throw new Error('sending amount may not be negative');
+            }
+
+            return this.addTransfer(accountId, -amount);
+        }
     }
 
-    addRecipient(accountId: AccountId, amount: number | BigNumber): this {
-        if (amount < 0) {
-            throw new Error('amount for addRecipient() must be nonnegative');
-        }
-
+    addRecipient(accountId: AccountId, amount: number | BigNumber | Hbar): this {
         return this.addTransfer(accountId, amount);
     }
 
-    addTransfer(accountId: AccountId, amount: number | BigNumber): this {
-        checkNumber(amount);
-
+    addTransfer(accountId: AccountId, amount: number | BigNumber | Hbar): this {
         const transfers = this.body.getTransfers() || new TransferList();
         this.body.setTransfers(transfers);
 
         const acctAmt = new AccountAmount();
         acctAmt.setAccountid(getProtoAccountId(accountId));
-        acctAmt.setAmount(String(amount));
+        acctAmt.setAmount(toTinybarString(amount));
 
         transfers.addAccountamounts(acctAmt);
 
