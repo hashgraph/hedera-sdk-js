@@ -6,14 +6,20 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {CryptoGetAccountBalanceQuery} from "./generated/CryptoGetAccountBalance_pb";
 import {QueryHeader} from "./generated/QueryHeader_pb";
 
-import {getProtoAccountId, getSdkAccountId, handleQueryPrecheck, reqDefined} from "./util";
+import {
+    getProtoAccountId,
+    getSdkAccountId,
+    handleQueryPrecheck,
+    reqDefined,
+    tinybarRangeCheck
+} from "./util";
 import {ProtobufMessage} from "@improbable-eng/grpc-web/dist/typings/message";
 import {AccountCreateTransaction} from "./account/AccountCreateTransaction";
 import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "./generated/CryptoService_pb_service";
 
-import {AccountId, TransactionId} from "./typedefs";
+import {AccountId, Tinybar, TransactionId} from "./typedefs";
 import {Hbar} from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
@@ -54,6 +60,9 @@ export abstract class BaseClient {
 
     protected readonly nodes: Node[];
 
+    private _maxTransactionFee: Hbar = Hbar.of(1);
+    private _maxQueryPayment?: Hbar;
+
     protected constructor(nodes: Nodes, operator: Operator) {
         this.nodes = Array.isArray(nodes) ? nodes : Object.entries(nodes);
         this.operator = operator;
@@ -70,6 +79,54 @@ export abstract class BaseClient {
             ({ publicKey: this.operatorPublicKey, signer: this.operatorSigner } =
                 (operator as PubKeyAndSigner));
         }
+    }
+
+    /** Get the current maximum transaction fee. */
+    public get maxTransactionFee(): Hbar {
+        return this._maxTransactionFee;
+    }
+
+    /** Get the current maximum query payment value, if set. */
+    public get maxQueryPayment(): Hbar | undefined {
+        return this._maxQueryPayment;
+    }
+
+    /**
+     * Set the default maximum fee for a transaction.
+     *
+     * This can be overridden for an individual transaction with
+     * `TransactionBuilder.setTransactionFee()`.
+     *
+     * If a transaction's fee will exceed this value, a `HederaError` will be thrown with
+     * `ResponseCode.INSUFFICIENT_TX_FEE`.
+     *
+     * @param maxFee
+     * @throws TinybarValueError if the value is out of range for the protocol
+     */
+    public setMaxTransactionFee(maxFee: Tinybar | Hbar): this {
+        tinybarRangeCheck(maxFee);
+        this._maxTransactionFee = maxFee instanceof Hbar ? maxFee : Hbar.fromTinybar(maxFee);
+        return this;
+    }
+
+    /**
+     * Set the max payment that can be automatically attached to a query.
+     *
+     * If this is not called then by default no payments will be made automatically for queries.
+     *
+     * If a query will cost more than this amount, a `MaxPaymentExceededError` will be thrown
+     * from `QueryBuilder.execute()`.
+     *
+     * This can be overridden for an individual query with
+     * `query.setPaymentDefault(await query.requestCost())`.
+     *
+     * @param maxPayment the maximum automatic payment for a query
+     * @throws TinybarValueError if the value is out of range for the protocol
+     */
+    public setMaxQueryPayment(maxPayment: Tinybar | Hbar): this {
+        tinybarRangeCheck(maxPayment);
+        this._maxQueryPayment = maxPayment instanceof Hbar ? maxPayment : Hbar.fromTinybar(maxPayment);
+        return this;
     }
 
     public createAccount(publicKey: Ed25519PublicKey, initialBalance = 100_000): Promise<{ account: AccountId }> {

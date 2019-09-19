@@ -4,7 +4,7 @@ import {TransactionResponse} from "../generated/TransactionResponse_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {CryptoCreateTransactionBody} from "../generated/CryptoCreate_pb";
 import {BaseClient} from "../BaseClient";
-import {newDuration, tinybarRangeCheck, tinybarToString} from "../util";
+import {newDuration, tinybarToString} from "../util";
 import {PublicKey} from "../Keys";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "../generated/CryptoService_pb_service";
@@ -26,8 +26,8 @@ export class AccountCreateTransaction extends TransactionBuilder {
         // Default to maximum values for record thresholds. Without this records would be
         // auto-created whenever a send or receive transaction takes place for this new account.
         // This should be an explicit ask.
-        this.setReceiveRecordThreshold(Number.MAX_SAFE_INTEGER);
-        this.setSendRecordThreshold(Number.MAX_SAFE_INTEGER);
+        this.setReceiveRecordThreshold(Hbar.MAX_VALUE);
+        this.setSendRecordThreshold(Hbar.MAX_VALUE);
     }
 
     setKey(publicKey: PublicKey): this {
@@ -45,15 +45,13 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    setReceiveRecordThreshold(threshold: number): this {
-        tinybarRangeCheck(threshold);
-        this.body.setReceiverecordthreshold(threshold);
+    setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
+        this.body.setReceiverecordthreshold(tinybarToString(threshold));
         return this;
     }
 
-    setSendRecordThreshold(threshold: number): this {
-        tinybarRangeCheck(threshold);
-        this.body.setSendrecordthreshold(threshold);
+    setSendRecordThreshold(threshold: Tinybar | Hbar): this {
+        this.body.setSendrecordthreshold(tinybarToString(threshold));
         return this;
     }
 
@@ -61,13 +59,13 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return CryptoService.createAccount;
     }
 
-    doValidate(): void {
+    doValidate(errors: string[]): void {
         if (!this.body.hasKey()) {
-            throw new Error('AccountCreateTransaction requires setKey()');
+            errors.push('AccountCreateTransaction requires setKey()');
         }
 
         if (new BigNumber(this.body.getInitialbalance()).isZero()) {
-            throw new Error('AccountCreateTransaction must have nonzero setInitialBalance')
+            errors.push('AccountCreateTransaction must have nonzero setInitialBalance')
         }
     }
 }

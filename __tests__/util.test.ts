@@ -30,9 +30,11 @@ describe('tinybarRangeCheck()', () => {
         expect(() => tinybarRangeCheck(Hbar.from(93, 'gigabar'))).toThrow(TinybarValueError);
         // the maximum amount of gigabar in the network at any given time
         expect(() => tinybarRangeCheck(Hbar.from(50, 'gigabar'))).not.toThrow();
+        expect(() => tinybarRangeCheck(Hbar.MAX_VALUE)).not.toThrow();
 
         expect(() => tinybarRangeCheck(Hbar.from(-93, 'gigabar'), 'allowNegative')).toThrow(TinybarValueError);
         expect(() => tinybarRangeCheck(Hbar.from(-50, 'gigabar'), 'allowNegative')).not.toThrow();
+        expect(() => tinybarRangeCheck(Hbar.MIN_VALUE, 'allowNegative')).not.toThrow();
 
     });
 });

@@ -48,6 +48,21 @@ export function throwIfExceptional(code: ResponseCode, unknownOk = false): void 
     }
 }
 
+export class ValidationError extends Error {
+    public constructor(className: string, errors: string[]) {
+        super(`${className} failed validation:\n${errors.join('\n')}`);
+    }
+}
+
+export class MaxPaymentExceededException extends Error {
+    public readonly queryCost: Hbar;
+
+    public constructor(queryCost: Hbar, maxQueryCost: Hbar) {
+        super(`query cost of ${queryCost.value()} HBAR exceeds max set on client: ${maxQueryCost.value()} HBAR`);
+        this.queryCost = queryCost;
+    }
+}
+
 export class TinybarValueError extends Error {
     public readonly amount: BigNumber;
 

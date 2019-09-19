@@ -6,7 +6,7 @@ import {ResponseHeader} from "./generated/ResponseHeader_pb";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";
 import BigNumber from "bignumber.js";
-import {throwIfExceptional, TinybarValueError} from "./errors";
+import {throwIfExceptional, TinybarValueError, ValidationError} from "./errors";
 import {Hbar} from "./Hbar";
 
 export function orThrow<T>(val?: T, msg = 'value must not be null'): T {
@@ -164,4 +164,51 @@ export function reqDefined<T>(val: T | undefined, msg: string): T {
     }
 
     return val;
+}
+
+export function runValidation(instance: object, doValidate: (errors: string[]) => void): void {
+    const errors: string[] = [];
+    doValidate(errors);
+    if (errors.length > 0) {
+        throw new ValidationError(instance.constructor.name, errors);
+    }
+}
+
+export function getResponseHeader(response: Response): ResponseHeader {
+    switch (response.getResponseCase()) {
+        case Response.ResponseCase.RESPONSE_NOT_SET:
+            throw new Error(`expected body for query response: ${response.toString()}`);
+        case Response.ResponseCase.GETBYKEY:
+            return response.getGetbykey()!.getHeader()!;
+        case Response.ResponseCase.GETBYSOLIDITYID:
+            return response.getGetbysolidityid()!.getHeader()!;
+        case Response.ResponseCase.CONTRACTCALLLOCAL:
+            return response.getContractcalllocal()!.getHeader()!;
+        case Response.ResponseCase.CONTRACTGETBYTECODERESPONSE:
+            return response.getContractgetbytecoderesponse()!.getHeader()!;
+        case Response.ResponseCase.CONTRACTGETINFO:
+            return response.getContractgetinfo()!.getHeader()!;
+        case Response.ResponseCase.CONTRACTGETRECORDSRESPONSE:
+            return response.getContractgetrecordsresponse()!.getHeader()!;
+        case Response.ResponseCase.CRYPTOGETACCOUNTBALANCE:
+            return response.getCryptogetaccountbalance()!.getHeader()!;
+        case Response.ResponseCase.CRYPTOGETACCOUNTRECORDS:
+            return response.getCryptogetaccountrecords()!.getHeader()!;
+        case Response.ResponseCase.CRYPTOGETINFO:
+            return response.getCryptogetinfo()!.getHeader()!;
+        case Response.ResponseCase.CRYPTOGETCLAIM:
+            return response.getCryptogetclaim()!.getHeader()!;
+        case Response.ResponseCase.CRYPTOGETPROXYSTAKERS:
+            return response.getCryptogetproxystakers()!.getHeader()!;
+        case Response.ResponseCase.FILEGETCONTENTS:
+            return response.getFilegetcontents()!.getHeader()!;
+        case Response.ResponseCase.FILEGETINFO:
+            return response.getFilegetinfo()!.getHeader()!;
+        case Response.ResponseCase.TRANSACTIONGETRECEIPT:
+            return response.getTransactiongetreceipt()!.getHeader()!;
+        case Response.ResponseCase.TRANSACTIONGETRECORD:
+            return response.getTransactiongetrecord()!.getHeader()!;
+        case Response.ResponseCase.TRANSACTIONGETFASTRECORD:
+            return response.getTransactiongetfastrecord()!.getHeader()!;
+    }
 }
