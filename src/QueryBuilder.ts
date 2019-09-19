@@ -4,11 +4,11 @@ import {Query} from "./generated/Query_pb";
 import {Response} from "./generated/Response_pb";
 import {throwIfExceptional} from "./errors";
 import BigNumber from "bignumber.js";
-import {checkNumber, getResponseHeader, runValidation} from "./util";
+import {getResponseHeader, runValidation} from "./util";
 import {grpc} from "@improbable-eng/grpc-web";
-import {Tinybar} from "./typedefs";
 import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
 import {Transaction} from "./generated/Transaction_pb";
+import {Hbar} from "./Hbar";
 
 export abstract class QueryBuilder<T> {
     private readonly client: BaseClient;
@@ -30,15 +30,14 @@ export abstract class QueryBuilder<T> {
     /**
      * Attach a signed payment from the operator account for the given amount.
      */
-    public async setPaymentDefault(amount: Tinybar): Promise<this> {
-        checkNumber(amount);
-
+    public async setPaymentDefault(amount: number | BigNumber | Hbar): Promise<this> {
         const [,nodeAccountId] = this.getNode();
 
         const payment = new CryptoTransferTransaction(this.client)
             .setNodeAccountId(nodeAccountId)
             .addRecipient(nodeAccountId, amount)
             .addSender(this.client.operator.account, amount)
+            .setTransactionFee(Hbar.of(1))
             .build();
 
         await payment.signWith(this.client.operatorPublicKey, this.client.operatorSigner);
@@ -73,12 +72,17 @@ export abstract class QueryBuilder<T> {
         runValidation(this, (errors) => this.prepaymentValidate(errors));
 
         // create a duplicate of the query with `COST_ANSWER` instead of the original response type
+        // we also must have a signed payment of 0 hbar which is not actually processed
         const responseType = this.header.getResponsetype();
         this.header.setResponsetype(ResponseType.COST_ANSWER);
+
+        const payment = this.header.getPayment();
+        this.setPaymentDefault(0);
 
         const query = this.inner.clone() as Query;
 
         this.header.setResponsetype(responseType);
+        this.header.setPayment(payment);
 
         const [url] = this.getNode();
 

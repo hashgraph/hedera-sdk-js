@@ -21,17 +21,16 @@ export class CryptoTransferTransaction extends TransactionBuilder {
     constructor(client: BaseClient) {
         super(client);
         this.body = new CryptoTransferTransactionBody();
+        this.body.setTransfers(new TransferList());
         this.inner.setCryptotransfer(this.body);
     }
 
-    protected doValidate(): void {
-        const missingTransfers = 'CryptoTransferTransaction must have at least one transfer';
-        const transfers = reqDefined(this.body.getTransfers(), missingTransfers);
-
-        const amts = transfers.getAccountamountsList();
+    protected doValidate(errors: string[]): void {
+        const amts = this.body.getTransfers()!.getAccountamountsList();
 
         if (amts.length === 0) {
-            throw new Error(missingTransfers);
+            errors.push('CryptoTransferTransaction must have at least one transfer');
+            return;
         }
 
         const sum = amts.reduce(
@@ -39,7 +38,7 @@ export class CryptoTransferTransaction extends TransactionBuilder {
             new BigNumber(0));
 
         if (!sum.isZero()) {
-            throw new Error('CryptoTransferTransaction must have zero sum; got: ' + sum);
+            errors.push('CryptoTransferTransaction must have zero sum; got: ' + sum);
         }
     }
 

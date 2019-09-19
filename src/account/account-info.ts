@@ -6,15 +6,15 @@ import {Response} from "../generated/Response_pb";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 import {BaseClient} from "../BaseClient";
 import {QueryHeader} from "../generated/QueryHeader_pb";
-import {AccountId, Timestamp} from "../typedefs";
+import {AccountId} from "../typedefs";
 import {Key} from "../generated/BasicTypes_pb";
-import {getProtoAccountId, getSdkAccountId} from "../util";
+import {getProtoAccountId, getSdkAccountId, timestampToMs} from "../util";
 import {Hbar} from "../Hbar";
 
 export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
     private readonly builder: CryptoGetInfoQuery;
 
-    constructor(client: BaseClient) {
+    public constructor(client: BaseClient) {
         const header = new QueryHeader();
         super(client, header);
         this.builder = new CryptoGetInfoQuery();
@@ -43,21 +43,15 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
             accountId: getSdkAccountId(accountInfo.getAccountid()!),
             contractAccountId: accountInfo.getContractaccountid() || undefined,
             isDeleted: accountInfo.getDeleted(),
-            proxyAccountId: accountInfo.hasProxyaccountid()
-                ? getSdkAccountId(accountInfo.getProxyaccountid()!)
-                : undefined,
-            proxyReceived: accountInfo.hasProxyaccountid()
-                ? Hbar.fromTinybar(accountInfo.getProxyreceived())
-                : undefined,
             key: accountInfo.getKey()!,
             balance: Hbar.fromTinybar(accountInfo.getBalance()),
             generateSendRecordThreshold: Hbar.fromTinybar(accountInfo.getGeneratesendrecordthreshold()),
             generateReceiveRecordThreshold: Hbar.fromTinybar(accountInfo.getGeneratereceiverecordthreshold()),
             receiverSigRequired: accountInfo.getReceiversigrequired(),
-            expirationTime: get
+            expirationTime: new Date(timestampToMs(accountInfo.getExpirationtime()!)),
+            autoRenewPeriodSeconds: accountInfo.getAutorenewperiod()!.getSeconds(),
         };
     }
-
 }
 
 export type AccountInfo = {
@@ -71,6 +65,8 @@ export type AccountInfo = {
     generateSendRecordThreshold: Hbar,
     generateReceiveRecordThreshold: Hbar,
     receiverSigRequired: boolean,
-    expirationTime: Timestamp,
+    expirationTime: Date,
+    autoRenewPeriodSeconds: number,
+    // proxy accounts and claims aren't really implemented so we're ignoring those
 };
 

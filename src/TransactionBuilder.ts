@@ -1,6 +1,6 @@
 import {BaseClient, getNode, Node, randomNode} from "./BaseClient";
 import {TransactionBody} from "./generated/TransactionBody_pb";
-import {getProtoAccountId, getProtoTxnId, newDuration, newTxnId, tinybarToString} from "./util";
+import {getProtoAccountId, getProtoTxnId, newDuration, newTxnId, tinybarToString, runValidation} from "./util";
 import {newTxn, Transaction} from "./Transaction";
 import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {grpc} from "@improbable-eng/grpc-web";
@@ -56,7 +56,7 @@ export abstract class TransactionBuilder {
 
     public abstract get method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
-    protected abstract doValidate(): void;
+    protected abstract doValidate(errors: string[]): void;
 
     protected getNode(): Node {
         if (!this.node) {
@@ -69,21 +69,23 @@ export abstract class TransactionBuilder {
     }
 
     public validate(): void {
-        if (!this.inner.hasTransactionid()) {
-            throw new Error('missing ID for transaction');
-        }
+        runValidation(this, (errors => {
+            if (!this.inner.hasTransactionid()) {
+                errors.push('missing ID for transaction');
+            }
 
-        if (this.inner.getTransactionfee() === '0') {
-            throw new Error('Every transaction requires setTransactionFee(). '
-                + 'This is only a maximum; the actual fee assessed may be lower.')
-        }
+            if (this.inner.getTransactionfee() === '0') {
+                errors.push('Every transaction requires setTransactionFee(). '
+                    + 'This is only a maximum; the actual fee assessed may be lower.')
+            }
 
-        // strings are UTF-16, max 100 bytes
-        if (this.inner.getMemo().length * 2 > 100) {
-            throw new Error('memo may not be longer than 100 bytes');
-        }
+            // strings are UTF-16, max 100 bytes
+            if (this.inner.getMemo().length * 2 > 100) {
+                errors.push('memo may not be longer than 100 bytes');
+            }
 
-        this.doValidate();
+            this.doValidate(errors);
+        }));
     }
 
     public build(): Transaction {
