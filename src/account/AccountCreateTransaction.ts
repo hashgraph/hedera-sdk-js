@@ -4,7 +4,7 @@ import {TransactionResponse} from "../generated/TransactionResponse_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {CryptoCreateTransactionBody} from "../generated/CryptoCreate_pb";
 import {BaseClient} from "../BaseClient";
-import {newDuration, tinybarRangeCheck, tinybarToString} from "../util";
+import {newDuration, tinybarToString} from "../util";
 import {PublicKey} from "../Keys";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "../generated/CryptoService_pb_service";
@@ -45,15 +45,13 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    setReceiveRecordThreshold(threshold: number): this {
-        tinybarRangeCheck(threshold);
-        this.body.setReceiverecordthreshold(threshold);
+    setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
+        this.body.setReceiverecordthreshold(tinybarToString(threshold));
         return this;
     }
 
-    setSendRecordThreshold(threshold: number): this {
-        tinybarRangeCheck(threshold);
-        this.body.setSendrecordthreshold(threshold);
+    setSendRecordThreshold(threshold: Tinybar | Hbar): this {
+        this.body.setSendrecordthreshold(tinybarToString(threshold));
         return this;
     }
 
