@@ -12,7 +12,7 @@ import {Hbar} from "./Hbar";
 
 export abstract class QueryBuilder<T> {
     private readonly client: BaseClient;
-    private readonly inner: Query;
+    protected readonly inner: Query;
 
     private readonly header: QueryHeader;
 
@@ -77,7 +77,7 @@ export abstract class QueryBuilder<T> {
         this.header.setResponsetype(ResponseType.COST_ANSWER);
 
         const payment = this.header.getPayment();
-        this.setPaymentDefault(0);
+        await this.setPaymentDefault(0);
 
         const query = this.inner.clone() as Query;
 

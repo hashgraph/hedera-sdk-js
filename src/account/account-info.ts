@@ -19,6 +19,7 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
         super(client, header);
         this.builder = new CryptoGetInfoQuery();
         this.builder.setHeader(header);
+        this.inner.setCryptogetinfo(this.builder);
     }
 
     public setAccountId(accountId: AccountId): this {
