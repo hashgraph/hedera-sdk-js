@@ -47,6 +47,10 @@ export class Hbar {
         this.tinybar = tinybar;
     }
 
+    public static readonly MAX_VALUE: Hbar = new Hbar(new BigNumber(2).pow(63).minus(1));
+
+    public static readonly MIN_VALUE: Hbar = new Hbar(new BigNumber(-2).pow(63));
+
     /**
      * Calculate the HBAR amount given a raw value and a unit.
      */
