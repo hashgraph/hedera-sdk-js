@@ -26,7 +26,7 @@ export type DeriveOpts = {
 
 export class Ed25519PublicKey implements PublicKey {
     private readonly keyData: Uint8Array;
-    private asString: string | null = null;
+    private asStringRaw?: string;
 
     public constructor(keyData: Uint8Array) {
         if (keyData.length !== nacl.sign.publicKeyLength) {
@@ -38,11 +38,17 @@ export class Ed25519PublicKey implements PublicKey {
 
     public static fromString(keyStr: string): Ed25519PublicKey {
         switch (keyStr.length) {
-            case 64:
-                return new Ed25519PublicKey(decodeHex(keyStr));
-            case 88:
+            case 64: { // raw public key
+                const newKey = new Ed25519PublicKey(decodeHex(keyStr));
+                newKey.asStringRaw = keyStr;
+                return newKey;
+            }
+            case 88: // DER encoded public key
                 if (keyStr.startsWith(ed25519PubKeyPrefix)) {
-                    return new Ed25519PublicKey(decodeHex(keyStr.slice(24)));
+                    const rawKey = keyStr.slice(24);
+                    const newKey = new Ed25519PublicKey(decodeHex(rawKey));
+                    newKey.asStringRaw = rawKey;
+                    return newKey;
                 }
                 break;
             default:
@@ -55,12 +61,12 @@ export class Ed25519PublicKey implements PublicKey {
         return this.keyData.slice();
     }
 
-    public toString(): string {
-        if (this.asString === null) {
-            this.asString = encodeHex(this.keyData, ed25519PubKeyPrefix);
+    public toString(raw = false): string {
+        if (!this.asStringRaw) {
+            this.asStringRaw = encodeHex(this.keyData);
         }
 
-        return this.asString;
+        return (raw ? '' : ed25519PubKeyPrefix) + this.asStringRaw;
     }
 
     public toProtoKey(): Key {
@@ -74,7 +80,7 @@ export class Ed25519PublicKey implements PublicKey {
 export class Ed25519PrivateKey {
     private readonly keyData: Uint8Array;
     public readonly publicKey: Ed25519PublicKey;
-    private asString?: string;
+    private asStringRaw?: string;
     private chainCode?: Uint8Array;
 
     private constructor({ privateKey, publicKey }: RawKeyPair) {
@@ -123,11 +129,17 @@ export class Ed25519PrivateKey {
     public static fromString(keyStr: string): Ed25519PrivateKey {
         switch (keyStr.length) {
             case 64: // lone private key
-            case 128: // private key + public key
-                return Ed25519PrivateKey.fromBytes(decodeHex(keyStr));
+            case 128: { // private key + public key
+                const newKey = Ed25519PrivateKey.fromBytes(decodeHex(keyStr));
+                newKey.asStringRaw = keyStr;
+                return newKey;
+            }
             case 96:
                 if (keyStr.startsWith(ed25519PrivKeyPrefix)) {
-                    return this.fromBytes(decodeHex(keyStr.slice(32)));
+                    const rawStr = keyStr.slice(32);
+                    const newKey = Ed25519PrivateKey.fromBytes(decodeHex(rawStr))
+                    newKey.asStringRaw = rawStr;
+                    return newKey;
                 }
                 break;
             default:
@@ -232,13 +244,13 @@ export class Ed25519PrivateKey {
         return this.keyData.slice(0, 32);
     }
 
-    public toString(): string {
-        if (!this.asString) {
+    public toString(raw = false): string {
+        if (!this.asStringRaw) {
             // only encode the private portion of the private key
-            this.asString = encodeHex(this.keyData.subarray(0, 32), ed25519PrivKeyPrefix);
+            this.asStringRaw = encodeHex(this.keyData.subarray(0, 32));
         }
 
-        return this.asString;
+        return (raw ? '' : ed25519PrivKeyPrefix) + this.asStringRaw;
     }
 
     /**
@@ -321,13 +333,13 @@ export class ThresholdKey implements PublicKey {
     }
 }
 
-function encodeHex(bytes: Uint8Array, prefix: string): string {
+function encodeHex(bytes: Uint8Array): string {
     return bytes.reduce((prev, val) => {
         if (val < 16) {
             prev += '0';
         }
         return prev + val.toString(16);
-    }, prefix);
+    }, '');
 }
 
 function decodeHex(hex: string): Uint8Array {
