@@ -64,7 +64,7 @@ export abstract class QueryBuilder<T> {
         });
     }
 
-    private prepaymentValidate(errors: string[]) {
+    private prepaymentValidate(errors: string[]): void {
         this.doValidate(errors);
     }
 

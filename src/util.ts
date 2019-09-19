@@ -166,7 +166,7 @@ export function reqDefined<T>(val: T | undefined, msg: string): T {
     return val;
 }
 
-export function runValidation(instance: object, doValidate: (errors: string[]) => void) {
+export function runValidation(instance: object, doValidate: (errors: string[]) => void): void {
     const errors: string[] = [];
     doValidate(errors);
     if (errors.length > 0) {
