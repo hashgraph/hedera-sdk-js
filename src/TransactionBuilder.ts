@@ -1,6 +1,13 @@
 import {BaseClient, getNode, Node, randomNode} from "./BaseClient";
 import {TransactionBody} from "./generated/TransactionBody_pb";
-import {getProtoAccountId, getProtoTxnId, newDuration, newTxnId, tinybarToString, runValidation} from "./util";
+import {
+    getProtoAccountId,
+    getProtoTxnId,
+    newDuration,
+    newTxnId,
+    runValidation,
+    tinybarToString
+} from "./util";
 import {newTxn, Transaction} from "./Transaction";
 import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {grpc} from "@improbable-eng/grpc-web";
@@ -26,6 +33,7 @@ export abstract class TransactionBuilder {
         this.client = client;
         this.inner = new TransactionBody();
         this.inner.setTransactionvalidduration(newDuration(120));
+        this.inner.setTransactionfee(tinybarToString(this.client.maxTransactionFee));
     }
 
     public setTransactionId(id: TransactionId): this {

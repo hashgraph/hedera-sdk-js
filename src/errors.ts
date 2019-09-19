@@ -55,10 +55,10 @@ export class ValidationError extends Error {
 }
 
 export class MaxPaymentExceededException extends Error {
-    public readonly queryCost: BigNumber;
+    public readonly queryCost: Hbar;
 
-    public constructor(queryCost: BigNumber, maxQueryCost: BigNumber) {
-        super(`query cost ${queryCost} exceeds max set on client: ${maxQueryCost}`);
+    public constructor(queryCost: Hbar, maxQueryCost: Hbar) {
+        super(`query cost of ${queryCost.value()} HBAR exceeds max set on client: ${maxQueryCost.value()} HBAR`);
         this.queryCost = queryCost;
     }
 }

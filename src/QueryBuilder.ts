@@ -2,13 +2,13 @@ import {BaseClient, Node, randomNode, unaryCall} from "./BaseClient";
 import {QueryHeader, ResponseType} from "./generated/QueryHeader_pb";
 import {Query} from "./generated/Query_pb";
 import {Response} from "./generated/Response_pb";
-import {throwIfExceptional} from "./errors";
-import BigNumber from "bignumber.js";
+import {MaxPaymentExceededException, throwIfExceptional} from "./errors";
 import {getResponseHeader, runValidation} from "./util";
 import {grpc} from "@improbable-eng/grpc-web";
 import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
 import {Transaction} from "./generated/Transaction_pb";
 import {Hbar} from "./Hbar";
+import {Tinybar} from "./typedefs";
 
 export abstract class QueryBuilder<T> {
     private readonly client: BaseClient;
@@ -29,8 +29,14 @@ export abstract class QueryBuilder<T> {
 
     /**
      * Attach a signed payment from the operator account for the given amount.
+     *
+     * Note that unlike transaction fees, this is an exact payment which will be deducted
+     * from the operator account. You probably want to use `.requestCost()` to get the actual
+     * cost of the query from the network.
+     *
+     * @throws TinybarValueError if the value is out of range for the protocol
      */
-    public async setPaymentDefault(amount: number | BigNumber | Hbar): Promise<this> {
+    public async setPaymentDefault(amount: Tinybar | Hbar): Promise<this> {
         const [,nodeAccountId] = this.getNode();
 
         const payment = new CryptoTransferTransaction(this.client)
@@ -47,6 +53,9 @@ export abstract class QueryBuilder<T> {
         return this;
     }
 
+    /**
+     * Set a manually created and signed `CryptoTransferTransaction` as the query payment.
+     */
     public setPayment(transaction: Transaction): this {
         this.header.setPayment(transaction);
         return this;
@@ -68,7 +77,12 @@ export abstract class QueryBuilder<T> {
         this.doValidate(errors);
     }
 
-    public async requestCost(): Promise<BigNumber> {
+    /**
+     * Request the cost of this query in HBAR from the node.
+     *
+     * You can then attach a payment for this value with `.setPaymentDefault()`.
+     */
+    public async requestCost(): Promise<Hbar> {
         runValidation(this, (errors) => this.prepaymentValidate(errors));
 
         // create a duplicate of the query with `COST_ANSWER` instead of the original response type
@@ -91,7 +105,7 @@ export abstract class QueryBuilder<T> {
         const responseHeader = getResponseHeader(response);
         throwIfExceptional(responseHeader.getNodetransactionprecheckcode());
 
-        return new BigNumber(responseHeader.getCost());
+        return Hbar.fromTinybar(responseHeader.getCost());
     }
 
     private getNode(): Node {
@@ -105,10 +119,17 @@ export abstract class QueryBuilder<T> {
     public async execute(): Promise<T> {
         const [nodeUrl] = this.getNode();
 
-        if (this.needsPayment && !this.header.hasPayment()) {
+        if (this.client.maxQueryPayment && this.needsPayment && !this.header.hasPayment()) {
             const cost = await this.requestCost();
+
+            if (this.client.maxQueryPayment.comparedTo(cost) < 0) {
+                throw new MaxPaymentExceededException(cost, this.client.maxQueryPayment);
+            }
+
             await this.setPaymentDefault(cost);
         }
+
+        this.validate();
 
         const response = await this.client[unaryCall](nodeUrl, this.inner, this.getMethod());
 
