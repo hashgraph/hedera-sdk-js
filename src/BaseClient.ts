@@ -105,6 +105,7 @@ export abstract class BaseClient {
         return txn.executeForReceipt().then(() => txn.getTransactionId());
     }
 
+    /** Get the current account balance in Tinybar */
     public getAccountBalance(): Promise<BigNumber> {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
         balanceQuery.setAccountid(getProtoAccountId(this.operatorAcct));

@@ -1,12 +1,12 @@
 import {AccountID, TransactionID} from "./generated/BasicTypes_pb";
 import {Timestamp} from "./generated/Timestamp_pb";
 import {Duration} from "./generated/Duration_pb";
-import {AccountId, TransactionId} from "./typedefs";
+import {AccountId, Tinybar, TransactionId} from "./typedefs";
 import {ResponseHeader} from "./generated/ResponseHeader_pb";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";
 import BigNumber from "bignumber.js";
-import {throwIfExceptional} from "./errors";
+import {throwIfExceptional, TinybarValueError} from "./errors";
 import {Hbar} from "./Hbar";
 
 export function orThrow<T>(val?: T, msg = 'value must not be null'): T {
@@ -121,37 +121,39 @@ export function handlePrecheck(resp_: TransactionResponse | undefined): Transact
 const maxTinybarBignum = new BigNumber(2).pow(63).minus(1);
 const minTinybarBignum = new BigNumber(2).pow(63).negated();
 
-export function checkNumber(amount: number | BigNumber): void {
-    if (amount instanceof BigNumber && (!amount.isInteger() || amount.gt(maxTinybarBignum) || amount.lt(minTinybarBignum))) {
-        throw new Error('`amount` as BigNumber must be an integer in the range [-2^63, 2^63)');
-    } else if (typeof amount === 'number' && !Number.isSafeInteger(amount)) {
-        throw new TypeError('`amount` as number must be in the range [-2^53, 2^53 - 1)');
+export function tinybarRangeCheck(amount: Tinybar | Hbar, allowNegative?: 'allowNegative'): void {
+    const negativeError = 'tinybar amount must not be negative in this context';
+
+    if (amount instanceof BigNumber || amount instanceof Hbar) {
+        if (!allowNegative && amount.isNegative()) {
+            throw new TinybarValueError(negativeError, amount);
+        }
+
+        const bnAmount = amount instanceof Hbar ? amount.asTinybar() : amount;
+
+        if (bnAmount.lt(minTinybarBignum) || bnAmount.gt(maxTinybarBignum)) {
+            throw new TinybarValueError('tinybar amount out of range', bnAmount);
+        }
+    } else {
+        if (!allowNegative && amount < 0) {
+            throw new TinybarValueError(negativeError, amount);
+        }
+
+        if (!Number.isSafeInteger(amount)) {
+            throw new TinybarValueError(
+                'tinybar amount out of safe integer range for `number`',
+                amount
+            );
+        }
     }
 }
 
-export function toTinybarString(amount: number | BigNumber | Hbar): string {
+export function tinybarToString(amount: Tinybar | Hbar, allowNegative?: 'allowNegative'): string {
+    tinybarRangeCheck(amount, allowNegative);
+
     if (amount instanceof Hbar) {
         return String(amount.asTinybar());
     } else {
-        checkNumber(amount);
-        return String(amount);
-    }
-}
-
-export function toPositiveTinybarString(amount: number | BigNumber | Hbar): string {
-    if (amount instanceof Hbar) {
-        if (amount.isNegative()) {
-            throw new Error(`amount must not be negative: ${amount.asTinybar()}`)
-        }
-
-        return String(amount.asTinybar());
-    } else {
-        checkNumber(amount);
-
-        if ((amount instanceof BigNumber && amount.isNegative()) || amount < 0) {
-            throw new Error(`amount must not be negative: ${amount}`)
-        }
-
         return String(amount);
     }
 }

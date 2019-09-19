@@ -8,11 +8,11 @@ import {
     CryptoTransferTransactionBody,
     TransferList
 } from "../generated/CryptoTransfer_pb";
-import {getProtoAccountId, reqDefined, toTinybarString} from "../util";
+import {getProtoAccountId, reqDefined, tinybarRangeCheck, tinybarToString} from "../util";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 
-import {AccountId} from "../typedefs";
+import {AccountId, Tinybar} from "../typedefs";
 import {Hbar} from "../Hbar";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
@@ -43,33 +43,24 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         }
     }
 
-    addSender(accountId: AccountId, amount: number | BigNumber | Hbar): this {
-        if (amount instanceof Hbar || amount instanceof BigNumber) {
-            if (amount.isNegative()) {
-                throw new Error('sending amount may not be negative');
-            }
-
-            return this.addTransfer(accountId, amount.negated());
-        } else {
-            if (amount < 0) {
-                throw new Error('sending amount may not be negative');
-            }
-
-            return this.addTransfer(accountId, -amount);
-        }
+    addSender(accountId: AccountId, amount: Tinybar | Hbar): this {
+        tinybarRangeCheck(amount);
+        const negated = typeof amount === 'number' ? -amount : amount.negated();
+        return this.addTransfer(accountId, negated);
     }
 
-    addRecipient(accountId: AccountId, amount: number | BigNumber | Hbar): this {
+    addRecipient(accountId: AccountId, amount: Tinybar | Hbar): this {
+        tinybarRangeCheck(amount);
         return this.addTransfer(accountId, amount);
     }
 
-    addTransfer(accountId: AccountId, amount: number | BigNumber | Hbar): this {
+    addTransfer(accountId: AccountId, amount: Tinybar | Hbar): this {
         const transfers = this.body.getTransfers() || new TransferList();
         this.body.setTransfers(transfers);
 
         const acctAmt = new AccountAmount();
         acctAmt.setAccountid(getProtoAccountId(accountId));
-        acctAmt.setAmount(toTinybarString(amount));
+        acctAmt.setAmount(tinybarToString(amount, 'allowNegative'));
 
         transfers.addAccountamounts(acctAmt);
 

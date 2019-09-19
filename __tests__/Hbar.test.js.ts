@@ -12,7 +12,7 @@ describe('Hbar', () => {
         expect(fiftyHbar.asTinybar()).toStrictEqual(fiftyGTinybar);
         expect(fiftyHbar.value()).toStrictEqual(new BigNumber(50));
 
-        expect(Hbar.from('50').asTinybar()).toStrictEqual(fiftyGTinybar);
+        expect(Hbar.of('50').asTinybar()).toStrictEqual(fiftyGTinybar);
         expect(Hbar.fromTinybar('5000000000').asTinybar()).toStrictEqual(fiftyGTinybar);
     });
 

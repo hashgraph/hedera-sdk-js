@@ -4,11 +4,12 @@ import {TransactionResponse} from "../generated/TransactionResponse_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {CryptoCreateTransactionBody} from "../generated/CryptoCreate_pb";
 import {BaseClient} from "../BaseClient";
-import {checkNumber, newDuration, toPositiveTinybarString} from "../util";
+import {newDuration, tinybarRangeCheck, tinybarToString} from "../util";
 import {PublicKey} from "../Keys";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 import {Hbar} from "../Hbar";
+import {Tinybar} from "../typedefs";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 export class AccountCreateTransaction extends TransactionBuilder {
@@ -39,19 +40,19 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    setInitialBalance(balance: number | BigNumber | Hbar): this {
-        this.body.setInitialbalance(toPositiveTinybarString(balance));
+    setInitialBalance(balance: Tinybar | Hbar): this {
+        this.body.setInitialbalance(tinybarToString(balance));
         return this;
     }
 
     setReceiveRecordThreshold(threshold: number): this {
-        checkNumber(threshold);
+        tinybarRangeCheck(threshold);
         this.body.setReceiverecordthreshold(threshold);
         return this;
     }
 
     setSendRecordThreshold(threshold: number): this {
-        checkNumber(threshold);
+        tinybarRangeCheck(threshold);
         this.body.setSendrecordthreshold(threshold);
         return this;
     }
