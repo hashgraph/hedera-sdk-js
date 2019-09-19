@@ -12,7 +12,11 @@ export {AccountInfo, AccountInfoQuery} from './src/account/account-info';
 
 export {Transaction} from './src/Transaction';
 
-export {HederaError, ResponseCodeEnum, ResponseCode, getResponseCodeName} from './src/errors';
+export {
+    HederaError,
+    ValidationError, MaxPaymentExceededException, TinybarValueError,
+    ResponseCodeEnum, ResponseCode, getResponseCodeName
+} from './src/errors';
 
 export {
     Ed25519PrivateKey, Ed25519PublicKey, ThresholdKey, PublicKey,
