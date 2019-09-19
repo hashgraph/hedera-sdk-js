@@ -1,5 +1,4 @@
 import BigNumber from "bignumber.js";
-import {checkNumber} from "./util";
 
 const hbarAsTinybar = new BigNumber(100_000_000);
 
@@ -21,12 +20,12 @@ function convertToTinybar(amount: BigNumber.Value, unit: HbarUnit): BigNumber {
 
 export type HbarUnit = keyof typeof tinybarConversions;
 
-/** The possible denominations of hbar in order by magnitude */
+/** The possible denominations of HBAR in order by magnitude */
 export const hbarUnits: HbarUnit[] = [
     'tinybar', 'microbar', 'millibar', 'hbar', 'kilobar', 'megabar', 'gigabar'
 ];
 
-/** Symbols for denominations of hbar for use in UIs */
+/** Symbols for denominations of HBAR for use in UIs */
 export const hbarUnitSymbols = {
     tinybar: 'tℏ',
     microbar: 'μℏ',
@@ -37,27 +36,35 @@ export const hbarUnitSymbols = {
     gigabar: 'Gℏ',
 };
 
+/**
+ * Typesafe wrapper for values of HBAR providing foolproof conversions to other denominations.
+ */
 export class Hbar {
-    /** The Hbar value in tinybar, used natively by the SDK and Hedera itself */
+    /** The HBAR value in tinybar, used natively by the SDK and Hedera itself */
     private readonly tinybar: BigNumber;
 
     private constructor(tinybar: BigNumber) {
-        checkNumber(tinybar);
         this.tinybar = tinybar;
     }
 
     /**
-     * Calculate the Hbar amount given a raw value and a unit
-     * (assumes value is in hbar if not provided)
+     * Calculate the HBAR amount given a raw value and a unit.
      */
-    public static from(amount: number | BigNumber | string, unit: HbarUnit = 'hbar'): Hbar {
+    public static from(amount: number | BigNumber | string, unit: HbarUnit): Hbar {
         return new Hbar(convertToTinybar(amount, unit));
     }
 
-    /** Get Hbar from a tinybar amount, may be a string */
+    /** Get HBAR from a tinybar amount, may be a string */
     public static fromTinybar(amount: number | BigNumber | string): Hbar {
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
         return new Hbar(bnAmount);
+    }
+
+    /**
+     * Wrap a raw value of HBAR, may be a string.
+     */
+    public static of(amount: number | BigNumber | string): Hbar {
+        return new Hbar(convertToTinybar(amount, 'hbar'));
     }
 
     public value(): BigNumber {
@@ -113,7 +120,7 @@ export class Hbar {
             return this.tinybar.comparedTo(convertToTinybar(amount, unit!));
         }
     }
-    
+
     public negated(): Hbar {
         return new Hbar(this.tinybar.negated());
     }

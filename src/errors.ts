@@ -1,4 +1,6 @@
 import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
+import BigNumber from "bignumber.js";
+import {Hbar} from "./Hbar";
 
 export {ResponseCodeEnum};
 
@@ -43,5 +45,24 @@ export function isPrecheckCodeOk(code: ResponseCode, unknownOk = false): boolean
 export function throwIfExceptional(code: ResponseCode, unknownOk = false): void {
     if (!isPrecheckCodeOk(code, unknownOk)) {
         throw new HederaError(code);
+    }
+}
+
+export class TinybarValueError extends Error {
+    public readonly amount: BigNumber;
+
+    public constructor(message: string, amount: number | BigNumber | Hbar) {
+        let bnAmount;
+
+        if (amount instanceof Hbar) {
+            bnAmount = amount.asTinybar();
+        } else if (amount instanceof BigNumber) {
+            bnAmount = amount;
+        } else {
+            bnAmount = new BigNumber(amount);
+        }
+
+        super(`${message}: ${bnAmount.toString()}`);
+        this.amount = bnAmount;
     }
 }
