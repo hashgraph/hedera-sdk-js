@@ -1,4 +1,4 @@
-import {BaseClient, getNode, Node, randomNode} from "./BaseClient";
+import {BaseClient, Node} from "./BaseClient";
 import {TransactionBody} from "./generated/TransactionBody_pb";
 import {
     getProtoAccountId,
@@ -8,7 +8,7 @@ import {
     runValidation,
     tinybarToString
 } from "./util";
-import {newTxn, Transaction} from "./Transaction";
+import {Transaction} from "./Transaction";
 import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
@@ -69,8 +69,8 @@ export abstract class TransactionBuilder {
     protected getNode(): Node {
         if (!this.node) {
             this.node = this.nodeAccountId
-                ? this.client[getNode](this.nodeAccountId)
-                : this.client[randomNode]();
+                ? this.client._getNode(this.nodeAccountId)
+                : this.client._randomNode();
         }
 
         return this.node;
@@ -115,6 +115,6 @@ export abstract class TransactionBuilder {
         const txn = new Transaction_();
         txn.setBodybytes(this.inner.serializeBinary());
 
-        return Transaction[newTxn](this.client, url, txn, this.inner, this.method);
+        return new Transaction(this.client, url, txn, this.inner, this.method);
     }
 }

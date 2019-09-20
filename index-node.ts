@@ -1,4 +1,4 @@
-import {BaseClient, ClientConfig, unaryCall} from "./src/BaseClient";
+import {BaseClient, ClientConfig} from "./src/BaseClient";
 import {grpc as grpc_web} from "@improbable-eng/grpc-web";
 
 import * as grpc from "grpc";
@@ -28,7 +28,7 @@ export class Client extends BaseClient {
         }), {});
     }
 
-    public [unaryCall]<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs> {
+    public _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs> {
         return new Promise<Rs>((resolve, reject) =>
             this.nodeClients[url].makeUnaryRequest(
                 // this gRPC client takes the full path

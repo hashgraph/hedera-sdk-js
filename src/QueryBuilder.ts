@@ -1,4 +1,4 @@
-import {BaseClient, Node, randomNode, unaryCall} from "./BaseClient";
+import {BaseClient, Node} from "./BaseClient";
 import {QueryHeader, ResponseType} from "./generated/QueryHeader_pb";
 import {Query} from "./generated/Query_pb";
 import {Response} from "./generated/Response_pb";
@@ -100,7 +100,7 @@ export abstract class QueryBuilder<T> {
 
         const [url] = this.getNode();
 
-        const response = await this.client[unaryCall](url, query, this.getMethod());
+        const response = await this.client._unaryCall(url, query, this.getMethod());
 
         const responseHeader = getResponseHeader(response);
         throwIfExceptional(responseHeader.getNodetransactionprecheckcode());
@@ -110,7 +110,7 @@ export abstract class QueryBuilder<T> {
 
     private getNode(): Node {
         if (!this.node) {
-            this.node = this.client[randomNode]();
+            this.node = this.client._randomNode();
         }
 
         return this.node;
@@ -131,7 +131,7 @@ export abstract class QueryBuilder<T> {
 
         this.validate();
 
-        const response = await this.client[unaryCall](nodeUrl, this.inner, this.getMethod());
+        const response = await this.client._unaryCall(nodeUrl, this.inner, this.getMethod());
 
         const responseHeader = getResponseHeader(response);
         throwIfExceptional(responseHeader.getNodetransactionprecheckcode());
