@@ -54,6 +54,7 @@ describe('Ed25519PrivateKey', () => {
     it('toString() produces correctly encoded string', () => {
         const privateKey = Ed25519PrivateKey.fromBytes(privKeyBytes);
         expect(privateKey.toString()).toStrictEqual(privKeyStr);
+        expect(privateKey.toString(true)).toStrictEqual(rawPrivKeyStr);
     });
 
     it('publicKey is the same', () => {
@@ -133,6 +134,7 @@ describe('Ed25519PublicKey', () => {
     it('toString() produces correctly encoded string', () => {
         const publicKey = new Ed25519PublicKey(pubKeyBytes);
         expect(publicKey.toString()).toStrictEqual(pubKeyStr);
+        expect(publicKey.toString(true)).toStrictEqual(rawPubKeyStr);
     });
 
     it('fromString returns correct value', () => {
