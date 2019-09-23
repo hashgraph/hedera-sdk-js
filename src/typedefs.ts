@@ -2,6 +2,10 @@ import BigNumber from "bignumber.js";
 
 export type AccountId = { shard: number; realm: number; account: number };
 
+export type FileId = { shard: number; realm: number; file: number };
+
+export type RealmId = { shard: number; realm: number };
+
 export type TransactionId = {
     account: AccountId;
     validStartSeconds: number;

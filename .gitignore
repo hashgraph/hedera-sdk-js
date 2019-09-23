@@ -11,3 +11,6 @@ src/**/*.js
 __tests__/**/*.js
 **/*.js.map
 **/*.d.ts
+
+# IDEA
+.idea
