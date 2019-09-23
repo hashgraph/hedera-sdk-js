@@ -10,6 +10,8 @@
   "scripts": {
     "prepare": "scripts/compile-protos.sh && tsc",
     "test": "jest",
+    "generate-flow-types": "scripts/generate-flow-types.sh",
+    "prepublishOnly": "npm run generate-flow-types",
     "create-account-test": "node examples/create-account.js",
     "lint": "eslint **/*.ts examples/*.js"
   },
@@ -32,6 +34,7 @@
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.5",
     "eslint": "^6.3.0",
+    "flowgen": "^1.10.0",
     "jest": "^24.9.0",
     "ts-jest": "^24.0.2",
     "ts-protoc-gen": "^0.11.0",

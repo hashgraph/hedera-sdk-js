@@ -1,4 +1,4 @@
-import {BaseClient, unaryCall} from "../src/BaseClient";
+import {BaseClient} from "../src/BaseClient";
 import {grpc} from "@improbable-eng/grpc-web";
 import {Ed25519PrivateKey} from "../src/Keys";
 import {AccountCreateTransaction} from "../src/account/AccountCreateTransaction";
@@ -18,7 +18,7 @@ class MockClient extends BaseClient {
         );
     }
 
-    public [unaryCall]<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(): Promise<Rs> {
+    public _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(): Promise<Rs> {
         throw new Error('should not be called');
     }
 }

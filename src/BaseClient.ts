@@ -48,10 +48,6 @@ export type ClientConfig = {
     operator: Operator;
 };
 
-export const randomNode = Symbol();
-export const getNode = Symbol();
-export const unaryCall = Symbol();
-
 export abstract class BaseClient {
     public readonly operator: Operator;
     private readonly operatorAcct: AccountId;
@@ -167,7 +163,7 @@ export abstract class BaseClient {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
         balanceQuery.setAccountid(getProtoAccountId(this.operatorAcct));
 
-        const [url, nodeAccountID] = this[randomNode]();
+        const [url, nodeAccountID] = this._randomNode();
 
         const paymentTxn = new CryptoTransferTransaction(this)
             .addSender(this.operatorAcct, 0)
@@ -182,16 +178,32 @@ export abstract class BaseClient {
         const query = new Query();
         query.setCryptogetaccountbalance(balanceQuery);
 
-        return this[unaryCall](url, query, CryptoService.cryptoGetBalance)
+        return this._unaryCall(url, query, CryptoService.cryptoGetBalance)
             .then(handleQueryPrecheck((resp) => resp.getCryptogetaccountbalance()))
             .then((response) => new BigNumber(response.getBalance()));
     }
 
-    public [randomNode](): Node {
+    /**
+     * NOT A STABLE API
+     *
+     * This method is public for access by other classes in the SDK but is not intended to be
+     * part of the stable/public API. Usage may be broken in releases with backwards-compatible
+     * version bumps.
+     */
+    // we're not using symbols because Flow doesn't support computed class properties and it's
+    // much nicer to just use `flowgen` rather than maintaining our own redundant definitions files
+    public _randomNode(): Node {
         return this.nodes[Math.floor(Math.random() * this.nodes.length)];
     }
 
-    public [getNode](node: string | AccountId): Node {
+    /**
+     * NOT A STABLE API
+     *
+     * This method is public for access by other classes in the SDK but is not intended to be
+     * part of the stable/public API. Usage may be broken in releases with backwards-compatible
+     * version bumps.
+     */
+    public _getNode(node: string | AccountId): Node {
         const maybeNode = this.nodes.find(([url, accountId]) => url === node || (
             typeof node === 'object'
                 && accountId.account == node.account
@@ -206,5 +218,12 @@ export abstract class BaseClient {
         throw new Error(`could not find node: ${JSON.stringify(node)}`);
     }
 
-    public abstract [unaryCall]<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs>;
+    /**
+     * NOT A STABLE API
+     *
+     * This method is public for access by other classes in the SDK but is not intended to be
+     * part of the stable/public API. Usage may be broken in releases with backwards-compatible
+     * version bumps.
+     */
+    public abstract _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs>;
 }

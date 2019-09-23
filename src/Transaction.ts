@@ -1,6 +1,6 @@
 import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {TransactionBody} from "./generated/TransactionBody_pb";
-import {BaseClient, getNode, Signer, unaryCall} from "./BaseClient";
+import {BaseClient, Signer} from "./BaseClient";
 import {TransactionId} from './typedefs';
 import {SignatureMap, SignaturePair, TransactionID} from "./generated/BasicTypes_pb";
 import {grpc} from "@improbable-eng/grpc-web";
@@ -38,8 +38,6 @@ export type SignatureAndKey = {
 const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
-export const newTxn = Symbol();
-
 export class Transaction {
     private readonly client: BaseClient;
 
@@ -49,17 +47,20 @@ export class Transaction {
     private readonly validDurationSeconds: number;
     private readonly method: UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
-    private constructor(client: BaseClient, nodeUrl: string, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>) {
+    /**
+     * NOT A STABLE API
+     *
+     * This constructor is not meant to be invoked from user code. It is only public for
+     * access from `TransactionBuilder.ts`. Usage may be broken in backwards-compatible
+     * version bumps.
+     */
+    public constructor(client: BaseClient, nodeUrl: string, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>) {
         this.client = client;
         this.nodeUrl = nodeUrl;
         this.inner = inner;
         this.txnId = orThrow(body.getTransactionid());
         this.validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
         this.method = method;
-    }
-
-    public static [newTxn](client: BaseClient, nodeUrl: string, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>): Transaction {
-        return new Transaction(client, nodeUrl, inner, body, method);
     }
 
     public static fromBytes(client: BaseClient, bytes: Uint8Array): Transaction {
@@ -69,7 +70,7 @@ export class Transaction {
         const nodeAccountId = getSdkAccountId(
             orThrow(body.getNodeaccountid(), 'transaction missing node account ID'));
 
-        const [url] = client[getNode](nodeAccountId);
+        const [url] = client._getNode(nodeAccountId);
 
         const method = methodFromTxn(body);
 
@@ -123,7 +124,7 @@ export class Transaction {
             await this.signWith(this.client.operatorPublicKey, this.client.operatorSigner);
         }
 
-        handlePrecheck(await this.client[unaryCall](this.nodeUrl, this.inner, this.method));
+        handlePrecheck(await this.client._unaryCall(this.nodeUrl, this.inner, this.method));
 
         return this.getTransactionId();
     }
@@ -139,7 +140,7 @@ export class Transaction {
         const query = new Query();
         query.setTransactiongetreceipt(receiptQuery);
 
-        return this.client[unaryCall](this.nodeUrl, query, CryptoService.getTransactionReceipts)
+        return this.client._unaryCall(this.nodeUrl, query, CryptoService.getTransactionReceipts)
             .then(handleQueryPrecheck((resp) => resp.getTransactiongetreceipt()))
             .then((receipt) => orThrow(receipt.getReceipt()));
     }
