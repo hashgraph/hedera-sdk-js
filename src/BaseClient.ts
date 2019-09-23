@@ -10,6 +10,7 @@ import {
     getProtoAccountId,
     getSdkAccountId,
     handleQueryPrecheck,
+    normalizeAccountId,
     reqDefined,
     tinybarRangeCheck
 } from "./util";
@@ -19,7 +20,7 @@ import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "./generated/CryptoService_pb_service";
 
-import {AccountId, Tinybar, TransactionId} from "./typedefs";
+import {AccountId, AccountIdLike, Tinybar, TransactionId} from "./typedefs";
 import {Hbar} from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
@@ -34,10 +35,10 @@ export type PubKeyAndSigner = {
 
 export type SigningOpts = PrivateKey | PubKeyAndSigner;
 
-export type Operator = { account: AccountId } & SigningOpts;
+export type Operator = { account: AccountIdLike } & SigningOpts;
 
 export type Nodes = {
-    [url: string]: AccountId;
+    [url: string]: AccountIdLike;
 } | Node[];
 
 /** A URL,AccountID pair identifying a Node */
@@ -58,15 +59,16 @@ export abstract class BaseClient {
     public readonly operatorSigner: Signer;
     public readonly operatorPublicKey: Ed25519PublicKey;
 
-    protected readonly nodes: Node[];
+    protected readonly nodes: [string, AccountId][];
 
     private _maxTransactionFee: Hbar = Hbar.of(1);
     private _maxQueryPayment?: Hbar;
 
     protected constructor(nodes: Nodes, operator: Operator) {
-        this.nodes = Array.isArray(nodes) ? nodes : Object.entries(nodes);
+        this.nodes = (Array.isArray(nodes) ? nodes : Object.entries(nodes))
+            .map(([url, acct]) => [url, normalizeAccountId(acct)]);
         this.operator = operator;
-        this.operatorAcct = operator.account;
+        this.operatorAcct = normalizeAccountId(operator.account);
 
         const maybePrivateKey = (operator as PrivateKey).privateKey;
         if (maybePrivateKey) {
@@ -152,7 +154,7 @@ export abstract class BaseClient {
      * @param recipient
      * @param amount
      */
-    public transferCryptoTo(recipient: AccountId, amount: number | BigNumber | Hbar): Promise<TransactionId> {
+    public transferCryptoTo(recipient: AccountIdLike, amount: number | BigNumber | Hbar): Promise<TransactionId> {
         const txn = new CryptoTransferTransaction(this)
             .addSender(this.operatorAcct, amount)
             .addRecipient(recipient, amount)

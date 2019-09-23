@@ -5,6 +5,7 @@ import {
     getProtoTxnId,
     newDuration,
     newTxnId,
+    normalizeAccountId,
     runValidation,
     tinybarToString
 } from "./util";
@@ -13,7 +14,7 @@ import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 
-import {AccountId, Tinybar, TransactionId} from "./typedefs";
+import {AccountId, AccountIdLike, Tinybar, TransactionIdLike} from "./typedefs";
 import {Hbar} from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
@@ -36,7 +37,7 @@ export abstract class TransactionBuilder {
         this.inner.setTransactionfee(tinybarToString(this.client.maxTransactionFee));
     }
 
-    public setTransactionId(id: TransactionId): this {
+    public setTransactionId(id: TransactionIdLike): this {
         this.inner.setTransactionid(getProtoTxnId(id));
         return this;
     }
@@ -51,8 +52,8 @@ export abstract class TransactionBuilder {
         return this;
     }
 
-    public setNodeAccountId(nodeAccountId: AccountId): this {
-        this.nodeAccountId = nodeAccountId;
+    public setNodeAccountId(nodeAccountId: AccountIdLike): this {
+        this.nodeAccountId = normalizeAccountId(nodeAccountId);
         this.inner.setNodeaccountid(getProtoAccountId(nodeAccountId));
         return this;
     }

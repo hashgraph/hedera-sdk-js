@@ -8,11 +8,11 @@ import {
     CryptoTransferTransactionBody,
     TransferList
 } from "../generated/CryptoTransfer_pb";
-import {getProtoAccountId, reqDefined, tinybarRangeCheck, tinybarToString} from "../util";
+import {getProtoAccountId, tinybarRangeCheck, tinybarToString} from "../util";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 
-import {AccountId, Tinybar} from "../typedefs";
+import {AccountIdLike, Tinybar} from "../typedefs";
 import {Hbar} from "../Hbar";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
@@ -42,18 +42,18 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         }
     }
 
-    addSender(accountId: AccountId, amount: Tinybar | Hbar): this {
+    addSender(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
         tinybarRangeCheck(amount);
         const negated = typeof amount === 'number' ? -amount : amount.negated();
         return this.addTransfer(accountId, negated);
     }
 
-    addRecipient(accountId: AccountId, amount: Tinybar | Hbar): this {
+    addRecipient(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
         tinybarRangeCheck(amount);
         return this.addTransfer(accountId, amount);
     }
 
-    addTransfer(accountId: AccountId, amount: Tinybar | Hbar): this {
+    addTransfer(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
         const transfers = this.body.getTransfers() || new TransferList();
         this.body.setTransfers(transfers);
 
