@@ -15,7 +15,7 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 export class AccountCreateTransaction extends TransactionBuilder {
     private body: CryptoCreateTransactionBody;
 
-    constructor(client: BaseClient) {
+    public constructor(client: BaseClient) {
         super(client);
         const body = new CryptoCreateTransactionBody();
         this.body = body;
@@ -30,36 +30,36 @@ export class AccountCreateTransaction extends TransactionBuilder {
         this.setSendRecordThreshold(Hbar.MAX_VALUE);
     }
 
-    setKey(publicKey: PublicKey): this {
+    public setKey(publicKey: PublicKey): this {
         this.body.setKey(publicKey.toProtoKey());
         return this;
     }
 
-    setAutoRenewPeriod(seconds: number): this {
+    public setAutoRenewPeriod(seconds: number): this {
         this.body.setAutorenewperiod(newDuration(seconds));
         return this;
     }
 
-    setInitialBalance(balance: Tinybar | Hbar): this {
+    public setInitialBalance(balance: Tinybar | Hbar): this {
         this.body.setInitialbalance(tinybarToString(balance));
         return this;
     }
 
-    setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
+    public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
         this.body.setReceiverecordthreshold(tinybarToString(threshold));
         return this;
     }
 
-    setSendRecordThreshold(threshold: Tinybar | Hbar): this {
+    public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
         this.body.setSendrecordthreshold(tinybarToString(threshold));
         return this;
     }
 
-    get method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
         return CryptoService.createAccount;
     }
 
-    doValidate(errors: string[]): void {
+    public doValidate(errors: string[]): void {
         if (!this.body.hasKey()) {
             errors.push('AccountCreateTransaction requires setKey()');
         }

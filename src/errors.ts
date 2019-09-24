@@ -2,7 +2,7 @@ import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
 import BigNumber from "bignumber.js";
 import {Hbar} from "./Hbar";
 
-export {ResponseCodeEnum};
+export {ResponseCodeEnum} from "./generated/ResponseCode_pb";
 
 export type ResponseCode = number;
 

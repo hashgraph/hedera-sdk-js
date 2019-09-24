@@ -3,6 +3,8 @@ node_modules/
 yarn-error*
 .npmrc
 
+dist/
+
 # ignores javascript files compiled from typescript
 index-web.js
 index-node.js

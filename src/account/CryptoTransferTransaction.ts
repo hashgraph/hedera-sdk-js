@@ -18,7 +18,7 @@ import {Hbar} from "../Hbar";
 export class CryptoTransferTransaction extends TransactionBuilder {
     private readonly body: CryptoTransferTransactionBody;
 
-    constructor(client: BaseClient) {
+    public constructor(client: BaseClient) {
         super(client);
         this.body = new CryptoTransferTransactionBody();
         this.body.setTransfers(new TransferList());
@@ -42,18 +42,18 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         }
     }
 
-    addSender(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
+    public addSender(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
         tinybarRangeCheck(amount);
         const negated = typeof amount === 'number' ? -amount : amount.negated();
         return this.addTransfer(accountId, negated);
     }
 
-    addRecipient(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
+    public addRecipient(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
         tinybarRangeCheck(amount);
         return this.addTransfer(accountId, amount);
     }
 
-    addTransfer(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
+    public addTransfer(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
         const transfers = this.body.getTransfers() || new TransferList();
         this.body.setTransfers(transfers);
 
@@ -66,7 +66,7 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         return this;
     }
 
-    get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return CryptoService.cryptoTransfer;
     }
 }
