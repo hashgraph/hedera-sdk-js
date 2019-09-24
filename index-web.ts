@@ -7,14 +7,14 @@ import Code = grpc.Code;
 export * from './exports';
 
 const testnetProxy = {
-    'https://grpc-web.myhederawallet.com': { shard: 0, realm: 0, account: 3 }
+    'https://grpc-web.testnet.myhbarwallet.com': { shard: 0, realm: 0, account: 3 }
 };
 
 /** This implementation of `BaseClient` is exported for browser usage. */
 export class Client extends BaseClient {
     /**
      * If `nodes` is not specified, default url is a proxy to 0.testnet.hedera.com:50211 generously
-     * hosted by MyHederaWallet.com. Mainnet proxy to come later; this url may change accordingly
+     * hosted by MyHbarWallet.com. Mainnet proxy to come later.
      */
     public constructor({ nodes = testnetProxy, operator }: ClientConfig) {
         super(nodes, operator);
