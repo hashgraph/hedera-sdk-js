@@ -1,7 +1,17 @@
 import {AccountID, TransactionID} from "./generated/BasicTypes_pb";
 import {Timestamp} from "./generated/Timestamp_pb";
 import {Duration} from "./generated/Duration_pb";
-import {AccountId, Tinybar, TransactionId} from "./typedefs";
+import {
+    AccountId,
+    AccountIdLike,
+    ContractId,
+    ContractIdLike,
+    FileId,
+    FileIdLike,
+    Tinybar,
+    TransactionId,
+    TransactionIdLike
+} from "./typedefs";
 import {ResponseHeader} from "./generated/ResponseHeader_pb";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";
@@ -17,7 +27,9 @@ export function orThrow<T>(val?: T, msg = 'value must not be null'): T {
     return val;
 }
 
-export function getProtoTxnId({ account, validStartSeconds, validStartNanos }: TransactionId): TransactionID {
+export function getProtoTxnId(transactionId: TransactionIdLike): TransactionID {
+    const { account, validStartSeconds, validStartNanos } = normalizeTxnId(transactionId);
+
     const txnId = new TransactionID();
     txnId.setAccountid(getProtoAccountId(account));
 
@@ -29,24 +41,32 @@ export function getProtoTxnId({ account, validStartSeconds, validStartNanos }: T
     return txnId;
 }
 
-export function newTxnId(accountId: AccountId): TransactionID {
+export function newTxnId(accountId: AccountIdLike): TransactionID {
     const acctId = getProtoAccountId(accountId);
 
-    const validStart = new Timestamp();
-
     // allows the transaction to be accepted as long as the node isn't 10 seconds behind us
-    const nowMs = Date.now() - 10_000;
+    const {seconds, nanos} = dateToTimestamp(Date.now() - 10_000);
 
-    // get whole seconds since the epoch
-    validStart.setSeconds(Math.floor(nowMs / 1000));
-    // get remainder as nanoseconds
-    validStart.setNanos(nowMs % 1000 * 1_000_000);
+    const validStart = new Timestamp();
+    validStart.setSeconds(seconds);
+    validStart.setNanos(nanos);
 
     const txnId = new TransactionID();
     txnId.setAccountid(acctId);
     txnId.setTransactionvalidstart(validStart);
 
     return txnId;
+}
+
+export function dateToTimestamp(dateOrMs: number | Date): { seconds: number; nanos: number } {
+    const dateMs = dateOrMs instanceof Date ? dateOrMs.getTime() : dateOrMs;
+
+    return {
+        // get whole seconds since the epoch
+        seconds: Math.floor(dateMs / 1000),
+        // get remainder as nanoseconds
+        nanos: Math.floor(dateMs % 1000 * 1_000_000)
+    };
 }
 
 export function timestampToMs(timestamp: Timestamp): number {
@@ -63,7 +83,84 @@ export function newDuration(seconds: number): Duration {
     return duration;
 }
 
-export function getProtoAccountId({ shard, realm, account }: AccountId): AccountID {
+type EntityKind = 'account' | 'contract' | 'file';
+
+type EntityId<Kind extends EntityKind> =
+    ({ shard?: number; realm?: number } & Record<Kind, number>)
+    | string | number;
+
+type NormalizedId<Kind extends EntityKind> = Record<'shard' | 'realm' | Kind, number>;
+
+function normalizeEntityId<Kind extends EntityKind>(kind: Kind, entityId: EntityId<Kind>): NormalizedId<Kind> {
+    switch (typeof entityId) {
+        case 'object':
+            if (!entityId[kind]) {
+                break;
+            }
+
+            return {
+                // defaults overwritten if they exist in `entityId`
+                shard: 0,
+                realm: 0,
+                ...entityId
+            };
+        case "string": {
+            const components = entityId.split('.');
+
+            if (components.length === 1) {
+                return normalizeEntityId(kind, { [kind]: Number(components[0])} as EntityId<Kind>);
+            } else if (components.length === 3) {
+                return {
+                    shard: Number(components[0]),
+                    realm: Number(components[1]),
+                    [kind]: Number(components[2])
+                } as NormalizedId<Kind>
+            }
+
+            break;
+        }
+        case 'number': {
+            if (!Number.isInteger(entityId) || entityId < 0) {
+                break;
+            } else if (!Number.isSafeInteger(entityId)) {
+                // this isn't really a `TypeError` as we already checked that it is a `number`
+                // eslint-disable-next-line unicorn/prefer-type-error
+                throw new Error(`${kind} ID outside safe integer range for number: ${entityId}`)
+            }
+
+            return normalizeEntityId(kind, { [kind]: entityId } as EntityId<Kind>);
+        }
+    }
+
+    throw new Error(`invalid ${kind} ID: ${entityId}`);
+}
+
+export const normalizeAccountId = (accountId: AccountIdLike): AccountId => normalizeEntityId('account', accountId);
+export const normalizeContractId = (contractId: ContractIdLike): ContractId => normalizeEntityId('contract', contractId);
+export const normalizeFileId = (fileId: FileIdLike): FileId => normalizeEntityId('file', fileId);
+
+export function normalizeTxnId(txnId: TransactionIdLike): TransactionId {
+    const account = normalizeAccountId(txnId.account);
+
+    if ('validStart' in txnId) {
+        const validStart = txnId.validStart;
+        const { seconds: validStartSeconds, nanos: validStartNanos } = dateToTimestamp(validStart);
+
+        return {
+            account,
+            validStartSeconds,
+            validStartNanos
+        };
+    } else {
+        return {
+            ...txnId,
+            account
+        };
+    }
+}
+
+export function getProtoAccountId(accountId: AccountIdLike): AccountID {
+    const { shard, realm, account } = normalizeAccountId(accountId);
     const acctId = new AccountID();
     acctId.setShardnum(shard);
     acctId.setRealmnum(realm);

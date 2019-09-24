@@ -6,7 +6,7 @@ import {Response} from "../generated/Response_pb";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 import {BaseClient} from "../BaseClient";
 import {QueryHeader} from "../generated/QueryHeader_pb";
-import {AccountId} from "../typedefs";
+import {AccountIdLike} from "../typedefs";
 import {Key} from "../generated/BasicTypes_pb";
 import {getProtoAccountId, getSdkAccountId, timestampToMs} from "../util";
 import {Hbar} from "../Hbar";
@@ -22,7 +22,7 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
         this.inner.setCryptogetinfo(this.builder);
     }
 
-    public setAccountId(accountId: AccountId): this {
+    public setAccountId(accountId: AccountIdLike): this {
         this.builder.setAccountid(getProtoAccountId(accountId));
         return this;
     }
@@ -56,10 +56,10 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
 }
 
 export type AccountInfo = {
-    accountId: AccountId;
+    accountId: AccountIdLike;
     contractAccountId?: string;
     isDeleted: boolean;
-    proxyAccountId?: AccountId;
+    proxyAccountId?: AccountIdLike;
     proxyReceived?: Hbar;
     key: Key,
     balance: Hbar,
