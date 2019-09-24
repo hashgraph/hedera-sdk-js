@@ -1,9 +1,9 @@
 import {BaseClient, ClientConfig} from "./src/BaseClient";
-import {grpc as grpc_web} from "@improbable-eng/grpc-web";
+import {grpc as grpcWeb} from "@improbable-eng/grpc-web";
 
 import * as grpc from "grpc";
-import ProtobufMessage = grpc_web.ProtobufMessage;
-import UnaryMethodDefinition = grpc_web.UnaryMethodDefinition;
+import ProtobufMessage = grpcWeb.ProtobufMessage;
+import UnaryMethodDefinition = grpcWeb.UnaryMethodDefinition;
 
 export * from './exports';
 

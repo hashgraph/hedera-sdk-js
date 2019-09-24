@@ -61,13 +61,13 @@ export type AccountInfo = {
     isDeleted: boolean;
     proxyAccountId?: AccountIdLike;
     proxyReceived?: Hbar;
-    key: Key,
-    balance: Hbar,
-    generateSendRecordThreshold: Hbar,
-    generateReceiveRecordThreshold: Hbar,
-    receiverSigRequired: boolean,
-    expirationTime: Date,
-    autoRenewPeriodSeconds: number,
+    key: Key;
+    balance: Hbar;
+    generateSendRecordThreshold: Hbar;
+    generateReceiveRecordThreshold: Hbar;
+    receiverSigRequired: boolean;
+    expirationTime: Date;
+    autoRenewPeriodSeconds: number;
     // proxy accounts and claims aren't really implemented so we're ignoring those
 };
 
