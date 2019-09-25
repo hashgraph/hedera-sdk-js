@@ -5,9 +5,9 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {BaseClient} from "../BaseClient";
 
 import {FileService} from "../generated/FileService_pb_service";
-import {FileID} from "../generated/BasicTypes_pb";
 import {FileDeleteTransactionBody} from "../generated/FileDelete_pb";
-import {FileId} from "../typedefs";
+import {FileIdLike} from "../typedefs";
+import {getProtoFileId} from "../util";
 
 export class FileDeleteTransaction extends TransactionBuilder {
     private readonly body: FileDeleteTransactionBody;
@@ -27,12 +27,8 @@ export class FileDeleteTransaction extends TransactionBuilder {
         }
     }
 
-    public setFileId({ shard, realm, file }: FileId): this {
-        const fileId = new FileID();
-        fileId.setShardnum(shard);
-        fileId.setRealmnum(realm);
-        fileId.setFilenum(file);
-        this.body.setFileid(fileId);
+    public setFileId(fileIdLike: FileIdLike): this {
+        this.body.setFileid(getProtoFileId(fileIdLike));
         return this;
     }
 

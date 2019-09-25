@@ -6,10 +6,10 @@ import {BaseClient} from "../BaseClient";
 
 import {FileService} from "../generated/FileService_pb_service";
 import {PublicKey} from "../Keys";
-import {FileID, KeyList} from "../generated/BasicTypes_pb";
+import {KeyList} from "../generated/BasicTypes_pb";
 import {FileUpdateTransactionBody} from "../generated/FileUpdate_pb";
-import {FileId} from "../typedefs";
-import {dateToTimestamp, getProtoTimestamp} from "../util";
+import {FileIdLike} from "../typedefs";
+import {dateToTimestamp, getProtoFileId, getProtoTimestamp} from "../util";
 
 export class FileUpdateTransaction extends TransactionBuilder {
     private readonly body: FileUpdateTransactionBody;
@@ -46,12 +46,8 @@ export class FileUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setFileId({ shard, realm, file }: FileId): this {
-        const fileId = new FileID();
-        fileId.setShardnum(shard);
-        fileId.setRealmnum(realm);
-        fileId.setFilenum(file);
-        this.body.setFileid(fileId);
+    public setFileId(fileIdLike: FileIdLike): this {
+        this.body.setFileid(getProtoFileId(fileIdLike));
         return this;
     }
 

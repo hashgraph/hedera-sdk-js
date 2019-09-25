@@ -7,7 +7,8 @@ import {BaseClient} from "../BaseClient";
 import {FileService} from "../generated/FileService_pb_service";
 import {FileID} from "../generated/BasicTypes_pb";
 import {FileAppendTransactionBody} from "../generated/FileAppend_pb";
-import {FileId} from "../typedefs";
+import {FileId, FileIdLike} from "../typedefs";
+import {getProtoFileId} from "../util";
 
 export class FileAppendTransaction extends TransactionBuilder {
     private readonly body: FileAppendTransactionBody;
@@ -28,12 +29,8 @@ export class FileAppendTransaction extends TransactionBuilder {
         }
     }
 
-    public setFileId({ shard, realm, file }: FileId): this {
-        const fileId = new FileID();
-        fileId.setShardnum(shard);
-        fileId.setRealmnum(realm);
-        fileId.setFilenum(file);
-        this.body.setFileid(fileId);
+    public setFileId(fileId: FileIdLike): this {
+        this.body.setFileid(getProtoFileId(fileId));
         return this;
     }
 
