@@ -6,6 +6,9 @@
     "strict": true,
     "declaration": false
   },
+  "include": [
+    "__tests__"
+  ],
   "exclude": [
     "node_modules"
   ]

@@ -1,0 +1,58 @@
+import {QueryBuilder} from "../QueryBuilder";
+import {FileIdLike} from "../typedefs";
+import {FileService} from "../generated/FileService_pb_service";
+import {grpc} from "@improbable-eng/grpc-web";
+import {Query} from "../generated/Query_pb";
+import {FileGetInfoQuery} from "../generated/FileGetInfo_pb";
+import {QueryHeader} from "../generated/QueryHeader_pb";
+import {BaseClient} from "../BaseClient";
+import {Response} from "../generated/Response_pb";
+import {getProtoFileId, getSdkFileId, getSdkKeys, timestampToDate} from "../util";
+import {Ed25519PublicKey} from "../Keys";
+
+export type FileInfo = {
+    fileId: FileIdLike;
+    size: number;
+    expirationTime: Date | null;
+    deleted: boolean;
+    keys: Ed25519PublicKey[];
+}
+
+export class FileInfoQuery extends QueryBuilder<FileInfo> {
+    private readonly builder: FileGetInfoQuery;
+
+    public constructor(client: BaseClient) {
+        const header = new QueryHeader();
+        super(client, header);
+        this.builder = new FileGetInfoQuery();
+        this.builder.setHeader(header);
+        this.inner.setFilegetinfo(this.builder);
+    }
+
+    public setFileId(fileId: FileIdLike): this {
+        this.builder.setFileid(getProtoFileId(fileId));
+        return this;
+    }
+
+    protected doValidate(errors: string[]): void {
+        if (!this.builder.hasFileid()) {
+            errors.push(".setFileId() required");
+        }
+    }
+
+    protected getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+        return FileService.getFileInfo;
+    }
+
+    protected mapResponse(response: Response): FileInfo {
+        const fileInfo = response.getFilegetinfo()!.getFileinfo()!;
+
+        return {
+            fileId: getSdkFileId(fileInfo.getFileid()!),
+            size: fileInfo.getSize(),
+            expirationTime: fileInfo.getExpirationtime() == null ? null : timestampToDate(fileInfo.getExpirationtime()!),
+            deleted: fileInfo.getDeleted(),
+            keys: getSdkKeys(fileInfo.getKeys()!)
+        };
+    }
+}

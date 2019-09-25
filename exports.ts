@@ -12,6 +12,12 @@ export {ContractCreateTransaction} from "./src/contract/ContractCreateTransactio
 export {ContractDeleteTransaction} from "./src/contract/ContractDeleteTransaction";
 export {ContractExecuteTransaction} from "./src/contract/ContractExecuteTransaction";
 export {ContractUpdateTransaction} from "./src/contract/ContractUpdateTransaction";
+export {FileCreateTransaction} from "./src/file/FileCreateTransaction";
+export {FileDeleteTransaction} from "./src/file/FileDeleteTransaction";
+export {FileUpdateTransaction} from "./src/file/FileUpdateTransaction";
+export {FileAppendTransaction} from "./src/file/FileAppendTransaction";
+export {FileInfoQuery} from "./src/file/FileInfoQuery";
+export {FileContentsQuery} from "./src/file/FileContentsQuery";
 export {AccountInfo, AccountInfoQuery} from './src/account/account-info';
 
 export {Transaction} from './src/Transaction';
