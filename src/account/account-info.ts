@@ -12,32 +12,32 @@ import {getProtoAccountId, getSdkAccountId, timestampToMs} from "../util";
 import {Hbar} from "../Hbar";
 
 export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
-    private readonly builder: CryptoGetInfoQuery;
+    private readonly _builder: CryptoGetInfoQuery;
 
     public constructor(client: BaseClient) {
         const header = new QueryHeader();
         super(client, header);
-        this.builder = new CryptoGetInfoQuery();
-        this.builder.setHeader(header);
-        this.inner.setCryptogetinfo(this.builder);
+        this._builder = new CryptoGetInfoQuery();
+        this._builder.setHeader(header);
+        this._inner.setCryptogetinfo(this._builder);
     }
 
     public setAccountId(accountId: AccountIdLike): this {
-        this.builder.setAccountid(getProtoAccountId(accountId));
+        this._builder.setAccountid(getProtoAccountId(accountId));
         return this;
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.builder.hasAccountid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._builder.hasAccountid()) {
             errors.push("`.setAccountId()` required");
         }
     }
 
-    protected getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
         return CryptoService.getAccountInfo;
     }
 
-    protected mapResponse(response: Response): AccountInfo {
+    protected _mapResponse(response: Response): AccountInfo {
         const accountInfo = response.getCryptogetinfo()!.getAccountinfo()!;
 
         return {

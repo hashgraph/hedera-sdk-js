@@ -12,16 +12,38 @@ import {FileIdLike} from "../typedefs";
 import {dateToTimestamp, getProtoFileId, getProtoTimestamp} from "../util";
 
 export class FileUpdateTransaction extends TransactionBuilder {
-    private readonly body: FileUpdateTransactionBody;
+    private readonly _body: FileUpdateTransactionBody;
 
     public constructor(client: BaseClient) {
         super(client);
-        this.body = new FileUpdateTransactionBody();
-        this.inner.setFileupdate(this.body);
+        this._body = new FileUpdateTransactionBody();
+        this._inner.setFileupdate(this._body);
     }
 
-    protected doValidate(errors: string[]): void {
-        const files = this.body.getKeys();
+    public setExpirationTime(date: number | Date): this {
+        this._body.setExpirationtime(getProtoTimestamp(dateToTimestamp(date)));
+        return this;
+    }
+
+    public addKey(key: PublicKey): this {
+        const keylist: KeyList = this._body.getKeys() == null ? new KeyList() : this._body.getKeys()!;
+        keylist.addKeys(key._toProtoKey());
+        this._body.setKeys(keylist);
+        return this;
+    }
+
+    public setContents(bytes: Uint8Array | string): this {
+        this._body.setContents(bytes);
+        return this;
+    }
+
+    public setFileId(fileIdLike: FileIdLike): this {
+        this._body.setFileid(getProtoFileId(fileIdLike));
+        return this;
+    }
+
+    protected _doValidate(errors: string[]): void {
+        const files = this._body.getKeys();
 
         if (files == null) {
             errors.push('FileUpdateTransaction must have a file set');
@@ -29,29 +51,7 @@ export class FileUpdateTransaction extends TransactionBuilder {
         }
     }
 
-    public setExpirationTime(date: number | Date): this {
-        this.body.setExpirationtime(getProtoTimestamp(dateToTimestamp(date)));
-        return this;
-    }
-
-    public addKey(key: PublicKey): this {
-        const keylist: KeyList = this.body.getKeys() == null ? new KeyList() : this.body.getKeys()!;
-        keylist.addKeys(key.toProtoKey());
-        this.body.setKeys(keylist);
-        return this;
-    }
-
-    public setContents(bytes: Uint8Array | string): this {
-        this.body.setContents(bytes);
-        return this;
-    }
-
-    public setFileId(fileIdLike: FileIdLike): this {
-        this.body.setFileid(getProtoFileId(fileIdLike));
-        return this;
-    }
-
-    public get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return FileService.updateFile;
     }
 }

@@ -5,23 +5,22 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {BaseClient} from "../BaseClient";
 
 import {FileService} from "../generated/FileService_pb_service";
-import {FileID} from "../generated/BasicTypes_pb";
 import {FileAppendTransactionBody} from "../generated/FileAppend_pb";
-import {FileId, FileIdLike} from "../typedefs";
+import {FileIdLike} from "../typedefs";
 import {getProtoFileId} from "../util";
 
 export class FileAppendTransaction extends TransactionBuilder {
-    private readonly body: FileAppendTransactionBody;
+    private readonly _body: FileAppendTransactionBody;
 
     public constructor(client: BaseClient) {
         super(client);
-        this.body = new FileAppendTransactionBody();
-        this.inner.setFileappend(this.body);
+        this._body = new FileAppendTransactionBody();
+        this._inner.setFileappend(this._body);
     }
 
-    protected doValidate(errors: string[]): void {
-        const file = this.body.getFileid();
-        const contents = this.body.getContents();
+    protected _doValidate(errors: string[]): void {
+        const file = this._body.getFileid();
+        const contents = this._body.getContents();
 
         if (file == null || contents == null) {
             errors.push('FileAppendTransaction must have a file id and contents set');
@@ -30,16 +29,16 @@ export class FileAppendTransaction extends TransactionBuilder {
     }
 
     public setFileId(fileId: FileIdLike): this {
-        this.body.setFileid(getProtoFileId(fileId));
+        this._body.setFileid(getProtoFileId(fileId));
         return this;
     }
 
     public setContents(bytes: Uint8Array | string): this {
-        this.body.setContents(bytes);
+        this._body.setContents(bytes);
         return this;
     }
 
-    public get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return FileService.appendContent;
     }
 }

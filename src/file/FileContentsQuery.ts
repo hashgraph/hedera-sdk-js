@@ -15,32 +15,32 @@ export type FileContents = {
 }
 
 export class FileContentsQuery extends QueryBuilder<FileContents> {
-    private readonly builder: FileGetContentsQuery;
+    private readonly _builder: FileGetContentsQuery;
 
     public constructor(client: BaseClient) {
         const header = new QueryHeader();
         super(client, header);
-        this.builder = new FileGetContentsQuery();
-        this.builder.setHeader(header);
-        this.inner.setFilegetcontents(this.builder);
+        this._builder = new FileGetContentsQuery();
+        this._builder.setHeader(header);
+        this._inner.setFilegetcontents(this._builder);
     }
 
     public setFileId(fileId: FileIdLike): this {
-        this.builder.setFileid(getProtoFileId(fileId));
+        this._builder.setFileid(getProtoFileId(fileId));
         return this;
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.builder.hasFileid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._builder.hasFileid()) {
             errors.push(".setFileId() required");
         }
     }
 
-    protected getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
         return FileService.getFileContent;
     }
 
-    protected mapResponse(response: Response): FileContents {
+    protected _mapResponse(response: Response): FileContents {
         const fileConents = response.getFilegetcontents()!.getFilecontents()!;
 
         return {

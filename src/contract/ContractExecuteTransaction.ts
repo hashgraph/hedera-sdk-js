@@ -11,42 +11,42 @@ import BigNumber from "bignumber.js";
 import {getProtoContractId} from "../util";
 
 export class ContractExecuteTransaction extends TransactionBuilder {
-    private readonly body: ContractCallTransactionBody;
+    private readonly _body: ContractCallTransactionBody;
 
     public constructor(client: BaseClient) {
         super(client);
-        this.body = new ContractCallTransactionBody();
-        this.inner.setContractcall(this.body);
+        this._body = new ContractCallTransactionBody();
+        this._inner.setContractcall(this._body);
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.body.hasContractid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._body.hasContractid()) {
             errors.push('ContractExecuteTransaction requires contract id to be set');
             return;
         }
     }
 
     public setGas(gas: number | BigNumber): this {
-        this.body.setGas(String(gas));
+        this._body.setGas(String(gas));
         return this;
     }
 
     public setAmount(amount: number): this {
-        this.body.setAmount(amount);
+        this._body.setAmount(amount);
         return this;
     }
 
     public setFunctionParameters(params: string): this {
-        this.body.setFunctionparameters(params);
+        this._body.setFunctionparameters(params);
         return this;
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this.body.setContractid(getProtoContractId(contractIdLike));
+        this._body.setContractid(getProtoContractId(contractIdLike));
         return this;
     }
 
-    public get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return SmartContractService.contractCallMethod;
     }
 }

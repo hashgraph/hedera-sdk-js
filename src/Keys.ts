@@ -25,29 +25,29 @@ export type DeriveOpts = {
 }
 
 export class Ed25519PublicKey implements PublicKey {
-    private readonly keyData: Uint8Array;
-    private asStringRaw?: string;
+    private readonly _keyData: Uint8Array;
+    private _asStringRaw?: string;
 
     public constructor(keyData: Uint8Array) {
         if (keyData.length !== nacl.sign.publicKeyLength) {
             throw new Error('invalid public key');
         }
 
-        this.keyData = keyData;
+        this._keyData = keyData;
     }
 
     public static fromString(keyStr: string): Ed25519PublicKey {
         switch (keyStr.length) {
             case 64: { // raw public key
                 const newKey = new Ed25519PublicKey(decodeHex(keyStr));
-                newKey.asStringRaw = keyStr;
+                newKey._asStringRaw = keyStr;
                 return newKey;
             }
             case 88: // DER encoded public key
                 if (keyStr.startsWith(ed25519PubKeyPrefix)) {
                     const rawKey = keyStr.slice(24);
                     const newKey = new Ed25519PublicKey(decodeHex(rawKey));
-                    newKey.asStringRaw = rawKey;
+                    newKey._asStringRaw = rawKey;
                     return newKey;
                 }
                 break;
@@ -58,18 +58,18 @@ export class Ed25519PublicKey implements PublicKey {
     }
 
     public toBytes(): Uint8Array {
-        return this.keyData.slice();
+        return this._keyData.slice();
     }
 
     public toString(raw = false): string {
-        if (!this.asStringRaw) {
-            this.asStringRaw = encodeHex(this.keyData);
+        if (!this._asStringRaw) {
+            this._asStringRaw = encodeHex(this._keyData);
         }
 
-        return (raw ? '' : ed25519PubKeyPrefix) + this.asStringRaw;
+        return (raw ? '' : ed25519PubKeyPrefix) + this._asStringRaw;
     }
 
-    public toProtoKey(): Key {
+    public _toProtoKey(): Key {
         const key = new Key();
         // copy the key bytes so they can't modify them through this object
         key.setEd25519(this.toBytes());
@@ -78,17 +78,18 @@ export class Ed25519PublicKey implements PublicKey {
 }
 
 export class Ed25519PrivateKey {
-    private readonly keyData: Uint8Array;
+    private readonly _keyData: Uint8Array;
+    private _asStringRaw?: string;
+    private _chainCode?: Uint8Array;
+
     public readonly publicKey: Ed25519PublicKey;
-    private asStringRaw?: string;
-    private chainCode?: Uint8Array;
 
     private constructor({ privateKey, publicKey }: RawKeyPair) {
         if (privateKey.length !== nacl.sign.secretKeyLength) {
             throw new Error('invalid private key');
         }
 
-        this.keyData = privateKey;
+        this._keyData = privateKey;
         this.publicKey = new Ed25519PublicKey(publicKey);
     }
 
@@ -131,14 +132,14 @@ export class Ed25519PrivateKey {
             case 64: // lone private key
             case 128: { // private key + public key
                 const newKey = Ed25519PrivateKey.fromBytes(decodeHex(keyStr));
-                newKey.asStringRaw = keyStr;
+                newKey._asStringRaw = keyStr;
                 return newKey;
             }
             case 96:
                 if (keyStr.startsWith(ed25519PrivKeyPrefix)) {
                     const rawStr = keyStr.slice(32);
                     const newKey = Ed25519PrivateKey.fromBytes(decodeHex(rawStr))
-                    newKey.asStringRaw = rawStr;
+                    newKey._asStringRaw = rawStr;
                     return newKey;
                 }
                 break;
@@ -182,7 +183,7 @@ export class Ed25519PrivateKey {
         }
 
         const key = Ed25519PrivateKey.fromBytes(keyBytes);
-        key.chainCode = chainCode;
+        key._chainCode = chainCode;
         return key;
     }
 
@@ -218,39 +219,39 @@ export class Ed25519PrivateKey {
      * You can check if a key supports derivation with `.supportsDerivation`
      */
     public derive(index: number): Ed25519PrivateKey {
-        if (!this.chainCode) {
+        if (!this._chainCode) {
             throw new Error('this Ed25519 private key does not support key derivation');
         }
 
-        const { keyBytes, chainCode } = deriveChildKey(this.keyData.subarray(0, 32), this.chainCode, index);
+        const { keyBytes, chainCode } = deriveChildKey(this._keyData.subarray(0, 32), this._chainCode, index);
         const key = Ed25519PrivateKey.fromBytes(keyBytes);
-        key.chainCode = chainCode;
+        key._chainCode = chainCode;
         return key;
     }
 
     /** Check if this private key supports deriving child keys */
     public get supportsDerivation(): boolean {
-        return !!this.chainCode;
+        return !!this._chainCode;
     }
 
     /** Sign the given message with this key. */
     public sign(msg: Uint8Array): Uint8Array {
-        return nacl.sign(msg, this.keyData);
+        return nacl.sign(msg, this._keyData);
     }
 
     public toBytes(): Uint8Array {
         // copy the bytes so they can't be modified accidentally
         // only copy the private key portion since that's what we're expecting on the other end
-        return this.keyData.slice(0, 32);
+        return this._keyData.slice(0, 32);
     }
 
     public toString(raw = false): string {
-        if (!this.asStringRaw) {
+        if (!this._asStringRaw) {
             // only encode the private portion of the private key
-            this.asStringRaw = encodeHex(this.keyData.subarray(0, 32));
+            this._asStringRaw = encodeHex(this._keyData.subarray(0, 32));
         }
 
-        return (raw ? '' : ed25519PrivKeyPrefix) + this.asStringRaw;
+        return (raw ? '' : ed25519PrivKeyPrefix) + this._asStringRaw;
     }
 
     /**
@@ -264,7 +265,7 @@ export class Ed25519PrivateKey {
      * @link fromKeystore
      */
     public createKeystore(passphrase: string): Promise<Uint8Array> {
-        return createKeystore(this.keyData, passphrase);
+        return createKeystore(this._keyData, passphrase);
     }
 }
 
@@ -288,42 +289,42 @@ function deriveChildKey(parentKey: Uint8Array, chainCode: Uint8Array, index: num
 }
 
 export interface PublicKey {
-    toProtoKey(): Key;
+    _toProtoKey(): Key;
 }
 
 export class ThresholdKey implements PublicKey {
-    private readonly threshold: number;
-    private readonly keys: Key[] = [];
+    private readonly _threshold: number;
+    private readonly _keys: Key[] = [];
 
     public constructor(threshold: number) {
-        this.threshold = threshold;
+        this._threshold = threshold;
     }
 
     public add(key: PublicKey): this {
-        this.keys.push(key.toProtoKey());
+        this._keys.push(key._toProtoKey());
         return this;
     }
 
     public addAll(...keys: PublicKey[]): this {
-        this.keys.push(...keys.map((key) => key.toProtoKey()));
+        this._keys.push(...keys.map((key) => key._toProtoKey()));
         return this;
     }
 
-    public toProtoKey(): Key {
-        if (this.keys.length === 0) {
+    public _toProtoKey(): Key {
+        if (this._keys.length === 0) {
             throw new Error("ThresholdKey must have at least one key");
         }
 
-        if (this.threshold > this.keys.length) {
+        if (this._threshold > this._keys.length) {
             throw new Error('ThresholdKey must have at least as many keys as threshold: '
-                + `${this.threshold}; # of keys currently: ${this.keys.length}`);
+                + `${this._threshold}; # of keys currently: ${this._keys.length}`);
         }
 
         const keyList = new KeyList();
-        keyList.setKeysList(this.keys);
+        keyList.setKeysList(this._keys);
 
         const thresholdKey = new ThresholdKeyProto();
-        thresholdKey.setThreshold(this.threshold);
+        thresholdKey.setThreshold(this._threshold);
         thresholdKey.setKeys(keyList);
 
         const protoKey = new Key();
@@ -415,13 +416,13 @@ export type Keystore = {
 }
 
 export class KeyMismatchException extends Error {
-    private readonly hmac: string;
-    private readonly expectedHmac: string;
+    private readonly _hmac: string;
+    private readonly _expectedHmac: string;
 
     public constructor(hmac: Buffer, expectedHmac: Buffer) {
         super('key mismatch when loading from keystore');
-        this.hmac = hmac.toString('hex');
-        this.expectedHmac = expectedHmac.toString('hex');
+        this._hmac = hmac.toString('hex');
+        this._expectedHmac = expectedHmac.toString('hex');
     }
 }
 

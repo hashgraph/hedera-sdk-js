@@ -13,13 +13,13 @@ import {Tinybar} from "../typedefs";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 export class AccountCreateTransaction extends TransactionBuilder {
-    private body: CryptoCreateTransactionBody;
+    private _body: CryptoCreateTransactionBody;
 
     public constructor(client: BaseClient) {
         super(client);
         const body = new CryptoCreateTransactionBody();
-        this.body = body;
-        this.inner.setCryptocreateaccount(body);
+        this._body = body;
+        this._inner.setCryptocreateaccount(body);
 
         // 90 days, required
         this.setAutoRenewPeriod(7890000);
@@ -31,40 +31,40 @@ export class AccountCreateTransaction extends TransactionBuilder {
     }
 
     public setKey(publicKey: PublicKey): this {
-        this.body.setKey(publicKey.toProtoKey());
+        this._body.setKey(publicKey._toProtoKey());
         return this;
     }
 
     public setAutoRenewPeriod(seconds: number): this {
-        this.body.setAutorenewperiod(newDuration(seconds));
+        this._body.setAutorenewperiod(newDuration(seconds));
         return this;
     }
 
     public setInitialBalance(balance: Tinybar | Hbar): this {
-        this.body.setInitialbalance(tinybarToString(balance));
+        this._body.setInitialbalance(tinybarToString(balance));
         return this;
     }
 
     public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
-        this.body.setReceiverecordthreshold(tinybarToString(threshold));
+        this._body.setReceiverecordthreshold(tinybarToString(threshold));
         return this;
     }
 
     public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
-        this.body.setSendrecordthreshold(tinybarToString(threshold));
+        this._body.setSendrecordthreshold(tinybarToString(threshold));
         return this;
     }
 
-    public get method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get _method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
         return CryptoService.createAccount;
     }
 
-    public doValidate(errors: string[]): void {
-        if (!this.body.hasKey()) {
+    public _doValidate(errors: string[]): void {
+        if (!this._body.hasKey()) {
             errors.push('AccountCreateTransaction requires setKey()');
         }
 
-        if (new BigNumber(this.body.getInitialbalance()).isZero()) {
+        if (new BigNumber(this._body.getInitialbalance()).isZero()) {
             errors.push('AccountCreateTransaction must have nonzero setInitialBalance')
         }
     }

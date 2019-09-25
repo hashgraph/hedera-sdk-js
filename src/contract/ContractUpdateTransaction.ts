@@ -18,52 +18,52 @@ import {
 } from "../util";
 
 export class ContractUpdateTransaction extends TransactionBuilder {
-    private readonly body: ContractUpdateTransactionBody;
+    private readonly _body: ContractUpdateTransactionBody;
 
     public constructor(client: BaseClient) {
         super(client);
-        this.body = new ContractUpdateTransactionBody();
-        this.inner.setContractupdateinstance(this.body);
+        this._body = new ContractUpdateTransactionBody();
+        this._inner.setContractupdateinstance(this._body);
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.body.hasContractid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._body.hasContractid()) {
             errors.push('ContractUpdateTransaction requires contract id to be set');
             return;
         }
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this.body.setContractid(getProtoContractId(contractIdLike));
+        this._body.setContractid(getProtoContractId(contractIdLike));
         return this;
     }
 
     public setAdminkey(publicKey: PublicKey): this {
-        this.body.setAdminkey(publicKey.toProtoKey());
+        this._body.setAdminkey(publicKey._toProtoKey());
         return this;
     }
 
     public setProxyAccountId(proxyAccountId: AccountId): this {
-        this.body.setProxyaccountid(getProtoAccountId(proxyAccountId));
+        this._body.setProxyaccountid(getProtoAccountId(proxyAccountId));
         return this;
     }
 
     public setFileId(fileIdLike: FileIdLike): this {
-        this.body.setFileid(getProtoFileId(fileIdLike));
+        this._body.setFileid(getProtoFileId(fileIdLike));
         return this;
     }
 
     public setAutoRenewPeriod(seconds: number): this {
-        this.body.setAutorenewperiod(newDuration(seconds));
+        this._body.setAutorenewperiod(newDuration(seconds));
         return this;
     }
 
     public setExpirationTime(date: number | Date): this {
-        this.body.setExpirationtime(getProtoTimestamp(dateToTimestamp(date)));
+        this._body.setExpirationtime(getProtoTimestamp(dateToTimestamp(date)));
         return this;
     }
 
-    public get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return SmartContractService.updateContract;
     }
 }
