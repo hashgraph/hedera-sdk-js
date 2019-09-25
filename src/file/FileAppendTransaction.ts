@@ -6,8 +6,8 @@ import { BaseClient } from "../BaseClient";
 
 import { FileService } from "../generated/FileService_pb_service";
 import { FileAppendTransactionBody } from "../generated/FileAppend_pb";
-import { FileIdLike } from "../typedefs";
-import { getProtoFileId } from "../util";
+import { FileIdLike } from "../types/FileId";
+import { fileIdToProto } from "../util";
 
 export class FileAppendTransaction extends TransactionBuilder {
     private readonly body: FileAppendTransactionBody;
@@ -28,7 +28,7 @@ export class FileAppendTransaction extends TransactionBuilder {
     }
 
     public setFileId(fileId: FileIdLike): this {
-        this.body.setFileid(getProtoFileId(fileId));
+        this.body.setFileid(fileIdToProto(fileId));
         return this;
     }
 

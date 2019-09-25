@@ -1,26 +1,19 @@
+import { ContractInfoQuery } from "../../exports";
 import { mockClient, mockTransaction } from "../MockClient";
-import { FileContentsQuery } from "../../exports";
 
-describe("FileContentsQuery", () => {
-    it("serializes and deserializes correctly; FileContentsQuery", () => {
-        const query = new FileContentsQuery(mockClient)
-            .setFileId({ shard: 0, realm: 0, file: 5 })
+describe("ContractInfoQuery", () => {
+    it("serializes and deserializes correctly; ContractInfoQuery", () => {
+        const transaction = new ContractInfoQuery(mockClient)
+            .setContractId({ shard: 0, realm: 0, contract: 3 })
             .setPayment(mockTransaction.toProto());
 
-        const tx = query.toProto().toObject();
+        const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({
             contractcalllocal: undefined,
             contractgetbytecode: undefined,
-            contractgetinfo: undefined,
-            contractgetrecords: undefined,
-            cryptogetaccountbalance: undefined,
-            cryptogetaccountrecords: undefined,
-            cryptogetclaim: undefined,
-            cryptogetinfo: undefined,
-            cryptogetproxystakers: undefined,
-            filegetcontents: {
-                fileid: {
-                    filenum: 5,
+            contractgetinfo: {
+                contractid: {
+                    contractnum: 3,
                     realmnum: 0,
                     shardnum: 0
                 },
@@ -34,6 +27,13 @@ describe("FileContentsQuery", () => {
                     responsetype: 0
                 }
             },
+            contractgetrecords: undefined,
+            cryptogetaccountbalance: undefined,
+            cryptogetaccountrecords: undefined,
+            cryptogetclaim: undefined,
+            cryptogetinfo: undefined,
+            cryptogetproxystakers: undefined,
+            filegetcontents: undefined,
             filegetinfo: undefined,
             getbykey: undefined,
             getbysolidityid: undefined,

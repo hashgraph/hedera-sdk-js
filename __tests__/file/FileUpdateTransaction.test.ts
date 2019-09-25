@@ -1,8 +1,8 @@
-import {mockClient, privateKey} from "../MockClient";
-import {FileUpdateTransaction} from "../../exports";
+import { mockClient, privateKey } from "../MockClient";
+import { FileUpdateTransaction } from "../../exports";
 
 describe("FileUpdateTransaction", () => {
-    it('serializes and deserializes correctly; FileUpdateTransaction', () => {
+    it("serializes and deserializes correctly; FileUpdateTransaction", () => {
         const transaction = new FileUpdateTransaction(mockClient)
             .setFileId({ shard: 0, realm: 0, file: 5 })
             .setContents("This is the file contents")

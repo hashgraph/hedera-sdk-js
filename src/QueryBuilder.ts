@@ -8,7 +8,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
 import { Transaction } from "./generated/Transaction_pb";
 import { Hbar } from "./Hbar";
-import { Tinybar } from "./typedefs";
+import { Tinybar } from "./types/Tinybar";
 
 export abstract class QueryBuilder<T> {
     private readonly client: BaseClient;

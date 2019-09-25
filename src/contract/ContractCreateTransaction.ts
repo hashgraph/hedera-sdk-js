@@ -4,13 +4,15 @@ import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { BaseClient } from "../BaseClient";
 import { ContractCreateTransactionBody } from "../generated/ContractCreate_pb";
-import { getProtoAccountId, getProtoFileId, newDuration, tinybarToString } from "../util";
+import {accountIdToProto, fileIdToProto, newDuration, tinybarToString} from "../util";
 import BigNumber from "bignumber.js";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
-import { AccountId, FileIdLike, Tinybar } from "../typedefs";
+import { Tinybar } from "../types/Tinybar";
 import { Hbar } from "../Hbar";
 import { PublicKey } from "../Keys";
+import { FileIdLike } from "../types/FileId";
+import { AccountId } from "../types/AccountId";
 
 export class ContractCreateTransaction extends TransactionBuilder {
     private readonly body: ContractCreateTransactionBody;
@@ -22,15 +24,13 @@ export class ContractCreateTransaction extends TransactionBuilder {
     }
 
     protected doValidate(errors: string[]): void {
-        const fileId = this.body.getFileid()!;
-
-        if (fileId == null) {
-            errors.push("ContractCreateTransaction must have BytecodeFile set");
+        if (!this.body.hasFileid()) {
+            errors.push(".setBytecodeFile() required");
         }
     }
 
     public setBytecodeFile(fileIdLike: FileIdLike): this {
-        this.body.setFileid(getProtoFileId(fileIdLike));
+        this.body.setFileid(fileIdToProto(fileIdLike));
         return this;
     }
 
@@ -50,7 +50,7 @@ export class ContractCreateTransaction extends TransactionBuilder {
     }
 
     public setProxyAccountId(proxyAccountId: AccountId): this {
-        this.body.setProxyaccountid(getProtoAccountId(proxyAccountId));
+        this.body.setProxyaccountid(accountIdToProto(proxyAccountId));
         return this;
     }
 

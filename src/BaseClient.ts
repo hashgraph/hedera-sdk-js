@@ -7,8 +7,7 @@ import { CryptoGetAccountBalanceQuery } from "./generated/CryptoGetAccountBalanc
 import { QueryHeader } from "./generated/QueryHeader_pb";
 
 import {
-    getProtoAccountId,
-    getSdkAccountId,
+    accountIdToProto,
     handleQueryPrecheck,
     normalizeAccountId,
     reqDefined,
@@ -20,9 +19,11 @@ import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
 import BigNumber from "bignumber.js";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 
-import { AccountId, AccountIdLike, Tinybar, TransactionId } from "./typedefs";
 import { Hbar } from "./Hbar";
+import { Tinybar } from "./types/Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
+import { AccountId, AccountIdLike, accountIdToSdk } from "./types/AccountId";
+import { TransactionId } from "./types/TransactionId";
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
@@ -135,7 +136,7 @@ export abstract class BaseClient {
             .build()
             .executeForReceipt()
             .then((receipt) => ({
-                account: getSdkAccountId(reqDefined(
+                account: accountIdToSdk(reqDefined(
                     receipt.getAccountid(),
                     `missing account ID from receipt: ${receipt}`
                 ))
@@ -164,7 +165,7 @@ export abstract class BaseClient {
     /** Get the current account balance in Tinybar */
     public getAccountBalance(): Promise<BigNumber> {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
-        balanceQuery.setAccountid(getProtoAccountId(this.operatorAcct));
+        balanceQuery.setAccountid(accountIdToProto(this.operatorAcct));
 
         const [ url, nodeAccountID ] = this._randomNode();
 
