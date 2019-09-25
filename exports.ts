@@ -18,7 +18,11 @@ export {FileUpdateTransaction} from "./src/file/FileUpdateTransaction";
 export {FileAppendTransaction} from "./src/file/FileAppendTransaction";
 export {FileInfoQuery} from "./src/file/FileInfoQuery";
 export {FileContentsQuery} from "./src/file/FileContentsQuery";
-export {AccountInfo, AccountInfoQuery} from './src/account/account-info';
+export {ContractCallQuery} from "./src/contract/ContractCallQuery";
+export {ContractRecordsQuery} from "./src/contract/ContractRecordsQuery";
+export {ContractInfoQuery} from "./src/contract/ContractInfoQuery";
+export {ContractBytecodeQuery} from "./src/contract/ContractBytecodeQuery";
+export {AccountInfoQuery, AccountInfo} from './src/account/AccountInfoQuery';
 
 export {Transaction} from './src/Transaction';
 
@@ -33,6 +37,6 @@ export {
     generateMnemonic, KeyMismatchException, MnemonicResult
 } from './src/Keys';
 
-export * from './src/typedefs';
+export * from './src/types/Tinybar';
 
 export {Hbar, HbarUnit, hbarUnits, hbarUnitSymbols} from './src/Hbar';

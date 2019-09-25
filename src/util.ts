@@ -1,23 +1,17 @@
 import {AccountID, ContractID, FileID, KeyList, TransactionID} from "./generated/BasicTypes_pb";
 import {Timestamp} from "./generated/Timestamp_pb";
 import {Duration} from "./generated/Duration_pb";
-import {
-    AccountId,
-    AccountIdLike,
-    ContractId,
-    ContractIdLike,
-    FileId,
-    FileIdLike,
-    Tinybar,
-    TransactionId,
-    TransactionIdLike
-} from "./typedefs";
 import {ResponseHeader} from "./generated/ResponseHeader_pb";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";
 import BigNumber from "bignumber.js";
 import {throwIfExceptional, TinybarValueError, ValidationError} from "./errors";
 import {Hbar} from "./Hbar";
+import {TransactionId, TransactionIdLike} from "./types/TransactionId";
+import {AccountId, AccountIdLike} from "./types/AccountId";
+import {ContractId, ContractIdLike} from "./types/ContractId";
+import {FileId, FileIdLike} from "./types/FileId";
+import {Tinybar} from "./types/Tinybar";
 import {Ed25519PublicKey, PublicKey} from "./Keys";
 
 export function orThrow<T>(val?: T, msg = 'value must not be null'): T {
@@ -32,7 +26,7 @@ export function getProtoTxnId(transactionId: TransactionIdLike): TransactionID {
     const { account, validStartSeconds, validStartNanos } = normalizeTxnId(transactionId);
 
     const txnId = new TransactionID();
-    txnId.setAccountid(getProtoAccountId(account));
+    txnId.setAccountid(accountIdToProto(account));
 
     const ts = new Timestamp();
     ts.setSeconds(validStartSeconds);
@@ -43,7 +37,7 @@ export function getProtoTxnId(transactionId: TransactionIdLike): TransactionID {
 }
 
 export function newTxnId(accountId: AccountIdLike): TransactionID {
-    const acctId = getProtoAccountId(accountId);
+    const acctId = accountIdToProto(accountId);
 
     // allows the transaction to be accepted as long as the node isn't 10 seconds behind us
     const {seconds, nanos} = dateToTimestamp(Date.now() - 10_000);
@@ -164,7 +158,7 @@ export function normalizeTxnId(txnId: TransactionIdLike): TransactionId {
     }
 }
 
-export function getProtoAccountId(accountId: AccountIdLike): AccountID {
+export function accountIdToProto(accountId: AccountIdLike): AccountID {
     const { shard, realm, account } = normalizeAccountId(accountId);
     const acctId = new AccountID();
     acctId.setShardnum(shard);
@@ -173,7 +167,7 @@ export function getProtoAccountId(accountId: AccountIdLike): AccountID {
     return acctId;
 }
 
-export function getProtoFileId(fileIdLike: FileIdLike): FileID {
+export function fileIdToProto(fileIdLike: FileIdLike): FileID {
     const { shard, realm, file } = normalizeFileId(fileIdLike);
     const fileId = new FileID();
     fileId.setShardnum(shard);
@@ -182,7 +176,7 @@ export function getProtoFileId(fileIdLike: FileIdLike): FileID {
     return fileId;
 }
 
-export function getProtoContractId(contractIdLike: ContractIdLike): ContractID {
+export function contractIdToProto(contractIdLike: ContractIdLike): ContractID {
     const { shard, realm, contract } = normalizeContractId(contractIdLike);
     const contractId = new ContractID();
     contractId.setShardnum(shard);
@@ -191,48 +185,17 @@ export function getProtoContractId(contractIdLike: ContractIdLike): ContractID {
     return contractId;
 }
 
-export function getProtoTimestamp({ seconds, nanos }: { seconds: number; nanos: number }): Timestamp {
+export function timestampToProto({ seconds, nanos }: { seconds: number; nanos: number }): Timestamp {
     const timestamp = new Timestamp();
     timestamp.setSeconds(seconds);
     timestamp.setNanos(nanos);
     return timestamp;
 }
 
-export const getSdkAccountId = (accountId: AccountID): AccountId => (
-    {
-        shard: accountId.getShardnum(),
-        realm: accountId.getRealmnum(),
-        account: accountId.getAccountnum()
-    }
-);
-
-export const getSdkFileId = (fileId: FileID): FileId => (
-    {
-        shard: fileId.getShardnum(),
-        realm: fileId.getRealmnum(),
-        file: fileId.getFilenum()
-    }
-);
-
-export const getSdkContractId = (contractId: ContractID): ContractId => (
-    {
-        shard: contractId.getShardnum(),
-        realm: contractId.getRealmnum(),
-        contract: contractId.getContractnum()
-    }
-);
-
 export function getSdkKeys(keylist: KeyList): Ed25519PublicKey[] {
     return keylist.getKeysList().map((key) => new Ed25519PublicKey(key.getEd25519() as Uint8Array));
 }
 
-export const getSdkTxnId = (txnId: TransactionID): TransactionId => (
-    {
-        account: getSdkAccountId(orThrow(txnId.getAccountid())),
-        validStartSeconds: orThrow(txnId.getTransactionvalidstart()).getSeconds(),
-        validStartNanos: orThrow(txnId.getTransactionvalidstart()).getNanos(),
-    }
-);
 
 export function setTimeoutAwaitable(timeoutMs: number): Promise<undefined> {
     return new Promise(resolve => setTimeout(resolve, timeoutMs));

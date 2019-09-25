@@ -8,7 +8,7 @@ import {newDuration, tinybarToString} from "../util";
 import {PublicKey} from "../Keys";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 import {Hbar} from "../Hbar";
-import {Tinybar} from "../typedefs";
+import {Tinybar} from "../types/Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 export class AccountCreateTransaction extends TransactionBuilder {

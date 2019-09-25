@@ -8,7 +8,9 @@ import {
 import {TinybarValueError} from "../src/errors";
 import BigNumber from "bignumber.js";
 import {Hbar} from "../src/Hbar";
-import {AccountId, ContractId, FileId} from "../src/typedefs";
+import {AccountId} from "../src/types/AccountId";
+import {ContractId} from "../src/types/ContractId";
+import {FileId} from "../src/types/FileId";
 
 describe('tinybarRangeCheck()', () => {
     it('forbids negative numbers by default', () => {

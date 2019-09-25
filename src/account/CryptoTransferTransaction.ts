@@ -8,12 +8,13 @@ import {
     CryptoTransferTransactionBody,
     TransferList
 } from "../generated/CryptoTransfer_pb";
-import {getProtoAccountId, tinybarRangeCheck, tinybarToString} from "../util";
+import {accountIdToProto, tinybarRangeCheck, tinybarToString} from "../util";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 
-import {AccountIdLike, Tinybar} from "../typedefs";
+import {Tinybar} from "../types/Tinybar";
 import {Hbar} from "../Hbar";
+import {AccountIdLike} from "../types/AccountId";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
     private readonly body: CryptoTransferTransactionBody;
@@ -58,7 +59,7 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         this.body.setTransfers(transfers);
 
         const acctAmt = new AccountAmount();
-        acctAmt.setAccountid(getProtoAccountId(accountId));
+        acctAmt.setAccountid(accountIdToProto(accountId));
         acctAmt.setAmount(tinybarToString(amount, 'allowNegative'));
 
         transfers.addAccountamounts(acctAmt);

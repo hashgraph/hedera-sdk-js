@@ -1,7 +1,7 @@
 import {BaseClient, Node} from "./BaseClient";
 import {TransactionBody} from "./generated/TransactionBody_pb";
 import {
-    getProtoAccountId,
+    accountIdToProto,
     getProtoTxnId,
     newDuration,
     newTxnId,
@@ -14,9 +14,11 @@ import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 
-import {AccountId, AccountIdLike, Tinybar, TransactionIdLike} from "./typedefs";
+import {Tinybar} from "./types/Tinybar";
 import {Hbar} from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
+import {AccountId, AccountIdLike} from "./types/AccountId";
+import {TransactionIdLike} from "./types/TransactionId";
 
 /**
  * Max duration of transactions on the network is 2 minutes
@@ -54,7 +56,7 @@ export abstract class TransactionBuilder {
 
     public setNodeAccountId(nodeAccountId: AccountIdLike): this {
         this.nodeAccountId = normalizeAccountId(nodeAccountId);
-        this.inner.setNodeaccountid(getProtoAccountId(nodeAccountId));
+        this.inner.setNodeaccountid(accountIdToProto(nodeAccountId));
         return this;
     }
 
