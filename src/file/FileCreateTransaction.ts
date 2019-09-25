@@ -6,9 +6,9 @@ import {BaseClient} from "../BaseClient";
 
 import {FileService} from "../generated/FileService_pb_service";
 import {FileCreateTransactionBody} from "../generated/FileCreate_pb";
-import {Timestamp} from "../generated/Timestamp_pb";
 import {PublicKey} from "../Keys";
 import {KeyList} from "../generated/BasicTypes_pb";
+import {dateToTimestamp, getProtoTimestamp} from "../util";
 
 export class FileCreateTransaction extends TransactionBuilder {
     private readonly body: FileCreateTransactionBody;
@@ -28,18 +28,8 @@ export class FileCreateTransaction extends TransactionBuilder {
         }
     }
 
-    public setExpirationTime(date: Date | { seconds: number; nanos: number }): this {
-        const timestamp = new Timestamp();
-
-        if (date instanceof Date) {
-            timestamp.setSeconds(date.getSeconds());
-            timestamp.setNanos(0);
-        } else {
-            timestamp.setSeconds(date.seconds);
-            timestamp.setNanos(date.nanos);
-        }
-
-        this.body.setExpirationtime(timestamp);
+    public setExpirationTime(date: number | Date): this {
+        this.body.setExpirationtime(getProtoTimestamp(dateToTimestamp(date)));
         return this;
     }
 

@@ -5,7 +5,7 @@ describe("FileCreateTransaction", () => {
     it('serializes and deserializes correctly; FileCreateTransaction', () => {
         const transaction = new FileCreateTransaction(mockClient)
             .setContents("This is the file contents")
-            .setExpirationTime({ seconds: 1615551515151, nanos: 10515790 })
+            .setExpirationTime(new Date(15415151511))
             .addKey(privateKey.publicKey)
             .setTransactionFee(1e6)
             .setTransactionId({
@@ -18,7 +18,7 @@ describe("FileCreateTransaction", () => {
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({
             body: undefined,
-            bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeIoBRhIMCI+U/7KCLxDO6oEFGiQKIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLciEE4YrIrLYXn4pXnKJ7Xp7bA=",
+            bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeIoBRRILCO/urAcQwPvU8wEaJAoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktyIQThisisthefilecontentsA==",
             sigmap: undefined,
             sigs: undefined
         });

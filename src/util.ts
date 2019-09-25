@@ -71,7 +71,7 @@ export function dateToTimestamp(dateOrMs: number | Date): { seconds: number; nan
 }
 
 export function timestampToDate(timestamp: Timestamp): Date {
-    return new Date(timestamp.getSeconds() * 1_000_000 + timestamp.getNanos() * 1000);
+    return new Date(timestamp.getSeconds() * 1_000 + timestamp.getNanos() / 1_000_000);
 }
 
 export function timestampToMs(timestamp: Timestamp): number {

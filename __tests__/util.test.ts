@@ -1,7 +1,8 @@
 import {
+    dateToTimestamp, getProtoTimestamp,
     normalizeAccountId,
     normalizeContractId,
-    normalizeFileId,
+    normalizeFileId, timestampToDate,
     tinybarRangeCheck
 } from "../src/util";
 import {TinybarValueError} from "../src/errors";
@@ -164,4 +165,14 @@ describe('normalizeFileId()', () => {
         expect(() => normalizeFileId(Number.MAX_SAFE_INTEGER + 1))
             .toThrow(`file ID outside safe integer range for number: ${Number.MAX_SAFE_INTEGER + 1}`);
     })
+});
+
+describe("Date and Timestamp", () => {
+    it("roundtrip", () => {
+        const date = new Date(1414141411);
+        const timestamp = dateToTimestamp(date);
+        const protoTimestmap = getProtoTimestamp(timestamp);
+        const roundTripDate = timestampToDate(protoTimestmap);
+        expect(date.toDateString()).toStrictEqual(roundTripDate.toDateString());
+    });
 });

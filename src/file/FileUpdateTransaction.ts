@@ -5,11 +5,11 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {BaseClient} from "../BaseClient";
 
 import {FileService} from "../generated/FileService_pb_service";
-import {Timestamp} from "../generated/Timestamp_pb";
 import {PublicKey} from "../Keys";
 import {FileID, KeyList} from "../generated/BasicTypes_pb";
 import {FileUpdateTransactionBody} from "../generated/FileUpdate_pb";
 import {FileId} from "../typedefs";
+import {dateToTimestamp, getProtoTimestamp} from "../util";
 
 export class FileUpdateTransaction extends TransactionBuilder {
     private readonly body: FileUpdateTransactionBody;
@@ -29,18 +29,8 @@ export class FileUpdateTransaction extends TransactionBuilder {
         }
     }
 
-    public setExpirationTime(date: Date | { seconds: number; nanos: number }): this {
-        const timestamp = new Timestamp();
-
-        if (date instanceof Date) {
-            timestamp.setSeconds(date.getSeconds());
-            timestamp.setNanos(0);
-        } else {
-            timestamp.setSeconds(date.seconds);
-            timestamp.setNanos(date.nanos);
-        }
-
-        this.body.setExpirationtime(timestamp);
+    public setExpirationTime(date: number | Date): this {
+        this.body.setExpirationtime(getProtoTimestamp(dateToTimestamp(date)));
         return this;
     }
 
