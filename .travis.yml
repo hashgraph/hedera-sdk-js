@@ -11,11 +11,15 @@ addons:
   apt:
     update: true
     packages:
-      - protobuf-compiler
       - libprotobuf-dev
 
-before_script:
-  - yarn
+before_install:
+  # Install protobuf
+  # Ubuntu has 3.0 in the repositories
+  - curl -OL https://github.com/google/protobuf/releases/download/v3.7.1/protoc-3.7.1-linux-x86_64.zip
+  - sudo unzip -o protoc-3.7.1-linux-x86_64.zip -d /usr/local bin/protoc
+  - sudo unzip -o protoc-3.7.1-linux-x86_64.zip -d /usr/local include/*
+  - rm -f protoc-3.7.1-linux-x86_64.zip
 
 script:
   - yarn lint
