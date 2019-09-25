@@ -5,10 +5,10 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {BaseClient} from "../BaseClient";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
 
-import {ContractID} from "../generated/BasicTypes_pb";
-import {ContractId} from "../typedefs";
+import {ContractIdLike} from "../typedefs";
 import {ContractCallTransactionBody} from "../generated/ContractCall_pb";
 import BigNumber from "bignumber.js";
+import {getProtoContractId} from "../util";
 
 export class ContractExecuteTransaction extends TransactionBuilder {
     private readonly body: ContractCallTransactionBody;
@@ -41,12 +41,8 @@ export class ContractExecuteTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setContractId({ shard, realm, contract }: ContractId): this {
-        const contractId = new ContractID();
-        contractId.setShardnum(shard);
-        contractId.setRealmnum(realm);
-        contractId.setContractnum(contract);
-        this.body.setContractid(contractId);
+    public setContractId(contractIdLike: ContractIdLike): this {
+        this.body.setContractid(getProtoContractId(contractIdLike));
         return this;
     }
 

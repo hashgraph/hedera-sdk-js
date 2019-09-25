@@ -5,12 +5,17 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {BaseClient} from "../BaseClient";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
 
-import {ContractID, FileID} from "../generated/BasicTypes_pb";
-import {AccountId, ContractId, FileId} from "../typedefs";
+import {AccountId, ContractIdLike, FileIdLike} from "../typedefs";
 import {ContractUpdateTransactionBody} from "../generated/ContractUpdate_pb";
 import {PublicKey} from "../Keys";
-import {getProtoAccountId, newDuration} from "../util";
-import {Timestamp} from "../generated/Timestamp_pb";
+import {
+    dateToTimestamp,
+    getProtoAccountId,
+    getProtoContractId,
+    getProtoFileId,
+    getProtoTimestamp,
+    newDuration
+} from "../util";
 
 export class ContractUpdateTransaction extends TransactionBuilder {
     private readonly body: ContractUpdateTransactionBody;
@@ -28,12 +33,8 @@ export class ContractUpdateTransaction extends TransactionBuilder {
         }
     }
 
-    public setContractId({ shard, realm, contract }: ContractId): this {
-        const contractId = new ContractID();
-        contractId.setShardnum(shard);
-        contractId.setRealmnum(realm);
-        contractId.setContractnum(contract);
-        this.body.setContractid(contractId);
+    public setContractId(contractIdLike: ContractIdLike): this {
+        this.body.setContractid(getProtoContractId(contractIdLike));
         return this;
     }
 
@@ -47,12 +48,8 @@ export class ContractUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setFileId({ shard, realm, file }: FileId): this {
-        const fileId = new FileID();
-        fileId.setShardnum(shard);
-        fileId.setRealmnum(realm);
-        fileId.setFilenum(file);
-        this.body.setFileid(fileId);
+    public setFileId(fileIdLike: FileIdLike): this {
+        this.body.setFileid(getProtoFileId(fileIdLike));
         return this;
     }
 
@@ -61,18 +58,8 @@ export class ContractUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setExpirationTime(date: Date | { seconds: number; nanos: number }): this {
-        const timestamp = new Timestamp();
-
-        if (date instanceof Date) {
-            timestamp.setSeconds(date.getSeconds());
-            timestamp.setNanos(0);
-        } else {
-            timestamp.setSeconds(date.seconds);
-            timestamp.setNanos(date.nanos);
-        }
-
-        this.body.setExpirationtime(timestamp);
+    public setExpirationTime(date: number | Date): this {
+        this.body.setExpirationtime(getProtoTimestamp(dateToTimestamp(date)));
         return this;
     }
 

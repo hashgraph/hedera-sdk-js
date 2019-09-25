@@ -6,8 +6,8 @@ import {BaseClient} from "../BaseClient";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
 
 import {ContractDeleteTransactionBody} from "../generated/ContractDelete_pb";
-import {ContractID} from "../generated/BasicTypes_pb";
-import {ContractId} from "../typedefs";
+import {ContractIdLike} from "../typedefs";
+import {getProtoContractId} from "../util";
 
 export class ContractDeleteTransaction extends TransactionBuilder {
     private readonly body: ContractDeleteTransactionBody;
@@ -25,12 +25,8 @@ export class ContractDeleteTransaction extends TransactionBuilder {
         }
     }
 
-    public setContractId({ shard, realm, contract }: ContractId): this {
-        const contractId = new ContractID();
-        contractId.setShardnum(shard);
-        contractId.setRealmnum(realm);
-        contractId.setContractnum(contract);
-        this.body.setContractid(contractId);
+    public setContractId(contractIdLike: ContractIdLike): this {
+        this.body.setContractid(getProtoContractId(contractIdLike));
         return this;
     }
 

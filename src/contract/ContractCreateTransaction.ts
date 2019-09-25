@@ -4,12 +4,11 @@ import {TransactionResponse} from "../generated/TransactionResponse_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {BaseClient} from "../BaseClient";
 import {ContractCreateTransactionBody} from "../generated/ContractCreate_pb";
-import {getProtoAccountId, tinybarToString, newDuration} from "../util";
+import {getProtoAccountId, tinybarToString, newDuration, getProtoFileId} from "../util";
 import BigNumber from "bignumber.js";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
-import {FileID} from "../generated/BasicTypes_pb";
 
-import {AccountId, Tinybar, FileId} from "../typedefs";
+import {AccountId, Tinybar, FileIdLike} from "../typedefs";
 import {Hbar} from "../Hbar";
 import {PublicKey} from "../Keys";
 
@@ -31,12 +30,8 @@ export class ContractCreateTransaction extends TransactionBuilder {
         }
     }
 
-    public setBytecodeFile({ shard, realm, file }: FileId): this {
-        const fileId = new FileID();
-        fileId.setShardnum(shard);
-        fileId.setRealmnum(realm);
-        fileId.setFilenum(file);
-        this.body.setFileid(fileId);
+    public setBytecodeFile(fileIdLike: FileIdLike): this {
+        this.body.setFileid(getProtoFileId(fileIdLike));
         return this;
     }
 
@@ -69,20 +64,6 @@ export class ContractCreateTransaction extends TransactionBuilder {
         this.body.setConstructorparameters(constructorParams);
         return this;
     }
-    // eslint-disable-next-line unicorn/expiring-todo-comments
-    // TODO: Uncomment when implemented by Hedera Hashgraph
-    // RealmID requires ShardID to also be provided, so combine both as to not override ShardID
-    // unintentionally
-    // public setRealmId({ shard, realm }: RealmId): this {
-    //     const protoRealmId = new RealmID();
-    //     protoRealmId.setShardnum(shard);
-    //     protoRealmId.setRealmnum(realm);
-    //     this.body.setRealmid(protoRealmId);
-    //     return this;
-    // }
-
-    // eslint-disable-next-line unicorn/expiring-todo-comments
-    // TODO: setNewRealmAdminKey
 
     public get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return SmartContractService.createContract;

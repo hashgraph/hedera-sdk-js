@@ -1,4 +1,4 @@
-import {AccountID, TransactionID} from "./generated/BasicTypes_pb";
+import {AccountID, ContractID, FileID, TransactionID} from "./generated/BasicTypes_pb";
 import {Timestamp} from "./generated/Timestamp_pb";
 import {Duration} from "./generated/Duration_pb";
 import {
@@ -168,6 +168,31 @@ export function getProtoAccountId(accountId: AccountIdLike): AccountID {
     return acctId;
 }
 
+export function getProtoFileId(fileIdLike: FileIdLike): FileID {
+    const { shard, realm, file } = normalizeFileId(fileIdLike);
+    const fileId = new FileID();
+    fileId.setShardnum(shard);
+    fileId.setRealmnum(realm);
+    fileId.setFilenum(file);
+    return fileId;
+}
+
+export function getProtoContractId(contractIdLike: ContractIdLike): ContractID {
+    const { shard, realm, contract } = normalizeContractId(contractIdLike);
+    const contractId = new ContractID();
+    contractId.setShardnum(shard);
+    contractId.setRealmnum(realm);
+    contractId.setContractnum(contract);
+    return contractId;
+}
+
+export function getProtoTimestamp({ seconds, nanos }: { seconds: number; nanos: number }): Timestamp {
+    const timestamp = new Timestamp();
+    timestamp.setSeconds(seconds);
+    timestamp.setNanos(nanos);
+    return timestamp;
+}
+
 export const getSdkAccountId = (accountId: AccountID): AccountId => (
     {
         shard: accountId.getShardnum(),
@@ -175,6 +200,23 @@ export const getSdkAccountId = (accountId: AccountID): AccountId => (
         account: accountId.getAccountnum()
     }
 );
+
+export const getSdkFileId = (fileId: FileID): FileId => (
+    {
+        shard: fileId.getShardnum(),
+        realm: fileId.getRealmnum(),
+        file: fileId.getFilenum()
+    }
+);
+
+export const getSdkContractId = (contractId: ContractID): ContractId => (
+    {
+        shard: contractId.getShardnum(),
+        realm: contractId.getRealmnum(),
+        contract: contractId.getContractnum()
+    }
+);
+
 export const getSdkTxnId = (txnId: TransactionID): TransactionId => (
     {
         account: getSdkAccountId(orThrow(txnId.getAccountid())),
