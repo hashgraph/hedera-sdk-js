@@ -16,6 +16,8 @@ export {FileCreateTransaction} from "./src/file/FileCreateTransaction";
 export {FileDeleteTransaction} from "./src/file/FileDeleteTransaction";
 export {FileUpdateTransaction} from "./src/file/FileUpdateTransaction";
 export {FileAppendTransaction} from "./src/file/FileAppendTransaction";
+export {FileInfoQuery} from "./src/file/FileInfoQuery";
+export {FileContentsQuery} from "./src/file/FileContentsQuery";
 export {AccountInfo, AccountInfoQuery} from './src/account/account-info';
 
 export {Transaction} from './src/Transaction';

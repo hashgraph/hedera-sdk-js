@@ -1,4 +1,4 @@
-import {AccountID, ContractID, FileID, TransactionID} from "./generated/BasicTypes_pb";
+import {AccountID, ContractID, FileID, KeyList, TransactionID} from "./generated/BasicTypes_pb";
 import {Timestamp} from "./generated/Timestamp_pb";
 import {Duration} from "./generated/Duration_pb";
 import {
@@ -18,6 +18,7 @@ import {Response} from "./generated/Response_pb";
 import BigNumber from "bignumber.js";
 import {throwIfExceptional, TinybarValueError, ValidationError} from "./errors";
 import {Hbar} from "./Hbar";
+import {Ed25519PublicKey, PublicKey} from "./Keys";
 
 export function orThrow<T>(val?: T, msg = 'value must not be null'): T {
     if (val === undefined || val === null) {
@@ -67,6 +68,10 @@ export function dateToTimestamp(dateOrMs: number | Date): { seconds: number; nan
         // get remainder as nanoseconds
         nanos: Math.floor(dateMs % 1000 * 1_000_000)
     };
+}
+
+export function timestampToDate(timestamp: Timestamp): Date {
+    return new Date(timestamp.getSeconds() * 1_000_000 + timestamp.getNanos() * 1000);
 }
 
 export function timestampToMs(timestamp: Timestamp): number {
@@ -216,6 +221,10 @@ export const getSdkContractId = (contractId: ContractID): ContractId => (
         contract: contractId.getContractnum()
     }
 );
+
+export function getSdkKeys(keylist: KeyList): Ed25519PublicKey[] {
+    return keylist.getKeysList().map((key) => new Ed25519PublicKey(key.getEd25519() as Uint8Array));
+}
 
 export const getSdkTxnId = (txnId: TransactionID): TransactionId => (
     {

@@ -139,6 +139,10 @@ export abstract class QueryBuilder<T> {
         return this.mapResponse(response);
     }
 
+    public toProto(): Query {
+        return this.inner;
+    }
+
     protected abstract getMethod(): grpc.UnaryMethodDefinition<Query, Response>;
 
     protected abstract mapResponse(response: Response): T;
