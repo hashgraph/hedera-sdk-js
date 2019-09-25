@@ -15,3 +15,6 @@ __tests__/**/*.js
 **/*.d.ts
 
 **/*.flow*
+
+# IDEA
+.idea

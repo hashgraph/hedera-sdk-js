@@ -8,6 +8,10 @@ export {
 
 export {AccountCreateTransaction} from './src/account/AccountCreateTransaction';
 export {CryptoTransferTransaction} from './src/account/CryptoTransferTransaction';
+export {ContractCreateTransaction} from "./src/contract/ContractCreateTransaction";
+export {ContractDeleteTransaction} from "./src/contract/ContractDeleteTransaction";
+export {ContractExecuteTransaction} from "./src/contract/ContractExecuteTransaction";
+export {ContractUpdateTransaction} from "./src/contract/ContractUpdateTransaction";
 export {AccountInfo, AccountInfoQuery} from './src/account/account-info';
 
 export {Transaction} from './src/Transaction';
