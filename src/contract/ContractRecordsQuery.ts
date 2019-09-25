@@ -15,31 +15,31 @@ export type ContractRecord = {
 }
 
 export class ContractRecordsQuery extends QueryBuilder<ContractRecord> {
-    private readonly builder: ContractGetRecordsQuery;
+    private readonly _builder: ContractGetRecordsQuery;
     public constructor(client: BaseClient) {
         const header = new QueryHeader();
         super(client, header);
-        this.builder = new ContractGetRecordsQuery();
-        this.builder.setHeader(header);
-        this.inner.setContractgetrecords(this.builder);
+        this._builder = new ContractGetRecordsQuery();
+        this._builder.setHeader(header);
+        this._inner.setContractgetrecords(this._builder);
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this.builder.setContractid(contractIdToProto(contractIdLike));
+        this._builder.setContractid(contractIdToProto(contractIdLike));
         return this;
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.builder.hasContractid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._builder.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
-    protected getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
         return SmartContractService.getTxRecordByContractID;
     }
 
-    protected mapResponse(response: Response): ContractRecord {
+    protected _mapResponse(response: Response): ContractRecord {
         const contractResponse = response.getContractgetrecordsresponse()!;
         const contractId = contractIdToSdk(contractResponse.getContractid()!);
         const recordList = recordListToSdk(contractResponse.getRecordsList()!);

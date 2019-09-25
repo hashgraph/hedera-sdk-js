@@ -49,20 +49,20 @@ export type ClientConfig = {
 
 export abstract class BaseClient {
     public readonly operator: Operator;
-    private readonly operatorAcct: AccountId;
+    private readonly _operatorAcct: AccountId;
     public readonly operatorSigner: Signer;
     public readonly operatorPublicKey: Ed25519PublicKey;
 
-    protected readonly nodes: [string, AccountId][];
+    protected readonly _nodes: [string, AccountId][];
 
     private _maxTransactionFee: Hbar = Hbar.of(1);
     private _maxQueryPayment?: Hbar;
 
     protected constructor(nodes: Nodes, operator: Operator) {
-        this.nodes = (Array.isArray(nodes) ? nodes : Object.entries(nodes))
+        this._nodes = (Array.isArray(nodes) ? nodes : Object.entries(nodes))
             .map(([ url, acct ]) => [ url, normalizeAccountId(acct) ]);
         this.operator = operator;
-        this.operatorAcct = normalizeAccountId(operator.account);
+        this._operatorAcct = normalizeAccountId(operator.account);
 
         const maybePrivateKey = (operator as PrivateKey).privateKey;
         if (maybePrivateKey) {
@@ -151,7 +151,7 @@ export abstract class BaseClient {
      */
     public transferCryptoTo(recipient: AccountIdLike, amount: number | BigNumber | Hbar): Promise<TransactionId> {
         const txn = new CryptoTransferTransaction(this)
-            .addSender(this.operatorAcct, amount)
+            .addSender(this._operatorAcct, amount)
             .addRecipient(recipient, amount)
             .setTransactionFee(1_000_000)
             .build();
@@ -162,12 +162,12 @@ export abstract class BaseClient {
     /** Get the current account balance in Tinybar */
     public getAccountBalance(): Promise<BigNumber> {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
-        balanceQuery.setAccountid(accountIdToProto(this.operatorAcct));
+        balanceQuery.setAccountid(accountIdToProto(this._operatorAcct));
 
         const [ url, nodeAccountID ] = this._randomNode();
 
         const paymentTxn = new CryptoTransferTransaction(this)
-            .addSender(this.operatorAcct, 0)
+            .addSender(this._operatorAcct, 0)
             .addRecipient(nodeAccountID, 0)
             .setTransactionFee(9)
             .build();
@@ -194,7 +194,7 @@ export abstract class BaseClient {
     // we're not using symbols because Flow doesn't support computed class properties and it's
     // much nicer to just use `flowgen` rather than maintaining our own redundant definitions files
     public _randomNode(): Node {
-        return this.nodes[ Math.floor(Math.random() * this.nodes.length) ];
+        return this._nodes[ Math.floor(Math.random() * this._nodes.length) ];
     }
 
     /**
@@ -205,7 +205,7 @@ export abstract class BaseClient {
      * version bumps.
      */
     public _getNode(node: string | AccountId): Node {
-        const maybeNode = this.nodes.find(([ url, accountId ]) => url === node || (
+        const maybeNode = this._nodes.find(([ url, accountId ]) => url === node || (
             typeof node === "object" &&
                 accountId.account === node.account &&
                 accountId.realm === node.realm &&

@@ -9,31 +9,31 @@ import { ContractIdLike, contractIdToProto } from "../types/ContractId";
 import { ContractGetBytecodeQuery } from "../generated/ContractGetBytecode_pb";
 
 export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
-    private readonly builder: ContractGetBytecodeQuery;
+    private readonly _builder: ContractGetBytecodeQuery;
     public constructor(client: BaseClient) {
         const header = new QueryHeader();
         super(client, header);
-        this.builder = new ContractGetBytecodeQuery();
-        this.builder.setHeader(header);
-        this.inner.setContractgetbytecode(this.builder);
+        this._builder = new ContractGetBytecodeQuery();
+        this._builder.setHeader(header);
+        this._inner.setContractgetbytecode(this._builder);
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this.builder.setContractid(contractIdToProto(contractIdLike));
+        this._builder.setContractid(contractIdToProto(contractIdLike));
         return this;
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.builder.hasContractid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._builder.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
-    protected getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
         return SmartContractService.contractCallLocalMethod;
     }
 
-    protected mapResponse(response: Response): Uint8Array {
+    protected _mapResponse(response: Response): Uint8Array {
         return response.getContractgetbytecoderesponse()!.getBytecode_asU8()!;
     }
 }

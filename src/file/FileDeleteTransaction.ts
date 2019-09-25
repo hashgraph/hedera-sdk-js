@@ -9,16 +9,16 @@ import { FileDeleteTransactionBody } from "../generated/FileDelete_pb";
 import { FileIdLike, fileIdToProto } from "../types/FileId";
 
 export class FileDeleteTransaction extends TransactionBuilder {
-    private readonly body: FileDeleteTransactionBody;
+    private readonly _body: FileDeleteTransactionBody;
 
     public constructor(client: BaseClient) {
         super(client);
-        this.body = new FileDeleteTransactionBody();
-        this.inner.setFiledelete(this.body);
+        this._body = new FileDeleteTransactionBody();
+        this._inner.setFiledelete(this._body);
     }
 
-    protected doValidate(errors: string[]): void {
-        const fileId = this.body.getFileid();
+    protected _doValidate(errors: string[]): void {
+        const fileId = this._body.getFileid();
 
         if (fileId == null) {
             errors.push("FileDeleteTransaction must have a file set");
@@ -26,11 +26,11 @@ export class FileDeleteTransaction extends TransactionBuilder {
     }
 
     public setFileId(fileIdLike: FileIdLike): this {
-        this.body.setFileid(fileIdToProto(fileIdLike));
+        this._body.setFileid(fileIdToProto(fileIdLike));
         return this;
     }
 
-    public get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return FileService.deleteFile;
     }
 }

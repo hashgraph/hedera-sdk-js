@@ -21,98 +21,98 @@ import { getProtoTxnId, newTxnId, TransactionIdLike } from "./types/TransactionI
 const maxValidDuration = 120;
 
 export abstract class TransactionBuilder {
-    private client: BaseClient;
-    private nodeAccountId?: AccountId;
-    protected readonly inner: TransactionBody;
+    private _client: BaseClient;
+    private _nodeAccountId?: AccountId;
+    protected readonly _inner: TransactionBody;
 
-    private node?: Node;
+    private _node?: Node;
 
     protected constructor(client: BaseClient) {
-        this.client = client;
-        this.inner = new TransactionBody();
-        this.inner.setTransactionvalidduration(newDuration(120));
-        this.inner.setTransactionfee(tinybarToString(this.client.maxTransactionFee));
+        this._client = client;
+        this._inner = new TransactionBody();
+        this._inner.setTransactionvalidduration(newDuration(120));
+        this._inner.setTransactionfee(tinybarToString(this._client.maxTransactionFee));
     }
 
     public setTransactionId(id: TransactionIdLike): this {
-        this.inner.setTransactionid(getProtoTxnId(id));
+        this._inner.setTransactionid(getProtoTxnId(id));
         return this;
     }
 
     public setTransactionValidDuration(seconds: number): this {
-        this.inner.setTransactionvalidduration(newDuration(Math.min(seconds, maxValidDuration)));
+        this._inner.setTransactionvalidduration(newDuration(Math.min(seconds, maxValidDuration)));
         return this;
     }
 
     public setTransactionFee(fee: Tinybar | Hbar): this {
-        this.inner.setTransactionfee(tinybarToString(fee));
+        this._inner.setTransactionfee(tinybarToString(fee));
         return this;
     }
 
     public setNodeAccountId(nodeAccountId: AccountIdLike): this {
-        this.nodeAccountId = normalizeAccountId(nodeAccountId);
-        this.inner.setNodeaccountid(accountIdToProto(nodeAccountId));
+        this._nodeAccountId = normalizeAccountId(nodeAccountId);
+        this._inner.setNodeaccountid(accountIdToProto(nodeAccountId));
         return this;
     }
 
     public setMemo(memo: string): this {
-        this.inner.setMemo(memo);
+        this._inner.setMemo(memo);
         return this;
     }
 
-    public abstract get method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
+    public abstract get _method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
-    protected abstract doValidate(errors: string[]): void;
+    protected abstract _doValidate(errors: string[]): void;
 
-    protected getNode(): Node {
-        if (!this.node) {
-            this.node = this.nodeAccountId ?
-                this.client._getNode(this.nodeAccountId) :
-                this.client._randomNode();
+    protected _getNode(): Node {
+        if (!this._node) {
+            this._node = this._nodeAccountId ?
+                this._client._getNode(this._nodeAccountId) :
+                this._client._randomNode();
         }
 
-        return this.node;
+        return this._node;
     }
 
     public validate(): void {
-        runValidation(this, (errors) => {
-            if (!this.inner.hasTransactionid()) {
+        runValidation(this, ((errors) => {
+            if (!this._inner.hasTransactionid()) {
                 errors.push("missing ID for transaction");
             }
 
-            if (this.inner.getTransactionfee() === "0") {
+            if (this._inner.getTransactionfee() === "0") {
                 errors.push("Every transaction requires setTransactionFee(). " +
                     "This is only a maximum; the actual fee assessed may be lower.");
             }
 
             // strings are UTF-16, max 100 bytes
-            if (this.inner.getMemo().length * 2 > 100) {
+            if (this._inner.getMemo().length * 2 > 100) {
                 errors.push("memo may not be longer than 100 bytes");
             }
 
-            this.doValidate(errors);
-        });
+            this._doValidate(errors);
+        }));
     }
 
     public build(): Transaction {
-        if (!this.inner.hasTransactionid()) {
-            this.inner.setTransactionid(newTxnId(this.client.operator.account));
+        if (!this._inner.hasTransactionid()) {
+            this._inner.setTransactionid(newTxnId(this._client.operator.account));
         }
 
-        if (!this.inner.hasTransactionvalidduration()) {
+        if (!this._inner.hasTransactionvalidduration()) {
             this.setTransactionValidDuration(maxValidDuration);
         }
 
-        const [ url, nodeAccountID ] = this.getNode();
-        if (!this.inner.hasNodeaccountid()) {
+        const [ url, nodeAccountID ] = this._getNode();
+        if (!this._inner.hasNodeaccountid()) {
             this.setNodeAccountId(nodeAccountID);
         }
 
         this.validate();
 
         const txn = new Transaction_();
-        txn.setBodybytes(this.inner.serializeBinary());
+        txn.setBodybytes(this._inner.serializeBinary());
 
-        return new Transaction(this.client, url, txn, this.inner, this.method);
+        return new Transaction(this._client, url, txn, this._inner, this._method);
     }
 }

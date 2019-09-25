@@ -15,56 +15,56 @@ import { FileIdLike, fileIdToProto } from "../types/FileId";
 import { AccountId, accountIdToProto } from "../types/AccountId";
 
 export class ContractCreateTransaction extends TransactionBuilder {
-    private readonly body: ContractCreateTransactionBody;
+    private readonly _body: ContractCreateTransactionBody;
 
     public constructor(client: BaseClient) {
         super(client);
-        this.body = new ContractCreateTransactionBody();
-        this.inner.setContractcreateinstance(this.body);
+        this._body = new ContractCreateTransactionBody();
+        this._inner.setContractcreateinstance(this._body);
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.body.hasFileid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._body.hasFileid()) {
             errors.push(".setBytecodeFile() required");
         }
     }
 
     public setBytecodeFile(fileIdLike: FileIdLike): this {
-        this.body.setFileid(fileIdToProto(fileIdLike));
+        this._body.setFileid(fileIdToProto(fileIdLike));
         return this;
     }
 
     public setAdminkey(publicKey: PublicKey): this {
-        this.body.setAdminkey(publicKey.toProtoKey());
+        this._body.setAdminkey(publicKey._toProtoKey());
         return this;
     }
 
     public setGas(gas: number | BigNumber): this {
-        this.body.setGas(String(gas));
+        this._body.setGas(String(gas));
         return this;
     }
 
     public setInitialBalance(intialBalance: Tinybar | Hbar): this {
-        this.body.setInitialbalance(tinybarToString(intialBalance));
+        this._body.setInitialbalance(tinybarToString(intialBalance));
         return this;
     }
 
     public setProxyAccountId(proxyAccountId: AccountId): this {
-        this.body.setProxyaccountid(accountIdToProto(proxyAccountId));
+        this._body.setProxyaccountid(accountIdToProto(proxyAccountId));
         return this;
     }
 
     public setAutoRenewPeriod(seconds: number): this {
-        this.body.setAutorenewperiod(newDuration(seconds));
+        this._body.setAutorenewperiod(newDuration(seconds));
         return this;
     }
 
     public setConstructorParams(constructorParams: Uint8Array | string): this {
-        this.body.setConstructorparameters(constructorParams);
+        this._body.setConstructorparameters(constructorParams);
         return this;
     }
 
-    public get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return SmartContractService.createContract;
     }
 }

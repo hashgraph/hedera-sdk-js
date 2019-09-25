@@ -38,13 +38,13 @@ const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
 export class Transaction {
-    private readonly client: BaseClient;
+    private readonly _client: BaseClient;
 
-    private readonly nodeUrl: string;
-    private readonly inner: Transaction_;
-    private readonly txnId: TransactionID;
-    private readonly validDurationSeconds: number;
-    private readonly method: UnaryMethodDefinition<Transaction_, TransactionResponse>;
+    private readonly _nodeUrl: string;
+    private readonly _inner: Transaction_;
+    private readonly _txnId: TransactionID;
+    private readonly _validDurationSeconds: number;
+    private readonly _method: UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
     /**
      * NOT A STABLE API
@@ -54,12 +54,12 @@ export class Transaction {
      * version bumps.
      */
     public constructor(client: BaseClient, nodeUrl: string, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>) {
-        this.client = client;
-        this.nodeUrl = nodeUrl;
-        this.inner = inner;
-        this.txnId = orThrow(body.getTransactionid());
-        this.validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
-        this.method = method;
+        this._client = client;
+        this._nodeUrl = nodeUrl;
+        this._inner = inner;
+        this._txnId = orThrow(body.getTransactionid());
+        this._validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
+        this._method = method;
     }
 
     public static fromBytes(client: BaseClient, bytes: Uint8Array): Transaction {
@@ -76,7 +76,7 @@ export class Transaction {
     }
 
     public getTransactionId(): TransactionId {
-        return transactionIdToSdk(this.txnId);
+        return transactionIdToSdk(this._txnId);
     }
 
     public addSignature({ signature, publicKey }: SignatureAndKey): this {
@@ -84,16 +84,16 @@ export class Transaction {
         sigPair.setPubkeyprefix(publicKey.toBytes());
         sigPair.setEd25519(signature);
 
-        const sigMap = this.inner.getSigmap() || new SignatureMap();
+        const sigMap = this._inner.getSigmap() || new SignatureMap();
         sigMap.addSigpair(sigPair);
-        this.inner.setSigmap(sigMap);
+        this._inner.setSigmap(sigMap);
 
         return this;
     }
 
     public sign(privateKey: Ed25519PrivateKey): this {
         return this.addSignature({
-            signature: privateKey.sign(this.inner.getBodybytes_asU8()),
+            signature: privateKey.sign(this._inner.getBodybytes_asU8()),
             publicKey: privateKey.publicKey
         });
     }
@@ -106,7 +106,7 @@ export class Transaction {
      * @param signer
      */
     public async signWith(publicKey: Ed25519PublicKey, signer: Signer): Promise<this> {
-        const signResult = signer(this.inner.getBodybytes_asU8());
+        const signResult = signer(this._inner.getBodybytes_asU8());
         const signature: Uint8Array = signResult instanceof Promise ?
             await signResult :
             signResult;
@@ -116,35 +116,35 @@ export class Transaction {
     }
 
     public async execute(): Promise<TransactionId> {
-        const sigMap = this.inner.getSigmap();
+        const sigMap = this._inner.getSigmap();
 
         if (!sigMap || sigMap.getSigpairList().length === 0) {
-            await this.signWith(this.client.operatorPublicKey, this.client.operatorSigner);
+            await this.signWith(this._client.operatorPublicKey, this._client.operatorSigner);
         }
 
-        handlePrecheck(await this.client._unaryCall(this.nodeUrl, this.inner, this.method));
+        handlePrecheck(await this._client._unaryCall(this._nodeUrl, this._inner, this._method));
 
         return this.getTransactionId();
     }
 
     public async executeForReceipt(): Promise<TransactionReceipt> {
         await this.execute();
-        return this.waitForReceipt();
+        return this._waitForReceipt();
     }
 
     private getReceipt(): Promise<TransactionReceipt> {
         const receiptQuery = new TransactionGetReceiptQuery();
-        receiptQuery.setTransactionid(this.txnId);
+        receiptQuery.setTransactionid(this._txnId);
         const query = new Query();
         query.setTransactiongetreceipt(receiptQuery);
 
-        return this.client._unaryCall(this.nodeUrl, query, CryptoService.getTransactionReceipts)
+        return this._client._unaryCall(this._nodeUrl, query, CryptoService.getTransactionReceipts)
             .then(handleQueryPrecheck((resp) => resp.getTransactiongetreceipt()))
             .then((receipt) => orThrow(receipt.getReceipt()));
     }
 
-    private async waitForReceipt(): Promise<TransactionReceipt> {
-        const validStartMs = timestampToMs(orThrow(this.txnId.getTransactionvalidstart()));
+    private async _waitForReceipt(): Promise<TransactionReceipt> {
+        const validStartMs = timestampToMs(orThrow(this._txnId.getTransactionvalidstart()));
         // set timeout at max valid duration
         const validUntilMs = validStartMs + 120000;
 
@@ -163,7 +163,7 @@ export class Transaction {
 
                 if (Date.now() + delay > validUntilMs) {
                     throw new Error(`timed out waiting for consensus on transaction ID: ${
-                        this.txnId.toObject()}`);
+                        this._txnId.toObject()}`);
                 }
 
                 await setTimeoutAwaitable(delay);
@@ -177,11 +177,11 @@ export class Transaction {
     }
 
     public toProto(): Transaction_ {
-        return Message.cloneMessage(this.inner);
+        return Message.cloneMessage(this._inner);
     }
 
     public toBytes(): Uint8Array {
-        return this.inner.serializeBinary();
+        return this._inner.serializeBinary();
     }
 }
 

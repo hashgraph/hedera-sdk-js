@@ -23,31 +23,31 @@ export type ContractInfo = {
 }
 
 export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
-    private readonly builder: ContractGetInfoQuery;
+    private readonly _builder: ContractGetInfoQuery;
     public constructor(client: BaseClient) {
         const header = new QueryHeader();
         super(client, header);
-        this.builder = new ContractGetInfoQuery();
-        this.builder.setHeader(header);
-        this.inner.setContractgetinfo(this.builder);
+        this._builder = new ContractGetInfoQuery();
+        this._builder.setHeader(header);
+        this._inner.setContractgetinfo(this._builder);
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this.builder.setContractid(contractIdToProto(contractIdLike));
+        this._builder.setContractid(contractIdToProto(contractIdLike));
         return this;
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.builder.hasContractid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._builder.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
-    protected getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
         return SmartContractService.getContractInfo;
     }
 
-    protected mapResponse(response: Response): ContractInfo {
+    protected _mapResponse(response: Response): ContractInfo {
         const contractInfo = response.getContractgetinfo()!.getContractinfo()!;
 
         return {

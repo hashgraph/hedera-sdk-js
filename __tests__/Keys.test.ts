@@ -150,17 +150,17 @@ describe("ThresholdKey", () => {
 
         const thresholdKey = new ThresholdKey(3);
 
-        expect(() => thresholdKey.toProtoKey())
+        expect(() => thresholdKey._toProtoKey())
             .toThrow("ThresholdKey must have at least one key");
 
         thresholdKey.addAll(key1.publicKey, key2.publicKey);
 
-        expect(() => thresholdKey.toProtoKey())
-            .toThrow("ThresholdKey must have at least as many keys as threshold: 3; # of keys currently: 2");
+        expect(() => thresholdKey._toProtoKey())
+            .toThrow('ThresholdKey must have at least as many keys as threshold: 3; # of keys currently: 2');
 
         thresholdKey.add(key3.publicKey);
 
-        expect(() => thresholdKey.toProtoKey()).not.toThrow();
+        expect(() => thresholdKey._toProtoKey()).not.toThrow();
     });
 });
 

@@ -10,31 +10,31 @@ import { ContractFunctionResult, contractFunctionResultToSdk } from "../types/Co
 import { ContractCallLocalQuery } from "../generated/ContractCallLocal_pb";
 
 export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
-    private readonly builder: ContractCallLocalQuery;
+    private readonly _builder: ContractCallLocalQuery;
     public constructor(client: BaseClient) {
         const header = new QueryHeader();
         super(client, header);
-        this.builder = new ContractCallLocalQuery();
-        this.builder.setHeader(header);
-        this.inner.setContractcalllocal(this.builder);
+        this._builder = new ContractCallLocalQuery();
+        this._builder.setHeader(header);
+        this._inner.setContractcalllocal(this._builder);
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this.builder.setContractid(contractIdToProto(contractIdLike));
+        this._builder.setContractid(contractIdToProto(contractIdLike));
         return this;
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.builder.hasContractid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._builder.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
-    protected getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
         return SmartContractService.contractCallLocalMethod;
     }
 
-    protected mapResponse(response: Response): ContractFunctionResult {
+    protected _mapResponse(response: Response): ContractFunctionResult {
         return contractFunctionResultToSdk(response.getContractcalllocal()!.getFunctionresult()!);
     }
 }
