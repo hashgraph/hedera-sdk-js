@@ -1,8 +1,8 @@
 import {
-    dateToTimestamp, getProtoTimestamp,
+    dateToTimestamp,
     normalizeAccountId,
     normalizeContractId,
-    normalizeFileId, timestampToDate,
+    normalizeFileId, timestampToDate, timestampToProto,
     tinybarRangeCheck
 } from "../src/util";
 import {TinybarValueError} from "../src/errors";
@@ -173,7 +173,7 @@ describe("Date and Timestamp", () => {
     it("roundtrip", () => {
         const date = new Date(1414141411);
         const timestamp = dateToTimestamp(date);
-        const protoTimestmap = getProtoTimestamp(timestamp);
+        const protoTimestmap = timestampToProto(timestamp);
         const roundTripDate = timestampToDate(protoTimestmap);
         expect(date.toDateString()).toStrictEqual(roundTripDate.toDateString());
     });

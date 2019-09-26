@@ -8,8 +8,8 @@ import {FileService} from "../generated/FileService_pb_service";
 import {PublicKey} from "../Keys";
 import {KeyList} from "../generated/BasicTypes_pb";
 import {FileUpdateTransactionBody} from "../generated/FileUpdate_pb";
-import {FileIdLike} from "../typedefs";
-import {dateToTimestamp, getProtoFileId, getProtoTimestamp} from "../util";
+import {dateToTimestamp, fileIdToProto, timestampToProto} from "../util";
+import {FileIdLike} from "../types/FileId";
 
 export class FileUpdateTransaction extends TransactionBuilder {
     private readonly body: FileUpdateTransactionBody;
@@ -30,7 +30,7 @@ export class FileUpdateTransaction extends TransactionBuilder {
     }
 
     public setExpirationTime(date: number | Date): this {
-        this.body.setExpirationtime(getProtoTimestamp(dateToTimestamp(date)));
+        this.body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
         return this;
     }
 
@@ -47,7 +47,7 @@ export class FileUpdateTransaction extends TransactionBuilder {
     }
 
     public setFileId(fileIdLike: FileIdLike): this {
-        this.body.setFileid(getProtoFileId(fileIdLike));
+        this.body.setFileid(fileIdToProto(fileIdLike));
         return this;
     }
 

@@ -8,7 +8,7 @@ import {FileService} from "../generated/FileService_pb_service";
 import {FileCreateTransactionBody} from "../generated/FileCreate_pb";
 import {Ed25519PublicKey} from "../Keys";
 import {KeyList} from "../generated/BasicTypes_pb";
-import {dateToTimestamp, getProtoTimestamp} from "../util";
+import {dateToTimestamp, timestampToProto} from "../util";
 
 export class FileCreateTransaction extends TransactionBuilder {
     private readonly body: FileCreateTransactionBody;
@@ -29,7 +29,7 @@ export class FileCreateTransaction extends TransactionBuilder {
     }
 
     public setExpirationTime(date: number | Date): this {
-        this.body.setExpirationtime(getProtoTimestamp(dateToTimestamp(date)));
+        this.body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
         return this;
     }
 
