@@ -73,7 +73,7 @@ export abstract class BaseClient {
             this.operatorPublicKey = privateKey.publicKey;
         } else {
             ({ publicKey: this.operatorPublicKey, signer: this.operatorSigner } =
-                (operator as PubKeyAndSigner));
+                operator as PubKeyAndSigner);
         }
     }
 

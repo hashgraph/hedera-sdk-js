@@ -172,8 +172,8 @@ export class Transaction {
             } else {
                 return receipt;
             }
+            /* eslint-enable no-await-in-loop */
         }
-        /* eslint-enable no-await-in-loop */
     }
 
     public toProto(): Transaction_ {
