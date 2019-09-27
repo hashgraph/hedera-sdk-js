@@ -6,7 +6,6 @@ import {CryptoCreateTransactionBody} from "../generated/CryptoCreate_pb";
 import {BaseClient} from "../BaseClient";
 import {newDuration, tinybarToString} from "../util";
 import {PublicKey} from "../Keys";
-import BigNumber from "bignumber.js";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 import {Hbar} from "../Hbar";
 import {Tinybar} from "../typedefs";
@@ -62,10 +61,6 @@ export class AccountCreateTransaction extends TransactionBuilder {
     public doValidate(errors: string[]): void {
         if (!this.body.hasKey()) {
             errors.push('AccountCreateTransaction requires setKey()');
-        }
-
-        if (new BigNumber(this.body.getInitialbalance()).isZero()) {
-            errors.push('AccountCreateTransaction must have nonzero setInitialBalance')
         }
     }
 }
