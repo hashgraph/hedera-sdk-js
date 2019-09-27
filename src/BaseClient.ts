@@ -15,11 +15,11 @@ import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "./generated/CryptoService_pb_service";
 
-import {Tinybar, tinybarRangeCheck} from "./types/Tinybar";
+import {Tinybar, tinybarRangeCheck} from "./Tinybar";
 import {Hbar} from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import {AccountId, AccountIdLike, accountIdToProto, accountIdToSdk, normalizeAccountId} from "./types/AccountId";
-import {TransactionId} from "./types/TransactionId";
+import {AccountId, AccountIdLike, accountIdToProto, accountIdToSdk, normalizeAccountId} from "./account/AccountId";
+import {TransactionId} from "./TransactionId";
 import {Ed25519PrivateKey} from "./crypto/Ed25519PrivateKey";
 import {Ed25519PublicKey} from "./crypto/Ed25519PublicKey";
 

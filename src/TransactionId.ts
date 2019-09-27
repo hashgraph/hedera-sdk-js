@@ -1,7 +1,7 @@
-import {AccountId, AccountIdLike, accountIdToProto, accountIdToSdk, normalizeAccountId} from "./AccountId";
-import {TransactionID} from "../generated/BasicTypes_pb";
-import {orThrow} from "../util";
-import {Timestamp} from "../generated/Timestamp_pb";
+import {AccountId, AccountIdLike, accountIdToProto, accountIdToSdk, normalizeAccountId} from "./account/AccountId";
+import {TransactionID} from "./generated/BasicTypes_pb";
+import {orThrow} from "./util";
+import {Timestamp} from "./generated/Timestamp_pb";
 import {dateToTimestamp} from "./Timestamp";
 
 /**

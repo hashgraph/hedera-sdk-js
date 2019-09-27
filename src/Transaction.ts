@@ -21,10 +21,10 @@ import {FileService} from "./generated/FileService_pb_service";
 import {FreezeService} from "./generated/FreezeService_pb_service";
 import {HederaError} from "./errors";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import {accountIdToSdk} from "./types/AccountId";
-import {TransactionId, transactionIdToSdk} from "./types/TransactionId";
-import {receiptToSdk, TransactionReceipt} from "./types/TransactionReceipt";
-import {timestampToMs} from "./types/Timestamp";
+import {accountIdToSdk} from "./account/AccountId";
+import {TransactionId, transactionIdToSdk} from "./TransactionId";
+import {receiptToSdk, TransactionReceipt} from "./TransactionReceipt";
+import {timestampToMs} from "./Timestamp";
 import {Ed25519PublicKey} from "./crypto/Ed25519PublicKey";
 import {Ed25519PrivateKey} from "./crypto/Ed25519PrivateKey";
 

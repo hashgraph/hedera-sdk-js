@@ -1,4 +1,4 @@
-import {ExchangeRate as ProtoExchangeRate, ExchangeRateSet as ProtoExchangeRateSet} from "../generated/ExchangeRate_pb";
+import {ExchangeRate as ProtoExchangeRate, ExchangeRateSet as ProtoExchangeRateSet} from "./generated/ExchangeRate_pb";
 
 export type ExchangeRateSet = {
     currentRate: ExchangeRate;

@@ -5,8 +5,8 @@ import {Query} from "../generated/Query_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {Response} from "../generated/Response_pb";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
-import {ContractIdLike, contractIdToProto} from "../types/ContractId";
-import {ContractFunctionResult, contractFunctionResultToSdk} from "../types/ContractFunctionResult";
+import {ContractIdLike, contractIdToProto} from "./ContractId";
+import {ContractFunctionResult, contractFunctionResultToSdk} from "./ContractFunctionResult";
 import {ContractCallLocalQuery} from "../generated/ContractCallLocal_pb";
 
 export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {

@@ -10,10 +10,10 @@ import {
     timestampToProto,
     newDuration
 } from "../util";
-import {ContractIdLike, contractIdToProto} from "../types/ContractId";
-import {AccountId, accountIdToProto} from "../types/AccountId";
-import {FileIdLike, fileIdToProto} from "../types/FileId";
-import {dateToTimestamp} from "../types/Timestamp";
+import {ContractIdLike, contractIdToProto} from "./ContractId";
+import {AccountId, accountIdToProto} from "../account/AccountId";
+import {FileIdLike, fileIdToProto} from "../file/FileId";
+import {dateToTimestamp} from "../Timestamp";
 import {PublicKey} from "../crypto/PublicKey";
 
 export class ContractUpdateTransaction extends TransactionBuilder {

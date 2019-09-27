@@ -9,11 +9,11 @@ import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 
-import {Tinybar, tinybarToString} from "./types/Tinybar";
+import {Tinybar, tinybarToString} from "./Tinybar";
 import {Hbar} from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import {AccountId, AccountIdLike, accountIdToProto, normalizeAccountId} from "./types/AccountId";
-import {getProtoTxnId, newTxnId, TransactionIdLike} from "./types/TransactionId";
+import {AccountId, AccountIdLike, accountIdToProto, normalizeAccountId} from "./account/AccountId";
+import {getProtoTxnId, newTxnId, TransactionIdLike} from "./TransactionId";
 
 /**
  * Max duration of transactions on the network is 2 minutes

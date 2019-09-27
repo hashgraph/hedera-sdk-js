@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
-import {Hbar} from "../Hbar";
-import {TinybarValueError} from "../errors";
+import {Hbar} from "./Hbar";
+import {TinybarValueError} from "./errors";
 
 /**
  * The default denomination of currency for the SDK and in the Hedera protocol.

@@ -1,11 +1,11 @@
 import {TinybarValueError} from "../src/errors";
 import BigNumber from "bignumber.js";
 import {Hbar} from "../src/Hbar";
-import {AccountId, normalizeAccountId} from "../src/types/AccountId";
-import {ContractId, normalizeContractId} from "../src/types/ContractId";
-import {FileId, normalizeFileId} from "../src/types/FileId";
-import {tinybarRangeCheck} from "../src/types/Tinybar";
-import {dateToTimestamp, timestampToDate} from "../src/types/Timestamp";
+import {AccountId, normalizeAccountId} from "../src/account/AccountId";
+import {ContractId, normalizeContractId} from "../src/contract/ContractId";
+import {FileId, normalizeFileId} from "../src/file/FileId";
+import {tinybarRangeCheck} from "../src/Tinybar";
+import {dateToTimestamp, timestampToDate} from "../src/Timestamp";
 import {timestampToProto} from "../src/util";
 
 describe('tinybarRangeCheck()', () => {

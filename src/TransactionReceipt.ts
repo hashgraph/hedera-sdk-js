@@ -1,7 +1,7 @@
-import {TransactionReceipt as ProtoTransactionReceipt} from "../generated/TransactionReceipt_pb";
-import {AccountId, accountIdToSdk} from "./AccountId";
-import {ContractId, contractIdToSdk} from "./ContractId";
-import {FileId, fileIdToSdk} from "./FileId";
+import {TransactionReceipt as ProtoTransactionReceipt} from "./generated/TransactionReceipt_pb";
+import {AccountId, accountIdToSdk} from "./account/AccountId";
+import {ContractId, contractIdToSdk} from "./contract/ContractId";
+import {FileId, fileIdToSdk} from "./file/FileId";
 import {ExchangeRateSet, exchangeRateSetToSdk} from "./ExchangeRate";
 
 export type TransactionReceipt = {

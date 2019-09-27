@@ -1,10 +1,10 @@
 import {receiptToSdk, TransactionReceipt} from "./TransactionReceipt";
-import {ContractFunctionResult, contractFunctionResultToSdk} from "./ContractFunctionResult";
+import {ContractFunctionResult, contractFunctionResultToSdk} from "./contract/ContractFunctionResult";
 import {transferListToSdk} from "./TransferList";
-import {TransactionRecord as ProtoTransactionRecord} from "../generated/TransactionRecord_pb";
+import {TransactionRecord as ProtoTransactionRecord} from "./generated/TransactionRecord_pb";
 import {TransactionId, transactionIdToSdk} from "./TransactionId";
 import {timestampToDate} from "./Timestamp";
-import {AccountAmount} from "./AccountAmount";
+import {AccountAmount} from "./account/AccountAmount";
 
 export type TransactionRecord = {
     receipt: TransactionReceipt | null;
