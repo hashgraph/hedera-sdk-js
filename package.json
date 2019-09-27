@@ -19,17 +19,17 @@
   ],
   "dependencies": {
     "@improbable-eng/grpc-web": "0.11.0",
-    "@types/google-protobuf": "^3.7.1",
+    "@types/google-protobuf": "^3.7.2",
     "bignumber.js": "^9.0.0",
     "bip39": "^3.0.2",
     "google-protobuf": "^3.9.2",
-    "grpc": "^1.23.3",
+    "grpc": "^1.24.0",
     "tweetnacl": "^1.0.1"
   },
   "devDependencies": {
     "@launchbadge/eslint-config": "^0.12.1",
     "@types/jest": "^24.0.18",
-    "@types/node": "^12.7.5",
+    "@types/node": "^12.7.8",
     "dts-generator": "^3.0.0",
     "eslint": "^6.3.0",
     "flowgen": "^1.10.0",
