@@ -7,7 +7,7 @@ import { BaseClient } from "../BaseClient";
 import { FileService } from "../generated/FileService_pb_service";
 import { FileCreateTransactionBody } from "../generated/FileCreate_pb";
 import { KeyList } from "../generated/BasicTypes_pb";
-import { dateToTimestamp, timestampToProto } from "../types/Timestamp";
+import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 
 export class FileCreateTransaction extends TransactionBuilder {

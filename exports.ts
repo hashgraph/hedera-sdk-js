@@ -39,6 +39,6 @@ export { PublicKey } from "./src/crypto/PublicKey";
 export { MnemonicResult, generateMnemonic } from "./src/crypto/MnemonicResult";
 export { KeyMismatchException } from "./src/crypto/KeyMismatchException";
 
-export * from "./src/types/Tinybar";
+export * from "./src/Tinybar";
 
 export { Hbar, HbarUnit, hbarUnits, hbarUnitSymbols } from "./src/Hbar";

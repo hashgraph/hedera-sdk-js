@@ -6,7 +6,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { Query } from "../generated/Query_pb";
 import { Response } from "../generated/Response_pb";
 import { FileService } from "../generated/FileService_pb_service";
-import { FileIdLike, fileIdToProto, fileIdToSdk } from "../types/FileId";
+import { FileIdLike, fileIdToProto, fileIdToSdk } from "../file/FileId";
 
 export type FileContents = {
     fileId: FileIdLike;

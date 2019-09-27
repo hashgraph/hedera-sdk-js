@@ -8,8 +8,8 @@ import { BaseClient } from "../BaseClient";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { Key } from "../generated/BasicTypes_pb";
 import { Hbar } from "../Hbar";
-import { AccountIdLike, accountIdToProto, accountIdToSdk } from "../types/AccountId";
-import { timestampToMs } from "../types/Timestamp";
+import { AccountIdLike, accountIdToProto, accountIdToSdk } from "./AccountId";
+import { timestampToMs } from "../Timestamp";
 
 export type AccountInfo = {
     accountId: AccountIdLike;

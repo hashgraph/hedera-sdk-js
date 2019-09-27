@@ -8,11 +8,11 @@ import { newDuration } from "../util";
 import BigNumber from "bignumber.js";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
-import { Tinybar, tinybarToString } from "../types/Tinybar";
+import { Tinybar, tinybarToString } from "../Tinybar";
 import { Hbar } from "../Hbar";
-import { FileIdLike, fileIdToProto } from "../types/FileId";
-import { AccountId, accountIdToProto } from "../types/AccountId";
 import { PublicKey } from "../crypto/PublicKey";
+import { FileIdLike, fileIdToProto } from "../file/FileId";
+import { AccountId, accountIdToProto } from "../account/AccountId";
 
 export class ContractCreateTransaction extends TransactionBuilder {
     private readonly _body: ContractCreateTransactionBody;

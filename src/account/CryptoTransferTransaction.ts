@@ -11,9 +11,9 @@ import {
 import BigNumber from "bignumber.js";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 
-import { Tinybar, tinybarRangeCheck, tinybarToString } from "../types/Tinybar";
+import { Tinybar, tinybarRangeCheck, tinybarToString } from "../Tinybar";
 import { Hbar } from "../Hbar";
-import { AccountIdLike, accountIdToProto } from "../types/AccountId";
+import { AccountIdLike, accountIdToProto } from "./AccountId";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
     private readonly _body: CryptoTransferTransactionBody;

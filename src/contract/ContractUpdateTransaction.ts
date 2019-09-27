@@ -7,10 +7,10 @@ import { SmartContractService } from "../generated/SmartContractService_pb_servi
 
 import { ContractUpdateTransactionBody } from "../generated/ContractUpdate_pb";
 import { newDuration } from "../util";
-import { ContractIdLike, contractIdToProto } from "../types/ContractId";
-import { AccountId, accountIdToProto } from "../types/AccountId";
-import { FileIdLike, fileIdToProto } from "../types/FileId";
-import { dateToTimestamp, timestampToProto } from "../types/Timestamp";
+import { ContractIdLike, contractIdToProto } from "./ContractId";
+import { AccountId, accountIdToProto } from "../account/AccountId";
+import { FileIdLike, fileIdToProto } from "../file/FileId";
+import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { PublicKey } from "../crypto/PublicKey";
 
 export class ContractUpdateTransaction extends TransactionBuilder {

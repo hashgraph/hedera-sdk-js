@@ -7,7 +7,7 @@ import { BaseClient } from "../BaseClient";
 import { newDuration } from "../util";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 import { Hbar } from "../Hbar";
-import { Tinybar, tinybarToString } from "../types/Tinybar";
+import { Tinybar, tinybarToString } from "../Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import BigNumber from "bignumber.js";
 import { PublicKey } from "../crypto/PublicKey";
