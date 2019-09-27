@@ -4,7 +4,7 @@ import { BaseClient, Signer } from "./BaseClient";
 import { SignatureMap, SignaturePair, TransactionID } from "./generated/BasicTypes_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
-import { TransactionReceipt } from "./generated/TransactionReceipt_pb";
+import { TransactionReceipt as ProtoTransactionReceipt } from "./generated/TransactionReceipt_pb";
 import {
     handlePrecheck,
     handleQueryPrecheck,
@@ -15,7 +15,6 @@ import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
 import { TransactionGetReceiptQuery } from "./generated/TransactionGetReceipt_pb";
 import { Query } from "./generated/Query_pb";
 import { Message } from "google-protobuf";
-import { Ed25519PrivateKey, Ed25519PublicKey } from "./Keys";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 import { SmartContractService } from "./generated/SmartContractService_pb_service";
 import { FileService } from "./generated/FileService_pb_service";
@@ -24,7 +23,10 @@ import { HederaError } from "./errors";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { accountIdToSdk } from "./types/AccountId";
 import { TransactionId, transactionIdToSdk } from "./types/TransactionId";
+import { receiptToSdk, TransactionReceipt } from "./types/TransactionReceipt";
 import { timestampToMs } from "./types/Timestamp";
+import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
+import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 
 /**
  * Signature/public key pairs are passed around as objects
@@ -129,10 +131,10 @@ export class Transaction {
 
     public async executeForReceipt(): Promise<TransactionReceipt> {
         await this.execute();
-        return this._waitForReceipt();
+        return receiptToSdk(await this._waitForReceipt());
     }
 
-    private getReceipt(): Promise<TransactionReceipt> {
+    private getReceipt(): Promise<ProtoTransactionReceipt> {
         const receiptQuery = new TransactionGetReceiptQuery();
         receiptQuery.setTransactionid(this._txnId);
         const query = new Query();
@@ -143,7 +145,7 @@ export class Transaction {
             .then((receipt) => orThrow(receipt.getReceipt()));
     }
 
-    private async _waitForReceipt(): Promise<TransactionReceipt> {
+    private async _waitForReceipt(): Promise<ProtoTransactionReceipt> {
         const validStartMs = timestampToMs(orThrow(this._txnId.getTransactionvalidstart()));
         // set timeout at max valid duration
         const validUntilMs = validStartMs + 120000;

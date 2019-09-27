@@ -7,9 +7,9 @@ import { QueryHeader } from "../generated/QueryHeader_pb";
 import { BaseClient } from "../BaseClient";
 import { Response } from "../generated/Response_pb";
 import { getSdkKeys } from "../util";
-import { Ed25519PublicKey } from "../Keys";
 import { FileIdLike, fileIdToProto, fileIdToSdk } from "../types/FileId";
 import { timestampToDate } from "../types/Timestamp";
+import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 
 export type FileInfo = {
     fileId: FileIdLike;

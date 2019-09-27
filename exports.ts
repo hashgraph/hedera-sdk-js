@@ -32,10 +32,12 @@ export {
     ResponseCodeEnum, ResponseCode, getResponseCodeName
 } from "./src/errors";
 
-export {
-    Ed25519PrivateKey, Ed25519PublicKey, ThresholdKey, PublicKey,
-    generateMnemonic, KeyMismatchException, MnemonicResult
-} from "./src/Keys";
+export { Ed25519PrivateKey } from "./src/crypto/Ed25519PrivateKey";
+export { Ed25519PublicKey } from "./src/crypto/Ed25519PublicKey";
+export { ThresholdKey } from "./src/crypto/ThresholdKey";
+export { PublicKey } from "./src/crypto/PublicKey";
+export { MnemonicResult, generateMnemonic } from "./src/crypto/MnemonicResult";
+export { KeyMismatchException } from "./src/crypto/KeyMismatchException";
 
 export * from "./src/types/Tinybar";
 

@@ -1,5 +1,4 @@
 import { Query } from "./generated/Query_pb";
-import { Ed25519PrivateKey, Ed25519PublicKey } from "./Keys";
 
 import { grpc } from "@improbable-eng/grpc-web";
 
@@ -19,8 +18,10 @@ import { CryptoService } from "./generated/CryptoService_pb_service";
 import { Tinybar, tinybarRangeCheck } from "./types/Tinybar";
 import { Hbar } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import { AccountId, AccountIdLike, accountIdToProto, accountIdToSdk, normalizeAccountId } from "./types/AccountId";
+import { AccountId, AccountIdLike, accountIdToProto, normalizeAccountId } from "./types/AccountId";
 import { TransactionId } from "./types/TransactionId";
+import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
+import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
@@ -133,10 +134,10 @@ export abstract class BaseClient {
             .build()
             .executeForReceipt()
             .then((receipt) => ({
-                account: accountIdToSdk(reqDefined(
-                    receipt.getAccountid(),
+                account: reqDefined(
+                    receipt.accountId,
                     `missing account ID from receipt: ${receipt}`
-                ))
+                )
             }));
     }
 
