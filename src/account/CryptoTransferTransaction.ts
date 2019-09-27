@@ -1,19 +1,19 @@
-import {TransactionBuilder} from "../TransactionBuilder";
-import {Transaction} from "../generated/Transaction_pb";
-import {TransactionResponse} from "../generated/TransactionResponse_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {BaseClient} from "../BaseClient";
+import { TransactionBuilder } from "../TransactionBuilder";
+import { Transaction } from "../generated/Transaction_pb";
+import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { BaseClient } from "../BaseClient";
 import {
     AccountAmount,
     CryptoTransferTransactionBody,
     TransferList
 } from "../generated/CryptoTransfer_pb";
-import {getProtoAccountId, tinybarRangeCheck, tinybarToString} from "../util";
+import { getProtoAccountId, tinybarRangeCheck, tinybarToString } from "../util";
 import BigNumber from "bignumber.js";
-import {CryptoService} from "../generated/CryptoService_pb_service";
+import { CryptoService } from "../generated/CryptoService_pb_service";
 
-import {AccountIdLike, Tinybar} from "../typedefs";
-import {Hbar} from "../Hbar";
+import { AccountIdLike, Tinybar } from "../typedefs";
+import { Hbar } from "../Hbar";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
     private readonly body: CryptoTransferTransactionBody;
@@ -29,22 +29,23 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         const amts = this.body.getTransfers()!.getAccountamountsList();
 
         if (amts.length === 0) {
-            errors.push('CryptoTransferTransaction must have at least one transfer');
+            errors.push("CryptoTransferTransaction must have at least one transfer");
             return;
         }
 
         const sum = amts.reduce(
             (lastSum, acctAmt) => lastSum.plus(acctAmt.getAmount()),
-            new BigNumber(0));
+            new BigNumber(0)
+        );
 
         if (!sum.isZero()) {
-            errors.push('CryptoTransferTransaction must have zero sum; got: ' + sum);
+            errors.push(`CryptoTransferTransaction must have zero sum; got: ${sum}`);
         }
     }
 
     public addSender(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
         tinybarRangeCheck(amount);
-        const negated = typeof amount === 'number' ? -amount : amount.negated();
+        const negated = typeof amount === "number" ? -amount : amount.negated();
         return this.addTransfer(accountId, negated);
     }
 
@@ -59,7 +60,7 @@ export class CryptoTransferTransaction extends TransactionBuilder {
 
         const acctAmt = new AccountAmount();
         acctAmt.setAccountid(getProtoAccountId(accountId));
-        acctAmt.setAmount(tinybarToString(amount, 'allowNegative'));
+        acctAmt.setAmount(tinybarToString(amount, "allowNegative"));
 
         transfers.addAccountamounts(acctAmt);
 

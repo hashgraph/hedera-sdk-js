@@ -1,14 +1,14 @@
-import {QueryBuilder} from "../QueryBuilder";
-import {FileIdLike} from "../typedefs";
-import {FileService} from "../generated/FileService_pb_service";
-import {grpc} from "@improbable-eng/grpc-web";
-import {Query} from "../generated/Query_pb";
-import {FileGetInfoQuery} from "../generated/FileGetInfo_pb";
-import {QueryHeader} from "../generated/QueryHeader_pb";
-import {BaseClient} from "../BaseClient";
-import {Response} from "../generated/Response_pb";
-import {getProtoFileId, getSdkFileId, getSdkKeys, timestampToDate} from "../util";
-import {Ed25519PublicKey} from "../Keys";
+import { QueryBuilder } from "../QueryBuilder";
+import { FileIdLike } from "../typedefs";
+import { FileService } from "../generated/FileService_pb_service";
+import { grpc } from "@improbable-eng/grpc-web";
+import { Query } from "../generated/Query_pb";
+import { FileGetInfoQuery } from "../generated/FileGetInfo_pb";
+import { QueryHeader } from "../generated/QueryHeader_pb";
+import { BaseClient } from "../BaseClient";
+import { Response } from "../generated/Response_pb";
+import { getProtoFileId, getSdkFileId, getSdkKeys, timestampToDate } from "../util";
+import { Ed25519PublicKey } from "../Keys";
 
 export type FileInfo = {
     fileId: FileIdLike;

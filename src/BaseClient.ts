@@ -1,10 +1,10 @@
-import {Query} from "./generated/Query_pb";
-import {Ed25519PrivateKey, Ed25519PublicKey} from "./Keys";
+import { Query } from "./generated/Query_pb";
+import { Ed25519PrivateKey, Ed25519PublicKey } from "./Keys";
 
-import {grpc} from "@improbable-eng/grpc-web";
+import { grpc } from "@improbable-eng/grpc-web";
 
-import {CryptoGetAccountBalanceQuery} from "./generated/CryptoGetAccountBalance_pb";
-import {QueryHeader} from "./generated/QueryHeader_pb";
+import { CryptoGetAccountBalanceQuery } from "./generated/CryptoGetAccountBalance_pb";
+import { QueryHeader } from "./generated/QueryHeader_pb";
 
 import {
     getProtoAccountId,
@@ -14,14 +14,14 @@ import {
     reqDefined,
     tinybarRangeCheck
 } from "./util";
-import {ProtobufMessage} from "@improbable-eng/grpc-web/dist/typings/message";
-import {AccountCreateTransaction} from "./account/AccountCreateTransaction";
-import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
+import { ProtobufMessage } from "@improbable-eng/grpc-web/dist/typings/message";
+import { AccountCreateTransaction } from "./account/AccountCreateTransaction";
+import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
 import BigNumber from "bignumber.js";
-import {CryptoService} from "./generated/CryptoService_pb_service";
+import { CryptoService } from "./generated/CryptoService_pb_service";
 
-import {AccountId, AccountIdLike, Tinybar, TransactionId} from "./typedefs";
-import {Hbar} from "./Hbar";
+import { AccountId, AccountIdLike, Tinybar, TransactionId } from "./typedefs";
+import { Hbar } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
@@ -62,20 +62,20 @@ export abstract class BaseClient {
 
     protected constructor(nodes: Nodes, operator: Operator) {
         this.nodes = (Array.isArray(nodes) ? nodes : Object.entries(nodes))
-            .map(([url, acct]) => [url, normalizeAccountId(acct)]);
+            .map(([ url, acct ]) => [ url, normalizeAccountId(acct) ]);
         this.operator = operator;
         this.operatorAcct = normalizeAccountId(operator.account);
 
         const maybePrivateKey = (operator as PrivateKey).privateKey;
         if (maybePrivateKey) {
-            const privateKey = maybePrivateKey instanceof Ed25519PrivateKey
-                ? maybePrivateKey
-                : Ed25519PrivateKey.fromString(maybePrivateKey);
+            const privateKey = maybePrivateKey instanceof Ed25519PrivateKey ?
+                maybePrivateKey :
+                Ed25519PrivateKey.fromString(maybePrivateKey);
             this.operatorSigner = (msg): Uint8Array => privateKey.sign(msg);
             this.operatorPublicKey = privateKey.publicKey;
         } else {
             ({ publicKey: this.operatorPublicKey, signer: this.operatorSigner } =
-                (operator as PubKeyAndSigner));
+                operator as PubKeyAndSigner);
         }
     }
 
@@ -135,9 +135,10 @@ export abstract class BaseClient {
             .build()
             .executeForReceipt()
             .then((receipt) => ({
-                account: getSdkAccountId(
-                    reqDefined(receipt.getAccountid(),
-                        'missing account ID from receipt: ' + receipt)),
+                account: getSdkAccountId(reqDefined(
+                    receipt.getAccountid(),
+                    `missing account ID from receipt: ${receipt}`
+                ))
             }));
     }
 
@@ -165,7 +166,7 @@ export abstract class BaseClient {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
         balanceQuery.setAccountid(getProtoAccountId(this.operatorAcct));
 
-        const [url, nodeAccountID] = this._randomNode();
+        const [ url, nodeAccountID ] = this._randomNode();
 
         const paymentTxn = new CryptoTransferTransaction(this)
             .addSender(this.operatorAcct, 0)
@@ -195,7 +196,7 @@ export abstract class BaseClient {
     // we're not using symbols because Flow doesn't support computed class properties and it's
     // much nicer to just use `flowgen` rather than maintaining our own redundant definitions files
     public _randomNode(): Node {
-        return this.nodes[Math.floor(Math.random() * this.nodes.length)];
+        return this.nodes[ Math.floor(Math.random() * this.nodes.length) ];
     }
 
     /**
@@ -206,12 +207,13 @@ export abstract class BaseClient {
      * version bumps.
      */
     public _getNode(node: string | AccountId): Node {
-        const maybeNode = this.nodes.find(([url, accountId]) => url === node || (
-            typeof node === 'object'
-                && accountId.account == node.account
-                && accountId.realm === node.realm
-                && accountId.shard == node.shard
-        ));
+        const maybeNode = this.nodes.find(([ url, accountId ]) => url === node ||
+            (
+                typeof node === "object" &&
+                accountId.account === node.account &&
+                accountId.realm === node.realm &&
+                accountId.shard === node.shard
+            ));
 
         if (maybeNode) {
             return maybeNode;

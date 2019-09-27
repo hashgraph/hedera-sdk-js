@@ -1,15 +1,15 @@
-import {QueryBuilder} from "../QueryBuilder";
-import {CryptoGetInfoQuery} from "../generated/CryptoGetInfo_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {Query} from "../generated/Query_pb";
-import {Response} from "../generated/Response_pb";
-import {CryptoService} from "../generated/CryptoService_pb_service";
-import {BaseClient} from "../BaseClient";
-import {QueryHeader} from "../generated/QueryHeader_pb";
-import {AccountIdLike} from "../typedefs";
-import {Key} from "../generated/BasicTypes_pb";
-import {getProtoAccountId, getSdkAccountId, timestampToMs} from "../util";
-import {Hbar} from "../Hbar";
+import { QueryBuilder } from "../QueryBuilder";
+import { CryptoGetInfoQuery } from "../generated/CryptoGetInfo_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { Query } from "../generated/Query_pb";
+import { Response } from "../generated/Response_pb";
+import { CryptoService } from "../generated/CryptoService_pb_service";
+import { BaseClient } from "../BaseClient";
+import { QueryHeader } from "../generated/QueryHeader_pb";
+import { AccountIdLike } from "../typedefs";
+import { Key } from "../generated/BasicTypes_pb";
+import { getProtoAccountId, getSdkAccountId, timestampToMs } from "../util";
+import { Hbar } from "../Hbar";
 
 export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
     private readonly builder: CryptoGetInfoQuery;
@@ -50,7 +50,7 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
             generateReceiveRecordThreshold: Hbar.fromTinybar(accountInfo.getGeneratereceiverecordthreshold()),
             receiverSigRequired: accountInfo.getReceiversigrequired(),
             expirationTime: new Date(timestampToMs(accountInfo.getExpirationtime()!)),
-            autoRenewPeriodSeconds: accountInfo.getAutorenewperiod()!.getSeconds(),
+            autoRenewPeriodSeconds: accountInfo.getAutorenewperiod()!.getSeconds()
         };
     }
 }

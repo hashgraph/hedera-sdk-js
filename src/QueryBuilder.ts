@@ -1,14 +1,14 @@
-import {BaseClient, Node} from "./BaseClient";
-import {QueryHeader, ResponseType} from "./generated/QueryHeader_pb";
-import {Query} from "./generated/Query_pb";
-import {Response} from "./generated/Response_pb";
-import {MaxPaymentExceededException, throwIfExceptional} from "./errors";
-import {getResponseHeader, runValidation} from "./util";
-import {grpc} from "@improbable-eng/grpc-web";
-import {CryptoTransferTransaction} from "./account/CryptoTransferTransaction";
-import {Transaction} from "./generated/Transaction_pb";
-import {Hbar} from "./Hbar";
-import {Tinybar} from "./typedefs";
+import { BaseClient, Node } from "./BaseClient";
+import { QueryHeader, ResponseType } from "./generated/QueryHeader_pb";
+import { Query } from "./generated/Query_pb";
+import { Response } from "./generated/Response_pb";
+import { MaxPaymentExceededException, throwIfExceptional } from "./errors";
+import { getResponseHeader, runValidation } from "./util";
+import { grpc } from "@improbable-eng/grpc-web";
+import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
+import { Transaction } from "./generated/Transaction_pb";
+import { Hbar } from "./Hbar";
+import { Tinybar } from "./typedefs";
 
 export abstract class QueryBuilder<T> {
     private readonly client: BaseClient;
@@ -37,7 +37,7 @@ export abstract class QueryBuilder<T> {
      * @throws TinybarValueError if the value is out of range for the protocol
      */
     public async setPaymentDefault(amount: Tinybar | Hbar): Promise<this> {
-        const [,nodeAccountId] = this.getNode();
+        const [ , nodeAccountId ] = this.getNode();
 
         const payment = new CryptoTransferTransaction(this.client)
             .setNodeAccountId(nodeAccountId)
@@ -66,7 +66,7 @@ export abstract class QueryBuilder<T> {
     public validate(): void {
         runValidation(this, (errors) => {
             if (!this.header.hasPayment()) {
-                errors.push('`.setPayment()` required');
+                errors.push("`.setPayment()` required");
             }
 
             this.prepaymentValidate(errors);
@@ -98,7 +98,7 @@ export abstract class QueryBuilder<T> {
         this.header.setResponsetype(responseType);
         this.header.setPayment(payment);
 
-        const [url] = this.getNode();
+        const [ url ] = this.getNode();
 
         const response = await this.client._unaryCall(url, query, this.getMethod());
 
@@ -117,7 +117,7 @@ export abstract class QueryBuilder<T> {
     }
 
     public async execute(): Promise<T> {
-        const [nodeUrl] = this.getNode();
+        const [ nodeUrl ] = this.getNode();
 
         if (this.client.maxQueryPayment && this.needsPayment && !this.header.hasPayment()) {
             const cost = await this.requestCost();

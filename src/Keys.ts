@@ -1,16 +1,20 @@
 import * as bip39 from "bip39";
 import * as nacl from "tweetnacl";
-import * as crypto from 'crypto';
-import * as util from 'util';
-import {Key, KeyList, ThresholdKey as ThresholdKeyProto} from "./generated/BasicTypes_pb";
+import * as crypto from "crypto";
+import * as util from "util";
+import { Key, KeyList, ThresholdKey as ThresholdKeyProto } from "./generated/BasicTypes_pb";
 
 const pbkdf2 = util.promisify(crypto.pbkdf2);
+const randomBytes = util.promisify(crypto.randomBytes);
+
+const encodeHex = (bytes: Uint8Array): string => Buffer.from(bytes).toString("hex");
+const decodeHex = (hex: string): Uint8Array => Buffer.from(hex, "hex");
 
 // we could go through the whole BS of producing a DER-encoded structure but it's quite simple
 // for Ed25519 keys and we don't have to shell out to a potentially broken lib
 // https://github.com/PeculiarVentures/pvutils/issues/8
-const ed25519PrivKeyPrefix = '302e020100300506032b657004220420';
-const ed25519PubKeyPrefix = '302a300506032b6570032100';
+const ed25519PrivKeyPrefix = "302e020100300506032b657004220420";
+const ed25519PubKeyPrefix = "302a300506032b6570032100";
 
 /**
  * BIP-44 key derivation options as described here:
@@ -30,7 +34,7 @@ export class Ed25519PublicKey implements PublicKey {
 
     public constructor(keyData: Uint8Array) {
         if (keyData.length !== nacl.sign.publicKeyLength) {
-            throw new Error('invalid public key');
+            throw new Error("invalid public key");
         }
 
         this.keyData = keyData;
@@ -54,11 +58,11 @@ export class Ed25519PublicKey implements PublicKey {
             default:
         }
 
-        throw new Error("invalid public key: " + keyStr);
+        throw new Error(`invalid public key: ${keyStr}`);
     }
 
     public toBytes(): Uint8Array {
-        return this.keyData.slice();
+        return Uint8Array.from(this.keyData);
     }
 
     public toString(raw = false): string {
@@ -66,7 +70,7 @@ export class Ed25519PublicKey implements PublicKey {
             this.asStringRaw = encodeHex(this.keyData);
         }
 
-        return (raw ? '' : ed25519PubKeyPrefix) + this.asStringRaw;
+        return (raw ? "" : ed25519PubKeyPrefix) + this.asStringRaw;
     }
 
     public toProtoKey(): Key {
@@ -85,7 +89,7 @@ export class Ed25519PrivateKey {
 
     private constructor({ privateKey, publicKey }: RawKeyPair) {
         if (privateKey.length !== nacl.sign.secretKeyLength) {
-            throw new Error('invalid private key');
+            throw new Error("invalid private key");
         }
 
         this.keyData = privateKey;
@@ -105,11 +109,11 @@ export class Ed25519PrivateKey {
 
         switch (bytes.length) {
             case 32:
-                // fromSeed takes the private key bytes and calculates the public key
+            // fromSeed takes the private key bytes and calculates the public key
                 keypair = nacl.sign.keyPair.fromSeed(bytesArray);
                 break;
             case 64:
-                // priv + pub key pair
+            // priv + pub key pair
                 keypair = nacl.sign.keyPair.fromSecretKey(bytesArray);
                 break;
             default:
@@ -137,14 +141,14 @@ export class Ed25519PrivateKey {
             case 96:
                 if (keyStr.startsWith(ed25519PrivKeyPrefix)) {
                     const rawStr = keyStr.slice(32);
-                    const newKey = Ed25519PrivateKey.fromBytes(decodeHex(rawStr))
+                    const newKey = Ed25519PrivateKey.fromBytes(decodeHex(rawStr));
                     newKey.asStringRaw = rawStr;
                     return newKey;
                 }
                 break;
             default:
         }
-        throw new Error("invalid private key: " + keyStr);
+        throw new Error(`invalid private key: ${keyStr}`);
     }
 
     /**
@@ -165,11 +169,11 @@ export class Ed25519PrivateKey {
      * @link generateMnemonic
      */
     public static async fromMnemonic(mnemonic: string | string[], passphrase?: string): Promise<Ed25519PrivateKey> {
-        const input = Array.isArray(mnemonic) ? mnemonic.join(' ') : mnemonic;
-        const salt = `mnemonic${passphrase || ''}`;
-        const seed = await pbkdf2(input, salt, 2048, 64, 'sha512');
+        const input = Array.isArray(mnemonic) ? mnemonic.join(" ") : mnemonic;
+        const salt = `mnemonic${passphrase || ""}`;
+        const seed = await pbkdf2(input, salt, 2048, 64, "sha512");
 
-        const hmac = crypto.createHmac('sha512', 'ed25519 seed');
+        const hmac = crypto.createHmac("sha512", "ed25519 seed");
         hmac.update(seed);
 
         const digest = hmac.digest();
@@ -177,7 +181,7 @@ export class Ed25519PrivateKey {
         let keyBytes: Uint8Array = digest.subarray(0, 32);
         let chainCode: Uint8Array = digest.subarray(32);
 
-        for (const index of [44, 3030, 0, 0]) {
+        for (const index of [ 44, 3030, 0, 0 ]) {
             ({ keyBytes, chainCode } = deriveChildKey(keyBytes, chainCode, index));
         }
 
@@ -206,7 +210,7 @@ export class Ed25519PrivateKey {
      * This key will _not_ support child key derivation.
      */
     public static async generate(): Promise<Ed25519PrivateKey> {
-        return this.fromBytes(crypto.randomBytes(32));
+        return this.fromBytes(await randomBytes(32));
     }
 
     /**
@@ -219,7 +223,7 @@ export class Ed25519PrivateKey {
      */
     public derive(index: number): Ed25519PrivateKey {
         if (!this.chainCode) {
-            throw new Error('this Ed25519 private key does not support key derivation');
+            throw new Error("this Ed25519 private key does not support key derivation");
         }
 
         const { keyBytes, chainCode } = deriveChildKey(this.keyData.subarray(0, 32), this.chainCode, index);
@@ -230,7 +234,7 @@ export class Ed25519PrivateKey {
 
     /** Check if this private key supports deriving child keys */
     public get supportsDerivation(): boolean {
-        return !!this.chainCode;
+        return Boolean(this.chainCode);
     }
 
     /** Sign the given message with this key. */
@@ -241,7 +245,7 @@ export class Ed25519PrivateKey {
     public toBytes(): Uint8Array {
         // copy the bytes so they can't be modified accidentally
         // only copy the private key portion since that's what we're expecting on the other end
-        return this.keyData.slice(0, 32);
+        return Uint8Array.from(this.keyData.subarray(0, 32));
     }
 
     public toString(raw = false): string {
@@ -250,7 +254,7 @@ export class Ed25519PrivateKey {
             this.asStringRaw = encodeHex(this.keyData.subarray(0, 32));
         }
 
-        return (raw ? '' : ed25519PrivKeyPrefix) + this.asStringRaw;
+        return (raw ? "" : ed25519PrivKeyPrefix) + this.asStringRaw;
     }
 
     /**
@@ -271,20 +275,20 @@ export class Ed25519PrivateKey {
 /** SLIP-10/BIP-32 child key derivation */
 function deriveChildKey(parentKey: Uint8Array, chainCode: Uint8Array, index: number): { keyBytes: Uint8Array; chainCode: Uint8Array } {
     // webpack version of crypto complains if input types are not `Buffer`
-    const hmac = crypto.createHmac('SHA512', Buffer.from(chainCode));
+    const hmac = crypto.createHmac("SHA512", Buffer.from(chainCode));
     const input = Buffer.alloc(37);
     // 0x00 + parentKey + index(BE)
-    input[0] = 0;
+    input[ 0 ] = 0;
     input.set(parentKey, 1);
     new DataView(input.buffer).setUint32(33, index, false);
     // set the index to hardened
-    input[33] = input[33] | 128;
+    input[ 33 ] |= 128;
 
     hmac.update(input);
 
     const digest = hmac.digest();
 
-    return { keyBytes: digest.subarray(0, 32), chainCode: digest.subarray(32) }
+    return { keyBytes: digest.subarray(0, 32), chainCode: digest.subarray(32) };
 }
 
 export interface PublicKey {
@@ -315,8 +319,8 @@ export class ThresholdKey implements PublicKey {
         }
 
         if (this.threshold > this.keys.length) {
-            throw new Error('ThresholdKey must have at least as many keys as threshold: '
-                + `${this.threshold}; # of keys currently: ${this.keys.length}`);
+            throw new Error("ThresholdKey must have at least as many keys as threshold: " +
+                `${this.threshold}; # of keys currently: ${this.keys.length}`);
         }
 
         const keyList = new KeyList();
@@ -331,31 +335,6 @@ export class ThresholdKey implements PublicKey {
 
         return protoKey;
     }
-}
-
-function encodeHex(bytes: Uint8Array): string {
-    return bytes.reduce((prev, val) => {
-        if (val < 16) {
-            prev += '0';
-        }
-        return prev + val.toString(16);
-    }, '');
-}
-
-function decodeHex(hex: string): Uint8Array {
-    if (hex.length % 2 != 0) {
-        throw new Error('hex code must be even length');
-    }
-
-    const byteLen = hex.length / 2;
-
-    const decodedHex = new Uint8Array(hex.length / 2);
-    for (let i = 0; i < byteLen; i += 1) {
-        const start = i * 2;
-        decodedHex[i] = Number.parseInt(hex.slice(start, start + 2), 16);
-    }
-
-    return decodedHex;
 }
 
 export type RawKeyPair = {
@@ -395,9 +374,9 @@ export type Keystore = {
         /** hex-encoded initialization vector */
         cipherparams: { iv: string };
         /** cipher being used */
-        cipher: 'aes-128-ctr';
+        cipher: "aes-128-ctr";
         /** key derivation function being used */
-        kdf: 'pbkdf2';
+        kdf: "pbkdf2";
         /** params for key derivation function */
         kdfparams: {
             /** derived key length */
@@ -407,7 +386,7 @@ export type Keystore = {
             /** iteration count */
             c: number;
             /** hash function */
-            prf: 'hmac-sha256';
+            prf: "hmac-sha256";
         };
         /** hex-encoded HMAC-SHA384 */
         mac: string;
@@ -419,13 +398,13 @@ export class KeyMismatchException extends Error {
     private readonly expectedHmac: string;
 
     public constructor(hmac: Buffer, expectedHmac: Buffer) {
-        super('key mismatch when loading from keystore');
-        this.hmac = hmac.toString('hex');
-        this.expectedHmac = expectedHmac.toString('hex');
+        super("key mismatch when loading from keystore");
+        this.hmac = hmac.toString("hex");
+        this.expectedHmac = expectedHmac.toString("hex");
     }
 }
 
-const hmacAlgo = 'sha384';
+const hmacAlgo = "sha384";
 
 async function createKeystore(privateKey: Uint8Array, passphrase: string): Promise<Uint8Array> {
     // all values taken from https://github.com/ethereumjs/ethereumjs-wallet/blob/de3a92e752673ada1d78f95cf80bc56ae1f59775/src/index.ts#L25
@@ -434,32 +413,32 @@ async function createKeystore(privateKey: Uint8Array, passphrase: string): Promi
     const saltLen = 32;
     const salt = crypto.randomBytes(saltLen);
 
-    const key = await pbkdf2(passphrase, salt, c, dkLen, 'sha256');
+    const key = await pbkdf2(passphrase, salt, c, dkLen, "sha256");
 
     const iv = crypto.randomBytes(16);
 
     // AES-128-CTR with the first half of the derived key and a random IV
-    const cipher = crypto.createCipheriv('aes-128-ctr', key.slice(0, 16), iv);
+    const cipher = crypto.createCipheriv("aes-128-ctr", key.slice(0, 16), iv);
 
-    const cipherText = Buffer.concat([cipher.update(privateKey), cipher.final()]);
+    const cipherText = Buffer.concat([ cipher.update(privateKey), cipher[ "final" ]() ]);
 
     const mac = crypto.createHmac(hmacAlgo, key.slice(16)).update(cipherText).digest();
 
     const keystore: Keystore = {
         version: 1,
         crypto: {
-            ciphertext: cipherText.toString('hex'),
-            cipherparams: { iv: iv.toString('hex') },
-            cipher: 'aes-128-ctr',
-            kdf: 'pbkdf2',
+            ciphertext: cipherText.toString("hex"),
+            cipherparams: { iv: iv.toString("hex") },
+            cipher: "aes-128-ctr",
+            kdf: "pbkdf2",
             kdfparams: {
                 dkLen,
-                salt: salt.toString('hex'),
+                salt: salt.toString("hex"),
                 c,
-                prf: 'hmac-sha256'
+                prf: "hmac-sha256"
             },
-            mac: mac.toString('hex')
-        },
+            mac: mac.toString("hex")
+        }
     };
 
     return Buffer.from(JSON.stringify(keystore));
@@ -469,27 +448,27 @@ async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string): Prom
     const keystore: Keystore = JSON.parse(Buffer.from(keystoreBytes).toString());
 
     if (keystore.version !== 1) {
-        throw new Error('unsupported keystore version: ' + keystore.version);
+        throw new Error(`unsupported keystore version: ${keystore.version}`);
     }
 
-    const { ciphertext, cipherparams: { iv }, cipher, kdf, kdfparams: { dkLen, salt, c, prf }, mac }
-        = keystore.crypto;
+    const { ciphertext, cipherparams: { iv }, cipher, kdf, kdfparams: { dkLen, salt, c, prf }, mac } =
+        keystore.crypto;
 
-    if (kdf !== 'pbkdf2') {
-        throw new Error('unsupported key derivation function: ' + kdf);
+    if (kdf !== "pbkdf2") {
+        throw new Error(`unsupported key derivation function: ${kdf}`);
     }
 
-    if (prf !== 'hmac-sha256') {
-        throw new Error('unsupported key derivation hash function: ' + prf);
+    if (prf !== "hmac-sha256") {
+        throw new Error(`unsupported key derivation hash function: ${prf}`);
     }
 
-    const saltBytes = Buffer.from(salt, 'hex');
-    const ivBytes = Buffer.from(iv, 'hex');
-    const cipherBytes = Buffer.from(ciphertext, 'hex');
+    const saltBytes = Buffer.from(salt, "hex");
+    const ivBytes = Buffer.from(iv, "hex");
+    const cipherBytes = Buffer.from(ciphertext, "hex");
 
-    const key = await pbkdf2(passphrase, saltBytes, c, dkLen, 'sha256');
+    const key = await pbkdf2(passphrase, saltBytes, c, dkLen, "sha256");
 
-    const hmac = Buffer.from(mac, 'hex');
+    const hmac = Buffer.from(mac, "hex");
     const verifyHmac = crypto.createHmac(hmacAlgo, key.slice(16)).update(cipherBytes).digest();
 
     if (!hmac.equals(verifyHmac)) {
@@ -497,7 +476,7 @@ async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string): Prom
     }
 
     const decipher = crypto.createDecipheriv(cipher, key.slice(0, 16), ivBytes);
-    const privateKeyBytes = Buffer.concat([decipher.update(cipherBytes), decipher.final()]);
+    const privateKeyBytes = Buffer.concat([ decipher.update(cipherBytes), decipher[ "final" ]() ]);
 
     // `Buffer instanceof Uint8Array` doesn't work in Jest because the prototype chain is different
     const { secretKey: privateKey, publicKey } = nacl.sign.keyPair.fromSecretKey(Uint8Array.from(privateKeyBytes));

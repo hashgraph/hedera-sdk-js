@@ -1,17 +1,16 @@
-import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
+import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
 import BigNumber from "bignumber.js";
-import {Hbar} from "./Hbar";
+import { Hbar } from "./Hbar";
 
-export {ResponseCodeEnum} from "./generated/ResponseCode_pb";
+export { ResponseCodeEnum } from "./generated/ResponseCode_pb";
 
 export type ResponseCode = number;
 
 const responseCodeNames: { [code: number]: string } = Object.entries(ResponseCodeEnum)
-    .reduce((map, [name, code]) => ({ ...map, [code]: name }), {});
+    .reduce((map, [ name, code ]) => ({ ...map, [ code ]: name }), {});
 
 /** Get the name of a response code from its number code. */
-export const getResponseCodeName = (code: ResponseCode): string | undefined =>
-    responseCodeNames[code];
+export const getResponseCodeName = (code: ResponseCode): string | undefined => responseCodeNames[ code ];
 
 /**
  * Class of errors for response codes returned from Hedera.
@@ -23,7 +22,7 @@ export class HederaError extends Error {
     public readonly codeName: string;
 
     public constructor(code: ResponseCode) {
-        const codeName = getResponseCodeName(code) || 'UNKNOWN';
+        const codeName = getResponseCodeName(code) || "UNKNOWN";
         super(`Hedera returned response code: ${codeName} (${code})`);
         this.code = code;
         this.codeName = codeName;
@@ -50,7 +49,7 @@ export function throwIfExceptional(code: ResponseCode, unknownOk = false): void 
 
 export class ValidationError extends Error {
     public constructor(className: string, errors: string[]) {
-        super(`${className} failed validation:\n${errors.join('\n')}`);
+        super(`${className} failed validation:\n${errors.join("\n")}`);
     }
 }
 

@@ -1,11 +1,11 @@
-import {Transaction as Transaction_} from "./generated/Transaction_pb";
-import {TransactionBody} from "./generated/TransactionBody_pb";
-import {BaseClient, Signer} from "./BaseClient";
-import {TransactionId} from './typedefs';
-import {SignatureMap, SignaturePair, TransactionID} from "./generated/BasicTypes_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {TransactionResponse} from "./generated/TransactionResponse_pb";
-import {TransactionReceipt} from "./generated/TransactionReceipt_pb";
+import { Transaction as Transaction_ } from "./generated/Transaction_pb";
+import { TransactionBody } from "./generated/TransactionBody_pb";
+import { BaseClient, Signer } from "./BaseClient";
+import { TransactionId } from "./typedefs";
+import { SignatureMap, SignaturePair, TransactionID } from "./generated/BasicTypes_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { TransactionResponse } from "./generated/TransactionResponse_pb";
+import { TransactionReceipt } from "./generated/TransactionReceipt_pb";
 import {
     getSdkAccountId,
     getSdkTxnId,
@@ -15,16 +15,16 @@ import {
     setTimeoutAwaitable,
     timestampToMs
 } from "./util";
-import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
-import {TransactionGetReceiptQuery} from "./generated/TransactionGetReceipt_pb";
-import {Query} from "./generated/Query_pb";
-import {Message} from "google-protobuf";
-import {Ed25519PrivateKey, Ed25519PublicKey} from "./Keys";
-import {CryptoService} from "./generated/CryptoService_pb_service";
-import {SmartContractService} from "./generated/SmartContractService_pb_service";
-import {FileService} from "./generated/FileService_pb_service";
-import {FreezeService} from "./generated/FreezeService_pb_service";
-import {HederaError} from "./errors";
+import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
+import { TransactionGetReceiptQuery } from "./generated/TransactionGetReceipt_pb";
+import { Query } from "./generated/Query_pb";
+import { Message } from "google-protobuf";
+import { Ed25519PrivateKey, Ed25519PublicKey } from "./Keys";
+import { CryptoService } from "./generated/CryptoService_pb_service";
+import { SmartContractService } from "./generated/SmartContractService_pb_service";
+import { FileService } from "./generated/FileService_pb_service";
+import { FreezeService } from "./generated/FreezeService_pb_service";
+import { HederaError } from "./errors";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
@@ -67,10 +67,9 @@ export class Transaction {
         const inner = Transaction_.deserializeBinary(bytes);
         const body = TransactionBody.deserializeBinary(inner.getBodybytes_asU8());
 
-        const nodeAccountId = getSdkAccountId(
-            orThrow(body.getNodeaccountid(), 'transaction missing node account ID'));
+        const nodeAccountId = getSdkAccountId(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
 
-        const [url] = client._getNode(nodeAccountId);
+        const [ url ] = client._getNode(nodeAccountId);
 
         const method = methodFromTxn(body);
 
@@ -109,9 +108,9 @@ export class Transaction {
      */
     public async signWith(publicKey: Ed25519PublicKey, signer: Signer): Promise<this> {
         const signResult = signer(this.inner.getBodybytes_asU8());
-        const signature: Uint8Array = signResult instanceof Promise
-            ? await signResult
-            : signResult;
+        const signature: Uint8Array = signResult instanceof Promise ?
+            await signResult :
+            signResult;
 
         this.addSignature({ signature, publicKey });
         return this;
@@ -131,10 +130,10 @@ export class Transaction {
 
     public async executeForReceipt(): Promise<TransactionReceipt> {
         await this.execute();
-        return this.waitForReceipt()
+        return this.waitForReceipt();
     }
 
-    private async getReceipt(): Promise<TransactionReceipt> {
+    private getReceipt(): Promise<TransactionReceipt> {
         const receiptQuery = new TransactionGetReceiptQuery();
         receiptQuery.setTransactionid(this.txnId);
         const query = new Query();
@@ -152,18 +151,20 @@ export class Transaction {
 
         await setTimeoutAwaitable(receiptInitialDelayMs);
 
-        for (let attempt = 0;/* loop will exit when transaction expires */; attempt += 1) {
+        /* eslint-disable no-await-in-loop */
+        // we want to wait in a loop, that's the whole point here
+        for (let attempt = 0; /* loop will exit when transaction expires */; attempt += 1) {
             const receipt = await this.getReceipt();
 
             // typecast required or we get a mismatching union type error
-            if (([ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK] as number[])
+            if (([ ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK ] as number[])
                 .includes(receipt.getStatus())) {
-                const delay = Math.floor(receiptRetryDelayMs
-                    * Math.random() * (2 ** attempt - 1));
+                const delay = Math.floor(receiptRetryDelayMs *
+                    Math.random() * ((2 ** attempt) - 1));
 
                 if (Date.now() + delay > validUntilMs) {
-                    throw new Error("timed out waiting for consensus on transaction ID: "
-                        + this.txnId.toObject());
+                    throw new Error(`timed out waiting for consensus on transaction ID: ${
+                        this.txnId.toObject()}`);
                 }
 
                 await setTimeoutAwaitable(delay);
@@ -173,6 +174,7 @@ export class Transaction {
                 return receipt;
             }
         }
+        /* eslint-enable no-await-in-loop */
     }
 
     public toProto(): Transaction_ {
@@ -221,8 +223,8 @@ function methodFromTxn(inner: TransactionBody): UnaryMethodDefinition<Transactio
         case TransactionBody.DataCase.FREEZE:
             return FreezeService.freeze;
         case TransactionBody.DataCase.DATA_NOT_SET:
-            throw new Error('transaction body missing');
+            throw new Error("transaction body missing");
+        default:
+            throw new Error(`unsupported body case:${inner.getDataCase().toString()}`);
     }
-
-    throw new Error('unsupported body case:' + inner.getDataCase().toString());
 }

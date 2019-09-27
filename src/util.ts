@@ -1,6 +1,6 @@
-import {AccountID, ContractID, FileID, KeyList, TransactionID} from "./generated/BasicTypes_pb";
-import {Timestamp} from "./generated/Timestamp_pb";
-import {Duration} from "./generated/Duration_pb";
+import { AccountID, ContractID, FileID, KeyList, TransactionID } from "./generated/BasicTypes_pb";
+import { Timestamp } from "./generated/Timestamp_pb";
+import { Duration } from "./generated/Duration_pb";
 import {
     AccountId,
     AccountIdLike,
@@ -12,15 +12,15 @@ import {
     TransactionId,
     TransactionIdLike
 } from "./typedefs";
-import {ResponseHeader} from "./generated/ResponseHeader_pb";
-import {TransactionResponse} from "./generated/TransactionResponse_pb";
-import {Response} from "./generated/Response_pb";
+import { ResponseHeader } from "./generated/ResponseHeader_pb";
+import { TransactionResponse } from "./generated/TransactionResponse_pb";
+import { Response } from "./generated/Response_pb";
 import BigNumber from "bignumber.js";
-import {throwIfExceptional, TinybarValueError, ValidationError} from "./errors";
-import {Hbar} from "./Hbar";
-import {Ed25519PublicKey, PublicKey} from "./Keys";
+import { throwIfExceptional, TinybarValueError, ValidationError } from "./errors";
+import { Hbar } from "./Hbar";
+import { Ed25519PublicKey } from "./Keys";
 
-export function orThrow<T>(val?: T, msg = 'value must not be null'): T {
+export function orThrow<T>(val?: T, msg = "value must not be null"): T {
     if (val === undefined || val === null) {
         throw new Error(msg);
     }
@@ -46,7 +46,7 @@ export function newTxnId(accountId: AccountIdLike): TransactionID {
     const acctId = getProtoAccountId(accountId);
 
     // allows the transaction to be accepted as long as the node isn't 10 seconds behind us
-    const {seconds, nanos} = dateToTimestamp(Date.now() - 10_000);
+    const { seconds, nanos } = dateToTimestamp(Date.now() - 10_000);
 
     const validStart = new Timestamp();
     validStart.setSeconds(seconds);
@@ -71,16 +71,16 @@ export function dateToTimestamp(dateOrMs: number | Date): { seconds: number; nan
 }
 
 export function timestampToDate(timestamp: Timestamp): Date {
-    return new Date(timestamp.getSeconds() * 1_000 + timestamp.getNanos() / 1_000_000);
+    return new Date(timestampToMs(timestamp));
 }
 
 export function timestampToMs(timestamp: Timestamp): number {
-    return timestamp.getSeconds() * 1000 + Math.floor(timestamp.getNanos() / 1_000_000);
+    return (timestamp.getSeconds() * 1000) + Math.floor(timestamp.getNanos() / 1_000_000);
 }
 
 export function newDuration(seconds: number): Duration {
     if (!Number.isSafeInteger(seconds)) {
-        throw new TypeError('duration cannot have fractional seconds')
+        throw new TypeError("duration cannot have fractional seconds");
     }
 
     const duration = new Duration();
@@ -88,66 +88,67 @@ export function newDuration(seconds: number): Duration {
     return duration;
 }
 
-type EntityKind = 'account' | 'contract' | 'file';
+type EntityKind = "account" | "contract" | "file";
 
 type EntityId<Kind extends EntityKind> =
     ({ shard?: number; realm?: number } & Record<Kind, number>)
     | string | number;
 
-type NormalizedId<Kind extends EntityKind> = Record<'shard' | 'realm' | Kind, number>;
+type NormalizedId<Kind extends EntityKind> = Record<"shard" | "realm" | Kind, number>;
 
 function normalizeEntityId<Kind extends EntityKind>(kind: Kind, entityId: EntityId<Kind>): NormalizedId<Kind> {
     switch (typeof entityId) {
-        case 'object':
-            if (!entityId[kind]) {
+        case "object":
+            if (!entityId[ kind ]) {
                 break;
             }
 
             return {
-                // defaults overwritten if they exist in `entityId`
+            // defaults overwritten if they exist in `entityId`
                 shard: 0,
                 realm: 0,
                 ...entityId
             };
         case "string": {
-            const components = entityId.split('.');
+            const components = entityId.split(".");
 
             if (components.length === 1) {
-                return normalizeEntityId(kind, { [kind]: Number(components[0])} as EntityId<Kind>);
+                return normalizeEntityId(kind, { [ kind ]: Number(components[ 0 ]) } as EntityId<Kind>);
             } else if (components.length === 3) {
                 return {
-                    shard: Number(components[0]),
-                    realm: Number(components[1]),
-                    [kind]: Number(components[2])
-                } as NormalizedId<Kind>
+                    shard: Number(components[ 0 ]),
+                    realm: Number(components[ 1 ]),
+                    [ kind ]: Number(components[ 2 ])
+                } as NormalizedId<Kind>;
             }
 
             break;
         }
-        case 'number': {
+        case "number": {
             if (!Number.isInteger(entityId) || entityId < 0) {
                 break;
             } else if (!Number.isSafeInteger(entityId)) {
-                // this isn't really a `TypeError` as we already checked that it is a `number`
-                // eslint-disable-next-line unicorn/prefer-type-error
-                throw new Error(`${kind} ID outside safe integer range for number: ${entityId}`)
+            // this isn't really a `TypeError` as we already checked that it is a `number`
+            // eslint-disable-next-line unicorn/prefer-type-error
+                throw new Error(`${kind} ID outside safe integer range for number: ${entityId}`);
             }
 
-            return normalizeEntityId(kind, { [kind]: entityId } as EntityId<Kind>);
+            return normalizeEntityId(kind, { [ kind ]: entityId } as EntityId<Kind>);
         }
+        default:
     }
 
     throw new Error(`invalid ${kind} ID: ${entityId}`);
 }
 
-export const normalizeAccountId = (accountId: AccountIdLike): AccountId => normalizeEntityId('account', accountId);
-export const normalizeContractId = (contractId: ContractIdLike): ContractId => normalizeEntityId('contract', contractId);
-export const normalizeFileId = (fileId: FileIdLike): FileId => normalizeEntityId('file', fileId);
+export const normalizeAccountId = (accountId: AccountIdLike): AccountId => normalizeEntityId("account", accountId);
+export const normalizeContractId = (contractId: ContractIdLike): ContractId => normalizeEntityId("contract", contractId);
+export const normalizeFileId = (fileId: FileIdLike): FileId => normalizeEntityId("file", fileId);
 
 export function normalizeTxnId(txnId: TransactionIdLike): TransactionId {
     const account = normalizeAccountId(txnId.account);
 
-    if ('validStart' in txnId) {
+    if ("validStart" in txnId) {
         const validStart = txnId.validStart;
         const { seconds: validStartSeconds, nanos: validStartNanos } = dateToTimestamp(validStart);
 
@@ -156,12 +157,11 @@ export function normalizeTxnId(txnId: TransactionIdLike): TransactionId {
             validStartSeconds,
             validStartNanos
         };
-    } else {
-        return {
-            ...txnId,
-            account
-        };
     }
+    return {
+        ...txnId,
+        account
+    };
 }
 
 export function getProtoAccountId(accountId: AccountIdLike): AccountID {
@@ -230,12 +230,12 @@ export const getSdkTxnId = (txnId: TransactionID): TransactionId => (
     {
         account: getSdkAccountId(orThrow(txnId.getAccountid())),
         validStartSeconds: orThrow(txnId.getTransactionvalidstart()).getSeconds(),
-        validStartNanos: orThrow(txnId.getTransactionvalidstart()).getNanos(),
+        validStartNanos: orThrow(txnId.getTransactionvalidstart()).getNanos()
     }
 );
 
 export function setTimeoutAwaitable(timeoutMs: number): Promise<undefined> {
-    return new Promise(resolve => setTimeout(resolve, timeoutMs));
+    return new Promise((resolve) => setTimeout(resolve, timeoutMs));
 }
 
 export interface GetHeader {
@@ -245,21 +245,21 @@ export interface GetHeader {
 export function handleQueryPrecheck<T extends GetHeader>(getBody: (r: Response) => T | undefined): (r: undefined | Response) => T {
     return (resp) => {
         const body = reqDefined(
-            getBody(reqDefined(resp, 'missing Response')),
-            'missing body from Response'
+            getBody(reqDefined(resp, "missing Response")),
+            "missing body from Response"
         );
 
-        const header = reqDefined(body.getHeader(), 'missing header from Response');
+        const header = reqDefined(body.getHeader(), "missing header from Response");
 
         const precheck = header.getNodetransactionprecheckcode();
 
         throwIfExceptional(precheck);
         return body;
-    }
+    };
 }
 
 export function handlePrecheck(resp_: TransactionResponse | undefined): TransactionResponse {
-    const resp = reqDefined(resp_, 'missing TransactionResponse');
+    const resp = reqDefined(resp_, "missing TransactionResponse");
     const precheck = resp.getNodetransactionprecheckcode();
 
     throwIfExceptional(precheck);
@@ -269,8 +269,8 @@ export function handlePrecheck(resp_: TransactionResponse | undefined): Transact
 const maxTinybarBignum = new BigNumber(2).pow(63).minus(1);
 const minTinybarBignum = new BigNumber(2).pow(63).negated();
 
-export function tinybarRangeCheck(amount: Tinybar | Hbar, allowNegative?: 'allowNegative'): void {
-    const negativeError = 'tinybar amount must not be negative in this context';
+export function tinybarRangeCheck(amount: Tinybar | Hbar, allowNegative?: "allowNegative"): void {
+    const negativeError = "tinybar amount must not be negative in this context";
 
     if (amount instanceof BigNumber || amount instanceof Hbar) {
         if (!allowNegative && amount.isNegative()) {
@@ -280,7 +280,7 @@ export function tinybarRangeCheck(amount: Tinybar | Hbar, allowNegative?: 'allow
         const bnAmount = amount instanceof Hbar ? amount.asTinybar() : amount;
 
         if (bnAmount.lt(minTinybarBignum) || bnAmount.gt(maxTinybarBignum)) {
-            throw new TinybarValueError('tinybar amount out of range', bnAmount);
+            throw new TinybarValueError("tinybar amount out of range", bnAmount);
         }
     } else {
         if (!allowNegative && amount < 0) {
@@ -289,21 +289,20 @@ export function tinybarRangeCheck(amount: Tinybar | Hbar, allowNegative?: 'allow
 
         if (!Number.isSafeInteger(amount)) {
             throw new TinybarValueError(
-                'tinybar amount out of safe integer range for `number`',
+                "tinybar amount out of safe integer range for `number`",
                 amount
             );
         }
     }
 }
 
-export function tinybarToString(amount: Tinybar | Hbar, allowNegative?: 'allowNegative'): string {
+export function tinybarToString(amount: Tinybar | Hbar, allowNegative?: "allowNegative"): string {
     tinybarRangeCheck(amount, allowNegative);
 
     if (amount instanceof Hbar) {
         return String(amount.asTinybar());
-    } else {
-        return String(amount);
     }
+    return String(amount);
 }
 
 export function reqDefined<T>(val: T | undefined, msg: string): T {
@@ -358,5 +357,7 @@ export function getResponseHeader(response: Response): ResponseHeader {
             return response.getTransactiongetrecord()!.getHeader()!;
         case Response.ResponseCase.TRANSACTIONGETFASTRECORD:
             return response.getTransactiongetfastrecord()!.getHeader()!;
+        default:
+            throw new Error(`unsupported response case ${response.getResponseCase()}`);
     }
 }

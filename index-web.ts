@@ -1,14 +1,12 @@
-import {BaseClient, ClientConfig} from "./src/BaseClient";
-import {grpc} from "@improbable-eng/grpc-web";
+import { BaseClient, ClientConfig } from "./src/BaseClient";
+import { grpc } from "@improbable-eng/grpc-web";
 import ProtobufMessage = grpc.ProtobufMessage;
 import UnaryOutput = grpc.UnaryOutput;
 import Code = grpc.Code;
 
-export * from './exports';
+export * from "./exports";
 
-const testnetProxy = {
-    'https://grpc-web.testnet.myhbarwallet.com': { shard: 0, realm: 0, account: 3 }
-};
+const testnetProxy = { "https://grpc-web.testnet.myhbarwallet.com": { shard: 0, realm: 0, account: 3 }};
 
 /** This implementation of `BaseClient` is exported for browser usage. */
 export class Client extends BaseClient {
@@ -24,7 +22,7 @@ export class Client extends BaseClient {
         return new Promise((resolve, reject) => grpc.unary(method, {
             host: url,
             request,
-            onEnd: (response: UnaryOutput<Rs>) => {
+            onEnd(response: UnaryOutput<Rs>) {
                 if (response.status === Code.OK && response.message) {
                     resolve(response.message);
                 } else {
