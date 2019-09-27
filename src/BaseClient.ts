@@ -1,5 +1,4 @@
 import {Query} from "./generated/Query_pb";
-import {Ed25519PrivateKey, Ed25519PublicKey} from "./Keys";
 
 import {grpc} from "@improbable-eng/grpc-web";
 
@@ -21,6 +20,8 @@ import {Hbar} from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import {AccountId, AccountIdLike, accountIdToProto, accountIdToSdk, normalizeAccountId} from "./types/AccountId";
 import {TransactionId} from "./types/TransactionId";
+import {Ed25519PrivateKey} from "./crypto/Ed25519PrivateKey";
+import {Ed25519PublicKey} from "./crypto/Ed25519PublicKey";
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 

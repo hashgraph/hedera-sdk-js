@@ -6,7 +6,6 @@ import {BaseClient} from "../BaseClient";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
 
 import {ContractUpdateTransactionBody} from "../generated/ContractUpdate_pb";
-import {PublicKey} from "../Keys";
 import {
     timestampToProto,
     newDuration
@@ -15,6 +14,7 @@ import {ContractIdLike, contractIdToProto} from "../types/ContractId";
 import {AccountId, accountIdToProto} from "../types/AccountId";
 import {FileIdLike, fileIdToProto} from "../types/FileId";
 import {dateToTimestamp} from "../types/Timestamp";
+import {PublicKey} from "../crypto/PublicKey";
 
 export class ContractUpdateTransaction extends TransactionBuilder {
     private readonly body: ContractUpdateTransactionBody;

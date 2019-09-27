@@ -15,7 +15,6 @@ import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
 import {TransactionGetReceiptQuery} from "./generated/TransactionGetReceipt_pb";
 import {Query} from "./generated/Query_pb";
 import {Message} from "google-protobuf";
-import {Ed25519PrivateKey, Ed25519PublicKey} from "./Keys";
 import {CryptoService} from "./generated/CryptoService_pb_service";
 import {SmartContractService} from "./generated/SmartContractService_pb_service";
 import {FileService} from "./generated/FileService_pb_service";
@@ -26,6 +25,8 @@ import {accountIdToSdk} from "./types/AccountId";
 import {TransactionId, transactionIdToSdk} from "./types/TransactionId";
 import {receiptToSdk, TransactionReceipt} from "./types/TransactionReceipt";
 import {timestampToMs} from "./types/Timestamp";
+import {Ed25519PublicKey} from "./crypto/Ed25519PublicKey";
+import {Ed25519PrivateKey} from "./crypto/Ed25519PrivateKey";
 
 /**
  * Signature/public key pairs are passed around as objects

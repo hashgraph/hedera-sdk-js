@@ -10,9 +10,9 @@ import {SmartContractService} from "../generated/SmartContractService_pb_service
 
 import {Tinybar, tinybarToString} from "../types/Tinybar";
 import {Hbar} from "../Hbar";
-import {PublicKey} from "../Keys";
 import {FileIdLike, fileIdToProto} from "../types/FileId";
 import {AccountId, accountIdToProto} from "../types/AccountId";
+import {PublicKey} from "../crypto/PublicKey";
 
 export class ContractCreateTransaction extends TransactionBuilder {
     private readonly body: ContractCreateTransactionBody;

@@ -5,7 +5,7 @@ import {ResponseHeader} from "./generated/ResponseHeader_pb";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 import {Response} from "./generated/Response_pb";
 import {throwIfExceptional, ValidationError} from "./errors";
-import {Ed25519PublicKey} from "./Keys";
+import {Ed25519PublicKey} from "./crypto/Ed25519PublicKey";
 
 export function orThrow<T>(val?: T, msg = 'value must not be null'): T {
     if (val === undefined || val === null) {

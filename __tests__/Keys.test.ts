@@ -1,11 +1,5 @@
-import {
-    Ed25519PrivateKey,
-    Ed25519PublicKey,
-    generateMnemonic,
-    KeyMismatchException,
-    ThresholdKey,
-} from '../src/Keys';
 import * as nacl from "tweetnacl";
+import {Ed25519PrivateKey, Ed25519PublicKey, generateMnemonic, KeyMismatchException, ThresholdKey} from "../exports";
 
 // key from hedera-sdk-java tests, not used anywhere
 const privKeyBytes = Uint8Array.of(
