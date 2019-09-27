@@ -7,8 +7,7 @@ import {SmartContractService} from "../generated/SmartContractService_pb_service
 
 import {ContractCallTransactionBody} from "../generated/ContractCall_pb";
 import BigNumber from "bignumber.js";
-import {contractIdToProto} from "../util";
-import {ContractIdLike} from "../types/ContractId";
+import {ContractIdLike, contractIdToProto} from "../types/ContractId";
 
 export class ContractExecuteTransaction extends TransactionBuilder {
     private readonly body: ContractCallTransactionBody;

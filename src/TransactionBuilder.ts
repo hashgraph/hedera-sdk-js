@@ -1,24 +1,19 @@
 import {BaseClient, Node} from "./BaseClient";
 import {TransactionBody} from "./generated/TransactionBody_pb";
 import {
-    accountIdToProto,
-    getProtoTxnId,
     newDuration,
-    newTxnId,
-    normalizeAccountId,
     runValidation,
-    tinybarToString
 } from "./util";
 import {Transaction} from "./Transaction";
 import {Transaction as Transaction_} from "./generated/Transaction_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
 
-import {Tinybar} from "./types/Tinybar";
+import {Tinybar, tinybarToString} from "./types/Tinybar";
 import {Hbar} from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import {AccountId, AccountIdLike} from "./types/AccountId";
-import {TransactionIdLike} from "./types/TransactionId";
+import {AccountId, AccountIdLike, accountIdToProto, normalizeAccountId} from "./types/AccountId";
+import {getProtoTxnId, newTxnId, TransactionIdLike} from "./types/TransactionId";
 
 /**
  * Max duration of transactions on the network is 2 minutes

@@ -6,9 +6,10 @@ import {FileGetInfoQuery} from "../generated/FileGetInfo_pb";
 import {QueryHeader} from "../generated/QueryHeader_pb";
 import {BaseClient} from "../BaseClient";
 import {Response} from "../generated/Response_pb";
-import {fileIdToProto, getSdkKeys, timestampToDate} from "../util";
+import {getSdkKeys} from "../util";
 import {Ed25519PublicKey} from "../Keys";
-import {FileIdLike, fileIdToSdk} from "../types/FileId";
+import {FileIdLike, fileIdToProto, fileIdToSdk} from "../types/FileId";
+import {timestampToDate} from "../types/Timestamp";
 
 export type FileInfo = {
     fileId: FileIdLike;

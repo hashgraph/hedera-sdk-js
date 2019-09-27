@@ -1,16 +1,12 @@
-import {
-    dateToTimestamp,
-    normalizeAccountId,
-    normalizeContractId,
-    normalizeFileId, timestampToDate, timestampToProto,
-    tinybarRangeCheck
-} from "../src/util";
 import {TinybarValueError} from "../src/errors";
 import BigNumber from "bignumber.js";
 import {Hbar} from "../src/Hbar";
-import {AccountId} from "../src/types/AccountId";
-import {ContractId} from "../src/types/ContractId";
-import {FileId} from "../src/types/FileId";
+import {AccountId, normalizeAccountId} from "../src/types/AccountId";
+import {ContractId, normalizeContractId} from "../src/types/ContractId";
+import {FileId, normalizeFileId} from "../src/types/FileId";
+import {tinybarRangeCheck} from "../src/types/Tinybar";
+import {dateToTimestamp, timestampToDate} from "../src/types/Timestamp";
+import {timestampToProto} from "../src/util";
 
 describe('tinybarRangeCheck()', () => {
     it('forbids negative numbers by default', () => {

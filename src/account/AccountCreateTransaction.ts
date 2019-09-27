@@ -4,11 +4,11 @@ import {TransactionResponse} from "../generated/TransactionResponse_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {CryptoCreateTransactionBody} from "../generated/CryptoCreate_pb";
 import {BaseClient} from "../BaseClient";
-import {newDuration, tinybarToString} from "../util";
+import {newDuration} from "../util";
 import {PublicKey} from "../Keys";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 import {Hbar} from "../Hbar";
-import {Tinybar} from "../types/Tinybar";
+import {Tinybar, tinybarToString} from "../types/Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 export class AccountCreateTransaction extends TransactionBuilder {

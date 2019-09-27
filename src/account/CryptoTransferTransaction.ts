@@ -8,13 +8,12 @@ import {
     CryptoTransferTransactionBody,
     TransferList
 } from "../generated/CryptoTransfer_pb";
-import {accountIdToProto, tinybarRangeCheck, tinybarToString} from "../util";
 import BigNumber from "bignumber.js";
 import {CryptoService} from "../generated/CryptoService_pb_service";
 
-import {Tinybar} from "../types/Tinybar";
+import {Tinybar, tinybarRangeCheck, tinybarToString} from "../types/Tinybar";
 import {Hbar} from "../Hbar";
-import {AccountIdLike} from "../types/AccountId";
+import {AccountIdLike, accountIdToProto} from "../types/AccountId";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
     private readonly body: CryptoTransferTransactionBody;

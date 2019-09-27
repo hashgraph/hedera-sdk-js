@@ -4,13 +4,12 @@ import {BaseClient, Signer} from "./BaseClient";
 import {SignatureMap, SignaturePair, TransactionID} from "./generated/BasicTypes_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {TransactionResponse} from "./generated/TransactionResponse_pb";
-import {TransactionReceipt} from "./generated/TransactionReceipt_pb";
+import {TransactionReceipt as ProtoTransactionReceipt} from "./generated/TransactionReceipt_pb";
 import {
     handlePrecheck,
     handleQueryPrecheck,
     orThrow,
-    setTimeoutAwaitable,
-    timestampToMs
+    setTimeoutAwaitable
 } from "./util";
 import {ResponseCodeEnum} from "./generated/ResponseCode_pb";
 import {TransactionGetReceiptQuery} from "./generated/TransactionGetReceipt_pb";
@@ -25,6 +24,8 @@ import {HederaError} from "./errors";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import {accountIdToSdk} from "./types/AccountId";
 import {TransactionId, transactionIdToSdk} from "./types/TransactionId";
+import {receiptToSdk, TransactionReceipt} from "./types/TransactionReceipt";
+import {timestampToMs} from "./types/Timestamp";
 
 /**
  * Signature/public key pairs are passed around as objects
@@ -130,10 +131,10 @@ export class Transaction {
 
     public async executeForReceipt(): Promise<TransactionReceipt> {
         await this.execute();
-        return this.waitForReceipt()
+        return receiptToSdk(await this.waitForReceipt());
     }
 
-    private async getReceipt(): Promise<TransactionReceipt> {
+    private async getReceipt(): Promise<ProtoTransactionReceipt> {
         const receiptQuery = new TransactionGetReceiptQuery();
         receiptQuery.setTransactionid(this.txnId);
         const query = new Query();
@@ -144,7 +145,7 @@ export class Transaction {
             .then((receipt) => orThrow(receipt.getReceipt()));
     }
 
-    private async waitForReceipt(): Promise<TransactionReceipt> {
+    private async waitForReceipt(): Promise<ProtoTransactionReceipt> {
         const validStartMs = timestampToMs(orThrow(this.txnId.getTransactionvalidstart()));
         // set timeout at max valid duration
         const validUntilMs = validStartMs + 120000;

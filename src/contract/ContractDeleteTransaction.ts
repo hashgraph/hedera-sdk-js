@@ -6,8 +6,7 @@ import {BaseClient} from "../BaseClient";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
 
 import {ContractDeleteTransactionBody} from "../generated/ContractDelete_pb";
-import {contractIdToProto} from "../util";
-import {ContractIdLike} from "../types/ContractId";
+import {ContractIdLike, contractIdToProto} from "../types/ContractId";
 
 export class ContractDeleteTransaction extends TransactionBuilder {
     private readonly body: ContractDeleteTransactionBody;

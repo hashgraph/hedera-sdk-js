@@ -4,15 +4,15 @@ import {TransactionResponse} from "../generated/TransactionResponse_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {BaseClient} from "../BaseClient";
 import {ContractCreateTransactionBody} from "../generated/ContractCreate_pb";
-import {accountIdToProto, tinybarToString, newDuration, fileIdToProto} from "../util";
+import {newDuration} from "../util";
 import BigNumber from "bignumber.js";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
 
-import {Tinybar} from "../types/Tinybar";
+import {Tinybar, tinybarToString} from "../types/Tinybar";
 import {Hbar} from "../Hbar";
 import {PublicKey} from "../Keys";
-import {FileIdLike} from "../types/FileId";
-import {AccountId} from "../types/AccountId";
+import {FileIdLike, fileIdToProto} from "../types/FileId";
+import {AccountId, accountIdToProto} from "../types/AccountId";
 
 export class ContractCreateTransaction extends TransactionBuilder {
     private readonly body: ContractCreateTransactionBody;

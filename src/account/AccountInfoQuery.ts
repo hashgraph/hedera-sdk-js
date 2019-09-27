@@ -7,9 +7,25 @@ import {CryptoService} from "../generated/CryptoService_pb_service";
 import {BaseClient} from "../BaseClient";
 import {QueryHeader} from "../generated/QueryHeader_pb";
 import {Key} from "../generated/BasicTypes_pb";
-import {accountIdToProto, timestampToMs} from "../util";
 import {Hbar} from "../Hbar";
-import {AccountIdLike, accountIdToSdk} from "../types/AccountId";
+import {AccountIdLike, accountIdToProto, accountIdToSdk} from "../types/AccountId";
+import {timestampToMs} from "../types/Timestamp";
+
+export type AccountInfo = {
+    accountId: AccountIdLike;
+    contractAccountId?: string;
+    isDeleted: boolean;
+    proxyAccountId?: AccountIdLike;
+    proxyReceived?: Hbar;
+    key: Key;
+    balance: Hbar;
+    generateSendRecordThreshold: Hbar;
+    generateReceiveRecordThreshold: Hbar;
+    receiverSigRequired: boolean;
+    expirationTime: Date;
+    autoRenewPeriodSeconds: number;
+    // proxy accounts and claims aren't really implemented so we're ignoring those
+};
 
 export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
     private readonly builder: CryptoGetInfoQuery;
@@ -54,20 +70,4 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
         };
     }
 }
-
-export type AccountInfo = {
-    accountId: AccountIdLike;
-    contractAccountId?: string;
-    isDeleted: boolean;
-    proxyAccountId?: AccountIdLike;
-    proxyReceived?: Hbar;
-    key: Key;
-    balance: Hbar;
-    generateSendRecordThreshold: Hbar;
-    generateReceiveRecordThreshold: Hbar;
-    receiverSigRequired: boolean;
-    expirationTime: Date;
-    autoRenewPeriodSeconds: number;
-    // proxy accounts and claims aren't really implemented so we're ignoring those
-};
 

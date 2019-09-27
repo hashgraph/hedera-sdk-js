@@ -6,8 +6,7 @@ import {BaseClient} from "../BaseClient";
 
 import {FileService} from "../generated/FileService_pb_service";
 import {FileAppendTransactionBody} from "../generated/FileAppend_pb";
-import {FileIdLike} from "../types/FileId";
-import {fileIdToProto} from "../util";
+import {FileIdLike, fileIdToProto} from "../types/FileId";
 
 export class FileAppendTransaction extends TransactionBuilder {
     private readonly body: FileAppendTransactionBody;

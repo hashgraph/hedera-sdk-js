@@ -6,8 +6,7 @@ import {BaseClient} from "../BaseClient";
 
 import {FileService} from "../generated/FileService_pb_service";
 import {FileDeleteTransactionBody} from "../generated/FileDelete_pb";
-import {FileIdLike} from "../types/FileId";
-import {fileIdToProto} from "../util";
+import {FileIdLike, fileIdToProto} from "../types/FileId";
 
 export class FileDeleteTransaction extends TransactionBuilder {
     private readonly body: FileDeleteTransactionBody;

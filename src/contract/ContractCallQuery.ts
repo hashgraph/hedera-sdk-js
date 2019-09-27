@@ -5,16 +5,11 @@ import {Query} from "../generated/Query_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {Response} from "../generated/Response_pb";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
-import {contractIdToProto} from "../util";
-import {ContractIdLike} from "../types/ContractId";
+import {ContractIdLike, contractIdToProto} from "../types/ContractId";
 import {ContractFunctionResult, contractFunctionResultToSdk} from "../types/ContractFunctionResult";
 import {ContractCallLocalQuery} from "../generated/ContractCallLocal_pb";
 
-export type ContractCall = {
-    result: ContractFunctionResult | null;
-}
-
-export class ContractCallQuery extends QueryBuilder<ContractCall> {
+export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
     private readonly builder: ContractCallLocalQuery;
     public constructor(client: BaseClient) {
         const header = new QueryHeader();
@@ -39,10 +34,7 @@ export class ContractCallQuery extends QueryBuilder<ContractCall> {
         return SmartContractService.contractCallLocalMethod
     }
 
-    protected mapResponse(response: Response): ContractCall {
-        const contractResponse = response.getContractcalllocal()!.getFunctionresult()!;
-        return {
-            result: contractResponse == null ? null : contractFunctionResultToSdk(contractResponse)
-        }
+    protected mapResponse(response: Response): ContractFunctionResult {
+        return contractFunctionResultToSdk(response.getContractcalllocal()!.getFunctionresult()!);
     }
 }

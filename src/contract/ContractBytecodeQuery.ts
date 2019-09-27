@@ -5,15 +5,10 @@ import {Query} from "../generated/Query_pb";
 import {grpc} from "@improbable-eng/grpc-web";
 import {Response} from "../generated/Response_pb";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
-import {contractIdToProto} from "../util";
-import {ContractIdLike} from "../types/ContractId";
+import {ContractIdLike, contractIdToProto} from "../types/ContractId";
 import {ContractGetBytecodeQuery} from "../generated/ContractGetBytecode_pb";
 
-export type ContractBytecode = {
-    bytecode: Uint8Array | string;
-}
-
-export class ContractBytecodeQuery extends QueryBuilder<ContractBytecode> {
+export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
     private readonly builder: ContractGetBytecodeQuery;
     public constructor(client: BaseClient) {
         const header = new QueryHeader();
@@ -38,10 +33,7 @@ export class ContractBytecodeQuery extends QueryBuilder<ContractBytecode> {
         return SmartContractService.contractCallLocalMethod
     }
 
-    protected mapResponse(response: Response): ContractBytecode {
-        const contractResponse = response.getContractgetbytecoderesponse()!.getBytecode()!;
-        return {
-            bytecode: contractResponse
-        }
+    protected mapResponse(response: Response): Uint8Array {
+        return response.getContractgetbytecoderesponse()!.getBytecode_asU8()!;
     }
 }
