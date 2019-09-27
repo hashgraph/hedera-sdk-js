@@ -7,9 +7,9 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {Response} from "../generated/Response_pb";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
 import {Ed25519PublicKey} from "../Keys";
-import {contractIdToProto, timestampToDate} from "../util";
-import {ContractId, ContractIdLike, contractIdToSdk} from "../types/ContractId";
+import {ContractId, ContractIdLike, contractIdToProto, contractIdToSdk} from "../types/ContractId";
 import {AccountId, accountIdToSdk} from "../types/AccountId";
+import {timestampToDate} from "../types/Timestamp";
 
 export type ContractInfo = {
     contractId: ContractId;

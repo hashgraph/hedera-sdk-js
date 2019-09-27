@@ -1,9 +1,10 @@
 import {receiptToSdk, TransactionReceipt} from "./TransactionReceipt";
 import {ContractFunctionResult, contractFunctionResultToSdk} from "./ContractFunctionResult";
-import {TransferList, transferListToSdk} from "./TransferList";
+import {transferListToSdk} from "./TransferList";
 import {TransactionRecord as ProtoTransactionRecord} from "../generated/TransactionRecord_pb";
-import {timestampToDate} from "../util";
 import {TransactionId, transactionIdToSdk} from "./TransactionId";
+import {timestampToDate} from "./Timestamp";
+import {AccountAmount} from "./AccountAmount";
 
 export type TransactionRecord = {
     receipt: TransactionReceipt | null;
@@ -14,7 +15,7 @@ export type TransactionRecord = {
     transactionFee: number;
     contractCallResult: ContractFunctionResult | null;
     contractCreateResult: ContractFunctionResult | null;
-    transferList: TransferList | null;
+    transferList: AccountAmount[] | null;
 }
 
 export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionRecord[] {

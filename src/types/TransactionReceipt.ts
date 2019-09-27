@@ -1,8 +1,8 @@
-import {ExchangeRateSet, exchangeRateSetToSdk} from "./ExchangeRateSet";
 import {TransactionReceipt as ProtoTransactionReceipt} from "../generated/TransactionReceipt_pb";
 import {AccountId, accountIdToSdk} from "./AccountId";
 import {ContractId, contractIdToSdk} from "./ContractId";
 import {FileId, fileIdToSdk} from "./FileId";
+import {ExchangeRateSet, exchangeRateSetToSdk} from "./ExchangeRate";
 
 export type TransactionReceipt = {
     status: number;
@@ -13,11 +13,11 @@ export type TransactionReceipt = {
 }
 
 export function receiptToSdk(receipt: ProtoTransactionReceipt): TransactionReceipt {
-    return {
+    return  {
         status: receipt.getStatus(),
         accountId: receipt.getAccountid() == null ? null : accountIdToSdk(receipt.getAccountid()!),
         fileId: receipt.getContractid() == null ? null : fileIdToSdk(receipt.getFileid()!),
         contractId: receipt.getFileid() == null ? null : contractIdToSdk(receipt.getContractid()!),
         exchangeRateSet: receipt.getExchangerate() == null ? null : exchangeRateSetToSdk(receipt.getExchangerate()!)
-    }
+    };
 }

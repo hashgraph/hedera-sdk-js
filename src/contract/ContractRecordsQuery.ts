@@ -6,8 +6,7 @@ import {grpc} from "@improbable-eng/grpc-web";
 import {Response} from "../generated/Response_pb";
 import {SmartContractService} from "../generated/SmartContractService_pb_service";
 import {recordListToSdk, TransactionRecord} from "../types/TransactionRecord";
-import {ContractId, ContractIdLike, contractIdToSdk} from "../types/ContractId";
-import {contractIdToProto} from "../util";
+import {ContractId, ContractIdLike, contractIdToProto, contractIdToSdk} from "../types/ContractId";
 import {ContractGetRecordsQuery} from "../generated/ContractGetRecords_pb";
 
 export type ContractRecord = {

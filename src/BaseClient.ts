@@ -7,11 +7,8 @@ import { CryptoGetAccountBalanceQuery } from "./generated/CryptoGetAccountBalanc
 import { QueryHeader } from "./generated/QueryHeader_pb";
 
 import {
-    accountIdToProto,
     handleQueryPrecheck,
-    normalizeAccountId,
     reqDefined,
-    tinybarRangeCheck
 } from "./util";
 import { ProtobufMessage } from "@improbable-eng/grpc-web/dist/typings/message";
 import { AccountCreateTransaction } from "./account/AccountCreateTransaction";
@@ -19,16 +16,16 @@ import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
 import BigNumber from "bignumber.js";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 
+import { Tinybar, tinybarRangeCheck } from "./types/Tinybar";
 import { Hbar } from "./Hbar";
-import { Tinybar } from "./types/Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import { AccountId, AccountIdLike, accountIdToSdk } from "./types/AccountId";
+import { AccountId, AccountIdLike, accountIdToProto, accountIdToSdk, normalizeAccountId } from "./types/AccountId";
 import { TransactionId } from "./types/TransactionId";
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
 /** If `privateKey` is a string it will be parsed as an `Ed25519PrivateKey` */
-export type PrivateKey = { privateKey: Ed25519PrivateKey | string };
+export type PrivateKey = { privateKey: Ed25519PrivateKey | string  };
 export type PubKeyAndSigner = {
     publicKey: Ed25519PublicKey;
     signer: Signer;
