@@ -22,7 +22,7 @@ message CryptoGetInfoQuery {
 message CryptoGetInfoResponse {
     ResponseHeader header = 1; //Standard response from node to client, including the requested fields: cost, or state proof, or both, or neither
 
-    message AccountInfoQuery {
+    message AccountInfo {
         AccountID accountID = 1; // The account ID for which this information applies
         string contractAccountID = 2; // The Contract Account ID comprising of both the contract instance and the cryptocurrency account owned by the contract instance, in the format used by Solidity
         bool deleted = 3; // If true, then this account has been deleted, it will disappear when it expires, and all transactions for it will fail except the transaction to extend its expiration date
@@ -37,5 +37,5 @@ message CryptoGetInfoResponse {
         Duration autoRenewPeriod = 13; // The duration for expiration time will extend every this many seconds. If there are insufficient funds, then it extends as long as possible. If it is empty when it expires, then it is deleted.
         repeated Claim claims = 14; // All of the claims attached to the account (each of which is a hash along with the keys that authorized it and can delete it )
     }
-    AccountInfoQuery accountInfo = 2; // Info about the account (a state proof can be generated for this)
+    AccountInfo accountInfo = 2; // Info about the account (a state proof can be generated for this)
 }
