@@ -61,7 +61,7 @@ export class AccountCreateTransaction extends TransactionBuilder {
 
     public _doValidate(errors: string[]): void {
         if (!this._body.hasKey()) {
-            errors.push("AccountCreateTransaction requires setKey()");
+            errors.push("AccountCreateTransaction requires .setKey()");
         }
 
         if (new BigNumber(this._body.getInitialbalance()).isZero()) {
