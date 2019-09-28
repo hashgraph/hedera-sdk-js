@@ -10,30 +10,28 @@ export const tinybarConversions = {
     hbar: hbarAsTinybar,
     kilobar: hbarAsTinybar.multipliedBy(1000),
     megabar: hbarAsTinybar.multipliedBy(1_000_000),
-    gigabar: hbarAsTinybar.multipliedBy(1_000_000_000),
+    gigabar: hbarAsTinybar.multipliedBy(1_000_000_000)
 };
 
 function convertToTinybar(amount: BigNumber.Value, unit: HbarUnit): BigNumber {
     const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
-    return bnAmount.multipliedBy(tinybarConversions[unit]);
+    return bnAmount.multipliedBy(tinybarConversions[ unit ]);
 }
 
 export type HbarUnit = keyof typeof tinybarConversions;
 
 /** The possible denominations of HBAR in order by magnitude */
-export const hbarUnits: HbarUnit[] = [
-    'tinybar', 'microbar', 'millibar', 'hbar', 'kilobar', 'megabar', 'gigabar'
-];
+export const hbarUnits: HbarUnit[] = [ "tinybar", "microbar", "millibar", "hbar", "kilobar", "megabar", "gigabar" ];
 
 /** Symbols for denominations of HBAR for use in UIs */
 export const hbarUnitSymbols = {
-    tinybar: 'tℏ',
-    microbar: 'μℏ',
-    millibar: 'mℏ',
-    hbar: 'ℏ',
-    kilobar: 'kℏ',
-    megabar: 'Mℏ',
-    gigabar: 'Gℏ',
+    tinybar: "tℏ",
+    microbar: "μℏ",
+    millibar: "mℏ",
+    hbar: "ℏ",
+    kilobar: "kℏ",
+    megabar: "Mℏ",
+    gigabar: "Gℏ"
 };
 
 /**
@@ -68,21 +66,23 @@ export class Hbar {
      * Wrap a raw value of HBAR, may be a string.
      */
     public static of(amount: number | BigNumber | string): Hbar {
-        return new Hbar(convertToTinybar(amount, 'hbar'));
+        return new Hbar(convertToTinybar(amount, "hbar"));
     }
 
     public value(): BigNumber {
-        return this.as('hbar');
+        return this.as("hbar");
     }
 
     public asTinybar(): BigNumber {
-        return this.as('tinybar');
+        return this.as("tinybar");
     }
 
     public as(unit: HbarUnit): BigNumber {
-        if (unit === 'tinybar') { return this.tinybar; }
+        if (unit === "tinybar") {
+            return this.tinybar;
+        }
 
-        return this.tinybar.dividedBy(tinybarConversions[unit]);
+        return this.tinybar.dividedBy(tinybarConversions[ unit ]);
     }
 
     public plus(hbar: Hbar): Hbar;
@@ -90,9 +90,8 @@ export class Hbar {
     public plus(amount: Hbar | number | BigNumber, unit?: HbarUnit): Hbar {
         if (amount instanceof Hbar) {
             return new Hbar(this.tinybar.plus(amount.tinybar));
-        } else {
-            return new Hbar(this.tinybar.plus(convertToTinybar(amount, unit!)));
         }
+        return new Hbar(this.tinybar.plus(convertToTinybar(amount, unit!)));
     }
 
     public minus(hbar: Hbar): Hbar;
@@ -100,9 +99,8 @@ export class Hbar {
     public minus(amount: Hbar | number | BigNumber, unit?: HbarUnit): Hbar {
         if (amount instanceof Hbar) {
             return new Hbar(this.tinybar.minus(amount.tinybar));
-        } else {
-            return new Hbar(this.tinybar.minus(convertToTinybar(amount, unit!)));
         }
+        return new Hbar(this.tinybar.minus(convertToTinybar(amount, unit!)));
     }
 
     public isEqualTo(hbar: Hbar): boolean;
@@ -110,9 +108,8 @@ export class Hbar {
     public isEqualTo(amount: Hbar | number | BigNumber, unit?: HbarUnit): boolean {
         if (amount instanceof Hbar) {
             return this.tinybar.isEqualTo(amount.tinybar);
-        } else {
-            return this.tinybar.isEqualTo(convertToTinybar(amount, unit!));
         }
+        return this.tinybar.isEqualTo(convertToTinybar(amount, unit!));
     }
 
     public comparedTo(hbar: Hbar): number;
@@ -120,9 +117,8 @@ export class Hbar {
     public comparedTo(amount: Hbar | number | BigNumber, unit?: HbarUnit): number {
         if (amount instanceof Hbar) {
             return this.tinybar.comparedTo(amount.tinybar);
-        } else {
-            return this.tinybar.comparedTo(convertToTinybar(amount, unit!));
         }
+        return this.tinybar.comparedTo(convertToTinybar(amount, unit!));
     }
 
     public negated(): Hbar {

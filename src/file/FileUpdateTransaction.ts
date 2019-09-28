@@ -1,15 +1,15 @@
-import {TransactionBuilder} from "../TransactionBuilder";
-import {Transaction} from "../generated/Transaction_pb";
-import {TransactionResponse} from "../generated/TransactionResponse_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {BaseClient} from "../BaseClient";
+import { TransactionBuilder } from "../TransactionBuilder";
+import { Transaction } from "../generated/Transaction_pb";
+import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { BaseClient } from "../BaseClient";
 
-import {FileService} from "../generated/FileService_pb_service";
-import {PublicKey} from "../Keys";
-import {KeyList} from "../generated/BasicTypes_pb";
-import {FileUpdateTransactionBody} from "../generated/FileUpdate_pb";
-import {FileIdLike} from "../typedefs";
-import {dateToTimestamp, getProtoFileId, getProtoTimestamp} from "../util";
+import { FileService } from "../generated/FileService_pb_service";
+import { PublicKey } from "../Keys";
+import { KeyList } from "../generated/BasicTypes_pb";
+import { FileUpdateTransactionBody } from "../generated/FileUpdate_pb";
+import { FileIdLike } from "../typedefs";
+import { dateToTimestamp, getProtoFileId, getProtoTimestamp } from "../util";
 
 export class FileUpdateTransaction extends TransactionBuilder {
     private readonly body: FileUpdateTransactionBody;
@@ -24,8 +24,7 @@ export class FileUpdateTransaction extends TransactionBuilder {
         const files = this.body.getKeys();
 
         if (files == null) {
-            errors.push('FileUpdateTransaction must have a file set');
-            return;
+            errors.push("FileUpdateTransaction must have a file set");
         }
     }
 

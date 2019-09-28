@@ -1,13 +1,13 @@
-import {TransactionBuilder} from "../TransactionBuilder";
-import {Transaction} from "../generated/Transaction_pb";
-import {TransactionResponse} from "../generated/TransactionResponse_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {BaseClient} from "../BaseClient";
-import {SmartContractService} from "../generated/SmartContractService_pb_service";
+import { TransactionBuilder } from "../TransactionBuilder";
+import { Transaction } from "../generated/Transaction_pb";
+import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { BaseClient } from "../BaseClient";
+import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
-import {AccountId, ContractIdLike, FileIdLike} from "../typedefs";
-import {ContractUpdateTransactionBody} from "../generated/ContractUpdate_pb";
-import {PublicKey} from "../Keys";
+import { AccountId, ContractIdLike, FileIdLike } from "../typedefs";
+import { ContractUpdateTransactionBody } from "../generated/ContractUpdate_pb";
+import { PublicKey } from "../Keys";
 import {
     dateToTimestamp,
     getProtoAccountId,
@@ -28,8 +28,7 @@ export class ContractUpdateTransaction extends TransactionBuilder {
 
     protected doValidate(errors: string[]): void {
         if (!this.body.hasContractid()) {
-            errors.push('ContractUpdateTransaction requires contract id to be set');
-            return;
+            errors.push("ContractUpdateTransaction requires contract id to be set");
         }
     }
 

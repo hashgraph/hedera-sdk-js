@@ -1,16 +1,16 @@
-import {TransactionBuilder} from "../TransactionBuilder";
-import {Transaction} from "../generated/Transaction_pb";
-import {TransactionResponse} from "../generated/TransactionResponse_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {BaseClient} from "../BaseClient";
-import {ContractCreateTransactionBody} from "../generated/ContractCreate_pb";
-import {getProtoAccountId, tinybarToString, newDuration, getProtoFileId} from "../util";
+import { TransactionBuilder } from "../TransactionBuilder";
+import { Transaction } from "../generated/Transaction_pb";
+import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { BaseClient } from "../BaseClient";
+import { ContractCreateTransactionBody } from "../generated/ContractCreate_pb";
+import { getProtoAccountId, getProtoFileId, newDuration, tinybarToString } from "../util";
 import BigNumber from "bignumber.js";
-import {SmartContractService} from "../generated/SmartContractService_pb_service";
+import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
-import {AccountId, Tinybar, FileIdLike} from "../typedefs";
-import {Hbar} from "../Hbar";
-import {PublicKey} from "../Keys";
+import { AccountId, FileIdLike, Tinybar } from "../typedefs";
+import { Hbar } from "../Hbar";
+import { PublicKey } from "../Keys";
 
 export class ContractCreateTransaction extends TransactionBuilder {
     private readonly body: ContractCreateTransactionBody;
@@ -25,8 +25,7 @@ export class ContractCreateTransaction extends TransactionBuilder {
         const fileId = this.body.getFileid()!;
 
         if (fileId == null) {
-            errors.push('ContractCreateTransaction must have BytecodeFile set');
-            return;
+            errors.push("ContractCreateTransaction must have BytecodeFile set");
         }
     }
 

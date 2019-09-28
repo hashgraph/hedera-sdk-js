@@ -1,14 +1,14 @@
-import {TransactionBuilder} from "../TransactionBuilder";
-import {Transaction} from "../generated/Transaction_pb";
-import {TransactionResponse} from "../generated/TransactionResponse_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {CryptoCreateTransactionBody} from "../generated/CryptoCreate_pb";
-import {BaseClient} from "../BaseClient";
-import {newDuration, tinybarToString} from "../util";
-import {PublicKey} from "../Keys";
-import {CryptoService} from "../generated/CryptoService_pb_service";
-import {Hbar} from "../Hbar";
-import {Tinybar} from "../typedefs";
+import { TransactionBuilder } from "../TransactionBuilder";
+import { Transaction } from "../generated/Transaction_pb";
+import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { CryptoCreateTransactionBody } from "../generated/CryptoCreate_pb";
+import { BaseClient } from "../BaseClient";
+import { newDuration, tinybarToString } from "../util";
+import { PublicKey } from "../Keys";
+import { CryptoService } from "../generated/CryptoService_pb_service";
+import { Hbar } from "../Hbar";
+import { Tinybar } from "../typedefs";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 export class AccountCreateTransaction extends TransactionBuilder {
@@ -60,7 +60,7 @@ export class AccountCreateTransaction extends TransactionBuilder {
 
     public doValidate(errors: string[]): void {
         if (!this.body.hasKey()) {
-            errors.push('AccountCreateTransaction requires setKey()');
+            errors.push("AccountCreateTransaction requires setKey()");
         }
     }
 }

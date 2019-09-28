@@ -1,13 +1,13 @@
-import {TransactionBuilder} from "../TransactionBuilder";
-import {Transaction} from "../generated/Transaction_pb";
-import {TransactionResponse} from "../generated/TransactionResponse_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {BaseClient} from "../BaseClient";
+import { TransactionBuilder } from "../TransactionBuilder";
+import { Transaction } from "../generated/Transaction_pb";
+import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { BaseClient } from "../BaseClient";
 
-import {FileService} from "../generated/FileService_pb_service";
-import {FileDeleteTransactionBody} from "../generated/FileDelete_pb";
-import {FileIdLike} from "../typedefs";
-import {getProtoFileId} from "../util";
+import { FileService } from "../generated/FileService_pb_service";
+import { FileDeleteTransactionBody } from "../generated/FileDelete_pb";
+import { FileIdLike } from "../typedefs";
+import { getProtoFileId } from "../util";
 
 export class FileDeleteTransaction extends TransactionBuilder {
     private readonly body: FileDeleteTransactionBody;
@@ -22,8 +22,7 @@ export class FileDeleteTransaction extends TransactionBuilder {
         const fileId = this.body.getFileid();
 
         if (fileId == null) {
-            errors.push('FileDeleteTransaction must have a file set');
-            return;
+            errors.push("FileDeleteTransaction must have a file set");
         }
     }
 

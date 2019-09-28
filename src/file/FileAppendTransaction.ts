@@ -1,14 +1,13 @@
-import {TransactionBuilder} from "../TransactionBuilder";
-import {Transaction} from "../generated/Transaction_pb";
-import {TransactionResponse} from "../generated/TransactionResponse_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {BaseClient} from "../BaseClient";
+import { TransactionBuilder } from "../TransactionBuilder";
+import { Transaction } from "../generated/Transaction_pb";
+import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { BaseClient } from "../BaseClient";
 
-import {FileService} from "../generated/FileService_pb_service";
-import {FileID} from "../generated/BasicTypes_pb";
-import {FileAppendTransactionBody} from "../generated/FileAppend_pb";
-import {FileId, FileIdLike} from "../typedefs";
-import {getProtoFileId} from "../util";
+import { FileService } from "../generated/FileService_pb_service";
+import { FileAppendTransactionBody } from "../generated/FileAppend_pb";
+import { FileIdLike } from "../typedefs";
+import { getProtoFileId } from "../util";
 
 export class FileAppendTransaction extends TransactionBuilder {
     private readonly body: FileAppendTransactionBody;
@@ -24,8 +23,7 @@ export class FileAppendTransaction extends TransactionBuilder {
         const contents = this.body.getContents();
 
         if (file == null || contents == null) {
-            errors.push('FileAppendTransaction must have a file id and contents set');
-            return;
+            errors.push("FileAppendTransaction must have a file id and contents set");
         }
     }
 

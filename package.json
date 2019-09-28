@@ -27,7 +27,7 @@
     "tweetnacl": "^1.0.1"
   },
   "devDependencies": {
-    "@launchbadge/eslint-config": "^0.12.1",
+    "@launchbadge/eslint-config": "^0.13.3",
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.8",
     "dts-generator": "^3.0.0",

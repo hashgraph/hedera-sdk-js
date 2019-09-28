@@ -1,5 +1,5 @@
-import {BaseClient, Node} from "./BaseClient";
-import {TransactionBody} from "./generated/TransactionBody_pb";
+import { BaseClient, Node } from "./BaseClient";
+import { TransactionBody } from "./generated/TransactionBody_pb";
 import {
     getProtoAccountId,
     getProtoTxnId,
@@ -9,13 +9,13 @@ import {
     runValidation,
     tinybarToString
 } from "./util";
-import {Transaction} from "./Transaction";
-import {Transaction as Transaction_} from "./generated/Transaction_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {TransactionResponse} from "./generated/TransactionResponse_pb";
+import { Transaction } from "./Transaction";
+import { Transaction as Transaction_ } from "./generated/Transaction_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { TransactionResponse } from "./generated/TransactionResponse_pb";
 
-import {AccountId, AccountIdLike, Tinybar, TransactionIdLike} from "./typedefs";
-import {Hbar} from "./Hbar";
+import { AccountId, AccountIdLike, Tinybar, TransactionIdLike } from "./typedefs";
+import { Hbar } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
@@ -30,7 +30,7 @@ export abstract class TransactionBuilder {
 
     private node?: Node;
 
-    protected constructor (client: BaseClient) {
+    protected constructor(client: BaseClient) {
         this.client = client;
         this.inner = new TransactionBody();
         this.inner.setTransactionvalidduration(newDuration(120));
@@ -69,32 +69,32 @@ export abstract class TransactionBuilder {
 
     protected getNode(): Node {
         if (!this.node) {
-            this.node = this.nodeAccountId
-                ? this.client._getNode(this.nodeAccountId)
-                : this.client._randomNode();
+            this.node = this.nodeAccountId ?
+                this.client._getNode(this.nodeAccountId) :
+                this.client._randomNode();
         }
 
         return this.node;
     }
 
     public validate(): void {
-        runValidation(this, (errors => {
+        runValidation(this, (errors) => {
             if (!this.inner.hasTransactionid()) {
-                errors.push('missing ID for transaction');
+                errors.push("missing ID for transaction");
             }
 
-            if (this.inner.getTransactionfee() === '0') {
-                errors.push('Every transaction requires setTransactionFee(). '
-                    + 'This is only a maximum; the actual fee assessed may be lower.')
+            if (this.inner.getTransactionfee() === "0") {
+                errors.push("Every transaction requires setTransactionFee(). " +
+                    "This is only a maximum; the actual fee assessed may be lower.");
             }
 
             // strings are UTF-16, max 100 bytes
             if (this.inner.getMemo().length * 2 > 100) {
-                errors.push('memo may not be longer than 100 bytes');
+                errors.push("memo may not be longer than 100 bytes");
             }
 
             this.doValidate(errors);
-        }));
+        });
     }
 
     public build(): Transaction {
@@ -106,7 +106,7 @@ export abstract class TransactionBuilder {
             this.setTransactionValidDuration(maxValidDuration);
         }
 
-        const [url, nodeAccountID] = this.getNode();
+        const [ url, nodeAccountID ] = this.getNode();
         if (!this.inner.hasNodeaccountid()) {
             this.setNodeAccountId(nodeAccountID);
         }

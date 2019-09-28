@@ -7,4 +7,8 @@ module.exports = {
   extends: [
     "@launchbadge/eslint-config",
   ],
+  rules: {
+    // we use process.env to get the operator private key in examples
+    "no-process-env": "off"
+  }
 };
