@@ -9,8 +9,7 @@ import {
     handlePrecheck,
     handleQueryPrecheck,
     orThrow,
-    setTimeoutAwaitable,
-    timestampToMs
+    setTimeoutAwaitable
 } from "./util";
 import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
 import { TransactionGetReceiptQuery } from "./generated/TransactionGetReceipt_pb";
@@ -25,6 +24,7 @@ import { HederaError } from "./errors";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { accountIdToSdk } from "./types/AccountId";
 import { TransactionId, transactionIdToSdk } from "./types/TransactionId";
+import { timestampToMs } from "./types/Timestamp";
 
 /**
  * Signature/public key pairs are passed around as objects

@@ -23,3 +23,10 @@ export function timestampToDate(timestamp: ProtoTimestamp): Date {
 export function timestampToMs(timestamp: ProtoTimestamp): number {
     return (timestamp.getSeconds() * 1000) + Math.floor(timestamp.getNanos() / 1_000_000);
 }
+
+export function timestampToProto({ seconds, nanos }: { seconds: number; nanos: number }): ProtoTimestamp {
+    const timestamp = new ProtoTimestamp();
+    timestamp.setSeconds(seconds);
+    timestamp.setNanos(nanos);
+    return timestamp;
+}

@@ -8,8 +8,8 @@ import { FileService } from "../generated/FileService_pb_service";
 import { PublicKey } from "../Keys";
 import { KeyList } from "../generated/BasicTypes_pb";
 import { FileUpdateTransactionBody } from "../generated/FileUpdate_pb";
-import { dateToTimestamp, fileIdToProto, timestampToProto } from "../util";
-import { FileIdLike } from "../types/FileId";
+import { FileIdLike, fileIdToProto } from "../types/FileId";
+import { dateToTimestamp, timestampToProto } from "../types/Timestamp";
 
 export class FileUpdateTransaction extends TransactionBuilder {
     private readonly body: FileUpdateTransactionBody;
