@@ -49,6 +49,8 @@ export class Hbar {
 
     public static readonly MIN_VALUE: Hbar = new Hbar(new BigNumber(-2).pow(63));
 
+    public static readonly ZERO: Hbar = Hbar.zero();
+
     /**
      * Calculate the HBAR amount given a raw value and a unit.
      */
@@ -67,6 +69,11 @@ export class Hbar {
      */
     public static of(amount: number | BigNumber | string): Hbar {
         return new Hbar(convertToTinybar(amount, "hbar"));
+    }
+
+    /** Create an Hbar with a value of 0 tinybar; Note that this is a positive signed zero */
+    public static zero(): Hbar {
+        return new Hbar(new BigNumber(0));
     }
 
     public value(): BigNumber {
