@@ -10,7 +10,6 @@ import { CryptoService } from "../generated/CryptoService_pb_service";
 import { Hbar } from "../Hbar";
 import { Tinybar, tinybarToString } from "../types/Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import { Tinybar } from "../types/Tinybar";
 
 export class AccountCreateTransaction extends TransactionBuilder {
     private body: CryptoCreateTransactionBody;

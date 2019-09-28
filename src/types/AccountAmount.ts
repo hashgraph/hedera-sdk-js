@@ -1,5 +1,5 @@
-import {AccountAmount as ProtoAccountAmount} from "../generated/CryptoTransfer_pb";
-import {AccountId, accountIdToSdk} from "./AccountId";
+import { AccountAmount as ProtoAccountAmount } from "../generated/CryptoTransfer_pb";
+import { AccountId, accountIdToSdk } from "./AccountId";
 
 export type AccountAmount = {
     accountId: AccountId;
@@ -10,5 +10,5 @@ export function accountAmountToSdk(accountAmount: ProtoAccountAmount): AccountAm
     return {
         accountId: accountIdToSdk(accountAmount.getAccountid()!),
         amount: accountAmount.getAmount()
-    }
+    };
 }

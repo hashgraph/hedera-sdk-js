@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
-import {Hbar} from "../Hbar";
-import {TinybarValueError} from "../errors";
+import { Hbar } from "../Hbar";
+import { TinybarValueError } from "../errors";
 
 /**
  * The default denomination of currency for the SDK and in the Hedera protocol.
@@ -23,8 +23,8 @@ export type Tinybar = number | BigNumber;
 const maxTinybarBignum = new BigNumber(2).pow(63).minus(1);
 const minTinybarBignum = new BigNumber(2).pow(63).negated();
 
-export function tinybarRangeCheck(amount: Tinybar | Hbar, allowNegative?: 'allowNegative'): void {
-    const negativeError = 'tinybar amount must not be negative in this context';
+export function tinybarRangeCheck(amount: Tinybar | Hbar, allowNegative?: "allowNegative"): void {
+    const negativeError = "tinybar amount must not be negative in this context";
 
     if (amount instanceof BigNumber || amount instanceof Hbar) {
         if (!allowNegative && amount.isNegative()) {
@@ -34,7 +34,7 @@ export function tinybarRangeCheck(amount: Tinybar | Hbar, allowNegative?: 'allow
         const bnAmount = amount instanceof Hbar ? amount.asTinybar() : amount;
 
         if (bnAmount.lt(minTinybarBignum) || bnAmount.gt(maxTinybarBignum)) {
-            throw new TinybarValueError('tinybar amount out of range', bnAmount);
+            throw new TinybarValueError("tinybar amount out of range", bnAmount);
         }
     } else {
         if (!allowNegative && amount < 0) {
@@ -43,19 +43,18 @@ export function tinybarRangeCheck(amount: Tinybar | Hbar, allowNegative?: 'allow
 
         if (!Number.isSafeInteger(amount)) {
             throw new TinybarValueError(
-                'tinybar amount out of safe integer range for `number`',
+                "tinybar amount out of safe integer range for `number`",
                 amount
             );
         }
     }
 }
 
-export function tinybarToString(amount: Tinybar | Hbar, allowNegative?: 'allowNegative'): string {
+export function tinybarToString(amount: Tinybar | Hbar, allowNegative?: "allowNegative"): string {
     tinybarRangeCheck(amount, allowNegative);
 
     if (amount instanceof Hbar) {
         return String(amount.asTinybar());
-    } else {
-        return String(amount);
     }
+    return String(amount);
 }

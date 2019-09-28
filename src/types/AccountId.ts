@@ -1,5 +1,5 @@
-import {AccountID} from "../generated/BasicTypes_pb";
-import {normalizeEntityId} from "../util";
+import { AccountID } from "../generated/BasicTypes_pb";
+import { normalizeEntityId } from "../util";
 
 /** Normalized account ID returned by various methods in the SDK. */
 export type AccountId = { shard: number; realm: number; account: number };
@@ -36,5 +36,5 @@ export function accountIdToProto(accountId: AccountIdLike): AccountID {
 }
 
 export function normalizeAccountId(accountId: AccountIdLike): AccountId {
-    return normalizeEntityId('account', accountId);
+    return normalizeEntityId("account", accountId);
 }

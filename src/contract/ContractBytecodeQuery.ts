@@ -1,12 +1,12 @@
-import {QueryBuilder} from "../QueryBuilder";
-import {BaseClient} from "../BaseClient";
-import {QueryHeader} from "../generated/QueryHeader_pb";
-import {Query} from "../generated/Query_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {Response} from "../generated/Response_pb";
-import {SmartContractService} from "../generated/SmartContractService_pb_service";
-import {ContractIdLike, contractIdToProto} from "../types/ContractId";
-import {ContractGetBytecodeQuery} from "../generated/ContractGetBytecode_pb";
+import { QueryBuilder } from "../QueryBuilder";
+import { BaseClient } from "../BaseClient";
+import { QueryHeader } from "../generated/QueryHeader_pb";
+import { Query } from "../generated/Query_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { Response } from "../generated/Response_pb";
+import { SmartContractService } from "../generated/SmartContractService_pb_service";
+import { ContractIdLike, contractIdToProto } from "../types/ContractId";
+import { ContractGetBytecodeQuery } from "../generated/ContractGetBytecode_pb";
 
 export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
     private readonly builder: ContractGetBytecodeQuery;
@@ -30,7 +30,7 @@ export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
     }
 
     protected getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
-        return SmartContractService.contractCallLocalMethod
+        return SmartContractService.contractCallLocalMethod;
     }
 
     protected mapResponse(response: Response): Uint8Array {

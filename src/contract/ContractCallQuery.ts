@@ -1,13 +1,13 @@
-import {QueryBuilder} from "../QueryBuilder";
-import {BaseClient} from "../BaseClient";
-import {QueryHeader} from "../generated/QueryHeader_pb";
-import {Query} from "../generated/Query_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {Response} from "../generated/Response_pb";
-import {SmartContractService} from "../generated/SmartContractService_pb_service";
-import {ContractIdLike, contractIdToProto} from "../types/ContractId";
-import {ContractFunctionResult, contractFunctionResultToSdk} from "../types/ContractFunctionResult";
-import {ContractCallLocalQuery} from "../generated/ContractCallLocal_pb";
+import { QueryBuilder } from "../QueryBuilder";
+import { BaseClient } from "../BaseClient";
+import { QueryHeader } from "../generated/QueryHeader_pb";
+import { Query } from "../generated/Query_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { Response } from "../generated/Response_pb";
+import { SmartContractService } from "../generated/SmartContractService_pb_service";
+import { ContractIdLike, contractIdToProto } from "../types/ContractId";
+import { ContractFunctionResult, contractFunctionResultToSdk } from "../types/ContractFunctionResult";
+import { ContractCallLocalQuery } from "../generated/ContractCallLocal_pb";
 
 export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
     private readonly builder: ContractCallLocalQuery;
@@ -31,7 +31,7 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
     }
 
     protected getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
-        return SmartContractService.contractCallLocalMethod
+        return SmartContractService.contractCallLocalMethod;
     }
 
     protected mapResponse(response: Response): ContractFunctionResult {

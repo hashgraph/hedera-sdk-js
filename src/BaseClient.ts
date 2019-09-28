@@ -8,7 +8,7 @@ import { QueryHeader } from "./generated/QueryHeader_pb";
 
 import {
     handleQueryPrecheck,
-    reqDefined,
+    reqDefined
 } from "./util";
 import { ProtobufMessage } from "@improbable-eng/grpc-web/dist/typings/message";
 import { AccountCreateTransaction } from "./account/AccountCreateTransaction";
@@ -25,7 +25,7 @@ import { TransactionId } from "./types/TransactionId";
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
 /** If `privateKey` is a string it will be parsed as an `Ed25519PrivateKey` */
-export type PrivateKey = { privateKey: Ed25519PrivateKey | string  };
+export type PrivateKey = { privateKey: Ed25519PrivateKey | string };
 export type PubKeyAndSigner = {
     publicKey: Ed25519PublicKey;
     signer: Signer;
@@ -73,7 +73,7 @@ export abstract class BaseClient {
             this.operatorPublicKey = privateKey.publicKey;
         } else {
             ({ publicKey: this.operatorPublicKey, signer: this.operatorSigner } =
-                operator as PubKeyAndSigner);
+                (operator as PubKeyAndSigner));
         }
     }
 
@@ -205,13 +205,12 @@ export abstract class BaseClient {
      * version bumps.
      */
     public _getNode(node: string | AccountId): Node {
-        const maybeNode = this.nodes.find(([ url, accountId ]) => url === node ||
-            (
-                typeof node === "object" &&
+        const maybeNode = this.nodes.find(([ url, accountId ]) => url === node || (
+            typeof node === "object" &&
                 accountId.account === node.account &&
                 accountId.realm === node.realm &&
                 accountId.shard === node.shard
-            ));
+        ));
 
         if (maybeNode) {
             return maybeNode;

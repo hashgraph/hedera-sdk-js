@@ -1,13 +1,13 @@
-import {QueryBuilder} from "../QueryBuilder";
-import {BaseClient} from "../BaseClient";
-import {QueryHeader} from "../generated/QueryHeader_pb";
-import {Query} from "../generated/Query_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {Response} from "../generated/Response_pb";
-import {SmartContractService} from "../generated/SmartContractService_pb_service";
-import {recordListToSdk, TransactionRecord} from "../types/TransactionRecord";
-import {ContractId, ContractIdLike, contractIdToProto, contractIdToSdk} from "../types/ContractId";
-import {ContractGetRecordsQuery} from "../generated/ContractGetRecords_pb";
+import { QueryBuilder } from "../QueryBuilder";
+import { BaseClient } from "../BaseClient";
+import { QueryHeader } from "../generated/QueryHeader_pb";
+import { Query } from "../generated/Query_pb";
+import { grpc } from "@improbable-eng/grpc-web";
+import { Response } from "../generated/Response_pb";
+import { SmartContractService } from "../generated/SmartContractService_pb_service";
+import { recordListToSdk, TransactionRecord } from "../types/TransactionRecord";
+import { ContractId, ContractIdLike, contractIdToProto, contractIdToSdk } from "../types/ContractId";
+import { ContractGetRecordsQuery } from "../generated/ContractGetRecords_pb";
 
 export type ContractRecord = {
     contractId: ContractId;
@@ -47,6 +47,6 @@ export class ContractRecordsQuery extends QueryBuilder<ContractRecord> {
         return {
             contractId,
             recordList
-        }
+        };
     }
 }

@@ -1,4 +1,4 @@
-import {ExchangeRate as ProtoExchangeRate, ExchangeRateSet as ProtoExchangeRateSet} from "../generated/ExchangeRate_pb";
+import { ExchangeRate as ProtoExchangeRate, ExchangeRateSet as ProtoExchangeRateSet } from "../generated/ExchangeRate_pb";
 
 export type ExchangeRateSet = {
     currentRate: ExchangeRate;
@@ -16,12 +16,12 @@ export function exchangeRateToSdk(exchangeRate: ProtoExchangeRate): ExchangeRate
         hbarEquiv: exchangeRate.getHbarequiv(),
         centEquiv: exchangeRate.getCentequiv(),
         expirationTime: new Date(exchangeRate.getExpirationtime()!.getSeconds())
-    }
+    };
 }
 
 export function exchangeRateSetToSdk(exchangeRateSet: ProtoExchangeRateSet): ExchangeRateSet {
     return {
         currentRate: exchangeRateToSdk(exchangeRateSet.getCurrentrate()!),
         nextRate: exchangeRateToSdk(exchangeRateSet.getCurrentrate()!)
-    }
+    };
 }

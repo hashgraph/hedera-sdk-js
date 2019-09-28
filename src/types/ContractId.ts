@@ -1,5 +1,5 @@
-import {ContractID} from "../generated/BasicTypes_pb";
-import {normalizeEntityId} from "../util";
+import { ContractID } from "../generated/BasicTypes_pb";
+import { normalizeEntityId } from "../util";
 
 /** Normalized contract ID returned by various methods in the SDK. */
 export type ContractId = { shard: number; realm: number; contract: number };
@@ -36,5 +36,5 @@ export function contractIdToProto(contractIdLike: ContractIdLike): ContractID {
 }
 
 export function normalizeContractId(contractId: ContractIdLike): ContractId {
-    return normalizeEntityId('contract', contractId);
+    return normalizeEntityId("contract", contractId);
 }

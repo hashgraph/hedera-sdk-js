@@ -1,23 +1,23 @@
-import {TransactionReceipt as ProtoTransactionReceipt} from "../generated/TransactionReceipt_pb";
-import {AccountId, accountIdToSdk} from "./AccountId";
-import {ContractId, contractIdToSdk} from "./ContractId";
-import {FileId, fileIdToSdk} from "./FileId";
-import {ExchangeRateSet, exchangeRateSetToSdk} from "./ExchangeRate";
+import { TransactionReceipt as ProtoTransactionReceipt } from "../generated/TransactionReceipt_pb";
+import { AccountId, accountIdToSdk } from "./AccountId";
+import { ContractId, contractIdToSdk } from "./ContractId";
+import { FileId, fileIdToSdk } from "./FileId";
+import { ExchangeRateSet, exchangeRateSetToSdk } from "./ExchangeRate";
 
 export type TransactionReceipt = {
     status: number;
-    accountId: AccountId | null;
-    fileId: FileId | null;
-    contractId: ContractId | null;
-    exchangeRateSet: ExchangeRateSet | null;
+    accountId?: AccountId;
+    fileId?: FileId;
+    contractId?: ContractId;
+    exchangeRateSet?: ExchangeRateSet;
 }
 
 export function receiptToSdk(receipt: ProtoTransactionReceipt): TransactionReceipt {
-    return  {
+    return {
         status: receipt.getStatus(),
-        accountId: receipt.getAccountid() == null ? null : accountIdToSdk(receipt.getAccountid()!),
-        fileId: receipt.getContractid() == null ? null : fileIdToSdk(receipt.getFileid()!),
-        contractId: receipt.getFileid() == null ? null : contractIdToSdk(receipt.getContractid()!),
-        exchangeRateSet: receipt.getExchangerate() == null ? null : exchangeRateSetToSdk(receipt.getExchangerate()!)
+        accountId: receipt.getAccountid() && accountIdToSdk(receipt.getAccountid()!),
+        fileId: receipt.getContractid() && fileIdToSdk(receipt.getFileid()!),
+        contractId: receipt.getFileid() && contractIdToSdk(receipt.getContractid()!),
+        exchangeRateSet: receipt.getExchangerate() && exchangeRateSetToSdk(receipt.getExchangerate()!)
     };
 }

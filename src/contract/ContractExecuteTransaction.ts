@@ -19,7 +19,6 @@ export class ContractExecuteTransaction extends TransactionBuilder {
         this.inner.setContractcall(this.body);
     }
 
-
     protected doValidate(errors: string[]): void {
         if (!this.body.hasContractid()) {
             errors.push(".setContractId() required");

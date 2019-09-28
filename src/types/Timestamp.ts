@@ -1,4 +1,4 @@
-import {Timestamp as ProtoTimestamp} from "../generated/Timestamp_pb";
+import { Timestamp as ProtoTimestamp } from "../generated/Timestamp_pb";
 
 export type Timestamp = {
     seconds: number;
@@ -17,9 +17,9 @@ export function dateToTimestamp(dateOrMs: number | Date): Timestamp {
 }
 
 export function timestampToDate(timestamp: ProtoTimestamp): Date {
-    return new Date(timestamp.getSeconds() * 1_000 + timestamp.getNanos() / 1_000_000);
+    return new Date(timestampToMs(timestamp));
 }
 
 export function timestampToMs(timestamp: ProtoTimestamp): number {
-    return timestamp.getSeconds() * 1000 + Math.floor(timestamp.getNanos() / 1_000_000);
+    return (timestamp.getSeconds() * 1000) + Math.floor(timestamp.getNanos() / 1_000_000);
 }

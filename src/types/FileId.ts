@@ -1,5 +1,5 @@
-import {FileID} from "../generated/BasicTypes_pb";
-import {normalizeEntityId} from "../util";
+import { FileID } from "../generated/BasicTypes_pb";
+import { normalizeEntityId } from "../util";
 
 /** Normalized file ID returned by various methods in the SDK. */
 export type FileId = { shard: number; realm: number; file: number };
@@ -36,5 +36,5 @@ export function fileIdToProto(fileIdLike: FileIdLike): FileID {
 }
 
 export function normalizeFileId(fileId: FileIdLike): FileId {
-    return normalizeEntityId('file', fileId);
+    return normalizeEntityId("file", fileId);
 }

@@ -4,7 +4,7 @@ import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { BaseClient } from "../BaseClient";
 import { ContractCreateTransactionBody } from "../generated/ContractCreate_pb";
-import {accountIdToProto, fileIdToProto, newDuration, tinybarToString} from "../util";
+import { accountIdToProto, fileIdToProto, newDuration, tinybarToString } from "../util";
 import BigNumber from "bignumber.js";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 

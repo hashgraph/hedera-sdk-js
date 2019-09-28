@@ -90,7 +90,7 @@ type EntityId<Kind extends EntityKind> =
 
 type NormalizedId<Kind extends EntityKind> = Record<"shard" | "realm" | Kind, number>;
 
-function normalizeEntityId<Kind extends EntityKind>(kind: Kind, entityId: EntityId<Kind>): NormalizedId<Kind> {
+export function normalizeEntityId<Kind extends EntityKind>(kind: Kind, entityId: EntityId<Kind>): NormalizedId<Kind> {
     switch (typeof entityId) {
         case "object":
             if (!entityId[ kind ]) {
@@ -195,7 +195,6 @@ export function timestampToProto({ seconds, nanos }: { seconds: number; nanos: n
 export function getSdkKeys(keylist: KeyList): Ed25519PublicKey[] {
     return keylist.getKeysList().map((key) => new Ed25519PublicKey(key.getEd25519() as Uint8Array));
 }
-
 
 export function setTimeoutAwaitable(timeoutMs: number): Promise<undefined> {
     return new Promise((resolve) => setTimeout(resolve, timeoutMs));

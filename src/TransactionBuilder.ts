@@ -15,7 +15,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
 
 import { Tinybar } from "./types/Tinybar";
-import {Hbar} from "./Hbar";
+import { Hbar } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { AccountId, AccountIdLike } from "./types/AccountId";
 import { TransactionIdLike } from "./types/TransactionId";

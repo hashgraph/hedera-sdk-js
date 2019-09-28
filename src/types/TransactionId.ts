@@ -1,8 +1,8 @@
-import {AccountId, AccountIdLike, accountIdToProto, accountIdToSdk, normalizeAccountId} from "./AccountId";
-import {TransactionID} from "../generated/BasicTypes_pb";
-import {orThrow} from "../util";
-import {Timestamp} from "../generated/Timestamp_pb";
-import {dateToTimestamp} from "./Timestamp";
+import { AccountId, AccountIdLike, accountIdToProto, accountIdToSdk, normalizeAccountId } from "./AccountId";
+import { TransactionID } from "../generated/BasicTypes_pb";
+import { orThrow } from "../util";
+import { Timestamp } from "../generated/Timestamp_pb";
+import { dateToTimestamp } from "./Timestamp";
 
 /**
  * Normalized transaction ID returned by various methods in the SDK.
@@ -23,7 +23,7 @@ export function transactionIdToSdk(txnId: TransactionID): TransactionId {
     return {
         account: accountIdToSdk(orThrow(txnId.getAccountid())),
         validStartSeconds: orThrow(txnId.getTransactionvalidstart()).getSeconds(),
-        validStartNanos: orThrow(txnId.getTransactionvalidstart()).getNanos(),
+        validStartNanos: orThrow(txnId.getTransactionvalidstart()).getNanos()
     };
 }
 
@@ -31,7 +31,7 @@ export function newTxnId(accountId: AccountIdLike): TransactionID {
     const acctId = accountIdToProto(accountId);
 
     // allows the transaction to be accepted as long as the node isn't 10 seconds behind us
-    const {seconds, nanos} = dateToTimestamp(Date.now() - 10_000);
+    const { seconds, nanos } = dateToTimestamp(Date.now() - 10_000);
 
     const validStart = new Timestamp();
     validStart.setSeconds(seconds);
@@ -61,7 +61,7 @@ export function getProtoTxnId(transactionId: TransactionIdLike): TransactionID {
 export function normalizeTxnId(txnId: TransactionIdLike): TransactionId {
     const account = normalizeAccountId(txnId.account);
 
-    if ('validStart' in txnId) {
+    if ("validStart" in txnId) {
         const validStart = txnId.validStart;
         const { seconds: validStartSeconds, nanos: validStartNanos } = dateToTimestamp(validStart);
 
@@ -70,10 +70,9 @@ export function normalizeTxnId(txnId: TransactionIdLike): TransactionId {
             validStartSeconds,
             validStartNanos
         };
-    } else {
-        return {
-            ...txnId,
-            account
-        };
     }
+    return {
+        ...txnId,
+        account
+    };
 }

@@ -6,8 +6,8 @@ export {
     PrivateKey, Nodes, Node
 } from "./src/BaseClient";
 
-export { AccountCreateTransaction } from './src/account/AccountCreateTransaction';
-export { CryptoTransferTransaction } from './src/account/CryptoTransferTransaction';
+export { AccountCreateTransaction } from "./src/account/AccountCreateTransaction";
+export { CryptoTransferTransaction } from "./src/account/CryptoTransferTransaction";
 export { ContractCreateTransaction } from "./src/contract/ContractCreateTransaction";
 export { ContractDeleteTransaction } from "./src/contract/ContractDeleteTransaction";
 export { ContractExecuteTransaction } from "./src/contract/ContractExecuteTransaction";
