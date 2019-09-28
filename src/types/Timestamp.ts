@@ -30,3 +30,10 @@ export function timestampToProto({ seconds, nanos }: { seconds: number; nanos: n
     timestamp.setNanos(nanos);
     return timestamp;
 }
+
+export function timestampToProto({ seconds, nanos }: { seconds: number; nanos: number }): ProtoTimestamp {
+    const timestamp = new ProtoTimestamp();
+    timestamp.setSeconds(seconds);
+    timestamp.setNanos(nanos);
+    return timestamp;
+}
