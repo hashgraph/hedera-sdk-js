@@ -112,6 +112,46 @@ export class Hbar {
         return this._tinybar.isEqualTo(convertToTinybar(amount, unit!));
     }
 
+    public isGreaterThan(hbar: Hbar): boolean;
+    public isGreaterThan(amount: number | BigNumber, unit: HbarUnit): boolean;
+    public isGreaterThan(amount: Hbar | number | BigNumber, unit?: HbarUnit): boolean {
+        if (amount instanceof Hbar) {
+            return this.tinybar.isGreaterThan(amount.tinybar);
+        } else {
+            return this.tinybar.isGreaterThan(convertToTinybar(amount, unit!));
+        }
+    }
+
+    public isGreaterThanOrEqualTo(hbar: Hbar): boolean;
+    public isGreaterThanOrEqualTo(amount: number | BigNumber, unit: HbarUnit): boolean;
+    public isGreaterThanOrEqualTo(amount: Hbar | number | BigNumber, unit?: HbarUnit): boolean {
+        if (amount instanceof Hbar) {
+            return this.tinybar.isGreaterThanOrEqualTo(amount.tinybar);
+        } else {
+            return this.tinybar.isGreaterThanOrEqualTo(convertToTinybar(amount, unit!));
+        }
+    }
+
+    public isLessThan(hbar: Hbar): boolean;
+    public isLessThan(amount: number | BigNumber, unit: HbarUnit): boolean;
+    public isLessThan(amount: Hbar | number | BigNumber, unit?: HbarUnit): boolean {
+        if (amount instanceof Hbar) {
+            return this.tinybar.isLessThan(amount.tinybar);
+        } else {
+            return this.tinybar.isLessThan(convertToTinybar(amount, unit!));
+        }
+    }
+
+    public isLessThanOrEqualTo(hbar: Hbar): boolean;
+    public isLessThanOrEqualTo(amount: number | BigNumber, unit: HbarUnit): boolean;
+    public isLessThanOrEqualTo(amount: Hbar | number | BigNumber, unit?: HbarUnit): boolean {
+        if (amount instanceof Hbar) {
+            return this.tinybar.isLessThanOrEqualTo(amount.tinybar);
+        } else {
+            return this.tinybar.isLessThanOrEqualTo(convertToTinybar(amount, unit!));
+        }
+    }
+
     public comparedTo(hbar: Hbar): number;
     public comparedTo(amount: number | BigNumber, unit: HbarUnit): number;
     public comparedTo(amount: Hbar | number | BigNumber, unit?: HbarUnit): number {
@@ -121,11 +161,19 @@ export class Hbar {
         return this._tinybar.comparedTo(convertToTinybar(amount, unit!));
     }
 
+    public isZero(): boolean {
+        return this.tinybar.isZero();
+    }
+
     public negated(): Hbar {
         return new Hbar(this._tinybar.negated());
     }
 
     public isNegative(): boolean {
         return this._tinybar.isNegative();
+    }
+
+    public isPositive(): boolean {
+        return this.tinybar.isPositive();
     }
 }

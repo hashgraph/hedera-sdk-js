@@ -5,6 +5,9 @@ describe("Hbar", () => {
     const fiftyGTinybar = new BigNumber(5_000_000_000);
     const fiftyHbar = Hbar.fromTinybar(fiftyGTinybar); // 50 hbar
 
+    const negativeFiftyGTinybar = new BigNumber(-5_000_000_000);
+    const negativeFiftyHbar = Hbar.fromTinybar(negativeFiftyGTinybar); // -50 hbar
+
     const hundredHbar = Hbar.from(new BigNumber(10_000_000_000), "tinybar");
     const zeroHbar = Hbar.from(0, "tinybar");
 
@@ -30,8 +33,12 @@ describe("Hbar", () => {
         expect(fiftyHbar.plus(fiftyHbar)).toStrictEqual(hundredHbar);
         expect(fiftyHbar.plus(fiftyGTinybar, "tinybar")).toStrictEqual(hundredHbar);
 
+        expect(fiftyHbar.plus(negativeFiftyHbar)).toStrictEqual(zeroHbar);
+
         expect(fiftyHbar.minus(fiftyHbar)).toStrictEqual(zeroHbar);
         expect(fiftyHbar.minus(fiftyGTinybar, "tinybar")).toStrictEqual(zeroHbar);
+
+        expect(fiftyHbar.minus(negativeFiftyHbar)).toStrictEqual(hundredHbar);
 
         expect(fiftyHbar.negated().asTinybar()).toStrictEqual(fiftyGTinybar.negated());
         expect(fiftyHbar.negated().isNegative()).toBe(true);
@@ -46,10 +53,48 @@ describe("Hbar", () => {
         expect(fiftyHbar.isEqualTo(zeroHbar)).toBe(false);
         expect(fiftyHbar.isEqualTo(100, "hbar")).toBe(false);
         expect(fiftyHbar.isEqualTo(500, "hbar")).toBe(false);
+        expect(fiftyHbar.isEqualTo(negativeFiftyHbar)).toBe(false);
+
+        expect(fiftyHbar.isGreaterThan(hundredHbar)).toBe(false);
+        expect(fiftyHbar.isGreaterThan(negativeFiftyHbar)).toBe(true);
+        expect(fiftyHbar.isGreaterThan(10, 'hbar')).toBe(true);
+        expect(fiftyHbar.isGreaterThan(negativeFiftyGTinybar, 'tinybar')).toBe(true);
+        expect(fiftyHbar.isGreaterThan(fiftyHbar)).toBe(false);
+
+        expect(fiftyHbar.isGreaterThanOrEqualTo(hundredHbar)).toBe(false);
+        expect(fiftyHbar.isGreaterThanOrEqualTo(negativeFiftyHbar)).toBe(true);
+        expect(fiftyHbar.isGreaterThanOrEqualTo(10, 'hbar')).toBe(true);
+        expect(fiftyHbar.isGreaterThanOrEqualTo(negativeFiftyGTinybar, 'tinybar')).toBe(true);
+        expect(fiftyHbar.isGreaterThanOrEqualTo(fiftyHbar)).toBe(true);
+
+        expect(fiftyHbar.isLessThan(hundredHbar)).toBe(true);
+        expect(fiftyHbar.isLessThan(negativeFiftyHbar)).toBe(false);
+        expect(fiftyHbar.isLessThan(10, 'hbar')).toBe(false);
+        expect(fiftyHbar.isLessThan(negativeFiftyGTinybar, 'tinybar')).toBe(false);
+        expect(fiftyHbar.isLessThan(fiftyHbar)).toBe(false);
+
+        expect(fiftyHbar.isLessThanOrEqualTo(hundredHbar)).toBe(true);
+        expect(fiftyHbar.isLessThanOrEqualTo(negativeFiftyHbar)).toBe(false);
+        expect(fiftyHbar.isLessThanOrEqualTo(10, 'hbar')).toBe(false);
+        expect(fiftyHbar.isLessThanOrEqualTo(negativeFiftyGTinybar, 'tinybar')).toBe(false);
+        expect(fiftyHbar.isLessThanOrEqualTo(fiftyHbar)).toBe(true);
 
         expect(fiftyHbar.comparedTo(fiftyHbar)).toStrictEqual(0);
         expect(fiftyHbar.comparedTo(hundredHbar)).toStrictEqual(-1);
         expect(fiftyHbar.comparedTo(zeroHbar)).toStrictEqual(1);
+
+        expect(fiftyHbar.comparedTo(50, "hbar")).toStrictEqual(0);
+
+        expect(zeroHbar.isZero()).toBe(true);
+
+        expect(fiftyHbar.isPositive()).toBe(true);
+        expect(fiftyHbar.isNegative()).toBe(false);
+        expect(fiftyHbar.isZero()).toBe(false);
+
+        expect(negativeFiftyHbar.isPositive()).toBe(false);
+        expect(negativeFiftyHbar.isNegative()).toBe(true);
+        expect(negativeFiftyHbar.isZero()).toBe(false);
+
     });
 
     it("hbarUnits matches tinyBarConversions", () => {
