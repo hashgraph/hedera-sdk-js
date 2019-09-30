@@ -1,8 +1,8 @@
-import {mockClient} from "../MockClient";
-import {FileAppendTransaction} from "../../exports";
+import { mockClient } from "../MockClient";
+import { FileAppendTransaction } from "../../exports";
 
 describe("FileAppendTransaction", () => {
-    it('serializes and deserializes correctly; FileAppendTransaction', () => {
+    it("serializes and deserializes correctly; FileAppendTransaction", () => {
         const transaction = new FileAppendTransaction(mockClient)
             .setFileId({ shard: 0, realm: 0, file: 5 })
             .setContents("This is some random data")

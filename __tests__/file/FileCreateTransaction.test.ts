@@ -1,8 +1,8 @@
-import {FileCreateTransaction} from "../../exports";
-import {mockClient, privateKey} from "../MockClient";
+import { FileCreateTransaction } from "../../exports";
+import { mockClient, privateKey } from "../MockClient";
 
 describe("FileCreateTransaction", () => {
-    it('serializes and deserializes correctly; FileCreateTransaction', () => {
+    it("serializes and deserializes correctly; FileCreateTransaction", () => {
         const transaction = new FileCreateTransaction(mockClient)
             .setContents("This is the file contents")
             .setExpirationTime(new Date(15415151511))

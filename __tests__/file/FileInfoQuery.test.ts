@@ -1,8 +1,8 @@
-import {mockClient, mockTransaction} from "../MockClient";
-import {FileInfoQuery} from "../../exports";
+import { mockClient, mockTransaction } from "../MockClient";
+import { FileInfoQuery } from "../../exports";
 
 describe("FileInfoQuery", () => {
-    it('serializes and deserializes correctly; FileInfoQuery', () => {
+    it("serializes and deserializes correctly; FileInfoQuery", () => {
         const query = new FileInfoQuery(mockClient)
             .setFileId({ shard: 0, realm: 0, file: 5 })
             .setPayment(mockTransaction.toProto());
@@ -23,24 +23,23 @@ describe("FileInfoQuery", () => {
                 fileid: {
                     filenum: 5,
                     realmnum: 0,
-                    shardnum: 0,
+                    shardnum: 0
                 },
                 header: {
-                    payment:  {
+                    payment: {
                         body: undefined,
                         bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeHIUChIKBwoCGAIQxwEKBwoCGAMQyAE=",
                         sigmap: undefined,
-                        sigs: undefined,
+                        sigs: undefined
                     },
-                    responsetype: 0,
-                },
+                    responsetype: 0
+                }
             },
             getbykey: undefined,
             getbysolidityid: undefined,
             transactiongetfastrecord: undefined,
             transactiongetreceipt: undefined,
             transactiongetrecord: undefined
-        }
-    );
+        });
     });
 });

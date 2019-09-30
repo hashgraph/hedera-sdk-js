@@ -1,8 +1,8 @@
-import {FileDeleteTransaction} from "../../exports";
-import {mockClient} from "../MockClient";
+import { FileDeleteTransaction } from "../../exports";
+import { mockClient } from "../MockClient";
 
 describe("FileDeleteTransaction", () => {
-    it('serializes and deserializes correctly; FileDeleteTransaction', () => {
+    it("serializes and deserializes correctly; FileDeleteTransaction", () => {
         const transaction = new FileDeleteTransaction(mockClient)
             .setFileId({ shard: 0, realm: 0, file: 5 })
             .setTransactionFee(1e6)

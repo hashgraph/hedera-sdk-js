@@ -6,8 +6,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { Query } from "../generated/Query_pb";
 import { Response } from "../generated/Response_pb";
 import { FileService } from "../generated/FileService_pb_service";
-import { FileIdLike } from "../typedefs";
-import { getProtoFileId, getSdkFileId } from "../util";
+import { FileIdLike, fileIdToProto, fileIdToSdk } from "../types/FileId";
 
 export type FileContents = {
     fileId: FileIdLike;
@@ -26,7 +25,7 @@ export class FileContentsQuery extends QueryBuilder<FileContents> {
     }
 
     public setFileId(fileId: FileIdLike): this {
-        this.builder.setFileid(getProtoFileId(fileId));
+        this.builder.setFileid(fileIdToProto(fileId));
         return this;
     }
 
@@ -44,7 +43,7 @@ export class FileContentsQuery extends QueryBuilder<FileContents> {
         const fileConents = response.getFilegetcontents()!.getFilecontents()!;
 
         return {
-            fileId: getSdkFileId(fileConents.getFileid()!),
+            fileId: fileIdToSdk(fileConents.getFileid()!),
             contents: fileConents.getContents()
         };
     }

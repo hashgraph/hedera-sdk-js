@@ -1,9 +1,9 @@
-import {AccountCreateTransaction} from "../src/account/AccountCreateTransaction";
-import {Transaction} from "../src/Transaction";
-import {mockClient, privateKey} from "./MockClient";
+import { AccountCreateTransaction } from "../src/account/AccountCreateTransaction";
+import { Transaction } from "../src/Transaction";
+import { mockClient, privateKey } from "./MockClient";
 
-describe('Transaction', () => {
-    it('serializes and deserializes correctly', () => {
+describe("Transaction", () => {
+    it("serializes and deserializes correctly", () => {
         const transaction = new AccountCreateTransaction(mockClient)
             .setKey(privateKey.publicKey)
             .setInitialBalance(1e3)

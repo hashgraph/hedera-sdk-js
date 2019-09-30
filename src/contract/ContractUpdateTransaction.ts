@@ -5,17 +5,13 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { BaseClient } from "../BaseClient";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
-import { AccountId, ContractIdLike, FileIdLike } from "../typedefs";
 import { ContractUpdateTransactionBody } from "../generated/ContractUpdate_pb";
 import { PublicKey } from "../Keys";
-import {
-    dateToTimestamp,
-    getProtoAccountId,
-    getProtoContractId,
-    getProtoFileId,
-    getProtoTimestamp,
-    newDuration
-} from "../util";
+import { newDuration } from "../util";
+import { ContractIdLike, contractIdToProto } from "../types/ContractId";
+import { AccountId, accountIdToProto } from "../types/AccountId";
+import { FileIdLike, fileIdToProto } from "../types/FileId";
+import { dateToTimestamp, timestampToProto } from "../types/Timestamp";
 
 export class ContractUpdateTransaction extends TransactionBuilder {
     private readonly body: ContractUpdateTransactionBody;
@@ -28,12 +24,12 @@ export class ContractUpdateTransaction extends TransactionBuilder {
 
     protected doValidate(errors: string[]): void {
         if (!this.body.hasContractid()) {
-            errors.push("ContractUpdateTransaction requires contract id to be set");
+            errors.push(".setContractId() required");
         }
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this.body.setContractid(getProtoContractId(contractIdLike));
+        this.body.setContractid(contractIdToProto(contractIdLike));
         return this;
     }
 
@@ -43,12 +39,12 @@ export class ContractUpdateTransaction extends TransactionBuilder {
     }
 
     public setProxyAccountId(proxyAccountId: AccountId): this {
-        this.body.setProxyaccountid(getProtoAccountId(proxyAccountId));
+        this.body.setProxyaccountid(accountIdToProto(proxyAccountId));
         return this;
     }
 
     public setFileId(fileIdLike: FileIdLike): this {
-        this.body.setFileid(getProtoFileId(fileIdLike));
+        this.body.setFileid(fileIdToProto(fileIdLike));
         return this;
     }
 
@@ -58,7 +54,7 @@ export class ContractUpdateTransaction extends TransactionBuilder {
     }
 
     public setExpirationTime(date: number | Date): this {
-        this.body.setExpirationtime(getProtoTimestamp(dateToTimestamp(date)));
+        this.body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
         return this;
     }
 

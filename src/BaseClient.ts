@@ -7,12 +7,8 @@ import { CryptoGetAccountBalanceQuery } from "./generated/CryptoGetAccountBalanc
 import { QueryHeader } from "./generated/QueryHeader_pb";
 
 import {
-    getProtoAccountId,
-    getSdkAccountId,
     handleQueryPrecheck,
-    normalizeAccountId,
-    reqDefined,
-    tinybarRangeCheck
+    reqDefined
 } from "./util";
 import { ProtobufMessage } from "@improbable-eng/grpc-web/dist/typings/message";
 import { AccountCreateTransaction } from "./account/AccountCreateTransaction";
@@ -20,9 +16,11 @@ import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
 import BigNumber from "bignumber.js";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 
-import { AccountId, AccountIdLike, Tinybar, TransactionId } from "./typedefs";
+import { Tinybar, tinybarRangeCheck } from "./types/Tinybar";
 import { Hbar } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
+import { AccountId, AccountIdLike, accountIdToProto, accountIdToSdk, normalizeAccountId } from "./types/AccountId";
+import { TransactionId } from "./types/TransactionId";
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
@@ -75,7 +73,7 @@ export abstract class BaseClient {
             this.operatorPublicKey = privateKey.publicKey;
         } else {
             ({ publicKey: this.operatorPublicKey, signer: this.operatorSigner } =
-                operator as PubKeyAndSigner);
+                (operator as PubKeyAndSigner));
         }
     }
 
@@ -135,7 +133,7 @@ export abstract class BaseClient {
             .build()
             .executeForReceipt()
             .then((receipt) => ({
-                account: getSdkAccountId(reqDefined(
+                account: accountIdToSdk(reqDefined(
                     receipt.getAccountid(),
                     `missing account ID from receipt: ${receipt}`
                 ))
@@ -164,7 +162,7 @@ export abstract class BaseClient {
     /** Get the current account balance in Tinybar */
     public getAccountBalance(): Promise<BigNumber> {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
-        balanceQuery.setAccountid(getProtoAccountId(this.operatorAcct));
+        balanceQuery.setAccountid(accountIdToProto(this.operatorAcct));
 
         const [ url, nodeAccountID ] = this._randomNode();
 
@@ -207,13 +205,12 @@ export abstract class BaseClient {
      * version bumps.
      */
     public _getNode(node: string | AccountId): Node {
-        const maybeNode = this.nodes.find(([ url, accountId ]) => url === node ||
-            (
-                typeof node === "object" &&
+        const maybeNode = this.nodes.find(([ url, accountId ]) => url === node || (
+            typeof node === "object" &&
                 accountId.account === node.account &&
                 accountId.realm === node.realm &&
                 accountId.shard === node.shard
-            ));
+        ));
 
         if (maybeNode) {
             return maybeNode;

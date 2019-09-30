@@ -5,10 +5,9 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { BaseClient } from "../BaseClient";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
-import { ContractIdLike } from "../typedefs";
 import { ContractCallTransactionBody } from "../generated/ContractCall_pb";
 import BigNumber from "bignumber.js";
-import { getProtoContractId } from "../util";
+import { ContractIdLike, contractIdToProto } from "../types/ContractId";
 
 export class ContractExecuteTransaction extends TransactionBuilder {
     private readonly body: ContractCallTransactionBody;
@@ -21,7 +20,7 @@ export class ContractExecuteTransaction extends TransactionBuilder {
 
     protected doValidate(errors: string[]): void {
         if (!this.body.hasContractid()) {
-            errors.push("ContractExecuteTransaction requires contract id to be set");
+            errors.push(".setContractId() required");
         }
     }
 
@@ -41,7 +40,7 @@ export class ContractExecuteTransaction extends TransactionBuilder {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this.body.setContractid(getProtoContractId(contractIdLike));
+        this.body.setContractid(contractIdToProto(contractIdLike));
         return this;
     }
 

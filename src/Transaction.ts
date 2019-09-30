@@ -1,19 +1,15 @@
 import { Transaction as Transaction_ } from "./generated/Transaction_pb";
 import { TransactionBody } from "./generated/TransactionBody_pb";
 import { BaseClient, Signer } from "./BaseClient";
-import { TransactionId } from "./typedefs";
 import { SignatureMap, SignaturePair, TransactionID } from "./generated/BasicTypes_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
 import { TransactionReceipt } from "./generated/TransactionReceipt_pb";
 import {
-    getSdkAccountId,
-    getSdkTxnId,
     handlePrecheck,
     handleQueryPrecheck,
     orThrow,
-    setTimeoutAwaitable,
-    timestampToMs
+    setTimeoutAwaitable
 } from "./util";
 import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
 import { TransactionGetReceiptQuery } from "./generated/TransactionGetReceipt_pb";
@@ -26,6 +22,9 @@ import { FileService } from "./generated/FileService_pb_service";
 import { FreezeService } from "./generated/FreezeService_pb_service";
 import { HederaError } from "./errors";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
+import { accountIdToSdk } from "./types/AccountId";
+import { TransactionId, transactionIdToSdk } from "./types/TransactionId";
+import { timestampToMs } from "./types/Timestamp";
 
 /**
  * Signature/public key pairs are passed around as objects
@@ -67,7 +66,7 @@ export class Transaction {
         const inner = Transaction_.deserializeBinary(bytes);
         const body = TransactionBody.deserializeBinary(inner.getBodybytes_asU8());
 
-        const nodeAccountId = getSdkAccountId(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
+        const nodeAccountId = accountIdToSdk(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
 
         const [ url ] = client._getNode(nodeAccountId);
 
@@ -77,7 +76,7 @@ export class Transaction {
     }
 
     public getTransactionId(): TransactionId {
-        return getSdkTxnId(this.txnId);
+        return transactionIdToSdk(this.txnId);
     }
 
     public addSignature({ signature, publicKey }: SignatureAndKey): this {
