@@ -42,3 +42,8 @@ export { KeyMismatchException } from "./src/crypto/KeyMismatchException";
 export * from "./src/Tinybar";
 
 export { Hbar, HbarUnit, hbarUnits, hbarUnitSymbols } from "./src/Hbar";
+
+export { normalizeAccountId, AccountId } from "./src/types/AccountId";
+export { normalizeContractId, ContractId } from "./src/types/ContractId";
+export { normalizeFileId, FileId } from "./src/types/FileId";
+export { TransactionId } from "./src/types/TransactionId";
