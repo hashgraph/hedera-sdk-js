@@ -134,7 +134,7 @@ export class Transaction {
         return receiptToSdk(await this._waitForReceipt());
     }
 
-    private getReceipt(): Promise<ProtoTransactionReceipt> {
+    private _getReceipt(): Promise<ProtoTransactionReceipt> {
         const receiptQuery = new TransactionGetReceiptQuery();
         receiptQuery.setTransactionid(this._txnId);
         const query = new Query();
@@ -155,7 +155,7 @@ export class Transaction {
         /* eslint-disable no-await-in-loop */
         // we want to wait in a loop, that's the whole point here
         for (let attempt = 0; /* loop will exit when transaction expires */; attempt += 1) {
-            const receipt = await this.getReceipt();
+            const receipt = await this._getReceipt();
 
             // typecast required or we get a mismatching union type error
             if (([ ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK ] as number[])
