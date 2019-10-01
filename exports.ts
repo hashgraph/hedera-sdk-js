@@ -43,7 +43,7 @@ export * from "./src/Tinybar";
 
 export { Hbar, HbarUnit, hbarUnits, hbarUnitSymbols } from "./src/Hbar";
 
-export { normalizeAccountId, AccountId } from "./src/types/AccountId";
-export { normalizeContractId, ContractId } from "./src/types/ContractId";
-export { normalizeFileId, FileId } from "./src/types/FileId";
-export { TransactionId } from "./src/types/TransactionId";
+export { normalizeAccountId, AccountId } from "./src/account/AccountId";
+export { normalizeContractId, ContractId } from "./src/contract/ContractId";
+export { normalizeFileId, FileId } from "./src/file/FileId";
+export { TransactionId } from "./src/TransactionId";
