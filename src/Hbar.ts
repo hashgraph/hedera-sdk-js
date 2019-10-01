@@ -39,10 +39,10 @@ export const hbarUnitSymbols = {
  */
 export class Hbar {
     /** The HBAR value in tinybar, used natively by the SDK and Hedera itself */
-    private readonly tinybar: BigNumber;
+    private readonly _tinybar: BigNumber;
 
     private constructor(tinybar: BigNumber) {
-        this.tinybar = tinybar;
+        this._tinybar = tinybar;
     }
 
     public static readonly MAX_VALUE: Hbar = new Hbar(new BigNumber(2).pow(63).minus(1));
@@ -79,53 +79,53 @@ export class Hbar {
 
     public as(unit: HbarUnit): BigNumber {
         if (unit === "tinybar") {
-            return this.tinybar;
+            return this._tinybar;
         }
 
-        return this.tinybar.dividedBy(tinybarConversions[ unit ]);
+        return this._tinybar.dividedBy(tinybarConversions[ unit ]);
     }
 
     public plus(hbar: Hbar): Hbar;
     public plus(amount: number | BigNumber, unit: HbarUnit): Hbar;
     public plus(amount: Hbar | number | BigNumber, unit?: HbarUnit): Hbar {
         if (amount instanceof Hbar) {
-            return new Hbar(this.tinybar.plus(amount.tinybar));
+            return new Hbar(this._tinybar.plus(amount._tinybar));
         }
-        return new Hbar(this.tinybar.plus(convertToTinybar(amount, unit!)));
+        return new Hbar(this._tinybar.plus(convertToTinybar(amount, unit!)));
     }
 
     public minus(hbar: Hbar): Hbar;
     public minus(amount: number | BigNumber, unit: HbarUnit): Hbar;
     public minus(amount: Hbar | number | BigNumber, unit?: HbarUnit): Hbar {
         if (amount instanceof Hbar) {
-            return new Hbar(this.tinybar.minus(amount.tinybar));
+            return new Hbar(this._tinybar.minus(amount._tinybar));
         }
-        return new Hbar(this.tinybar.minus(convertToTinybar(amount, unit!)));
+        return new Hbar(this._tinybar.minus(convertToTinybar(amount, unit!)));
     }
 
     public isEqualTo(hbar: Hbar): boolean;
     public isEqualTo(amount: number | BigNumber, unit: HbarUnit): boolean;
     public isEqualTo(amount: Hbar | number | BigNumber, unit?: HbarUnit): boolean {
         if (amount instanceof Hbar) {
-            return this.tinybar.isEqualTo(amount.tinybar);
+            return this._tinybar.isEqualTo(amount._tinybar);
         }
-        return this.tinybar.isEqualTo(convertToTinybar(amount, unit!));
+        return this._tinybar.isEqualTo(convertToTinybar(amount, unit!));
     }
 
     public comparedTo(hbar: Hbar): number;
     public comparedTo(amount: number | BigNumber, unit: HbarUnit): number;
     public comparedTo(amount: Hbar | number | BigNumber, unit?: HbarUnit): number {
         if (amount instanceof Hbar) {
-            return this.tinybar.comparedTo(amount.tinybar);
+            return this._tinybar.comparedTo(amount._tinybar);
         }
-        return this.tinybar.comparedTo(convertToTinybar(amount, unit!));
+        return this._tinybar.comparedTo(convertToTinybar(amount, unit!));
     }
 
     public negated(): Hbar {
-        return new Hbar(this.tinybar.negated());
+        return new Hbar(this._tinybar.negated());
     }
 
     public isNegative(): boolean {
-        return this.tinybar.isNegative();
+        return this._tinybar.isNegative();
     }
 }

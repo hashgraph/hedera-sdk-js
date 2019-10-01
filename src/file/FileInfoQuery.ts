@@ -7,9 +7,9 @@ import { QueryHeader } from "../generated/QueryHeader_pb";
 import { BaseClient } from "../BaseClient";
 import { Response } from "../generated/Response_pb";
 import { getSdkKeys } from "../util";
-import { Ed25519PublicKey } from "../Keys";
-import { FileIdLike, fileIdToProto, fileIdToSdk } from "../types/FileId";
-import { timestampToDate } from "../types/Timestamp";
+import { FileIdLike, fileIdToProto, fileIdToSdk } from "../file/FileId";
+import { timestampToDate } from "../Timestamp";
+import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 
 export type FileInfo = {
     fileId: FileIdLike;
@@ -20,32 +20,32 @@ export type FileInfo = {
 }
 
 export class FileInfoQuery extends QueryBuilder<FileInfo> {
-    private readonly builder: FileGetInfoQuery;
+    private readonly _builder: FileGetInfoQuery;
 
     public constructor(client: BaseClient) {
         const header = new QueryHeader();
         super(client, header);
-        this.builder = new FileGetInfoQuery();
-        this.builder.setHeader(header);
-        this.inner.setFilegetinfo(this.builder);
+        this._builder = new FileGetInfoQuery();
+        this._builder.setHeader(header);
+        this._inner.setFilegetinfo(this._builder);
     }
 
     public setFileId(fileId: FileIdLike): this {
-        this.builder.setFileid(fileIdToProto(fileId));
+        this._builder.setFileid(fileIdToProto(fileId));
         return this;
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.builder.hasFileid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._builder.hasFileid()) {
             errors.push(".setFileId() required");
         }
     }
 
-    protected getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
         return FileService.getFileInfo;
     }
 
-    protected mapResponse(response: Response): FileInfo {
+    protected _mapResponse(response: Response): FileInfo {
         const fileInfo = response.getFilegetinfo()!.getFileinfo()!;
 
         return {

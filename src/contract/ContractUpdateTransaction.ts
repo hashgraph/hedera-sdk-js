@@ -6,59 +6,59 @@ import { BaseClient } from "../BaseClient";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
 import { ContractUpdateTransactionBody } from "../generated/ContractUpdate_pb";
-import { PublicKey } from "../Keys";
 import { newDuration } from "../util";
-import { ContractIdLike, contractIdToProto } from "../types/ContractId";
-import { AccountId, accountIdToProto } from "../types/AccountId";
-import { FileIdLike, fileIdToProto } from "../types/FileId";
-import { dateToTimestamp, timestampToProto } from "../types/Timestamp";
+import { ContractIdLike, contractIdToProto } from "./ContractId";
+import { AccountId, accountIdToProto } from "../account/AccountId";
+import { FileIdLike, fileIdToProto } from "../file/FileId";
+import { dateToTimestamp, timestampToProto } from "../Timestamp";
+import { PublicKey } from "../crypto/PublicKey";
 
 export class ContractUpdateTransaction extends TransactionBuilder {
-    private readonly body: ContractUpdateTransactionBody;
+    private readonly _body: ContractUpdateTransactionBody;
 
     public constructor(client: BaseClient) {
         super(client);
-        this.body = new ContractUpdateTransactionBody();
-        this.inner.setContractupdateinstance(this.body);
+        this._body = new ContractUpdateTransactionBody();
+        this._inner.setContractupdateinstance(this._body);
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.body.hasContractid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._body.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this.body.setContractid(contractIdToProto(contractIdLike));
+        this._body.setContractid(contractIdToProto(contractIdLike));
         return this;
     }
 
     public setAdminkey(publicKey: PublicKey): this {
-        this.body.setAdminkey(publicKey.toProtoKey());
+        this._body.setAdminkey(publicKey._toProtoKey());
         return this;
     }
 
     public setProxyAccountId(proxyAccountId: AccountId): this {
-        this.body.setProxyaccountid(accountIdToProto(proxyAccountId));
+        this._body.setProxyaccountid(accountIdToProto(proxyAccountId));
         return this;
     }
 
     public setFileId(fileIdLike: FileIdLike): this {
-        this.body.setFileid(fileIdToProto(fileIdLike));
+        this._body.setFileid(fileIdToProto(fileIdLike));
         return this;
     }
 
     public setAutoRenewPeriod(seconds: number): this {
-        this.body.setAutorenewperiod(newDuration(seconds));
+        this._body.setAutorenewperiod(newDuration(seconds));
         return this;
     }
 
     public setExpirationTime(date: number | Date): this {
-        this.body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
+        this._body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
         return this;
     }
 
-    public get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return SmartContractService.updateContract;
     }
 }

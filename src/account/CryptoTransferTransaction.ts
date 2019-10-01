@@ -11,22 +11,22 @@ import {
 import BigNumber from "bignumber.js";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 
-import { Tinybar, tinybarRangeCheck, tinybarToString } from "../types/Tinybar";
+import { Tinybar, tinybarRangeCheck, tinybarToString } from "../Tinybar";
 import { Hbar } from "../Hbar";
-import { AccountIdLike, accountIdToProto } from "../types/AccountId";
+import { AccountIdLike, accountIdToProto } from "./AccountId";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
-    private readonly body: CryptoTransferTransactionBody;
+    private readonly _body: CryptoTransferTransactionBody;
 
     public constructor(client: BaseClient) {
         super(client);
-        this.body = new CryptoTransferTransactionBody();
-        this.body.setTransfers(new TransferList());
-        this.inner.setCryptotransfer(this.body);
+        this._body = new CryptoTransferTransactionBody();
+        this._body.setTransfers(new TransferList());
+        this._inner.setCryptotransfer(this._body);
     }
 
-    protected doValidate(errors: string[]): void {
-        const amts = this.body.getTransfers()!.getAccountamountsList();
+    protected _doValidate(errors: string[]): void {
+        const amts = this._body.getTransfers()!.getAccountamountsList();
 
         if (amts.length === 0) {
             errors.push("CryptoTransferTransaction must have at least one transfer");
@@ -55,8 +55,8 @@ export class CryptoTransferTransaction extends TransactionBuilder {
     }
 
     public addTransfer(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
-        const transfers = this.body.getTransfers() || new TransferList();
-        this.body.setTransfers(transfers);
+        const transfers = this._body.getTransfers() || new TransferList();
+        this._body.setTransfers(transfers);
 
         const acctAmt = new AccountAmount();
         acctAmt.setAccountid(accountIdToProto(accountId));
@@ -67,7 +67,7 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         return this;
     }
 
-    public get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return CryptoService.cryptoTransfer;
     }
 }

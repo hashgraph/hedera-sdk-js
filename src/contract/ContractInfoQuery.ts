@@ -6,10 +6,10 @@ import { Query } from "../generated/Query_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Response } from "../generated/Response_pb";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
-import { Ed25519PublicKey } from "../Keys";
-import { ContractId, ContractIdLike, contractIdToProto, contractIdToSdk } from "../types/ContractId";
-import { AccountId, accountIdToSdk } from "../types/AccountId";
-import { timestampToDate } from "../types/Timestamp";
+import { ContractId, ContractIdLike, contractIdToProto, contractIdToSdk } from "./ContractId";
+import { AccountId, accountIdToSdk } from "../account/AccountId";
+import { timestampToDate } from "../Timestamp";
+import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 
 export type ContractInfo = {
     contractId: ContractId;
@@ -23,31 +23,31 @@ export type ContractInfo = {
 }
 
 export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
-    private readonly builder: ContractGetInfoQuery;
+    private readonly _builder: ContractGetInfoQuery;
     public constructor(client: BaseClient) {
         const header = new QueryHeader();
         super(client, header);
-        this.builder = new ContractGetInfoQuery();
-        this.builder.setHeader(header);
-        this.inner.setContractgetinfo(this.builder);
+        this._builder = new ContractGetInfoQuery();
+        this._builder.setHeader(header);
+        this._inner.setContractgetinfo(this._builder);
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this.builder.setContractid(contractIdToProto(contractIdLike));
+        this._builder.setContractid(contractIdToProto(contractIdLike));
         return this;
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.builder.hasContractid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._builder.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
-    protected getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
         return SmartContractService.getContractInfo;
     }
 
-    protected mapResponse(response: Response): ContractInfo {
+    protected _mapResponse(response: Response): ContractInfo {
         const contractInfo = response.getContractgetinfo()!.getContractinfo()!;
 
         return {

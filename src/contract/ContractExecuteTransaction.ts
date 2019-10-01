@@ -7,44 +7,44 @@ import { SmartContractService } from "../generated/SmartContractService_pb_servi
 
 import { ContractCallTransactionBody } from "../generated/ContractCall_pb";
 import BigNumber from "bignumber.js";
-import { ContractIdLike, contractIdToProto } from "../types/ContractId";
+import { ContractIdLike, contractIdToProto } from "./ContractId";
 
 export class ContractExecuteTransaction extends TransactionBuilder {
-    private readonly body: ContractCallTransactionBody;
+    private readonly _body: ContractCallTransactionBody;
 
     public constructor(client: BaseClient) {
         super(client);
-        this.body = new ContractCallTransactionBody();
-        this.inner.setContractcall(this.body);
+        this._body = new ContractCallTransactionBody();
+        this._inner.setContractcall(this._body);
     }
 
-    protected doValidate(errors: string[]): void {
-        if (!this.body.hasContractid()) {
+    protected _doValidate(errors: string[]): void {
+        if (!this._body.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
     public setGas(gas: number | BigNumber): this {
-        this.body.setGas(String(gas));
+        this._body.setGas(String(gas));
         return this;
     }
 
     public setAmount(amount: number): this {
-        this.body.setAmount(amount);
+        this._body.setAmount(amount);
         return this;
     }
 
     public setFunctionParameters(params: string): this {
-        this.body.setFunctionparameters(params);
+        this._body.setFunctionparameters(params);
         return this;
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this.body.setContractid(contractIdToProto(contractIdLike));
+        this._body.setContractid(contractIdToProto(contractIdLike));
         return this;
     }
 
-    public get method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return SmartContractService.contractCallMethod;
     }
 }

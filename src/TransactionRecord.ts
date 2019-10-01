@@ -1,10 +1,10 @@
 import { receiptToSdk, TransactionReceipt } from "./TransactionReceipt";
-import { ContractFunctionResult, contractFunctionResultToSdk } from "./ContractFunctionResult";
-import { TransactionRecord as ProtoTransactionRecord } from "../generated/TransactionRecord_pb";
+import { ContractFunctionResult, contractFunctionResultToSdk } from "./contract/ContractFunctionResult";
+import { TransactionRecord as ProtoTransactionRecord } from "./generated/TransactionRecord_pb";
 import { TransactionId, transactionIdToSdk } from "./TransactionId";
 import { timestampToDate } from "./Timestamp";
-import { AccountAmount, accountAmountToSdk } from "./AccountAmount";
-import { TransferList as ProtoTransferList } from "../generated/CryptoTransfer_pb";
+import { AccountAmount, accountAmountToSdk } from "./account/AccountAmount";
+import { TransferList as ProtoTransferList, AccountAmount as ProtoAccountAmount } from "./generated/CryptoTransfer_pb";
 
 export type TransactionRecord = {
     receipt?: TransactionReceipt;
@@ -33,5 +33,5 @@ export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionR
 }
 
 export function transferListToSdk(transferList: ProtoTransferList): AccountAmount[] {
-    return transferList.getAccountamountsList().map((accountAmount) => accountAmountToSdk(accountAmount));
+    return transferList.getAccountamountsList().map((accountAmount: ProtoAccountAmount) => accountAmountToSdk(accountAmount));
 }
