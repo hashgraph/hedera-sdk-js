@@ -73,7 +73,7 @@ export class Ed25519PrivateKey {
                 break;
             default:
         }
-        throw new Error(`invalid private key: ${keyStr}`);
+        throw new Error(`invalid private key length: ${keyStr.length}`);
     }
 
     /**
