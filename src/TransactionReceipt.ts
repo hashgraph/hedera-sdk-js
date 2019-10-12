@@ -16,8 +16,8 @@ export function receiptToSdk(receipt: ProtoTransactionReceipt): TransactionRecei
     return {
         status: receipt.getStatus(),
         accountId: receipt.getAccountid() && accountIdToSdk(receipt.getAccountid()!),
-        fileId: receipt.getContractid() && fileIdToSdk(receipt.getFileid()!),
-        contractId: receipt.getFileid() && contractIdToSdk(receipt.getContractid()!),
+        fileId: receipt.getFileid() && fileIdToSdk(receipt.getFileid()!),
+        contractId: receipt.getContractid() && contractIdToSdk(receipt.getContractid()!),
         exchangeRateSet: receipt.getExchangerate() && exchangeRateSetToSdk(receipt.getExchangerate()!)
     };
 }
