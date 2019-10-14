@@ -16,6 +16,7 @@ export class FileCreateTransaction extends TransactionBuilder {
     public constructor(client: BaseClient) {
         super(client);
         this._body = new FileCreateTransactionBody();
+        this.setExpirationTime(Date.now() + 7890000000);
         this._inner.setFilecreate(this._body);
     }
 
