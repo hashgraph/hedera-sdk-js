@@ -13,7 +13,7 @@
     "prepare": "gulp build",
     "prepublishOnly": "gulp generate:flow",
     "create-account-test": "node examples/create-account.js",
-    "lint": "eslint \"*.ts\" \"src/**/*.ts\" \"examples/**/*.js\""
+    "lint": "eslint \"src/**/*.ts\" \"examples/**/*.js\""
   },
   "files": [
     "lib/"
