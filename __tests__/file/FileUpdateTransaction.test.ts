@@ -1,5 +1,5 @@
 import { mockClient, privateKey } from "../MockClient";
-import { FileUpdateTransaction } from "../../exports";
+import { FileUpdateTransaction } from "../../src/exports";
 
 describe("FileUpdateTransaction", () => {
     it("serializes and deserializes correctly; FileUpdateTransaction", () => {

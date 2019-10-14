@@ -1,4 +1,4 @@
-import { BaseClient, ClientConfig } from "./src/BaseClient";
+import { BaseClient, ClientConfig } from "./BaseClient";
 import { grpc as grpcWeb } from "@improbable-eng/grpc-web";
 
 import * as grpc from "grpc";

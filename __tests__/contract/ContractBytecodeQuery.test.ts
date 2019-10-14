@@ -1,4 +1,4 @@
-import { ContractBytecodeQuery } from "../../exports";
+import { ContractBytecodeQuery } from "../../src/exports";
 import { mockClient, mockTransaction } from "../MockClient";
 
 describe("ContractBytecodeQuery", () => {

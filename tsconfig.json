@@ -4,7 +4,7 @@
     "target": "es6",
     "sourceMap": true,
     "strict": true,
-    "declaration": false
+    "declaration": true
   },
   "include": [
     "__tests__"

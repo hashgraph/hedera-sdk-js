@@ -1,4 +1,4 @@
-import { ContractExecuteTransaction } from "../../exports";
+import { ContractExecuteTransaction } from "../../src/exports";
 import { mockClient, privateKey } from "../MockClient";
 
 describe("ContractExecuteTransaction", () => {

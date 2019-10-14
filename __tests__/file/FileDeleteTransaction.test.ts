@@ -1,4 +1,4 @@
-import { FileDeleteTransaction } from "../../exports";
+import { FileDeleteTransaction } from "../../src/exports";
 import { mockClient } from "../MockClient";
 
 describe("FileDeleteTransaction", () => {

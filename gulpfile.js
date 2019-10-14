@@ -3,57 +3,23 @@ const path = require("path");
 const gulp = require("gulp");
 const exec = require("gulp-exec");
 const fs = require("fs-extra");
-const webpack = require('webpack-stream');
 const cp = require("child_process");
-const named = require('vinyl-named');
 const glob = require('glob');
-const dtsGenerator = require("dts-generator");
-const replace = require('gulp-replace');
+const ts = require('gulp-typescript');
 
-gulp.task("build:webpack:web", () => {
-    return gulp.src("index-web.ts")
-        .pipe(named(() => "web"))
-        .pipe(webpack({
-            ...require("./webpack.config"),
-        }))
-        .pipe(gulp.dest("dist/"));
+const tsProject = ts.createProject("tsconfig.json", {
+    declaration: true
 });
 
-gulp.task("build:webpack:node", () => {
-    return gulp.src("index-node.ts")
-        .pipe(named(() => "node"))
-        .pipe(webpack({
-            target: "node",
-            ...require("./webpack.config"),
-        }))
-        .pipe(gulp.dest("dist/"));
+gulp.task("build:tsc", () => {
+    return gulp.src("src/**/*.ts")
+        .pipe(tsProject())
+        .pipe(gulp.dest("lib/"));
 });
 
 gulp.task("generate:flow", () => {
-    return gulp.src("./dist/sdk.d.ts")
-        .pipe(exec("flowgen -o ./dist/sdk.flow.js <%= file.path %>"));
-});
-
-gulp.task("generate:dts", () => {
-    dtsGenerator.default({
-        name: "@hashgraph/sdk",
-        prefix: "@hashgraph/sdk",
-        project: path.resolve(__dirname),
-        baseDir: path.resolve(__dirname),
-        main: "@hashgraph/sdk/index-web",
-        out: "dist/sdk.d.ts",
-        files: ["./index-web.ts"],
-    });
-
-    return gulp.src("./dist/sdk.d.ts")
-        // HACK: Some external modules are not properly recognized
-        // https://github.com/SitePen/dts-generator/issues/125
-        .pipe(replace("@hashgraph/sdk/@improbable-eng/grpc-web", "@improbable-eng/grpc-web"))
-        .pipe(replace("@hashgraph/sdk/bignumber.js", "bignumber.js"))
-        .pipe(replace("@hashgraph/sdk/google-protobuf", "google-protobuf"))
-        // No idea why the proto modules don't get resolved correctly
-        .pipe(replace(/\.\/(.*)_pb/g, "@hashgraph/sdk/src/generated/$1_pb"))
-        .pipe(gulp.dest('dist/'));
+    return gulp.src("lib/**/*.d.ts")
+        .pipe(exec("flowgen -o <%= file.path.replace('.d.ts', '.flow.js') %> <%= file.path %>"));
 });
 
 gulp.task("build:proto", (cb) => {
@@ -65,7 +31,7 @@ gulp.task("build:proto", (cb) => {
         plugin += ".cmd";
     }
 
-    const out = path.resolve(__dirname, "src", "generated");
+    const out = path.resolve(__dirname, "lib", "generated");
     const include = path.resolve(__dirname, "src", "proto");
     const files = glob.sync("src/proto/*.proto", { absolute: true }).join(" ");
 
@@ -88,7 +54,4 @@ gulp.task("build:proto", (cb) => {
 
 gulp.task("build", gulp.series(
     "build:proto",
-    "build:webpack:node",
-    "build:webpack:web",
-    "generate:dts",
-    "generate:flow"));
+    "build:tsc"));

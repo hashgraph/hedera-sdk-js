@@ -1,4 +1,4 @@
-import { FileCreateTransaction } from "../../exports";
+import { FileCreateTransaction } from "../../src/exports";
 import { mockClient, privateKey } from "../MockClient";
 
 describe("FileCreateTransaction", () => {

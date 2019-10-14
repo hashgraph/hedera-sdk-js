@@ -1,5 +1,5 @@
 import { mockClient, mockTransaction } from "../MockClient";
-import { FileContentsQuery } from "../../exports";
+import { FileContentsQuery } from "../../src/exports";
 
 describe("FileContentsQuery", () => {
     it("serializes and deserializes correctly; FileContentsQuery", () => {

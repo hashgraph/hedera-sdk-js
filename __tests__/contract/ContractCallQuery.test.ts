@@ -1,4 +1,4 @@
-import { ContractCallQuery } from "../../exports";
+import { ContractCallQuery } from "../../src/exports";
 import { mockClient, mockTransaction } from "../MockClient";
 
 describe("ContractCallQuery", () => {

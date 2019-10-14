@@ -1,4 +1,4 @@
-import { BaseClient, ClientConfig } from "./src/BaseClient";
+import { BaseClient, ClientConfig } from "./BaseClient";
 import { grpc } from "@improbable-eng/grpc-web";
 import ProtobufMessage = grpc.ProtobufMessage;
 import UnaryOutput = grpc.UnaryOutput;

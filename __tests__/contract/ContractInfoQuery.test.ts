@@ -1,4 +1,4 @@
-import { ContractInfoQuery } from "../../exports";
+import { ContractInfoQuery } from "../../src/exports";
 import { mockClient, mockTransaction } from "../MockClient";
 
 describe("ContractInfoQuery", () => {

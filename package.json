@@ -2,51 +2,46 @@
   "name": "@hashgraph/sdk",
   "version": "0.6.1",
   "description": "JavaScript SDK for the Hedera Hashgraph API",
-  "types": "./dist/sdk.d.ts",
-  "main": "./dist/sdk.node.js",
-  "browser": "./dist/sdk.web.js",
+  "types": "./lib/index-web.d.ts",
+  "main": "./lib/index-node.js",
+  "browser": "./lib/index-web.js",
   "repository": "https://github.com/hashgraph/hedera-sdk-js",
   "author": "Launchbadge <contact@launchbadge.com>",
   "license": "Apache-2.0",
   "scripts": {
     "test": "jest",
     "prepare": "gulp build",
+    "prepublishOnly": "gulp generate:flow",
     "create-account-test": "node examples/create-account.js",
     "lint": "eslint \"*.ts\" \"src/**/*.ts\" \"examples/**/*.js\""
   },
   "files": [
-    "dist/"
+    "lib/"
   ],
   "dependencies": {
-    "@improbable-eng/grpc-web": "0.11.0",
+    "@improbable-eng/grpc-web": "^0.11.0",
     "@types/google-protobuf": "^3.7.2",
     "bignumber.js": "^9.0.0",
     "bip39": "^3.0.2",
-    "google-protobuf": "^3.9.2",
+    "google-protobuf": "^3.10.0",
     "grpc": "^1.24.0",
     "tweetnacl": "^1.0.1"
   },
   "devDependencies": {
     "@launchbadge/eslint-config": "^0.13.3",
-    "@types/jest": "^24.0.18",
-    "@types/node": "^12.7.8",
-    "dts-generator": "^3.0.0",
-    "eslint": "^6.3.0",
+    "@types/jest": "^24.0.19",
+    "@types/node": "^12.7.12",
+    "@types/protobufjs": "^6.0.0",
+    "eslint": "^6.5.1",
     "flowgen": "^1.10.0",
     "fs-extra": "^8.1.0",
     "glob": "^7.1.4",
     "gulp": "^4.0.2",
     "gulp-exec": "^4.0.0",
-    "gulp-replace": "^1.0.0",
+    "gulp-typescript": "^5.0.1",
     "jest": "^24.9.0",
     "ts-jest": "^24.0.2",
-    "ts-loader": "^6.1.2",
     "ts-protoc-gen": "^0.11.0",
-    "typescript": "^3.6.3",
-    "vinyl-named": "^1.1.0",
-    "webpack": "^4.41.0",
-    "webpack-cli": "^3.3.9",
-    "webpack-node-externals": "^1.7.2",
-    "webpack-stream": "^5.2.1"
+    "typescript": "^3.6.4"
   }
 }

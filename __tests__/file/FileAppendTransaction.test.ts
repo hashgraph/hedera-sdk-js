@@ -1,5 +1,5 @@
 import { mockClient } from "../MockClient";
-import { FileAppendTransaction } from "../../exports";
+import { FileAppendTransaction } from "../../src/exports";
 
 describe("FileAppendTransaction", () => {
     it("serializes and deserializes correctly; FileAppendTransaction", () => {
