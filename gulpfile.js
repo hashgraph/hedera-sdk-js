@@ -22,6 +22,11 @@ gulp.task("generate:flow", () => {
         .pipe(exec("flowgen -o <%= file.path.replace('.d.ts', '.flow.js') %> <%= file.path %>"));
 });
 
+gulp.task("copy:proto", () => {
+    return gulp.src("src/generated/*", { base: 'src' })
+        .pipe(gulp.dest("lib/"));
+});
+
 gulp.task("build:proto", (cb) => {
     // HACK: This depends on node_modules/
     let plugin = path.resolve(__dirname, "node_modules", ".bin", "protoc-gen-ts");
@@ -31,7 +36,7 @@ gulp.task("build:proto", (cb) => {
         plugin += ".cmd";
     }
 
-    const out = path.resolve(__dirname, "lib", "generated");
+    const out = path.resolve(__dirname, "src", "generated");
     const include = path.resolve(__dirname, "src", "proto");
     const files = glob.sync("src/proto/*.proto", { absolute: true }).join(" ");
 
@@ -54,4 +59,5 @@ gulp.task("build:proto", (cb) => {
 
 gulp.task("build", gulp.series(
     "build:proto",
+    "copy:proto",
     "build:tsc"));
