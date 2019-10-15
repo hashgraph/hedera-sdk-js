@@ -55,15 +55,17 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
 
     protected _mapResponse(response: Response): AccountInfo {
         const accountInfo = response.getCryptogetinfo()!.getAccountinfo()!;
+        const sendThreshold = Hbar.fromTinybar(accountInfo.getGeneratesendrecordthreshold());
+        const receiveThreshold = Hbar.fromTinybar(accountInfo.getGeneratereceiverecordthreshold());
 
         return {
             accountId: accountIdToSdk(accountInfo.getAccountid()!),
-            contractAccountId: accountInfo.getContractaccountid() || undefined,
+            contractAccountId: accountInfo.getContractaccountid(),
             isDeleted: accountInfo.getDeleted(),
             key: accountInfo.getKey()!,
             balance: Hbar.fromTinybar(accountInfo.getBalance()),
-            generateSendRecordThreshold: Hbar.fromTinybar(accountInfo.getGeneratesendrecordthreshold()),
-            generateReceiveRecordThreshold: Hbar.fromTinybar(accountInfo.getGeneratereceiverecordthreshold()),
+            generateSendRecordThreshold: sendThreshold,
+            generateReceiveRecordThreshold: receiveThreshold,
             receiverSigRequired: accountInfo.getReceiversigrequired(),
             expirationTime: new Date(timestampToMs(accountInfo.getExpirationtime()!)),
             autoRenewPeriodSeconds: accountInfo.getAutorenewperiod()!.getSeconds()

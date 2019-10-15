@@ -55,7 +55,13 @@ export class Transaction {
      * access from `TransactionBuilder.ts`. Usage may be broken in backwards-compatible
      * version bumps.
      */
-    public constructor(client: BaseClient, nodeUrl: string, inner: Transaction_, body: TransactionBody, method: UnaryMethodDefinition<Transaction_, TransactionResponse>) {
+    public constructor(
+        client: BaseClient,
+        nodeUrl: string,
+        inner: Transaction_,
+        body: TransactionBody,
+        method: UnaryMethodDefinition<Transaction_, TransactionResponse>
+    ) {
         this._client = client;
         this._nodeUrl = nodeUrl;
         this._inner = inner;
@@ -187,6 +193,7 @@ export class Transaction {
     }
 }
 
+/* eslint-disable-next-line max-len */
 function methodFromTxn(inner: TransactionBody): UnaryMethodDefinition<Transaction_, TransactionResponse> {
     switch (inner.getDataCase()) {
         case TransactionBody.DataCase.CONTRACTCALL:

@@ -39,7 +39,11 @@ export function decodeHex(hex: string): Uint8Array {
 }
 
 /** SLIP-10/BIP-32 child key derivation */
-export function deriveChildKey(parentKey: Uint8Array, chainCode: Uint8Array, index: number): { keyBytes: Uint8Array; chainCode: Uint8Array } {
+export function deriveChildKey(
+    parentKey: Uint8Array,
+    chainCode: Uint8Array,
+    index: number
+): { keyBytes: Uint8Array; chainCode: Uint8Array } {
     // webpack version of crypto complains if input types are not `Buffer`
     const hmac = crypto.createHmac("SHA512", Buffer.from(chainCode));
     const input = Buffer.alloc(37);

@@ -122,11 +122,18 @@ export abstract class BaseClient {
      */
     public setMaxQueryPayment(maxPayment: Tinybar | Hbar): this {
         tinybarRangeCheck(maxPayment);
-        this._maxQueryPayment = maxPayment instanceof Hbar ? maxPayment : Hbar.fromTinybar(maxPayment);
+
+        this._maxQueryPayment = maxPayment instanceof Hbar ?
+            maxPayment :
+            Hbar.fromTinybar(maxPayment);
+
         return this;
     }
 
-    public createAccount(publicKey: Ed25519PublicKey, initialBalance = 100_000): Promise<{ account: AccountId }> {
+    public createAccount(
+        publicKey: Ed25519PublicKey,
+        initialBalance = 100_000
+    ): Promise<{ account: AccountId }> {
         return new AccountCreateTransaction(this)
             .setKey(publicKey)
             .setInitialBalance(initialBalance)
@@ -150,7 +157,10 @@ export abstract class BaseClient {
      * @param recipient
      * @param amount
      */
-    public transferCryptoTo(recipient: AccountIdLike, amount: number | BigNumber | Hbar): Promise<TransactionId> {
+    public transferCryptoTo(
+        recipient: AccountIdLike,
+        amount: number | BigNumber | Hbar
+    ): Promise<TransactionId> {
         const txn = new CryptoTransferTransaction(this)
             .addSender(this._operatorAcct, amount)
             .addRecipient(recipient, amount)
@@ -227,5 +237,6 @@ export abstract class BaseClient {
      * part of the stable/public API. Usage may be broken in releases with backwards-compatible
      * version bumps.
      */
-    public abstract _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs>;
+    public abstract _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(
+        url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs>;
 }

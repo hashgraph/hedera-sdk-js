@@ -7,7 +7,7 @@ import { throwIfExceptional, ValidationError } from "./errors";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 
 export function orThrow<T>(val?: T, msg = "value must not be null"): T {
-    if (val === undefined || val === null) {
+    if (val == null) {
         throw new Error(msg);
     }
 
@@ -32,7 +32,10 @@ type EntityId<Kind extends EntityKind> =
 
 type NormalizedId<Kind extends EntityKind> = Record<"shard" | "realm" | Kind, number>;
 
-export function normalizeEntityId<Kind extends EntityKind>(kind: Kind, entityId: EntityId<Kind>): NormalizedId<Kind> {
+export function normalizeEntityId<Kind extends EntityKind>(
+    kind: Kind,
+    entityId: EntityId<Kind>
+): NormalizedId<Kind> {
     switch (typeof entityId) {
         case "object":
             if (!entityId[ kind ]) {
@@ -49,7 +52,8 @@ export function normalizeEntityId<Kind extends EntityKind>(kind: Kind, entityId:
             const components = entityId.split(".");
 
             if (components.length === 1) {
-                return normalizeEntityId(kind, { [ kind ]: Number(components[ 0 ]) } as EntityId<Kind>);
+                const id = { [ kind ]: Number(components[ 0 ]) } as EntityId<Kind>;
+                return normalizeEntityId(kind, id);
             } else if (components.length === 3) {
                 return {
                     shard: Number(components[ 0 ]),
@@ -81,7 +85,7 @@ export function getSdkKeys(keylist: KeyList): Ed25519PublicKey[] {
     return keylist.getKeysList().map((key) => new Ed25519PublicKey(key.getEd25519() as Uint8Array));
 }
 
-export function setTimeoutAwaitable(timeoutMs: number): Promise<undefined> {
+export function setTimeoutAwaitable(timeoutMs: number): Promise<null> {
     return new Promise((resolve) => setTimeout(resolve, timeoutMs));
 }
 
@@ -89,6 +93,7 @@ export interface GetHeader {
     getHeader(): ResponseHeader | undefined;
 }
 
+/* eslint-disable-next-line max-len */
 export function handleQueryPrecheck<T extends GetHeader>(getBody: (r: Response) => T | undefined): (r: undefined | Response) => T {
     return (resp) => {
         const body = reqDefined(
@@ -114,7 +119,7 @@ export function handlePrecheck(resp_: TransactionResponse | undefined): Transact
 }
 
 export function reqDefined<T>(val: T | undefined, msg: string): T {
-    if (val === undefined) {
+    if (val == null) {
         throw new Error(msg);
     }
 

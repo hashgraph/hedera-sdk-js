@@ -28,7 +28,7 @@
     "tweetnacl": "^1.0.1"
   },
   "devDependencies": {
-    "@launchbadge/eslint-config": "^0.13.3",
+    "@launchbadge/eslint-config": "^0.13.10",
     "@types/jest": "^24.0.19",
     "@types/node": "^12.7.12",
     "@types/protobufjs": "^6.0.0",

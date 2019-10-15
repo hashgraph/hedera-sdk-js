@@ -13,11 +13,12 @@ export type TransactionReceipt = {
 }
 
 export function receiptToSdk(receipt: ProtoTransactionReceipt): TransactionReceipt {
+    const exchangeRate = receipt.getExchangerate();
     return {
         status: receipt.getStatus(),
         accountId: receipt.getAccountid() && accountIdToSdk(receipt.getAccountid()!),
         fileId: receipt.getFileid() && fileIdToSdk(receipt.getFileid()!),
         contractId: receipt.getContractid() && contractIdToSdk(receipt.getContractid()!),
-        exchangeRateSet: receipt.getExchangerate() && exchangeRateSetToSdk(receipt.getExchangerate()!)
+        exchangeRateSet: exchangeRate && exchangeRateSetToSdk(exchangeRate!)
     };
 }

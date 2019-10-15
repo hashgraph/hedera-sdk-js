@@ -31,7 +31,10 @@ export type Keystore = {
     };
 }
 
-export async function createKeystore(privateKey: Uint8Array, passphrase: string): Promise<Uint8Array> {
+export async function createKeystore(
+    privateKey: Uint8Array,
+    passphrase: string
+): Promise<Uint8Array> {
     // all values taken from https://github.com/ethereumjs/ethereumjs-wallet/blob/de3a92e752673ada1d78f95cf80bc56ae1f59775/src/index.ts#L25
     const dkLen = 32;
     const c = 262144;
@@ -69,15 +72,23 @@ export async function createKeystore(privateKey: Uint8Array, passphrase: string)
     return Buffer.from(JSON.stringify(keystore));
 }
 
-export async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string): Promise<RawKeyPair> {
+export async function loadKeystore(
+    keystoreBytes: Uint8Array,
+    passphrase: string
+): Promise<RawKeyPair> {
     const keystore: Keystore = JSON.parse(Buffer.from(keystoreBytes).toString());
 
     if (keystore.version !== 1) {
         throw new Error(`unsupported keystore version: ${keystore.version}`);
     }
 
-    const { ciphertext, cipherparams: { iv }, cipher, kdf, kdfparams: { dkLen, salt, c, prf }, mac } =
-        keystore.crypto;
+    const {
+        ciphertext,
+        cipherparams: { iv },
+        cipher,
+        kdf,
+        kdfparams: { dkLen, salt, c, prf }, mac
+    } = keystore.crypto;
 
     if (kdf !== "pbkdf2") {
         throw new Error(`unsupported key derivation function: ${kdf}`);
@@ -104,6 +115,10 @@ export async function loadKeystore(keystoreBytes: Uint8Array, passphrase: string
     const privateKeyBytes = Buffer.concat([ decipher.update(cipherBytes), decipher[ "final" ]() ]);
 
     // `Buffer instanceof Uint8Array` doesn't work in Jest because the prototype chain is different
-    const { secretKey: privateKey, publicKey } = nacl.sign.keyPair.fromSecretKey(Uint8Array.from(privateKeyBytes));
+    const {
+        secretKey: privateKey,
+        publicKey
+    } = nacl.sign.keyPair.fromSecretKey(Uint8Array.from(privateKeyBytes));
+
     return { privateKey, publicKey };
 }

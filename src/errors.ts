@@ -10,7 +10,8 @@ const responseCodeNames: { [code: number]: string } = Object.entries(ResponseCod
     .reduce((map, [ name, code ]) => ({ ...map, [ code ]: name }), {});
 
 /** Get the name of a response code from its number code. */
-export const getResponseCodeName = (code: ResponseCode): string | undefined => responseCodeNames[ code ];
+/* eslint-disable-next-line max-len */
+export const getResponseCodeName = (code: ResponseCode): string | null => responseCodeNames[ code ];
 
 /**
  * Class of errors for response codes returned from Hedera.

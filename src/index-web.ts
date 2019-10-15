@@ -18,7 +18,11 @@ export class Client extends BaseClient {
         super(nodes, operator);
     }
 
-    public _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(url: string, request: Rq, method: grpc.UnaryMethodDefinition<Rq, Rs>): Promise<Rs> {
+    public _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(
+        url: string,
+        request: Rq,
+        method: grpc.UnaryMethodDefinition<Rq, Rs>
+    ): Promise<Rs> {
         return new Promise((resolve, reject) => grpc.unary(method, {
             host: url,
             request,

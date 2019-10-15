@@ -95,7 +95,9 @@ export class Hbar {
     public plus(hbar: Hbar): Hbar;
     public plus(amount: number | BigNumber, unit: HbarUnit): Hbar;
     public plus(amount: Hbar | number | BigNumber, unit?: HbarUnit): Hbar {
-        return amount instanceof Hbar ? new Hbar(this._tinybar.plus(amount._tinybar)) : new Hbar(this._tinybar.plus(convertToTinybar(amount, unit!)));
+        return amount instanceof Hbar ?
+            new Hbar(this._tinybar.plus(amount._tinybar)) :
+            new Hbar(this._tinybar.plus(convertToTinybar(amount, unit!)));
     }
 
     public minus(hbar: Hbar): Hbar;

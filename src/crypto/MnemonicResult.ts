@@ -20,5 +20,10 @@ export type MnemonicResult = {
 export function generateMnemonic(): MnemonicResult {
     // 256-bit entropy gives us 24 words
     const mnemonic = bip39.generateMnemonic(256);
-    return { mnemonic, generateKey: (passphrase) => Ed25519PrivateKey.fromMnemonic(mnemonic, passphrase) };
+    return {
+        mnemonic,
+        generateKey(passphrase) {
+            return Ed25519PrivateKey.fromMnemonic(mnemonic, passphrase);
+        }
+    };
 }

@@ -11,6 +11,7 @@ export type ContractFunctionResult = {
     logInfoList: ContractLogInfo[];
 }
 
+/* eslint-disable-next-line max-len */
 export function contractFunctionResultToSdk(result: ProtoContractFunctionResult): ContractFunctionResult {
     return {
         contractId: contractIdToSdk(result.getContractid()!),

@@ -51,7 +51,11 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
         return {
             fileId: fileIdToSdk(fileInfo.getFileid()!),
             size: fileInfo.getSize(),
-            expirationTime: fileInfo.getExpirationtime() == null ? null : timestampToDate(fileInfo.getExpirationtime()!),
+
+            expirationTime: fileInfo.getExpirationtime() == null ?
+                null :
+                timestampToDate(fileInfo.getExpirationtime()!),
+
             deleted: fileInfo.getDeleted(),
             keys: getSdkKeys(fileInfo.getKeys()!)
         };

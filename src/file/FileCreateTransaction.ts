@@ -26,7 +26,10 @@ export class FileCreateTransaction extends TransactionBuilder {
     }
 
     public addKey(key: Ed25519PublicKey): this {
-        const keylist: KeyList = this._body.getKeys() == null ? new KeyList() : this._body.getKeys()!;
+        const keylist: KeyList = this._body.getKeys() == null ?
+            new KeyList() :
+            this._body.getKeys()!;
+
         keylist.addKeys(key._toProtoKey());
         this._body.setKeys(keylist);
         return this;

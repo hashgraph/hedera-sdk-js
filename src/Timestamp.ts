@@ -24,6 +24,7 @@ export function timestampToMs(timestamp: ProtoTimestamp): number {
     return (timestamp.getSeconds() * 1000) + Math.floor(timestamp.getNanos() / 1_000_000);
 }
 
+/* eslint-disable-next-line max-len */
 export function timestampToProto({ seconds, nanos }: { seconds: number; nanos: number }): ProtoTimestamp {
     const timestamp = new ProtoTimestamp();
     timestamp.setSeconds(seconds);

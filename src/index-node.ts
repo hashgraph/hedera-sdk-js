@@ -26,7 +26,11 @@ export class Client extends BaseClient {
         }), {});
     }
 
-    public _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs> {
+    public _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(
+        url: string,
+        request: Rq,
+        method: UnaryMethodDefinition<Rq, Rs>
+    ): Promise<Rs> {
         return new Promise<Rs>((resolve, reject) => this.nodeClients[ url ].makeUnaryRequest(
             // this gRPC client takes the full path
             `/${method.service.serviceName}/${method.methodName}`,

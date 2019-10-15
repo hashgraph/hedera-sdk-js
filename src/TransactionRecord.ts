@@ -19,19 +19,25 @@ export type TransactionRecord = {
 }
 
 export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionRecord[] {
-    return records.map((record) => ({
-        receipt: receiptToSdk(record.getReceipt()!),
-        transactionHash: record.getTransactionhash(),
-        consensusTimestamp: timestampToDate(record.getConsensustimestamp()!),
-        transactionId: transactionIdToSdk(record.getTransactionid()!),
-        memo: record.getMemo(),
-        transactionFee: record.getTransactionfee(),
-        contractCallResult: record.getContractcallresult() && contractFunctionResultToSdk(record.getContractcallresult()!),
-        contractCreateResult: record.getContractcreateresult() && contractFunctionResultToSdk(record.getContractcreateresult()!),
-        transferList: record.getTransferlist() && transferListToSdk(record.getTransferlist()!)
-    }));
+    return records.map((record) => {
+        const callResult = record.getContractcallresult();
+        const createResult = record.getContractcreateresult();
+
+        return {
+            receipt: receiptToSdk(record.getReceipt()!),
+            transactionHash: record.getTransactionhash(),
+            consensusTimestamp: timestampToDate(record.getConsensustimestamp()!),
+            transactionId: transactionIdToSdk(record.getTransactionid()!),
+            memo: record.getMemo(),
+            transactionFee: record.getTransactionfee(),
+            contractCallResult: callResult && contractFunctionResultToSdk(callResult!),
+            contractCreateResult: createResult && contractFunctionResultToSdk(createResult!),
+            transferList: record.getTransferlist() && transferListToSdk(record.getTransferlist()!)
+        };
+    });
 }
 
 export function transferListToSdk(transferList: ProtoTransferList): AccountAmount[] {
+    /* eslint-disable-next-line max-len */
     return transferList.getAccountamountsList().map((accountAmount: ProtoAccountAmount) => accountAmountToSdk(accountAmount));
 }

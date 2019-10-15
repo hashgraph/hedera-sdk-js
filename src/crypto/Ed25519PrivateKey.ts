@@ -93,7 +93,10 @@ export class Ed25519PrivateKey {
      *
      * @link generateMnemonic
      */
-    public static async fromMnemonic(mnemonic: string | string[], passphrase?: string): Promise<Ed25519PrivateKey> {
+    public static async fromMnemonic(
+        mnemonic: string | string[],
+        passphrase?: string
+    ): Promise<Ed25519PrivateKey> {
         const input = Array.isArray(mnemonic) ? mnemonic.join(" ") : mnemonic;
         const salt = `mnemonic${passphrase || ""}`;
         const seed = await pbkdf2(input, salt, 2048, 64, "sha512");
@@ -125,7 +128,10 @@ export class Ed25519PrivateKey {
      * @throws KeyMismatchException if the passphrase is incorrect or the hash fails to validate
      * @link createKeystore
      */
-    public static async fromKeystore(keystore: Uint8Array, passphrase: string): Promise<Ed25519PrivateKey> {
+    public static async fromKeystore(
+        keystore: Uint8Array,
+        passphrase: string
+    ): Promise<Ed25519PrivateKey> {
         return new Ed25519PrivateKey(await loadKeystore(keystore, passphrase));
     }
 
@@ -151,9 +157,14 @@ export class Ed25519PrivateKey {
             throw new Error("this Ed25519 private key does not support key derivation");
         }
 
-        const { keyBytes, chainCode } = deriveChildKey(this._keyData.subarray(0, 32), this._chainCode, index);
+        const {
+            keyBytes,
+            chainCode
+        } = deriveChildKey(this._keyData.subarray(0, 32), this._chainCode, index);
+
         const key = Ed25519PrivateKey.fromBytes(keyBytes);
         key._chainCode = chainCode;
+
         return key;
     }
 
