@@ -47,3 +47,6 @@ export { normalizeAccountId, AccountId } from "./account/AccountId";
 export { normalizeContractId, ContractId } from "./contract/ContractId";
 export { normalizeFileId, FileId } from "./file/FileId";
 export { TransactionId } from "./TransactionId";
+
+export { TransactionReceipt } from "./TransactionReceipt";
+export { TransactionRecord } from "./TransactionRecord";
