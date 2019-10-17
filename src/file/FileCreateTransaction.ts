@@ -41,8 +41,16 @@ export class FileCreateTransaction extends TransactionBuilder {
     }
 
     protected _doValidate(errors: string[]): void {
-        if (this._body.getKeys() == null) {
+        const contents = this._body.getContents();
+
+        if (this._body.getContents() == null) {
             errors.push("FileCreateTransaction must have a file set");
+        }
+
+        const contentsBytes = this._body.getContents_asU8();
+
+        if (contentsBytes.byteLength > 4096) {
+            errors.push("FileCreateTransaction contents must not exceed 4kb");
         }
     }
 
