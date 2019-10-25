@@ -64,8 +64,8 @@ export class AccountCreateTransaction extends TransactionBuilder {
             errors.push("AccountCreateTransaction requires .setKey()");
         }
 
-        if (new BigNumber(this._body.getInitialbalance()).isZero()) {
-            errors.push("AccountCreateTransaction must have nonzero setInitialBalance");
+        if (new BigNumber(this._body.getInitialbalance()).isNegative()) {
+            errors.push("AccountCreateTransaction must have a positive setInitialBalance");
         }
     }
 }
