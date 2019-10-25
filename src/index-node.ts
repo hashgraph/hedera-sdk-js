@@ -45,7 +45,7 @@ export class Client extends BaseClient {
                 } else {
                     resolve(val);
                 }
-            },
-        ),);
+            }
+        ));
     }
 }
