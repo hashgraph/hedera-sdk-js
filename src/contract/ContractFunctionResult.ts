@@ -2,6 +2,7 @@ import { ContractLogInfo, contractLogInfoListToSdk } from "./ContractLogInfo";
 import { ContractFunctionResult as ProtoContractFunctionResult } from "../generated/ContractCallLocal_pb";
 import { ContractId, contractIdToSdk } from "./ContractId";
 import BigNumber from "bignumber.js";
+import { encodeHex } from "../crypto/util";
 
 export class ContractFunctionResult {
     public readonly contractId: ContractId;
@@ -28,53 +29,53 @@ export class ContractFunctionResult {
         this.logInfoList = logInfoList;
     }
 
-    public getString(index?: number): string {
-        return String(this.getBytes(index == null ? 0 : index));
+    public getString(index: number): string {
+        return Buffer.from(this.getBytes(index)).toString("utf-8");
     }
 
     public getBytes(index: number): Uint8Array {
         // Len should never be larger than Number.MAX
         // index * 32 is the position of the lenth
-        // index * 33 onward to index * 33 + (len * 32) will be the elements of the array
+        // (index + 1) * 32 onward to (index + 1) * 32 + (len * 32) will be the elements of the array
         // Arrays in solidity cannot be longer than 1024:
         // https://solidity.readthedocs.io/en/v0.4.21/introduction-to-smart-contracts.html
-        const len = this.getNumber(index);
-        return this.contractCallResult.slice((index * 33), (index * 33) + (len * 32));
+        const len = this.getUint32(index);
+        return this.contractCallResult.subarray((index + 1) * 32, ((index + 1) * 32) + (len * 32));
     }
 
-    public getBigNumber(index?: number): BigNumber {
-        let num = new BigNumber(0);
-        num = num.plus(
-            Buffer.from(this.contractCallResult.slice(
-                ((index == null ? 0 : index) * 32),
-                ((index == null ? 0 : index) * 32) + 32
-            )).toString("hex"),
+    public getBigNumber(index: number): BigNumber {
+        return new BigNumber(
+            encodeHex(this.getBytes32(index)),
             16
         );
-        return num;
     }
 
-    public getNumber(index?: number): number {
-        let num = new BigNumber(0);
-        // Number is stored as 53 bits in a 64 bit floating point number
-        num = num.plus(
-            Buffer.from(this.contractCallResult.slice(
-                ((index == null ? 0 : index) * 32) + 24,
-                ((index == null ? 0 : index) * 33) + 32
-            )).toString("hex"),
-            16
+    public getBytes32(index: number): Uint8Array {
+        return this.contractCallResult.subarray(
+            index * 32,
+            (index * 32) + 32
         );
-        return num.toNumber();
     }
 
-    public getBool(index?: number): boolean {
-        return this.contractCallResult[ ((index == null ? 0 : index) * 32) + 31 ] !== 0;
+    public getUint32(index: number): number {
+        // .getUint32() interprets as big-endian
+        // Using DataView instead of Uint32Array because the latter interprets
+        // using platform endianness which is little-endian on x86
+        return new DataView(
+            this.contractCallResult.buffer,
+            this.contractCallResult.byteOffset,
+            this.contractCallResult.byteLength
+        ).getUint32((index * 32) + 28);
     }
 
-    public getAddress(index?: number): Uint8Array {
-        return this.contractCallResult.slice(
-            (index == null ? 0 : index * 32) + 12,
-            ((index == null ? 0 : index) * 32) + 32
+    public getBool(index: number): boolean {
+        return this.contractCallResult[ (index * 32) + 31 ] !== 0;
+    }
+
+    public getAddress(index: number): Uint8Array {
+        return this.contractCallResult.subarray(
+            (index * 32) + 12,
+            (index * 32) + 32
         );
     }
 }
