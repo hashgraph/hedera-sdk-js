@@ -140,6 +140,10 @@ If you need to add modifications to an **existing** patch file, you need to recr
 that contains both existing modifications as well as new modifications. If you run into this and
 don't know how to proceed, don't be afraid to ask for help.
 
+### DISCLAIMER
+
+This project is actively under development and not recommended for production use. Join the [Hedera discord](https://hedera.com/discord) for the latest updates and announcements.
+
 ### LICENSE
 
 Copyright 2019 Hedera Hashgraph LLC
