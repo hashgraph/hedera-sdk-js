@@ -7,6 +7,7 @@ export {
 } from "./BaseClient";
 
 export { AccountCreateTransaction } from "./account/AccountCreateTransaction";
+export { AccountUpdateTransaction } from "./account/AccountUpdateTransaction";
 export { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
 export { ContractCreateTransaction } from "./contract/ContractCreateTransaction";
 export { ContractDeleteTransaction } from "./contract/ContractDeleteTransaction";
