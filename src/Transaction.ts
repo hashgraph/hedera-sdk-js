@@ -185,6 +185,16 @@ export class Transaction {
     public toBytes(): Uint8Array {
         return this._inner.serializeBinary();
     }
+
+    public toString(): string {
+        const tx = this.toProto().toObject();
+        const bodybytes = tx.bodybytes instanceof Uint8Array ?
+            Buffer.from(tx.bodybytes as Uint8Array) :
+            Buffer.from(tx.bodybytes as string, "base64");
+        tx.body = TransactionBody.deserializeBinary(bodybytes).toObject();
+
+        return tx.toString();
+    }
 }
 
 /* eslint-disable-next-line max-len */

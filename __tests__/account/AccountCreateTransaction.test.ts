@@ -19,8 +19,8 @@ describe('AccountCreateTransaction', () => {
         const bodybytes = "Cg4KCAjcyQcQ258JEgIYAxICGAMYgMLXLyICCHhaPwoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktzD//////////384//////////9/SgUI0MjhAw==";
 
         const tx = transaction.toProto().toObject();
-        expect(tx).toStrictEqual({
-            body: undefined,
+        let expectedTx = {
+            body: undefined as undefined | Object,
             bodybytes,
             sigmap: {
                 sigpairList: [
@@ -34,12 +34,14 @@ describe('AccountCreateTransaction', () => {
                 ]
             },
             sigs: undefined
-        });
+        };
+
+        expect(tx).toStrictEqual(expectedTx);
 
         const txnBody = TransactionBody.deserializeBinary(Buffer.from(bodybytes, "base64")).toObject();
 
         // `toObject()` sets not-present properties explicitly to undefined
-        expect(txnBody).toStrictEqual({
+        const expectedTxBody = {
             "contractcall": undefined,
             "contractcreateinstance": undefined,
             "contractdeleteinstance": undefined,
@@ -99,6 +101,11 @@ describe('AccountCreateTransaction', () => {
             "transactionvalidduration": {
                 "seconds": 120
             }
-        });
+        };
+        expect(txnBody).toStrictEqual(expectedTxBody);
+
+        expectedTx.body = expectedTxBody;
+
+        expect(expectedTx.toString()).toEqual(transaction.toString());
     });
 });
