@@ -14,8 +14,7 @@ describe("ContractExecuteTransaction", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .build()
-            .sign(privateKey);
+            .build();
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({

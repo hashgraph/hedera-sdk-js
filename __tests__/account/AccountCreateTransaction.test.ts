@@ -14,8 +14,7 @@ describe('AccountCreateTransaction', () => {
             })
             .setKey(privateKey.publicKey)
             .setTransactionFee(Hbar.of(1))
-            .build()
-            .sign(privateKey);
+            .build();
 
         const bodybytes = "Cg4KCAjcyQcQ258JEgIYAxICGAMYgMLXLyICCHhaPwoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktzD//////////384//////////9/SgUI0MjhAw==";
 
@@ -26,11 +25,11 @@ describe('AccountCreateTransaction', () => {
             sigmap: {
                 sigpairList: [
                     {
-                        "contract": "",
-                        "ecdsa384": "",
-                        "ed25519": "Vueml5zTmYI2f9O2kcw6/zKFaIPn5WCOKD/jvhwO+EFN55yepuYa566qbD8Z274nncCi/aqVrr/M6NIu91OnAQoOCggI3MkHENufCRICGAMSAhgDGIDC1y8iAgh4Wj8KIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLcw//////////9/OP//////////f0oFCNDI4QM=",
-                        "pubkeyprefix": "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
-                        "rsa3072": ""
+                        contract: "",
+                        ecdsa384: "",
+                        ed25519: "Vueml5zTmYI2f9O2kcw6/zKFaIPn5WCOKD/jvhwO+EFN55yepuYa566qbD8Z274nncCi/aqVrr/M6NIu91OnAQoOCggI3MkHENufCRICGAMSAhgDGIDC1y8iAgh4Wj8KIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLcw//////////9/OP//////////f0oFCNDI4QM=",
+                        pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
+                        rsa3072: ""
                     }
                 ]
             },

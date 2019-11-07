@@ -20,7 +20,15 @@ describe("ContractBytecodeQuery", () => {
                     payment: {
                         body: undefined,
                         bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeHIUChIKBwoCGAIQxwEKBwoCGAMQyAE=",
-                        sigmap: undefined,
+                        sigmap: {
+                            sigpairList: [{
+                                contract: "",
+                                ecdsa384: "",
+                                ed25519: "1W86WCxMfK1Pv83GbBxXIDzpTLgwsLzOO/Nccs9QEV6ej/kp3QbJGtgO64gTXrdje6lyTdbuaLFYxxHXtje2CgoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHhyFAoSCgcKAhgCEMcBCgcKAhgDEMgB",
+                                pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
+                                rsa3072: "",
+                              }]
+                        },
                         sigs: undefined
                     },
                     responsetype: 0

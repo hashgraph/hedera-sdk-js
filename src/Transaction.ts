@@ -124,12 +124,6 @@ export class Transaction {
     }
 
     public async execute(): Promise<TransactionId> {
-        const sigMap = this._inner.getSigmap();
-
-        if (!sigMap || sigMap.getSigpairList().length === 0) {
-            await this.signWith(this._client.operatorPublicKey, this._client.operatorSigner);
-        }
-
         handlePrecheck(await this._client._unaryCall(this._nodeUrl, this._inner, this._method));
 
         return this.getTransactionId();
