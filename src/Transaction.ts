@@ -40,9 +40,9 @@ const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
 export class Transaction {
-    private readonly _client: BaseClient;
+    private readonly _client?: BaseClient;
 
-    private readonly _nodeUrl: string;
+    private readonly _nodeUrl?: string;
     private readonly _inner: Transaction_;
     private readonly _txnId: TransactionID;
     private readonly _validDurationSeconds: number;
@@ -56,18 +56,18 @@ export class Transaction {
      * version bumps.
      */
     public constructor(
-        client: BaseClient,
-        nodeUrl: string,
         inner: Transaction_,
         body: TransactionBody,
-        method: UnaryMethodDefinition<Transaction_, TransactionResponse>
+        method: UnaryMethodDefinition<Transaction_, TransactionResponse>,
+        client?: BaseClient,
+        nodeUrl?: string
     ) {
-        this._client = client;
-        this._nodeUrl = nodeUrl;
         this._inner = inner;
         this._txnId = orThrow(body.getTransactionid());
         this._validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
         this._method = method;
+        this._client = client;
+        this._nodeUrl = nodeUrl;
     }
 
     public static fromBytes(client: BaseClient, bytes: Uint8Array): Transaction {
@@ -80,7 +80,7 @@ export class Transaction {
 
         const method = methodFromTxn(body);
 
-        return new Transaction(client, url, inner, body, method);
+        return new Transaction(inner, body, method, client, url);
     }
 
     public getTransactionId(): TransactionId {
@@ -124,7 +124,17 @@ export class Transaction {
     }
 
     public async execute(): Promise<TransactionId> {
-        handlePrecheck(await this._client._unaryCall(this._nodeUrl, this._inner, this._method));
+        if (this._client == null || this._nodeUrl == null) {
+            throw new Error("Cannot execute transaction: client and node address must be set");
+        }
+
+        const sigMap = this._inner.getSigmap();
+
+        if (!sigMap || sigMap.getSigpairList().length === 0) {
+            await this.signWith(this._client.operatorPublicKey, this._client.operatorSigner);
+        }
+
+        handlePrecheck(await this._client!._unaryCall(this._nodeUrl!, this._inner, this._method));
 
         return this.getTransactionId();
     }
@@ -140,7 +150,7 @@ export class Transaction {
         const query = new Query();
         query.setTransactiongetreceipt(receiptQuery);
 
-        return this._client._unaryCall(this._nodeUrl, query, CryptoService.getTransactionReceipts)
+        return this._client!._unaryCall(this._nodeUrl!, query, CryptoService.getTransactionReceipts)
             .then(handleQueryPrecheck((resp) => resp.getTransactiongetreceipt()))
             .then((receipt) => orThrow(receipt.getReceipt()));
     }

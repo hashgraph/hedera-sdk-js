@@ -21,7 +21,7 @@ import { getProtoTxnId, newTxnId, TransactionIdLike } from "./TransactionId";
 const maxValidDuration = 120;
 
 export abstract class TransactionBuilder {
-    private _client: BaseClient;
+    private _client?: BaseClient;
     private _nodeAccountId?: AccountId;
     protected readonly _inner: TransactionBody;
 
@@ -64,8 +64,12 @@ export abstract class TransactionBuilder {
 
     protected abstract _doValidate(errors: string[]): void;
 
-    protected _getNode(): Node {
+    protected _getNode(): Node | null {
         if (!this._node) {
+            if (this._client == null) {
+                return null;
+            }
+
             this._node = this._nodeAccountId ?
                 this._client._getNode(this._nodeAccountId) :
                 this._client._randomNode();
@@ -95,27 +99,34 @@ export abstract class TransactionBuilder {
     }
 
     public build(): Transaction {
-        if (!this._inner.hasTransactionid()) {
-            this._inner.setTransactionid(newTxnId(this._client.operator.account));
-        }
+        let node: [string, AccountId] | undefined;
 
-        if (!this._inner.hasTransactionvalidduration()) {
-            this.setTransactionValidDuration(maxValidDuration);
-        }
+        if (this._client != null) {
+            if (!this._inner.hasTransactionid()) {
+                this._inner.setTransactionid(newTxnId(this._client.operator.account));
+            }
 
-        const [ url, nodeAccountID ] = this._getNode();
-        if (!this._inner.hasNodeaccountid()) {
-            this.setNodeAccountId(nodeAccountID);
+            node = this._getNode()!;
+            if (!this._inner.hasNodeaccountid()) {
+                this.setNodeAccountId(node[ 1 ]);
+            }
+
+            if (!this._inner.hasTransactionvalidduration()) {
+                this.setTransactionValidDuration(maxValidDuration);
+            }
         }
 
         this.validate();
 
-        const protoTx = new Transaction_();
-        protoTx.setBodybytes(this._inner.serializeBinary());
+        const txProto = new Transaction_();
+        txProto.setBodybytes(this._inner.serializeBinary());
 
-        const txn = new Transaction(this._client, url, protoTx, this._inner, this._method);
-        txn.signWith(this._client.operatorPublicKey, this._client.operatorSigner);
-
-        return txn;
+        return new Transaction(
+            txProto,
+            this._inner,
+            this._method,
+            this._client,
+            node == null ? node : node[ 0 ]
+        );
     }
 }
