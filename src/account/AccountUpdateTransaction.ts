@@ -7,12 +7,10 @@ import { BaseClient } from "../BaseClient";
 import { newDuration } from "../util";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 import { Hbar } from "../Hbar";
-import { Tinybar, tinybarRangeCheck } from "../Tinybar";
+import { Tinybar, tinybarToUInt64Value } from "../Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { PublicKey } from "../crypto/PublicKey";
 import { AccountIdLike, accountIdToProto } from "./AccountId";
-import { UInt64Value } from "google-protobuf/google/protobuf/wrappers_pb";
-import BigNumber from "bignumber.js";
 
 export class AccountUpdateTransaction extends TransactionBuilder {
     private _body: CryptoUpdateTransactionBody;
@@ -40,34 +38,12 @@ export class AccountUpdateTransaction extends TransactionBuilder {
     }
 
     public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
-        const value = new UInt64Value();
-        const tinybar: Tinybar = threshold instanceof Hbar ?
-            (threshold as Hbar).asTinybar() :
-            threshold as Tinybar;
-        if (tinybar instanceof BigNumber) {
-            tinybarRangeCheck(tinybar);
-            value.setValue((tinybar as BigNumber).toNumber());
-        } else {
-            value.setValue(tinybar as number);
-        }
-
-        this._body.setReceiverecordthresholdwrapper(value);
+        this._body.setReceiverecordthresholdwrapper(tinybarToUInt64Value(threshold));
         return this;
     }
 
     public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
-        const value = new UInt64Value();
-        const tinybar: Tinybar = threshold instanceof Hbar ?
-            (threshold as Hbar).asTinybar() :
-            threshold as Tinybar;
-        if (tinybar instanceof BigNumber) {
-            tinybarRangeCheck(tinybar);
-            value.setValue((tinybar as BigNumber).toNumber());
-        } else {
-            value.setValue(tinybar as number);
-        }
-
-        this._body.setSendrecordthresholdwrapper(value);
+        this._body.setSendrecordthresholdwrapper(tinybarToUInt64Value(threshold));
         return this;
     }
 

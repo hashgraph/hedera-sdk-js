@@ -1,6 +1,7 @@
 import BigNumber from "bignumber.js";
 import { Hbar } from "./Hbar";
 import { TinybarValueError } from "./errors";
+import { UInt64Value } from "google-protobuf/google/protobuf/wrappers_pb";
 
 /**
  * The default denomination of currency for the SDK and in the Hedera protocol.
@@ -57,4 +58,19 @@ export function tinybarToString(amount: Tinybar | Hbar, allowNegative?: "allowNe
         return String(amount.asTinybar());
     }
     return String(amount);
+}
+
+export function tinybarToUInt64Value(threshold: Tinybar | Hbar): UInt64Value {
+    const value = new UInt64Value();
+    const tinybar: Tinybar = threshold instanceof Hbar ?
+        (threshold as Hbar).asTinybar() :
+        threshold as Tinybar;
+    if (tinybar instanceof BigNumber) {
+        tinybarRangeCheck(tinybar);
+        value.setValue((tinybar as BigNumber).toNumber());
+    } else {
+        value.setValue(tinybar as number);
+    }
+
+    return value;
 }
