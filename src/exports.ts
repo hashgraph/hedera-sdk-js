@@ -12,6 +12,7 @@ export { ContractCreateTransaction } from "./contract/ContractCreateTransaction"
 export { ContractDeleteTransaction } from "./contract/ContractDeleteTransaction";
 export { ContractExecuteTransaction } from "./contract/ContractExecuteTransaction";
 export { ContractUpdateTransaction } from "./contract/ContractUpdateTransaction";
+export { ContractFunctionResult } from "./contract/ContractFunctionResult";
 export { FileCreateTransaction } from "./file/FileCreateTransaction";
 export { FileDeleteTransaction } from "./file/FileDeleteTransaction";
 export { FileUpdateTransaction } from "./file/FileUpdateTransaction";
