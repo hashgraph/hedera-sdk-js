@@ -110,9 +110,12 @@ export abstract class TransactionBuilder {
 
         this.validate();
 
-        const txn = new Transaction_();
-        txn.setBodybytes(this._inner.serializeBinary());
+        const protoTx = new Transaction_();
+        protoTx.setBodybytes(this._inner.serializeBinary());
 
-        return new Transaction(this._client, url, txn, this._inner, this._method);
+        const txn = new Transaction(this._client, url, protoTx, this._inner, this._method);
+        txn.signWith(this._client.operatorPublicKey, this._client.operatorSigner);
+
+        return txn;
     }
 }

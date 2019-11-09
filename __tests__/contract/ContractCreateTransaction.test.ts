@@ -16,23 +16,20 @@ describe("ContractCreateTransaction", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .build()
-            .sign(privateKey);
+            .build();
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({
             body: undefined,
             bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeEI3CgIYBBoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktyBkKOgHMgIYA0IECIDqSQ==",
             sigmap: {
-                sigpairList: [
-                    {
-                        contract: "",
-                        ecdsa384: "",
-                        ed25519: "tIaKEQ3Slu4LCmZDWmEjeSrOnG43bj1PI0HbTnswHtjCEGnnnqnAZ1S3nvmbzzBVZx4xgYjzi1ORz1Xpf22ZAgoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHhCNwoCGAQaIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLcgZCjoBzICGANCBAiA6kk=",
-                        pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
-                        rsa3072: ""
-                    }
-                ]
+                sigpairList: [{
+                    contract: "",
+                    ecdsa384: "",
+                    ed25519: "tIaKEQ3Slu4LCmZDWmEjeSrOnG43bj1PI0HbTnswHtjCEGnnnqnAZ1S3nvmbzzBVZx4xgYjzi1ORz1Xpf22ZAgoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHhCNwoCGAQaIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLcgZCjoBzICGANCBAiA6kk=",
+                    pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
+                    rsa3072: ""
+                }]
             },
             sigs: undefined
         });
