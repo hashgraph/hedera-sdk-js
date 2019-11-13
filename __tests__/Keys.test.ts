@@ -1,5 +1,12 @@
 import * as nacl from "tweetnacl";
-import {Ed25519PrivateKey, Ed25519PublicKey, generateMnemonic, KeyMismatchException, ThresholdKey} from "../src/exports";
+import {
+    Ed25519PrivateKey,
+    Ed25519PublicKey,
+    generateMnemonic,
+    KeyMismatchException,
+    ThresholdKey
+} from "../src/exports";
+import { KeyList } from "../src/crypto/KeyList";
 
 // key from hedera-sdk-java tests, not used anywhere
 const privKeyBytes = Uint8Array.of(-37, 72, 75, -126, -114, 100, -78, -40, -15, 44, -29, -64, -96, -23, 58, 11, -116, -50, 122, -15, -69, -113, 57, -55, 119, 50, 57, 68, -126, 83, -114, 16);
@@ -155,6 +162,45 @@ describe("ThresholdKey", () => {
         thresholdKey.add(key3.publicKey);
 
         expect(() => thresholdKey._toProtoKey()).not.toThrow();
+    });
+});
+
+describe("KeyList", () => {
+    it("serializes correctly", async () => {
+        const key1 = Ed25519PublicKey.fromString(pubKeyStr);
+        const key2 = new Ed25519PublicKey(iosWalletPubKeyBytes);
+
+        const keyList = new KeyList();
+        keyList.add(key1);
+        keyList.add(key2);
+
+        expect(keyList._toProtoKey().toObject()).toStrictEqual({
+            contractid: undefined,
+            ecdsa384: "",
+            ed25519: "",
+            keylist: {
+                keysList: [
+                    {
+                        contractid: undefined,
+                        ecdsa384: "",
+                        ed25519: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
+                        keylist: undefined,
+                        rsa3072: "",
+                        thresholdkey: undefined,
+                    },
+                    {
+                        contractid: undefined,
+                        ecdsa384: "",
+                        ed25519: "K2DPfujPEOzVoHa/+tmnx7l983CtdYwPHdTvc44EzrY=",
+                        keylist: undefined,
+                        rsa3072: "",
+                        thresholdkey: undefined,
+                    }
+                ]
+            },
+            rsa3072: "",
+            thresholdkey: undefined,
+        });
     });
 });
 

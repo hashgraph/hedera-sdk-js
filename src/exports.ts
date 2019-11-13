@@ -38,6 +38,7 @@ export { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 export { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 export { ThresholdKey } from "./crypto/ThresholdKey";
 export { PublicKey } from "./crypto/PublicKey";
+export { KeyList } from "./crypto/KeyList";
 export { MnemonicResult, generateMnemonic } from "./crypto/MnemonicResult";
 export { KeyMismatchException } from "./crypto/KeyMismatchException";
 
