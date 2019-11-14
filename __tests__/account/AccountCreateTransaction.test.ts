@@ -19,51 +19,75 @@ describe('AccountCreateTransaction', () => {
         const bodybytes = "Cg4KCAjcyQcQ258JEgIYAxICGAMYgMLXLyICCHhaPwoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktzD//////////384//////////9/SgUI0MjhAw==";
 
         const tx = transaction.toProto().toObject();
-        expect(tx).toStrictEqual({
-            body: undefined,
+        let expectedTx = {
+            body: undefined as undefined | Object,
             bodybytes,
             sigmap: {
                 sigpairList: [
                     {
-                        contract: "",
-                        ecdsa384: "",
-                        ed25519: "Vueml5zTmYI2f9O2kcw6/zKFaIPn5WCOKD/jvhwO+EFN55yepuYa566qbD8Z274nncCi/aqVrr/M6NIu91OnAQoOCggI3MkHENufCRICGAMSAhgDGIDC1y8iAgh4Wj8KIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLcw//////////9/OP//////////f0oFCNDI4QM=",
                         pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
-                        rsa3072: ""
+                        contract: "",
+                        ed25519: "Vueml5zTmYI2f9O2kcw6/zKFaIPn5WCOKD/jvhwO+EFN55yepuYa566qbD8Z274nncCi/aqVrr/M6NIu91OnAQoOCggI3MkHENufCRICGAMSAhgDGIDC1y8iAgh4Wj8KIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLcw//////////9/OP//////////f0oFCNDI4QM=",
+                        rsa3072: "",
+                        ecdsa384: ""
                     }
                 ]
             },
             sigs: undefined
-        });
+        };
+
+        expect(tx).toStrictEqual(expectedTx);
 
         const txnBody = TransactionBody.deserializeBinary(Buffer.from(bodybytes, "base64")).toObject();
 
         // `toObject()` sets not-present properties explicitly to undefined
-        expect(txnBody).toStrictEqual({
+        const expectedTxBody = {
             "contractcall": undefined,
             "contractcreateinstance": undefined,
             "contractdeleteinstance": undefined,
             "contractupdateinstance": undefined,
             "cryptoaddclaim": undefined,
-            "cryptocreateaccount": {
-                "autorenewperiod": {
-                    "seconds": 7890000
+            "transactionid": {
+                "transactionvalidstart": {
+                    "seconds": 124124,
+                    "nanos": 151515
                 },
-                "initialbalance": "0",
+                "accountid": {
+                    "shardnum": 0,
+                    "realmnum": 0,
+                    "accountnum": 3
+                }
+            },
+            "nodeaccountid": {
+                "shardnum": 0,
+                "realmnum": 0,
+                "accountnum": 3
+            },
+            "transactionfee": "100000000",
+            "transactionvalidduration": {
+                "seconds": 120
+            },
+            "generaterecord": false,
+            "memo": "",
+            "cryptocreateaccount": {
                 "key": {
                     "contractid": undefined,
-                    "ecdsa384": "",
                     "ed25519": "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
                     "keylist": undefined,
                     "rsa3072": "",
+                    "ecdsa384": "",
                     "thresholdkey": undefined,
+                },
+                "initialbalance": "0",
+                "sendrecordthreshold": "9223372036854775807",
+                "receiverecordthreshold": "9223372036854775807",
+                "receiversigrequired": false,
+                "autorenewperiod": {
+                    "seconds": 7890000
                 },
                 "newrealmadminkey": undefined,
                 "proxyaccountid": undefined,
                 "realmid": undefined,
-                "receiverecordthreshold": "9223372036854775807",
-                "receiversigrequired": false,
-                "sendrecordthreshold": "9223372036854775807",
                 "shardid": undefined,
             },
             "cryptodelete": undefined,
@@ -75,30 +99,13 @@ describe('AccountCreateTransaction', () => {
             "filedelete": undefined,
             "fileupdate": undefined,
             "freeze": undefined,
-            "generaterecord": false,
-            "memo": "",
-            "nodeaccountid": {
-                "accountnum": 3,
-                "realmnum": 0,
-                "shardnum": 0
-            },
             "systemdelete": undefined,
-            "systemundelete": undefined,
-            "transactionfee": "100000000",
-            "transactionid": {
-                "accountid": {
-                    "accountnum": 3,
-                    "realmnum": 0,
-                    "shardnum": 0
-                },
-                "transactionvalidstart": {
-                    "nanos": 151515,
-                    "seconds": 124124
-                }
-            },
-            "transactionvalidduration": {
-                "seconds": 120
-            }
-        });
+            "systemundelete": undefined
+        };
+        expect(txnBody).toStrictEqual(expectedTxBody);
+
+        expectedTx.body = expectedTxBody;
+
+        expect(JSON.stringify(expectedTx, undefined, 4)).toEqual(transaction.toString());
     });
 });
