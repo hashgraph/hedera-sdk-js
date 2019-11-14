@@ -22,17 +22,7 @@ describe('AccountCreateTransaction', () => {
         let expectedTx = {
             body: undefined as undefined | Object,
             bodybytes,
-            sigmap: {
-                sigpairList: [
-                    {
-                        pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
-                        contract: "",
-                        ed25519: "Vueml5zTmYI2f9O2kcw6/zKFaIPn5WCOKD/jvhwO+EFN55yepuYa566qbD8Z274nncCi/aqVrr/M6NIu91OnAQoOCggI3MkHENufCRICGAMSAhgDGIDC1y8iAgh4Wj8KIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLcw//////////9/OP//////////f0oFCNDI4QM=",
-                        rsa3072: "",
-                        ecdsa384: ""
-                    }
-                ]
-            },
+            sigmap: undefined,
             sigs: undefined
         };
 

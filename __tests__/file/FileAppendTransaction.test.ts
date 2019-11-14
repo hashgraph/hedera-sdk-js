@@ -18,15 +18,7 @@ describe("FileAppendTransaction", () => {
         expect(tx).toStrictEqual({
             body: undefined,
             bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeIIBFRICGAUiD04YrIrLKJnq2p3aJnWrWg==",
-            sigmap: {
-                sigpairList: [{
-                      contract: "",
-                      ecdsa384: "",
-                      ed25519: "U+rHe8KHX5uFILbvdYSSEqB8RdMlMq25G1ckP6YvsmFOguC/A+tmQaf8UEEsIElCzabo6y+Hf3xB6IMUNxylBAoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiCARUSAhgFIg9OGKyKyyiZ6tqd2iZ1q1o=",
-                      pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
-                      rsa3072: "",
-                }]
-            },
+            sigmap: undefined,
             sigs: undefined
         });
     });

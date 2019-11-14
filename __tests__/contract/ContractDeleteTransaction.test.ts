@@ -17,17 +17,7 @@ describe("ContractDeleteTransaction", () => {
         expect(tx).toStrictEqual({
             body: undefined,
             bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeLIBBAoCGAU=",
-            sigmap: {
-                sigpairList: [
-                    {
-                        contract: "",
-                        ecdsa384: "",
-                        ed25519: "z858sDlRVMUczlhCHOovkMAGOuBOaS43c/mVAcA4OM7QY3lzSgz6CcD3u99/EioEZnwZV4EPVz9rUUTwMfN4AwoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiyAQQKAhgF",
-                        pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
-                        rsa3072: ""
-                    }
-                ]
-            },
+            sigmap: undefined,
             sigs: undefined
         });
     });
