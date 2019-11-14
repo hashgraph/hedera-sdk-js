@@ -193,7 +193,7 @@ export class Transaction {
             Buffer.from(tx.bodybytes as string, "base64");
         tx.body = TransactionBody.deserializeBinary(bodybytes).toObject();
 
-        return tx.toString();
+        return JSON.stringify(tx, null, 4);
     }
 }
 
