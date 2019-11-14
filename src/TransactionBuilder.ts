@@ -126,7 +126,7 @@ export abstract class TransactionBuilder {
             this._inner,
             this._method,
             this._client,
-            node == null ? node : node[ 0 ]
+            node?.[ 0 ]
         );
     }
 }
