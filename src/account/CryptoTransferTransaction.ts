@@ -2,7 +2,6 @@ import { TransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { BaseClient } from "../BaseClient";
 import {
     AccountAmount,
     CryptoTransferTransactionBody,
@@ -18,8 +17,8 @@ import { AccountIdLike, accountIdToProto } from "./AccountId";
 export class CryptoTransferTransaction extends TransactionBuilder {
     private readonly _body: CryptoTransferTransactionBody;
 
-    public constructor(client: BaseClient) {
-        super(client);
+    public constructor() {
+        super();
         this._body = new CryptoTransferTransactionBody();
         this._body.setTransfers(new TransferList());
         this._inner.setCryptotransfer(this._body);

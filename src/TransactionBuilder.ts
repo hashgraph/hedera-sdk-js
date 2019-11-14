@@ -21,17 +21,14 @@ import { getProtoTxnId, newTxnId, TransactionIdLike } from "./TransactionId";
 const maxValidDuration = 120;
 
 export abstract class TransactionBuilder {
-    private _client: BaseClient;
     private _nodeAccountId?: AccountId;
     protected readonly _inner: TransactionBody;
 
     private _node?: Node;
 
-    protected constructor(client: BaseClient) {
-        this._client = client;
+    protected constructor() {
         this._inner = new TransactionBody();
         this._inner.setTransactionvalidduration(newDuration(120));
-        this._inner.setTransactionfee(tinybarToString(this._client.maxTransactionFee));
     }
 
     public setTransactionId(id: TransactionIdLike): this {
@@ -64,11 +61,15 @@ export abstract class TransactionBuilder {
 
     protected abstract _doValidate(errors: string[]): void;
 
-    protected _getNode(): Node {
+    protected _getNode(client?: BaseClient): Node {
         if (!this._node) {
+            if (!client) {
+                throw new Error("`setNodeAccountId` must be called if client is not supplied");
+            }
+
             this._node = this._nodeAccountId ?
-                this._client._getNode(this._nodeAccountId) :
-                this._client._randomNode();
+                client!._getNode(this._nodeAccountId) :
+                client!._randomNode();
         }
 
         return this._node;
@@ -94,18 +95,23 @@ export abstract class TransactionBuilder {
         }));
     }
 
-    public build(): Transaction {
-        if (!this._inner.hasTransactionid()) {
-            this._inner.setTransactionid(newTxnId(this._client.operator.account));
+    public build(client?: BaseClient): Transaction {
+        // Don't override TransactionFee if it's already set
+        if (client && this._inner.getTransactionfee() === "") {
+            this._inner.setTransactionfee(tinybarToString(client!.maxTransactionFee));
+        }
+
+        if (client && !this._inner.hasTransactionid()) {
+            this._inner.setTransactionid(newTxnId(client!.operator.account));
         }
 
         if (!this._inner.hasTransactionvalidduration()) {
             this.setTransactionValidDuration(maxValidDuration);
         }
 
-        const [ url, nodeAccountID ] = this._getNode();
-        if (!this._inner.hasNodeaccountid()) {
-            this.setNodeAccountId(nodeAccountID);
+        const [ url, nodeAccountId ] = this._getNode(client);
+        if (client && !this._inner.hasNodeaccountid()) {
+            this.setNodeAccountId(nodeAccountId);
         }
 
         this.validate();
@@ -113,8 +119,12 @@ export abstract class TransactionBuilder {
         const protoTx = new Transaction_();
         protoTx.setBodybytes(this._inner.serializeBinary());
 
-        const txn = new Transaction(this._client, url, protoTx, this._inner, this._method);
-        txn.signWith(this._client.operatorPublicKey, this._client.operatorSigner);
+        const txn = new Transaction(url, protoTx, this._inner, this._method);
+
+        // If client is supplied make sure to sign transaction
+        if (client) {
+            txn.signWith(client!.operatorPublicKey, client!.operatorSigner);
+        }
 
         return txn;
     }

@@ -3,7 +3,7 @@ import { mockClient } from "../MockClient";
 
 describe("FileDeleteTransaction", () => {
     it("serializes and deserializes correctly; FileDeleteTransaction", () => {
-        const transaction = new FileDeleteTransaction(mockClient)
+        const transaction = new FileDeleteTransaction()
             .setFileId({ shard: 0, realm: 0, file: 5 })
             .setTransactionFee(1e6)
             .setTransactionId({
@@ -11,7 +11,7 @@ describe("FileDeleteTransaction", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .build();
+            .build(mockClient);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({

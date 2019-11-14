@@ -1,5 +1,4 @@
 import { QueryBuilder } from "../QueryBuilder";
-import { BaseClient } from "../BaseClient";
 import { ContractGetInfoQuery } from "../generated/ContractGetInfo_pb";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { Query } from "../generated/Query_pb";
@@ -24,9 +23,9 @@ export type ContractInfo = {
 
 export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
     private readonly _builder: ContractGetInfoQuery;
-    public constructor(client: BaseClient) {
+    public constructor() {
         const header = new QueryHeader();
-        super(client, header);
+        super(header);
         this._builder = new ContractGetInfoQuery();
         this._builder.setHeader(header);
         this._inner.setContractgetinfo(this._builder);

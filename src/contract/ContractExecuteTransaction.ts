@@ -2,7 +2,6 @@ import { TransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { BaseClient } from "../BaseClient";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
 import { ContractCallTransactionBody } from "../generated/ContractCall_pb";
@@ -12,8 +11,8 @@ import { ContractIdLike, contractIdToProto } from "./ContractId";
 export class ContractExecuteTransaction extends TransactionBuilder {
     private readonly _body: ContractCallTransactionBody;
 
-    public constructor(client: BaseClient) {
-        super(client);
+    public constructor() {
+        super();
         this._body = new ContractCallTransactionBody();
         this._inner.setContractcall(this._body);
     }

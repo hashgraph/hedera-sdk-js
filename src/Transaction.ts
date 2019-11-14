@@ -40,8 +40,6 @@ const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
 export class Transaction {
-    private readonly _client: BaseClient;
-
     private readonly _nodeUrl: string;
     private readonly _inner: Transaction_;
     private readonly _txnId: TransactionID;
@@ -56,13 +54,11 @@ export class Transaction {
      * version bumps.
      */
     public constructor(
-        client: BaseClient,
         nodeUrl: string,
         inner: Transaction_,
         body: TransactionBody,
         method: UnaryMethodDefinition<Transaction_, TransactionResponse>
     ) {
-        this._client = client;
         this._nodeUrl = nodeUrl;
         this._inner = inner;
         this._txnId = orThrow(body.getTransactionid());
@@ -80,7 +76,7 @@ export class Transaction {
 
         const method = methodFromTxn(body);
 
-        return new Transaction(client, url, inner, body, method);
+        return new Transaction(url, inner, body, method);
     }
 
     public getTransactionId(): TransactionId {
@@ -123,29 +119,28 @@ export class Transaction {
         return this;
     }
 
-    public async execute(): Promise<TransactionId> {
-        handlePrecheck(await this._client._unaryCall(this._nodeUrl, this._inner, this._method));
+    public async execute(client: BaseClient): Promise<TransactionId> {
+        handlePrecheck(await client._unaryCall(this._nodeUrl, this._inner, this._method));
 
         return this.getTransactionId();
     }
 
-    public async executeForReceipt(): Promise<TransactionReceipt> {
-        await this.execute();
-        return receiptToSdk(await this._waitForReceipt());
+    public async getReceipt(client: BaseClient): Promise<TransactionReceipt> {
+        return receiptToSdk(await this._waitForReceipt(client));
     }
 
-    private _getReceipt(): Promise<ProtoTransactionReceipt> {
+    private _getReceipt(client: BaseClient): Promise<ProtoTransactionReceipt> {
         const receiptQuery = new TransactionGetReceiptQuery();
         receiptQuery.setTransactionid(this._txnId);
         const query = new Query();
         query.setTransactiongetreceipt(receiptQuery);
 
-        return this._client._unaryCall(this._nodeUrl, query, CryptoService.getTransactionReceipts)
+        return client._unaryCall(this._nodeUrl, query, CryptoService.getTransactionReceipts)
             .then(handleQueryPrecheck((resp) => resp.getTransactiongetreceipt()))
             .then((receipt) => orThrow(receipt.getReceipt()));
     }
 
-    private async _waitForReceipt(): Promise<ProtoTransactionReceipt> {
+    private async _waitForReceipt(client: BaseClient): Promise<ProtoTransactionReceipt> {
         const validStartMs = timestampToMs(orThrow(this._txnId.getTransactionvalidstart()));
         // set timeout at max valid duration
         const validUntilMs = validStartMs + 120000;
@@ -155,7 +150,7 @@ export class Transaction {
         /* eslint-disable no-await-in-loop */
         // we want to wait in a loop, that's the whole point here
         for (let attempt = 0; /* loop will exit when transaction expires */; attempt += 1) {
-            const receipt = await this._getReceipt();
+            const receipt = await this._getReceipt(client);
 
             // typecast required or we get a mismatching union type error
             if (([ ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK ] as number[])

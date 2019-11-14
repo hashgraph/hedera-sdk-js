@@ -2,7 +2,6 @@ import { TransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { BaseClient } from "../BaseClient";
 import { ContractCreateTransactionBody } from "../generated/ContractCreate_pb";
 import { newDuration } from "../util";
 import BigNumber from "bignumber.js";
@@ -17,8 +16,8 @@ import { AccountId, accountIdToProto } from "../account/AccountId";
 export class ContractCreateTransaction extends TransactionBuilder {
     private readonly _body: ContractCreateTransactionBody;
 
-    public constructor(client: BaseClient) {
-        super(client);
+    public constructor() {
+        super();
         this._body = new ContractCreateTransactionBody();
         this._inner.setContractcreateinstance(this._body);
     }

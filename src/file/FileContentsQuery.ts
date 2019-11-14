@@ -1,5 +1,4 @@
 import { QueryBuilder } from "../QueryBuilder";
-import { BaseClient } from "../BaseClient";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { FileGetContentsQuery } from "../generated/FileGetContents_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -16,9 +15,9 @@ export type FileContents = {
 export class FileContentsQuery extends QueryBuilder<FileContents> {
     private readonly _builder: FileGetContentsQuery;
 
-    public constructor(client: BaseClient) {
+    public constructor() {
         const header = new QueryHeader();
-        super(client, header);
+        super(header);
         this._builder = new FileGetContentsQuery();
         this._builder.setHeader(header);
         this._inner.setFilegetcontents(this._builder);

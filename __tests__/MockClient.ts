@@ -23,7 +23,7 @@ class MockClient extends BaseClient {
 
 export const mockClient = new MockClient();
 
-export const mockTransaction = new CryptoTransferTransaction(mockClient)
+export const mockTransaction = new CryptoTransferTransaction()
     .addSender({ shard: 0, realm: 0, account: 2}, 100)
     .addRecipient({ shard: 0, realm: 0, account: 3}, 100)
     .setTransactionFee(8000000)
@@ -33,4 +33,4 @@ export const mockTransaction = new CryptoTransferTransaction(mockClient)
         validStartSeconds: 124124,
         validStartNanos: 151515
     })
-    .build();
+    .build(mockClient);

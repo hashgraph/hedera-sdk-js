@@ -3,7 +3,6 @@ import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoCreateTransactionBody } from "../generated/CryptoCreate_pb";
-import { BaseClient } from "../BaseClient";
 import { newDuration } from "../util";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 import { Hbar } from "../Hbar";
@@ -15,8 +14,8 @@ import { PublicKey } from "../crypto/PublicKey";
 export class AccountCreateTransaction extends TransactionBuilder {
     private _body: CryptoCreateTransactionBody;
 
-    public constructor(client: BaseClient) {
-        super(client);
+    public constructor() {
+        super();
         const body = new CryptoCreateTransactionBody();
         this._body = body;
         this._inner.setCryptocreateaccount(body);

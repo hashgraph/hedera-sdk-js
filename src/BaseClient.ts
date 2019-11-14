@@ -5,12 +5,8 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoGetAccountBalanceQuery } from "./generated/CryptoGetAccountBalance_pb";
 import { QueryHeader } from "./generated/QueryHeader_pb";
 
-import {
-    handleQueryPrecheck,
-    reqDefined
-} from "./util";
+import { handleQueryPrecheck } from "./util";
 import { ProtobufMessage } from "@improbable-eng/grpc-web/dist/typings/message";
-import { AccountCreateTransaction } from "./account/AccountCreateTransaction";
 import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
 import BigNumber from "bignumber.js";
 import { CryptoService } from "./generated/CryptoService_pb_service";
@@ -21,7 +17,6 @@ import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { AccountId, AccountIdLike, accountIdToProto, normalizeAccountId } from "./account/AccountId";
 import { Tinybar, tinybarRangeCheck } from "./Tinybar";
-import { TransactionId } from "./TransactionId";
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
@@ -130,46 +125,6 @@ export abstract class BaseClient {
         return this;
     }
 
-    public createAccount(
-        publicKey: Ed25519PublicKey,
-        initialBalance = 100_000
-    ): Promise<{ account: AccountId }> {
-        return new AccountCreateTransaction(this)
-            .setKey(publicKey)
-            .setInitialBalance(initialBalance)
-            .setTransactionFee(10_000_000)
-            .build()
-            .executeForReceipt()
-            .then((receipt) => ({
-                account: reqDefined(
-                    receipt.accountId,
-                    `missing account ID from receipt: ${receipt}`
-                )
-            }));
-    }
-
-    /**
-     * Transfer the given amount from the operator account to the given recipient.
-     *
-     * Note that `number` can only represent exact integers in the range`[-2^53, 2^53)`.
-     * To represent exact values higher than this you should use the `BigNumber` type instead.
-     *
-     * @param recipient
-     * @param amount
-     */
-    public transferCryptoTo(
-        recipient: AccountIdLike,
-        amount: number | BigNumber | Hbar
-    ): Promise<TransactionId> {
-        const txn = new CryptoTransferTransaction(this)
-            .addSender(this._operatorAcct, amount)
-            .addRecipient(recipient, amount)
-            .setTransactionFee(1_000_000)
-            .build();
-
-        return txn.executeForReceipt().then(() => txn.getTransactionId());
-    }
-
     /** Get the current account balance in Tinybar */
     public getAccountBalance(): Promise<BigNumber> {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
@@ -177,11 +132,11 @@ export abstract class BaseClient {
 
         const [ url, nodeAccountID ] = this._randomNode();
 
-        const paymentTxn = new CryptoTransferTransaction(this)
+        const paymentTxn = new CryptoTransferTransaction()
             .addSender(this._operatorAcct, 0)
             .addRecipient(nodeAccountID, 0)
             .setTransactionFee(9)
-            .build();
+            .build(this);
 
         const queryHeader = new QueryHeader();
         queryHeader.setPayment(paymentTxn.toProto());

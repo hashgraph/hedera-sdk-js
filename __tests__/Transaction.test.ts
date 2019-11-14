@@ -4,11 +4,11 @@ import { mockClient, privateKey } from "./MockClient";
 
 describe("Transaction", () => {
     it("serializes and deserializes correctly", () => {
-        const transaction = new AccountCreateTransaction(mockClient)
+        const transaction = new AccountCreateTransaction()
             .setKey(privateKey.publicKey)
             .setInitialBalance(1e3)
             .setTransactionFee(1e6)
-            .build();
+            .build(mockClient);
 
         const txnBytes = transaction.toBytes();
 

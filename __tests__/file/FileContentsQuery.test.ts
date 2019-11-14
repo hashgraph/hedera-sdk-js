@@ -3,7 +3,7 @@ import { FileContentsQuery } from "../../src/exports";
 
 describe("FileContentsQuery", () => {
     it("serializes and deserializes correctly; FileContentsQuery", () => {
-        const query = new FileContentsQuery(mockClient)
+        const query = new FileContentsQuery()
             .setFileId({ shard: 0, realm: 0, file: 5 })
             .setPayment(mockTransaction.toProto());
 

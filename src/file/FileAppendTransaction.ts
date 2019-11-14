@@ -2,7 +2,6 @@ import { TransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { BaseClient } from "../BaseClient";
 
 import { FileService } from "../generated/FileService_pb_service";
 import { FileAppendTransactionBody } from "../generated/FileAppend_pb";
@@ -11,8 +10,8 @@ import { FileIdLike, fileIdToProto } from "../file/FileId";
 export class FileAppendTransaction extends TransactionBuilder {
     private readonly _body: FileAppendTransactionBody;
 
-    public constructor(client: BaseClient) {
-        super(client);
+    public constructor() {
+        super();
         this._body = new FileAppendTransactionBody();
         this._inner.setFileappend(this._body);
     }

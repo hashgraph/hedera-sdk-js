@@ -3,7 +3,7 @@ import { FileAppendTransaction } from "../../src/exports";
 
 describe("FileAppendTransaction", () => {
     it("serializes and deserializes correctly; FileAppendTransaction", () => {
-        const transaction = new FileAppendTransaction(mockClient)
+        const transaction = new FileAppendTransaction()
             .setFileId({ shard: 0, realm: 0, file: 5 })
             .setContents("This is some random data")
             .setTransactionFee(1e6)
@@ -12,7 +12,7 @@ describe("FileAppendTransaction", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .build();
+            .build(mockClient);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({

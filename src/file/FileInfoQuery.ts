@@ -4,7 +4,6 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { Query } from "../generated/Query_pb";
 import { FileGetInfoQuery } from "../generated/FileGetInfo_pb";
 import { QueryHeader } from "../generated/QueryHeader_pb";
-import { BaseClient } from "../BaseClient";
 import { Response } from "../generated/Response_pb";
 import { getSdkKeys } from "../util";
 import { FileIdLike, fileIdToProto, fileIdToSdk } from "../file/FileId";
@@ -22,9 +21,9 @@ export type FileInfo = {
 export class FileInfoQuery extends QueryBuilder<FileInfo> {
     private readonly _builder: FileGetInfoQuery;
 
-    public constructor(client: BaseClient) {
+    public constructor() {
         const header = new QueryHeader();
-        super(client, header);
+        super(header);
         this._builder = new FileGetInfoQuery();
         this._builder.setHeader(header);
         this._inner.setFilegetinfo(this._builder);

@@ -11,7 +11,6 @@ import { Hbar } from "./Hbar";
 import { Tinybar } from "./Tinybar";
 
 export abstract class QueryBuilder<T> {
-    private readonly _client: BaseClient;
     protected readonly _inner: Query;
 
     private readonly _header: QueryHeader;
@@ -20,8 +19,7 @@ export abstract class QueryBuilder<T> {
 
     private _node?: Node;
 
-    protected constructor(client: BaseClient, header: QueryHeader) {
-        this._client = client;
+    protected constructor(header: QueryHeader) {
         this._inner = new Query();
         this._header = header;
         this._needsPayment = true;
@@ -36,17 +34,17 @@ export abstract class QueryBuilder<T> {
      *
      * @throws TinybarValueError if the value is out of range for the protocol
      */
-    public async setPaymentDefault(amount: Tinybar | Hbar): Promise<this> {
-        const [ , nodeAccountId ] = this._getNode();
+    public async setPaymentDefault(amount: Tinybar | Hbar, client: BaseClient): Promise<this> {
+        const [ , nodeAccountId ] = this._getNode(client);
 
-        const payment = new CryptoTransferTransaction(this._client)
+        const payment = new CryptoTransferTransaction()
             .setNodeAccountId(nodeAccountId)
             .addRecipient(nodeAccountId, amount)
-            .addSender(this._client.operator.account, amount)
+            .addSender(client.operator.account, amount)
             .setTransactionFee(Hbar.of(1))
-            .build();
+            .build(client);
 
-        await payment.signWith(this._client.operatorPublicKey, this._client.operatorSigner);
+        await payment.signWith(client.operatorPublicKey, client.operatorSigner);
 
         this._header.setPayment(payment.toProto());
 
@@ -82,7 +80,7 @@ export abstract class QueryBuilder<T> {
      *
      * You can then attach a payment for this value with `.setPaymentDefault()`.
      */
-    public async requestCost(): Promise<Hbar> {
+    public async requestCost(client: BaseClient): Promise<Hbar> {
         runValidation(this, (errors) => this._prepaymentValidate(errors));
 
         // create a duplicate of the query with `COST_ANSWER` instead of the original response type
@@ -91,16 +89,16 @@ export abstract class QueryBuilder<T> {
         this._header.setResponsetype(ResponseType.COST_ANSWER);
 
         const payment = this._header.getPayment();
-        await this.setPaymentDefault(0);
+        await this.setPaymentDefault(0, client);
 
         const query = this._inner.clone() as Query;
 
         this._header.setResponsetype(responseType);
         this._header.setPayment(payment);
 
-        const [ url ] = this._getNode();
+        const [ url ] = this._getNode(client);
 
-        const response = await this._client._unaryCall(url, query, this._method);
+        const response = await client._unaryCall(url, query, this._method);
 
         const responseHeader = getResponseHeader(response);
         throwIfExceptional(responseHeader.getNodetransactionprecheckcode());
@@ -108,30 +106,30 @@ export abstract class QueryBuilder<T> {
         return Hbar.fromTinybar(responseHeader.getCost());
     }
 
-    private _getNode(): Node {
+    private _getNode(client: BaseClient): Node {
         if (!this._node) {
-            this._node = this._client._randomNode();
+            this._node = client._randomNode();
         }
 
         return this._node;
     }
 
-    public async execute(): Promise<T> {
-        const [ nodeUrl ] = this._getNode();
+    public async execute(client: BaseClient): Promise<T> {
+        const [ nodeUrl ] = this._getNode(client);
 
-        if (this._client.maxQueryPayment && this._needsPayment && !this._header.hasPayment()) {
-            const cost = await this.requestCost();
+        if (client.maxQueryPayment && this._needsPayment && !this._header.hasPayment()) {
+            const cost = await this.requestCost(client);
 
-            if (this._client.maxQueryPayment.comparedTo(cost) < 0) {
-                throw new MaxPaymentExceededException(cost, this._client.maxQueryPayment);
+            if (client.maxQueryPayment.comparedTo(cost) < 0) {
+                throw new MaxPaymentExceededException(cost, client.maxQueryPayment);
             }
 
-            await this.setPaymentDefault(cost);
+            await this.setPaymentDefault(cost, client);
         }
 
         this.validate();
 
-        const response = await this._client._unaryCall(nodeUrl, this._inner, this._method);
+        const response = await client._unaryCall(nodeUrl, this._inner, this._method);
 
         const responseHeader = getResponseHeader(response);
         throwIfExceptional(responseHeader.getNodetransactionprecheckcode());
