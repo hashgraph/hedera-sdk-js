@@ -35,11 +35,11 @@ export abstract class QueryBuilder<T> {
      * @throws TinybarValueError if the value is out of range for the protocol
      */
     public async setPaymentDefault(amount: Tinybar | Hbar, client: BaseClient): Promise<this> {
-        const [ , nodeAccountId ] = this._getNode(client);
+        const nodeId = this._getNode(client).id;
 
         const payment = new CryptoTransferTransaction()
-            .setNodeAccountId(nodeAccountId)
-            .addRecipient(nodeAccountId, amount)
+            .setNodeAccountId(nodeId)
+            .addRecipient(nodeId, amount)
             .addSender(client.operator.account, amount)
             .setTransactionFee(Hbar.of(1))
             .build(client);
@@ -96,9 +96,9 @@ export abstract class QueryBuilder<T> {
         this._header.setResponsetype(responseType);
         this._header.setPayment(payment);
 
-        const [ url ] = this._getNode(client);
+        const node = this._getNode(client);
 
-        const response = await client._unaryCall(url, query, this._method);
+        const response = await client._unaryCall(node.url, query, this._method);
 
         const responseHeader = getResponseHeader(response);
         throwIfExceptional(responseHeader.getNodetransactionprecheckcode());
@@ -115,7 +115,7 @@ export abstract class QueryBuilder<T> {
     }
 
     public async execute(client: BaseClient): Promise<T> {
-        const [ nodeUrl ] = this._getNode(client);
+        const node = this._getNode(client);
 
         if (client.maxQueryPayment && this._needsPayment && !this._header.hasPayment()) {
             const cost = await this.requestCost(client);
@@ -129,7 +129,7 @@ export abstract class QueryBuilder<T> {
 
         this.validate();
 
-        const response = await client._unaryCall(nodeUrl, this._inner, this._method);
+        const response = await client._unaryCall(node.url, this._inner, this._method);
 
         const responseHeader = getResponseHeader(response);
         throwIfExceptional(responseHeader.getNodetransactionprecheckcode());

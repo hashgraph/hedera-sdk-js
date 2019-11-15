@@ -21,7 +21,7 @@ import { FileService } from "./generated/FileService_pb_service";
 import { FreezeService } from "./generated/FreezeService_pb_service";
 import { HederaError } from "./errors";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import { accountIdToSdk } from "./account/AccountId";
+import { AccountId, accountIdToSdk } from "./account/AccountId";
 import { TransactionId, transactionIdToSdk } from "./TransactionId";
 import { receiptToSdk, TransactionReceipt } from "./TransactionReceipt";
 import { timestampToMs } from "./Timestamp";
@@ -40,7 +40,7 @@ const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
 export class Transaction {
-    private readonly _nodeUrl: string;
+    private readonly _node: AccountId;
     private readonly _inner: Transaction_;
     private readonly _txnId: TransactionID;
     private readonly _validDurationSeconds: number;
@@ -54,12 +54,12 @@ export class Transaction {
      * version bumps.
      */
     public constructor(
-        nodeUrl: string,
+        node: AccountId,
         inner: Transaction_,
         body: TransactionBody,
         method: UnaryMethodDefinition<Transaction_, TransactionResponse>
     ) {
-        this._nodeUrl = nodeUrl;
+        this._node = node;
         this._inner = inner;
         this._txnId = orThrow(body.getTransactionid());
         this._validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
@@ -70,13 +70,11 @@ export class Transaction {
         const inner = Transaction_.deserializeBinary(bytes);
         const body = TransactionBody.deserializeBinary(inner.getBodybytes_asU8());
 
-        const nodeAccountId = accountIdToSdk(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
-
-        const [ url ] = client._getNode(nodeAccountId);
+        const nodeId = accountIdToSdk(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
 
         const method = methodFromTxn(body);
 
-        return new Transaction(url, inner, body, method);
+        return new Transaction(nodeId, inner, body, method);
     }
 
     public getTransactionId(): TransactionId {
@@ -120,12 +118,13 @@ export class Transaction {
     }
 
     public async execute(client: BaseClient): Promise<TransactionId> {
-        handlePrecheck(await client._unaryCall(this._nodeUrl, this._inner, this._method));
+        const node = client._getNode(this._node);
+        handlePrecheck(await client._unaryCall(node.url, this._inner, this._method));
 
         return this.getTransactionId();
     }
 
-    public async getReceipt(client: BaseClient): Promise<TransactionReceipt> {
+    public async waitForReceipt(client: BaseClient): Promise<TransactionReceipt> {
         return receiptToSdk(await this._waitForReceipt(client));
     }
 
@@ -135,7 +134,9 @@ export class Transaction {
         const query = new Query();
         query.setTransactiongetreceipt(receiptQuery);
 
-        return client._unaryCall(this._nodeUrl, query, CryptoService.getTransactionReceipts)
+        const node = client._getNode(this._node);
+
+        return client._unaryCall(node.url, query, CryptoService.getTransactionReceipts)
             .then(handleQueryPrecheck((resp) => resp.getTransactiongetreceipt()))
             .then((receipt) => orThrow(receipt.getReceipt()));
     }

@@ -1,4 +1,4 @@
-import { BaseClient, Node } from "./BaseClient";
+import { BaseClient } from "./BaseClient";
 import { TransactionBody } from "./generated/TransactionBody_pb";
 import {
     newDuration,
@@ -21,10 +21,9 @@ import { getProtoTxnId, newTxnId, TransactionIdLike } from "./TransactionId";
 const maxValidDuration = 120;
 
 export abstract class TransactionBuilder {
-    private _nodeAccountId?: AccountId;
     protected readonly _inner: TransactionBody;
 
-    private _node?: Node;
+    private _node?: AccountId;
 
     protected constructor() {
         this._inner = new TransactionBody();
@@ -47,7 +46,7 @@ export abstract class TransactionBuilder {
     }
 
     public setNodeAccountId(nodeAccountId: AccountIdLike): this {
-        this._nodeAccountId = normalizeAccountId(nodeAccountId);
+        this._node = normalizeAccountId(nodeAccountId);
         this._inner.setNodeaccountid(accountIdToProto(nodeAccountId));
         return this;
     }
@@ -60,20 +59,6 @@ export abstract class TransactionBuilder {
     public abstract get _method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
     protected abstract _doValidate(errors: string[]): void;
-
-    protected _getNode(client?: BaseClient): Node {
-        if (!this._node) {
-            if (!client) {
-                throw new Error("`setNodeAccountId` must be called if client is not supplied");
-            }
-
-            this._node = this._nodeAccountId ?
-                client!._getNode(this._nodeAccountId) :
-                client!._randomNode();
-        }
-
-        return this._node;
-    }
 
     public validate(): void {
         runValidation(this, ((errors) => {
@@ -109,9 +94,17 @@ export abstract class TransactionBuilder {
             this.setTransactionValidDuration(maxValidDuration);
         }
 
-        const [ url, nodeAccountId ] = this._getNode(client);
-        if (client && !this._inner.hasNodeaccountid()) {
-            this.setNodeAccountId(nodeAccountId);
+        // Set `this._node` accordingly if client is supplied otherwise error out
+        if (!this._node && !client) {
+            throw new Error("`setNodeAccountId` must be called if client is not supplied");
+        }
+
+        if (!this._node) {
+            this._node = client!._randomNode().id;
+        }
+
+        if (this._node && !this._inner.hasNodeaccountid()) {
+            this.setNodeAccountId(this._node);
         }
 
         this.validate();
@@ -119,7 +112,7 @@ export abstract class TransactionBuilder {
         const protoTx = new Transaction_();
         protoTx.setBodybytes(this._inner.serializeBinary());
 
-        const txn = new Transaction(url, protoTx, this._inner, this._method);
+        const txn = new Transaction(this._node, protoTx, this._inner, this._method);
 
         // If client is supplied make sure to sign transaction
         if (client) {

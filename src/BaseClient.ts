@@ -36,7 +36,10 @@ export type Nodes = {
 } | Node[];
 
 /** A URL,AccountID pair identifying a Node */
-export type Node = [string, AccountId];
+export type Node = {
+    url: string;
+    id: AccountId;
+}
 
 export type ClientConfig = {
     nodes?: Nodes;
@@ -49,14 +52,19 @@ export abstract class BaseClient {
     public readonly operatorSigner: Signer;
     public readonly operatorPublicKey: Ed25519PublicKey;
 
-    protected readonly _nodes: [string, AccountId][];
+    protected readonly _nodes: Node[];
 
     private _maxTransactionFee: Hbar = Hbar.of(1);
     private _maxQueryPayment?: Hbar;
 
     protected constructor(nodes: Nodes, operator: Operator) {
-        this._nodes = (Array.isArray(nodes) ? nodes : Object.entries(nodes))
-            .map(([ url, acct ]) => [ url, normalizeAccountId(acct) ]);
+        this._nodes = Array.isArray(nodes) ?
+            nodes as Node[] :
+            Object.entries(nodes)
+                .map(([ url, accountId ]) => {
+                    const id = normalizeAccountId(accountId as AccountIdLike);
+                    return { url, id };
+                });
         this.operator = operator;
         this._operatorAcct = normalizeAccountId(operator.account);
 
@@ -130,11 +138,11 @@ export abstract class BaseClient {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
         balanceQuery.setAccountid(accountIdToProto(this._operatorAcct));
 
-        const [ url, nodeAccountID ] = this._randomNode();
+        const node = this._randomNode();
 
         const paymentTxn = new CryptoTransferTransaction()
             .addSender(this._operatorAcct, 0)
-            .addRecipient(nodeAccountID, 0)
+            .addRecipient(node.id, 0)
             .setTransactionFee(9)
             .build(this);
 
@@ -145,7 +153,7 @@ export abstract class BaseClient {
         const query = new Query();
         query.setCryptogetaccountbalance(balanceQuery);
 
-        return this._unaryCall(url, query, CryptoService.cryptoGetBalance)
+        return this._unaryCall(node.url, query, CryptoService.cryptoGetBalance)
             .then(handleQueryPrecheck((resp) => resp.getCryptogetaccountbalance()))
             .then((response) => new BigNumber(response.getBalance()));
     }
@@ -171,11 +179,11 @@ export abstract class BaseClient {
      * version bumps.
      */
     public _getNode(node: string | AccountId): Node {
-        const maybeNode = this._nodes.find(([ url, accountId ]) => url === node || (
+        const maybeNode = this._nodes.find((_node) => _node.url === node || (
             typeof node === "object" &&
-                accountId.account === node.account &&
-                accountId.realm === node.realm &&
-                accountId.shard === node.shard
+                _node.id.account === node.account &&
+                _node.id.realm === node.realm &&
+                _node.id.shard === node.shard
         ));
 
         if (maybeNode) {
