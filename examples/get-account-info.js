@@ -19,4 +19,4 @@ const accountId = { shard: 0, realm: 0, account: 3 };
 
 (async function() {
     console.log("account info:", JSON.stringify(await new AccountInfoQuery(client).setAccountId(accountId).execute()));
-}());
+});
