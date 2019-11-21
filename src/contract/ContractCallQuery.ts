@@ -28,7 +28,7 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
         if (params instanceof Uint8Array) {
             this._builder.setFunctionparameters(params as Uint8Array);
         } else {
-            this._builder.setFunctionparameters((params as CallParams).finish());
+            this._builder.setFunctionparameters((params as CallParams).toProto());
         }
         return this;
     }
