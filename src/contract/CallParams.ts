@@ -1,20 +1,73 @@
 import { keccak256 } from "js-sha3";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const utf8 = require("utf8");
 
 enum ArgumentType {
-    uint8 = "uint8",
-    int8 = "int8",
-    uint16 = "uint16",
-    int16 = "int16",
-    uint32 = "uint32",
-    int32 = "int32",
-    uint64 = "uint64",
-    int64 = "int64",
-    uint256 = "uint256",
-    string = "string",
-    bool = "bool",
-    bytes = "bytes",
+    uint8,
+    int8,
+    uint16,
+    int16,
+    uint32,
+    int32,
+    uint64,
+    int64,
+    uint256,
+    string,
+    stringArray,
+    bool,
+    bytes,
+    bytesArray,
+    bytesfix,
+    address,
+    func,
+}
+
+function argumentTypeToString(ty: ArgumentType, length?: number): string {
+    switch (ty) {
+        case ArgumentType.uint8:
+            return "uint8";
+        case ArgumentType.int8:
+            return "int8";
+        case ArgumentType.uint16:
+            return "uint16";
+        case ArgumentType.int16:
+            return "int16";
+        case ArgumentType.uint32:
+            return "uint32";
+        case ArgumentType.int32:
+            return "int32";
+        case ArgumentType.uint64:
+            return "uint64";
+        case ArgumentType.int64:
+            return "int64";
+        case ArgumentType.uint256:
+            return "uint256";
+        case ArgumentType.string:
+            return "string";
+        case ArgumentType.stringArray:
+            return "string[]";
+        case ArgumentType.bool:
+            return "bool";
+        case ArgumentType.bytes:
+            return "bytes";
+        case ArgumentType.bytesArray:
+            return "bytes[]";
+        case ArgumentType.bytesfix:
+            return `bytes${length}`;
+        case ArgumentType.address:
+            return "address";
+        case ArgumentType.func:
+            return "function";
+        default:
+            return "";
+    }
+}
+
+function stringToArgumentType(ty: string): ArgumentType {
+    const argument = ArgumentType[ ty as keyof typeof ArgumentType ];
+    if (argument == null) {
+        throw new Error(`Argument Type is unsuppored: ${ty}`);
+    }
+
+    return argument;
 }
 
 export class FunctionSelector {
@@ -54,18 +107,23 @@ export class FunctionSelector {
         };
     }
 
-    public addParamType(ty: string): this {
+    public addParamType(ty: string, length?: number): this {
         if (this.needsComma) {
             this.func += ",";
         }
 
-        const argument = stringToArgumentType(ty);
+        const argument: ArgumentType = stringToArgumentType(ty);
 
-        this.func += argument;
+        this.func += argumentTypeToString(argument, length);
+
         this.argumentTypes.push(argument);
         this.needsComma = true;
 
         return this;
+    }
+
+    public static identifier(func: string): Uint8Array {
+        return new Uint8Array(keccak256.arrayBuffer(func).slice(0, 4));
     }
 
     /**
@@ -74,7 +132,7 @@ export class FunctionSelector {
     public toProto(): Uint8Array {
         this.func += ")";
 
-        return new Uint8Array(keccak256.arrayBuffer(this.func!).slice(0, 4));
+        return FunctionSelector.identifier(this.func!);
     }
 
     public toString(): string {
@@ -110,10 +168,8 @@ export class CallParams {
         return this;
     }
 
-    private guessType(param: string | boolean | number | Uint8Array): void {
-        // This guesses the parameter type from the passed in parameter
-        // If the user wants to define this themselves they should pass
-        // in a FunctionSelector into the constructor themselves
+    private guessType(param: string | boolean | number | Uint8Array | 
+        string[] | Uint8Array[]): void {
         switch (typeof param) {
             case "string":
                 this.func.addParamType("string");
@@ -123,39 +179,34 @@ export class CallParams {
                 break;
             case "number":
                 if (param as number > 0) {
-                    // If number is less than max uint8
                     if (Math.floor(param as number) <= 255) {
                         this.func.addParamType("uint8");
-                    // If number is less than max uint16
                     } else if (Math.floor(param as number) <= 65536) {
                         this.func.addParamType("uint16");
-                    // If number is less than max uint32
                     } else if (Math.floor(param as number) <= 4294967296) {
                         this.func.addParamType("uint32");
-                    // Else type must be uint64
                     } else {
                         this.func.addParamType("uint64");
                     }
                 } else {
-                    // Disabling no-lonely-if because I think it's valid to have it here
-                    // If number is less than max int8
                     // eslint-disable-next-line no-lonely-if
                     if (Math.floor(param as number) >= -128) {
                         this.func.addParamType("int8");
-                    // If number is less than max int16
                     } else if (Math.floor(param as number) >= -32768) {
                         this.func.addParamType("int16");
-                    // If number is less than max int32
                     } else if (Math.floor(param as number) >= -2147483648) {
                         this.func.addParamType("int32");
-                    // Else type must be int64
                     } else {
                         this.func.addParamType("int64");
                     }
                 }
                 break;
             default:
-                if (param instanceof Uint8Array) {
+                if (Array.isArray(param) && param[ 0 ] instanceof Uint8Array) {
+                    this.func.addParamType("bytesArray");
+                } else if (Array.isArray(param) && typeof param[ 0 ] === "string") {
+                    this.func.addParamType("stringArray");
+                } else if (param instanceof Uint8Array) {
                     switch ((param as Uint8Array).length) {
                         case 1:
                             this.func.addParamType("uint8");
@@ -169,11 +220,21 @@ export class CallParams {
                         case 8:
                             this.func.addParamType("uint64");
                             break;
+                        case 20:
+                            this.func.addParamType("address");
+                            break;
+                        case 24:
+                            this.func.addParamType("function");
+                            break;
                         case 32:
                             this.func.addParamType("uint256");
                             break;
                         default:
-                            this.func.addParamType("bytes");
+                            if ((param as Uint8Array).length < 32) {
+                                this.func.addParamType("bytesfix", (param as Uint8Array).length);
+                            } else {
+                                this.func.addParamType("bytes");
+                            }
                     }
                 } else {
                     throw new TypeError("Should not be possible to get here");
@@ -181,12 +242,131 @@ export class CallParams {
         }
     }
 
-    public addParam(param: string | boolean | number | Uint8Array): this {
-        let value = new Uint8Array(32);
+    private conditionallyAddType(ty: string, length?: number): void {
+        if (this.func.argumentTypes.length === this.currentArgument) {
+            this.func.addParamType(ty, length);
+        }
+    }
+
+    public addUin8(param: number): this {
+        this.conditionallyAddType("uint8");
+
+        return this.addParam(param);
+    }
+
+    public addInt8(param: number): this {
+        this.conditionallyAddType("int8");
+
+        return this.addParam(param);
+    }
+
+    public addUint16(param: number): this {
+        this.conditionallyAddType("uint16");
+
+        return this.addParam(param);
+    }
+
+    public addInt16(param: number): this {
+        this.conditionallyAddType("int16");
+
+        return this.addParam(param);
+    }
+
+    public addUint32(param: number): this {
+        this.conditionallyAddType("uint32");
+
+        return this.addParam(param);
+    }
+
+    public addInt32(param: number): this {
+        this.conditionallyAddType("int32");
+
+        return this.addParam(param);
+    }
+
+    public addUint64(param: Uint8Array): this {
+        this.conditionallyAddType("uint64");
+
+        return this.addParam(param);
+    }
+
+    public addInt64(param: Uint8Array): this {
+        this.conditionallyAddType("int64");
+
+        return this.addParam(param);
+    }
+
+    public addUint256(param: Uint8Array): this {
+        this.conditionallyAddType("uint256");
+
+        return this.addParam(param);
+    }
+
+    public addString(param: string): this {
+        this.conditionallyAddType("string");
+
+        return this.addParam(param);
+    }
+
+    public addAddress(param: Uint8Array | string): this {
+        const par = param instanceof Uint8Array ?
+            param :
+            Buffer.from(param as string, "hex");
+
+        if (par.length !== 20) {
+            throw new Error("`address` type requires parameter to be exactly 20 bytes");
+        }
+
+        this.conditionallyAddType("address");
+
+        return this.addParam(par);
+    }
+
+    public addBytes(param: Uint8Array): this {
+        this.conditionallyAddType("bytes");
+
+        return this.addParam(param);
+    }
+
+    public addBytesFixed(param: Uint8Array): this {
+        if (param.length > 32) {
+            throw new Error("`bytes<M>` type requires parameter length to be less than or equal to 32 bytes");
+        }
+
+        this.conditionallyAddType("bytes", param.length);
+
+        return this.addParam(param);
+    }
+
+    public addFunction(address: Uint8Array | string, func: FunctionSelector | string): this {
+        const addressParam = address instanceof Uint8Array ?
+            address :
+            Buffer.from(address as string, "hex");
+
+        const functionSelector = func instanceof FunctionSelector ?
+            (func as FunctionSelector).toProto() :
+            FunctionSelector.identifier(func as string);
+
+        if (addressParam.length !== 20) {
+            throw new Error("`function` type requires parameter `address` to be exactly 20 bytes");
+        }
+
+        this.conditionallyAddType("function");
+
+        const proto = new Uint8Array(24);
+        proto.set(addressParam, 0);
+        proto.set(functionSelector, 20);
+
+        return this.addParam(proto);
+    }
+
+    // Allows user to add any parameter they wish and they type will be guessed from the
+    // type and size of the parameter passed in
+    // For more control, use the `add<Type>` methods instead.
+    public addParam(param: string | boolean | number | Uint8Array | 
+        string[] | Uint8Array[]): this {
+        let value;
         let dynamic = false;
-        const length = new Uint8Array(32);
-        const lengthView = new DataView(length.buffer, 28);
-        const valueView = new DataView(value.buffer, 0);
 
         // Determine if we need to guess the parameter type or if it's already defined
         // The reason we even have this code is because javascript doesn't support 64-bit numbers.
@@ -202,104 +382,32 @@ export class CallParams {
 
         // This is required because the user might have already defined the parameter types
         switch (this.func.argumentTypes[ this.currentArgument ]) {
-            case ArgumentType.uint8:
-                if (typeof param === "number") {
-                    valueView.setUint8(31, param as number);
-                } else {
-                    value.set(param as Uint8Array, 31);
-                }
-                break;
-            case ArgumentType.int8:
-                if (typeof param === "number") {
-                    valueView.setInt8(31, param as number);
-                } else {
-                    value.set(param as Uint8Array, 31);
-                }
-                break;
-            case ArgumentType.uint16:
-                if (typeof param === "number") {
-                    valueView.setUint16(30, param as number);
-                } else {
-                    value.set(param as Uint8Array, 30);
-                }
-                break;
-            case ArgumentType.int16:
-                if (typeof param === "number") {
-                    valueView.setInt16(30, param as number);
-                } else {
-                    value.set(param as Uint8Array, 30);
-                }
-                break;
-            case ArgumentType.uint32:
-                if (typeof param === "number") {
-                    valueView.setUint32(28, param as number);
-                } else {
-                    value.set(param as Uint8Array, 28);
-                }
-                break;
-            case ArgumentType.int32:
-                if (typeof param === "number") {
-                    valueView.setInt32(28, param as number);
-                } else {
-                    value.set(param as Uint8Array, 28);
-                }
-                break;
-            // int64, uint64, and uint256 both expect the parameter to be an Uint8Array instead of number
-            case ArgumentType.uint64:
-                value.set(param as Uint8Array, 24);
-                break;
-            case ArgumentType.int64:
-                value.set(param as Uint8Array, 24);
-                break;
-            case ArgumentType.uint256:
-                value = (param as Uint8Array);
-                break;
-            case ArgumentType.bool:
-                value[ 31 ] = (param as boolean) ? 1 : 0;
-                break;
-            // Bytes should have not the length already encoded
-            // JS String type is encoded as UTF-16 whilst Solidity `string` type is UTF-8 encoded.
-            // So if will assume is already correctly updated to being a Uint8Array of UTF-8 string
             case ArgumentType.bytes:
+            case ArgumentType.bytesArray:
             case ArgumentType.string:
-                // Bytes and string are dynamic types
+            case ArgumentType.stringArray:
                 dynamic = true;
-
-                // If param is of type string, encode it in UTF-8 format and conver it to Uint8Array
-                // Required because JS Strings are UTF-16
-                // eslint-disable-next-line no-case-declarations
-                const par: Uint8Array = param instanceof Uint8Array ?
-                    param as Uint8Array :
-                    utf8.encode(param);
-
-                // Resize value to a 32 byte boundary if needed
-                if (Math.floor(par.length / 32) >= 0 && Math.floor(par.length % 32) !== 0) {
-                    value = new Uint8Array((Math.floor(par.length / 32) + 1) * 32);
-                }
-
-                // Copy data of parameter into value; left to right
-                value.set(Buffer.from(par), 0);
-
-                // Bytes and String types are prefixed with length as an uint256
-                lengthView.setUint32(0, par.length);
-
-                // Update offset for next parameter that needs it
-                // offsetView.setUint32(0, this.offsetView.getUint32(0));
-
-                // The next offset is equal to the last offset + the length of this field + 32 bytes for length.
-                // Bytes are encoded as one 32 byte value for the length, and then the value after
-                // right-padded to a 32 byte boundary.
-                // this.offsetView.setUint32(0, offsetView.getUint32(0) + value.length + 32);
+            // eslint-disable-next-line no-fallthrough
+            case ArgumentType.uint8:
+            case ArgumentType.int8:
+            case ArgumentType.uint16:
+            case ArgumentType.int16:
+            case ArgumentType.uint32:
+            case ArgumentType.int32:
+            case ArgumentType.uint64:
+            case ArgumentType.int64:
+            case ArgumentType.uint256:
+            case ArgumentType.address:
+            case ArgumentType.bool:
+            case ArgumentType.func:
+            case ArgumentType.bytesfix:
+                value = argumentToBytes(param, this.func.argumentTypes[ this.currentArgument ]);
                 break;
             default: throw new Error(`Unsupported argument type: ${this.func.argumentTypes[ this.currentArgument ]}`);
         }
 
         this.func.argumentList.push({
             dynamic,
-            offset: null,
-            offsetView: null,
-            length,
-            lengthView,
             value
         });
 
@@ -316,51 +424,25 @@ export class CallParams {
             throw new Error("Invalid number of parameters provided");
         }
 
-        // Length = 4 bytes for function header + number of arguments * 32 bytes for each argument +
-        // (for each dynamic argument take the length of value and add 32 for the length)
-        // We have to get this length because Uint8Arrays aren't easily resizable. So create a
-        // Uint8Array of appropriate size initially and populate the contents accordingly
         const length = (this.func.argumentList.length * 32) + this.func.argumentList
-            .map((arg) => arg.dynamic ? arg.value.length + 32 : 0)
+            .map((arg) => arg.dynamic ? arg.value.length : 0)
             .reduce((sum, value) => sum + value) + 4;
+
+        console.error(`length: ${length}`);
 
         const func = new Uint8Array(length);
         func.set(this.func.toProto(), 0);
 
-        const { offset, offsetView } = this.func.initialOffset();
+        let offset = 32 * this.func.argumentList.length;
 
-        // Encode the initial arguments
-        // For non dynamic types encode the value in-place,
-        // for dynamic types encode the offset
-        // The 4 bytes is added to offsets because offset don't account
-        // for the function hash
-        for (let i = 0; i < this.func.argumentList.length; i += 1) {
-            const arg = this.func.argumentList[ i ];
-            if (arg.dynamic) {
-                // Set the offset in the argument. This is used later write the argument data into the
-                // appopriate position in the buffer
-                arg.offset = new Uint8Array(Buffer.from(offset.buffer));
-                arg.offsetView = new DataView((arg.offset as Uint8Array).buffer, 28);
-
-                func.set(offset, 4 + (i * 32));
-
-                offsetView.setUint32(
-                    0,
-                    offsetView.getUint32(0) +
-                    arg.value.length + 32
-                );
+        for (const [ i, { dynamic, value }] of this.func.argumentList.entries()) {
+            if (dynamic) {
+                const view = new DataView(func.buffer, 4 + (i * 32) + 28);
+                view.setUint32(0, offset);
+                func.set(value, view.getUint32(0) + 4);
+                offset += value.length;
             } else {
-                func.set(arg.value, 4 + (i * 32));
-            }
-        }
-
-        // Encode dynamic arguments at the offset.
-        for (let i = 0; i < this.func.argumentList.length; i += 1) {
-            const arg = this.func.argumentList[ i ];
-            if (arg.dynamic) {
-                const argOffset = (arg.offsetView as DataView).getUint32(0);
-                func.set(arg.length as Uint8Array, 4 + argOffset);
-                func.set(arg.value as Uint8Array, 4 + argOffset + 32);
+                func.set(value, 4 + (i * 32));
             }
         }
 
@@ -370,19 +452,143 @@ export class CallParams {
 
 type Argument = {
     dynamic: boolean;
-    offset: null | Uint8Array;
-    offsetView: null | DataView;
-    length: null | Uint8Array;
-    lengthView: null | DataView;
     value: Uint8Array;
 };
 
-function stringToArgumentType(ty: string): ArgumentType {
-    const argument = ArgumentType[ ty as keyof typeof ArgumentType ];
-    if (argument == null) {
-        throw new Error(`Argument Type is unsuppored: ${ty}`);
+function argumentToBytes(
+    param: string | boolean | number | Uint8Array | string[] | Uint8Array[],
+    ty: ArgumentType
+): Uint8Array {
+    let value = new Uint8Array(32);
+    let valueView = new DataView(value.buffer, 0);
+
+    console.error(`type: ${ty}`);
+
+    switch (ty) {
+        case ArgumentType.uint8:
+            if (typeof param === "number") {
+                valueView.setUint8(31, param as number);
+            } else {
+                value.set(param as Uint8Array, 31);
+            }
+            return value;
+        case ArgumentType.int8:
+            if (typeof param === "number") {
+                valueView.setInt8(31, param as number);
+            } else {
+                value.set(param as Uint8Array, 31);
+            }
+            return value;
+        case ArgumentType.uint16:
+            if (typeof param === "number") {
+                valueView.setUint16(30, param as number);
+            } else {
+                value.set(param as Uint8Array, 30);
+            }
+            return value;
+        case ArgumentType.int16:
+            if (typeof param === "number") {
+                valueView.setInt16(30, param as number);
+            } else {
+                value.set(param as Uint8Array, 30);
+            }
+            return value;
+        case ArgumentType.uint32:
+            if (typeof param === "number") {
+                valueView.setUint32(28, param as number);
+            } else {
+                value.set(param as Uint8Array, 28);
+            }
+            return value;
+        case ArgumentType.int32:
+            if (typeof param === "number") {
+                valueView.setInt32(28, param as number);
+            } else {
+                value.set(param as Uint8Array, 28);
+            }
+            return value;
+        // int64, uint64, and uint256 both expect the parameter to be an Uint8Array instead of number
+        case ArgumentType.uint64:
+            value.set(param as Uint8Array, 24);
+            return value;
+        case ArgumentType.int64:
+            value.set(param as Uint8Array, 24);
+            return value;
+        case ArgumentType.uint256:
+            value = (param as Uint8Array);
+            return value;
+        case ArgumentType.address:
+            value.set(param as Uint8Array, 20);
+            return value;
+        case ArgumentType.bool:
+            value[ 31 ] = (param as boolean) ? 1 : 0;
+            return value;
+        case ArgumentType.func:
+            value.set(param as Uint8Array, 0);
+            return value;
+        case ArgumentType.bytesfix:
+            value.set(param as Uint8Array, 0);
+            return value;
+        // Bytes should have not the length already encoded
+        // JS String type is encoded as UTF-16 whilst Solidity `string` type is UTF-8 encoded.
+        // So if will assume is already correctly updated to being a Uint8Array of UTF-8 string
+        case ArgumentType.bytes:
+        case ArgumentType.string:
+            // If value is of type string, encode it in UTF-8 format and conver it to Uint8Array
+            // Required because JS Strings are UTF-16
+            // eslint-disable-next-line no-case-declarations
+            const par: Uint8Array = param instanceof Uint8Array ?
+                param as Uint8Array :
+                Buffer.from(param as string, "utf8");
+
+            // Resize value to a 32 byte boundary if needed
+            if (Math.floor(par.length / 32) >= 0 && Math.floor(par.length % 32) !== 0) {
+                value = new Uint8Array(((Math.floor(par.length / 32) + 1) * 32) + 32);
+            } else {
+                value = new Uint8Array(64);
+            }
+
+            value.set(par, 32);
+
+            valueView = new DataView(value.buffer, 28);
+            valueView.setUint32(0, par.length);
+            return value;
+        case ArgumentType.bytesArray:
+        case ArgumentType.stringArray:
+            // eslint-disable-next-line no-case-declarations
+            let values: Uint8Array[];
+
+            // w0w this is dumb, but `param instanceof Array<Uint8Array>` doesn't work
+            // This introduces a limitation where there must be at least one value supplied
+            if (Array.isArray(param) && param[ 0 ] instanceof Uint8Array) {
+                values = (param as Uint8Array[])
+                    .map((s: Uint8Array) => argumentToBytes(s, ArgumentType.bytes));
+            } else {
+                values = (param as string[])
+                    .map((s: string) => argumentToBytes(s, ArgumentType.string));
+            }
+
+            // eslint-disable-next-line no-case-declarations
+            const totalLengthOfValues = values
+                .map((a) => a.length)
+                .reduce((total, current) => total + current);
+
+            value = new Uint8Array((values.length * 32) + totalLengthOfValues + 32);
+
+            valueView = new DataView(value.buffer, 28);
+            valueView.setUint32(0, values.length);
+
+            // eslint-disable-next-line no-case-declarations
+            let offset = 32 * values.length;
+
+            for (const [ i, e ] of values.entries()) {
+                const view = new DataView(value.buffer, ((i + 1) * 32) + 28);
+                view.setUint32(0, offset);
+                value.set(e, view.getUint32(0) + 32);
+                offset += e.length;
+            }
+
+            return value;
+        default: throw new Error(`Unsupported argument type: ${ty}`);
     }
-
-    return argument;
 }
-
