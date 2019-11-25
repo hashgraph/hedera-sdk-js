@@ -1,5 +1,4 @@
 import { QueryBuilder } from "../QueryBuilder";
-import { BaseClient } from "../BaseClient";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { Query } from "../generated/Query_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -10,9 +9,9 @@ import { ContractIdLike, contractIdToProto } from "./ContractId";
 
 export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
     private readonly _builder: ContractGetBytecodeQuery;
-    public constructor(client: BaseClient) {
+    public constructor() {
         const header = new QueryHeader();
-        super(client, header);
+        super(header);
         this._builder = new ContractGetBytecodeQuery();
         this._builder.setHeader(header);
         this._inner.setContractgetbytecode(this._builder);

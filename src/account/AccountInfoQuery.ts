@@ -4,7 +4,6 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { Query } from "../generated/Query_pb";
 import { Response } from "../generated/Response_pb";
 import { CryptoService } from "../generated/CryptoService_pb_service";
-import { BaseClient } from "../BaseClient";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { Key } from "../generated/BasicTypes_pb";
 import { Hbar } from "../Hbar";
@@ -30,9 +29,9 @@ export type AccountInfo = {
 export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
     private readonly _builder: CryptoGetInfoQuery;
 
-    public constructor(client: BaseClient) {
+    public constructor() {
         const header = new QueryHeader();
-        super(client, header);
+        super(header);
         this._builder = new CryptoGetInfoQuery();
         this._builder.setHeader(header);
         this._inner.setCryptogetinfo(this._builder);

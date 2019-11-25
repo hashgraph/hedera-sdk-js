@@ -2,7 +2,6 @@ import { TransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { BaseClient } from "../BaseClient";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
 import { ContractUpdateTransactionBody } from "../generated/ContractUpdate_pb";
@@ -16,8 +15,8 @@ import { PublicKey } from "../crypto/PublicKey";
 export class ContractUpdateTransaction extends TransactionBuilder {
     private readonly _body: ContractUpdateTransactionBody;
 
-    public constructor(client: BaseClient) {
-        super(client);
+    public constructor() {
+        super();
         this._body = new ContractUpdateTransactionBody();
         this._inner.setContractupdateinstance(this._body);
     }

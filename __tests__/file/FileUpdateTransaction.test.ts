@@ -3,7 +3,7 @@ import { FileUpdateTransaction } from "../../src/exports";
 
 describe("FileUpdateTransaction", () => {
     it("serializes and deserializes correctly; FileUpdateTransaction", () => {
-        const transaction = new FileUpdateTransaction(mockClient)
+        const transaction = new FileUpdateTransaction()
             .setFileId({ shard: 0, realm: 0, file: 5 })
             .setContents("This is the file contents")
             .setExpirationTime(new Date(15415151511))
@@ -14,7 +14,7 @@ describe("FileUpdateTransaction", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .build();
+            .build(mockClient);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({

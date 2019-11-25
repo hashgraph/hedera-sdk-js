@@ -3,7 +3,7 @@ import { FileInfoQuery } from "../../src/exports";
 
 describe("FileInfoQuery", () => {
     it("serializes and deserializes correctly; FileInfoQuery", () => {
-        const query = new FileInfoQuery(mockClient)
+        const query = new FileInfoQuery()
             .setFileId({ shard: 0, realm: 0, file: 5 })
             .setPayment(mockTransaction.toProto());
 

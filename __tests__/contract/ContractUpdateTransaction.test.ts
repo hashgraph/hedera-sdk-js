@@ -3,7 +3,7 @@ import { mockClient, privateKey } from "../MockClient";
 
 describe("ContractUpdateTransaction", () => {
     it("serializes and deserializes correctly; ContractUpdateTransaction", () => {
-        const transaction = new ContractUpdateTransaction(mockClient)
+        const transaction = new ContractUpdateTransaction()
             .setContractId({ shard: 0, realm: 0, contract: 3 })
             .setAdminkey(privateKey.publicKey)
             .setFileId({ shard: 0, realm: 0, file: 5 })
@@ -16,7 +16,7 @@ describe("ContractUpdateTransaction", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .build();
+            .build(mockClient);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({

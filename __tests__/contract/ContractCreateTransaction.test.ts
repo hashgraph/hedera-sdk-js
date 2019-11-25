@@ -3,7 +3,7 @@ import { mockClient, privateKey } from "../MockClient";
 
 describe("ContractCreateTransaction", () => {
     it("serializes and deserializes correctly; ContractCreateTransaction", () => {
-        const transaction = new ContractCreateTransaction(mockClient)
+        const transaction = new ContractCreateTransaction()
             .setAdminkey(privateKey.publicKey)
             .setInitialBalance(1e3)
             .setBytecodeFile({ shard: 0, realm: 0, file: 4 })
@@ -16,7 +16,7 @@ describe("ContractCreateTransaction", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .build();
+            .build(mockClient);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({

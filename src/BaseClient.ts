@@ -5,12 +5,8 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoGetAccountBalanceQuery } from "./generated/CryptoGetAccountBalance_pb";
 import { QueryHeader } from "./generated/QueryHeader_pb";
 
-import {
-    handleQueryPrecheck,
-    reqDefined
-} from "./util";
+import { handleQueryPrecheck } from "./util";
 import { ProtobufMessage } from "@improbable-eng/grpc-web/dist/typings/message";
-import { AccountCreateTransaction } from "./account/AccountCreateTransaction";
 import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
 import BigNumber from "bignumber.js";
 import { CryptoService } from "./generated/CryptoService_pb_service";
@@ -21,7 +17,6 @@ import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { AccountId, AccountIdLike, accountIdToProto, normalizeAccountId } from "./account/AccountId";
 import { Tinybar, tinybarRangeCheck } from "./Tinybar";
-import { TransactionId } from "./TransactionId";
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
@@ -41,7 +36,10 @@ export type Nodes = {
 } | Node[];
 
 /** A URL,AccountID pair identifying a Node */
-export type Node = [string, AccountId];
+export type Node = {
+    url: string;
+    id: AccountId;
+}
 
 export type ClientConfig = {
     nodes?: Nodes;
@@ -54,14 +52,19 @@ export abstract class BaseClient {
     public readonly operatorSigner: Signer;
     public readonly operatorPublicKey: Ed25519PublicKey;
 
-    protected readonly _nodes: [string, AccountId][];
+    protected readonly _nodes: Node[];
 
     private _maxTransactionFee: Hbar = Hbar.of(1);
     private _maxQueryPayment?: Hbar;
 
     protected constructor(nodes: Nodes, operator: Operator) {
-        this._nodes = (Array.isArray(nodes) ? nodes : Object.entries(nodes))
-            .map(([ url, acct ]) => [ url, normalizeAccountId(acct) ]);
+        this._nodes = Array.isArray(nodes) ?
+            nodes as Node[] :
+            Object.entries(nodes)
+                .map(([ url, accountId ]) => {
+                    const id = normalizeAccountId(accountId as AccountIdLike);
+                    return { url, id };
+                });
         this.operator = operator;
         this._operatorAcct = normalizeAccountId(operator.account);
 
@@ -130,58 +133,18 @@ export abstract class BaseClient {
         return this;
     }
 
-    public createAccount(
-        publicKey: Ed25519PublicKey,
-        initialBalance = 100_000
-    ): Promise<{ account: AccountId }> {
-        return new AccountCreateTransaction(this)
-            .setKey(publicKey)
-            .setInitialBalance(initialBalance)
-            .setTransactionFee(10_000_000)
-            .build()
-            .executeForReceipt()
-            .then((receipt) => ({
-                account: reqDefined(
-                    receipt.accountId,
-                    `missing account ID from receipt: ${receipt}`
-                )
-            }));
-    }
-
-    /**
-     * Transfer the given amount from the operator account to the given recipient.
-     *
-     * Note that `number` can only represent exact integers in the range`[-2^53, 2^53)`.
-     * To represent exact values higher than this you should use the `BigNumber` type instead.
-     *
-     * @param recipient
-     * @param amount
-     */
-    public transferCryptoTo(
-        recipient: AccountIdLike,
-        amount: number | BigNumber | Hbar
-    ): Promise<TransactionId> {
-        const txn = new CryptoTransferTransaction(this)
-            .addSender(this._operatorAcct, amount)
-            .addRecipient(recipient, amount)
-            .setTransactionFee(1_000_000)
-            .build();
-
-        return txn.executeForReceipt().then(() => txn.getTransactionId());
-    }
-
     /** Get the current account balance in Tinybar */
     public getAccountBalance(): Promise<BigNumber> {
         const balanceQuery = new CryptoGetAccountBalanceQuery();
         balanceQuery.setAccountid(accountIdToProto(this._operatorAcct));
 
-        const [ url, nodeAccountID ] = this._randomNode();
+        const node = this._randomNode();
 
-        const paymentTxn = new CryptoTransferTransaction(this)
+        const paymentTxn = new CryptoTransferTransaction()
             .addSender(this._operatorAcct, 0)
-            .addRecipient(nodeAccountID, 0)
+            .addRecipient(node.id, 0)
             .setTransactionFee(9)
-            .build();
+            .build(this);
 
         const queryHeader = new QueryHeader();
         queryHeader.setPayment(paymentTxn.toProto());
@@ -190,7 +153,7 @@ export abstract class BaseClient {
         const query = new Query();
         query.setCryptogetaccountbalance(balanceQuery);
 
-        return this._unaryCall(url, query, CryptoService.cryptoGetBalance)
+        return this._unaryCall(node.url, query, CryptoService.cryptoGetBalance)
             .then(handleQueryPrecheck((resp) => resp.getCryptogetaccountbalance()))
             .then((response) => new BigNumber(response.getBalance()));
     }
@@ -216,11 +179,11 @@ export abstract class BaseClient {
      * version bumps.
      */
     public _getNode(node: string | AccountId): Node {
-        const maybeNode = this._nodes.find(([ url, accountId ]) => url === node || (
+        const maybeNode = this._nodes.find((_node) => _node.url === node || (
             typeof node === "object" &&
-                accountId.account === node.account &&
-                accountId.realm === node.realm &&
-                accountId.shard === node.shard
+                _node.id.account === node.account &&
+                _node.id.realm === node.realm &&
+                _node.id.shard === node.shard
         ));
 
         if (maybeNode) {

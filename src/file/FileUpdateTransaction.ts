@@ -2,7 +2,6 @@ import { TransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { BaseClient } from "../BaseClient";
 
 import { FileService } from "../generated/FileService_pb_service";
 import { KeyList } from "../generated/BasicTypes_pb";
@@ -14,8 +13,8 @@ import { PublicKey } from "../crypto/PublicKey";
 export class FileUpdateTransaction extends TransactionBuilder {
     private readonly _body: FileUpdateTransactionBody;
 
-    public constructor(client: BaseClient) {
-        super(client);
+    public constructor() {
+        super();
         this._body = new FileUpdateTransactionBody();
         this._inner.setFileupdate(this._body);
     }

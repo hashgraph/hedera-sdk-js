@@ -5,7 +5,7 @@ import { TransactionBody } from "../../src/generated/TransactionBody_pb";
 
 describe('AccountCreateTransaction', () => {
     it('serializes correctly', () => {
-        const transaction = new AccountCreateTransaction(mockClient)
+        const transaction = new AccountCreateTransaction()
             // deterministic values
             .setTransactionId({
                 account: { shard: 0, realm: 0, account: 3 },
@@ -14,7 +14,7 @@ describe('AccountCreateTransaction', () => {
             })
             .setKey(privateKey.publicKey)
             .setTransactionFee(Hbar.of(1))
-            .build();
+            .build(mockClient);
 
         const bodybytes = "Cg4KCAjcyQcQ258JEgIYAxICGAMYgMLXLyICCHhaPwoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktzD//////////384//////////9/SgUI0MjhAw==";
 

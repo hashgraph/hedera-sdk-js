@@ -3,7 +3,7 @@ import { mockClient, mockTransaction } from "../MockClient";
 
 describe("ContractBytecodeQuery", () => {
     it("serializes and deserializes correctly; ContractBytecodeQuery", () => {
-        const transaction = new ContractBytecodeQuery(mockClient)
+        const transaction = new ContractBytecodeQuery()
             .setContractId({ shard: 0, realm: 0, contract: 3 })
             .setPayment(mockTransaction.toProto());
 

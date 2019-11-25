@@ -3,7 +3,6 @@ import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoUpdateTransactionBody } from "../generated/CryptoUpdate_pb";
-import { BaseClient } from "../BaseClient";
 import { newDuration } from "../util";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 import { Hbar } from "../Hbar";
@@ -15,8 +14,8 @@ import { AccountIdLike, accountIdToProto } from "./AccountId";
 export class AccountUpdateTransaction extends TransactionBuilder {
     private _body: CryptoUpdateTransactionBody;
 
-    public constructor(client: BaseClient) {
-        super(client);
+    public constructor() {
+        super();
         const body = new CryptoUpdateTransactionBody();
         this._body = body;
         this._inner.setCryptoupdateaccount(body);

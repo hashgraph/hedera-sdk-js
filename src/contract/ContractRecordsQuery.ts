@@ -1,5 +1,4 @@
 import { QueryBuilder } from "../QueryBuilder";
-import { BaseClient } from "../BaseClient";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { Query } from "../generated/Query_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -16,9 +15,9 @@ export type ContractRecord = {
 
 export class ContractRecordsQuery extends QueryBuilder<ContractRecord> {
     private readonly _builder: ContractGetRecordsQuery;
-    public constructor(client: BaseClient) {
+    public constructor() {
         const header = new QueryHeader();
-        super(client, header);
+        super(header);
         this._builder = new ContractGetRecordsQuery();
         this._builder.setHeader(header);
         this._inner.setContractgetrecords(this._builder);

@@ -21,7 +21,7 @@ import { FileService } from "./generated/FileService_pb_service";
 import { FreezeService } from "./generated/FreezeService_pb_service";
 import { HederaError } from "./errors";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import { accountIdToSdk } from "./account/AccountId";
+import { AccountId, accountIdToSdk } from "./account/AccountId";
 import { TransactionId, transactionIdToSdk } from "./TransactionId";
 import { receiptToSdk, TransactionReceipt } from "./TransactionReceipt";
 import { timestampToMs } from "./Timestamp";
@@ -40,9 +40,7 @@ const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
 
 export class Transaction {
-    private readonly _client: BaseClient;
-
-    private readonly _nodeUrl: string;
+    private readonly _node: AccountId;
     private readonly _inner: Transaction_;
     private readonly _txnId: TransactionID;
     private readonly _validDurationSeconds: number;
@@ -56,14 +54,12 @@ export class Transaction {
      * version bumps.
      */
     public constructor(
-        client: BaseClient,
-        nodeUrl: string,
+        node: AccountId,
         inner: Transaction_,
         body: TransactionBody,
         method: UnaryMethodDefinition<Transaction_, TransactionResponse>
     ) {
-        this._client = client;
-        this._nodeUrl = nodeUrl;
+        this._node = node;
         this._inner = inner;
         this._txnId = orThrow(body.getTransactionid());
         this._validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
@@ -74,13 +70,11 @@ export class Transaction {
         const inner = Transaction_.deserializeBinary(bytes);
         const body = TransactionBody.deserializeBinary(inner.getBodybytes_asU8());
 
-        const nodeAccountId = accountIdToSdk(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
-
-        const [ url ] = client._getNode(nodeAccountId);
+        const nodeId = accountIdToSdk(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
 
         const method = methodFromTxn(body);
 
-        return new Transaction(client, url, inner, body, method);
+        return new Transaction(nodeId, inner, body, method);
     }
 
     public getTransactionId(): TransactionId {
@@ -123,29 +117,31 @@ export class Transaction {
         return this;
     }
 
-    public async execute(): Promise<TransactionId> {
-        handlePrecheck(await this._client._unaryCall(this._nodeUrl, this._inner, this._method));
+    public async execute(client: BaseClient): Promise<TransactionId> {
+        const node = client._getNode(this._node);
+        handlePrecheck(await client._unaryCall(node.url, this._inner, this._method));
 
         return this.getTransactionId();
     }
 
-    public async executeForReceipt(): Promise<TransactionReceipt> {
-        await this.execute();
-        return receiptToSdk(await this._waitForReceipt());
+    public async waitForReceipt(client: BaseClient): Promise<TransactionReceipt> {
+        return receiptToSdk(await this._waitForReceipt(client));
     }
 
-    private _getReceipt(): Promise<ProtoTransactionReceipt> {
+    private _getReceipt(client: BaseClient): Promise<ProtoTransactionReceipt> {
         const receiptQuery = new TransactionGetReceiptQuery();
         receiptQuery.setTransactionid(this._txnId);
         const query = new Query();
         query.setTransactiongetreceipt(receiptQuery);
 
-        return this._client._unaryCall(this._nodeUrl, query, CryptoService.getTransactionReceipts)
+        const node = client._getNode(this._node);
+
+        return client._unaryCall(node.url, query, CryptoService.getTransactionReceipts)
             .then(handleQueryPrecheck((resp) => resp.getTransactiongetreceipt()))
             .then((receipt) => orThrow(receipt.getReceipt()));
     }
 
-    private async _waitForReceipt(): Promise<ProtoTransactionReceipt> {
+    private async _waitForReceipt(client: BaseClient): Promise<ProtoTransactionReceipt> {
         const validStartMs = timestampToMs(orThrow(this._txnId.getTransactionvalidstart()));
         // set timeout at max valid duration
         const validUntilMs = validStartMs + 120000;
@@ -155,7 +151,7 @@ export class Transaction {
         /* eslint-disable no-await-in-loop */
         // we want to wait in a loop, that's the whole point here
         for (let attempt = 0; /* loop will exit when transaction expires */; attempt += 1) {
-            const receipt = await this._getReceipt();
+            const receipt = await this._getReceipt(client);
 
             // typecast required or we get a mismatching union type error
             if (([ ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK ] as number[])

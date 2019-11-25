@@ -1,5 +1,4 @@
 import { QueryBuilder } from "../QueryBuilder";
-import { BaseClient } from "../BaseClient";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { Query } from "../generated/Query_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -11,9 +10,9 @@ import { ContractCallLocalQuery } from "../generated/ContractCallLocal_pb";
 
 export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
     private readonly _builder: ContractCallLocalQuery;
-    public constructor(client: BaseClient) {
+    public constructor() {
         const header = new QueryHeader();
-        super(client, header);
+        super(header);
         this._builder = new ContractCallLocalQuery();
         this._builder.setHeader(header);
         this._inner.setContractcalllocal(this._builder);

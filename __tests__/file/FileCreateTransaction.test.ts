@@ -3,7 +3,7 @@ import { mockClient, privateKey } from "../MockClient";
 
 describe("FileCreateTransaction", () => {
     it("serializes and deserializes correctly; FileCreateTransaction", () => {
-        const transaction = new FileCreateTransaction(mockClient)
+        const transaction = new FileCreateTransaction()
             .setContents("This is the file contents")
             .setExpirationTime(new Date(15415151511))
             .addKey(privateKey.publicKey)
@@ -13,7 +13,7 @@ describe("FileCreateTransaction", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .build();
+            .build(mockClient);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({
