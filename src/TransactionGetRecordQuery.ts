@@ -16,7 +16,7 @@ export class TransactionGetRecordQuery extends QueryBuilder<TransactionRecord> {
         super(header);
         this._builder = new ProtoTransactionGetRecordQuery();
         this._builder.setHeader(header);
-        this._inner.setTransactiongetreceipt(this._builder);
+        this._inner.setTransactiongetrecord(this._builder);
     }
 
     public setTransactionId(txId: TransactionIdLike): this {
@@ -40,4 +40,3 @@ export class TransactionGetRecordQuery extends QueryBuilder<TransactionRecord> {
         return recordListToSdk([ receipt.getTransactionrecord()! ])[ 0 ];
     }
 }
-
