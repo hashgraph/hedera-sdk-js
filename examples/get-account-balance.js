@@ -22,7 +22,7 @@ async function main() {
         .setAccountId(operatorAccount)
         .execute(client);
 
-    console.log(`${operatorAccount} balance = ${balance.balance.value()}`);
+    console.log(`${operatorAccount} balance = ${balance.value()}`);
 }
 
 main();

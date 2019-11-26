@@ -8,12 +8,7 @@ import { Hbar } from "../Hbar";
 import { AccountIdLike, accountIdToProto, accountIdToSdk } from "./AccountId";
 import { CryptoGetAccountBalanceQuery } from "../generated/CryptoGetAccountBalance_pb";
 
-export type AccountBalance = {
-    accountId: AccountIdLike;
-    balance: Hbar;
-};
-
-export class AccountBalanceQuery extends QueryBuilder<AccountBalance> {
+export class AccountBalanceQuery extends QueryBuilder<Hbar> {
     private readonly _builder: CryptoGetAccountBalanceQuery;
 
     public constructor() {
@@ -39,13 +34,10 @@ export class AccountBalanceQuery extends QueryBuilder<AccountBalance> {
         return CryptoService.cryptoGetBalance;
     }
 
-    protected _mapResponse(response: Response): AccountBalance {
+    protected _mapResponse(response: Response): Hbar {
         const accountBalance = response.getCryptogetaccountbalance()!;
 
-        return {
-            accountId: accountIdToSdk(accountBalance.getAccountid()!),
-            balance: Hbar.fromTinybar(accountBalance.getBalance())
-        };
+        return Hbar.fromTinybar(accountBalance.getBalance());
     }
 }
 
