@@ -16,11 +16,9 @@ async function main() {
         }
     });
 
-    const { mnemonic, generateKey } = generateMnemonic();
     const privateKey = await generateKey();
 
     console.log("private =", privateKey.toString());
-    console.log("mnemonic =", mnemonic);
 
     const tx = new AccountCreateTransaction()
         .setKey(privateKey.publicKey)
