@@ -1,22 +1,28 @@
-#!/usr/bin/env node
+const { Client, AccountInfoQuery } = require("@hashgraph/sdk");
 
-const { AccountInfoQuery, Client } = require("@hashgraph/sdk");
+async function main() {
+    const operatorPrivateKey = process.env.OPERATOR_KEY;
+    const operatorAccount = process.env.OPERATOR_ID;
 
-const privateKey = process.env.OPERATOR_KEY;
+    if (operatorPrivateKey == null || operatorAccount == null) {
+        throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
+    }
 
-if (!privateKey) {
-    throw new Error("missing env var OPERATOR_KEY");
+    const client = new Client({
+        nodes: { "0.testnet.hedera.com:50211": "0.0.3" },
+        operator: {
+            account: operatorAccount,
+            privateKey: operatorPrivateKey,
+        }
+    });
+
+    client.setMaxQueryPayment(1000000000);
+
+    const info = await new AccountInfoQuery()
+        .setAccountId(operatorAccount)
+        .execute(client);
+
+    console.log(`${operatorAccount} info = ${JSON.stringify(info, null, 4)}`);
 }
 
-const client = new Client({
-    operator: {
-        account: { shard: 0, realm: 0, account: 2 },
-        privateKey
-    }
-});
-
-const accountId = { shard: 0, realm: 0, account: 3 };
-
-(async function() {
-    console.log("account info:", JSON.stringify(await new AccountInfoQuery(client).setAccountId(accountId).execute()));
-}());
+main();

@@ -1,26 +1,40 @@
-#!/usr/bin/env node
+const { Client, generateMnemonic, AccountCreateTransaction } = require("@hashgraph/sdk");
 
-const { Client, generateMnemonic } = require("@hashgraph/sdk");
+async function main() {
+    const operatorPrivateKey = process.env.OPERATOR_KEY;
+    const operatorAccount = process.env.OPERATOR_ID;
 
-const privateKey = process.env.OPERATOR_KEY;
-
-if (!privateKey) {
-    throw new Error("missing env var OPERATOR_KEY");
-}
-
-const client = new Client({
-    operator: {
-        account: { shard: 0, realm: 0, account: 2 },
-        privateKey
+    if (operatorPrivateKey == null || operatorAccount == null) {
+        throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
     }
-});
 
-(async function() {
+    const client = new Client({
+        nodes: { "0.testnet.hedera.com:50211": "0.0.3" },
+        operator: {
+            account: operatorAccount,
+            privateKey: operatorPrivateKey,
+        }
+    });
+
+    client.setMaxTransactionFee(100000000);
+
     const { mnemonic, generateKey } = generateMnemonic();
     const privateKey = await generateKey();
 
-    console.log("privateKey:", privateKey.toString());
-    console.log("mnemonic:", mnemonic);
+    console.log("private =", privateKey.toString());
+    console.log("mnemonic =", mnemonic);
 
-    console.log(await client.createAccount(privateKey.publicKey));
-}());
+    const tx = new AccountCreateTransaction()
+        .setKey(privateKey.publicKey)
+        .setInitialBalance(0)
+        .setTransactionFee(100000000)
+        .build(client);
+
+    const id = await tx.execute(client);
+    const receipt = await tx.waitForReceipt(client);
+
+    console.log(`transaction ${JSON.stringify(id, null, 4)}`);
+    console.log(`receipt ${JSON.stringify(receipt, null, 4)}`);
+}
+
+main();

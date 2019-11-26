@@ -1,22 +1,30 @@
-#!/usr/bin/env node
+const { Client, CryptoTransferTransaction } = require("@hashgraph/sdk");
 
-const { Client } = require("@hashgraph/sdk");
+async function main() {
+    const operatorPrivateKey = process.env.OPERATOR_KEY;
+    const operatorAccount = process.env.OPERATOR_ID;
 
-const privateKey = process.env.OPERATOR_KEY;
+    if (operatorPrivateKey == null || operatorAccount == null) {
+        throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
+    }
 
-if (!privateKey) {
-    throw new Error("missing env var OPERATOR_KEY");
+    const client = new Client({
+        nodes: { "0.testnet.hedera.com:50211": "0.0.3" },
+        operator: {
+            account: operatorAccount,
+            privateKey: operatorPrivateKey,
+        }
+    });
+
+    client.setMaxTransactionFee(100000000);
+
+    const tx = new CryptoTransferTransaction()
+        .addSender(operatorAccount, 10)
+        .addRecipient("0.0.3", 10)
+        .setMemo("[sdk example] transfer to 0.0.3")
+        .build(client);
+
+    await tx.execute(client);
 }
 
-const client = new Client({
-    operator: {
-        account: { shard: 0, realm: 0, account: 2 },
-        privateKey
-    }
-});
-
-(async function() {
-    console.log("balance before transfer:", (await client.getAccountBalance()).toString());
-    await client.transferCryptoTo({ shard: 0, realm: 0, account: 3 }, 10000);
-    console.log("balance after transfer:", (await client.getAccountBalance()).toString());
-}());
+main();
