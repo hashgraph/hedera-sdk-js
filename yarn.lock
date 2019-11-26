@@ -492,10 +492,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.21.tgz#4a9db7ef1d1671c0015e632c5fa3d46c86c58c1e"
   integrity sha512-nuFlRdBiqbF+PJIEVxm2jLFcQWN7q7iWEJGsBV4n7v1dbI9qXB8im2pMMKMCUZe092sQb5SQft2DHfuQGK5hqQ==
 
-"@types/node@^12.12.12":
-  version "12.12.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.12.tgz#529bc3e73dbb35dd9e90b0a1c83606a9d3264bdb"
-  integrity sha512-MGuvYJrPU0HUwqF7LqvIj50RZUX23Z+m583KBygKYUZLlZ88n6w28XRNJRJgsHukLEnLz6w6SvxZoLgbr5wLqQ==
+"@types/node@^12.12.14":
+  version "12.12.14"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.14.tgz#1c1d6e3c75dba466e0326948d56e8bd72a1903d2"
+  integrity sha512-u/SJDyXwuihpwjXy7hOOghagLEV1KdAST6syfnOk6QZAMzZuWZqXy5aYYZbh8Jdpd4escVFP0MvftHNDb9pruA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -2736,10 +2736,10 @@ glogg@^1.0.0:
   dependencies:
     sparkles "^1.0.0"
 
-google-protobuf@^3.11.0-rc.2:
-  version "3.11.0-rc.2"
-  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.11.0-rc.2.tgz#15e6b7cb589e999079b62f1840a0db4641f2e142"
-  integrity sha512-xnTxIDmEFeT5IlD0os1jO0qim7FRnoMCweW6uGZQUYpdjj1uMQCc/2AzfUM56hfVdP7dsd6cpgjEy8AXm//eiw==
+google-protobuf@^3.11.0:
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.11.0.tgz#9449d6029569aa4603fdaa154ec6a7681aea0787"
+  integrity sha512-Pni0ZGKZc/FpaRiz2n11+FfjzeuoUpnMdtuqoBUandjsEPsLDLh5C0yacl/bgNAFaZkyUgIGcGowW34u6mVWPw==
 
 google-protobuf@^3.6.1:
   version "3.9.1"

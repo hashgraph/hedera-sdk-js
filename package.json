@@ -23,14 +23,14 @@
     "@types/google-protobuf": "^3.7.2",
     "bignumber.js": "^9.0.0",
     "bip39": "^3.0.2",
-    "google-protobuf": "^3.11.0-rc.2",
+    "google-protobuf": "^3.11.0",
     "grpc": "^1.24.2",
     "tweetnacl": "^1.0.1"
   },
   "devDependencies": {
     "@launchbadge/eslint-config": "^0.13.10",
     "@types/jest": "^24.0.23",
-    "@types/node": "^12.12.12",
+    "@types/node": "^12.12.14",
     "@types/protobufjs": "^6.0.0",
     "eslint": "^6.7.1",
     "flowgen": "^1.10.0",
