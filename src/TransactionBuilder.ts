@@ -56,6 +56,11 @@ export abstract class TransactionBuilder {
         return this;
     }
 
+    public setGenerateRecord(generateRecord: boolean): this {
+        this._inner.setGeneraterecord(generateRecord);
+        return this;
+    }
+
     public abstract get _method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
     protected abstract _doValidate(errors: string[]): void;
