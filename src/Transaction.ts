@@ -77,7 +77,7 @@ export class Transaction {
         return new Transaction(nodeId, inner, body, method);
     }
 
-    public getTransactionId(): TransactionId {
+    public get id(): TransactionId {
         return transactionIdToSdk(this._txnId);
     }
 
@@ -121,7 +121,7 @@ export class Transaction {
         const node = client._getNode(this._node);
         handlePrecheck(await client._unaryCall(node.url, this._inner, this._method));
 
-        return this.getTransactionId();
+        return this.id;
     }
 
     public async waitForReceipt(client: BaseClient): Promise<TransactionReceipt> {
