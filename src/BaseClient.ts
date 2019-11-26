@@ -144,26 +144,10 @@ export abstract class BaseClient {
             .execute(this);
     }
 
-    /*
-     * NOT A STABLE API
-     *
-     * This method is public for access by other classes in the SDK but is not intended to be
-     * part of the stable/public API. Usage may be broken in releases with backwards-compatible
-     * version bumps.
-     */
-    // we're not using symbols because Flow doesn't support computed class properties and it's
-    // much nicer to just use `flowgen` rather than maintaining our own redundant definitions files
     public _randomNode(): Node {
         return this._nodes[ Math.floor(Math.random() * this._nodes.length) ];
     }
 
-    /*
-     * NOT A STABLE API
-     *
-     * This method is public for access by other classes in the SDK but is not intended to be
-     * part of the stable/public API. Usage may be broken in releases with backwards-compatible
-     * version bumps.
-     */
     public _getNode(node: string | AccountId): Node {
         const maybeNode = this._nodes.find((_node) => _node.url === node || (
             typeof node === "object" &&
@@ -179,13 +163,6 @@ export abstract class BaseClient {
         throw new Error(`could not find node: ${JSON.stringify(node)}`);
     }
 
-    /*
-     * NOT A STABLE API
-     *
-     * This method is public for access by other classes in the SDK but is not intended to be
-     * part of the stable/public API. Usage may be broken in releases with backwards-compatible
-     * version bumps.
-     */
     public abstract _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(
         url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs>;
 }
