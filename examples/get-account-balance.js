@@ -16,8 +16,6 @@ async function main() {
         }
     });
 
-    client.setMaxQueryPayment(1000000000);
-
     const balance = await new AccountBalanceQuery()
         .setAccountId(operatorAccount)
         .execute(client);

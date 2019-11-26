@@ -16,8 +16,6 @@ async function main() {
         }
     });
 
-    client.setMaxQueryPayment(1000000000);
-
     const info = await new AccountInfoQuery()
         .setAccountId(operatorAccount)
         .execute(client);

@@ -16,8 +16,6 @@ async function main() {
         }
     });
 
-    client.setMaxTransactionFee(100000000);
-
     const tx = new CryptoTransferTransaction()
         .addSender(operatorAccount, 10)
         .addRecipient("0.0.3", 10)
