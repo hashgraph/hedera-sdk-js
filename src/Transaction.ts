@@ -81,7 +81,7 @@ export class Transaction {
         return transactionIdToSdk(this._txnId);
     }
 
-    public addSignature({ signature, publicKey }: SignatureAndKey): this {
+    private _addSignature({ signature, publicKey }: SignatureAndKey): this {
         const sigPair = new SignaturePair();
         sigPair.setPubkeyprefix(publicKey.toBytes());
         sigPair.setEd25519(signature);
@@ -94,7 +94,7 @@ export class Transaction {
     }
 
     public sign(privateKey: Ed25519PrivateKey): this {
-        return this.addSignature({
+        return this._addSignature({
             signature: privateKey.sign(this._inner.getBodybytes_asU8()),
             publicKey: privateKey.publicKey
         });
@@ -113,7 +113,7 @@ export class Transaction {
             await signResult :
             signResult;
 
-        this.addSignature({ signature, publicKey });
+        this._addSignature({ signature, publicKey });
         return this;
     }
 
@@ -124,7 +124,7 @@ export class Transaction {
         return this.id;
     }
 
-    public async waitForReceipt(client: BaseClient): Promise<TransactionReceipt> {
+    public async getReceipt(client: BaseClient): Promise<TransactionReceipt> {
         return receiptToSdk(await this._waitForReceipt(client));
     }
 
