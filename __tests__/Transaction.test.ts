@@ -11,7 +11,7 @@ describe("Transaction", () => {
 
         const txnBytes = transaction.toBytes();
 
-        const transaction2 = Transaction.fromBytes(mockClient, txnBytes);
+        const transaction2 = Transaction.fromBytes(txnBytes);
 
         expect(transaction.toProto()).toStrictEqual(transaction2.toProto());
     });

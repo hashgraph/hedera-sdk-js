@@ -66,7 +66,7 @@ export class Transaction {
         this._method = method;
     }
 
-    public static fromBytes(client: BaseClient, bytes: Uint8Array): Transaction {
+    public static fromBytes(bytes: Uint8Array): Transaction {
         const inner = Transaction_.deserializeBinary(bytes);
         const body = TransactionBody.deserializeBinary(inner.getBodybytes_asU8());
 
