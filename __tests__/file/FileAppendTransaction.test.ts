@@ -6,7 +6,7 @@ describe("FileAppendTransaction", () => {
         const transaction = new FileAppendTransaction()
             .setFileId({ shard: 0, realm: 0, file: 5 })
             .setContents("This is some random data")
-            .setTransactionFee(1e6)
+            .setMaxTransactionFee(1e6)
             .setTransactionId({
                 account: { shard: 0, realm: 0, account: 3 },
                 validStartSeconds: 124124,

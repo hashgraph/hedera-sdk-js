@@ -40,7 +40,7 @@ export abstract class TransactionBuilder {
         return this;
     }
 
-    public setTransactionFee(fee: Tinybar | Hbar): this {
+    public setMaxTransactionFee(fee: Tinybar | Hbar): this {
         this._inner.setTransactionfee(tinybarToString(fee));
         return this;
     }
@@ -66,11 +66,6 @@ export abstract class TransactionBuilder {
                 errors.push("missing ID for transaction");
             }
 
-            if (this._inner.getTransactionfee() === "0") {
-                errors.push("Every transaction requires setTransactionFee(). " +
-                    "This is only a maximum; the actual fee assessed may be lower.");
-            }
-
             // strings are UTF-16, max 100 bytes
             if (this._inner.getMemo().length * 2 > 100) {
                 errors.push("memo may not be longer than 100 bytes");
@@ -82,7 +77,8 @@ export abstract class TransactionBuilder {
 
     public build(client?: BaseClient): Transaction {
         // Don't override TransactionFee if it's already set
-        if (client && this._inner.getTransactionfee() === "") {
+
+        if (client && this._inner.getTransactionfee() === "0") {
             this._inner.setTransactionfee(tinybarToString(client!.maxTransactionFee));
         }
 

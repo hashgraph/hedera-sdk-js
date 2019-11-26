@@ -26,8 +26,7 @@ export const mockClient = new MockClient();
 export const mockTransaction = new CryptoTransferTransaction()
     .addSender({ shard: 0, realm: 0, account: 2}, 100)
     .addRecipient({ shard: 0, realm: 0, account: 3}, 100)
-    .setTransactionFee(8000000)
-    .setTransactionFee(1e6)
+    .setMaxTransactionFee(1e6)
     .setTransactionId({
         account: { shard: 0, realm: 0, account: 3 },
         validStartSeconds: 124124,

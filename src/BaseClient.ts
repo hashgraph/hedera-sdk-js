@@ -11,12 +11,13 @@ import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
 import BigNumber from "bignumber.js";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 
-import { Hbar } from "./Hbar";
+import { Hbar, hbarUnits } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { AccountId, AccountIdLike, accountIdToProto, normalizeAccountId } from "./account/AccountId";
 import { Tinybar, tinybarRangeCheck } from "./Tinybar";
+import { AccountBalanceQuery } from "./account/AccountBalanceQuery";
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
@@ -54,8 +55,9 @@ export abstract class BaseClient {
 
     protected readonly _nodes: Node[];
 
+    // Default payment and transaction fees to 1 hbar
     private _maxTransactionFee: Hbar = Hbar.of(1);
-    private _maxQueryPayment?: Hbar;
+    private _maxQueryPayment?: Hbar = Hbar.of(1);
 
     protected constructor(nodes: Nodes, operator: Operator) {
         this._nodes = Array.isArray(nodes) ?
@@ -65,7 +67,9 @@ export abstract class BaseClient {
                     const id = normalizeAccountId(accountId as AccountIdLike);
                     return { url, id };
                 });
+
         this.operator = operator;
+
         this._operatorAcct = normalizeAccountId(operator.account);
 
         const maybePrivateKey = (operator as PrivateKey).privateKey;
@@ -86,7 +90,7 @@ export abstract class BaseClient {
         return this._maxTransactionFee;
     }
 
-    /** Get the current maximum query payment value, if set. */
+    /** Get the current maximum query payment. */
     public get maxQueryPayment(): Hbar | undefined {
         return this._maxQueryPayment;
     }
@@ -95,7 +99,7 @@ export abstract class BaseClient {
      * Set the default maximum fee for a transaction.
      *
      * This can be overridden for an individual transaction with
-     * `TransactionBuilder.setTransactionFee()`.
+     * `TransactionBuilder.setMaxTransactionFee()`.
      *
      * If a transaction's fee will exceed this value, a `HederaError` will be thrown with
      * `ResponseCode.INSUFFICIENT_TX_FEE`.
@@ -133,32 +137,14 @@ export abstract class BaseClient {
         return this;
     }
 
-    /** Get the current account balance in Tinybar */
-    public getAccountBalance(): Promise<BigNumber> {
-        const balanceQuery = new CryptoGetAccountBalanceQuery();
-        balanceQuery.setAccountid(accountIdToProto(this._operatorAcct));
-
-        const node = this._randomNode();
-
-        const paymentTxn = new CryptoTransferTransaction()
-            .addSender(this._operatorAcct, 0)
-            .addRecipient(node.id, 0)
-            .setTransactionFee(9)
-            .build(this);
-
-        const queryHeader = new QueryHeader();
-        queryHeader.setPayment(paymentTxn.toProto());
-        balanceQuery.setHeader(queryHeader);
-
-        const query = new Query();
-        query.setCryptogetaccountbalance(balanceQuery);
-
-        return this._unaryCall(node.url, query, CryptoService.cryptoGetBalance)
-            .then(handleQueryPrecheck((resp) => resp.getCryptogetaccountbalance()))
-            .then((response) => new BigNumber(response.getBalance()));
+    /** Get the current account balance. */
+    public getAccountBalance(): Promise<Hbar> {
+        return new AccountBalanceQuery()
+            .setAccountId(this._operatorAcct)
+            .execute(this);
     }
 
-    /**
+    /*
      * NOT A STABLE API
      *
      * This method is public for access by other classes in the SDK but is not intended to be
@@ -171,7 +157,7 @@ export abstract class BaseClient {
         return this._nodes[ Math.floor(Math.random() * this._nodes.length) ];
     }
 
-    /**
+    /*
      * NOT A STABLE API
      *
      * This method is public for access by other classes in the SDK but is not intended to be
@@ -193,7 +179,7 @@ export abstract class BaseClient {
         throw new Error(`could not find node: ${JSON.stringify(node)}`);
     }
 
-    /**
+    /*
      * NOT A STABLE API
      *
      * This method is public for access by other classes in the SDK but is not intended to be

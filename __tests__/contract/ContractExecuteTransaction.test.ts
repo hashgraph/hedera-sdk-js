@@ -8,7 +8,7 @@ describe("ContractExecuteTransaction", () => {
             .setGas(141)
             .setAmount(10000)
             .setFunctionParameters("These are random parameters")
-            .setTransactionFee(1e6)
+            .setMaxTransactionFee(1e6)
             .setTransactionId({
                 account: { shard: 0, realm: 0, account: 3 },
                 validStartSeconds: 124124,

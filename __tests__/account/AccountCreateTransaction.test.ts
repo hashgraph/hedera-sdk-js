@@ -13,7 +13,6 @@ describe('AccountCreateTransaction', () => {
                 validStartNanos: 151515
             })
             .setKey(privateKey.publicKey)
-            .setTransactionFee(Hbar.of(1))
             .build(mockClient);
 
         const bodybytes = "Cg4KCAjcyQcQ258JEgIYAxICGAMYgMLXLyICCHhaPwoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktzD//////////384//////////9/SgUI0MjhAw==";

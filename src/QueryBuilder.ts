@@ -41,7 +41,7 @@ export abstract class QueryBuilder<T> {
             .setNodeAccountId(nodeId)
             .addRecipient(nodeId, amount)
             .addSender(client.operator.account, amount)
-            .setTransactionFee(Hbar.of(1))
+            .setMaxTransactionFee(Hbar.of(1))
             .build(client);
 
         await payment.signWith(client.operatorPublicKey, client.operatorSigner);

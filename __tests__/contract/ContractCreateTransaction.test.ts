@@ -10,7 +10,7 @@ describe("ContractCreateTransaction", () => {
             .setGas(100)
             .setProxyAccountId({ shard: 0, realm: 0, account: 3 })
             .setAutoRenewPeriod(60 * 60 * 24 * 14)
-            .setTransactionFee(1e6)
+            .setMaxTransactionFee(1e6)
             .setTransactionId({
                 account: { shard: 0, realm: 0, account: 3 },
                 validStartSeconds: 124124,

@@ -7,7 +7,6 @@ describe("Transaction", () => {
         const transaction = new AccountCreateTransaction()
             .setKey(privateKey.publicKey)
             .setInitialBalance(1e3)
-            .setTransactionFee(1e6)
             .build(mockClient);
 
         const txnBytes = transaction.toBytes();

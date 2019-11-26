@@ -7,7 +7,7 @@ describe("FileCreateTransaction", () => {
             .setContents("This is the file contents")
             .setExpirationTime(new Date(15415151511))
             .addKey(privateKey.publicKey)
-            .setTransactionFee(1e6)
+            .setMaxTransactionFee(1e6)
             .setTransactionId({
                 account: { shard: 0, realm: 0, account: 3 },
                 validStartSeconds: 124124,

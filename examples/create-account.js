@@ -16,8 +16,6 @@ async function main() {
         }
     });
 
-    client.setMaxTransactionFee(100000000);
-
     const { mnemonic, generateKey } = generateMnemonic();
     const privateKey = await generateKey();
 
@@ -27,7 +25,6 @@ async function main() {
     const tx = new AccountCreateTransaction()
         .setKey(privateKey.publicKey)
         .setInitialBalance(0)
-        .setTransactionFee(100000000)
         .build(client);
 
     const id = await tx.execute(client);

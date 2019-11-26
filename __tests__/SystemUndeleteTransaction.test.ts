@@ -5,7 +5,7 @@ describe("SystemUndeleteTransaction", () => {
     it("serializes and deserializes correctly; SystemUndeleteTransaction", () => {
         const transaction = new SystemUndeleteTransaction()
             .setId({ file: 3 })
-            .setTransactionFee(1e6)
+            .setMaxTransactionFee(1e6)
             .setTransactionId({
                 account: { shard: 0, realm: 0, account: 3 },
                 validStartSeconds: 124124,
