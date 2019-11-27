@@ -613,8 +613,6 @@ function argumentToBytes(
     let value = new Uint8Array(32);
     let valueView = new DataView(value.buffer, 0);
 
-    console.error(`type: ${ty.ty}`);
-
     if (ty.array) {
         if (!Array.isArray(param)) {
             throw new TypeError("SoldityType indicates type is array, but parameter is not an array");
