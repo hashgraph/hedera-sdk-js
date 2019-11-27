@@ -2,44 +2,39 @@ import { CallParams, FunctionSelector } from "../../src/exports";
 import BigNumber from "bignumber.js";
 
 describe("CallParams", () => {
-    const uint32 = new Uint8Array(4);
-    const uint32View = new DataView(uint32.buffer);
-    uint32View.setUint32(0, 16909060);
+    // const uint32 = new Uint8Array(4);
+    // const uint32View = new DataView(uint32.buffer);
+    // uint32View.setUint32(0, 16909060);
+    const uint32 = 16909060;
 
     const bytes = new Uint8Array(10);
     bytes[ 1 ] = 1;
     bytes[ 4 ] = 4;
     bytes[ 9 ] = 8;
 
-    const uint64 = new Uint8Array(8);
-    const uint64View = new DataView(uint64.buffer);
-    uint64View.setUint32(0, 4294967295);
+    // const uint64 = new Uint8Array(8);
+    // const uint64View = new DataView(uint64.buffer);
+    // uint64View.setUint32(0, 4294967295);
+
+    const uint64 = new BigNumber("ffffffff", 16).multipliedBy(new BigNumber(256).pow(4));
 
     const str: string = "this is a grin: \uD83D\uDE01";
 
     const strArray: string[] = ["one", "two"];
 
     it("encodes correctly using function selector", () => {
-        const func = new FunctionSelector("f")
-            .addParamType("uint32")
-            .addParamType("bytes")
-            .addParamType("uint64")
-            .addParamType("bytes")
-            .addParamType("string");
-
         const bytes2 = new Uint8Array(32);
         bytes2[ 0 ] = 255;
         bytes2[ 31 ] = 255;
 
-        const params = new CallParams(func);
-        expect(() => params.toProto()).toThrow(new Error("Invalid number of parameters provided"));
-        params.addParam(uint32)
-            .addParam(bytes)
-            .addParam(uint64)
-            .addParam(bytes2)
-            .addParam(str);
+        const params = new CallParams("f");
+        params.addUint(uint32, 32)
+            .addBytes(bytes)
+            .addUint(uint64, 64)
+            .addBytes(bytes2)
+            .addString(str);
 
-        const finished = params.toProto();
+        const finished = params._toProto();
         const funcHash              = Buffer.from(finished.slice(0,  4).buffer).toString("hex");
         const firstParam            = Buffer.from(finished.slice((32 * 0)  + 4, (32 * 1)  + 4).buffer).toString("hex");
         const secondParam           = Buffer.from(finished.slice((32 * 1)  + 4, (32 * 2)  + 4).buffer).toString("hex");
@@ -70,14 +65,14 @@ describe("CallParams", () => {
     it("encodes correctly using generic addParam", () => {
         const params = new CallParams()
             .setFunction("f")
-            .addParam(uint32)
-            .addParam(bytes)
-            .addParam(uint64)
-            .addParam(str)
-            .addParam(1515)
-            .addParam(strArray);
+            .addUint(uint32, 32)
+            .addBytes(bytes, bytes.length)
+            .addUint(uint64, 64)
+            .addString(str)
+            .addUint(1515, 16)
+            .addStringArray(strArray);
 
-        const finished = params.toProto();
+        const finished = params._toProto();
         const funcHash              = Buffer.from(finished.slice(0,  4).buffer).toString("hex");
         const firstParam            = Buffer.from(finished.slice((32 * 0)  + 4, (32 * 1)  + 4).buffer).toString("hex");
         const secondParam           = Buffer.from(finished.slice((32 * 1)  + 4, (32 * 2)  + 4).buffer).toString("hex");
@@ -111,21 +106,5 @@ describe("CallParams", () => {
         expect(sixthParamSecondElLen).toStrictEqual("0000000000000000000000000000000000000000000000000000000000000003");
         expect(sixthParamSecondEl).toStrictEqual("74776f0000000000000000000000000000000000000000000000000000000000");
         expect(finished).toHaveLength(484);
-    });
-
-    it("encodes correctly using correct addParam", () => {
-        const params = new CallParams()
-            .setFunction("f")
-            .addUint64(uint64)
-            .addUint64(new BigNumber(2).pow(63));
-
-        const finished = params.toProto();
-        const funcHash              = Buffer.from(finished.slice(0,  4).buffer).toString("hex");
-        const firstParam            = Buffer.from(finished.slice((32 * 0)  + 4, (32 * 1)  + 4).buffer).toString("hex");
-        const secondParam           = Buffer.from(finished.slice((32 * 1)  + 4, (32 * 2)  + 4).buffer).toString("hex");
-        expect(funcHash).toStrictEqual("6a43b6eb");
-        expect(firstParam).toStrictEqual("000000000000000000000000000000000000000000000000ffffffff00000000");
-        expect(secondParam).toStrictEqual("0000000000000000000000000000000000000000000000008000000000000000");
-        expect(finished).toHaveLength(68);
     });
 });
