@@ -1,4 +1,4 @@
-const { Client, generateMnemonic, AccountCreateTransaction } = require("@hashgraph/sdk");
+const { Client, Ed25519PrivateKey, AccountCreateTransaction } = require("@hashgraph/sdk");
 
 async function main() {
     const operatorPrivateKey = process.env.OPERATOR_KEY;
@@ -12,11 +12,11 @@ async function main() {
         nodes: { "0.testnet.hedera.com:50211": "0.0.3" },
         operator: {
             account: operatorAccount,
-            privateKey: operatorPrivateKey,
+            privateKey: operatorPrivateKey
         }
     });
 
-    const privateKey = await generateKey();
+    const privateKey = await Ed25519PrivateKey.generate();
 
     console.log("private =", privateKey.toString());
 
