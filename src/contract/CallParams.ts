@@ -428,46 +428,22 @@ function argumentToBytes(
 
     switch (ty.ty) {
         case ArgumentType.uint8:
-            if (typeof param === "number") {
-                valueView.setUint8(31, param as number);
-            } else {
-                valueView.setUint8(31, (param as BigNumber).toNumber());
-            }
+            numberToBytes(param as number | BigNumber, 31, valueView.setUint8.bind(valueView));
             return value;
         case ArgumentType.int8:
-            if (typeof param === "number") {
-                valueView.setInt8(31, param as number);
-            } else {
-                valueView.setInt8(31, (param as BigNumber).toNumber());
-            }
+            numberToBytes(param as number | BigNumber, 31, valueView.setInt8.bind(valueView));
             return value;
         case ArgumentType.uint16:
-            if (typeof param === "number") {
-                valueView.setUint16(30, param as number);
-            } else {
-                valueView.setUint16(30, (param as BigNumber).toNumber());
-            }
+            numberToBytes(param as number | BigNumber, 30, valueView.setUint16.bind(valueView));
             return value;
         case ArgumentType.int16:
-            if (typeof param === "number") {
-                valueView.setInt16(30, param as number);
-            } else {
-                valueView.setInt16(30, (param as BigNumber).toNumber());
-            }
+            numberToBytes(param as number | BigNumber, 30, valueView.setInt16.bind(valueView));
             return value;
         case ArgumentType.uint32:
-            if (typeof param === "number") {
-                valueView.setUint32(28, param as number);
-            } else {
-                valueView.setUint32(28, (param as BigNumber).toNumber());
-            }
+            numberToBytes(param as number | BigNumber, 28, valueView.setUint32.bind(valueView));
             return value;
         case ArgumentType.int32:
-            if (typeof param === "number") {
-                valueView.setInt32(28, param as number);
-            } else {
-                valueView.setInt32(28, (param as BigNumber).toNumber());
-            }
+            numberToBytes(param as number | BigNumber, 28, valueView.setInt32.bind(valueView));
             return value;
         // int64, uint64, and uint256 both expect the parameter to be an Uint8Array instead of number
         case ArgumentType.uint64:
@@ -527,6 +503,16 @@ function argumentToBytes(
             return value;
         default: throw new Error(`Unsupported argument type: ${ty}`);
     }
+}
+
+function numberToBytes(
+    param: number | BigNumber,
+    byteoffset: number,
+    func: (byteOffset: number, value: number) => void
+): void {
+    const value = param instanceof BigNumber ? (param as BigNumber).toNumber() : param as number;
+
+    func(byteoffset, value);
 }
 
 function solidityTypeFromBitwidth(bitwidth: number, signed: boolean, array: boolean): SolidityType {

@@ -2,9 +2,6 @@ import { CallParams, FunctionSelector } from "../../src/exports";
 import BigNumber from "bignumber.js";
 
 describe("CallParams", () => {
-    // const uint32 = new Uint8Array(4);
-    // const uint32View = new DataView(uint32.buffer);
-    // uint32View.setUint32(0, 16909060);
     const uint32 = 16909060;
 
     const bytes = new Uint8Array(10);
@@ -12,15 +9,11 @@ describe("CallParams", () => {
     bytes[ 4 ] = 4;
     bytes[ 9 ] = 8;
 
-    // const uint64 = new Uint8Array(8);
-    // const uint64View = new DataView(uint64.buffer);
-    // uint64View.setUint32(0, 4294967295);
-
     const uint64 = new BigNumber("ffffffff", 16).multipliedBy(new BigNumber(256).pow(4));
 
-    const str: string = "this is a grin: \uD83D\uDE01";
+    const str = "this is a grin: \uD83D\uDE01";
 
-    const strArray: string[] = ["one", "two"];
+    const strArray: string[] = [ "one", "two" ];
 
     it("encodes correctly using function selector", () => {
         const bytes2 = new Uint8Array(32);
