@@ -25,7 +25,9 @@
     "bip39": "^3.0.2",
     "google-protobuf": "^3.11.0",
     "grpc": "^1.24.2",
-    "tweetnacl": "^1.0.1"
+    "js-sha3": "^0.8.0",
+    "tweetnacl": "^1.0.1",
+    "utf8": "^3.0.0"
   },
   "devDependencies": {
     "@launchbadge/eslint-config": "^0.13.10",
