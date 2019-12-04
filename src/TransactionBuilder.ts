@@ -88,10 +88,9 @@ export abstract class TransactionBuilder {
         }
 
         if (client && !this._inner.hasTransactionid()) {
-            if (!client.operator) {
-                throw new Error("Client's operator is undefined, but is required");
+            if (client.operator) {
+                this._inner.setTransactionid(TransactionId.newId(client.operator.account));
             }
-            this._inner.setTransactionid(TransactionId.newId(client!.operator.account));
         }
 
         if (!this._inner.hasTransactionvalidduration()) {
@@ -120,10 +119,9 @@ export abstract class TransactionBuilder {
 
         // If client is supplied make sure to sign transaction
         if (client) {
-            if (!client.operatorPublicKey || !client.operatorSigner) {
-                throw new Error("Client's operator public key and/or signer are undefined, but are required");
+            if (client.operatorPublicKey && client.operatorSigner) {
+                txn.signWith(client!.operatorPublicKey, client!.operatorSigner);
             }
-            txn.signWith(client!.operatorPublicKey, client!.operatorSigner);
         }
 
         return txn;

@@ -59,7 +59,9 @@ export abstract class BaseClient {
                     return { url, id };
                 });
 
-        this.setOperator(operator);
+        if (operator) {
+            this.setOperator(operator);
+        }
     }
 
     /** Add a node to the list of nodes */
@@ -69,11 +71,7 @@ export abstract class BaseClient {
     }
 
     /** Set the operator for the client object */
-    public setOperator(operator?: Operator): this {
-        if (!operator) {
-            return this;
-        }
-
+    public setOperator(operator: Operator): this {
         this.operator = operator;
 
         this._operatorAcct = new AccountId(operator.account);

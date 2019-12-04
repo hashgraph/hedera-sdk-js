@@ -249,7 +249,6 @@ export class CallParams {
         // If a length is supplied then the parameter type would be `byte<M>` where M is equal to length
         // and M is less than or equal to 32
         if (length) {
-            console.error(`length: ${length}`);
             if (length !== param.length) {
                 throw new Error("length of parameter is not equal to the length passed in");
             } else if (length > 32) {
