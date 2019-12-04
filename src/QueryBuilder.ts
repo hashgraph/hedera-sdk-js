@@ -28,7 +28,7 @@ export abstract class QueryBuilder<T> {
         this._needsPayment = true;
     }
 
-    public setMaxQueryCost(amount: Tinybar | Hbar): this {
+    public setMaxQueryPayment(amount: Tinybar | Hbar): this {
         this.maxCost = amount instanceof Hbar ?
             amount as Hbar :
             Hbar.fromTinybar(amount as Tinybar);
@@ -49,7 +49,7 @@ export abstract class QueryBuilder<T> {
         return this;
     }
 
-    private async _setPaymentAmount(amount: Tinybar | Hbar, client: BaseClient): Promise<this> {
+    private async _generatePayment(amount: Tinybar | Hbar, client: BaseClient): Promise<this> {
         const nodeId = this._getNode(client).id;
 
         const payment = new CryptoTransferTransaction()
@@ -104,7 +104,7 @@ export abstract class QueryBuilder<T> {
         this._header.setResponsetype(ResponseType.COST_ANSWER);
 
         const payment = this._header.getPayment();
-        await this._setPaymentAmount(0, client);
+        await this._generatePayment(0, client);
 
         const query = this._inner.clone() as Query;
 
@@ -144,9 +144,9 @@ export abstract class QueryBuilder<T> {
                 );
             }
 
-            await this._setPaymentAmount(cost, client);
+            await this._generatePayment(cost, client);
         } else if (this.amount && this._needsPayment && !this._header.hasPayment()) {
-            await this._setPaymentAmount(this.amount, client);
+            await this._generatePayment(this.amount, client);
         }
 
         this.validate();
