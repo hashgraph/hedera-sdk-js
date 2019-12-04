@@ -5,7 +5,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { CryptoDeleteTransactionBody } from "../generated/CryptoDelete_pb";
-import { AccountIdLike, accountIdToProto } from "./AccountId";
+import { AccountId, AccountIdLike } from "./AccountId";
 
 export class AccountDeleteTransaction extends TransactionBuilder {
     private _body: CryptoDeleteTransactionBody;
@@ -18,7 +18,7 @@ export class AccountDeleteTransaction extends TransactionBuilder {
     }
 
     public setAccountId(accountId: AccountIdLike): this {
-        this._body.setDeleteaccountid(accountIdToProto(accountId));
+        this._body.setDeleteaccountid(new AccountId(accountId).toProto());
         return this;
     }
 

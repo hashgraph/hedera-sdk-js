@@ -1,7 +1,7 @@
 import { receiptToSdk, TransactionReceipt } from "./TransactionReceipt";
 import { ContractFunctionResult, contractFunctionResultToSdk } from "./contract/ContractFunctionResult";
 import { TransactionRecord as ProtoTransactionRecord } from "./generated/TransactionRecord_pb";
-import { TransactionId, transactionIdToSdk } from "./TransactionId";
+import { TransactionId } from "./TransactionId";
 import { timestampToDate } from "./Timestamp";
 import { AccountAmount, accountAmountToSdk } from "./account/AccountAmount";
 import { TransferList as ProtoTransferList, AccountAmount as ProtoAccountAmount } from "./generated/CryptoTransfer_pb";
@@ -27,7 +27,7 @@ export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionR
             receipt: receiptToSdk(record.getReceipt()!),
             transactionHash: record.getTransactionhash(),
             consensusTimestamp: timestampToDate(record.getConsensustimestamp()!),
-            transactionId: transactionIdToSdk(record.getTransactionid()!),
+            transactionId: TransactionId.fromProto(record.getTransactionid()!),
             memo: record.getMemo(),
             transactionFee: record.getTransactionfee(),
             contractCallResult: callResult && contractFunctionResultToSdk(callResult!),

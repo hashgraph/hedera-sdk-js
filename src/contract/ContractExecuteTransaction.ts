@@ -6,7 +6,7 @@ import { SmartContractService } from "../generated/SmartContractService_pb_servi
 
 import { ContractCallTransactionBody } from "../generated/ContractCall_pb";
 import BigNumber from "bignumber.js";
-import { ContractIdLike, contractIdToProto } from "./ContractId";
+import { ContractId, ContractIdLike } from "./ContractId";
 
 export class ContractExecuteTransaction extends TransactionBuilder {
     private readonly _body: ContractCallTransactionBody;
@@ -39,7 +39,7 @@ export class ContractExecuteTransaction extends TransactionBuilder {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this._body.setContractid(contractIdToProto(contractIdLike));
+        this._body.setContractid(new ContractId(contractIdLike).toProto());
         return this;
     }
 

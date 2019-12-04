@@ -157,7 +157,7 @@ describe("ThresholdKey", () => {
         thresholdKey.addAll(key1.publicKey, key2.publicKey);
 
         expect(() => thresholdKey._toProtoKey())
-            .toThrow('ThresholdKey must have at least as many keys as threshold: 3; # of keys currently: 2');
+            .toThrow("ThresholdKey must have at least as many keys as threshold: 3; # of keys currently: 2");
 
         thresholdKey.add(key3.publicKey);
 
@@ -166,7 +166,7 @@ describe("ThresholdKey", () => {
 });
 
 describe("KeyList", () => {
-    it("serializes correctly", async () => {
+    it("serializes correctly", async() => {
         const key1 = Ed25519PublicKey.fromString(pubKeyStr);
         const key2 = new Ed25519PublicKey(iosWalletPubKeyBytes);
 
@@ -186,7 +186,7 @@ describe("KeyList", () => {
                         ed25519: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
                         keylist: undefined,
                         rsa3072: "",
-                        thresholdkey: undefined,
+                        thresholdkey: undefined
                     },
                     {
                         contractid: undefined,
@@ -194,12 +194,12 @@ describe("KeyList", () => {
                         ed25519: "K2DPfujPEOzVoHa/+tmnx7l983CtdYwPHdTvc44EzrY=",
                         keylist: undefined,
                         rsa3072: "",
-                        thresholdkey: undefined,
+                        thresholdkey: undefined
                     }
                 ]
             },
             rsa3072: "",
-            thresholdkey: undefined,
+            thresholdkey: undefined
         });
     });
 });

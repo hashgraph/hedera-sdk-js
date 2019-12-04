@@ -52,9 +52,9 @@ export * from "./Tinybar";
 
 export { Hbar, HbarUnit, hbarUnits, hbarUnitSymbols } from "./Hbar";
 
-export { normalizeAccountId, AccountId } from "./account/AccountId";
-export { normalizeContractId, ContractId } from "./contract/ContractId";
-export { normalizeFileId, FileId } from "./file/FileId";
+export { AccountId } from "./account/AccountId";
+export { ContractId } from "./contract/ContractId";
+export { FileId } from "./file/FileId";
 export { TransactionId } from "./TransactionId";
 
 export { TransactionReceipt } from "./TransactionReceipt";

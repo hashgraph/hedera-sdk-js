@@ -18,13 +18,15 @@ describe("SystemUndeleteTransaction", () => {
             body: undefined,
             bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeKoBBAoCGAM=",
             sigmap: {
-                sigpairList: [{
-                    contract: "",
-                    ecdsa384: "",
-                    ed25519: "qvS+HQClMp+3DO5sB4Ik4t2hnMPeRwUkYTEXOkf1RciQhOnnDdoveVfFzQk0NarOur/mx+eVZjNSLZuUURXBAQoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiqAQQKAhgD",
-                    pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
-                    rsa3072: "",
-                }],
+                sigpairList: [
+                    {
+                        contract: "",
+                        ecdsa384: "",
+                        ed25519: "qvS+HQClMp+3DO5sB4Ik4t2hnMPeRwUkYTEXOkf1RciQhOnnDdoveVfFzQk0NarOur/mx+eVZjNSLZuUURXBAQoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiqAQQKAhgD",
+                        pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
+                        rsa3072: ""
+                    }
+                ]
             },
             sigs: undefined
         });

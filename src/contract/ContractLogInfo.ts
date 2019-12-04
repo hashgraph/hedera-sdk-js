@@ -1,5 +1,5 @@
 import { ContractLoginfo as ProtoContractLoginfo } from "../generated/ContractCallLocal_pb";
-import { ContractId, contractIdToSdk } from "./ContractId";
+import { ContractId } from "./ContractId";
 
 export type ContractLogInfo = {
     contractId: ContractId;
@@ -10,7 +10,7 @@ export type ContractLogInfo = {
 
 export function contractLogInfoListToSdk(logInfoList: ProtoContractLoginfo[]): ContractLogInfo[] {
     return logInfoList.map((logInfo) => ({
-        contractId: contractIdToSdk(logInfo.getContractid()!),
+        contractId: ContractId.fromProto(logInfo.getContractid()!),
         bloom: logInfo.getBloom_asU8(),
         topicList: logInfo.getTopicList_asU8(),
         data: logInfo.getData_asU8()

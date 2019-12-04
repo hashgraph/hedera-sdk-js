@@ -5,7 +5,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { Response } from "../generated/Response_pb";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 import { ContractGetBytecodeQuery } from "../generated/ContractGetBytecode_pb";
-import { ContractIdLike, contractIdToProto } from "./ContractId";
+import { ContractId, ContractIdLike } from "./ContractId";
 
 export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
     private readonly _builder: ContractGetBytecodeQuery;
@@ -18,7 +18,7 @@ export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this._builder.setContractid(contractIdToProto(contractIdLike));
+        this._builder.setContractid(new ContractId(contractIdLike).toProto());
         return this;
     }
 

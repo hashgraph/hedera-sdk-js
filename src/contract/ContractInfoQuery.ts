@@ -5,8 +5,8 @@ import { Query } from "../generated/Query_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Response } from "../generated/Response_pb";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
-import { ContractId, ContractIdLike, contractIdToProto, contractIdToSdk } from "./ContractId";
-import { AccountId, accountIdToSdk } from "../account/AccountId";
+import { ContractId, ContractIdLike } from "./ContractId";
+import { AccountId } from "../account/AccountId";
 import { timestampToDate } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 
@@ -32,7 +32,7 @@ export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this._builder.setContractid(contractIdToProto(contractIdLike));
+        this._builder.setContractid(new ContractId(contractIdLike).toProto());
         return this;
     }
 
@@ -50,8 +50,8 @@ export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
         const contractInfo = response.getContractgetinfo()!.getContractinfo()!;
 
         return {
-            contractId: contractIdToSdk(contractInfo.getContractid()!),
-            accountId: accountIdToSdk(contractInfo.getAccountid()!),
+            contractId: ContractId.fromProto(contractInfo.getContractid()!),
+            accountId: AccountId.fromProto(contractInfo.getAccountid()!),
             contractAccountId: contractInfo.getContractaccountid(),
             adminKey: null,
             expirationTime: timestampToDate(contractInfo.getExpirationtime()!),

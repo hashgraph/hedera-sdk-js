@@ -1,7 +1,7 @@
 import { QueryBuilder } from "./QueryBuilder";
 import { TransactionGetRecordQuery as ProtoTransactionGetRecordQuery } from "./generated/TransactionGetRecord_pb";
 import { QueryHeader } from "./generated/QueryHeader_pb";
-import { getProtoTxnId, TransactionIdLike } from "./TransactionId";
+import { TransactionId, TransactionIdLike } from "./TransactionId";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
@@ -20,7 +20,7 @@ export class TransactionGetRecordQuery extends QueryBuilder<TransactionRecord> {
     }
 
     public setTransactionId(txId: TransactionIdLike): this {
-        this._builder.setTransactionid(getProtoTxnId(txId));
+        this._builder.setTransactionid(new TransactionId(txId).toProto());
         return this;
     }
 

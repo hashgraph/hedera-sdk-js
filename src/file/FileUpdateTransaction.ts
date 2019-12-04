@@ -6,7 +6,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { FileService } from "../generated/FileService_pb_service";
 import { KeyList } from "../generated/BasicTypes_pb";
 import { FileUpdateTransactionBody } from "../generated/FileUpdate_pb";
-import { FileIdLike, fileIdToProto } from "../file/FileId";
+import { FileId, FileIdLike } from "../file/FileId";
 import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { PublicKey } from "../crypto/PublicKey";
 
@@ -40,7 +40,7 @@ export class FileUpdateTransaction extends TransactionBuilder {
     }
 
     public setFileId(fileIdLike: FileIdLike): this {
-        this._body.setFileid(fileIdToProto(fileIdLike));
+        this._body.setFileid(new FileId(fileIdLike).toProto());
         return this;
     }
 

@@ -5,7 +5,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 
 import { FileService } from "../generated/FileService_pb_service";
 import { FileDeleteTransactionBody } from "../generated/FileDelete_pb";
-import { FileIdLike, fileIdToProto } from "../file/FileId";
+import { FileId, FileIdLike } from "../file/FileId";
 
 export class FileDeleteTransaction extends TransactionBuilder {
     private readonly _body: FileDeleteTransactionBody;
@@ -25,7 +25,7 @@ export class FileDeleteTransaction extends TransactionBuilder {
     }
 
     public setFileId(fileIdLike: FileIdLike): this {
-        this._body.setFileid(fileIdToProto(fileIdLike));
+        this._body.setFileid(new FileId(fileIdLike).toProto());
         return this;
     }
 

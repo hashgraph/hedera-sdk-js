@@ -6,7 +6,7 @@ import { Hbar } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
-import { AccountId, AccountIdLike, normalizeAccountId } from "./account/AccountId";
+import { AccountId, AccountIdLike } from "./account/AccountId";
 import { Tinybar, tinybarRangeCheck } from "./Tinybar";
 import { AccountBalanceQuery } from "./account/AccountBalanceQuery";
 
@@ -55,7 +55,7 @@ export abstract class BaseClient {
             nodes as Node[] :
             Object.entries(nodes)
                 .map(([ url, accountId ]) => {
-                    const id = normalizeAccountId(accountId as AccountIdLike);
+                    const id = new AccountId(accountId as AccountIdLike);
                     return { url, id };
                 });
 
@@ -64,7 +64,7 @@ export abstract class BaseClient {
 
     /** Add a node to the list of nodes */
     public putNode(id: AccountIdLike, url: string): this {
-        this._nodes.push({ id: normalizeAccountId(id), url });
+        this._nodes.push({ id: new AccountId(id), url });
         return this;
     }
 
@@ -76,7 +76,7 @@ export abstract class BaseClient {
 
         this.operator = operator;
 
-        this._operatorAcct = normalizeAccountId(operator.account);
+        this._operatorAcct = new AccountId(operator.account);
 
         const maybePrivateKey = (operator as PrivateKey).privateKey;
         if (maybePrivateKey) {

@@ -12,8 +12,8 @@ import { TransactionResponse } from "./generated/TransactionResponse_pb";
 import { Tinybar, tinybarToString } from "./Tinybar";
 import { Hbar } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import { AccountId, AccountIdLike, accountIdToProto, normalizeAccountId } from "./account/AccountId";
-import { getProtoTxnId, newTxnId, TransactionIdLike } from "./TransactionId";
+import { AccountId, AccountIdLike } from "./account/AccountId";
+import { TransactionId, TransactionIdLike } from "./TransactionId";
 
 /**
  * Max duration of transactions on the network is 2 minutes
@@ -31,7 +31,7 @@ export abstract class TransactionBuilder {
     }
 
     public setTransactionId(id: TransactionIdLike): this {
-        this._inner.setTransactionid(getProtoTxnId(id));
+        this._inner.setTransactionid(new TransactionId(id).toProto());
         return this;
     }
 
@@ -46,8 +46,8 @@ export abstract class TransactionBuilder {
     }
 
     public setNodeAccountId(nodeAccountId: AccountIdLike): this {
-        this._node = normalizeAccountId(nodeAccountId);
-        this._inner.setNodeaccountid(accountIdToProto(nodeAccountId));
+        this._node = new AccountId(nodeAccountId);
+        this._inner.setNodeaccountid(this._node.toProto());
         return this;
     }
 
@@ -91,7 +91,7 @@ export abstract class TransactionBuilder {
             if (!client.operator) {
                 throw new Error("Client's operator is undefined, but is required");
             }
-            this._inner.setTransactionid(newTxnId(client!.operator.account));
+            this._inner.setTransactionid(TransactionId.newId(client!.operator.account));
         }
 
         if (!this._inner.hasTransactionvalidduration()) {

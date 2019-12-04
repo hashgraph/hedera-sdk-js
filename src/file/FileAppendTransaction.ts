@@ -5,7 +5,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 
 import { FileService } from "../generated/FileService_pb_service";
 import { FileAppendTransactionBody } from "../generated/FileAppend_pb";
-import { FileIdLike, fileIdToProto } from "../file/FileId";
+import { FileId, FileIdLike } from "../file/FileId";
 
 export class FileAppendTransaction extends TransactionBuilder {
     private readonly _body: FileAppendTransactionBody;
@@ -26,7 +26,7 @@ export class FileAppendTransaction extends TransactionBuilder {
     }
 
     public setFileId(fileId: FileIdLike): this {
-        this._body.setFileid(fileIdToProto(fileId));
+        this._body.setFileid(new FileId(fileId).toProto());
         return this;
     }
 
