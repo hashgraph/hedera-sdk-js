@@ -19,10 +19,20 @@ export abstract class QueryBuilder<T> {
 
     private _node?: Node;
 
+    private maxCost?: Hbar;
+    private amount?: Tinybar | Hbar;
+
     protected constructor(header: QueryHeader) {
         this._inner = new Query();
         this._header = header;
         this._needsPayment = true;
+    }
+
+    public setMaxQueryCost(amount: Tinybar | Hbar): this {
+        this.maxCost = amount instanceof Hbar ?
+            amount as Hbar :
+            Hbar.fromTinybar(amount as Tinybar);
+        return this;
     }
 
     /**
@@ -34,17 +44,18 @@ export abstract class QueryBuilder<T> {
      *
      * @throws TinybarValueError if the value is out of range for the protocol
      */
-    public async setPaymentDefault(amount: Tinybar | Hbar, client: BaseClient): Promise<this> {
-        const nodeId = this._getNode(client).id;
+    public setPaymentAmount(amount: Tinybar | Hbar): this {
+        this.amount = amount;
+        return this;
+    }
 
-        if (!client.operator) {
-            throw new Error("Operator is undefined, but is required to set payment");
-        }
+    private async _setPaymentAmount(amount: Tinybar | Hbar, client: BaseClient): Promise<this> {
+        const nodeId = this._getNode(client).id;
 
         const payment = new CryptoTransferTransaction()
             .setNodeAccountId(nodeId)
-            .addRecipient(nodeId, amount)
-            .addSender(client.operator!.account, amount)
+            .addRecipient(nodeId, this.amount ? this.amount : amount)
+            .addSender(client.operator!.account, this.amount ? this.amount : amount)
             .setMaxTransactionFee(Hbar.of(1))
             .build(client);
 
@@ -82,7 +93,7 @@ export abstract class QueryBuilder<T> {
     /**
      * Request the cost of this query in HBAR from the node.
      *
-     * You can then attach a payment for this value with `.setPaymentDefault()`.
+     * You can then attach a payment for this value with `.setPaymentAmount()`.
      */
     public async getCost(client: BaseClient): Promise<Hbar> {
         runValidation(this, (errors) => this._prepaymentValidate(errors));
@@ -93,7 +104,7 @@ export abstract class QueryBuilder<T> {
         this._header.setResponsetype(ResponseType.COST_ANSWER);
 
         const payment = this._header.getPayment();
-        await this.setPaymentDefault(0, client);
+        await this._setPaymentAmount(0, client);
 
         const query = this._inner.clone() as Query;
 
@@ -121,14 +132,21 @@ export abstract class QueryBuilder<T> {
     public async execute(client: BaseClient): Promise<T> {
         const node = this._getNode(client);
 
-        if (client.maxQueryPayment && this._needsPayment && !this._header.hasPayment()) {
+        if ((client.maxQueryPayment || this.maxCost) &&
+            this._needsPayment && !this._header.hasPayment()) {
             const cost = await this.getCost(client);
 
-            if (client.maxQueryPayment.comparedTo(cost) < 0) {
-                throw new MaxPaymentExceededException(cost, client.maxQueryPayment);
+            if ((this.maxCost && this.maxCost.comparedTo(cost) < 0) ||
+                (client.maxQueryPayment && client.maxQueryPayment.comparedTo(cost) < 0)) {
+                throw new MaxPaymentExceededException(
+                    cost,
+                    client.maxQueryPayment ? client.maxQueryPayment : this.maxCost!
+                );
             }
 
-            await this.setPaymentDefault(cost, client);
+            await this._setPaymentAmount(cost, client);
+        } else if (this.amount && this._needsPayment && !this._header.hasPayment()) {
+            await this._setPaymentAmount(this.amount, client);
         }
 
         this.validate();
