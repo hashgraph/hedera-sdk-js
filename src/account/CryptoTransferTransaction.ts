@@ -12,7 +12,7 @@ import { CryptoService } from "../generated/CryptoService_pb_service";
 
 import { Tinybar, tinybarRangeCheck, tinybarToString } from "../Tinybar";
 import { Hbar } from "../Hbar";
-import { AccountIdLike, accountIdToProto } from "./AccountId";
+import { AccountId, AccountIdLike } from "./AccountId";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
     private readonly _body: CryptoTransferTransactionBody;
@@ -58,7 +58,7 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         this._body.setTransfers(transfers);
 
         const acctAmt = new AccountAmount();
-        acctAmt.setAccountid(accountIdToProto(accountId));
+        acctAmt.setAccountid(new AccountId(accountId).toProto());
         acctAmt.setAmount(tinybarToString(amount, "allowNegative"));
 
         transfers.addAccountamounts(acctAmt);

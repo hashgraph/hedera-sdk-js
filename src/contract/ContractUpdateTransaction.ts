@@ -6,9 +6,9 @@ import { SmartContractService } from "../generated/SmartContractService_pb_servi
 
 import { ContractUpdateTransactionBody } from "../generated/ContractUpdate_pb";
 import { newDuration } from "../util";
-import { ContractIdLike, contractIdToProto } from "./ContractId";
-import { AccountId, accountIdToProto } from "../account/AccountId";
-import { FileIdLike, fileIdToProto } from "../file/FileId";
+import { ContractId, ContractIdLike } from "./ContractId";
+import { AccountId, AccountIdLike } from "../account/AccountId";
+import { FileId, FileIdLike } from "../file/FileId";
 import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { PublicKey } from "../crypto/PublicKey";
 
@@ -28,7 +28,7 @@ export class ContractUpdateTransaction extends TransactionBuilder {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this._body.setContractid(contractIdToProto(contractIdLike));
+        this._body.setContractid(new ContractId(contractIdLike).toProto());
         return this;
     }
 
@@ -37,13 +37,13 @@ export class ContractUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setProxyAccountId(proxyAccountId: AccountId): this {
-        this._body.setProxyaccountid(accountIdToProto(proxyAccountId));
+    public setProxyAccountId(proxyAccountId: AccountIdLike): this {
+        this._body.setProxyaccountid(new AccountId(proxyAccountId).toProto());
         return this;
     }
 
     public setFileId(fileIdLike: FileIdLike): this {
-        this._body.setFileid(fileIdToProto(fileIdLike));
+        this._body.setFileid(new FileId(fileIdLike).toProto());
         return this;
     }
 

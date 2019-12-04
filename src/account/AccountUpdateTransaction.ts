@@ -9,7 +9,7 @@ import { Hbar } from "../Hbar";
 import { Tinybar, tinybarToUInt64Value } from "../Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { PublicKey } from "../crypto/PublicKey";
-import { AccountIdLike, accountIdToProto } from "./AccountId";
+import { AccountId, AccountIdLike } from "./AccountId";
 
 export class AccountUpdateTransaction extends TransactionBuilder {
     private _body: CryptoUpdateTransactionBody;
@@ -22,7 +22,7 @@ export class AccountUpdateTransaction extends TransactionBuilder {
     }
 
     public setAccountId(id: AccountIdLike): this {
-        this._body.setAccountidtoupdate(accountIdToProto(id));
+        this._body.setAccountidtoupdate(new AccountId(id).toProto());
         return this;
     }
 

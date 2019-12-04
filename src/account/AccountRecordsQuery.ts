@@ -4,7 +4,7 @@ import { Query } from "../generated/Query_pb";
 import { Response } from "../generated/Response_pb";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 import { QueryHeader } from "../generated/QueryHeader_pb";
-import { AccountIdLike, accountIdToProto } from "./AccountId";
+import { AccountId, AccountIdLike } from "./AccountId";
 import { CryptoGetAccountRecordsQuery } from "../generated/CryptoGetAccountRecords_pb";
 import { recordListToSdk, TransactionRecord } from "../TransactionRecord";
 
@@ -20,7 +20,7 @@ export class AccountRecordsQuery extends QueryBuilder<TransactionRecord[]> {
     }
 
     public setAccountId(accountId: AccountIdLike): this {
-        this._builder.setAccountid(accountIdToProto(accountId));
+        this._builder.setAccountid(new AccountId(accountId).toProto());
         return this;
     }
 

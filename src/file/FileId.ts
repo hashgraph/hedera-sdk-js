@@ -2,7 +2,45 @@ import { FileID } from "../generated/BasicTypes_pb";
 import { normalizeEntityId } from "../util";
 
 /** Normalized file ID returned by various methods in the SDK. */
-export type FileId = { shard: number; realm: number; file: number };
+export class FileId {
+    public shard: number;
+    public realm: number;
+    public file: number;
+
+    public constructor(fileId: FileIdLike) {
+        const id = fileId instanceof FileId ?
+            fileId as FileId :
+            normalizeEntityId("file", fileId);
+
+        this.shard = id.shard;
+        this.realm = id.realm;
+        this.file = id.file;
+    }
+
+    public toString(): string {
+        return `${this.shard}.${this.realm}.${this.file}`;
+    }
+
+    public static fromString(id: string): FileId {
+        return new FileId(id);
+    }
+
+    public static fromProto(fileId: FileID): FileId {
+        return new FileId({
+            shard: fileId.getShardnum(),
+            realm: fileId.getRealmnum(),
+            file: fileId.getFilenum()
+        });
+    }
+
+    public toProto(): FileID {
+        const fileId = new FileID();
+        fileId.setShardnum(this.shard);
+        fileId.setRealmnum(this.realm);
+        fileId.setFilenum(this.file);
+        return fileId;
+    }
+}
 
 /**
  * Input type for an ID of a file on the network.
@@ -16,25 +54,5 @@ export type FileId = { shard: number; realm: number; file: number };
 export type FileIdLike =
     { shard?: number; realm?: number; file: number }
     | string
-    | number;
-
-export function fileIdToSdk(fileId: FileID): FileId {
-    return {
-        shard: fileId.getShardnum(),
-        realm: fileId.getRealmnum(),
-        file: fileId.getFilenum()
-    };
-}
-
-export function fileIdToProto(fileIdLike: FileIdLike): FileID {
-    const { shard, realm, file } = normalizeFileId(fileIdLike);
-    const fileId = new FileID();
-    fileId.setShardnum(shard);
-    fileId.setRealmnum(realm);
-    fileId.setFilenum(file);
-    return fileId;
-}
-
-export function normalizeFileId(fileId: FileIdLike): FileId {
-    return normalizeEntityId("file", fileId);
-}
+    | number
+    | FileId;

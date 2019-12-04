@@ -1,21 +1,12 @@
-import { Query } from "./generated/Query_pb";
-
 import { grpc } from "@improbable-eng/grpc-web";
 
-import { CryptoGetAccountBalanceQuery } from "./generated/CryptoGetAccountBalance_pb";
-import { QueryHeader } from "./generated/QueryHeader_pb";
-
-import { handleQueryPrecheck } from "./util";
 import { ProtobufMessage } from "@improbable-eng/grpc-web/dist/typings/message";
-import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
-import BigNumber from "bignumber.js";
-import { CryptoService } from "./generated/CryptoService_pb_service";
 
-import { Hbar, hbarUnits } from "./Hbar";
+import { Hbar } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
-import { AccountId, AccountIdLike, accountIdToProto, normalizeAccountId } from "./account/AccountId";
+import { AccountId, AccountIdLike } from "./account/AccountId";
 import { Tinybar, tinybarRangeCheck } from "./Tinybar";
 import { AccountBalanceQuery } from "./account/AccountBalanceQuery";
 
@@ -48,10 +39,10 @@ export type ClientConfig = {
 };
 
 export abstract class BaseClient {
-    public readonly operator: Operator;
-    private readonly _operatorAcct: AccountId;
-    public readonly operatorSigner: Signer;
-    public readonly operatorPublicKey: Ed25519PublicKey;
+    public operator?: Operator;
+    private _operatorAcct?: AccountId;
+    public operatorSigner?: Signer;
+    public operatorPublicKey?: Ed25519PublicKey;
 
     protected readonly _nodes: Node[];
 
@@ -59,18 +50,31 @@ export abstract class BaseClient {
     private _maxTransactionFee: Hbar = Hbar.of(1);
     private _maxQueryPayment?: Hbar = Hbar.of(1);
 
-    protected constructor(nodes: Nodes, operator: Operator) {
+    protected constructor(nodes: Nodes, operator?: Operator) {
         this._nodes = Array.isArray(nodes) ?
             nodes as Node[] :
             Object.entries(nodes)
                 .map(([ url, accountId ]) => {
-                    const id = normalizeAccountId(accountId as AccountIdLike);
+                    const id = new AccountId(accountId as AccountIdLike);
                     return { url, id };
                 });
 
+        if (operator) {
+            this.setOperator(operator);
+        }
+    }
+
+    /** Add a node to the list of nodes */
+    public putNode(id: AccountIdLike, url: string): this {
+        this._nodes.push({ id: new AccountId(id), url });
+        return this;
+    }
+
+    /** Set the operator for the client object */
+    public setOperator(operator: Operator): this {
         this.operator = operator;
 
-        this._operatorAcct = normalizeAccountId(operator.account);
+        this._operatorAcct = new AccountId(operator.account);
 
         const maybePrivateKey = (operator as PrivateKey).privateKey;
         if (maybePrivateKey) {
@@ -83,6 +87,8 @@ export abstract class BaseClient {
             ({ publicKey: this.operatorPublicKey, signer: this.operatorSigner } =
                 (operator as PubKeyAndSigner));
         }
+
+        return this;
     }
 
     /** Get the current maximum transaction fee. */
@@ -138,9 +144,9 @@ export abstract class BaseClient {
     }
 
     /** Get the current account balance. */
-    public getAccountBalance(): Promise<Hbar> {
+    public getAccountBalance(id: AccountIdLike): Promise<Hbar> {
         return new AccountBalanceQuery()
-            .setAccountId(this._operatorAcct)
+            .setAccountId(id)
             .execute(this);
     }
 

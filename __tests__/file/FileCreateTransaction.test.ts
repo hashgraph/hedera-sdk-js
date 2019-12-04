@@ -20,13 +20,15 @@ describe("FileCreateTransaction", () => {
             body: undefined,
             bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeIoBRRILCO/urAcQwPvU8wEaJAoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktyIQThisisthefilecontentsA==",
             sigmap: {
-            sigpairList: [{
-                contract: "",
-                ecdsa384: "",
-                ed25519: "76ilivBgtIJ3/FkcbWYxz4ndfYwzY8q8nKXBeX8k1nlWyHr007Bo+gRK3J3FvaVN2NJ45tyW4pWeYoGiu6EyDwoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiKAUUSCwjv7qwHEMD71PMBGiQKIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLciEE4YrIrLYXn4pXnKJ7Xp7bA=",
-                pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
-                rsa3072: "",
-               }],
+                sigpairList: [
+                    {
+                        contract: "",
+                        ecdsa384: "",
+                        ed25519: "76ilivBgtIJ3/FkcbWYxz4ndfYwzY8q8nKXBeX8k1nlWyHr007Bo+gRK3J3FvaVN2NJ45tyW4pWeYoGiu6EyDwoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiKAUUSCwjv7qwHEMD71PMBGiQKIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLciEE4YrIrLYXn4pXnKJ7Xp7bA=",
+                        pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
+                        rsa3072: ""
+                    }
+                ]
             },
             sigs: undefined
         });

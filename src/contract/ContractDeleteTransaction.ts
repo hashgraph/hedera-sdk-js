@@ -5,7 +5,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
 import { ContractDeleteTransactionBody } from "../generated/ContractDelete_pb";
-import { ContractIdLike, contractIdToProto } from "./ContractId";
+import { ContractId, ContractIdLike } from "./ContractId";
 
 export class ContractDeleteTransaction extends TransactionBuilder {
     private readonly _body: ContractDeleteTransactionBody;
@@ -23,7 +23,7 @@ export class ContractDeleteTransaction extends TransactionBuilder {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this._body.setContractid(contractIdToProto(contractIdLike));
+        this._body.setContractid(new ContractId(contractIdLike).toProto());
         return this;
     }
 

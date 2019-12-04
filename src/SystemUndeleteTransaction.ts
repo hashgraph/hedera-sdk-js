@@ -1,11 +1,12 @@
 import { TransactionBuilder } from "./TransactionBuilder";
-import { FileIdLike, fileIdToProto, normalizeFileId } from "./file/FileId";
-import { ContractIdLike, contractIdToProto } from "./contract/ContractId";
+import { FileId, FileIdLike } from "./file/FileId";
+import { ContractId, ContractIdLike } from "./contract/ContractId";
 import { grpc } from "@improbable-eng/grpc-web";
 import { FileService } from "./generated/FileService_pb_service";
 import { Transaction } from "./generated/Transaction_pb";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
 import { SystemUndeleteTransactionBody } from "./generated/SystemUndelete_pb";
+import { normalizeEntityId } from "./util";
 
 export class SystemUndeleteTransaction extends TransactionBuilder {
     private readonly _body: SystemUndeleteTransactionBody;
@@ -17,11 +18,14 @@ export class SystemUndeleteTransaction extends TransactionBuilder {
     }
 
     public setId(id: ContractIdLike | FileIdLike): this {
-        if (normalizeFileId(id as FileIdLike).file != null) {
-            this._body.setFileid(fileIdToProto(id as FileIdLike));
-        } else {
-            this._body.setContractid(contractIdToProto(id as ContractIdLike));
+        try {
+            const fileId = normalizeEntityId("file", id as FileIdLike);
+            this._body.setFileid(new FileId(fileId).toProto());
+        } catch {
+            const contractId = normalizeEntityId("contract", id as ContractIdLike);
+            this._body.setContractid(new ContractId(contractId).toProto());
         }
+
         return this;
     }
 

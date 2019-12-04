@@ -2,7 +2,45 @@ import { ContractID } from "../generated/BasicTypes_pb";
 import { normalizeEntityId } from "../util";
 
 /** Normalized contract ID returned by various methods in the SDK. */
-export type ContractId = { shard: number; realm: number; contract: number };
+export class ContractId {
+    public shard: number;
+    public realm: number;
+    public contract: number;
+
+    public constructor(contractId: ContractIdLike) {
+        const id = contractId instanceof ContractId ?
+            contractId as ContractId :
+            normalizeEntityId("contract", contractId);
+
+        this.shard = id.shard;
+        this.realm = id.realm;
+        this.contract = id.contract;
+    }
+
+    public toString(): string {
+        return `${this.shard}.${this.realm}.${this.contract}`;
+    }
+
+    public static fromString(id: string): ContractId {
+        return new ContractId(id);
+    }
+
+    public static fromProto(contractId: ContractID): ContractId {
+        return new ContractId({
+            shard: contractId.getShardnum(),
+            realm: contractId.getRealmnum(),
+            contract: contractId.getContractnum()
+        });
+    }
+
+    public toProto(): ContractID {
+        const contractId = new ContractID();
+        contractId.setShardnum(this.shard);
+        contractId.setRealmnum(this.realm);
+        contractId.setContractnum(this.contract);
+        return contractId;
+    }
+}
 
 /**
  * Input type for an ID of a contract on the network.
@@ -16,25 +54,5 @@ export type ContractId = { shard: number; realm: number; contract: number };
 export type ContractIdLike =
     { shard?: number; realm?: number; contract: number }
     | string
-    | number;
-
-export function contractIdToSdk(contractId: ContractID): ContractId {
-    return {
-        shard: contractId.getShardnum(),
-        realm: contractId.getRealmnum(),
-        contract: contractId.getContractnum()
-    };
-}
-
-export function contractIdToProto(contractIdLike: ContractIdLike): ContractID {
-    const { shard, realm, contract } = normalizeContractId(contractIdLike);
-    const contractId = new ContractID();
-    contractId.setShardnum(shard);
-    contractId.setRealmnum(realm);
-    contractId.setContractnum(contract);
-    return contractId;
-}
-
-export function normalizeContractId(contractId: ContractIdLike): ContractId {
-    return normalizeEntityId("contract", contractId);
-}
+    | number
+    | ContractId;

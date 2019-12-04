@@ -21,8 +21,8 @@ import { FileService } from "./generated/FileService_pb_service";
 import { FreezeService } from "./generated/FreezeService_pb_service";
 import { HederaError } from "./errors";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import { AccountId, accountIdToSdk } from "./account/AccountId";
-import { TransactionId, transactionIdToSdk } from "./TransactionId";
+import { AccountId } from "./account/AccountId";
+import { TransactionId } from "./TransactionId";
 import { receiptToSdk, TransactionReceipt } from "./TransactionReceipt";
 import { timestampToMs } from "./Timestamp";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
@@ -70,7 +70,7 @@ export class Transaction {
         const inner = Transaction_.deserializeBinary(bytes);
         const body = TransactionBody.deserializeBinary(inner.getBodybytes_asU8());
 
-        const nodeId = accountIdToSdk(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
+        const nodeId = AccountId.fromProto(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
 
         const method = methodFromTxn(body);
 
@@ -78,7 +78,7 @@ export class Transaction {
     }
 
     public get id(): TransactionId {
-        return transactionIdToSdk(this._txnId);
+        return TransactionId.fromProto(this._txnId);
     }
 
     private _addSignature({ signature, publicKey }: SignatureAndKey): this {

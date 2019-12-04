@@ -18,13 +18,15 @@ describe("FileDeleteTransaction", () => {
             body: undefined,
             bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeJIBBBICGAU=",
             sigmap: {
-                sigpairList: [{
-                      contract: "",
-                      ecdsa384: "",
-                      ed25519: "0jJ2AZn6SwAuQ1t4aF6BajIzMo+acjjahE3MedPKVtcNArkz9skOVPjIvbbIvOWyUVJzVh0/E+AUK2DJB0kqCgoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiSAQQSAhgF",
-                      pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
-                      rsa3072: ""
-                }]
+                sigpairList: [
+                    {
+                        contract: "",
+                        ecdsa384: "",
+                        ed25519: "0jJ2AZn6SwAuQ1t4aF6BajIzMo+acjjahE3MedPKVtcNArkz9skOVPjIvbbIvOWyUVJzVh0/E+AUK2DJB0kqCgoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiSAQQSAhgF",
+                        pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
+                        rsa3072: ""
+                    }
+                ]
             },
             sigs: undefined
         });

@@ -4,7 +4,7 @@ import { Query } from "../generated/Query_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Response } from "../generated/Response_pb";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
-import { ContractIdLike, contractIdToProto } from "./ContractId";
+import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractFunctionResult, contractFunctionResultToSdk } from "./ContractFunctionResult";
 import { ContractCallLocalQuery } from "../generated/ContractCallLocal_pb";
 import { CallParams } from "./CallParams";
@@ -20,7 +20,7 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this._builder.setContractid(contractIdToProto(contractIdLike));
+        this._builder.setContractid(new ContractId(contractIdLike).toProto());
         return this;
     }
 

@@ -6,7 +6,7 @@ import { FileGetInfoQuery } from "../generated/FileGetInfo_pb";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { Response } from "../generated/Response_pb";
 import { getSdkKeys } from "../util";
-import { FileIdLike, fileIdToProto, fileIdToSdk } from "../file/FileId";
+import { FileId, FileIdLike } from "../file/FileId";
 import { timestampToDate } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 
@@ -30,7 +30,7 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
     }
 
     public setFileId(fileId: FileIdLike): this {
-        this._builder.setFileid(fileIdToProto(fileId));
+        this._builder.setFileid(new FileId(fileId).toProto());
         return this;
     }
 
@@ -48,7 +48,7 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
         const fileInfo = response.getFilegetinfo()!.getFileinfo()!;
 
         return {
-            fileId: fileIdToSdk(fileInfo.getFileid()!),
+            fileId: FileId.fromProto(fileInfo.getFileid()!),
             size: fileInfo.getSize(),
 
             expirationTime: fileInfo.getExpirationtime() == null ?

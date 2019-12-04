@@ -18,13 +18,15 @@ describe("AccountDeleteTransaction", () => {
             body: undefined,
             bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeGIEEgIYAw==",
             sigmap: {
-                sigpairList: [{
-                    contract: "",
-                    ecdsa384: "",
-                    ed25519: "YzRkNcQJmckTIFTt8sNbu3SmvaeFDdhfOVrhHCWG1cSaWQUGjQ0S1uT8uVlAIe3HUowEBmBY0HH3Aw+pLTsBDwoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHhiBBICGAM=",
-                    pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
-                    rsa3072: "",
-                }],
+                sigpairList: [
+                    {
+                        contract: "",
+                        ecdsa384: "",
+                        ed25519: "YzRkNcQJmckTIFTt8sNbu3SmvaeFDdhfOVrhHCWG1cSaWQUGjQ0S1uT8uVlAIe3HUowEBmBY0HH3Aw+pLTsBDwoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHhiBBICGAM=",
+                        pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
+                        rsa3072: ""
+                    }
+                ]
             },
             sigs: undefined
         });

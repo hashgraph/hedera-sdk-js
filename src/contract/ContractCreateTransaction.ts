@@ -10,8 +10,8 @@ import { SmartContractService } from "../generated/SmartContractService_pb_servi
 import { Tinybar, tinybarToString } from "../Tinybar";
 import { Hbar } from "../Hbar";
 import { PublicKey } from "../crypto/PublicKey";
-import { FileIdLike, fileIdToProto } from "../file/FileId";
-import { AccountId, accountIdToProto } from "../account/AccountId";
+import { FileId, FileIdLike } from "../file/FileId";
+import { AccountId, AccountIdLike } from "../account/AccountId";
 
 export class ContractCreateTransaction extends TransactionBuilder {
     private readonly _body: ContractCreateTransactionBody;
@@ -29,7 +29,7 @@ export class ContractCreateTransaction extends TransactionBuilder {
     }
 
     public setBytecodeFile(fileIdLike: FileIdLike): this {
-        this._body.setFileid(fileIdToProto(fileIdLike));
+        this._body.setFileid(new FileId(fileIdLike).toProto());
         return this;
     }
 
@@ -48,8 +48,8 @@ export class ContractCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setProxyAccountId(proxyAccountId: AccountId): this {
-        this._body.setProxyaccountid(accountIdToProto(proxyAccountId));
+    public setProxyAccountId(proxyAccountId: AccountIdLike): this {
+        this._body.setProxyaccountid(new AccountId(proxyAccountId).toProto());
         return this;
     }
 

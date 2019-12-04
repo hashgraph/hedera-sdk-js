@@ -1,6 +1,6 @@
 import { ContractLogInfo, contractLogInfoListToSdk } from "./ContractLogInfo";
 import { ContractFunctionResult as ProtoContractFunctionResult } from "../generated/ContractCallLocal_pb";
-import { ContractId, contractIdToSdk } from "./ContractId";
+import { ContractId, ContractIdLike } from "./ContractId";
 import BigNumber from "bignumber.js";
 import { encodeHex } from "../crypto/util";
 
@@ -14,14 +14,14 @@ export class ContractFunctionResult {
 
     // Constructor isn't part of the stable API
     public constructor(
-        contractId: ContractId,
+        contractId: ContractIdLike,
         contractCallResult: Uint8Array,
         errorMessage: string,
         bloom: Uint8Array,
         gasUsed: number,
         logInfoList: ContractLogInfo[]
     ) {
-        this.contractId = contractId;
+        this.contractId = new ContractId(contractId);
         this.contractCallResult = contractCallResult;
         this.errorMessage = errorMessage;
         this.bloom = bloom;
@@ -83,7 +83,7 @@ export class ContractFunctionResult {
 /* eslint-disable-next-line max-len */
 export function contractFunctionResultToSdk(result: ProtoContractFunctionResult): ContractFunctionResult {
     return new ContractFunctionResult(
-        contractIdToSdk(result.getContractid()!),
+        ContractId.fromProto(result.getContractid()!),
         result.getContractcallresult_asU8(),
         result.getErrormessage(),
         result.getBloom_asU8(),

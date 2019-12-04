@@ -5,7 +5,7 @@ import { Response } from "../generated/Response_pb";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { Hbar } from "../Hbar";
-import { AccountIdLike, accountIdToProto, accountIdToSdk } from "./AccountId";
+import { AccountId, AccountIdLike } from "./AccountId";
 import { CryptoGetAccountBalanceQuery } from "../generated/CryptoGetAccountBalance_pb";
 
 export class AccountBalanceQuery extends QueryBuilder<Hbar> {
@@ -20,7 +20,7 @@ export class AccountBalanceQuery extends QueryBuilder<Hbar> {
     }
 
     public setAccountId(accountId: AccountIdLike): this {
-        this._builder.setAccountid(accountIdToProto(accountId));
+        this._builder.setAccountid(new AccountId(accountId).toProto());
         return this;
     }
 
