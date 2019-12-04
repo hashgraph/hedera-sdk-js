@@ -43,20 +43,17 @@ describe("tinybarRangeCheck()", () => {
 });
 
 describe("normalizeAccountId()", () => {
-    const expectedId: AccountId = { shard: 0, realm: 0, account: 3 };
-
     it("normalizes objects", () => {
-        expect(normalizeAccountId({ account: 3 })).toStrictEqual(expectedId);
-        expect(normalizeAccountId({ shard: 1, account: 3 })).toStrictEqual({ shard: 1, realm: 0, account: 3 });
-        expect(normalizeAccountId({ realm: 2, account: 3 })).toStrictEqual({ shard: 0, realm: 2, account: 3 });
-        expect(normalizeAccountId({ shard: 1, realm: 2, account: 3 })).toStrictEqual({ shard: 1, realm: 2, account: 3 });
-        expect(normalizeAccountId(expectedId)).toStrictEqual(expectedId);
+        expect(normalizeAccountId({ account: 3 }).toString()).toStrictEqual("0.0.3");
+        expect(normalizeAccountId({ shard: 1, account: 3 }).toString()).toStrictEqual("1.0.3");
+        expect(normalizeAccountId({ realm: 2, account: 3 }).toString()).toStrictEqual("0.2.3");
+        expect(normalizeAccountId({ shard: 1, realm: 2, account: 3 }).toString()).toStrictEqual("1.2.3");
     });
 
     it("normalizes strings", () => {
-        expect(normalizeAccountId("3")).toStrictEqual(expectedId);
-        expect(normalizeAccountId("0.0.3")).toStrictEqual(expectedId);
-        expect(normalizeAccountId("1.2.3")).toStrictEqual({ shard: 1, realm: 2, account: 3 });
+        expect(normalizeAccountId("3").toString()).toStrictEqual("0.0.3");
+        expect(normalizeAccountId("0.0.3").toString()).toStrictEqual("0.0.3");
+        expect(normalizeAccountId("1.2.3").toString()).toStrictEqual("1.2.3");
 
         expect(() => normalizeAccountId("0.0.0.3"))
             .toThrow("invalid account ID: 0.0.0.3");
@@ -67,8 +64,8 @@ describe("normalizeAccountId()", () => {
     });
 
     it("normalizes numbers", () => {
-        expect(normalizeAccountId(3)).toStrictEqual(expectedId);
-        expect(normalizeAccountId(Number.MAX_SAFE_INTEGER)).toStrictEqual({ shard: 0, realm: 0, account: Number.MAX_SAFE_INTEGER });
+        expect(normalizeAccountId(3).toString()).toStrictEqual("0.0.3");
+        expect(normalizeAccountId(Number.MAX_SAFE_INTEGER).toString()).toStrictEqual(`0.0.${Number.MAX_SAFE_INTEGER}`);
 
         expect(() => normalizeAccountId(-1))
             .toThrow("invalid account ID: -1");
@@ -82,20 +79,18 @@ describe("normalizeAccountId()", () => {
 // technically redundant to `normalizeAccountId()` but if the implementation details or types change
 // asymmetrically or in a breaking manner we would want to know
 describe("normalizeContractId()", () => {
-    const expectedId: ContractId = { shard: 0, realm: 0, contract: 3 };
-
     it("normalizes objects", () => {
-        expect(normalizeContractId({ contract: 3 })).toStrictEqual(expectedId);
-        expect(normalizeContractId({ shard: 1, contract: 3 })).toStrictEqual({ shard: 1, realm: 0, contract: 3 });
-        expect(normalizeContractId({ realm: 2, contract: 3 })).toStrictEqual({ shard: 0, realm: 2, contract: 3 });
-        expect(normalizeContractId({ shard: 1, realm: 2, contract: 3 })).toStrictEqual({ shard: 1, realm: 2, contract: 3 });
-        expect(normalizeContractId(expectedId)).toStrictEqual(expectedId);
+        expect(normalizeContractId({ contract: 3 }).toString()).toStrictEqual("0.0.3");
+        expect(normalizeContractId({ shard: 1, contract: 3 }).toString()).toStrictEqual("1.0.3");
+        expect(normalizeContractId({ realm: 2, contract: 3 }).toString()).toStrictEqual("0.2.3");
+        expect(normalizeContractId({ shard: 1, realm: 2, contract: 3 }).toString()).toStrictEqual("1.2.3");
+        expect(normalizeContractId({ contract: 3 }).toString()).toStrictEqual("0.0.3");
     });
 
     it("normalizes strings", () => {
-        expect(normalizeContractId("3")).toStrictEqual(expectedId);
-        expect(normalizeContractId("0.0.3")).toStrictEqual(expectedId);
-        expect(normalizeContractId("1.2.3")).toStrictEqual({ shard: 1, realm: 2, contract: 3 });
+        expect(normalizeContractId("3").toString()).toStrictEqual("0.0.3");
+        expect(normalizeContractId("0.0.3").toString()).toStrictEqual("0.0.3");
+        expect(normalizeContractId("1.2.3").toString()).toStrictEqual("1.2.3");
 
         expect(() => normalizeContractId("0.0.0.3"))
             .toThrow("invalid contract ID: 0.0.0.3");
@@ -106,8 +101,8 @@ describe("normalizeContractId()", () => {
     });
 
     it("normalizes numbers", () => {
-        expect(normalizeContractId(3)).toStrictEqual(expectedId);
-        expect(normalizeContractId(Number.MAX_SAFE_INTEGER)).toStrictEqual({ shard: 0, realm: 0, contract: Number.MAX_SAFE_INTEGER });
+        expect(normalizeContractId(3).toString()).toStrictEqual("0.0.3");
+        expect(normalizeContractId(Number.MAX_SAFE_INTEGER).toString()).toStrictEqual(`0.0.${Number.MAX_SAFE_INTEGER}`);
 
         expect(() => normalizeContractId(-1))
             .toThrow("invalid contract ID: -1");
@@ -121,20 +116,18 @@ describe("normalizeContractId()", () => {
 // technically redundant to `normalizeAccountId()` but if the implementation details or types change
 // asymmetrically or in a breaking manner we would want to know
 describe("normalizeFileId()", () => {
-    const expectedId: FileId = { shard: 0, realm: 0, file: 3 };
-
     it("normalizes objects", () => {
-        expect(normalizeFileId({ file: 3 })).toStrictEqual(expectedId);
-        expect(normalizeFileId({ shard: 1, file: 3 })).toStrictEqual({ shard: 1, realm: 0, file: 3 });
-        expect(normalizeFileId({ realm: 2, file: 3 })).toStrictEqual({ shard: 0, realm: 2, file: 3 });
-        expect(normalizeFileId({ shard: 1, realm: 2, file: 3 })).toStrictEqual({ shard: 1, realm: 2, file: 3 });
-        expect(normalizeFileId(expectedId)).toStrictEqual(expectedId);
+        expect(normalizeFileId({ file: 3 }).toString()).toStrictEqual("0.0.3");
+        expect(normalizeFileId({ shard: 1, file: 3 }).toString()).toStrictEqual("1.0.3");
+        expect(normalizeFileId({ realm: 2, file: 3 }).toString()).toStrictEqual("0.2.3");
+        expect(normalizeFileId({ shard: 1, realm: 2, file: 3 }).toString()).toStrictEqual("1.2.3");
+        expect(normalizeFileId({ file: 3 }).toString()).toStrictEqual("0.0.3");
     });
 
     it("normalizes strings", () => {
-        expect(normalizeFileId("3")).toStrictEqual(expectedId);
-        expect(normalizeFileId("0.0.3")).toStrictEqual(expectedId);
-        expect(normalizeFileId("1.2.3")).toStrictEqual({ shard: 1, realm: 2, file: 3 });
+        expect(normalizeFileId("3").toString()).toStrictEqual("0.0.3");
+        expect(normalizeFileId("0.0.3").toString()).toStrictEqual("0.0.3");
+        expect(normalizeFileId("1.2.3").toString()).toStrictEqual("1.2.3");
 
         expect(() => normalizeFileId("0.0.0.3"))
             .toThrow("invalid file ID: 0.0.0.3");
@@ -145,8 +138,8 @@ describe("normalizeFileId()", () => {
     });
 
     it("normalizes numbers", () => {
-        expect(normalizeFileId(3)).toStrictEqual(expectedId);
-        expect(normalizeFileId(Number.MAX_SAFE_INTEGER)).toStrictEqual({ shard: 0, realm: 0, file: Number.MAX_SAFE_INTEGER });
+        expect(normalizeFileId(3).toString()).toStrictEqual("0.0.3");
+        expect(normalizeFileId(Number.MAX_SAFE_INTEGER).toString()).toStrictEqual(`0.0.${Number.MAX_SAFE_INTEGER}`);
 
         expect(() => normalizeFileId(-1))
             .toThrow("invalid file ID: -1");

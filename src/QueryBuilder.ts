@@ -37,14 +37,18 @@ export abstract class QueryBuilder<T> {
     public async setPaymentDefault(amount: Tinybar | Hbar, client: BaseClient): Promise<this> {
         const nodeId = this._getNode(client).id;
 
+        if (!client.operator) {
+            throw new Error("Operator is undefined, but is required to set payment");
+        }
+
         const payment = new CryptoTransferTransaction()
             .setNodeAccountId(nodeId)
             .addRecipient(nodeId, amount)
-            .addSender(client.operator.account, amount)
+            .addSender(client.operator!.account, amount)
             .setMaxTransactionFee(Hbar.of(1))
             .build(client);
 
-        await payment.signWith(client.operatorPublicKey, client.operatorSigner);
+        await payment.signWith(client.operatorPublicKey!, client.operatorSigner!);
 
         this._header.setPayment(payment.toProto());
 
@@ -80,7 +84,7 @@ export abstract class QueryBuilder<T> {
      *
      * You can then attach a payment for this value with `.setPaymentDefault()`.
      */
-    public async requestCost(client: BaseClient): Promise<Hbar> {
+    public async getCost(client: BaseClient): Promise<Hbar> {
         runValidation(this, (errors) => this._prepaymentValidate(errors));
 
         // create a duplicate of the query with `COST_ANSWER` instead of the original response type
@@ -118,7 +122,7 @@ export abstract class QueryBuilder<T> {
         const node = this._getNode(client);
 
         if (client.maxQueryPayment && this._needsPayment && !this._header.hasPayment()) {
-            const cost = await this.requestCost(client);
+            const cost = await this.getCost(client);
 
             if (client.maxQueryPayment.comparedTo(cost) < 0) {
                 throw new MaxPaymentExceededException(cost, client.maxQueryPayment);

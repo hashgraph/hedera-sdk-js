@@ -32,6 +32,11 @@ type EntityId<Kind extends EntityKind> =
 
 type NormalizedId<Kind extends EntityKind> = Record<"shard" | "realm" | Kind, number>;
 
+export function idToString({ shard, realm, num }: { shard: number; realm: number; num: number }):
+    string {
+    return `${shard}.${realm}.${num}`;
+}
+
 export function normalizeEntityId<Kind extends EntityKind>(
     kind: Kind,
     entityId: EntityId<Kind>
@@ -46,7 +51,10 @@ export function normalizeEntityId<Kind extends EntityKind>(
             // defaults overwritten if they exist in `entityId`
                 shard: 0,
                 realm: 0,
-                ...entityId
+                ...entityId,
+                toString() {
+                    return idToString({ shard: this.shard, realm: this.realm, num: this[ kind ] });
+                }
             };
         case "string": {
             const components = entityId.split(".");
@@ -58,7 +66,14 @@ export function normalizeEntityId<Kind extends EntityKind>(
                 return {
                     shard: Number(components[ 0 ]),
                     realm: Number(components[ 1 ]),
-                    [ kind ]: Number(components[ 2 ])
+                    [ kind ]: Number(components[ 2 ]),
+                    toString() {
+                        return idToString({
+                            shard: this.shard,
+                            realm: this.realm,
+                            num: this[ kind ]
+                        });
+                    }
                 } as NormalizedId<Kind>;
             }
 

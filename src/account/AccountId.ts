@@ -1,8 +1,8 @@
 import { AccountID } from "../generated/BasicTypes_pb";
-import { normalizeEntityId } from "../util";
+import { idToString, normalizeEntityId } from "../util";
 
 /** Normalized account ID returned by various methods in the SDK. */
-export type AccountId = { shard: number; realm: number; account: number };
+export type AccountId = { shard: number; realm: number; account: number; toString(): string };
 
 /**
  * Input type for an ID of an account on the network.
@@ -16,13 +16,17 @@ export type AccountId = { shard: number; realm: number; account: number };
 export type AccountIdLike =
     { shard?: number; realm?: number; account: number }
     | string
-    | number;
+    | number
+    | AccountId;
 
 export function accountIdToSdk(accountId: AccountID): AccountId {
     return {
         shard: accountId.getShardnum(),
         realm: accountId.getRealmnum(),
-        account: accountId.getAccountnum()
+        account: accountId.getAccountnum(),
+        toString() {
+            return idToString({ shard: this.shard, realm: this.realm, num: this.account });
+        }
     };
 }
 

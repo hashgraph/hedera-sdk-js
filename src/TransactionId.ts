@@ -1,4 +1,10 @@
-import { AccountId, AccountIdLike, accountIdToProto, accountIdToSdk, normalizeAccountId } from "./account/AccountId";
+import {
+    AccountId,
+    AccountIdLike,
+    accountIdToProto,
+    accountIdToSdk,
+    normalizeAccountId
+} from "./account/AccountId";
 import { TransactionID } from "./generated/BasicTypes_pb";
 import { orThrow } from "./util";
 import { Timestamp } from "./generated/Timestamp_pb";
@@ -76,3 +82,8 @@ export function normalizeTxnId(txnId: TransactionIdLike): TransactionId {
         account
     };
 }
+
+export function transactionIdToString(id: TransactionId): string {
+    return `${id.account.toString()}@${id.validStartSeconds}.${id.validStartNanos}`;
+}
+

@@ -1,8 +1,8 @@
 import { ContractID } from "../generated/BasicTypes_pb";
-import { normalizeEntityId } from "../util";
+import { idToString, normalizeEntityId } from "../util";
 
 /** Normalized contract ID returned by various methods in the SDK. */
-export type ContractId = { shard: number; realm: number; contract: number };
+export type ContractId = { shard: number; realm: number; contract: number; toString(): string };
 
 /**
  * Input type for an ID of a contract on the network.
@@ -16,13 +16,17 @@ export type ContractId = { shard: number; realm: number; contract: number };
 export type ContractIdLike =
     { shard?: number; realm?: number; contract: number }
     | string
-    | number;
+    | number
+    | ContractId;
 
 export function contractIdToSdk(contractId: ContractID): ContractId {
     return {
         shard: contractId.getShardnum(),
         realm: contractId.getRealmnum(),
-        contract: contractId.getContractnum()
+        contract: contractId.getContractnum(),
+        toString() {
+            return idToString({ shard: this.shard, realm: this.realm, num: this.contract });
+        }
     };
 }
 

@@ -1,8 +1,8 @@
 import { FileID } from "../generated/BasicTypes_pb";
-import { normalizeEntityId } from "../util";
+import { idToString, normalizeEntityId } from "../util";
 
 /** Normalized file ID returned by various methods in the SDK. */
-export type FileId = { shard: number; realm: number; file: number };
+export type FileId = { shard: number; realm: number; file: number; toString(): string };
 
 /**
  * Input type for an ID of a file on the network.
@@ -16,13 +16,17 @@ export type FileId = { shard: number; realm: number; file: number };
 export type FileIdLike =
     { shard?: number; realm?: number; file: number }
     | string
-    | number;
+    | number
+    | FileId;
 
 export function fileIdToSdk(fileId: FileID): FileId {
     return {
         shard: fileId.getShardnum(),
         realm: fileId.getRealmnum(),
-        file: fileId.getFilenum()
+        file: fileId.getFilenum(),
+        toString() {
+            return idToString({ shard: this.shard, realm: this.realm, num: this.file });
+        }
     };
 }
 
