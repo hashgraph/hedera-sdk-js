@@ -10,7 +10,7 @@ import { AccountId } from "../account/AccountId";
 import { timestampToDate } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 
-export type ContractInfo = {
+export interface ContractInfo {
     contractId: ContractId;
     accountId: AccountId;
     contractAccountId: string;

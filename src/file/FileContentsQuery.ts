@@ -7,7 +7,7 @@ import { Response } from "../generated/Response_pb";
 import { FileService } from "../generated/FileService_pb_service";
 import { FileId, FileIdLike } from "../file/FileId";
 
-export type FileContents = {
+export interface FileContents {
     fileId: FileIdLike;
     contents: Uint8Array | string;
 }

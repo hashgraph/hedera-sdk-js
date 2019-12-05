@@ -3,7 +3,7 @@ import {
     Ed25519PrivateKey,
     Ed25519PublicKey,
     generateMnemonic,
-    KeyMismatchException,
+    KeyMismatchError,
     ThresholdKey
 } from "../src/exports";
 import { KeyList } from "../src/crypto/KeyList";
@@ -99,10 +99,10 @@ describe("Ed25519PrivateKey", () => {
 
         expect(key1.toBytes()).toStrictEqual(key2.toBytes());
 
-        // keystore with the wrong password should reject with a `KeyMismatchException`
+        // keystore with the wrong password should reject with a `KeyMismatchError`
         await expect(Ed25519PrivateKey.fromKeystore(keystoreBytes, "some random password"))
             .rejects
-            .toBeInstanceOf(KeyMismatchException);
+            .toBeInstanceOf(KeyMismatchError);
     });
 
     it("derive() produces correct value", async() => {

@@ -39,9 +39,8 @@ export class GetByKeyQuery extends QueryBuilder<EntityId[]> {
     }
 
     protected _mapResponse(response: Response): EntityId[] {
-        return response.getGetbykey()!.getEntitiesList().filter((id) => (
-            id.hasContractid() || id.hasAccountid() || id.hasFileid()
-        )).map((id) => {
+        return response.getGetbykey()!.getEntitiesList().filter((id) => id.hasContractid() ||
+            id.hasAccountid() || id.hasFileid()).map((id) => {
             if (id.hasAccountid()) {
                 return {
                     type: "ACCOUNT",

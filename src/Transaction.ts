@@ -31,10 +31,10 @@ import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 /**
  * Signature/public key pairs are passed around as objects
  */
-export type SignatureAndKey = {
+export interface SignatureAndKey {
     signature: Uint8Array;
     publicKey: Ed25519PublicKey;
-};
+}
 
 const receiptInitialDelayMs = 1000;
 const receiptRetryDelayMs = 500;
@@ -157,7 +157,7 @@ export class Transaction {
             if (([ ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK ] as number[])
                 .includes(receipt.getStatus())) {
                 const delay = Math.floor(receiptRetryDelayMs *
-                    Math.random() * ((2 ** attempt) - 1));
+                    Math.random() * (2 ** attempt - 1));
 
                 if (Date.now() + delay > validUntilMs) {
                     throw new Error(`timed out waiting for consensus on transaction ID: ${
@@ -185,8 +185,8 @@ export class Transaction {
     public toString(): string {
         const tx = this.toProto().toObject();
         const bodybytes = tx.bodybytes instanceof Uint8Array ?
-            Buffer.from(tx.bodybytes as Uint8Array) :
-            Buffer.from(tx.bodybytes as string, "base64");
+            Buffer.from(tx.bodybytes) :
+            Buffer.from(tx.bodybytes, "base64");
         tx.body = TransactionBody.deserializeBinary(bodybytes).toObject();
 
         return JSON.stringify(tx, null, 4);

@@ -1,7 +1,7 @@
 import { ContractLoginfo as ProtoContractLoginfo } from "../generated/ContractCallLocal_pb";
 import { ContractId } from "./ContractId";
 
-export type ContractLogInfo = {
+export interface ContractLogInfo {
     contractId: ContractId;
     bloom: Uint8Array;
     topicList: Uint8Array[];

@@ -23,8 +23,12 @@ export class HederaError extends Error {
     public readonly codeName: string;
 
     public constructor(code: ResponseCode) {
-        const codeName = getResponseCodeName(code) || "UNKNOWN";
+        const responseCodeName = getResponseCodeName(code);
+        const codeName = responseCodeName == null ? "UNKNOWN" : responseCodeName;
+
         super(`Hedera returned response code: ${codeName} (${code})`);
+
+        this.name = "HederaError";
         this.code = code;
         this.codeName = codeName;
     }
@@ -51,14 +55,18 @@ export function throwIfExceptional(code: ResponseCode, unknownOk = false): void 
 export class ValidationError extends Error {
     public constructor(className: string, errors: string[]) {
         super(`${className} failed validation:\n${errors.join("\n")}`);
+
+        this.name = "ValidationError";
     }
 }
 
-export class MaxPaymentExceededException extends Error {
+export class MaxPaymentExceededError extends Error {
     public readonly queryCost: Hbar;
 
     public constructor(queryCost: Hbar, maxQueryCost: Hbar) {
         super(`query cost of ${queryCost.value()} HBAR exceeds max set on client: ${maxQueryCost.value()} HBAR`);
+
+        this.name = "MaxPaymentExceededError";
         this.queryCost = queryCost;
     }
 }
@@ -78,6 +86,8 @@ export class TinybarValueError extends Error {
         }
 
         super(`${message}: ${bnAmount.toString()}`);
+
+        this.name = "TinybarValueError";
         this.amount = bnAmount;
     }
 }

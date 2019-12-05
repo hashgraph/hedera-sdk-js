@@ -40,7 +40,7 @@ export class ContractFunctionResult {
         // Arrays in solidity cannot be longer than 1024:
         // https://solidity.readthedocs.io/en/v0.4.21/introduction-to-smart-contracts.html
         const len = this.getUint32(index);
-        return this.contractCallResult.subarray((index + 1) * 32, ((index + 1) * 32) + (len * 32));
+        return this.contractCallResult.subarray((index + 1) * 32, (index + 1) * 32 + len * 32);
     }
 
     public getBigNumber(index: number): BigNumber {
@@ -53,7 +53,7 @@ export class ContractFunctionResult {
     public getBytes32(index: number): Uint8Array {
         return this.contractCallResult.subarray(
             index * 32,
-            (index * 32) + 32
+            index * 32 + 32
         );
     }
 
@@ -65,17 +65,17 @@ export class ContractFunctionResult {
             this.contractCallResult.buffer,
             this.contractCallResult.byteOffset,
             this.contractCallResult.byteLength
-        ).getUint32((index * 32) + 28);
+        ).getUint32(index * 32 + 28);
     }
 
     public getBool(index: number): boolean {
-        return this.contractCallResult[ (index * 32) + 31 ] !== 0;
+        return this.contractCallResult[ index * 32 + 31 ] !== 0;
     }
 
     public getAddress(index: number): Uint8Array {
         return this.contractCallResult.subarray(
-            (index * 32) + 12,
-            (index * 32) + 32
+            index * 32 + 12,
+            index * 32 + 32
         );
     }
 }

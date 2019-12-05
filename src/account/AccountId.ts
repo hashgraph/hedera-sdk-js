@@ -9,16 +9,12 @@ export class AccountId {
 
     public constructor(accountId: AccountIdLike) {
         const id = accountId instanceof AccountId ?
-            accountId as AccountId :
+            accountId :
             normalizeEntityId("account", accountId);
 
         this.shard = id.shard;
         this.realm = id.realm;
         this.account = id.account;
-    }
-
-    public toString(): string {
-        return `${this.shard}.${this.realm}.${this.account}`;
     }
 
     public static fromString(id: string): AccountId {
@@ -31,6 +27,10 @@ export class AccountId {
             realm: accountId.getRealmnum(),
             account: accountId.getAccountnum()
         });
+    }
+
+    public toString(): string {
+        return `${this.shard}.${this.realm}.${this.account}`;
     }
 
     public toProto(): AccountID {

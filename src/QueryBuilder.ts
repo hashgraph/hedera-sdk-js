@@ -2,7 +2,7 @@ import { BaseClient, Node } from "./BaseClient";
 import { QueryHeader, ResponseType } from "./generated/QueryHeader_pb";
 import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
-import { MaxPaymentExceededException, throwIfExceptional } from "./errors";
+import { MaxPaymentExceededError, throwIfExceptional } from "./errors";
 import { getResponseHeader, runValidation } from "./util";
 import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
@@ -30,8 +30,8 @@ export abstract class QueryBuilder<T> {
 
     public setMaxQueryPayment(amount: Tinybar | Hbar): this {
         this.maxCost = amount instanceof Hbar ?
-            amount as Hbar :
-            Hbar.fromTinybar(amount as Tinybar);
+            amount :
+            Hbar.fromTinybar(amount);
         return this;
     }
 
@@ -106,7 +106,7 @@ export abstract class QueryBuilder<T> {
         const payment = this._header.getPayment();
         await this._generatePayment(0, client);
 
-        const query = this._inner.clone() as Query;
+        const query = this._inner.clone();
 
         this._header.setResponsetype(responseType);
         this._header.setPayment(payment);
@@ -136,9 +136,9 @@ export abstract class QueryBuilder<T> {
             this._needsPayment && !this._header.hasPayment()) {
             const cost = await this.getCost(client);
 
-            if ((this.maxCost && this.maxCost.comparedTo(cost) < 0) ||
-                (client.maxQueryPayment && client.maxQueryPayment.comparedTo(cost) < 0)) {
-                throw new MaxPaymentExceededException(
+            if (this.maxCost && this.maxCost.comparedTo(cost) < 0 ||
+                client.maxQueryPayment && client.maxQueryPayment.comparedTo(cost) < 0) {
+                throw new MaxPaymentExceededError(
                     cost,
                     client.maxQueryPayment ? client.maxQueryPayment : this.maxCost!
                 );

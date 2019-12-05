@@ -22,7 +22,7 @@ export class AccountDeleteTransaction extends TransactionBuilder {
         return this;
     }
 
-    public get _method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected get _method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
         return CryptoService.cryptoDelete;
     }
 

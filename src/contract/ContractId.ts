@@ -9,16 +9,12 @@ export class ContractId {
 
     public constructor(contractId: ContractIdLike) {
         const id = contractId instanceof ContractId ?
-            contractId as ContractId :
+            contractId :
             normalizeEntityId("contract", contractId);
 
         this.shard = id.shard;
         this.realm = id.realm;
         this.contract = id.contract;
-    }
-
-    public toString(): string {
-        return `${this.shard}.${this.realm}.${this.contract}`;
     }
 
     public static fromString(id: string): ContractId {
@@ -31,6 +27,10 @@ export class ContractId {
             realm: contractId.getRealmnum(),
             contract: contractId.getContractnum()
         });
+    }
+
+    public toString(): string {
+        return `${this.shard}.${this.realm}.${this.contract}`;
     }
 
     public toProto(): ContractID {

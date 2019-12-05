@@ -14,6 +14,7 @@ export class KeyList {
         return this;
     }
 
+    /* eslint-disable-next-line @typescript-eslint/member-naming */
     public _toProtoKey(): proto.Key {
         const keyList = new proto.KeyList();
         keyList.setKeysList(this._keys);

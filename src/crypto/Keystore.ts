@@ -2,9 +2,12 @@ import * as crypto from "crypto";
 import * as nacl from "tweetnacl";
 import { hmacAlgo, pbkdf2 } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
-import { KeyMismatchException } from "./KeyMismatchException";
+import { KeyMismatchError } from "./KeyMismatchError";
 
-export type Keystore = {
+const AES_128_CTR = "aes-128-ctr";
+const HMAC_SHA256 = "hmac-sha256";
+
+export interface Keystore {
     version: 1;
     crypto: {
         /** hex-encoded ciphertext */
@@ -12,7 +15,7 @@ export type Keystore = {
         /** hex-encoded initialization vector */
         cipherparams: { iv: string };
         /** cipher being used */
-        cipher: "aes-128-ctr";
+        cipher: typeof AES_128_CTR;
         /** key derivation function being used */
         kdf: "pbkdf2";
         /** params for key derivation function */
@@ -24,7 +27,7 @@ export type Keystore = {
             /** iteration count */
             c: number;
             /** hash function */
-            prf: "hmac-sha256";
+            prf: typeof HMAC_SHA256;
         };
         /** hex-encoded HMAC-SHA384 */
         mac: string;
@@ -46,7 +49,7 @@ export async function createKeystore(
     const iv = crypto.randomBytes(16);
 
     // AES-128-CTR with the first half of the derived key and a random IV
-    const cipher = crypto.createCipheriv("aes-128-ctr", key.slice(0, 16), iv);
+    const cipher = crypto.createCipheriv(AES_128_CTR, key.slice(0, 16), iv);
 
     const cipherText = Buffer.concat([ cipher.update(privateKey), cipher[ "final" ]() ]);
 
@@ -57,13 +60,13 @@ export async function createKeystore(
         crypto: {
             ciphertext: cipherText.toString("hex"),
             cipherparams: { iv: iv.toString("hex") },
-            cipher: "aes-128-ctr",
+            cipher: AES_128_CTR,
             kdf: "pbkdf2",
             kdfparams: {
                 dkLen,
                 salt: salt.toString("hex"),
                 c,
-                prf: "hmac-sha256"
+                prf: HMAC_SHA256
             },
             mac: mac.toString("hex")
         }
@@ -94,7 +97,7 @@ export async function loadKeystore(
         throw new Error(`unsupported key derivation function: ${kdf}`);
     }
 
-    if (prf !== "hmac-sha256") {
+    if (prf !== HMAC_SHA256) {
         throw new Error(`unsupported key derivation hash function: ${prf}`);
     }
 
@@ -108,7 +111,7 @@ export async function loadKeystore(
     const verifyHmac = crypto.createHmac(hmacAlgo, key.slice(16)).update(cipherBytes).digest();
 
     if (!hmac.equals(verifyHmac)) {
-        throw new KeyMismatchException(hmac, verifyHmac);
+        throw new KeyMismatchError(hmac, verifyHmac);
     }
 
     const decipher = crypto.createDecipheriv(cipher, key.slice(0, 16), ivBytes);

@@ -61,12 +61,12 @@ export abstract class TransactionBuilder {
         return this;
     }
 
-    public abstract get _method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
+    protected abstract get _method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
     protected abstract _doValidate(errors: string[]): void;
 
     public validate(): void {
-        runValidation(this, ((errors) => {
+        runValidation(this, (errors) => {
             if (!this._inner.hasTransactionid()) {
                 errors.push("missing ID for transaction");
             }
@@ -77,14 +77,14 @@ export abstract class TransactionBuilder {
             }
 
             this._doValidate(errors);
-        }));
+        });
     }
 
     public build(client?: BaseClient): Transaction {
         // Don't override TransactionFee if it's already set
 
         if (client && this._inner.getTransactionfee() === "0") {
-            this._inner.setTransactionfee(tinybarToString(client!.maxTransactionFee));
+            this._inner.setTransactionfee(tinybarToString(client.maxTransactionFee));
         }
 
         if (client && !this._inner.hasTransactionid()) {
@@ -120,7 +120,7 @@ export abstract class TransactionBuilder {
         // If client is supplied make sure to sign transaction
         if (client) {
             if (client.operatorPublicKey && client.operatorSigner) {
-                txn.signWith(client!.operatorPublicKey, client!.operatorSigner);
+                txn.signWith(client.operatorPublicKey, client.operatorSigner);
             }
         }
 

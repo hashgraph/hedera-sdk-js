@@ -46,11 +46,11 @@ export class AccountUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public get _method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected get _method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
         return CryptoService.updateAccount;
     }
 
-    public _doValidate(errors: string[]): void {
+    protected _doValidate(errors: string[]): void {
         if (!this._body.hasAccountidtoupdate()) {
             errors.push("AccountUpdateTransaction requires .setAccountId()");
         }

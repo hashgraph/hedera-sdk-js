@@ -41,13 +41,14 @@ export class Ed25519PublicKey implements PublicKey {
     }
 
     public toString(raw = false): string {
-        if (!this._asStringRaw) {
+        if (this._asStringRaw == null) {
             this._asStringRaw = encodeHex(this._keyData);
         }
 
         return (raw ? "" : ed25519PubKeyPrefix) + this._asStringRaw;
     }
 
+    /* eslint-disable-next-line @typescript-eslint/member-naming */
     public _toProtoKey(): Key {
         const key = new Key();
         // copy the key bytes so they can't modify them through this object

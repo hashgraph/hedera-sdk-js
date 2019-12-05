@@ -16,18 +16,18 @@ export class ContractDeleteTransaction extends TransactionBuilder {
         this._inner.setContractdeleteinstance(this._body);
     }
 
+    public setContractId(contractIdLike: ContractIdLike): this {
+        this._body.setContractid(new ContractId(contractIdLike).toProto());
+        return this;
+    }
+
     protected _doValidate(errors: string[]): void {
         if (!this._body.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
-    public setContractId(contractIdLike: ContractIdLike): this {
-        this._body.setContractid(new ContractId(contractIdLike).toProto());
-        return this;
-    }
-
-    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return SmartContractService.deleteContract;
     }
 }

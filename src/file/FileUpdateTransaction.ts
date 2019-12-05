@@ -52,7 +52,7 @@ export class FileUpdateTransaction extends TransactionBuilder {
         }
     }
 
-    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return FileService.updateFile;
     }
 }

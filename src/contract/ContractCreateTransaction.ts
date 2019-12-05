@@ -22,12 +22,6 @@ export class ContractCreateTransaction extends TransactionBuilder {
         this._inner.setContractcreateinstance(this._body);
     }
 
-    protected _doValidate(errors: string[]): void {
-        if (!this._body.hasFileid()) {
-            errors.push(".setBytecodeFile() required");
-        }
-    }
-
     public setBytecodeFile(fileIdLike: FileIdLike): this {
         this._body.setFileid(new FileId(fileIdLike).toProto());
         return this;
@@ -63,7 +57,13 @@ export class ContractCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected _doValidate(errors: string[]): void {
+        if (!this._body.hasFileid()) {
+            errors.push(".setBytecodeFile() required");
+        }
+    }
+
+    protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return SmartContractService.createContract;
     }
 }

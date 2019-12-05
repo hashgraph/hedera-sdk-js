@@ -18,6 +18,7 @@ export class Client extends BaseClient {
         super(network, operator);
     }
 
+    /* eslint-disable-next-line @typescript-eslint/member-naming */
     public _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(
         url: string,
         request: Rq,
@@ -27,7 +28,7 @@ export class Client extends BaseClient {
             host: url,
             request,
             onEnd(response: UnaryOutput<Rs>) {
-                if (response.status === Code.OK && response.message) {
+                if (response.status === Code.OK && response.message != null) {
                     resolve(response.message);
                 } else {
                     reject(new Error(response.statusMessage));

@@ -8,4 +8,7 @@ module.exports = {
     "@launchbadge/eslint-config/browser",
     "@launchbadge/eslint-config/typescript"
   ],
+  rules: {
+    "no-mixed-operators": 0,
+  }
 };

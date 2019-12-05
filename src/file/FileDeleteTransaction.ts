@@ -16,6 +16,11 @@ export class FileDeleteTransaction extends TransactionBuilder {
         this._inner.setFiledelete(this._body);
     }
 
+    public setFileId(fileIdLike: FileIdLike): this {
+        this._body.setFileid(new FileId(fileIdLike).toProto());
+        return this;
+    }
+
     protected _doValidate(errors: string[]): void {
         const fileId = this._body.getFileid();
 
@@ -24,12 +29,7 @@ export class FileDeleteTransaction extends TransactionBuilder {
         }
     }
 
-    public setFileId(fileIdLike: FileIdLike): this {
-        this._body.setFileid(new FileId(fileIdLike).toProto());
-        return this;
-    }
-
-    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return FileService.deleteFile;
     }
 }

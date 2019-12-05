@@ -36,7 +36,7 @@ export class FreezeTransaction extends TransactionBuilder {
         // Do nothing
     }
 
-    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return FreezeService.freeze;
     }
 }

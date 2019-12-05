@@ -1,11 +1,12 @@
 import { PublicKey } from "./PublicKey";
 import * as proto from "../generated/BasicTypes_pb";
 
-export class ThresholdKey implements PublicKey {
+export class ThresholdKey extends PublicKey {
     private readonly _threshold: number;
     private readonly _keys: proto.Key[] = [];
 
     public constructor(threshold: number) {
+        super();
         this._threshold = threshold;
     }
 
@@ -19,6 +20,7 @@ export class ThresholdKey implements PublicKey {
         return this;
     }
 
+    /* eslint-disable-next-line @typescript-eslint/member-naming */
     public _toProtoKey(): proto.Key {
         if (this._keys.length === 0) {
             throw new Error("ThresholdKey must have at least one key");

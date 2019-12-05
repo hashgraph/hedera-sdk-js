@@ -8,7 +8,7 @@ import { recordListToSdk, TransactionRecord } from "../TransactionRecord";
 import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractGetRecordsQuery } from "../generated/ContractGetRecords_pb";
 
-export type ContractRecord = {
+export interface ContractRecord {
     contractId: ContractId;
     recordList: TransactionRecord[];
 }

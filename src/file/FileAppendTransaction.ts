@@ -16,15 +16,6 @@ export class FileAppendTransaction extends TransactionBuilder {
         this._inner.setFileappend(this._body);
     }
 
-    protected _doValidate(errors: string[]): void {
-        const file = this._body.getFileid();
-        const contents = this._body.getContents();
-
-        if (file == null || contents == null) {
-            errors.push("FileAppendTransaction must have a file id and contents set");
-        }
-    }
-
     public setFileId(fileId: FileIdLike): this {
         this._body.setFileid(new FileId(fileId).toProto());
         return this;
@@ -35,7 +26,16 @@ export class FileAppendTransaction extends TransactionBuilder {
         return this;
     }
 
-    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected _doValidate(errors: string[]): void {
+        const file = this._body.getFileid();
+        const contents = this._body.getContents();
+
+        if (file == null || contents == null) {
+            errors.push("FileAppendTransaction must have a file id and contents set");
+        }
+    }
+
+    protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return FileService.appendContent;
     }
 }

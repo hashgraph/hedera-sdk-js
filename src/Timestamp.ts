@@ -1,6 +1,6 @@
 import { Timestamp as ProtoTimestamp } from "./generated/Timestamp_pb";
 
-export type Timestamp = {
+export interface Timestamp {
     seconds: number;
     nanos: number;
 }
@@ -21,7 +21,7 @@ export function timestampToDate(timestamp: ProtoTimestamp): Date {
 }
 
 export function timestampToMs(timestamp: ProtoTimestamp): number {
-    return (timestamp.getSeconds() * 1000) + Math.floor(timestamp.getNanos() / 1_000_000);
+    return timestamp.getSeconds() * 1000 + Math.floor(timestamp.getNanos() / 1_000_000);
 }
 
 /* eslint-disable-next-line max-len */

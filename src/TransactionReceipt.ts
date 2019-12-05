@@ -4,7 +4,7 @@ import { ContractId } from "./contract/ContractId";
 import { FileId } from "./file/FileId";
 import { ExchangeRateSet, exchangeRateSetToSdk } from "./ExchangeRate";
 
-export type TransactionReceipt = {
+export interface TransactionReceipt {
     status: number;
     accountId?: AccountId;
     fileId?: FileId;
@@ -19,6 +19,6 @@ export function receiptToSdk(receipt: ProtoTransactionReceipt): TransactionRecei
         accountId: receipt.getAccountid() && AccountId.fromProto(receipt.getAccountid()!),
         fileId: receipt.getFileid() && FileId.fromProto(receipt.getFileid()!),
         contractId: receipt.getContractid() && ContractId.fromProto(receipt.getContractid()!),
-        exchangeRateSet: exchangeRate && exchangeRateSetToSdk(exchangeRate!)
+        exchangeRateSet: exchangeRate && exchangeRateSetToSdk(exchangeRate)
     };
 }

@@ -1,7 +1,7 @@
 import { AccountAmount as ProtoAccountAmount } from "../generated/CryptoTransfer_pb";
 import { AccountId } from "./AccountId";
 
-export type AccountAmount = {
+export interface AccountAmount {
     accountId: AccountId;
     amount: string;
 }

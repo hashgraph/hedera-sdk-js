@@ -1,11 +1,11 @@
 import { ExchangeRate as ProtoExchangeRate, ExchangeRateSet as ProtoExchangeRateSet } from "./generated/ExchangeRate_pb";
 
-export type ExchangeRateSet = {
+export interface ExchangeRateSet {
     currentRate: ExchangeRate;
     nextRate: ExchangeRate;
 }
 
-export type ExchangeRate = {
+export interface ExchangeRate {
     hbarEquiv: number;
     centEquiv: number;
     expirationTime: Date;

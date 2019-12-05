@@ -7,11 +7,7 @@ import { throwIfExceptional, ValidationError } from "./errors";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 
 export function orThrow<T>(val?: T, msg = "value must not be null"): T {
-    if (val == null) {
-        throw new Error(msg);
-    }
-
-    return val;
+    return reqDefined(val, msg);
 }
 
 export function newDuration(seconds: number): Duration {
@@ -38,7 +34,7 @@ export function normalizeEntityId<Kind extends EntityKind>(
 ): NormalizedId<Kind> {
     switch (typeof entityId) {
         case "object":
-            if (!entityId[ kind ]) {
+            if (entityId[ kind ] == null) {
                 break;
             }
 
@@ -95,7 +91,7 @@ export interface GetHeader {
 
 /* eslint-disable-next-line max-len */
 export function handleQueryPrecheck<T extends GetHeader>(getBody: (r: Response) => T | undefined): (r: undefined | Response) => T {
-    return (resp) => {
+    return (resp): T => {
         const body = reqDefined(
             getBody(reqDefined(resp, "missing Response")),
             "missing body from Response"

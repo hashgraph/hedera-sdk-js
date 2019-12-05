@@ -46,7 +46,7 @@ export { Transaction } from "./Transaction";
 
 export {
     HederaError,
-    ValidationError, MaxPaymentExceededException, TinybarValueError,
+    ValidationError, MaxPaymentExceededError, TinybarValueError,
     ResponseCodeEnum, ResponseCode, getResponseCodeName
 } from "./errors";
 
@@ -56,7 +56,7 @@ export { ThresholdKey } from "./crypto/ThresholdKey";
 export { PublicKey } from "./crypto/PublicKey";
 export { KeyList } from "./crypto/KeyList";
 export { MnemonicResult, generateMnemonic } from "./crypto/MnemonicResult";
-export { KeyMismatchException } from "./crypto/KeyMismatchException";
+export { KeyMismatchError } from "./crypto/KeyMismatchError";
 
 export * from "./Tinybar";
 

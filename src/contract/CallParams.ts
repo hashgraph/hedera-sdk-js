@@ -19,7 +19,7 @@ enum ArgumentType {
     func = 14,
 }
 
-type SolidityType = {
+interface SolidityType {
     ty: ArgumentType;
     array: boolean;
 }
@@ -127,7 +127,7 @@ export class FunctionSelector {
 
         const argument: SolidityType = typeof ty === "string" ?
             stringToSoldityType(ty) :
-            ty as SolidityType;
+            ty;
 
         this._func += solidityTypeToString(argument, length);
 
@@ -160,7 +160,7 @@ export class CallParams {
     private _currentArgument = 0;
 
     public constructor(func?: string | FunctionSelector) {
-        if (func && typeof func == "string") {
+        if (func && typeof func === "string") {
             this._func = new FunctionSelector(func);
         } else if (func instanceof FunctionSelector) {
             this._func = func;
@@ -234,7 +234,7 @@ export class CallParams {
     public addAddress(param: Uint8Array | string): this {
         const par = param instanceof Uint8Array ?
             param :
-            Buffer.from(param as string, "hex");
+            Buffer.from(param, "hex");
 
         if (par.length !== 20) {
             throw new Error("`address` type requires parameter to be exactly 20 bytes");
@@ -266,11 +266,11 @@ export class CallParams {
     public addFunction(address: Uint8Array | string, func: FunctionSelector | string): this {
         const addressParam = address instanceof Uint8Array ?
             address :
-            Buffer.from(address as string, "hex");
+            Buffer.from(address, "hex");
 
         const functionSelector = func instanceof FunctionSelector ?
-            (func as FunctionSelector)._toProto() :
-            FunctionSelector.identifier(func as string);
+            func._toProto() :
+            FunctionSelector.identifier(func);
 
         if (addressParam.length !== 20) {
             throw new Error("`function` type requires parameter `address` to be exactly 20 bytes");
@@ -314,7 +314,7 @@ export class CallParams {
 
                 par.push(a);
             } else {
-                const buf = Buffer.from(a as string, "hex");
+                const buf = Buffer.from(a, "hex");
 
                 if (buf.length !== 20) {
                     throw new Error("`address` type requires parameter to be exactly 20 bytes");
@@ -353,7 +353,7 @@ export class CallParams {
 
         const length = this._func.argumentList.length === 0 ?
             0 :
-            (this._func.argumentList.length * 32) + this._func.argumentList
+            this._func.argumentList.length * 32 + this._func.argumentList
                 .map((arg) => arg.dynamic ? arg.value.length : 0)
                 .reduce((sum, value) => sum + value) + 4;
 
@@ -364,12 +364,12 @@ export class CallParams {
 
         for (const [ i, { dynamic, value }] of this._func.argumentList.entries()) {
             if (dynamic) {
-                const view = new DataView(func.buffer, 4 + (i * 32) + 28);
+                const view = new DataView(func.buffer, 4 + i * 32 + 28);
                 view.setUint32(0, offset);
                 func.set(value, view.getUint32(0) + 4);
                 offset += value.length;
             } else {
-                func.set(value, 4 + (i * 32));
+                func.set(value, 4 + i * 32);
             }
         }
 
@@ -377,10 +377,10 @@ export class CallParams {
     }
 }
 
-type Argument = {
+interface Argument {
     dynamic: boolean;
     value: Uint8Array;
-};
+}
 
 function argumentToBytes(
     param: string | boolean | number | Uint8Array | BigNumber |
@@ -408,7 +408,7 @@ function argumentToBytes(
             .map((a) => a.length)
             .reduce((total, current) => total + current);
 
-        value = new Uint8Array((values.length * 32) + totalLengthOfValues + 32);
+        value = new Uint8Array(values.length * 32 + totalLengthOfValues + 32);
 
         valueView = new DataView(value.buffer, 28);
         valueView.setUint32(0, values.length);
@@ -416,7 +416,7 @@ function argumentToBytes(
         let offset = 32 * values.length;
 
         for (const [ i, e ] of values.entries()) {
-            const view = new DataView(value.buffer, ((i + 1) * 32) + 28);
+            const view = new DataView(value.buffer, (i + 1) * 32 + 28);
             view.setUint32(0, offset);
             value.set(e, view.getUint32(0) + 32);
             offset += e.length;
@@ -449,10 +449,10 @@ function argumentToBytes(
         case ArgumentType.int64:
             if (param instanceof BigNumber) {
                 // eslint-disable-next-line no-case-declarations
-                const par = (param as BigNumber).toString(16);
+                const par = param.toString(16);
                 if (par.length > 16) {
                     throw new TypeError("uint64/int64 requires BigNumber to be less than or equal to 8 bytes");
-                } else if (!(param as BigNumber).isInteger()) {
+                } else if (!param.isInteger()) {
                     throw new TypeError("uint64/int64 requires BigNumber to be an integer");
                 }
 
@@ -462,7 +462,7 @@ function argumentToBytes(
             }
             return value;
         case ArgumentType.uint256:
-            value = (param as Uint8Array);
+            value = param as Uint8Array;
             return value;
         case ArgumentType.address:
             value.set(param as Uint8Array, 20);
@@ -485,12 +485,12 @@ function argumentToBytes(
             // Required because JS Strings are UTF-16
             // eslint-disable-next-line no-case-declarations
             const par: Uint8Array = param instanceof Uint8Array ?
-                param as Uint8Array :
+                param :
                 Buffer.from(param as string, "utf8");
 
             // Resize value to a 32 byte boundary if needed
             if (Math.floor(par.length / 32) >= 0 && Math.floor(par.length % 32) !== 0) {
-                value = new Uint8Array(((Math.floor(par.length / 32) + 1) * 32) + 32);
+                value = new Uint8Array((Math.floor(par.length / 32) + 1) * 32 + 32);
             } else {
                 value = new Uint8Array(64);
             }
@@ -509,7 +509,7 @@ function numberToBytes(
     byteoffset: number,
     func: (byteOffset: number, value: number) => void
 ): void {
-    const value = param instanceof BigNumber ? (param as BigNumber).toNumber() : param as number;
+    const value = param instanceof BigNumber ? param.toNumber() : param;
 
     func(byteoffset, value);
 }

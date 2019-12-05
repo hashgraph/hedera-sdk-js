@@ -54,11 +54,11 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public get _method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected get _method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
         return CryptoService.createAccount;
     }
 
-    public _doValidate(errors: string[]): void {
+    protected _doValidate(errors: string[]): void {
         if (!this._body.hasKey()) {
             errors.push("AccountCreateTransaction requires .setKey()");
         }

@@ -17,12 +17,6 @@ export class ContractExecuteTransaction extends TransactionBuilder {
         this._inner.setContractcall(this._body);
     }
 
-    protected _doValidate(errors: string[]): void {
-        if (!this._body.hasContractid()) {
-            errors.push(".setContractId() required");
-        }
-    }
-
     public setGas(gas: number | BigNumber): this {
         this._body.setGas(String(gas));
         return this;
@@ -43,7 +37,13 @@ export class ContractExecuteTransaction extends TransactionBuilder {
         return this;
     }
 
-    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected _doValidate(errors: string[]): void {
+        if (!this._body.hasContractid()) {
+            errors.push(".setContractId() required");
+        }
+    }
+
+    protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return SmartContractService.contractCallMethod;
     }
 }

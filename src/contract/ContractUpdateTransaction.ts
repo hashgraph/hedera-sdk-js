@@ -21,12 +21,6 @@ export class ContractUpdateTransaction extends TransactionBuilder {
         this._inner.setContractupdateinstance(this._body);
     }
 
-    protected _doValidate(errors: string[]): void {
-        if (!this._body.hasContractid()) {
-            errors.push(".setContractId() required");
-        }
-    }
-
     public setContractId(contractIdLike: ContractIdLike): this {
         this._body.setContractid(new ContractId(contractIdLike).toProto());
         return this;
@@ -57,7 +51,13 @@ export class ContractUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected _doValidate(errors: string[]): void {
+        if (!this._body.hasContractid()) {
+            errors.push(".setContractId() required");
+        }
+    }
+
+    protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return SmartContractService.updateContract;
     }
 }

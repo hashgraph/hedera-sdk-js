@@ -6,7 +6,7 @@ import { timestampToDate } from "./Timestamp";
 import { AccountAmount, accountAmountToSdk } from "./account/AccountAmount";
 import { TransferList as ProtoTransferList, AccountAmount as ProtoAccountAmount } from "./generated/CryptoTransfer_pb";
 
-export type TransactionRecord = {
+export interface TransactionRecord {
     receipt?: TransactionReceipt;
     transactionHash: Uint8Array | string;
     consensusTimestamp: Date;
@@ -30,8 +30,8 @@ export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionR
             transactionId: TransactionId.fromProto(record.getTransactionid()!),
             memo: record.getMemo(),
             transactionFee: record.getTransactionfee(),
-            contractCallResult: callResult && contractFunctionResultToSdk(callResult!),
-            contractCreateResult: createResult && contractFunctionResultToSdk(createResult!),
+            contractCallResult: callResult && contractFunctionResultToSdk(callResult),
+            contractCreateResult: createResult && contractFunctionResultToSdk(createResult),
             transferList: record.getTransferlist() && transferListToSdk(record.getTransferlist()!)
         };
     });

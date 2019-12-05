@@ -13,11 +13,13 @@ import { AccountBalanceQuery } from "./account/AccountBalanceQuery";
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
 /** If `privateKey` is a string it will be parsed as an `Ed25519PrivateKey` */
-export type PrivateKey = { privateKey: Ed25519PrivateKey | string };
-export type PubKeyAndSigner = {
+export interface PrivateKey {
+    privateKey: Ed25519PrivateKey | string;
+}
+export interface PubKeyAndSigner {
     publicKey: Ed25519PublicKey;
     signer: Signer;
-};
+}
 
 export type SigningOpts = PrivateKey | PubKeyAndSigner;
 
@@ -28,19 +30,18 @@ export type Nodes = {
 } | Node[];
 
 /** A URL,AccountID pair identifying a Node */
-export type Node = {
+export interface Node {
     url: string;
     id: AccountId;
 }
 
-export type ClientConfig = {
+export interface ClientConfig {
     network?: Nodes;
     operator: Operator;
-};
+}
 
 export abstract class BaseClient {
     public operator?: Operator;
-    private _operatorAcct?: AccountId;
     public operatorSigner?: Signer;
     public operatorPublicKey?: Ed25519PublicKey;
 
@@ -50,12 +51,14 @@ export abstract class BaseClient {
     private _maxTransactionFee: Hbar = Hbar.of(1);
     private _maxQueryPayment?: Hbar = Hbar.of(1);
 
+    private _operatorAcct?: AccountId;
+
     protected constructor(network: Nodes, operator?: Operator) {
         this._nodes = Array.isArray(network) ?
             network as Node[] :
             Object.entries(network)
                 .map(([ url, accountId ]) => {
-                    const id = new AccountId(accountId as AccountIdLike);
+                    const id = new AccountId(accountId);
                     return { url, id };
                 });
 
@@ -85,7 +88,7 @@ export abstract class BaseClient {
             this.operatorPublicKey = privateKey.publicKey;
         } else {
             ({ publicKey: this.operatorPublicKey, signer: this.operatorSigner } =
-                (operator as PubKeyAndSigner));
+                operator as PubKeyAndSigner);
         }
 
         return this;
@@ -155,12 +158,11 @@ export abstract class BaseClient {
     }
 
     public _getNode(node: string | AccountId): Node {
-        const maybeNode = this._nodes.find((_node) => _node.url === node || (
+        const maybeNode = this._nodes.find((_node) => _node.url === node ||
             typeof node === "object" &&
                 _node.id.account === node.account &&
                 _node.id.realm === node.realm &&
-                _node.id.shard === node.shard
-        ));
+                _node.id.shard === node.shard);
 
         if (maybeNode) {
             return maybeNode;
@@ -169,6 +171,7 @@ export abstract class BaseClient {
         throw new Error(`could not find node: ${JSON.stringify(node)}`);
     }
 
+    /* eslint-disable-next-line @typescript-eslint/member-naming */
     public abstract _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(
         url: string, request: Rq, method: UnaryMethodDefinition<Rq, Rs>): Promise<Rs>;
 }

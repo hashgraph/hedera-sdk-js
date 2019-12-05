@@ -10,7 +10,7 @@ import { Hbar } from "../Hbar";
 import { AccountId, AccountIdLike } from "./AccountId";
 import { timestampToMs } from "../Timestamp";
 
-export type AccountInfo = {
+export interface AccountInfo {
     accountId: AccountIdLike;
     contractAccountId?: string;
     isDeleted: boolean;
@@ -24,7 +24,7 @@ export type AccountInfo = {
     expirationTime: Date;
     autoRenewPeriodSeconds: number;
     // proxy accounts and claims aren't really implemented so we're ignoring those
-};
+}
 
 export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
     private readonly _builder: CryptoGetInfoQuery;

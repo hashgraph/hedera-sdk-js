@@ -63,13 +63,13 @@ export function tinybarToString(amount: Tinybar | Hbar, allowNegative?: "allowNe
 export function tinybarToUInt64Value(threshold: Tinybar | Hbar): UInt64Value {
     const value = new UInt64Value();
     const tinybar: Tinybar = threshold instanceof Hbar ?
-        (threshold as Hbar).asTinybar() :
-        threshold as Tinybar;
+        threshold.asTinybar() :
+        threshold;
     if (tinybar instanceof BigNumber) {
         tinybarRangeCheck(tinybar);
-        value.setValue((tinybar as BigNumber).toNumber());
+        value.setValue(tinybar.toNumber());
     } else {
-        value.setValue(tinybar as number);
+        value.setValue(tinybar);
     }
 
     return value;

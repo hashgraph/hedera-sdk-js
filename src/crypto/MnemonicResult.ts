@@ -2,7 +2,7 @@ import * as bip39 from "bip39";
 import { Ed25519PrivateKey } from "./Ed25519PrivateKey";
 
 /** result of `generateMnemonic()` */
-export type MnemonicResult = {
+export interface MnemonicResult {
     mnemonic: string;
     /** Lazily generate the key, providing an optional passphrase to protect it with */
     generateKey: (passphrase?: string) => Promise<Ed25519PrivateKey>;
@@ -22,7 +22,7 @@ export function generateMnemonic(): MnemonicResult {
     const mnemonic = bip39.generateMnemonic(256);
     return {
         mnemonic,
-        generateKey(passphrase) {
+        generateKey(passphrase): Promise<Ed25519PrivateKey> {
             return Ed25519PrivateKey.fromMnemonic(mnemonic, passphrase);
         }
     };

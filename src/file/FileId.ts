@@ -9,16 +9,12 @@ export class FileId {
 
     public constructor(fileId: FileIdLike) {
         const id = fileId instanceof FileId ?
-            fileId as FileId :
+            fileId :
             normalizeEntityId("file", fileId);
 
         this.shard = id.shard;
         this.realm = id.realm;
         this.file = id.file;
-    }
-
-    public toString(): string {
-        return `${this.shard}.${this.realm}.${this.file}`;
     }
 
     public static fromString(id: string): FileId {
@@ -31,6 +27,10 @@ export class FileId {
             realm: fileId.getRealmnum(),
             file: fileId.getFilenum()
         });
+    }
+
+    public toString(): string {
+        return `${this.shard}.${this.realm}.${this.file}`;
     }
 
     public toProto(): FileID {

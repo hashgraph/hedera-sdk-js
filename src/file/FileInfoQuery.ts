@@ -10,7 +10,7 @@ import { FileId, FileIdLike } from "../file/FileId";
 import { timestampToDate } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 
-export type FileInfo = {
+export interface FileInfo {
     fileId: FileIdLike;
     size: number;
     expirationTime: Date | null;

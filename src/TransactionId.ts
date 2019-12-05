@@ -87,4 +87,4 @@ export class TransactionId {
  * Input type for an ID of a new transaction.
  */
 export type TransactionIdLike = { account: AccountIdLike }
-    & ({ validStart: Date } | { validStartSeconds: number; validStartNanos: number });
+& ({ validStart: Date } | { validStartSeconds: number; validStartNanos: number });

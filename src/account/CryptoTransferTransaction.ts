@@ -24,24 +24,6 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         this._inner.setCryptotransfer(this._body);
     }
 
-    protected _doValidate(errors: string[]): void {
-        const amts = this._body.getTransfers()!.getAccountamountsList();
-
-        if (amts.length === 0) {
-            errors.push("CryptoTransferTransaction must have at least one transfer");
-            return;
-        }
-
-        const sum = amts.reduce(
-            (lastSum, acctAmt) => lastSum.plus(acctAmt.getAmount()),
-            new BigNumber(0)
-        );
-
-        if (!sum.isZero()) {
-            errors.push(`CryptoTransferTransaction must have zero sum; got: ${sum}`);
-        }
-    }
-
     public addSender(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
         tinybarRangeCheck(amount);
         const negated = typeof amount === "number" ? -amount : amount.negated();
@@ -66,7 +48,25 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         return this;
     }
 
-    public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
+    protected _doValidate(errors: string[]): void {
+        const amts = this._body.getTransfers()!.getAccountamountsList();
+
+        if (amts.length === 0) {
+            errors.push("CryptoTransferTransaction must have at least one transfer");
+            return;
+        }
+
+        const sum = amts.reduce(
+            (lastSum, acctAmt) => lastSum.plus(acctAmt.getAmount()),
+            new BigNumber(0)
+        );
+
+        if (!sum.isZero()) {
+            errors.push(`CryptoTransferTransaction must have zero sum; got: ${sum}`);
+        }
+    }
+
+    protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
         return CryptoService.cryptoTransfer;
     }
 }

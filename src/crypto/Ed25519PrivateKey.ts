@@ -6,11 +6,11 @@ import { RawKeyPair } from "./RawKeyPair";
 import { createKeystore, loadKeystore } from "./Keystore";
 
 export class Ed25519PrivateKey {
+    public readonly publicKey: Ed25519PublicKey;
+
     private readonly _keyData: Uint8Array;
     private _asStringRaw?: string;
     private _chainCode?: Uint8Array;
-
-    public readonly publicKey: Ed25519PublicKey;
 
     private constructor({ privateKey, publicKey }: RawKeyPair) {
         if (privateKey.length !== nacl.sign.secretKeyLength) {
@@ -98,7 +98,7 @@ export class Ed25519PrivateKey {
         passphrase?: string
     ): Promise<Ed25519PrivateKey> {
         const input = Array.isArray(mnemonic) ? mnemonic.join(" ") : mnemonic;
-        const salt = `mnemonic${passphrase || ""}`;
+        const salt = `mnemonic${passphrase == null ? "" : passphrase}`;
         const seed = await pbkdf2(input, salt, 2048, 64, "sha512");
 
         const hmac = crypto.createHmac("sha512", "ed25519 seed");
@@ -125,7 +125,7 @@ export class Ed25519PrivateKey {
      *
      * @param keystore the keystore blob
      * @param passphrase the passphrase used to create the keystore
-     * @throws KeyMismatchException if the passphrase is incorrect or the hash fails to validate
+     * @throws KeyMismatchError if the passphrase is incorrect or the hash fails to validate
      * @link createKeystore
      */
     public static async fromKeystore(
@@ -153,7 +153,7 @@ export class Ed25519PrivateKey {
      * You can check if a key supports derivation with `.supportsDerivation`
      */
     public derive(index: number): Ed25519PrivateKey {
-        if (!this._chainCode) {
+        if (this._chainCode == null) {
             throw new Error("this Ed25519 private key does not support key derivation");
         }
 
@@ -170,7 +170,7 @@ export class Ed25519PrivateKey {
 
     /** Check if this private key supports deriving child keys */
     public get supportsDerivation(): boolean {
-        return Boolean(this._chainCode);
+        return this._chainCode != null;
     }
 
     /** Sign the given message with this key. */
@@ -185,7 +185,7 @@ export class Ed25519PrivateKey {
     }
 
     public toString(raw = false): string {
-        if (!this._asStringRaw) {
+        if (this._asStringRaw == null) {
             // only encode the private portion of the private key
             this._asStringRaw = encodeHex(this._keyData.subarray(0, 32));
         }
