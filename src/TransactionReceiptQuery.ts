@@ -8,7 +8,7 @@ import { Response } from "./generated/Response_pb";
 import { receiptToSdk, TransactionReceipt } from "./TransactionReceipt";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 
-export class TransactionGetReceiptQuery extends QueryBuilder<TransactionReceipt> {
+export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
     private readonly _builder: ProtoTransactionGetReceiptQuery;
 
     public constructor() {
@@ -40,4 +40,3 @@ export class TransactionGetReceiptQuery extends QueryBuilder<TransactionReceipt>
         return receiptToSdk(receipt.getReceipt()!);
     }
 }
-

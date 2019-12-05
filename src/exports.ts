@@ -33,10 +33,10 @@ export { ContractCallQuery } from "./contract/ContractCallQuery";
 export { ContractRecordsQuery } from "./contract/ContractRecordsQuery";
 export { ContractInfoQuery } from "./contract/ContractInfoQuery";
 export { ContractBytecodeQuery } from "./contract/ContractBytecodeQuery";
-
-export { TransactionGetReceiptQuery } from "./TransactionGetReceiptQuery";
-export { TransactionGetRecordQuery } from "./TransactionGetRecordQuery";
-
+export { AccountInfoQuery, AccountInfo } from "./account/AccountInfoQuery";
+export { AccountBalanceQuery } from "./account/AccountBalanceQuery";
+export { TransactionReceiptQuery } from "./TransactionReceiptQuery";
+export { TransactionRecordQuery } from "./TransactionRecordQuery";
 export { SystemDeleteTransaction } from "./SystemDeleteTransaction";
 export { SystemUndeleteTransaction } from "./SystemUndeleteTransaction";
 export { FreezeTransaction } from "./FreezeTransaction";

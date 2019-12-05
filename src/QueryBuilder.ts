@@ -2,13 +2,22 @@ import { BaseClient, Node } from "./BaseClient";
 import { QueryHeader, ResponseType } from "./generated/QueryHeader_pb";
 import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
-import { MaxPaymentExceededError, throwIfExceptional } from "./errors";
-import { getResponseHeader, runValidation } from "./util";
+import {
+    HederaError,
+    MaxPaymentExceededException,
+    ResponseCodeEnum,
+    throwIfExceptional
+} from "./errors";
+import { getResponseHeader, orThrow, runValidation, setTimeoutAwaitable } from "./util";
 import { grpc } from "@improbable-eng/grpc-web";
-import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
 import { Transaction } from "./generated/Transaction_pb";
 import { Hbar } from "./Hbar";
 import { Tinybar } from "./Tinybar";
+import ResponseCase = Response.ResponseCase;
+import { timestampToMs } from "./Timestamp";
+
+const receiptInitialDelayMs = 1000;
+const receiptRetryDelayMs = 500;
 
 export abstract class QueryBuilder<T> {
     protected readonly _inner: Query;
@@ -17,7 +26,7 @@ export abstract class QueryBuilder<T> {
 
     protected readonly _needsPayment: boolean;
 
-    private _node?: Node;
+    protected _node?: Node;
 
     private maxCost?: Hbar;
     private amount?: Tinybar | Hbar;
@@ -49,9 +58,12 @@ export abstract class QueryBuilder<T> {
         return this;
     }
 
-    private async _generatePayment(amount: Tinybar | Hbar, client: BaseClient): Promise<this> {
+    // UNSTABLE API
+    public async _generatePayment(amount: Tinybar | Hbar, client: BaseClient): Promise<this> {
         const nodeId = this._getNode(client).id;
 
+        // Async import because otherwise there would a cycle in the imports which breaks everything
+        const { CryptoTransferTransaction } = await import("./account/CryptoTransferTransaction");
         const payment = new CryptoTransferTransaction()
             .setNodeAccountId(nodeId)
             .addRecipient(nodeId, this.amount ? this.amount : amount)
@@ -130,6 +142,16 @@ export abstract class QueryBuilder<T> {
     }
 
     public async execute(client: BaseClient): Promise<T> {
+        let validStartMs = 0;
+        let txId;
+        if (this._inner.getTransactiongetreceipt()) {
+            txId = this._inner.getTransactiongetreceipt()!.getTransactionid()!;
+            validStartMs = timestampToMs(orThrow(txId.getTransactionvalidstart()));
+        }
+        // set timeout at max valid duration
+        // only used for receipt query
+        const validUntilMs = validStartMs + 120000;
+
         const node = this._getNode(client);
 
         if ((client.maxQueryPayment || this.maxCost) &&
@@ -151,12 +173,42 @@ export abstract class QueryBuilder<T> {
 
         this.validate();
 
-        const response = await client._unaryCall(node.url, this._inner, this._method);
+        await setTimeoutAwaitable(receiptInitialDelayMs);
 
-        const responseHeader = getResponseHeader(response);
-        throwIfExceptional(responseHeader.getNodetransactionprecheckcode());
+        /* eslint-disable no-await-in-loop */
+        // we want to wait in a loop, that's the whole point here
+        for (let attempt = 0; /* loop will exit when transaction expires */; attempt += 1) {
+            const response = await client._unaryCall(node.url, this._inner, this._method);
 
-        return this._mapResponse(response);
+            const responseHeader = getResponseHeader(response);
+            let status: number = responseHeader.getNodetransactionprecheckcode();
+
+            if (response.getResponseCase() === ResponseCase.TRANSACTIONGETRECEIPT) {
+                status = response.getTransactiongetreceipt()!.getReceipt()!.getStatus();
+            }
+
+            // typecast required or we get a mismatching union type error
+            if (([
+                ResponseCodeEnum.BUSY,
+                ResponseCodeEnum.UNKNOWN,
+                ResponseCodeEnum.OK
+            ] as number[])
+                .includes(status)) {
+                const delay = Math.floor(receiptRetryDelayMs *
+                    Math.random() * ((2 ** attempt) - 1));
+
+                if (Date.now() + delay > validUntilMs) {
+                    throw new Error(`timed out waiting for consensus on transaction ID: ${txId}`);
+                }
+
+                await setTimeoutAwaitable(delay);
+            } else if (status !== ResponseCodeEnum.SUCCESS) {
+                throw new HederaError(status);
+            } else {
+                return this._mapResponse(response);
+            }
+            /* eslint-enable no-await-in-loop */
+        }
     }
 
     public toProto(): Query {

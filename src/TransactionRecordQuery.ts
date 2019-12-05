@@ -8,7 +8,7 @@ import { Response } from "./generated/Response_pb";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 import { recordListToSdk, TransactionRecord } from "./TransactionRecord";
 
-export class TransactionGetRecordQuery extends QueryBuilder<TransactionRecord> {
+export class TransactionRecordQuery extends QueryBuilder<TransactionRecord> {
     private readonly _builder: ProtoTransactionGetRecordQuery;
 
     public constructor() {

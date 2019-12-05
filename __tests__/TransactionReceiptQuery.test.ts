@@ -1,9 +1,9 @@
-import { TransactionGetReceiptQuery } from "../src/exports";
-import { mockTransaction } from "./MockClient";
+import { TransactionReceiptQuery } from "../src/exports";
+import {mockClient, mockTransaction} from "./MockClient";
 
 describe("TransactionGetReceiptQuery", () => {
     it("serializes and deserializes correctly; TransactionGetReceiptQuery", () => {
-        const transaction = new TransactionGetReceiptQuery()
+        const transaction = new TransactionReceiptQuery()
             .setTransactionId({
                 account: {
                     shard: 0,
@@ -65,5 +65,21 @@ describe("TransactionGetReceiptQuery", () => {
             },
             transactiongetrecord: undefined
         });
+    });
+
+    it("generate payment doesn't die because of cycle dependency", () => {
+        const transaction = new TransactionReceiptQuery()
+            .setTransactionId({
+                account: {
+                    shard: 0,
+                    realm: 0,
+                    account: 3
+                },
+                validStartSeconds: 124124,
+                validStartNanos: 151515
+            })
+            ._generatePayment(100000, mockClient);
+
+        expect(true).toBe(true);
     });
 });

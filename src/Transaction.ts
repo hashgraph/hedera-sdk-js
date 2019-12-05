@@ -4,29 +4,19 @@ import { BaseClient, Signer } from "./BaseClient";
 import { SignatureMap, SignaturePair, TransactionID } from "./generated/BasicTypes_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
-import { TransactionReceipt as ProtoTransactionReceipt } from "./generated/TransactionReceipt_pb";
-import {
-    handlePrecheck,
-    handleQueryPrecheck,
-    orThrow,
-    setTimeoutAwaitable
-} from "./util";
-import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
-import { TransactionGetReceiptQuery } from "./generated/TransactionGetReceipt_pb";
-import { Query } from "./generated/Query_pb";
+import { handlePrecheck, orThrow } from "./util";
 import { Message } from "google-protobuf";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 import { SmartContractService } from "./generated/SmartContractService_pb_service";
 import { FileService } from "./generated/FileService_pb_service";
 import { FreezeService } from "./generated/FreezeService_pb_service";
-import { HederaError } from "./errors";
-import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { AccountId } from "./account/AccountId";
 import { TransactionId } from "./TransactionId";
-import { receiptToSdk, TransactionReceipt } from "./TransactionReceipt";
-import { timestampToMs } from "./Timestamp";
+import { TransactionReceipt } from "./TransactionReceipt";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
+import { TransactionReceiptQuery } from "./TransactionReceiptQuery";
+import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
  * Signature/public key pairs are passed around as objects
@@ -35,9 +25,6 @@ export interface SignatureAndKey {
     signature: Uint8Array;
     publicKey: Ed25519PublicKey;
 }
-
-const receiptInitialDelayMs = 1000;
-const receiptRetryDelayMs = 500;
 
 export class Transaction {
     private readonly _node: AccountId;
@@ -124,54 +111,10 @@ export class Transaction {
         return this.id;
     }
 
-    public async getReceipt(client: BaseClient): Promise<TransactionReceipt> {
-        return receiptToSdk(await this._waitForReceipt(client));
-    }
-
-    private _getReceipt(client: BaseClient): Promise<ProtoTransactionReceipt> {
-        const receiptQuery = new TransactionGetReceiptQuery();
-        receiptQuery.setTransactionid(this._txnId);
-        const query = new Query();
-        query.setTransactiongetreceipt(receiptQuery);
-
-        const node = client._getNode(this._node);
-
-        return client._unaryCall(node.url, query, CryptoService.getTransactionReceipts)
-            .then(handleQueryPrecheck((resp) => resp.getTransactiongetreceipt()))
-            .then((receipt) => orThrow(receipt.getReceipt()));
-    }
-
-    private async _waitForReceipt(client: BaseClient): Promise<ProtoTransactionReceipt> {
-        const validStartMs = timestampToMs(orThrow(this._txnId.getTransactionvalidstart()));
-        // set timeout at max valid duration
-        const validUntilMs = validStartMs + 120000;
-
-        await setTimeoutAwaitable(receiptInitialDelayMs);
-
-        /* eslint-disable no-await-in-loop */
-        // we want to wait in a loop, that's the whole point here
-        for (let attempt = 0; /* loop will exit when transaction expires */; attempt += 1) {
-            const receipt = await this._getReceipt(client);
-
-            // typecast required or we get a mismatching union type error
-            if (([ ResponseCodeEnum.UNKNOWN, ResponseCodeEnum.OK ] as number[])
-                .includes(receipt.getStatus())) {
-                const delay = Math.floor(receiptRetryDelayMs *
-                    Math.random() * (2 ** attempt - 1));
-
-                if (Date.now() + delay > validUntilMs) {
-                    throw new Error(`timed out waiting for consensus on transaction ID: ${
-                        this._txnId.toObject()}`);
-                }
-
-                await setTimeoutAwaitable(delay);
-            } else if (receipt.getStatus() !== ResponseCodeEnum.SUCCESS) {
-                throw new HederaError(receipt.getStatus());
-            } else {
-                return receipt;
-            }
-            /* eslint-enable no-await-in-loop */
-        }
+    public getReceipt(client: BaseClient): Promise<TransactionReceipt> {
+        return new TransactionReceiptQuery()
+            .setTransactionId(TransactionId.fromProto(this._txnId))
+            .execute(client);
     }
 
     public toProto(): Transaction_ {
