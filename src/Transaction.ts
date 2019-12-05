@@ -17,6 +17,8 @@ import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { TransactionReceiptQuery } from "./TransactionReceiptQuery";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
+import { TransactionRecord } from "./TransactionRecord";
+import { TransactionRecordQuery } from "./TransactionRecordQuery";
 
 /**
  * Signature/public key pairs are passed around as objects
@@ -113,6 +115,12 @@ export class Transaction {
 
     public getReceipt(client: BaseClient): Promise<TransactionReceipt> {
         return new TransactionReceiptQuery()
+            .setTransactionId(TransactionId.fromProto(this._txnId))
+            .execute(client);
+    }
+
+    public getRecord(client: BaseClient): Promise<TransactionRecord> {
+        return new TransactionRecordQuery()
             .setTransactionId(TransactionId.fromProto(this._txnId))
             .execute(client);
     }
