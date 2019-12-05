@@ -16,7 +16,7 @@ export class AccountRecordsQuery extends QueryBuilder<TransactionRecord[]> {
         super(header);
         this._builder = new CryptoGetAccountRecordsQuery();
         this._builder.setHeader(header);
-        this._inner.setCryptogetinfo(this._builder);
+        this._inner.setCryptogetaccountrecords(this._builder);
     }
 
     public setAccountId(accountId: AccountIdLike): this {
