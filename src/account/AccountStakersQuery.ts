@@ -41,8 +41,8 @@ export class AccountStakersQuery extends QueryBuilder<ProxyStaker[]> {
     protected _mapResponse(response: Response): ProxyStaker[] {
         const allStakers = response.getCryptogetproxystakers()!;
 
-        return allStakers.getStakers().getProxystakerList().map((staker) => ({
-            accountId: AccountId.fromProto(staker.getAccountid()),
+        return allStakers.getStakers()!.getProxystakerList().map((staker) => ({
+            accountId: AccountId.fromProto(staker.getAccountid()!),
             amount: staker.getAmount(),            
         }));
     }
