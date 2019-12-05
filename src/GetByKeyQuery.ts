@@ -2,19 +2,19 @@ import { QueryBuilder } from "./QueryBuilder";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
-import { CryptoService } from "./generated/CryptoService_pb_service";
 import { QueryHeader } from "./generated/QueryHeader_pb";
 import { FileId } from "./file/FileId";
 import { ContractId } from "./contract/ContractId";
 import { AccountId } from "./account/AccountId";
 import * as pb from "./generated/GetByKey_pb";
+import { PublicKey } from "./crypto/PublicKey";
 
-type EntityId = 
+export type EntityId = 
     { type: "ACCOUNT", accountId: AccountId } |
     { type: "CONTRACT", contractId: ContractId } |
     { type: "FILE", fileId: FileId };
 
-export class GetByKeyQuery extends QueryBuilder<void> {
+export class GetByKeyQuery extends QueryBuilder<EntityId[]> {
     private readonly _builder: pb.GetByKeyQuery;
 
     public constructor() {
@@ -23,6 +23,11 @@ export class GetByKeyQuery extends QueryBuilder<void> {
         this._builder = new pb.GetByKeyQuery();
         this._builder.setHeader(header);
         this._inner.setGetbykey(this._builder);
+    }
+
+    public setKey(publicKey: PublicKey): this {
+        this._builder.setKey(publicKey._toProtoKey());
+        return this;
     }
 
     protected _doValidate(errors: string[]): void {
@@ -40,17 +45,17 @@ export class GetByKeyQuery extends QueryBuilder<void> {
             if (id.hasAccountid()) {
                 return {
                     type: "ACCOUNT",
-                    accountId: AccountId.fromProto(id.getAccountid())
+                    accountId: AccountId.fromProto(id.getAccountid()!)
                 };
             } else if (id.hasContractid()) {
                 return {
                     type: "CONTRACT",
-                    contractId: ContractId.fromProto(id.getContractid())
+                    contractId: ContractId.fromProto(id.getContractid()!)
                 };
             } else if (id.hasFileid()) {
                 return {
                     type: "FILE",
-                    fileId: FileId.fromProto(id.getFileid())
+                    fileId: FileId.fromProto(id.getFileid()!)
                 };
             }
 

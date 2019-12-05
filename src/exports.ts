@@ -40,6 +40,7 @@ export { TransactionGetRecordQuery } from "./TransactionGetRecordQuery";
 export { SystemDeleteTransaction } from "./SystemDeleteTransaction";
 export { SystemUndeleteTransaction } from "./SystemUndeleteTransaction";
 export { FreezeTransaction } from "./FreezeTransaction";
+export { GetBySolidityIdQuery } from "./GetBySolidityIdQuery";
 
 export { Transaction } from "./Transaction";
 
