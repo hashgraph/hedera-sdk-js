@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "create-account": "create-account.js",
-    "get-account-balance": "get-account-balance.js",
     "transfer-crypto": "transfer-crypto.js"
   },
   "dependencies": {

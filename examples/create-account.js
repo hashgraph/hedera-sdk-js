@@ -26,7 +26,7 @@ async function main() {
         .build(client);
 
     const id = await tx.execute(client);
-    const receipt = await tx.waitForReceipt(client);
+    const receipt = await tx.getReceipt(client);
 
     console.log(`transaction ${JSON.stringify(id, null, 4)}`);
     console.log(`receipt ${JSON.stringify(receipt, null, 4)}`);
