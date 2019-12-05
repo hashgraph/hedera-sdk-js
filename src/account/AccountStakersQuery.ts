@@ -43,7 +43,7 @@ export class AccountStakersQuery extends QueryBuilder<ProxyStaker[]> {
 
         return allStakers.getStakers()!.getProxystakerList().map((staker) => ({
             accountId: AccountId.fromProto(staker.getAccountid()!),
-            amount: staker.getAmount(),            
+            amount: staker.getAmount()
         }));
     }
 }

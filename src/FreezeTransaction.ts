@@ -32,11 +32,11 @@ export class FreezeTransaction extends TransactionBuilder {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doValidate(/* errors: string[] */): void {
         // Do nothing
     }
 
     public get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
-        return FreezeService.freeze
+        return FreezeService.freeze;
     }
 }

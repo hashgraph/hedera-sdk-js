@@ -26,7 +26,7 @@ export class GetBySolidityIdQuery extends QueryBuilder<EntityId> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doValidate(/* errors: string[] */): void {
         // Do nothing
     }
 

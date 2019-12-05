@@ -9,10 +9,10 @@ import { AccountId } from "./account/AccountId";
 import * as pb from "./generated/GetByKey_pb";
 import { PublicKey } from "./crypto/PublicKey";
 
-export type EntityId = 
-    { type: "ACCOUNT", accountId: AccountId } |
-    { type: "CONTRACT", contractId: ContractId } |
-    { type: "FILE", fileId: FileId };
+export type EntityId =
+    { type: "ACCOUNT"; accountId: AccountId } |
+    { type: "CONTRACT"; contractId: ContractId } |
+    { type: "FILE"; fileId: FileId };
 
 export class GetByKeyQuery extends QueryBuilder<EntityId[]> {
     private readonly _builder: pb.GetByKeyQuery;
@@ -30,7 +30,7 @@ export class GetByKeyQuery extends QueryBuilder<EntityId[]> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doValidate(/* errors: string[] */): void {
         // Do nothing
     }
 

@@ -15,7 +15,7 @@ async function main() {
             privateKey: operatorPrivateKey
         }
     });
-    
+
     const balance = await new AccountBalanceQuery()
         .setAccountId(operatorAccount)
         .execute(client);
