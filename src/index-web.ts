@@ -11,11 +11,11 @@ const testnetProxy = { "https://grpc-web.testnet.myhbarwallet.com": { shard: 0, 
 /** This implementation of `BaseClient` is exported for browser usage. */
 export class Client extends BaseClient {
     /**
-     * If `nodes` is not specified, default url is a proxy to 0.testnet.hedera.com:50211 generously
+     * If `network` is not specified, default url is a proxy to 0.testnet.hedera.com:50211 generously
      * hosted by MyHbarWallet.com. Mainnet proxy to come later.
      */
-    public constructor({ nodes = testnetProxy, operator }: ClientConfig) {
-        super(nodes, operator);
+    public constructor({ network = testnetProxy, operator }: ClientConfig) {
+        super(network, operator);
     }
 
     public _unaryCall<Rq extends ProtobufMessage, Rs extends ProtobufMessage>(

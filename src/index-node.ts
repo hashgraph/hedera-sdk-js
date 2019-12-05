@@ -18,9 +18,9 @@ export class Client extends BaseClient {
     };
 
     /** If `nodes` is not specified, the Hedera public testnet is assumed. */
-    public constructor({ nodes = testNet, operator }: ClientConfig) {
-        super(nodes, operator);
-        this.nodeClients = Object.keys(nodes).reduce((prev, url) => ({
+    public constructor({ network = testNet, operator }: ClientConfig) {
+        super(network, operator);
+        this.nodeClients = Object.keys(network).reduce((prev, url) => ({
             [ url ]: new grpc.Client(url, grpc.credentials.createInsecure()),
             ...prev
         }), {});

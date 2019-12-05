@@ -34,7 +34,7 @@ export type Node = {
 }
 
 export type ClientConfig = {
-    nodes?: Nodes;
+    network?: Nodes;
     operator: Operator;
 };
 
@@ -50,10 +50,10 @@ export abstract class BaseClient {
     private _maxTransactionFee: Hbar = Hbar.of(1);
     private _maxQueryPayment?: Hbar = Hbar.of(1);
 
-    protected constructor(nodes: Nodes, operator?: Operator) {
-        this._nodes = Array.isArray(nodes) ?
-            nodes as Node[] :
-            Object.entries(nodes)
+    protected constructor(network: Nodes, operator?: Operator) {
+        this._nodes = Array.isArray(network) ?
+            network as Node[] :
+            Object.entries(network)
                 .map(([ url, accountId ]) => {
                     const id = new AccountId(accountId as AccountIdLike);
                     return { url, id };
