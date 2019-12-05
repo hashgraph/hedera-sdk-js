@@ -32,7 +32,7 @@ import {Client} from "@hashgraph/sdk";
 const client = new Client({ 
     // this key defaults to this url, a public free proxy to the Hedera public testnet
     // generously hosted by MyHederaWallet.com
-    url: "https://grpc-web.myhederawallet.com",
+    network: { "https://grpc-web.myhederawallet.com": "0.0.3" },
     operator: {
         // the account which signs transactions and query payments by default
         account: { shard: 0, realm: 0, account: ___ },
@@ -44,26 +44,38 @@ const client = new Client({
 ```
 
 #### Checking your balance
+
 ```typescript
 console.log('current account balance:', await client.getAccountBalance());
 ```
 
 #### Sending a transfer
+
 ```typescript
 // the amount parameter can either be a `number` or a bignumber.js type
-await client.transferCryptoTo({ shard: 0, realm: 0, account: ___ }, 10_000_000);
+new CryptoTransferTransaction()
+    .addSender({ shard: 0, realm: 0, account: ___ }, 10_000_000)
+    .addRecipient({ shard: 0, realm: 0, account: ___ }, 10_000_000)
+    .build(client)
+    .execute(client);
 ```
 
 #### Creating a new Account
-```typescript
-import {Ed25519PrivateKey} from "@hashgraph/sdk";
 
-// generate a new, cryptographically random private key
+```typescript
+import { Ed25519PrivateKey } from "@hashgraph/sdk";
+
 const privateKey = await Ed25519PrivateKey.generate();
 const publicKey = privateKey.publicKey;
 
-// second parameter is optional initial balance for new account, transferred from operator account
-const newAccount = await client.createAccount(publicKey, 10_000_000);
+const tx = new AccountCreateTransaction()
+    .setKey(privateKey.publicKey)
+    .setInitialBalance(0)
+    .build(client);
+
+await tx.execute(client);
+const receipt = await tx.getReceipt(client);
+const newAccount = receipt.accountId;
 
 console.log('new account: ', newAccount, 'public key: ', publicKey.toString(), ' private key: ', privateKey.toString());
 ```
@@ -103,7 +115,9 @@ You can modify the endpoint to connect to in `envoy.yaml`.
 [the gRPC-Web protocol]: https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-WEB.md
 
 #### Updating Protobufs
+
 If the protobuf files are ever found to be out of sync, you can update them easily as follows:
+
 ```shell script
 $ ./scripts/update-protos.sh
 ```
@@ -112,6 +126,7 @@ This will temporarily clone https://github.com/hashgraph/hedera-protobuf and cop
 there.
 
 #### NOTE: some Protobufs have to be manually patched
+
 In most places where `sint64` or `uint64` is used in the protobufs, they have to be patched
 to annotate these fields as `[jstype=JS_STRING]` or the Protobufs-JS library will try to decode
 them as JS `number` types which can only represent exact integers in the range `[-2^53, 2^53 - 1]`.
