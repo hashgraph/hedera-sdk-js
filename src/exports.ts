@@ -8,29 +8,38 @@ export {
 
 export { AccountCreateTransaction } from "./account/AccountCreateTransaction";
 export { AccountUpdateTransaction } from "./account/AccountUpdateTransaction";
+export { AccountDeleteTransaction } from "./account/AccountDeleteTransaction";
+export { AccountInfoQuery, AccountInfo } from "./account/AccountInfoQuery";
+export { AccountBalanceQuery } from "./account/AccountBalanceQuery";
+export { AccountRecordsQuery } from "./account/AccountRecordsQuery";
+export { AccountStakersQuery } from "./account/AccountStakersQuery";
+
 export { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
+
 export { ContractCreateTransaction } from "./contract/ContractCreateTransaction";
 export { ContractDeleteTransaction } from "./contract/ContractDeleteTransaction";
 export { ContractExecuteTransaction } from "./contract/ContractExecuteTransaction";
 export { ContractUpdateTransaction } from "./contract/ContractUpdateTransaction";
 export { ContractFunctionResult } from "./contract/ContractFunctionResult";
+
 export { FileCreateTransaction } from "./file/FileCreateTransaction";
 export { FileDeleteTransaction } from "./file/FileDeleteTransaction";
 export { FileUpdateTransaction } from "./file/FileUpdateTransaction";
 export { FileAppendTransaction } from "./file/FileAppendTransaction";
 export { FileInfoQuery } from "./file/FileInfoQuery";
 export { FileContentsQuery } from "./file/FileContentsQuery";
+
 export { ContractCallQuery } from "./contract/ContractCallQuery";
 export { ContractRecordsQuery } from "./contract/ContractRecordsQuery";
 export { ContractInfoQuery } from "./contract/ContractInfoQuery";
 export { ContractBytecodeQuery } from "./contract/ContractBytecodeQuery";
-export { AccountInfoQuery, AccountInfo } from "./account/AccountInfoQuery";
-export { AccountBalanceQuery } from "./account/AccountBalanceQuery";
+
 export { TransactionGetReceiptQuery } from "./TransactionGetReceiptQuery";
 export { TransactionGetRecordQuery } from "./TransactionGetRecordQuery";
+
 export { SystemDeleteTransaction } from "./SystemDeleteTransaction";
 export { SystemUndeleteTransaction } from "./SystemUndeleteTransaction";
-export { AccountDeleteTransaction } from "./account/AccountDeleteTransaction";
+export { FreezeTransaction } from "./FreezeTransaction";
 
 export { Transaction } from "./Transaction";
 
