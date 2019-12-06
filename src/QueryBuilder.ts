@@ -70,6 +70,9 @@ export abstract class QueryBuilder<T> {
      * Set a manually created and signed `CryptoTransferTransaction` as the query payment.
      */
     public setPayment(transaction: Transaction): this {
+        if (!(transaction instanceof Transaction)) {
+            throw new TypeError(`QueryBuilder.setPayment expects a Transaction, but received ${typeof transaction}`);
+        }
         this._header.setPayment(transaction);
         return this;
     }
