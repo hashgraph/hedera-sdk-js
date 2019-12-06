@@ -16,35 +16,34 @@ export class TransactionId {
     public validStartSeconds: number;
     public validStartNanos: number;
 
-    public constructor(transactionId: TransactionIdLike) {
-        this.account = new AccountId(transactionId.account);
+    public constructor(id: TransactionIdLike | AccountIdLike) {
+        // Cannot use try/catch here because test die horribly
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        // eslint-disable-next-line dot-notation
+        if (!(id as TransactionIdLike)[ "validStart" ] && !(id as TransactionIdLike)[ "validStartSeconds" ]) {
+            this.account = new AccountId(id as AccountIdLike);
 
-        if ("validStart" in transactionId) {
-            const { seconds, nanos } = dateToTimestamp(transactionId.validStart);
+            // allows the transaction to be accepted as long as the node isn't 10 seconds behind us
+            const { seconds, nanos } = dateToTimestamp(Date.now() - 10_000);
 
             this.validStartSeconds = seconds;
             this.validStartNanos = nanos;
         } else {
-            this.validStartSeconds = transactionId.validStartSeconds;
-            this.validStartNanos = transactionId.validStartNanos;
+            const transactionId = id as TransactionIdLike;
+
+            this.account = new AccountId(transactionId.account);
+
+            if ("validStart" in transactionId) {
+                const { seconds, nanos } = dateToTimestamp(transactionId.validStart);
+
+                this.validStartSeconds = seconds;
+                this.validStartNanos = nanos;
+            } else {
+                this.validStartSeconds = transactionId.validStartSeconds;
+                this.validStartNanos = transactionId.validStartNanos;
+            }
         }
-    }
-
-    public static newId(accountId: AccountIdLike): TransactionID {
-        const acctId = new AccountId(accountId).toProto();
-
-        // allows the transaction to be accepted as long as the node isn't 10 seconds behind us
-        const { seconds, nanos } = dateToTimestamp(Date.now() - 10_000);
-
-        const validStart = new Timestamp();
-        validStart.setSeconds(seconds);
-        validStart.setNanos(nanos);
-
-        const txnId = new TransactionID();
-        txnId.setAccountid(acctId);
-        txnId.setTransactionvalidstart(validStart);
-
-        return txnId;
     }
 
     public toString(): string {

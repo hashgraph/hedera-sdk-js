@@ -89,7 +89,7 @@ export abstract class TransactionBuilder {
 
         if (client && !this._inner.hasTransactionid()) {
             if (client.operator) {
-                this._inner.setTransactionid(TransactionId.newId(client.operator.account));
+                this._inner.setTransactionid(new TransactionId(client.operator.account).toProto());
             }
         }
 
