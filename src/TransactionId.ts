@@ -12,7 +12,7 @@ import { dateToTimestamp } from "./Timestamp";
  */
 
 export class TransactionId {
-    public account: AccountId;
+    public accountId: AccountId;
     public validStartSeconds: number;
     public validStartNanos: number;
 
@@ -22,7 +22,7 @@ export class TransactionId {
         // @ts-ignore
         // eslint-disable-next-line dot-notation
         if (!(id as TransactionIdLike)[ "validStart" ] && !(id as TransactionIdLike)[ "validStartSeconds" ]) {
-            this.account = new AccountId(id as AccountIdLike);
+            this.accountId = new AccountId(id as AccountIdLike);
 
             // allows the transaction to be accepted as long as the node isn't 10 seconds behind us
             const { seconds, nanos } = dateToTimestamp(Date.now() - 10_000);
@@ -32,22 +32,28 @@ export class TransactionId {
         } else {
             const transactionId = id as TransactionIdLike;
 
-            this.account = new AccountId(transactionId.account);
-
-            if ("validStart" in transactionId) {
-                const { seconds, nanos } = dateToTimestamp(transactionId.validStart);
-
-                this.validStartSeconds = seconds;
-                this.validStartNanos = nanos;
-            } else {
+            if (transactionId instanceof TransactionId) {
+                this.accountId = transactionId.accountId;
                 this.validStartSeconds = transactionId.validStartSeconds;
                 this.validStartNanos = transactionId.validStartNanos;
+            } else {
+                this.accountId = new AccountId(transactionId.account);
+
+                if ("validStart" in transactionId) {
+                    const { seconds, nanos } = dateToTimestamp(transactionId.validStart);
+
+                    this.validStartSeconds = seconds;
+                    this.validStartNanos = nanos;
+                } else {
+                    this.validStartSeconds = transactionId.validStartSeconds;
+                    this.validStartNanos = transactionId.validStartNanos;
+                }
             }
         }
     }
 
     public toString(): string {
-        return `${this.account.toString()}@${this.validStartSeconds}.${this.validStartNanos}`;
+        return `${this.accountId.toString()}@${this.validStartSeconds}.${this.validStartNanos}`;
     }
 
     public static fromString(id: string): TransactionId {
@@ -73,7 +79,7 @@ export class TransactionId {
     // NOT A STABLE API
     public _toProto(): TransactionID {
         const txnId = new TransactionID();
-        txnId.setAccountid(this.account._toProto());
+        txnId.setAccountid(this.accountId._toProto());
 
         const ts = new Timestamp();
         ts.setSeconds(this.validStartSeconds);
@@ -87,5 +93,7 @@ export class TransactionId {
 /**
  * Input type for an ID of a new transaction.
  */
-export type TransactionIdLike = { account: AccountIdLike }
-& ({ validStart: Date } | { validStartSeconds: number; validStartNanos: number });
+export type TransactionIdLike =
+    ({ account: AccountIdLike } &
+        ({ validStart: Date } | { validStartSeconds: number; validStartNanos: number })) |
+    TransactionId;
