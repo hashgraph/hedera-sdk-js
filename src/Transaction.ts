@@ -4,7 +4,7 @@ import { BaseClient, Signer } from "./BaseClient";
 import { SignatureMap, SignaturePair, TransactionID } from "./generated/BasicTypes_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
-import { handlePrecheck, orThrow } from "./util";
+import { orThrow, setTimeoutAwaitable } from "./util";
 import { Message } from "google-protobuf";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 import { SmartContractService } from "./generated/SmartContractService_pb_service";
@@ -19,6 +19,8 @@ import { TransactionReceiptQuery } from "./TransactionReceiptQuery";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { TransactionRecord } from "./TransactionRecord";
 import { TransactionRecordQuery } from "./TransactionRecordQuery";
+import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
+import { HederaError } from "./errors";
 
 /**
  * Signature/public key pairs are passed around as objects
@@ -27,6 +29,8 @@ export interface SignatureAndKey {
     signature: Uint8Array;
     publicKey: Ed25519PublicKey;
 }
+
+const receiptRetryDelayMs = 500;
 
 export class Transaction {
     private readonly _node: AccountId;
@@ -108,9 +112,33 @@ export class Transaction {
 
     public async execute(client: BaseClient): Promise<TransactionId> {
         const node = client._getNode(this._node);
-        handlePrecheck(await client._unaryCall(node.url, this._inner, this._method));
+        const validUntilMs = this._validDurationSeconds * 1000;
 
-        return this.id;
+        /* eslint-disable no-await-in-loop */
+        // we want to wait in a loop, that's the whole point here
+        for (let attempt = 0; /* loop will exit when transaction expires */; attempt += 1) {
+            const response = await client._unaryCall(node.url, this._inner, this._method);
+            const status: number = response.getNodetransactionprecheckcode();
+
+            // If response code is BUSY we need to timeout and retry
+            if (ResponseCodeEnum.BUSY === status) {
+                const delay = Math.floor(receiptRetryDelayMs *
+                    Math.random() * ((2 ** attempt) - 1));
+
+                if (Date.now() + delay > validUntilMs) {
+                    throw new Error(`timed out waiting for consensus on transaction ID: ${this._txnId}`);
+                }
+
+                await setTimeoutAwaitable(delay);
+            // If status is *NOT* SUCCESS we must have received an error.
+            } else if (status !== ResponseCodeEnum.SUCCESS) {
+                throw new HederaError(status);
+            // otherwise return the id
+            } else {
+                return this.id;
+            }
+            /* eslint-enable no-await-in-loop */
+        }
     }
 
     public getReceipt(client: BaseClient): Promise<TransactionReceipt> {

@@ -4,7 +4,7 @@ import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
 import {
     HederaError,
-    MaxPaymentExceededException,
+    MaxPaymentExceededError,
     ResponseCodeEnum,
     throwIfExceptional
 } from "./errors";
