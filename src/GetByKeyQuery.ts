@@ -44,17 +44,17 @@ export class GetByKeyQuery extends QueryBuilder<EntityId[]> {
             if (id.hasAccountid()) {
                 return {
                     type: "ACCOUNT",
-                    accountId: AccountId.fromProto(id.getAccountid()!)
+                    accountId: AccountId._fromProto(id.getAccountid()!)
                 };
             } else if (id.hasContractid()) {
                 return {
                     type: "CONTRACT",
-                    contractId: ContractId.fromProto(id.getContractid()!)
+                    contractId: ContractId._fromProto(id.getContractid()!)
                 };
             } else if (id.hasFileid()) {
                 return {
                     type: "FILE",
-                    fileId: FileId.fromProto(id.getFileid()!)
+                    fileId: FileId._fromProto(id.getFileid()!)
                 };
             }
 

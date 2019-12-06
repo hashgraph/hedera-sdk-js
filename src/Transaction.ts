@@ -63,7 +63,7 @@ export class Transaction {
         const inner = Transaction_.deserializeBinary(bytes);
         const body = TransactionBody.deserializeBinary(inner.getBodybytes_asU8());
 
-        const nodeId = AccountId.fromProto(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
+        const nodeId = AccountId._fromProto(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
 
         const method = methodFromTxn(body);
 
@@ -71,7 +71,7 @@ export class Transaction {
     }
 
     public get id(): TransactionId {
-        return TransactionId.fromProto(this._txnId);
+        return TransactionId._fromProto(this._txnId);
     }
 
     private _addSignature({ signature, publicKey }: SignatureAndKey): this {
@@ -143,13 +143,13 @@ export class Transaction {
 
     public getReceipt(client: BaseClient): Promise<TransactionReceipt> {
         return new TransactionReceiptQuery()
-            .setTransactionId(TransactionId.fromProto(this._txnId))
+            .setTransactionId(TransactionId._fromProto(this._txnId))
             .execute(client);
     }
 
     public getRecord(client: BaseClient): Promise<TransactionRecord> {
         return new TransactionRecordQuery()
-            .setTransactionId(TransactionId.fromProto(this._txnId))
+            .setTransactionId(TransactionId._fromProto(this._txnId))
             .execute(client);
     }
 

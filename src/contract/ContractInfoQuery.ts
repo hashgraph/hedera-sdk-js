@@ -32,7 +32,7 @@ export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this._builder.setContractid(new ContractId(contractIdLike).toProto());
+        this._builder.setContractid(new ContractId(contractIdLike)._toProto());
         return this;
     }
 
@@ -50,8 +50,8 @@ export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
         const contractInfo = response.getContractgetinfo()!.getContractinfo()!;
 
         return {
-            contractId: ContractId.fromProto(contractInfo.getContractid()!),
-            accountId: AccountId.fromProto(contractInfo.getAccountid()!),
+            contractId: ContractId._fromProto(contractInfo.getContractid()!),
+            accountId: AccountId._fromProto(contractInfo.getAccountid()!),
             contractAccountId: contractInfo.getContractaccountid(),
             adminKey: null,
             expirationTime: timestampToDate(contractInfo.getExpirationtime()!),

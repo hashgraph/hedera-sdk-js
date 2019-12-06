@@ -21,7 +21,8 @@ export class FileId {
         return new FileId(id);
     }
 
-    public static fromProto(fileId: FileID): FileId {
+    // NOT A STABLE API
+    public static _fromProto(fileId: FileID): FileId {
         return new FileId({
             shard: fileId.getShardnum(),
             realm: fileId.getRealmnum(),
@@ -33,7 +34,8 @@ export class FileId {
         return `${this.shard}.${this.realm}.${this.file}`;
     }
 
-    public toProto(): FileID {
+    // NOT A STABLE API
+    public _toProto(): FileID {
         const fileId = new FileID();
         fileId.setShardnum(this.shard);
         fileId.setRealmnum(this.realm);

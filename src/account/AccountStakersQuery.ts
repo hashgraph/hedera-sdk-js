@@ -24,7 +24,7 @@ export class AccountStakersQuery extends QueryBuilder<ProxyStaker[]> {
     }
 
     public setAccountId(accountId: AccountIdLike): this {
-        this._builder.setAccountid(new AccountId(accountId).toProto());
+        this._builder.setAccountid(new AccountId(accountId)._toProto());
         return this;
     }
 
@@ -42,7 +42,7 @@ export class AccountStakersQuery extends QueryBuilder<ProxyStaker[]> {
         const allStakers = response.getCryptogetproxystakers()!;
 
         return allStakers.getStakers()!.getProxystakerList().map((staker) => ({
-            accountId: AccountId.fromProto(staker.getAccountid()!),
+            accountId: AccountId._fromProto(staker.getAccountid()!),
             amount: staker.getAmount()
         }));
     }

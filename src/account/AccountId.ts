@@ -21,7 +21,8 @@ export class AccountId {
         return new AccountId(id);
     }
 
-    public static fromProto(accountId: AccountID): AccountId {
+    // NOT A STABLE API
+    public static _fromProto(accountId: AccountID): AccountId {
         return new AccountId({
             shard: accountId.getShardnum(),
             realm: accountId.getRealmnum(),
@@ -33,7 +34,8 @@ export class AccountId {
         return `${this.shard}.${this.realm}.${this.account}`;
     }
 
-    public toProto(): AccountID {
+    // NOT A STABLE API
+    public _toProto(): AccountID {
         const acctId = new AccountID();
         acctId.setShardnum(this.shard);
         acctId.setRealmnum(this.realm);

@@ -61,17 +61,19 @@ export class TransactionId {
         });
     }
 
-    public static fromProto(id: TransactionID): TransactionId {
+    // NOT A STABLE API
+    public static _fromProto(id: TransactionID): TransactionId {
         return new TransactionId({
-            account: AccountId.fromProto(orThrow(id.getAccountid())),
+            account: AccountId._fromProto(orThrow(id.getAccountid())),
             validStartSeconds: orThrow(id.getTransactionvalidstart()).getSeconds(),
             validStartNanos: orThrow(id.getTransactionvalidstart()).getNanos()
         });
     }
 
-    public toProto(): TransactionID {
+    // NOT A STABLE API
+    public _toProto(): TransactionID {
         const txnId = new TransactionID();
-        txnId.setAccountid(this.account.toProto());
+        txnId.setAccountid(this.account._toProto());
 
         const ts = new Timestamp();
         ts.setSeconds(this.validStartSeconds);

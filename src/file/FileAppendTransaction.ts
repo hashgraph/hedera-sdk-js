@@ -17,7 +17,7 @@ export class FileAppendTransaction extends TransactionBuilder {
     }
 
     public setFileId(fileId: FileIdLike): this {
-        this._body.setFileid(new FileId(fileId).toProto());
+        this._body.setFileid(new FileId(fileId)._toProto());
         return this;
     }
 

@@ -31,7 +31,7 @@ export abstract class TransactionBuilder {
     }
 
     public setTransactionId(id: TransactionIdLike): this {
-        this._inner.setTransactionid(new TransactionId(id).toProto());
+        this._inner.setTransactionid(new TransactionId(id)._toProto());
         return this;
     }
 
@@ -47,7 +47,7 @@ export abstract class TransactionBuilder {
 
     public setNodeAccountId(nodeAccountId: AccountIdLike): this {
         this._node = new AccountId(nodeAccountId);
-        this._inner.setNodeaccountid(this._node.toProto());
+        this._inner.setNodeaccountid(this._node._toProto());
         return this;
     }
 
@@ -88,8 +88,9 @@ export abstract class TransactionBuilder {
         }
 
         if (client && !this._inner.hasTransactionid()) {
-            if (client.operator) {
-                this._inner.setTransactionid(new TransactionId(client.operator.account).toProto());
+            if (client._getOperator()) {
+                this._inner
+                    .setTransactionid(new TransactionId(client._getOperator()!.account)._toProto());
             }
         }
 
@@ -119,8 +120,8 @@ export abstract class TransactionBuilder {
 
         // If client is supplied make sure to sign transaction
         if (client) {
-            if (client.operatorPublicKey && client.operatorSigner) {
-                txn.signWith(client.operatorPublicKey, client.operatorSigner);
+            if (client._getOperatorKey() && client._getOperatorSigner()) {
+                txn.signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
             }
         }
 

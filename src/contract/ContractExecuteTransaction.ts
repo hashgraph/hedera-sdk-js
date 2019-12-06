@@ -33,7 +33,7 @@ export class ContractExecuteTransaction extends TransactionBuilder {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this._body.setContractid(new ContractId(contractIdLike).toProto());
+        this._body.setContractid(new ContractId(contractIdLike)._toProto());
         return this;
     }
 

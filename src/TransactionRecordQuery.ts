@@ -20,7 +20,7 @@ export class TransactionRecordQuery extends QueryBuilder<TransactionRecord> {
     }
 
     public setTransactionId(txId: TransactionIdLike): this {
-        this._builder.setTransactionid(new TransactionId(txId).toProto());
+        this._builder.setTransactionid(new TransactionId(txId)._toProto());
         return this;
     }
 

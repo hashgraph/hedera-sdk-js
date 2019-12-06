@@ -24,7 +24,7 @@ export class ContractRecordsQuery extends QueryBuilder<ContractRecord> {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this._builder.setContractid(new ContractId(contractIdLike).toProto());
+        this._builder.setContractid(new ContractId(contractIdLike)._toProto());
         return this;
     }
 
@@ -40,7 +40,7 @@ export class ContractRecordsQuery extends QueryBuilder<ContractRecord> {
 
     protected _mapResponse(response: Response): ContractRecord {
         const contractResponse = response.getContractgetrecordsresponse()!;
-        const contractId = ContractId.fromProto(contractResponse.getContractid()!);
+        const contractId = ContractId._fromProto(contractResponse.getContractid()!);
         const recordList = recordListToSdk(contractResponse.getRecordsList()!);
 
         return {

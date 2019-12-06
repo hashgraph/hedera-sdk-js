@@ -23,7 +23,7 @@ export class ContractCreateTransaction extends TransactionBuilder {
     }
 
     public setBytecodeFile(fileIdLike: FileIdLike): this {
-        this._body.setFileid(new FileId(fileIdLike).toProto());
+        this._body.setFileid(new FileId(fileIdLike)._toProto());
         return this;
     }
 
@@ -43,7 +43,7 @@ export class ContractCreateTransaction extends TransactionBuilder {
     }
 
     public setProxyAccountId(proxyAccountId: AccountIdLike): this {
-        this._body.setProxyaccountid(new AccountId(proxyAccountId).toProto());
+        this._body.setProxyaccountid(new AccountId(proxyAccountId)._toProto());
         return this;
     }
 

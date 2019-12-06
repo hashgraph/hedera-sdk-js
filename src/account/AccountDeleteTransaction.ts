@@ -18,7 +18,7 @@ export class AccountDeleteTransaction extends TransactionBuilder {
     }
 
     public setAccountId(accountId: AccountIdLike): this {
-        this._body.setDeleteaccountid(new AccountId(accountId).toProto());
+        this._body.setDeleteaccountid(new AccountId(accountId)._toProto());
         return this;
     }
 

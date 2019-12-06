@@ -21,7 +21,8 @@ export class ContractId {
         return new ContractId(id);
     }
 
-    public static fromProto(contractId: ContractID): ContractId {
+    // NOT A STABLE API
+    public static _fromProto(contractId: ContractID): ContractId {
         return new ContractId({
             shard: contractId.getShardnum(),
             realm: contractId.getRealmnum(),
@@ -33,7 +34,8 @@ export class ContractId {
         return `${this.shard}.${this.realm}.${this.contract}`;
     }
 
-    public toProto(): ContractID {
+    // NOT A STABLE API
+    public _toProto(): ContractID {
         const contractId = new ContractID();
         contractId.setShardnum(this.shard);
         contractId.setRealmnum(this.realm);
