@@ -41,9 +41,9 @@ export interface ClientConfig {
 }
 
 export abstract class BaseClient {
-    public operator?: Operator;
-    public operatorSigner?: Signer;
-    public operatorPublicKey?: Ed25519PublicKey;
+    private _operator?: Operator;
+    private _operatorSigner?: Signer;
+    private _operatorPublicKey?: Ed25519PublicKey;
 
     protected readonly _nodes: Node[];
 
@@ -75,7 +75,7 @@ export abstract class BaseClient {
 
     /** Set the operator for the client object */
     public setOperator(operator: Operator): this {
-        this.operator = operator;
+        this._operator = operator;
 
         this._operatorAcct = new AccountId(operator.account);
 
@@ -84,14 +84,26 @@ export abstract class BaseClient {
             const privateKey = maybePrivateKey instanceof Ed25519PrivateKey ?
                 maybePrivateKey :
                 Ed25519PrivateKey.fromString(maybePrivateKey);
-            this.operatorSigner = (msg): Uint8Array => privateKey.sign(msg);
-            this.operatorPublicKey = privateKey.publicKey;
+            this._operatorSigner = (msg): Uint8Array => privateKey.sign(msg);
+            this._operatorPublicKey = privateKey.publicKey;
         } else {
-            ({ publicKey: this.operatorPublicKey, signer: this.operatorSigner } =
+            ({ publicKey: this._operatorPublicKey, signer: this._operatorSigner } =
                 operator as PubKeyAndSigner);
         }
 
         return this;
+    }
+
+    public _getOperator(): Operator | undefined {
+        return this._operator;
+    }
+
+    public _getOperatorSigner(): Signer | undefined {
+        return this._operatorSigner;
+    }
+
+    public _getOperatorKey(): Ed25519PublicKey | undefined {
+        return this._operatorPublicKey;
     }
 
     /** Get the current maximum transaction fee. */

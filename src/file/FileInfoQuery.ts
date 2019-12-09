@@ -30,7 +30,7 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
     }
 
     public setFileId(fileId: FileIdLike): this {
-        this._builder.setFileid(new FileId(fileId).toProto());
+        this._builder.setFileid(new FileId(fileId)._toProto());
         return this;
     }
 
@@ -48,7 +48,7 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
         const fileInfo = response.getFilegetinfo()!.getFileinfo()!;
 
         return {
-            fileId: FileId.fromProto(fileInfo.getFileid()!),
+            fileId: FileId._fromProto(fileInfo.getFileid()!),
             size: fileInfo.getSize(),
 
             expirationTime: fileInfo.getExpirationtime() == null ?

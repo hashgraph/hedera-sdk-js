@@ -27,10 +27,10 @@ export class SystemDeleteTransaction extends TransactionBuilder {
     public setId(id: ContractIdLike | FileIdLike): this {
         try {
             const fileId = normalizeEntityId("file", id as FileIdLike);
-            this._body.setFileid(new FileId(fileId).toProto());
+            this._body.setFileid(new FileId(fileId)._toProto());
         } catch {
             const contractId = normalizeEntityId("contract", id as ContractIdLike);
-            this._body.setContractid(new ContractId(contractId).toProto());
+            this._body.setContractid(new ContractId(contractId)._toProto());
         }
 
         return this;

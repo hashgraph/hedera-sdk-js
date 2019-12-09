@@ -83,7 +83,7 @@ export class ContractFunctionResult {
 /* eslint-disable-next-line max-len */
 export function contractFunctionResultToSdk(result: ProtoContractFunctionResult): ContractFunctionResult {
     return new ContractFunctionResult(
-        ContractId.fromProto(result.getContractid()!),
+        ContractId._fromProto(result.getContractid()!),
         result.getContractcallresult_asU8(),
         result.getErrormessage(),
         result.getBloom_asU8(),

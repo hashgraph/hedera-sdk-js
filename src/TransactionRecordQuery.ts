@@ -8,7 +8,7 @@ import { Response } from "./generated/Response_pb";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 import { recordListToSdk, TransactionRecord } from "./TransactionRecord";
 
-export class TransactionGetRecordQuery extends QueryBuilder<TransactionRecord> {
+export class TransactionRecordQuery extends QueryBuilder<TransactionRecord> {
     private readonly _builder: ProtoTransactionGetRecordQuery;
 
     public constructor() {
@@ -20,7 +20,7 @@ export class TransactionGetRecordQuery extends QueryBuilder<TransactionRecord> {
     }
 
     public setTransactionId(txId: TransactionIdLike): this {
-        this._builder.setTransactionid(new TransactionId(txId).toProto());
+        this._builder.setTransactionid(new TransactionId(txId)._toProto());
         return this;
     }
 

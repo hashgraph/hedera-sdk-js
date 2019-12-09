@@ -24,7 +24,7 @@ export class FileContentsQuery extends QueryBuilder<FileContents> {
     }
 
     public setFileId(fileId: FileIdLike): this {
-        this._builder.setFileid(new FileId(fileId).toProto());
+        this._builder.setFileid(new FileId(fileId)._toProto());
         return this;
     }
 
@@ -42,7 +42,7 @@ export class FileContentsQuery extends QueryBuilder<FileContents> {
         const fileConents = response.getFilegetcontents()!.getFilecontents()!;
 
         return {
-            fileId: FileId.fromProto(fileConents.getFileid()!),
+            fileId: FileId._fromProto(fileConents.getFileid()!),
             contents: fileConents.getContents()
         };
     }

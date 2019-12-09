@@ -10,7 +10,7 @@ export interface ContractLogInfo {
 
 export function contractLogInfoListToSdk(logInfoList: ProtoContractLoginfo[]): ContractLogInfo[] {
     return logInfoList.map((logInfo) => ({
-        contractId: ContractId.fromProto(logInfo.getContractid()!),
+        contractId: ContractId._fromProto(logInfo.getContractid()!),
         bloom: logInfo.getBloom_asU8(),
         topicList: logInfo.getTopicList_asU8(),
         data: logInfo.getData_asU8()

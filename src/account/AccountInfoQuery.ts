@@ -38,7 +38,7 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
     }
 
     public setAccountId(accountId: AccountIdLike): this {
-        this._builder.setAccountid(new AccountId(accountId).toProto());
+        this._builder.setAccountid(new AccountId(accountId)._toProto());
         return this;
     }
 
@@ -58,7 +58,7 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
         const receiveThreshold = Hbar.fromTinybar(accountInfo.getGeneratereceiverecordthreshold());
 
         return {
-            accountId: AccountId.fromProto(accountInfo.getAccountid()!),
+            accountId: AccountId._fromProto(accountInfo.getAccountid()!),
             contractAccountId: accountInfo.getContractaccountid(),
             isDeleted: accountInfo.getDeleted(),
             key: accountInfo.getKey()!,

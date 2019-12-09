@@ -8,7 +8,7 @@ export interface AccountAmount {
 
 export function accountAmountToSdk(accountAmount: ProtoAccountAmount): AccountAmount {
     return {
-        accountId: AccountId.fromProto(accountAmount.getAccountid()!),
+        accountId: AccountId._fromProto(accountAmount.getAccountid()!),
         amount: accountAmount.getAmount()
     };
 }

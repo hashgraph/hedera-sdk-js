@@ -17,7 +17,7 @@ export class FileDeleteTransaction extends TransactionBuilder {
     }
 
     public setFileId(fileIdLike: FileIdLike): this {
-        this._body.setFileid(new FileId(fileIdLike).toProto());
+        this._body.setFileid(new FileId(fileIdLike)._toProto());
         return this;
     }
 

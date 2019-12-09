@@ -22,7 +22,7 @@ export class AccountUpdateTransaction extends TransactionBuilder {
     }
 
     public setAccountId(id: AccountIdLike): this {
-        this._body.setAccountidtoupdate(new AccountId(id).toProto());
+        this._body.setAccountidtoupdate(new AccountId(id)._toProto());
         return this;
     }
 

@@ -22,7 +22,7 @@ export class ContractUpdateTransaction extends TransactionBuilder {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this._body.setContractid(new ContractId(contractIdLike).toProto());
+        this._body.setContractid(new ContractId(contractIdLike)._toProto());
         return this;
     }
 
@@ -32,12 +32,12 @@ export class ContractUpdateTransaction extends TransactionBuilder {
     }
 
     public setProxyAccountId(proxyAccountId: AccountIdLike): this {
-        this._body.setProxyaccountid(new AccountId(proxyAccountId).toProto());
+        this._body.setProxyaccountid(new AccountId(proxyAccountId)._toProto());
         return this;
     }
 
     public setFileId(fileIdLike: FileIdLike): this {
-        this._body.setFileid(new FileId(fileIdLike).toProto());
+        this._body.setFileid(new FileId(fileIdLike)._toProto());
         return this;
     }
 

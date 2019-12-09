@@ -20,7 +20,7 @@ export class AccountRecordsQuery extends QueryBuilder<TransactionRecord[]> {
     }
 
     public setAccountId(accountId: AccountIdLike): this {
-        this._builder.setAccountid(new AccountId(accountId).toProto());
+        this._builder.setAccountid(new AccountId(accountId)._toProto());
         return this;
     }
 

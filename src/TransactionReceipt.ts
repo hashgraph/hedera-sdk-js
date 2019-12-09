@@ -16,9 +16,9 @@ export function receiptToSdk(receipt: ProtoTransactionReceipt): TransactionRecei
     const exchangeRate = receipt.getExchangerate();
     return {
         status: receipt.getStatus(),
-        accountId: receipt.getAccountid() && AccountId.fromProto(receipt.getAccountid()!),
-        fileId: receipt.getFileid() && FileId.fromProto(receipt.getFileid()!),
-        contractId: receipt.getContractid() && ContractId.fromProto(receipt.getContractid()!),
+        accountId: receipt.getAccountid() && AccountId._fromProto(receipt.getAccountid()!),
+        fileId: receipt.getFileid() && FileId._fromProto(receipt.getFileid()!),
+        contractId: receipt.getContractid() && ContractId._fromProto(receipt.getContractid()!),
         exchangeRateSet: exchangeRate && exchangeRateSetToSdk(exchangeRate)
     };
 }

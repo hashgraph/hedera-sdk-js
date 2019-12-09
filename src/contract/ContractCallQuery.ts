@@ -20,7 +20,7 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
     }
 
     public setContractId(contractIdLike: ContractIdLike): this {
-        this._builder.setContractid(new ContractId(contractIdLike).toProto());
+        this._builder.setContractid(new ContractId(contractIdLike)._toProto());
         return this;
     }
 

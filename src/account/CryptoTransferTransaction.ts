@@ -40,7 +40,7 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         this._body.setTransfers(transfers);
 
         const acctAmt = new AccountAmount();
-        acctAmt.setAccountid(new AccountId(accountId).toProto());
+        acctAmt.setAccountid(new AccountId(accountId)._toProto());
         acctAmt.setAmount(tinybarToString(amount, "allowNegative"));
 
         transfers.addAccountamounts(acctAmt);

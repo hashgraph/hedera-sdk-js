@@ -27,7 +27,7 @@ export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionR
             receipt: receiptToSdk(record.getReceipt()!),
             transactionHash: record.getTransactionhash(),
             consensusTimestamp: timestampToDate(record.getConsensustimestamp()!),
-            transactionId: TransactionId.fromProto(record.getTransactionid()!),
+            transactionId: TransactionId._fromProto(record.getTransactionid()!),
             memo: record.getMemo(),
             transactionFee: record.getTransactionfee(),
             contractCallResult: callResult && contractFunctionResultToSdk(callResult),

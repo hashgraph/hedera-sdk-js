@@ -1,9 +1,9 @@
-import { TransactionGetRecordQuery } from "../src/exports";
+import { TransactionRecordQuery } from "../src/exports";
 import { mockTransaction } from "./MockClient";
 
 describe("TransactionGetRecordQuery", () => {
     it("serializes and deserializes correctly; TransactionGetRecordQuery", () => {
-        const transaction = new TransactionGetRecordQuery()
+        const transaction = new TransactionRecordQuery()
             .setTransactionId({
                 account: {
                     shard: 0,
