@@ -198,7 +198,7 @@ export abstract class QueryBuilder<T> {
                     Math.random() * ((2 ** attempt) - 1));
 
                 if (Date.now() + delay > validUntilMs) {
-                    throw new Error(`timed out waiting for consensus on transaction ID: ${txId}`);
+                    throw new HederaError(status);
                 }
 
                 await setTimeoutAwaitable(delay);

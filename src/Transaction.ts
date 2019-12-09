@@ -147,7 +147,9 @@ export class Transaction {
             .execute(client);
     }
 
-    public getRecord(client: BaseClient): Promise<TransactionRecord> {
+    public async getRecord(client: BaseClient): Promise<TransactionRecord> {
+        // Wait for consensus using a free query first
+        await this.getReceipt(client);
         return new TransactionRecordQuery()
             .setTransactionId(TransactionId._fromProto(this._txnId))
             .execute(client);
