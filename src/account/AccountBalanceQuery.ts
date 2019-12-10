@@ -7,15 +7,17 @@ import { QueryHeader } from "../generated/QueryHeader_pb";
 import { Hbar } from "../Hbar";
 import { AccountId, AccountIdLike } from "./AccountId";
 import { CryptoGetAccountBalanceQuery } from "../generated/CryptoGetAccountBalance_pb";
+import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export class AccountBalanceQuery extends QueryBuilder<Hbar> {
     private readonly _builder: CryptoGetAccountBalanceQuery;
 
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new CryptoGetAccountBalanceQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setCryptogetaccountbalance(this._builder);
     }
 
@@ -24,14 +26,22 @@ export class AccountBalanceQuery extends QueryBuilder<Hbar> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasAccountid()) {
             errors.push("`.setAccountId()` required");
         }
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return CryptoService.cryptoGetBalance;
+    }
+
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getCryptogetaccountbalance()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): Hbar {

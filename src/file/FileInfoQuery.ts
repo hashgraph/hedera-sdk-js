@@ -9,6 +9,7 @@ import { getSdkKeys } from "../util";
 import { FileId, FileIdLike } from "../file/FileId";
 import { timestampToDate } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
+import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export interface FileInfo {
     fileId: FileIdLike;
@@ -22,10 +23,11 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
     private readonly _builder: FileGetInfoQuery;
 
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new FileGetInfoQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setFilegetinfo(this._builder);
     }
 
@@ -34,14 +36,22 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasFileid()) {
             errors.push(".setFileId() required");
         }
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return FileService.getFileInfo;
+    }
+
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getFilegetinfo()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): FileInfo {

@@ -9,6 +9,7 @@ import { ContractId, ContractIdLike } from "./ContractId";
 import { AccountId } from "../account/AccountId";
 import { timestampToDate } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
+import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export interface ContractInfo {
     contractId: ContractId;
@@ -24,10 +25,11 @@ export interface ContractInfo {
 export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
     private readonly _builder: ContractGetInfoQuery;
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new ContractGetInfoQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setContractgetinfo(this._builder);
     }
 
@@ -36,14 +38,22 @@ export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return SmartContractService.getContractInfo;
+    }
+
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getContractgetinfo()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): ContractInfo {

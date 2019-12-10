@@ -7,31 +7,46 @@ import { FileId } from "./file/FileId";
 import { ContractId } from "./contract/ContractId";
 import { AccountId } from "./account/AccountId";
 import * as pb from "./generated/GetBySolidityID_pb";
-import { EntityId } from "./GetByKeyQuery";
 import { SmartContractService } from "./generated/SmartContractService_pb_service";
+import { ResponseHeader } from "./generated/ResponseHeader_pb";
+
+export type EntityId =
+    { type: "ACCOUNT"; accountId: AccountId } |
+    { type: "CONTRACT"; contractId: ContractId } |
+    { type: "FILE"; fileId: FileId };
 
 export class GetBySolidityIdQuery extends QueryBuilder<EntityId> {
     private readonly _builder: pb.GetBySolidityIDQuery;
 
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new pb.GetBySolidityIDQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setGetbysolidityid(this._builder);
     }
 
     public setSolidityId(id: string): this {
         this._builder.setSolidityid(id);
+
         return this;
     }
 
-    protected _doValidate(/* errors: string[] */): void {
-        // Do nothing
+    protected _doLocalValidate(/* errors: string[] */): void {
+        // Nothing
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return SmartContractService.getBySolidityID;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getGetbysolidityid()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): EntityId {
@@ -42,12 +57,16 @@ export class GetBySolidityIdQuery extends QueryBuilder<EntityId> {
                 type: "ACCOUNT",
                 accountId: AccountId._fromProto(id.getAccountid()!)
             };
-        } else if (id.hasContractid()) {
+        }
+
+        if (id.hasContractid()) {
             return {
                 type: "CONTRACT",
                 contractId: ContractId._fromProto(id.getContractid()!)
             };
-        } else if (id.hasFileid()) {
+        }
+
+        if (id.hasFileid()) {
             return {
                 type: "FILE",
                 fileId: FileId._fromProto(id.getFileid()!)

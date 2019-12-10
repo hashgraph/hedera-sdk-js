@@ -13,7 +13,7 @@ describe("TransactionGetRecordQuery", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .setPayment(mockTransaction.toProto());
+            .setPayment(mockTransaction);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({

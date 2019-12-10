@@ -7,6 +7,7 @@ import { SmartContractService } from "../generated/SmartContractService_pb_servi
 import { recordListToSdk, TransactionRecord } from "../TransactionRecord";
 import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractGetRecordsQuery } from "../generated/ContractGetRecords_pb";
+import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export interface ContractRecord {
     contractId: ContractId;
@@ -16,10 +17,11 @@ export interface ContractRecord {
 export class ContractRecordsQuery extends QueryBuilder<ContractRecord> {
     private readonly _builder: ContractGetRecordsQuery;
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new ContractGetRecordsQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setContractgetrecords(this._builder);
     }
 
@@ -28,14 +30,22 @@ export class ContractRecordsQuery extends QueryBuilder<ContractRecord> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return SmartContractService.getTxRecordByContractID;
+    }
+
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getContractgetrecordsresponse()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): ContractRecord {

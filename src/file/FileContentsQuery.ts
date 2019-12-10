@@ -6,6 +6,7 @@ import { Query } from "../generated/Query_pb";
 import { Response } from "../generated/Response_pb";
 import { FileService } from "../generated/FileService_pb_service";
 import { FileId, FileIdLike } from "../file/FileId";
+import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export interface FileContents {
     fileId: FileIdLike;
@@ -16,10 +17,11 @@ export class FileContentsQuery extends QueryBuilder<FileContents> {
     private readonly _builder: FileGetContentsQuery;
 
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new FileGetContentsQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setFilegetcontents(this._builder);
     }
 
@@ -28,14 +30,22 @@ export class FileContentsQuery extends QueryBuilder<FileContents> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasFileid()) {
             errors.push(".setFileId() required");
         }
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return FileService.getFileContent;
+    }
+
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getFilegetcontents()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): FileContents {

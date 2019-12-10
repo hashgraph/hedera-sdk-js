@@ -7,15 +7,17 @@ import { QueryHeader } from "../generated/QueryHeader_pb";
 import { AccountId, AccountIdLike } from "./AccountId";
 import { CryptoGetAccountRecordsQuery } from "../generated/CryptoGetAccountRecords_pb";
 import { recordListToSdk, TransactionRecord } from "../TransactionRecord";
+import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export class AccountRecordsQuery extends QueryBuilder<TransactionRecord[]> {
     private readonly _builder: CryptoGetAccountRecordsQuery;
 
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new CryptoGetAccountRecordsQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setCryptogetaccountrecords(this._builder);
     }
 
@@ -24,14 +26,22 @@ export class AccountRecordsQuery extends QueryBuilder<TransactionRecord[]> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasAccountid()) {
             errors.push("`.setAccountId()` required");
         }
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return CryptoService.getAccountRecords;
+    }
+
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getCryptogetaccountrecords()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): TransactionRecord[] {

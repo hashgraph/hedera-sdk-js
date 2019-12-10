@@ -1,4 +1,4 @@
-import { TransactionReceiptQuery } from "../src/exports";
+import { TransactionReceiptQuery, AccountId } from "../src/exports";
 import {mockClient, mockTransaction} from "./MockClient";
 
 describe("TransactionGetReceiptQuery", () => {
@@ -13,7 +13,7 @@ describe("TransactionGetReceiptQuery", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .setPayment(mockTransaction.toProto());
+            .setPayment(mockTransaction);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({
@@ -78,7 +78,7 @@ describe("TransactionGetReceiptQuery", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            ._generatePayment(100000, mockClient);
+            ._generatePaymentTransaction(mockClient, { url: "0.testnet.hedera.com:50211", id: new AccountId(3) }, 100000);
 
         expect(true).toBe(true);
     });

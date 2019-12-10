@@ -7,31 +7,78 @@ import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
 import { receiptToSdk, TransactionReceipt } from "./TransactionReceipt";
 import { CryptoService } from "./generated/CryptoService_pb_service";
+import { ResponseHeader } from "./generated/ResponseHeader_pb";
+import { ResponseCode } from "./errors";
+import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
 
 export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
     private readonly _builder: ProtoTransactionGetReceiptQuery;
 
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new ProtoTransactionGetReceiptQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setTransactiongetreceipt(this._builder);
     }
 
     public setTransactionId(txId: TransactionIdLike): this {
         this._builder.setTransactionid(new TransactionId(txId)._toProto());
+
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasTransactionid()) {
             errors.push("`.setTransactionId()` required");
         }
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return CryptoService.getTransactionReceipts;
+    }
+
+    protected _shouldRetry(status: ResponseCode, response: Response): boolean {
+        if (super._shouldRetry(status, response)) return true;
+
+        if (status === ResponseCodeEnum.OK) {
+            const receipt = response.getTransactiongetreceipt()!.getReceipt()!;
+            const receiptStatus = receipt.getStatus()! as number;
+
+            if (([
+                // Accepted but has not reached consensus
+                ResponseCodeEnum.OK,
+                // Queue is full
+                // TODO[2020-01-01]: Can you get this on a receipt ?
+                ResponseCodeEnum.BUSY,
+                // Still in the node's queue
+                ResponseCodeEnum.UNKNOWN
+            ] as number[]).includes(receiptStatus)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected _getDefaultExecuteTimeout(): number {
+        // TODO[2020-01-01]: Get a stopping point closer to "valid duration" of the transaction
+
+        return 120000; // ~2 minutes
+    }
+
+    protected _isPaymentRequired(): boolean {
+        // Receipt queries do not require a payment
+        return false;
+    }
+
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getTransactiongetreceipt()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): TransactionReceipt {

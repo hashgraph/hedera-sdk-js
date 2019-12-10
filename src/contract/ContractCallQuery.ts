@@ -8,14 +8,17 @@ import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractFunctionResult, contractFunctionResultToSdk } from "./ContractFunctionResult";
 import { ContractCallLocalQuery } from "../generated/ContractCallLocal_pb";
 import { CallParams } from "./CallParams";
+import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
     private readonly _builder: ContractCallLocalQuery;
+
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new ContractCallLocalQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setContractcalllocal(this._builder);
     }
 
@@ -33,14 +36,22 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return SmartContractService.contractCallLocalMethod;
+    }
+
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getContractcalllocal()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): ContractFunctionResult {

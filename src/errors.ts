@@ -34,20 +34,24 @@ export class HederaError extends Error {
     }
 }
 
-export function isPrecheckCodeOk(code: ResponseCode, unknownOk = false): boolean {
+export function isCodeExceptional(code: ResponseCode, unknownIsExceptional: boolean): boolean {
     switch (code) {
         case ResponseCodeEnum.SUCCESS:
         case ResponseCodeEnum.OK:
-            return true;
-        case ResponseCodeEnum.UNKNOWN:
-            return unknownOk;
-        default:
             return false;
+
+        case ResponseCodeEnum.UNKNOWN:
+        case ResponseCodeEnum.RECEIPT_NOT_FOUND:
+        case ResponseCodeEnum.RECORD_NOT_FOUND:
+            return unknownIsExceptional;
+
+        default:
+            return true;
     }
 }
 
-export function throwIfExceptional(code: ResponseCode, unknownOk = false): void {
-    if (!isPrecheckCodeOk(code, unknownOk)) {
+export function throwIfExceptional(code: ResponseCode, unknownIsExceptional = true): void {
+    if (isCodeExceptional(code, unknownIsExceptional)) {
         throw new HederaError(code);
     }
 }
