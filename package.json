@@ -32,7 +32,7 @@
   "devDependencies": {
     "@launchbadge/eslint-config": "^0.13.10",
     "@types/jest": "^24.0.23",
-    "@types/node": "^12.12.14",
+    "@types/node": "^12.12.16",
     "@types/protobufjs": "^6.0.0",
     "eslint": "^6.7.2",
     "flowgen": "^1.10.0",
