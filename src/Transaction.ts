@@ -144,17 +144,11 @@ export class Transaction {
     }
 
     public getReceipt(client: BaseClient): Promise<TransactionReceipt> {
-        return new TransactionReceiptQuery()
-            .setTransactionId(TransactionId._fromProto(this._txnId))
-            .execute(client);
+        return this.id.getReceipt(client);
     }
 
     public async getRecord(client: BaseClient): Promise<TransactionRecord> {
-        // Wait for consensus using a free query first
-        await this.getReceipt(client);
-        return new TransactionRecordQuery()
-            .setTransactionId(TransactionId._fromProto(this._txnId))
-            .execute(client);
+        return this.id.getRecord(client);
     }
 
     public toProto(): Transaction_ {

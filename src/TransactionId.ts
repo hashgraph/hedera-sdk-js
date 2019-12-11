@@ -6,15 +6,22 @@ import { TransactionID } from "./generated/BasicTypes_pb";
 import { orThrow } from "./util";
 import { Timestamp } from "./generated/Timestamp_pb";
 import { dateToTimestamp } from "./Timestamp";
+import { BaseClient } from "./BaseClient";
+import { TransactionReceipt } from "./TransactionReceipt";
+import { TransactionRecord } from "./TransactionRecord";
+import { TransactionReceiptQuery } from "./TransactionReceiptQuery";
+import { TransactionRecordQuery } from "./TransactionRecordQuery";
 
 /**
  * Normalized transaction ID returned by various methods in the SDK.
  */
 
 export class TransactionId {
-    public accountId: AccountId;
-    public validStartSeconds: number;
-    public validStartNanos: number;
+    public readonly accountId: AccountId;
+    
+    public readonly validStartSeconds: number;
+
+    public readonly validStartNanos: number;
 
     public constructor(id: TransactionIdLike | AccountIdLike) {
         // Cannot use try/catch here because test die horribly
@@ -52,10 +59,6 @@ export class TransactionId {
         }
     }
 
-    public toString(): string {
-        return `${this.accountId.toString()}@${this.validStartSeconds}.${this.validStartNanos}`;
-    }
-
     public static fromString(id: string): TransactionId {
         const [ account, time ] = id.split("@");
         const [ seconds, nanos ] = time.split(".");
@@ -65,6 +68,24 @@ export class TransactionId {
             validStartSeconds: Number(seconds),
             validStartNanos: Number(nanos)
         });
+    }
+
+    public toString(): string {
+        return `${this.accountId.toString()}@${this.validStartSeconds}.${this.validStartNanos}`;
+    }
+
+    public getReceipt(client: BaseClient): Promise<TransactionReceipt> {
+        return new TransactionReceiptQuery()
+            .setTransactionId(this)
+            .execute(client);
+    }
+
+    public async getRecord(client: BaseClient): Promise<TransactionRecord> {
+        // Wait for consensus using a free query first
+        await this.getReceipt(client);
+        return new TransactionRecordQuery()
+            .setTransactionId(this)
+            .execute(client);
     }
 
     // NOT A STABLE API
