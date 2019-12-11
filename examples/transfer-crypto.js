@@ -16,13 +16,11 @@ async function main() {
         }
     });
 
-    const tx = new CryptoTransferTransaction()
+    await new CryptoTransferTransaction()
         .addSender(operatorAccount, 10)
         .addRecipient("0.0.3", 10)
-        .setMemo("[sdk example] transfer to 0.0.3")
-        .build(client);
-
-    await tx.execute(client);
+        .setMemo("sdk example")
+        .execute(client);
 }
 
 main();

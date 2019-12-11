@@ -18,18 +18,18 @@ async function main() {
 
     const privateKey = await Ed25519PrivateKey.generate();
 
-    console.log("private =", privateKey.toString());
+    console.log(`private = ${privateKey.toString()}`);
+    console.log(`public = ${privateKey.publicKey.toString()}`);
 
-    const tx = new AccountCreateTransaction()
+    const transactionId = await new AccountCreateTransaction()
         .setKey(privateKey.publicKey)
         .setInitialBalance(0)
-        .build(client);
+        .execute(client);
 
-    const id = await tx.execute(client);
-    const receipt = await tx.getReceipt(client);
+    const transactionReceipt = await transactionId.getReceipt(client)
+    const newAccountId = transactionReceipt.accountId;
 
-    console.log(`transaction ${JSON.stringify(id, null, 4)}`);
-    console.log(`receipt ${JSON.stringify(receipt, null, 4)}`);
+    console.log(`account = ${newAccountId}`);
 }
 
 main();
