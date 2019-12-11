@@ -127,4 +127,8 @@ export abstract class TransactionBuilder {
 
         return txn;
     }
+
+    public execute(client: BaseClient): Promise<TransactionId> {
+        return this.build(client).execute(client);
+    }
 }
