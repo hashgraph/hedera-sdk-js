@@ -6,14 +6,16 @@ import { Response } from "../generated/Response_pb";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 import { ContractGetBytecodeQuery } from "../generated/ContractGetBytecode_pb";
 import { ContractId, ContractIdLike } from "./ContractId";
+import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
     private readonly _builder: ContractGetBytecodeQuery;
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new ContractGetBytecodeQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setContractgetbytecode(this._builder);
     }
 
@@ -22,14 +24,22 @@ export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasContractid()) {
             errors.push(".setContractId() required");
         }
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return SmartContractService.contractCallLocalMethod;
+    }
+
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getContractgetbytecoderesponse()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): Uint8Array {

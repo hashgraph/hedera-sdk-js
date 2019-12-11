@@ -7,6 +7,21 @@ export class FileId {
     public realm: number;
     public file: number;
 
+    /**
+     * The public node address book for the current network.
+     */
+    public static readonly ADDRESS_BOOK: FileId = new FileId("0.0.102");
+
+    /**
+     * The current fee schedule for the network.
+     */
+    public static readonly FEE_SCHEDULE: FileId = new FileId("0.0.111");
+
+    /**
+     * The current exchange rate of HBAR to USD.
+     */
+    public static readonly EXCHANGE_RATES: FileId = new FileId("0.0.112");
+
     public constructor(fileId: FileIdLike) {
         const id = fileId instanceof FileId ?
             fileId :

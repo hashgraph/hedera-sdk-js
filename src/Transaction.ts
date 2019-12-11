@@ -20,7 +20,7 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { TransactionRecord } from "./TransactionRecord";
 import { TransactionRecordQuery } from "./TransactionRecordQuery";
 import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
-import { HederaError } from "./errors";
+import { throwIfExceptional } from "./errors";
 
 /**
  * Signature/public key pairs are passed around as objects
@@ -117,11 +117,7 @@ export class Transaction {
         /* eslint-disable no-await-in-loop */
         // we want to wait in a loop, that's the whole point here
         for (let attempt = 0; /* loop will exit when transaction expires */; attempt += 1) {
-            const response = await client._unaryCall(node.url, this._inner, this._method);
-            const status: number = response.getNodetransactionprecheckcode();
-
-            // If response code is BUSY we need to timeout and retry
-            if (ResponseCodeEnum.BUSY === status) {
+            if (attempt > 0) {
                 const delay = Math.floor(receiptRetryDelayMs *
                     Math.random() * ((2 ** attempt) - 1));
 
@@ -130,15 +126,21 @@ export class Transaction {
                 }
 
                 await setTimeoutAwaitable(delay);
-            // If status is *NOT* SUCCESS we must have received an error.
-            } else if (status !== ResponseCodeEnum.SUCCESS) {
-                throw new HederaError(status);
-            // otherwise return the id
-            } else {
-                return this.id;
             }
-            /* eslint-enable no-await-in-loop */
+
+            const response = await client._unaryCall(node.url, this._inner, this._method);
+            const status: number = response.getNodetransactionprecheckcode();
+
+            // If response code is BUSY we need to timeout and retry
+            if (ResponseCodeEnum.BUSY === status) {
+                continue;
+            }
+
+            throwIfExceptional(status);
+
+            return this.id;
         }
+        /* eslint-enable no-await-in-loop */
     }
 
     public getReceipt(client: BaseClient): Promise<TransactionReceipt> {

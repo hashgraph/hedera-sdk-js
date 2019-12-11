@@ -7,15 +7,17 @@ import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 import { recordListToSdk, TransactionRecord } from "./TransactionRecord";
+import { ResponseHeader } from "./generated/ResponseHeader_pb";
 
 export class TransactionRecordQuery extends QueryBuilder<TransactionRecord> {
     private readonly _builder: ProtoTransactionGetRecordQuery;
 
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new ProtoTransactionGetRecordQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setTransactiongetrecord(this._builder);
     }
 
@@ -24,14 +26,22 @@ export class TransactionRecordQuery extends QueryBuilder<TransactionRecord> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasTransactionid()) {
             errors.push("`.setTransactionId()` required");
         }
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return CryptoService.getTxRecordByTxID;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getTransactiongetrecord()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): TransactionRecord {

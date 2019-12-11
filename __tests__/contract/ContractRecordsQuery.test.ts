@@ -5,7 +5,7 @@ describe("ContractRecordsQuery", () => {
     it("serializes and deserializes correctly; ContractRecordsQuery", () => {
         const transaction = new ContractRecordsQuery()
             .setContractId({ shard: 0, realm: 0, contract: 3 })
-            .setPayment(mockTransaction.toProto());
+            .setPayment(mockTransaction);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({

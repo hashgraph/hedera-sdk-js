@@ -5,7 +5,7 @@ describe("AccountBalanceQuery", () => {
     it("serializes and deserializes correctly; AccountBalanceQuery", () => {
         const transaction = new AccountBalanceQuery()
             .setAccountId({ account: 3 })
-            .setPayment(mockTransaction.toProto());
+            .setPayment(mockTransaction);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({

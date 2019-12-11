@@ -1,9 +1,8 @@
 import { KeyList } from "./generated/BasicTypes_pb";
 import { Duration } from "./generated/Duration_pb";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
-import { TransactionResponse } from "./generated/TransactionResponse_pb";
 import { Response } from "./generated/Response_pb";
-import { throwIfExceptional, ValidationError } from "./errors";
+import { ValidationError } from "./errors";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 
 export function orThrow<T>(val?: T, msg = "value must not be null"): T {
@@ -85,33 +84,22 @@ export function setTimeoutAwaitable(timeoutMs: number): Promise<null> {
     return new Promise((resolve) => setTimeout(resolve, timeoutMs));
 }
 
+export function timeoutPromise<T>(
+    ms: number,
+    promise: Promise<T>,
+    timedOutCallback: (reject: (reason: Error) => void) => void
+): Promise<T> {
+    const timeout = new Promise<T>((resolve, reject) => {
+        setTimeout(() => {
+            timedOutCallback(reject);
+        }, ms);
+    });
+
+    return Promise.race<T>([ promise, timeout ]);
+}
+
 export interface GetHeader {
     getHeader(): ResponseHeader | undefined;
-}
-
-/* eslint-disable-next-line max-len */
-export function handleQueryPrecheck<T extends GetHeader>(getBody: (r: Response) => T | undefined): (r: undefined | Response) => T {
-    return (resp): T => {
-        const body = reqDefined(
-            getBody(reqDefined(resp, "missing Response")),
-            "missing body from Response"
-        );
-
-        const header = reqDefined(body.getHeader(), "missing header from Response");
-
-        const precheck = header.getNodetransactionprecheckcode();
-
-        throwIfExceptional(precheck);
-        return body;
-    };
-}
-
-export function handlePrecheck(resp_: TransactionResponse | undefined): TransactionResponse {
-    const resp = reqDefined(resp_, "missing TransactionResponse");
-    const precheck = resp.getNodetransactionprecheckcode();
-
-    throwIfExceptional(precheck);
-    return resp;
 }
 
 export function reqDefined<T>(val: T | undefined, msg: string): T {

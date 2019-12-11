@@ -9,6 +9,7 @@ import { Key } from "../generated/BasicTypes_pb";
 import { Hbar } from "../Hbar";
 import { AccountId, AccountIdLike } from "./AccountId";
 import { timestampToMs } from "../Timestamp";
+import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export interface AccountInfo {
     accountId: AccountIdLike;
@@ -30,10 +31,11 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
     private readonly _builder: CryptoGetInfoQuery;
 
     public constructor() {
-        const header = new QueryHeader();
-        super(header);
+        super();
+
         this._builder = new CryptoGetInfoQuery();
-        this._builder.setHeader(header);
+        this._builder.setHeader(new QueryHeader());
+
         this._inner.setCryptogetinfo(this._builder);
     }
 
@@ -42,14 +44,22 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasAccountid()) {
             errors.push("`.setAccountId()` required");
         }
     }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Query, Response> {
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return CryptoService.getAccountInfo;
+    }
+
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
+
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getCryptogetinfo()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): AccountInfo {
