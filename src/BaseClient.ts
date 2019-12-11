@@ -51,8 +51,6 @@ export abstract class BaseClient {
     private _maxTransactionFee: Hbar = Hbar.of(1);
     private _maxQueryPayment?: Hbar = Hbar.of(1);
 
-    private _operatorAcct?: AccountId;
-
     protected constructor(network: Nodes, operator?: Operator) {
         this._nodes = Array.isArray(network) ?
             network as Node[] :
@@ -76,8 +74,6 @@ export abstract class BaseClient {
     /** Set the operator for the client object */
     public setOperator(operator: Operator): this {
         this._operator = operator;
-
-        this._operatorAcct = new AccountId(operator.account);
 
         const maybePrivateKey = (operator as PrivateKey).privateKey;
         if (maybePrivateKey) {
