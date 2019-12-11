@@ -90,9 +90,7 @@ export function timeoutPromise<T>(
     timedOutCallback: (reject: (reason: Error) => void) => void
 ): Promise<T> {
     const timeout = new Promise<T>((resolve, reject) => {
-        const timerId = setTimeout(() => {
-            clearTimeout(timerId);
-
+        setTimeout(() => {
             timedOutCallback(reject);
         }, ms);
     });
