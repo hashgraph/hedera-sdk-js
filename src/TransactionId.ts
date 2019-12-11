@@ -18,7 +18,7 @@ import { TransactionRecordQuery } from "./TransactionRecordQuery";
 
 export class TransactionId {
     public readonly accountId: AccountId;
-    
+
     public readonly validStartSeconds: number;
 
     public readonly validStartNanos: number;

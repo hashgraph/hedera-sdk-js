@@ -15,10 +15,8 @@ import { TransactionId } from "./TransactionId";
 import { TransactionReceipt } from "./TransactionReceipt";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
-import { TransactionReceiptQuery } from "./TransactionReceiptQuery";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { TransactionRecord } from "./TransactionRecord";
-import { TransactionRecordQuery } from "./TransactionRecordQuery";
 import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
 import { throwIfExceptional } from "./errors";
 
@@ -147,7 +145,7 @@ export class Transaction {
         return this.id.getReceipt(client);
     }
 
-    public async getRecord(client: BaseClient): Promise<TransactionRecord> {
+    public getRecord(client: BaseClient): Promise<TransactionRecord> {
         return this.id.getRecord(client);
     }
 

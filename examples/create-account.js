@@ -26,7 +26,7 @@ async function main() {
         .setInitialBalance(0)
         .execute(client);
 
-    const transactionReceipt = await transactionId.getReceipt(client)
+    const transactionReceipt = await transactionId.getReceipt(client);
     const newAccountId = transactionReceipt.accountId;
 
     console.log(`account = ${newAccountId}`);
