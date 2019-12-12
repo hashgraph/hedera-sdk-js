@@ -15,10 +15,10 @@ import { TransactionId } from "./TransactionId";
 import { TransactionReceipt } from "./TransactionReceipt";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
-import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { TransactionRecord } from "./TransactionRecord";
 import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
 import { throwIfExceptional } from "./errors";
+import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
  * Signature/public key pairs are passed around as objects
@@ -72,6 +72,16 @@ export class Transaction {
         return TransactionId._fromProto(this._txnId);
     }
 
+    private _checkPubKey(publicKey: Ed25519PublicKey): void {
+        if (this._inner.hasSigmap()) {
+            for (const sig of this._inner.getSigmap()!.getSigpairList()) {
+                if (publicKey._bytesEqual(sig.getPubkeyprefix_asU8())) {
+                    throw new Error(`transaction ${this._txnId} already signed with public key ${publicKey.toString()}`);
+                }
+            }
+        }
+    }
+
     private _addSignature({ signature, publicKey }: SignatureAndKey): this {
         const sigPair = new SignaturePair();
         sigPair.setPubkeyprefix(publicKey.toBytes());
@@ -85,6 +95,8 @@ export class Transaction {
     }
 
     public sign(privateKey: Ed25519PrivateKey): this {
+        this._checkPubKey(privateKey.publicKey);
+
         return this._addSignature({
             signature: privateKey.sign(this._inner.getBodybytes_asU8()),
             publicKey: privateKey.publicKey
@@ -99,6 +111,8 @@ export class Transaction {
      * @param signer
      */
     public async signWith(publicKey: Ed25519PublicKey, signer: Signer): Promise<this> {
+        this._checkPubKey(publicKey);
+
         const signResult = signer(this._inner.getBodybytes_asU8());
         const signature: Uint8Array = signResult instanceof Promise ?
             await signResult :
