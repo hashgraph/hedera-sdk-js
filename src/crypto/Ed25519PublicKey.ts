@@ -55,4 +55,9 @@ export class Ed25519PublicKey implements PublicKey {
         key.setEd25519(this.toBytes());
         return key;
     }
+
+    // INTERNAL API
+    public _bytesEqual(bytes: Uint8Array): boolean {
+        return this._keyData === bytes;
+    }
 }
