@@ -32,7 +32,3 @@
 ​
 ```
 
-[Accounts - PreviousCreate an account]()[Next - AccountsUpdate an account](https://docs.hedera.net/javasdk/accounts-1/update-an-account)
-
-Last updated 10 hours ago
-
