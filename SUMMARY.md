@@ -21,9 +21,11 @@
 
 ## File Service
 
-* [Untitled](file-service/untitled.md)
+* [Create a file](file-service/untitled.md)
+* [Append to a file](file-service/append-to-a-file.md)
+* [Update a file](file-service/update-a-file.md)
 
 ## Smart Contracts
 
-* [Untitled](smart-contracts/untitled.md)
+* [Create a smart contract](smart-contracts/untitled.md)
 
