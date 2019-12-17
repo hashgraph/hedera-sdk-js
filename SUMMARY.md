@@ -25,6 +25,8 @@
 * [Append to a file](file-service/append-to-a-file.md)
 * [Update a file](file-service/update-a-file.md)
 * [Delete a file](file-service/delete-a-file.md)
+* [Get file contents](file-service/get-file-contents.md)
+* [Get file info](file-service/get-file-info.md)
 
 ## Smart Contracts
 
