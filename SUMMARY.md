@@ -18,6 +18,7 @@
 * [Get Account Info](accounts/get-account-info.md)
 * [Get account record](accounts/get-account-record.md)
 * [Get account claims](accounts/get-account-claims.md)
+* [Errors](accounts/errors.md)
 
 ## File Service
 
@@ -27,6 +28,7 @@
 * [Delete a file](file-service/delete-a-file.md)
 * [Get file contents](file-service/get-file-contents.md)
 * [Get file info](file-service/get-file-info.md)
+* [Errors](file-service/errors.md)
 
 ## Smart Contracts
 
@@ -36,4 +38,5 @@
 * [Call a smart contract function](smart-contracts/call-a-smart-contract-function.md)
 * [Get smart contract byte code](smart-contracts/get-smart-contract-byte-code.md)
 * [Get smart contract info](smart-contracts/get-smart-contract-info.md)
+* [Errors](smart-contracts/errors.md)
 
