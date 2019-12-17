@@ -2,6 +2,10 @@
 
 * [README](README.md)
 * [User-defined Data Types](user-defined-data-types.md)
+* [Keys](keys.md)
+* [Client](client.md)
+* [Address Book](address-book.md)
+* [Global Errors](global-errors.md)
 
 ## Accounts
 
