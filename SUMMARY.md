@@ -34,4 +34,5 @@
 * [Update a smart contract](smart-contracts/update-a-smart-contract.md)
 * [Delete a smart contract](smart-contracts/delete-a-smart-contract.md)
 * [Call a smart contract function](smart-contracts/call-a-smart-contract-function.md)
+* [Get smart contract byte code](smart-contracts/get-smart-contract-byte-code.md)
 
