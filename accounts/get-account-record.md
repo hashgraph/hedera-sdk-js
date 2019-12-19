@@ -12,11 +12,19 @@ A record returns the following information about an account:
 * Memo \(if any\)
 * Transaction Fee
 
+| Constructor | Description |
+| :--- | :--- |
+| `AccountRecordsQuery()` | Initializes the AccountRecordsQuery object |
+
 ```javascript
 new AccountRecordsQuery()  
     .setAccount()  
     .execute();
 ```
+
+| Method | Type | Description |
+| :--- | :--- | :--- |
+| `setAccountId(<accountId>)` | AccountId | The accountId of the account to return the record for |
 
 ## Example <a id="example"></a>
 
