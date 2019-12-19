@@ -24,7 +24,7 @@ new FileUpdateTransaction()
 
 ## Example
 
-```java
+```javascript
 
 ```
 
