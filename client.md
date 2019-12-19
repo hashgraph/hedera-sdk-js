@@ -25,12 +25,19 @@ You can find testnet and mainnet network details by logging into your Hedera por
 The network information provided \(testnet address: 0.testnet.hedera.com:50211
 
 ```javascript
-    const client = new Client({
-        network: { "0.testnet.hedera.com:50211": "0.0.3" },
-        operator: {
-            account: operatorAccount,
-            privateKey: operatorPrivateKey
-        }
-    });
+import {Client} from "@hashgraph/sdk";
+
+const client = new Client({ 
+    // this key defaults to this url, a public free proxy to the Hedera public testnet
+    // generously hosted by MyHederaWallet.com
+    network: { "https://grpc-web.myhederawallet.com": "0.0.3" },
+    operator: {
+        // the account which signs transactions and query payments by default
+        account: { shard: 0, realm: 0, account: ___ },
+        // the private key used to sign the transactions, either encoded as a string
+        // or as an `Ed25519PrivateKey` type 
+        privateKey: "..."
+    },
+});
 ```
 
