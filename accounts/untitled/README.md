@@ -95,14 +95,20 @@ new AccountCreateTransaction()
 </table>## Example:
 
 ```javascript
-const transactionId = await new AccountCreateTransaction()
+import { Ed25519PrivateKey } from "@hashgraph/sdk";
+
+const privateKey = await Ed25519PrivateKey.generate();
+const publicKey = privateKey.publicKey;
+
+const tx = new AccountCreateTransaction()
     .setKey(privateKey.publicKey)
     .setInitialBalance(0)
-    .execute(client);
+    .build(client);
 
-const transactionReceipt = await transactionId.getReceipt(client);
-const newAccountId = transactionReceipt.accountId;
+await tx.execute(client);
+const receipt = await tx.getReceipt(client);
+const newAccount = receipt.accountId;
 
-console.log(`account = ${newAccountId}`)
+console.log('new account: ', newAccount, 'public key: ', publicKey.toString(), ' private key: ', privateKey.toString());
 ```
 
