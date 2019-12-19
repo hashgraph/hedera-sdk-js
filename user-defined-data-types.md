@@ -29,7 +29,7 @@ Together these values make up your accountId. When an `FileId` is requested, be 
 ## Example <a id="example-1"></a>
 
 ```text
-FileId fileId = new FileId(0,0,15);System.out.println(fileId);​FileId fileId = FileId.fromString("0.0.15");System.out.println(fileId);
+
 ```
 
 ## [ContractId](https://github.com/hashgraph/hedera-sdk-java/blob/master/src/main/java/com/hedera/hashgraph/sdk/contract/ContractId.java)
@@ -45,6 +45,6 @@ Together these values make up your `ContractId`. When an `ContractId` is request
 ## Example <a id="example-2"></a>
 
 ```text
-ContractId contractId = new ContractId(0,0,20);System.out.println(contractId);​ContractId contractId = ContractId.fromString("0.0.20");System.out.println(contractId);
+
 ```
 
