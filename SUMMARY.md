@@ -2,7 +2,7 @@
 
 * [README](README.md)
 * [Getting Started](getting-started.md)
-* [User-defined Data Types](user-defined-data-types.md)
+* [Specialized Data Types](user-defined-data-types.md)
 * [Keys](keys.md)
 * [Client](client.md)
 * [Address Book](address-book.md)
