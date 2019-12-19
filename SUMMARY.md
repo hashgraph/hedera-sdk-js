@@ -16,7 +16,7 @@
 * [Transfer cryptocurrency](accounts/transfer-cryptocurrency.md)
 * [Delete an account](accounts/delete-an-account.md)
 * [Get account balance](accounts/get-account-balance.md)
-* [Get Account Info](accounts/get-account-info.md)
+* [Get account info](accounts/get-account-info.md)
 * [Get account record](accounts/get-account-record.md)
 * [Get account claims](accounts/get-account-claims.md)
 * [Errors](accounts/errors.md)
