@@ -1,7 +1,5 @@
 # Create an account
 
-
-
 The account represents your account specific to the Hedera network. Accounts are required to utilize the Hedera network services and to pay network transaction fees. 
 
 {% hint style="info" %}
