@@ -36,11 +36,11 @@ export class ContractFunctionResult {
     public getBytes(index: number): Uint8Array {
         // Len should never be larger than Number.MAX
         // index * 32 is the position of the lenth
-        // (index + 1) * 32 onward to (index + 1) * 32 + (len * 32) will be the elements of the array
+        // (index + 1) * 32 onward to (index + 1) * 32 + len will be the elements of the array
         // Arrays in solidity cannot be longer than 1024:
         // https://solidity.readthedocs.io/en/v0.4.21/introduction-to-smart-contracts.html
         const len = this.getUint32(index);
-        return this.contractCallResult.subarray((index + 1) * 32, (index + 1) * 32 + len * 32);
+        return this.contractCallResult.subarray((index + 1) * 32, (index + 1) * 32 + len);
     }
 
     public getBigNumber(index: number): BigNumber {
