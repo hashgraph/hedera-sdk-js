@@ -31,7 +31,7 @@ export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
     }
 
     protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
-        return SmartContractService.contractCallLocalMethod;
+        return SmartContractService.ContractGetBytecode;
     }
 
     protected _getHeader(): QueryHeader {
