@@ -1,13 +1,16 @@
-import { ContractID } from "../generated/BasicTypes_pb";
+import { ContractID, Key } from "../generated/BasicTypes_pb";
 import { normalizeEntityId } from "../util";
+import { PublicKey } from "../crypto/PublicKey";
 
 /** Normalized contract ID returned by various methods in the SDK. */
-export class ContractId {
+export class ContractId extends PublicKey {
     public shard: number;
     public realm: number;
     public contract: number;
 
     public constructor(contractId: ContractIdLike) {
+        super()
+
         const id = contractId instanceof ContractId ?
             contractId :
             normalizeEntityId("contract", contractId);
@@ -41,6 +44,13 @@ export class ContractId {
         contractId.setRealmnum(this.realm);
         contractId.setContractnum(this.contract);
         return contractId;
+    }
+
+    // NOT A STABLE API
+    public _toProtoKey(): Key {
+        const key = new Key();
+        key.setContractid(this._toProto());
+        return key;
     }
 }
 

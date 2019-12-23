@@ -7,15 +7,15 @@ import { AccountAmount, accountAmountToSdk } from "./account/AccountAmount";
 import { TransferList as ProtoTransferList, AccountAmount as ProtoAccountAmount } from "./generated/CryptoTransfer_pb";
 
 export interface TransactionRecord {
-    receipt?: TransactionReceipt;
-    transactionHash: Uint8Array | string;
+    receipt: TransactionReceipt | null;
+    transactionHash: Uint8Array;
     consensusTimestamp: Date;
     transactionId: TransactionId;
     memo: string;
     transactionFee: number;
-    contractCallResult?: ContractFunctionResult;
-    contractCreateResult?: ContractFunctionResult;
-    transferList?: AccountAmount[];
+    contractCallResult: ContractFunctionResult | null;
+    contractCreateResult: ContractFunctionResult | null;
+    transfers: AccountAmount[];
 }
 
 export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionRecord[] {
@@ -25,14 +25,14 @@ export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionR
 
         return {
             receipt: receiptToSdk(record.getReceipt()!),
-            transactionHash: record.getTransactionhash(),
+            transactionHash: record.getTransactionhash_asU8(),
             consensusTimestamp: timestampToDate(record.getConsensustimestamp()!),
             transactionId: TransactionId._fromProto(record.getTransactionid()!),
             memo: record.getMemo(),
             transactionFee: record.getTransactionfee(),
-            contractCallResult: callResult && new ContractFunctionResult(callResult),
-            contractCreateResult: createResult && new ContractFunctionResult(createResult),
-            transferList: record.getTransferlist() && transferListToSdk(record.getTransferlist()!)
+            contractCallResult: callResult == null ? null : new ContractFunctionResult(callResult!),
+            contractCreateResult: createResult == null ? null : new ContractFunctionResult(createResult!),
+            transfers: transferListToSdk(record.getTransferlist()!)
         };
     });
 }

@@ -5,11 +5,10 @@ import { Query } from "../generated/Query_pb";
 import { FileGetInfoQuery } from "../generated/FileGetInfo_pb";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { Response } from "../generated/Response_pb";
-import { getSdkKeys } from "../util";
 import { FileId, FileIdLike } from "../file/FileId";
 import { timestampToDate } from "../Timestamp";
-import { PublicKey } from "../crypto/PublicKey";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { PublicKey, _fromProtoKeyList } from "../crypto/PublicKey";
 
 export interface FileInfo {
     fileId: FileId;
@@ -61,12 +60,12 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
             fileId: FileId._fromProto(fileInfo.getFileid()!),
             size: fileInfo.getSize(),
 
-            expirationTime: fileInfo.getExpirationtime() == null ?
-                null :
-                timestampToDate(fileInfo.getExpirationtime()!),
+            expirationTime: fileInfo.hasExpirationtime() ?
+                timestampToDate(fileInfo.getExpirationtime()!) : 
+                null,
 
             isDeleted: fileInfo.getDeleted(),
-            keys: getSdkKeys(fileInfo.getKeys()!)
+            keys: _fromProtoKeyList(fileInfo.getKeys()!)
         };
     }
 }
