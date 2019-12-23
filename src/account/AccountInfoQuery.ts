@@ -21,9 +21,9 @@ export interface AccountInfo {
     balance: Hbar;
     generateSendRecordThreshold: Hbar;
     generateReceiveRecordThreshold: Hbar;
-    receiverSigRequired: boolean;
+    isReceiverSignatureRequired: boolean;
     expirationTime: Date;
-    autoRenewPeriodSeconds: number;
+    autoRenewPeriod: number;
     // proxy accounts and claims aren't really implemented so we're ignoring those
 }
 
@@ -75,9 +75,9 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
             balance: Hbar.fromTinybar(accountInfo.getBalance()),
             generateSendRecordThreshold: sendThreshold,
             generateReceiveRecordThreshold: receiveThreshold,
-            receiverSigRequired: accountInfo.getReceiversigrequired(),
+            isReceiverSignatureRequired: accountInfo.getReceiversigrequired(),
             expirationTime: new Date(timestampToMs(accountInfo.getExpirationtime()!)),
-            autoRenewPeriodSeconds: accountInfo.getAutorenewperiod()!.getSeconds()
+            autoRenewPeriod: accountInfo.getAutorenewperiod()!.getSeconds()
         };
     }
 }
