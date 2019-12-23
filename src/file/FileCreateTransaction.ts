@@ -39,10 +39,8 @@ export class FileCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
-        if (this._body.getKeys() == null) {
-            errors.push("FileCreateTransaction must have a file set");
-        }
+    protected _doValidate(errors: string[]): void { 
+        // No local validation
     }
 
     protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
