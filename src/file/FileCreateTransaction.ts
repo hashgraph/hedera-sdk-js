@@ -34,7 +34,7 @@ export class FileCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setContents(bytes: Uint8Array | string): this {
+    public setContents(bytes: Uint8Array): this {
         this._body.setContents(bytes);
         return this;
     }
