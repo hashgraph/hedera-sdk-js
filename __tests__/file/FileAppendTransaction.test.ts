@@ -17,13 +17,13 @@ describe("FileAppendTransaction", () => {
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({
             body: undefined,
-            bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeIIBFRICGAUiD04YrIrLKJnq2p3aJnWrWg==",
+            bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeIIBHhICGAUiGFRoaXMgaXMgc29tZSByYW5kb20gZGF0YQ==",
             sigmap: {
                 sigpairList: [
                     {
                         contract: "",
                         ecdsa384: "",
-                        ed25519: "U+rHe8KHX5uFILbvdYSSEqB8RdMlMq25G1ckP6YvsmFOguC/A+tmQaf8UEEsIElCzabo6y+Hf3xB6IMUNxylBAoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiCARUSAhgFIg9OGKyKyyiZ6tqd2iZ1q1o=",
+                        ed25519: "AARYvUSlhpKLrulpEjjC1ccX83MxX68Fgdp+scguTffn3lfXePg/O8b+fvChYqQ1mpCHiby+bp0r97+ag6mSDwoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiCAR4SAhgFIhhUaGlzIGlzIHNvbWUgcmFuZG9tIGRhdGE=",
                         pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
                         rsa3072: ""
                     }
