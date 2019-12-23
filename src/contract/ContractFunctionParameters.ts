@@ -10,7 +10,7 @@ enum ArgumentType {
     int32 = 5,
     uint64 = 6,
     int64 = 7,
-    uint256 = 8,
+    int256 = 8,
     string = 9,
     bool = 10,
     bytes = 11,
@@ -51,8 +51,8 @@ function solidityTypeToString(ty: SolidityType, length?: number): string {
         case ArgumentType.int64:
             s = "int64";
             break;
-        case ArgumentType.uint256:
-            s = "uint256";
+        case ArgumentType.int256:
+            s = "int256";
             break;
         case ArgumentType.string:
             s = "string";
@@ -155,18 +155,12 @@ export class FunctionSelector {
     }
 }
 
-export class CallParams {
+export class ContractFunctionParameters {
     private readonly _func: FunctionSelector;
     private _currentArgument = 0;
 
-    public constructor(func?: string | FunctionSelector) {
-        if (func && typeof func === "string") {
-            this._func = new FunctionSelector(func);
-        } else if (func instanceof FunctionSelector) {
-            this._func = func;
-        } else {
-            this._func = new FunctionSelector();
-        }
+    public constructor() {
+        this._func = new FunctionSelector();
     }
 
     public setFunction(func: string): this {
@@ -175,66 +169,74 @@ export class CallParams {
         return this;
     }
 
-    private _conditionallyAddType(ty: SolidityType, length?: number): void {
-        if (this._func.argumentTypes.length === this._currentArgument) {
-            this._func.addParamType(ty, length);
-        }
-    }
-
-    private static _validateBitWidth(bitwidth: number): void {
-        if (bitwidth > 256 || bitwidth % 8 !== 0) {
-            throw new Error("bitwidth must be less than or equal to 256 and a multiple of 8");
-        }
-    }
-
-    public addUint(param: number | BigNumber, bitwidth: number): this {
-        CallParams._validateBitWidth(bitwidth);
-
-        this._conditionallyAddType(solidityTypeFromBitwidth(bitwidth, false, false));
-
-        return this._addParam(param, false);
-    }
-
-    public addInt(param: number | BigNumber, bitwidth: number): this {
-        CallParams._validateBitWidth(bitwidth);
-
-        this._conditionallyAddType(solidityTypeFromBitwidth(bitwidth, true, false));
-
-        return this._addParam(param, false);
-    }
-
-    public addUintArray(param: number[] | BigNumber[], bitwidth: number): this {
-        CallParams._validateBitWidth(bitwidth);
-
-        this._conditionallyAddType(solidityTypeFromBitwidth(bitwidth, false, true));
-
-        return this._addParam(param, true);
-    }
-
-    public addIntArray(param: number[] | BigNumber[], bitwidth: number): this {
-        CallParams._validateBitWidth(bitwidth);
-
-        this._conditionallyAddType(solidityTypeFromBitwidth(bitwidth, true, true));
-
-        return this._addParam(param, true);
-    }
-
-    public addBoolean(param: boolean): this {
-        this._conditionallyAddType({ ty: ArgumentType.bool, array: false });
-
-        return this._addParam(param, false);
-    }
-
     public addString(param: string): this {
         this._conditionallyAddType({ ty: ArgumentType.string, array: false });
 
         return this._addParam(param, true);
     }
 
-    public addAddress(param: Uint8Array | string): this {
-        const par = param instanceof Uint8Array ?
-            param :
-            Buffer.from(param, "hex");
+    public addStringArray(strArray: string[]): this {
+        this._conditionallyAddType({ ty: ArgumentType.string, array: true });
+
+        return this._addParam(strArray, true);
+    }
+
+    public addBytes(param: Uint8Array): this {
+        this._conditionallyAddType({ ty: ArgumentType.bytes, array: false });
+
+        return this._addParam(param, true);
+    }
+
+    public addByteArray(byteArray: Uint8Array[]): this {
+        this._conditionallyAddType({ ty: ArgumentType.bytes, array: true });
+
+        return this._addParam(byteArray, true);
+    }
+
+    public addBool(param: boolean): this {
+        this._conditionallyAddType({ ty: ArgumentType.bool, array: false });
+
+        return this._addParam(param, false);
+    }
+
+    public addInt32(param: number): this {
+        this._conditionallyAddType({ ty: ArgumentType.int32, array: false });
+
+        return this._addParam(param, false);
+    }
+
+    public addInt64(param: BigNumber): this {
+        this._conditionallyAddType({ ty: ArgumentType.int64, array: false });
+
+        return this._addParam(param, false);
+    }
+
+    public addInt256(param: BigNumber): this {
+        this._conditionallyAddType({ ty: ArgumentType.int256, array: false });
+
+        return this._addParam(param, false);
+    }
+
+    public addInt32Array(param: number[]): this {
+        this._conditionallyAddType({ ty: ArgumentType.int32, array: true });
+
+        return this._addParam(param, false);
+    }
+
+    public addInt64Array(param: BigNumber[]): this {
+        this._conditionallyAddType({ ty: ArgumentType.int64, array: true });
+
+        return this._addParam(param, false);
+    }
+
+    public addInt256Array(param: BigNumber[]): this {
+        this._conditionallyAddType({ ty: ArgumentType.int256, array: true });
+
+        return this._addParam(param, false);
+    }
+
+    public addAddress(param: string): this {
+        const par = Buffer.from(param, "hex");
 
         if (par.length !== 20) {
             throw new Error("`address` type requires parameter to be exactly 20 bytes");
@@ -245,32 +247,50 @@ export class CallParams {
         return this._addParam(par, false);
     }
 
-    public addBytes(param: Uint8Array, length?: number): this {
-        // If a length is supplied then the parameter type would be `byte<M>` where M is equal to length
-        // and M is less than or equal to 32
-        if (length) {
-            if (length !== param.length) {
-                throw new Error("length of parameter is not equal to the length passed in");
-            } else if (length > 32) {
-                throw new Error("`bytes<M>` type requires parameter length to be less than or equal to 32 bytes");
+    public addAddressArray(addresses: string[]): this {
+        const par: Uint8Array[] = [];
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const [ _, a ] of addresses.entries()) {
+            const buf = Buffer.from(a, "hex");
+
+            if (buf.length !== 20) {
+                throw new Error("`address` type requires parameter to be exactly 20 bytes");
             }
 
-            this._conditionallyAddType({ ty: ArgumentType.bytesfix, array: false }, length);
-        } else {
-            this._conditionallyAddType({ ty: ArgumentType.bytes, array: false });
+            par.push();
         }
 
-        return this._addParam(param, length == null);
+        this._conditionallyAddType({ ty: ArgumentType.address, array: true });
+
+        return this._addParam(par, true);
     }
 
-    public addFunction(address: Uint8Array | string, func: FunctionSelector | string): this {
-        const addressParam = address instanceof Uint8Array ?
-            address :
-            Buffer.from(address, "hex");
+    private _conditionallyAddType(ty: SolidityType): void {
+        if (this._func.argumentTypes.length === this._currentArgument) {
+            this._func.addParamType(ty);
+        }
+    }
 
-        const functionSelector = func instanceof FunctionSelector ?
-            func._toProto() :
-            FunctionSelector.identifier(func);
+    private static _validateBitWidth(bitwidth: number): void {
+        if (bitwidth > 256 || bitwidth % 8 !== 0) {
+            throw new Error("bitwidth must be less than or equal to 256 and a multiple of 8");
+        }
+    }
+
+    public addFunction(address: string, methodSignature: string | number): this {
+        const addressParam = Buffer.from(address, "hex");
+
+        // If methodSignature is a number representing the hash
+        const sig = new Uint8Array(4);
+        const sigView = new DataView(sig);
+        if (typeof methodSignature === "number") {
+            sigView.setInt32(0, methodSignature as number);
+        }
+
+        const functionSelector = typeof methodSignature === "string" ?
+            FunctionSelector.identifier(methodSignature) :
+            sig;
 
         if (addressParam.length !== 20) {
             throw new Error("`function` type requires parameter `address` to be exactly 20 bytes");
@@ -283,50 +303,6 @@ export class CallParams {
         proto.set(functionSelector, 20);
 
         return this._addParam(proto, false);
-    }
-
-    public addStringArray(strArray: string[]): this {
-        this._conditionallyAddType({ ty: ArgumentType.string, array: true });
-
-        return this._addParam(strArray, true);
-    }
-
-    public addByteArray(byteArray: Uint8Array[]): this {
-        this._conditionallyAddType({ ty: ArgumentType.bytes, array: true });
-
-        return this._addParam(byteArray, true);
-    }
-
-    public addAddressArray(addresses: string[] | Uint8Array[]): this {
-        // Compiler would not allow the use of `.entries` without this assertion
-        if (!Array.isArray(addresses)) {
-            throw new TypeError(`expected array, got ${typeof addresses}`);
-        }
-
-        const par: Uint8Array[] = [];
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (const [ _, a ] of addresses.entries()) {
-            if (a instanceof Uint8Array) {
-                if (a.length !== 20) {
-                    throw new Error("`address` type requires parameter to be exactly 20 bytes");
-                }
-
-                par.push(a);
-            } else {
-                const buf = Buffer.from(a, "hex");
-
-                if (buf.length !== 20) {
-                    throw new Error("`address` type requires parameter to be exactly 20 bytes");
-                }
-
-                par.push();
-            }
-        }
-
-        this._conditionallyAddType({ ty: ArgumentType.address, array: true });
-
-        return this._addParam(par, true);
     }
 
     private _addParam(
@@ -444,7 +420,7 @@ function argumentToBytes(
         case ArgumentType.int32:
             numberToBytes(param as number | BigNumber, 28, valueView.setInt32.bind(valueView));
             return value;
-        // int64, uint64, and uint256 both expect the parameter to be an Uint8Array instead of number
+        // int64, uint64, and int256 both expect the parameter to be an Uint8Array instead of number
         case ArgumentType.uint64:
         case ArgumentType.int64:
             if (param instanceof BigNumber) {
@@ -461,7 +437,7 @@ function argumentToBytes(
                 value.set(buf, 32 - buf.length);
             }
             return value;
-        case ArgumentType.uint256:
+        case ArgumentType.int256:
             value = param as Uint8Array;
             return value;
         case ArgumentType.address:
@@ -512,22 +488,4 @@ function numberToBytes(
     const value = param instanceof BigNumber ? param.toNumber() : param;
 
     func(byteoffset, value);
-}
-
-function solidityTypeFromBitwidth(bitwidth: number, signed: boolean, array: boolean): SolidityType {
-    let ty: SolidityType;
-
-    switch (bitwidth) {
-        case 8: ty = { ty: signed ? ArgumentType.int8 : ArgumentType.uint8, array };
-            break;
-        case 16: ty = { ty: signed ? ArgumentType.int16 : ArgumentType.uint16, array };
-            break;
-        case 32: ty = { ty: signed ? ArgumentType.int32 : ArgumentType.uint32, array };
-            break;
-        case 64: ty = { ty: signed ? ArgumentType.int64 : ArgumentType.uint64, array };
-            break;
-        default: ty = { ty: ArgumentType.uint256, array };
-    }
-
-    return ty;
 }

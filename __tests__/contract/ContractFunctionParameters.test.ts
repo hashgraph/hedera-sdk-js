@@ -1,15 +1,15 @@
-import { CallParams, FunctionSelector } from "../../src/exports";
+import { ContractFunctionParameters, FunctionSelector } from "../../src/exports";
 import BigNumber from "bignumber.js";
 
-describe("CallParams", () => {
-    const uint32 = 16909060;
+describe("ContractFunctionParameters", () => {
+    const int32 = 16909060;
 
     const bytes = new Uint8Array(10);
     bytes[ 1 ] = 1;
     bytes[ 4 ] = 4;
     bytes[ 9 ] = 8;
 
-    const uint64 = new BigNumber("ffffffff", 16).multipliedBy(new BigNumber(256).pow(4));
+    const int64 = new BigNumber("ffffffff", 16).multipliedBy(new BigNumber(256).pow(4));
 
     const str = "this is a grin: \uD83D\uDE01";
 
@@ -20,10 +20,11 @@ describe("CallParams", () => {
         bytes2[ 0 ] = 255;
         bytes2[ 31 ] = 255;
 
-        const params = new CallParams("f");
-        params.addUint(uint32, 32)
+        const params = new ContractFunctionParameters()
+            .setFunction("f")
+            .addInt32(int32)
             .addBytes(bytes)
-            .addUint(uint64, 64)
+            .addInt64(int64)
             .addBytes(bytes2)
             .addString(str);
 
@@ -40,7 +41,7 @@ describe("CallParams", () => {
         const fourthParamData = Buffer.from(finished.slice((32 * 8) + 4, (32 * 9) + 4).buffer).toString("hex");
         const fifthParamDataLength = Buffer.from(finished.slice((32 * 9) + 4, (32 * 10) + 4).buffer).toString("hex");
         const fifthParamData = Buffer.from(finished.slice((32 * 10) + 4, (32 * 11) + 4).buffer).toString("hex");
-        expect(funcHash).toStrictEqual("4fec5a19");
+        expect(funcHash).toStrictEqual("b54f97cf");
         expect(firstParam).toStrictEqual("0000000000000000000000000000000000000000000000000000000001020304");
         expect(secondParam).toStrictEqual("00000000000000000000000000000000000000000000000000000000000000a0");
         expect(thirdParam).toStrictEqual("000000000000000000000000000000000000000000000000ffffffff00000000");
@@ -56,13 +57,13 @@ describe("CallParams", () => {
     });
 
     it("encodes correctly using generic addParam", () => {
-        const params = new CallParams()
+        const params = new ContractFunctionParameters()
             .setFunction("f")
-            .addUint(uint32, 32)
-            .addBytes(bytes, bytes.length)
-            .addUint(uint64, 64)
+            .addInt32(int32)
+            .addInt32(int32)
+            .addInt64(int64)
             .addString(str)
-            .addUint(1515, 16)
+            .addInt32(1515)
             .addStringArray(strArray);
 
         const finished = params._toProto();
@@ -82,9 +83,9 @@ describe("CallParams", () => {
         const sixthParamFirstEl = Buffer.from(finished.slice((32 * 12) + 4, (32 * 13) + 4).buffer).toString("hex");
         const sixthParamSecondElLen = Buffer.from(finished.slice((32 * 13) + 4, (32 * 14) + 4).buffer).toString("hex");
         const sixthParamSecondEl = Buffer.from(finished.slice((32 * 14) + 4, (32 * 15) + 4).buffer).toString("hex");
-        expect(funcHash).toStrictEqual("d4dbd767");
+        expect(funcHash).toStrictEqual("a27fc6f6");
         expect(firstParam).toStrictEqual("0000000000000000000000000000000000000000000000000000000001020304");
-        expect(secondParam).toStrictEqual("0001000004000000000800000000000000000000000000000000000000000000");
+        expect(secondParam).toStrictEqual("0000000000000000000000000000000000000000000000000000000001020304");
         expect(thirdParam).toStrictEqual("000000000000000000000000000000000000000000000000ffffffff00000000");
         expect(forthParam).toStrictEqual("00000000000000000000000000000000000000000000000000000000000000c0");
         expect(fifthParam).toStrictEqual("00000000000000000000000000000000000000000000000000000000000005eb");

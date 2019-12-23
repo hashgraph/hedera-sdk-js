@@ -37,13 +37,13 @@ export class FileCreateTransaction extends TransactionBuilder {
     public setContents(contents: Uint8Array | string): this {
         const bytes = contents instanceof Uint8Array ?
         contents as Uint8Array :
-        Uint8Array.from(Buffer.from(contents as string, "utf8"));
+            Uint8Array.from(Buffer.from(contents as string, "utf8"));
 
         this._body.setContents(bytes);
         return this;
     }
 
-    protected _doValidate(errors: string[]): void { 
+    protected _doValidate(errors: string[]): void {
         // No local validation
     }
 

@@ -7,7 +7,7 @@ import { SmartContractService } from "../generated/SmartContractService_pb_servi
 import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractFunctionResult, contractFunctionResultToSdk } from "./ContractFunctionResult";
 import { ContractCallLocalQuery } from "../generated/ContractCallLocal_pb";
-import { CallParams } from "./CallParams";
+import { ContractFunctionParameters } from "./ContractFunctionParameters";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
@@ -27,7 +27,7 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
         return this;
     }
 
-    public setFunctionParameters(params: CallParams | Uint8Array): this {
+    public setFunctionParameters(params: ContractFunctionParameters | Uint8Array): this {
         if (params instanceof Uint8Array) {
             this._builder.setFunctionparameters(params);
         } else {

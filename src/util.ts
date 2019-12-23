@@ -76,7 +76,6 @@ export function normalizeEntityId<Kind extends EntityKind>(
     throw new Error(`invalid ${kind} ID: ${entityId}`);
 }
 
-// FIXME: Keys could be threshold keys, a list of keys, or a single public key
 export function getSdkKeys(keylist: KeyList): Ed25519PublicKey[] {
     return keylist.getKeysList().map((key) => new Ed25519PublicKey(key.getEd25519() as Uint8Array));
 }

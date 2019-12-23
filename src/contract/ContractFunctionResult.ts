@@ -76,7 +76,7 @@ export class ContractFunctionResult {
         );
     }
 
-    public getAddress(index: number): String {
+    public getAddress(index: number): string {
         return Buffer.from(this.contractCallResult.subarray(
             index * 32 + 12,
             index * 32 + 32
