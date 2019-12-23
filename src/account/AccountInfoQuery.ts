@@ -5,26 +5,25 @@ import { Query } from "../generated/Query_pb";
 import { Response } from "../generated/Response_pb";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 import { QueryHeader } from "../generated/QueryHeader_pb";
-import { Key } from "../generated/BasicTypes_pb";
 import { Hbar } from "../Hbar";
 import { AccountId, AccountIdLike } from "./AccountId";
 import { timestampToMs } from "../Timestamp";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
 
 export interface AccountInfo {
-    accountId: AccountIdLike;
-    contractAccountId?: string;
+    accountId: AccountId;
+    contractAccountId: string | null;
     isDeleted: boolean;
-    proxyAccountId?: AccountIdLike;
-    proxyReceived?: Hbar;
-    key: Key;
+    proxyAccountId: AccountId | null;
+    proxyReceived: Hbar;
+    key: PublicKey;
     balance: Hbar;
     generateSendRecordThreshold: Hbar;
     generateReceiveRecordThreshold: Hbar;
     isReceiverSignatureRequired: boolean;
     expirationTime: Date;
     autoRenewPeriod: number;
-    // proxy accounts and claims aren't really implemented so we're ignoring those
 }
 
 export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
@@ -71,13 +70,15 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
             accountId: AccountId._fromProto(accountInfo.getAccountid()!),
             contractAccountId: accountInfo.getContractaccountid(),
             isDeleted: accountInfo.getDeleted(),
-            key: accountInfo.getKey()!,
+            key: _fromProtoKey(accountInfo.getKey()!),
             balance: Hbar.fromTinybar(accountInfo.getBalance()),
             generateSendRecordThreshold: sendThreshold,
             generateReceiveRecordThreshold: receiveThreshold,
             isReceiverSignatureRequired: accountInfo.getReceiversigrequired(),
             expirationTime: new Date(timestampToMs(accountInfo.getExpirationtime()!)),
-            autoRenewPeriod: accountInfo.getAutorenewperiod()!.getSeconds()
+            autoRenewPeriod: accountInfo.getAutorenewperiod()!.getSeconds(),
+            proxyAccountId: accountInfo.hasProxyaccountid() ? AccountId._fromProto(accountInfo.getProxyaccountid()!) : null,
+            proxyReceived: Hbar.fromTinybar(accountInfo.getProxyreceived()),
         };
     }
 }

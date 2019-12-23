@@ -6,19 +6,18 @@ import { ExchangeRateSet, exchangeRateSetToSdk } from "./ExchangeRate";
 
 export interface TransactionReceipt {
     status: number;
-    accountId?: AccountId;
-    fileId?: FileId;
-    contractId?: ContractId;
-    exchangeRateSet?: ExchangeRateSet;
+    accountId: AccountId | null;
+    fileId: FileId | null;
+    contractId: ContractId | null;
+    exchangeRateSet: ExchangeRateSet | null;
 }
 
 export function receiptToSdk(receipt: ProtoTransactionReceipt): TransactionReceipt {
-    const exchangeRate = receipt.getExchangerate();
     return {
         status: receipt.getStatus(),
-        accountId: receipt.getAccountid() && AccountId._fromProto(receipt.getAccountid()!),
-        fileId: receipt.getFileid() && FileId._fromProto(receipt.getFileid()!),
-        contractId: receipt.getContractid() && ContractId._fromProto(receipt.getContractid()!),
-        exchangeRateSet: exchangeRate && exchangeRateSetToSdk(exchangeRate)
+        accountId: receipt.hasAccountid() ? AccountId._fromProto(receipt.getAccountid()!) : null,
+        fileId: receipt.hasFileid() ? FileId._fromProto(receipt.getFileid()!) : null,
+        contractId: receipt.hasContractid() ? ContractId._fromProto(receipt.getContractid()!) : null,
+        exchangeRateSet: receipt.hasExchangerate() ? exchangeRateSetToSdk(receipt.getExchangerate()!) : null
     };
 }

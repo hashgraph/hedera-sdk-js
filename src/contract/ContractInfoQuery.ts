@@ -10,12 +10,13 @@ import { AccountId } from "../account/AccountId";
 import { timestampToDate } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
 
 export interface ContractInfo {
     contractId: ContractId;
     accountId: AccountId;
     contractAccountId: string;
-    adminKey: Ed25519PublicKey | null;
+    adminKey: PublicKey | null;
     expirationTime: Date;
     autoRenewPeriod: number;
     storage: number;
@@ -63,7 +64,7 @@ export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
             contractId: ContractId._fromProto(contractInfo.getContractid()!),
             accountId: AccountId._fromProto(contractInfo.getAccountid()!),
             contractAccountId: contractInfo.getContractaccountid(),
-            adminKey: null,
+            adminKey: contractInfo.hasAdminkey() ? _fromProtoKey(contractInfo.getAdminkey()!) : null,
             expirationTime: timestampToDate(contractInfo.getExpirationtime()!),
             autoRenewPeriod: contractInfo.getAutorenewperiod()!.getSeconds(),
             storage: contractInfo.getStorage(),
