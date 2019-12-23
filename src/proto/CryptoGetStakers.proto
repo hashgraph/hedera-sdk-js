@@ -18,7 +18,7 @@ message CryptoGetStakersQuery {
 /* information about a single account that is proxy staking */
 message ProxyStaker {
     AccountID accountID = 1; // The Account ID that is proxy staking
-    int64 amount = 2; // The number of hbars that are currently proxy staked
+    int64 amount = 2 [jstype=JS_STRING]; // The number of hbars that are currently proxy staked
 }
 
 /* all of the accounts proxy staking to a given account, and the amounts proxy staked */
