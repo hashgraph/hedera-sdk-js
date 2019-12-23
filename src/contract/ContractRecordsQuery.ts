@@ -9,12 +9,7 @@ import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractGetRecordsQuery } from "../generated/ContractGetRecords_pb";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
-export interface ContractRecord {
-    contractId: ContractId;
-    recordList: TransactionRecord[];
-}
-
-export class ContractRecordsQuery extends QueryBuilder<ContractRecord> {
+export class ContractRecordsQuery extends QueryBuilder<TransactionRecord[]> {
     private readonly _builder: ContractGetRecordsQuery;
     public constructor() {
         super();
@@ -48,14 +43,8 @@ export class ContractRecordsQuery extends QueryBuilder<ContractRecord> {
         return response.getContractgetrecordsresponse()!.getHeader()!;
     }
 
-    protected _mapResponse(response: Response): ContractRecord {
+    protected _mapResponse(response: Response): TransactionRecord[] {
         const contractResponse = response.getContractgetrecordsresponse()!;
-        const contractId = ContractId._fromProto(contractResponse.getContractid()!);
-        const recordList = recordListToSdk(contractResponse.getRecordsList()!);
-
-        return {
-            contractId,
-            recordList
-        };
+        return recordListToSdk(contractResponse.getRecordsList()!);
     }
 }
