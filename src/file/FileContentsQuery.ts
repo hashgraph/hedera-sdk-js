@@ -8,12 +8,7 @@ import { FileService } from "../generated/FileService_pb_service";
 import { FileId, FileIdLike } from "../file/FileId";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
-export interface FileContents {
-    fileId: FileIdLike;
-    contents: Uint8Array | string;
-}
-
-export class FileContentsQuery extends QueryBuilder<FileContents> {
+export class FileContentsQuery extends QueryBuilder<Uint8Array> {
     private readonly _builder: FileGetContentsQuery;
 
     public constructor() {
@@ -48,12 +43,9 @@ export class FileContentsQuery extends QueryBuilder<FileContents> {
         return response.getFilegetcontents()!.getHeader()!;
     }
 
-    protected _mapResponse(response: Response): FileContents {
+    protected _mapResponse(response: Response): Uint8Array {
         const fileConents = response.getFilegetcontents()!.getFilecontents()!;
 
-        return {
-            fileId: FileId._fromProto(fileConents.getFileid()!),
-            contents: fileConents.getContents()
-        };
+        return fileConents.getContents_asU8();
     }
 }
