@@ -21,14 +21,13 @@ describe("ContractFunctionParams", () => {
         bytes2[ 31 ] = 255;
 
         const params = new ContractFunctionParams()
-            .setFunction("f")
             .addInt32(int32)
             .addBytes(bytes)
             .addInt64(int64)
             .addBytes(bytes2)
             .addString(str);
 
-        const finished = params._toProto();
+        const finished = params._build("f");
         const funcHash = Buffer.from(finished.slice(0, 4).buffer).toString("hex");
         const firstParam = Buffer.from(finished.slice((32 * 0) + 4, (32 * 1) + 4).buffer).toString("hex");
         const secondParam = Buffer.from(finished.slice((32 * 1) + 4, (32 * 2) + 4).buffer).toString("hex");
@@ -58,7 +57,6 @@ describe("ContractFunctionParams", () => {
 
     it("encodes correctly using generic addParam", () => {
         const params = new ContractFunctionParams()
-            .setFunction("f")
             .addInt32(int32)
             .addInt32(int32)
             .addInt64(int64)
@@ -66,7 +64,7 @@ describe("ContractFunctionParams", () => {
             .addInt32(1515)
             .addStringArray(strArray);
 
-        const finished = params._toProto();
+        const finished = params._build("f");
         const funcHash = Buffer.from(finished.slice(0, 4).buffer).toString("hex");
         const firstParam = Buffer.from(finished.slice((32 * 0) + 4, (32 * 1) + 4).buffer).toString("hex");
         const secondParam = Buffer.from(finished.slice((32 * 1) + 4, (32 * 2) + 4).buffer).toString("hex");

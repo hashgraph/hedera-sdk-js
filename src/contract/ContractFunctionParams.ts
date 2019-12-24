@@ -1,257 +1,102 @@
-import { keccak256 } from "js-sha3";
 import BigNumber from "bignumber.js";
+import { ContractFunctionSelector, ArgumentType, SolidityType } from "./ContractFunctionSelector";
 
-enum ArgumentType {
-    uint8 = 0,
-    int8 = 1,
-    uint16 = 2,
-    int16 = 3,
-    uint32 = 4,
-    int32 = 5,
-    uint64 = 6,
-    int64 = 7,
-    int256 = 8,
-    string = 9,
-    bool = 10,
-    bytes = 11,
-    bytesfix = 12,
-    address = 13,
-    func = 14,
-}
-
-interface SolidityType {
-    ty: ArgumentType;
-    array: boolean;
-}
-
-function solidityTypeToString(ty: SolidityType, length?: number): string {
-    let s = "";
-    switch (ty.ty) {
-        case ArgumentType.uint8:
-            s = "uint8";
-            break;
-        case ArgumentType.int8:
-            s = "int8";
-            break;
-        case ArgumentType.uint16:
-            s = "uint16";
-            break;
-        case ArgumentType.int16:
-            s = "int16";
-            break;
-        case ArgumentType.uint32:
-            s = "uint32";
-            break;
-        case ArgumentType.int32:
-            s = "int32";
-            break;
-        case ArgumentType.uint64:
-            s = "uint64";
-            break;
-        case ArgumentType.int64:
-            s = "int64";
-            break;
-        case ArgumentType.int256:
-            s = "int256";
-            break;
-        case ArgumentType.string:
-            s = "string";
-            break;
-        case ArgumentType.bool:
-            s = "bool";
-            break;
-        case ArgumentType.bytes:
-            s = "bytes";
-            break;
-        case ArgumentType.bytesfix:
-            s = `bytes${length}`;
-            break;
-        case ArgumentType.address:
-            s = "address";
-            break;
-        case ArgumentType.func:
-            s = "function";
-            break;
-        default:
-            s = "";
-            break;
-    }
-
-    if (ty.array) {
-        s += "[]";
-    }
-
-    return s;
-}
-
-function stringToSoldityType(ty: string): SolidityType {
-    const argument = ArgumentType[ ty as keyof typeof ArgumentType ];
-    if (argument == null) {
-        throw new Error(`Argument Type is unsuppored: ${ty}`);
-    }
-
-    const array = ty.endsWith("[]");
-
-    return {
-        ty: argument,
-        array
-    };
-}
-
-class FunctionSelector {
-    private _func?: string;
-    private _needsComma = false;
-    public argumentTypes: SolidityType[] = [];
-    public argumentList: Argument[] = [];
-
-    public constructor(func?: string) {
-        if (func) {
-            this._func = `${func}(`;
-        }
-    }
-
-    public setFunction(func: string): this {
-        if (this._func) {
-            throw new Error("Function Name has already been set");
-        }
-
-        this._func = func ? `${func}(` : "";
-
-        return this;
-    }
-
-    public addParamType(ty: string | SolidityType, length?: number): this {
-        if (this._needsComma) {
-            this._func += ",";
-        }
-
-        const argument: SolidityType = typeof ty === "string" ?
-            stringToSoldityType(ty) :
-            ty;
-
-        this._func += solidityTypeToString(argument, length);
-
-        this.argumentTypes.push(argument);
-        this._needsComma = true;
-
-        return this;
-    }
-
-    public static identifier(func: string): Uint8Array {
-        return new Uint8Array(keccak256.arrayBuffer(func).slice(0, 4));
-    }
-
-    /**
-     * NOT A STABLE API
-     */
-    public _toProto(): Uint8Array {
-        this._func += ")";
-
-        return FunctionSelector.identifier(this._func!);
-    }
-
-    public toString(): string {
-        return `${this._func!})`;
-    }
+interface Argument {
+    dynamic: boolean;
+    value: Uint8Array;
 }
 
 export class ContractFunctionParams {
-    private readonly _func: FunctionSelector;
-    private _currentArgument = 0;
+    private readonly _selector: ContractFunctionSelector;
+    private readonly _arguments: Argument[] = [];
 
     public constructor() {
-        this._func = new FunctionSelector();
+        this._selector = new ContractFunctionSelector();
     }
 
-    public setFunction(func: string): this {
-        this._func.setFunction(func);
+    public addString(value: string): this {
+        this._selector.addString();
 
-        return this;
+        return this._addParam(value, true);
     }
 
-    public addString(param: string): this {
-        this._conditionallyAddType({ ty: ArgumentType.string, array: false });
+    public addStringArray(value: string[]): this {
+        this._selector.addStringArray();
 
-        return this._addParam(param, true);
+        return this._addParam(value, true);
     }
 
-    public addStringArray(strArray: string[]): this {
-        this._conditionallyAddType({ ty: ArgumentType.string, array: true });
+    public addBytes(value: Uint8Array): this {
+        this._selector.addBytes();
 
-        return this._addParam(strArray, true);
+        return this._addParam(value, true);
     }
 
-    public addBytes(param: Uint8Array): this {
-        this._conditionallyAddType({ ty: ArgumentType.bytes, array: false });
+    public addBytesArray(value: Uint8Array[]): this {
+        this._selector.addBytesArray();
 
-        return this._addParam(param, true);
+        return this._addParam(value, true);
     }
 
-    public addBytesArray(byteArray: Uint8Array[]): this {
-        this._conditionallyAddType({ ty: ArgumentType.bytes, array: true });
+    public addBool(value: boolean): this {
+        this._selector.addBool();
 
-        return this._addParam(byteArray, true);
+        return this._addParam(value, false);
     }
 
-    public addBool(param: boolean): this {
-        this._conditionallyAddType({ ty: ArgumentType.bool, array: false });
+    public addInt32(value: number): this {
+        this._selector.addInt32();
 
-        return this._addParam(param, false);
+        return this._addParam(value, false);
     }
 
-    public addInt32(param: number): this {
-        this._conditionallyAddType({ ty: ArgumentType.int32, array: false });
+    public addInt64(value: BigNumber): this {
+        this._selector.addInt64();
 
-        return this._addParam(param, false);
+        return this._addParam(value, false);
     }
 
-    public addInt64(param: BigNumber): this {
-        this._conditionallyAddType({ ty: ArgumentType.int64, array: false });
+    public addInt256(value: BigNumber): this {
+        this._selector.addInt256();
 
-        return this._addParam(param, false);
+        return this._addParam(value, false);
     }
 
-    public addInt256(param: BigNumber): this {
-        this._conditionallyAddType({ ty: ArgumentType.int256, array: false });
+    public addInt32Array(value: number[]): this {
+        this._selector.addInt32();
 
-        return this._addParam(param, false);
+        return this._addParam(value, false);
     }
 
-    public addInt32Array(param: number[]): this {
-        this._conditionallyAddType({ ty: ArgumentType.int32, array: true });
+    public addInt64Array(value: BigNumber[]): this {
+        this._selector.addInt64();
 
-        return this._addParam(param, false);
+        return this._addParam(value, false);
     }
 
-    public addInt64Array(param: BigNumber[]): this {
-        this._conditionallyAddType({ ty: ArgumentType.int64, array: true });
+    public addInt256Array(value: BigNumber[]): this {
+        this._selector.addInt256();
 
-        return this._addParam(param, false);
+        return this._addParam(value, false);
     }
 
-    public addInt256Array(param: BigNumber[]): this {
-        this._conditionallyAddType({ ty: ArgumentType.int256, array: true });
-
-        return this._addParam(param, false);
-    }
-
-    public addAddress(param: string): this {
-        const par = Buffer.from(param, "hex");
+    public addAddress(value: string): this {
+        const par = Buffer.from(value, "hex");
 
         if (par.length !== 20) {
             throw new Error("`address` type requires parameter to be exactly 20 bytes");
         }
 
-        this._conditionallyAddType({ ty: ArgumentType.address, array: false });
+        this._selector.addAddress();
 
         return this._addParam(par, false);
     }
 
-    public addAddressArray(addresses: string[]): this {
+    public addAddressArray(value: string[]): this {
         const par: Uint8Array[] = [];
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (const [ _, a ] of addresses.entries()) {
+        for (const [ _, a ] of value.entries()) {
             const buf = Buffer.from(a, "hex");
 
             if (buf.length !== 20) {
@@ -261,38 +106,20 @@ export class ContractFunctionParams {
             par.push();
         }
 
-        this._conditionallyAddType({ ty: ArgumentType.address, array: true });
+        this._selector.addAddressArray();
 
         return this._addParam(par, true);
     }
 
-    private _conditionallyAddType(ty: SolidityType): void {
-        if (this._func.argumentTypes.length === this._currentArgument) {
-            this._func.addParamType(ty);
-        }
-    }
-
-    public addFunction(address: string, methodId: number): this;
-    public addFunction(address: string, methodSignature: string): this;
-    public addFunction(address: string, methodSignatureOrId: string | number): this {
+    public addFunction(address: string, selector: ContractFunctionSelector): this {
         const addressParam = Buffer.from(address, "hex");
-
-        // If methodSignature is a number representing the hash
-        const sig = new Uint8Array(4);
-        const sigView = new DataView(sig);
-        if (typeof methodSignatureOrId === "number") {
-            sigView.setInt32(0, methodSignatureOrId as number);
-        }
-
-        const functionSelector = typeof methodSignatureOrId === "string" ?
-            FunctionSelector.identifier(methodSignatureOrId) :
-            sig;
+        const functionSelector = selector._build(null);
 
         if (addressParam.length !== 20) {
             throw new Error("`function` type requires parameter `address` to be exactly 20 bytes");
         }
 
-        this._conditionallyAddType({ ty: ArgumentType.func, array: false });
+        this._selector.addFunction();
 
         const proto = new Uint8Array(24);
         proto.set(addressParam, 0);
@@ -306,11 +133,10 @@ export class ContractFunctionParams {
         string[] | boolean[] | number[] | Uint8Array[] | BigNumber[],
         dynamic: boolean
     ): this {
-        const value = argumentToBytes(param, this._func.argumentTypes[ this._currentArgument ]);
+        const index = this._selector._paramTypes.length - 1;
+        const value = argumentToBytes(param, this._selector._paramTypes[ index ]);
 
-        this._func.argumentList.push({ dynamic, value });
-
-        this._currentArgument += 1;
+        this._arguments.push({ dynamic, value });
 
         return this;
     }
@@ -318,23 +144,19 @@ export class ContractFunctionParams {
     /**
      * NOT A STABLE API
      */
-    public _toProto(): Uint8Array {
-        if (this._func.argumentList.length !== this._func.argumentTypes.length) {
-            throw new Error("Invalid number of parameters provided");
-        }
-
-        const length = this._func.argumentList.length === 0 ?
+    public _build(name: string): Uint8Array {
+        const length = this._arguments.length === 0 ?
             0 :
-            this._func.argumentList.length * 32 + this._func.argumentList
+            this._arguments.length * 32 + this._arguments
                 .map((arg) => arg.dynamic ? arg.value.length : 0)
                 .reduce((sum, value) => sum + value) + 4;
 
         const func = new Uint8Array(length);
-        func.set(this._func._toProto(), 0);
+        func.set(this._selector._build(name), 0);
 
-        let offset = 32 * this._func.argumentList.length;
+        let offset = 32 * this._arguments.length;
 
-        for (const [ i, { dynamic, value }] of this._func.argumentList.entries()) {
+        for (const [ i, { dynamic, value }] of this._arguments.entries()) {
             if (dynamic) {
                 const view = new DataView(func.buffer, 4 + i * 32 + 28);
                 view.setUint32(0, offset);
@@ -347,11 +169,6 @@ export class ContractFunctionParams {
 
         return func;
     }
-}
-
-interface Argument {
-    dynamic: boolean;
-    value: Uint8Array;
 }
 
 function argumentToBytes(

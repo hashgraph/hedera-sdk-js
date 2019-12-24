@@ -3,10 +3,10 @@ import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
-
 import { ContractCallTransactionBody } from "../generated/ContractCall_pb";
 import BigNumber from "bignumber.js";
 import { ContractId, ContractIdLike } from "./ContractId";
+import { ContractFunctionParams } from "./ContractFunctionParams";
 
 export class ContractExecuteTransaction extends TransactionBuilder {
     private readonly _body: ContractCallTransactionBody;
@@ -27,8 +27,8 @@ export class ContractExecuteTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setFunctionParameters(params: string): this {
-        this._body.setFunctionparameters(params);
+    public setFunction(name: string, params: ContractFunctionParams): this {
+        this._body.setFunctionparameters(params._build(name));
         return this;
     }
 

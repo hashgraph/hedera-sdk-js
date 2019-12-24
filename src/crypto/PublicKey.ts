@@ -1,14 +1,17 @@
 import * as pb from "../generated/BasicTypes_pb";
-import { Ed25519PublicKey } from "./Ed25519PublicKey";
-import { ContractId } from "../contract/ContractId";
-import { ThresholdKey } from "./ThresholdKey";
-import { KeyList } from "./KeyList";
 
 export abstract class PublicKey {
     public abstract _toProtoKey(): pb.Key;
 }
 
 export function _fromProtoKey(key: pb.Key): PublicKey {
+    /* eslint-disable @typescript-eslint/no-var-requires */
+    const { Ed25519PublicKey } = require("./Ed25519PublicKey");
+    const { ContractId } = require("../contract/ContractId");
+    const { ThresholdKey } = require("./ThresholdKey");
+    const { KeyList } = require("./KeyList");
+    /* eslint-enable @typescript-eslint/no-var-requires */
+
     if (key.hasEd25519()) {
         return new Ed25519PublicKey(key.getEcdsa384_asU8());
     }
