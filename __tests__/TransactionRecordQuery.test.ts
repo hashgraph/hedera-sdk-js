@@ -3,7 +3,7 @@ import { mockTransaction } from "./MockClient";
 
 describe("TransactionGetRecordQuery", () => {
     it("serializes and deserializes correctly; TransactionGetRecordQuery", () => {
-        const transaction = new TransactionRecordQuery()
+        const query = new TransactionRecordQuery()
             .setTransactionId({
                 account: {
                     shard: 0,
@@ -13,9 +13,9 @@ describe("TransactionGetRecordQuery", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .setPayment(mockTransaction);
+            .setQueryPaymentTransaction(mockTransaction);
 
-        const tx = transaction.toProto().toObject();
+        const tx = query._toProto().toObject();
         expect(tx).toStrictEqual({
             contractcalllocal: undefined,
             contractgetbytecode: undefined,

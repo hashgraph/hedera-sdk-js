@@ -145,25 +145,31 @@ export class ContractFunctionParams {
      * NOT A STABLE API
      */
     public _build(name: string | null): Uint8Array {
+        const includeId = name != null;
+        const nameOffset = includeId ? 4 : 0;
+
         const length = this._arguments.length === 0 ?
             0 :
             this._arguments.length * 32 + this._arguments
                 .map((arg) => arg.dynamic ? arg.value.length : 0)
-                .reduce((sum, value) => sum + value) + 4;
+                .reduce((sum, value) => sum + value) + nameOffset;
 
         const func = new Uint8Array(length);
-        func.set(this._selector._build(name), 0);
+
+        if (includeId) {
+            func.set(this._selector._build(name), 0);
+        }
 
         let offset = 32 * this._arguments.length;
 
         for (const [ i, { dynamic, value }] of this._arguments.entries()) {
             if (dynamic) {
-                const view = new DataView(func.buffer, 4 + i * 32 + 28);
+                const view = new DataView(func.buffer, nameOffset + i * 32 + 28);
                 view.setUint32(0, offset);
-                func.set(value, view.getUint32(0) + 4);
+                func.set(value, view.getUint32(0) + nameOffset);
                 offset += value.length;
             } else {
-                func.set(value, 4 + i * 32);
+                func.set(value, nameOffset + i * 32);
             }
         }
 

@@ -3,11 +3,11 @@ import { mockTransaction } from "../MockClient";
 
 describe("AccountBalanceQuery", () => {
     it("serializes and deserializes correctly; AccountBalanceQuery", () => {
-        const transaction = new AccountBalanceQuery()
+        const query = new AccountBalanceQuery()
             .setAccountId({ account: 3 })
-            .setPayment(mockTransaction);
+            .setQueryPaymentTransaction(mockTransaction);
 
-        const tx = transaction.toProto().toObject();
+        const tx = query._toProto().toObject();
         expect(tx).toStrictEqual({
             contractcalllocal: undefined,
             contractgetbytecode: undefined,

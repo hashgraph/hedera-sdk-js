@@ -26,7 +26,7 @@ export class ContractUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setAdminkey(publicKey: PublicKey): this {
+    public setAdminKey(publicKey: PublicKey): this {
         this._body.setAdminkey(publicKey._toProtoKey());
         return this;
     }
@@ -36,7 +36,7 @@ export class ContractUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setFileId(fileIdLike: FileIdLike): this {
+    public setBytecodeFileId(fileIdLike: FileIdLike): this {
         this._body.setFileid(new FileId(fileIdLike)._toProto());
         return this;
     }
