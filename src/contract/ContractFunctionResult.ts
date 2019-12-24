@@ -14,13 +14,22 @@ export class ContractFunctionResult {
     private readonly _bytes: Uint8Array;
 
     // Constructor isn't part of the stable API
-    public constructor(result: pb.ContractFunctionResult) {
-        this._bytes = result.getContractcallresult_asU8();
-        this.contractId = ContractId._fromProto(result.getContractid()!);
-        this.errorMessage = result.getErrormessage();
-        this.bloom = result.getBloom_asU8();
-        this.gasUsed = result.getGasused();
-        this.logs = contractLogInfoListToSdk(result.getLoginfoList());
+    public constructor(result: pb.ContractFunctionResult | Uint8Array) {
+        if (result instanceof pb.ContractFunctionResult) {
+            this._bytes = result.getContractcallresult_asU8();
+            this.contractId = ContractId._fromProto(result.getContractid()!);
+            this.errorMessage = result.getErrormessage();
+            this.bloom = result.getBloom_asU8();
+            this.gasUsed = result.getGasused();
+            this.logs = contractLogInfoListToSdk(result.getLoginfoList());
+        } else {
+            this.contractId = new ContractId(0);
+            this._bytes = result as Uint8Array;
+            this.errorMessage = "";
+            this.bloom = new Uint8Array();
+            this.gasUsed = 0;
+            this.logs = [];
+        }
     }
 
     public asBytes(): Uint8Array {
@@ -77,6 +86,9 @@ export class ContractFunctionResult {
         )).toString("hex");
     }
 
+    //
+    //  NOT A STABLE API
+    //
     public getBytes32(index: number): Uint8Array {
         return this._bytes.subarray(
             index * 32,

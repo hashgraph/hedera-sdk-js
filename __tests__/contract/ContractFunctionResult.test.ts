@@ -11,14 +11,7 @@ describe("ContractFunctionResult", () => {
 
     const address = "11223344556677889900aabbccddeeff00112233";
 
-    const result = new ContractFunctionResult(
-        { shard: 0, realm: 0, contract: 1 },
-        byteResult,
-        "",
-        new Uint8Array(),
-        10,
-        []
-    );
+    const result = new ContractFunctionResult(byteResult);
 
     it("deserializes correctly; ContractFunctionResult", () => {
         expect(result.getBool(0)).toBe(true);

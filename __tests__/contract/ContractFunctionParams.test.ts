@@ -99,4 +99,47 @@ describe("ContractFunctionParams", () => {
         expect(sixthParamSecondEl).toStrictEqual("74776f0000000000000000000000000000000000000000000000000000000000");
         expect(finished).toHaveLength(484);
     });
+
+    it("encodes correctly without name", () => {
+        const params = new ContractFunctionParams()
+            .addInt32(int32)
+            .addInt32(int32)
+            .addInt64(int64)
+            .addString(str)
+            .addInt32(1515)
+            .addStringArray(strArray);
+
+        const finished = params._build(null);
+        const firstParam = Buffer.from(finished.slice((32 * 0), (32 * 1)).buffer).toString("hex");
+        const secondParam = Buffer.from(finished.slice((32 * 1), (32 * 2)).buffer).toString("hex");
+        const thirdParam = Buffer.from(finished.slice((32 * 2), (32 * 3)).buffer).toString("hex");
+        const forthParam = Buffer.from(finished.slice((32 * 3), (32 * 4)).buffer).toString("hex");
+        const fifthParam = Buffer.from(finished.slice((32 * 4), (32 * 5)).buffer).toString("hex");
+        const sixthParam = Buffer.from(finished.slice((32 * 5), (32 * 6)).buffer).toString("hex");
+        const fourthParamDataLength = Buffer.from(finished.slice((32 * 6), (32 * 7)).buffer).toString("hex");
+        const fourthParamData = Buffer.from(finished.slice((32 * 7), (32 * 8)).buffer).toString("hex");
+        const sixthParamDataLength = Buffer.from(finished.slice((32 * 8), (32 * 9)).buffer).toString("hex");
+        const sixthParamFirstElOff = Buffer.from(finished.slice((32 * 9), (32 * 10)).buffer).toString("hex");
+        const sixthParamSecondElOff = Buffer.from(finished.slice((32 * 10), (32 * 11)).buffer).toString("hex");
+        const sixthParamFirstElLen = Buffer.from(finished.slice((32 * 11), (32 * 12)).buffer).toString("hex");
+        const sixthParamFirstEl = Buffer.from(finished.slice((32 * 12), (32 * 13)).buffer).toString("hex");
+        const sixthParamSecondElLen = Buffer.from(finished.slice((32 * 13), (32 * 14)).buffer).toString("hex");
+        const sixthParamSecondEl = Buffer.from(finished.slice((32 * 14), (32 * 15)).buffer).toString("hex");
+        expect(firstParam).toStrictEqual("0000000000000000000000000000000000000000000000000000000001020304");
+        expect(secondParam).toStrictEqual("0000000000000000000000000000000000000000000000000000000001020304");
+        expect(thirdParam).toStrictEqual("000000000000000000000000000000000000000000000000ffffffff00000000");
+        expect(forthParam).toStrictEqual("00000000000000000000000000000000000000000000000000000000000000c0");
+        expect(fifthParam).toStrictEqual("00000000000000000000000000000000000000000000000000000000000005eb");
+        expect(sixthParam).toStrictEqual("0000000000000000000000000000000000000000000000000000000000000100");
+        expect(fourthParamDataLength).toStrictEqual("0000000000000000000000000000000000000000000000000000000000000014");
+        expect(fourthParamData).toStrictEqual("746869732069732061206772696e3a20f09f9881000000000000000000000000");
+        expect(sixthParamDataLength).toStrictEqual("0000000000000000000000000000000000000000000000000000000000000002");
+        expect(sixthParamFirstElOff).toStrictEqual("0000000000000000000000000000000000000000000000000000000000000040");
+        expect(sixthParamSecondElOff).toStrictEqual("0000000000000000000000000000000000000000000000000000000000000080");
+        expect(sixthParamFirstElLen).toStrictEqual("0000000000000000000000000000000000000000000000000000000000000003");
+        expect(sixthParamFirstEl).toStrictEqual("6f6e650000000000000000000000000000000000000000000000000000000000");
+        expect(sixthParamSecondElLen).toStrictEqual("0000000000000000000000000000000000000000000000000000000000000003");
+        expect(sixthParamSecondEl).toStrictEqual("74776f0000000000000000000000000000000000000000000000000000000000");
+        expect(finished).toHaveLength(480);
+    });
 });
