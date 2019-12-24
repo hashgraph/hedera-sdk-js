@@ -9,7 +9,7 @@ export class ContractId extends PublicKey {
     public contract: number;
 
     public constructor(contractId: ContractIdLike) {
-        super()
+        super();
 
         const id = contractId instanceof ContractId ?
             contractId :

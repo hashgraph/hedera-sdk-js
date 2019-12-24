@@ -50,7 +50,6 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
                 // Accepted but has not reached consensus
                 ResponseCodeEnum.OK,
                 // Queue is full
-                // TODO[2020-01-01]: Can you get this on a receipt ?
                 ResponseCodeEnum.BUSY,
                 // Still in the node's queue
                 ResponseCodeEnum.UNKNOWN
@@ -63,8 +62,6 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
     }
 
     protected _getDefaultExecuteTimeout(): number {
-        // TODO[2020-01-01]: Get a stopping point closer to "valid duration" of the transaction
-
         return 120000; // ~2 minutes
     }
 

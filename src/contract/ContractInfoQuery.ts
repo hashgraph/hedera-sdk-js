@@ -8,7 +8,6 @@ import { SmartContractService } from "../generated/SmartContractService_pb_servi
 import { ContractId, ContractIdLike } from "./ContractId";
 import { AccountId } from "../account/AccountId";
 import { timestampToDate } from "../Timestamp";
-import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
 
@@ -64,7 +63,11 @@ export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
             contractId: ContractId._fromProto(contractInfo.getContractid()!),
             accountId: AccountId._fromProto(contractInfo.getAccountid()!),
             contractAccountId: contractInfo.getContractaccountid(),
-            adminKey: contractInfo.hasAdminkey() ? _fromProtoKey(contractInfo.getAdminkey()!) : null,
+
+            adminKey: contractInfo.hasAdminkey() ?
+                _fromProtoKey(contractInfo.getAdminkey()!) :
+                null,
+
             expirationTime: timestampToDate(contractInfo.getExpirationtime()!),
             autoRenewPeriod: contractInfo.getAutorenewperiod()!.getSeconds(),
             storage: contractInfo.getStorage(),

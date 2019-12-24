@@ -17,7 +17,13 @@ export function receiptToSdk(receipt: ProtoTransactionReceipt): TransactionRecei
         status: receipt.getStatus(),
         accountId: receipt.hasAccountid() ? AccountId._fromProto(receipt.getAccountid()!) : null,
         fileId: receipt.hasFileid() ? FileId._fromProto(receipt.getFileid()!) : null,
-        contractId: receipt.hasContractid() ? ContractId._fromProto(receipt.getContractid()!) : null,
-        exchangeRateSet: receipt.hasExchangerate() ? exchangeRateSetToSdk(receipt.getExchangerate()!) : null
+
+        contractId: receipt.hasContractid() ?
+            ContractId._fromProto(receipt.getContractid()!) :
+            null,
+
+        exchangeRateSet: receipt.hasExchangerate() ?
+            exchangeRateSetToSdk(receipt.getExchangerate()!) :
+            null
     };
 }

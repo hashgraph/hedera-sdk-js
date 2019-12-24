@@ -19,22 +19,24 @@ export interface TransactionRecord {
 }
 
 export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionRecord[] {
-    return records.map((record) => {
-        const callResult = record.getContractcallresult();
-        const createResult = record.getContractcreateresult();
+    return records.map((record) => ({
+        receipt: receiptToSdk(record.getReceipt()!),
+        transactionHash: record.getTransactionhash_asU8(),
+        consensusTimestamp: timestampToDate(record.getConsensustimestamp()!),
+        transactionId: TransactionId._fromProto(record.getTransactionid()!),
+        memo: record.getMemo(),
+        transactionFee: record.getTransactionfee(),
 
-        return {
-            receipt: receiptToSdk(record.getReceipt()!),
-            transactionHash: record.getTransactionhash_asU8(),
-            consensusTimestamp: timestampToDate(record.getConsensustimestamp()!),
-            transactionId: TransactionId._fromProto(record.getTransactionid()!),
-            memo: record.getMemo(),
-            transactionFee: record.getTransactionfee(),
-            contractCallResult: callResult == null ? null : new ContractFunctionResult(callResult!),
-            contractCreateResult: createResult == null ? null : new ContractFunctionResult(createResult!),
-            transfers: transferListToSdk(record.getTransferlist()!)
-        };
-    });
+        contractCallResult: record.hasContractcallresult() ?
+            new ContractFunctionResult(record.getContractcallresult()!) :
+            null,
+
+        contractCreateResult: record.hasContractcreateresult() ?
+            new ContractFunctionResult(record.getContractcreateresult()!) :
+            null,
+
+        transfers: transferListToSdk(record.getTransferlist()!)
+    }));
 }
 
 export function transferListToSdk(transferList: ProtoTransferList): AccountAmount[] {

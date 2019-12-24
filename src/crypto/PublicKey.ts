@@ -1,5 +1,4 @@
 import * as pb from "../generated/BasicTypes_pb";
-import { Ed25519PrivateKey } from "./Ed25519PrivateKey";
 import { Ed25519PublicKey } from "./Ed25519PublicKey";
 import { ContractId } from "../contract/ContractId";
 import { ThresholdKey } from "./ThresholdKey";

@@ -77,8 +77,12 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
             isReceiverSignatureRequired: accountInfo.getReceiversigrequired(),
             expirationTime: new Date(timestampToMs(accountInfo.getExpirationtime()!)),
             autoRenewPeriod: accountInfo.getAutorenewperiod()!.getSeconds(),
-            proxyAccountId: accountInfo.hasProxyaccountid() ? AccountId._fromProto(accountInfo.getProxyaccountid()!) : null,
-            proxyReceived: Hbar.fromTinybar(accountInfo.getProxyreceived()),
+
+            proxyAccountId: accountInfo.hasProxyaccountid() ?
+                AccountId._fromProto(accountInfo.getProxyaccountid()!) :
+                null,
+
+            proxyReceived: Hbar.fromTinybar(accountInfo.getProxyreceived())
         };
     }
 }

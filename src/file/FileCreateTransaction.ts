@@ -43,7 +43,7 @@ export class FileCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doValidate(): void {
         // No local validation
     }
 

@@ -10,5 +10,6 @@ module.exports = {
   ],
   rules: {
     "no-mixed-operators": 0,
+    "no-await-in-loop": 0
   }
 };

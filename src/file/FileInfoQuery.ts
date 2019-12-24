@@ -61,7 +61,7 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
             size: fileInfo.getSize(),
 
             expirationTime: fileInfo.hasExpirationtime() ?
-                timestampToDate(fileInfo.getExpirationtime()!) : 
+                timestampToDate(fileInfo.getExpirationtime()!) :
                 null,
 
             isDeleted: fileInfo.getDeleted(),

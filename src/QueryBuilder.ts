@@ -29,7 +29,6 @@ export abstract class QueryBuilder<T> {
     protected constructor() {
     }
 
-    // TODO[2020-01-01]: https://github.com/hashgraph/hedera-sdk-java/issues/283
     public setMaxQueryPayment(amount: Hbar | Tinybar): this {
         this._maxPaymentAmount = amount instanceof Hbar ?
             amount :
@@ -38,7 +37,7 @@ export abstract class QueryBuilder<T> {
         return this;
     }
 
-    public setPaymentAmount(amount: Hbar | Tinybar): this {
+    public setQueryPayment(amount: Hbar | Tinybar): this {
         this._paymentAmount = amount instanceof Hbar ?
             amount :
             Hbar.fromTinybar(amount);
@@ -85,8 +84,6 @@ export abstract class QueryBuilder<T> {
                 .build(client)
                 .toProto());
 
-            // TODO[2020-01-01]: This needs to go through the normal backoff/retry logic
-            //       Perhaps we should have a top-level Execute abstract class like Java?
             const resp = await client._unaryCall(node.url, this._inner.clone(), this._getMethod());
 
             const respHeader = this._mapResponseHeader(resp);
@@ -122,9 +119,9 @@ export abstract class QueryBuilder<T> {
                 } else if (this._maxPaymentAmount != null || client.maxQueryPayment != null) {
                     node = client._randomNode();
 
-                    // TODO[2020-01-01]: Use `??` when we can
-                    const maxPaymentAmount: Hbar = this._maxPaymentAmount ||
-                        client.maxQueryPayment!;
+                    const maxPaymentAmount: Hbar = this._maxPaymentAmount == null ?
+                        client.maxQueryPayment! :
+                        this._maxPaymentAmount;
 
                     const actualCost = await this.getCost(client);
 
@@ -184,6 +181,7 @@ export abstract class QueryBuilder<T> {
 
     protected abstract _doLocalValidate(errors: string[]): void;
 
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     protected _shouldRetry(status: ResponseCode, response: Response): boolean {
         // By deafult, ONLY the BUSY status should be retriesd
         return status === ResponseCodeEnum.BUSY;
