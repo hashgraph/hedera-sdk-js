@@ -5,9 +5,10 @@ import { grpc } from "@improbable-eng/grpc-web";
 
 import { FileService } from "../generated/FileService_pb_service";
 import { FileCreateTransactionBody } from "../generated/FileCreate_pb";
-import { KeyList } from "../generated/BasicTypes_pb";
+import { KeyList, ShardID, RealmID } from "../generated/BasicTypes_pb";
 import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
+import { PublicKey } from "../crypto/PublicKey";
 
 export class FileCreateTransaction extends TransactionBuilder {
     private readonly _body: FileCreateTransactionBody;
@@ -31,6 +32,26 @@ export class FileCreateTransaction extends TransactionBuilder {
 
         keylist.addKeys(key._toProtoKey());
         this._body.setKeys(keylist);
+        return this;
+    }
+
+    public setRealm(realmnum: number): this {
+        const realm = new RealmID();
+        realm.setRealmnum(realmnum);
+        realm.setShardnum(this._body.hasShardid() ? this._body.getShardid()!.getShardnum() : 0);
+        this._body.setRealmid(realm);
+        return this;
+    }
+
+    public setShard(shardnum: number): this {
+        const shard = new ShardID();
+        shard.setShardnum(shardnum);
+        this._body.setShardid(shard);
+        return this;
+    }
+
+    public setNewRealmAdminKey(key: PublicKey): this {
+        this._body.setNewrealmadminkey(key._toProtoKey());
         return this;
     }
 

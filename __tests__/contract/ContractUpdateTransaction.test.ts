@@ -5,8 +5,8 @@ describe("ContractUpdateTransaction", () => {
     it("serializes and deserializes correctly; ContractUpdateTransaction", () => {
         const transaction = new ContractUpdateTransaction()
             .setContractId({ shard: 0, realm: 0, contract: 3 })
-            .setAdminkey(privateKey.publicKey)
-            .setFileId({ shard: 0, realm: 0, file: 5 })
+            .setAdminKey(privateKey.publicKey)
+            .setBytecodeFileId({ shard: 0, realm: 0, file: 5 })
             .setExpirationTime(new Date(1569375111277))
             .setProxyAccountId({ shard: 0, realm: 0, account: 3 })
             .setAutoRenewPeriod(60 * 60 * 24 * 14)

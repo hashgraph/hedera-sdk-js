@@ -67,14 +67,14 @@ export class ContractFunctionResult {
 
     public getInt64(index: number): BigNumber {
         return new BigNumber(
-            encodeHex(this.getBytes32(index).subarray(24, 32)),
+            encodeHex(this._getBytes32(index).subarray(24, 32)),
             16
         );
     }
 
     public getInt256(index: number): BigNumber {
         return new BigNumber(
-            encodeHex(this.getBytes32(index)),
+            encodeHex(this._getBytes32(index)),
             16
         );
     }
@@ -89,7 +89,7 @@ export class ContractFunctionResult {
     //
     //  NOT A STABLE API
     //
-    public getBytes32(index: number): Uint8Array {
+    public _getBytes32(index: number): Uint8Array {
         return this._bytes.subarray(
             index * 32,
             index * 32 + 32
