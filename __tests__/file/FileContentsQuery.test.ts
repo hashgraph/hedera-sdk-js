@@ -5,9 +5,9 @@ describe("FileContentsQuery", () => {
     it("serializes and deserializes correctly; FileContentsQuery", () => {
         const query = new FileContentsQuery()
             .setFileId({ shard: 0, realm: 0, file: 5 })
-            .setPayment(mockTransaction);
+            .setQueryPaymentTransaction(mockTransaction);
 
-        const tx = query.toProto().toObject();
+        const tx = query._toProto().toObject();
         expect(tx).toStrictEqual({
             contractcalllocal: undefined,
             contractgetbytecode: undefined,

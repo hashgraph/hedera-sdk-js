@@ -3,11 +3,11 @@ import { mockClient, mockTransaction } from "../MockClient";
 
 describe("ContractRecordsQuery", () => {
     it("serializes and deserializes correctly; ContractRecordsQuery", () => {
-        const transaction = new ContractRecordsQuery()
+        const query = new ContractRecordsQuery()
             .setContractId({ shard: 0, realm: 0, contract: 3 })
-            .setPayment(mockTransaction);
+            .setQueryPaymentTransaction(mockTransaction);
 
-        const tx = transaction.toProto().toObject();
+        const tx = query._toProto().toObject();
         expect(tx).toStrictEqual({
             contractcalllocal: undefined,
             contractgetbytecode: undefined,
