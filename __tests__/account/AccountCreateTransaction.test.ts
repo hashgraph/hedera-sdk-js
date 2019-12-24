@@ -14,7 +14,7 @@ describe("AccountCreateTransaction", () => {
             .setKey(privateKey.publicKey)
             .build(mockClient);
 
-        const bodybytes = "Cg4KCAjcyQcQ258JEgIYAxICGAMYgMLXLyICCHhaPwoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktzD//////////384//////////9/SgUI0MjhAw==";
+        const bodybytes = "Cg4KCAjcyQcQ258JEgIYAxICGAMYgMLXLyICCHhaQwoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktzD//////////384//////////9/SgUI0MjhA1IAWgA=";
 
         const tx = transaction.toProto().toObject();
         const expectedTx = {
@@ -25,7 +25,7 @@ describe("AccountCreateTransaction", () => {
                     {
                         pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
                         contract: "",
-                        ed25519: "Vueml5zTmYI2f9O2kcw6/zKFaIPn5WCOKD/jvhwO+EFN55yepuYa566qbD8Z274nncCi/aqVrr/M6NIu91OnAQoOCggI3MkHENufCRICGAMSAhgDGIDC1y8iAgh4Wj8KIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLcw//////////9/OP//////////f0oFCNDI4QM=",
+                        ed25519: "tmHYR8tl2wT4V1ua1W4qMvxjlltDPbBSmRBeEplpo868detuQdU9bKEG3LDG+q/o0Dwzgcrph/KLs/ATqF0ICQoOCggI3MkHENufCRICGAMSAhgDGIDC1y8iAgh4WkMKIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLcw//////////9/OP//////////f0oFCNDI4QNSAFoA",
                         rsa3072: "",
                         ecdsa384: ""
                     }
@@ -81,8 +81,13 @@ describe("AccountCreateTransaction", () => {
                 autorenewperiod: { seconds: 7890000 },
                 newrealmadminkey: undefined,
                 proxyaccountid: undefined,
-                realmid: undefined,
-                shardid: undefined
+                shardid: {
+                    shardnum: 0
+                },
+                realmid: {
+                    shardnum: 0,
+                    realmnum: 0,
+                },
             },
             cryptodelete: undefined,
             cryptodeleteclaim: undefined,

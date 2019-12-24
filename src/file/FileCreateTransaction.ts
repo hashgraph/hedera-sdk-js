@@ -9,6 +9,7 @@ import { KeyList, ShardID, RealmID } from "../generated/BasicTypes_pb";
 import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 import { PublicKey } from "../crypto/PublicKey";
+import { TransactionId, TransactionIdLike } from "../TransactionId";
 
 export class FileCreateTransaction extends TransactionBuilder {
     private readonly _body: FileCreateTransactionBody;
@@ -18,6 +19,20 @@ export class FileCreateTransaction extends TransactionBuilder {
         this._body = new FileCreateTransactionBody();
         this.setExpirationTime(Date.now() + 7890000000);
         this._inner.setFilecreate(this._body);
+    }
+
+    public setTransactionId(txLike: TransactionIdLike): this {
+        const txId = new TransactionId(txLike);
+
+        if (!this._body.hasShardid()) {
+            this.setShardId(txId.accountId.shard);
+        }
+
+        if (!this._body.hasRealmid()) {
+            this.setRealmId(txId.accountId.realm);
+        }
+
+        return super.setTransactionId(txId);
     }
 
     public setExpirationTime(date: number | Date): this {
@@ -35,7 +50,7 @@ export class FileCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setRealm(realmnum: number): this {
+    public setRealmId(realmnum: number): this {
         const realm = new RealmID();
         realm.setRealmnum(realmnum);
         realm.setShardnum(this._body.hasShardid() ? this._body.getShardid()!.getShardnum() : 0);
@@ -43,7 +58,7 @@ export class FileCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setShard(shardnum: number): this {
+    public setShardId(shardnum: number): this {
         const shard = new ShardID();
         shard.setShardnum(shardnum);
         this._body.setShardid(shard);
