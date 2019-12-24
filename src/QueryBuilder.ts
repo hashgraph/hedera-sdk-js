@@ -49,7 +49,7 @@ export abstract class QueryBuilder<T> {
      * Set a manually created and signed
      * `CryptoTransferTransaction` as the query payment.
      */
-    public setPayment(transaction: import("./Transaction").Transaction): this {
+    public setQueryPaymentTransaction(transaction: import("./Transaction").Transaction): this {
         this._getHeader().setPayment(transaction.toProto());
 
         return this;
@@ -167,7 +167,7 @@ export abstract class QueryBuilder<T> {
         });
     }
 
-    public toProto(): Query {
+    public _toProto(): Query {
         return this._inner;
     }
 
@@ -221,7 +221,7 @@ export abstract class QueryBuilder<T> {
             .setMaxTransactionFee(Hbar.of(1))
             .build(client);
 
-        this.setPayment(paymentTx);
+        this.setQueryPaymentTransaction(paymentTx);
 
         return this;
     }

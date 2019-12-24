@@ -144,7 +144,7 @@ export class ContractFunctionParams {
     /**
      * NOT A STABLE API
      */
-    public _build(name: string): Uint8Array {
+    public _build(name: string | null): Uint8Array {
         const length = this._arguments.length === 0 ?
             0 :
             this._arguments.length * 32 + this._arguments

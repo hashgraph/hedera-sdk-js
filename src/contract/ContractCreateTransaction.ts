@@ -12,6 +12,7 @@ import { Hbar } from "../Hbar";
 import { PublicKey } from "../crypto/PublicKey";
 import { FileId, FileIdLike } from "../file/FileId";
 import { AccountId, AccountIdLike } from "../account/AccountId";
+import { ContractFunctionParams } from "./ContractFunctionParams";
 
 export class ContractCreateTransaction extends TransactionBuilder {
     private readonly _body: ContractCreateTransactionBody;
@@ -52,8 +53,8 @@ export class ContractCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setConstructorParams(constructorParams: Uint8Array | string): this {
-        this._body.setConstructorparameters(constructorParams);
+    public setConstructorParams(constructorParams: ContractFunctionParams): this {
+        this._body.setConstructorparameters(constructorParams._build(null));
         return this;
     }
 
