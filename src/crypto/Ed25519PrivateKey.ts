@@ -18,7 +18,7 @@ export class Ed25519PrivateKey {
         }
 
         this._keyData = privateKey;
-        this.publicKey = new Ed25519PublicKey(publicKey);
+        this.publicKey = Ed25519PublicKey.fromBytes(publicKey);
     }
 
     /**

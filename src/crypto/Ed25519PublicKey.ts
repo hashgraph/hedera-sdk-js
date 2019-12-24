@@ -7,12 +7,16 @@ export class Ed25519PublicKey implements PublicKey {
     private readonly _keyData: Uint8Array;
     private _asStringRaw?: string;
 
-    public constructor(keyData: Uint8Array) {
+    private constructor(keyData: Uint8Array) {
         if (keyData.length !== nacl.sign.publicKeyLength) {
             throw new Error("invalid public key");
         }
 
         this._keyData = keyData;
+    }
+
+    public static fromBytes(keyData: Uint8Array): Ed25519PublicKey {
+        return new Ed25519PublicKey(keyData);
     }
 
     public static fromString(keyStr: string): Ed25519PublicKey {

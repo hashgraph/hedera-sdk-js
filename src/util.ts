@@ -77,7 +77,7 @@ export function normalizeEntityId<Kind extends EntityKind>(
 }
 
 export function getSdkKeys(keylist: KeyList): Ed25519PublicKey[] {
-    return keylist.getKeysList().map((key) => new Ed25519PublicKey(key.getEd25519() as Uint8Array));
+    return keylist.getKeysList().map((key) => Ed25519PublicKey.fromBytes(key.getEd25519_asU8()));
 }
 
 export function setTimeoutAwaitable(timeoutMs: number): Promise<null> {
