@@ -10,6 +10,8 @@ import { Tinybar, tinybarToString } from "../Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import BigNumber from "bignumber.js";
 import { PublicKey } from "../crypto/PublicKey";
+import { ShardID, RealmID } from "../generated/BasicTypes_pb";
+import { AccountId, AccountIdLike } from "./AccountId";
 
 export class AccountCreateTransaction extends TransactionBuilder {
     private _body: CryptoCreateTransactionBody;
@@ -51,6 +53,36 @@ export class AccountCreateTransaction extends TransactionBuilder {
 
     public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
         this._body.setSendrecordthreshold(tinybarToString(threshold));
+        return this;
+    }
+
+    public setReceiverSignatureRequired(required: boolean): this {
+        this._body.setReceiversigrequired(required);
+        return this;
+    }
+
+    public setRealm(realmnum: number): this {
+        const realm = new RealmID();
+        realm.setRealmnum(realmnum);
+        realm.setShardnum(this._body.hasShardid() ? this._body.getShardid()!.getShardnum() : 0);
+        this._body.setRealmid(realm);
+        return this;
+    }
+
+    public setShard(shardnum: number): this {
+        const shard = new ShardID();
+        shard.setShardnum(shardnum);
+        this._body.setShardid(shard);
+        return this;
+    }
+
+    public setNewRealmAdminKey(key: PublicKey): this {
+        this._body.setNewrealmadminkey(key._toProtoKey());
+        return this;
+    }
+
+    public setProxyAccountId(accountId: AccountIdLike): this {
+        this._body.setProxyaccountid(new AccountId(accountId)._toProto());
         return this;
     }
 

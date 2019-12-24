@@ -10,6 +10,7 @@ import { Tinybar, tinybarToUInt64Value } from "../Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { PublicKey } from "../crypto/PublicKey";
 import { AccountId, AccountIdLike } from "./AccountId";
+import { dateToTimestamp, timestampToProto } from "../Timestamp";
 
 export class AccountUpdateTransaction extends TransactionBuilder {
     private _body: CryptoUpdateTransactionBody;
@@ -28,6 +29,11 @@ export class AccountUpdateTransaction extends TransactionBuilder {
 
     public setKey(publicKey: PublicKey): this {
         this._body.setKey(publicKey._toProtoKey());
+        return this;
+    }
+
+    public setExpirationTime(date: number | Date): this {
+        this._body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
         return this;
     }
 

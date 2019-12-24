@@ -17,8 +17,13 @@ export class AccountDeleteTransaction extends TransactionBuilder {
         this._inner.setCryptodelete(body);
     }
 
-    public setAccountId(accountId: AccountIdLike): this {
+    public setDeleteAccountId(accountId: AccountIdLike): this {
         this._body.setDeleteaccountid(new AccountId(accountId)._toProto());
+        return this;
+    }
+
+    public setTransferAccountId(accountId: AccountIdLike): this {
+        this._body.setTransferaccountid(new AccountId(accountId)._toProto());
         return this;
     }
 
