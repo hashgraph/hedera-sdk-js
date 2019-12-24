@@ -1,5 +1,5 @@
 import { receiptToSdk, TransactionReceipt } from "./TransactionReceipt";
-import { ContractFunctionResult, contractFunctionResultToSdk } from "./contract/ContractFunctionResult";
+import { ContractFunctionResult } from "./contract/ContractFunctionResult";
 import { TransactionRecord as ProtoTransactionRecord } from "./generated/TransactionRecord_pb";
 import { TransactionId } from "./TransactionId";
 import { timestampToDate } from "./Timestamp";
@@ -30,8 +30,8 @@ export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionR
             transactionId: TransactionId._fromProto(record.getTransactionid()!),
             memo: record.getMemo(),
             transactionFee: record.getTransactionfee(),
-            contractCallResult: callResult && contractFunctionResultToSdk(callResult),
-            contractCreateResult: createResult && contractFunctionResultToSdk(createResult),
+            contractCallResult: callResult && new ContractFunctionResult(callResult),
+            contractCreateResult: createResult && new ContractFunctionResult(createResult),
             transferList: record.getTransferlist() && transferListToSdk(record.getTransferlist()!)
         };
     });

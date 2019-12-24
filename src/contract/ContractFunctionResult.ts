@@ -1,36 +1,30 @@
 import { ContractLogInfo, contractLogInfoListToSdk } from "./ContractLogInfo";
-import { ContractFunctionResult as ProtoContractFunctionResult } from "../generated/ContractCallLocal_pb";
-import { ContractId, ContractIdLike } from "./ContractId";
+import * as pb from "../generated/ContractCallLocal_pb";
+import { ContractId } from "./ContractId";
 import BigNumber from "bignumber.js";
 import { encodeHex } from "../crypto/util";
 
 export class ContractFunctionResult {
     public readonly contractId: ContractId;
-    private readonly contractCallResult: Uint8Array;
     public readonly errorMessage: string;
     public readonly bloom: Uint8Array;
     public readonly gasUsed: number;
     public readonly logs: ContractLogInfo[];
 
+    private readonly _bytes: Uint8Array;
+
     // Constructor isn't part of the stable API
-    public constructor(
-        contractId: ContractIdLike,
-        contractCallResult: Uint8Array,
-        errorMessage: string,
-        bloom: Uint8Array,
-        gasUsed: number,
-        logs: ContractLogInfo[]
-    ) {
-        this.contractId = new ContractId(contractId);
-        this.contractCallResult = contractCallResult;
-        this.errorMessage = errorMessage;
-        this.bloom = bloom;
-        this.gasUsed = gasUsed;
-        this.logs = logs;
+    public constructor(result: pb.ContractFunctionResult) {
+        this._bytes = result.getContractcallresult_asU8();
+        this.contractId = ContractId._fromProto(result.getContractid()!);
+        this.errorMessage = result.getErrormessage();
+        this.bloom = result.getBloom_asU8();
+        this.gasUsed = result.getGasused();
+        this.logs = contractLogInfoListToSdk(result.getLoginfoList());
     }
 
     public asBytes(): Uint8Array {
-        return this.contractCallResult;
+        return this._bytes;
     }
 
     public getString(index: number): string {
@@ -44,11 +38,11 @@ export class ContractFunctionResult {
         // Arrays in solidity cannot be longer than 1024:
         // https://solidity.readthedocs.io/en/v0.4.21/introduction-to-smart-contracts.html
         const len = this.getInt32(index);
-        return this.contractCallResult.subarray((index + 1) * 32, (index + 1) * 32 + len);
+        return this._bytes.subarray((index + 1) * 32, (index + 1) * 32 + len);
     }
 
     public getBool(index: number): boolean {
-        return this.contractCallResult[ index * 32 + 31 ] !== 0;
+        return this._bytes[ index * 32 + 31 ] !== 0;
     }
 
     public getInt32(index: number): number {
@@ -56,9 +50,9 @@ export class ContractFunctionResult {
         // Using DataView instead of Uint32Array because the latter interprets
         // using platform endianness which is little-endian on x86
         return new DataView(
-            this.contractCallResult.buffer,
-            this.contractCallResult.byteOffset,
-            this.contractCallResult.byteLength
+            this._bytes.buffer,
+            this._bytes.byteOffset,
+            this._bytes.byteLength
         ).getInt32(index * 32 + 28);
     }
 
@@ -77,28 +71,16 @@ export class ContractFunctionResult {
     }
 
     public getAddress(index: number): string {
-        return Buffer.from(this.contractCallResult.subarray(
+        return Buffer.from(this._bytes.subarray(
             index * 32 + 12,
             index * 32 + 32
         )).toString("hex");
     }
 
     public getBytes32(index: number): Uint8Array {
-        return this.contractCallResult.subarray(
+        return this._bytes.subarray(
             index * 32,
             index * 32 + 32
         );
     }
-}
-
-/* eslint-disable-next-line max-len */
-export function contractFunctionResultToSdk(result: ProtoContractFunctionResult): ContractFunctionResult {
-    return new ContractFunctionResult(
-        ContractId._fromProto(result.getContractid()!),
-        result.getContractcallresult_asU8(),
-        result.getErrormessage(),
-        result.getBloom_asU8(),
-        result.getGasused(),
-        contractLogInfoListToSdk(result.getLoginfoList())
-    );
 }

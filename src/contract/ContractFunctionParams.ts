@@ -98,7 +98,7 @@ function stringToSoldityType(ty: string): SolidityType {
     };
 }
 
-export class FunctionSelector {
+class FunctionSelector {
     private _func?: string;
     private _needsComma = false;
     public argumentTypes: SolidityType[] = [];
@@ -155,7 +155,7 @@ export class FunctionSelector {
     }
 }
 
-export class ContractFunctionParameters {
+export class ContractFunctionParams {
     private readonly _func: FunctionSelector;
     private _currentArgument = 0;
 
@@ -187,7 +187,7 @@ export class ContractFunctionParameters {
         return this._addParam(param, true);
     }
 
-    public addByteArray(byteArray: Uint8Array[]): this {
+    public addBytesArray(byteArray: Uint8Array[]): this {
         this._conditionallyAddType({ ty: ArgumentType.bytes, array: true });
 
         return this._addParam(byteArray, true);
@@ -272,24 +272,20 @@ export class ContractFunctionParameters {
         }
     }
 
-    private static _validateBitWidth(bitwidth: number): void {
-        if (bitwidth > 256 || bitwidth % 8 !== 0) {
-            throw new Error("bitwidth must be less than or equal to 256 and a multiple of 8");
-        }
-    }
-
-    public addFunction(address: string, methodSignature: string | number): this {
+    public addFunction(address: string, methodId: number): this;
+    public addFunction(address: string, methodSignature: string): this;
+    public addFunction(address: string, methodSignatureOrId: string | number): this {
         const addressParam = Buffer.from(address, "hex");
 
         // If methodSignature is a number representing the hash
         const sig = new Uint8Array(4);
         const sigView = new DataView(sig);
-        if (typeof methodSignature === "number") {
-            sigView.setInt32(0, methodSignature as number);
+        if (typeof methodSignatureOrId === "number") {
+            sigView.setInt32(0, methodSignatureOrId as number);
         }
 
-        const functionSelector = typeof methodSignature === "string" ?
-            FunctionSelector.identifier(methodSignature) :
+        const functionSelector = typeof methodSignatureOrId === "string" ?
+            FunctionSelector.identifier(methodSignatureOrId) :
             sig;
 
         if (addressParam.length !== 20) {
@@ -462,7 +458,7 @@ function argumentToBytes(
             // eslint-disable-next-line no-case-declarations
             const par: Uint8Array = param instanceof Uint8Array ?
                 param :
-                Buffer.from(param as string, "utf8");
+                Uint8Array.from(new TextEncoder().encode(param as string));
 
             // Resize value to a 32 byte boundary if needed
             if (Math.floor(par.length / 32) >= 0 && Math.floor(par.length % 32) !== 0) {

@@ -1,7 +1,7 @@
-import { ContractFunctionParameters, FunctionSelector } from "../../src/exports";
+import { ContractFunctionParams } from "../../src/exports";
 import BigNumber from "bignumber.js";
 
-describe("ContractFunctionParameters", () => {
+describe("ContractFunctionParams", () => {
     const int32 = 16909060;
 
     const bytes = new Uint8Array(10);
@@ -20,7 +20,7 @@ describe("ContractFunctionParameters", () => {
         bytes2[ 0 ] = 255;
         bytes2[ 31 ] = 255;
 
-        const params = new ContractFunctionParameters()
+        const params = new ContractFunctionParams()
             .setFunction("f")
             .addInt32(int32)
             .addBytes(bytes)
@@ -57,7 +57,7 @@ describe("ContractFunctionParameters", () => {
     });
 
     it("encodes correctly using generic addParam", () => {
-        const params = new ContractFunctionParameters()
+        const params = new ContractFunctionParams()
             .setFunction("f")
             .addInt32(int32)
             .addInt32(int32)

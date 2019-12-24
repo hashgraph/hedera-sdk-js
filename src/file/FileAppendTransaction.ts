@@ -23,8 +23,8 @@ export class FileAppendTransaction extends TransactionBuilder {
 
     public setContents(contents: Uint8Array | string): this {
         const bytes = contents instanceof Uint8Array ?
-        contents as Uint8Array :
-            Uint8Array.from(Buffer.from(contents as string, "utf8"));
+            contents as Uint8Array :
+            Uint8Array.from(new TextEncoder().encode(contents as string));
 
         this._body.setContents(bytes);
         return this;

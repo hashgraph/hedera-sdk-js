@@ -68,4 +68,4 @@ export { TransactionId } from "./TransactionId";
 export { TransactionReceipt } from "./TransactionReceipt";
 export { TransactionRecord } from "./TransactionRecord";
 
-export { ContractFunctionParameters, FunctionSelector } from "./contract/ContractFunctionParameters";
+export { ContractFunctionParams } from "./contract/ContractFunctionParams";
