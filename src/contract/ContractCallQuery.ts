@@ -5,9 +5,9 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { Response } from "../generated/Response_pb";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 import { ContractId, ContractIdLike } from "./ContractId";
-import { ContractFunctionResult, contractFunctionResultToSdk } from "./ContractFunctionResult";
+import { ContractFunctionResult } from "./ContractFunctionResult";
 import { ContractCallLocalQuery } from "../generated/ContractCallLocal_pb";
-import { CallParams } from "./CallParams";
+import { ContractFunctionParams } from "./ContractFunctionParams";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
@@ -27,7 +27,7 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
         return this;
     }
 
-    public setFunctionParameters(params: CallParams | Uint8Array): this {
+    public setFunctionParameters(params: ContractFunctionParams | Uint8Array): this {
         if (params instanceof Uint8Array) {
             this._builder.setFunctionparameters(params);
         } else {
@@ -55,6 +55,6 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
     }
 
     protected _mapResponse(response: Response): ContractFunctionResult {
-        return contractFunctionResultToSdk(response.getContractcalllocal()!.getFunctionresult()!);
+        return new ContractFunctionResult(response.getContractcalllocal()!.getFunctionresult()!);
     }
 }

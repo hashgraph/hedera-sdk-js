@@ -19,13 +19,13 @@ describe("FileUpdateTransaction", () => {
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({
             body: undefined,
-            bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeJoBSQoCGAUSCwjv7qwHEMD71PMBGiQKIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLciEE4YrIrLYXn4pXnKJ7Xp7bA=",
+            bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeJoBUgoCGAUSCwjv7qwHEMD71PMBGiQKIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLciGVRoaXMgaXMgdGhlIGZpbGUgY29udGVudHM=",
             sigmap: {
                 sigpairList: [
                     {
                         contract: "",
                         ecdsa384: "",
-                        ed25519: "DHcTKXIBZbXzY2kkuAQrMFVF8Y3mqIo93uqYKB+34ah8EDOjeCwuR87GQ7ycpRbjWmT0IPeTK4D79eIoz1dyDgoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiaAUkKAhgFEgsI7+6sBxDA+9TzARokCiISIODI7CdYpYef+sImoTwMUWt5nnLjUUGg3YKPlNN5iKS3IhBOGKyKy2F5+KV5yie16e2w",
+                        ed25519: "o6ZiLnUGqONHANKwEsCgYpPcrMAsLhvnWPx9Yzmb4RkzLSMI45jSYcHQaTnTcAw3N85oqhGhlQ/9+0CSwwkFCAoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiaAVIKAhgFEgsI7+6sBxDA+9TzARokCiISIODI7CdYpYef+sImoTwMUWt5nnLjUUGg3YKPlNN5iKS3IhlUaGlzIGlzIHRoZSBmaWxlIGNvbnRlbnRz",
                         pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
                         rsa3072: ""
                     }

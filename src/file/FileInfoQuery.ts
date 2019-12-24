@@ -8,15 +8,15 @@ import { Response } from "../generated/Response_pb";
 import { getSdkKeys } from "../util";
 import { FileId, FileIdLike } from "../file/FileId";
 import { timestampToDate } from "../Timestamp";
-import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
+import { PublicKey } from "../crypto/PublicKey";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export interface FileInfo {
-    fileId: FileIdLike;
+    fileId: FileId;
     size: number;
     expirationTime: Date | null;
-    deleted: boolean;
-    keys: Ed25519PublicKey[];
+    isDeleted: boolean;
+    keys: PublicKey[];
 }
 
 export class FileInfoQuery extends QueryBuilder<FileInfo> {
@@ -65,7 +65,7 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
                 null :
                 timestampToDate(fileInfo.getExpirationtime()!),
 
-            deleted: fileInfo.getDeleted(),
+            isDeleted: fileInfo.getDeleted(),
             keys: getSdkKeys(fileInfo.getKeys()!)
         };
     }

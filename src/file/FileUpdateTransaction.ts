@@ -34,7 +34,11 @@ export class FileUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setContents(bytes: Uint8Array): this {
+    public setContents(contents: Uint8Array | string): this {
+        const bytes = contents instanceof Uint8Array ?
+            contents as Uint8Array :
+            Uint8Array.from(new TextEncoder().encode(contents as string));
+
         this._body.setContents(bytes);
         return this;
     }
