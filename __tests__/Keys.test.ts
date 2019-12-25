@@ -129,7 +129,7 @@ describe("Ed25519PrivateKey", () => {
 
 describe("Ed25519PublicKey", () => {
     it("toString() produces correctly encoded string", () => {
-        const publicKey = new Ed25519PublicKey(pubKeyBytes);
+        const publicKey = Ed25519PublicKey.fromBytes(pubKeyBytes);
         expect(publicKey.toString()).toStrictEqual(pubKeyStr);
         expect(publicKey.toString(true)).toStrictEqual(rawPubKeyStr);
     });
@@ -168,7 +168,7 @@ describe("ThresholdKey", () => {
 describe("KeyList", () => {
     it("serializes correctly", async() => {
         const key1 = Ed25519PublicKey.fromString(pubKeyStr);
-        const key2 = new Ed25519PublicKey(iosWalletPubKeyBytes);
+        const key2 = Ed25519PublicKey.fromBytes(iosWalletPubKeyBytes);
 
         const keyList = new KeyList();
         keyList.add(key1);
