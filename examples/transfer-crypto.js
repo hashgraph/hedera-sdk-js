@@ -16,11 +16,14 @@ async function main() {
         }
     });
 
-    await new CryptoTransferTransaction()
-        .addSender(operatorAccount, 10)
-        .addRecipient("0.0.3", 10)
+    const receipt = await (await new CryptoTransferTransaction()
+        .addSender(operatorAccount, 1)
+        .addRecipient("0.0.3", 1)
         .setMemo("sdk example")
-        .execute(client);
+        .execute(client))
+        .getReceipt(client);
+
+    console.log(receipt);
 }
 
 main();

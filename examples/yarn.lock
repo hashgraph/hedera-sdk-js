@@ -3,22 +3,22 @@
 
 
 "@hashgraph/sdk@file:..":
-  version "0.7.2"
+  version "1.0.0-beta.1"
   dependencies:
-    "@improbable-eng/grpc-web" "^0.11.0"
+    "@improbable-eng/grpc-web" "^0.12.0"
     "@types/google-protobuf" "^3.7.2"
     bignumber.js "^9.0.0"
     bip39 "^3.0.2"
-    google-protobuf "^3.11.1"
+    google-protobuf "^3.11.2"
     grpc "^1.24.2"
     js-sha3 "^0.8.0"
     tweetnacl "^1.0.1"
     utf8 "^3.0.0"
 
-"@improbable-eng/grpc-web@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@improbable-eng/grpc-web/-/grpc-web-0.11.0.tgz#c9d4097b4a947384e3dc0234299d910668a6e7ad"
-  integrity sha512-SS2YP6iHyZ7TSSuCShnSo9xJyUkNZHEhEPJpTSUcNoULe1LuLEk52OKHY+VW9XB0qXstejpHgZq2Hx+69PThiw==
+"@improbable-eng/grpc-web@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@improbable-eng/grpc-web/-/grpc-web-0.12.0.tgz#9b10a7edf2a1d7672f8997e34a60e7b70e49738f"
+  integrity sha512-uJjgMPngreRTYPBuo6gswMj1gK39Wbqre/RgE0XnSDXJRg6ST7ZhuS53dFE6Vc2CX4jxgl+cO+0B3op8LA4Q0Q==
   dependencies:
     browser-headers "^0.4.0"
 
@@ -266,10 +266,10 @@ glob@^7.0.5, glob@^7.1.3:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-google-protobuf@^3.11.1:
-  version "3.11.1"
-  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.11.1.tgz#c1319e5fc8579394758c8a41699f0a2e3e950c38"
-  integrity sha512-1fdyssLSa7Dip+MDdluLl0uK+2rspgU1PrbdPJKt7hywqSl3+R27TkLYKuBn9dvOyr0VQ0cliQWlfMheW5WKqA==
+google-protobuf@^3.11.2:
+  version "3.11.2"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.11.2.tgz#43272974521a5cec35a21f62730cf517a5a8e38c"
+  integrity sha512-T4fin7lcYLUPj2ChUZ4DvfuuHtg3xi1621qeRZt2J7SvOQusOzq+sDT4vbotWTCjUXJoR36CA016LlhtPy80uQ==
 
 grpc@^1.24.2:
   version "1.24.2"
