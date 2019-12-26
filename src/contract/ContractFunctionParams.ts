@@ -149,7 +149,7 @@ export class ContractFunctionParams {
         const nameOffset = includeId ? 4 : 0;
 
         const length = this._arguments.length === 0 ?
-            0 :
+            nameOffset :
             this._arguments.length * 32 + this._arguments
                 .map((arg) => arg.dynamic ? arg.value.length : 0)
                 .reduce((sum, value) => sum + value) + nameOffset;
