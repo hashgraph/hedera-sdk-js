@@ -117,16 +117,7 @@ export abstract class TransactionBuilder {
         const protoTx = new Transaction_();
         protoTx.setBodybytes(this._inner.serializeBinary());
 
-        const txn = new Transaction(this._node, protoTx, this._inner, this._method);
-
-        // If client is supplied make sure to sign transaction
-        if (client) {
-            if (client._getOperatorKey() && client._getOperatorSigner()) {
-                txn.signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
-            }
-        }
-
-        return txn;
+        return new Transaction(this._node, protoTx, this._inner, this._method);
     }
 
     public execute(client: BaseClient): Promise<TransactionId> {

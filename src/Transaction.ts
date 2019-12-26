@@ -123,6 +123,11 @@ export class Transaction {
     }
 
     public async execute(client: BaseClient): Promise<TransactionId> {
+        // If client is supplied make sure to sign transaction if we have not already
+        if (client._getOperatorKey() && client._getOperatorSigner()) {
+            await this.signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
+        }
+
         const node = client._getNode(this._node);
         const validUntilMs = Date.now() + (this._validDurationSeconds * 1000);
 
