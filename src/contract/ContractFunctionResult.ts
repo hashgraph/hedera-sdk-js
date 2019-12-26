@@ -5,7 +5,7 @@ import BigNumber from "bignumber.js";
 import { encodeHex } from "../crypto/util";
 
 export class ContractFunctionResult {
-    public readonly contractId: ContractId;
+    public readonly contractId: ContractId | null;
     public readonly errorMessage: string;
     public readonly bloom: Uint8Array;
     public readonly gasUsed: number;
@@ -17,7 +17,11 @@ export class ContractFunctionResult {
     public constructor(result: pb.ContractFunctionResult | Uint8Array) {
         if (result instanceof pb.ContractFunctionResult) {
             this._bytes = result.getContractcallresult_asU8();
-            this.contractId = ContractId._fromProto(result.getContractid()!);
+
+            this.contractId = result.hasContractid() ?
+                ContractId._fromProto(result.getContractid()!) :
+                null;
+
             this.errorMessage = result.getErrormessage();
             this.bloom = result.getBloom_asU8();
             this.gasUsed = result.getGasused();
