@@ -48,12 +48,9 @@ export class FileUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected _doValidate(errors: string[]): void {
-        const files = this._body.getKeys();
-
-        if (files == null) {
-            errors.push("FileUpdateTransaction must have a file set");
-        }
+        // No validation
     }
 
     protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
