@@ -29,8 +29,18 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
         return this;
     }
 
-    public setFunction(name: string, params: ContractFunctionParams): this {
-        this._builder.setFunctionparameters(params._build(name));
+    public setFunction(name: string, params: ContractFunctionParams | null): this {
+        this._builder.setFunctionparameters((params ?? new ContractFunctionParams())._build(name));
+        return this;
+    }
+
+    public setGas(gas: number): this {
+        this._builder.setGas(gas);
+        return this;
+    }
+
+    public setMaxResultSize(size: number): this {
+        this._builder.setMaxresultsize(size);
         return this;
     }
 
