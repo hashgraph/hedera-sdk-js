@@ -70,7 +70,9 @@ async function main() {
     console.log("call gas used:", callResult.gasUsed);
     console.log("message:", callResult.getString(0));
 
+    // eslint-disable-next-line unicorn/expiring-todo-comments
     // TODO: Update the message
+    // eslint-disable-next-line unicorn/expiring-todo-comments
     // TODO: Set a new message
 }
 
