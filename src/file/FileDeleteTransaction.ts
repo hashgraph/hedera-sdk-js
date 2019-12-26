@@ -25,7 +25,7 @@ export class FileDeleteTransaction extends TransactionBuilder {
         const fileId = this._body.getFileid();
 
         if (fileId == null) {
-            errors.push("FileDeleteTransaction must have a file set");
+            errors.push("FileDeleteTransaction must have a file id set");
         }
     }
 
