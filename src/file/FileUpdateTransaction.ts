@@ -9,6 +9,7 @@ import { FileUpdateTransactionBody } from "../generated/FileUpdate_pb";
 import { FileId, FileIdLike } from "../file/FileId";
 import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { PublicKey } from "../crypto/PublicKey";
+import { utf8encode } from "../util";
 
 export class FileUpdateTransaction extends TransactionBuilder {
     private readonly _body: FileUpdateTransactionBody;
@@ -37,7 +38,7 @@ export class FileUpdateTransaction extends TransactionBuilder {
     public setContents(contents: Uint8Array | string): this {
         const bytes = contents instanceof Uint8Array ?
             contents as Uint8Array :
-            Uint8Array.from(new TextEncoder().encode(contents as string));
+            utf8encode(contents as string);
 
         this._body.setContents(bytes);
         return this;

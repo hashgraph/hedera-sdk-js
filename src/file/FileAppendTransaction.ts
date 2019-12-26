@@ -6,6 +6,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { FileService } from "../generated/FileService_pb_service";
 import { FileAppendTransactionBody } from "../generated/FileAppend_pb";
 import { FileId, FileIdLike } from "../file/FileId";
+import { utf8encode } from "../util";
 
 export class FileAppendTransaction extends TransactionBuilder {
     private readonly _body: FileAppendTransactionBody;
@@ -24,7 +25,7 @@ export class FileAppendTransaction extends TransactionBuilder {
     public setContents(contents: Uint8Array | string): this {
         const bytes = contents instanceof Uint8Array ?
             contents as Uint8Array :
-            Uint8Array.from(new TextEncoder().encode(contents as string));
+            utf8encode(contents as string);
 
         this._body.setContents(bytes);
         return this;

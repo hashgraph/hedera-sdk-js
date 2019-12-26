@@ -10,6 +10,7 @@ import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 import { PublicKey } from "../crypto/PublicKey";
 import { TransactionId, TransactionIdLike } from "../TransactionId";
+import { utf8encode } from "../util";
 
 export class FileCreateTransaction extends TransactionBuilder {
     private readonly _body: FileCreateTransactionBody;
@@ -73,7 +74,7 @@ export class FileCreateTransaction extends TransactionBuilder {
     public setContents(contents: Uint8Array | string): this {
         const bytes = contents instanceof Uint8Array ?
             contents as Uint8Array :
-            Uint8Array.from(new TextEncoder().encode(contents as string));
+            utf8encode(contents as string);
 
         this._body.setContents(bytes);
         return this;

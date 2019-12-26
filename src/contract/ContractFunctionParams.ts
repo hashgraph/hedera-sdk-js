@@ -1,5 +1,6 @@
 import BigNumber from "bignumber.js";
 import { ContractFunctionSelector, ArgumentType, SolidityType } from "./ContractFunctionSelector";
+import { utf8encode } from "../util";
 
 interface Argument {
     dynamic: boolean;
@@ -281,7 +282,7 @@ function argumentToBytes(
             // eslint-disable-next-line no-case-declarations
             const par: Uint8Array = param instanceof Uint8Array ?
                 param :
-                Uint8Array.from(new TextEncoder().encode(param as string));
+                utf8encode(param as string);
 
             // Resize value to a 32 byte boundary if needed
             if (Math.floor(par.length / 32) >= 0 && Math.floor(par.length % 32) !== 0) {
