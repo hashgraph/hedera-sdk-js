@@ -32,4 +32,5 @@ export const mockTransaction = new CryptoTransferTransaction()
         validStartSeconds: 124124,
         validStartNanos: 151515
     })
-    .build(mockClient);
+    .build(mockClient)
+    .sign(privateKey);

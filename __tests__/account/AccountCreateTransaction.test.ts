@@ -1,6 +1,7 @@
 import { AccountCreateTransaction, Hbar } from "../../src/exports";
 import { mockClient, privateKey } from "../MockClient";
 import { TransactionBody } from "../../src/generated/TransactionBody_pb";
+import {transcode} from "buffer";
 
 describe("AccountCreateTransaction", () => {
     it("serializes correctly", () => {
@@ -12,7 +13,8 @@ describe("AccountCreateTransaction", () => {
                 validStartNanos: 151515
             })
             .setKey(privateKey.publicKey)
-            .build(mockClient);
+            .build(mockClient)
+            .sign(privateKey);
 
         const bodybytes = "Cg4KCAjcyQcQ258JEgIYAxICGAMYgMLXLyICCHhaQwoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktzD//////////384//////////9/SgUI0MjhA1IAWgA=";
 

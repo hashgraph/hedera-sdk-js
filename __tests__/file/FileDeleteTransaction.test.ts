@@ -1,5 +1,5 @@
 import { FileDeleteTransaction } from "../../src/exports";
-import { mockClient } from "../MockClient";
+import {mockClient, privateKey} from "../MockClient";
 
 describe("FileDeleteTransaction", () => {
     it("serializes and deserializes correctly; FileDeleteTransaction", () => {
@@ -11,7 +11,8 @@ describe("FileDeleteTransaction", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .build(mockClient);
+            .build(mockClient)
+            .sign(privateKey);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({

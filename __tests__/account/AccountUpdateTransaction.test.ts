@@ -14,7 +14,8 @@ describe("AccountUpdateTransaction", () => {
             .setAccountId({ account: 3 })
             .setKey(privateKey.publicKey)
             .setMaxTransactionFee(Hbar.of(1))
-            .build(mockClient);
+            .build(mockClient)
+            .sign(privateKey);
 
         const bodybytes = "Cg4KCAjcyQcQ258JEgIYAxICGAMYgMLXLyICCHh6KBICGAMaIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=";
 

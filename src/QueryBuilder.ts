@@ -214,12 +214,13 @@ export abstract class QueryBuilder<T> {
         // HACK: Async import because otherwise there would a cycle in the imports which breaks everything
         const { CryptoTransferTransaction } = await import("./account/CryptoTransferTransaction");
 
-        const paymentTx = new CryptoTransferTransaction()
+        const paymentTx = await new CryptoTransferTransaction()
             .setNodeAccountId(node.id)
             .addRecipient(node.id, amount)
             .addSender(client._getOperator()!.account, amount)
             .setMaxTransactionFee(Hbar.of(1))
-            .build(client);
+            .build(client)
+            .signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
 
         this.setQueryPaymentTransaction(paymentTx);
 

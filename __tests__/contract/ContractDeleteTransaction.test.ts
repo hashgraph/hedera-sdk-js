@@ -11,7 +11,8 @@ describe("ContractDeleteTransaction", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
-            .build(mockClient);
+            .build(mockClient)
+            .sign(privateKey);
 
         const tx = transaction.toProto().toObject();
         expect(tx).toStrictEqual({
