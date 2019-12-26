@@ -28,7 +28,7 @@ export class ContractExecuteTransaction extends TransactionBuilder {
     }
 
     public setFunction(name: string, params: ContractFunctionParams): this {
-        this._body.setFunctionparameters(params._build(name));
+        this._body.setFunctionparameters((params ?? new ContractFunctionParams())._build(name));
         return this;
     }
 
