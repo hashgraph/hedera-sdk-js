@@ -23,6 +23,9 @@ export class ContractCreateTransaction extends TransactionBuilder {
         super();
         this._body = new ContractCreateTransactionBody();
         this._inner.setContractcreateinstance(this._body);
+
+        // Default autoRenewPeriod to a value within the required range (~1/4 a year)
+        this.setAutoRenewPeriod(131500 * 60);
     }
 
     public setTransactionId(txLike: TransactionIdLike): this {
