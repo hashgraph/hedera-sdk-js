@@ -12,6 +12,7 @@ import BigNumber from "bignumber.js";
 import { PublicKey } from "../crypto/PublicKey";
 import { ShardID, RealmID } from "../generated/BasicTypes_pb";
 import { AccountId, AccountIdLike } from "./AccountId";
+import { TransactionId, TransactionIdLike } from "../TransactionId";
 
 export class AccountCreateTransaction extends TransactionBuilder {
     private _body: CryptoCreateTransactionBody;
@@ -34,6 +35,20 @@ export class AccountCreateTransaction extends TransactionBuilder {
     public setKey(publicKey: PublicKey): this {
         this._body.setKey(publicKey._toProtoKey());
         return this;
+    }
+
+    public setTransactionId(txLike: TransactionIdLike): this {
+        const txId = new TransactionId(txLike);
+
+        if (!this._body.hasShardid()) {
+            this.setShardId(txId.accountId.shard);
+        }
+
+        if (!this._body.hasRealmid()) {
+            this.setRealmId(txId.accountId.realm);
+        }
+
+        return super.setTransactionId(txId);
     }
 
     public setAutoRenewPeriod(seconds: number): this {
@@ -61,7 +76,7 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setRealm(realmnum: number): this {
+    public setRealmId(realmnum: number): this {
         const realm = new RealmID();
         realm.setRealmnum(realmnum);
         realm.setShardnum(this._body.hasShardid() ? this._body.getShardid()!.getShardnum() : 0);
@@ -69,7 +84,7 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setShard(shardnum: number): this {
+    public setShardId(shardnum: number): this {
         const shard = new ShardID();
         shard.setShardnum(shardnum);
         this._body.setShardid(shard);

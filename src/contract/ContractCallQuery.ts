@@ -9,6 +9,8 @@ import { ContractFunctionResult } from "./ContractFunctionResult";
 import { ContractCallLocalQuery } from "../generated/ContractCallLocal_pb";
 import { ContractFunctionParams } from "./ContractFunctionParams";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { BaseClient } from "../BaseClient";
+import { Hbar } from "../Hbar";
 
 export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
     private readonly _builder: ContractCallLocalQuery;
@@ -30,6 +32,10 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
     public setFunction(name: string, params: ContractFunctionParams): this {
         this._builder.setFunctionparameters(params._build(name));
         return this;
+    }
+
+    public async getCost(client: BaseClient): Promise<Hbar> {
+        return (await super.getCost(client)).multipliedBy(1.1);
     }
 
     protected _doLocalValidate(errors: string[]): void {

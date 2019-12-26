@@ -14,6 +14,7 @@ import { FileId, FileIdLike } from "../file/FileId";
 import { AccountId, AccountIdLike } from "../account/AccountId";
 import { ContractFunctionParams } from "./ContractFunctionParams";
 import { ShardID, RealmID } from "../generated/BasicTypes_pb";
+import { TransactionId, TransactionIdLike } from "../TransactionId";
 
 export class ContractCreateTransaction extends TransactionBuilder {
     private readonly _body: ContractCreateTransactionBody;
@@ -24,12 +25,26 @@ export class ContractCreateTransaction extends TransactionBuilder {
         this._inner.setContractcreateinstance(this._body);
     }
 
-    public setBytecodeFile(fileIdLike: FileIdLike): this {
+    public setTransactionId(txLike: TransactionIdLike): this {
+        const txId = new TransactionId(txLike);
+
+        if (!this._body.hasShardid()) {
+            this.setShardId(txId.accountId.shard);
+        }
+
+        if (!this._body.hasRealmid()) {
+            this.setRealmId(txId.accountId.realm);
+        }
+
+        return super.setTransactionId(txId);
+    }
+
+    public setBytecodeFileId(fileIdLike: FileIdLike): this {
         this._body.setFileid(new FileId(fileIdLike)._toProto());
         return this;
     }
 
-    public setAdminkey(publicKey: PublicKey): this {
+    public setAdminKey(publicKey: PublicKey): this {
         this._body.setAdminkey(publicKey._toProtoKey());
         return this;
     }
@@ -59,7 +74,7 @@ export class ContractCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setRealm(realmnum: number): this {
+    public setRealmId(realmnum: number): this {
         const realm = new RealmID();
         realm.setRealmnum(realmnum);
         realm.setShardnum(this._body.hasShardid() ? this._body.getShardid()!.getShardnum() : 0);
@@ -67,7 +82,7 @@ export class ContractCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setShard(shardnum: number): this {
+    public setShardId(shardnum: number): this {
         const shard = new ShardID();
         shard.setShardnum(shardnum);
         this._body.setShardid(shard);

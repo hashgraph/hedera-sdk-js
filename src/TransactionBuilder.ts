@@ -31,7 +31,8 @@ export abstract class TransactionBuilder {
     }
 
     public setTransactionId(id: TransactionIdLike): this {
-        this._inner.setTransactionid(new TransactionId(id)._toProto());
+        this._inner.setTransactionid((id instanceof TransactionId ? id : new TransactionId(id))
+            ._toProto());
         return this;
     }
 

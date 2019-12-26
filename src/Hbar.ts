@@ -92,6 +92,10 @@ export class Hbar {
         return this._tinybar.dividedBy(tinybarConversions[ unit ]);
     }
 
+    public multipliedBy(amount: number | BigNumber): Hbar {
+        return new Hbar(this._tinybar.multipliedBy(amount));
+    }
+
     public plus(hbar: Hbar): Hbar;
     public plus(amount: number | BigNumber, unit: HbarUnit): Hbar;
     public plus(amount: Hbar | number | BigNumber, unit?: HbarUnit): Hbar {
