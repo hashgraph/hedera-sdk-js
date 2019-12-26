@@ -13,7 +13,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    
+
+    - uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-cache-
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -27,3 +34,5 @@ jobs:
     - run: yarn
     
     - run: yarn test
+    
+    - run: yarn lint
