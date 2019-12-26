@@ -124,7 +124,7 @@ export class Transaction {
 
     public async execute(client: BaseClient): Promise<TransactionId> {
         const node = client._getNode(this._node);
-        const validUntilMs = this._validDurationSeconds * 1000;
+        const validUntilMs = Date.now() + (this._validDurationSeconds * 1000);
 
         /* eslint-disable no-await-in-loop */
         // we want to wait in a loop, that's the whole point here
@@ -134,7 +134,7 @@ export class Transaction {
                     Math.random() * ((2 ** attempt) - 1));
 
                 if (Date.now() + delay > validUntilMs) {
-                    throw new Error(`timed out waiting for consensus on transaction ID: ${this._txnId}`);
+                    throw new Error(`timed out waiting to send transaction ID: ${this._txnId.toString()}`);
                 }
 
                 await setTimeoutAwaitable(delay);
