@@ -52,7 +52,7 @@ export abstract class TransactionBuilder {
         return this;
     }
 
-    public setMemo(memo: string): this {
+    public setTransactionMemo(memo: string): this {
         this._inner.setMemo(memo);
         return this;
     }
