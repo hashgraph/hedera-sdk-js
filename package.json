@@ -11,7 +11,7 @@
   "scripts": {
     "test": "jest",
     "prepare": "gulp build",
-    "docs": "typedoc --out docs src",
+    "docs": "typedoc --excludeNotExported --excludePrivate --excludeProtected --excludeExternals --out docs src",
     "prepublishOnly": "gulp generate:flow",
     "create-account-test": "node examples/create-account.js",
     "lint": "eslint \"src/**/*.ts\" \"examples/*.js\""
