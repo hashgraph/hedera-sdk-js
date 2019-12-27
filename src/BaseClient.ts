@@ -37,7 +37,7 @@ export interface Node {
 
 export interface ClientConfig {
     network?: Nodes;
-    operator: Operator;
+    operator?: Operator;
 }
 
 export abstract class BaseClient {
@@ -45,23 +45,28 @@ export abstract class BaseClient {
     private _operatorSigner?: Signer;
     private _operatorPublicKey?: Ed25519PublicKey;
 
-    protected readonly _nodes: Node[];
+    protected _nodes: Node[] = [];
 
     // Default payment and transaction fees to 1 hbar
     private _maxTransactionFee: Hbar = Hbar.of(1);
     private _maxQueryPayment?: Hbar = Hbar.of(1);
 
     protected constructor(network: Nodes, operator?: Operator) {
-        this._nodes = Array.isArray(network) ?
-            network as Node[] :
-            Object.entries(network)
-                .map(([ url, accountId ]) => {
-                    const id = new AccountId(accountId);
-                    return { url, id };
-                });
+        this.replaceNodes(network);
 
         if (operator) {
-            this.setOperator(operator);
+            if ((operator as PrivateKey).privateKey != null) {
+                this.setOperator(
+                    operator.account,
+                    (operator as PrivateKey).privateKey as Ed25519PrivateKey
+                );
+            } else {
+                this.setOperatorWith(
+                    operator.account,
+                    (operator as PubKeyAndSigner).publicKey as Ed25519PublicKey,
+                    (operator as PubKeyAndSigner).signer as Signer
+                );
+            }
         }
     }
 
@@ -72,20 +77,45 @@ export abstract class BaseClient {
     }
 
     /** Set the operator for the client object */
-    public setOperator(operator: Operator): this {
-        this._operator = operator;
+    public setOperator(account: AccountIdLike, privateKey: Ed25519PrivateKey): this {
+        const operator = {
+            account,
+            privateKey
+        };
 
-        const maybePrivateKey = (operator as PrivateKey).privateKey;
-        if (maybePrivateKey) {
-            const privateKey = maybePrivateKey instanceof Ed25519PrivateKey ?
-                maybePrivateKey :
-                Ed25519PrivateKey.fromString(maybePrivateKey);
-            this._operatorSigner = (msg): Uint8Array => privateKey.sign(msg);
-            this._operatorPublicKey = privateKey.publicKey;
-        } else {
-            ({ publicKey: this._operatorPublicKey, signer: this._operatorSigner } =
-                operator as PubKeyAndSigner);
-        }
+        this._operator = operator;
+        this._operatorPublicKey = privateKey.publicKey;
+        this._operatorSigner = (msg): Uint8Array => privateKey.sign(msg);
+
+        return this;
+    }
+
+    public setOperatorWith(
+        account: AccountIdLike,
+        publicKey: Ed25519PublicKey,
+        signer: Signer
+    ): this {
+        const operator = {
+            account,
+            publicKey,
+            signer
+        };
+
+        this._operator = operator;
+        this._operatorPublicKey = publicKey;
+        this._operatorSigner = signer;
+
+        return this;
+    }
+
+    public replaceNodes(network: Nodes): this {
+        this._nodes = Array.isArray(network) ?
+            network as Node[] :
+            Object.entries(network)
+                .map(([ url, accountId ]) => {
+                    const id = new AccountId(accountId);
+                    return { url, id };
+                });
 
         return this;
     }

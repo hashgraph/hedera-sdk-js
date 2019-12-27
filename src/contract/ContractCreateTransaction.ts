@@ -28,20 +28,6 @@ export class ContractCreateTransaction extends TransactionBuilder {
         this.setAutoRenewPeriod(131500 * 60);
     }
 
-    public setTransactionId(txLike: TransactionIdLike): this {
-        const txId = new TransactionId(txLike);
-
-        if (!this._body.hasShardid()) {
-            this.setShardId(txId.accountId.shard);
-        }
-
-        if (!this._body.hasRealmid()) {
-            this.setRealmId(txId.accountId.realm);
-        }
-
-        return super.setTransactionId(txId);
-    }
-
     public setBytecodeFileId(fileIdLike: FileIdLike): this {
         this._body.setFileid(new FileId(fileIdLike)._toProto());
         return this;
@@ -77,23 +63,8 @@ export class ContractCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setRealmId(realmnum: number): this {
-        const realm = new RealmID();
-        realm.setRealmnum(realmnum);
-        realm.setShardnum(this._body.hasShardid() ? this._body.getShardid()!.getShardnum() : 0);
-        this._body.setRealmid(realm);
-        return this;
-    }
-
-    public setShardId(shardnum: number): this {
-        const shard = new ShardID();
-        shard.setShardnum(shardnum);
-        this._body.setShardid(shard);
-        return this;
-    }
-
-    public setNewRealmAdminKey(key: PublicKey): this {
-        this._body.setNewrealmadminkey(key._toProtoKey());
+    public setContractMemo(memo: string): this {
+        this._body.setMemo(memo);
         return this;
     }
 

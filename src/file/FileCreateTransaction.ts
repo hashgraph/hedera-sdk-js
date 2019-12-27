@@ -22,20 +22,6 @@ export class FileCreateTransaction extends TransactionBuilder {
         this._inner.setFilecreate(this._body);
     }
 
-    public setTransactionId(txLike: TransactionIdLike): this {
-        const txId = new TransactionId(txLike);
-
-        if (!this._body.hasShardid()) {
-            this.setShardId(txId.accountId.shard);
-        }
-
-        if (!this._body.hasRealmid()) {
-            this.setRealmId(txId.accountId.realm);
-        }
-
-        return super.setTransactionId(txId);
-    }
-
     public setExpirationTime(date: number | Date): this {
         this._body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
         return this;
@@ -48,26 +34,6 @@ export class FileCreateTransaction extends TransactionBuilder {
 
         keylist.addKeys(key._toProtoKey());
         this._body.setKeys(keylist);
-        return this;
-    }
-
-    public setRealmId(realmnum: number): this {
-        const realm = new RealmID();
-        realm.setRealmnum(realmnum);
-        realm.setShardnum(this._body.hasShardid() ? this._body.getShardid()!.getShardnum() : 0);
-        this._body.setRealmid(realm);
-        return this;
-    }
-
-    public setShardId(shardnum: number): this {
-        const shard = new ShardID();
-        shard.setShardnum(shardnum);
-        this._body.setShardid(shard);
-        return this;
-    }
-
-    public setNewRealmAdminKey(key: PublicKey): this {
-        this._body.setNewrealmadminkey(key._toProtoKey());
         return this;
     }
 
