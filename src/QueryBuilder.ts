@@ -78,10 +78,11 @@ export abstract class QueryBuilder<T> {
 
             // COST_ANSWER requires a "null" payment but does not actually
             // process it
-            queryHeader.setPayment(new CryptoTransferTransaction()
+            queryHeader.setPayment((await new CryptoTransferTransaction()
                 .addRecipient(node.id, 0)
                 .addSender(client._getOperator()!.account, 0)
                 .build(client)
+                .signWith(client._getOperatorKey()!, client._getOperatorSigner()!))
                 .toProto());
 
             const resp = await client._unaryCall(node.url, this._inner.clone(), this._getMethod());
