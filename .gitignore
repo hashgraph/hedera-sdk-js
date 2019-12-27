@@ -19,3 +19,6 @@ __tests__/**/*.js
 
 # IDEA
 .idea
+
+# Docs
+docs/
