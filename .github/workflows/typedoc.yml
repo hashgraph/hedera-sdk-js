@@ -42,3 +42,4 @@ jobs:
         BRANCH: gh-pages
         FOLDER: docs
         CLEAN: true
+        CLEAN_EXCLUDE: '[".nojekyll"]'
