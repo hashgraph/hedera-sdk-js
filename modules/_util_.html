@@ -38,10 +38,6 @@
 							</div>
 							<input type="checkbox" id="tsd-filter-inherited" checked />
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-externals" checked />
-							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -76,14 +72,6 @@
 								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_util_.getheader.html" class="tsd-kind-icon">Get<wbr>Header</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-not-exported">
-							<h3>Type aliases</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported"><a href="_util_.html#entityid" class="tsd-kind-icon">Entity<wbr>Id</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported"><a href="_util_.html#entitykind" class="tsd-kind-icon">Entity<wbr>Kind</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported"><a href="_util_.html#normalizedid" class="tsd-kind-icon">Normalized<wbr>Id</a></li>
-							</ul>
-						</section>
 						<section class="tsd-index-section ">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
@@ -102,51 +90,6 @@
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
-				<h2>Type aliases</h2>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
-					<a name="entityid" class="tsd-anchor"></a>
-					<h3>Entity<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">Entity<wbr>Id&lt;Kind&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L24">src/util.ts:24</a></li>
-						</ul>
-					</aside>
-					<h4 class="tsd-type-parameters-title">Type parameters</h4>
-					<ul class="tsd-type-parameters">
-						<li>
-							<h4>Kind<span class="tsd-signature-symbol">: </span><a href="_util_.html#entitykind" class="tsd-signature-type">EntityKind</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="entitykind" class="tsd-anchor"></a>
-					<h3>Entity<wbr>Kind</h3>
-					<div class="tsd-signature tsd-kind-icon">Entity<wbr>Kind<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"account"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"contract"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"file"</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L22">src/util.ts:22</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
-					<a name="normalizedid" class="tsd-anchor"></a>
-					<h3>Normalized<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">Normalized<wbr>Id&lt;Kind&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">"shard"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"realm"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Kind</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L28">src/util.ts:28</a></li>
-						</ul>
-					</aside>
-					<h4 class="tsd-type-parameters-title">Type parameters</h4>
-					<ul class="tsd-type-parameters">
-						<li>
-							<h4>Kind<span class="tsd-signature-symbol">: </span><a href="_util_.html#entitykind" class="tsd-signature-type">EntityKind</a></h4>
-						</li>
-					</ul>
-				</section>
-			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
@@ -159,7 +102,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L121">src/util.ts:121</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/589b409/src/util.ts#L121">src/util.ts:121</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -182,7 +125,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L79">src/util.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/589b409/src/util.ts#L79">src/util.ts:79</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -205,7 +148,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L12">src/util.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/589b409/src/util.ts#L12">src/util.ts:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -222,19 +165,19 @@
 					<a name="normalizeentityid" class="tsd-anchor"></a>
 					<h3>normalize<wbr>Entity<wbr>Id</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">normalize<wbr>Entity<wbr>Id&lt;Kind&gt;<span class="tsd-signature-symbol">(</span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Kind</span>, entityId<span class="tsd-signature-symbol">: </span><a href="_util_.html#entityid" class="tsd-signature-type">EntityId</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Kind</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_util_.html#normalizedid" class="tsd-signature-type">NormalizedId</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Kind</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">normalize<wbr>Entity<wbr>Id&lt;Kind&gt;<span class="tsd-signature-symbol">(</span>kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Kind</span>, entityId<span class="tsd-signature-symbol">: </span><a href="_getbysolidityidquery_.html#entityid" class="tsd-signature-type">EntityId</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Kind</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">NormalizedId</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Kind</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L30">src/util.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/589b409/src/util.ts#L30">src/util.ts:30</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>Kind<span class="tsd-signature-symbol">: </span><a href="_util_.html#entitykind" class="tsd-signature-type">EntityKind</a></h4>
+									<h4>Kind<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EntityKind</span></h4>
 								</li>
 							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -243,10 +186,10 @@
 									<h5>kind: <span class="tsd-signature-type">Kind</span></h5>
 								</li>
 								<li>
-									<h5>entityId: <a href="_util_.html#entityid" class="tsd-signature-type">EntityId</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Kind</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>entityId: <a href="_getbysolidityidquery_.html#entityid" class="tsd-signature-type">EntityId</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Kind</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_util_.html#normalizedid" class="tsd-signature-type">NormalizedId</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Kind</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">NormalizedId</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Kind</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -260,7 +203,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L8">src/util.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/589b409/src/util.ts#L8">src/util.ts:8</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -292,7 +235,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L105">src/util.ts:105</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/589b409/src/util.ts#L105">src/util.ts:105</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -324,7 +267,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L113">src/util.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/589b409/src/util.ts#L113">src/util.ts:113</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -368,7 +311,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L83">src/util.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/589b409/src/util.ts#L83">src/util.ts:83</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -391,7 +334,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L87">src/util.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/589b409/src/util.ts#L87">src/util.ts:87</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -462,7 +405,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/57977da/src/util.ts#L163">src/util.ts:163</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/589b409/src/util.ts#L163">src/util.ts:163</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -492,15 +435,6 @@
 				<ul class="before-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="../interfaces/_util_.getheader.html" class="tsd-kind-icon">Get<wbr>Header</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
-						<a href="_util_.html#entityid" class="tsd-kind-icon">Entity<wbr>Id</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_util_.html#entitykind" class="tsd-kind-icon">Entity<wbr>Kind</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
-						<a href="_util_.html#normalizedid" class="tsd-kind-icon">Normalized<wbr>Id</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="_util_.html#getresponseheader" class="tsd-kind-icon">get<wbr>Response<wbr>Header</a>
