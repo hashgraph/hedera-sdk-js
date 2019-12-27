@@ -1,5 +1,6 @@
 [![Actions Status](https://github.com/hashgraph/hedera-sdk-js/workflows/Node/badge.svg)](https://github.com/hashgraph/hedera-sdk-js/actions?query=workflow%3ANode)
 [![npm](https://img.shields.io/npm/v/@hashgraph/sdk)](https://www.npmjs.com/package/@hashgraph/sdk)
+[![Documentation](https://img.shields.io/badge/typedoc-reference-informational)](https://hashgraph.github.io/hedera-sdk-js/)
 ![NPM](https://img.shields.io/npm/l/@hashgraph/sdk)
 
 # Hedera Hashgraph Javascript/Typescript SDK
