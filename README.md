@@ -99,6 +99,12 @@ Ubuntu/Debian:
 $ sudo apt-get install protobuf-compiler libprotobuf-dev
 ```
 
+Mac OSX:
+```shell script
+# Homebrew
+$ brew install protobuf
+```
+
 ### Hosting your own Envoy Proxy
 
 This SDK talks to Hedera Hashgraph through [the gRPC-Web protocol] which allows it to function
