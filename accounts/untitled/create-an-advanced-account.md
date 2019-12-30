@@ -1,17 +1,8 @@
 # Create an advanced account
 
-## KeyList <a id="account-keylist"></a>
+## Create an advanced account
 
-| Method | Type | Description |
-| :--- | :--- | :--- |
-| ​`Add()` | ​PublicKey | ​ |
-| `AddAll()` | PublicKey |  |
-
-```text
-​
-```
-
-## Threshold Key <a id="account-threshold-key"></a>
+## Account: KeyList <a id="account-keylist"></a>
 
 | Method | Type | Description |
 | :--- | :--- | :--- |
@@ -21,7 +12,17 @@
 ​
 ```
 
-## Nested Keys <a id="account-nested-keys"></a>
+## Account: Threshold Key <a id="account-threshold-key"></a>
+
+| Method | Type | Description |
+| :--- | :--- | :--- |
+| ​ | ​ | ​ |
+
+```text
+​
+```
+
+## Account: Nested Keys <a id="account-nested-keys"></a>
 
 | Method | Type | Description |
 | :--- | :--- | :--- |
