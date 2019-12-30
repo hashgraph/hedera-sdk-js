@@ -51,6 +51,27 @@ new CryptoTransferTransaction()
         account.</td>
     </tr>
     <tr>
+      <td style="text-align:left"><code>setMaxTransactionFee(&lt;fee&gt;)</code>
+      </td>
+      <td style="text-align:left">long</td>
+      <td style="text-align:left">The maximum fee to be paid for this transaction executed by this client.
+        The actual fee may be less, but will never be greater than this value.</td>
+    </tr>
+    <tr>
+      <td style="text-align:left"><code>setNodeAccountId(&lt;accountId&gt;)</code>
+      </td>
+      <td style="text-align:left">AccountId</td>
+      <td style="text-align:left"><b>TBD</b>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:left"><code>setTransactionId(&lt;transactionId&gt;)</code>
+      </td>
+      <td style="text-align:left">TransactionId</td>
+      <td style="text-align:left"><b>TBD</b>
+      </td>
+    </tr>
+    <tr>
       <td style="text-align:left"><code>setMemo(&lt;memo&gt;)</code>
       </td>
       <td style="text-align:left">String</td>
