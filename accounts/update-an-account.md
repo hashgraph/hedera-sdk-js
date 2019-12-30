@@ -25,6 +25,7 @@ new AccountUpdateTransaction()
   .setExpirationTime()
   .setSendRecordThreshold()
   .setReceiveRecordThreshold()
+  .setMaxTransactionFee()
   //.setProxyAccount()
   .setMemo()
   .build();
@@ -105,6 +106,13 @@ new AccountUpdateTransaction()
         <p><em>default:  None</em>
         </p>
       </td>
+    </tr>
+    <tr>
+      <td style="text-align:left"><code>setMaxTransactionFee(&lt;fee&gt;)</code>
+      </td>
+      <td style="text-align:left">long</td>
+      <td style="text-align:left">The maximum fee to be paid for this transaction executed by this client.
+        The actual fee may be less, but will never be greater than this value.</td>
     </tr>
     <tr>
       <td style="text-align:left"><b><code>setProxyAccount(&lt;accountId&gt;)</code></b>
