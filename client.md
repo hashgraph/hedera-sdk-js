@@ -4,8 +4,6 @@ description: Creating a client
 
 # Client
 
-## Requirements
-
 You will need the following pieces of information to construct your Hedera client. 
 
 **User Information**
@@ -17,12 +15,14 @@ The operator is the user paying for the transactions fees.
 
 **Network Information**
 
-The SDK provides points to a public free proxy to the Hedera **public testnet**. The node ID and node address the proxy points to are:
+You can find testnet and mainnet network details by logging into your Hedera portal. On mainnet, you can also request the contents of the most current address book file.
 
-* **Node ID**: `0.0.3`
-* **Node Address**: `0.testnet.hedera.com:50211`
+* **Node ID:** The account ID of the node submitting the transaction to the network
+* **Node Address:** The network address of the node submitting the transaction to the network
 
-### Example
+
+
+The network information provided \(testnet address: 0.testnet.hedera.com:50211
 
 ```javascript
 import {Client} from "@hashgraph/sdk";

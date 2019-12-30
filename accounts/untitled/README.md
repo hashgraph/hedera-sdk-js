@@ -95,20 +95,40 @@ new AccountCreateTransaction()
 </table>## Example:
 
 ```javascript
-import { Ed25519PrivateKey } from "@hashgraph/sdk";
+const { Client, Ed25519PrivateKey, AccountCreateTransaction } = require("@hashgraph/sdk");
 
-const privateKey = await Ed25519PrivateKey.generate();
-const publicKey = privateKey.publicKey;
+async function main() {
+    const operatorPrivateKey = process.env.OPERATOR_KEY;
+    const operatorAccount = process.env.OPERATOR_ID;
 
-const tx = new AccountCreateTransaction()
-    .setKey(privateKey.publicKey)
-    .setInitialBalance(0)
-    .build(client);
+    if (operatorPrivateKey == null || operatorAccount == null) {
+        throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
+    }
 
-await tx.execute(client);
-const receipt = await tx.getReceipt(client);
-const newAccount = receipt.accountId;
+    const client = new Client({
+        network: { "0.testnet.hedera.com:50211": "0.0.3" },
+        operator: {
+            account: operatorAccount,
+            privateKey: operatorPrivateKey
+        }
+    });
 
-console.log('new account: ', newAccount, 'public key: ', publicKey.toString(), ' private key: ', privateKey.toString());
+    const privateKey = await Ed25519PrivateKey.generate();
+
+    console.log(`private = ${privateKey.toString()}`);
+    console.log(`public = ${privateKey.publicKey.toString()}`);
+
+    const transactionId = await new AccountCreateTransaction()
+        .setKey(privateKey.publicKey)
+        .setInitialBalance(0)
+        .execute(client);
+
+    const transactionReceipt = await transactionId.getReceipt(client);
+    const newAccountId = transactionReceipt.accountId;
+
+    console.log(`account = ${newAccountId}`);
+}
+
+main();
 ```
 
