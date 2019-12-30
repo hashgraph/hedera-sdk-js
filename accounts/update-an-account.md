@@ -25,7 +25,8 @@ new AccountUpdateTransaction()
   .setExpirationTime()
   .setSendRecordThreshold()
   .setReceiveRecordThreshold()
-  .setProxyAccount()
+  //.setProxyAccount()
+  .setMemo()
   .build();
 ```
 
@@ -115,6 +116,15 @@ new AccountUpdateTransaction()
         </p>
         <p><em><b>default:  None</b></em>
         </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:left"><code>setMemo(&lt;memo&gt;)</code>
+      </td>
+      <td style="text-align:left">String</td>
+      <td style="text-align:left">
+        <p>A short note attached to the transaction</p>
+        <p>Max: 100 bytes</p>
       </td>
     </tr>
   </tbody>
