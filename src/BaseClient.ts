@@ -41,7 +41,7 @@ export interface ClientConfig {
 }
 
 export abstract class BaseClient {
-    private _operator?: Operator;
+    private _operatorAccount?: AccountId;
     private _operatorSigner?: Signer;
     private _operatorPublicKey?: Ed25519PublicKey;
 
@@ -56,9 +56,12 @@ export abstract class BaseClient {
 
         if (operator) {
             if ((operator as PrivateKey).privateKey != null) {
+                const key = (operator as PrivateKey).privateKey;
                 this.setOperator(
                     operator.account,
-                    (operator as PrivateKey).privateKey as Ed25519PrivateKey
+                    typeof (operator as PrivateKey).privateKey === "string" ?
+                        Ed25519PrivateKey.fromString(key as string) :
+                        key as Ed25519PrivateKey
                 );
             } else {
                 this.setOperatorWith(
@@ -78,14 +81,9 @@ export abstract class BaseClient {
 
     /** Set the operator for the client object */
     public setOperator(account: AccountIdLike, privateKey: Ed25519PrivateKey): this {
-        const operator = {
-            account,
-            privateKey
-        };
-
-        this._operator = operator;
+        this._operatorAccount = new AccountId(account);
         this._operatorPublicKey = privateKey.publicKey;
-        this._operatorSigner = (msg): Uint8Array => privateKey.sign(msg);
+        this._operatorSigner = privateKey.sign.bind(privateKey);
 
         return this;
     }
@@ -95,13 +93,7 @@ export abstract class BaseClient {
         publicKey: Ed25519PublicKey,
         signer: Signer
     ): this {
-        const operator = {
-            account,
-            publicKey,
-            signer
-        };
-
-        this._operator = operator;
+        this._operatorAccount = new AccountId(account);
         this._operatorPublicKey = publicKey;
         this._operatorSigner = signer;
 
@@ -120,8 +112,8 @@ export abstract class BaseClient {
         return this;
     }
 
-    public _getOperator(): Operator | undefined {
-        return this._operator;
+    public _getOperatorAccountId(): AccountId | undefined {
+        return this._operatorAccount;
     }
 
     public _getOperatorSigner(): Signer | undefined {

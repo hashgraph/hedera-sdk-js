@@ -1,5 +1,5 @@
 export enum Status {
-  OK = 0,
+  Ok = 0,
   InvalidTransaction = 1,
   PayerAccountNotFound = 2,
   InvalidNodeAccount = 3,

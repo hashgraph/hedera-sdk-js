@@ -1,4 +1,4 @@
-import { BaseClient, ClientConfig, Nodes } from "./BaseClient";
+import { Operator, BaseClient, ClientConfig, Nodes } from "./BaseClient";
 import { grpc as grpcWeb } from "@improbable-eng/grpc-web";
 import * as fs from "fs";
 import * as util from "util";
@@ -58,10 +58,10 @@ export class Client extends BaseClient {
         return new Client({ network: testnetNodes });
     }
 
-    public static async fromFile(filename: string): Promise<Client> {
+    public static async fromFile(filename: string, operator?: Operator): Promise<Client> {
         const network: Nodes = JSON.parse(await readFile(filename, "utf8"));
 
-        return new Client({ network });
+        return new Client({ network, operator });
     }
 
     /* eslint-disable-next-line @typescript-eslint/member-naming */

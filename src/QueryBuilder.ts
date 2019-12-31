@@ -80,7 +80,7 @@ export abstract class QueryBuilder<T> {
             // process it
             queryHeader.setPayment((await new CryptoTransferTransaction()
                 .addRecipient(node.id, 0)
-                .addSender(client._getOperator()!.account, 0)
+                .addSender(client._getOperatorAccountId()!, 0)
                 .build(client)
                 .signWith(client._getOperatorKey()!, client._getOperatorSigner()!))
                 .toProto());
@@ -218,7 +218,7 @@ export abstract class QueryBuilder<T> {
         const paymentTx = await new CryptoTransferTransaction()
             .setNodeAccountId(node.id)
             .addRecipient(node.id, amount)
-            .addSender(client._getOperator()!.account, amount)
+            .addSender(client._getOperatorAccountId()!, amount)
             .setMaxTransactionFee(Hbar.of(1))
             .build(client)
             .signWith(client._getOperatorKey()!, client._getOperatorSigner()!);

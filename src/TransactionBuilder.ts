@@ -89,9 +89,9 @@ export abstract class TransactionBuilder {
         }
 
         if (client && !this._inner.hasTransactionid()) {
-            if (client._getOperator()) {
-                this._inner
-                    .setTransactionid(new TransactionId(client._getOperator()!.account)._toProto());
+            if (client._getOperatorAccountId()) {
+                const tx = new TransactionId(client._getOperatorAccountId()!);
+                this._inner.setTransactionid(tx._toProto());
             }
         }
 
