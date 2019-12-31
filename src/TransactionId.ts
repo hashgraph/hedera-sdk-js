@@ -11,6 +11,7 @@ import { TransactionReceipt } from "./TransactionReceipt";
 import { TransactionRecord } from "./TransactionRecord";
 import { TransactionReceiptQuery } from "./TransactionReceiptQuery";
 import { TransactionRecordQuery } from "./TransactionRecordQuery";
+import { Time } from "./Time";
 
 /**
  * Normalized transaction ID returned by various methods in the SDK.
@@ -19,9 +20,7 @@ import { TransactionRecordQuery } from "./TransactionRecordQuery";
 export class TransactionId {
     public readonly accountId: AccountId;
 
-    public readonly validStartSeconds: number;
-
-    public readonly validStartNanos: number;
+    public readonly validStart: Time
 
     public constructor(id: TransactionIdLike | AccountIdLike) {
         // Cannot use try/catch here because test die horribly
@@ -34,29 +33,39 @@ export class TransactionId {
             // allows the transaction to be accepted as long as the node isn't 10 seconds behind us
             const { seconds, nanos } = dateToTimestamp(Date.now() - 10_000);
 
-            this.validStartSeconds = seconds;
-            this.validStartNanos = nanos;
+            this.validStart = new Time(seconds, nanos);
         } else {
             const transactionId = id as TransactionIdLike;
 
             if (transactionId instanceof TransactionId) {
                 this.accountId = transactionId.accountId;
-                this.validStartSeconds = transactionId.validStartSeconds;
-                this.validStartNanos = transactionId.validStartNanos;
+                this.validStart = new Time(
+                    transactionId.validStart.seconds,
+                    transactionId.validStart.nanos
+                );
             } else {
                 this.accountId = new AccountId(transactionId.account);
 
                 if ("validStart" in transactionId) {
                     const { seconds, nanos } = dateToTimestamp(transactionId.validStart);
 
-                    this.validStartSeconds = seconds;
-                    this.validStartNanos = nanos;
+                    this.validStart = new Time(seconds, nanos);
                 } else {
-                    this.validStartSeconds = transactionId.validStartSeconds;
-                    this.validStartNanos = transactionId.validStartNanos;
+                    this.validStart = new Time(
+                        transactionId.validStartSeconds,
+                        transactionId.validStartNanos
+                    );
                 }
             }
         }
+    }
+
+    public static withValidStart(id: AccountIdLike, validStart: Time): TransactionId {
+        return new TransactionId({
+            account: id,
+            validStartSeconds: validStart.seconds,
+            validStartNanos: validStart.nanos
+        });
     }
 
     public static fromString(id: string): TransactionId {
@@ -71,7 +80,7 @@ export class TransactionId {
     }
 
     public toString(): string {
-        return `${this.accountId.toString()}@${this.validStartSeconds}.${this.validStartNanos}`;
+        return `${this.accountId.toString()}@${this.validStart.seconds}.${this.validStart.nanos}`;
     }
 
     public getReceipt(client: BaseClient): Promise<TransactionReceipt> {
@@ -90,10 +99,13 @@ export class TransactionId {
 
     // NOT A STABLE API
     public static _fromProto(id: TransactionID): TransactionId {
+        const seconds = orThrow(id.getTransactionvalidstart()).getSeconds();
+        const nanos = orThrow(id.getTransactionvalidstart()).getNanos();
+
         return new TransactionId({
             account: AccountId._fromProto(orThrow(id.getAccountid())),
-            validStartSeconds: orThrow(id.getTransactionvalidstart()).getSeconds(),
-            validStartNanos: orThrow(id.getTransactionvalidstart()).getNanos()
+            validStartSeconds: seconds,
+            validStartNanos: nanos
         });
     }
 
@@ -103,8 +115,8 @@ export class TransactionId {
         txnId.setAccountid(this.accountId._toProto());
 
         const ts = new Timestamp();
-        ts.setSeconds(this.validStartSeconds);
-        ts.setNanos(this.validStartNanos);
+        ts.setSeconds(this.validStart.seconds);
+        ts.setNanos(this.validStart.nanos);
         txnId.setTransactionvalidstart(ts);
 
         return txnId;
