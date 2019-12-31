@@ -1,4 +1,4 @@
-import { receiptToSdk, TransactionReceipt } from "./TransactionReceipt";
+import { TransactionReceipt } from "./TransactionReceipt";
 import { ContractFunctionResult } from "./contract/ContractFunctionResult";
 import { TransactionRecord as ProtoTransactionRecord } from "./generated/TransactionRecord_pb";
 import { TransactionId } from "./TransactionId";
@@ -20,7 +20,7 @@ export interface TransactionRecord {
 
 export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionRecord[] {
     return records.map((record) => ({
-        receipt: receiptToSdk(record.getReceipt()!),
+        receipt: TransactionReceipt.fromProto(record.getReceipt()!),
         transactionHash: record.getTransactionhash_asU8(),
         consensusTimestamp: timestampToDate(record.getConsensustimestamp()!),
         transactionId: TransactionId._fromProto(record.getTransactionid()!),

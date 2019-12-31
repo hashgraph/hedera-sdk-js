@@ -5,7 +5,7 @@ import { TransactionId, TransactionIdLike } from "./TransactionId";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
-import { receiptToSdk, TransactionReceipt } from "./TransactionReceipt";
+import { TransactionReceipt } from "./TransactionReceipt";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
 import { ResponseCode } from "./errors";
@@ -81,6 +81,6 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
     protected _mapResponse(response: Response): TransactionReceipt {
         const receipt = response.getTransactiongetreceipt()!;
 
-        return receiptToSdk(receipt.getReceipt()!);
+        return TransactionReceipt.fromProto(receipt.getReceipt()!);
     }
 }
