@@ -81,6 +81,6 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
     protected _mapResponse(response: Response): TransactionReceipt {
         const receipt = response.getTransactiongetreceipt()!;
 
-        return TransactionReceipt.fromProto(receipt.getReceipt()!);
+        return TransactionReceipt._fromProto(receipt.getReceipt()!);
     }
 }

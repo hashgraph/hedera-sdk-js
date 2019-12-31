@@ -7,38 +7,39 @@ import { Status } from "./Status";
 
 export class TransactionReceipt {
     public readonly status: Status;
-    private accountId: AccountId | null;
-    private fileId: FileId | null;
-    private contractId: ContractId | null;
+    private _accountId: AccountId | null;
+    private _fileId: FileId | null;
+    private _contractId: ContractId | null;
     public readonly exchangeRateSet: ExchangeRateSet | null;
 
     private constructor(
         status: Status,
-        accountId: AccountId | null,
-        fileId: FileId | null,
-        contractId: ContractId | null,
+        _accountId: AccountId | null,
+        _fileId: FileId | null,
+        _contractId: ContractId | null,
         exchangeRateSet: ExchangeRateSet | null
     ) {
         this.status = status;
-        this.accountId = accountId;
-        this.fileId = fileId;
-        this.contractId = contractId;
+        this._accountId = _accountId;
+        this._fileId = _fileId;
+        this._contractId = _contractId;
         this.exchangeRateSet = exchangeRateSet;
     }
 
     public getAccountId(): AccountId {
-        return this.accountId!;
+        return this._accountId!;
     }
 
     public getFileId(): FileId {
-        return this.fileId!;
+        return this._fileId!;
     }
 
     public getContractId(): ContractId {
-        return this.contractId!;
+        return this._contractId!;
     }
 
-    public static fromProto(receipt: ProtoTransactionReceipt): TransactionReceipt {
+    // NOT A STABLE API
+    public static _fromProto(receipt: ProtoTransactionReceipt): TransactionReceipt {
         return new TransactionReceipt(
             receipt.getStatus(),
             receipt.hasAccountid() ? AccountId._fromProto(receipt.getAccountid()!) : null,

@@ -20,7 +20,7 @@ export interface TransactionRecord {
 
 export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionRecord[] {
     return records.map((record) => ({
-        receipt: TransactionReceipt.fromProto(record.getReceipt()!),
+        receipt: TransactionReceipt._fromProto(record.getReceipt()!),
         transactionHash: record.getTransactionhash_asU8(),
         consensusTimestamp: timestampToDate(record.getConsensustimestamp()!),
         transactionId: TransactionId._fromProto(record.getTransactionid()!),
