@@ -69,3 +69,4 @@ export { TransactionReceipt } from "./TransactionReceipt";
 export { TransactionRecord } from "./TransactionRecord";
 
 export { ContractFunctionParams } from "./contract/ContractFunctionParams";
+export { Time } from "./Time";
