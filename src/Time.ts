@@ -1,3 +1,5 @@
+import { Timestamp as ProtoTimestamp } from "./generated/Timestamp_pb";
+
 export class Time {
     public readonly seconds: number;
     public readonly nanos: number;
@@ -9,5 +11,9 @@ export class Time {
 
     public asDate(): Date {
         return new Date(this.seconds * 1000 + Math.floor(this.nanos / 1_000_000));
+    }
+
+    public static fromProto(timestamp: ProtoTimestamp): Time {
+        return new Time(timestamp.getSeconds(), timestamp.getNanos());
     }
 }
