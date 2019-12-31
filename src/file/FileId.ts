@@ -1,5 +1,6 @@
 import { FileID } from "../generated/BasicTypes_pb";
 import { normalizeEntityId } from "../util";
+import BigNumber from "bignumber.js";
 
 /** Normalized file ID returned by various methods in the SDK. */
 export class FileId {
@@ -22,14 +23,23 @@ export class FileId {
      */
     public static readonly EXCHANGE_RATES: FileId = new FileId("0.0.112");
 
-    public constructor(fileId: FileIdLike) {
-        const id = fileId instanceof FileId ?
-            fileId :
-            normalizeEntityId("file", fileId);
+    public constructor(shard: number, realm: number, file: number);
+    public constructor(fileId: FileIdLike);
+    public constructor(shardOrFileId: FileIdLike, realm?: number, file?: number) {
+        if (typeof shardOrFileId === "number" && realm != null && file != null) {
+            this.shard = shardOrFileId as number;
+            this.realm = realm!;
+            this.file = file!;
+        } else {
+            const fileId = shardOrFileId as FileIdLike;
+            const id = fileId instanceof FileId ?
+                fileId :
+                normalizeEntityId("file", fileId);
 
-        this.shard = id.shard;
-        this.realm = id.realm;
-        this.file = id.file;
+            this.shard = id.shard;
+            this.realm = id.realm;
+            this.file = id.file;
+        }
     }
 
     public static fromString(id: string): FileId {
@@ -47,6 +57,33 @@ export class FileId {
 
     public toString(): string {
         return `${this.shard}.${this.realm}.${this.file}`;
+    }
+
+    public static fromSolidityAddress(address: string): FileId {
+        if (address.length !== 40) {
+            throw new Error(`Invalid hex encoded solidity address length:
+                    expected length 40, got length ${address.length}`);
+        }
+
+        // First 4 bytes encoded as 8 characters
+        const shard = new BigNumber(address.slice(0, 8), 16).toNumber();
+        // Next 8 bytes encoded as 16 characters
+        const realm = new BigNumber(address.slice(8, 24), 16).toNumber();
+        // Next 8 bytes encoded as 16 characters
+        const file = new BigNumber(address.slice(24, 40), 16).toNumber();
+
+        return new FileId(shard, realm, file);
+    }
+
+    public toSolidityAddress(): string {
+        const buffer = new Uint8Array(20);
+        const view = new DataView(buffer, 0, 20);
+
+        view.setUint32(0, this.shard);
+        view.setUint32(8, this.realm);
+        view.setUint32(16, this.file);
+
+        return Buffer.from(buffer).toString("hex");
     }
 
     // NOT A STABLE API
