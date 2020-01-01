@@ -1,6 +1,6 @@
 import { TinybarValueError } from "../src/errors";
 import BigNumber from "bignumber.js";
-import { Hbar } from "../src/Hbar";
+import { Hbar, HbarUnit } from "../src/Hbar";
 import { AccountId } from "../src/account/AccountId";
 import { ContractId } from "../src/contract/ContractId";
 import { FileId } from "../src/file/FileId";
@@ -31,14 +31,14 @@ describe("tinybarRangeCheck()", () => {
     });
 
     it("forbids Hbar values out of range", () => {
-        expect(() => tinybarRangeCheck(Hbar.from(93, "gigabar"))).toThrow(TinybarValueError);
+        expect(() => tinybarRangeCheck(Hbar.from(93, HbarUnit.Gigabar))).toThrow(TinybarValueError);
         // the maximum amount of gigabar in the network at any given time
-        expect(() => tinybarRangeCheck(Hbar.from(50, "gigabar"))).not.toThrow();
-        expect(() => tinybarRangeCheck(Hbar.MAX_VALUE)).not.toThrow();
+        expect(() => tinybarRangeCheck(Hbar.from(50, HbarUnit.Gigabar))).not.toThrow();
+        expect(() => tinybarRangeCheck(Hbar.MAX)).not.toThrow();
 
-        expect(() => tinybarRangeCheck(Hbar.from(-93, "gigabar"), "allowNegative")).toThrow(TinybarValueError);
-        expect(() => tinybarRangeCheck(Hbar.from(-50, "gigabar"), "allowNegative")).not.toThrow();
-        expect(() => tinybarRangeCheck(Hbar.MIN_VALUE, "allowNegative")).not.toThrow();
+        expect(() => tinybarRangeCheck(Hbar.from(-93, HbarUnit.Gigabar), "allowNegative")).toThrow(TinybarValueError);
+        expect(() => tinybarRangeCheck(Hbar.from(-50, HbarUnit.Gigabar), "allowNegative")).not.toThrow();
+        expect(() => tinybarRangeCheck(Hbar.MIN, "allowNegative")).not.toThrow();
     });
 });
 
