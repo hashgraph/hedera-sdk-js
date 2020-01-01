@@ -45,9 +45,9 @@ export class Hbar {
         this._tinybar = tinybar;
     }
 
-    public static readonly MAX_VALUE: Hbar = new Hbar(new BigNumber(2).pow(63).minus(1));
+    public static readonly MAX: Hbar = new Hbar(new BigNumber(2).pow(63).minus(1));
 
-    public static readonly MIN_VALUE: Hbar = new Hbar(new BigNumber(-2).pow(63));
+    public static readonly MIN: Hbar = new Hbar(new BigNumber(-2).pow(63));
 
     public static readonly ZERO: Hbar = Hbar.zero();
 
