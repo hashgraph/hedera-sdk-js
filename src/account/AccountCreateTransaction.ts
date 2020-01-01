@@ -28,8 +28,8 @@ export class AccountCreateTransaction extends TransactionBuilder {
         // Default to maximum values for record thresholds. Without this records would be
         // auto-created whenever a send or receive transaction takes place for this new account.
         // This should be an explicit ask.
-        this.setReceiveRecordThreshold(Hbar.MAX_VALUE);
-        this.setSendRecordThreshold(Hbar.MAX_VALUE);
+        this.setReceiveRecordThreshold(Hbar.MAX);
+        this.setSendRecordThreshold(Hbar.MAX);
     }
 
     public setKey(publicKey: PublicKey): this {
