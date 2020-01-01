@@ -10,9 +10,7 @@ import { Tinybar, tinybarToString } from "../Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import BigNumber from "bignumber.js";
 import { PublicKey } from "../crypto/PublicKey";
-import { ShardID, RealmID } from "../generated/BasicTypes_pb";
 import { AccountId, AccountIdLike } from "./AccountId";
-import { TransactionId, TransactionIdLike } from "../TransactionId";
 
 export class AccountCreateTransaction extends TransactionBuilder {
     private _body: CryptoCreateTransactionBody;

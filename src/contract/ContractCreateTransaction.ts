@@ -13,8 +13,6 @@ import { PublicKey } from "../crypto/PublicKey";
 import { FileId, FileIdLike } from "../file/FileId";
 import { AccountId, AccountIdLike } from "../account/AccountId";
 import { ContractFunctionParams } from "./ContractFunctionParams";
-import { ShardID, RealmID } from "../generated/BasicTypes_pb";
-import { TransactionId, TransactionIdLike } from "../TransactionId";
 
 export class ContractCreateTransaction extends TransactionBuilder {
     private readonly _body: ContractCreateTransactionBody;
