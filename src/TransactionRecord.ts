@@ -2,7 +2,6 @@ import { TransactionReceipt } from "./TransactionReceipt";
 import { ContractFunctionResult } from "./contract/ContractFunctionResult";
 import { TransactionRecord as ProtoTransactionRecord } from "./generated/TransactionRecord_pb";
 import { TransactionId } from "./TransactionId";
-import { timestampToDate } from "./Timestamp";
 import { AccountAmount, accountAmountToSdk } from "./account/AccountAmount";
 import { TransferList as ProtoTransferList, AccountAmount as ProtoAccountAmount } from "./generated/CryptoTransfer_pb";
 import { Time } from "./Time";
