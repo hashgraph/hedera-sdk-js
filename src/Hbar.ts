@@ -18,10 +18,26 @@ function convertToTinybar(amount: BigNumber.Value, unit: HbarUnit): BigNumber {
     return bnAmount.multipliedBy(tinybarConversions[ unit ]);
 }
 
-export type HbarUnit = keyof typeof tinybarConversions;
+export enum HbarUnit {
+    Tinybar = "tinybar",
+    Microbar = "microbar",
+    Millibar = "millibar",
+    Hbar = "hbar",
+    Kilobar = "kilobar",
+    Megabar = "megabar",
+    Gigabar = "gigabar",
+}
 
 /** The possible denominations of HBAR in order by magnitude */
-export const hbarUnits: HbarUnit[] = [ "tinybar", "microbar", "millibar", "hbar", "kilobar", "megabar", "gigabar" ];
+export const hbarUnits: HbarUnit[] = [
+    HbarUnit.Tinybar,
+    HbarUnit.Microbar,
+    HbarUnit.Millibar,
+    HbarUnit.Hbar,
+    HbarUnit.Kilobar,
+    HbarUnit.Megabar,
+    HbarUnit.Gigabar
+];
 
 /** Symbols for denominations of HBAR for use in UIs */
 export const hbarUnitSymbols = {
@@ -68,7 +84,7 @@ export class Hbar {
      * Wrap a raw value of HBAR, may be a string.
      */
     public static of(amount: number | BigNumber | string): Hbar {
-        return new Hbar(convertToTinybar(amount, "hbar"));
+        return new Hbar(convertToTinybar(amount, HbarUnit.Hbar));
     }
 
     /** Create an Hbar with a value of 0 tinybar; Note that this is a positive signed zero */
@@ -77,11 +93,11 @@ export class Hbar {
     }
 
     public value(): BigNumber {
-        return this.as("hbar");
+        return this.as(HbarUnit.Hbar);
     }
 
     public asTinybar(): BigNumber {
-        return this.as("tinybar");
+        return this.as(HbarUnit.Tinybar);
     }
 
     public as(unit: HbarUnit): BigNumber {
