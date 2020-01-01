@@ -1,54 +1,55 @@
 import BigNumber from "bignumber.js";
 
-const hbarAsTinybar = new BigNumber(100_000_000);
+export class HbarUnit {
+    public static readonly Tinybar = new HbarUnit("tinybar");
+    public static readonly Microbar = new HbarUnit("microbar");
+    public static readonly Millibar = new HbarUnit("millibar");
+    public static readonly Hbar = new HbarUnit("hbar");
+    public static readonly Kilobar = new HbarUnit("kilobar");
+    public static readonly Megabar = new HbarUnit("megabar");
+    public static readonly Gigabar = new HbarUnit("gigabar");
 
-/** Multipliers of tinybar to other denominations */
-export const tinybarConversions = {
-    tinybar: 1,
-    microbar: 100,
-    millibar: 100_000,
-    hbar: hbarAsTinybar,
-    kilobar: hbarAsTinybar.multipliedBy(1000),
-    megabar: hbarAsTinybar.multipliedBy(1_000_000),
-    gigabar: hbarAsTinybar.multipliedBy(1_000_000_000)
-};
+    private readonly _unit: string;
+
+    private constructor(unit: string) {
+        this._unit = unit;
+    }
+
+    public getSymbol(): string {
+        switch (this._unit) {
+            case "tinybar": return "tℏ";
+            case "microbar": return "μℏ";
+            case "millibar": return "mℏ";
+            case "hbar": return "ℏ";
+            case "kilobar": return "kℏ";
+            case "megabar": return "Mℏ";
+            case "gigabar": return "Gℏ";
+            default: throw new TypeError("HbarUnit was not a valid value");
+        }
+    }
+
+    public _toTinybarCount(): BigNumber {
+        switch (this._unit) {
+            case "tinybar": return new BigNumber(1);
+            case "microbar": return new BigNumber(100);
+            case "millibar": return new BigNumber(100_000);
+            case "hbar": return new BigNumber(100_000_000);
+            case "kilobar": return new BigNumber(100_000_000).multipliedBy(1000);
+            case "megabar": return new BigNumber(100_000_000).multipliedBy(1_000_000);
+            case "gigabar": return new BigNumber(100_000_000).multipliedBy(1_000_000_000);
+            default: throw new TypeError("HbarUnit was not a valid value");
+        }
+    }
+
+    public toString(): string {
+        return this._unit;
+    }
+}
 
 function convertToTinybar(amount: BigNumber.Value, unit: HbarUnit): BigNumber {
     const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
-    return bnAmount.multipliedBy(tinybarConversions[ unit ]);
+    return bnAmount.multipliedBy(unit._toTinybarCount());
 }
-
-export enum HbarUnit {
-    Tinybar = "tinybar",
-    Microbar = "microbar",
-    Millibar = "millibar",
-    Hbar = "hbar",
-    Kilobar = "kilobar",
-    Megabar = "megabar",
-    Gigabar = "gigabar",
-}
-
-/** The possible denominations of HBAR in order by magnitude */
-export const hbarUnits: HbarUnit[] = [
-    HbarUnit.Tinybar,
-    HbarUnit.Microbar,
-    HbarUnit.Millibar,
-    HbarUnit.Hbar,
-    HbarUnit.Kilobar,
-    HbarUnit.Megabar,
-    HbarUnit.Gigabar
-];
-
-/** Symbols for denominations of HBAR for use in UIs */
-export const hbarUnitSymbols = {
-    tinybar: "tℏ",
-    microbar: "μℏ",
-    millibar: "mℏ",
-    hbar: "ℏ",
-    kilobar: "kℏ",
-    megabar: "Mℏ",
-    gigabar: "Gℏ"
-};
 
 /**
  * Typesafe wrapper for values of HBAR providing foolproof conversions to other denominations.
@@ -101,11 +102,11 @@ export class Hbar {
     }
 
     public as(unit: HbarUnit): BigNumber {
-        if (unit === "tinybar") {
+        if (unit.toString() === "tinybar") {
             return this._tinybar;
         }
 
-        return this._tinybar.dividedBy(tinybarConversions[ unit ]);
+        return this._tinybar.dividedBy(unit._toTinybarCount());
     }
 
     public multipliedBy(amount: number | BigNumber): Hbar {

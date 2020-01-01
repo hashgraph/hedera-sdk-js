@@ -58,7 +58,7 @@ export { KeyMismatchError } from "./crypto/KeyMismatchError";
 
 export * from "./Tinybar";
 
-export { Hbar, HbarUnit, hbarUnits, hbarUnitSymbols } from "./Hbar";
+export { Hbar, HbarUnit } from "./Hbar";
 
 export { AccountId } from "./account/AccountId";
 export { ContractId } from "./contract/ContractId";
