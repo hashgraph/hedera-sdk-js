@@ -51,6 +51,11 @@ export class ContractUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
+    public setContractMemo(memo: string): this {
+        this._body.setMemo(memo);
+        return this;
+    }
+
     protected _doValidate(errors: string[]): void {
         if (!this._body.hasContractid()) {
             errors.push(".setContractId() required");

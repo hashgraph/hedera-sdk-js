@@ -52,7 +52,7 @@ export abstract class TransactionBuilder {
         return this;
     }
 
-    public setMemo(memo: string): this {
+    public setTransactionMemo(memo: string): this {
         this._inner.setMemo(memo);
         return this;
     }
@@ -89,9 +89,9 @@ export abstract class TransactionBuilder {
         }
 
         if (client && !this._inner.hasTransactionid()) {
-            if (client._getOperator()) {
-                this._inner
-                    .setTransactionid(new TransactionId(client._getOperator()!.account)._toProto());
+            if (client._getOperatorAccountId()) {
+                const tx = new TransactionId(client._getOperatorAccountId()!);
+                this._inner.setTransactionid(tx._toProto());
             }
         }
 

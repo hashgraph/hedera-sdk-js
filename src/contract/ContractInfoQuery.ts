@@ -19,7 +19,7 @@ export interface ContractInfo {
     expirationTime: Date;
     autoRenewPeriod: number;
     storage: number;
-    memo: string;
+    contractMemo: string;
 }
 
 export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
@@ -71,7 +71,7 @@ export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
             expirationTime: timestampToDate(contractInfo.getExpirationtime()!),
             autoRenewPeriod: contractInfo.getAutorenewperiod()!.getSeconds(),
             storage: contractInfo.getStorage(),
-            memo: contractInfo.getMemo()
+            contractMemo: contractInfo.getMemo()
         };
     }
 }

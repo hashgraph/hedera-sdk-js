@@ -37,20 +37,6 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setTransactionId(txLike: TransactionIdLike): this {
-        const txId = new TransactionId(txLike);
-
-        if (!this._body.hasShardid()) {
-            this.setShardId(txId.accountId.shard);
-        }
-
-        if (!this._body.hasRealmid()) {
-            this.setRealmId(txId.accountId.realm);
-        }
-
-        return super.setTransactionId(txId);
-    }
-
     public setAutoRenewPeriod(seconds: number): this {
         this._body.setAutorenewperiod(newDuration(seconds));
         return this;
@@ -73,26 +59,6 @@ export class AccountCreateTransaction extends TransactionBuilder {
 
     public setReceiverSignatureRequired(required: boolean): this {
         this._body.setReceiversigrequired(required);
-        return this;
-    }
-
-    public setRealmId(realmnum: number): this {
-        const realm = new RealmID();
-        realm.setRealmnum(realmnum);
-        realm.setShardnum(this._body.hasShardid() ? this._body.getShardid()!.getShardnum() : 0);
-        this._body.setRealmid(realm);
-        return this;
-    }
-
-    public setShardId(shardnum: number): this {
-        const shard = new ShardID();
-        shard.setShardnum(shardnum);
-        this._body.setShardid(shard);
-        return this;
-    }
-
-    public setNewRealmAdminKey(key: PublicKey): this {
-        this._body.setNewrealmadminkey(key._toProtoKey());
         return this;
     }
 
