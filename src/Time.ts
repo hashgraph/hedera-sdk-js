@@ -13,7 +13,7 @@ export class Time {
         return new Date(this.seconds * 1000 + Math.floor(this.nanos / 1_000_000));
     }
 
-    public static fromProto(timestamp: ProtoTimestamp): Time {
+    public static _fromProto(timestamp: ProtoTimestamp): Time {
         return new Time(timestamp.getSeconds(), timestamp.getNanos());
     }
 }

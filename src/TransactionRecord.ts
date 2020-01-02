@@ -23,7 +23,7 @@ export function recordListToSdk(records: ProtoTransactionRecord[]): TransactionR
     return records.map((record) => ({
         receipt: TransactionReceipt._fromProto(record.getReceipt()!),
         transactionHash: record.getTransactionhash_asU8(),
-        consensusTimestamp: Time.fromProto(record.getConsensustimestamp()!),
+        consensusTimestamp: Time._fromProto(record.getConsensustimestamp()!),
         transactionId: TransactionId._fromProto(record.getTransactionid()!),
         transactionMemo: record.getMemo(),
         transactionFee: Hbar.fromTinybar(record.getTransactionfee()),
