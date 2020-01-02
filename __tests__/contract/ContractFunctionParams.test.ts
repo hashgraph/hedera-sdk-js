@@ -142,4 +142,14 @@ describe("ContractFunctionParams", () => {
         expect(sixthParamSecondEl).toStrictEqual("74776f0000000000000000000000000000000000000000000000000000000000");
         expect(finished).toHaveLength(480);
     });
+
+    it("encodes address", () => {
+        const params = new ContractFunctionParams()
+            .addAddress("888937961a6E3D313e481a2c5BAd9791fD11ea5b");
+
+        const finished = params._build(null);
+        const firstParam = Buffer.from(finished.slice((32 * 0), (32 * 1)).buffer).toString("hex");
+        expect(firstParam).toStrictEqual("000000000000000000000000888937961a6e3d313e481a2c5bad9791fd11ea5b");
+        expect(finished).toHaveLength(32);
+    });
 });

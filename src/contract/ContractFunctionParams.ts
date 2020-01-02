@@ -261,13 +261,13 @@ function argumentToBytes(
             value = param as Uint8Array;
             return value;
         case ArgumentType.address:
-            value.set(param as Uint8Array, 20);
+            value.set(param as Uint8Array, (32 - 20));
             return value;
         case ArgumentType.bool:
             value[ 31 ] = (param as boolean) ? 1 : 0;
             return value;
         case ArgumentType.func:
-            value.set(param as Uint8Array, 0);
+            value.set(param as Uint8Array, (32 - 24));
             return value;
         case ArgumentType.bytesfix:
             value.set(param as Uint8Array, 0);
