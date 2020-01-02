@@ -168,7 +168,7 @@ export class Transaction {
         return this.id.getRecord(client);
     }
 
-    public toProto(): Transaction_ {
+    public _toProto(): Transaction_ {
         return Message.cloneMessage(this._inner);
     }
 
@@ -177,7 +177,7 @@ export class Transaction {
     }
 
     public toString(): string {
-        const tx = this.toProto().toObject();
+        const tx = this._toProto().toObject();
         const bodybytes = tx.bodybytes instanceof Uint8Array ?
             Buffer.from(tx.bodybytes) :
             Buffer.from(tx.bodybytes, "base64");

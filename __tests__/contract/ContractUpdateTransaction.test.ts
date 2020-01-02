@@ -19,7 +19,7 @@ describe("ContractUpdateTransaction", () => {
             .build(mockClient)
             .sign(privateKey);
 
-        const tx = transaction.toProto().toObject();
+        const tx = transaction._toProto().toObject();
         expect(tx).toStrictEqual({
             body: undefined,
             bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeEpECgIYAxIMCIeHq+wFEMDeioQBGiISIODI7CdYpYef+sImoTwMUWt5nnLjUUGg3YKPlNN5iKS3MgIYAzoECIDqSUICGAU=",

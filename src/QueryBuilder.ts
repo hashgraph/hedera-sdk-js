@@ -50,7 +50,7 @@ export abstract class QueryBuilder<T> {
      * `CryptoTransferTransaction` as the query payment.
      */
     public setQueryPaymentTransaction(transaction: import("./Transaction").Transaction): this {
-        this._getHeader().setPayment(transaction.toProto());
+        this._getHeader().setPayment(transaction._toProto());
 
         return this;
     }
@@ -83,7 +83,7 @@ export abstract class QueryBuilder<T> {
                 .addSender(client._getOperatorAccountId()!, 0)
                 .build(client)
                 .signWith(client._getOperatorKey()!, client._getOperatorSigner()!))
-                .toProto());
+                ._toProto());
 
             const resp = await client._unaryCall(node.url, this._inner.clone(), this._getMethod());
 

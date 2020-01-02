@@ -16,7 +16,7 @@ describe("FileCreateTransaction", () => {
             .build(mockClient)
             .sign(privateKey);
 
-        const tx = transaction.toProto().toObject();
+        const tx = transaction._toProto().toObject();
         expect(tx).toStrictEqual({
             body: undefined,
             bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeIoBThILCO/urAcQwPvU8wEaJAoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktyIZVGhpcyBpcyB0aGUgZmlsZSBjb250ZW50cw==",

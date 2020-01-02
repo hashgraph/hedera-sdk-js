@@ -19,7 +19,7 @@ describe("AccountUpdateTransaction", () => {
 
         const bodybytes = "Cg4KCAjcyQcQ258JEgIYAxICGAMYgMLXLyICCHh6KBICGAMaIhIg4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=";
 
-        const tx = transaction.toProto().toObject();
+        const tx = transaction._toProto().toObject();
         expect(tx).toStrictEqual({
             body: undefined,
             bodybytes,

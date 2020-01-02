@@ -13,6 +13,6 @@ describe("Transaction", () => {
 
         const transaction2 = Transaction.fromBytes(txnBytes);
 
-        expect(transaction.toProto()).toStrictEqual(transaction2.toProto());
+        expect(transaction._toProto()).toStrictEqual(transaction2._toProto());
     });
 });

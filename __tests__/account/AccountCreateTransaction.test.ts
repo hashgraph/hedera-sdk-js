@@ -18,7 +18,7 @@ describe("AccountCreateTransaction", () => {
 
         const bodybytes = "Cg4KCAjcyQcQ258JEgIYAxICGAMYgMLXLyICCHhaPwoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktzD//////////384//////////9/SgUI0MjhAw==";
 
-        const tx = transaction.toProto().toObject();
+        const tx = transaction._toProto().toObject();
         const expectedTx = {
             body: undefined as undefined | Record<string, any>,
             bodybytes,

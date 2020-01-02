@@ -15,7 +15,7 @@ describe("SystemDeleteTransaction", () => {
             .build(mockClient)
             .sign(privateKey);
 
-        const tx = transaction.toProto().toObject();
+        const tx = transaction._toProto().toObject();
         expect(tx).toStrictEqual({
             body: undefined,
             bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeKIBCwoCGAMaBQjv7qwH",
