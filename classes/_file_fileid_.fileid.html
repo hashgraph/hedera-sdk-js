@@ -105,8 +105,10 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_file_fileid_.fileid.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_file_fileid_.fileid.html#tosolidityaddress" class="tsd-kind-icon">to<wbr>Solidity<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_file_fileid_.fileid.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_file_fileid_.fileid.html#_fromproto" class="tsd-kind-icon">_from<wbr>Proto</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_file_fileid_.fileid.html#fromsolidityaddress" class="tsd-kind-icon">from<wbr>Solidity<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_file_fileid_.fileid.html#fromstring" class="tsd-kind-icon">from<wbr>String</a></li>
 							</ul>
 						</section>
@@ -119,13 +121,34 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>File<wbr>Id<span class="tsd-signature-symbol">(</span>shard<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, realm<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, file<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a></li>
 						<li class="tsd-signature tsd-kind-icon">new <wbr>File<wbr>Id<span class="tsd-signature-symbol">(</span>fileId<span class="tsd-signature-symbol">: </span><a href="../modules/_file_fileid_.html#fileidlike" class="tsd-signature-type">FileIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/file/FileId.ts#L23">src/file/FileId.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L24">src/file/FileId.ts:24</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>shard: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>realm: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>file: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L26">src/file/FileId.ts:26</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -147,7 +170,7 @@
 					<div class="tsd-signature tsd-kind-icon">file<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/file/FileId.ts#L8">src/file/FileId.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L9">src/file/FileId.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -157,7 +180,7 @@
 					<div class="tsd-signature tsd-kind-icon">realm<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/file/FileId.ts#L7">src/file/FileId.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L8">src/file/FileId.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -167,7 +190,7 @@
 					<div class="tsd-signature tsd-kind-icon">shard<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/file/FileId.ts#L6">src/file/FileId.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L7">src/file/FileId.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -177,7 +200,7 @@
 					<div class="tsd-signature tsd-kind-icon">ADDRESS_<wbr>BOOK<span class="tsd-signature-symbol">:</span> <a href="_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a><span class="tsd-signature-symbol"> =&nbsp;new FileId(&quot;0.0.102&quot;)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/file/FileId.ts#L13">src/file/FileId.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L14">src/file/FileId.ts:14</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -192,7 +215,7 @@
 					<div class="tsd-signature tsd-kind-icon">EXCHANGE_<wbr>RATES<span class="tsd-signature-symbol">:</span> <a href="_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a><span class="tsd-signature-symbol"> =&nbsp;new FileId(&quot;0.0.112&quot;)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/file/FileId.ts#L23">src/file/FileId.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L24">src/file/FileId.ts:24</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -207,7 +230,7 @@
 					<div class="tsd-signature tsd-kind-icon">FEE_<wbr>SCHEDULE<span class="tsd-signature-symbol">:</span> <a href="_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a><span class="tsd-signature-symbol"> =&nbsp;new FileId(&quot;0.0.111&quot;)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/file/FileId.ts#L18">src/file/FileId.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L19">src/file/FileId.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -229,10 +252,27 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/file/FileId.ts#L53">src/file/FileId.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L90">src/file/FileId.ts:90</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">FileID</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tosolidityaddress" class="tsd-anchor"></a>
+					<h3>to<wbr>Solidity<wbr>Address</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Solidity<wbr>Address<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L78">src/file/FileId.ts:78</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -246,7 +286,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/file/FileId.ts#L48">src/file/FileId.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L58">src/file/FileId.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -263,13 +303,36 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/file/FileId.ts#L40">src/file/FileId.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L50">src/file/FileId.ts:50</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>fileId: <span class="tsd-signature-type">FileID</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="fromsolidityaddress" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> from<wbr>Solidity<wbr>Address</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">from<wbr>Solidity<wbr>Address<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L62">src/file/FileId.ts:62</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>address: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a></h4>
@@ -286,7 +349,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/file/FileId.ts#L35">src/file/FileId.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/file/FileId.ts#L45">src/file/FileId.ts:45</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -344,10 +407,16 @@
 								<a href="_file_fileid_.fileid.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_file_fileid_.fileid.html#tosolidityaddress" class="tsd-kind-icon">to<wbr>Solidity<wbr>Address</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_file_fileid_.fileid.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_file_fileid_.fileid.html#_fromproto" class="tsd-kind-icon">_from<wbr>Proto</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="_file_fileid_.fileid.html#fromsolidityaddress" class="tsd-kind-icon">from<wbr>Solidity<wbr>Address</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_file_fileid_.fileid.html#fromstring" class="tsd-kind-icon">from<wbr>String</a>

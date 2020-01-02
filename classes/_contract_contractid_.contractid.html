@@ -108,8 +108,10 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_contract_contractid_.contractid.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_contract_contractid_.contractid.html#_toprotokey" class="tsd-kind-icon">_to<wbr>Proto<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_contract_contractid_.contractid.html#tosolidityaddress" class="tsd-kind-icon">to<wbr>Solidity<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_contract_contractid_.contractid.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_contract_contractid_.contractid.html#_fromproto" class="tsd-kind-icon">_from<wbr>Proto</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_contract_contractid_.contractid.html#fromsolidityaddress" class="tsd-kind-icon">from<wbr>Solidity<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_contract_contractid_.contractid.html#fromstring" class="tsd-kind-icon">from<wbr>String</a></li>
 							</ul>
 						</section>
@@ -122,13 +124,34 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Contract<wbr>Id<span class="tsd-signature-symbol">(</span>shard<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, realm<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, contract<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_contract_contractid_.contractid.html" class="tsd-signature-type">ContractId</a></li>
 						<li class="tsd-signature tsd-kind-icon">new <wbr>Contract<wbr>Id<span class="tsd-signature-symbol">(</span>contractId<span class="tsd-signature-symbol">: </span><a href="../modules/_contract_contractid_.html#contractidlike" class="tsd-signature-type">ContractIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_contract_contractid_.contractid.html" class="tsd-signature-type">ContractId</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/308f080/src/contract/ContractId.ts#L9">src/contract/ContractId.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L10">src/contract/ContractId.ts:10</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>shard: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>realm: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>contract: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_contract_contractid_.contractid.html" class="tsd-signature-type">ContractId</a></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L12">src/contract/ContractId.ts:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -150,7 +173,7 @@
 					<div class="tsd-signature tsd-kind-icon">contract<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/308f080/src/contract/ContractId.ts#L9">src/contract/ContractId.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L10">src/contract/ContractId.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -160,7 +183,7 @@
 					<div class="tsd-signature tsd-kind-icon">realm<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/308f080/src/contract/ContractId.ts#L8">src/contract/ContractId.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L9">src/contract/ContractId.ts:9</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -170,7 +193,7 @@
 					<div class="tsd-signature tsd-kind-icon">shard<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/308f080/src/contract/ContractId.ts#L7">src/contract/ContractId.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L8">src/contract/ContractId.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -187,7 +210,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/308f080/src/contract/ContractId.ts#L41">src/contract/ContractId.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L78">src/contract/ContractId.ts:78</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ContractID</span></h4>
@@ -205,10 +228,27 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_crypto_publickey_.publickey.html">PublicKey</a>.<a href="_crypto_publickey_.publickey.html#_toprotokey">_toProtoKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/308f080/src/contract/ContractId.ts#L50">src/contract/ContractId.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L87">src/contract/ContractId.ts:87</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Key</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tosolidityaddress" class="tsd-anchor"></a>
+					<h3>to<wbr>Solidity<wbr>Address</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Solidity<wbr>Address<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L66">src/contract/ContractId.ts:66</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -222,7 +262,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/308f080/src/contract/ContractId.ts#L36">src/contract/ContractId.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L46">src/contract/ContractId.ts:46</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -239,13 +279,36 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/308f080/src/contract/ContractId.ts#L28">src/contract/ContractId.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L38">src/contract/ContractId.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>contractId: <span class="tsd-signature-type">ContractID</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_contract_contractid_.contractid.html" class="tsd-signature-type">ContractId</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="fromsolidityaddress" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> from<wbr>Solidity<wbr>Address</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">from<wbr>Solidity<wbr>Address<span class="tsd-signature-symbol">(</span>address<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_contract_contractid_.contractid.html" class="tsd-signature-type">ContractId</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L50">src/contract/ContractId.ts:50</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>address: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_contract_contractid_.contractid.html" class="tsd-signature-type">ContractId</a></h4>
@@ -262,7 +325,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/308f080/src/contract/ContractId.ts#L23">src/contract/ContractId.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c0b48b7/src/contract/ContractId.ts#L33">src/contract/ContractId.ts:33</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -314,10 +377,16 @@
 								<a href="_contract_contractid_.contractid.html#_toprotokey" class="tsd-kind-icon">_to<wbr>Proto<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_contract_contractid_.contractid.html#tosolidityaddress" class="tsd-kind-icon">to<wbr>Solidity<wbr>Address</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_contract_contractid_.contractid.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_contract_contractid_.contractid.html#_fromproto" class="tsd-kind-icon">_from<wbr>Proto</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="_contract_contractid_.contractid.html#fromsolidityaddress" class="tsd-kind-icon">from<wbr>Solidity<wbr>Address</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_contract_contractid_.contractid.html#fromstring" class="tsd-kind-icon">from<wbr>String</a>
