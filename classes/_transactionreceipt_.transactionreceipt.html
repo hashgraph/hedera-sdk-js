@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Ed25519PublicKey | @hashgraph/sdk - v1.0.0-beta.3</title>
+	<title>TransactionReceipt | @hashgraph/sdk - v1.0.0-beta.3</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_crypto_ed25519publickey_.html">&quot;crypto/Ed25519PublicKey&quot;</a>
+					<a href="../modules/_transactionreceipt_.html">&quot;TransactionReceipt&quot;</a>
 				</li>
 				<li>
-					<a href="_crypto_ed25519publickey_.ed25519publickey.html">Ed25519PublicKey</a>
+					<a href="_transactionreceipt_.transactionreceipt.html">TransactionReceipt</a>
 				</li>
 			</ul>
-			<h1>Class Ed25519PublicKey</h1>
+			<h1>Class TransactionReceipt</h1>
 		</div>
 	</div>
 </header>
@@ -69,14 +69,8 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Ed25519PublicKey</span>
+						<span class="target">TransactionReceipt</span>
 					</li>
-				</ul>
-			</section>
-			<section class="tsd-panel">
-				<h3>Implements</h3>
-				<ul class="tsd-hierarchy">
-					<li><a href="_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -84,144 +78,120 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_transactionreceipt_.transactionreceipt.html#exchangerateset" class="tsd-kind-icon">exchange<wbr>Rate<wbr>Set</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_transactionreceipt_.transactionreceipt.html#status" class="tsd-kind-icon">status</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519publickey_.ed25519publickey.html#_bytesequal" class="tsd-kind-icon">_bytes<wbr>Equal</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519publickey_.ed25519publickey.html#_toprotokey" class="tsd-kind-icon">_to<wbr>Proto<wbr>Key</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519publickey_.ed25519publickey.html#tobytes" class="tsd-kind-icon">to<wbr>Bytes</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519publickey_.ed25519publickey.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_crypto_ed25519publickey_.ed25519publickey.html#frombytes" class="tsd-kind-icon">from<wbr>Bytes</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_crypto_ed25519publickey_.ed25519publickey.html#fromstring" class="tsd-kind-icon">from<wbr>String</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_transactionreceipt_.transactionreceipt.html#getaccountid" class="tsd-kind-icon">get<wbr>Account<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_transactionreceipt_.transactionreceipt.html#getcontractid" class="tsd-kind-icon">get<wbr>Contract<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_transactionreceipt_.transactionreceipt.html#getfileid" class="tsd-kind-icon">get<wbr>File<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_transactionreceipt_.transactionreceipt.html#_fromproto" class="tsd-kind-icon">_from<wbr>Proto</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="exchangerateset" class="tsd-anchor"></a>
+					<h3>exchange<wbr>Rate<wbr>Set</h3>
+					<div class="tsd-signature tsd-kind-icon">exchange<wbr>Rate<wbr>Set<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_exchangerate_.exchangerateset.html" class="tsd-signature-type">ExchangeRateSet</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/TransactionReceipt.ts#L13">src/TransactionReceipt.ts:13</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="status" class="tsd-anchor"></a>
+					<h3>status</h3>
+					<div class="tsd-signature tsd-kind-icon">status<span class="tsd-signature-symbol">:</span> <a href="../enums/_status_.status.html" class="tsd-signature-type">Status</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/TransactionReceipt.ts#L9">src/TransactionReceipt.ts:9</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="_bytesequal" class="tsd-anchor"></a>
-					<h3>_bytes<wbr>Equal</h3>
+					<a name="getaccountid" class="tsd-anchor"></a>
+					<h3>get<wbr>Account<wbr>Id</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">_bytes<wbr>Equal<span class="tsd-signature-symbol">(</span>bytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Account<wbr>Id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_account_accountid_.accountid.html" class="tsd-signature-type">AccountId</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/crypto/Ed25519PublicKey.ts#L64">src/crypto/Ed25519PublicKey.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/TransactionReceipt.ts#L29">src/TransactionReceipt.ts:29</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>bytes: <span class="tsd-signature-type">Uint8Array</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_account_accountid_.accountid.html" class="tsd-signature-type">AccountId</a></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="_toprotokey" class="tsd-anchor"></a>
-					<h3>_to<wbr>Proto<wbr>Key</h3>
+					<a name="getcontractid" class="tsd-anchor"></a>
+					<h3>get<wbr>Contract<wbr>Id</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">_to<wbr>Proto<wbr>Key<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Key</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Contract<wbr>Id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_contract_contractid_.contractid.html" class="tsd-signature-type">ContractId</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/crypto/Ed25519PublicKey.ts#L56">src/crypto/Ed25519PublicKey.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/TransactionReceipt.ts#L37">src/TransactionReceipt.ts:37</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Key</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_contract_contractid_.contractid.html" class="tsd-signature-type">ContractId</a></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="tobytes" class="tsd-anchor"></a>
-					<h3>to<wbr>Bytes</h3>
+					<a name="getfileid" class="tsd-anchor"></a>
+					<h3>get<wbr>File<wbr>Id</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">to<wbr>Bytes<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<wbr>File<wbr>Id<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/crypto/Ed25519PublicKey.ts#L43">src/crypto/Ed25519PublicKey.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/TransactionReceipt.ts#L33">src/TransactionReceipt.ts:33</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="tostring" class="tsd-anchor"></a>
-					<h3>to<wbr>String</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">to<wbr>String<span class="tsd-signature-symbol">(</span>raw<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/crypto/Ed25519PublicKey.ts#L47">src/crypto/Ed25519PublicKey.ts:47</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> raw: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a></h4>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="frombytes" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> from<wbr>Bytes</h3>
+					<a name="_fromproto" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> _from<wbr>Proto</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">from<wbr>Bytes<span class="tsd-signature-symbol">(</span>keyData<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a></li>
+						<li class="tsd-signature tsd-kind-icon">_from<wbr>Proto<span class="tsd-signature-symbol">(</span>receipt<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ProtoTransactionReceipt</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_transactionreceipt_.transactionreceipt.html" class="tsd-signature-type">TransactionReceipt</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/crypto/Ed25519PublicKey.ts#L18">src/crypto/Ed25519PublicKey.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/TransactionReceipt.ts#L42">src/TransactionReceipt.ts:42</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>keyData: <span class="tsd-signature-type">Uint8Array</span></h5>
+									<h5>receipt: <span class="tsd-signature-type">ProtoTransactionReceipt</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="fromstring" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> from<wbr>String</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">from<wbr>String<span class="tsd-signature-symbol">(</span>keyStr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/aa87295/src/crypto/Ed25519PublicKey.ts#L22">src/crypto/Ed25519PublicKey.ts:22</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>keyStr: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_transactionreceipt_.transactionreceipt.html" class="tsd-signature-type">TransactionReceipt</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -234,7 +204,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_crypto_ed25519publickey_.html">&quot;crypto/<wbr>Ed25519<wbr>Public<wbr>Key&quot;</a>
+						<a href="../modules/_transactionreceipt_.html">&quot;<wbr>Transaction<wbr>Receipt&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -243,25 +213,25 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-kind-icon">Ed25519<wbr>Public<wbr>Key</a>
+						<a href="_transactionreceipt_.transactionreceipt.html" class="tsd-kind-icon">Transaction<wbr>Receipt</a>
 						<ul>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_crypto_ed25519publickey_.ed25519publickey.html#_bytesequal" class="tsd-kind-icon">_bytes<wbr>Equal</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_transactionreceipt_.transactionreceipt.html#exchangerateset" class="tsd-kind-icon">exchange<wbr>Rate<wbr>Set</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_transactionreceipt_.transactionreceipt.html#status" class="tsd-kind-icon">status</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_crypto_ed25519publickey_.ed25519publickey.html#_toprotokey" class="tsd-kind-icon">_to<wbr>Proto<wbr>Key</a>
+								<a href="_transactionreceipt_.transactionreceipt.html#getaccountid" class="tsd-kind-icon">get<wbr>Account<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_crypto_ed25519publickey_.ed25519publickey.html#tobytes" class="tsd-kind-icon">to<wbr>Bytes</a>
+								<a href="_transactionreceipt_.transactionreceipt.html#getcontractid" class="tsd-kind-icon">get<wbr>Contract<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_crypto_ed25519publickey_.ed25519publickey.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
+								<a href="_transactionreceipt_.transactionreceipt.html#getfileid" class="tsd-kind-icon">get<wbr>File<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_crypto_ed25519publickey_.ed25519publickey.html#frombytes" class="tsd-kind-icon">from<wbr>Bytes</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_crypto_ed25519publickey_.ed25519publickey.html#fromstring" class="tsd-kind-icon">from<wbr>String</a>
+								<a href="_transactionreceipt_.transactionreceipt.html#_fromproto" class="tsd-kind-icon">_from<wbr>Proto</a>
 							</li>
 						</ul>
 					</li>
