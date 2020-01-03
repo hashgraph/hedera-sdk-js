@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.1-beta.4
+
+### Added
+
+ * `Client.forTestnet` makes a new client configured to talk to TestNet (use `.setOperator` to set an operater)
+ 
+ * `Client.forMainnet` makes a new client configured to talk to Mainnet (use `.setOperator` to set an operater)
+
+### Changed
+
+ * Renamed `TransactionReceipt.accountId`, `TransactionReceipt.contractId`, `TransactionReceipt.fileId`, and
+   `TransactionReceipt.contractId` to `TransactionReceipt.getAccountId()`, etc. to add an explicit illegal 
+   state check as these fields are mutually exclusive
+   
+ * Renamed `TransactionRecord.contractCallResult` to `TransactionRecord.getContractExecuteResult()`
+ 
+ * Renamed `TransactionRecord.contractCreateResult` to `TransactionRecord.getContractCreateResult()`
+
+## v1.0.1-beta.3
+
+### Changed
+
+ * `TransactionBuilder.setMemo` is renamed to `TransactionBuilder.setTransactionMemo` to avoid confusion 
+   as there are 2 other kinds of memos on transactions
+ 
+### Fixed
+
+ * Fix usage on Node versions less than 12.x
+
 ## v1.0.0-beta.2
 
 ### Changed
