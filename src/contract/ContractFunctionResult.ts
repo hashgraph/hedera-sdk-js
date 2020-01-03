@@ -51,12 +51,12 @@ export class ContractFunctionResult {
         // Arrays in solidity cannot be longer than 1024:
         // https://solidity.readthedocs.io/en/v0.4.21/introduction-to-smart-contracts.html
         const offset = this.getInt32(index);
-        const len =
-        new DataView(
+        const len = new DataView(
             this._bytes.buffer,
-            offset + 28,
+            this._bytes.byteOffset + offset + 28,
             4
         ).getInt32(0);
+
         return this._bytes.subarray(offset + 32, offset + 32 + len);
     }
 
@@ -70,7 +70,7 @@ export class ContractFunctionResult {
         // using platform endianness which is little-endian on x86
         return new DataView(
             this._bytes.buffer,
-            index * 32 + 28,
+            this._bytes.byteOffset + index * 32 + 28,
             4
         ).getInt32(0);
     }
