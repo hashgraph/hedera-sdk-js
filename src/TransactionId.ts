@@ -4,6 +4,7 @@ import {
 } from "./account/AccountId";
 import { TransactionID } from "./generated/BasicTypes_pb";
 import { orThrow } from "./util";
+import { throwIfExceptional } from "./errors";
 import { Timestamp } from "./generated/Timestamp_pb";
 import { dateToTimestamp } from "./Timestamp";
 import { BaseClient } from "./BaseClient";
@@ -83,10 +84,15 @@ export class TransactionId {
         return `${this.accountId.toString()}@${this.validStart.seconds}.${this.validStart.nanos}`;
     }
 
-    public getReceipt(client: BaseClient): Promise<TransactionReceipt> {
-        return new TransactionReceiptQuery()
+    public async getReceipt(client: BaseClient): Promise<TransactionReceipt> {
+        const receipt = await new TransactionReceiptQuery()
             .setTransactionId(this)
             .execute(client);
+
+        // Throw an exception on an invalid receipt status
+        throwIfExceptional(receipt.status, true);
+
+        return receipt;
     }
 
     public async getRecord(client: BaseClient): Promise<TransactionRecord> {
