@@ -1,15 +1,15 @@
 const {
     Client, FileCreateTransaction, ContractCreateTransaction, Hbar, Ed25519PrivateKey,
-    ContractFunctionParams, ContractCallQuery
+    ContractFunctionParams, ContractCallQuery, ContractExecuteTransaction
 } = require("@hashgraph/sdk");
 
 function createHederaClient() {
-    const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
-    const operatorAccount = process.env.OPERATOR_ID;
-
-    if (operatorPrivateKey == null || operatorAccount == null) {
+    if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
         throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
     }
+
+    const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
+    const operatorAccount = process.env.OPERATOR_ID;
 
     return [
         operatorPrivateKey,
@@ -38,7 +38,7 @@ async function main() {
         .setContents(smartContractByteCode)
         .execute(hederaClient))
         .getReceipt(hederaClient))
-        .fileId;
+        .getFileId();
 
     console.log("contract bytecode file:", byteCodeFileId.toString());
 
@@ -47,7 +47,7 @@ async function main() {
         .setMaxTransactionFee(Hbar.of(100))
         // Failing to set this to an adequate amount
         // INSUFFICIENT_GAS
-        .setGas(10000)
+        .setGas(2000) // ~1260
         // Failing to set parameters when parameters are required
         // CONTRACT_REVERT_EXECUTED
         .setConstructorParams(new ContractFunctionParams()
@@ -56,24 +56,45 @@ async function main() {
         .execute(hederaClient))
         .getRecord(hederaClient);
 
+    const newContractId = record.receipt.getContractId();
+
     console.log("contract create gas used:", record.contractCreateResult.gasUsed);
-    console.log("contract create transaction fee:", record.transactionFee);
-    console.log("contract:", record.receipt.contractId.toString());
+    console.log("contract create transaction fee:", record.transactionFee.asTinybar());
+    console.log("contract:", newContractId.toString());
 
     // Next let's ask for the current message (we set on creation)
-    const callResult = await new ContractCallQuery()
-        .setContractId(record.receipt.contractId)
-        .setGas(1000)
+    let callResult = await new ContractCallQuery()
+        .setContractId(newContractId)
+        .setGas(1000) // ~897
         .setFunction("getMessage", null)
         .execute(hederaClient);
 
     console.log("call gas used:", callResult.gasUsed);
     console.log("message:", callResult.getString(0));
 
-    // eslint-disable-next-line unicorn/expiring-todo-comments
-    // TODO: Update the message
-    // eslint-disable-next-line unicorn/expiring-todo-comments
-    // TODO: Set a new message
+    // Update the message
+    const getRecord = await (await new ContractExecuteTransaction()
+        .setContractId(newContractId)
+        .setGas(7000) // ~6016
+        .setFunction("setMessage", new ContractFunctionParams()
+            .addString("hello from hedera again!"))
+        .execute(hederaClient))
+        // [getReceipt] or [getRecord] waits for consensus before continuing 
+        //      and will throw an exception 
+        //      on an error received during that process like INSUFFICENT_GAS
+        .getRecord(hederaClient);
+
+    console.log("execute gas used:", getRecord.contractCallResult.gasUsed)
+
+    // Next let's ask for the new message
+    callResult = await new ContractCallQuery()
+        .setContractId(newContractId)
+        .setGas(1000) // ~897
+        .setFunction("getMessage", null)
+        .execute(hederaClient);
+
+    console.log("call gas used:", callResult.gasUsed);
+    console.log("message:", callResult.getString(0));
 }
 
 main();
