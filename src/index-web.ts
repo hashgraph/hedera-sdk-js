@@ -6,6 +6,8 @@ import Code = grpc.Code;
 
 export * from "./exports";
 
+const mainnetProxy = { "https://grpc-web.myhbarwallet.com": { shard: 0, realm: 0, account: 3 }};
+
 const testnetProxy = { "https://grpc-web.testnet.myhbarwallet.com": { shard: 0, realm: 0, account: 3 }};
 
 /** This implementation of `BaseClient` is exported for browser usage. */
@@ -16,6 +18,26 @@ export class Client extends BaseClient {
      */
     public constructor({ network = testnetProxy, operator }: ClientConfig) {
         super(network, operator);
+    }
+
+    public static forMainnet(): Client {
+        return new Client({ network: mainnetProxy });
+    }
+
+    public static forTestnet(): Client {
+        return new Client({ network: testnetProxy });
+    }
+
+    public static async fromFile(): Promise<Client> {
+        throw new Error("Client.fromFile is not supported in the browser");
+    }
+
+    public static async fromJson(text: string): Promise<Client> {
+        return new Client(JSON.parse(text));
+    }
+
+    public close(): Promise<void> {
+        throw new Error("Client.close is not supported in the browser");
     }
 
     /* eslint-disable-next-line @typescript-eslint/member-naming */

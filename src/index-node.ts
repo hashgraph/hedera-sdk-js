@@ -58,10 +58,18 @@ export class Client extends BaseClient {
         return new Client({ network: testnetNodes });
     }
 
-    public static async fromFile(filename: string, operator?: Operator): Promise<Client> {
-        const network: Nodes = JSON.parse(await readFile(filename, "utf8"));
+    public static async fromFile(filename: string): Promise<Client> {
+        return Client.fromJson(await readFile(filename, "utf8"));
+    }
 
-        return new Client({ network, operator });
+    public static async fromJson(text: string): Promise<Client> {
+        return new Client(JSON.parse(text));
+    }
+
+    public close(): void {
+        for (const client of Object.values(this._nodeClients)) {
+            client.close();
+        }
     }
 
     /* eslint-disable-next-line @typescript-eslint/member-naming */

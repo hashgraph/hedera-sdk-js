@@ -95,6 +95,8 @@ async function main() {
 
     console.log("call gas used:", callResult.gasUsed);
     console.log("message:", callResult.getString(0));
+
+    hederaClient.close();
 }
 
 main();
