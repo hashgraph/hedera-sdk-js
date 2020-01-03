@@ -8,7 +8,7 @@ import { Response } from "./generated/Response_pb";
 import { TransactionReceipt } from "./TransactionReceipt";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
-import { ResponseCode } from "./errors";
+import { ResponseCode, throwIfExceptional } from "./errors";
 import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
 
 export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
@@ -80,6 +80,9 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
 
     protected _mapResponse(response: Response): TransactionReceipt {
         const receipt = response.getTransactiongetreceipt()!;
+
+        // Throw an exception on an invalid receipt status
+        throwIfExceptional(receipt.getReceipt()!.getStatus()!, true);
 
         return TransactionReceipt._fromProto(receipt.getReceipt()!);
     }
