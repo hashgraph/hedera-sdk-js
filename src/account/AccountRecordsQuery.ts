@@ -6,7 +6,7 @@ import { CryptoService } from "../generated/CryptoService_pb_service";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { AccountId, AccountIdLike } from "./AccountId";
 import { CryptoGetAccountRecordsQuery } from "../generated/CryptoGetAccountRecords_pb";
-import { recordListToSdk, TransactionRecord } from "../TransactionRecord";
+import { TransactionRecord } from "../TransactionRecord";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
 export class AccountRecordsQuery extends QueryBuilder<TransactionRecord[]> {
@@ -47,7 +47,7 @@ export class AccountRecordsQuery extends QueryBuilder<TransactionRecord[]> {
     protected _mapResponse(response: Response): TransactionRecord[] {
         const accountInfo = response.getCryptogetaccountrecords()!;
 
-        return recordListToSdk(accountInfo.getRecordsList());
+        return accountInfo.getRecordsList().map(TransactionRecord._fromProto);
     }
 }
 

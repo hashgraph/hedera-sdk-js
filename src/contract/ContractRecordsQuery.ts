@@ -4,7 +4,7 @@ import { Query } from "../generated/Query_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Response } from "../generated/Response_pb";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
-import { recordListToSdk, TransactionRecord } from "../TransactionRecord";
+import { TransactionRecord } from "../TransactionRecord";
 import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractGetRecordsQuery } from "../generated/ContractGetRecords_pb";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
@@ -45,6 +45,6 @@ export class ContractRecordsQuery extends QueryBuilder<TransactionRecord[]> {
 
     protected _mapResponse(response: Response): TransactionRecord[] {
         const contractResponse = response.getContractgetrecordsresponse()!;
-        return recordListToSdk(contractResponse.getRecordsList()!);
+        return contractResponse.getRecordsList()!.map(TransactionRecord._fromProto);
     }
 }

@@ -6,7 +6,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
 import { CryptoService } from "./generated/CryptoService_pb_service";
-import { recordListToSdk, TransactionRecord } from "./TransactionRecord";
+import { TransactionRecord } from "./TransactionRecord";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
 
 export class TransactionRecordQuery extends QueryBuilder<TransactionRecord> {
@@ -47,6 +47,6 @@ export class TransactionRecordQuery extends QueryBuilder<TransactionRecord> {
     protected _mapResponse(response: Response): TransactionRecord {
         const receipt = response.getTransactiongetrecord()!;
 
-        return recordListToSdk([ receipt.getTransactionrecord()! ])[ 0 ];
+        return TransactionRecord._fromProto(receipt.getTransactionrecord()!);
     }
 }

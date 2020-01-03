@@ -58,7 +58,7 @@ async function main() {
 
     const newContractId = record.receipt.getContractId();
 
-    console.log("contract create gas used:", record.contractCreateResult.gasUsed);
+    console.log("contract create gas used:", record.getContractCreateResult().gasUsed);
     console.log("contract create transaction fee:", record.transactionFee.asTinybar());
     console.log("contract:", newContractId.toString());
 
@@ -84,7 +84,7 @@ async function main() {
         //      on an error received during that process like INSUFFICENT_GAS
         .getRecord(hederaClient);
 
-    console.log("execute gas used:", getRecord.contractCallResult.gasUsed)
+    console.log("execute gas used:", getRecord.getContractExecuteResult().gasUsed)
 
     // Next let's ask for the new message
     callResult = await new ContractCallQuery()
