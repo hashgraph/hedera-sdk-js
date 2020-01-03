@@ -49,7 +49,7 @@ export { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 export { ThresholdKey } from "./crypto/ThresholdKey";
 export { PublicKey } from "./crypto/PublicKey";
 export { KeyList } from "./crypto/KeyList";
-export { MnemonicResult, generateMnemonic } from "./crypto/MnemonicResult";
+export { Mnemonic } from "./crypto/Mnemonic";
 export { KeyMismatchError } from "./crypto/KeyMismatchError";
 
 export { Hbar, HbarUnit } from "./Hbar";

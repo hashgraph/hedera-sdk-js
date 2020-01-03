@@ -1,6 +1,7 @@
 import * as nacl from "tweetnacl";
 import * as crypto from "crypto";
 import { Ed25519PublicKey } from "./Ed25519PublicKey";
+import { Mnemonic } from "./Mnemonic";
 import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { createKeystore, loadKeystore } from "./Keystore";
@@ -8,7 +9,8 @@ import { createKeystore, loadKeystore } from "./Keystore";
 export class Ed25519PrivateKey {
     public readonly publicKey: Ed25519PublicKey;
 
-    private readonly _keyData: Uint8Array;
+    // NOT A STABLE API
+    public readonly _keyData: Uint8Array;
     private _asStringRaw?: string;
     private _chainCode?: Uint8Array;
 
@@ -94,11 +96,11 @@ export class Ed25519PrivateKey {
      * @link generateMnemonic
      */
     public static async fromMnemonic(
-        mnemonic: string | string[],
-        passphrase?: string
+        mnemonic: Mnemonic,
+        passphrase: string
     ): Promise<Ed25519PrivateKey> {
-        const input = Array.isArray(mnemonic) ? mnemonic.join(" ") : mnemonic;
-        const salt = `mnemonic${passphrase == null ? "" : passphrase}`;
+        const input = mnemonic.toString();
+        const salt = `mnemonic${passphrase}`;
         const seed = await pbkdf2(input, salt, 2048, 64, "sha512");
 
         const hmac = crypto.createHmac("sha512", "ed25519 seed");
@@ -173,11 +175,6 @@ export class Ed25519PrivateKey {
         return this._chainCode != null;
     }
 
-    /** Sign the given message with this key. */
-    public sign(msg: Uint8Array): Uint8Array {
-        return nacl.sign(msg, this._keyData);
-    }
-
     public toBytes(): Uint8Array {
         // copy the bytes so they can't be modified accidentally
         // only copy the private key portion since that's what we're expecting on the other end
@@ -203,7 +200,7 @@ export class Ed25519PrivateKey {
      *
      * @link fromKeystore
      */
-    public createKeystore(passphrase: string): Promise<Uint8Array> {
+    public toKeystore(passphrase: string): Promise<Uint8Array> {
         return createKeystore(this._keyData, passphrase);
     }
 }
