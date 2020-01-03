@@ -1,3 +1,4 @@
+import * as nacl from "tweetnacl";
 import { Transaction as Transaction_ } from "./generated/Transaction_pb";
 import { TransactionBody } from "./generated/TransactionBody_pb";
 import { BaseClient, Signer } from "./BaseClient";
@@ -98,7 +99,7 @@ export class Transaction {
         this._checkPubKey(privateKey.publicKey);
 
         return this._addSignature({
-            signature: privateKey.sign(this._inner.getBodybytes_asU8()),
+            signature: nacl.sign(this._inner.getBodybytes_asU8(), privateKey._keyData),
             publicKey: privateKey.publicKey
         });
     }

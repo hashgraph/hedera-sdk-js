@@ -1,4 +1,5 @@
 import { grpc } from "@improbable-eng/grpc-web";
+import * as nacl from "tweetnacl";
 
 import { ProtobufMessage } from "@improbable-eng/grpc-web/dist/typings/message";
 
@@ -84,7 +85,8 @@ export abstract class BaseClient {
     public setOperator(account: AccountIdLike, privateKey: Ed25519PrivateKey): this {
         this._operatorAccount = new AccountId(account);
         this._operatorPublicKey = privateKey.publicKey;
-        this._operatorSigner = privateKey.sign.bind(privateKey);
+        this._operatorSigner =
+            (msg: Uint8Array): Uint8Array => nacl.sign(msg, privateKey._keyData);
 
         return this;
     }
