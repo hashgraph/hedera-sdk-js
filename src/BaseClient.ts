@@ -16,6 +16,7 @@ export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 export interface PrivateKey {
     privateKey: Ed25519PrivateKey | string;
 }
+
 export interface PubKeyAndSigner {
     publicKey: Ed25519PublicKey;
     signer: Signer;
