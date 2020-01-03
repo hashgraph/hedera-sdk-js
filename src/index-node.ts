@@ -1,4 +1,4 @@
-import { Operator, BaseClient, ClientConfig, Nodes } from "./BaseClient";
+import { BaseClient, ClientConfig, Nodes } from "./BaseClient";
 import { grpc as grpcWeb } from "@improbable-eng/grpc-web";
 import * as fs from "fs";
 import * as util from "util";
@@ -62,7 +62,7 @@ export class Client extends BaseClient {
         return Client.fromJson(await readFile(filename, "utf8"));
     }
 
-    public static async fromJson(text: string): Promise<Client> {
+    public static fromJson(text: string): Client {
         return new Client(JSON.parse(text));
     }
 

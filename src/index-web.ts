@@ -28,11 +28,11 @@ export class Client extends BaseClient {
         return new Client({ network: testnetProxy });
     }
 
-    public static async fromFile(): Promise<Client> {
+    public static fromFile(): Promise<Client> {
         throw new Error("Client.fromFile is not supported in the browser");
     }
 
-    public static async fromJson(text: string): Promise<Client> {
+    public static fromJson(text: string): Client {
         return new Client(JSON.parse(text));
     }
 

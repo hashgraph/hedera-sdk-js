@@ -79,12 +79,12 @@ async function main() {
         .setFunction("setMessage", new ContractFunctionParams()
             .addString("hello from hedera again!"))
         .execute(hederaClient))
-        // [getReceipt] or [getRecord] waits for consensus before continuing 
-        //      and will throw an exception 
+        // [getReceipt] or [getRecord] waits for consensus before continuing
+        //      and will throw an exception
         //      on an error received during that process like INSUFFICENT_GAS
         .getRecord(hederaClient);
 
-    console.log("execute gas used:", getRecord.getContractExecuteResult().gasUsed)
+    console.log("execute gas used:", getRecord.getContractExecuteResult().gasUsed);
 
     // Next let's ask for the new message
     callResult = await new ContractCallQuery()
