@@ -80,6 +80,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#_keydata" class="tsd-kind-icon">_key<wbr>Data</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#publickey" class="tsd-kind-icon">public<wbr>Key</a></li>
 							</ul>
 						</section>
@@ -92,10 +93,9 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#createkeystore" class="tsd-kind-icon">create<wbr>Keystore</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#derive" class="tsd-kind-icon">derive</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#sign" class="tsd-kind-icon">sign</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#tobytes" class="tsd-kind-icon">to<wbr>Bytes</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#tokeystore" class="tsd-kind-icon">to<wbr>Keystore</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#frombytes" class="tsd-kind-icon">from<wbr>Bytes</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#fromkeystore" class="tsd-kind-icon">from<wbr>Keystore</a></li>
@@ -110,12 +110,22 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_keydata" class="tsd-anchor"></a>
+					<h3>_key<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">_key<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L13">src/crypto/Ed25519PrivateKey.ts:13</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="publickey" class="tsd-anchor"></a>
 					<h3>public<wbr>Key</h3>
 					<div class="tsd-signature tsd-kind-icon">public<wbr>Key<span class="tsd-signature-symbol">:</span> <a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L9">src/crypto/Ed25519PrivateKey.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L10">src/crypto/Ed25519PrivateKey.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -132,7 +142,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L172">src/crypto/Ed25519PrivateKey.ts:172</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L174">src/crypto/Ed25519PrivateKey.ts:174</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -148,16 +158,64 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="createkeystore" class="tsd-anchor"></a>
-					<h3>create<wbr>Keystore</h3>
+					<a name="derive" class="tsd-anchor"></a>
+					<h3>derive</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Keystore<span class="tsd-signature-symbol">(</span>passphrase<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">derive<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L206">src/crypto/Ed25519PrivateKey.ts:206</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L157">src/crypto/Ed25519PrivateKey.ts:157</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Derive a new private key at the given wallet index.</p>
+								</div>
+								<p>Only currently supported for keys created with <code>fromMnemonic()</code>; other keys will throw
+								an error.</p>
+								<p>You can check if a key supports derivation with <code>.supportsDerivation</code></p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>index: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tobytes" class="tsd-anchor"></a>
+					<h3>to<wbr>Bytes</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Bytes<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L178">src/crypto/Ed25519PrivateKey.ts:178</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tokeystore" class="tsd-anchor"></a>
+					<h3>to<wbr>Keystore</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Keystore<span class="tsd-signature-symbol">(</span>passphrase<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L203">src/crypto/Ed25519PrivateKey.ts:203</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -184,82 +242,6 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="derive" class="tsd-anchor"></a>
-					<h3>derive</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">derive<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L155">src/crypto/Ed25519PrivateKey.ts:155</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Derive a new private key at the given wallet index.</p>
-								</div>
-								<p>Only currently supported for keys created with <code>fromMnemonic()</code>; other keys will throw
-								an error.</p>
-								<p>You can check if a key supports derivation with <code>.supportsDerivation</code></p>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>index: <span class="tsd-signature-type">number</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="sign" class="tsd-anchor"></a>
-					<h3>sign</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">sign<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L177">src/crypto/Ed25519PrivateKey.ts:177</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Sign the given message with this key.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>msg: <span class="tsd-signature-type">Uint8Array</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="tobytes" class="tsd-anchor"></a>
-					<h3>to<wbr>Bytes</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">to<wbr>Bytes<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L181">src/crypto/Ed25519PrivateKey.ts:181</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="tostring" class="tsd-anchor"></a>
 					<h3>to<wbr>String</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -269,7 +251,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L187">src/crypto/Ed25519PrivateKey.ts:187</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L184">src/crypto/Ed25519PrivateKey.ts:184</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -292,7 +274,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L29">src/crypto/Ed25519PrivateKey.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L31">src/crypto/Ed25519PrivateKey.ts:31</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -321,7 +303,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L131">src/crypto/Ed25519PrivateKey.ts:131</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L133">src/crypto/Ed25519PrivateKey.ts:133</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -361,13 +343,13 @@
 					<a name="frommnemonic" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> from<wbr>Mnemonic</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">from<wbr>Mnemonic<span class="tsd-signature-symbol">(</span>mnemonic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, passphrase<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">from<wbr>Mnemonic<span class="tsd-signature-symbol">(</span>mnemonic<span class="tsd-signature-symbol">: </span><a href="_crypto_mnemonic_.mnemonic.html" class="tsd-signature-type">Mnemonic</a>, passphrase<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L96">src/crypto/Ed25519PrivateKey.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L98">src/crypto/Ed25519PrivateKey.ts:98</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -388,13 +370,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>mnemonic: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>mnemonic: <a href="_crypto_mnemonic_.mnemonic.html" class="tsd-signature-type">Mnemonic</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>the mnemonic, either as a string separated by spaces or as a 24-element array</p>
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> passphrase: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<h5>passphrase: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>the passphrase to protect the private key with</p>
 									</div>
@@ -414,7 +396,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L58">src/crypto/Ed25519PrivateKey.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L60">src/crypto/Ed25519PrivateKey.ts:60</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -443,7 +425,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/3921fad/src/crypto/Ed25519PrivateKey.ts#L143">src/crypto/Ed25519PrivateKey.ts:143</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7b51944/src/crypto/Ed25519PrivateKey.ts#L145">src/crypto/Ed25519PrivateKey.ts:145</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -477,22 +459,22 @@
 						<a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-kind-icon">Ed25519<wbr>Private<wbr>Key</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#_keydata" class="tsd-kind-icon">_key<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#publickey" class="tsd-kind-icon">public<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#supportsderivation" class="tsd-kind-icon">supports<wbr>Derivation</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#createkeystore" class="tsd-kind-icon">create<wbr>Keystore</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#derive" class="tsd-kind-icon">derive</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#sign" class="tsd-kind-icon">sign</a>
+								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#tobytes" class="tsd-kind-icon">to<wbr>Bytes</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#tobytes" class="tsd-kind-icon">to<wbr>Bytes</a>
+								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#tokeystore" class="tsd-kind-icon">to<wbr>Keystore</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
