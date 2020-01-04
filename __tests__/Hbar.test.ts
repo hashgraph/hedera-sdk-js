@@ -26,27 +26,27 @@ describe("hbar", () => {
     it.each([[ 50_000_000, HbarUnit.Microbar ], [ "50000000", HbarUnit.Microbar ], [ 50_000, HbarUnit.Millibar ], [ "50000", HbarUnit.Millibar ], [ 50, HbarUnit.Hbar ], [ "50", HbarUnit.Hbar ], [ 0.05, HbarUnit.Kilobar ], [ "0.05", HbarUnit.Kilobar ], [ 0.00005, HbarUnit.Megabar ], [ "0.00005", HbarUnit.Megabar ], [ 0.00000005, HbarUnit.Gigabar ], [ "0.00000005", HbarUnit.Gigabar ]] as [number, HbarUnit][])(
         "value conversions are correct/50 hbar",
         (amount, unit) => {
-            expect(Hbar.from(amount, unit)).toStrictEqual(fiftyHbar);
+            expect(Hbar.from(amount, unit).asTinybar()).toStrictEqual(fiftyHbar.asTinybar());
 
             expect(fiftyHbar.as(unit)).toStrictEqual(new BigNumber(amount));
         }
     );
 
     it("arithmetic works correctly", () => {
-        expect(fiftyHbar.plus(fiftyHbar)).toStrictEqual(hundredHbar);
-        expect(fiftyHbar.plus(fiftyGTinybar, HbarUnit.Tinybar)).toStrictEqual(hundredHbar);
-        expect(fiftyHbar.plus(negativeFiftyHbar)).toStrictEqual(zeroHbar);
-        expect(fiftyHbar.plus(zeroHbar)).toStrictEqual(fiftyHbar);
-        expect(fiftyHbar.plus(negativeZeroHbar)).toStrictEqual(fiftyHbar);
+        expect(fiftyHbar.plus(fiftyHbar).asTinybar()).toStrictEqual(hundredHbar.asTinybar());
+        expect(fiftyHbar.plus(fiftyGTinybar, HbarUnit.Tinybar).asTinybar()).toStrictEqual(hundredHbar.asTinybar());
+        expect(fiftyHbar.plus(negativeFiftyHbar).asTinybar()).toStrictEqual(zeroHbar.asTinybar());
+        expect(fiftyHbar.plus(zeroHbar).asTinybar()).toStrictEqual(fiftyHbar.asTinybar());
+        expect(fiftyHbar.plus(negativeZeroHbar).asTinybar()).toStrictEqual(fiftyHbar.asTinybar());
 
-        expect(fiftyHbar.minus(fiftyHbar)).toStrictEqual(zeroHbar);
-        expect(fiftyHbar.minus(fiftyGTinybar, HbarUnit.Tinybar)).toStrictEqual(zeroHbar);
-        expect(fiftyHbar.minus(negativeFiftyHbar)).toStrictEqual(hundredHbar);
-        expect(fiftyHbar.minus(zeroHbar)).toStrictEqual(fiftyHbar);
-        expect(fiftyHbar.minus(negativeZeroHbar)).toStrictEqual(fiftyHbar);
+        expect(fiftyHbar.minus(fiftyHbar).asTinybar()).toStrictEqual(zeroHbar.asTinybar());
+        expect(fiftyHbar.minus(fiftyGTinybar, HbarUnit.Tinybar).asTinybar()).toStrictEqual(zeroHbar.asTinybar());
+        expect(fiftyHbar.minus(negativeFiftyHbar).asTinybar()).toStrictEqual(hundredHbar.asTinybar());
+        expect(fiftyHbar.minus(zeroHbar).asTinybar()).toStrictEqual(fiftyHbar.asTinybar());
+        expect(fiftyHbar.minus(negativeZeroHbar).asTinybar()).toStrictEqual(fiftyHbar.asTinybar());
 
-        expect(zeroHbar.minus(fiftyHbar)).toStrictEqual(negativeFiftyHbar);
-        expect(negativeZeroHbar.minus(fiftyHbar)).toStrictEqual(negativeFiftyHbar);
+        expect(zeroHbar.minus(fiftyHbar).asTinybar()).toStrictEqual(negativeFiftyHbar.asTinybar());
+        expect(negativeZeroHbar.minus(fiftyHbar).asTinybar()).toStrictEqual(negativeFiftyHbar.asTinybar());
 
         expect(fiftyHbar.negated().asTinybar()).toStrictEqual(fiftyGTinybar.negated());
         expect(fiftyHbar.negated().isNegative()).toBe(true);

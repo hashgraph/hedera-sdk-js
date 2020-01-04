@@ -22,7 +22,7 @@ export class ContractExecuteTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setAmount(amount: number): this {
+    public setPayableAmount(amount: number): this {
         this._body.setAmount(amount);
         return this;
     }
