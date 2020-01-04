@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package proto;
+
+option java_package = "com.hederahashgraph.api.proto.java";
+option java_multiple_files = true;
+
+import "Timestamp.proto";
+
+
+/*  Values from these proto denotes habr and cents(USD) conversion */
+message ExchangeRate {
+    int32 hbarEquiv = 1; // value which denote habar equivalent to cent
+    int32 centEquiv = 2; // value which denote cents (USD) equivalent to Hbar}
+    TimestampSeconds expirationTime = 3; // expired time in seconds for this exchange rate
+}
+/* Two sets of exchange rate */
+message ExchangeRateSet {
+    ExchangeRate currentRate = 1; // Current rate of Exchange of Hbar to cents
+    ExchangeRate nextRate = 2; // Next rate exchange of Hbar to cents
+}

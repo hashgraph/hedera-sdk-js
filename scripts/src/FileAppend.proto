@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package proto;
+
+option java_package = "com.hederahashgraph.api.proto.java";
+option java_multiple_files = true;
+
+
+import "BasicTypes.proto";
+
+/* Append the given contents to the end of the file. If a file is too big to create with a single FileCreateTransaction, then it can be created with the first part of its contents, and then appended multiple times to create the entire file. */
+message FileAppendTransactionBody {
+    FileID fileID = 2; // The file ID of the file to which the bytes are appended to
+    bytes contents = 4; // The bytes to append to the contents of the file
+}

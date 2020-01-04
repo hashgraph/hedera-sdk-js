@@ -9,6 +9,7 @@ describe("ContractCallQuery", () => {
 
         const tx = query._toProto().toObject();
         expect(tx).toStrictEqual({
+            consensusgettopicinfo: undefined,
             contractcalllocal: {
                 contractid: {
                     contractnum: 3,

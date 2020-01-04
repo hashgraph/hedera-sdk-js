@@ -26,6 +26,8 @@ import "TransactionGetReceipt.proto";
 import "TransactionGetRecord.proto";
 import "TransactionGetFastRecord.proto";
 
+import "ConsensusGetTopicInfo.proto";
+
 /* A single query, which is sent from the client to the node. This includes all possible queries. Each Query should not have more than 50 levels. */
 message Query {
     oneof query {
@@ -48,5 +50,9 @@ message Query {
         TransactionGetReceiptQuery transactionGetReceipt = 14; // Get a receipt for a transaction (lasts 180 seconds)
         TransactionGetRecordQuery transactionGetRecord = 15; // Get a record for a transaction (lasts 1 hour)
         TransactionGetFastRecordQuery transactionGetFastRecord = 16; // Get a record for a transaction (lasts 180 seconds)
+
+        // New functionality in the HCS release below here
+
+        ConsensusGetTopicInfoQuery consensusGetTopicInfo = 50; // Get the parameters of and state of a consensus topic.
     }
 }
