@@ -14,13 +14,14 @@ export enum ArgumentType {
     int32 = 5,
     uint64 = 6,
     int64 = 7,
-    int256 = 8,
-    string = 9,
-    bool = 10,
-    bytes = 11,
-    bytesfix = 12,
-    address = 13,
-    func = 14,
+    uint256 = 8,
+    int256 = 9,
+    string = 10,
+    bool = 11,
+    bytes = 12,
+    bytesfix = 13,
+    address = 14,
+    func = 15,
 }
 
 export interface SolidityType {
@@ -79,6 +80,30 @@ export class ContractFunctionSelector {
 
     public addInt256Array(): this {
         return this._addParam({ ty: ArgumentType.int256, array: true });
+    }
+
+    public addUint32(): this {
+        return this._addParam({ ty: ArgumentType.uint32, array: false });
+    }
+
+    public addUint64(): this {
+        return this._addParam({ ty: ArgumentType.uint64, array: false });
+    }
+
+    public addUint256(): this {
+        return this._addParam({ ty: ArgumentType.uint256, array: false });
+    }
+
+    public addUint32Array(): this {
+        return this._addParam({ ty: ArgumentType.uint32, array: true });
+    }
+
+    public addUint64Array(): this {
+        return this._addParam({ ty: ArgumentType.uint64, array: true });
+    }
+
+    public addUint256Array(): this {
+        return this._addParam({ ty: ArgumentType.uint256, array: true });
     }
 
     public addBool(): this {
@@ -152,6 +177,9 @@ function solidityTypeToString(ty: SolidityType, length?: number): string {
             break;
         case ArgumentType.int64:
             s = "int64";
+            break;
+        case ArgumentType.uint256:
+            s = "uint256";
             break;
         case ArgumentType.int256:
             s = "int256";

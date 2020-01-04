@@ -81,6 +81,42 @@ export class ContractFunctionParams {
         return this._addParam(value, true);
     }
 
+    public addUint32(value: number): this {
+        this._selector.addUint32();
+
+        return this._addParam(value, false);
+    }
+
+    public addUint64(value: BigNumber): this {
+        this._selector.addUint64();
+
+        return this._addParam(value, false);
+    }
+
+    public addUint256(value: BigNumber): this {
+        this._selector.addUint256();
+
+        return this._addParam(value, false);
+    }
+
+    public addUint32Array(value: number[]): this {
+        this._selector.addUint32Array();
+
+        return this._addParam(value, true);
+    }
+
+    public addUint64Array(value: BigNumber[]): this {
+        this._selector.addUint64Array();
+
+        return this._addParam(value, true);
+    }
+
+    public addUint256Array(value: BigNumber[]): this {
+        this._selector.addUint256Array();
+
+        return this._addParam(value, true);
+    }
+
     public addAddress(value: string): this {
         const par = Buffer.from(value, "hex");
 
@@ -214,6 +250,7 @@ function argumentToBytes(
             case ArgumentType.int32:
             case ArgumentType.uint64:
             case ArgumentType.int64:
+            case ArgumentType.uint256:
             case ArgumentType.int256:
             case ArgumentType.bool:
             case ArgumentType.bytesfix:
@@ -243,6 +280,7 @@ function argumentToBytes(
                 case ArgumentType.int32:
                 case ArgumentType.uint64:
                 case ArgumentType.int64:
+                case ArgumentType.uint256:
                 case ArgumentType.int256:
                 case ArgumentType.bool:
                 case ArgumentType.bytesfix:
@@ -306,6 +344,7 @@ function argumentToBytes(
             }
             return value;
         case ArgumentType.int256:
+        case ArgumentType.uint256:
             if (param instanceof BigNumber) {
                 let par = param.toString(16);
                 if (par.length % 2 === 1) {
