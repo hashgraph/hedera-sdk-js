@@ -17,6 +17,7 @@ describe("TransactionGetReceiptQuery", () => {
 
         const tx = query._toProto().toObject();
         expect(tx).toStrictEqual({
+            consensusgettopicinfo: undefined,
             contractcalllocal: undefined,
             contractgetbytecode: undefined,
             contractgetinfo: undefined,

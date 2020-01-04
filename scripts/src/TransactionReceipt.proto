@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package proto;
+
+option java_package = "com.hederahashgraph.api.proto.java";
+option java_multiple_files = true;
+
+import "BasicTypes.proto";
+import "ResponseCode.proto";
+import "ExchangeRate.proto";
+
+
+/* The consensus result for a transaction, which might not be currently known, or may  succeed or fail. */
+message TransactionReceipt {
+    ResponseCodeEnum status = 1; // whether the transaction succeeded or failed (or is unknown)
+    AccountID accountID = 2; //  The account ID, if a new account was created
+    FileID fileID = 3; // The file ID, if a new file was created
+    ContractID contractID = 4; // The contract ID, if a new smart contract instance was created
+    ExchangeRateSet exchangeRate = 5; // exchange rate set of Hbar to cents (USD)
+}

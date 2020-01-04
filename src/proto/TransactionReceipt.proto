@@ -17,4 +17,12 @@ message TransactionReceipt {
     FileID fileID = 3; // The file ID, if a new file was created
     ContractID contractID = 4; // The contract ID, if a new smart contract instance was created
     ExchangeRateSet exchangeRate = 5; // exchange rate set of Hbar to cents (USD)
+
+    TopicID topicID = 6; // TopicID of a newly created consensus service topic
+
+    // Updated sequence number for a consensus service topic. The result of a ConsensusSubmitMessage.
+    uint64 topicSequenceNumber = 7;
+
+    // Updated running hash for a consensus service topic. The result of a ConsensusSubmitMessage.
+    bytes topicRunningHash = 8;
 }

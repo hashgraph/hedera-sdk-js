@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package proto;
+
+option java_package = "com.hederahashgraph.api.proto.java";
+option java_multiple_files = true;
+
+import "BasicTypes.proto";
+import "Timestamp.proto";
+
+/* Modify some of the metadata for a file. Any null field is ignored (left unchanged). Any field that is null is left unchanged. If contents is non-null, then the file's contents will be replaced with the given bytes. This transaction must be signed by all the keys for that file. If the transaction is modifying the keys field, then it must be signed by all the keys in both the old list and the new list. 
+ *
+ * If a file was created without ANY keys in the keys field, ONLY the expirationTime of the file can be changed using this call. The file contents or its keys cannot be changed.
+ */
+message FileUpdateTransactionBody {
+    FileID fileID = 1; // The file ID of the file to update
+    Timestamp expirationTime = 2; // The new time at which it should expire (ignored if not later than the current value)
+    KeyList keys = 3; // The keys that can modify or delete the file
+    bytes contents = 4; // The new file contents. All the bytes in the old contents are discarded.
+}

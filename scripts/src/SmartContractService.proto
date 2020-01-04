@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package proto;
+
+option java_package = "com.hederahashgraph.service.proto.java";
+
+import "TransactionResponse.proto";
+import "Query.proto";
+import "Response.proto";
+import "Transaction.proto";
+
+/* The request and responses for different smart contract services. */
+service SmartContractService {
+    rpc createContract (Transaction) returns (TransactionResponse); // Creates a contract by submitting the transaction. The grpc server returns the TransactionResponse
+
+    rpc updateContract (Transaction) returns (TransactionResponse); // Updates a contract with the content by submitting the transaction. The grpc server returns the TransactionResponse
+
+    rpc contractCallMethod (Transaction) returns (TransactionResponse); // Calls a contract by submitting the transaction. The grpc server returns the TransactionResponse
+
+    rpc getContractInfo (Query) returns (Response); // Retrieves the contract information by submitting the query. The grpc server returns the Response
+
+    rpc contractCallLocalMethod (Query) returns (Response); // Calls a smart contract by submitting the query. The grpc server returns the Response
+
+    rpc ContractGetBytecode (Query) returns (Response); // Retrieves the byte code of a contract by submitting the query. The grpc server returns the Response
+
+    rpc getBySolidityID (Query) returns (Response); // Retrieves a contract(using Solidity ID) by submitting the query. The grpc server returns the Response
+
+    rpc getTxRecordByContractID (Query) returns (Response); // Retrieves a contract(using contract ID) by submitting the query. The grpc server returns the Response
+
+    rpc deleteContract (Transaction) returns (TransactionResponse); //Delete a contract instance(mark as deleted until it expires), and transfer hbars to the specified account. The grpc server returns the TransactionResponse
+
+    rpc systemDelete (Transaction) returns (TransactionResponse); // Deletes a smart contract by submitting the transaction when the account has admin privileges on the file. The grpc server returns the TransactionResponse
+
+    rpc systemUndelete (Transaction) returns (TransactionResponse); // UnDeletes a smart contract by submitting the transaction when the account has admin privileges on the file. The grpc server returns the TransactionResponse
+
+    }

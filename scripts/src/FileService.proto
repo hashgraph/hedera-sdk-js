@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package proto;
+
+option java_package = "com.hederahashgraph.service.proto.java";
+
+import "Query.proto";
+import "Response.proto";
+import "TransactionResponse.proto";
+import "Transaction.proto";
+
+/* The request and responses for different file services. */
+service FileService {
+    rpc createFile (Transaction) returns (TransactionResponse); // Creates a file with the content by submitting the transaction. The grpc server returns the TransactionResponse
+
+    rpc updateFile (Transaction) returns (TransactionResponse); // Updates a file by submitting the transaction. The grpc server returns the TransactionResponse
+
+    rpc deleteFile (Transaction) returns (TransactionResponse); // Deletes a file by submitting the transaction. The grpc server returns the TransactionResponse
+
+    rpc appendContent (Transaction) returns (TransactionResponse); // Appends the file contents(for a given FileID) by submitting the transaction. The grpc server returns the TransactionResponse
+
+    rpc getFileContent (Query) returns (Response); // Retrieves the file content by submitting the query. The grpc server returns the Response
+
+    rpc getFileInfo (Query) returns (Response); // Retrieves the file information by submitting the query. The grpc server returns the Response
+
+    rpc systemDelete (Transaction) returns (TransactionResponse); // Deletes a file by submitting the transaction when the account has admin privileges on the file. The grpc server returns the TransactionResponse
+
+    rpc systemUndelete (Transaction) returns (TransactionResponse); // UnDeletes a file by submitting the transaction when the account has admin privileges on the file. The grpc server returns the TransactionResponse
+}

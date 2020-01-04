@@ -5,9 +5,10 @@ import { Response } from "../generated/Response_pb";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 import { QueryHeader } from "../generated/QueryHeader_pb";
 import { AccountId, AccountIdLike } from "./AccountId";
-import { Transfer, transferFromProto } from "../Transfer";
+import { Transfer } from "../Transfer";
 import { CryptoGetStakersQuery } from "../generated/CryptoGetStakers_pb";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { Hbar } from "../Hbar";
 
 export class AccountStakersQuery extends QueryBuilder<Transfer[]> {
     private readonly _builder: CryptoGetStakersQuery;
@@ -47,6 +48,9 @@ export class AccountStakersQuery extends QueryBuilder<Transfer[]> {
     protected _mapResponse(response: Response): Transfer[] {
         const allStakers = response.getCryptogetproxystakers()!;
 
-        return allStakers.getStakers()!.getProxystakerList().map(transferFromProto);
+        return allStakers.getStakers()!.getProxystakerList().map((proto) => ({
+            accountId: AccountId._fromProto(proto.getAccountid()!),
+            amount: Hbar.fromTinybar(proto.getAmount())
+        }));
     }
 }

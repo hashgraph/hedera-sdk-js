@@ -13,6 +13,7 @@ message SystemDeleteTransactionBody {
     oneof id {
         FileID fileID = 1; // The file ID of the file to delete, in the format used in transactions
         ContractID contractID = 2; // The contract ID instance to delete, in the format used in transactions
+        TopicID topicID = 4;
     }
     TimestampSeconds expirationTime = 3; // The timestamp in seconds at which the "deleted" file should truly be permanently deleted
 }
