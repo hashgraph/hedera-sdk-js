@@ -108,6 +108,7 @@ export class Status {
 
     public readonly code: number;
 
+    // NOT A STABLE API
     public constructor(code: number) {
         this.code = code;
     }
