@@ -10,7 +10,7 @@ export class TransactionReceipt {
     private _accountId: AccountId | null;
     private _fileId: FileId | null;
     private _contractId: ContractId | null;
-    public readonly exchangeRateSet: ExchangeRateSet | null;
+    private readonly _exchangeRateSet: ExchangeRateSet | null;
 
     private constructor(
         status: Status,
@@ -23,7 +23,7 @@ export class TransactionReceipt {
         this._accountId = _accountId;
         this._fileId = _fileId;
         this._contractId = _contractId;
-        this.exchangeRateSet = exchangeRateSet;
+        this._exchangeRateSet = exchangeRateSet;
     }
 
     public getAccountId(): AccountId {
@@ -41,7 +41,7 @@ export class TransactionReceipt {
     // NOT A STABLE API
     public static _fromProto(receipt: ProtoTransactionReceipt): TransactionReceipt {
         return new TransactionReceipt(
-            receipt.getStatus(),
+            new Status(receipt.getStatus()),
             receipt.hasAccountid() ? AccountId._fromProto(receipt.getAccountid()!) : null,
             receipt.hasFileid() ? FileId._fromProto(receipt.getFileid()!) : null,
             receipt.hasContractid() ?
