@@ -13,6 +13,13 @@ export class Time {
         return new Date(this.seconds * 1000 + Math.floor(this.nanos / 1_000_000));
     }
 
+    public _toProto(): ProtoTimestamp {
+        const proto = new ProtoTimestamp();
+        proto.setSeconds(this.seconds);
+        proto.setNanos(this.nanos);
+        return proto;
+    }
+
     public static _fromProto(timestamp: ProtoTimestamp): Time {
         return new Time(timestamp.getSeconds(), timestamp.getNanos());
     }
