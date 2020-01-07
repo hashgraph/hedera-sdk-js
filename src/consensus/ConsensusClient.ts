@@ -3,6 +3,9 @@ import { ConsensusTopicQuery, ConsensusTopicResponse } from "../generated/Mirror
 import { ConsensusMessage } from "./ConsensusMessage";
 import { ConsensusTopicId } from "./ConsensusTopicId";
 import { Time } from "../Time";
+import { grpc } from "@improbable-eng/grpc-web";
+import { NodeHttpTransport } from "@improbable-eng/grpc-web-node-http-transport";
+import { BrowserHeaders } from "browser-headers";
 
 type ErrorHandler = (error: Error) => void;
 type Listener = (message: ConsensusMessage) => void;
@@ -45,15 +48,18 @@ export class ConsensusClient {
             query.setConsensusstarttime(startTime!._toProto());
         }
 
-        const response = this.client.subscribeTopic(query)
+        const response = this.client.subscribeTopic(query, new BrowserHeaders({
+                "Connection": "Keep-Alive",
+                "Keep-Alive": "timeout=5, max=1000"
+            }))
             .on("data", (message: ConsensusTopicResponse): void => {
+                console.log("Received message inside client");
                 listener(new ConsensusMessage(topicId, message));
+            })
+            .on("status", (status: Status): void => {
+                console.log(`status: ${JSON.stringify(status)}`);
+                // response.cancel();
             });
-
-        response.on("status", (status: Status): void => {
-            console.log(`status: ${status}`);
-            // response.cancel();
-        });
 
         return new SubscriptionClient(response);
     }

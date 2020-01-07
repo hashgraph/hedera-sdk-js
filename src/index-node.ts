@@ -2,16 +2,21 @@ import { BaseClient, ClientConfig, Nodes } from "./BaseClient";
 import { grpc as grpcWeb } from "@improbable-eng/grpc-web";
 import * as fs from "fs";
 import * as util from "util";
+import { NodeHttpTransport } from "@improbable-eng/grpc-web-node-http-transport";
 
 import * as grpc from "grpc";
 import ProtobufMessage = grpcWeb.ProtobufMessage;
 import UnaryMethodDefinition = grpcWeb.UnaryMethodDefinition;
 
 export * from "./exports";
+export { ConsensusMessage } from "./consensus/ConsensusMessage";
+export { ConsensusClient } from "./consensus/ConsensusClient";
 
 const readFile = util.promisify(fs.readFile);
 
 const testNet = { "0.testnet.hedera.com:50211": { shard: 0, realm: 0, account: 3 }};
+
+grpcWeb.setDefaultTransport(NodeHttpTransport());
 
 const mainnetNodes: Nodes = {
     "35.237.200.180:50211": "0.0.3",
