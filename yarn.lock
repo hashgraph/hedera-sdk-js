@@ -2314,6 +2314,11 @@ fast-levenshtein@~2.0.6:
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
+fastestsmallesttextencoderdecoder@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/fastestsmallesttextencoderdecoder/-/fastestsmallesttextencoderdecoder-1.0.14.tgz#ef5d331ab5aeee83f837187f1571d30f5c365e79"
+  integrity sha512-ov+uDh4DMZHpZvcGwlCb9tfntaHwRI7SK+/6XkdXhksZLJcMoTJ20FZx3GvujnsGjMvJVQ71LkduEUEPwX1BvQ==
+
 fb-watchman@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/fb-watchman/-/fb-watchman-2.0.1.tgz#fc84fb39d2709cf3ff6d743706157bb5708a8a85"
