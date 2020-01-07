@@ -30,6 +30,10 @@ describe("ContractFunctionResult", () => {
         expect(result.getInt32(2)).toBe(1122867);
         expect(result.getAddress(2)).toStrictEqual(address);
 
+        expect(result.getUint32(0)).toBe(4294967295);
+        expect(result.getUint64(0).toString(10)).toStrictEqual("4294967295");
+        expect(result.getUint256(0).toString(10)).toStrictEqual("4294967295");
+
         const result2 = new ContractFunctionResult(byteResult2);
         expect(result2.getInt32(0)).toBe(32);
         expect(result2.getString(0)).toBe("hello from hedera!");

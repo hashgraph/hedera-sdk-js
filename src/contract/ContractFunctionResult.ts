@@ -89,6 +89,31 @@ export class ContractFunctionResult {
         );
     }
 
+    public getUint32(index: number): number {
+        // .getUint32() interprets as big-endian
+        // Using DataView instead of Uint32Array because the latter interprets
+        // using platform endianness which is little-endian on x86
+        return new DataView(
+            this._bytes.buffer,
+            this._bytes.byteOffset + index * 32 + 28,
+            4
+        ).getUint32(0);
+    }
+
+    public getUint64(index: number): BigNumber {
+        return new BigNumber(
+            encodeHex(this._getBytes32(index).subarray(24, 32)),
+            16
+        );
+    }
+
+    public getUint256(index: number): BigNumber {
+        return new BigNumber(
+            encodeHex(this._getBytes32(index)),
+            16
+        );
+    }
+
     public getAddress(index: number): string {
         return Buffer.from(this._bytes.subarray(
             index * 32 + 12,

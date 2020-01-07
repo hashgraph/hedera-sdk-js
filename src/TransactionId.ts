@@ -90,7 +90,7 @@ export class TransactionId {
             .execute(client);
 
         // Throw an exception on an invalid receipt status
-        throwIfExceptional(receipt.status, true);
+        throwIfExceptional(receipt.status.code, true);
 
         return receipt;
     }

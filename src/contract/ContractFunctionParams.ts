@@ -64,21 +64,57 @@ export class ContractFunctionParams {
     }
 
     public addInt32Array(value: number[]): this {
-        this._selector.addInt32();
+        this._selector.addInt32Array();
 
-        return this._addParam(value, false);
+        return this._addParam(value, true);
     }
 
     public addInt64Array(value: BigNumber[]): this {
-        this._selector.addInt64();
+        this._selector.addInt64Array();
+
+        return this._addParam(value, true);
+    }
+
+    public addInt256Array(value: BigNumber[]): this {
+        this._selector.addInt256Array();
+
+        return this._addParam(value, true);
+    }
+
+    public addUint32(value: number): this {
+        this._selector.addUint32();
 
         return this._addParam(value, false);
     }
 
-    public addInt256Array(value: BigNumber[]): this {
-        this._selector.addInt256();
+    public addUint64(value: BigNumber): this {
+        this._selector.addUint64();
 
         return this._addParam(value, false);
+    }
+
+    public addUint256(value: BigNumber): this {
+        this._selector.addUint256();
+
+        return this._addParam(value, false);
+    }
+
+    public addUint32Array(value: number[]): this {
+        this._selector.addUint32Array();
+
+        return this._addParam(value, true);
+    }
+
+    public addUint64Array(value: BigNumber[]): this {
+        this._selector.addUint64Array();
+
+        return this._addParam(value, true);
+    }
+
+    public addUint256Array(value: BigNumber[]): this {
+        this._selector.addUint256Array();
+
+        return this._addParam(value, true);
     }
 
     public addAddress(value: string): this {
@@ -104,7 +140,7 @@ export class ContractFunctionParams {
                 throw new Error("`address` type requires parameter to be exactly 20 bytes");
             }
 
-            par.push();
+            par.push(buf);
         }
 
         this._selector.addAddressArray();
@@ -197,14 +233,37 @@ function argumentToBytes(
         // Destructuring required so the first variable must be assigned
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [ _, p ] of param.entries()) {
-            values.push(argumentToBytes(p, { ty: ty.ty, array: false }));
+            const arg = argumentToBytes(p, { ty: ty.ty, array: false });
+            values.push(arg);
         }
 
         const totalLengthOfValues = values
             .map((a) => a.length)
             .reduce((total, current) => total + current);
 
-        value = new Uint8Array(values.length * 32 + totalLengthOfValues + 32);
+        switch (ty.ty) {
+            case ArgumentType.uint8:
+            case ArgumentType.int8:
+            case ArgumentType.uint16:
+            case ArgumentType.int16:
+            case ArgumentType.uint32:
+            case ArgumentType.int32:
+            case ArgumentType.uint64:
+            case ArgumentType.int64:
+            case ArgumentType.uint256:
+            case ArgumentType.int256:
+            case ArgumentType.bool:
+            case ArgumentType.bytesfix:
+            case ArgumentType.address:
+            case ArgumentType.func:
+                value = new Uint8Array(totalLengthOfValues + 32);
+                break;
+            case ArgumentType.bytes:
+            case ArgumentType.string:
+                value = new Uint8Array(values.length * 32 + totalLengthOfValues + 32);
+                break;
+            default: throw new TypeError(`Expected param type to be ArgumentType, but received ${ty.ty}`);
+        }
 
         valueView = new DataView(value.buffer, 28);
         valueView.setUint32(0, values.length);
@@ -212,10 +271,33 @@ function argumentToBytes(
         let offset = 32 * values.length;
 
         for (const [ i, e ] of values.entries()) {
-            const view = new DataView(value.buffer, (i + 1) * 32 + 28);
-            view.setUint32(0, offset);
-            value.set(e, view.getUint32(0) + 32);
-            offset += e.length;
+            switch (ty.ty) {
+                case ArgumentType.uint8:
+                case ArgumentType.int8:
+                case ArgumentType.uint16:
+                case ArgumentType.int16:
+                case ArgumentType.uint32:
+                case ArgumentType.int32:
+                case ArgumentType.uint64:
+                case ArgumentType.int64:
+                case ArgumentType.uint256:
+                case ArgumentType.int256:
+                case ArgumentType.bool:
+                case ArgumentType.bytesfix:
+                case ArgumentType.address:
+                case ArgumentType.func:
+                    value.set(e, i * 32 + 32);
+                    break;
+                case ArgumentType.bytes:
+                case ArgumentType.string:
+                    // eslint-disable-next-line no-case-declarations
+                    const view = new DataView(value.buffer, (i + 1) * 32 + 28);
+                    view.setUint32(0, offset);
+                    value.set(e, view.getUint32(0) + 32);
+                    offset += e.length;
+                    break;
+                default: throw new TypeError(`Expected param type to be ArgumentType, but received ${ty.ty}`);
+            }
         }
 
         return value;
@@ -245,11 +327,15 @@ function argumentToBytes(
         case ArgumentType.int64:
             if (param instanceof BigNumber) {
                 // eslint-disable-next-line no-case-declarations
-                const par = param.toString(16);
+                let par = param.toString(16);
                 if (par.length > 16) {
                     throw new TypeError("uint64/int64 requires BigNumber to be less than or equal to 8 bytes");
                 } else if (!param.isInteger()) {
                     throw new TypeError("uint64/int64 requires BigNumber to be an integer");
+                }
+
+                if (par.length % 2 === 1) {
+                    par = `0${par}`;
                 }
 
                 // eslint-disable-next-line no-case-declarations
@@ -258,10 +344,19 @@ function argumentToBytes(
             }
             return value;
         case ArgumentType.int256:
-            value = param as Uint8Array;
+        case ArgumentType.uint256:
+            if (param instanceof BigNumber) {
+                let par = param.toString(16);
+                if (par.length % 2 === 1) {
+                    par = `0${par}`;
+                }
+
+                const buf = Buffer.from(par, "hex");
+                value.set(buf, 32 - buf.length);
+            }
             return value;
         case ArgumentType.address:
-            value.set(param as Uint8Array, (32 - 20));
+            value.set(param as Uint8Array, 32 - 20);
             return value;
         case ArgumentType.bool:
             value[ 31 ] = (param as boolean) ? 1 : 0;
