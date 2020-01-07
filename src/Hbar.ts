@@ -96,7 +96,9 @@ export class Hbar {
     }
 
     public toString(): string {
-        return `${this.value()} ${this._unit.toString()} (${this._tinybar.toString(10)} tinybar)`;
+        return this._unit === HbarUnit.Tinybar ?
+            `${this.value()} ${this._unit.toString()}` :
+            `${this.value()} ${this._unit.toString()} (${this._tinybar.toString(10)} tinybar)`;
     }
 
     public value(): BigNumber {
