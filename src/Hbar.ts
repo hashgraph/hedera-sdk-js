@@ -57,9 +57,11 @@ function convertToTinybar(amount: BigNumber.Value, unit: HbarUnit): BigNumber {
 export class Hbar {
     /** The HBAR value in tinybar, used natively by the SDK and Hedera itself */
     private readonly _tinybar: BigNumber;
+    private readonly _unit: HbarUnit;
 
-    private constructor(tinybar: BigNumber) {
+    private constructor(tinybar: BigNumber, unit: HbarUnit = HbarUnit.Hbar) {
         this._tinybar = tinybar;
+        this._unit = unit;
     }
 
     public static readonly MAX: Hbar = new Hbar(new BigNumber(2).pow(63).minus(1));
@@ -72,25 +74,31 @@ export class Hbar {
      * Calculate the HBAR amount given a raw value and a unit.
      */
     public static from(amount: number | BigNumber | string, unit: HbarUnit): Hbar {
-        return new Hbar(convertToTinybar(amount, unit));
+        return new Hbar(convertToTinybar(amount, unit), unit);
     }
 
     /** Get HBAR from a tinybar amount, may be a string */
     public static fromTinybar(amount: number | BigNumber | string): Hbar {
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
-        return new Hbar(bnAmount);
+        return new Hbar(bnAmount, HbarUnit.Tinybar);
     }
 
     /**
      * Wrap a raw value of HBAR, may be a string.
      */
     public static of(amount: number | BigNumber | string): Hbar {
-        return new Hbar(convertToTinybar(amount, HbarUnit.Hbar));
+        return new Hbar(convertToTinybar(amount, HbarUnit.Hbar), HbarUnit.Hbar);
     }
 
     /** Create an Hbar with a value of 0 tinybar; Note that this is a positive signed zero */
     public static zero(): Hbar {
         return new Hbar(new BigNumber(0));
+    }
+
+    public toString(): string {
+        return this._unit === HbarUnit.Tinybar ?
+            `${this.value()} ${this._unit.toString()}` :
+            `${this.value()} ${this._unit.toString()} (${this._tinybar.toString(10)} tinybar)`;
     }
 
     public value(): BigNumber {

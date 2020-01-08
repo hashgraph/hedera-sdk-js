@@ -6,7 +6,7 @@ describe("ContractExecuteTransaction", () => {
         const transaction = new ContractExecuteTransaction()
             .setContractId({ shard: 0, realm: 0, contract: 5 })
             .setGas(141)
-            .setAmount(10000)
+            .setPayableAmount(10000)
             .setFunction("set_message", new ContractFunctionParams().addString("this is random message"))
             .setMaxTransactionFee(1e6)
             .setTransactionId({
