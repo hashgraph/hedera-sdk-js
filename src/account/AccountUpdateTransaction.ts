@@ -11,6 +11,7 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { PublicKey } from "../crypto/PublicKey";
 import { AccountId, AccountIdLike } from "./AccountId";
 import { dateToTimestamp, timestampToProto } from "../Timestamp";
+import { BoolValue } from "google-protobuf/google/protobuf/wrappers_pb";
 
 export class AccountUpdateTransaction extends TransactionBuilder {
     private _body: CryptoUpdateTransactionBody;
@@ -39,6 +40,18 @@ export class AccountUpdateTransaction extends TransactionBuilder {
 
     public setAutoRenewPeriod(seconds: number): this {
         this._body.setAutorenewperiod(newDuration(seconds));
+        return this;
+    }
+
+    public setPorxyAccount(id: AccountId): this {
+        this._body.setProxyaccountid(id._toProto());
+        return this;
+    }
+
+    public setReceiverSignatureRequired(required: boolean): this {
+        const value = new BoolValue();
+        value.setValue(required);
+        this._body.setReceiversigrequiredwrapper(value);
         return this;
     }
 
