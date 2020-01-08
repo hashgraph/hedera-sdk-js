@@ -8,6 +8,8 @@ import { Response } from "../generated/Response_pb";
 import { FileId, FileIdLike } from "../file/FileId";
 import { timestampToDate } from "../Timestamp";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { BaseClient } from "../BaseClient";
+import { Hbar } from "../Hbar";
 import { PublicKey, _fromProtoKeyList } from "../crypto/PublicKey";
 
 export interface FileInfo {
@@ -33,6 +35,15 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
     public setFileId(fileId: FileIdLike): this {
         this._builder.setFileid(new FileId(fileId)._toProto());
         return this;
+    }
+
+    public async getCost(client: BaseClient): Promise<Hbar> {
+        // deleted files return a COST_ANSWER of zero which triggers `INSUFFICIENT_TX_FEE`
+        // if you set that as the query payment; 25 tinybar seems to be the minimum to get
+        // `FILE_DELETED` back instead.
+        const min = Hbar.fromTinybar(25);
+        const cost = await super.getCost(client);
+        return cost.isGreaterThan(min) ? cost : min;
     }
 
     protected _doLocalValidate(errors: string[]): void {
