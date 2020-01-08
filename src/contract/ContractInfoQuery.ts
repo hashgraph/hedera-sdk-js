@@ -10,6 +10,8 @@ import { AccountId } from "../account/AccountId";
 import { timestampToDate } from "../Timestamp";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
+import { BaseClient } from "../BaseClient";
+import { Hbar } from "../Hbar";
 
 export interface ContractInfo {
     contractId: ContractId;
@@ -36,6 +38,12 @@ export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
     public setContractId(contractIdLike: ContractIdLike): this {
         this._builder.setContractid(new ContractId(contractIdLike)._toProto());
         return this;
+    }
+
+    public async getCost(client: BaseClient): Promise<Hbar> {
+        const min = Hbar.fromTinybar(25);
+        const cost = await super.getCost(client);
+        return cost.isGreaterThan(min) ? cost : min;
     }
 
     protected _doLocalValidate(errors: string[]): void {

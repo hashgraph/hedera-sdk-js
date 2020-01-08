@@ -10,6 +10,7 @@ import { AccountId, AccountIdLike } from "./AccountId";
 import { timestampToMs } from "../Timestamp";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
+import { BaseClient } from "../BaseClient";
 
 export interface AccountInfo {
     accountId: AccountId;
@@ -41,6 +42,12 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
     public setAccountId(accountId: AccountIdLike): this {
         this._builder.setAccountid(new AccountId(accountId)._toProto());
         return this;
+    }
+
+    public async getCost(client: BaseClient): Promise<Hbar> {
+        const min = Hbar.fromTinybar(25);
+        const cost = await super.getCost(client);
+        return cost.isGreaterThan(min) ? cost : min;
     }
 
     protected _doLocalValidate(errors: string[]): void {

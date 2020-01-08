@@ -6,6 +6,7 @@ import { CryptoService } from "../generated/CryptoService_pb_service";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { CryptoDeleteTransactionBody } from "../generated/CryptoDelete_pb";
 import { AccountId, AccountIdLike } from "./AccountId";
+import { TransactionId } from "../TransactionId";
 
 export class AccountDeleteTransaction extends TransactionBuilder {
     private _body: CryptoDeleteTransactionBody;
@@ -18,7 +19,9 @@ export class AccountDeleteTransaction extends TransactionBuilder {
     }
 
     public setDeleteAccountId(accountId: AccountIdLike): this {
-        this._body.setDeleteaccountid(new AccountId(accountId)._toProto());
+        const account = new AccountId(accountId);
+        this.setTransactionId(new TransactionId(account));
+        this._body.setDeleteaccountid(account._toProto());
         return this;
     }
 
