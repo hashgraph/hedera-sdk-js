@@ -2,10 +2,6 @@ import { ConsensusTopicResponse } from "../generated/MirrorConsensusService_pb";
 import { ConsensusTopicId } from "./ConsensusTopicId";
 import { Time } from "../Time";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const encoderAndDecoder = require("fastestsmallesttextencoderdecoder");
-const decode = encoderAndDecoder.decode;
-
 export class ConsensusMessage {
     public readonly topicId: ConsensusTopicId;
     public readonly consensusTimestamp: Time;
@@ -22,6 +18,6 @@ export class ConsensusMessage {
     }
 
     public toString(): string {
-        return decode(this.message);
+        return Buffer.from(this.message).toString("utf8");
     }
 }

@@ -24,7 +24,7 @@ async function main() {
         });
 
     const network = {};
-    network[nodeAddress] = "0.0.3";
+    network[ nodeAddress ] = "0.0.3";
 
     const client = new Client({
         network,
@@ -44,8 +44,8 @@ async function main() {
 
     console.log(`topicId = ${topicId}`);
 
-    const subscription = consensusClient.subscribe(topicId, null, (message) => {
-        console.log("Received message");
+    consensusClient.subscribe(topicId, null, (message) => {
+        console.log(message.toString());
     });
 
     for (let i = 0; ; i += 1) {

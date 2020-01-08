@@ -1,19 +1,17 @@
-import { ConsensusServiceClient, ResponseStream, Status } from "../generated/MirrorConsensusService_pb_service";
+import { ConsensusService } from "../generated/MirrorConsensusService_pb_service";
 import { ConsensusTopicQuery, ConsensusTopicResponse } from "../generated/MirrorConsensusService_pb";
 import { ConsensusMessage } from "./ConsensusMessage";
 import { ConsensusTopicId } from "./ConsensusTopicId";
 import { Time } from "../Time";
-import { grpc } from "@improbable-eng/grpc-web";
-import { NodeHttpTransport } from "@improbable-eng/grpc-web-node-http-transport";
-import { BrowserHeaders } from "browser-headers";
+import * as grpc from "grpc";
 
 type ErrorHandler = (error: Error) => void;
 type Listener = (message: ConsensusMessage) => void;
 
 export class SubscriptionClient {
-    private stream: ResponseStream<ConsensusTopicResponse>;
+    private stream: grpc.ClientReadableStream<ConsensusTopicResponse>;
 
-    public constructor(stream: ResponseStream<ConsensusTopicResponse>) {
+    public constructor(stream: grpc.ClientReadableStream<ConsensusTopicResponse>) {
         this.stream = stream;
     }
 
@@ -23,11 +21,11 @@ export class SubscriptionClient {
 }
 
 export class ConsensusClient {
-    private client: ConsensusServiceClient;
+    private client: grpc.Client;
     private errorHandler: ErrorHandler | null;
 
     public constructor(endpoint: string) {
-        this.client = new ConsensusServiceClient(endpoint);
+        this.client = new grpc.Client(endpoint, grpc.credentials.createInsecure());
         this.errorHandler = null;
     }
 
@@ -48,15 +46,18 @@ export class ConsensusClient {
             query.setConsensusstarttime(startTime!._toProto());
         }
 
-        const response = this.client.subscribeTopic(query, new BrowserHeaders({
-                "Connection": "Keep-Alive",
-                "Keep-Alive": "timeout=5, max=1000"
-            }))
+        const response = this.client.makeServerStreamRequest(
+            `/${ConsensusService.serviceName}/${ConsensusService.subscribeTopic.methodName}`,
+            (req) => Buffer.from(req.serializeBinary()),
+            ConsensusTopicResponse.deserializeBinary,
+            query,
+            null,
+            null
+        )
             .on("data", (message: ConsensusTopicResponse): void => {
-                console.log("Received message inside client");
                 listener(new ConsensusMessage(topicId, message));
             })
-            .on("status", (status: Status): void => {
+            .on("status", (status: grpc.StatusObject): void => {
                 console.log(`status: ${JSON.stringify(status)}`);
                 // response.cancel();
             });

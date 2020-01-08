@@ -7,10 +7,6 @@ import { ConsensusService } from "../generated/ConsensusService_pb_service";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { ConsensusTopicId, ConsensusTopicIdLike } from "./ConsensusTopicId";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { TextEncoder } = require("fastestsmallesttextencoderdecoder");
-const encode = (new TextEncoder()).encode;
-
 export class ConsensusSubmitMessageTransaction extends TransactionBuilder {
     private _body: ConsensusSubmitMessageTransactionBody;
 
@@ -30,7 +26,7 @@ export class ConsensusSubmitMessageTransaction extends TransactionBuilder {
         if (message instanceof Uint8Array) {
             this._body.setMessage(message as Uint8Array);
         } else {
-            this._body.setMessage(encode(message as string));
+            this._body.setMessage(Buffer.from(message as string, "utf8"));
         }
         return this;
     }
