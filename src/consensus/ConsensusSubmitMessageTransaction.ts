@@ -6,6 +6,7 @@ import { ConsensusSubmitMessageTransactionBody } from "../generated/ConsensusSub
 import { ConsensusService } from "../generated/ConsensusService_pb_service";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { ConsensusTopicId, ConsensusTopicIdLike } from "./ConsensusTopicId";
+import { utf8encode } from "../util";
 
 export class ConsensusSubmitMessageTransaction extends TransactionBuilder {
     private _body: ConsensusSubmitMessageTransactionBody;
@@ -26,7 +27,7 @@ export class ConsensusSubmitMessageTransaction extends TransactionBuilder {
         if (message instanceof Uint8Array) {
             this._body.setMessage(message as Uint8Array);
         } else {
-            this._body.setMessage(Buffer.from(message as string, "utf8"));
+            this._body.setMessage(utf8encode(message as string));
         }
         return this;
     }
