@@ -8,13 +8,9 @@ async function main() {
         throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
     }
 
-    const client = new Client({
-        network: { "0.testnet.hedera.com:50211": "0.0.3" },
-        operator: {
-            account: operatorAccount,
-            privateKey: operatorPrivateKey
-        }
-    });
+    const client = Client.forTestnet();
+
+    client.setOperator(operatorAccount, operatorPrivateKey);
 
     const balance = await new AccountBalanceQuery()
         .setAccountId(operatorAccount)
