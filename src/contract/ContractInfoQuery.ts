@@ -41,6 +41,9 @@ export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
     }
 
     public async getCost(client: BaseClient): Promise<Hbar> {
+        // deleted contracts return a COST_ANSWER of zero which triggers `INSUFFICIENT_TX_FEE`
+        // if you set that as the query payment; 25 tinybar seems to be the minimum to get
+        // `CONTRACT_DELETED` back instead.
         const min = Hbar.fromTinybar(25);
         const cost = await super.getCost(client);
         return cost.isGreaterThan(min) ? cost : min;
