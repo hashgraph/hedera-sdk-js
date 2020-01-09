@@ -115,7 +115,7 @@
 					<div class="tsd-signature tsd-kind-icon">_key<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L13">src/crypto/Ed25519PrivateKey.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L13">src/crypto/Ed25519PrivateKey.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -125,7 +125,7 @@
 					<div class="tsd-signature tsd-kind-icon">public<wbr>Key<span class="tsd-signature-symbol">:</span> <a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L10">src/crypto/Ed25519PrivateKey.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L10">src/crypto/Ed25519PrivateKey.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -135,24 +135,12 @@
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="supportsderivation" class="tsd-anchor"></a>
 					<h3>supports<wbr>Derivation</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> supportsDerivation<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L174">src/crypto/Ed25519PrivateKey.ts:174</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Check if this private key supports deriving child keys</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-						</li>
-					</ul>
+					<div class="tsd-signature tsd-kind-icon">supports<wbr>Derivation<span class="tsd-signature-symbol">:</span> </div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L174">src/crypto/Ed25519PrivateKey.ts:174</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -167,17 +155,9 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L157">src/crypto/Ed25519PrivateKey.ts:157</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L157">src/crypto/Ed25519PrivateKey.ts:157</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Derive a new private key at the given wallet index.</p>
-								</div>
-								<p>Only currently supported for keys created with <code>fromMnemonic()</code>; other keys will throw
-								an error.</p>
-								<p>You can check if a key supports derivation with <code>.supportsDerivation</code></p>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -198,7 +178,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L178">src/crypto/Ed25519PrivateKey.ts:178</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L178">src/crypto/Ed25519PrivateKey.ts:178</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
@@ -215,22 +195,9 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L203">src/crypto/Ed25519PrivateKey.ts:203</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L203">src/crypto/Ed25519PrivateKey.ts:203</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Create a keystore blob with a given passphrase.</p>
-								</div>
-								<p>The key can be recovered later with <code>fromKeystore()</code>.</p>
-								<p>Note that this will not retain the ancillary data used for deriving child keys,
-								thus <code>.derive()</code> on the restored key will throw even if this instance supports derivation.</p>
-								<dl class="tsd-comment-tags">
-									<dt>link</dt>
-									<dd><p>fromKeystore</p>
-									</dd>
-								</dl>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -251,7 +218,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L184">src/crypto/Ed25519PrivateKey.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L184">src/crypto/Ed25519PrivateKey.ts:184</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -274,15 +241,9 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L31">src/crypto/Ed25519PrivateKey.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L31">src/crypto/Ed25519PrivateKey.ts:31</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Recover a private key from its raw bytes form.</p>
-								</div>
-								<p>This key will <em>not</em> support child key derivation.</p>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -303,36 +264,16 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L133">src/crypto/Ed25519PrivateKey.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L133">src/crypto/Ed25519PrivateKey.ts:133</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Recover a private key from a keystore blob previously created by <code>.createKeystore()</code>.</p>
-								</div>
-								<p>This key will <em>not</em> support child key derivation.</p>
-								<dl class="tsd-comment-tags">
-									<dt>throws</dt>
-									<dd><p>KeyMismatchError if the passphrase is incorrect or the hash fails to validate</p>
-									</dd>
-									<dt>link</dt>
-									<dd><p>createKeystore</p>
-									</dd>
-								</dl>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>keystore: <span class="tsd-signature-type">Uint8Array</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>the keystore blob</p>
-									</div>
 								</li>
 								<li>
 									<h5>passphrase: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>the passphrase used to create the keystore</p>
-									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -349,37 +290,16 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L98">src/crypto/Ed25519PrivateKey.ts:98</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L98">src/crypto/Ed25519PrivateKey.ts:98</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Recover a key from a 24-word mnemonic.</p>
-								</div>
-								<p>There is no corresponding <code>toMnemonic()</code> as the mnemonic cannot be recovered from the key.</p>
-								<p>Instead, you must generate a mnemonic and a corresponding key in that order with
-								<code>generateMnemonic()</code>.</p>
-								<p>This accepts mnemonics generated by the Android and iOS mobile wallets.</p>
-								<p>This key <em>will</em> support deriving child keys with <code>.derive()</code>.</p>
-								<dl class="tsd-comment-tags">
-									<dt>link</dt>
-									<dd><p>generateMnemonic</p>
-									</dd>
-								</dl>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>mnemonic: <a href="_crypto_mnemonic_.mnemonic.html" class="tsd-signature-type">Mnemonic</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>the mnemonic, either as a string separated by spaces or as a 24-element array</p>
-									</div>
 								</li>
 								<li>
 									<h5>passphrase: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>the passphrase to protect the private key with</p>
-									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -396,15 +316,9 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L60">src/crypto/Ed25519PrivateKey.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L60">src/crypto/Ed25519PrivateKey.ts:60</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Recover a key from a hex-encoded string.</p>
-								</div>
-								<p>This key will <em>not</em> support child key derivation.</p>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -425,15 +339,9 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/crypto/Ed25519PrivateKey.ts#L145">src/crypto/Ed25519PrivateKey.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/crypto/Ed25519PrivateKey.ts#L145">src/crypto/Ed25519PrivateKey.ts:145</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Generate a new, cryptographically random private key.</p>
-								</div>
-								<p>This key will <em>not</em> support child key derivation.</p>
-							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>

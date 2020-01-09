@@ -91,23 +91,9 @@
 					<div class="tsd-signature tsd-kind-icon">Tinybar<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/Tinybar.ts#L22">src/Tinybar.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/Tinybar.ts#L22">src/Tinybar.ts:22</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The default denomination of currency for the SDK and in the Hedera protocol.</p>
-						</div>
-						<p>One Tinybar is <code>1 / 100,000,000</code> of an HBAR.</p>
-						<p>Note that <code>number</code> can only precisely represent integers in the range <code>[-2^53, 2^53)</code>;
-							passing <code>number</code> values outside of this range will cause an error to be thrown as rounding may
-						have occurred. For all other cases, <code>BigNumber</code> may be used.</p>
-						<p>However, the recommended way to handle HBAR amounts with the SDK is to use the <code>Hbar</code> class
-							which provides conversion to and from any standard denomination of HBAR. Any method which
-						accepts this type for currency amounts also accepts instances of this class.</p>
-						<p>Note additionally that while <code>BigNumber</code> and <code>Hbar</code> are arbitrary-precision, the largest range
-						supported by the Hedera protocol is <code>[-2^63, 2^63)</code>.</p>
-					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -116,13 +102,13 @@
 					<a name="tinybarrangecheck" class="tsd-anchor"></a>
 					<h3>tinybar<wbr>Range<wbr>Check</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">tinybar<wbr>Range<wbr>Check<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><a href="_tinybar_.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_hbar_.hbar.html" class="tsd-signature-type">Hbar</a>, allowNegative<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"allowNegative"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">tinybar<wbr>Range<wbr>Check<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><a href="_tinybar_.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_hbar_.hbar.html" class="tsd-signature-type">Hbar</a>, allowNegative<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"allowNegative"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/Tinybar.ts#L27">src/Tinybar.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/Tinybar.ts#L27">src/Tinybar.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -142,13 +128,13 @@
 					<a name="tinybartostring" class="tsd-anchor"></a>
 					<h3>tinybar<wbr>ToString</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">tinybar<wbr>ToString<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><a href="_tinybar_.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_hbar_.hbar.html" class="tsd-signature-type">Hbar</a>, allowNegative<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"allowNegative"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+						<li class="tsd-signature tsd-kind-icon">tinybar<wbr>ToString<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><a href="_tinybar_.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="../classes/_hbar_.hbar.html" class="tsd-signature-type">Hbar</a>, allowNegative<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"allowNegative"</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/Tinybar.ts#L54">src/Tinybar.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/Tinybar.ts#L54">src/Tinybar.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -174,7 +160,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/50e0865/src/Tinybar.ts#L63">src/Tinybar.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5fe27c5/src/Tinybar.ts#L63">src/Tinybar.ts:63</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
