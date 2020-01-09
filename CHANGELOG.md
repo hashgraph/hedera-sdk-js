@@ -4,7 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.1-beta.4
+## v1.0.0-beta.5
+
+### Fixed
+
+ * Fix `getCost` for entity Info queries where the entity was deleted
+
+### Added
+
+ * Add support for unsigned integers (incl. Arrays) for contract encoding and decoding
+ 
+ * Add `AccountUpdateTransaction.setReceiverSignatureRequired`
+ 
+ * Add `AccountUpdateTransaction.setProxyAccountId`
+ 
+### Changed
+
+ * Rename `ContractExecuteTransaction.setAmount()` to `ContractExecuteTransaction.setPayableAmount()`
+
+## v1.0.0-beta.4
 
 ### Added
 
@@ -22,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  
  * Renamed `TransactionRecord.contractCreateResult` to `TransactionRecord.getContractCreateResult()`
 
-## v1.0.1-beta.3
+## v1.0.0-beta.3
 
 ### Changed
 
