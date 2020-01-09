@@ -60,7 +60,7 @@ export abstract class BaseClient {
             if ((operator as PrivateKey).privateKey != null) {
                 this.setOperator(
                     operator.account,
-                    (operator as PrivateKey).privateKey,
+                    (operator as PrivateKey).privateKey
                 );
             } else {
                 this.setOperatorWith(
@@ -81,7 +81,7 @@ export abstract class BaseClient {
     /** Set the operator for the client object */
     public setOperator(account: AccountIdLike, privateKey: Ed25519PrivateKey | string): this {
         const key = typeof privateKey === "string" ?
-                        Ed25519PrivateKey.fromString(privateKey as string) :
+            Ed25519PrivateKey.fromString(privateKey as string) :
                         privateKey as Ed25519PrivateKey;
 
         this._operatorAccount = new AccountId(account);
