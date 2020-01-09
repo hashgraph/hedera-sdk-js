@@ -1,13 +1,37 @@
 {
   "name": "@hashgraph/sdk",
-  "version": "1.0.0-beta.5",
-  "description": "JavaScript SDK for the Hedera Hashgraph API",
+  "version": "1.0.0",
+  "description": "Hedera™ Hashgraph SDK for JavaScript/TypeScript",
   "types": "./lib/index-web.d.ts",
   "main": "./lib/index-node.js",
   "browser": "./lib/index-web.js",
+  "homepage": "https://docs.hedera.com/docs/hedera-sdks",
   "repository": "https://github.com/hashgraph/hedera-sdk-js",
+  "bugs": "https://github.com/hashgraph/hedera-sdk-js/issues",
   "author": "Launchbadge <contact@launchbadge.com>",
   "license": "Apache-2.0",
+  "keywords": [
+    "hedera",
+    "hashgraph",
+    "sdk"
+  ],
+  "contributors": [
+    {
+      "name": "Austin Bonander",
+      "email": "austin.bonander@gmail.com",
+      "url": "https://github.com/abonander"
+    },
+    {
+      "name": "Daniel Akhterov",
+      "email": "akhterovd@gmail.com",
+      "url": "https://github.com/danielakhterov"
+    },
+    {
+      "name": "Ryan Leckey",
+      "email": "leckey.ryan@gmail.com",
+      "url": "https://github.com/mehcode"
+    }
+  ],
   "scripts": {
     "test": "jest",
     "prepare": "gulp build",
@@ -19,6 +43,7 @@
   "files": [
     "lib/"
   ],
+  "engines" : { "node" : ">=0.8.17" },
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.12.0",
     "@types/google-protobuf": "^3.7.2",
@@ -27,8 +52,7 @@
     "google-protobuf": "^3.11.2",
     "grpc": "^1.24.2",
     "js-sha3": "^0.8.0",
-    "tweetnacl": "^1.0.1",
-    "utf8": "^3.0.0"
+    "tweetnacl": "^1.0.1"
   },
   "devDependencies": {
     "@launchbadge/eslint-config": "^0.13.10",
