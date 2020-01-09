@@ -46,7 +46,7 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
 
     public async getCost(client: BaseClient): Promise<Hbar> {
         // deleted accounts return a COST_ANSWER of zero which triggers `INSUFFICIENT_TX_FEE`
-        // if you set that as the query payment; 25 tinybar seems to be the minimum to get
+        // if you set that as the query payment; 25 tinybar seems to be enough to get
         // `ACCOUNT_DELETED` back instead.
         const min = Hbar.fromTinybar(25);
         const cost = await super.getCost(client);
