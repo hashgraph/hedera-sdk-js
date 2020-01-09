@@ -58,12 +58,9 @@ export abstract class BaseClient {
 
         if (operator) {
             if ((operator as PrivateKey).privateKey != null) {
-                const key = (operator as PrivateKey).privateKey;
                 this.setOperator(
                     operator.account,
-                    typeof (operator as PrivateKey).privateKey === "string" ?
-                        Ed25519PrivateKey.fromString(key as string) :
-                        key as Ed25519PrivateKey
+                    (operator as PrivateKey).privateKey,
                 );
             } else {
                 this.setOperatorWith(
@@ -82,11 +79,15 @@ export abstract class BaseClient {
     }
 
     /** Set the operator for the client object */
-    public setOperator(account: AccountIdLike, privateKey: Ed25519PrivateKey): this {
+    public setOperator(account: AccountIdLike, privateKey: Ed25519PrivateKey | string): this {
+        const key = typeof privateKey === "string" ?
+                        Ed25519PrivateKey.fromString(privateKey as string) :
+                        privateKey as Ed25519PrivateKey;
+
         this._operatorAccount = new AccountId(account);
-        this._operatorPublicKey = privateKey.publicKey;
+        this._operatorPublicKey = key.publicKey;
         this._operatorSigner =
-            (msg: Uint8Array): Uint8Array => nacl.sign(msg, privateKey._keyData);
+            (msg: Uint8Array): Uint8Array => nacl.sign(msg, key._keyData);
 
         return this;
     }
