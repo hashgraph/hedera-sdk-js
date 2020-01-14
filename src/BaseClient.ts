@@ -50,8 +50,8 @@ export abstract class BaseClient {
     protected _nodes: Node[] = [];
 
     // Default payment and transaction fees to 1 hbar
-    private _maxTransactionFee: Hbar = Hbar.of(1);
-    private _maxQueryPayment?: Hbar = Hbar.of(1);
+    private _maxTransactionFee: Hbar = new Hbar(1);
+    private _maxQueryPayment?: Hbar = new Hbar(1);
 
     protected constructor(network: Nodes, operator?: Operator) {
         this.replaceNodes(network);

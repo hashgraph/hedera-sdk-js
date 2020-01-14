@@ -19,7 +19,7 @@ export enum ArgumentType {
     string = 10,
     bool = 11,
     bytes = 12,
-    bytesfix = 13,
+    bytes32 = 13,
     address = 14,
     func = 15,
 }
@@ -54,8 +54,20 @@ export class ContractFunctionSelector {
         return this._addParam({ ty: ArgumentType.bytes, array: false });
     }
 
+    public addBytes32(): this {
+        return this._addParam({ ty: ArgumentType.bytes32, array: false });
+    }
+
     public addBytesArray(): this {
         return this._addParam({ ty: ArgumentType.bytes, array: true });
+    }
+
+    public addBytes32Array(): this {
+        return this._addParam({ ty: ArgumentType.bytes32, array: true });
+    }
+
+    public addInt8(): this {
+        return this._addParam({ ty: ArgumentType.int8, array: false });
     }
 
     public addInt32(): this {
@@ -70,6 +82,10 @@ export class ContractFunctionSelector {
         return this._addParam({ ty: ArgumentType.int256, array: false });
     }
 
+    public addInt8Array(): this {
+        return this._addParam({ ty: ArgumentType.int8, array: true });
+    }
+
     public addInt32Array(): this {
         return this._addParam({ ty: ArgumentType.int32, array: true });
     }
@@ -82,6 +98,10 @@ export class ContractFunctionSelector {
         return this._addParam({ ty: ArgumentType.int256, array: true });
     }
 
+    public addUint8(): this {
+        return this._addParam({ ty: ArgumentType.uint8, array: false });
+    }
+
     public addUint32(): this {
         return this._addParam({ ty: ArgumentType.uint32, array: false });
     }
@@ -92,6 +112,10 @@ export class ContractFunctionSelector {
 
     public addUint256(): this {
         return this._addParam({ ty: ArgumentType.uint256, array: false });
+    }
+
+    public addUint8Array(): this {
+        return this._addParam({ ty: ArgumentType.uint8, array: true });
     }
 
     public addUint32Array(): this {
@@ -151,7 +175,7 @@ export class ContractFunctionSelector {
     }
 }
 
-function solidityTypeToString(ty: SolidityType, length?: number): string {
+function solidityTypeToString(ty: SolidityType): string {
     let s = "";
     switch (ty.ty) {
         case ArgumentType.uint8:
@@ -193,8 +217,8 @@ function solidityTypeToString(ty: SolidityType, length?: number): string {
         case ArgumentType.bytes:
             s = "bytes";
             break;
-        case ArgumentType.bytesfix:
-            s = `bytes${length}`;
+        case ArgumentType.bytes32:
+            s = "bytes32";
             break;
         case ArgumentType.address:
             s = "address";

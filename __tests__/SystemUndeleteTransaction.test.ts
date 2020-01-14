@@ -4,7 +4,7 @@ import {mockClient, privateKey} from "./MockClient";
 describe("SystemUndeleteTransaction", () => {
     it("serializes and deserializes correctly; SystemUndeleteTransaction", () => {
         const transaction = new SystemUndeleteTransaction()
-            .setId({ file: 3 })
+            .setFileId({ file: 3 })
             .setMaxTransactionFee(1e6)
             .setTransactionId({
                 account: { shard: 0, realm: 0, account: 3 },

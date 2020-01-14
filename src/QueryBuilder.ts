@@ -219,7 +219,7 @@ export abstract class QueryBuilder<T> {
             .setNodeAccountId(node.id)
             .addRecipient(node.id, amount)
             .addSender(client._getOperatorAccountId()!, amount)
-            .setMaxTransactionFee(Hbar.of(1))
+            .setMaxTransactionFee(new Hbar(1))
             .build(client)
             .signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
 

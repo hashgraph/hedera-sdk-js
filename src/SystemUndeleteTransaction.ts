@@ -6,7 +6,6 @@ import { FileService } from "./generated/FileService_pb_service";
 import { Transaction } from "./generated/Transaction_pb";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
 import { SystemUndeleteTransactionBody } from "./generated/SystemUndelete_pb";
-import { normalizeEntityId } from "./util";
 
 export class SystemUndeleteTransaction extends TransactionBuilder {
     private readonly _body: SystemUndeleteTransactionBody;
@@ -17,21 +16,19 @@ export class SystemUndeleteTransaction extends TransactionBuilder {
         this._inner.setSystemundelete(this._body);
     }
 
-    public setId(id: ContractIdLike | FileIdLike): this {
-        try {
-            const fileId = normalizeEntityId("file", id as FileIdLike);
-            this._body.setFileid(new FileId(fileId)._toProto());
-        } catch {
-            const contractId = normalizeEntityId("contract", id as ContractIdLike);
-            this._body.setContractid(new ContractId(contractId)._toProto());
-        }
+    public setFileId(id: FileIdLike): this {
+        this._body.setFileid(new FileId(id)._toProto());
+        return this;
+    }
 
+    public setContractId(id: ContractIdLike): this {
+        this._body.setContractid(new ContractId(id)._toProto());
         return this;
     }
 
     protected _doValidate(errors: string[]): void {
         if (!this._body.hasContractid() == null && !this._body.hasFileid()) {
-            errors.push("SystemDelete must have an id set. Use `.setId()`");
+            errors.push("SystemDelete must have an id set. Use `.setFileId()` or `.setContractId()");
         }
     }
 

@@ -60,8 +60,16 @@ export class ContractFunctionResult {
         return this._bytes.subarray(offset + 32, offset + 32 + len);
     }
 
+    public getBytes32(index: number): Uint8Array {
+        return this._bytes.subarray(index * 32, index * 32 + 32);
+    }
+
     public getBool(index: number): boolean {
         return this._bytes[ index * 32 + 31 ] !== 0;
+    }
+
+    public getInt8(index: number): number {
+        return this._bytes[ index * 32 + 31 ];
     }
 
     public getInt32(index: number): number {
@@ -87,6 +95,10 @@ export class ContractFunctionResult {
             encodeHex(this._getBytes32(index)),
             16
         );
+    }
+
+    public getUint8(index: number): number {
+        return this._bytes[ index * 32 + 31 ];
     }
 
     public getUint32(index: number): number {

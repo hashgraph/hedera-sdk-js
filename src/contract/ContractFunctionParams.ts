@@ -33,14 +33,43 @@ export class ContractFunctionParams {
         return this._addParam(value, true);
     }
 
+    public addBytes32(value: Uint8Array): this {
+        if (value.length !== 32) {
+            throw new Error(`addBytes32 expected array to be of length 32, but received ${value.length}`);
+        }
+
+        this._selector.addBytes32();
+
+        return this._addParam(value, true);
+    }
+
     public addBytesArray(value: Uint8Array[]): this {
         this._selector.addBytesArray();
 
         return this._addParam(value, true);
     }
 
+    public addBytes32Array(value: Uint8Array[]): this {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const [ _, entry ] of value.entries()) {
+            if (entry.length !== 32) {
+                throw new Error(`addBytes32 expected array to be of length 32, but received ${entry.length}`);
+            }
+        }
+
+        this._selector.addBytes32();
+
+        return this._addParam(value, true);
+    }
+
     public addBool(value: boolean): this {
         this._selector.addBool();
+
+        return this._addParam(value, false);
+    }
+
+    public addInt8(value: number): this {
+        this._selector.addInt8();
 
         return this._addParam(value, false);
     }
@@ -63,6 +92,12 @@ export class ContractFunctionParams {
         return this._addParam(value, false);
     }
 
+    public addInt8Array(value: number[]): this {
+        this._selector.addInt8Array();
+
+        return this._addParam(value, true);
+    }
+
     public addInt32Array(value: number[]): this {
         this._selector.addInt32Array();
 
@@ -81,6 +116,12 @@ export class ContractFunctionParams {
         return this._addParam(value, true);
     }
 
+    public addUint8(value: number): this {
+        this._selector.addUint8();
+
+        return this._addParam(value, false);
+    }
+
     public addUint32(value: number): this {
         this._selector.addUint32();
 
@@ -97,6 +138,12 @@ export class ContractFunctionParams {
         this._selector.addUint256();
 
         return this._addParam(value, false);
+    }
+
+    public addUint8Array(value: number[]): this {
+        this._selector.addUint8Array();
+
+        return this._addParam(value, true);
     }
 
     public addUint32Array(value: number[]): this {
@@ -253,7 +300,7 @@ function argumentToBytes(
             case ArgumentType.uint256:
             case ArgumentType.int256:
             case ArgumentType.bool:
-            case ArgumentType.bytesfix:
+            case ArgumentType.bytes32:
             case ArgumentType.address:
             case ArgumentType.func:
                 value = new Uint8Array(totalLengthOfValues + 32);
@@ -283,7 +330,7 @@ function argumentToBytes(
                 case ArgumentType.uint256:
                 case ArgumentType.int256:
                 case ArgumentType.bool:
-                case ArgumentType.bytesfix:
+                case ArgumentType.bytes32:
                 case ArgumentType.address:
                 case ArgumentType.func:
                     value.set(e, i * 32 + 32);
@@ -364,7 +411,7 @@ function argumentToBytes(
         case ArgumentType.func:
             value.set(param as Uint8Array, (32 - 24));
             return value;
-        case ArgumentType.bytesfix:
+        case ArgumentType.bytes32:
             value.set(param as Uint8Array, 0);
             return value;
         // Bytes should have not the length already encoded

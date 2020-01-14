@@ -59,9 +59,10 @@ export class Hbar {
     private readonly _tinybar: BigNumber;
     private readonly _unit: HbarUnit;
 
-    private constructor(tinybar: BigNumber, unit: HbarUnit = HbarUnit.Hbar) {
-        this._tinybar = tinybar;
-        this._unit = unit;
+    public constructor(amount: number | BigNumber | string) {
+        const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
+        this._tinybar = bnAmount.multipliedBy(HbarUnit.Hbar._toTinybarCount());
+        this._unit = HbarUnit.Hbar;
     }
 
     public static readonly MAX: Hbar = new Hbar(new BigNumber(2).pow(63).minus(1));
@@ -74,20 +75,13 @@ export class Hbar {
      * Calculate the HBAR amount given a raw value and a unit.
      */
     public static from(amount: number | BigNumber | string, unit: HbarUnit): Hbar {
-        return new Hbar(convertToTinybar(amount, unit), unit);
+        return new Hbar(convertToTinybar(amount, unit));
     }
 
     /** Get HBAR from a tinybar amount, may be a string */
     public static fromTinybar(amount: number | BigNumber | string): Hbar {
-        const bnAmount = BigNumber.isBigNumber(amount) ? amount : new BigNumber(amount);
-        return new Hbar(bnAmount, HbarUnit.Tinybar);
-    }
-
-    /**
-     * Wrap a raw value of HBAR, may be a string.
-     */
-    public static of(amount: number | BigNumber | string): Hbar {
-        return new Hbar(convertToTinybar(amount, HbarUnit.Hbar), HbarUnit.Hbar);
+        const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
+        return new Hbar(bnAmount);
     }
 
     /** Create an Hbar with a value of 0 tinybar; Note that this is a positive signed zero */
