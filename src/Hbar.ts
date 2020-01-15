@@ -1,8 +1,5 @@
 import BigNumber from "bignumber.js";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const deprecate = require("deprecate");
-
 export class HbarUnit {
     public static readonly Tinybar = new HbarUnit("tinybar");
     public static readonly Microbar = new HbarUnit("microbar");
@@ -89,8 +86,6 @@ export class Hbar {
     /** Get HBAR from a tinybar amount, may be a string */
     public static fromTinybar(amount: number | BigNumber | string): Hbar {
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
-
-        console.log(`amount: ${bnAmount.dividedBy(HbarUnit.Hbar._toTinybarCount())}`);
         return new Hbar(bnAmount.dividedBy(HbarUnit.Hbar._toTinybarCount()));
     }
 
@@ -99,7 +94,7 @@ export class Hbar {
      * @deprecate Use constructor instead. `new Hbar(amount)`
      */
     public static of(amount: number | BigNumber | string): Hbar {
-        deprecate("`Hbar.of` is deprecated, use constructor instead. `new Hbar(amount)`");
+        console.warn("`Hbar.of` is deprecated. Use `new Hbar(amount)` instead.");
         return new Hbar(amount);
     }
 
