@@ -26,7 +26,7 @@ describe("hbar", () => {
     it.each([[ 50_000_000, HbarUnit.Microbar ], [ "50000000", HbarUnit.Microbar ], [ 50_000, HbarUnit.Millibar ], [ "50000", HbarUnit.Millibar ], [ 50, HbarUnit.Hbar ], [ "50", HbarUnit.Hbar ], [ 0.05, HbarUnit.Kilobar ], [ "0.05", HbarUnit.Kilobar ], [ 0.00005, HbarUnit.Megabar ], [ "0.00005", HbarUnit.Megabar ], [ 0.00000005, HbarUnit.Gigabar ], [ "0.00000005", HbarUnit.Gigabar ]] as [number, HbarUnit][])(
         "value conversions are correct/50 hbar",
         (amount, unit) => {
-            expect(Hbar.from(amount, unit).asTinybar()).toStrictEqual(fiftyHbar.asTinybar());
+            expect(Hbar.from(amount, unit).value()).toStrictEqual(fiftyHbar.value());
 
             expect(fiftyHbar.as(unit)).toStrictEqual(new BigNumber(amount));
         }

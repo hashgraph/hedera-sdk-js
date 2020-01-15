@@ -1,5 +1,8 @@
 import BigNumber from "bignumber.js";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const deprecate = require("deprecate");
+
 export class HbarUnit {
     public static readonly Tinybar = new HbarUnit("tinybar");
     public static readonly Microbar = new HbarUnit("microbar");
@@ -65,9 +68,11 @@ export class Hbar {
         this._unit = HbarUnit.Hbar;
     }
 
-    public static readonly MAX: Hbar = new Hbar(new BigNumber(2).pow(63).minus(1));
+    public static readonly MAX: Hbar = new Hbar(new BigNumber(2).pow(63).minus(1)
+        .dividedBy(HbarUnit.Hbar._toTinybarCount()));
 
-    public static readonly MIN: Hbar = new Hbar(new BigNumber(-2).pow(63));
+    public static readonly MIN: Hbar = new Hbar(new BigNumber(-2).pow(63)
+        .dividedBy(HbarUnit.Hbar._toTinybarCount()));
 
     public static readonly ZERO: Hbar = Hbar.zero();
 
@@ -75,13 +80,27 @@ export class Hbar {
      * Calculate the HBAR amount given a raw value and a unit.
      */
     public static from(amount: number | BigNumber | string, unit: HbarUnit): Hbar {
-        return new Hbar(convertToTinybar(amount, unit));
+        const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
+        const tinybar = bnAmount.multipliedBy(unit._toTinybarCount());
+        const hbar = tinybar.dividedBy(HbarUnit.Hbar._toTinybarCount());
+        return new Hbar(hbar);
     }
 
     /** Get HBAR from a tinybar amount, may be a string */
     public static fromTinybar(amount: number | BigNumber | string): Hbar {
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
-        return new Hbar(bnAmount);
+
+        console.log(`amount: ${bnAmount.dividedBy(HbarUnit.Hbar._toTinybarCount())}`);
+        return new Hbar(bnAmount.dividedBy(HbarUnit.Hbar._toTinybarCount()));
+    }
+
+    /**
+     * Wrap a raw value of HBAR, may be a string.
+     * @deprecate Use constructor instead. `new Hbar(amount)`
+     */
+    public static of(amount: number | BigNumber | string): Hbar {
+        deprecate("`Hbar.of` is deprecated, use constructor instead. `new Hbar(amount)`");
+        return new Hbar(amount);
     }
 
     /** Create an Hbar with a value of 0 tinybar; Note that this is a positive signed zero */
@@ -118,17 +137,19 @@ export class Hbar {
     public plus(hbar: Hbar): Hbar;
     public plus(amount: number | BigNumber, unit: HbarUnit): Hbar;
     public plus(amount: Hbar | number | BigNumber, unit?: HbarUnit): Hbar {
-        return amount instanceof Hbar ?
-            new Hbar(this._tinybar.plus(amount._tinybar)) :
-            new Hbar(this._tinybar.plus(convertToTinybar(amount, unit!)));
+        return new Hbar((amount instanceof Hbar ?
+            this._tinybar.plus(amount._tinybar) :
+            this._tinybar.plus(convertToTinybar(amount, unit!))
+        ).dividedBy(HbarUnit.Hbar._toTinybarCount()));
     }
 
     public minus(hbar: Hbar): Hbar;
     public minus(amount: number | BigNumber, unit: HbarUnit): Hbar;
     public minus(amount: Hbar | number | BigNumber, unit?: HbarUnit): Hbar {
-        return amount instanceof Hbar ?
-            new Hbar(this._tinybar.minus(amount._tinybar)) :
-            new Hbar(this._tinybar.minus(convertToTinybar(amount, unit!)));
+        return new Hbar((amount instanceof Hbar ?
+            this._tinybar.minus(amount._tinybar) :
+            this._tinybar.minus(convertToTinybar(amount, unit!))
+        ).dividedBy(HbarUnit.Hbar._toTinybarCount()));
     }
 
     public isEqualTo(hbar: Hbar): boolean;
@@ -184,7 +205,7 @@ export class Hbar {
     }
 
     public negated(): Hbar {
-        return new Hbar(this._tinybar.negated());
+        return new Hbar(this._tinybar.negated().dividedBy(HbarUnit.Hbar._toTinybarCount()));
     }
 
     public isNegative(): boolean {
