@@ -10,7 +10,6 @@ import {
 import BigNumber from "bignumber.js";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 
-import { Tinybar, tinybarRangeCheck, tinybarToString } from "../Tinybar";
 import { Hbar } from "../Hbar";
 import { AccountId, AccountIdLike } from "./AccountId";
 
@@ -24,24 +23,21 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         this._inner.setCryptotransfer(this._body);
     }
 
-    public addSender(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
-        tinybarRangeCheck(amount);
-        const negated = typeof amount === "number" ? -amount : amount.negated();
-        return this.addTransfer(accountId, negated);
+    public addSender(accountId: AccountIdLike, amount: Hbar): this {
+        return this.addTransfer(accountId, amount.negated());
     }
 
-    public addRecipient(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
-        tinybarRangeCheck(amount);
+    public addRecipient(accountId: AccountIdLike, amount: Hbar): this {
         return this.addTransfer(accountId, amount);
     }
 
-    public addTransfer(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
+    public addTransfer(accountId: AccountIdLike, amount: Hbar): this {
         const transfers = this._body.getTransfers() || new TransferList();
         this._body.setTransfers(transfers);
 
         const acctAmt = new AccountAmount();
         acctAmt.setAccountid(new AccountId(accountId)._toProto());
-        acctAmt.setAmount(tinybarToString(amount, "allowNegative"));
+        acctAmt.setAmount(amount._toProto());
 
         transfers.addAccountamounts(acctAmt);
 

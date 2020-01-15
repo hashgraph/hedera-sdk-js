@@ -1,4 +1,6 @@
 import BigNumber from "bignumber.js";
+import { HbarRangeError } from "./errors";
+import { UInt64Value } from "google-protobuf/google/protobuf/wrappers_pb";
 
 export class HbarUnit {
     public static readonly Tinybar = new HbarUnit("tinybar");
@@ -51,6 +53,9 @@ function convertToTinybar(amount: BigNumber.Value, unit: HbarUnit): BigNumber {
     return bnAmount.multipliedBy(unit._toTinybarCount());
 }
 
+const max = new BigNumber(2).pow(63).minus(1).dividedBy(HbarUnit.Hbar._toTinybarCount());
+const min = new BigNumber(-2).pow(63).dividedBy(HbarUnit.Hbar._toTinybarCount());
+
 /**
  * Typesafe wrapper for values of HBAR providing foolproof conversions to other denominations.
  */
@@ -63,13 +68,14 @@ export class Hbar {
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
         this._tinybar = bnAmount.multipliedBy(HbarUnit.Hbar._toTinybarCount());
         this._unit = HbarUnit.Hbar;
+
+        console.log(`amount ${this._tinybar}`);
+        this._check();
     }
 
-    public static readonly MAX: Hbar = new Hbar(new BigNumber(2).pow(63).minus(1)
-        .dividedBy(HbarUnit.Hbar._toTinybarCount()));
+    public static readonly MAX: Hbar = new Hbar(max);
 
-    public static readonly MIN: Hbar = new Hbar(new BigNumber(-2).pow(63)
-        .dividedBy(HbarUnit.Hbar._toTinybarCount()));
+    public static readonly MIN: Hbar = new Hbar(min);
 
     public static readonly ZERO: Hbar = Hbar.zero();
 
@@ -209,5 +215,28 @@ export class Hbar {
 
     public isPositive(): boolean {
         return this._tinybar.isPositive();
+    }
+
+    // NOT A STABLE API
+    public _check(allowNegative = false): void {
+        if (this._tinybar.isNegative() && !allowNegative) {
+            throw new HbarRangeError(this);
+        }
+
+        if (this._tinybar.isGreaterThan(max)) {
+            throw new HbarRangeError(this);
+        }
+    }
+
+    // NOT A STABLE API
+    public _toProto(): string {
+        return String(this._tinybar);
+    }
+
+    // NOT A STABLE API
+    public _toProtoValue(): UInt64Value {
+        const value = new UInt64Value();
+        value.setValue(this._tinybar.toNumber());
+        return value;
     }
 }

@@ -4,7 +4,6 @@ import {
 } from "./account/AccountId";
 import { TransactionID } from "./generated/BasicTypes_pb";
 import { orThrow } from "./util";
-import { throwIfExceptional } from "./errors";
 import { Timestamp } from "./generated/Timestamp_pb";
 import { dateToTimestamp } from "./Timestamp";
 import { BaseClient } from "./BaseClient";
@@ -90,7 +89,7 @@ export class TransactionId {
             .execute(client);
 
         // Throw an exception on an invalid receipt status
-        throwIfExceptional(receipt.status.code, true);
+        receipt.status._throwError();
 
         return receipt;
     }

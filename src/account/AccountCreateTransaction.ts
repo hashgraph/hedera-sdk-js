@@ -6,7 +6,6 @@ import { CryptoCreateTransactionBody } from "../generated/CryptoCreate_pb";
 import { newDuration } from "../util";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 import { Hbar } from "../Hbar";
-import { Tinybar, tinybarToString } from "../Tinybar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import BigNumber from "bignumber.js";
 import { PublicKey } from "../crypto/PublicKey";
@@ -40,18 +39,18 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setInitialBalance(balance: Tinybar | Hbar): this {
-        this._body.setInitialbalance(tinybarToString(balance));
+    public setInitialBalance(balance: Hbar): this {
+        this._body.setInitialbalance(balance._toProto());
         return this;
     }
 
-    public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
-        this._body.setReceiverecordthreshold(tinybarToString(threshold));
+    public setReceiveRecordThreshold(threshold: Hbar): this {
+        this._body.setReceiverecordthreshold(threshold._toProto());
         return this;
     }
 
-    public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
-        this._body.setSendrecordthreshold(tinybarToString(threshold));
+    public setSendRecordThreshold(threshold: Hbar): this {
+        this._body.setSendrecordthreshold(threshold._toProto());
         return this;
     }
 

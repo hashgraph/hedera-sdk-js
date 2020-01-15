@@ -9,7 +9,6 @@ import { Transaction as Transaction_ } from "./generated/Transaction_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
 
-import { Tinybar, tinybarToString } from "./Tinybar";
 import { Hbar } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { AccountId, AccountIdLike } from "./account/AccountId";
@@ -41,8 +40,8 @@ export abstract class TransactionBuilder {
         return this;
     }
 
-    public setMaxTransactionFee(fee: Tinybar | Hbar): this {
-        this._inner.setTransactionfee(tinybarToString(fee));
+    public setMaxTransactionFee(fee: Hbar): this {
+        this._inner.setTransactionfee(fee._toProto());
         return this;
     }
 
@@ -85,7 +84,7 @@ export abstract class TransactionBuilder {
         // Don't override TransactionFee if it's already set
 
         if (client && this._inner.getTransactionfee() === "0") {
-            this._inner.setTransactionfee(tinybarToString(client.maxTransactionFee));
+            this._inner.setTransactionfee(client.maxTransactionFee._toProto());
         }
 
         if (client && !this._inner.hasTransactionid()) {

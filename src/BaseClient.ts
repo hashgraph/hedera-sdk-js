@@ -8,7 +8,6 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { AccountId, AccountIdLike } from "./account/AccountId";
-import { Tinybar, tinybarRangeCheck } from "./Tinybar";
 import { AccountBalanceQuery } from "./account/AccountBalanceQuery";
 
 export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
@@ -144,15 +143,13 @@ export abstract class BaseClient {
      * This can be overridden for an individual transaction with
      * `TransactionBuilder.setMaxTransactionFee()`.
      *
-     * If a transaction's fee will exceed this value, a `HederaError` will be thrown with
+     * If a transaction's fee will exceed this value, a `HederaStatusError` will be thrown with
      * `ResponseCode.INSUFFICIENT_TX_FEE`.
      *
      * @param maxFee
-     * @throws TinybarValueError if the value is out of range for the protocol
      */
-    public setMaxTransactionFee(maxFee: Tinybar | Hbar): this {
-        tinybarRangeCheck(maxFee);
-        this._maxTransactionFee = maxFee instanceof Hbar ? maxFee : Hbar.fromTinybar(maxFee);
+    public setMaxTransactionFee(maxFee: Hbar): this {
+        this._maxTransactionFee = maxFee;
         return this;
     }
 
@@ -161,18 +158,15 @@ export abstract class BaseClient {
      *
      * If this is not called then by default no payments will be made automatically for queries.
      *
-     * If a query will cost more than this amount, a `MaxPaymentExceededError` will be thrown
+     * If a query will cost more than this amount, a `MaxQueryPaymentExceededError` will be thrown
      * from `QueryBuilder.execute()`.
      *
      * This can be overridden for an individual query with
      * `query.setPaymentDefault(await query.requestCost())`.
      *
      * @param maxPayment the maximum automatic payment for a query
-     * @throws TinybarValueError if the value is out of range for the protocol
      */
-    public setMaxQueryPayment(maxPayment: Tinybar | Hbar): this {
-        tinybarRangeCheck(maxPayment);
-
+    public setMaxQueryPayment(maxPayment: Hbar): this {
         this._maxQueryPayment = maxPayment instanceof Hbar ?
             maxPayment :
             Hbar.fromTinybar(maxPayment);

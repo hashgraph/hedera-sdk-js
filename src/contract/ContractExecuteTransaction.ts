@@ -7,7 +7,6 @@ import { ContractCallTransactionBody } from "../generated/ContractCall_pb";
 import BigNumber from "bignumber.js";
 import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractFunctionParams } from "./ContractFunctionParams";
-import { Tinybar, tinybarToString } from "../Tinybar";
 import { Hbar } from "../Hbar";
 
 export class ContractExecuteTransaction extends TransactionBuilder {
@@ -24,8 +23,8 @@ export class ContractExecuteTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setPayableAmount(amount: Tinybar | Hbar): this {
-        this._body.setAmount(tinybarToString(amount));
+    public setPayableAmount(amount: Hbar): this {
+        this._body.setAmount(amount._toProto());
         return this;
     }
 

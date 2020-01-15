@@ -1,44 +1,37 @@
-import { TinybarValueError } from "../src/errors";
+import { HbarRangeError } from "../src/errors";
 import BigNumber from "bignumber.js";
 import { Hbar, HbarUnit } from "../src/Hbar";
 import { AccountId } from "../src/account/AccountId";
 import { ContractId } from "../src/contract/ContractId";
 import { FileId } from "../src/file/FileId";
-import { tinybarRangeCheck } from "../src/Tinybar";
 import { dateToTimestamp, timestampToDate, timestampToProto } from "../src/Timestamp";
 
-describe("tinybarRangeCheck()", () => {
+describe(")", () => {
     it("forbids negative numbers by default", () => {
-        expect(() => tinybarRangeCheck(-1)).toThrow(TinybarValueError);
-        expect(() => tinybarRangeCheck(new BigNumber(-1))).toThrow(TinybarValueError);
-        expect(() => tinybarRangeCheck(Hbar.of("-1"))).toThrow(TinybarValueError);
+        expect(() => Hbar.of("-1")).toThrow(HbarRangeError);
     });
 
     it("forbids number values out of range", () => {
-        expect(() => tinybarRangeCheck(2 ** 53)).toThrow(TinybarValueError);
-        expect(() => tinybarRangeCheck((2 ** 53) - 1)).not.toThrow();
+        expect(() => Hbar.fromTinybar(2 ** 53)._check()).toThrow(HbarRangeError);
+        expect(() => Hbar.fromTinybar((2 ** 53) - 1)._check()).not.toThrow();
 
-        expect(() => tinybarRangeCheck(-(2 ** 53), "allowNegative")).toThrow(TinybarValueError);
-        expect(() => tinybarRangeCheck(-(2 ** 53) + 1, "allowNegative")).not.toThrow();
+        expect(() => Hbar.fromTinybar(2 ** 53).negated()._check()).toThrow(HbarRangeError);
     });
 
     it("forbids BigNumber values out of range", () => {
-        expect(() => tinybarRangeCheck(new BigNumber(2).pow(63))).toThrow(TinybarValueError);
-        expect(() => tinybarRangeCheck(new BigNumber(2).pow(63).minus(1))).not.toThrow();
+        expect(() => Hbar.fromTinybar(new BigNumber(2).pow(63))._check()).toThrow(HbarRangeError);
+        expect(() => Hbar.fromTinybar(new BigNumber(2).pow(63).minus(1))._check()).not.toThrow();
 
-        expect(() => tinybarRangeCheck(new BigNumber(-2).pow(63).minus(1), "allowNegative")).toThrow(TinybarValueError);
-        expect(() => tinybarRangeCheck(new BigNumber(-2).pow(63), "allowNegative")).not.toThrow();
+        expect(() => Hbar.fromTinybar(new BigNumber(-2).pow(63).minus(1))._check()).toThrow(HbarRangeError);
+        expect(() => Hbar.fromTinybar(new BigNumber(-2).pow(63))._check(true)).not.toThrow();
     });
 
     it("forbids Hbar values out of range", () => {
-        expect(() => tinybarRangeCheck(Hbar.from(93, HbarUnit.Gigabar))).toThrow(TinybarValueError);
+        expect(() => Hbar.from(93, HbarUnit.Gigabar)._check()).toThrow(HbarRangeError);
         // the maximum amount of gigabar in the network at any given time
-        expect(() => tinybarRangeCheck(Hbar.from(50, HbarUnit.Gigabar))).not.toThrow();
-        expect(() => tinybarRangeCheck(Hbar.MAX)).not.toThrow();
-
-        expect(() => tinybarRangeCheck(Hbar.from(-93, HbarUnit.Gigabar), "allowNegative")).toThrow(TinybarValueError);
-        expect(() => tinybarRangeCheck(Hbar.from(-50, HbarUnit.Gigabar), "allowNegative")).not.toThrow();
-        expect(() => tinybarRangeCheck(Hbar.MIN, "allowNegative")).not.toThrow();
+        expect(() => Hbar.from(50, HbarUnit.Gigabar)._check()).not.toThrow();
+        expect(() => Hbar.from(-93, HbarUnit.Gigabar)._check()).toThrow(HbarRangeError);
+        expect(() => Hbar.from(-50, HbarUnit.Gigabar)._check(true)).not.toThrow();
     });
 });
 

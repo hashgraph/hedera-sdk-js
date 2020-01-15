@@ -40,8 +40,8 @@ export { Status } from "./Status";
 export { Transfer } from "./Transfer";
 
 export {
-    HederaError,
-    ValidationError, MaxPaymentExceededError, TinybarValueError
+    HederaStatusError,
+    ValidationError, MaxQueryPaymentExceededError, HbarRangeError, BadKeyError
 } from "./errors";
 
 export { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";

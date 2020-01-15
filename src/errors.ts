@@ -1,6 +1,6 @@
 import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
-import BigNumber from "bignumber.js";
 import { Hbar } from "./Hbar";
+import { Status } from "./Status";
 
 export { ResponseCodeEnum } from "./generated/ResponseCode_pb";
 
@@ -16,43 +16,13 @@ export const getResponseCodeName = (code: ResponseCode): string | null => respon
 /**
  * Class of errors for response codes returned from Hedera.
  */
-export class HederaError extends Error {
-    /** The numerical code */
-    public readonly code: ResponseCode;
-    /** The name of the code from the protobufs, or 'UNKNOWN' */
-    public readonly codeName: string;
+export class HederaStatusError extends Error {
+    public readonly status: Status;
 
-    public constructor(code: ResponseCode) {
-        const responseCodeName = getResponseCodeName(code);
-        const codeName = responseCodeName == null ? "UNKNOWN" : responseCodeName;
-
-        super(`Hedera returned response code: ${codeName} (${code})`);
-
-        this.name = "HederaError";
-        this.code = code;
-        this.codeName = codeName;
-    }
-}
-
-export function isCodeExceptional(code: ResponseCode, unknownIsExceptional: boolean): boolean {
-    switch (code) {
-        case ResponseCodeEnum.SUCCESS:
-        case ResponseCodeEnum.OK:
-            return false;
-
-        case ResponseCodeEnum.UNKNOWN:
-        case ResponseCodeEnum.RECEIPT_NOT_FOUND:
-        case ResponseCodeEnum.RECORD_NOT_FOUND:
-            return unknownIsExceptional;
-
-        default:
-            return true;
-    }
-}
-
-export function throwIfExceptional(code: ResponseCode, unknownIsExceptional = true): void {
-    if (isCodeExceptional(code, unknownIsExceptional)) {
-        throw new HederaError(code);
+    public constructor(status: Status) {
+        super(`Hedera returned response code: ${status.toString()}`);
+        this.status = status;
+        this.name = "HederaStatusError";
     }
 }
 
@@ -64,34 +34,30 @@ export class ValidationError extends Error {
     }
 }
 
-export class MaxPaymentExceededError extends Error {
+export class MaxQueryPaymentExceededError extends Error {
     public readonly queryCost: Hbar;
 
     public constructor(queryCost: Hbar, maxQueryCost: Hbar) {
         super(`query cost of ${queryCost.value()} HBAR exceeds max set on client: ${maxQueryCost.value()} HBAR`);
 
-        this.name = "MaxPaymentExceededError";
+        this.name = "MaxQueryPaymentExceededError";
         this.queryCost = queryCost;
     }
 }
 
-export class TinybarValueError extends Error {
-    public readonly amount: BigNumber;
+export class BadKeyError extends Error {
+    public constructor() {
+        super("Failed to parse correct key");
+        this.name = "BadKeyError";
+    }
+}
 
-    public constructor(message: string, amount: number | BigNumber | Hbar) {
-        let bnAmount;
+export class HbarRangeError extends Error {
+    private amount: Hbar;
 
-        if (amount instanceof Hbar) {
-            bnAmount = amount.asTinybar();
-        } else if (BigNumber.isBigNumber(amount)) {
-            bnAmount = amount;
-        } else {
-            bnAmount = new BigNumber(amount);
-        }
-
-        super(`${message}: ${bnAmount.toString()}`);
-
-        this.name = "TinybarValueError";
-        this.amount = bnAmount;
+    public constructor(amount: Hbar) {
+        super(`Hbar amount out of range: ${amount.toString()}`);
+        this.name = "HbarRangeError";
+        this.amount = amount;
     }
 }

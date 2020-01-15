@@ -5,6 +5,7 @@ import { Mnemonic } from "./Mnemonic";
 import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { createKeystore, loadKeystore } from "./Keystore";
+import { BadKeyError } from "../errors";
 
 export class Ed25519PrivateKey {
     public readonly publicKey: Ed25519PublicKey;
@@ -16,7 +17,7 @@ export class Ed25519PrivateKey {
 
     private constructor({ privateKey, publicKey }: RawKeyPair) {
         if (privateKey.length !== nacl.sign.secretKeyLength) {
-            throw new Error("invalid private key");
+            throw new BadKeyError();
         }
 
         this._keyData = privateKey;
@@ -44,7 +45,7 @@ export class Ed25519PrivateKey {
                 keypair = nacl.sign.keyPair.fromSecretKey(bytesArray);
                 break;
             default:
-                throw new Error("invalid private key");
+                throw new BadKeyError();
         }
 
         const { secretKey: privateKey, publicKey } = keypair;
@@ -75,7 +76,7 @@ export class Ed25519PrivateKey {
                 break;
             default:
         }
-        throw new Error(`invalid private key length: ${keyStr.length}`);
+        throw new BadKeyError();
     }
 
     /**

@@ -2,6 +2,7 @@ import * as nacl from "tweetnacl";
 import { Key } from "../generated/BasicTypes_pb";
 import { decodeHex, ed25519PubKeyPrefix, encodeHex } from "./util";
 import { PublicKey } from "./PublicKey";
+import { BadKeyError } from "../errors";
 
 export class Ed25519PublicKey implements PublicKey {
     private readonly _keyData: Uint8Array;
@@ -9,7 +10,7 @@ export class Ed25519PublicKey implements PublicKey {
 
     private constructor(keyData: Uint8Array) {
         if (keyData.length !== nacl.sign.publicKeyLength) {
-            throw new Error("invalid public key");
+            throw new BadKeyError();
         }
 
         this._keyData = keyData;
@@ -37,7 +38,7 @@ export class Ed25519PublicKey implements PublicKey {
             default:
         }
 
-        throw new Error(`invalid public key: ${keyStr}`);
+        throw new BadKeyError();
     }
 
     public toBytes(): Uint8Array {

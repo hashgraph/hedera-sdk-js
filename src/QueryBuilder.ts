@@ -5,19 +5,18 @@ import { QueryHeader, ResponseType } from "./generated/QueryHeader_pb";
 import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
 import {
-    HederaError,
-    MaxPaymentExceededError,
+    HederaStatusError,
+    MaxQueryPaymentExceededError,
     ResponseCodeEnum,
-    throwIfExceptional,
     ResponseCode
 } from "./errors";
 import { runValidation, setTimeoutAwaitable, timeoutPromise } from "./util";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Tinybar } from "./Tinybar";
 import { Hbar } from "./Hbar";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
 import { TransactionBody } from "./generated/TransactionBody_pb";
 import { AccountId } from "./account/AccountId";
+import { Status } from "./Status";
 
 export abstract class QueryBuilder<T> {
     protected readonly _inner: Query = new Query();
@@ -29,7 +28,7 @@ export abstract class QueryBuilder<T> {
     protected constructor() {
     }
 
-    public setMaxQueryPayment(amount: Hbar | Tinybar): this {
+    public setMaxQueryPayment(amount: Hbar): this {
         this._maxPaymentAmount = amount instanceof Hbar ?
             amount :
             Hbar.fromTinybar(amount);
@@ -37,7 +36,7 @@ export abstract class QueryBuilder<T> {
         return this;
     }
 
-    public setQueryPayment(amount: Hbar | Tinybar): this {
+    public setQueryPayment(amount: Hbar): this {
         this._paymentAmount = amount instanceof Hbar ?
             amount :
             Hbar.fromTinybar(amount);
@@ -79,8 +78,8 @@ export abstract class QueryBuilder<T> {
             // COST_ANSWER requires a "null" payment but does not actually
             // process it
             queryHeader.setPayment((await new CryptoTransferTransaction()
-                .addRecipient(node.id, 0)
-                .addSender(client._getOperatorAccountId()!, 0)
+                .addRecipient(node.id, Hbar.zero())
+                .addSender(client._getOperatorAccountId()!, Hbar.zero())
                 .build(client)
                 .signWith(client._getOperatorKey()!, client._getOperatorSigner()!))
                 ._toProto());
@@ -88,7 +87,7 @@ export abstract class QueryBuilder<T> {
             const resp = await client._unaryCall(node.url, this._inner.clone(), this._getMethod());
 
             const respHeader = this._mapResponseHeader(resp);
-            throwIfExceptional(respHeader.getNodetransactionprecheckcode());
+            new Status(respHeader.getNodetransactionprecheckcode())._throwError();
 
             return Hbar.fromTinybar(respHeader.getCost());
         } finally {
@@ -127,7 +126,7 @@ export abstract class QueryBuilder<T> {
                     const actualCost = await this.getCost(client);
 
                     if (actualCost.isGreaterThan(maxPaymentAmount)) {
-                        throw new MaxPaymentExceededError(actualCost, maxPaymentAmount);
+                        throw new MaxQueryPaymentExceededError(actualCost, maxPaymentAmount);
                     }
 
                     await this._generatePaymentTransaction(client, node, actualCost);
@@ -153,7 +152,7 @@ export abstract class QueryBuilder<T> {
                     continue;
                 }
 
-                throwIfExceptional(respStatus, true);
+                new Status(respStatus)._throwError();
 
                 return this._mapResponse(resp);
             }
@@ -163,7 +162,7 @@ export abstract class QueryBuilder<T> {
                 reject(new Error("timed out"));
             } else {
                 // We executed at least once
-                reject(new HederaError(respStatus));
+                reject(new HederaStatusError(new Status(respStatus)));
             }
         });
     }
@@ -210,7 +209,7 @@ export abstract class QueryBuilder<T> {
     public async _generatePaymentTransaction(
         client: BaseClient,
         node: Node,
-        amount: Tinybar | Hbar
+        amount: Hbar
     ): Promise<this> {
         // HACK: Async import because otherwise there would a cycle in the imports which breaks everything
         const { CryptoTransferTransaction } = await import("./account/CryptoTransferTransaction");

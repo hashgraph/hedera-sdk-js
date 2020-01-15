@@ -17,8 +17,7 @@ import { TransactionReceipt } from "./TransactionReceipt";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { TransactionRecord } from "./TransactionRecord";
-import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
-import { throwIfExceptional } from "./errors";
+import { Status } from "./Status";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
@@ -147,14 +146,14 @@ export class Transaction {
             }
 
             const response = await client._unaryCall(node.url, this._inner, this._method);
-            const status: number = response.getNodetransactionprecheckcode();
+            const status: Status = new Status(response.getNodetransactionprecheckcode());
 
             // If response code is BUSY we need to timeout and retry
-            if (ResponseCodeEnum.BUSY === status) {
+            if (status._isBusy()) {
                 continue;
             }
 
-            throwIfExceptional(status);
+            status._throwError();
 
             return this.id;
         }

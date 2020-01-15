@@ -1,3 +1,5 @@
+import { HederaStatusError } from "./errors";
+
 export class Status {
     public static readonly Ok = new Status(0);
     public static readonly InvalidTransaction = new Status(1);
@@ -222,6 +224,35 @@ export class Status {
             case Status.FeeScheduleFilePartUploaded.code: return "FEE_SCHEDULE_FILE_PART_UPLOADED";
             case Status.ExchangeRateChangeLimitExceeded.code: return "EXCHANGE_RATE_CHANGE_LIMIT_EXCEEDED";
             default: return "UNKNOWN STATUS CODE (4120)";
+        }
+    }
+
+    // NOT A STABLE API
+    public _isBusy(): boolean {
+        return Status.Busy.code === this.code;
+    }
+
+    // NOT A STABLE API
+    public _isError(): boolean {
+        switch (this.code) {
+            case Status.Success.code:
+            case Status.Ok.code:
+                return false;
+
+            case Status.Unknown.code:
+            case Status.ReceiptNotFound.code:
+            case Status.RecordNotFound.code:
+                return true;
+
+            default:
+                return true;
+        }
+    }
+
+    // NOT A STABLE API
+    public _throwError(): void {
+        if (this._isError()) {
+            throw new HederaStatusError(this);
         }
     }
 }

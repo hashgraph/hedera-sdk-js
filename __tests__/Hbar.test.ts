@@ -6,7 +6,7 @@ describe("hbar", () => {
     const fiftyHbar = Hbar.fromTinybar(fiftyGTinybar); // 50 hbar
 
     const negativeFiftyGTinybar = new BigNumber(-5_000_000_000);
-    const negativeFiftyHbar = Hbar.fromTinybar(negativeFiftyGTinybar); // -50 hbar
+    const negativeFiftyHbar = Hbar.fromTinybar(fiftyGTinybar).negated(); // -50 hbar
 
     const hundredHbar = Hbar.from(new BigNumber(10_000_000_000), HbarUnit.Tinybar);
 
