@@ -6,6 +6,8 @@ import Code = grpc.Code;
 
 export * from "./exports";
 
+export { ConsensusClient, Subscription } from "./consensus/WebConsensusClient";
+
 const mainnetProxy = { "https://grpc-web.myhbarwallet.com": { shard: 0, realm: 0, account: 3 }};
 
 const testnetProxy = { "https://grpc-web.testnet.myhbarwallet.com": { shard: 0, realm: 0, account: 3 }};

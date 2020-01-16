@@ -8,8 +8,8 @@ import ProtobufMessage = grpcWeb.ProtobufMessage;
 import UnaryMethodDefinition = grpcWeb.UnaryMethodDefinition;
 
 export * from "./exports";
-export { ConsensusMessage } from "./consensus/ConsensusMessage";
-export { ConsensusClient } from "./consensus/ConsensusClient";
+
+export { ConsensusClient, Subscription } from "./consensus/NodeConsensusClient";
 
 const readFile = util.promisify(fs.readFile);
 

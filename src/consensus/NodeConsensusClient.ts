@@ -4,11 +4,12 @@ import { ConsensusMessage } from "./ConsensusMessage";
 import { ConsensusTopicId } from "./ConsensusTopicId";
 import { Time } from "../Time";
 import * as grpc from "grpc";
+import { BaseConsensusClient, SubscriptionInterface } from "./BaseConsensusClient";
 
 type ErrorHandler = (error: Error) => void;
 type Listener = (message: ConsensusMessage) => void;
 
-export class SubscriptionClient {
+export class Subscription implements SubscriptionInterface {
     private stream: grpc.ClientReadableStream<ConsensusTopicResponse>;
 
     public constructor(stream: grpc.ClientReadableStream<ConsensusTopicResponse>) {
@@ -20,31 +21,27 @@ export class SubscriptionClient {
     }
 }
 
-export class ConsensusClient {
+export class ConsensusClient extends BaseConsensusClient {
     private client: grpc.Client;
-    private errorHandler: ErrorHandler | null;
 
     public constructor(endpoint: string) {
+        super();
         this.client = new grpc.Client(endpoint, grpc.credentials.createInsecure());
-        this.errorHandler = null;
-    }
-
-    public setErrorHandler(errorHandler: ErrorHandler): this {
-        this.errorHandler = errorHandler;
-        return this;
     }
 
     public subscribe(
         topicId: ConsensusTopicId,
         startTime: Time | null,
         listener: Listener
-    ): SubscriptionClient {
+    ): SubscriptionInterface {
         const query = new ConsensusTopicQuery();
         query.setTopicid(topicId._toProto());
 
         if (startTime != null) {
             query.setConsensusstarttime(startTime!._toProto());
         }
+
+        const errorHandler = this.errorHandler;
 
         const response = this.client.makeServerStreamRequest(
             `/${ConsensusService.serviceName}/${ConsensusService.subscribeTopic.methodName}`,
@@ -58,10 +55,16 @@ export class ConsensusClient {
                 listener(new ConsensusMessage(topicId, message));
             })
             .on("status", (status: grpc.StatusObject): void => {
-                console.log(`status: ${JSON.stringify(status)}`);
-                // response.cancel();
+                if (errorHandler != null) {
+                    errorHandler(new Error(`Received status code: ${status.code} and message: ${status.details}`));
+                }
+            })
+            .on("end", (status?: grpc.StatusObject): void => {
+                if (errorHandler != null && status != null) {
+                    errorHandler(new Error(`Received status code: ${status.code} and message: ${status.details}`));
+                }
             });
 
-        return new SubscriptionClient(response);
+        return new Subscription(response);
     }
 }
