@@ -2,6 +2,8 @@ import BigNumber from "bignumber.js";
 import { HbarRangeError } from "./errors";
 import { UInt64Value } from "google-protobuf/google/protobuf/wrappers_pb";
 
+export type Tinybar = number;
+
 export class HbarUnit {
     public static readonly Tinybar = new HbarUnit("tinybar");
     public static readonly Microbar = new HbarUnit("microbar");
@@ -53,8 +55,11 @@ function convertToTinybar(amount: BigNumber.Value, unit: HbarUnit): BigNumber {
     return bnAmount.multipliedBy(unit._toTinybarCount());
 }
 
-const max = new BigNumber(2).pow(63).minus(1).dividedBy(HbarUnit.Hbar._toTinybarCount());
-const min = new BigNumber(-2).pow(63).dividedBy(HbarUnit.Hbar._toTinybarCount());
+const maxTinybar = new BigNumber(2).pow(63).minus(1);
+const maxHbar = maxTinybar.dividedBy(HbarUnit.Hbar._toTinybarCount());
+
+const minTinybar = new BigNumber(-2).pow(63);
+const minHbar = minTinybar.dividedBy(HbarUnit.Hbar._toTinybarCount());
 
 /**
  * Typesafe wrapper for values of HBAR providing foolproof conversions to other denominations.
@@ -68,14 +73,12 @@ export class Hbar {
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
         this._tinybar = bnAmount.multipliedBy(HbarUnit.Hbar._toTinybarCount());
         this._unit = HbarUnit.Hbar;
-
-        console.log(`amount ${this._tinybar}`);
-        this._check();
+        this._check(true);
     }
 
-    public static readonly MAX: Hbar = new Hbar(max);
+    public static readonly MAX: Hbar = new Hbar(maxHbar);
 
-    public static readonly MIN: Hbar = new Hbar(min);
+    public static readonly MIN: Hbar = new Hbar(minHbar);
 
     public static readonly ZERO: Hbar = Hbar.zero();
 
@@ -91,6 +94,10 @@ export class Hbar {
 
     /** Get HBAR from a tinybar amount, may be a string */
     public static fromTinybar(amount: number | BigNumber | string): Hbar {
+        if (typeof amount === "number" && amount >= 2 ** 53) {
+            throw new HbarRangeError(new Hbar(amount));
+        }
+
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
         return new Hbar(bnAmount.dividedBy(HbarUnit.Hbar._toTinybarCount()));
     }
@@ -219,11 +226,11 @@ export class Hbar {
 
     // NOT A STABLE API
     public _check(allowNegative = false): void {
-        if (this._tinybar.isNegative() && !allowNegative) {
+        if (this._tinybar.isNegative() && !allowNegative && this._tinybar.isLessThan(maxTinybar)) {
             throw new HbarRangeError(this);
         }
 
-        if (this._tinybar.isGreaterThan(max)) {
+        if (this._tinybar.isGreaterThan(maxTinybar)) {
             throw new HbarRangeError(this);
         }
     }

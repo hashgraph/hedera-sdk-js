@@ -12,7 +12,7 @@ import {
 } from "./errors";
 import { runValidation, setTimeoutAwaitable, timeoutPromise } from "./util";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Hbar } from "./Hbar";
+import { Hbar, Tinybar } from "./Hbar";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
 import { TransactionBody } from "./generated/TransactionBody_pb";
 import { AccountId } from "./account/AccountId";
@@ -28,18 +28,19 @@ export abstract class QueryBuilder<T> {
     protected constructor() {
     }
 
-    public setMaxQueryPayment(amount: Hbar): this {
-        this._maxPaymentAmount = amount instanceof Hbar ?
-            amount :
-            Hbar.fromTinybar(amount);
+    public setMaxQueryPayment(amount: Tinybar | Hbar): this {
+        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
+        hbar._check();
 
+        this._maxPaymentAmount = hbar;
         return this;
     }
 
-    public setQueryPayment(amount: Hbar): this {
-        this._paymentAmount = amount instanceof Hbar ?
-            amount :
-            Hbar.fromTinybar(amount);
+    public setQueryPayment(amount: Tinybar | Hbar): this {
+        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
+        hbar._check();
+
+        this._paymentAmount = hbar;
 
         return this;
     }
@@ -209,15 +210,18 @@ export abstract class QueryBuilder<T> {
     public async _generatePaymentTransaction(
         client: BaseClient,
         node: Node,
-        amount: Hbar
+        amount: Tinybar | Hbar
     ): Promise<this> {
+        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
+        hbar._check();
+
         // HACK: Async import because otherwise there would a cycle in the imports which breaks everything
         const { CryptoTransferTransaction } = await import("./account/CryptoTransferTransaction");
 
         const paymentTx = await new CryptoTransferTransaction()
             .setNodeAccountId(node.id)
-            .addRecipient(node.id, amount)
-            .addSender(client._getOperatorAccountId()!, amount)
+            .addRecipient(node.id, hbar)
+            .addSender(client._getOperatorAccountId()!, hbar)
             .setMaxTransactionFee(new Hbar(1))
             .build(client)
             .signWith(client._getOperatorKey()!, client._getOperatorSigner()!);

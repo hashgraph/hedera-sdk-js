@@ -24,7 +24,7 @@ async function main() {
 
     let transactionId = await new AccountCreateTransaction()
         .setKey(privateKey.publicKey)
-        .setInitialBalance(Hbar.of(2))
+        .setInitialBalance(new Hbar(2))
         .execute(client);
 
     let transactionReceipt = await transactionId.getReceipt(client);

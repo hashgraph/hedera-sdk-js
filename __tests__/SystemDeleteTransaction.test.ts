@@ -4,7 +4,7 @@ import {mockClient, privateKey} from "./MockClient";
 describe("SystemDeleteTransaction", () => {
     it("serializes and deserializes correctly; SystemDeleteTransaction", () => {
         const transaction = new SystemDeleteTransaction()
-            .setFileId({ file: 3 })
+            .setFileId(3)
             .setExpirationTime(new Date(15415151511))
             .setMaxTransactionFee(1e6)
             .setTransactionId({

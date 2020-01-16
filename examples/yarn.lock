@@ -3,7 +3,7 @@
 
 
 "@hashgraph/sdk@file:..":
-  version "1.0.0"
+  version "1.0.1"
   dependencies:
     "@improbable-eng/grpc-web" "^0.12.0"
     "@types/google-protobuf" "^3.7.2"
@@ -13,6 +13,7 @@
     grpc "^1.24.2"
     js-sha3 "^0.8.0"
     tweetnacl "^1.0.1"
+    util-deprecate "^1.0.2"
 
 "@improbable-eng/grpc-web@^0.12.0":
   version "0.12.0"
@@ -725,7 +726,7 @@ tweetnacl@^1.0.1:
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-1.0.1.tgz#2594d42da73cd036bd0d2a54683dd35a6b55ca17"
   integrity sha512-kcoMoKTPYnoeS50tzoqjPY3Uv9axeuuFAZY9M/9zFnhoVvRfxz9K29IMPD7jGmt2c8SW7i3gT9WqDl2+nV7p4A==
 
-util-deprecate@~1.0.1:
+util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=

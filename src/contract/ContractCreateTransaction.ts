@@ -7,7 +7,7 @@ import { newDuration } from "../util";
 import BigNumber from "bignumber.js";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
-import { Hbar } from "../Hbar";
+import { Hbar, Tinybar } from "../Hbar";
 import { PublicKey } from "../crypto/PublicKey";
 import { FileId, FileIdLike } from "../file/FileId";
 import { AccountId, AccountIdLike } from "../account/AccountId";
@@ -40,8 +40,11 @@ export class ContractCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setInitialBalance(intialBalance: Hbar): this {
-        this._body.setInitialbalance(intialBalance._toProto());
+    public setInitialBalance(balance: Tinybar | Hbar): this {
+        const hbar = typeof balance === "number" ? Hbar.fromTinybar(balance) : balance as Hbar;
+        hbar._check();
+
+        this._body.setInitialbalance(hbar._toProto());
         return this;
     }
 

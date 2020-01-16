@@ -18,7 +18,7 @@ describe("hbar", () => {
         expect(fiftyHbar.asTinybar()).toStrictEqual(fiftyGTinybar);
         expect(fiftyHbar.value()).toStrictEqual(new BigNumber(50));
 
-        expect(Hbar.of("50").asTinybar()).toStrictEqual(fiftyGTinybar);
+        expect(new Hbar("50").asTinybar()).toStrictEqual(fiftyGTinybar);
         expect(Hbar.fromTinybar("5000000000").asTinybar()).toStrictEqual(fiftyGTinybar);
         expect(Hbar.zero().asTinybar()).toStrictEqual(zeroTinyBar);
     });

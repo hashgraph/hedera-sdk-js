@@ -4,10 +4,9 @@ import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 import { ContractCallTransactionBody } from "../generated/ContractCall_pb";
-import BigNumber from "bignumber.js";
 import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractFunctionParams } from "./ContractFunctionParams";
-import { Hbar } from "../Hbar";
+import { Hbar, Tinybar } from "../Hbar";
 
 export class ContractExecuteTransaction extends TransactionBuilder {
     private readonly _body: ContractCallTransactionBody;
@@ -18,13 +17,19 @@ export class ContractExecuteTransaction extends TransactionBuilder {
         this._inner.setContractcall(this._body);
     }
 
-    public setGas(gas: number | BigNumber): this {
-        this._body.setGas(String(gas));
+    public setGas(gas: Tinybar | Hbar): this {
+        const hbar = typeof gas === "number" ? Hbar.fromTinybar(gas) : gas as Hbar;
+        hbar._check();
+
+        this._body.setGas(hbar._toProto());
         return this;
     }
 
-    public setPayableAmount(amount: Hbar): this {
-        this._body.setAmount(amount._toProto());
+    public setPayableAmount(amount: Tinybar | Hbar): this {
+        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
+        hbar._check();
+
+        this._body.setAmount(hbar._toProto());
         return this;
     }
 

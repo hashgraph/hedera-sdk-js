@@ -13,7 +13,7 @@ describe("AccountUpdateTransaction", () => {
             })
             .setAccountId({ account: 3 })
             .setKey(privateKey.publicKey)
-            .setMaxTransactionFee(Hbar.of(1))
+            .setMaxTransactionFee(new Hbar(1))
             .build(mockClient)
             .sign(privateKey);
 

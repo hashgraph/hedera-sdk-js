@@ -25,9 +25,9 @@ class MockClient extends BaseClient {
 export const mockClient = new MockClient();
 
 export const mockTransaction = new CryptoTransferTransaction()
-    .addSender({ shard: 0, realm: 0, account: 2 }, Hbar.fromTinybar(100))
-    .addRecipient({ shard: 0, realm: 0, account: 3 }, Hbar.fromTinybar(100))
-    .setMaxTransactionFee(Hbar.fromTinybar(1e6))
+    .addSender({ shard: 0, realm: 0, account: 2 }, 100)
+    .addRecipient({ shard: 0, realm: 0, account: 3 }, 100)
+    .setMaxTransactionFee(1e6)
     .setTransactionId({
         account: { shard: 0, realm: 0, account: 3 },
         validStartSeconds: 124124,

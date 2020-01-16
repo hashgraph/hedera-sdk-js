@@ -5,7 +5,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoCreateTransactionBody } from "../generated/CryptoCreate_pb";
 import { newDuration } from "../util";
 import { CryptoService } from "../generated/CryptoService_pb_service";
-import { Hbar } from "../Hbar";
+import { Hbar, Tinybar } from "../Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import BigNumber from "bignumber.js";
 import { PublicKey } from "../crypto/PublicKey";
@@ -39,8 +39,11 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setInitialBalance(balance: Hbar): this {
-        this._body.setInitialbalance(balance._toProto());
+    public setInitialBalance(balance: Tinybar | Hbar): this {
+        const hbar = typeof balance === "number" ? Hbar.fromTinybar(balance) : balance as Hbar;
+        hbar._check();
+
+        this._body.setInitialbalance(hbar._toProto());
         return this;
     }
 

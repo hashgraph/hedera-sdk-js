@@ -33,7 +33,7 @@ async function main() {
 
     // First we must upload a file containing the byte code
     const byteCodeFileId = (await (await new FileCreateTransaction()
-        .setMaxTransactionFee(Hbar.of(3))
+        .setMaxTransactionFee(new Hbar(3))
         .addKey(operatorPrivateKey.publicKey)
         .setContents(smartContractByteCode)
         .execute(hederaClient))
@@ -44,7 +44,7 @@ async function main() {
 
     // Next we instantiate the contract instance
     const record = await (await new ContractCreateTransaction()
-        .setMaxTransactionFee(Hbar.of(100))
+        .setMaxTransactionFee(new Hbar(100))
         // Failing to set this to an adequate amount
         // INSUFFICIENT_GAS
         .setGas(2000) // ~1260

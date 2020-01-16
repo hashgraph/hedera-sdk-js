@@ -10,7 +10,7 @@ import {
 import BigNumber from "bignumber.js";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 
-import { Hbar } from "../Hbar";
+import { Hbar, Tinybar } from "../Hbar";
 import { AccountId, AccountIdLike } from "./AccountId";
 
 export class CryptoTransferTransaction extends TransactionBuilder {
@@ -23,12 +23,18 @@ export class CryptoTransferTransaction extends TransactionBuilder {
         this._inner.setCryptotransfer(this._body);
     }
 
-    public addSender(accountId: AccountIdLike, amount: Hbar): this {
-        return this.addTransfer(accountId, amount.negated());
+    public addSender(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
+        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
+        hbar._check();
+
+        return this.addTransfer(accountId, hbar.negated());
     }
 
-    public addRecipient(accountId: AccountIdLike, amount: Hbar): this {
-        return this.addTransfer(accountId, amount);
+    public addRecipient(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
+        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
+        hbar._check();
+
+        return this.addTransfer(accountId, hbar);
     }
 
     public addTransfer(accountId: AccountIdLike, amount: Hbar): this {

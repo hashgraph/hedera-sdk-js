@@ -9,7 +9,7 @@ import { Transaction as Transaction_ } from "./generated/Transaction_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
 
-import { Hbar } from "./Hbar";
+import { Hbar, Tinybar } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { AccountId, AccountIdLike } from "./account/AccountId";
 import { TransactionId, TransactionIdLike } from "./TransactionId";
@@ -40,8 +40,11 @@ export abstract class TransactionBuilder {
         return this;
     }
 
-    public setMaxTransactionFee(fee: Hbar): this {
-        this._inner.setTransactionfee(fee._toProto());
+    public setMaxTransactionFee(fee: Tinybar | Hbar): this {
+        const hbar = typeof fee === "number" ? Hbar.fromTinybar(fee) : fee as Hbar;
+        hbar._check();
+
+        this._inner.setTransactionfee(hbar._toProto());
         return this;
     }
 
