@@ -1,4 +1,4 @@
-import { HbarRangeError } from "../src/errors";
+import { HbarRangeError } from "../src/HbarRangeError";
 import BigNumber from "bignumber.js";
 import { Hbar, HbarUnit } from "../src/Hbar";
 import { AccountId } from "../src/account/AccountId";

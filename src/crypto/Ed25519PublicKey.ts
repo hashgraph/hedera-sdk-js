@@ -2,7 +2,7 @@ import * as nacl from "tweetnacl";
 import { Key } from "../generated/BasicTypes_pb";
 import { decodeHex, ed25519PubKeyPrefix, encodeHex } from "./util";
 import { PublicKey } from "./PublicKey";
-import { BadKeyError } from "../errors";
+import { BadKeyError } from "../BadKeyError";
 
 export class Ed25519PublicKey implements PublicKey {
     private readonly _keyData: Uint8Array;

@@ -39,10 +39,12 @@ export { Transaction } from "./Transaction";
 export { Status } from "./Status";
 export { Transfer } from "./Transfer";
 
-export {
-    HederaStatusError,
-    ValidationError, MaxQueryPaymentExceededError, HbarRangeError, BadKeyError
-} from "./errors";
+// Errors
+export { HederaStatusError } from "./HederaStatusError";
+export { LocalValidationError } from "./LocalValidationError";
+export { BadKeyError } from "./BadKeyError";
+export { HbarRangeError } from "./HbarRangeError";
+export { MaxQueryPaymentExceededError } from "./MaxQueryPaymentExceededError";
 
 export { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 export { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";

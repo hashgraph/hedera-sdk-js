@@ -1,4 +1,4 @@
-import { HederaStatusError } from "./errors";
+import { HederaStatusError } from "./HederaStatusError";
 
 export class Status {
     public static readonly Ok = new Status(0);

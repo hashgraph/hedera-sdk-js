@@ -2,7 +2,7 @@ import { KeyList } from "./generated/BasicTypes_pb";
 import { Duration } from "./generated/Duration_pb";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
 import { Response } from "./generated/Response_pb";
-import { ValidationError } from "./errors";
+import { LocalValidationError } from "./LocalValidationError";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 
 export function orThrow<T>(val?: T, msg = "value must not be null"): T {
@@ -114,7 +114,7 @@ export function runValidation(instance: object, doValidate: (errors: string[]) =
     const errors: string[] = [];
     doValidate(errors);
     if (errors.length > 0) {
-        throw new ValidationError(instance.constructor.name, errors);
+        throw new LocalValidationError(instance.constructor.name, errors);
     }
 }
 

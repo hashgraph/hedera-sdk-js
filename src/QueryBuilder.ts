@@ -4,12 +4,8 @@ import { BaseClient, Node } from "./BaseClient";
 import { QueryHeader, ResponseType } from "./generated/QueryHeader_pb";
 import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
-import {
-    HederaStatusError,
-    MaxQueryPaymentExceededError,
-    ResponseCodeEnum,
-    ResponseCode
-} from "./errors";
+import { HederaStatusError } from "./HederaStatusError";
+import { MaxQueryPaymentExceededError } from "./MaxQueryPaymentExceededError";
 import { runValidation, setTimeoutAwaitable, timeoutPromise } from "./util";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Hbar, Tinybar } from "./Hbar";
@@ -100,7 +96,7 @@ export abstract class QueryBuilder<T> {
     }
 
     public execute(client: BaseClient): Promise<T> {
-        let respStatus: ResponseCode | null = null;
+        let respStatus: Status | null = null;
 
         return timeoutPromise(this._getDefaultExecuteTimeout(), (async() => {
             let node: Node;
@@ -147,13 +143,14 @@ export abstract class QueryBuilder<T> {
                 }
 
                 const resp = await client._unaryCall(node!.url, this._inner, this._getMethod());
-                respStatus = this._mapResponseHeader(resp).getNodetransactionprecheckcode();
+                respStatus = new Status(this._mapResponseHeader(resp)
+                    .getNodetransactionprecheckcode());
 
                 if (this._shouldRetry(respStatus, resp)) {
                     continue;
                 }
 
-                new Status(respStatus)._throwError();
+                respStatus._throwError();
 
                 return this._mapResponse(resp);
             }
@@ -163,7 +160,7 @@ export abstract class QueryBuilder<T> {
                 reject(new Error("timed out"));
             } else {
                 // We executed at least once
-                reject(new HederaStatusError(new Status(respStatus)));
+                reject(new HederaStatusError(respStatus));
             }
         });
     }
@@ -183,9 +180,9 @@ export abstract class QueryBuilder<T> {
     protected abstract _doLocalValidate(errors: string[]): void;
 
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-    protected _shouldRetry(status: ResponseCode, response: Response): boolean {
+    protected _shouldRetry(status: Status, response: Response): boolean {
         // By deafult, ONLY the BUSY status should be retriesd
-        return status === ResponseCodeEnum.BUSY;
+        return status.code === Status.Busy.code;
     }
 
     protected _getDefaultExecuteTimeout(): number {

@@ -8,8 +8,7 @@ import { Response } from "./generated/Response_pb";
 import { TransactionReceipt } from "./TransactionReceipt";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
-import { ResponseCode } from "./errors";
-import { ResponseCodeEnum } from "./generated/ResponseCode_pb";
+import { Status } from "./Status";
 
 export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
     private readonly _builder: ProtoTransactionGetReceiptQuery;
@@ -39,21 +38,21 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
         return CryptoService.getTransactionReceipts;
     }
 
-    protected _shouldRetry(status: ResponseCode, response: Response): boolean {
+    protected _shouldRetry(status: Status, response: Response): boolean {
         if (super._shouldRetry(status, response)) return true;
 
-        if (status === ResponseCodeEnum.OK) {
+        if (status.code === Status.Ok.code) {
             const receipt = response.getTransactiongetreceipt()!.getReceipt()!;
-            const receiptStatus = receipt.getStatus()! as number;
+            const receiptStatus = new Status(receipt.getStatus()! as number);
 
             if (([
                 // Accepted but has not reached consensus
-                ResponseCodeEnum.OK,
+                Status.Ok.code,
                 // Queue is full
-                ResponseCodeEnum.BUSY,
+                Status.Busy.code,
                 // Still in the node's queue
-                ResponseCodeEnum.UNKNOWN
-            ] as number[]).includes(receiptStatus)) {
+                Status.Unknown.code
+            ] as number[]).includes(receiptStatus.code)) {
                 return true;
             }
         }

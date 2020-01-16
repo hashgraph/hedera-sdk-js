@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { HbarRangeError } from "./errors";
+import { HbarRangeError } from "./HbarRangeError";
 import { UInt64Value } from "google-protobuf/google/protobuf/wrappers_pb";
 
 export type Tinybar = number;
