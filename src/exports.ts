@@ -66,3 +66,5 @@ export { TransactionRecord } from "./TransactionRecord";
 
 export { ContractFunctionParams } from "./contract/ContractFunctionParams";
 export { Time } from "./Time";
+
+export { TransactionSigner } from "./BaseClient";

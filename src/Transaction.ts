@@ -1,7 +1,7 @@
 import * as nacl from "tweetnacl";
 import { Transaction as Transaction_ } from "./generated/Transaction_pb";
 import { TransactionBody } from "./generated/TransactionBody_pb";
-import { BaseClient, Signer } from "./BaseClient";
+import { BaseClient, TransactionSigner } from "./BaseClient";
 import { SignatureMap, SignaturePair, TransactionID } from "./generated/BasicTypes_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
@@ -110,7 +110,7 @@ export class Transaction {
      * @param publicKey the public key that can be used to verify the returned signature
      * @param signer
      */
-    public async signWith(publicKey: Ed25519PublicKey, signer: Signer): Promise<this> {
+    public async signWith(publicKey: Ed25519PublicKey, signer: TransactionSigner): Promise<this> {
         this._checkPubKey(publicKey);
 
         const signResult = signer(this._inner.getBodybytes_asU8());

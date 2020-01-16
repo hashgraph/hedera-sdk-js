@@ -10,7 +10,7 @@ import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { AccountId, AccountIdLike } from "./account/AccountId";
 import { AccountBalanceQuery } from "./account/AccountBalanceQuery";
 
-export type Signer = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
+export type TransactionSigner = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
 /** If `privateKey` is a string it will be parsed as an `Ed25519PrivateKey` */
 export interface PrivateKey {
@@ -19,7 +19,7 @@ export interface PrivateKey {
 
 export interface PubKeyAndSigner {
     publicKey: Ed25519PublicKey;
-    signer: Signer;
+    signer: TransactionSigner;
 }
 
 export type SigningOpts = PrivateKey | PubKeyAndSigner;
@@ -43,7 +43,7 @@ export interface ClientConfig {
 
 export abstract class BaseClient {
     private _operatorAccount?: AccountId;
-    private _operatorSigner?: Signer;
+    private _operatorSigner?: TransactionSigner;
     private _operatorPublicKey?: Ed25519PublicKey;
 
     protected _nodes: Node[] = [];
@@ -65,7 +65,7 @@ export abstract class BaseClient {
                 this.setOperatorWith(
                     operator.account,
                     (operator as PubKeyAndSigner).publicKey as Ed25519PublicKey,
-                    (operator as PubKeyAndSigner).signer as Signer
+                    (operator as PubKeyAndSigner).signer as TransactionSigner
                 );
             }
         }
@@ -94,7 +94,7 @@ export abstract class BaseClient {
     public setOperatorWith(
         account: AccountIdLike,
         publicKey: Ed25519PublicKey,
-        signer: Signer
+        signer: TransactionSigner
     ): this {
         this._operatorAccount = new AccountId(account);
         this._operatorPublicKey = publicKey;
@@ -119,7 +119,7 @@ export abstract class BaseClient {
         return this._operatorAccount;
     }
 
-    public _getOperatorSigner(): Signer | undefined {
+    public _getOperatorSigner(): TransactionSigner | undefined {
         return this._operatorSigner;
     }
 
