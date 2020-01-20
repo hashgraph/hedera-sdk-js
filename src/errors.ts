@@ -83,7 +83,7 @@ export class TinybarValueError extends Error {
 
         if (amount instanceof Hbar) {
             bnAmount = amount.asTinybar();
-        } else if (amount instanceof BigNumber) {
+        } else if (BigNumber.isBigNumber(amount)) {
             bnAmount = amount;
         } else {
             bnAmount = new BigNumber(amount);

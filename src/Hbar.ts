@@ -47,7 +47,7 @@ export class HbarUnit {
 }
 
 function convertToTinybar(amount: BigNumber.Value, unit: HbarUnit): BigNumber {
-    const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
+    const bnAmount = BigNumber.isBigNumber(amount) ? amount : new BigNumber(amount);
     return bnAmount.multipliedBy(unit._toTinybarCount());
 }
 
@@ -79,7 +79,7 @@ export class Hbar {
 
     /** Get HBAR from a tinybar amount, may be a string */
     public static fromTinybar(amount: number | BigNumber | string): Hbar {
-        const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
+        const bnAmount = BigNumber.isBigNumber(amount) ? amount : new BigNumber(amount);
         return new Hbar(bnAmount, HbarUnit.Tinybar);
     }
 

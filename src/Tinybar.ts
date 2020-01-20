@@ -27,7 +27,7 @@ const minTinybarBignum = new BigNumber(2).pow(63).negated();
 export function tinybarRangeCheck(amount: Tinybar | Hbar, allowNegative?: "allowNegative"): void {
     const negativeError = "tinybar amount must not be negative in this context";
 
-    if (amount instanceof BigNumber || amount instanceof Hbar) {
+    if (BigNumber.isBigNumber(amount) || amount instanceof Hbar) {
         if (!allowNegative && amount.isNegative()) {
             throw new TinybarValueError(negativeError, amount);
         }
@@ -65,7 +65,7 @@ export function tinybarToUInt64Value(threshold: Tinybar | Hbar): UInt64Value {
     const tinybar: Tinybar = threshold instanceof Hbar ?
         threshold.asTinybar() :
         threshold;
-    if (tinybar instanceof BigNumber) {
+    if (BigNumber.isBigNumber(tinybar)) {
         tinybarRangeCheck(tinybar);
         value.setValue(tinybar.toNumber());
     } else {

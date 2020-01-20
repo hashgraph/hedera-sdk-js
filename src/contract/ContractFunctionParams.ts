@@ -325,7 +325,7 @@ function argumentToBytes(
         // int64, uint64, and int256 both expect the parameter to be an Uint8Array instead of number
         case ArgumentType.uint64:
         case ArgumentType.int64:
-            if (param instanceof BigNumber) {
+            if (BigNumber.isBigNumber(param)) {
                 // eslint-disable-next-line no-case-declarations
                 let par = param.toString(16);
                 if (par.length > 16) {
@@ -345,7 +345,7 @@ function argumentToBytes(
             return value;
         case ArgumentType.int256:
         case ArgumentType.uint256:
-            if (param instanceof BigNumber) {
+            if (BigNumber.isBigNumber(param)) {
                 let par = param.toString(16);
                 if (par.length % 2 === 1) {
                     par = `0${par}`;
@@ -400,7 +400,7 @@ function numberToBytes(
     byteoffset: number,
     func: (byteOffset: number, value: number) => void
 ): void {
-    const value = param instanceof BigNumber ? param.toNumber() : param;
+    const value = BigNumber.isBigNumber(param) ? param.toNumber() : param;
 
     func(byteoffset, value);
 }
