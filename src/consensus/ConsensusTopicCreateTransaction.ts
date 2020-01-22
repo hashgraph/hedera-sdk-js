@@ -40,7 +40,7 @@ export class ConsensusTopicCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setMemo(memo: string): this {
+    public setTopicMemo(memo: string): this {
         this._body.setMemo(memo);
         return this;
     }

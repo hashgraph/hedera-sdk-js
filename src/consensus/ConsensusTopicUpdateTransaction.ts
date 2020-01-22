@@ -47,7 +47,7 @@ export class ConsensusTopicUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setMemo(memo: string): this {
+    public setTopicMemo(memo: string): this {
         const value = new StringValue();
         value.setValue(memo);
         this._body.setMemo(value);
@@ -61,6 +61,26 @@ export class ConsensusTopicUpdateTransaction extends TransactionBuilder {
 
     public setAutoRenewAccount(id: AccountIdLike): this {
         this._body.setAutorenewaccount(new AccountId(id)._toProto());
+        return this;
+    }
+
+    public clearTopicMemo(): this {
+        this._body.clearMemo();
+        return this;
+    }
+
+    public clearAdminKey(): this {
+        this._body.clearAdminkey();
+        return this;
+    }
+
+    public clearSubmitKey(): this {
+        this._body.clearSubmitkey();
+        return this;
+    }
+
+    public clearAutoRenewAccount(): this {
+        this._body.clearAutorenewaccount();
         return this;
     }
 

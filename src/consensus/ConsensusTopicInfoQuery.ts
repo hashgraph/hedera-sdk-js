@@ -12,14 +12,14 @@ import { AccountId } from "../account/AccountId";
 import { ConsensusTopicId } from "./ConsensusTopicId";
 
 export interface ConsensusTopicInfo {
-    memo: string;
+    topicMemo: string;
     runningHash: Uint8Array;
     sequenceNumber: number;
-    expirationTime: Time | null;
+    expirationTime: Time;
     adminKey: PublicKey | null;
     submitKey: PublicKey | null;
     autoRenewPeriod: number;
-    autoRenewAccount: AccountId;
+    autoRenewAccount: AccountId | null;
 }
 
 export class ConsensusTopicInfoQuery extends QueryBuilder<ConsensusTopicInfo> {
@@ -60,15 +60,12 @@ export class ConsensusTopicInfoQuery extends QueryBuilder<ConsensusTopicInfo> {
     protected _mapResponse(response: Response): ConsensusTopicInfo {
         const topicInfo = response.getConsensusgettopicinfo()!.getTopicinfo()!;
 
-        // return fileConents.getContents_asU8();
         return {
-            memo: topicInfo.getMemo(),
+            topicMemo: topicInfo.getMemo(),
             runningHash: topicInfo.getRunninghash_asU8(),
             sequenceNumber: topicInfo.getSequencenumber(),
 
-            expirationTime: topicInfo.hasExpirationtime() ?
-                Time._fromProto(topicInfo.getExpirationtime()!) :
-                null,
+            expirationTime: Time._fromProto(topicInfo.getExpirationtime()!),
 
             adminKey: topicInfo.hasAdminkey() ?
                 _fromProtoKey(topicInfo.getAdminkey()!) :
@@ -79,7 +76,9 @@ export class ConsensusTopicInfoQuery extends QueryBuilder<ConsensusTopicInfo> {
                 null,
 
             autoRenewPeriod: topicInfo.getAutorenewperiod()!.getSeconds(),
-            autoRenewAccount: AccountId._fromProto(topicInfo.getAutorenewaccount()!)
+            autoRenewAccount: topicInfo.hasAutorenewaccount() ?
+                AccountId._fromProto(topicInfo.getAutorenewaccount()!) :
+                null
         };
     }
 }
