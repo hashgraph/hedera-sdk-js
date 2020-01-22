@@ -60,7 +60,8 @@ export { KeyList } from "./crypto/KeyList";
 export { Mnemonic } from "./crypto/Mnemonic";
 export { KeyMismatchError } from "./crypto/KeyMismatchError";
 
-export { Hbar, HbarUnit } from "./Hbar";
+export { Hbar } from "./Hbar";
+export { HbarUnit } from "./HbarUnit";
 
 export { AccountId } from "./account/AccountId";
 export { ContractId } from "./contract/ContractId";

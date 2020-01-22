@@ -1,4 +1,5 @@
-import { Hbar, HbarUnit } from "../src/Hbar";
+import { Hbar } from "../src/Hbar";
+import { HbarUnit } from "../src/HbarUnit";
 import BigNumber from "bignumber.js";
 
 describe("hbar", () => {
@@ -11,7 +12,7 @@ describe("hbar", () => {
     const hundredHbar = Hbar.from(new BigNumber(10_000_000_000), HbarUnit.Tinybar);
 
     const zeroTinyBar = new BigNumber(0);
-    const zeroHbar = Hbar.zero();
+    const zeroHbar = new Hbar(0);
     const negativeZeroHbar = Hbar.from(-0, HbarUnit.Tinybar);
 
     it("factory method checks", () => {
@@ -20,7 +21,7 @@ describe("hbar", () => {
 
         expect(new Hbar("50").asTinybar()).toStrictEqual(fiftyGTinybar);
         expect(Hbar.fromTinybar("5000000000").asTinybar()).toStrictEqual(fiftyGTinybar);
-        expect(Hbar.zero().asTinybar()).toStrictEqual(zeroTinyBar);
+        expect(new Hbar(0).asTinybar()).toStrictEqual(zeroTinyBar);
     });
 
     it.each([[ 50_000_000, HbarUnit.Microbar ], [ "50000000", HbarUnit.Microbar ], [ 50_000, HbarUnit.Millibar ], [ "50000", HbarUnit.Millibar ], [ 50, HbarUnit.Hbar ], [ "50", HbarUnit.Hbar ], [ 0.05, HbarUnit.Kilobar ], [ "0.05", HbarUnit.Kilobar ], [ 0.00005, HbarUnit.Megabar ], [ "0.00005", HbarUnit.Megabar ], [ 0.00000005, HbarUnit.Gigabar ], [ "0.00000005", HbarUnit.Gigabar ]] as [number, HbarUnit][])(

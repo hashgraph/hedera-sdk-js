@@ -1,54 +1,9 @@
 import BigNumber from "bignumber.js";
 import { HbarRangeError } from "./errors/HbarRangeError";
+import { HbarUnit } from "./HbarUnit";
 import { UInt64Value } from "google-protobuf/google/protobuf/wrappers_pb";
 
 export type Tinybar = number;
-
-export class HbarUnit {
-    public static readonly Tinybar = new HbarUnit("tinybar");
-    public static readonly Microbar = new HbarUnit("microbar");
-    public static readonly Millibar = new HbarUnit("millibar");
-    public static readonly Hbar = new HbarUnit("hbar");
-    public static readonly Kilobar = new HbarUnit("kilobar");
-    public static readonly Megabar = new HbarUnit("megabar");
-    public static readonly Gigabar = new HbarUnit("gigabar");
-
-    private readonly _unit: string;
-
-    private constructor(unit: string) {
-        this._unit = unit;
-    }
-
-    public getSymbol(): string {
-        switch (this._unit) {
-            case "tinybar": return "tℏ";
-            case "microbar": return "μℏ";
-            case "millibar": return "mℏ";
-            case "hbar": return "ℏ";
-            case "kilobar": return "kℏ";
-            case "megabar": return "Mℏ";
-            case "gigabar": return "Gℏ";
-            default: throw new TypeError("HbarUnit was not a valid value");
-        }
-    }
-
-    public _toTinybarCount(): BigNumber {
-        switch (this._unit) {
-            case "tinybar": return new BigNumber(1);
-            case "microbar": return new BigNumber(100);
-            case "millibar": return new BigNumber(100_000);
-            case "hbar": return new BigNumber(100_000_000);
-            case "kilobar": return new BigNumber(100_000_000).multipliedBy(1000);
-            case "megabar": return new BigNumber(100_000_000).multipliedBy(1_000_000);
-            case "gigabar": return new BigNumber(100_000_000).multipliedBy(1_000_000_000);
-            default: throw new TypeError("HbarUnit was not a valid value");
-        }
-    }
-
-    public toString(): string {
-        return this._unit;
-    }
-}
 
 function convertToTinybar(amount: BigNumber.Value, unit: HbarUnit): BigNumber {
     const bnAmount = BigNumber.isBigNumber(amount) ? amount : new BigNumber(amount);
@@ -73,40 +28,51 @@ export class Hbar {
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
 
         if (bnAmount.isZero()) {
-            this._tinybar = HbarUnit.Hbar._toTinybarCount();
+            this._tinybar = bnAmount;
         } else {
             this._tinybar = bnAmount.multipliedBy(HbarUnit.Hbar._toTinybarCount());
             this._check({ allowNegative: true });
         }
 
         this._unit = HbarUnit.Hbar;
+
+        // See `Hbar.fromTinybar()` as to why this is done
+        if (typeof amount === "number" && amount >= 2 ** 53) {
+            throw new HbarRangeError(this);
+        }
     }
 
     public static readonly MAX: Hbar = new Hbar(maxHbar);
 
     public static readonly MIN: Hbar = new Hbar(minHbar);
 
-    public static readonly ZERO: Hbar = Hbar.zero();
+    public static readonly ZERO: Hbar = new Hbar(0);
 
     /**
      * Calculate the HBAR amount given a raw value and a unit.
      */
     public static from(amount: number | BigNumber | string, unit: HbarUnit): Hbar {
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
-        const tinybar = bnAmount.multipliedBy(unit._toTinybarCount());
-        const hbar = tinybar.dividedBy(HbarUnit.Hbar._toTinybarCount());
-        return new Hbar(hbar);
+        const hbar = new Hbar(0);
+        hbar._tinybar = bnAmount.multipliedBy(unit._toTinybarCount());
+        return hbar;
     }
 
     /** Get HBAR from a tinybar amount, may be a string */
     public static fromTinybar(amount: number | BigNumber | string): Hbar {
-        if (typeof amount === "number" && amount >= 2 ** 53) {
-            throw new HbarRangeError(new Hbar(amount));
-        }
-
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
         const hbar = new Hbar(0);
         hbar._tinybar = bnAmount;
+
+        // Check if amount is out of range after hbar is constructed
+        // Technically we're able to successfully construct Hbar from 2 ** 53,
+        // but at that point the number is out of range for a js `number` type
+        // so we throw an error to indicate this. If someone wants to use values
+        // 2 ** 53 and higher then they shhould wrap the number in BigNumber.
+        if (typeof amount === "number" && amount >= 2 ** 53) {
+            throw new HbarRangeError(hbar);
+        }
+
         return hbar;
     }
 
@@ -119,8 +85,13 @@ export class Hbar {
         return new Hbar(amount);
     }
 
-    /** Create an Hbar with a value of 0 tinybar; Note that this is a positive signed zero */
+    // Create an Hbar with a value of 0 tinybar; Note that this is a positive signed zero
+    //
+    // @deprecate `Hbar.zero() is deprecated. If you want to use `Hbar.zero()` for
+    // comparisions then use `Hbar.ZERO` static field, otherwise use `new Hbar(0)`.
     public static zero(): Hbar {
+        console.warn(`\`Hbar.zero()\` is deprecated. If you want to use \`Hbar.zero()\` for 
+comparisions then use \`Hbar.ZERO\` static field, otherwise use \`new Hbar(0)\``);
         return new Hbar(new BigNumber(0));
     }
 
