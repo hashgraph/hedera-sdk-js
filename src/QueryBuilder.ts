@@ -7,9 +7,9 @@ import { Response } from "./generated/Response_pb";
 import {
     HederaError,
     MaxPaymentExceededError,
+    ResponseCode,
     ResponseCodeEnum,
-    throwIfExceptional,
-    ResponseCode
+    throwIfExceptional
 } from "./errors";
 import { runValidation, setTimeoutAwaitable, timeoutPromise } from "./util";
 import { grpc } from "@improbable-eng/grpc-web";
