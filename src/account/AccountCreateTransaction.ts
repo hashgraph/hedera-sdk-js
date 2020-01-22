@@ -47,13 +47,19 @@ export class AccountCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setReceiveRecordThreshold(threshold: Hbar): this {
-        this._body.setReceiverecordthreshold(threshold._toProto());
+    public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
+        const hbar = typeof threshold === "number" ? Hbar.fromTinybar(threshold) : threshold as Hbar;
+        hbar._check({ allowNegative: false });
+
+        this._body.setReceiverecordthreshold(hbar._toProto());
         return this;
     }
 
-    public setSendRecordThreshold(threshold: Hbar): this {
-        this._body.setSendrecordthreshold(threshold._toProto());
+    public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
+        const hbar = typeof threshold === "number" ? Hbar.fromTinybar(threshold) : threshold as Hbar;
+        hbar._check({ allowNegative: false });
+
+        this._body.setSendrecordthreshold(hbar._toProto());
         return this;
     }
 

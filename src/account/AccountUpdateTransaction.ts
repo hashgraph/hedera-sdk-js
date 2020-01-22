@@ -5,7 +5,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoUpdateTransactionBody } from "../generated/CryptoUpdate_pb";
 import { newDuration } from "../util";
 import { CryptoService } from "../generated/CryptoService_pb_service";
-import { Hbar } from "../Hbar";
+import { Hbar, Tinybar } from "../Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { PublicKey } from "../crypto/PublicKey";
 import { AccountId, AccountIdLike } from "./AccountId";
@@ -54,13 +54,19 @@ export class AccountUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setReceiveRecordThreshold(threshold: Hbar): this {
-        this._body.setReceiverecordthresholdwrapper(threshold._toProtoValue());
+    public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
+        const hbar = typeof threshold === "number" ? Hbar.fromTinybar(threshold) : threshold as Hbar;
+        hbar._check({ allowNegative: false });
+
+        this._body.setReceiverecordthresholdwrapper(hbar._toProtoValue());
         return this;
     }
 
-    public setSendRecordThreshold(threshold: Hbar): this {
-        this._body.setSendrecordthresholdwrapper(threshold._toProtoValue());
+    public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
+        const hbar = typeof threshold === "number" ? Hbar.fromTinybar(threshold) : threshold as Hbar;
+        hbar._check({ allowNegative: false });
+
+        this._body.setSendrecordthresholdwrapper(hbar._toProtoValue());
         return this;
     }
 
