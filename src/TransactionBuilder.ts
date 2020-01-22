@@ -42,7 +42,7 @@ export abstract class TransactionBuilder {
 
     public setMaxTransactionFee(fee: Tinybar | Hbar): this {
         const hbar = typeof fee === "number" ? Hbar.fromTinybar(fee) : fee as Hbar;
-        hbar._check();
+        hbar._check({ allowNegative: false });
 
         this._inner.setTransactionfee(hbar._toProto());
         return this;

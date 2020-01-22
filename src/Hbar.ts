@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { HbarRangeError } from "./HbarRangeError";
+import { HbarRangeError } from "./errors/HbarRangeError";
 import { UInt64Value } from "google-protobuf/google/protobuf/wrappers_pb";
 
 export type Tinybar = number;
@@ -66,14 +66,20 @@ const minHbar = minTinybar.dividedBy(HbarUnit.Hbar._toTinybarCount());
  */
 export class Hbar {
     /** The HBAR value in tinybar, used natively by the SDK and Hedera itself */
-    private readonly _tinybar: BigNumber;
+    private _tinybar: BigNumber;
     private readonly _unit: HbarUnit;
 
     public constructor(amount: number | BigNumber | string) {
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
-        this._tinybar = bnAmount.multipliedBy(HbarUnit.Hbar._toTinybarCount());
+
+        if (bnAmount.isZero()) {
+            this._tinybar = HbarUnit.Hbar._toTinybarCount();
+        } else {
+            this._tinybar = bnAmount.multipliedBy(HbarUnit.Hbar._toTinybarCount());
+            this._check({ allowNegative: true });
+        }
+
         this._unit = HbarUnit.Hbar;
-        this._check(true);
     }
 
     public static readonly MAX: Hbar = new Hbar(maxHbar);
@@ -99,7 +105,9 @@ export class Hbar {
         }
 
         const bnAmount = amount instanceof BigNumber ? amount : new BigNumber(amount);
-        return new Hbar(bnAmount.dividedBy(HbarUnit.Hbar._toTinybarCount()));
+        const hbar = new Hbar(0);
+        hbar._tinybar = bnAmount;
+        return hbar;
     }
 
     /**
@@ -225,7 +233,7 @@ export class Hbar {
     }
 
     // NOT A STABLE API
-    public _check(allowNegative = false): void {
+    public _check({ allowNegative }: { allowNegative: boolean }): void {
         if (this._tinybar.isNegative() && !allowNegative && this._tinybar.isLessThan(maxTinybar)) {
             throw new HbarRangeError(this);
         }

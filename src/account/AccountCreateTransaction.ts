@@ -41,7 +41,7 @@ export class AccountCreateTransaction extends TransactionBuilder {
 
     public setInitialBalance(balance: Tinybar | Hbar): this {
         const hbar = typeof balance === "number" ? Hbar.fromTinybar(balance) : balance as Hbar;
-        hbar._check();
+        hbar._check({ allowNegative: false });
 
         this._body.setInitialbalance(hbar._toProto());
         return this;

@@ -89,7 +89,7 @@ export class TransactionId {
             .execute(client);
 
         // Throw an exception on an invalid receipt status
-        receipt.status._throwError();
+        receipt.status._throwIfError();
 
         return receipt;
     }

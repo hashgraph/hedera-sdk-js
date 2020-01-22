@@ -25,14 +25,14 @@ export class CryptoTransferTransaction extends TransactionBuilder {
 
     public addSender(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
         const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check();
+        hbar._check({ allowNegative: false });
 
         return this.addTransfer(accountId, hbar.negated());
     }
 
     public addRecipient(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
         const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check();
+        hbar._check({ allowNegative: false });
 
         return this.addTransfer(accountId, hbar);
     }

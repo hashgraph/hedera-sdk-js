@@ -153,7 +153,7 @@ export class Transaction {
                 continue;
             }
 
-            status._throwError();
+            status._throwIfError();
 
             return this.id;
         }

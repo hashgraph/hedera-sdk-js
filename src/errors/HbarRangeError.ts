@@ -1,4 +1,4 @@
-import { Hbar } from "./Hbar";
+import { Hbar } from "../Hbar";
 
 export class HbarRangeError extends Error {
     private amount: Hbar;

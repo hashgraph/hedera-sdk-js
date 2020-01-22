@@ -1,4 +1,4 @@
-import { HederaStatusError } from "./HederaStatusError";
+import { HederaStatusError } from "./errors/HederaStatusError";
 
 export class Status {
     public static readonly Ok = new Status(0);
@@ -250,7 +250,7 @@ export class Status {
     }
 
     // NOT A STABLE API
-    public _throwError(): void {
+    public _throwIfError(): void {
         if (this._isError()) {
             throw new HederaStatusError(this);
         }

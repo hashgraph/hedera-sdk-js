@@ -5,7 +5,7 @@ import { Mnemonic } from "./Mnemonic";
 import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { createKeystore, loadKeystore } from "./Keystore";
-import { BadKeyError } from "../BadKeyError";
+import { BadKeyError } from "../errors/BadKeyError";
 
 export class Ed25519PrivateKey {
     public readonly publicKey: Ed25519PublicKey;

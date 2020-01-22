@@ -1,4 +1,4 @@
-import { Hbar } from "./Hbar";
+import { Hbar } from "../Hbar";
 
 export class MaxQueryPaymentExceededError extends Error {
     public readonly queryCost: Hbar;

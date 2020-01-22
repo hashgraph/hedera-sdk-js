@@ -40,11 +40,17 @@ export { Status } from "./Status";
 export { Transfer } from "./Transfer";
 
 // Errors
-export { HederaStatusError } from "./HederaStatusError";
-export { LocalValidationError } from "./LocalValidationError";
-export { BadKeyError } from "./BadKeyError";
-export { HbarRangeError } from "./HbarRangeError";
-export { MaxQueryPaymentExceededError } from "./MaxQueryPaymentExceededError";
+export { HederaStatusError } from "./errors/HederaStatusError";
+export { LocalValidationError } from "./errors/LocalValidationError";
+export { BadKeyError } from "./errors/BadKeyError";
+export { HbarRangeError } from "./errors/HbarRangeError";
+export { MaxQueryPaymentExceededError } from "./errors/MaxQueryPaymentExceededError";
+
+// Deprecated Errors
+export { ResponseCode, HederaError } from "./errors/HederaError";
+export { ValidationError } from "./errors/ValidationError";
+export { TinybarValueError } from "./errors/TinybarValueError";
+export { MaxPaymentExceededError } from "./errors/MaxPaymentExceededError";
 
 export { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 export { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";

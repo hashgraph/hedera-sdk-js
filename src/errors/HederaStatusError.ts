@@ -1,4 +1,4 @@
-import { Status } from "./Status";
+import { Status } from "../Status";
 
 /**
  * Class of errors for response codes returned from Hedera.

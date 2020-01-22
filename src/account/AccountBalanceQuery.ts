@@ -8,7 +8,7 @@ import { Hbar } from "../Hbar";
 import { AccountId, AccountIdLike } from "./AccountId";
 import { CryptoGetAccountBalanceQuery } from "../generated/CryptoGetAccountBalance_pb";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
-import { ContractId, ContractIdLike } from "../contract/ContractId";
+// import { ContractId, ContractIdLike } from "../contract/ContractId";
 
 export class AccountBalanceQuery extends QueryBuilder<Hbar> {
     private readonly _builder: CryptoGetAccountBalanceQuery;
@@ -27,12 +27,10 @@ export class AccountBalanceQuery extends QueryBuilder<Hbar> {
         return this;
     }
 
-    public setContractId(id: ContractIdLike): this {
-        const contractId = new ContractId(id);
-        const accountId = new AccountId(contractId.shard, contractId.realm, contractId.contract);
-        this._builder.setAccountid(accountId._toProto());
-        return this;
-    }
+    // public setContractId(id: ContractIdLike): this {
+    //     this._builder.setContractid(new ContractId(id)._toProto());
+    //     return this;
+    // }
 
     protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasAccountid()) {

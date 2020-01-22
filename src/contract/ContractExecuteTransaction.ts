@@ -7,6 +7,7 @@ import { ContractCallTransactionBody } from "../generated/ContractCall_pb";
 import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractFunctionParams } from "./ContractFunctionParams";
 import { Hbar, Tinybar } from "../Hbar";
+import BigNumber from "bignumber.js";
 
 export class ContractExecuteTransaction extends TransactionBuilder {
     private readonly _body: ContractCallTransactionBody;
@@ -17,17 +18,14 @@ export class ContractExecuteTransaction extends TransactionBuilder {
         this._inner.setContractcall(this._body);
     }
 
-    public setGas(gas: Tinybar | Hbar): this {
-        const hbar = typeof gas === "number" ? Hbar.fromTinybar(gas) : gas as Hbar;
-        hbar._check();
-
-        this._body.setGas(hbar._toProto());
+    public setGas(gas: number | BigNumber): this {
+        this._body.setGas(String(gas));
         return this;
     }
 
     public setPayableAmount(amount: Tinybar | Hbar): this {
         const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check();
+        hbar._check({ allowNegative: false });
 
         this._body.setAmount(hbar._toProto());
         return this;

@@ -2,7 +2,7 @@ import { KeyList } from "./generated/BasicTypes_pb";
 import { Duration } from "./generated/Duration_pb";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
 import { Response } from "./generated/Response_pb";
-import { LocalValidationError } from "./LocalValidationError";
+import { LocalValidationError } from "./errors/LocalValidationError";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 
 export function orThrow<T>(val?: T, msg = "value must not be null"): T {

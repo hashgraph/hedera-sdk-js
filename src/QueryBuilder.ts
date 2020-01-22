@@ -4,8 +4,8 @@ import { BaseClient, Node } from "./BaseClient";
 import { QueryHeader, ResponseType } from "./generated/QueryHeader_pb";
 import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
-import { HederaStatusError } from "./HederaStatusError";
-import { MaxQueryPaymentExceededError } from "./MaxQueryPaymentExceededError";
+import { HederaStatusError } from "./errors/HederaStatusError";
+import { MaxQueryPaymentExceededError } from "./errors/MaxQueryPaymentExceededError";
 import { runValidation, setTimeoutAwaitable, timeoutPromise } from "./util";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Hbar, Tinybar } from "./Hbar";
@@ -26,7 +26,7 @@ export abstract class QueryBuilder<T> {
 
     public setMaxQueryPayment(amount: Tinybar | Hbar): this {
         const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check();
+        hbar._check({ allowNegative: false });
 
         this._maxPaymentAmount = hbar;
         return this;
@@ -34,7 +34,7 @@ export abstract class QueryBuilder<T> {
 
     public setQueryPayment(amount: Tinybar | Hbar): this {
         const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check();
+        hbar._check({ allowNegative: false });
 
         this._paymentAmount = hbar;
 
@@ -84,7 +84,7 @@ export abstract class QueryBuilder<T> {
             const resp = await client._unaryCall(node.url, this._inner.clone(), this._getMethod());
 
             const respHeader = this._mapResponseHeader(resp);
-            new Status(respHeader.getNodetransactionprecheckcode())._throwError();
+            new Status(respHeader.getNodetransactionprecheckcode())._throwIfError();
 
             return Hbar.fromTinybar(respHeader.getCost());
         } finally {
@@ -150,7 +150,7 @@ export abstract class QueryBuilder<T> {
                     continue;
                 }
 
-                respStatus._throwError();
+                respStatus._throwIfError();
 
                 return this._mapResponse(resp);
             }
@@ -210,7 +210,7 @@ export abstract class QueryBuilder<T> {
         amount: Tinybar | Hbar
     ): Promise<this> {
         const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check();
+        hbar._check({ allowNegative: false });
 
         // HACK: Async import because otherwise there would a cycle in the imports which breaks everything
         const { CryptoTransferTransaction } = await import("./account/CryptoTransferTransaction");
