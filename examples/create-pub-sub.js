@@ -1,6 +1,7 @@
 const {
     Client,
-    ConsensusClient,
+    MirrorClient,
+    MirrorConsensusTopicQuery,
     ConsensusTopicCreateTransaction,
     ConsensusSubmitMessageTransaction
 } = require("@hashgraph/sdk");
@@ -18,10 +19,7 @@ async function main() {
         throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, MIRROR_NODE_ADDRESS, NODE_ADDRESS must be present");
     }
 
-    const consensusClient = new ConsensusClient(mirrorNodeAddress)
-        .setErrorHandler((error) => {
-            console.log(`Error: ${error}`);
-        });
+    const consensusClient = new MirrorClient(mirrorNodeAddress);
 
     const network = {};
     network[ nodeAddress ] = "0.0.3";
@@ -35,7 +33,7 @@ async function main() {
     });
 
     const transactionId = await new ConsensusTopicCreateTransaction()
-        .setMemo("sdk example create_pub_sub.js")
+        .setTopicMemo("sdk example create_pub_sub.js")
         .setMaxTransactionFee(1000000000)
         .execute(client);
 
@@ -44,9 +42,13 @@ async function main() {
 
     console.log(`topicId = ${topicId}`);
 
-    consensusClient.subscribe(topicId, null, (message) => {
-        console.log(message.toString());
-    });
+    new MirrorConsensusTopicQuery()
+      .setTopicId(topicId)
+      .subscribe(
+          consensusClient, 
+          (message) => console.log(message.toString()),
+          (error) => console.log(`Error: ${error}`)
+      );
 
     for (let i = 0; ; i += 1) {
         // eslint-disable-next-line no-await-in-loop

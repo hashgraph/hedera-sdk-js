@@ -9,7 +9,8 @@ import UnaryMethodDefinition = grpcWeb.UnaryMethodDefinition;
 
 export * from "./exports";
 
-export { ConsensusClient, Subscription } from "./consensus/NodeConsensusClient";
+export { MirrorClient } from "./mirror/node/MirrorClient";
+export { MirrorConsensusTopicQuery } from "./mirror/node/MirrorConsensusTopicQuery";
 
 const readFile = util.promisify(fs.readFile);
 
