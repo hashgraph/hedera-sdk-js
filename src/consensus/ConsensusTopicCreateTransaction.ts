@@ -18,6 +18,7 @@ export class ConsensusTopicCreateTransaction extends TransactionBuilder {
         const body = new ConsensusCreateTopicTransactionBody();
         this._body = body;
         this._inner.setConsensuscreatetopic(body);
+        this.setAutoRenewPeriod(7890000);
     }
 
     public setAdminKey(key: PublicKey): this {
