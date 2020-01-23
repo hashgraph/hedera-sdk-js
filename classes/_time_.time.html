@@ -93,8 +93,10 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_time_.time.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_time_.time.html#asdate" class="tsd-kind-icon">as<wbr>Date</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_time_.time.html#_fromproto" class="tsd-kind-icon">_from<wbr>Proto</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_time_.time.html#fromdate" class="tsd-kind-icon">from<wbr>Date</a></li>
 							</ul>
 						</section>
 					</div>
@@ -112,7 +114,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Time.ts#L5">src/Time.ts:5</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/86de62d/src/Time.ts#L5">src/Time.ts:5</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -137,7 +139,7 @@
 					<div class="tsd-signature tsd-kind-icon">nanos<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Time.ts#L5">src/Time.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/86de62d/src/Time.ts#L5">src/Time.ts:5</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -147,13 +149,30 @@
 					<div class="tsd-signature tsd-kind-icon">seconds<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Time.ts#L4">src/Time.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/86de62d/src/Time.ts#L4">src/Time.ts:4</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="_toproto" class="tsd-anchor"></a>
+					<h3>_to<wbr>Proto</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">_to<wbr>Proto<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ProtoTimestamp</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/86de62d/src/Time.ts#L25">src/Time.ts:25</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ProtoTimestamp</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="asdate" class="tsd-anchor"></a>
 					<h3>as<wbr>Date</h3>
@@ -164,7 +183,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Time.ts#L12">src/Time.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/86de62d/src/Time.ts#L12">src/Time.ts:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Date</span></h4>
@@ -181,13 +200,36 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Time.ts#L16">src/Time.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/86de62d/src/Time.ts#L32">src/Time.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>timestamp: <span class="tsd-signature-type">ProtoTimestamp</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_time_.time.html" class="tsd-signature-type">Time</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="fromdate" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> from<wbr>Date</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">from<wbr>Date<span class="tsd-signature-symbol">(</span>date<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_time_.time.html" class="tsd-signature-type">Time</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/86de62d/src/Time.ts#L16">src/Time.ts:16</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>date: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_time_.time.html" class="tsd-signature-type">Time</a></h4>
@@ -224,10 +266,16 @@
 								<a href="_time_.time.html#seconds" class="tsd-kind-icon">seconds</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_time_.time.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_time_.time.html#asdate" class="tsd-kind-icon">as<wbr>Date</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_time_.time.html#_fromproto" class="tsd-kind-icon">_from<wbr>Proto</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="_time_.time.html#fromdate" class="tsd-kind-icon">from<wbr>Date</a>
 							</li>
 						</ul>
 					</li>
