@@ -1,5 +1,4 @@
 import { ConsensusTopicResponse } from "../generated/MirrorConsensusService_pb";
-import { ConsensusTopicId } from "../consensus/ConsensusTopicId";
 import { Time } from "../Time";
 
 export class MirrorConsensusTopicResponse {

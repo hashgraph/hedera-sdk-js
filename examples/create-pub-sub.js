@@ -34,7 +34,7 @@ async function main() {
 
     const transactionId = await new ConsensusTopicCreateTransaction()
         .setTopicMemo("sdk example create_pub_sub.js")
-        .setMaxTransactionFee(1000000000)
+        .setMaxTransactionFee(100000000000)
         .execute(client);
 
     const transactionReceipt = await transactionId.getReceipt(client);
@@ -43,12 +43,12 @@ async function main() {
     console.log(`topicId = ${topicId}`);
 
     new MirrorConsensusTopicQuery()
-      .setTopicId(topicId)
-      .subscribe(
-          consensusClient, 
-          (message) => console.log(message.toString()),
-          (error) => console.log(`Error: ${error}`)
-      );
+        .setTopicId(topicId)
+        .subscribe(
+            consensusClient,
+            (message) => console.log(message.toString()),
+            (error) => console.log(`Error: ${error}`)
+        );
 
     for (let i = 0; ; i += 1) {
         // eslint-disable-next-line no-await-in-loop
