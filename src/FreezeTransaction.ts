@@ -14,20 +14,16 @@ export class FreezeTransaction extends TransactionBuilder {
         this._inner.setFreeze(this._body);
     }
 
-    public setStartTime(startTime: number | Date): this {
-        const startDateTime = new Date(startTime);
-
-        this._body.setStarthour(startDateTime.getUTCHours());
-        this._body.setStartmin(startDateTime.getUTCMinutes());
+    public setStartTime(hour: number, minute: number): this {
+        this._body.setStarthour(hour);
+        this._body.setStartmin(minute);
 
         return this;
     }
 
-    public setEndTime(endTime: number | Date): this {
-        const endDateTime = new Date(endTime);
-
-        this._body.setEndhour(endDateTime.getUTCHours());
-        this._body.setEndmin(endDateTime.getUTCMinutes());
+    public setEndTime(hour: number, minute: number): this {
+        this._body.setEndhour(hour);
+        this._body.setEndmin(minute);
 
         return this;
     }
