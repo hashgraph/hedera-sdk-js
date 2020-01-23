@@ -37,11 +37,6 @@ export class ConsensusTopicUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setValidStart(time: Time): this {
-        this._body.setValidstarttime(time._toProto());
-        return this;
-    }
-
     public setExpirationTime(time: Time): this {
         this._body.setExpirationtime(time._toProto());
         return this;
