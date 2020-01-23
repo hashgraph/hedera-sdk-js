@@ -78,6 +78,12 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_hbar_.hbar.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_hbar_.hbar.html#max" class="tsd-kind-icon">MAX</a></li>
@@ -88,6 +94,9 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_hbar_.hbar.html#_check" class="tsd-kind-icon">_check</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_hbar_.hbar.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_hbar_.hbar.html#_toprotovalue" class="tsd-kind-icon">_to<wbr>Proto<wbr>Value</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_hbar_.hbar.html#as" class="tsd-kind-icon">as</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_hbar_.hbar.html#astinybar" class="tsd-kind-icon">as<wbr>Tinybar</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_hbar_.hbar.html#comparedto" class="tsd-kind-icon">compared<wbr>To</a></li>
@@ -115,34 +124,60 @@
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Hbar<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L25">src/Hbar.ts:25</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a name="max" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> MAX</h3>
-					<div class="tsd-signature tsd-kind-icon">MAX<span class="tsd-signature-symbol">:</span> <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol"> =&nbsp;new Hbar(new BigNumber(2).pow(63).minus(1))</span></div>
+					<div class="tsd-signature tsd-kind-icon">MAX<span class="tsd-signature-symbol">:</span> <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol"> =&nbsp;new Hbar(maxHbar)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L67">src/Hbar.ts:67</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L45">src/Hbar.ts:45</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a name="min" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> MIN</h3>
-					<div class="tsd-signature tsd-kind-icon">MIN<span class="tsd-signature-symbol">:</span> <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol"> =&nbsp;new Hbar(new BigNumber(-2).pow(63))</span></div>
+					<div class="tsd-signature tsd-kind-icon">MIN<span class="tsd-signature-symbol">:</span> <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol"> =&nbsp;new Hbar(minHbar)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L69">src/Hbar.ts:69</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L47">src/Hbar.ts:47</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a name="zero" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> ZERO</h3>
-					<div class="tsd-signature tsd-kind-icon">ZERO<span class="tsd-signature-symbol">:</span> <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol"> =&nbsp;Hbar.zero()</span></div>
+					<div class="tsd-signature tsd-kind-icon">ZERO<span class="tsd-signature-symbol">:</span> <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol"> =&nbsp;new Hbar(0)</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L71">src/Hbar.ts:71</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L49">src/Hbar.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -150,22 +185,81 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="as" class="tsd-anchor"></a>
-					<h3>as</h3>
+					<a name="_check" class="tsd-anchor"></a>
+					<h3>_check</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">as<span class="tsd-signature-symbol">(</span>unit<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BigNumber</span></li>
+						<li class="tsd-signature tsd-kind-icon">_check<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L112">src/Hbar.ts:112</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L207">src/Hbar.ts:207</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>unit: <a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
+									<h5>__namedParameters: <span class="tsd-signature-type">object</span></h5>
+									<ul class="tsd-parameters">
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="_toproto" class="tsd-anchor"></a>
+					<h3>_to<wbr>Proto</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">_to<wbr>Proto<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L218">src/Hbar.ts:218</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="_toprotovalue" class="tsd-anchor"></a>
+					<h3>_to<wbr>Proto<wbr>Value</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">_to<wbr>Proto<wbr>Value<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">UInt64Value</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L223">src/Hbar.ts:223</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">UInt64Value</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="as" class="tsd-anchor"></a>
+					<h3>as</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">as<span class="tsd-signature-symbol">(</span>unit<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BigNumber</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L112">src/Hbar.ts:112</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>unit: <a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">BigNumber</span></h4>
@@ -182,7 +276,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L108">src/Hbar.ts:108</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L108">src/Hbar.ts:108</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">BigNumber</span></h4>
@@ -194,13 +288,13 @@
 					<h3>compared<wbr>To</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">compared<wbr>To<span class="tsd-signature-symbol">(</span>hbar<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-						<li class="tsd-signature tsd-kind-icon">compared<wbr>To<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon">compared<wbr>To<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L180">src/Hbar.ts:180</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L182">src/Hbar.ts:182</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -214,7 +308,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L181">src/Hbar.ts:181</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L183">src/Hbar.ts:183</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -223,7 +317,7 @@
 									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></h5>
 								</li>
 								<li>
-									<h5>unit: <a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
+									<h5>unit: <a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -235,13 +329,13 @@
 					<h3>is<wbr>Equal<wbr>To</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">is<wbr>Equal<wbr>To<span class="tsd-signature-symbol">(</span>hbar<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Equal<wbr>To<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Equal<wbr>To<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L140">src/Hbar.ts:140</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L142">src/Hbar.ts:142</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -255,7 +349,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L141">src/Hbar.ts:141</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L143">src/Hbar.ts:143</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -264,7 +358,7 @@
 									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></h5>
 								</li>
 								<li>
-									<h5>unit: <a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
+									<h5>unit: <a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -276,13 +370,13 @@
 					<h3>is<wbr>Greater<wbr>Than</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">is<wbr>Greater<wbr>Than<span class="tsd-signature-symbol">(</span>hbar<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Greater<wbr>Than<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Greater<wbr>Than<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L148">src/Hbar.ts:148</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L150">src/Hbar.ts:150</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -296,7 +390,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L149">src/Hbar.ts:149</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L151">src/Hbar.ts:151</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -305,7 +399,7 @@
 									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></h5>
 								</li>
 								<li>
-									<h5>unit: <a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
+									<h5>unit: <a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -317,13 +411,13 @@
 					<h3>is<wbr>Greater<wbr>Than<wbr>OrEqual<wbr>To</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">is<wbr>Greater<wbr>Than<wbr>OrEqual<wbr>To<span class="tsd-signature-symbol">(</span>hbar<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Greater<wbr>Than<wbr>OrEqual<wbr>To<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Greater<wbr>Than<wbr>OrEqual<wbr>To<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L156">src/Hbar.ts:156</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L158">src/Hbar.ts:158</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -337,7 +431,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L157">src/Hbar.ts:157</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L159">src/Hbar.ts:159</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -346,7 +440,7 @@
 									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></h5>
 								</li>
 								<li>
-									<h5>unit: <a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
+									<h5>unit: <a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -358,13 +452,13 @@
 					<h3>is<wbr>Less<wbr>Than</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">is<wbr>Less<wbr>Than<span class="tsd-signature-symbol">(</span>hbar<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Less<wbr>Than<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Less<wbr>Than<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L164">src/Hbar.ts:164</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L166">src/Hbar.ts:166</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -378,7 +472,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L165">src/Hbar.ts:165</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L167">src/Hbar.ts:167</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -387,7 +481,7 @@
 									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></h5>
 								</li>
 								<li>
-									<h5>unit: <a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
+									<h5>unit: <a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -399,13 +493,13 @@
 					<h3>is<wbr>Less<wbr>Than<wbr>OrEqual<wbr>To</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">is<wbr>Less<wbr>Than<wbr>OrEqual<wbr>To<span class="tsd-signature-symbol">(</span>hbar<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Less<wbr>Than<wbr>OrEqual<wbr>To<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Less<wbr>Than<wbr>OrEqual<wbr>To<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L172">src/Hbar.ts:172</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L174">src/Hbar.ts:174</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -419,7 +513,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L173">src/Hbar.ts:173</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L175">src/Hbar.ts:175</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -428,7 +522,7 @@
 									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></h5>
 								</li>
 								<li>
-									<h5>unit: <a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
+									<h5>unit: <a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -445,7 +539,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L196">src/Hbar.ts:196</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L198">src/Hbar.ts:198</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -462,7 +556,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L200">src/Hbar.ts:200</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L202">src/Hbar.ts:202</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -479,7 +573,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L188">src/Hbar.ts:188</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L190">src/Hbar.ts:190</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -491,13 +585,13 @@
 					<h3>minus</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">minus<span class="tsd-signature-symbol">(</span>hbar<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></li>
-						<li class="tsd-signature tsd-kind-icon">minus<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></li>
+						<li class="tsd-signature tsd-kind-icon">minus<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L132">src/Hbar.ts:132</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L133">src/Hbar.ts:133</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -511,7 +605,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L133">src/Hbar.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L134">src/Hbar.ts:134</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -520,7 +614,7 @@
 									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></h5>
 								</li>
 								<li>
-									<h5>unit: <a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
+									<h5>unit: <a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></h4>
@@ -537,7 +631,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L120">src/Hbar.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L120">src/Hbar.ts:120</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -560,7 +654,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L192">src/Hbar.ts:192</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L194">src/Hbar.ts:194</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></h4>
@@ -572,13 +666,13 @@
 					<h3>plus</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">plus<span class="tsd-signature-symbol">(</span>hbar<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></li>
-						<li class="tsd-signature tsd-kind-icon">plus<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></li>
+						<li class="tsd-signature tsd-kind-icon">plus<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L124">src/Hbar.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L124">src/Hbar.ts:124</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -592,7 +686,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L125">src/Hbar.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L125">src/Hbar.ts:125</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -601,7 +695,7 @@
 									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></h5>
 								</li>
 								<li>
-									<h5>unit: <a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
+									<h5>unit: <a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></h4>
@@ -618,7 +712,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L98">src/Hbar.ts:98</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L98">src/Hbar.ts:98</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -635,7 +729,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L104">src/Hbar.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L104">src/Hbar.ts:104</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">BigNumber</span></h4>
@@ -646,13 +740,13 @@
 					<a name="from" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> from</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">from<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></li>
+						<li class="tsd-signature tsd-kind-icon">from<span class="tsd-signature-symbol">(</span>amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, unit<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L76">src/Hbar.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L54">src/Hbar.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -661,7 +755,7 @@
 									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>unit: <a href="_hbar_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
+									<h5>unit: <a href="_hbarunit_.hbarunit.html" class="tsd-signature-type">HbarUnit</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></h4>
@@ -678,7 +772,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L81">src/Hbar.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L62">src/Hbar.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -701,7 +795,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L89">src/Hbar.ts:89</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L83">src/Hbar.ts:83</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -724,7 +818,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/Hbar.ts#L94">src/Hbar.ts:94</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/Hbar.ts#L92">src/Hbar.ts:92</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></h4>
@@ -751,6 +845,9 @@
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
 						<a href="_hbar_.hbar.html" class="tsd-kind-icon">Hbar</a>
 						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_hbar_.hbar.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
 								<a href="_hbar_.hbar.html#max" class="tsd-kind-icon">MAX</a>
 							</li>
@@ -759,6 +856,15 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
 								<a href="_hbar_.hbar.html#zero" class="tsd-kind-icon">ZERO</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_hbar_.hbar.html#_check" class="tsd-kind-icon">_check</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_hbar_.hbar.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_hbar_.hbar.html#_toprotovalue" class="tsd-kind-icon">_to<wbr>Proto<wbr>Value</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_hbar_.hbar.html#as" class="tsd-kind-icon">as</a>
@@ -827,8 +933,8 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_hbar_.hbarunit.html" class="tsd-kind-icon">Hbar<wbr>Unit</a>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
+						<a href="../modules/_hbar_.html#tinybar" class="tsd-kind-icon">Tinybar</a>
 					</li>
 				</ul>
 			</nav>

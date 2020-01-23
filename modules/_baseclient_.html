@@ -86,8 +86,8 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_baseclient_.html#nodes" class="tsd-kind-icon">Nodes</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_baseclient_.html#operator" class="tsd-kind-icon">Operator</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_baseclient_.html#signer" class="tsd-kind-icon">Signer</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_baseclient_.html#signingopts" class="tsd-kind-icon">Signing<wbr>Opts</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-external-module"><a href="_baseclient_.html#transactionsigner" class="tsd-kind-icon">Transaction<wbr>Signer</a></li>
 							</ul>
 						</section>
 					</div>
@@ -101,7 +101,7 @@
 					<div class="tsd-signature tsd-kind-icon">Nodes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_baseclient_.node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/BaseClient.ts#L30">src/BaseClient.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/BaseClient.ts#L29">src/BaseClient.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -111,17 +111,27 @@
 					<div class="tsd-signature tsd-kind-icon">Operator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> &amp; </span><a href="_baseclient_.html#signingopts" class="tsd-signature-type">SigningOpts</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/BaseClient.ts#L28">src/BaseClient.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/BaseClient.ts#L27">src/BaseClient.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
-					<a name="signer" class="tsd-anchor"></a>
-					<h3>Signer</h3>
-					<div class="tsd-signature tsd-kind-icon">Signer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<a name="signingopts" class="tsd-anchor"></a>
+					<h3>Signing<wbr>Opts</h3>
+					<div class="tsd-signature tsd-kind-icon">Signing<wbr>Opts<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_baseclient_.privatekey.html" class="tsd-signature-type">PrivateKey</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_baseclient_.pubkeyandsigner.html" class="tsd-signature-type">PubKeyAndSigner</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/BaseClient.ts#L14">src/BaseClient.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/BaseClient.ts#L25">src/BaseClient.ts:25</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
+					<a name="transactionsigner" class="tsd-anchor"></a>
+					<h3>Transaction<wbr>Signer</h3>
+					<div class="tsd-signature tsd-kind-icon">Transaction<wbr>Signer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d949ab4/src/BaseClient.ts#L13">src/BaseClient.ts:13</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -148,16 +158,6 @@
 							</li>
 						</ul>
 					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
-					<a name="signingopts" class="tsd-anchor"></a>
-					<h3>Signing<wbr>Opts</h3>
-					<div class="tsd-signature tsd-kind-icon">Signing<wbr>Opts<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_baseclient_.privatekey.html" class="tsd-signature-type">PrivateKey</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_baseclient_.pubkeyandsigner.html" class="tsd-signature-type">PubKeyAndSigner</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac6ff43/src/BaseClient.ts#L26">src/BaseClient.ts:26</a></li>
-						</ul>
-					</aside>
 				</section>
 			</section>
 		</div>
@@ -196,10 +196,10 @@
 						<a href="_baseclient_.html#operator" class="tsd-kind-icon">Operator</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="_baseclient_.html#signer" class="tsd-kind-icon">Signer</a>
+						<a href="_baseclient_.html#signingopts" class="tsd-kind-icon">Signing<wbr>Opts</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
-						<a href="_baseclient_.html#signingopts" class="tsd-kind-icon">Signing<wbr>Opts</a>
+						<a href="_baseclient_.html#transactionsigner" class="tsd-kind-icon">Transaction<wbr>Signer</a>
 					</li>
 				</ul>
 			</nav>
