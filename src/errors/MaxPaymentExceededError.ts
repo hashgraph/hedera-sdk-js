@@ -5,7 +5,8 @@ export class MaxPaymentExceededError extends Error {
     public readonly queryCost: Hbar;
 
     public constructor(queryCost: Hbar, maxQueryCost: Hbar) {
-        console.warn("`MaxPaymentExceededError` is deprecated. Use `MaxQueryPaymentExceededError` instead");
+        console.warn("`MaxPaymentExceededError` has been renamed to `MaxQueryPaymentExceededError`");
+
         super(`query cost of ${queryCost.value()} HBAR exceeds max set on client: ${maxQueryCost.value()} HBAR`);
 
         this.name = "MaxPaymentExceededError";

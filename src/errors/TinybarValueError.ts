@@ -6,7 +6,8 @@ export class TinybarValueError extends Error {
     public readonly amount: BigNumber;
 
     public constructor(message: string, amount: number | BigNumber | Hbar) {
-        console.warn("`TinybarValueError` is deprecated. Use `HbarRangeError` instead");
+        console.warn("`TinybarValueError` has been renamed to `HbarRangeError`");
+        
         let bnAmount;
 
         if (amount instanceof Hbar) {

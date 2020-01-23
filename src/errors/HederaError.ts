@@ -13,7 +13,8 @@ export class HederaError extends Error {
     public readonly codeName: string;
 
     public constructor(code: ResponseCode) {
-        console.warn("`HederaErrror` is deprecated. Use `HederaStatusError` instead");
+        console.warn("`HederaError` has been renamed to `HederaStatusError`");
+
         const codeName = new Status(code).toString();
         super(`Hedera returned response code: ${codeName} (${code})`);
 
