@@ -6,6 +6,7 @@ import { FileService } from "./generated/FileService_pb_service";
 import { Transaction } from "./generated/Transaction_pb";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
 import { SystemUndeleteTransactionBody } from "./generated/SystemUndelete_pb";
+import { normalizeEntityId } from "./util";
 
 export class SystemUndeleteTransaction extends TransactionBuilder {
     private readonly _body: SystemUndeleteTransactionBody;
@@ -14,6 +15,20 @@ export class SystemUndeleteTransaction extends TransactionBuilder {
         super();
         this._body = new SystemUndeleteTransactionBody();
         this._inner.setSystemundelete(this._body);
+    }
+
+    public setId(id: FileIdLike | ContractIdLike): this {
+        console.warn("`.setId` is deprecated. Use `.setFileId` or `.setContractId` instead");
+
+        try {
+            const fileId = normalizeEntityId("file", id as FileIdLike);
+            this._body.setFileid(new FileId(fileId)._toProto());
+        } catch {
+            const contractId = normalizeEntityId("contract", id as ContractIdLike);
+            this._body.setContractid(new ContractId(contractId)._toProto());
+        }
+
+        return this;
     }
 
     public setFileId(id: FileIdLike): this {

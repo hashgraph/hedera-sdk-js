@@ -7,6 +7,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { FileService } from "./generated/FileService_pb_service";
 import { Transaction } from "./generated/Transaction_pb";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
+import { normalizeEntityId } from "./util";
 
 export class SystemDeleteTransaction extends TransactionBuilder {
     private readonly _body: SystemDeleteTransactionBody;
@@ -20,6 +21,20 @@ export class SystemDeleteTransaction extends TransactionBuilder {
 
     public setExpirationTime(date: number | Date): this {
         this._body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
+        return this;
+    }
+
+    public setId(id: FileIdLike | ContractIdLike): this {
+        console.warn("`.setId` is deprecated. Use `.setFileId` or `.setContractId` instead");
+
+        try {
+            const fileId = normalizeEntityId("file", id as FileIdLike);
+            this._body.setFileid(new FileId(fileId)._toProto());
+        } catch {
+            const contractId = normalizeEntityId("contract", id as ContractIdLike);
+            this._body.setContractid(new ContractId(contractId)._toProto());
+        }
+
         return this;
     }
 
