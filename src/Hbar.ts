@@ -192,7 +192,7 @@ comparisions then use \`Hbar.ZERO\` static field, otherwise use \`new Hbar(0)\``
     }
 
     public negated(): Hbar {
-        return new Hbar(this._tinybar.negated().dividedBy(HbarUnit.Hbar._toTinybarCount()));
+        return Hbar.fromTinybar(this._tinybar.negated());
     }
 
     public isNegative(): boolean {
