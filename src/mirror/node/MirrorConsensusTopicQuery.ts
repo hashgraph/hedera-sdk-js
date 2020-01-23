@@ -23,7 +23,7 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
             null
         )
             .on("data", (message: ConsensusTopicResponse): void => {
-                listener(new MirrorConsensusTopicResponse(this.topicId!, message));
+                listener(new MirrorConsensusTopicResponse(message));
             })
             .on("status", (status: grpc.StatusObject): void => {
                 if (errorHandler != null) {

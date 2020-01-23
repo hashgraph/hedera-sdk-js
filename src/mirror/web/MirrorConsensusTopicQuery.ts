@@ -14,13 +14,11 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
     ): MirrorSubscriptionHandle {
         this._validate();
 
-        const topicId = this.topicId!;
-
         const response = grpc.invoke(ConsensusService.subscribeTopic, {
             host: client.endpoint,
             request: this._builder,
             onMessage(message: ConsensusTopicResponse): void {
-                listener(new MirrorConsensusTopicResponse(topicId, message));
+                listener(new MirrorConsensusTopicResponse(message));
             },
             onEnd(code: grpc.Code, message: string): void {
                 if (errorHandler != null) {

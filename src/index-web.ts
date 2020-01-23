@@ -6,9 +6,6 @@ import Code = grpc.Code;
 
 export * from "./exports";
 
-export { MirrorClient } from "./mirror/web/MirrorClient";
-export { MirrorConsensusTopicQuery } from "./mirror/web/MirrorConsensusTopicQuery";
-
 const mainnetProxy = { "https://grpc-web.myhbarwallet.com": { shard: 0, realm: 0, account: 3 }};
 
 const testnetProxy = { "https://grpc-web.testnet.myhbarwallet.com": { shard: 0, realm: 0, account: 3 }};
@@ -62,3 +59,7 @@ export class Client extends BaseClient {
         }));
     }
 }
+
+// Mirror
+export { MirrorClient } from "./mirror/web/MirrorClient";
+export { MirrorConsensusTopicQuery } from "./mirror/web/MirrorConsensusTopicQuery";

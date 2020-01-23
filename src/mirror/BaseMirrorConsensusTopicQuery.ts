@@ -1,7 +1,7 @@
 import { ConsensusTopicQuery } from "../generated/MirrorConsensusService_pb";
 import { ConsensusTopicId } from "../consensus/ConsensusTopicId";
 import { Time } from "../Time";
-import { ValidationError } from "../errors";
+import { LocalValidationError } from "../errors/LocalValidationError";
 import { MirrorConsensusTopicResponse } from "./MirrorConsensusTopicResponse";
 
 export type Listener = (message: MirrorConsensusTopicResponse) => void;
@@ -9,11 +9,9 @@ export type ErrorHandler = (error: Error) => void;
 
 export class BaseMirrorConsensusTopicQuery {
     protected readonly _builder: ConsensusTopicQuery = new ConsensusTopicQuery();
-    protected topicId: ConsensusTopicId | null = null;
 
     public setTopicId(id: ConsensusTopicId): this {
         this._builder.setTopicid(id._toProto());
-        this.topicId = id;
         return this;
     }
 
@@ -34,8 +32,8 @@ export class BaseMirrorConsensusTopicQuery {
 
     // NOT A STABLE API
     public _validate(): void {
-        if (this.topicId == null) {
-            throw new ValidationError("MirrorConsensusTopicQuery", [ "`.setTopicId()` is required to be called" ]);
+        if (!this._builder.hasTopicid()) {
+            throw new LocalValidationError("MirrorConsensusTopicQuery", [ "`.setTopicId()` is required to be called" ]);
         }
     }
 }
