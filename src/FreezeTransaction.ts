@@ -14,14 +14,42 @@ export class FreezeTransaction extends TransactionBuilder {
         this._inner.setFreeze(this._body);
     }
 
-    public setStartTime(hour: number, minute: number): this {
+    public setStartTime(date: number | Date): this;
+    public setStartTime(hour: number, minute: number): this;
+    public setStartTime(dateOrHour: number | Date, maybeMinute?: number): this {
+        let hour;
+        let minute;
+        if (typeof dateOrHour === "number" && maybeMinute != null) {
+            hour = dateOrHour as number;
+            minute = maybeMinute!;
+        } else {
+            console.warn(`Using \`number | Date\` for parameter is invalid and incorrect.
+Instead pass in \`hour: number, minute: number\``);
+            hour = (dateOrHour as Date).getHours();
+            minute = (dateOrHour as Date).getMinutes();
+        }
+
         this._body.setStarthour(hour);
         this._body.setStartmin(minute);
 
         return this;
     }
 
-    public setEndTime(hour: number, minute: number): this {
+    public setEndTime(date: number | Date): this;
+    public setEndTime(hour: number, minute: number): this;
+    public setEndTime(dateOrHour: number | Date, maybeMinute?: number): this {
+        let hour;
+        let minute;
+        if (typeof dateOrHour === "number" && maybeMinute != null) {
+            hour = dateOrHour as number;
+            minute = maybeMinute!;
+        } else {
+            console.warn(`Using \`number | Date\` for parameter is invalid and incorrect.
+Instead pass in \`hour: number, minute: number\``);
+            hour = (dateOrHour as Date).getHours();
+            minute = (dateOrHour as Date).getMinutes();
+        }
+
         this._body.setEndhour(hour);
         this._body.setEndmin(minute);
 
