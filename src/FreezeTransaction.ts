@@ -23,8 +23,8 @@ export class FreezeTransaction extends TransactionBuilder {
             hour = dateOrHour as number;
             minute = maybeMinute!;
         } else {
-            console.warn(`Using \`number | Date\` for parameter is invalid and incorrect.
-Instead pass in \`hour: number, minute: number\``);
+            console.warn("passing `Date` is deprecated; pass the `hour` and `minute` as separate parameters");
+
             hour = (dateOrHour as Date).getHours();
             minute = (dateOrHour as Date).getMinutes();
         }
@@ -44,8 +44,8 @@ Instead pass in \`hour: number, minute: number\``);
             hour = dateOrHour as number;
             minute = maybeMinute!;
         } else {
-            console.warn(`Using \`number | Date\` for parameter is invalid and incorrect.
-Instead pass in \`hour: number, minute: number\``);
+            console.warn("passing `Date` is deprecated; pass the `hour` and `minute` as separate parameters");
+
             hour = (dateOrHour as Date).getHours();
             minute = (dateOrHour as Date).getMinutes();
         }
