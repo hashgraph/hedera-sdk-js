@@ -19,5 +19,7 @@ message CryptoGetAccountBalanceQuery {
 message CryptoGetAccountBalanceResponse {
     ResponseHeader header = 1; //Standard response from node to client, including the requested fields: cost, or state proof, or both, or neither
     AccountID accountID = 2; // The account ID that is being described (this is useful with state proofs, for proving to a third party)
-    uint64 balance = 3 [jstype=JS_STRING]; // The current balance, in tinybars
+    uint64 balance = 3 [jstype = JS_STRING]; // The current balance, in tinybars
 }
+
+

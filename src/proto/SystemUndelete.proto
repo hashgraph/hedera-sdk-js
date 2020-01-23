@@ -12,5 +12,6 @@ message SystemUndeleteTransactionBody {
     oneof id {
         FileID fileID = 1; // The file ID to undelete, in the format used in transactions
         ContractID contractID = 2; // The contract ID instance to undelete, in the format used in transactions
+        TopicID topicID = 3;
     }
 }

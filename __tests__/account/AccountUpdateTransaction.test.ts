@@ -41,6 +41,10 @@ describe("AccountUpdateTransaction", () => {
 
         // `toObject()` sets not-present properties explicitly to undefined
         expect(txnBody).toStrictEqual({
+            consensuscreatetopic: undefined,
+            consensusdeletetopic: undefined,
+            consensussubmitmessage: undefined,
+            consensusupdatetopic: undefined,
             contractcall: undefined,
             contractcreateinstance: undefined,
             contractdeleteinstance: undefined,

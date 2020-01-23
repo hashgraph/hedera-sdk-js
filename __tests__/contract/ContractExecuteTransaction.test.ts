@@ -1,4 +1,4 @@
-import { ContractExecuteTransaction, ContractFunctionParams } from "../../src/exports";
+import { ContractExecuteTransaction, ContractFunctionParams, Hbar } from "../../src/exports";
 import {mockClient, privateKey} from "../MockClient";
 
 describe("ContractExecuteTransaction", () => {

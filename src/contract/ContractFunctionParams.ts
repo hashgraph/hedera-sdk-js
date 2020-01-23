@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import { ContractFunctionSelector, ArgumentType, SolidityType } from "./ContractFunctionSelector";
+import { ArgumentType, ContractFunctionSelector, SolidityType } from "./ContractFunctionSelector";
 import { utf8encode } from "../util";
 
 interface Argument {

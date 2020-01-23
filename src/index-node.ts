@@ -9,6 +9,9 @@ import UnaryMethodDefinition = grpcWeb.UnaryMethodDefinition;
 
 export * from "./exports";
 
+export { MirrorClient } from "./mirror/node/MirrorClient";
+export { MirrorConsensusTopicQuery } from "./mirror/node/MirrorConsensusTopicQuery";
+
 const readFile = util.promisify(fs.readFile);
 
 const testNet = { "0.testnet.hedera.com:50211": { shard: 0, realm: 0, account: 3 }};

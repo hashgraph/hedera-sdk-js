@@ -33,3 +33,4 @@ message ContractGetInfoResponse {
 
     ContractInfo contractInfo = 2; // the information about this contract instance (a state proof can be generated for this)
 }
+

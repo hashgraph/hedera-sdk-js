@@ -30,3 +30,5 @@ message GetByKeyResponse {
     ResponseHeader header = 1; //Standard response from node to client, including the requested fields: cost, or state proof, or both, or neither
     repeated EntityID entities = 2; // The list of entities that include this public key in their associated Key list
 }
+
+

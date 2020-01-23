@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # don't proceed if the clone fails
-git clone https://github.com/hashgraph/hedera-protobuf || exit 1
+git clone --branch hcs https://github.com/hashgraph/hedera-protobuf || exit 1
 
 # replace CRLFs with LFs in proto files in case they accidentally get mixed
 for f in hedera-protobuf/src/main/proto/*; do

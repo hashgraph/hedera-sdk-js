@@ -75,3 +75,15 @@ export { ContractFunctionParams } from "./contract/ContractFunctionParams";
 export { Time } from "./Time";
 
 export { TransactionSigner } from "./BaseClient";
+
+// Consensus
+export { ConsensusTopicCreateTransaction } from "./consensus/ConsensusTopicCreateTransaction";
+export { ConsensusTopicDeleteTransaction } from "./consensus/ConsensusTopicDeleteTransaction";
+export { ConsensusTopicUpdateTransaction } from "./consensus/ConsensusTopicUpdateTransaction";
+export { ConsensusTopicInfoQuery } from "./consensus/ConsensusTopicInfoQuery";
+export { ConsensusTopicId } from "./consensus/ConsensusTopicId";
+export { ConsensusSubmitMessageTransaction } from "./consensus/ConsensusSubmitMessageTransaction";
+
+// Mirror
+export { MirrorConsensusTopicResponse } from "./mirror/MirrorConsensusTopicResponse";
+export { MirrorSubscriptionHandle } from "./mirror/MirrorSubscriptionHandle";
