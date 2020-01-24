@@ -41,7 +41,8 @@ export class TransactionRecordQuery extends QueryBuilder<TransactionRecord> {
     }
 
     protected _mapResponseHeader(response: Response): ResponseHeader {
-        return response.getTransactiongetrecord()!.getHeader()!;
+        const header = response.getTransactiongetrecord()!.getHeader();
+        return header == null ? new ResponseHeader() : header;
     }
 
     protected _mapResponse(response: Response): TransactionRecord {
