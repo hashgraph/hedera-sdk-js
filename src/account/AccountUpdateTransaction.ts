@@ -42,9 +42,14 @@ export class AccountUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setPorxyAccount(id: AccountId): this {
+    public setProxyAccountId(id: AccountId): this {
         this._body.setProxyaccountid(id._toProto());
         return this;
+    }
+
+    public setPorxyAccount(id: AccountId): this {
+        console.warn("deprecated: `.setPorxyAccount` was renamed to `.setProxyAccountId`");
+        return this.setProxyAccountId(id);
     }
 
     public setReceiverSignatureRequired(required: boolean): this {
