@@ -4,6 +4,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.0
+
+### Fixed
+
+ * Contract parameter encoding with BigNumbers
+
+### Added
+
+Add support for Hedera Consensus Service (HCS).
+
+ * Add `ConsensusTopicCreateTransaction`, `ConsensusTopicUpdateTransaction`, `ConsensusTopicDeleteTransaction`, and `ConsensusMessageSubmitTransaction` transactions
+
+ * Add `ConsensusTopicInfoQuery` query (returns `ConsensusTopicInfo`)
+
+ * Add `MirrorClient` and `MirrorConsensusTopicQuery` which can be used to listen for HCS messages from a mirror node.
+
+### Changed
+
+Minor version bumps may add deprecations as we improve parity between SDKs 
+or fix reported issues. Do not worry about upgrading in a timely manner. All v1+ APIs
+will be continuously supported.
+
+ * Deprecated `SystemDelete#setId`; replaced with `SystemDelete#setFileId` or `SystemDelete#setContractId`
+
+ * Deprecated `SystemUndelete#setId`; replaced with `SystemUndelete#setFileId` or `SystemUndelete#setContractId`
+
+ * Deprecated `Hbar.of(val)`; replaced with `new Hbar(val)`
+
+ * Deprecated `FreezeTransaction#setStartTime(Date)`; replaced with `FreezeTransaction#setStartTime(hour: number, minute: number)`
+
+ * Deprecated `FreezeTransaction#setEndTime(Date)`; replaced with `FreezeTransaction#setEndTime(hour: number, minute: number)`
+
+ * All previous exception types are no longer thrown. Instead there are a set of new exception types to match the Java SDK.
+
+   * `HederaError` becomes `HederaStatusError`
+   * `ValidationError` becomes `LocalValidationError`
+   * `TinybarValueError` becomes `HbarRangeError`
+   * `MaxPaymentExceededError` becomes `MaxQueryPaymentExceededError`
+   * `BadKeyError` is a new exception type when attempting to parse or otherwise use a key that doesn't look like a key
+
 ## v1.0.1
 
 ### Added
