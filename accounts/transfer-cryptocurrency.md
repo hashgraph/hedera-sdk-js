@@ -45,7 +45,7 @@ async function main() {
     const receipt = await (await new CryptoTransferTransaction()
         .addSender(operatorAccount, 1)
         .addRecipient("0.0.3", 1)
-        .setMemo("sdk example")
+        .setTransactionMemo("sdk example")
         .execute(client))
         .getReceipt(client);
 
