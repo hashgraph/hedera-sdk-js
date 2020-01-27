@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Introduction](README.md)
+* [Summary](README.md)
 * [Getting Started](getting-started.md)
 * [Specialized Data Types](user-defined-data-types.md)
 * [Keys](keys.md)
