@@ -8,9 +8,6 @@
 
 ```java
 new FileDeleteTransaction()
-     .setFileId()
-     .execute();
-
 ```
 
 | Method | Type | Description |
