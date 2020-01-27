@@ -15,7 +15,7 @@ The operator is the user paying for the transactions fees.
 
 **Network Information**
 
-The SDK provides points to a public free proxy to the Hedera **public testnet**. The node ID and node address the proxy points to are:
+If the network is not specified, it defaults to the following testnet proxy:
 
 * **Node ID**: `0.0.3`
 * **Node Address**: `0.testnet.hedera.com:50211`

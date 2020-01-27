@@ -10,6 +10,8 @@ The SDK currently suppports Ed25519 key system.
 ## Example <a id="example"></a>
 
 ```javascript
+const {Ed25519PrivateKey}= require('@hashgraph/sdk');
+
 const privateKey = await Ed25519PrivateKey.generate();
 const key = privateKey.publicKey;
 
