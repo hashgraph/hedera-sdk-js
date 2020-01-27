@@ -1,28 +1,32 @@
 # Create an advanced account
 
-## Create an advanced account
-
-## Account: KeyList <a id="account-keylist"></a>
+## KeyList <a id="account-keylist"></a>
 
 | Method | Type | Description |
 | :--- | :--- | :--- |
-| ​ | ​ | ​ |
+| ​`Add()` | ​PublicKey | ​ |
+| `AddAll()` | PublicKey | Add a list of public keys |
 
 ```text
 ​
 ```
 
-## Account: Threshold Key <a id="account-threshold-key"></a>
+## Threshold Key <a id="account-threshold-key"></a>
 
 | Method | Type | Description |
 | :--- | :--- | :--- |
-| ​ | ​ | ​ |
+| `​new ThresholdKeys(<threshold>)` | ​number | ​The minimum number of signatures required to process the transaction |
 
-```text
-​
+```java
+​new ThresholdKeys
 ```
 
-## Account: Nested Keys <a id="account-nested-keys"></a>
+| Method | Type | Description |
+| :--- | :--- | :--- |
+| ​`Add()` | ​PublicKey | ​Add one more public keys |
+| `AddAll()` | PublicKey | Add a list of public keys |
+
+## Nested Keys <a id="account-nested-keys"></a>
 
 | Method | Type | Description |
 | :--- | :--- | :--- |

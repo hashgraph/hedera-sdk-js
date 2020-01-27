@@ -8,9 +8,6 @@
 
 ```java
 new FileAppendTransaction()
-     .setFileId()
-     .setContents()
-     .Build;
 ```
 
 | Method | Type | Description |
