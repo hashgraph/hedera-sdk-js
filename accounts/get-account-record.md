@@ -17,7 +17,9 @@ A record returns the following information about an account:
 | `AccountRecordsQuery()` | Initializes the AccountRecordsQuery object |
 
 ```javascript
-new AccountRecordsQuery()
+new AccountRecordsQuery()  
+    .setAccount()  
+    .execute();
 ```
 
 | Method | Type | Description |

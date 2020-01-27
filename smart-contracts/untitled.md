@@ -22,7 +22,7 @@ new ContractCreateTransaction()
 | :--- | :--- | :--- |
 | `setAdminKey(<key>)` | Ed25519PublicKey | The state of the instance and its fields can be modified arbitrarily if this key signs a transaction to modify it. If this is null, then such modifications are not possible, and there is no administrator that can override the normal operation of this smart contract instance. |
 | `setByteCodeFile(<fileId>)` | FileId | The `fileId` of the file that contains the smart contract bytecode |
-| `setGas(<gas>)` | long | Gas amount to run the constructor |
-| `setInitialBalance(<amount>)` | long | The initial number of tinybars to put into the cryptocurrency account associated with and owned by the smart contract. |
+| `setGas(<gas>)` | number | Gas amount to run the constructor |
+| `setInitialBalance(<amount>)` | number | The initial number of tinybars to put into the cryptocurrency account associated with and owned by the smart contract. |
 | `setAutoRenewPeriod(<duration>)` | Duration | The period of time in which the smart contract will auto-renew in seconds. Duration type is in seconds. For example, one hour would result in the input value of 3600 seconds. |
 

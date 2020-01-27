@@ -21,6 +21,8 @@ This information includes:
 
 ```javascript
 new AccountInfoQuery()     
+    .setAccountId()     
+    .execute();
 ```
 
 | Method | Type | Description |

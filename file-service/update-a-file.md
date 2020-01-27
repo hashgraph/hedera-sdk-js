@@ -8,6 +8,11 @@
 
 ```java
 new FileUpdateTransaction()
+    .setFileId()
+    .addKey()
+    .setContents()
+    .setExpirationTime()
+    .build();
 ```
 
 | Method | Type | Description |
