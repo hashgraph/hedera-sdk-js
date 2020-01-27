@@ -18,7 +18,6 @@ new AccountCreateTransaction()
 | :--- | :---: | :--- |
 | `setKey(<key>)` | Ed25519 | The public key generated for the new account. |
 | `setInitialBalance(<amount>)` | number/Hbar | The initial balance for the account in tinybars |
-| \`\` |  |  |
 
 ## Example:
 
