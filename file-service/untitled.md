@@ -8,6 +8,11 @@
 
 ```java
 new FileCreateTransaction()
+    .addKey()
+    .setContents()
+    .setExpirationTime()
+    .execute()
+
 ```
 
 | Method | Type | Description |
