@@ -20,7 +20,6 @@
 * [Get account balance](accounts/get-account-balance.md)
 * [Get account info](accounts/get-account-info.md)
 * [Get account record](accounts/get-account-record.md)
-* [Get account claims](accounts/get-account-claims.md)
 * [Errors](accounts/errors.md)
 
 ## File Service
