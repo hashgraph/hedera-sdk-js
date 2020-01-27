@@ -15,7 +15,7 @@ The operator is the user paying for the transactions fees.
 
 **Network Information**
 
-If the network is not specified, it defaults to the following testnet proxy:
+If the network is not specified, it defaults to the following public testnet proxy:
 
 * **Node ID**: `0.0.3`
 * **Node Address**: `0.testnet.hedera.com:50211`
@@ -38,4 +38,17 @@ const client = new Client({
     },
 });
 ```
+
+## Advanced
+
+| Method | Type | Description |
+| :--- | :--- | :--- |
+| `setOperator(<account, privateKey>)` | AccountId, ED25519PrivateKey | Modify the operator account ID and private key of the client object |
+| `setmaxTransactionFee(<amount>)` | Hbar | Set the default minimum fee for a transaction |
+| `setMaxQueryPayment(<maxPayment>)` | Hbar | The maximum automatic payment for a query in tinybar |
+| `maxQueryPayment()` |  | Get the maximum query payment from the client object |
+| `_getOperatorKey()` |  | Returns the private key of the operator account from the client object |
+| `_getOperatorAccountId()` | \`\` | Returns the account ID from the client object |
+
+
 
