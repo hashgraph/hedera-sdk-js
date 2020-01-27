@@ -46,8 +46,8 @@ const client = new Client({
 | `setOperator(<account, privateKey>)` | AccountId, ED25519PrivateKey | Modify the operator account ID and private key of the client object |
 | `setmaxTransactionFee(<amount>)` | Hbar | Set the default minimum fee for a transaction |
 | `setMaxQueryPayment(<maxPayment>)` | Hbar | The maximum automatic payment for a query in tinybar |
-| `maxTransactionFee()` |  | Get the the current maximum transaction fee from the client object |
-| `maxQueryPayment()` |  | Get the maximum query payment from the client object |
+| `maxTransactionFee` |  | Get the the current maximum transaction fee from the client object |
+| `maxQueryPayment` |  | Get the maximum query payment from the client object |
 | `_getOperatorKey()` |  | Returns the private key of the operator account from the client object |
 | `_getOperatorAccountId()` | \`\` | Returns the account ID from the client object |
 
