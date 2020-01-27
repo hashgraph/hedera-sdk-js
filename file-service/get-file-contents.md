@@ -8,9 +8,6 @@
 
 ```javascript
 new FileContentsQuery()
-    .setAcountId()
-    .execute();
-
 ```
 
 | Method | Type | Description |
@@ -20,6 +17,6 @@ new FileContentsQuery()
 ## Example
 
 ```javascript
-hsh
+
 ```
 
