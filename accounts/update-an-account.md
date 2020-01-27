@@ -101,8 +101,6 @@ new AccountUpdateTransaction()
 </table>#### Example
 
 ```java
-const { Client, Ed25519PrivateKey, AccountUpdateTransaction} = require("@hashgraph/sdk");
-
 const transaction = new AccountUpdateTransaction()
     .setAccountId(accountId)
     .setKey(publicKey)
