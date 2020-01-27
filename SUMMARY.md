@@ -6,6 +6,8 @@
 * [Keys](keys.md)
 * [Client](client.md)
 * [Address Book](address-book.md)
+* [Transactions](transactions.md)
+* [Queries](queries.md)
 * [General Errors](global-errors.md)
 
 ## Accounts
