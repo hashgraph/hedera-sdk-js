@@ -10,7 +10,7 @@
 * Proxy Account
 
 {% hint style="danger" %}
-The account must be signed by the **old key\(s\)** and **new key\(s\)** when updating the keys of an account.
+The account must be signed by the **old key\(s\)** and **new key\(s\)** when updating the keys of an account. In the case of threshold keys, only the 
 {% endhint %}
 
 | Constructor | Description |
@@ -107,5 +107,6 @@ const transaction = new AccountUpdateTransaction()
     .build(client)
     .sign(originalkey)
     .sign(newKey)
+    .execute(client);
 ```
 
