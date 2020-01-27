@@ -109,5 +109,11 @@ main();
       <td style="text-align:left">Creates a record for any transaction that withdraws more than x value
         of tinybars.</td>
     </tr>
+    <tr>
+      <td style="text-align:left"><code>setGenerateRecord(&lt;generateRecord&gt;)</code>
+      </td>
+      <td style="text-align:left">boolean</td>
+      <td style="text-align:left">Generate a record for this transaction or not</td>
+    </tr>
   </tbody>
 </table>
