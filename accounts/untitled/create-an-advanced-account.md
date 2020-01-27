@@ -17,9 +17,14 @@
 | :--- | :--- | :--- |
 | `​new ThresholdKeys(<threshold>)` | ​number | ​The minimum number of signatures required to process the transaction |
 
-```text
-​
+```java
+​new ThresholdKeys
 ```
+
+| Method | Type | Description |
+| :--- | :--- | :--- |
+| ​`Add()` | ​PublicKey | ​Add one more public keys |
+| `AddAll()` | PublicKey | Add a list of public keys |
 
 ## Nested Keys <a id="account-nested-keys"></a>
 
