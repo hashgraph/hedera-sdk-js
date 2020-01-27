@@ -40,5 +40,6 @@
 * [Call a smart contract function](smart-contracts/call-a-smart-contract-function.md)
 * [Get smart contract byte code](smart-contracts/get-smart-contract-byte-code.md)
 * [Get smart contract info](smart-contracts/get-smart-contract-info.md)
+* [Get smart contract record](smart-contracts/get-smart-contract-record.md)
 * [Errors](smart-contracts/errors.md)
 
