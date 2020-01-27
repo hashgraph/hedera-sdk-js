@@ -25,7 +25,9 @@ new AccountUpdateTransaction()
   .setExpirationTime()
   .setSendRecordThreshold()
   .setReceiveRecordThreshold()
-  .setProxyAccount()
+  .setMaxTransactionFee()
+  //.setProxyAccount()
+  .setMemo()
   .build();
 ```
 
@@ -62,9 +64,9 @@ new AccountUpdateTransaction()
       </td>
     </tr>
     <tr>
-      <td style="text-align:left"><code>setAutoRenewPeriod(&lt;autoRenewPeriod&gt;)</code>
+      <td style="text-align:left"><code>setAutoRenewPeriod(&lt;seconds)</code>
       </td>
-      <td style="text-align:left">Duration</td>
+      <td style="text-align:left">number</td>
       <td style="text-align:left">
         <p>The period of time in which the account will auto-renew in seconds. Duration
           type is in seconds. For example, one hour would result in the input value
@@ -74,9 +76,9 @@ new AccountUpdateTransaction()
       </td>
     </tr>
     <tr>
-      <td style="text-align:left"><code>setExpirationTime(&lt;expirationTime&gt;)</code>
+      <td style="text-align:left"><code>setExpirationTime(&lt;date&gt;)</code>
       </td>
-      <td style="text-align:left">Instant</td>
+      <td style="text-align:left">number</td>
       <td style="text-align:left">
         <p>The new expiration time to extend to.</p>
         <p><em>default:  None</em>
@@ -86,7 +88,7 @@ new AccountUpdateTransaction()
     <tr>
       <td style="text-align:left"><code>setSendRecordThreshold(&lt;sendRecordThreshold&gt;)</code>
       </td>
-      <td style="text-align:left">long</td>
+      <td style="text-align:left">number</td>
       <td style="text-align:left">
         <p>Creates a record for any transaction that withdraws more than x value
           of tinybars.</p>
@@ -97,7 +99,7 @@ new AccountUpdateTransaction()
     <tr>
       <td style="text-align:left"><code>setReceiveRecordThreshold(&lt;receiveRecordThreshold)</code>
       </td>
-      <td style="text-align:left">long</td>
+      <td style="text-align:left">number</td>
       <td style="text-align:left">
         <p>Creates a record for any transaction that deposits more than x value of
           tinybars.</p>
@@ -106,19 +108,44 @@ new AccountUpdateTransaction()
       </td>
     </tr>
     <tr>
-      <td style="text-align:left"><code>setProxyAccount(&lt;accountId&gt;)</code>
+      <td style="text-align:left"><code>setMaxTransactionFee(&lt;fee&gt;)</code>
       </td>
-      <td style="text-align:left">AccountId</td>
+      <td style="text-align:left">long</td>
+      <td style="text-align:left">The maximum fee to be paid for this transaction executed by this client.
+        The actual fee may be less, but will never be greater than this value.</td>
+    </tr>
+    <tr>
+      <td style="text-align:left"><b><code>setProxyAccount(&lt;accountId&gt;)</code></b>
+      </td>
+      <td style="text-align:left"><b>AccountId</b>
+      </td>
       <td style="text-align:left">
-        <p>ID of account to which this account should be proxy staked.</p>
-        <p><em>default:  None</em>
+        <p><b>ID of account to which this account should be proxy staked.</b>
         </p>
+        <p><em><b>default:  None</b></em>
+        </p>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:left"><code>setMemo(&lt;memo&gt;)</code>
+      </td>
+      <td style="text-align:left">String</td>
+      <td style="text-align:left">
+        <p>A short note attached to the transaction</p>
+        <p>Max: 100 bytes</p>
       </td>
     </tr>
   </tbody>
 </table>#### Example
 
 ```java
+const { Client, Ed25519PrivateKey, AccountUpdateTransaction} = require("@hashgraph/sdk");
 
+const transaction = new AccountUpdateTransaction()
+    .setAccountId(accountId)
+    .setKey(publicKey)
+    .build(client)
+    .sign(originalkey)
+    .sign(newKey)
 ```
 

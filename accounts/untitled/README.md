@@ -14,8 +14,6 @@ When creating a **new account** an existing account will need to fund the initia
 new AccountCreateTransaction()
 ```
 
-### 
-
 | Methods | Type | Description |
 | :--- | :---: | :--- |
 | `setKey(<key>)` | Ed25519 | The public key generated for the new account. |
