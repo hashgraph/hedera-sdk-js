@@ -51,7 +51,8 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
                 // Queue is full
                 Status.Busy.code,
                 // Still in the node's queue
-                Status.Unknown.code
+                Status.Unknown.code,
+                Status.ReceiptNotFound.code
             ] as number[]).includes(receiptStatus.code)) {
                 return true;
             }
