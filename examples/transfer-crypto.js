@@ -9,7 +9,7 @@ async function main() {
     }
 
     const client = Client.forTestnet();
-    
+
     client.setOperator(operatorAccount, operatorPrivateKey);
 
     const receipt = await (await new CryptoTransferTransaction()
