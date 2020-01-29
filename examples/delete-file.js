@@ -29,7 +29,7 @@ async function main() {
   // First, we'll create a file with our operator as an admin
   const transactionId = await new FileCreateTransaction()
     .setContents("creating a file to test deletion")
-    .setMaxTransactionFee(Hbar.of(100))
+    .setMaxTransactionFee(new Hbar(15))
     .addKey(operatorPublicKey)
     .execute(client);
 
@@ -40,7 +40,7 @@ async function main() {
   // Then we'll delete this newly created file
   const deleteFileTransactionId = await new FileDeleteTransaction()
     .setFileId(createFileReceipt._fileId) // Define which file to delete
-    .setMaxTransactionFee(Hbar.of(100))
+    .setMaxTransactionFee(new Hbar(1))
     .execute(client); // Presumes the client is the file's admin key
 
   // After deletion, the receipt should NOT contain a file ID

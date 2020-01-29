@@ -23,7 +23,7 @@ async function main() {
   const transactionId = await new FileCreateTransaction()
     .setContents("Hello, Hedera's file service!")
     .addKey(operatorPublicKey) // Defines the "admin" of this file
-    .setMaxTransactionFee(Hbar.of(1000))
+    .setMaxTransactionFee(new Hbar(15))
     .execute(client);
 
   const receipt = await transactionId.getReceipt(client);  
