@@ -20,9 +20,9 @@ The following methods can be called when building the above transaction types:
 | `setTransactionValidDuration(<Duration>)` | Duration | The Duration in which the transaction will be valid from transactionValidStart time |
 | `setNodeAccountId(<accountId>)` | AccountId | The account of the node that submits the client's transaction to the network |
 | `setTransactionId(<transactionId>)` | TransactionId | The ID for this transaction, which includes the payer's account \(the account paying the transaction fee\). If two transactions have the same transactionID, they won't both have an effect |
-| `build(<client>)` | [Client]() | Builds the transaction |
+| `build(<client>)` | Client | Builds the transaction |
 | `sign(<key>)` | PrivateKey&lt;? extends PublicKey&gt; | Expliclity sign the transaction with a private key |
-| `execute(<client>)` | [Client]() | Submits the transaction to the Hedera network for consensus  |
+| `execute(<client>)` | Client | Submits the transaction to the Hedera network for consensus  |
 
 
 
