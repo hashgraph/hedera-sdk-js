@@ -22,7 +22,7 @@ async function main() {
   console.log("tx:", tx);
 
   const receipt = await tx.getReceipt(client);
-  const newTopicId = receipt._topicId;
+  const newTopicId = receipt.getTopicId();
   console.log("new HCS topic ID:", newTopicId);
 }
 
