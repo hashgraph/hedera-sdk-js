@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Client | @hashgraph/sdk - v1.1.0</title>
+	<title>Client | @hashgraph/sdk</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">@hashgraph/sdk - v1.1.0</a>
+					<a href="../index.html" class="title">@hashgraph/sdk</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -65,6 +65,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>This implementation of <code>BaseClient</code> is exported for Node.js usage.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -127,20 +134,31 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Client<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_node_.client.html" class="tsd-signature-type">Client</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Client<span class="tsd-signature-symbol">(</span>__namedParameters<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>network<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_baseclient_.node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>operator<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_baseclient_.privatekey.html" class="tsd-signature-type">PrivateKey</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_baseclient_.pubkeyandsigner.html" class="tsd-signature-type">PubKeyAndSigner</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_index_node_.client.html" class="tsd-signature-type">Client</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/index-node.ts#L42">src/index-node.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/index-node.ts#L42">src/index-node.ts:42</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>If <code>nodes</code> is not specified, the Hedera public testnet is assumed.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>__namedParameters: <span class="tsd-signature-type">object</span></h5>
+									<h5>__namedParameters: <span class="tsd-signature-symbol">{ </span>network<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_baseclient_.node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>operator<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_baseclient_.privatekey.html" class="tsd-signature-type">PrivateKey</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_baseclient_.pubkeyandsigner.html" class="tsd-signature-type">PubKeyAndSigner</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> }</span></h5>
 									<ul class="tsd-parameters">
+										<li class="tsd-parameter">
+											<h5>network<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_baseclient_.node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol">[]</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5>operator<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_baseclient_.privatekey.html" class="tsd-signature-type">PrivateKey</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">{ </span>account<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/_baseclient_.pubkeyandsigner.html" class="tsd-signature-type">PubKeyAndSigner</a><span class="tsd-signature-symbol">)</span></h5>
+										</li>
 									</ul>
 								</li>
 							</ul>
@@ -154,24 +172,48 @@
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 					<a name="maxquerypayment" class="tsd-anchor"></a>
 					<h3>max<wbr>Query<wbr>Payment</h3>
-					<div class="tsd-signature tsd-kind-icon">max<wbr>Query<wbr>Payment<span class="tsd-signature-symbol">:</span> </div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#maxquerypayment">maxQueryPayment</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L136">src/BaseClient.ts:136</a></li>
-						</ul>
-					</aside>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> maxQueryPayment<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#maxquerypayment">maxQueryPayment</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L136">src/BaseClient.ts:136</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the current maximum query payment.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
+						</li>
+					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 					<a name="maxtransactionfee" class="tsd-anchor"></a>
 					<h3>max<wbr>Transaction<wbr>Fee</h3>
-					<div class="tsd-signature tsd-kind-icon">max<wbr>Transaction<wbr>Fee<span class="tsd-signature-symbol">:</span> </div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#maxtransactionfee">maxTransactionFee</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L131">src/BaseClient.ts:131</a></li>
-						</ul>
-					</aside>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> maxTransactionFee<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#maxtransactionfee">maxTransactionFee</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L131">src/BaseClient.ts:131</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the current maximum transaction fee.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -187,7 +229,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#_getnode">_getNode</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L188">src/BaseClient.ts:188</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L188">src/BaseClient.ts:188</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -211,13 +253,10 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#_getoperatoraccountid">_getOperatorAccountId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L118">src/BaseClient.ts:118</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L118">src/BaseClient.ts:118</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_account_accountid_.accountid.html" class="tsd-signature-type">AccountId</a>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">undefined</span>
-							</h4>
+							<h4 class="tsd-returns-title">Returns <a href="_account_accountid_.accountid.html" class="tsd-signature-type">AccountId</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -232,13 +271,10 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#_getoperatorkey">_getOperatorKey</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L126">src/BaseClient.ts:126</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L126">src/BaseClient.ts:126</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">undefined</span>
-							</h4>
+							<h4 class="tsd-returns-title">Returns <a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -246,20 +282,17 @@
 					<a name="_getoperatorsigner" class="tsd-anchor"></a>
 					<h3>_get<wbr>Operator<wbr>Signer</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">_get<wbr>Operator<wbr>Signer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_baseclient_.html#transactionsigner" class="tsd-signature-type">TransactionSigner</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
+						<li class="tsd-signature tsd-kind-icon">_get<wbr>Operator<wbr>Signer<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../modules/_index_node_.html#transactionsigner" class="tsd-signature-type">TransactionSigner</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#_getoperatorsigner">_getOperatorSigner</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L122">src/BaseClient.ts:122</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L122">src/BaseClient.ts:122</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="../modules/_baseclient_.html#transactionsigner" class="tsd-signature-type">TransactionSigner</a>
-								<span class="tsd-signature-symbol"> | </span>
-								<span class="tsd-signature-type">undefined</span>
-							</h4>
+							<h4 class="tsd-returns-title">Returns <a href="../modules/_index_node_.html#transactionsigner" class="tsd-signature-type">TransactionSigner</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -274,7 +307,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#_randomnode">_randomNode</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L184">src/BaseClient.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L184">src/BaseClient.ts:184</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_baseclient_.node.html" class="tsd-signature-type">Node</a></h4>
@@ -292,7 +325,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#_unarycall">_unaryCall</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/index-node.ts#L76">src/index-node.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/index-node.ts#L76">src/index-node.ts:76</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -330,7 +363,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/index-node.ts#L69">src/index-node.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/index-node.ts#L69">src/index-node.ts:69</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -348,9 +381,14 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#getaccountbalance">getAccountBalance</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L178">src/BaseClient.ts:178</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L178">src/BaseClient.ts:178</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get the current account balance.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -372,9 +410,14 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#putnode">putNode</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L75">src/BaseClient.ts:75</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L75">src/BaseClient.ts:75</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add a node to the list of nodes</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -399,7 +442,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#replacenodes">replaceNodes</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L106">src/BaseClient.ts:106</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L106">src/BaseClient.ts:106</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -423,13 +466,26 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#setmaxquerypayment">setMaxQueryPayment</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L169">src/BaseClient.ts:169</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L169">src/BaseClient.ts:169</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set the max payment that can be automatically attached to a query.</p>
+								</div>
+								<p>If this is not called then by default no payments will be made automatically for queries.</p>
+								<p>If a query will cost more than this amount, a <code>MaxQueryPaymentExceededError</code> will be thrown
+								from <code>QueryBuilder.execute()</code>.</p>
+								<p>This can be overridden for an individual query with
+								<code>query.setPaymentDefault(await query.requestCost())</code>.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>maxPayment: <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the maximum automatic payment for a query</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -447,13 +503,24 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#setmaxtransactionfee">setMaxTransactionFee</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L151">src/BaseClient.ts:151</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L151">src/BaseClient.ts:151</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set the default maximum fee for a transaction.</p>
+								</div>
+								<p>This can be overridden for an individual transaction with
+								<code>TransactionBuilder.setMaxTransactionFee()</code>.</p>
+								<p>If a transaction&#39;s fee will exceed this value, a <code>HederaStatusError</code> will be thrown with
+								<code>ResponseCode.INSUFFICIENT_TX_FEE</code>.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>maxFee: <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -471,9 +538,14 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#setoperator">setOperator</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L81">src/BaseClient.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L81">src/BaseClient.ts:81</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set the operator for the client object</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -491,14 +563,14 @@
 					<a name="setoperatorwith" class="tsd-anchor"></a>
 					<h3>set<wbr>Operator<wbr>With</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Operator<wbr>With<span class="tsd-signature-symbol">(</span>account<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a>, publicKey<span class="tsd-signature-symbol">: </span><a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a>, signer<span class="tsd-signature-symbol">: </span><a href="../modules/_baseclient_.html#transactionsigner" class="tsd-signature-type">TransactionSigner</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Operator<wbr>With<span class="tsd-signature-symbol">(</span>account<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a>, publicKey<span class="tsd-signature-symbol">: </span><a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a>, signer<span class="tsd-signature-symbol">: </span><a href="../modules/_index_node_.html#transactionsigner" class="tsd-signature-type">TransactionSigner</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_baseclient_.baseclient.html">BaseClient</a>.<a href="_baseclient_.baseclient.html#setoperatorwith">setOperatorWith</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/BaseClient.ts#L94">src/BaseClient.ts:94</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/BaseClient.ts#L94">src/BaseClient.ts:94</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -510,7 +582,7 @@
 									<h5>publicKey: <a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a></h5>
 								</li>
 								<li>
-									<h5>signer: <a href="../modules/_baseclient_.html#transactionsigner" class="tsd-signature-type">TransactionSigner</a></h5>
+									<h5>signer: <a href="../modules/_index_node_.html#transactionsigner" class="tsd-signature-type">TransactionSigner</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -527,7 +599,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/index-node.ts#L53">src/index-node.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/index-node.ts#L53">src/index-node.ts:53</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_index_node_.client.html" class="tsd-signature-type">Client</a></h4>
@@ -544,7 +616,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/index-node.ts#L57">src/index-node.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/index-node.ts#L57">src/index-node.ts:57</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_index_node_.client.html" class="tsd-signature-type">Client</a></h4>
@@ -561,7 +633,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/index-node.ts#L61">src/index-node.ts:61</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/index-node.ts#L61">src/index-node.ts:61</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -584,7 +656,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/index-node.ts#L65">src/index-node.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/index-node.ts#L65">src/index-node.ts:65</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>

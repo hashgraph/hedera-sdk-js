@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;file/FileId&quot; | @hashgraph/sdk - v1.1.0</title>
+	<title>&quot;file/FileId&quot; | @hashgraph/sdk</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">@hashgraph/sdk - v1.1.0</a>
+					<a href="../index.html" class="title">@hashgraph/sdk</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -86,12 +86,20 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-external-module">
 					<a name="fileidlike" class="tsd-anchor"></a>
 					<h3>File<wbr>IdLike</h3>
-					<div class="tsd-signature tsd-kind-icon">File<wbr>IdLike<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><a href="../classes/_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a></div>
+					<div class="tsd-signature tsd-kind-icon">File<wbr>IdLike<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>file<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>realm<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>shard<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><a href="../classes/_file_fileid_.fileid.html" class="tsd-signature-type">FileId</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/e976f2e/src/file/FileId.ts#L108">src/file/FileId.ts:108</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b56b149/src/file/FileId.ts#L108">src/file/FileId.ts:108</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Input type for an ID of a file on the network.</p>
+						</div>
+						<p>In any form, <code>shard</code> and <code>realm</code> are assumed to be 0 if not provided.</p>
+						<p>Strings may take the form <code>&#39;&lt;shard&gt;.&lt;realm&gt;.&lt;file&gt;&#39;</code> or <code>&#39;&lt;file&gt;&#39;</code>.</p>
+						<p>A bare <code>number</code> will be taken as the file number with shard and realm of 0.</p>
+					</div>
 				</section>
 			</section>
 		</div>
