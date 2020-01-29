@@ -21,8 +21,8 @@ async function main() {
   const tx = await new ConsensusTopicCreateTransaction().execute(client);
   console.log("tx:", tx);
 
-  const record = await tx.getRecord(client);
-  const newTopicId = record.receipt._topicId;
+  const receipt = await tx.getReceipt(client);
+  const newTopicId = receipt._topicId;
   console.log("new HCS topic ID:", newTopicId);
 }
 
