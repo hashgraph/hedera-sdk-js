@@ -33,7 +33,7 @@ async function main() {
     privateKeyList.push(privateKey);
     publicKeyList.push(publicKey);
     console.log(i + ": pub key:" + publicKey);
-    console.log(i + ": pub key:" + privateKey);
+    console.log(i + ": priv key:" + privateKey);
   }
 
   // Create our threshold key
