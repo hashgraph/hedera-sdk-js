@@ -1,3 +1,6 @@
+// Learn about Hedera's confirmation mechanisms - 
+// https://www.hedera.com/blog/transaction-confirmation-methods-in-hedera
+
 const { Client, CryptoTransferTransaction } = require("@hashgraph/sdk");
 
 async function main() {
@@ -22,7 +25,7 @@ async function main() {
   const transactionId = await new CryptoTransferTransaction()
     .addSender(operatorAccount, 0)
     .addRecipient("0.0.1", 0)
-    .setMemo("testing :)")
+    .setTransactionMemo("testing :)")
     .execute(client);
 
   // Confirmation 2 - Ask for a receipt
@@ -31,6 +34,8 @@ async function main() {
   console.log('transaction ' + transactionId + ' receipt = ' + JSON.stringify(receipt) + '\n');
 
   // Confirmation 3 - Ask for a record 
+  // Note: these cost HBAR! View the network fees at docs.hedera.com
+  // You should only request these when it's worth paying for the extra details it provides
   console.log("attempting to get record for transaction id = " + transactionId + '\n');
   const record = await transactionId.getRecord(client);
   console.log('transaction ' + transactionId + ' record = ' + JSON.stringify(record) + '\n');
