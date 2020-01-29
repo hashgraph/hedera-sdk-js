@@ -39,13 +39,13 @@ async function main() {
 
   // Then we'll delete this newly created file
   const deleteFileTransactionId = await new FileDeleteTransaction()
-    .setFileId(createFileReceipt._fileId) // Define which file to delete
+    .setFileId(createFileReceipt.getFileId()) // Define which file to delete
     .setMaxTransactionFee(new Hbar(1))
     .execute(client); // Presumes the client is the file's admin key
 
   // After deletion, the receipt should NOT contain a file ID
   const deleteFileReceipt = await deleteFileTransactionId.getReceipt(client);
-  console.log("deleted file receipt, won't contain a file ID ", JSON.stringify(deleteFileReceipt) + "\n");  
+  console.log("deleted file receipt, won't contain a file ID ", deleteFileReceipt.getFileId() + "\n");  
 }
 
 main();

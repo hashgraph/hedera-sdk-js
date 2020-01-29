@@ -27,7 +27,7 @@ async function main() {
     .execute(client);
 
   const receipt = await transactionId.getReceipt(client);  
-  console.log("new file id = ", receipt._fileId);
+  console.log("new file id = ", receipt.getFileId());
 }
 
 main();
