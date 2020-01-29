@@ -1,6 +1,6 @@
 {
   "name": "@hashgraph/sdk",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Hedera™ Hashgraph SDK for JavaScript/TypeScript",
   "types": "./lib/index-web.d.ts",
   "main": "./lib/index-node.js",
