@@ -1,10 +1,10 @@
-const { Client, FileCreateTransaction, Ed25519PublicKey, Hbar } = require("@hashgraph/sdk");
+const { Client, FileCreateTransaction, Ed25519PrivateKey, Hbar } = require("@hashgraph/sdk");
 
 async function main() {
   
   const operatorAccount = process.env.OPERATOR_ID;
-  const operatorPrivateKey = process.env.OPERATOR_KEY;
-  const operatorPublicKey = Ed25519PublicKey.fromString(process.env.OPERATOR_PUB_KEY);
+  const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
+  const operatorPublicKey = operatorPrivateKey.publicKey;
 
   if (operatorPrivateKey == null || operatorAccount == null) {
     throw new Error(
