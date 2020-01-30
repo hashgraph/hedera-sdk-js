@@ -15,7 +15,7 @@ The operator is the user paying for the transactions fees.
 
 **Network Information**
 
-If the network is not specified, it defaults to the following public testnet proxy:
+The SDK provides points to a public free proxy to the Hedera **public testnet**. The node ID and node address the proxy points to are:
 
 * **Node ID**: `0.0.3`
 * **Node Address**: `0.testnet.hedera.com:50211`
@@ -23,40 +23,19 @@ If the network is not specified, it defaults to the following public testnet pro
 ### Example
 
 ```javascript
-const { Client} = require("@hashgraph/sdk");
-require("dotenv").config();
+import {Client} from "@hashgraph/sdk";
 
-async function main() {
-
-    const operatorPrivateKey = process.env.OPERATOR_KEY;
-    const operatorAccount = process.env.OPERATOR_ID;
-
-    if (operatorPrivateKey == null || operatorAccount == null) {
-        throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
-    }
-
-    const client = new Client({
-        network: { "0.testnet.hedera.com:50211": "0.0.3" },
-        operator: {
-            account: operatorAccount ,
-            privateKey: operatorPrivateKey,
-        }
-    });
-
-}
-
-main();
+const client = new Client({ 
+    // this key defaults to this url, a public free proxy to the Hedera public testnet
+    // generously hosted by MyHederaWallet.com
+    network: { "https://grpc-web.myhederawallet.com": "0.0.3" },
+    operator: {
+        // the account which signs transactions and query payments by default
+        account: { shard: 0, realm: 0, account: ___ },
+        // the private key used to sign the transactions, either encoded as a string
+        // or as an `Ed25519PrivateKey` type 
+        privateKey: "..."
+    },
+});
 ```
-
-## Advanced
-
-| Method | Type | Description |
-| :--- | :--- | :--- |
-| `setOperator(<account, privateKey>)` | AccountId, ED25519PrivateKey | Modify the operator account ID and private key of the client object |
-| `setmaxTransactionFee(<amount>)` | Hbar | Set the default minimum fee for a transaction |
-| `setMaxQueryPayment(<maxPayment>)` | Hbar | The maximum automatic payment for a query in tinybar |
-| `maxTransactionFee` |  | Get the the current maximum transaction fee from the client object |
-| `maxQueryPayment` |  | Get the maximum query payment from the client object |
-
-
 

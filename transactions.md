@@ -26,30 +26,3 @@ The following methods can be called when building the above transaction types:
 
 
 
-## Transaction Receipt
-
-The receipt of a transaction returns whether the transaction has reached consensus or not. It also returns the a new `accountId`, `consensusTopicId`, `contractId`, and `fileId` if generated in the transaction.
-
-| Method | Type | Description |
-| :--- | :--- | :--- |
-| `getReceipt(<client>)` | TransactionReceipt | Gets the receipt for a transaction object |
-
-```java
-const transactionReceipt = await transactionId.getReceipt(client);
-```
-
-### Modifiers
-
-| Modifier | Type | Description |
-| :--- | :--- | :--- |
-| `getAccountId()` | AccountId | The newly generated account ID |
-| `getConsensusTopicId()` | ConsensusTopicId | The newly generated topic ID |
-| `getConsensusTopicRunningHash()` | byte \[ \] | The topic running hash |
-| `getConsensusTopicSequenceNumber()` | long | The topic sequence number |
-| `getContractId()` | ContractId | The newly generated contract ID |
-| `getFileId()` | FileId | The newly generated file ID |
-
-```java
-const transactionRecord = await transactionId.getRecord(client)
-```
-
