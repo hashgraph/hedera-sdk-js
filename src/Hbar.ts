@@ -110,7 +110,7 @@ comparisions then use \`Hbar.ZERO\` static field, otherwise use \`new Hbar(0)\``
     }
 
     public as(unit: HbarUnit): BigNumber {
-        if (unit.toString() === "tinybar") {
+        if (unit.toString() === HbarUnit.Tinybar.toString()) {
             return this._tinybar;
         }
 
@@ -118,7 +118,8 @@ comparisions then use \`Hbar.ZERO\` static field, otherwise use \`new Hbar(0)\``
     }
 
     public multipliedBy(amount: number | BigNumber): Hbar {
-        return new Hbar(this._tinybar.multipliedBy(amount));
+        return new Hbar(this._tinybar.multipliedBy(amount)
+            .dividedBy(HbarUnit.Hbar._toTinybarCount()));
     }
 
     public plus(hbar: Hbar): Hbar;
