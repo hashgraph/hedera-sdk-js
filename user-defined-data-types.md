@@ -223,8 +223,9 @@ A `topicId` is composed of a &lt;shardNum&gt;.&lt;realmNum&gt;.&lt;topicNum&gt; 
 | Methods | Type | Description |
 | :--- | :--- | :--- |
 | `fromString(<topic>` | String | Generate topic ID from  a string |
-| `ConsensusTopicId.toString()` |  | Coverts the topic ID to string  |
-| `ConsensusTopicId.toSolidityAddress()` |  | Converts topic ID to solidity address |
+| `ConsensusTopicId.toString()` |  | Generate the topic ID to string  |
+| `fromSolidityAddress(<address>)` | String | Generate topic ID from string |
+| `ConsensusTopicId.toSolidityAddress()` |  | Generate topic ID to solidity address |
 
 ### Example
 
