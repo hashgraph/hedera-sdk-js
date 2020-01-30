@@ -21,16 +21,8 @@ async function main() {
 
     const consensusClient = new MirrorClient(mirrorNodeAddress);
 
-    const network = {};
-    network[ nodeAddress ] = "0.0.3";
-
-    const client = new Client({
-        network,
-        operator: {
-            account: operatorAccount,
-            privateKey: operatorPrivateKey
-        }
-    });
+    const client = Client.forTestnet()
+    client.setOperator(operatorAccount, operatorPrivateKey);
 
     const transactionId = await new ConsensusTopicCreateTransaction()
         .setTopicMemo("sdk example create_pub_sub.js")

@@ -10,13 +10,8 @@ async function main() {
     );
   }
 
-  const client = new Client({
-    network: { "0.testnet.hedera.com:50211": "0.0.3" },
-    operator: {
-      account: operatorAccount,
-      privateKey: operatorPrivateKey
-    }
-  });
+  const client = Client.forTestnet()
+  client.setOperator(operatorAccount, operatorPrivateKey);
 
   const tx = await new ConsensusTopicCreateTransaction().execute(client);
   console.log("tx:", tx);
