@@ -20,9 +20,9 @@ async function main() {
   });
 
   const transactionId = await new CryptoTransferTransaction()
-    .addSender(operatorAccount, Hbar.of(2)) // define total amount of hbar to send
-    .addRecipient("0.0.3", Hbar.of(1)) // add recipient, and amount of hbar
-    .addRecipient("0.0.17210", Hbar.of(1)) // add recipient, and amount of hbar
+    .addSender(operatorAccount, new Hbar(2)) // define total amount of hbar to send
+    .addRecipient("0.0.3", new Hbar(1)) // add recipient, and amount of hbar
+    .addRecipient("0.0.17210", new Hbar(1)) // add recipient, and amount of hbar
     .execute(client);
 
   const receipt = await transactionId.getRecord(client);
