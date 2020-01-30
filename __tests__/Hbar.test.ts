@@ -112,4 +112,11 @@ describe("hbar", () => {
         expect(negativeFiftyHbar.isNegative()).toBe(true);
         expect(negativeFiftyHbar.isZero()).toBe(false);
     });
+
+    it("multipliedBy() works correctly", () => {
+        expect(fiftyHbar.multipliedBy(2).asTinybar()).toStrictEqual(hundredHbar.asTinybar());
+        expect(fiftyHbar.multipliedBy(0).asTinybar()).toStrictEqual(zeroHbar.asTinybar());
+        expect(fiftyHbar.multipliedBy(-1).asTinybar()).toStrictEqual(fiftyHbar.negated().asTinybar());
+    });
+
 });
