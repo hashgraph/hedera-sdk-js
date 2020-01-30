@@ -87,11 +87,11 @@ console.log('new account: ', newAccount, 'public key: ', publicKey.toString(), '
 
 Do you want to run this SDK locally or help contribute? 
 
-Checkout the [DEVELOPING.MD](DEVELOPING.MD) file to get started!
+Checkout the [DEVELOPING.md](DEVELOPING.md) file to get started!
 
 ## Proxying from a browser
 
-By default, you can specify which nodes you'd like to submit to, but this assumes that you're running in a server environment. If you're running from the browser, the SDK defaults to a gRPC proxy hosted by [myhbarwallet](https://myhbarwallet.com/) and the [LaunchBadge](https://launchbadge.com/) team. If you'd like to run your own proxy, please checkout the [PROXY.MD](PROXY.MD) file to get setup!
+By default, you can specify which nodes you'd like to submit to, but this assumes that you're running in a server environment. If you're running from the browser, the SDK defaults to a gRPC proxy hosted by [myhbarwallet](https://myhbarwallet.com/) and the [LaunchBadge](https://launchbadge.com/) team. If you'd like to run your own proxy, please checkout the [PROXY.md](PROXY.md) file to get setup!
 
 ### DISCLAIMER
 
