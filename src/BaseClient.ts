@@ -71,8 +71,10 @@ export abstract class BaseClient {
         }
     }
 
-    /** Add a node to the list of nodes */
+    // Add a node to the list of nodes
+    // @deprecate `BaseClient.putNode()` is deprecrated. Use `BaseClient.replaceNodes()` instead.
     public putNode(id: AccountIdLike, url: string): this {
+        console.warn("`BaseClient.putNode()` is deprecrated. Use `BaseClient.replaceNodes()` instead.");
         this._nodes.push({ id: new AccountId(id), url });
         return this;
     }

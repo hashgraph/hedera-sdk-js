@@ -165,11 +165,14 @@ export class ContractFunctionParams {
     }
 
     public addAddress(value: string): this {
-        const par = Buffer.from(value, "hex");
-
-        if (par.length !== 20) {
-            throw new Error("`address` type requires parameter to be exactly 20 bytes");
+        // Allow `0x` prefix
+        if (value.length !== 40 && value.length !== 42) {
+            throw new Error("`address` type requires parameter to be 40 or 42 characters");
         }
+
+        const par = value.length === 40 ?
+            Buffer.from(value, "hex") :
+            Buffer.from(value.substring(2), "hex");
 
         this._selector.addAddress();
 
@@ -180,12 +183,14 @@ export class ContractFunctionParams {
         const par: Uint8Array[] = [];
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (const [ _, a ] of value.entries()) {
-            const buf = Buffer.from(a, "hex");
-
-            if (buf.length !== 20) {
-                throw new Error("`address` type requires parameter to be exactly 20 bytes");
+        for (const [ _, entry ] of value.entries()) {
+            if (entry.length !== 40 && entry.length !== 42) {
+                throw new Error("`address` type requires parameter to be 40 or 42 characters");
             }
+
+            const buf = entry.length === 40 ?
+                Buffer.from(entry, "hex") :
+                Buffer.from(entry.substring(2), "hex");
 
             par.push(buf);
         }

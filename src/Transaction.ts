@@ -160,11 +160,15 @@ export class Transaction {
         /* eslint-enable no-await-in-loop */
     }
 
+    // @deprecate `Transaction.getReceipt()` is deprecrated. Use `(await Transaction.execute()).getReceipt()` instead.
     public getReceipt(client: BaseClient): Promise<TransactionReceipt> {
+        console.warn("`Transaction.getReceipt()` is deprecrated. Use `(await Transaction.execute()).getReceipt()` instead.");
         return this.id.getReceipt(client);
     }
 
+    // @deprecate `Transaction.getRecord()` is deprecrated. Use `(await Transaction.execute()).getRecord()` instead.
     public getRecord(client: BaseClient): Promise<TransactionRecord> {
+        console.warn("`Transaction.getRecord()` is deprecrated. Use `(await Transaction.execute()).getRecord()` instead.");
         return this.id.getRecord(client);
     }
 

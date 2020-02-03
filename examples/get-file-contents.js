@@ -20,7 +20,7 @@ async function main() {
         .setFileId(FileId.ADDRESS_BOOK)
         .execute(client);
 
-    console.log(resp.contents);
+    console.log(resp);
 }
 
 main();
