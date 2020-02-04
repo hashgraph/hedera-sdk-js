@@ -33,7 +33,7 @@ async function main() {
       .execute(client);
 
   const transactionReceipt = await transactionId.getReceipt(client);
-  const topicId = transactionReceipt.getTopicId();
+  const topicId = transactionReceipt.getConsensusTopicId();
 
   console.log(`topicId = ${topicId}`);
 

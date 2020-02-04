@@ -8,14 +8,16 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { ConsensusTopicId, ConsensusTopicIdLike } from "./ConsensusTopicId";
 import { utf8encode } from "../util";
 
+/** @deprecated use `ConsensusMessageSubmitTransaction` instead. */
 export class ConsensusSubmitMessageTransaction extends TransactionBuilder {
     private _body: ConsensusSubmitMessageTransactionBody;
 
-    // @deprecate `ConsensusSubmitMessageTransaction` is deprecated.
-    // Use `ConsensusMessageSubmitTransaction` instead.
+    /** @deprecated use `ConsensusMessageSubmitTransaction` instead. */
     public constructor() {
         super();
-        console.warn("@deprecate `ConsensusSubmitMessageTransaction` is deprecated. Use `ConsensusMessageSubmitTransaction` instead.");
+
+        console.warn("ConsensusSubmitMessageTransaction has been renamed to ConsensusMessageSubmitTransaction");
+
         const body = new ConsensusSubmitMessageTransactionBody();
         this._body = body;
         this._inner.setConsensussubmitmessage(body);

@@ -8,13 +8,14 @@ import { Status } from "./Status";
 
 export class TransactionReceipt {
     public readonly status: Status;
-    private _accountId: AccountId | null;
-    private _fileId: FileId | null;
-    private _contractId: ContractId | null;
-    private _topicId: ConsensusTopicId | null;
+
+    private readonly _accountId: AccountId | null;
+    private readonly _fileId: FileId | null;
+    private readonly _contractId: ContractId | null;
+    private readonly _topicId: ConsensusTopicId | null;
     private readonly _exchangeRateSet: ExchangeRateSet | null;
-    public readonly topicSequenceNubmer: number;
-    public readonly topicRunningHash: Uint8Array;
+    private readonly _topicSequenceNubmer: number;
+    private readonly _topicRunningHash: Uint8Array;
 
     private constructor(
         status: Status,
@@ -32,24 +33,44 @@ export class TransactionReceipt {
         this._contractId = contractId;
         this._topicId = topicId;
         this._exchangeRateSet = exchangeRateSet;
-        this.topicSequenceNubmer = topicSequenceNubmer;
-        this.topicRunningHash = topicRunningHash;
+        this._topicSequenceNubmer = topicSequenceNubmer;
+        this._topicRunningHash = topicRunningHash;
     }
 
     public getAccountId(): AccountId {
+        // TODO: Assert that account ID is not null and throw an explicit error
         return this._accountId!;
     }
 
     public getFileId(): FileId {
+        // TODO: Assert that file ID is not null and throw an explicit error
         return this._fileId!;
     }
 
     public getContractId(): ContractId {
+        // TODO: Assert that file ID is not null and throw an explicit error
         return this._contractId!;
     }
 
-    public getTopicId(): ConsensusTopicId {
+    public getConsensusTopicId(): ConsensusTopicId {
+        // TODO: Assert that topic ID is not null and throw an explicit error
         return this._topicId!;
+    }
+
+    /** @deprecated `TransactionReceipt.getTopicId()` is deprecrated. Use `TransactionReceipt.getConsensusTopicId()` instead. */
+    public getTopicId(): ConsensusTopicId {
+        console.warn("`TransactionReceipt.getTopicId()` is deprecrated. Use `TransactionReceipt.getConsensusTopicId()` instead.");
+        return this.getConsensusTopicId();
+    }
+
+    public getConsensusTopicRunningHash(): Uint8Array {
+        // TODO: Assert that topic ID is not null and throw an explicit error
+        return this._topicRunningHash;
+    }
+
+    public getConsensusTopicSequenceNumber(): number {
+        // TODO: Assert that topic ID is not null and throw an explicit error
+        return this._topicSequenceNubmer;
     }
 
     // NOT A STABLE API
