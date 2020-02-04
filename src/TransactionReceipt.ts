@@ -13,6 +13,8 @@ export class TransactionReceipt {
     private _contractId: ContractId | null;
     private _topicId: ConsensusTopicId | null;
     private readonly _exchangeRateSet: ExchangeRateSet | null;
+    public readonly topicSequenceNubmer: number;
+    public readonly topicRunningHash: Uint8Array;
 
     private constructor(
         status: Status,
@@ -20,7 +22,9 @@ export class TransactionReceipt {
         fileId: FileId | null,
         contractId: ContractId | null,
         topicId: ConsensusTopicId | null,
-        exchangeRateSet: ExchangeRateSet | null
+        exchangeRateSet: ExchangeRateSet | null,
+        topicSequenceNubmer: number,
+        topicRunningHash: Uint8Array
     ) {
         this.status = status;
         this._accountId = accountId;
@@ -28,6 +32,8 @@ export class TransactionReceipt {
         this._contractId = contractId;
         this._topicId = topicId;
         this._exchangeRateSet = exchangeRateSet;
+        this.topicSequenceNubmer = topicSequenceNubmer;
+        this.topicRunningHash = topicRunningHash;
     }
 
     public getAccountId(): AccountId {
@@ -60,7 +66,9 @@ export class TransactionReceipt {
                 null,
             receipt.hasExchangerate() ?
                 exchangeRateSetToSdk(receipt.getExchangerate()!) :
-                null
+                null,
+            receipt.getTopicsequencenumber(),
+            receipt.getTopicrunninghash_asU8()
         );
     }
 }

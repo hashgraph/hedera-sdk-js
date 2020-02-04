@@ -11,11 +11,8 @@ import { utf8encode } from "../util";
 export class ConsensusSubmitMessageTransaction extends TransactionBuilder {
     private _body: ConsensusSubmitMessageTransactionBody;
 
-    // @deprecate `ConsensusSubmitMessageTransaction` is deprecated.
-    // Use `ConsensusMessageSubmitTransaction` instead.
     public constructor() {
         super();
-        console.warn("@deprecate `ConsensusSubmitMessageTransaction` is deprecated. Use `ConsensusMessageSubmitTransaction` instead.");
         const body = new ConsensusSubmitMessageTransactionBody();
         this._body = body;
         this._inner.setConsensussubmitmessage(body);
