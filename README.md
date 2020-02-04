@@ -1,9 +1,11 @@
+![](https://www.hedera.com/logo-capital-hbar-wordmark.jpg)
+
+# Hedera Hashgraph's Javascript/TypeScript SDK
+
 [![Actions Status](https://github.com/hashgraph/hedera-sdk-js/workflows/Node/badge.svg)](https://github.com/hashgraph/hedera-sdk-js/actions?query=workflow%3ANode)
 [![npm](https://img.shields.io/npm/v/@hashgraph/sdk)](https://www.npmjs.com/package/@hashgraph/sdk)
 [![Documentation](https://img.shields.io/badge/typedoc-reference-informational)](https://hashgraph.github.io/hedera-sdk-js/)
 ![NPM](https://img.shields.io/npm/l/@hashgraph/sdk)
-
-# Hedera Hashgraph Javascript/Typescript SDK
 
 > The Javascript/Typescript SDK for interacting with [Hedera Hashgraph]: the official distributed consensus
 > platform built using the hashgraph consensus algorithm for fast, fair and secure
@@ -81,89 +83,15 @@ const newAccount = receipt.accountId;
 console.log('new account: ', newAccount, 'public key: ', publicKey.toString(), ' private key: ', privateKey.toString());
 ```
 
-## Development
+## Running locally
 
-To build the SDK from source, you must have the official Protobufs compiler, `protoc`, installed:
+Do you want to run this SDK locally or help contribute? 
 
-Arch (with Pikaur):
+Checkout the [DEVELOPING.md](DEVELOPING.md) file to get started!
 
-```shell script
-# Pacman
-$ sudo pacman -S protobuf
-# with Pikaur
-$ pikaur -S protobuf
-```
+## Proxying from a browser
 
-Ubuntu/Debian:
-
-```shell script
-# libprotobuf-dev contains the Protobuf definitions for standard types
-$ sudo apt-get install protobuf-compiler libprotobuf-dev
-```
-
-Mac OSX:
-
-```shell script
-# Homebrew
-$ brew install protobuf
-```
-
-### Hosting your own Envoy Proxy
-
-This SDK talks to Hedera Hashgraph through [the gRPC-Web protocol] which allows it to function
-in a browser. By default, the SDK points to a public free proxy that connects through to
-`0.testnet.hedera.com:50211`. If you want to change this endpoint or simply host your own proxy,
-a script to easily start an Envoy proxy in Docker is provided:
-
-```shell script
-# this script assumes that `envoy.yaml` is in the current working directory
-$ ./scripts/start-envoy.sh
-```
-
-You can modify the endpoint to connect to in `envoy.yaml`.
-
-[the gRPC-Web protocol]: https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-WEB.md
-
-#### Updating Protobufs
-
-If the protobuf files are ever found to be out of sync, you can update them easily as follows:
-
-```shell script
-$ ./scripts/update-protos.sh
-```
-
-This will temporarily clone https://github.com/hashgraph/hedera-protobuf and copy the protobufs from
-there.
-
-#### NOTE: some Protobufs have to be manually patched
-
-In most places where `sint64` or `uint64` is used in the protobufs, they have to be patched
-to annotate these fields as `[jstype=JS_STRING]` or the Protobufs-JS library will try to decode
-them as JS `number` types which can only represent exact integers in the range `[-2^53, 2^53 - 1]`.
-
-(This is only really necessary for values which may conceivably fall outside that range, like 
-tinybar amounts. We're assuming for now that shard/realm/entity numbers will not exceed this range 
-for a very long time.)
-
-Since `update-protos.sh` will inevitably clobber these modifications, it has the feature of
-automatically applying patches defined in `patches` to the files in `src/protos` after overwriting.
-These patch files have the original filename and extension and then an additional `.patch` 
-extension, e.g. `src/protos/CryptoCreate.proto` has a patch file at the path 
-`patches/CryptoCreate.proto.patch`.
-
-If you find a **new** file needs to be modified, you can make the modification in `src/protos`, and 
-**before committing it**, run the following:
-
-```shell script
-$ git diff src/proto/[proto file] > patches/[proto file].patch 
-```
-
-Then check-in the `.patch` file that was created and commit it as well as the change to the Protobuf
-file. Your modification will then be preserved across `update-protos.sh` runs.
-
-If you need to add modifications to an **existing** patch file, you need to recreate the patch file
-that contains both existing modifications as well as new modifications. If you run into this and
-don't know how to proceed, don't be afraid to ask for help.
+By default, you can specify which nodes you'd like to submit to, but this assumes that you're running in a server environment. If you're running from the browser, the SDK defaults to a gRPC proxy hosted by [myhbarwallet](https://myhbarwallet.com/) and the [LaunchBadge](https://launchbadge.com/) team. If you'd like to run your own proxy, please checkout the [PROXY.md](PROXY.md) file to get setup!
 
 ### DISCLAIMER
 
