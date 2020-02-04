@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.5
+
+### Added
+
+ * Add `TransactionReceipt.getConsensusTopicId()`.
+ 
+ * Add `TransactionReceipt.getConsensusTopicRunningHash()`.
+
+ * Add `TransactionReceipt.getConsensusTopicSequenceNumber()`.
+
+ * Adds support for addresses with a leading `0x` prefix with `ContractFunctionParams.addAddress()`.
+
+### Deprecated
+
+ * Deprecates `Client.putNode()`. Use `Client.replaceNodes()` instead.
+
+ * Depreactes `Transaction.getReceipt()` and `Transaction.getRecord()`. Use `TransactionId.getReceipt()` or 
+   `TransactionId.getRecord()` instead. The `execute` method on `Transaction` returns a `TransactionId`.
+
+ * Deprecates `ConsensusSubmitMessageTransaction`. This was renamed to `ConsensusMessageSubmitTransaction` to 
+   match the Java SDK.
+
 ## v1.1.2
 
 ### Fixed
