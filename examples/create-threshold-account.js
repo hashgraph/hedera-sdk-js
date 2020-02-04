@@ -43,7 +43,9 @@ async function main() {
     .setInitialBalance(0)
     .execute(client);
 
-  console.log(await accountCreateTransaction.getReceipt(client)._accountId);
+  const receipt = await accountCreateTransaction.getReceipt(client);
+
+  console.log(receipt.getAccountId().toString());
 }
 
 main();
