@@ -1,6 +1,8 @@
 # Get account record
 
-`AccountRecordsQuery()` gets all of the records for an account for transfers into and out, that were above the threshold limit that is set by the user, during the last 24 hours. The query response includes the header and account ID. The header can return the cost of the transaction, the state proof or both. The account ID is the account the record is for.
+`AccountRecordsQuery()` gets all of the records for an account for transfers into and out, that were above the threshold on that account, during the last 24 hours. 
+
+The query header stipulates that the response should return the cost of the query or the actual response. The account ID is the account the record is for.
 
 A record returns the following information about an account:
 
@@ -11,15 +13,14 @@ A record returns the following information about an account:
 * Transaction Hash
 * Memo \(if any\)
 * Transaction Fee
+* Transfer List
 
 | Constructor | Description |
 | :--- | :--- |
 | `AccountRecordsQuery()` | Initializes the AccountRecordsQuery object |
 
 ```javascript
-new AccountRecordsQuery()  
-    .setAccount()  
-    .execute();
+new AccountRecordsQuery()
 ```
 
 | Method | Type | Description |
