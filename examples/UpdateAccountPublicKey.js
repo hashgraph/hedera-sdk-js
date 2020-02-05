@@ -54,11 +54,11 @@ async function main() {
     console.log(`transactionId = ${updateTransaction}`)
 
     // (important!) wait for the transaction to complete by querying the receipt
-    updateTransaction.getReceipt(client);
+    await updateTransaction.getReceipt(client);
 
-    // Now we fetch the account information to check if the key was changed
     console.log(`:: get account info and check our current key`);
-    
+
+   // Now we fetch the account information to check if the key was changed
     const acctInfo = await new AccountInfoQuery()
         .setAccountId(accountId)
         .execute(client); 
