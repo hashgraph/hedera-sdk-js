@@ -21,7 +21,7 @@ async function main() {
 
     const consensusClient = new MirrorClient(mirrorNodeAddress);
 
-    const client = Client.forTestnet()
+    const client = Client.forTestnet();
     client.setOperator(operatorAccount, operatorPrivateKey);
 
     const transactionId = await new ConsensusTopicCreateTransaction()

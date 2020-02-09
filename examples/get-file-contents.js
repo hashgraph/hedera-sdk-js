@@ -8,7 +8,7 @@ async function main() {
         throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
     }
 
-    const client = Client.forTestnet()
+    const client = Client.forTestnet();
     client.setOperator(operatorAccount, operatorPrivateKey);
 
     const resp = await new FileContentsQuery()
