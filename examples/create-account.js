@@ -13,9 +13,8 @@ async function main() {
 
     const privateKey = await Ed25519PrivateKey.generate();
 
-    console.log("Automatic signing example");
-    console.log(`private = ${privateKey.toString()}`);
-    console.log(`public = ${privateKey.publicKey.toString()}`);
+    console.log("private =", privateKey);
+    console.log("public =", privateKey.publicKey);
 
     const transactionId = await new AccountCreateTransaction()
         .setKey(privateKey.publicKey)
@@ -23,9 +22,12 @@ async function main() {
         .execute(client);
 
     const transactionReceipt = await transactionId.getReceipt(client);
+
+    console.log("receipt =", transactionReceipt);
+
     const newAccountId = transactionReceipt.getAccountId();
 
-    console.log(`account = ${newAccountId}`);
+    console.log("accountId =", newAccountId);
 }
 
 main();
