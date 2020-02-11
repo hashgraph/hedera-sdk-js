@@ -109,6 +109,28 @@ export class TransactionReceipt {
         return this._topicSequenceNubmer;
     }
 
+    public toJSON(): object {
+        return {
+            status: this.status.toString(),
+            accountId: this._accountId?.toString(),
+            fileId: this._fileId?.toString(),
+            contractId: this._contractId?.toString(),
+            consensusTopicId: this._topicId?.toString(),
+            consensusTopicRunningHash: this._topicRunningHash.byteLength === 0 ?
+            /* eslint-disable-next-line no-undefined */
+                undefined :
+                this._topicRunningHash.toString(),
+            consensusTopicSequenceNumber: this._topicSequenceNubmer === 0 ?
+            /* eslint-disable-next-line no-undefined */
+                undefined :
+                this._topicSequenceNubmer
+        };
+    }
+
+    public toString(): string {
+        return JSON.stringify(this.toJSON(), null, 2);
+    }
+
     // NOT A STABLE API
     public static _fromProto(receipt: ProtoTransactionReceipt): TransactionReceipt {
         return new TransactionReceipt(
