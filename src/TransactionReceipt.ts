@@ -94,7 +94,7 @@ export class TransactionReceipt {
     }
 
     public getConsensusTopicRunningHash(): Uint8Array {
-        if (this._topicRunningHash.byteLength == 0) {
+        if (this._topicRunningHash.byteLength === 0) {
             throw new Error("receipt was not for a consensus topic transaction");
         }
 
@@ -102,7 +102,7 @@ export class TransactionReceipt {
     }
 
     public getConsensusTopicSequenceNumber(): number {
-        if (this._topicSequenceNubmer == 0) {
+        if (this._topicSequenceNubmer === 0) {
             throw new Error("receipt was not for a consensus topic transaction");
         }
 
