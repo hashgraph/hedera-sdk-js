@@ -153,6 +153,16 @@ describe("ContractFunctionParams", () => {
         expect(finished).toHaveLength(32);
     });
 
+    it("encodes address with 0x prefix", () => {
+        const params = new ContractFunctionParams()
+            .addAddress("0x888937961a6E3D313e481a2c5BAd9791fD11ea5b");
+
+        const finished = params._build(null);
+        const firstParam = Buffer.from(finished.slice((32 * 0), (32 * 1)).buffer).toString("hex");
+        expect(firstParam).toStrictEqual("000000000000000000000000888937961a6e3d313e481a2c5bad9791fd11ea5b");
+        expect(finished).toHaveLength(32);
+    });
+
     it("encodes arrays correctly", () => {
         const params = new ContractFunctionParams()
             .addInt256(int64)

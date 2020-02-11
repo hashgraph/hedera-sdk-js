@@ -13,7 +13,7 @@ export function _fromProtoKey(key: pb.Key): PublicKey {
     /* eslint-enable @typescript-eslint/no-var-requires */
 
     if (key.hasEd25519()) {
-        return new Ed25519PublicKey(key.getEcdsa384_asU8());
+        return new Ed25519PublicKey(key.getEd25519_asU8());
     }
 
     if (key.hasContractid()) {
