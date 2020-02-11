@@ -1,4 +1,4 @@
-const { Client, Ed25519PrivateKey, AccountCreateTransaction, AccountUpdateTransaction, AccountInfoQuery, AccountId} = require("@hashgraph/sdk");
+const { Client, Ed25519PrivateKey, AccountCreateTransaction, AccountUpdateTransaction, AccountInfoQuery } = require("@hashgraph/sdk");
 require("dotenv").config();
 
 async function main() {
@@ -39,10 +39,10 @@ async function main() {
     const newPrivateKey = await Ed25519PrivateKey.generate();
     const newPublicKey = newPrivateKey.publicKey;
 
-    console.log(`:: update keys of account ${accountId}`)
-    console.log(`setKey = ${newPublicKey}`)
+    console.log(`:: update keys of account ${accountId}`);
+    console.log(`setKey = ${newPublicKey}`);
 
-    //Update the key on the account
+    // Update the key on the account
     const updateTransaction = await new AccountUpdateTransaction()
         .setAccountId(accountId)
         .setKey(newPublicKey) // The new public key to update the account with
@@ -51,18 +51,18 @@ async function main() {
         .sign(newPrivateKey) // Sign with new private key on the account
         .execute(client);
 
-    console.log(`transactionId = ${updateTransaction}`)
+    console.log(`transactionId = ${updateTransaction}`);
 
     // (important!) wait for the transaction to complete by querying the receipt
     await updateTransaction.getReceipt(client);
 
-    console.log(`:: get account info and check our current key`);
+    console.log(":: get account info and check our current key");
 
-   // Now we fetch the account information to check if the key was changed
+    // Now we fetch the account information to check if the key was changed
     const acctInfo = await new AccountInfoQuery()
         .setAccountId(accountId)
-        .execute(client); 
+        .execute(client);
 
-    console.log(`key = ${acctInfo.key}`)
+    console.log(`key = ${acctInfo.key}`);
 }
 main();
