@@ -37,6 +37,12 @@ export class TransactionReceipt {
         this._topicRunningHash = topicRunningHash;
     }
 
+    /** @deprecated */
+    public get accountId(): AccountId {
+        console.warn("`TransactionReceipt.accountId` is deprecrated. Use `TransactionReceipt.getAccountId()` instead.");
+        return this.getAccountId();
+    }
+
     public getAccountId(): AccountId {
         if (this._accountId == null) {
             throw new Error("receipt does not contain an account ID");
@@ -45,12 +51,24 @@ export class TransactionReceipt {
         return this._accountId!;
     }
 
+    /** @deprecated */
+    public get fileId(): FileId {
+        console.warn("`TransactionReceipt.fileId` is deprecrated. Use `TransactionReceipt.getfileId()` instead.");
+        return this.getFileId();
+    }
+
     public getFileId(): FileId {
         if (this._fileId == null) {
             throw new Error("receipt does not contain a file ID");
         }
 
         return this._fileId!;
+    }
+
+    /** @deprecated */
+    public get contractId(): ContractId {
+        console.warn("`TransactionReceipt.contractId` is deprecrated. Use `TransactionReceipt.getcontractId()` instead.");
+        return this.getContractId();
     }
 
     public getContractId(): ContractId {
