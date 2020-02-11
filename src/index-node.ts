@@ -7,6 +7,7 @@ import * as grpc from "grpc";
 import ProtobufMessage = grpcWeb.ProtobufMessage;
 import UnaryMethodDefinition = grpcWeb.UnaryMethodDefinition;
 
+import { Ed25519PrivateKey, Ed25519PublicKey, TransactionReceipt, ConsensusTopicId, FileId, AccountId, ContractId, TransactionId } from "./exports";
 export * from "./exports";
 
 const readFile = util.promisify(fs.readFile);
@@ -100,3 +101,23 @@ export class Client extends BaseClient {
 // Mirror
 export { MirrorClient } from "./mirror/node/MirrorClient";
 export { MirrorConsensusTopicQuery } from "./mirror/node/MirrorConsensusTopicQuery";
+
+// Override console.log output for some classes (to be toString)
+for (const cls of [
+    TransactionReceipt,
+    AccountId,
+    FileId,
+    ConsensusTopicId,
+    ContractId,
+    TransactionId,
+    Ed25519PrivateKey,
+    Ed25519PublicKey
+]) {
+    Object.defineProperty(cls.prototype, util.inspect.custom, {
+        enumerable: false,
+        writable: false,
+        value(): string {
+            return this.toString();
+        }
+    });
+}
