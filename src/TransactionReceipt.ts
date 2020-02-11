@@ -38,22 +38,34 @@ export class TransactionReceipt {
     }
 
     public getAccountId(): AccountId {
-        // TODO: Assert that account ID is not null and throw an explicit error
+        if (this._accountId == null) {
+            throw new Error("receipt does not contain an account ID");
+        }
+
         return this._accountId!;
     }
 
     public getFileId(): FileId {
-        // TODO: Assert that file ID is not null and throw an explicit error
+        if (this._fileId == null) {
+            throw new Error("receipt does not contain a file ID");
+        }
+
         return this._fileId!;
     }
 
     public getContractId(): ContractId {
-        // TODO: Assert that file ID is not null and throw an explicit error
+        if (this._contractId == null) {
+            throw new Error("receipt does not contain a contract ID");
+        }
+
         return this._contractId!;
     }
 
     public getConsensusTopicId(): ConsensusTopicId {
-        // TODO: Assert that topic ID is not null and throw an explicit error
+        if (this._topicId == null) {
+            throw new Error("receipt does not contain a topic ID");
+        }
+
         return this._topicId!;
     }
 
@@ -64,12 +76,18 @@ export class TransactionReceipt {
     }
 
     public getConsensusTopicRunningHash(): Uint8Array {
-        // TODO: Assert that topic ID is not null and throw an explicit error
+        if (this._topicRunningHash.byteLength == 0) {
+            throw new Error("receipt was not for a consensus topic transaction");
+        }
+
         return this._topicRunningHash;
     }
 
     public getConsensusTopicSequenceNumber(): number {
-        // TODO: Assert that topic ID is not null and throw an explicit error
+        if (this._topicSequenceNubmer == 0) {
+            throw new Error("receipt was not for a consensus topic transaction");
+        }
+
         return this._topicSequenceNubmer;
     }
 
