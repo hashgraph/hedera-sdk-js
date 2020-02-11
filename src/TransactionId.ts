@@ -91,11 +91,7 @@ export class TransactionId {
             .execute(client);
 
         // Throw an exception on an invalid receipt status
-        try {
-            receipt.status._throwIfError();
-        } catch (error) {
-            throw new HederaReceiptStatusError(receipt.status, receipt, this);
-        }
+        HederaReceiptStatusError._throwIfError(receipt.status.code, receipt, this);
 
         return receipt;
     }
@@ -113,11 +109,7 @@ export class TransactionId {
             .setTransactionId(this)
             .execute(client);
 
-        try {
-            record.receipt!.status._throwIfError();
-        } catch (error) {
-            throw new HederaRecordStatusError(record.receipt!.status, record, this);
-        }
+        HederaRecordStatusError._throwIfError(record.receipt!.status.code, record, this);
 
         return record;
     }

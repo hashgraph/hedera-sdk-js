@@ -13,4 +13,11 @@ export class HederaPrecheckStatusError extends HederaStatusError {
         this.transactionId = transactionId;
         this.name = "HederaPrecheckStatusError";
     }
+
+    public static _throwIfError(code: number, transactionId: TransactionId): void {
+        const status = new Status(code);
+        if (status._isError()) {
+            throw new HederaPrecheckStatusError(status, transactionId);
+        }
+    }
 }

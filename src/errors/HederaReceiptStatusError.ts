@@ -16,4 +16,15 @@ export class HederaReceiptStatusError extends HederaStatusError {
         this.receipt = receipt;
         this.name = "HederaReceiptStatusError";
     }
+
+    public static _throwIfError(
+        code: number,
+        receipt: TransactionReceipt,
+        transactionId: TransactionId
+    ): void {
+        const status = new Status(code);
+        if (status._isError()) {
+            throw new HederaReceiptStatusError(status, receipt, transactionId);
+        }
+    }
 }

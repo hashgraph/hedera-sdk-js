@@ -16,4 +16,15 @@ export class HederaRecordStatusError extends HederaStatusError {
         this.record = record;
         this.name = "HederaRecordStatusError";
     }
+
+    public static _throwIfError(
+        code: number,
+        record: TransactionRecord,
+        transactionId: TransactionId
+    ): void {
+        const status = new Status(code);
+        if (status._isError()) {
+            throw new HederaRecordStatusError(status, record, transactionId);
+        }
+    }
 }

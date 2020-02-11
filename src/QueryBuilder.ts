@@ -93,7 +93,10 @@ export abstract class QueryBuilder<T> {
 
             const respHeader = this._mapResponseHeader(resp);
 
-            Status._fromCode(respHeader.getNodetransactionprecheckcode())._throwIfError();
+            HederaPrecheckStatusError._throwIfError(
+                respHeader.getNodetransactionprecheckcode(),
+                this._transactionId
+            );
 
             return Hbar.fromTinybar(respHeader.getCost());
         } finally {
@@ -159,14 +162,10 @@ export abstract class QueryBuilder<T> {
                     continue;
                 }
 
-                try {
-                    respStatus._throwIfError();
-                } catch (error) {
-                    throw new HederaPrecheckStatusError(
-                        (error as HederaStatusError).status,
-                        this._transactionId!
-                    );
-                }
+                HederaPrecheckStatusError._throwIfError(
+                    respStatus.code,
+                    this._transactionId!
+                );
 
                 return this._mapResponse(resp);
             }
