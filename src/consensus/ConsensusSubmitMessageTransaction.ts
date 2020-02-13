@@ -16,7 +16,7 @@ export class ConsensusSubmitMessageTransaction extends TransactionBuilder {
     public constructor() {
         super();
 
-        console.warn("ConsensusSubmitMessageTransaction has been renamed to ConsensusMessageSubmitTransaction");
+        console.warn("deprecated: ConsensusSubmitMessageTransaction has been renamed to ConsensusMessageSubmitTransaction");
 
         const body = new ConsensusSubmitMessageTransactionBody();
         this._body = body;
