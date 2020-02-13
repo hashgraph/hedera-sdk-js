@@ -39,8 +39,6 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
     }
 
     protected _shouldRetry(status: Status, response: Response): boolean {
-        console.log("_shouldRetry? status = %s", status);
-
         if (super._shouldRetry(status, response)) return true;
         
         if (([
@@ -55,8 +53,6 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
 
         const receipt = response.getTransactiongetreceipt()?.getReceipt();
         const receiptStatus = receipt == null ? null : Status._fromCode(receipt.getStatus());
-
-        console.log("receiptStatus = %s", receiptStatus);
 
         if (receiptStatus != null) {
             if (([
