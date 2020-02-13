@@ -23,7 +23,7 @@ export class HederaReceiptStatusError extends HederaStatusError {
         receipt: TransactionReceipt,
         transactionId: TransactionId
     ): void {
-        const status = new Status(code);
+        const status = Status._fromCode(code);
         if (status._isError()) {
             throw new HederaReceiptStatusError(status, receipt, transactionId);
         }

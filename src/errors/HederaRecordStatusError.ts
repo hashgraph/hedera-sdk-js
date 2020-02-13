@@ -23,7 +23,7 @@ export class HederaRecordStatusError extends HederaStatusError {
         record: TransactionRecord,
         transactionId: TransactionId
     ): void {
-        const status = new Status(code);
+        const status = Status._fromCode(code);
         if (status._isError()) {
             throw new HederaRecordStatusError(status, record, transactionId);
         }
