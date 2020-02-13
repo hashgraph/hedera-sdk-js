@@ -39,12 +39,26 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
     }
 
     protected _shouldRetry(status: Status, response: Response): boolean {
+        console.log("_shouldRetry? status = %s", status);
+
         if (super._shouldRetry(status, response)) return true;
+        
+        if (([
+            Status.Busy.code,
+            Status.Unknown.code,
+            Status.ReceiptNotFound.code
+        ] as number[]).includes(status.code)) {
+            return true;
+        }
 
-        if (status.code === Status.Ok.code) {
-            const receipt = response.getTransactiongetreceipt()!.getReceipt()!;
-            const receiptStatus = Status._fromCode(receipt.getStatus()! as number);
+        // If there _was_ a receipt fetched, check the status of that
 
+        const receipt = response.getTransactiongetreceipt()?.getReceipt();
+        const receiptStatus = receipt == null ? null : Status._fromCode(receipt.getStatus());
+
+        console.log("receiptStatus = %s", receiptStatus);
+
+        if (receiptStatus != null) {
             if (([
                 // Accepted but has not reached consensus
                 Status.Ok.code,
