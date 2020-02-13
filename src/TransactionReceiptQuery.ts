@@ -43,7 +43,7 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
 
         if (status.code === Status.Ok.code) {
             const receipt = response.getTransactiongetreceipt()!.getReceipt()!;
-            const receiptStatus = new Status(receipt.getStatus()! as number);
+            const receiptStatus = Status._fromCode(receipt.getStatus()! as number);
 
             if (([
                 // Accepted but has not reached consensus

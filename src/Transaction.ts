@@ -146,7 +146,7 @@ export class Transaction {
             }
 
             const response = await client._unaryCall(node.url, this._inner, this._method);
-            const status: Status = new Status(response.getNodetransactionprecheckcode());
+            const status: Status = Status._fromCode(response.getNodetransactionprecheckcode());
 
             // If response code is BUSY we need to timeout and retry
             if (status._isBusy()) {

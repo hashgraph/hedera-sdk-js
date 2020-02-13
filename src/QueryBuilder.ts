@@ -84,7 +84,7 @@ export abstract class QueryBuilder<T> {
             const resp = await client._unaryCall(node.url, this._inner.clone(), this._getMethod());
 
             const respHeader = this._mapResponseHeader(resp);
-            new Status(respHeader.getNodetransactionprecheckcode())._throwIfError();
+            Status._fromCode(respHeader.getNodetransactionprecheckcode())._throwIfError();
 
             return Hbar.fromTinybar(respHeader.getCost());
         } finally {
@@ -143,7 +143,7 @@ export abstract class QueryBuilder<T> {
                 }
 
                 const resp = await client._unaryCall(node!.url, this._inner, this._getMethod());
-                respStatus = new Status(this._mapResponseHeader(resp)
+                respStatus = Status._fromCode(this._mapResponseHeader(resp)
                     .getNodetransactionprecheckcode());
 
                 if (this._shouldRetry(respStatus, resp)) {
