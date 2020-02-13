@@ -1,6 +1,13 @@
 import { HederaStatusError } from "./errors/HederaStatusError";
 
-export class Status {
+interface Indexed {
+    [code: number]: Status;
+}
+
+export class Status implements Indexed {
+    // Index signatures
+    [code: number]: Status;
+
     public static readonly Ok = new Status(0);
     public static readonly InvalidTransaction = new Status(1);
     public static readonly PayerAccountNotFound = new Status(2);
@@ -108,6 +115,113 @@ export class Status {
     public static readonly FeeScheduleFilePartUploaded = new Status(104);
     public static readonly ExchangeRateChangeLimitExceeded = new Status(105);
 
+    private static [ 0 ] = Status.Ok;
+    private static [ 1 ] = Status.InvalidTransaction;
+    private static [ 2 ] = Status.PayerAccountNotFound;
+    private static [ 3 ] = Status.InvalidNodeAccount;
+    private static [ 4 ] = Status.TransactionExpired;
+    private static [ 5 ] = Status.InvalidTransactionStart;
+    private static [ 6 ] = Status.InvalidTransactionDuration;
+    private static [ 7 ] = Status.InvalidSignature;
+    private static [ 8 ] = Status.MemoTooLong;
+    private static [ 9 ] = Status.InsufficientTxFee;
+    private static [ 10 ] = Status.InsufficientPayerBalance;
+    private static [ 11 ] = Status.DuplicateTransaction;
+    private static [ 12 ] = Status.Busy;
+    private static [ 13 ] = Status.NotSupported;
+    private static [ 14 ] = Status.InvalidFileId;
+    private static [ 15 ] = Status.InvalidAccountId;
+    private static [ 16 ] = Status.InvalidContractId;
+    private static [ 17 ] = Status.InvalidTransactionId;
+    private static [ 18 ] = Status.ReceiptNotFound;
+    private static [ 19 ] = Status.RecordNotFound;
+    private static [ 20 ] = Status.InvalidSolidityId;
+    private static [ 21 ] = Status.Unknown;
+    private static [ 22 ] = Status.Success;
+    private static [ 23 ] = Status.FailInvalid;
+    private static [ 24 ] = Status.FailFee;
+    private static [ 25 ] = Status.FailBalance;
+    private static [ 26 ] = Status.KeyRequired;
+    private static [ 27 ] = Status.BadEncoding;
+    private static [ 28 ] = Status.InsufficientAccountBalance;
+    private static [ 29 ] = Status.InvalidSolidityAddress;
+    private static [ 30 ] = Status.InsufficientGas;
+    private static [ 31 ] = Status.ContractSizeLimitExceeded;
+    private static [ 32 ] = Status.LocalCallModificationException;
+    private static [ 33 ] = Status.ContractRevertExecuted;
+    private static [ 34 ] = Status.ContractExecutionException;
+    private static [ 35 ] = Status.InvalidReceivingNodeAccount;
+    private static [ 36 ] = Status.MissingQueryHeader;
+    private static [ 37 ] = Status.AccountUpdateFailed;
+    private static [ 38 ] = Status.InvalidKeyEncoding;
+    private static [ 39 ] = Status.NullSolidityAddress;
+    private static [ 40 ] = Status.ContractUpdateFailed;
+    private static [ 41 ] = Status.InvalidQueryHeader;
+    private static [ 42 ] = Status.InvalidFeeSubmitted;
+    private static [ 43 ] = Status.InvalidPayerSignature;
+    private static [ 44 ] = Status.KeyNotProvided;
+    private static [ 45 ] = Status.InvalidExpirationTime;
+    private static [ 46 ] = Status.NoWaclKey;
+    private static [ 47 ] = Status.FileContentEmpty;
+    private static [ 48 ] = Status.InvalidAccountAmounts;
+    private static [ 49 ] = Status.EmptyTransactionBody;
+    private static [ 50 ] = Status.InvalidTransactionBody;
+    private static [ 51 ] = Status.InvalidSignatureTypeMismatchingKey;
+    private static [ 52 ] = Status.InvalidSignatureCountMismatchingKey;
+    private static [ 53 ] = Status.EmptyClaimBody;
+    private static [ 54 ] = Status.EmptyClaimHash;
+    private static [ 55 ] = Status.EmptyClaimKeys;
+    private static [ 56 ] = Status.InvalidClaimHashSize;
+    private static [ 57 ] = Status.EmptyQueryBody;
+    private static [ 58 ] = Status.EmptyClaimQuery;
+    private static [ 59 ] = Status.ClaimNotFound;
+    private static [ 60 ] = Status.AccountIdDoesNotExist;
+    private static [ 61 ] = Status.ClaimAlreadyExists;
+    private static [ 62 ] = Status.InvalidFileWacl;
+    private static [ 63 ] = Status.SerializationFailed;
+    private static [ 64 ] = Status.TransactionOversize;
+    private static [ 65 ] = Status.TransactionTooManyLayers;
+    private static [ 66 ] = Status.ContractDeleted;
+    private static [ 67 ] = Status.PlatformNotActive;
+    private static [ 68 ] = Status.KeyPrefixMismatch;
+    private static [ 69 ] = Status.PlatformTransactionNotCreated;
+    private static [ 70 ] = Status.InvalidRenewalPeriod;
+    private static [ 71 ] = Status.InvalidPayerAccountId;
+    private static [ 72 ] = Status.AccountDeleted;
+    private static [ 73 ] = Status.FileDeleted;
+    private static [ 74 ] = Status.AccountRepeatedInAccountAmounts;
+    private static [ 75 ] = Status.SettingNegativeAccountBalance;
+    private static [ 76 ] = Status.ObtainerRequired;
+    private static [ 77 ] = Status.ObtainerSameContractId;
+    private static [ 78 ] = Status.ObtainerDoesNotExist;
+    private static [ 79 ] = Status.ModifyingImmutableContract;
+    private static [ 80 ] = Status.FileSystemException;
+    private static [ 81 ] = Status.AutorenewDurationNotInRange;
+    private static [ 82 ] = Status.ErrorDecodingBytestring;
+    private static [ 83 ] = Status.ContractFileEmpty;
+    private static [ 84 ] = Status.ContractBytecodeEmpty;
+    private static [ 85 ] = Status.InvalidInitialBalance;
+    private static [ 86 ] = Status.InvalidReceiveRecordThreshold;
+    private static [ 87 ] = Status.InvalidSendRecordThreshold;
+    private static [ 88 ] = Status.AccountIsNotGenesisAccount;
+    private static [ 89 ] = Status.PayerAccountUnauthorized;
+    private static [ 90 ] = Status.InvalidFreezeTransactionBody;
+    private static [ 91 ] = Status.FreezeTransactionBodyNotFound;
+    private static [ 92 ] = Status.TransferListSizeLimitExceeded;
+    private static [ 93 ] = Status.ResultSizeLimitExceeded;
+    private static [ 94 ] = Status.NotSpecialAccount;
+    private static [ 95 ] = Status.ContractNegativeGas;
+    private static [ 96 ] = Status.ContractNegativeValue;
+    private static [ 97 ] = Status.InvalidFeeFile;
+    private static [ 98 ] = Status.InvalidExchangeRateFile;
+    private static [ 99 ] = Status.InsufficientLocalCallGas;
+    private static [ 100 ] = Status.EntityNotAllowedToDelete;
+    private static [ 101 ] = Status.AuthorizationFailed;
+    private static [ 102 ] = Status.FileUploadedProtoInvalid;
+    private static [ 103 ] = Status.FileUploadedProtoNotSavedToDisk;
+    private static [ 104 ] = Status.FeeScheduleFilePartUploaded;
+    private static [ 105 ] = Status.ExchangeRateChangeLimitExceeded;
+
     public readonly code: number;
 
     // NOT A STABLE API
@@ -116,132 +230,136 @@ export class Status {
     }
 
     public toString(): string {
-        switch (this.code) {
-            case Status.Ok.code: return "OK";
-            case Status.InvalidTransaction.code: return "INVALID_TRANSACTION";
-            case Status.PayerAccountNotFound.code: return "PAYER_ACCOUNT_NOT_FOUND";
-            case Status.InvalidNodeAccount.code: return "INVALID_NODE_ACCOUNT";
-            case Status.TransactionExpired.code: return "TRANSACTION_EXPIRED";
-            case Status.InvalidTransactionStart.code: return "INVALID_TRANSACTION_START";
-            case Status.InvalidTransactionDuration.code: return "INVALID_TRANSACTION_DURATION";
-            case Status.InvalidSignature.code: return "INVALID_SIGNATURE";
-            case Status.MemoTooLong.code: return "MEMO_TOO_LONG";
-            case Status.InsufficientTxFee.code: return "INSUFFICIENT_TX_FEE";
-            case Status.InsufficientPayerBalance.code: return "INSUFFICIENT_PAYER_BALANCE";
-            case Status.DuplicateTransaction.code: return "DUPLICATE_TRANSACTION";
-            case Status.Busy.code: return "BUSY";
-            case Status.NotSupported.code: return "NOT_SUPPORTED";
-            case Status.InvalidFileId.code: return "INVALID_FILE_ID";
-            case Status.InvalidAccountId.code: return "INVALID_ACCOUNT_ID";
-            case Status.InvalidContractId.code: return "INVALID_CONTRACT_ID";
-            case Status.InvalidTransactionId.code: return "INVALID_TRANSACTION_ID";
-            case Status.ReceiptNotFound.code: return "RECEIPT_NOT_FOUND";
-            case Status.RecordNotFound.code: return "RECORD_NOT_FOUND";
-            case Status.InvalidSolidityId.code: return "INVALID_SOLIDITY_ID";
-            case Status.Unknown.code: return "UNKNOWN";
-            case Status.Success.code: return "SUCCESS";
-            case Status.FailInvalid.code: return "FAIL_INVALID";
-            case Status.FailFee.code: return "FAIL_FEE";
-            case Status.FailBalance.code: return "FAIL_BALANCE";
-            case Status.KeyRequired.code: return "KEY_REQUIRED";
-            case Status.BadEncoding.code: return "BAD_ENCODING";
-            case Status.InsufficientAccountBalance.code: return "INSUFFICIENT_ACCOUNT_BALANCE";
-            case Status.InvalidSolidityAddress.code: return "INVALID_SOLIDITY_ADDRESS";
-            case Status.InsufficientGas.code: return "INSUFFICIENT_GAS";
-            case Status.ContractSizeLimitExceeded.code: return "CONTRACT_SIZE_LIMIT_EXCEEDED";
-            case Status.LocalCallModificationException.code: return "LOCAL_CALL_MODIFICATION_EXCEPTION";
-            case Status.ContractRevertExecuted.code: return "CONTRACT_REVERT_EXECUTED";
-            case Status.ContractExecutionException.code: return "CONTRACT_EXECUTION_EXCEPTION";
-            case Status.InvalidReceivingNodeAccount.code: return "INVALID_RECEIVING_NODE_ACCOUNT";
-            case Status.MissingQueryHeader.code: return "MISSING_QUERY_HEADER";
-            case Status.AccountUpdateFailed.code: return "ACCOUNT_UPDATE_FAILED";
-            case Status.InvalidKeyEncoding.code: return "INVALID_KEY_ENCODING";
-            case Status.NullSolidityAddress.code: return "NULL_SOLIDITY_ADDRESS";
-            case Status.ContractUpdateFailed.code: return "CONTRACT_UPDATE_FAILED";
-            case Status.InvalidQueryHeader.code: return "INVALID_QUERY_HEADER";
-            case Status.InvalidFeeSubmitted.code: return "INVALID_FEE_SUBMITTED";
-            case Status.InvalidPayerSignature.code: return "INVALID_PAYER_SIGNATURE";
-            case Status.KeyNotProvided.code: return "KEY_NOT_PROVIDED";
-            case Status.InvalidExpirationTime.code: return "INVALID_EXPIRATION_TIME";
-            case Status.NoWaclKey.code: return "NO_WACL_KEY";
-            case Status.FileContentEmpty.code: return "FILE_CONTENT_EMPTY";
-            case Status.InvalidAccountAmounts.code: return "INVALID_ACCOUNT_AMOUNTS";
-            case Status.EmptyTransactionBody.code: return "EMPTY_TRANSACTION_BODY";
-            case Status.InvalidTransactionBody.code: return "INVALID_TRANSACTION_BODY";
-            case Status.InvalidSignatureTypeMismatchingKey.code: return "INVALID_SIGNATURE_TYPE_MISMATCHING_KEY";
-            case Status.InvalidSignatureCountMismatchingKey.code: return "INVALID_SIGNATURE_COUNT_MISMATCHING_KEY";
-            case Status.EmptyClaimBody.code: return "EMPTY_CLAIM_BODY";
-            case Status.EmptyClaimHash.code: return "EMPTY_CLAIM_HASH";
-            case Status.EmptyClaimKeys.code: return "EMPTY_CLAIM_KEYS";
-            case Status.InvalidClaimHashSize.code: return "INVALID_CLAIM_HASH_SIZE";
-            case Status.EmptyQueryBody.code: return "EMPTY_QUERY_BODY";
-            case Status.EmptyClaimQuery.code: return "EMPTY_CLAIM_QUERY";
-            case Status.ClaimNotFound.code: return "CLAIM_NOT_FOUND";
-            case Status.AccountIdDoesNotExist.code: return "ACCOUNT_ID_DOES_NOT_EXIST";
-            case Status.ClaimAlreadyExists.code: return "CLAIM_ALREADY_EXISTS";
-            case Status.InvalidFileWacl.code: return "INVALID_FILE_WACL";
-            case Status.SerializationFailed.code: return "SERIALIZATION_FAILED";
-            case Status.TransactionOversize.code: return "TRANSACTION_OVERSIZE";
-            case Status.TransactionTooManyLayers.code: return "TRANSACTION_TOO_MANY_LAYERS";
-            case Status.ContractDeleted.code: return "CONTRACT_DELETED";
-            case Status.PlatformNotActive.code: return "PLATFORM_NOT_ACTIVE";
-            case Status.KeyPrefixMismatch.code: return "KEY_PREFIX_MISMATCH";
-            case Status.PlatformTransactionNotCreated.code: return "PLATFORM_TRANSACTION_NOT_CREATED";
-            case Status.InvalidRenewalPeriod.code: return "INVALID_RENEWAL_PERIOD";
-            case Status.InvalidPayerAccountId.code: return "INVALID_PAYER_ACCOUNT_ID";
-            case Status.AccountDeleted.code: return "ACCOUNT_DELETED";
-            case Status.FileDeleted.code: return "FILE_DELETED";
-            case Status.AccountRepeatedInAccountAmounts.code: return "ACCOUNT_REPEATED_IN_ACCOUNT_AMOUNTS";
-            case Status.SettingNegativeAccountBalance.code: return "SETTING_NEGATIVE_ACCOUNT_BALANCE";
-            case Status.ObtainerRequired.code: return "OBTAINER_REQUIRED";
-            case Status.ObtainerSameContractId.code: return "OBTAINER_SAME_CONTRACT_ID";
-            case Status.ObtainerDoesNotExist.code: return "OBTAINER_DOES_NOT_EXIST";
-            case Status.ModifyingImmutableContract.code: return "MODIFYING_IMMUTABLE_CONTRACT";
-            case Status.FileSystemException.code: return "FILE_SYSTEM_EXCEPTION";
-            case Status.AutorenewDurationNotInRange.code: return "AUTORENEW_DURATION_NOT_IN_RANGE";
-            case Status.ErrorDecodingBytestring.code: return "ERROR_DECODING_BYTESTRING";
-            case Status.ContractFileEmpty.code: return "CONTRACT_FILE_EMPTY";
-            case Status.ContractBytecodeEmpty.code: return "CONTRACT_BYTECODE_EMPTY";
-            case Status.InvalidInitialBalance.code: return "INVALID_INITIAL_BALANCE";
-            case Status.InvalidReceiveRecordThreshold.code: return "INVALID_RECEIVE_RECORD_THRESHOLD";
-            case Status.InvalidSendRecordThreshold.code: return "INVALID_SEND_RECORD_THRESHOLD";
-            case Status.AccountIsNotGenesisAccount.code: return "ACCOUNT_IS_NOT_GENESIS_ACCOUNT";
-            case Status.PayerAccountUnauthorized.code: return "PAYER_ACCOUNT_UNAUTHORIZED";
-            case Status.InvalidFreezeTransactionBody.code: return "INVALID_FREEZE_TRANSACTION_BODY";
-            case Status.FreezeTransactionBodyNotFound.code: return "FREEZE_TRANSACTION_BODY_NOT_FOUND";
-            case Status.TransferListSizeLimitExceeded.code: return "TRANSFER_LIST_SIZE_LIMIT_EXCEEDED";
-            case Status.ResultSizeLimitExceeded.code: return "RESULT_SIZE_LIMIT_EXCEEDED";
-            case Status.NotSpecialAccount.code: return "NOT_SPECIAL_ACCOUNT";
-            case Status.ContractNegativeGas.code: return "CONTRACT_NEGATIVE_GAS";
-            case Status.ContractNegativeValue.code: return "CONTRACT_NEGATIVE_VALUE";
-            case Status.InvalidFeeFile.code: return "INVALID_FEE_FILE";
-            case Status.InvalidExchangeRateFile.code: return "INVALID_EXCHANGE_RATE_FILE";
-            case Status.InsufficientLocalCallGas.code: return "INSUFFICIENT_LOCAL_CALL_GAS";
-            case Status.EntityNotAllowedToDelete.code: return "ENTITY_NOT_ALLOWED_TO_DELETE";
-            case Status.AuthorizationFailed.code: return "AUTHORIZATION_FAILED";
-            case Status.FileUploadedProtoInvalid.code: return "FILE_UPLOADED_PROTO_INVALID";
-            case Status.FileUploadedProtoNotSavedToDisk.code: return "FILE_UPLOADED_PROTO_NOT_SAVED_TO_DISK";
-            case Status.FeeScheduleFilePartUploaded.code: return "FEE_SCHEDULE_FILE_PART_UPLOADED";
-            case Status.ExchangeRateChangeLimitExceeded.code: return "EXCHANGE_RATE_CHANGE_LIMIT_EXCEEDED";
-            default: return "UNKNOWN STATUS CODE (4120)";
+        switch (this) {
+            case Status.Ok: return "OK";
+            case Status.InvalidTransaction: return "INVALID_TRANSACTION";
+            case Status.PayerAccountNotFound: return "PAYER_ACCOUNT_NOT_FOUND";
+            case Status.InvalidNodeAccount: return "INVALID_NODE_ACCOUNT";
+            case Status.TransactionExpired: return "TRANSACTION_EXPIRED";
+            case Status.InvalidTransactionStart: return "INVALID_TRANSACTION_START";
+            case Status.InvalidTransactionDuration: return "INVALID_TRANSACTION_DURATION";
+            case Status.InvalidSignature: return "INVALID_SIGNATURE";
+            case Status.MemoTooLong: return "MEMO_TOO_LONG";
+            case Status.InsufficientTxFee: return "INSUFFICIENT_TX_FEE";
+            case Status.InsufficientPayerBalance: return "INSUFFICIENT_PAYER_BALANCE";
+            case Status.DuplicateTransaction: return "DUPLICATE_TRANSACTION";
+            case Status.Busy: return "BUSY";
+            case Status.NotSupported: return "NOT_SUPPORTED";
+            case Status.InvalidFileId: return "INVALID_FILE_ID";
+            case Status.InvalidAccountId: return "INVALID_ACCOUNT_ID";
+            case Status.InvalidContractId: return "INVALID_CONTRACT_ID";
+            case Status.InvalidTransactionId: return "INVALID_TRANSACTION_ID";
+            case Status.ReceiptNotFound: return "RECEIPT_NOT_FOUND";
+            case Status.RecordNotFound: return "RECORD_NOT_FOUND";
+            case Status.InvalidSolidityId: return "INVALID_SOLIDITY_ID";
+            case Status.Unknown: return "UNKNOWN";
+            case Status.Success: return "SUCCESS";
+            case Status.FailInvalid: return "FAIL_INVALID";
+            case Status.FailFee: return "FAIL_FEE";
+            case Status.FailBalance: return "FAIL_BALANCE";
+            case Status.KeyRequired: return "KEY_REQUIRED";
+            case Status.BadEncoding: return "BAD_ENCODING";
+            case Status.InsufficientAccountBalance: return "INSUFFICIENT_ACCOUNT_BALANCE";
+            case Status.InvalidSolidityAddress: return "INVALID_SOLIDITY_ADDRESS";
+            case Status.InsufficientGas: return "INSUFFICIENT_GAS";
+            case Status.ContractSizeLimitExceeded: return "CONTRACT_SIZE_LIMIT_EXCEEDED";
+            case Status.LocalCallModificationException: return "LOCAL_CALL_MODIFICATION_EXCEPTION";
+            case Status.ContractRevertExecuted: return "CONTRACT_REVERT_EXECUTED";
+            case Status.ContractExecutionException: return "CONTRACT_EXECUTION_EXCEPTION";
+            case Status.InvalidReceivingNodeAccount: return "INVALID_RECEIVING_NODE_ACCOUNT";
+            case Status.MissingQueryHeader: return "MISSING_QUERY_HEADER";
+            case Status.AccountUpdateFailed: return "ACCOUNT_UPDATE_FAILED";
+            case Status.InvalidKeyEncoding: return "INVALID_KEY_ENCODING";
+            case Status.NullSolidityAddress: return "NULL_SOLIDITY_ADDRESS";
+            case Status.ContractUpdateFailed: return "CONTRACT_UPDATE_FAILED";
+            case Status.InvalidQueryHeader: return "INVALID_QUERY_HEADER";
+            case Status.InvalidFeeSubmitted: return "INVALID_FEE_SUBMITTED";
+            case Status.InvalidPayerSignature: return "INVALID_PAYER_SIGNATURE";
+            case Status.KeyNotProvided: return "KEY_NOT_PROVIDED";
+            case Status.InvalidExpirationTime: return "INVALID_EXPIRATION_TIME";
+            case Status.NoWaclKey: return "NO_WACL_KEY";
+            case Status.FileContentEmpty: return "FILE_CONTENT_EMPTY";
+            case Status.InvalidAccountAmounts: return "INVALID_ACCOUNT_AMOUNTS";
+            case Status.EmptyTransactionBody: return "EMPTY_TRANSACTION_BODY";
+            case Status.InvalidTransactionBody: return "INVALID_TRANSACTION_BODY";
+            case Status.InvalidSignatureTypeMismatchingKey: return "INVALID_SIGNATURE_TYPE_MISMATCHING_KEY";
+            case Status.InvalidSignatureCountMismatchingKey: return "INVALID_SIGNATURE_COUNT_MISMATCHING_KEY";
+            case Status.EmptyClaimBody: return "EMPTY_CLAIM_BODY";
+            case Status.EmptyClaimHash: return "EMPTY_CLAIM_HASH";
+            case Status.EmptyClaimKeys: return "EMPTY_CLAIM_KEYS";
+            case Status.InvalidClaimHashSize: return "INVALID_CLAIM_HASH_SIZE";
+            case Status.EmptyQueryBody: return "EMPTY_QUERY_BODY";
+            case Status.EmptyClaimQuery: return "EMPTY_CLAIM_QUERY";
+            case Status.ClaimNotFound: return "CLAIM_NOT_FOUND";
+            case Status.AccountIdDoesNotExist: return "ACCOUNT_ID_DOES_NOT_EXIST";
+            case Status.ClaimAlreadyExists: return "CLAIM_ALREADY_EXISTS";
+            case Status.InvalidFileWacl: return "INVALID_FILE_WACL";
+            case Status.SerializationFailed: return "SERIALIZATION_FAILED";
+            case Status.TransactionOversize: return "TRANSACTION_OVERSIZE";
+            case Status.TransactionTooManyLayers: return "TRANSACTION_TOO_MANY_LAYERS";
+            case Status.ContractDeleted: return "CONTRACT_DELETED";
+            case Status.PlatformNotActive: return "PLATFORM_NOT_ACTIVE";
+            case Status.KeyPrefixMismatch: return "KEY_PREFIX_MISMATCH";
+            case Status.PlatformTransactionNotCreated: return "PLATFORM_TRANSACTION_NOT_CREATED";
+            case Status.InvalidRenewalPeriod: return "INVALID_RENEWAL_PERIOD";
+            case Status.InvalidPayerAccountId: return "INVALID_PAYER_ACCOUNT_ID";
+            case Status.AccountDeleted: return "ACCOUNT_DELETED";
+            case Status.FileDeleted: return "FILE_DELETED";
+            case Status.AccountRepeatedInAccountAmounts: return "ACCOUNT_REPEATED_IN_ACCOUNT_AMOUNTS";
+            case Status.SettingNegativeAccountBalance: return "SETTING_NEGATIVE_ACCOUNT_BALANCE";
+            case Status.ObtainerRequired: return "OBTAINER_REQUIRED";
+            case Status.ObtainerSameContractId: return "OBTAINER_SAME_CONTRACT_ID";
+            case Status.ObtainerDoesNotExist: return "OBTAINER_DOES_NOT_EXIST";
+            case Status.ModifyingImmutableContract: return "MODIFYING_IMMUTABLE_CONTRACT";
+            case Status.FileSystemException: return "FILE_SYSTEM_EXCEPTION";
+            case Status.AutorenewDurationNotInRange: return "AUTORENEW_DURATION_NOT_IN_RANGE";
+            case Status.ErrorDecodingBytestring: return "ERROR_DECODING_BYTESTRING";
+            case Status.ContractFileEmpty: return "CONTRACT_FILE_EMPTY";
+            case Status.ContractBytecodeEmpty: return "CONTRACT_BYTECODE_EMPTY";
+            case Status.InvalidInitialBalance: return "INVALID_INITIAL_BALANCE";
+            case Status.InvalidReceiveRecordThreshold: return "INVALID_RECEIVE_RECORD_THRESHOLD";
+            case Status.InvalidSendRecordThreshold: return "INVALID_SEND_RECORD_THRESHOLD";
+            case Status.AccountIsNotGenesisAccount: return "ACCOUNT_IS_NOT_GENESIS_ACCOUNT";
+            case Status.PayerAccountUnauthorized: return "PAYER_ACCOUNT_UNAUTHORIZED";
+            case Status.InvalidFreezeTransactionBody: return "INVALID_FREEZE_TRANSACTION_BODY";
+            case Status.FreezeTransactionBodyNotFound: return "FREEZE_TRANSACTION_BODY_NOT_FOUND";
+            case Status.TransferListSizeLimitExceeded: return "TRANSFER_LIST_SIZE_LIMIT_EXCEEDED";
+            case Status.ResultSizeLimitExceeded: return "RESULT_SIZE_LIMIT_EXCEEDED";
+            case Status.NotSpecialAccount: return "NOT_SPECIAL_ACCOUNT";
+            case Status.ContractNegativeGas: return "CONTRACT_NEGATIVE_GAS";
+            case Status.ContractNegativeValue: return "CONTRACT_NEGATIVE_VALUE";
+            case Status.InvalidFeeFile: return "INVALID_FEE_FILE";
+            case Status.InvalidExchangeRateFile: return "INVALID_EXCHANGE_RATE_FILE";
+            case Status.InsufficientLocalCallGas: return "INSUFFICIENT_LOCAL_CALL_GAS";
+            case Status.EntityNotAllowedToDelete: return "ENTITY_NOT_ALLOWED_TO_DELETE";
+            case Status.AuthorizationFailed: return "AUTHORIZATION_FAILED";
+            case Status.FileUploadedProtoInvalid: return "FILE_UPLOADED_PROTO_INVALID";
+            case Status.FileUploadedProtoNotSavedToDisk: return "FILE_UPLOADED_PROTO_NOT_SAVED_TO_DISK";
+            case Status.FeeScheduleFilePartUploaded: return "FEE_SCHEDULE_FILE_PART_UPLOADED";
+            case Status.ExchangeRateChangeLimitExceeded: return "EXCHANGE_RATE_CHANGE_LIMIT_EXCEEDED";
+            default: return `UNKNOWN STATUS CODE (${this.code})`;
         }
     }
 
     // NOT A STABLE API
     public _isBusy(): boolean {
-        return Status.Busy.code === this.code;
+        return Status.Busy === this;
+    }
+
+    public static _fromCode(code: number): Status {
+        return (Status as unknown as Indexed)[ code ] ?? new Status(code);
     }
 
     // NOT A STABLE API
     public _isError(): boolean {
-        switch (this.code) {
-            case Status.Success.code:
-            case Status.Ok.code:
+        switch (this) {
+            case Status.Success:
+            case Status.Ok:
                 return false;
 
-            case Status.Unknown.code:
-            case Status.ReceiptNotFound.code:
-            case Status.RecordNotFound.code:
+            case Status.Unknown:
+            case Status.ReceiptNotFound:
+            case Status.RecordNotFound:
                 return true;
 
             default:
