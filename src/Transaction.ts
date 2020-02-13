@@ -19,7 +19,6 @@ import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { TransactionRecord } from "./TransactionRecord";
 import { Status } from "./Status";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-import { HederaStatusError } from "./errors/HederaStatusError";
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
 
 /**
@@ -155,11 +154,7 @@ export class Transaction {
                 continue;
             }
 
-            try {
-                status._throwIfError();
-            } catch (error) {
-                throw new HederaPrecheckStatusError((error as HederaStatusError).status, this.id);
-            }
+            HederaPrecheckStatusError._throwIfError(status.code, this.id);
 
             return this.id;
         }

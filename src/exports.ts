@@ -45,6 +45,9 @@ export { LocalValidationError } from "./errors/LocalValidationError";
 export { BadKeyError } from "./errors/BadKeyError";
 export { HbarRangeError } from "./errors/HbarRangeError";
 export { MaxQueryPaymentExceededError } from "./errors/MaxQueryPaymentExceededError";
+export { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
+export { HederaReceiptStatusError } from "./errors/HederaReceiptStatusError";
+export { HederaRecordStatusError } from "./errors/HederaRecordStatusError";
 
 // Deprecated Errors
 export { ResponseCode, HederaError } from "./errors/HederaError";

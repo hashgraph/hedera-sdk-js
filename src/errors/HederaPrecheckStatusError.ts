@@ -12,6 +12,7 @@ export class HederaPrecheckStatusError extends HederaStatusError {
         super(status);
         this.transactionId = transactionId;
         this.name = "HederaPrecheckStatusError";
+        this.message = `Transaction ${this.transactionId} failed with status: ${this.status}`;
     }
 
     public static _throwIfError(code: number, transactionId: TransactionId): void {

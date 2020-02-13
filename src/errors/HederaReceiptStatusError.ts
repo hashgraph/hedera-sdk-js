@@ -15,6 +15,7 @@ export class HederaReceiptStatusError extends HederaStatusError {
         this.transactionId = transactionId;
         this.receipt = receipt;
         this.name = "HederaReceiptStatusError";
+        this.message = `Received receipt for transaction ${this.transactionId} with exceptional status: ${this.status}`;
     }
 
     public static _throwIfError(

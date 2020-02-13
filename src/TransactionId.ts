@@ -102,7 +102,9 @@ export class TransactionId {
         try {
             await this.getReceipt(client);
         } catch (error) {
-            // Do nothing, we want record either way
+            if (!(error instanceof HederaReceiptStatusError)) {
+                throw error;
+            }
         }
 
         const record = await new TransactionRecordQuery()

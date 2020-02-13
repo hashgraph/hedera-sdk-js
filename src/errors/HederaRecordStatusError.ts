@@ -15,6 +15,7 @@ export class HederaRecordStatusError extends HederaStatusError {
         this.transactionId = transactionId;
         this.record = record;
         this.name = "HederaRecordStatusError";
+        this.message = `Received record for transaction ${this.transactionId} with exceptional status: ${this.status}`;
     }
 
     public static _throwIfError(
