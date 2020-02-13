@@ -19,6 +19,7 @@ import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { TransactionRecord } from "./TransactionRecord";
 import { Status } from "./Status";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
+import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
 
 /**
  * Signature/public key pairs are passed around as objects
@@ -153,7 +154,7 @@ export class Transaction {
                 continue;
             }
 
-            status._throwIfError();
+            HederaPrecheckStatusError._throwIfError(status.code, this.id);
 
             return this.id;
         }

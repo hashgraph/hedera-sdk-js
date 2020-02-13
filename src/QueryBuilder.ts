@@ -13,6 +13,7 @@ import { ResponseHeader } from "./generated/ResponseHeader_pb";
 import { TransactionBody } from "./generated/TransactionBody_pb";
 import { AccountId } from "./account/AccountId";
 import { Status } from "./Status";
+import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
 
 export abstract class QueryBuilder<T> {
     protected readonly _inner: Query = new Query();
@@ -20,6 +21,8 @@ export abstract class QueryBuilder<T> {
     private _maxPaymentAmount: Hbar | null = null;
 
     private _paymentAmount: Hbar | null = null;
+
+    private _transactionId: import("./TransactionId").TransactionId | null = null;
 
     protected constructor() {
     }
@@ -46,6 +49,7 @@ export abstract class QueryBuilder<T> {
      * `CryptoTransferTransaction` as the query payment.
      */
     public setQueryPaymentTransaction(transaction: import("./Transaction").Transaction): this {
+        this._transactionId = transaction.id;
         this._getHeader().setPayment(transaction._toProto());
 
         return this;
@@ -74,17 +78,25 @@ export abstract class QueryBuilder<T> {
 
             // COST_ANSWER requires a "null" payment but does not actually
             // process it
-            queryHeader.setPayment((await new CryptoTransferTransaction()
+            const transaction = new CryptoTransferTransaction()
                 .addRecipient(node.id, 0)
                 .addSender(client._getOperatorAccountId()!, 0)
-                .build(client)
+                .build(client);
+
+            this._transactionId = transaction.id;
+
+            queryHeader.setPayment((await transaction
                 .signWith(client._getOperatorKey()!, client._getOperatorSigner()!))
                 ._toProto());
 
             const resp = await client._unaryCall(node.url, this._inner.clone(), this._getMethod());
 
             const respHeader = this._mapResponseHeader(resp);
-            Status._fromCode(respHeader.getNodetransactionprecheckcode())._throwIfError();
+
+            HederaPrecheckStatusError._throwIfError(
+                respHeader.getNodetransactionprecheckcode(),
+                this._transactionId
+            );
 
             return Hbar.fromTinybar(respHeader.getCost());
         } finally {
@@ -150,7 +162,10 @@ export abstract class QueryBuilder<T> {
                     continue;
                 }
 
-                respStatus._throwIfError();
+                HederaPrecheckStatusError._throwIfError(
+                    respStatus.code,
+                    this._transactionId!
+                );
 
                 return this._mapResponse(resp);
             }

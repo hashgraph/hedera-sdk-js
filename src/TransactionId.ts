@@ -12,6 +12,8 @@ import { TransactionRecord } from "./TransactionRecord";
 import { TransactionReceiptQuery } from "./TransactionReceiptQuery";
 import { TransactionRecordQuery } from "./TransactionRecordQuery";
 import { Time } from "./Time";
+import { HederaReceiptStatusError } from "./errors/HederaReceiptStatusError";
+import { HederaRecordStatusError } from "./errors/HederaRecordStatusError";
 
 /**
  * Normalized transaction ID returned by various methods in the SDK.
@@ -89,17 +91,29 @@ export class TransactionId {
             .execute(client);
 
         // Throw an exception on an invalid receipt status
-        receipt.status._throwIfError();
+        HederaReceiptStatusError._throwIfError(receipt.status.code, receipt, this);
 
         return receipt;
     }
 
     public async getRecord(client: BaseClient): Promise<TransactionRecord> {
         // Wait for consensus using a free query first
-        await this.getReceipt(client);
-        return new TransactionRecordQuery()
+
+        try {
+            await this.getReceipt(client);
+        } catch (error) {
+            if (!(error instanceof HederaReceiptStatusError)) {
+                throw error;
+            }
+        }
+
+        const record = await new TransactionRecordQuery()
             .setTransactionId(this)
             .execute(client);
+
+        HederaRecordStatusError._throwIfError(record.receipt!.status.code, record, this);
+
+        return record;
     }
 
     // NOT A STABLE API
