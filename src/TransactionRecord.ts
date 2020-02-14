@@ -7,23 +7,52 @@ import { Time } from "./Time";
 import { Hbar } from "./Hbar";
 import { Transfer, transferFromProto } from "./Transfer";
 
+/**
+ * Response when the client sends the node TransactionGetRecordResponse.
+ */
 export class TransactionRecord {
-    private readonly _callResult: ContractFunctionResult | null = null;
+    private readonly [ "callResult" ]: ContractFunctionResult | null = null;
 
-    private readonly _callResultIsCreate: boolean = false;
+    private readonly [ "callResultIsCreate" ]: boolean = false;
 
+    /**
+     * The status (reach consensus, or failed, or is unknown) and the ID of
+     * any new account/file/instance created.
+     */
     public readonly receipt: TransactionReceipt | null;
 
+    /**
+     * The hash of the Transaction that executed (not the hash of any Transaction that failed
+     * for having a duplicate TransactionID).
+     */
     public readonly transactionHash: Uint8Array;
 
+    /**
+     * The consensus timestamp (or null if didn't reach consensus yet).
+     */
     public readonly consensusTimestamp: Time;
 
+    /**
+     * The ID of the transaction this record represents.
+     */
     public readonly transactionId: TransactionId;
 
+    /**
+     * The memo that was submitted as part of the transaction (max 100 bytes).
+     */
     public readonly transactionMemo: string;
 
+    /**
+     * The actual transaction fee charged,
+     * not the original transactionFee value from TransactionBody.
+     */
     public readonly transactionFee: Hbar;
 
+    /**
+     * All hbar transfers as a result of this transaction, such as fees, or transfers performed
+     * by the transaction, or by a smart contract it calls, or by the creation of threshold
+     * records that it triggers.
+     */
     public readonly transfers: Transfer[];
 
     private constructor(record: ProtoTransactionRecord) {
@@ -36,10 +65,10 @@ export class TransactionRecord {
         this.transfers = transferListToSdk(record.getTransferlist()!);
 
         if (record.hasContractcallresult()) {
-            this._callResult = new ContractFunctionResult(record.getContractcreateresult()!);
-            this._callResultIsCreate = true;
+            this.callResult = new ContractFunctionResult(record.getContractcreateresult()!);
+            this.callResultIsCreate = true;
         } else if (record.hasContractcreateresult()) {
-            this._callResult = new ContractFunctionResult(record.getContractcallresult()!);
+            this.callResult = new ContractFunctionResult(record.getContractcallresult()!);
         }
     }
 
@@ -48,19 +77,19 @@ export class TransactionRecord {
     }
 
     public getContractCreateResult(): ContractFunctionResult {
-        if (this._callResult == null || this._callResultIsCreate) {
+        if (this.callResult == null || this.callResultIsCreate) {
             throw new Error("record does not contain a contract create result");
         }
 
-        return this._callResult;
+        return this.callResult;
     }
 
     public getContractExecuteResult(): ContractFunctionResult {
-        if (this._callResult == null || !this._callResultIsCreate) {
+        if (this.callResult == null || !this.callResultIsCreate) {
             throw new Error("record does not contain a contract execute result");
         }
 
-        return this._callResult;
+        return this.callResult;
     }
 }
 

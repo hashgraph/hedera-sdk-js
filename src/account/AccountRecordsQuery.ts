@@ -9,6 +9,10 @@ import { CryptoGetAccountRecordsQuery } from "../generated/CryptoGetAccountRecor
 import { TransactionRecord } from "../TransactionRecord";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
+/**
+ * Get all the records for an account for any transfers into it and out of it, that were above the
+ * threshold, during the last 25 hours.
+ */
 export class AccountRecordsQuery extends QueryBuilder<TransactionRecord[]> {
     private readonly _builder: CryptoGetAccountRecordsQuery;
 
@@ -21,6 +25,9 @@ export class AccountRecordsQuery extends QueryBuilder<TransactionRecord[]> {
         this._inner.setCryptogetaccountrecords(this._builder);
     }
 
+    /**
+     * The account that this record is for.
+     */
     public setAccountId(accountId: AccountIdLike): this {
         this._builder.setAccountid(new AccountId(accountId)._toProto());
         return this;

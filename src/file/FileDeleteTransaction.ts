@@ -7,6 +7,13 @@ import { FileService } from "../generated/FileService_pb_service";
 import { FileDeleteTransactionBody } from "../generated/FileDelete_pb";
 import { FileId, FileIdLike } from "../file/FileId";
 
+/**
+ * Delete the given file. After deletion, it will be marked as deleted and will have no contents.
+ * But information about it will continue to exist until it expires. A list of keys  was given
+ * when the file was created. All the keys on that list must sign transactions to create or modify
+ * the file, but any single one of them can be used to delete the file. Each "key" on that list
+ * may itself be a threshold key containing other keys (including other threshold keys).
+ */
 export class FileDeleteTransaction extends TransactionBuilder {
     private readonly _body: FileDeleteTransactionBody;
 
@@ -16,6 +23,9 @@ export class FileDeleteTransaction extends TransactionBuilder {
         this._inner.setFiledelete(this._body);
     }
 
+    /**
+     * The file to delete. It will be marked as deleted until it expires. Then it will disappear.
+     */
     public setFileId(fileIdLike: FileIdLike): this {
         this._body.setFileid(new FileId(fileIdLike)._toProto());
         return this;

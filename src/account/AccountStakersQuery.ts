@@ -10,6 +10,10 @@ import { CryptoGetStakersQuery } from "../generated/CryptoGetStakers_pb";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 import { Hbar } from "../Hbar";
 
+/**
+ * Get all the accounts that are proxy staking to this account. For each of them, give the amount
+ * currently staked. This is not yet implemented, but will be in a future version of the API.
+ */
 export class AccountStakersQuery extends QueryBuilder<Transfer[]> {
     private readonly _builder: CryptoGetStakersQuery;
 
@@ -22,6 +26,9 @@ export class AccountStakersQuery extends QueryBuilder<Transfer[]> {
         this._inner.setCryptogetproxystakers(this._builder);
     }
 
+    /**
+     * The Account ID that is being proxy staked to.
+     */
     public setAccountId(accountId: AccountIdLike): this {
         this._builder.setAccountid(new AccountId(accountId)._toProto());
         return this;

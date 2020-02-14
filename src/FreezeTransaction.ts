@@ -5,6 +5,10 @@ import { TransactionResponse } from "./generated/TransactionResponse_pb";
 import { FreezeTransactionBody } from "./generated/Freeze_pb";
 import { FreezeService } from "./generated/FreezeService_pb_service";
 
+/**
+ * Set the freezing period in which the platform will stop creating events and accepting
+ * transactions. This is used before safely shut down the platform for maintenance.
+ */
 export class FreezeTransaction extends TransactionBuilder {
     private readonly _body: FreezeTransactionBody;
 
@@ -14,6 +18,10 @@ export class FreezeTransaction extends TransactionBuilder {
         this._inner.setFreeze(this._body);
     }
 
+    /**
+     * @param hour  The start hour (in UTC time), a value between 0 and 23.
+     * @param minute  The start minute (in UTC time), a value between 0 and 59.
+     */
     public setStartTime(date: number | Date): this;
     public setStartTime(hour: number, minute: number): this;
     public setStartTime(dateOrHour: number | Date, maybeMinute?: number): this {
@@ -35,6 +43,10 @@ export class FreezeTransaction extends TransactionBuilder {
         return this;
     }
 
+    /**
+     * @param hour  The end hour (in UTC time), a value between 0 and 23.
+     * @param minute  The end minute (in UTC time), a value between 0 and 59.
+     */
     public setEndTime(date: number | Date): this;
     public setEndTime(hour: number, minute: number): this;
     public setEndTime(dateOrHour: number | Date, maybeMinute?: number): this {

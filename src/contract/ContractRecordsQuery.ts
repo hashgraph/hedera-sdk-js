@@ -9,6 +9,10 @@ import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractGetRecordsQuery } from "../generated/ContractGetRecords_pb";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
+/**
+ * Get all the records for a smart contract instance, for any function call
+ * (or the constructor call) during the last 25 hours, for which a Record was requested.
+ */
 export class ContractRecordsQuery extends QueryBuilder<TransactionRecord[]> {
     private readonly _builder: ContractGetRecordsQuery;
     public constructor() {
@@ -20,6 +24,9 @@ export class ContractRecordsQuery extends QueryBuilder<TransactionRecord[]> {
         this._inner.setContractgetrecords(this._builder);
     }
 
+    /**
+     * The smart contract instance for which the records should be retrieved.
+     */
     public setContractId(contractIdLike: ContractIdLike): this {
         this._builder.setContractid(new ContractId(contractIdLike)._toProto());
         return this;

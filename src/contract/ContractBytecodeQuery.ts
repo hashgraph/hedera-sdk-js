@@ -8,6 +8,9 @@ import { ContractGetBytecodeQuery } from "../generated/ContractGetBytecode_pb";
 import { ContractId, ContractIdLike } from "./ContractId";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
+/**
+ * Get the bytecode for a smart contract instance.
+ */
 export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
     private readonly _builder: ContractGetBytecodeQuery;
     public constructor() {
@@ -19,6 +22,9 @@ export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
         this._inner.setContractgetbytecode(this._builder);
     }
 
+    /**
+     * The contract for which information is requested.
+     */
     public setContractId(contractIdLike: ContractIdLike): this {
         this._builder.setContractid(new ContractId(contractIdLike)._toProto());
         return this;

@@ -11,6 +11,16 @@ import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { PublicKey } from "../crypto/PublicKey";
 import { utf8encode } from "../util";
 
+/**
+ * Modify some of the metadata for a file. Any null field is ignored (left unchanged). Any field
+ * that is null is left unchanged. If contents is non-null, then the file's contents will be
+ * replaced with the given bytes. This transaction must be signed by all the keys for that file.
+ * If the transaction is modifying the keys field, then it must be signed by all the keys in both
+ * the old list and the new list.
+ *
+ * If a file was created without ANY keys in the keys field, ONLY the expirationTime of the file
+ * can be changed using this call. The file contents or its keys cannot be changed.
+ */
 export class FileUpdateTransaction extends TransactionBuilder {
     private readonly _body: FileUpdateTransactionBody;
 
@@ -20,11 +30,17 @@ export class FileUpdateTransaction extends TransactionBuilder {
         this._inner.setFileupdate(this._body);
     }
 
+    /**
+     * The new time at which it should expire (ignored if not later than the current value).
+     */
     public setExpirationTime(date: number | Date): this {
         this._body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
         return this;
     }
 
+    /**
+     * The keys that can modify or delete the file.
+     */
     public addKey(key: PublicKey): this {
         const keylist: KeyList = this._body.getKeys() == null ?
             new KeyList() :
@@ -35,6 +51,9 @@ export class FileUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
+    /**
+     * The new file contents. All the bytes in the old contents are discarded.
+     */
     public setContents(contents: Uint8Array | string): this {
         const bytes = contents instanceof Uint8Array ?
             contents as Uint8Array :
@@ -44,6 +63,9 @@ export class FileUpdateTransaction extends TransactionBuilder {
         return this;
     }
 
+    /**
+     * The file ID of the file to update.
+     */
     public setFileId(fileIdLike: FileIdLike): this {
         this._body.setFileid(new FileId(fileIdLike)._toProto());
         return this;

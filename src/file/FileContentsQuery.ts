@@ -8,6 +8,9 @@ import { FileService } from "../generated/FileService_pb_service";
 import { FileId, FileIdLike } from "../file/FileId";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 
+/**
+ * Get the contents of a file. The content field is empty (no bytes) if the file is empty.
+ */
 export class FileContentsQuery extends QueryBuilder<Uint8Array> {
     private readonly _builder: FileGetContentsQuery;
 
@@ -20,6 +23,9 @@ export class FileContentsQuery extends QueryBuilder<Uint8Array> {
         this._inner.setFilegetcontents(this._builder);
     }
 
+    /**
+     * The file ID of the file whose contents are requested.
+     */
     public setFileId(fileId: FileIdLike): this {
         this._builder.setFileid(new FileId(fileId)._toProto());
         return this;

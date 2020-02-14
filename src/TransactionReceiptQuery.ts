@@ -40,7 +40,7 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
 
     protected _shouldRetry(status: Status, response: Response): boolean {
         if (super._shouldRetry(status, response)) return true;
-        
+
         if (([
             Status.Busy.code,
             Status.Unknown.code,
