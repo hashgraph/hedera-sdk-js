@@ -13,6 +13,27 @@ new Uint8Array([ 80, 82, 73, 86, 65, 84, 69, 32, 75, 69, 89 ]);
 
 const derPrefix = decodeHex("302e020100300506032b657004220420");
 
+function _bytesLengthCases(bytes: Uint8Array): nacl.SignKeyPair {
+    const bytesArray = bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
+
+    switch (bytes.length) {
+        case 48:
+            // key with prefix
+            if (arraysEqual(bytesArray.subarray(0, 16), derPrefix)) {
+                return nacl.sign.keyPair.fromSeed(bytesArray.subarray(16));
+            }
+            break;
+        case 32:
+            // fromSeed takes the private key bytes and calculates the public key
+            return nacl.sign.keyPair.fromSeed(bytesArray);
+        case 64:
+            // priv + pub key pair
+            return nacl.sign.keyPair.fromSecretKey(bytesArray);
+        default:
+    }
+    throw new BadKeyError();
+}
+
 export class Ed25519PrivateKey {
     public readonly publicKey: Ed25519PublicKey;
 
@@ -38,28 +59,7 @@ export class Ed25519PrivateKey {
     public static fromBytes(bytes: Uint8Array): Ed25519PrivateKey {
         // this check is necessary because Jest breaks the prototype chain of Uint8Array
         // noinspection SuspiciousTypeOfGuard
-        const bytesArray = bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
-        let keypair;
-
-        switch (bytes.length) {
-            case 48:
-                if (arraysEqual(bytesArray.subarray(0, 16), derPrefix)) {
-                    keypair = nacl.sign.keyPair.fromSeed(bytesArray.subarray(16));
-                    break;
-                } else {
-                    throw new BadKeyError();
-                }
-            case 32:
-                // fromSeed takes the private key bytes and calculates the public key
-                keypair = nacl.sign.keyPair.fromSeed(bytesArray);
-                break;
-            case 64:
-                // priv + pub key pair
-                keypair = nacl.sign.keyPair.fromSecretKey(bytesArray);
-                break;
-            default:
-                throw new BadKeyError();
-        }
+        const keypair = _bytesLengthCases(bytes);
 
         const { secretKey: privateKey, publicKey } = keypair;
 
