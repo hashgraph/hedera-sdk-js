@@ -47,6 +47,12 @@ const signTestData = Uint8Array.from(Buffer.from("this is the test data to sign"
 
 const passphrase = "asdf1234";
 
+const pemString = "-----BEGIN PRIVATE KEY-----\n" +
+"MC4CAQAwBQYDK2VwBCIEINtIS4KOZLLY8SzjwKDpOguMznrxu485yXcyOUSCU44Q\n" +
+"-----END PRIVATE KEY-----\n";
+
+const pemUint8Array = new TextEncoder().encode(pemString);
+
 describe("Ed25519PrivateKey", () => {
     it("toString() produces correctly encoded string", () => {
         const privateKey = Ed25519PrivateKey.fromBytes(privKeyBytes);
@@ -117,6 +123,11 @@ describe("Ed25519PrivateKey", () => {
 
         expect(androidChildKey.toBytes()).toStrictEqual(androidWalletPrivKeyBytes);
         expect(androidChildKey.publicKey.toBytes()).toStrictEqual(androidWalletPubKeyBytes);
+    });
+
+    it("fromPem() produces a correct value", async() => {
+        const key = Ed25519PrivateKey.fromPem(pemUint8Array);
+        expect(key.toString()).toStrictEqual(privKeyStr);
     });
 });
 
