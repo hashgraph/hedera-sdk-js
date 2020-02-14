@@ -2,10 +2,16 @@ import * as nacl from "tweetnacl";
 import * as crypto from "crypto";
 import { Ed25519PublicKey } from "./Ed25519PublicKey";
 import { Mnemonic } from "./Mnemonic";
-import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes } from "./util";
+import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes, findSubarray, arraysEqual } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { createKeystore, loadKeystore } from "./Keystore";
 import { BadKeyError } from "../errors/BadKeyError";
+import { BadPemFileError } from "../errors/BadPemFileError";
+
+const privateKeyUint8Array: Uint8Array =
+new Uint8Array([ 80, 82, 73, 86, 65, 84, 69, 32, 75, 69, 89 ]);
+
+const derPrefix = decodeHex("302e020100300506032b657004220420");
 
 export class Ed25519PrivateKey {
     public readonly publicKey: Ed25519PublicKey;
@@ -36,6 +42,13 @@ export class Ed25519PrivateKey {
         let keypair;
 
         switch (bytes.length) {
+            case 48:
+                if (arraysEqual(bytesArray.subarray(0, 16), derPrefix)) {
+                    keypair = nacl.sign.keyPair.fromSeed(bytesArray.subarray(16));
+                    break;
+                } else {
+                    throw new BadKeyError();
+                }
             case 32:
                 // fromSeed takes the private key bytes and calculates the public key
                 keypair = nacl.sign.keyPair.fromSeed(bytesArray);
@@ -203,5 +216,33 @@ export class Ed25519PrivateKey {
      */
     public toKeystore(passphrase: string): Promise<Uint8Array> {
         return createKeystore(this._keyData, passphrase);
+    }
+
+    /**
+     * Recover a private key from a .pem file
+     *
+     * This pem method assumes the .pem file has been converted to a Uint8Array already
+     *
+     * Ensures the words "Private Key" are in the file, then looks for the next new line, slices the key from the array, then decodes and prepares it
+     */
+    public static fromPem(pemArray: Uint8Array): Ed25519PrivateKey {
+        const index = findSubarray(pemArray, privateKeyUint8Array);
+
+        if (index === -1) {
+            throw new BadPemFileError();
+        }
+
+        const newPemArray = pemArray.slice(index);
+        const firstNLIndex = newPemArray.findIndex((el) => el === 10);
+        const newPemArray2 = newPemArray.slice(firstNLIndex + 1);
+        const secondNLIndex = newPemArray2.findIndex((el) => el === 10);
+
+        const keyArray = newPemArray2.slice(0, secondNLIndex);
+
+        const keyBase64 = new TextDecoder().decode(keyArray);
+
+        const keyDecoded = Buffer.from(keyBase64, "base64");
+
+        return Ed25519PrivateKey.fromBytes(keyDecoded);
     }
 }

@@ -60,3 +60,30 @@ export function deriveChildKey(
 
     return { keyBytes: digest.subarray(0, 32), chainCode: digest.subarray(32) };
 }
+
+export function findSubarray(array: Uint8Array, subArray: Uint8Array): number {
+    for (let i = 0; i < array.length; i += 1) {
+        if (subArray[ 0 ] === array[ i ]) {
+            for (let j = 0; j < subArray.length; j += 1) {
+                if (subArray[ j ] !== array[ i + j ]) {
+                    break;
+                }
+                if (j === subArray.length - 1) {
+                    return i + j;
+                }
+            }
+        }
+    }
+    return -1;
+}
+
+export function arraysEqual(a: Uint8Array, b: Uint8Array): boolean {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    for (const [ i, element ] of a.entries()) {
+        if (element !== b[ i ]) return false;
+    }
+    return true;
+}
