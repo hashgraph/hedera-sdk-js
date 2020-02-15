@@ -13,6 +13,8 @@ import { Hbar, Tinybar } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { AccountId, AccountIdLike } from "./account/AccountId";
 import { TransactionId, TransactionIdLike } from "./TransactionId";
+import { Status } from "./Status";
+import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
 
 /**
  * Max duration of transactions on the network is 2 minutes
@@ -83,15 +85,46 @@ export abstract class TransactionBuilder {
         });
     }
 
+    public async getCost(client: BaseClient): Promise<Hbar> {
+        const fee = this._inner.getTransactionfee();
+        this._inner.setTransactionfee("0");
+        const tx = this.build(client);
+        const id = tx.id;
+
+        console.log(`TransactionId in getCost ${id}`);
+        const response = await tx.executeRaw(client);
+
+        // console.log(JSON.stringify(response));
+        const status: Status = Status._fromCode(response.getNodetransactionprecheckcode());
+
+        console.log(`Status: ${status}`);
+
+        if (status == Status.InsufficientTxFee || status == Status.Ok) {
+            const cost = Hbar.fromTinybar(response.getCost());
+            console.log(`Cost: ${cost}`);
+            return cost;
+        }
+
+        this._inner.setTransactionfee(fee);
+        this._inner.clearTransactionid();
+        this._inner.clearTransactionvalidduration();
+
+        return new Hbar(0);
+
+        // HederaPrecheckStatusError._throwIfError(status.code, id);
+        // throw new Error(`Precheck was not INSUFFICIENT_TX_FEE: ${status}`);
+    }
+
     public build(client?: BaseClient): Transaction {
         // Don't override TransactionFee if it's already set
 
-        if (client && this._inner.getTransactionfee() === "0") {
-            this._inner.setTransactionfee(client.maxTransactionFee._toProto());
-        }
+        // if (client && this._inner.getTransactionfee() === "0") {
+        //     this._inner.setTransactionfee(client.maxTransactionFee._toProto());
+        // }
 
         if (client && !this._inner.hasTransactionid()) {
             if (client._getOperatorAccountId()) {
+                console.log("Generating new TransactionId");
                 const tx = new TransactionId(client._getOperatorAccountId()!);
                 this._inner.setTransactionid(tx._toProto());
             }

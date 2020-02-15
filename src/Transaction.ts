@@ -20,6 +20,7 @@ import { TransactionRecord } from "./TransactionRecord";
 import { Status } from "./Status";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
+import { Hbar } from "./Hbar";
 
 /**
  * Signature/public key pairs are passed around as objects
@@ -121,6 +122,42 @@ export class Transaction {
 
         this._addSignature({ signature, publicKey });
         return this;
+    }
+
+    public async executeRaw(client: BaseClient): Promise<TransactionResponse> {
+        // If client is supplied make sure to sign transaction if we have not already
+        if (client._getOperatorKey() && client._getOperatorSigner()) {
+            await this.signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
+        }
+
+        const node = client._getNode(this._node);
+        const validUntilMs = Date.now() + (this._validDurationSeconds * 1000);
+
+        /* eslint-disable no-await-in-loop */
+        // we want to wait in a loop, that's the whole point here
+        for (let attempt = 0; /* loop will exit when transaction expires */; attempt += 1) {
+            if (attempt > 0) {
+                const delay = Math.floor(receiptRetryDelayMs *
+                    Math.random() * ((2 ** attempt) - 1));
+
+                if (Date.now() + delay > validUntilMs) {
+                    throw new Error(`timed out waiting to send transaction ID: ${this._txnId.toString()}`);
+                }
+
+                await setTimeoutAwaitable(delay);
+            }
+
+            const response = await client._unaryCall(node.url, this._inner, this._method);
+            const status: Status = Status._fromCode(response.getNodetransactionprecheckcode());
+
+            // If response code is BUSY we need to timeout and retry
+            if (status._isBusy() || status == Status.Ok) {
+                continue;
+            }
+
+            return response;
+        }
+        /* eslint-enable no-await-in-loop */
     }
 
     public async execute(client: BaseClient): Promise<TransactionId> {
