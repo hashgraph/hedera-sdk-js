@@ -2,14 +2,27 @@ import * as nacl from "tweetnacl";
 import * as crypto from "crypto";
 import { Ed25519PublicKey } from "./Ed25519PublicKey";
 import { Mnemonic } from "./Mnemonic";
-import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes, findSubarray, arraysEqual } from "./util";
+import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes, findSubarray, arraysEqual, errorIndexes } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { createKeystore, loadKeystore } from "./Keystore";
 import { BadKeyError } from "../errors/BadKeyError";
 import { BadPemFileError } from "../errors/BadPemFileError";
 
-const privateKeyUint8Array: Uint8Array =
-new Uint8Array([ 80, 82, 73, 86, 65, 84, 69, 32, 75, 69, 89 ]);
+/* eslint-disable array-element-newline */
+const beginPrivateKeyUint8Array: Uint8Array =
+new Uint8Array([
+    45, 45, 45, 45, 45, 66, 69, 71, 73, 78, 32, 80,
+    82, 73, 86, 65, 84, 69, 32, 75, 69, 89, 45, 45,
+    45, 45, 45, 10
+]);
+
+const endPrivateKeyUint8Array: Uint8Array =
+new Uint8Array([
+    10, 45, 45, 45, 45, 45, 69, 78, 68, 32, 80, 82,
+    73, 86, 65, 84, 69, 32, 75, 69, 89, 45, 45, 45,
+    45, 45, 10
+]);
+/* eslint-enable array-element-newline */
 
 const derPrefix = decodeHex("302e020100300506032b657004220420");
 
@@ -226,18 +239,14 @@ export class Ed25519PrivateKey {
      * Ensures the words "Private Key" are in the file, then looks for the next new line, slices the key from the array, then decodes and prepares it
      */
     public static fromPem(pemArray: Uint8Array): Ed25519PrivateKey {
-        const index = findSubarray(pemArray, privateKeyUint8Array);
+        const beginningIndexes = findSubarray(pemArray, beginPrivateKeyUint8Array);
+        const endingIndexes = findSubarray(pemArray, endPrivateKeyUint8Array);
 
-        if (index === -1) {
+        if (beginningIndexes === errorIndexes || endingIndexes === errorIndexes) {
             throw new BadPemFileError();
         }
 
-        const newPemArray = pemArray.slice(index);
-        const firstNLIndex = newPemArray.findIndex((el) => el === 10);
-        const newPemArray2 = newPemArray.slice(firstNLIndex + 1);
-        const secondNLIndex = newPemArray2.findIndex((el) => el === 10);
-
-        const keyArray = newPemArray2.slice(0, secondNLIndex);
+        const keyArray = pemArray.slice(beginningIndexes[ 1 ] + 1, endingIndexes[ 0 ]);
 
         const keyBase64 = new TextDecoder().decode(keyArray);
 

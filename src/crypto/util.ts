@@ -3,6 +3,7 @@ import { promisify } from "util";
 
 export const pbkdf2 = promisify(crypto.pbkdf2);
 export const randomBytes = promisify(crypto.randomBytes);
+export const errorIndexes = [ -1, -1 ]; // need this to simplify error checking in Ed25519PrivateKey.fromPem()
 
 // we could go through the whole BS of producing a DER-encoded structure but it's quite simple
 // for Ed25519 keys and we don't have to shell out to a potentially broken lib
@@ -61,20 +62,20 @@ export function deriveChildKey(
     return { keyBytes: digest.subarray(0, 32), chainCode: digest.subarray(32) };
 }
 
-export function findSubarray(array: Uint8Array, subArray: Uint8Array): number {
+export function findSubarray(array: Uint8Array, subArray: Uint8Array): number[] {
     for (let i = 0; i < array.length; i += 1) {
         if (subArray[ 0 ] === array[ i ]) {
-            for (let j = 0; j < subArray.length; j += 1) {
+            for (let j = 1; j < subArray.length; j += 1) {
                 if (subArray[ j ] !== array[ i + j ]) {
                     break;
                 }
                 if (j === subArray.length - 1) {
-                    return i + j;
+                    return [ i, i + j ];
                 }
             }
         }
     }
-    return -1;
+    return errorIndexes; // returns [ -1, -1 ] on failure
 }
 
 export function arraysEqual(a: Uint8Array, b: Uint8Array): boolean {

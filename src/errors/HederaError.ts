@@ -16,8 +16,9 @@ export class HederaError extends Error {
         console.warn("`HederaError` has been renamed to `HederaStatusError`");
 
         const codeName = Status._fromCode(code).toString();
-        super(`Hedera returned response code: ${codeName} (${code})`);
+        super();
 
+        this.message = `Hedera returned response code: ${codeName} (${code})`;
         this.name = "HederaError";
         this.code = code;
         this.codeName = codeName;

@@ -3,8 +3,9 @@ export class ValidationError extends Error {
     public constructor(className: string, errors: string[]) {
         console.warn("`ValidationError` has been renamed to `LocalValidationError`");
 
-        super(`${className} failed validation:\n${errors.join("\n")}`);
+        super();
 
+        this.message = `${className} failed validation:\n${errors.join("\n")}`;
         this.name = "ValidationError";
     }
 }

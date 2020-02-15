@@ -7,8 +7,9 @@ export class MaxPaymentExceededError extends Error {
     public constructor(queryCost: Hbar, maxQueryCost: Hbar) {
         console.warn("`MaxPaymentExceededError` has been renamed to `MaxQueryPaymentExceededError`");
 
-        super(`query cost of ${queryCost.value()} HBAR exceeds max set on client: ${maxQueryCost.value()} HBAR`);
+        super();
 
+        this.message = `query cost of ${queryCost.value()} HBAR exceeds max set on client: ${maxQueryCost.value()} HBAR`;
         this.name = "MaxPaymentExceededError";
         this.queryCost = queryCost;
     }

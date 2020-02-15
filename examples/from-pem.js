@@ -11,6 +11,7 @@ function main() {
     const key = Ed25519PrivateKey.fromPem(pemUint8Array);
     console.log(key.toString());
     console.log(testKeyStr);
+    console.log("MATCHES:", key.toString() === testKeyStr);
 }
 
 main();

@@ -17,8 +17,9 @@ export class TinybarValueError extends Error {
             bnAmount = new BigNumber(amount);
         }
 
-        super(`${message}: ${bnAmount.toString()}`);
+        super();
 
+        this.message = `${message}: ${bnAmount.toString()}`;
         this.name = "TinybarValueError";
         this.amount = bnAmount;
     }

@@ -6,6 +6,7 @@ import { AccountId } from "../../src/account/AccountId";
 import { ContractId } from "../../src/contract/ContractId";
 import { FileId } from "../../src/file/FileId";
 import { dateToTimestamp, timestampToDate, timestampToProto } from "../../src/Timestamp";
+import { findSubarray } from "../src/crypto/util";
 
 describe(")", () => {
     it("allow negative numbers by default", () => {
@@ -195,5 +196,22 @@ describe("Date and Timestamp", () => {
         const protoTimestmap = timestampToProto(timestamp);
         const roundTripDate = timestampToDate(protoTimestmap);
         expect(date.toDateString()).toStrictEqual(roundTripDate.toDateString());
+    });
+});
+
+describe("findSubarray()", () => {
+    it("finds subarrays correctly", () => {
+        const testArray = new Uint8Array([ 1, 2, 3, 5, 2, 3, 5, 2, 3, 4, 5 ]);
+        const testSubArray = new Uint8Array([ 5, 2, 3 ]);
+        const indexes = findSubarray(testArray, testSubArray);
+        expect(indexes[ 0 ]).toStrictEqual(3);
+        expect(indexes[ 1 ]).toStrictEqual(5);
+    });
+    it("fails if subarray doesn't exist in array", () => {
+        const testArray = new Uint8Array([ 1, 2, 3, 5, 1, 3, 5, 2, 1, 1, 3 ]);
+        const testSubArray = new Uint8Array([ 5, 2, 3 ]);
+        const indexes = findSubarray(testArray, testSubArray);
+        expect(indexes[ 0 ]).toStrictEqual(-1);
+        expect(indexes[ 1 ]).toStrictEqual(-1);
     });
 });
