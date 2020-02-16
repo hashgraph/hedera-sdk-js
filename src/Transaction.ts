@@ -22,15 +22,19 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
 import { Hbar } from "./Hbar";
 
-/**
- * Signature/public key pairs are passed around as objects
- */
+/** signature/public key pairs are passed around as objects */
 export interface SignatureAndKey {
     signature: Uint8Array;
     publicKey: Ed25519PublicKey;
 }
 
 const receiptRetryDelayMs = 500;
+
+/** internal method to create a new transaction from its discrete parts */
+export const transactionCreate = Symbol();
+
+/** execute the transaction directly and return the protobuf response */
+export const transactionCall = Symbol();
 
 export class Transaction {
     private readonly _node: AccountId;
@@ -39,24 +43,25 @@ export class Transaction {
     private readonly _validDurationSeconds: number;
     private readonly _method: UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
-    /**
-     * NOT A STABLE API
-     *
-     * This constructor is not meant to be invoked from user code. It is only public for
-     * access from `TransactionBuilder.ts`. Usage may be broken in backwards-compatible
-     * version bumps.
-     */
-    public constructor(
+    private static [transactionCreate](
         node: AccountId,
         inner: Transaction_,
         body: TransactionBody,
         method: UnaryMethodDefinition<Transaction_, TransactionResponse>
-    ) {
-        this._node = node;
-        this._inner = inner;
-        this._txnId = orThrow(body.getTransactionid());
-        this._validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
-        this._method = method;
+    ): Transaction {
+        const tx = Object.create(this.prototype);
+
+        tx._node = node;
+        tx._inner = inner;
+        tx._txnId = orThrow(body.getTransactionid());
+        tx._validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
+        tx._method = method;
+
+        return tx;
+    }
+
+    private constructor() {
+        throw new Error("the constructor of Transaction is private; please construct through TransactionBuilder");
     }
 
     public static fromBytes(bytes: Uint8Array): Transaction {
@@ -67,7 +72,7 @@ export class Transaction {
 
         const method = methodFromTxn(body);
 
-        return new Transaction(nodeId, inner, body, method);
+        return Transaction[transactionCreate](nodeId, inner, body, method);
     }
 
     public get id(): TransactionId {
@@ -124,43 +129,7 @@ export class Transaction {
         return this;
     }
 
-    public async executeRaw(client: BaseClient): Promise<TransactionResponse> {
-        // If client is supplied make sure to sign transaction if we have not already
-        if (client._getOperatorKey() && client._getOperatorSigner()) {
-            await this.signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
-        }
-
-        const node = client._getNode(this._node);
-        const validUntilMs = Date.now() + (this._validDurationSeconds * 1000);
-
-        /* eslint-disable no-await-in-loop */
-        // we want to wait in a loop, that's the whole point here
-        for (let attempt = 0; /* loop will exit when transaction expires */; attempt += 1) {
-            if (attempt > 0) {
-                const delay = Math.floor(receiptRetryDelayMs *
-                    Math.random() * ((2 ** attempt) - 1));
-
-                if (Date.now() + delay > validUntilMs) {
-                    throw new Error(`timed out waiting to send transaction ID: ${this._txnId.toString()}`);
-                }
-
-                await setTimeoutAwaitable(delay);
-            }
-
-            const response = await client._unaryCall(node.url, this._inner, this._method);
-            const status: Status = Status._fromCode(response.getNodetransactionprecheckcode());
-
-            // If response code is BUSY we need to timeout and retry
-            if (status._isBusy() || status == Status.Ok) {
-                continue;
-            }
-
-            return response;
-        }
-        /* eslint-enable no-await-in-loop */
-    }
-
-    public async execute(client: BaseClient): Promise<TransactionId> {
+    async [transactionCall](client: BaseClient): Promise<TransactionResponse> {
         // If client is supplied make sure to sign transaction if we have not already
         if (client._getOperatorKey() && client._getOperatorSigner()) {
             await this.signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
@@ -191,11 +160,18 @@ export class Transaction {
                 continue;
             }
 
-            HederaPrecheckStatusError._throwIfError(status.code, this.id);
-
-            return this.id;
+            return response;
         }
         /* eslint-enable no-await-in-loop */
+    }
+
+    public async execute(client: BaseClient): Promise<TransactionId> {
+        const response = await this[transactionCall](client);
+        const status: Status = Status._fromCode(response.getNodetransactionprecheckcode());
+        
+        HederaPrecheckStatusError._throwIfError(status.code, this.id);
+
+        return this.id;
     }
 
     /** @deprecate `Transaction.getReceipt()` is deprecrated. Use `(await Transaction.execute()).getReceipt()` instead. */

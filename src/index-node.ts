@@ -7,7 +7,7 @@ import * as grpc from "grpc";
 import ProtobufMessage = grpcWeb.ProtobufMessage;
 import UnaryMethodDefinition = grpcWeb.UnaryMethodDefinition;
 
-import { Ed25519PrivateKey, Ed25519PublicKey, TransactionReceipt, ConsensusTopicId, FileId, AccountId, ContractId, TransactionId, Status } from "./exports";
+import { Hbar, Ed25519PrivateKey, Ed25519PublicKey, TransactionReceipt, ConsensusTopicId, FileId, AccountId, ContractId, TransactionId, Status } from "./exports";
 export * from "./exports";
 
 const readFile = util.promisify(fs.readFile);
@@ -112,7 +112,8 @@ for (const cls of [
     TransactionId,
     Ed25519PrivateKey,
     Ed25519PublicKey,
-    Status
+    Status,
+    Hbar
 ]) {
     Object.defineProperty(cls.prototype, util.inspect.custom, {
         enumerable: false,
