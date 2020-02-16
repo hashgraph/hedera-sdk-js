@@ -20,7 +20,6 @@ import { TransactionRecord } from "./TransactionRecord";
 import { Status } from "./Status";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
-import { Hbar } from "./Hbar";
 
 /** signature/public key pairs are passed around as objects */
 export interface SignatureAndKey {
@@ -31,10 +30,10 @@ export interface SignatureAndKey {
 const receiptRetryDelayMs = 500;
 
 /** internal method to create a new transaction from its discrete parts */
-export const transactionCreate = Symbol();
+export const transactionCreate = Symbol("transactionCreate");
 
 /** execute the transaction directly and return the protobuf response */
-export const transactionCall = Symbol();
+export const transactionCall = Symbol("transactionCall");
 
 export class Transaction {
     private readonly _node: AccountId;
@@ -43,7 +42,7 @@ export class Transaction {
     private readonly _validDurationSeconds: number;
     private readonly _method: UnaryMethodDefinition<Transaction_, TransactionResponse>;
 
-    private static [transactionCreate](
+    private static [ transactionCreate ](
         node: AccountId,
         inner: Transaction_,
         body: TransactionBody,
@@ -72,7 +71,7 @@ export class Transaction {
 
         const method = methodFromTxn(body);
 
-        return Transaction[transactionCreate](nodeId, inner, body, method);
+        return Transaction[ transactionCreate ](nodeId, inner, body, method);
     }
 
     public get id(): TransactionId {
@@ -129,7 +128,7 @@ export class Transaction {
         return this;
     }
 
-    async [transactionCall](client: BaseClient): Promise<TransactionResponse> {
+    public async [ transactionCall ](client: BaseClient): Promise<TransactionResponse> {
         // If client is supplied make sure to sign transaction if we have not already
         if (client._getOperatorKey() && client._getOperatorSigner()) {
             await this.signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
@@ -166,9 +165,9 @@ export class Transaction {
     }
 
     public async execute(client: BaseClient): Promise<TransactionId> {
-        const response = await this[transactionCall](client);
+        const response = await this[ transactionCall ](client);
         const status: Status = Status._fromCode(response.getNodetransactionprecheckcode());
-        
+
         HederaPrecheckStatusError._throwIfError(status.code, this.id);
 
         return this.id;

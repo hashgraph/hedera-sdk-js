@@ -24,7 +24,7 @@ const maxValidDuration = 120;
 
 export abstract class TransactionBuilder {
     protected readonly _inner: TransactionBody;
-    private _shouldSetFee: boolean = true;
+    private _shouldSetFee = true;
 
     private _node?: AccountId;
 
@@ -97,10 +97,10 @@ export abstract class TransactionBuilder {
 
             const tx = this.build(client);
 
-            const response = await tx[transactionCall](client);
+            const response = await tx[ transactionCall ](client);
             const status: Status = Status._fromCode(response.getNodetransactionprecheckcode());
 
-            if (status == Status.InsufficientTxFee) {
+            if (status === Status.InsufficientTxFee) {
                 // NOTE: The actual cost returned by Hedera is within 99.8% to 99.9% of the actual
                 //       fee that will be assessed. We're unsure if this is because the fee fluctuates that
                 //       much or if the calculations are simply incorrect on the server. To compensate for
@@ -121,7 +121,7 @@ export abstract class TransactionBuilder {
             this._inner.clearTransactionid();
             this._inner.clearTransactionvalidduration();
 
-            // NOTE: The Node ID is explicitly not cleared as we want to use the same node to execute 
+            // NOTE: The Node ID is explicitly not cleared as we want to use the same node to execute
             //       as we just used to ask for the cost
             // this._inner.clearNodeaccountid();
         }
@@ -165,8 +165,7 @@ export abstract class TransactionBuilder {
         const protoTx = new Transaction_();
         protoTx.setBodybytes(this._inner.serializeBinary());
 
-        return Transaction[transactionCreate](
-            this._node, protoTx, this._inner, this._method);
+        return Transaction[ transactionCreate ](this._node, protoTx, this._inner, this._method);
     }
 
     public execute(client: BaseClient): Promise<TransactionId> {
