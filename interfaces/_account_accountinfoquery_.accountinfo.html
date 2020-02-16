@@ -65,6 +65,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Response when the client sends the node CryptoGetInfoQuery.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -105,9 +112,14 @@
 					<div class="tsd-signature tsd-kind-icon">account<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="../classes/_account_accountid_.accountid.html" class="tsd-signature-type">AccountId</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L16">src/account/AccountInfoQuery.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L22">src/account/AccountInfoQuery.ts:22</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The account ID for which this information applies.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="autorenewperiod" class="tsd-anchor"></a>
@@ -115,9 +127,16 @@
 					<div class="tsd-signature tsd-kind-icon">auto<wbr>Renew<wbr>Period<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L27">src/account/AccountInfoQuery.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L88">src/account/AccountInfoQuery.ts:88</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The duration for expiration time will extend every this many seconds. If there are
+								insufficient funds, then it extends as long as possible. If it is empty when it
+							expires, then it is deleted.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="balance" class="tsd-anchor"></a>
@@ -125,9 +144,14 @@
 					<div class="tsd-signature tsd-kind-icon">balance<span class="tsd-signature-symbol">:</span> <a href="../classes/_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L22">src/account/AccountInfoQuery.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L59">src/account/AccountInfoQuery.ts:59</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The current balance of account in tinybars.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="contractaccountid" class="tsd-anchor"></a>
@@ -135,9 +159,15 @@
 					<div class="tsd-signature tsd-kind-icon">contract<wbr>Account<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L17">src/account/AccountInfoQuery.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L28">src/account/AccountInfoQuery.ts:28</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Contract Account ID comprising of both the contract instance and the cryptocurrency
+							account owned by the contract instance, in the format used by Solidity.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="expirationtime" class="tsd-anchor"></a>
@@ -145,9 +175,14 @@
 					<div class="tsd-signature tsd-kind-icon">expiration<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Date</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L26">src/account/AccountInfoQuery.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L81">src/account/AccountInfoQuery.ts:81</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The TimeStamp time at which this account is set to expire.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="generatereceiverecordthreshold" class="tsd-anchor"></a>
@@ -155,9 +190,15 @@
 					<div class="tsd-signature tsd-kind-icon">generate<wbr>Receive<wbr>Record<wbr>Threshold<span class="tsd-signature-symbol">:</span> <a href="../classes/_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L24">src/account/AccountInfoQuery.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L71">src/account/AccountInfoQuery.ts:71</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The threshold amount (in tinybars) for which an account record is created
+							(and this account charged for them) for any transaction above this amount.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="generatesendrecordthreshold" class="tsd-anchor"></a>
@@ -165,9 +206,15 @@
 					<div class="tsd-signature tsd-kind-icon">generate<wbr>Send<wbr>Record<wbr>Threshold<span class="tsd-signature-symbol">:</span> <a href="../classes/_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L23">src/account/AccountInfoQuery.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L65">src/account/AccountInfoQuery.ts:65</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The threshold amount (in tinybars) for which an account record is created (and this account
+							charged for them) for any send/withdraw transaction.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="isdeleted" class="tsd-anchor"></a>
@@ -175,9 +222,15 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Deleted<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L18">src/account/AccountInfoQuery.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L34">src/account/AccountInfoQuery.ts:34</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>If true, then this account has been deleted, it will disappear when it expires, and
+							all transactions for it will fail except the transaction to extend its expiration date.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="isreceiversignaturerequired" class="tsd-anchor"></a>
@@ -185,9 +238,14 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Receiver<wbr>Signature<wbr>Required<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L25">src/account/AccountInfoQuery.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L76">src/account/AccountInfoQuery.ts:76</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>If true, no transaction can transfer to this account unless signed by this account&#39;s key.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="key" class="tsd-anchor"></a>
@@ -195,9 +253,15 @@
 					<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <a href="../classes/_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L21">src/account/AccountInfoQuery.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L54">src/account/AccountInfoQuery.ts:54</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The key for the account, which must sign in order to transfer out, or to modify the account
+							in any way other than extending its expiration date.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="proxyaccountid" class="tsd-anchor"></a>
@@ -205,9 +269,18 @@
 					<div class="tsd-signature tsd-kind-icon">proxy<wbr>Account<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="../classes/_account_accountid_.accountid.html" class="tsd-signature-type">AccountId</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L19">src/account/AccountInfoQuery.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L43">src/account/AccountInfoQuery.ts:43</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Account ID of the account to which this is proxy staked. If proxyAccountID is null,
+								or is an invalid account, or is an account that isn&#39;t a node, then this account is
+								automatically proxy staked to a node chosen by the network, but without earning payments.
+								If the proxyAccountID account refuses to accept proxy staking , or if it is not currently
+							running a node, then it will behave as if proxyAccountID was null.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="proxyreceived" class="tsd-anchor"></a>
@@ -215,9 +288,14 @@
 					<div class="tsd-signature tsd-kind-icon">proxy<wbr>Received<span class="tsd-signature-symbol">:</span> <a href="../classes/_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountInfoQuery.ts#L20">src/account/AccountInfoQuery.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountInfoQuery.ts#L48">src/account/AccountInfoQuery.ts:48</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The total number of tinybars proxy staked to this account.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>

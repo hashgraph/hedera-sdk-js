@@ -65,6 +65,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Response when the client sends the node ContractGetInfoQuery</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -101,9 +108,15 @@
 					<div class="tsd-signature tsd-kind-icon">account<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="../classes/_account_accountid_.accountid.html" class="tsd-signature-type">AccountId</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractInfoQuery.ts#L18">src/contract/ContractInfoQuery.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractInfoQuery.ts#L29">src/contract/ContractInfoQuery.ts:29</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>ID of the cryptocurrency account owned by the contract instance,
+							in the format used in transactions.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="adminkey" class="tsd-anchor"></a>
@@ -111,9 +124,19 @@
 					<div class="tsd-signature tsd-kind-icon">admin<wbr>Key<span class="tsd-signature-symbol">:</span> <a href="../classes/_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractInfoQuery.ts#L20">src/contract/ContractInfoQuery.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractInfoQuery.ts#L45">src/contract/ContractInfoQuery.ts:45</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The state of the instance and its fields can be modified arbitrarily if this key signs a
+								transaction to modify it. If this is null, then such modifications are not possible,
+								and there is no administrator that can override the normal operation of this smart
+								contract instance. Note that if it is created with no admin keys, then there is no
+								administrator to authorize changing the admin keys, so there can never be any admin keys
+							for that instance.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="autorenewperiod" class="tsd-anchor"></a>
@@ -121,9 +144,16 @@
 					<div class="tsd-signature tsd-kind-icon">auto<wbr>Renew<wbr>Period<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractInfoQuery.ts#L22">src/contract/ContractInfoQuery.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractInfoQuery.ts#L57">src/contract/ContractInfoQuery.ts:57</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The expiration time will extend every this many seconds. If there are insufficient funds,
+								then it extends as long as possible. If the account is empty when it expires,
+							then it is deleted.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="contractaccountid" class="tsd-anchor"></a>
@@ -131,9 +161,15 @@
 					<div class="tsd-signature tsd-kind-icon">contract<wbr>Account<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractInfoQuery.ts#L19">src/contract/ContractInfoQuery.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractInfoQuery.ts#L35">src/contract/ContractInfoQuery.ts:35</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>ID of both the contract instance and the cryptocurrency account owned by the contract
+							instance, in the format used by Solidity.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="contractid" class="tsd-anchor"></a>
@@ -141,9 +177,14 @@
 					<div class="tsd-signature tsd-kind-icon">contract<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="../classes/_contract_contractid_.contractid.html" class="tsd-signature-type">ContractId</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractInfoQuery.ts#L17">src/contract/ContractInfoQuery.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractInfoQuery.ts#L23">src/contract/ContractInfoQuery.ts:23</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>ID of the contract instance, in the format used in transactions.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="contractmemo" class="tsd-anchor"></a>
@@ -151,9 +192,14 @@
 					<div class="tsd-signature tsd-kind-icon">contract<wbr>Memo<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractInfoQuery.ts#L24">src/contract/ContractInfoQuery.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractInfoQuery.ts#L68">src/contract/ContractInfoQuery.ts:68</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The memo associated with the contract (max 100 bytes).</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="expirationtime" class="tsd-anchor"></a>
@@ -161,9 +207,14 @@
 					<div class="tsd-signature tsd-kind-icon">expiration<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Date</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractInfoQuery.ts#L21">src/contract/ContractInfoQuery.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractInfoQuery.ts#L50">src/contract/ContractInfoQuery.ts:50</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The current time at which this contract instance (and its account) is set to expire.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="storage" class="tsd-anchor"></a>
@@ -171,9 +222,15 @@
 					<div class="tsd-signature tsd-kind-icon">storage<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractInfoQuery.ts#L23">src/contract/ContractInfoQuery.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractInfoQuery.ts#L63">src/contract/ContractInfoQuery.ts:63</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Number of bytes of storage being used by this instance (which affects the cost to
+							extend the expiration time).</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>

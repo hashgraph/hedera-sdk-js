@@ -65,6 +65,20 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Call a function of the given smart contract instance, giving it functionParameters as its inputs.
+						It will consume the entire given amount of gas.</p>
+					</div>
+					<p>This is performed locally on the particular node that the client is communicating with. It cannot
+						change the state of the contract instance (and so, cannot spend anything from the instance&#39;s
+						cryptocurrency account). It will not have a consensus timestamp. It cannot generate a record or a
+						receipt. The response will contain the output returned by the function call.  This is useful for
+						calling getter functions, which purely read the state and don&#39;t change it. It is faster and
+					cheaper than a normal call, because it is purely local to a single  node.</p>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -119,7 +133,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractCallQuery.ts#L16">src/contract/ContractCallQuery.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractCallQuery.ts#L27">src/contract/ContractCallQuery.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_contract_contractcallquery_.contractcallquery.html" class="tsd-signature-type">ContractCallQuery</a></h4>
@@ -140,7 +154,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionreceiptquery_.transactionreceiptquery.html">TransactionReceiptQuery</a>.<a href="_transactionreceiptquery_.transactionreceiptquery.html#_generatepaymenttransaction">_generatePaymentTransaction</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/QueryBuilder.ts#L222">src/QueryBuilder.ts:222</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/QueryBuilder.ts#L222">src/QueryBuilder.ts:222</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -170,7 +184,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionreceiptquery_.transactionreceiptquery.html">TransactionReceiptQuery</a>.<a href="_transactionreceiptquery_.transactionreceiptquery.html#_toproto">_toProto</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/QueryBuilder.ts#L183">src/QueryBuilder.ts:183</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/QueryBuilder.ts#L183">src/QueryBuilder.ts:183</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Query</span></h4>
@@ -188,7 +202,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionreceiptquery_.transactionreceiptquery.html">TransactionReceiptQuery</a>.<a href="_transactionreceiptquery_.transactionreceiptquery.html#execute">execute</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/QueryBuilder.ts#L110">src/QueryBuilder.ts:110</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/QueryBuilder.ts#L110">src/QueryBuilder.ts:110</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -212,9 +226,17 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="_transactionreceiptquery_.transactionreceiptquery.html">TransactionReceiptQuery</a>.<a href="_transactionreceiptquery_.transactionreceiptquery.html#getcost">getCost</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractCallQuery.ts#L47">src/contract/ContractCallQuery.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractCallQuery.ts#L77">src/contract/ContractCallQuery.ts:77</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Wrapper around <code>QueryBuilder.getCost()</code>. This must exist because the cost returned
+										<code>QueryBuilder.getCost()</code> and therein the Hedera Network doesn&#39;t work for
+										<code>ContractCallQuery</code>&#39;s. However, if you multiply the cost by ~1.1 then <em>most</em>
+									contracts calls seem to complete fine.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -235,9 +257,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractCallQuery.ts#L27">src/contract/ContractCallQuery.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractCallQuery.ts#L41">src/contract/ContractCallQuery.ts:41</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The contract instance to call, in the format used in transactions.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -258,9 +285,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractCallQuery.ts#L32">src/contract/ContractCallQuery.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractCallQuery.ts#L49">src/contract/ContractCallQuery.ts:49</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Which function to call, and the parameters to pass to the function.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -284,9 +316,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractCallQuery.ts#L37">src/contract/ContractCallQuery.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractCallQuery.ts#L57">src/contract/ContractCallQuery.ts:57</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The amount of gas to use for the call. All of the gas offered will be charged for.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -308,7 +345,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionreceiptquery_.transactionreceiptquery.html">TransactionReceiptQuery</a>.<a href="_transactionreceiptquery_.transactionreceiptquery.html#setmaxquerypayment">setMaxQueryPayment</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/QueryBuilder.ts#L30">src/QueryBuilder.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/QueryBuilder.ts#L30">src/QueryBuilder.ts:30</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -331,9 +368,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractCallQuery.ts#L42">src/contract/ContractCallQuery.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractCallQuery.ts#L66">src/contract/ContractCallQuery.ts:66</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Max number of bytes that the result might include. The run will fail if it would have
+									returned more than this number of bytes.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -355,7 +398,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionreceiptquery_.transactionreceiptquery.html">TransactionReceiptQuery</a>.<a href="_transactionreceiptquery_.transactionreceiptquery.html#setquerypayment">setQueryPayment</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/QueryBuilder.ts#L38">src/QueryBuilder.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/QueryBuilder.ts#L38">src/QueryBuilder.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -379,7 +422,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionreceiptquery_.transactionreceiptquery.html">TransactionReceiptQuery</a>.<a href="_transactionreceiptquery_.transactionreceiptquery.html#setquerypaymenttransaction">setQueryPaymentTransaction</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/QueryBuilder.ts#L51">src/QueryBuilder.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/QueryBuilder.ts#L51">src/QueryBuilder.ts:51</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

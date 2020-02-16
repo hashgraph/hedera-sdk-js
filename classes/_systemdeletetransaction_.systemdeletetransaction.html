@@ -65,6 +65,18 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Delete a file or smart contract - can only be done with a Hedera admin multisig. When it is
+							deleted, it immediately disappears from the system as seen by the user, but is still stored
+							internally until the expiration time, at which time it is truly and permanently deleted.
+							Until that time, it can be undeleted by the Hedera admin multisig. When a smart contract is
+							deleted, the cryptocurrency account within it continues to exist, and is not affected
+						by the expiration time here.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -100,6 +112,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_systemdeletetransaction_.systemdeletetransaction.html#setid" class="tsd-kind-icon">set<wbr>Id</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_systemdeletetransaction_.systemdeletetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_systemdeletetransaction_.systemdeletetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_systemdeletetransaction_.systemdeletetransaction.html#settopicid" class="tsd-kind-icon">set<wbr>Topic<wbr>Id</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_systemdeletetransaction_.systemdeletetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_systemdeletetransaction_.systemdeletetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_systemdeletetransaction_.systemdeletetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
@@ -121,7 +134,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/SystemDeleteTransaction.ts#L13">src/SystemDeleteTransaction.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/SystemDeleteTransaction.ts#L22">src/SystemDeleteTransaction.ts:22</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_systemdeletetransaction_.systemdeletetransaction.html" class="tsd-signature-type">SystemDeleteTransaction</a></h4>
@@ -142,7 +155,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#build">build</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L86">src/TransactionBuilder.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L86">src/TransactionBuilder.ts:86</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -166,7 +179,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#execute">execute</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L125">src/TransactionBuilder.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L125">src/TransactionBuilder.ts:125</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -189,9 +202,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/SystemDeleteTransaction.ts#L46">src/SystemDeleteTransaction.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/SystemDeleteTransaction.ts#L67">src/SystemDeleteTransaction.ts:67</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The contract ID instance to delete, in the format used in transactions</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -212,9 +230,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/SystemDeleteTransaction.ts#L22">src/SystemDeleteTransaction.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/SystemDeleteTransaction.ts#L34">src/SystemDeleteTransaction.ts:34</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The timestamp in seconds at which the &quot;deleted&quot; file should truly be permanently deleted.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -235,9 +258,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/SystemDeleteTransaction.ts#L41">src/SystemDeleteTransaction.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/SystemDeleteTransaction.ts#L59">src/SystemDeleteTransaction.ts:59</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The file ID of the file to delete, in the format used in transactions.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -259,7 +287,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setgeneraterecord">setGenerateRecord</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -282,9 +310,16 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/SystemDeleteTransaction.ts#L27">src/SystemDeleteTransaction.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/SystemDeleteTransaction.ts#L42">src/SystemDeleteTransaction.ts:42</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>deprecated</dt>
+									<dd><p><code>.setId</code> is deprecated. Use <code>.setFileId</code> or <code>.setContractId</code> instead.</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -306,7 +341,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setmaxtransactionfee">setMaxTransactionFee</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L43">src/TransactionBuilder.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L43">src/TransactionBuilder.ts:43</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -330,13 +365,41 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setnodeaccountid">setNodeAccountId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L51">src/TransactionBuilder.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L51">src/TransactionBuilder.ts:51</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeAccountId: <a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="settopicid" class="tsd-anchor"></a>
+					<h3>set<wbr>Topic<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Topic<wbr>Id<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><a href="../modules/_consensus_consensustopicid_.html#consensustopicidlike" class="tsd-signature-type">ConsensusTopicIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/SystemDeleteTransaction.ts#L75">src/SystemDeleteTransaction.ts:75</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The topic ID instance to delete, in the format used in transactions</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <a href="../modules/_consensus_consensustopicid_.html#consensustopicidlike" class="tsd-signature-type">ConsensusTopicIdLike</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -354,7 +417,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionid">setTransactionId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L32">src/TransactionBuilder.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L32">src/TransactionBuilder.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -378,7 +441,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionmemo">setTransactionMemo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L57">src/TransactionBuilder.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L57">src/TransactionBuilder.ts:57</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -402,7 +465,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionvalidduration">setTransactionValidDuration</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L38">src/TransactionBuilder.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L38">src/TransactionBuilder.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -426,7 +489,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#validate">validate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L71">src/TransactionBuilder.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L71">src/TransactionBuilder.ts:71</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -482,6 +545,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_systemdeletetransaction_.systemdeletetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_systemdeletetransaction_.systemdeletetransaction.html#settopicid" class="tsd-kind-icon">set<wbr>Topic<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_systemdeletetransaction_.systemdeletetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>

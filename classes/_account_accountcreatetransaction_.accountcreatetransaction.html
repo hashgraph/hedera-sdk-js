@@ -65,6 +65,40 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a new account. After the account is created, the AccountID for it is in the receipt,
+							or can be retrieved with a GetByKey query, or by asking for a Record of the transaction to
+							be created, and retrieving that. The account can then automatically generate records for large
+							transfers into it or out of it, which each last for 25 hours. Records are generated for any
+							transfer that exceeds the thresholds given here. This account is charged cryptocurrency for
+							each record generated, so the thresholds are useful for limiting Record generation to happen
+							only for large transactions. The Key field is the key used to sign transactions for this
+							account. If the account has receiverSigRequired set to true, then all cryptocurrency transfers
+							must be signed by this account&#39;s key, both for transfers in and out. If it is false, then only
+							transfers out have to be signed by it. When the account is created, the payer account is charged
+							enough hbars so that the new account will not expire for the next autoRenewPeriod seconds. When
+							it reaches the expiration time, the new account will then be automatically charged to renew for
+							another autoRenewPeriod seconds. If it does not have enough hbars to renew for that long, then
+							the remaining hbars are used to extend its expiration as long as possible. If it is has a zero
+							balance when it expires, then it is deleted. This transaction must be signed by the payer
+							account. If receiverSigRequired is false, then the transaction does not have to be signed by the
+							keys in the keys field. If it is true, then it must be signed by them, in addition to the keys
+						of the payer account.</p>
+					</div>
+					<p>An entity (account, file, or smart contract instance) must be created in a particular realm.
+						If the realmID is left null, then a new realm will be created with the given admin key.
+						If a new realm has a null adminKey, then anyone can create/modify/delete entities in that realm.
+						But if an admin key is given, then any transaction to create/modify/delete an entity in that
+						realm must be signed by that key, though anyone can still call functions on smart contract
+						instances that exist in that realm. A realm ceases to exist when everything within it has
+					expired and no longer exists.</p>
+					<p>The current API ignores shardID, realmID, and newRealmAdminKey, and creates everything in
+						shard 0 and realm 0, with a null key. Future versions of the API will support multiple
+					realms and multiple shards.</p>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -124,7 +158,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountCreateTransaction.ts#L15">src/account/AccountCreateTransaction.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountCreateTransaction.ts#L47">src/account/AccountCreateTransaction.ts:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_account_accountcreatetransaction_.accountcreatetransaction.html" class="tsd-signature-type">AccountCreateTransaction</a></h4>
@@ -145,7 +179,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#build">build</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L86">src/TransactionBuilder.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L86">src/TransactionBuilder.ts:86</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -169,7 +203,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#execute">execute</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L125">src/TransactionBuilder.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L125">src/TransactionBuilder.ts:125</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -192,9 +226,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountCreateTransaction.ts#L37">src/account/AccountCreateTransaction.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountCreateTransaction.ts#L76">src/account/AccountCreateTransaction.ts:76</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The account is charged to extend its expiration date every this many seconds. If it doesn&#39;t have enough balance,
+									it extends as long as possible. If it is empty when it expires, then it is deleted.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -216,7 +256,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setgeneraterecord">setGenerateRecord</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -239,9 +279,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountCreateTransaction.ts#L42">src/account/AccountCreateTransaction.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountCreateTransaction.ts#L84">src/account/AccountCreateTransaction.ts:84</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The initial number of tinybars to put into the account.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -262,9 +307,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountCreateTransaction.ts#L32">src/account/AccountCreateTransaction.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountCreateTransaction.ts#L67">src/account/AccountCreateTransaction.ts:67</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The key that must sign each transfer out of the account. If receiverSigRequired is true, then it must also sign any transfer into the account.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -286,7 +336,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setmaxtransactionfee">setMaxTransactionFee</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L43">src/TransactionBuilder.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L43">src/TransactionBuilder.ts:43</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -310,7 +360,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setnodeaccountid">setNodeAccountId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L51">src/TransactionBuilder.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L51">src/TransactionBuilder.ts:51</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -333,9 +383,18 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountCreateTransaction.ts#L71">src/account/AccountCreateTransaction.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountCreateTransaction.ts#L129">src/account/AccountCreateTransaction.ts:129</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>ID of the account to which this account is proxy staked. If proxyAccountID is null,
+										or is an invalid account, or is an account that isn&#39;t a node, then this account is
+										automatically proxy staked to a node chosen by the network, but without earning payments.
+										If the proxyAccountID account refuses to accept proxy staking , or if it is not currently
+									running a node, then it will behave as if proxyAccountID was null.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -356,9 +415,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountCreateTransaction.ts#L50">src/account/AccountCreateTransaction.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountCreateTransaction.ts#L95">src/account/AccountCreateTransaction.ts:95</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The threshold amount (in tinybars) for which an account record is created for any receive/deposit transaction.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -379,9 +443,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountCreateTransaction.ts#L66">src/account/AccountCreateTransaction.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountCreateTransaction.ts#L117">src/account/AccountCreateTransaction.ts:117</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>If true, this account&#39;s key must sign any transaction depositing into this account (in addition to all withdrawals).</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -402,9 +471,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountCreateTransaction.ts#L58">src/account/AccountCreateTransaction.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountCreateTransaction.ts#L106">src/account/AccountCreateTransaction.ts:106</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The threshold amount (in tinybars) for which an account record is created for any send/withdraw transaction.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -426,7 +500,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionid">setTransactionId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L32">src/TransactionBuilder.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L32">src/TransactionBuilder.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -450,7 +524,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionmemo">setTransactionMemo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L57">src/TransactionBuilder.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L57">src/TransactionBuilder.ts:57</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -474,7 +548,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionvalidduration">setTransactionValidDuration</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L38">src/TransactionBuilder.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L38">src/TransactionBuilder.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -498,7 +572,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#validate">validate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L71">src/TransactionBuilder.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L71">src/TransactionBuilder.ts:71</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

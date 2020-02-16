@@ -65,6 +65,41 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a new file, containing the given contents.  It is referenced by its FileID, and does not
+							have a filename, so it is important to get the FileID. After the file is created, the FileID
+							for it can be found in the receipt, or retrieved with a GetByKey query, or by asking for a Record
+						of the transaction to be created, and retrieving that.</p>
+					</div>
+					<p>The file contains the given contents (possibly empty). The file will automatically disappear at
+						the fileExpirationTime, unless its expiration is extended by another transaction before that
+						time. If the file is deleted, then its contents will become empty and it will be marked as deleted
+						until it expires, and then it will cease to exist. See FileGetInfoQuery for more information
+					about files.</p>
+					<p>The keys field is a list of keys. All the keys on the list must sign to create or modify a file,
+						but only one of them needs to sign in order to delete the file.  Each of those &quot;keys&quot; may itself
+						be threshold key containing other keys (including other threshold keys). In other words, the
+						behavior is an AND for create/modify, OR for delete. This is useful for acting as a revocation
+						server. If it is desired to have the behavior be AND for all 3 operations (or OR for all 3),
+						then the list should have only a single Key, which is a threshold key, with N=1 for OR,
+					N=M for AND.</p>
+					<p>If a file is created without ANY keys in the keys field, the file is immutable ONLY the
+						expirationTime of the file can be changed using FileUpdate API. The file contents or its keys
+					cannot be changed.</p>
+					<p>An entity (account, file, or smart contract instance) must be created in a particular realm. If
+						the realmID is left null, then a new realm will be created with the given admin key. If a new
+						realm has a null adminKey, then anyone can create/modify/delete entities in that realm. But if
+						an admin key is given, then any transaction to create/modify/delete an entity in that realm
+						must be signed by that key, though anyone can still call functions on smart contract instances
+						that exist in that realm. A realm ceases to exist when everything within it has expired
+					and no longer exists.</p>
+					<p>The current API ignores shardID, realmID, and newRealmAdminKey, and creates everything in
+						shard 0 and realm 0, with a null key. Future versions of the API will support multiple
+					realms and multiple shards.</p>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -120,7 +155,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/file/FileCreateTransaction.ts#L14">src/file/FileCreateTransaction.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/file/FileCreateTransaction.ts#L50">src/file/FileCreateTransaction.ts:50</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_file_filecreatetransaction_.filecreatetransaction.html" class="tsd-signature-type">FileCreateTransaction</a></h4>
@@ -140,9 +175,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/file/FileCreateTransaction.ts#L28">src/file/FileCreateTransaction.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/file/FileCreateTransaction.ts#L73">src/file/FileCreateTransaction.ts:73</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add a key.</p>
+								</div>
+								<p>All these keys must sign to create or modify the file. Any one of them can sign to delete the file.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -164,7 +205,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#build">build</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L86">src/TransactionBuilder.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L86">src/TransactionBuilder.ts:86</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -188,7 +229,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#execute">execute</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L125">src/TransactionBuilder.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L125">src/TransactionBuilder.ts:125</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -211,9 +252,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/file/FileCreateTransaction.ts#L38">src/file/FileCreateTransaction.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/file/FileCreateTransaction.ts#L86">src/file/FileCreateTransaction.ts:86</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The bytes that are the contents of the file.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -234,9 +280,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/file/FileCreateTransaction.ts#L23">src/file/FileCreateTransaction.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/file/FileCreateTransaction.ts#L63">src/file/FileCreateTransaction.ts:63</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The time at which this file should expire (unless FileUpdateTransaction is used before
+									then to extend its life).</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -258,7 +310,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setgeneraterecord">setGenerateRecord</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -282,7 +334,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setmaxtransactionfee">setMaxTransactionFee</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L43">src/TransactionBuilder.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L43">src/TransactionBuilder.ts:43</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -306,7 +358,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setnodeaccountid">setNodeAccountId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L51">src/TransactionBuilder.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L51">src/TransactionBuilder.ts:51</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -330,7 +382,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionid">setTransactionId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L32">src/TransactionBuilder.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L32">src/TransactionBuilder.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -354,7 +406,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionmemo">setTransactionMemo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L57">src/TransactionBuilder.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L57">src/TransactionBuilder.ts:57</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -378,7 +430,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionvalidduration">setTransactionValidDuration</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L38">src/TransactionBuilder.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L38">src/TransactionBuilder.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -402,7 +454,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#validate">validate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L71">src/TransactionBuilder.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L71">src/TransactionBuilder.ts:71</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

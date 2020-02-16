@@ -65,6 +65,16 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The result returned by a call to a smart contract function. This is part of the response to
+							a ContractCallLocal query, and is in the record for a ContractCall or ContractCreateInstance
+							transaction. The ContractCreateInstance transaction record has the results of the call to
+						the constructor.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -127,7 +137,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L14">src/contract/ContractFunctionResult.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L39">src/contract/ContractFunctionResult.ts:39</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -149,9 +159,14 @@
 					<div class="tsd-signature tsd-kind-icon">bloom<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L10">src/contract/ContractFunctionResult.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L27">src/contract/ContractFunctionResult.ts:27</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Bloom filter for record</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="contractid" class="tsd-anchor"></a>
@@ -159,9 +174,14 @@
 					<div class="tsd-signature tsd-kind-icon">contract<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="_contract_contractid_.contractid.html" class="tsd-signature-type">ContractId</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L8">src/contract/ContractFunctionResult.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L17">src/contract/ContractFunctionResult.ts:17</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The smart contract instance whose function was called.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="errormessage" class="tsd-anchor"></a>
@@ -169,9 +189,14 @@
 					<div class="tsd-signature tsd-kind-icon">error<wbr>Message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L9">src/contract/ContractFunctionResult.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L22">src/contract/ContractFunctionResult.ts:22</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Message In case there was an error during smart contract execution.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="gasused" class="tsd-anchor"></a>
@@ -179,9 +204,14 @@
 					<div class="tsd-signature tsd-kind-icon">gas<wbr>Used<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L11">src/contract/ContractFunctionResult.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L32">src/contract/ContractFunctionResult.ts:32</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Units of gas used  to execute contract.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="logs" class="tsd-anchor"></a>
@@ -189,9 +219,14 @@
 					<div class="tsd-signature tsd-kind-icon">logs<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_contract_contractloginfo_.contractloginfo.html" class="tsd-signature-type">ContractLogInfo</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L12">src/contract/ContractFunctionResult.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L37">src/contract/ContractFunctionResult.ts:37</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The log info for events returned by the function.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -206,7 +241,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L139">src/contract/ContractFunctionResult.ts:139</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L164">src/contract/ContractFunctionResult.ts:164</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -229,7 +264,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L39">src/contract/ContractFunctionResult.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L64">src/contract/ContractFunctionResult.ts:64</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
@@ -246,7 +281,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L129">src/contract/ContractFunctionResult.ts:129</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L154">src/contract/ContractFunctionResult.ts:154</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -269,7 +304,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L67">src/contract/ContractFunctionResult.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L92">src/contract/ContractFunctionResult.ts:92</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -292,7 +327,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L63">src/contract/ContractFunctionResult.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L88">src/contract/ContractFunctionResult.ts:88</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -315,7 +350,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L93">src/contract/ContractFunctionResult.ts:93</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L118">src/contract/ContractFunctionResult.ts:118</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -338,7 +373,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L75">src/contract/ContractFunctionResult.ts:75</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L100">src/contract/ContractFunctionResult.ts:100</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -361,7 +396,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L86">src/contract/ContractFunctionResult.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L111">src/contract/ContractFunctionResult.ts:111</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -384,7 +419,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L71">src/contract/ContractFunctionResult.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L96">src/contract/ContractFunctionResult.ts:96</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -407,7 +442,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L43">src/contract/ContractFunctionResult.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L68">src/contract/ContractFunctionResult.ts:68</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -430,7 +465,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L122">src/contract/ContractFunctionResult.ts:122</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L147">src/contract/ContractFunctionResult.ts:147</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -453,7 +488,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L104">src/contract/ContractFunctionResult.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L129">src/contract/ContractFunctionResult.ts:129</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -476,7 +511,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L115">src/contract/ContractFunctionResult.ts:115</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L140">src/contract/ContractFunctionResult.ts:140</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -499,7 +534,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/contract/ContractFunctionResult.ts#L100">src/contract/ContractFunctionResult.ts:100</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/contract/ContractFunctionResult.ts#L125">src/contract/ContractFunctionResult.ts:125</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>

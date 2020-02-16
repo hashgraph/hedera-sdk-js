@@ -65,6 +65,19 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Change properties for the given account. Any null field is ignored (left unchanged). This
+							transaction must be signed by the existing key for this account. If the transaction is
+							changing the key field, then the transaction must be signed by both the old key
+							(from before the change) and the new key. The old key must sign for security. The new
+							key must sign as a safeguard to avoid accidentally changing to an invalid key, and then
+							having no way to recover. When extending the expiration date, the cost is affected by the
+						size of the list of attached claims, and of the keys associated with the claims and the account.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -126,7 +139,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountUpdateTransaction.ts#L16">src/account/AccountUpdateTransaction.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountUpdateTransaction.ts#L25">src/account/AccountUpdateTransaction.ts:25</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_account_accountupdatetransaction_.accountupdatetransaction.html" class="tsd-signature-type">AccountUpdateTransaction</a></h4>
@@ -147,7 +160,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#build">build</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L86">src/TransactionBuilder.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L86">src/TransactionBuilder.ts:86</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -171,7 +184,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#execute">execute</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L125">src/TransactionBuilder.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L125">src/TransactionBuilder.ts:125</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -194,9 +207,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountUpdateTransaction.ts#L25">src/account/AccountUpdateTransaction.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountUpdateTransaction.ts#L37">src/account/AccountUpdateTransaction.ts:37</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The account ID which is being updated in this transaction.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -217,9 +235,16 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountUpdateTransaction.ts#L40">src/account/AccountUpdateTransaction.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountUpdateTransaction.ts#L63">src/account/AccountUpdateTransaction.ts:63</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The duration in which it will automatically extend the expiration period. If it doesn&#39;t
+										have enough balance, it extends as long as possible. If it is empty when it expires,
+									then it is deleted.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -240,9 +265,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountUpdateTransaction.ts#L35">src/account/AccountUpdateTransaction.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountUpdateTransaction.ts#L53">src/account/AccountUpdateTransaction.ts:53</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The new expiration time to extend to (ignored if equal to or before the current one)</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -264,7 +294,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setgeneraterecord">setGenerateRecord</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -287,9 +317,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountUpdateTransaction.ts#L30">src/account/AccountUpdateTransaction.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountUpdateTransaction.ts#L45">src/account/AccountUpdateTransaction.ts:45</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The new key.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -311,7 +346,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setmaxtransactionfee">setMaxTransactionFee</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L43">src/TransactionBuilder.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L43">src/TransactionBuilder.ts:43</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -335,7 +370,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setnodeaccountid">setNodeAccountId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L51">src/TransactionBuilder.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L51">src/TransactionBuilder.ts:51</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -358,9 +393,19 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountUpdateTransaction.ts#L50">src/account/AccountUpdateTransaction.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountUpdateTransaction.ts#L84">src/account/AccountUpdateTransaction.ts:84</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The new expiration time to extend to (ignored if equal to or before the current one).</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>deprecated</dt>
+									<dd><p><code>.setPorxyAccount</code> was renamed to <code>.setProxyAccountId</code></p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -381,9 +426,18 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountUpdateTransaction.ts#L45">src/account/AccountUpdateTransaction.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountUpdateTransaction.ts#L75">src/account/AccountUpdateTransaction.ts:75</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>ID of the account to which this account is proxy staked. If proxyAccountID is null, or is
+										an invalid account, or is an account that isn&#39;t a node, then this account is automatically
+										proxy staked to a node chosen by the network, but without earning payments. If the
+										proxyAccountID account refuses to accept proxy staking , or if it is not currently running
+									a node, then it will behave as if proxyAccountID was null.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -404,9 +458,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountUpdateTransaction.ts#L62">src/account/AccountUpdateTransaction.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountUpdateTransaction.ts#L102">src/account/AccountUpdateTransaction.ts:102</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The new threshold amount (in tinybars) for which an account record is created for any receive/deposit transaction.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -427,9 +486,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountUpdateTransaction.ts#L55">src/account/AccountUpdateTransaction.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountUpdateTransaction.ts#L92">src/account/AccountUpdateTransaction.ts:92</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The new threshold amount (in tinybars) for which an account record is created for any send/withdraw transaction.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -450,9 +514,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/account/AccountUpdateTransaction.ts#L70">src/account/AccountUpdateTransaction.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/account/AccountUpdateTransaction.ts#L113">src/account/AccountUpdateTransaction.ts:113</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The new expiration time to extend to (ignored if equal to or before the current one).</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -474,7 +543,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionid">setTransactionId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L32">src/TransactionBuilder.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L32">src/TransactionBuilder.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -498,7 +567,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionmemo">setTransactionMemo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L57">src/TransactionBuilder.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L57">src/TransactionBuilder.ts:57</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -522,7 +591,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionvalidduration">setTransactionValidDuration</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L38">src/TransactionBuilder.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L38">src/TransactionBuilder.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -546,7 +615,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#validate">validate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L71">src/TransactionBuilder.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L71">src/TransactionBuilder.ts:71</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

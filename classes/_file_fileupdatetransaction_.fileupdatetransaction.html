@@ -65,6 +65,19 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Modify some of the metadata for a file. Any null field is ignored (left unchanged). Any field
+							that is null is left unchanged. If contents is non-null, then the file&#39;s contents will be
+							replaced with the given bytes. This transaction must be signed by all the keys for that file.
+							If the transaction is modifying the keys field, then it must be signed by all the keys in both
+						the old list and the new list.</p>
+					</div>
+					<p>If a file was created without ANY keys in the keys field, ONLY the expirationTime of the file
+					can be changed using this call. The file contents or its keys cannot be changed.</p>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -121,7 +134,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/file/FileUpdateTransaction.ts#L15">src/file/FileUpdateTransaction.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/file/FileUpdateTransaction.ts#L25">src/file/FileUpdateTransaction.ts:25</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_file_fileupdatetransaction_.fileupdatetransaction.html" class="tsd-signature-type">FileUpdateTransaction</a></h4>
@@ -141,9 +154,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/file/FileUpdateTransaction.ts#L28">src/file/FileUpdateTransaction.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/file/FileUpdateTransaction.ts#L44">src/file/FileUpdateTransaction.ts:44</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The keys that can modify or delete the file.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -165,7 +183,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#build">build</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L86">src/TransactionBuilder.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L86">src/TransactionBuilder.ts:86</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -189,7 +207,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#execute">execute</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L125">src/TransactionBuilder.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L125">src/TransactionBuilder.ts:125</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -212,9 +230,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/file/FileUpdateTransaction.ts#L38">src/file/FileUpdateTransaction.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/file/FileUpdateTransaction.ts#L57">src/file/FileUpdateTransaction.ts:57</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The new file contents. All the bytes in the old contents are discarded.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -235,9 +258,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/file/FileUpdateTransaction.ts#L23">src/file/FileUpdateTransaction.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/file/FileUpdateTransaction.ts#L36">src/file/FileUpdateTransaction.ts:36</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The new time at which it should expire (ignored if not later than the current value).</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -258,9 +286,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/file/FileUpdateTransaction.ts#L47">src/file/FileUpdateTransaction.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/file/FileUpdateTransaction.ts#L69">src/file/FileUpdateTransaction.ts:69</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The file ID of the file to update.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -282,7 +315,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setgeneraterecord">setGenerateRecord</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -306,7 +339,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setmaxtransactionfee">setMaxTransactionFee</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L43">src/TransactionBuilder.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L43">src/TransactionBuilder.ts:43</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -330,7 +363,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setnodeaccountid">setNodeAccountId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L51">src/TransactionBuilder.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L51">src/TransactionBuilder.ts:51</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -354,7 +387,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionid">setTransactionId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L32">src/TransactionBuilder.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L32">src/TransactionBuilder.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -378,7 +411,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionmemo">setTransactionMemo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L57">src/TransactionBuilder.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L57">src/TransactionBuilder.ts:57</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -402,7 +435,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionvalidduration">setTransactionValidDuration</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L38">src/TransactionBuilder.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L38">src/TransactionBuilder.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -426,7 +459,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#validate">validate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionBuilder.ts#L71">src/TransactionBuilder.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionBuilder.ts#L71">src/TransactionBuilder.ts:71</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

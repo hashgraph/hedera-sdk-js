@@ -65,6 +65,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Response when the client sends the node TransactionGetRecordResponse.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -108,9 +115,14 @@
 					<div class="tsd-signature tsd-kind-icon">consensus<wbr>Timestamp<span class="tsd-signature-symbol">:</span> <a href="_time_.time.html" class="tsd-signature-type">Time</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionRecord.ts#L19">src/TransactionRecord.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionRecord.ts#L33">src/TransactionRecord.ts:33</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The consensus timestamp (or null if didn&#39;t reach consensus yet).</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="receipt" class="tsd-anchor"></a>
@@ -118,9 +130,15 @@
 					<div class="tsd-signature tsd-kind-icon">receipt<span class="tsd-signature-symbol">:</span> <a href="_transactionreceipt_.transactionreceipt.html" class="tsd-signature-type">TransactionReceipt</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionRecord.ts#L15">src/TransactionRecord.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionRecord.ts#L22">src/TransactionRecord.ts:22</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The status (reach consensus, or failed, or is unknown) and the ID of
+							any new account/file/instance created.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="transactionfee" class="tsd-anchor"></a>
@@ -128,9 +146,15 @@
 					<div class="tsd-signature tsd-kind-icon">transaction<wbr>Fee<span class="tsd-signature-symbol">:</span> <a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionRecord.ts#L25">src/TransactionRecord.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionRecord.ts#L49">src/TransactionRecord.ts:49</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The actual transaction fee charged,
+							not the original transactionFee value from TransactionBody.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="transactionhash" class="tsd-anchor"></a>
@@ -138,9 +162,15 @@
 					<div class="tsd-signature tsd-kind-icon">transaction<wbr>Hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionRecord.ts#L17">src/TransactionRecord.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionRecord.ts#L28">src/TransactionRecord.ts:28</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The hash of the Transaction that executed (not the hash of any Transaction that failed
+							for having a duplicate TransactionID).</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="transactionid" class="tsd-anchor"></a>
@@ -148,9 +178,14 @@
 					<div class="tsd-signature tsd-kind-icon">transaction<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="_transactionid_.transactionid.html" class="tsd-signature-type">TransactionId</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionRecord.ts#L21">src/TransactionRecord.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionRecord.ts#L38">src/TransactionRecord.ts:38</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The ID of the transaction this record represents.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="transactionmemo" class="tsd-anchor"></a>
@@ -158,9 +193,14 @@
 					<div class="tsd-signature tsd-kind-icon">transaction<wbr>Memo<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionRecord.ts#L23">src/TransactionRecord.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionRecord.ts#L43">src/TransactionRecord.ts:43</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The memo that was submitted as part of the transaction (max 100 bytes).</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="transfers" class="tsd-anchor"></a>
@@ -168,9 +208,16 @@
 					<div class="tsd-signature tsd-kind-icon">transfers<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_transfer_.transfer.html" class="tsd-signature-type">Transfer</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionRecord.ts#L27">src/TransactionRecord.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionRecord.ts#L56">src/TransactionRecord.ts:56</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>All hbar transfers as a result of this transaction, such as fees, or transfers performed
+								by the transaction, or by a smart contract it calls, or by the creation of threshold
+							records that it triggers.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -185,7 +232,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionRecord.ts#L50">src/TransactionRecord.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionRecord.ts#L79">src/TransactionRecord.ts:79</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_contract_contractfunctionresult_.contractfunctionresult.html" class="tsd-signature-type">ContractFunctionResult</a></h4>
@@ -202,7 +249,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionRecord.ts#L58">src/TransactionRecord.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionRecord.ts#L87">src/TransactionRecord.ts:87</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_contract_contractfunctionresult_.contractfunctionresult.html" class="tsd-signature-type">ContractFunctionResult</a></h4>
@@ -219,7 +266,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/b325fae/src/TransactionRecord.ts#L46">src/TransactionRecord.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7a0057b/src/TransactionRecord.ts#L75">src/TransactionRecord.ts:75</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
