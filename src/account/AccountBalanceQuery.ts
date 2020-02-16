@@ -8,8 +8,11 @@ import { Hbar } from "../Hbar";
 import { AccountId, AccountIdLike } from "./AccountId";
 import { CryptoGetAccountBalanceQuery } from "../generated/CryptoGetAccountBalance_pb";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
-// import { ContractId, ContractIdLike } from "../contract/ContractId";
 
+/**
+ * Get the balance of a cryptocurrency account. This returns only the balance, so it is a smaller
+ * and faster reply than CryptoGetInfo, which returns the balance plus additional information.
+ */
 export class AccountBalanceQuery extends QueryBuilder<Hbar> {
     private readonly _builder: CryptoGetAccountBalanceQuery;
 
@@ -22,15 +25,13 @@ export class AccountBalanceQuery extends QueryBuilder<Hbar> {
         this._inner.setCryptogetaccountbalance(this._builder);
     }
 
+    /**
+     * The account ID for which information is requested.
+     */
     public setAccountId(id: AccountIdLike): this {
         this._builder.setAccountid(new AccountId(id)._toProto());
         return this;
     }
-
-    // public setContractId(id: ContractIdLike): this {
-    //     this._builder.setContractid(new ContractId(id)._toProto());
-    //     return this;
-    // }
 
     protected _doLocalValidate(errors: string[]): void {
         if (!this._builder.hasAccountid()) {

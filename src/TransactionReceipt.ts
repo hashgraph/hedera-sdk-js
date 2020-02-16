@@ -6,16 +6,23 @@ import { FileId } from "./file/FileId";
 import { ExchangeRateSet, exchangeRateSetToSdk } from "./ExchangeRate";
 import { Status } from "./Status";
 
+/**
+ * The consensus result for a transaction, which might not be currently known,
+ * or may  succeed or fail.
+ */
 export class TransactionReceipt {
+    /**
+     * Whether the transaction succeeded or failed (or is unknown).
+     */
     public readonly status: Status;
 
-    private readonly _accountId: AccountId | null;
-    private readonly _fileId: FileId | null;
-    private readonly _contractId: ContractId | null;
-    private readonly _topicId: ConsensusTopicId | null;
-    private readonly _exchangeRateSet: ExchangeRateSet | null;
-    private readonly _topicSequenceNubmer: number;
-    private readonly _topicRunningHash: Uint8Array;
+    private readonly [ "_accountId" ]: AccountId | null;
+    private readonly [ "_fileId" ]: FileId | null;
+    private readonly [ "_contractId" ]: ContractId | null;
+    private readonly [ "_topicId" ]: ConsensusTopicId | null;
+    private readonly [ "_exchangeRateSet" ]: ExchangeRateSet | null;
+    private readonly [ "_topicSequenceNumber" ]: number;
+    private readonly [ "_topicRunningHash" ]: Uint8Array;
 
     private constructor(
         status: Status,
@@ -33,7 +40,7 @@ export class TransactionReceipt {
         this._contractId = contractId;
         this._topicId = topicId;
         this._exchangeRateSet = exchangeRateSet;
-        this._topicSequenceNubmer = topicSequenceNubmer;
+        this._topicSequenceNumber = topicSequenceNubmer;
         this._topicRunningHash = topicRunningHash;
     }
 
@@ -43,6 +50,9 @@ export class TransactionReceipt {
         return this.getAccountId();
     }
 
+    /**
+     * The account ID, if a new account was created.
+     */
     public getAccountId(): AccountId {
         if (this._accountId == null) {
             throw new Error("receipt does not contain an account ID");
@@ -57,6 +67,9 @@ export class TransactionReceipt {
         return this.getFileId();
     }
 
+    /**
+     * The file ID, if a new file was created.
+     */
     public getFileId(): FileId {
         if (this._fileId == null) {
             throw new Error("receipt does not contain a file ID");
@@ -71,6 +84,9 @@ export class TransactionReceipt {
         return this.getContractId();
     }
 
+    /**
+     * The contract ID, if a new smart contract instance was created.
+     */
     public getContractId(): ContractId {
         if (this._contractId == null) {
             throw new Error("receipt does not contain a contract ID");
@@ -79,6 +95,9 @@ export class TransactionReceipt {
         return this._contractId!;
     }
 
+    /**
+     * TopicID of a newly created consensus service topic.
+     */
     public getConsensusTopicId(): ConsensusTopicId {
         if (this._topicId == null) {
             throw new Error("receipt does not contain a topic ID");
@@ -93,6 +112,9 @@ export class TransactionReceipt {
         return this.getConsensusTopicId();
     }
 
+    /**
+     * Updated running hash for a consensus service topic. The result of a ConsensusSubmitMessage.
+     */
     public getConsensusTopicRunningHash(): Uint8Array {
         if (this._topicRunningHash.byteLength === 0) {
             throw new Error("receipt was not for a consensus topic transaction");
@@ -101,12 +123,15 @@ export class TransactionReceipt {
         return this._topicRunningHash;
     }
 
+    /**
+     * Updated sequence number for a consensus service topic. The result of a ConsensusSubmitMessage.
+     */
     public getConsensusTopicSequenceNumber(): number {
-        if (this._topicSequenceNubmer === 0) {
+        if (this._topicSequenceNumber === 0) {
             throw new Error("receipt was not for a consensus topic transaction");
         }
 
-        return this._topicSequenceNubmer;
+        return this._topicSequenceNumber;
     }
 
     public toJSON(): object {
@@ -120,10 +145,10 @@ export class TransactionReceipt {
             /* eslint-disable-next-line no-undefined */
                 undefined :
                 this._topicRunningHash.toString(),
-            consensusTopicSequenceNumber: this._topicSequenceNubmer === 0 ?
+            consensusTopicSequenceNumber: this._topicSequenceNumber === 0 ?
             /* eslint-disable-next-line no-undefined */
                 undefined :
-                this._topicSequenceNubmer
+                this._topicSequenceNumber
         };
     }
 
