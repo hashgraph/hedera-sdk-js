@@ -4,9 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v1.1.6
 
 ### Added
+
+ * Add `TransactionBuilder.getCost()` to return a very close estimate of the transaction fee (within 1%).
+
+ * Add additional error classes to allow more introspection on errors:
+    * `HederaPrecheckStatusError` - Thrown when the transaction fails at the node (the precheck)
+    * `HederaReceiptStatusError` - Thrown when the receipt is checked and has a failing status. The error object contains the full receipt.
+    * `HederaRecordStatusError` - Thrown when the record is checked and it has a failing status. The error object contains the full record.
 
  * `console.log(obj)` now prints out nice debug information for several types in the SDK including receipts
 
