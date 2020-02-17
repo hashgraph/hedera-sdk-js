@@ -56,5 +56,8 @@ export class AccountBalanceQuery extends QueryBuilder<Hbar> {
 
         return Hbar.fromTinybar(accountBalance.getBalance());
     }
-}
 
+    protected _isPaymentRequired(): boolean {
+        return false;
+    }
+}
