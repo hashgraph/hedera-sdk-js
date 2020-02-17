@@ -5,7 +5,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoCreateTransactionBody } from "../generated/CryptoCreate_pb";
 import { newDuration } from "../util";
 import { CryptoService } from "../generated/CryptoService_pb_service";
-import { Hbar, Tinybar } from "../Hbar";
+import { Hbar, Tinybar, hbarFromTinybarOrHbar, hbarCheck, hbarToProto } from "../Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import BigNumber from "bignumber.js";
 import { PublicKey } from "../crypto/PublicKey";
@@ -82,10 +82,10 @@ export class AccountCreateTransaction extends TransactionBuilder {
      * The initial number of tinybars to put into the account.
      */
     public setInitialBalance(balance: Tinybar | Hbar): this {
-        const hbar = typeof balance === "number" ? Hbar.fromTinybar(balance) : balance as Hbar;
-        hbar._check({ allowNegative: false });
+        const hbar = hbarFromTinybarOrHbar(balance);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-        this._body.setInitialbalance(hbar._toProto());
+        this._body.setInitialbalance(hbar[ hbarToProto ]());
         return this;
     }
 
@@ -93,10 +93,10 @@ export class AccountCreateTransaction extends TransactionBuilder {
      * The threshold amount (in tinybars) for which an account record is created for any receive/deposit transaction.
      */
     public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
-        const hbar = typeof threshold === "number" ? Hbar.fromTinybar(threshold) : threshold as Hbar;
-        hbar._check({ allowNegative: false });
+        const hbar = hbarFromTinybarOrHbar(threshold);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-        this._body.setReceiverecordthreshold(hbar._toProto());
+        this._body.setReceiverecordthreshold(hbar[ hbarToProto ]());
         return this;
     }
 
@@ -104,10 +104,10 @@ export class AccountCreateTransaction extends TransactionBuilder {
      * The threshold amount (in tinybars) for which an account record is created for any send/withdraw transaction.
      */
     public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
-        const hbar = typeof threshold === "number" ? Hbar.fromTinybar(threshold) : threshold as Hbar;
-        hbar._check({ allowNegative: false });
+        const hbar = hbarFromTinybarOrHbar(threshold);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-        this._body.setSendrecordthreshold(hbar._toProto());
+        this._body.setSendrecordthreshold(hbar[ hbarToProto ]());
         return this;
     }
 

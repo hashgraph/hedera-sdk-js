@@ -7,7 +7,7 @@ import { newDuration } from "../util";
 import BigNumber from "bignumber.js";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
-import { Hbar, Tinybar } from "../Hbar";
+import { Hbar, Tinybar, hbarFromTinybarOrHbar, hbarCheck, hbarToProto } from "../Hbar";
 import { PublicKey } from "../crypto/PublicKey";
 import { FileId, FileIdLike } from "../file/FileId";
 import { AccountId, AccountIdLike } from "../account/AccountId";
@@ -113,10 +113,10 @@ export class ContractCreateTransaction extends TransactionBuilder {
      * Initial number of tinybars to put into the cryptocurrency account associated with and owned by the smart contract.
      */
     public setInitialBalance(balance: Tinybar | Hbar): this {
-        const hbar = typeof balance === "number" ? Hbar.fromTinybar(balance) : balance as Hbar;
-        hbar._check({ allowNegative: false });
+        const balanceHbar = hbarFromTinybarOrHbar(balance);
+        balanceHbar[ hbarCheck ]({ allowNegative: false });
 
-        this._body.setInitialbalance(hbar._toProto());
+        this._body.setInitialbalance(balanceHbar[ hbarToProto ]());
         return this;
     }
 

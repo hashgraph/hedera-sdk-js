@@ -10,7 +10,7 @@ import {
 import BigNumber from "bignumber.js";
 import { CryptoService } from "../generated/CryptoService_pb_service";
 
-import { Hbar, Tinybar } from "../Hbar";
+import { Hbar, Tinybar, hbarCheck, hbarFromTinybarOrHbar, hbarToProto } from "../Hbar";
 import { AccountId, AccountIdLike } from "./AccountId";
 
 /**
@@ -39,8 +39,8 @@ export class CryptoTransferTransaction extends TransactionBuilder {
      * A list of senders with a given amount.
      */
     public addSender(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
-        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check({ allowNegative: false });
+        const hbar = hbarFromTinybarOrHbar(amount);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
         return this.addTransfer(accountId, hbar.negated());
     }
@@ -49,10 +49,10 @@ export class CryptoTransferTransaction extends TransactionBuilder {
      * A list of receivers with a given amount.
      */
     public addRecipient(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
-        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check({ allowNegative: false });
+        const hbar = hbarFromTinybarOrHbar(amount);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-        return this.addTransfer(accountId, hbar);
+        return this.addTransfer(accountId, amount);
     }
 
     /**
@@ -61,13 +61,16 @@ export class CryptoTransferTransaction extends TransactionBuilder {
      * and `CryptoTransferTransaction.addRecipient()` instead as those methods automatically
      * negate the values appropriately.
      */
-    public addTransfer(accountId: AccountIdLike, amount: Hbar): this {
+    public addTransfer(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
+        const amountHbar = hbarFromTinybarOrHbar(amount);
+        amountHbar[ hbarCheck ]({ allowNegative: true });
+
         const transfers = this._body.getTransfers() || new TransferList();
         this._body.setTransfers(transfers);
 
         const acctAmt = new AccountAmount();
         acctAmt.setAccountid(new AccountId(accountId)._toProto());
-        acctAmt.setAmount(amount._toProto());
+        acctAmt.setAmount(amountHbar[ hbarToProto ]());
 
         transfers.addAccountamounts(acctAmt);
 

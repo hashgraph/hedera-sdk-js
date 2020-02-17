@@ -5,7 +5,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoUpdateTransactionBody } from "../generated/CryptoUpdate_pb";
 import { newDuration } from "../util";
 import { CryptoService } from "../generated/CryptoService_pb_service";
-import { Hbar, Tinybar } from "../Hbar";
+import { Hbar, Tinybar, hbarFromTinybarOrHbar, hbarCheck, hbarToProtoValue } from "../Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { PublicKey } from "../crypto/PublicKey";
 import { AccountId, AccountIdLike } from "./AccountId";
@@ -100,10 +100,10 @@ export class AccountUpdateTransaction extends TransactionBuilder {
      * The new threshold amount (in tinybars) for which an account record is created for any receive/deposit transaction.
      */
     public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
-        const hbar = typeof threshold === "number" ? Hbar.fromTinybar(threshold) : threshold as Hbar;
-        hbar._check({ allowNegative: false });
+        const hbar = hbarFromTinybarOrHbar(threshold);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-        this._body.setReceiverecordthresholdwrapper(hbar._toProtoValue());
+        this._body.setReceiverecordthresholdwrapper(hbar[ hbarToProtoValue ]());
         return this;
     }
 
@@ -111,10 +111,10 @@ export class AccountUpdateTransaction extends TransactionBuilder {
      * The new expiration time to extend to (ignored if equal to or before the current one).
      */
     public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
-        const hbar = typeof threshold === "number" ? Hbar.fromTinybar(threshold) : threshold as Hbar;
-        hbar._check({ allowNegative: false });
+        const hbar = hbarFromTinybarOrHbar(threshold);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-        this._body.setSendrecordthresholdwrapper(hbar._toProtoValue());
+        this._body.setSendrecordthresholdwrapper(hbar[ hbarToProtoValue ]());
         return this;
     }
 

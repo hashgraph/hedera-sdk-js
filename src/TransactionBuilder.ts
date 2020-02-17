@@ -9,7 +9,7 @@ import { Transaction as Transaction_ } from "./generated/Transaction_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
 
-import { Hbar, Tinybar } from "./Hbar";
+import { Hbar, Tinybar, hbarFromTinybarOrHbar, hbarCheck, hbarToProto } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { AccountId, AccountIdLike } from "./account/AccountId";
 import { TransactionId, TransactionIdLike } from "./TransactionId";
@@ -45,10 +45,11 @@ export abstract class TransactionBuilder {
     }
 
     public setMaxTransactionFee(fee: Tinybar | Hbar): this {
-        const hbar = typeof fee === "number" ? Hbar.fromTinybar(fee) : fee as Hbar;
-        hbar._check({ allowNegative: false });
+        const hbar = hbarFromTinybarOrHbar(fee);
+        // const hbar = typeof fee === "number" ? Hbar.fromTinybar(fee) : fee as Hbar;
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-        this._inner.setTransactionfee(hbar._toProto());
+        this._inner.setTransactionfee(hbar[ hbarToProto ]());
         return this;
     }
 
@@ -133,7 +134,7 @@ export abstract class TransactionBuilder {
     public build(client?: BaseClient): Transaction {
         if (client && this._shouldSetFee && this._inner.getTransactionfee() === "0") {
             // Don't override TransactionFee if it's already set
-            this._inner.setTransactionfee(client.maxTransactionFee._toProto());
+            this._inner.setTransactionfee(client._maxTransactionFee[ hbarToProto ]());
         }
 
         if (client && !this._inner.hasTransactionid()) {

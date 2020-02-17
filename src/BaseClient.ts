@@ -49,8 +49,12 @@ export abstract class BaseClient {
     protected _nodes: Node[] = [];
 
     // Default payment and transaction fees to 1 hbar
-    private _maxTransactionFee: Hbar = new Hbar(1);
-    private _maxQueryPayment?: Hbar = new Hbar(1);
+
+    // NOTE: This is a package-private API
+    public _maxTransactionFee: Hbar = new Hbar(1);
+
+    // NOTE: This is a package-private API
+    public _maxQueryPayment: Hbar = new Hbar(1);
 
     protected constructor(network: Nodes, operator?: Operator) {
         this.replaceNodes(network);
@@ -131,14 +135,14 @@ export abstract class BaseClient {
 
     /** Get the current maximum transaction fee. */
     public get maxTransactionFee(): Hbar {
-        console.warn("deprecated: Client#maxTransactionFee is deprecated for removal with no replacement; please see #184")
+        console.warn("deprecated: Client#maxTransactionFee is deprecated for removal with no replacement; please see #184");
 
         return this._maxTransactionFee;
     }
 
     /** Get the current maximum query payment. */
     public get maxQueryPayment(): Hbar | undefined {
-        console.warn("deprecated: Client#maxQueryPayment is deprecated for removal with no replacement; please see #184")
+        console.warn("deprecated: Client#maxQueryPayment is deprecated for removal with no replacement; please see #184");
 
         return this._maxQueryPayment;
     }

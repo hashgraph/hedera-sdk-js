@@ -6,7 +6,7 @@ import { SmartContractService } from "../generated/SmartContractService_pb_servi
 import { ContractCallTransactionBody } from "../generated/ContractCall_pb";
 import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractFunctionParams } from "./ContractFunctionParams";
-import { Hbar, Tinybar } from "../Hbar";
+import { Hbar, Tinybar, hbarFromTinybarOrHbar, hbarCheck, hbarToProto } from "../Hbar";
 import BigNumber from "bignumber.js";
 
 /**
@@ -38,10 +38,10 @@ export class ContractExecuteTransaction extends TransactionBuilder {
      * Number of tinybars sent (the function must be payable if this is nonzero).
      */
     public setPayableAmount(amount: Tinybar | Hbar): this {
-        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check({ allowNegative: false });
+        const amountHbar = hbarFromTinybarOrHbar(amount);
+        amountHbar[ hbarCheck ]({ allowNegative: false });
 
-        this._body.setAmount(hbar._toProto());
+        this._body.setAmount(amountHbar[ hbarToProto ]());
         return this;
     }
 

@@ -8,7 +8,7 @@ import { HederaStatusError } from "./errors/HederaStatusError";
 import { MaxQueryPaymentExceededError } from "./errors/MaxQueryPaymentExceededError";
 import { runValidation, setTimeoutAwaitable, timeoutPromise } from "./util";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Hbar, Tinybar } from "./Hbar";
+import { Hbar, Tinybar, hbarFromTinybarOrHbar, hbarCheck } from "./Hbar";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
 import { TransactionBody } from "./generated/TransactionBody_pb";
 import { AccountId } from "./account/AccountId";
@@ -28,16 +28,16 @@ export abstract class QueryBuilder<T> {
     }
 
     public setMaxQueryPayment(amount: Tinybar | Hbar): this {
-        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check({ allowNegative: false });
+        const hbar = hbarFromTinybarOrHbar(amount);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
         this._maxPaymentAmount = hbar;
         return this;
     }
 
     public setQueryPayment(amount: Tinybar | Hbar): this {
-        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check({ allowNegative: false });
+        const hbar = hbarFromTinybarOrHbar(amount);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
         this._paymentAmount = hbar;
 
@@ -125,11 +125,11 @@ export abstract class QueryBuilder<T> {
                     node = client._randomNode();
 
                     await this._generatePaymentTransaction(client, node, this._paymentAmount);
-                } else if (this._maxPaymentAmount != null || client.maxQueryPayment != null) {
+                } else if (this._maxPaymentAmount != null || client._maxQueryPayment != null) {
                     node = client._randomNode();
 
                     const maxPaymentAmount: Hbar = this._maxPaymentAmount == null ?
-                        client.maxQueryPayment! :
+                        client._maxQueryPayment! :
                         this._maxPaymentAmount;
 
                     const actualCost = await this.getCost(client);
@@ -224,8 +224,8 @@ export abstract class QueryBuilder<T> {
         node: Node,
         amount: Tinybar | Hbar
     ): Promise<this> {
-        const hbar = typeof amount === "number" ? Hbar.fromTinybar(amount) : amount as Hbar;
-        hbar._check({ allowNegative: false });
+        const hbar = hbarFromTinybarOrHbar(amount);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
         // HACK: Async import because otherwise there would a cycle in the imports which breaks everything
         const { CryptoTransferTransaction } = await import("./account/CryptoTransferTransaction");
