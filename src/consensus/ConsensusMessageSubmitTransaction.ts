@@ -8,7 +8,7 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { ConsensusTopicId, ConsensusTopicIdLike } from "./ConsensusTopicId";
 import { utf8encode } from "../util";
 
-export class ConsensusSubmitMessageTransaction extends TransactionBuilder {
+export class ConsensusMessageSubmitTransaction extends TransactionBuilder {
     private _body: ConsensusSubmitMessageTransactionBody;
 
     public constructor() {
