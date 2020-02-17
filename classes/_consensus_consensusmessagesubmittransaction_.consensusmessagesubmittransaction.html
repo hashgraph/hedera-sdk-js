@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>FileCreateTransaction | @hashgraph/sdk</title>
+	<title>ConsensusMessageSubmitTransaction | @hashgraph/sdk</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,54 +52,19 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_file_filecreatetransaction_.html">&quot;file/FileCreateTransaction&quot;</a>
+					<a href="../modules/_consensus_consensusmessagesubmittransaction_.html">&quot;consensus/ConsensusMessageSubmitTransaction&quot;</a>
 				</li>
 				<li>
-					<a href="_file_filecreatetransaction_.filecreatetransaction.html">FileCreateTransaction</a>
+					<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html">ConsensusMessageSubmitTransaction</a>
 				</li>
 			</ul>
-			<h1>Class FileCreateTransaction</h1>
+			<h1>Class ConsensusMessageSubmitTransaction</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Create a new file, containing the given contents.  It is referenced by its FileID, and does not
-							have a filename, so it is important to get the FileID. After the file is created, the FileID
-							for it can be found in the receipt, or retrieved with a GetByKey query, or by asking for a Record
-						of the transaction to be created, and retrieving that.</p>
-					</div>
-					<p>The file contains the given contents (possibly empty). The file will automatically disappear at
-						the fileExpirationTime, unless its expiration is extended by another transaction before that
-						time. If the file is deleted, then its contents will become empty and it will be marked as deleted
-						until it expires, and then it will cease to exist. See FileGetInfoQuery for more information
-					about files.</p>
-					<p>The keys field is a list of keys. All the keys on the list must sign to create or modify a file,
-						but only one of them needs to sign in order to delete the file.  Each of those &quot;keys&quot; may itself
-						be threshold key containing other keys (including other threshold keys). In other words, the
-						behavior is an AND for create/modify, OR for delete. This is useful for acting as a revocation
-						server. If it is desired to have the behavior be AND for all 3 operations (or OR for all 3),
-						then the list should have only a single Key, which is a threshold key, with N=1 for OR,
-					N=M for AND.</p>
-					<p>If a file is created without ANY keys in the keys field, the file is immutable ONLY the
-						expirationTime of the file can be changed using FileUpdate API. The file contents or its keys
-					cannot be changed.</p>
-					<p>An entity (account, file, or smart contract instance) must be created in a particular realm. If
-						the realmID is left null, then a new realm will be created with the given admin key. If a new
-						realm has a null adminKey, then anyone can create/modify/delete entities in that realm. But if
-						an admin key is given, then any transaction to create/modify/delete an entity in that realm
-						must be signed by that key, though anyone can still call functions on smart contract instances
-						that exist in that realm. A realm ceases to exist when everything within it has expired
-					and no longer exists.</p>
-					<p>The current API ignores shardID, realmID, and newRealmAdminKey, and creates everything in
-						shard 0 and realm 0, with a null key. Future versions of the API will support multiple
-					realms and multiple shards.</p>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -107,7 +72,7 @@
 						<a href="_transactionbuilder_.transactionbuilder.html" class="tsd-signature-type">TransactionBuilder</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">FileCreateTransaction</span>
+								<span class="target">ConsensusMessageSubmitTransaction</span>
 							</li>
 						</ul>
 					</li>
@@ -120,25 +85,24 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_file_filecreatetransaction_.filecreatetransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_file_filecreatetransaction_.filecreatetransaction.html#addkey" class="tsd-kind-icon">add<wbr>Key</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filecreatetransaction_.filecreatetransaction.html#build" class="tsd-kind-icon">build</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filecreatetransaction_.filecreatetransaction.html#execute" class="tsd-kind-icon">execute</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filecreatetransaction_.filecreatetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_file_filecreatetransaction_.filecreatetransaction.html#setcontents" class="tsd-kind-icon">set<wbr>Contents</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_file_filecreatetransaction_.filecreatetransaction.html#setexpirationtime" class="tsd-kind-icon">set<wbr>Expiration<wbr>Time</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filecreatetransaction_.filecreatetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filecreatetransaction_.filecreatetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filecreatetransaction_.filecreatetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filecreatetransaction_.filecreatetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filecreatetransaction_.filecreatetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filecreatetransaction_.filecreatetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filecreatetransaction_.filecreatetransaction.html#validate" class="tsd-kind-icon">validate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#build" class="tsd-kind-icon">build</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#execute" class="tsd-kind-icon">execute</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#setmessage" class="tsd-kind-icon">set<wbr>Message</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#settopicid" class="tsd-kind-icon">set<wbr>Topic<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#validate" class="tsd-kind-icon">validate</a></li>
 							</ul>
 						</section>
 					</div>
@@ -150,51 +114,22 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>File<wbr>Create<wbr>Transaction<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_file_filecreatetransaction_.filecreatetransaction.html" class="tsd-signature-type">FileCreateTransaction</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Consensus<wbr>Message<wbr>Submit<wbr>Transaction<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html" class="tsd-signature-type">ConsensusMessageSubmitTransaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac92a2e/src/file/FileCreateTransaction.ts#L50">src/file/FileCreateTransaction.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac92a2e/src/consensus/ConsensusMessageSubmitTransaction.ts#L12">src/consensus/ConsensusMessageSubmitTransaction.ts:12</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_file_filecreatetransaction_.filecreatetransaction.html" class="tsd-signature-type">FileCreateTransaction</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html" class="tsd-signature-type">ConsensusMessageSubmitTransaction</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="addkey" class="tsd-anchor"></a>
-					<h3>add<wbr>Key</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Key<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac92a2e/src/file/FileCreateTransaction.ts#L73">src/file/FileCreateTransaction.ts:73</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Add a key.</p>
-								</div>
-								<p>All these keys must sign to create or modify the file. Any one of them can sign to delete the file.</p>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>key: <a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-						</li>
-					</ul>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="build" class="tsd-anchor"></a>
 					<h3>build</h3>
@@ -267,63 +202,6 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="setcontents" class="tsd-anchor"></a>
-					<h3>set<wbr>Contents</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Contents<span class="tsd-signature-symbol">(</span>contents<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac92a2e/src/file/FileCreateTransaction.ts#L86">src/file/FileCreateTransaction.ts:86</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>The bytes that are the contents of the file.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>contents: <span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="setexpirationtime" class="tsd-anchor"></a>
-					<h3>set<wbr>Expiration<wbr>Time</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Expiration<wbr>Time<span class="tsd-signature-symbol">(</span>date<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac92a2e/src/file/FileCreateTransaction.ts#L63">src/file/FileCreateTransaction.ts:63</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>The time at which this file should expire (unless FileUpdateTransaction is used before
-									then to extend its life).</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>date: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
-						</li>
-					</ul>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="setgeneraterecord" class="tsd-anchor"></a>
 					<h3>set<wbr>Generate<wbr>Record</h3>
@@ -372,6 +250,29 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setmessage" class="tsd-anchor"></a>
+					<h3>set<wbr>Message</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Message<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac92a2e/src/consensus/ConsensusMessageSubmitTransaction.ts#L26">src/consensus/ConsensusMessageSubmitTransaction.ts:26</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>message: <span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="setnodeaccountid" class="tsd-anchor"></a>
 					<h3>set<wbr>Node<wbr>Account<wbr>Id</h3>
@@ -390,6 +291,29 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeAccountId: <a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="settopicid" class="tsd-anchor"></a>
+					<h3>set<wbr>Topic<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Topic<wbr>Id<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><a href="../modules/_consensus_consensustopicid_.html#consensustopicidlike" class="tsd-signature-type">ConsensusTopicIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/ac92a2e/src/consensus/ConsensusMessageSubmitTransaction.ts#L21">src/consensus/ConsensusMessageSubmitTransaction.ts:21</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <a href="../modules/_consensus_consensustopicid_.html#consensustopicidlike" class="tsd-signature-type">ConsensusTopicIdLike</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -495,7 +419,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_file_filecreatetransaction_.html">&quot;file/<wbr>File<wbr>Create<wbr>Transaction&quot;</a>
+						<a href="../modules/_consensus_consensusmessagesubmittransaction_.html">&quot;consensus/<wbr>Consensus<wbr>Message<wbr>Submit<wbr>Transaction&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -504,49 +428,46 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_file_filecreatetransaction_.filecreatetransaction.html" class="tsd-kind-icon">File<wbr>Create<wbr>Transaction</a>
+						<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html" class="tsd-kind-icon">Consensus<wbr>Message<wbr>Submit<wbr>Transaction</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#build" class="tsd-kind-icon">build</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#execute" class="tsd-kind-icon">execute</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#addkey" class="tsd-kind-icon">add<wbr>Key</a>
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#setmessage" class="tsd-kind-icon">set<wbr>Message</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#build" class="tsd-kind-icon">build</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#execute" class="tsd-kind-icon">execute</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#setcontents" class="tsd-kind-icon">set<wbr>Contents</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#setexpirationtime" class="tsd-kind-icon">set<wbr>Expiration<wbr>Time</a>
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#settopicid" class="tsd-kind-icon">set<wbr>Topic<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a>
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a>
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filecreatetransaction_.filecreatetransaction.html#validate" class="tsd-kind-icon">validate</a>
+								<a href="_consensus_consensusmessagesubmittransaction_.consensusmessagesubmittransaction.html#validate" class="tsd-kind-icon">validate</a>
 							</li>
 						</ul>
 					</li>
