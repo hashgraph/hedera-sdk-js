@@ -131,11 +131,15 @@ export abstract class BaseClient {
 
     /** Get the current maximum transaction fee. */
     public get maxTransactionFee(): Hbar {
+        console.warn("deprecated: Client#maxTransactionFee is deprecated for removal with no replacement; please see #184")
+
         return this._maxTransactionFee;
     }
 
     /** Get the current maximum query payment. */
     public get maxQueryPayment(): Hbar | undefined {
+        console.warn("deprecated: Client#maxQueryPayment is deprecated for removal with no replacement; please see #184")
+
         return this._maxQueryPayment;
     }
 
