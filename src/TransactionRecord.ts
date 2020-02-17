@@ -7,13 +7,17 @@ import { Time } from "./Time";
 import { Hbar } from "./Hbar";
 import { Transfer, transferFromProto } from "./Transfer";
 
+const callResult = Symbol("callResult");
+
+const callResultIsCreate = Symbol("callResultIsCreate");
+
 /**
  * Response when the client sends the node TransactionGetRecordResponse.
  */
 export class TransactionRecord {
-    private readonly [ "callResult" ]: ContractFunctionResult | null = null;
+    private readonly [ callResult ]: ContractFunctionResult | null = null;
 
-    private readonly [ "callResultIsCreate" ]: boolean = false;
+    private readonly [ callResultIsCreate ]: boolean = false;
 
     /**
      * The status (reach consensus, or failed, or is unknown) and the ID of
@@ -65,10 +69,10 @@ export class TransactionRecord {
         this.transfers = transferListToSdk(record.getTransferlist()!);
 
         if (record.hasContractcallresult()) {
-            this.callResult = new ContractFunctionResult(record.getContractcreateresult()!);
-            this.callResultIsCreate = true;
+            this[ callResult ] = new ContractFunctionResult(record.getContractcallresult()!);
+            this[ callResultIsCreate ] = true;
         } else if (record.hasContractcreateresult()) {
-            this.callResult = new ContractFunctionResult(record.getContractcallresult()!);
+            this[ callResult ] = new ContractFunctionResult(record.getContractcreateresult()!);
         }
     }
 
@@ -77,19 +81,19 @@ export class TransactionRecord {
     }
 
     public getContractCreateResult(): ContractFunctionResult {
-        if (this.callResult == null || this.callResultIsCreate) {
+        if (this[ callResult ] == null || this[ callResultIsCreate ]) {
             throw new Error("record does not contain a contract create result");
         }
 
-        return this.callResult;
+        return this[ callResult ]!;
     }
 
     public getContractExecuteResult(): ContractFunctionResult {
-        if (this.callResult == null || !this.callResultIsCreate) {
+        if (this[ callResult ] == null || !this[ callResultIsCreate ]) {
             throw new Error("record does not contain a contract execute result");
         }
 
-        return this.callResult;
+        return this[ callResult ]!;
     }
 }
 
