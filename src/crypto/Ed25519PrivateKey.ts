@@ -248,9 +248,7 @@ export class Ed25519PrivateKey {
 
         const keyArray = pemArray.slice(beginningIndexes[ 1 ] + 1, endingIndexes[ 0 ]);
 
-        const keyBase64 = new TextDecoder().decode(keyArray);
-
-        const keyDecoded = Buffer.from(keyBase64, "base64");
+        const keyDecoded = Buffer.from(Buffer.from(keyArray).toString("utf8"), "base64");
 
         return Ed25519PrivateKey.fromBytes(keyDecoded);
     }
