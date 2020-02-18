@@ -52,8 +52,6 @@ const pemString = "-----BEGIN PRIVATE KEY-----\n" +
 "MC4CAQAwBQYDK2VwBCIEINtIS4KOZLLY8SzjwKDpOguMznrxu485yXcyOUSCU44Q\n" +
 "-----END PRIVATE KEY-----\n";
 
-const pemUint8Array = utf8encode(pemString);
-
 describe("Ed25519PrivateKey", () => {
     it("toString() produces correctly encoded string", () => {
         const privateKey = Ed25519PrivateKey.fromBytes(privKeyBytes);
@@ -127,7 +125,7 @@ describe("Ed25519PrivateKey", () => {
     });
 
     it("fromPem() produces a correct value", () => {
-        const key = Ed25519PrivateKey.fromPem(pemUint8Array);
+        const key = Ed25519PrivateKey.fromPem(pemString);
         expect(key.toString()).toStrictEqual(privKeyStr);
     });
 });
