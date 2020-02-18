@@ -2,10 +2,50 @@ import * as nacl from "tweetnacl";
 import * as crypto from "crypto";
 import { Ed25519PublicKey } from "./Ed25519PublicKey";
 import { Mnemonic } from "./Mnemonic";
-import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes } from "./util";
+import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes, findSubarray, arraysEqual, errorIndexes } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { createKeystore, loadKeystore } from "./Keystore";
 import { BadKeyError } from "../errors/BadKeyError";
+import { BadPemFileError } from "../errors/BadPemFileError";
+
+/* eslint-disable array-element-newline */
+const beginPrivateKeyUint8Array: Uint8Array =
+new Uint8Array([
+    45, 45, 45, 45, 45, 66, 69, 71, 73, 78, 32, 80,
+    82, 73, 86, 65, 84, 69, 32, 75, 69, 89, 45, 45,
+    45, 45, 45, 10
+]);
+
+const endPrivateKeyUint8Array: Uint8Array =
+new Uint8Array([
+    10, 45, 45, 45, 45, 45, 69, 78, 68, 32, 80, 82,
+    73, 86, 65, 84, 69, 32, 75, 69, 89, 45, 45, 45,
+    45, 45, 10
+]);
+/* eslint-enable array-element-newline */
+
+const derPrefix = decodeHex("302e020100300506032b657004220420");
+
+function _bytesLengthCases(bytes: Uint8Array): nacl.SignKeyPair {
+    const bytesArray = bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
+
+    switch (bytes.length) {
+        case 48:
+            // key with prefix
+            if (arraysEqual(bytesArray.subarray(0, 16), derPrefix)) {
+                return nacl.sign.keyPair.fromSeed(bytesArray.subarray(16));
+            }
+            break;
+        case 32:
+            // fromSeed takes the private key bytes and calculates the public key
+            return nacl.sign.keyPair.fromSeed(bytesArray);
+        case 64:
+            // priv + pub key pair
+            return nacl.sign.keyPair.fromSecretKey(bytesArray);
+        default:
+    }
+    throw new BadKeyError();
+}
 
 export class Ed25519PrivateKey {
     public readonly publicKey: Ed25519PublicKey;
@@ -32,21 +72,7 @@ export class Ed25519PrivateKey {
     public static fromBytes(bytes: Uint8Array): Ed25519PrivateKey {
         // this check is necessary because Jest breaks the prototype chain of Uint8Array
         // noinspection SuspiciousTypeOfGuard
-        const bytesArray = bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
-        let keypair;
-
-        switch (bytes.length) {
-            case 32:
-                // fromSeed takes the private key bytes and calculates the public key
-                keypair = nacl.sign.keyPair.fromSeed(bytesArray);
-                break;
-            case 64:
-                // priv + pub key pair
-                keypair = nacl.sign.keyPair.fromSecretKey(bytesArray);
-                break;
-            default:
-                throw new BadKeyError();
-        }
+        const keypair = _bytesLengthCases(bytes);
 
         const { secretKey: privateKey, publicKey } = keypair;
 
@@ -203,5 +229,27 @@ export class Ed25519PrivateKey {
      */
     public toKeystore(passphrase: string): Promise<Uint8Array> {
         return createKeystore(this._keyData, passphrase);
+    }
+
+    /**
+     * Recover a private key from a .pem file
+     *
+     * This pem method assumes the .pem file has been converted to a Uint8Array already
+     *
+     * Ensures the words "Private Key" are in the file, then looks for the next new line, slices the key from the array, then decodes and prepares it
+     */
+    public static fromPem(pemArray: Uint8Array): Ed25519PrivateKey {
+        const beginningIndexes = findSubarray(pemArray, beginPrivateKeyUint8Array);
+        const endingIndexes = findSubarray(pemArray, endPrivateKeyUint8Array);
+
+        if (beginningIndexes === errorIndexes || endingIndexes === errorIndexes) {
+            throw new BadPemFileError();
+        }
+
+        const keyArray = pemArray.slice(beginningIndexes[ 1 ] + 1, endingIndexes[ 0 ]);
+
+        const keyDecoded = Buffer.from(Buffer.from(keyArray).toString("utf8"), "base64");
+
+        return Ed25519PrivateKey.fromBytes(keyDecoded);
     }
 }

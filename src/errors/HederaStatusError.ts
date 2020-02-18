@@ -8,6 +8,7 @@ export class HederaStatusError extends Error {
 
     public constructor(status: Status) {
         super();
+        this.message = `Hedera returned response code: ${status.toString()}`;
         this.status = status;
         this.name = "HederaStatusError";
     }
