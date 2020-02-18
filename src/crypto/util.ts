@@ -64,14 +64,12 @@ export function deriveChildKey(
 
 export function findSubarray(array: Uint8Array, subArray: Uint8Array): number[] {
     for (let i = 0; i < array.length; i += 1) {
-        if (subArray[ 0 ] === array[ i ]) {
-            for (let j = 1; j < subArray.length; j += 1) {
-                if (subArray[ j ] !== array[ i + j ]) {
-                    break;
-                }
-                if (j === subArray.length - 1) {
-                    return [ i, i + j ];
-                }
+        for (let j = 0; j < subArray.length; j += 1) {
+            if (subArray[ j ] !== array[ i + j ]) {
+                break;
+            }
+            if (j === subArray.length - 1) {
+                return [ i, i + j ];
             }
         }
     }
