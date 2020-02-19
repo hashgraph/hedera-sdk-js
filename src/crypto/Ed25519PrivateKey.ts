@@ -2,27 +2,15 @@ import * as nacl from "tweetnacl";
 import * as crypto from "crypto";
 import { Ed25519PublicKey } from "./Ed25519PublicKey";
 import { Mnemonic } from "./Mnemonic";
-import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes, findSubarray, arraysEqual, errorIndexes } from "./util";
+import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes, arraysEqual } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { createKeystore, loadKeystore } from "./Keystore";
 import { BadKeyError } from "../errors/BadKeyError";
 import { BadPemFileError } from "../errors/BadPemFileError";
 
-/* eslint-disable array-element-newline */
-const beginPrivateKeyUint8Array: Uint8Array =
-new Uint8Array([
-    45, 45, 45, 45, 45, 66, 69, 71, 73, 78, 32, 80,
-    82, 73, 86, 65, 84, 69, 32, 75, 69, 89, 45, 45,
-    45, 45, 45, 10
-]);
+const beginPrivateKey = "-----BEGIN PRIVATE KEY-----\n";
 
-const endPrivateKeyUint8Array: Uint8Array =
-new Uint8Array([
-    10, 45, 45, 45, 45, 45, 69, 78, 68, 32, 80, 82,
-    73, 86, 65, 84, 69, 32, 75, 69, 89, 45, 45, 45,
-    45, 45, 10
-]);
-/* eslint-enable array-element-newline */
+const endPrivateKey = "-----END PRIVATE KEY-----\n";
 
 const derPrefix = decodeHex("302e020100300506032b657004220420");
 
@@ -232,24 +220,24 @@ export class Ed25519PrivateKey {
     }
 
     /**
-     * Recover a private key from a .pem file
+     * Recover a private key from a pem string
      *
-     * This pem method assumes the .pem file has been converted to a Uint8Array already
+     * This pem method assumes the .pem file has been converted to a string already
      *
-     * Ensures the words "Private Key" are in the file, then looks for the next new line, slices the key from the array, then decodes and prepares it
+     * Ensures the strings "-----BEGIN PRIVATE KEY-----\n" and "-----END PRIVATE KEY-----\n" are substrings in the pem string, then slices the key from the pem string, then creates an Ed25519PrivateKey object from the key string
      */
-    public static fromPem(pemArray: Uint8Array): Ed25519PrivateKey {
-        const beginningIndexes = findSubarray(pemArray, beginPrivateKeyUint8Array);
-        const endingIndexes = findSubarray(pemArray, endPrivateKeyUint8Array);
+    public static fromPem(pem: string): Ed25519PrivateKey {
+        const beginIndex = pem.indexOf(beginPrivateKey);
+        const endIndex = pem.indexOf(endPrivateKey);
 
-        if (beginningIndexes === errorIndexes || endingIndexes === errorIndexes) {
+        if (beginIndex === -1 || endIndex === -1) {
             throw new BadPemFileError();
         }
 
-        const keyArray = pemArray.slice(beginningIndexes[ 1 ] + 1, endingIndexes[ 0 ]);
+        const keyEncoded = pem.slice(beginIndex + beginPrivateKey.length, endIndex);
 
-        const keyDecoded = Buffer.from(Buffer.from(keyArray).toString("utf8"), "base64");
+        const key = Buffer.from(keyEncoded, "base64");
 
-        return Ed25519PrivateKey.fromBytes(keyDecoded);
+        return Ed25519PrivateKey.fromBytes(key);
     }
 }

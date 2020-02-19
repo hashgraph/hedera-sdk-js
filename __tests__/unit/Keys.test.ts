@@ -7,7 +7,6 @@ import {
     Mnemonic
 } from "../../src/exports";
 import { KeyList } from "../../src/crypto/KeyList";
-import { utf8encode } from "../../src/util";
 
 // key from hedera-sdk-java tests, not used anywhere
 const privKeyBytes = Uint8Array.of(-37, 72, 75, -126, -114, 100, -78, -40, -15, 44, -29, -64, -96, -23, 58, 11, -116, -50, 122, -15, -69, -113, 57, -55, 119, 50, 57, 68, -126, 83, -114, 16);
@@ -51,8 +50,6 @@ const passphrase = "asdf1234";
 const pemString = "-----BEGIN PRIVATE KEY-----\n" +
 "MC4CAQAwBQYDK2VwBCIEINtIS4KOZLLY8SzjwKDpOguMznrxu485yXcyOUSCU44Q\n" +
 "-----END PRIVATE KEY-----\n";
-
-const pemUint8Array = utf8encode(pemString);
 
 describe("Ed25519PrivateKey", () => {
     it("toString() produces correctly encoded string", () => {
@@ -127,7 +124,7 @@ describe("Ed25519PrivateKey", () => {
     });
 
     it("fromPem() produces a correct value", () => {
-        const key = Ed25519PrivateKey.fromPem(pemUint8Array);
+        const key = Ed25519PrivateKey.fromPem(pemString);
         expect(key.toString()).toStrictEqual(privKeyStr);
     });
 });
