@@ -227,14 +227,14 @@ export class Ed25519PrivateKey {
      * Ensures the strings "-----BEGIN PRIVATE KEY-----\n" and "-----END PRIVATE KEY-----\n" are substrings in the pem string, then slices the key from the pem string, then creates an Ed25519PrivateKey object from the key string
      */
     public static fromPem(pem: string): Ed25519PrivateKey {
-        const beginIndex = pem.search(beginPrivateKey) + beginPrivateKey.length;
-        const endIndex = pem.search(endPrivateKey);
+        const beginIndex = pem.indexOf(beginPrivateKey);
+        const endIndex = pem.indexOf(endPrivateKey);
 
         if (beginIndex === -1 || endIndex === -1) {
             throw new BadPemFileError();
         }
 
-        const keyEncoded = pem.slice(beginIndex, endIndex);
+        const keyEncoded = pem.slice(beginIndex + beginPrivateKey.length, endIndex);
 
         const key = Buffer.from(keyEncoded, "base64");
 
