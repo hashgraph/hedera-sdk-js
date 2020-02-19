@@ -1,4 +1,4 @@
-const { Client, Ed25519PrivateKey, AccountCreateTransaction } = require("@hashgraph/sdk");
+const { Client, Ed25519PrivateKey, AccountCreateTransaction, Hbar } = require("@hashgraph/sdk");
 
 async function main() {
     const operatorPrivateKey = process.env.OPERATOR_KEY;
@@ -18,6 +18,7 @@ async function main() {
 
     const transactionId = await new AccountCreateTransaction()
         .setKey(privateKey.publicKey)
+        .setMaxTransactionFee(new Hbar(1))
         .setInitialBalance(0)
         .execute(client);
 

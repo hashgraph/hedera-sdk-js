@@ -33,7 +33,8 @@
     }
   ],
   "scripts": {
-    "test": "jest",
+    "test:unit": "jest --config jest.config.js",
+    "test:e2e": "jest --config jest.e2e.config.js --forceExit",
     "prepare": "gulp build",
     "docs": "typedoc --excludeNotExported --excludePrivate --excludeProtected --excludeExternals --out docs src",
     "prepublishOnly": "gulp generate:flow",

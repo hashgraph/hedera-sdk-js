@@ -12,6 +12,7 @@ describe("AccountCreateTransaction", () => {
                 validStartSeconds: 124124,
                 validStartNanos: 151515
             })
+            .setMaxTransactionFee(new Hbar(1))
             .setKey(privateKey.publicKey)
             .build(mockClient)
             .sign(privateKey);
