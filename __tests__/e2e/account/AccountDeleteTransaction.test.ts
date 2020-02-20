@@ -1,6 +1,6 @@
 import { Client, Ed25519PrivateKey, AccountCreateTransaction, TransactionId, AccountDeleteTransaction, Hbar } from "../../../src/index-node";
 
-describe("AccountCreateTransaction", () => {
+describe("AccountDeleteTransaction", () => {
     it("can be executed", async () => {
         if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
             throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
