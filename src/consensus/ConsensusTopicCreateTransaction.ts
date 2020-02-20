@@ -26,23 +26,18 @@ export class ConsensusTopicCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setSubmitKey(key: PublicKey): this {
-        this._body.setSubmitkey(key._toProtoKey());
-        return this;
+    /**
+     * @deprecated `ConsensusTopicUpdateTransaction.setAutoRenewAccount()`
+     * use `ConsensusTopicUpdateTransaction.setAutoRenewAccountId()` instead.
+     */
+    public setAutoRenewAccount(id: AccountIdLike): this {
+        console.warn("`ConsensusTopicCreateTransaction.setAutoRenewAccount()` is deprecated\
+use `ConsensusTopicCreateTransaction.setAutoRenewAccountId()` instead.");
+        return this.setAutoRenewAccountId(id);
     }
 
-    public setValidStart(time: Time): this {
-        this._body.setValidstarttime(time._toProto());
-        return this;
-    }
-
-    public setExpirationTime(time: Time): this {
-        this._body.setExpirationtime(time._toProto());
-        return this;
-    }
-
-    public setTopicMemo(memo: string): this {
-        this._body.setMemo(memo);
+    public setAutoRenewAccountId(id: AccountIdLike): this {
+        this._body.setAutorenewaccount(new AccountId(id)._toProto());
         return this;
     }
 
@@ -51,8 +46,33 @@ export class ConsensusTopicCreateTransaction extends TransactionBuilder {
         return this;
     }
 
-    public setAutoRenewAccount(id: AccountIdLike): this {
-        this._body.setAutorenewaccount(new AccountId(id)._toProto());
+    /**
+     * @deprecated `ConsensusTopicCreateTransaction.setExpirationTime()` is deprecated, and
+     * should not be used.
+     */
+    public setExpirationTime(time: Time): this {
+        console.warn("`ConsensusTopicCreateTransaction.setExpirationTime()` is deprecated, and should not be used");
+        this._body.setExpirationtime(time._toProto());
+        return this;
+    }
+
+    public setSubmitKey(key: PublicKey): this {
+        this._body.setSubmitkey(key._toProtoKey());
+        return this;
+    }
+
+    public setTopicMemo(memo: string): this {
+        this._body.setMemo(memo);
+        return this;
+    }
+
+    /**
+     * @deprecated `ConsensusTopicCreateTransaction.setValidStart()` is deprecated, and
+     * should not be used.
+     */
+    public setValidStart(time: Time): this {
+        console.warn("`ConsensusTopicCreateTransaction.setValidStart()` is deprecated.");
+        this._body.setValidstarttime(time._toProto());
         return this;
     }
 

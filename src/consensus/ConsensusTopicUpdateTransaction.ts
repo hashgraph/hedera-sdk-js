@@ -22,43 +22,6 @@ export class ConsensusTopicUpdateTransaction extends TransactionBuilder {
         this._inner.setConsensusupdatetopic(body);
     }
 
-    public setTopicId(id: ConsensusTopicIdLike): this {
-        this._body.setTopicid(new ConsensusTopicId(id)._toProto());
-        return this;
-    }
-
-    public setAdminKey(key: PublicKey): this {
-        this._body.setAdminkey(key._toProtoKey());
-        return this;
-    }
-
-    public setSubmitKey(key: PublicKey): this {
-        this._body.setSubmitkey(key._toProtoKey());
-        return this;
-    }
-
-    public setExpirationTime(time: Time): this {
-        this._body.setExpirationtime(time._toProto());
-        return this;
-    }
-
-    public setTopicMemo(memo: string): this {
-        const value = new StringValue();
-        value.setValue(memo);
-        this._body.setMemo(value);
-        return this;
-    }
-
-    public setAutoRenewPeriod(seconds: number): this {
-        this._body.setAutorenewperiod(newDuration(seconds));
-        return this;
-    }
-
-    public setAutoRenewAccount(id: AccountIdLike): this {
-        this._body.setAutorenewaccount(new AccountId(id)._toProto());
-        return this;
-    }
-
     public clearTopicMemo(): this {
         this._body.clearMemo();
         return this;
@@ -76,6 +39,53 @@ export class ConsensusTopicUpdateTransaction extends TransactionBuilder {
 
     public clearAutoRenewAccount(): this {
         this._body.clearAutorenewaccount();
+        return this;
+    }
+
+    public setAdminKey(key: PublicKey): this {
+        this._body.setAdminkey(key._toProtoKey());
+        return this;
+    }
+
+    /**
+     * @deprecated `ConsensusTopicCreateTransaction.setAutoRenewAccount()`
+     * use `ConsensusTopicCreateTransaction.setAutoRenewAccountId()` instead.
+     */
+    public setAutoRenewAccount(id: AccountIdLike): this {
+        console.warn("`ConsensusTopicUpdateTransaction.setAutoRenewAccount()` is deprecated\
+use `ConsensusTopicUpdateTransaction.setAutoRenewAccountId()` instead.");
+        return this.setAutoRenewAccountId(id);
+    }
+
+    public setAutoRenewAccountId(id: AccountIdLike): this {
+        this._body.setAutorenewaccount(new AccountId(id)._toProto());
+        return this;
+    }
+
+    public setAutoRenewPeriod(seconds: number): this {
+        this._body.setAutorenewperiod(newDuration(seconds));
+        return this;
+    }
+
+    public setExpirationTime(time: Time): this {
+        this._body.setExpirationtime(time._toProto());
+        return this;
+    }
+
+    public setSubmitKey(key: PublicKey): this {
+        this._body.setSubmitkey(key._toProtoKey());
+        return this;
+    }
+
+    public setTopicId(id: ConsensusTopicIdLike): this {
+        this._body.setTopicid(new ConsensusTopicId(id)._toProto());
+        return this;
+    }
+
+    public setTopicMemo(memo: string): this {
+        const value = new StringValue();
+        value.setValue(memo);
+        this._body.setMemo(value);
         return this;
     }
 
