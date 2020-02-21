@@ -2,19 +2,20 @@ export type AsnSeq = { seq: AsnType[] }
 export type AsnInt = { int: number }
 export type AsnBytes = { bytes: Uint8Array }
 export type AsnIdent = { ident: string }
-export type AsnNull = null;
+// to make type refinement easier
+export type AsnNull = {};
 
 export type AsnType = AsnSeq | AsnInt | AsnBytes | AsnIdent | AsnNull;
 
 /**
  * Note: may throw weird errors on malformed input. Catch and rethrow with, e.g. `BadKeyError`.
  */
-export function decode(derBytes: Uint8Array): AsnType {
+export function decodeDer(derBytes: Uint8Array): AsnType {
     const [ asn ] = decodeIncremental(derBytes);
     return asn;
 }
 
-export function decodeIncremental(bytes: Uint8Array): [AsnType, Uint8Array] {
+function decodeIncremental(bytes: Uint8Array): [AsnType, Uint8Array] {
     // slice off the initial tag byte, `decodeLength` returns a slice of the remaining data
     const [ len, rem ] = decodeLength(bytes.subarray(1));
     const data = rem.subarray(0, len);
@@ -26,7 +27,7 @@ export function decodeIncremental(bytes: Uint8Array): [AsnType, Uint8Array] {
         case 4: // must always be primitive form in DER; for OCTET STRING this is literal bytes
             return [{ bytes: data }, tail ];
         case 5: // empty
-            return [ null, tail ];
+            return [{}, tail ];
         case 6:
             return [{ ident: decodeObjectIdent(data) }, tail ];
         case 48:

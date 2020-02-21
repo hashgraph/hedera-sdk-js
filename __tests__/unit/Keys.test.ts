@@ -1,10 +1,9 @@
-import * as nacl from "tweetnacl";
 import {
     Ed25519PrivateKey,
     Ed25519PublicKey,
     KeyMismatchError,
-    ThresholdKey,
-    Mnemonic
+    Mnemonic,
+    ThresholdKey
 } from "../../src/exports";
 import { KeyList } from "../../src/crypto/KeyList";
 
@@ -50,6 +49,15 @@ const passphrase = "asdf1234";
 const pemString = "-----BEGIN PRIVATE KEY-----\n" +
 "MC4CAQAwBQYDK2VwBCIEINtIS4KOZLLY8SzjwKDpOguMznrxu485yXcyOUSCU44Q\n" +
 "-----END PRIVATE KEY-----\n";
+
+const encryptedPem = "-----BEGIN ENCRYPTED PRIVATE KEY-----\n"
+    + "MIGbMFcGCSqGSIb3DQEFDTBKMCkGCSqGSIb3DQEFDDAcBAi8WY7Gy2tThQICCAAw\n"
+    + "DAYIKoZIhvcNAgkFADAdBglghkgBZQMEAQIEEOq46NPss58chbjUn20NoK0EQG1x\n"
+    + "R88hIXcWDOECttPTNlMXWJt7Wufm1YwBibrxmCq1QykIyTYhy1TZMyxyPxlYW6aV\n"
+    + "9hlo4YEh3uEaCmfJzWM=\n"
+    + "-----END ENCRYPTED PRIVATE KEY-----\n";
+
+const pemPassphrase = "this is a passphrase";
 
 describe("Ed25519PrivateKey", () => {
     it("toString() produces correctly encoded string", () => {
@@ -123,10 +131,15 @@ describe("Ed25519PrivateKey", () => {
         expect(androidChildKey.publicKey.toBytes()).toStrictEqual(androidWalletPubKeyBytes);
     });
 
-    it("fromPem() produces a correct value", () => {
-        const key = Ed25519PrivateKey.fromPem(pemString);
+    it("fromPem() produces a correct value", async () => {
+        const key = await Ed25519PrivateKey.fromPem(pemString);
         expect(key.toString()).toStrictEqual(privKeyStr);
     });
+
+    it("fromPem() with passphrase produces a correct value", async () => {
+        const key = await Ed25519PrivateKey.fromPem(encryptedPem, pemPassphrase);
+        expect(key.toString()).toStrictEqual(privKeyStr);
+    })
 });
 
 describe("Ed25519PublicKey", () => {
