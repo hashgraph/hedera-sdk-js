@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>MirrorSubscriptionHandle | @hashgraph/sdk</title>
+	<title>EncryptedPrivateKeyInfo | @hashgraph/sdk</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_mirror_mirrorsubscriptionhandle_.html">&quot;mirror/MirrorSubscriptionHandle&quot;</a>
+					<a href="../modules/_crypto_pkcs_.html">&quot;crypto/pkcs&quot;</a>
 				</li>
 				<li>
-					<a href="_mirror_mirrorsubscriptionhandle_.mirrorsubscriptionhandle.html">MirrorSubscriptionHandle</a>
+					<a href="_crypto_pkcs_.encryptedprivatekeyinfo.html">EncryptedPrivateKeyInfo</a>
 				</li>
 			</ul>
-			<h1>Class MirrorSubscriptionHandle</h1>
+			<h1>Class EncryptedPrivateKeyInfo</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">MirrorSubscriptionHandle</span>
+						<span class="target">EncryptedPrivateKeyInfo</span>
 					</li>
 				</ul>
 			</section>
@@ -80,13 +80,21 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_mirror_mirrorsubscriptionhandle_.mirrorsubscriptionhandle.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_crypto_pkcs_.encryptedprivatekeyinfo.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_crypto_pkcs_.encryptedprivatekeyinfo.html#algid" class="tsd-kind-icon">alg<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_crypto_pkcs_.encryptedprivatekeyinfo.html#data" class="tsd-kind-icon">data</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_mirror_mirrorsubscriptionhandle_.mirrorsubscriptionhandle.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_pkcs_.encryptedprivatekeyinfo.html#decrypt" class="tsd-kind-icon">decrypt</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_crypto_pkcs_.encryptedprivatekeyinfo.html#parse" class="tsd-kind-icon">parse</a></li>
 							</ul>
 						</section>
 					</div>
@@ -98,42 +106,94 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Mirror<wbr>Subscription<wbr>Handle<span class="tsd-signature-symbol">(</span>call<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">UnsubscribeCall</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_mirror_mirrorsubscriptionhandle_.mirrorsubscriptionhandle.html" class="tsd-signature-type">MirrorSubscriptionHandle</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Encrypted<wbr>Private<wbr>Key<wbr>Info<span class="tsd-signature-symbol">(</span>asn<span class="tsd-signature-symbol">: </span><a href="../modules/_crypto_der_.html#asntype" class="tsd-signature-type">AsnType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_crypto_pkcs_.encryptedprivatekeyinfo.html" class="tsd-signature-type">EncryptedPrivateKeyInfo</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/df78b4d/src/mirror/MirrorSubscriptionHandle.ts#L4">src/mirror/MirrorSubscriptionHandle.ts:4</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/df78b4d/src/crypto/pkcs.ts#L102">src/crypto/pkcs.ts:102</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>call: <span class="tsd-signature-type">UnsubscribeCall</span></h5>
+									<h5>asn: <a href="../modules/_crypto_der_.html#asntype" class="tsd-signature-type">AsnType</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_mirror_mirrorsubscriptionhandle_.mirrorsubscriptionhandle.html" class="tsd-signature-type">MirrorSubscriptionHandle</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_crypto_pkcs_.encryptedprivatekeyinfo.html" class="tsd-signature-type">EncryptedPrivateKeyInfo</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="algid" class="tsd-anchor"></a>
+					<h3>alg<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">alg<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="_crypto_pkcs_.algorithmidentifier.html" class="tsd-signature-type">AlgorithmIdentifier</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/df78b4d/src/crypto/pkcs.ts#L101">src/crypto/pkcs.ts:101</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="data" class="tsd-anchor"></a>
+					<h3>data</h3>
+					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/df78b4d/src/crypto/pkcs.ts#L102">src/crypto/pkcs.ts:102</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="unsubscribe" class="tsd-anchor"></a>
-					<h3>unsubscribe</h3>
+					<a name="decrypt" class="tsd-anchor"></a>
+					<h3>decrypt</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">unsubscribe<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">decrypt<span class="tsd-signature-symbol">(</span>passphrase<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_crypto_pkcs_.privatekeyinfo.html" class="tsd-signature-type">PrivateKeyInfo</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/df78b4d/src/mirror/MirrorSubscriptionHandle.ts#L10">src/mirror/MirrorSubscriptionHandle.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/df78b4d/src/crypto/pkcs.ts#L118">src/crypto/pkcs.ts:118</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>passphrase: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_crypto_pkcs_.privatekeyinfo.html" class="tsd-signature-type">PrivateKeyInfo</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="parse" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> parse</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">parse<span class="tsd-signature-symbol">(</span>encoded<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_crypto_pkcs_.encryptedprivatekeyinfo.html" class="tsd-signature-type">EncryptedPrivateKeyInfo</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/df78b4d/src/crypto/pkcs.ts#L114">src/crypto/pkcs.ts:114</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>encoded: <span class="tsd-signature-type">Uint8Array</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_crypto_pkcs_.encryptedprivatekeyinfo.html" class="tsd-signature-type">EncryptedPrivateKeyInfo</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -146,27 +206,42 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_mirror_mirrorsubscriptionhandle_.html">&quot;mirror/<wbr>Mirror<wbr>Subscription<wbr>Handle&quot;</a>
+						<a href="../modules/_crypto_pkcs_.html">&quot;crypto/pkcs&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_crypto_pkcs_.algorithmidentifier.html" class="tsd-kind-icon">Algorithm<wbr>Identifier</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_mirror_mirrorsubscriptionhandle_.mirrorsubscriptionhandle.html" class="tsd-kind-icon">Mirror<wbr>Subscription<wbr>Handle</a>
+						<a href="_crypto_pkcs_.encryptedprivatekeyinfo.html" class="tsd-kind-icon">Encrypted<wbr>Private<wbr>Key<wbr>Info</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_mirror_mirrorsubscriptionhandle_.mirrorsubscriptionhandle.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_crypto_pkcs_.encryptedprivatekeyinfo.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_crypto_pkcs_.encryptedprivatekeyinfo.html#algid" class="tsd-kind-icon">alg<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_crypto_pkcs_.encryptedprivatekeyinfo.html#data" class="tsd-kind-icon">data</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_mirror_mirrorsubscriptionhandle_.mirrorsubscriptionhandle.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a>
+								<a href="_crypto_pkcs_.encryptedprivatekeyinfo.html#decrypt" class="tsd-kind-icon">decrypt</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="_crypto_pkcs_.encryptedprivatekeyinfo.html#parse" class="tsd-kind-icon">parse</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="_crypto_pkcs_.privatekeyinfo.html" class="tsd-kind-icon">Private<wbr>Key<wbr>Info</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
