@@ -2,19 +2,33 @@ import * as nacl from "tweetnacl";
 import * as crypto from "crypto";
 import { Ed25519PublicKey } from "./Ed25519PublicKey";
 import { Mnemonic } from "./Mnemonic";
-import { decodeHex, deriveChildKey, ed25519PrivKeyPrefix, encodeHex, pbkdf2, randomBytes, arraysEqual } from "./util";
+import {
+    arraysEqual,
+    decodeHex,
+    deriveChildKey,
+    ed25519PrivKeyPrefix,
+    encodeHex,
+    pbkdf2,
+    randomBytes
+} from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { createKeystore, loadKeystore } from "./Keystore";
 import { BadKeyError } from "../errors/BadKeyError";
 import { BadPemFileError } from "../errors/BadPemFileError";
+import { EncryptedPrivateKeyInfo } from "./pkcs";
+import { decodeDer } from "./der";
 
 const beginPrivateKey = "-----BEGIN PRIVATE KEY-----\n";
-
 const endPrivateKey = "-----END PRIVATE KEY-----\n";
+
+const beginEncryptedPkey = "-----BEGIN ENCRYPTED PRIVATE KEY-----\n";
+const endEncryptedPkey = "-----END ENCRYPTED PRIVATE KEY-----\n";
 
 const derPrefix = decodeHex("302e020100300506032b657004220420");
 
 function _bytesLengthCases(bytes: Uint8Array): nacl.SignKeyPair {
+    // this check is necessary because Jest breaks the prototype chain of Uint8Array
+    // noinspection SuspiciousTypeOfGuard
     const bytesArray = bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
 
     switch (bytes.length) {
@@ -58,8 +72,6 @@ export class Ed25519PrivateKey {
      * This key will _not_ support child key derivation.
      */
     public static fromBytes(bytes: Uint8Array): Ed25519PrivateKey {
-        // this check is necessary because Jest breaks the prototype chain of Uint8Array
-        // noinspection SuspiciousTypeOfGuard
         const keypair = _bytesLengthCases(bytes);
 
         const { secretKey: privateKey, publicKey } = keypair;
@@ -220,23 +232,52 @@ export class Ed25519PrivateKey {
     }
 
     /**
-     * Recover a private key from a pem string
+     * Recover a private key from a pem string; the private key may be encrypted.
      *
-     * This pem method assumes the .pem file has been converted to a string already
+     * This method assumes the .pem file has been converted to a string already.
      *
-     * Ensures the strings "-----BEGIN PRIVATE KEY-----\n" and "-----END PRIVATE KEY-----\n" are substrings in the pem string, then slices the key from the pem string, then creates an Ed25519PrivateKey object from the key string
+     * If `passphrase` is not null or empty, this looks for the first `ENCRYPTED PRIVATE KEY`
+     * section and uses `passphrase` to decrypt it; otherwise, it looks for the first `PRIVATE KEY`
+     * section and decodes that as a DER-encoded Ed25519 private key.
      */
-    public static fromPem(pem: string): Ed25519PrivateKey {
-        const beginIndex = pem.indexOf(beginPrivateKey);
-        const endIndex = pem.indexOf(endPrivateKey);
+    public static async fromPem(pem: string, passphrase?: string): Promise<Ed25519PrivateKey> {
+        const beginTag = passphrase ? beginEncryptedPkey : beginPrivateKey;
+        const endTag = passphrase ? endEncryptedPkey : endPrivateKey;
+
+        const beginIndex = pem.indexOf(beginTag);
+        const endIndex = pem.indexOf(endTag);
 
         if (beginIndex === -1 || endIndex === -1) {
             throw new BadPemFileError();
         }
 
-        const keyEncoded = pem.slice(beginIndex + beginPrivateKey.length, endIndex);
+        const keyEncoded = pem.slice(beginIndex + beginTag.length, endIndex);
 
         const key = Buffer.from(keyEncoded, "base64");
+
+        if (passphrase) {
+            let encrypted;
+
+            try {
+                encrypted = EncryptedPrivateKeyInfo.parse(key);
+            } catch (error) {
+                throw new BadKeyError(`failed to parse encrypted private key: ${error.message}`);
+            }
+
+            const decrypted = await encrypted.decrypt(passphrase);
+
+            if (decrypted.algId.algIdent !== "1.3.101.112") {
+                throw new BadKeyError(`unknown private key algorithm ${decrypted.algId}`);
+            }
+
+            const keyData = decodeDer(decrypted.privateKey);
+
+            if ("bytes" in keyData) {
+                return Ed25519PrivateKey.fromBytes(keyData.bytes);
+            }
+
+            throw new BadKeyError(`expected ASN bytes, got ${JSON.stringify(keyData)}`);
+        }
 
         return Ed25519PrivateKey.fromBytes(key);
     }

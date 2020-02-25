@@ -1,7 +1,7 @@
 export class BadKeyError extends Error {
-    public constructor() {
+    public constructor(msg?: string) {
         super();
-        this.message = "Failed to parse correct key";
+        this.message = msg ? msg : "Failed to parse correct key";
         this.name = "BadKeyError";
     }
 }
