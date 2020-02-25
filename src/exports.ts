@@ -61,6 +61,8 @@ export { ThresholdKey } from "./crypto/ThresholdKey";
 export { PublicKey } from "./crypto/PublicKey";
 export { KeyList } from "./crypto/KeyList";
 export { Mnemonic } from "./crypto/Mnemonic";
+export { MnemonicValidationResult } from "./crypto/MnemonicValidationResult";
+export { MnemonicValidationStatus } from "./crypto/MnemonicValidationStatus";
 export { KeyMismatchError } from "./crypto/KeyMismatchError";
 
 export { Hbar } from "./Hbar";
