@@ -9,7 +9,7 @@ import { ConsensusGetTopicInfoQuery } from "../generated/ConsensusGetTopicInfo_p
 import { Time } from "../Time";
 import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
 import { AccountId } from "../account/AccountId";
-import { ConsensusTopicId } from "./ConsensusTopicId";
+import { ConsensusTopicId, ConsensusTopicIdLike } from "./ConsensusTopicId";
 
 export interface ConsensusTopicInfo {
     topicMemo: string;
@@ -34,8 +34,8 @@ export class ConsensusTopicInfoQuery extends QueryBuilder<ConsensusTopicInfo> {
         this._inner.setConsensusgettopicinfo(this._builder);
     }
 
-    public setTopicId(id: ConsensusTopicId): this {
-        this._builder.setTopicid(id._toProto());
+    public setTopicId(id: ConsensusTopicIdLike): this {
+        this._builder.setTopicid(new ConsensusTopicId(id)._toProto());
         return this;
     }
 

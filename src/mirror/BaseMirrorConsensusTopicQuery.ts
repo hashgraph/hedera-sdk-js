@@ -1,5 +1,8 @@
 import { ConsensusTopicQuery } from "../generated/MirrorConsensusService_pb";
-import { ConsensusTopicId } from "../consensus/ConsensusTopicId";
+import {
+    ConsensusTopicId,
+    ConsensusTopicIdLike
+} from "../consensus/ConsensusTopicId";
 import { Time } from "../Time";
 import { LocalValidationError } from "../errors/LocalValidationError";
 import { MirrorConsensusTopicResponse } from "./MirrorConsensusTopicResponse";
@@ -10,8 +13,8 @@ export type ErrorHandler = (error: Error) => void;
 export class BaseMirrorConsensusTopicQuery {
     protected readonly _builder: ConsensusTopicQuery = new ConsensusTopicQuery();
 
-    public setTopicId(id: ConsensusTopicId): this {
-        this._builder.setTopicid(id._toProto());
+    public setTopicId(id: ConsensusTopicIdLike): this {
+        this._builder.setTopicid(new ConsensusTopicId(id)._toProto());
         return this;
     }
 
