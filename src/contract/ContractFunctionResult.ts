@@ -65,7 +65,11 @@ export class ContractFunctionResult {
         return this.bytes;
     }
 
-    public getString(index: number): string {
+    public getString(index?: number): string {
+        if (index == null) {
+            return Buffer.from(this.getBytes(0)).toString("utf-8");
+        }
+
         return Buffer.from(this.getBytes(index)).toString("utf-8");
     }
 

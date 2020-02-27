@@ -9,13 +9,11 @@ describe("ContractFunctionResult", () => {
         "0000000000000000000000000000000000000000000000000000000000000014" +
         "48656c6c6f2c20776f726c642c20616761696e21000000000000000000000000");
 
-    
     const byteResult2 = decodeHex("0000000000000000000000000000000000000000000000000000000000000020" +
         "0000000000000000000000000000000000000000000000000000000000000012" +
         "68656c6c6f2066726f6d20686564657261210000000000000000000000000000");
 
     const address = "11223344556677889900aabbccddeeff00112233";
-
 
     it("deserializes correctly; ContractFunctionResult", () => {
         const result = new ContractFunctionResult(byteResult);
@@ -37,5 +35,6 @@ describe("ContractFunctionResult", () => {
         const result2 = new ContractFunctionResult(byteResult2);
         expect(result2.getInt32(0)).toBe(32);
         expect(result2.getString(0)).toBe("hello from hedera!");
+        expect(result2.getString()).toBe("hello from hedera!");
     });
 });
