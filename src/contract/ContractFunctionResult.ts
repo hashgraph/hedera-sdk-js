@@ -65,11 +65,11 @@ export class ContractFunctionResult {
         return this.bytes;
     }
 
-    public getString(index: number): string {
+    public getString(index?: number): string {
         return Buffer.from(this.getBytes(index)).toString("utf-8");
     }
 
-    private getBytes(index: number): Uint8Array {
+    private getBytes(index?: number): Uint8Array {
         // Len should never be larger than Number.MAX
         // index * 32 is the position of the lenth
         // (index + 1) * 32 onward to (index + 1) * 32 + len will be the elements of the array
@@ -85,86 +85,86 @@ export class ContractFunctionResult {
         return this.bytes.subarray(offset + 32, offset + 32 + len);
     }
 
-    public getBytes32(index: number): Uint8Array {
-        return this.bytes.subarray(index * 32, index * 32 + 32);
+    public getBytes32(index?: number): Uint8Array {
+        return this.bytes.subarray((index ?? 0) * 32, (index ?? 0) * 32 + 32);
     }
 
-    public getBool(index: number): boolean {
-        return this.bytes[ index * 32 + 31 ] !== 0;
+    public getBool(index?: number): boolean {
+        return this.bytes[ (index ?? 0) * 32 + 31 ] !== 0;
     }
 
-    public getInt8(index: number): number {
-        return this.bytes[ index * 32 + 31 ];
+    public getInt8(index?: number): number {
+        return this.bytes[ (index ?? 0) * 32 + 31 ];
     }
 
-    public getInt32(index: number): number {
+    public getInt32(index?: number): number {
         // .getUint32() interprets as big-endian
         // Using DataView instead of Uint32Array because the latter interprets
         // using platform endianness which is little-endian on x86
         return new DataView(
             this.bytes.buffer,
-            this.bytes.byteOffset + index * 32 + 28,
+            this.bytes.byteOffset + (index ?? 0) * 32 + 28,
             4
         ).getInt32(0);
     }
 
-    public getInt64(index: number): BigNumber {
+    public getInt64(index?: number): BigNumber {
         return new BigNumber(
-            encodeHex(this._getBytes32(index).subarray(24, 32)),
+            encodeHex(this._getBytes32(index ?? 0).subarray(24, 32)),
             16
         );
     }
 
-    public getInt256(index: number): BigNumber {
+    public getInt256(index?: number): BigNumber {
         return new BigNumber(
-            encodeHex(this._getBytes32(index)),
+            encodeHex(this._getBytes32(index ?? 0)),
             16
         );
     }
 
-    public getUint8(index: number): number {
-        return this.bytes[ index * 32 + 31 ];
+    public getUint8(index?: number): number {
+        return this.bytes[ (index ?? 0) * 32 + 31 ];
     }
 
-    public getUint32(index: number): number {
+    public getUint32(index?: number): number {
         // .getUint32() interprets as big-endian
         // Using DataView instead of Uint32Array because the latter interprets
         // using platform endianness which is little-endian on x86
         return new DataView(
             this.bytes.buffer,
-            this.bytes.byteOffset + index * 32 + 28,
+            this.bytes.byteOffset + (index ?? 0) * 32 + 28,
             4
         ).getUint32(0);
     }
 
-    public getUint64(index: number): BigNumber {
+    public getUint64(index?: number): BigNumber {
         return new BigNumber(
             encodeHex(this._getBytes32(index).subarray(24, 32)),
             16
         );
     }
 
-    public getUint256(index: number): BigNumber {
+    public getUint256(index?: number): BigNumber {
         return new BigNumber(
             encodeHex(this._getBytes32(index)),
             16
         );
     }
 
-    public getAddress(index: number): string {
+    public getAddress(index?: number): string {
         return Buffer.from(this.bytes.subarray(
-            index * 32 + 12,
-            index * 32 + 32
+            (index ?? 0) * 32 + 12,
+            (index ?? 0) * 32 + 32
         )).toString("hex");
     }
 
     //
     //  NOT A STABLE API
     //
-    public _getBytes32(index: number): Uint8Array {
+    public _getBytes32(index?: number): Uint8Array {
         return this.bytes.subarray(
-            index * 32,
-            index * 32 + 32
+            (index ?? 0) * 32,
+            (index ?? 0) * 32 + 32
         );
     }
 }
