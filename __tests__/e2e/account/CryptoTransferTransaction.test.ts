@@ -1,6 +1,6 @@
 import { Client, Ed25519PrivateKey, CryptoTransferTransaction, TransactionId, Hbar } from "../../../src/index-node";
 
-describe("AccountInfoQuery", () => {
+describe("CryptoTransferTransaction", () => {
     it("can be executed", async () => {
         if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
             throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
