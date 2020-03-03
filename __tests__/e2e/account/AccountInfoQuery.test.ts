@@ -23,27 +23,40 @@ describe("AccountInfoQuery", () => {
 
         let receipt = await transactionId.getReceipt(client);
 
-        const accountId = receipt.getAccountId();
+        const account = receipt.getAccountId();
 
         const info = await new AccountInfoQuery()
-            .setAccountId(accountId)
+            .setAccountId(account)
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
 
-        expect(info.accountId).toStrictEqual(accountId);
+        expect(info.accountId).toStrictEqual(account);
         expect(info.isDeleted).toBe(false);
         expect(info.key.toString()).toBe(key.publicKey.toString());
         expect(info.balance.asTinybar().toString(10)).toBe(new Hbar(1).asTinybar().toString(10));
 
         transactionId = await new AccountDeleteTransaction()
-            .setDeleteAccountId(accountId)
+            .setDeleteAccountId(account)
             .setTransferAccountId(operatorAccount)
             .setMaxTransactionFee(new Hbar(1))
-            .setTransactionId(new TransactionId(accountId))
+            .setTransactionId(new TransactionId(account))
             .build(client)
             .sign(key)
             .execute(client);
 
         receipt = await transactionId.getReceipt(client);
+
+        let errorThrown = false;
+        try {
+            await new AccountInfoQuery()
+                .setAccountId(account)
+                .setMaxQueryPayment(new Hbar(1))
+                .execute(client);
+        } catch {
+            errorThrown = true;
+        }
+
+        expect(errorThrown).toBe(true);
+
     }, 30000);
 });
