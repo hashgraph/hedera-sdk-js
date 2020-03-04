@@ -1,4 +1,17 @@
-import { Client, Ed25519PrivateKey, CryptoTransferTransaction, AccountBalanceQuery, AccountInfoQuery, AccountCreateTransaction, AccountDeleteTransaction, AccountUpdateTransaction, Hbar, TransactionId } from "../../../src/index-node";
+import {
+    Client,
+    Ed25519PrivateKey,
+    CryptoTransferTransaction,
+    AccountBalanceQuery,
+    AccountInfoQuery,
+    AccountCreateTransaction,
+    AccountDeleteTransaction,
+    AccountUpdateTransaction,
+    AccountRecordsQuery,
+    AccountStakersQuery,
+    Hbar,
+    TransactionId
+} from "../../../src/index-node";
 
 describe("AccountUpdateTransaction", () => {
     it("can be executed", async () => {
@@ -41,6 +54,28 @@ describe("AccountUpdateTransaction", () => {
         expect(info.isDeleted).toBe(false);
         expect(info.key.toString()).toBe(key1.publicKey.toString());
         expect(info.balance.asTinybar().toString(10)).toBe(new Hbar(1).asTinybar().toString(10));
+
+        const records = await new AccountRecordsQuery()
+            .setAccountId(account)
+            .setMaxQueryPayment(new Hbar(1))
+            .execute(client);
+
+        for(const record of records) {
+            expect(record.receipt).toBeDefined();
+        }
+
+        let errorThrown = false;
+        try {
+            // NOT-SUPPORTED
+            await new AccountStakersQuery()
+                .setAccountId(account)
+                .setMaxQueryPayment(new Hbar(1))
+                .execute(client);
+        } catch {
+            errorThrown = true;
+        }
+
+        expect(errorThrown).toBe(true);
 
         transactionId = await new AccountUpdateTransaction()
             .setAccountId(account)
@@ -91,7 +126,7 @@ describe("AccountUpdateTransaction", () => {
 
         await transactionId.getReceipt(client);
 
-        let errorThrown = false;
+        errorThrown = false;
         try {
             await new AccountInfoQuery()
                 .setAccountId(account)

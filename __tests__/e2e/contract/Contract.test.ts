@@ -9,6 +9,7 @@ import {
     ContractBytecodeQuery,
     ContractCreateTransaction,
     ContractInfoQuery,
+    ContractRecordsQuery,
     ContractUpdateTransaction,
     ContractDeleteTransaction,
     Hbar
@@ -97,6 +98,15 @@ describe("ContractCreateTransaction", () => {
             .execute(client);
 
         expect(result.getString(0)).toBe("new message");
+
+        const records = await new ContractRecordsQuery()
+            .setContractId(contract)
+            .setMaxQueryPayment(new Hbar(5))
+            .execute(client);
+
+        for(const record of records) {
+            expect(record.receipt).toBeDefined();
+        }
 
         transactionId = await new ContractUpdateTransaction()
             .setContractId(contract)
