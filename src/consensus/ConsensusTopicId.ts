@@ -9,16 +9,21 @@ export class ConsensusTopicId {
 
     public constructor(shard: number, realm: number, topic: number);
     public constructor(topicId: ConsensusTopicIdLike);
-    public constructor(shardOrTopicId: ConsensusTopicIdLike, realm?: number, topic?: number) {
+    public constructor(
+        shardOrTopicId: ConsensusTopicIdLike,
+        realm?: number,
+        topic?: number
+    ) {
         if (typeof shardOrTopicId === "number" && realm != null && topic != null) {
             this.shard = shardOrTopicId as number;
             this.realm = realm!;
             this.topic = topic!;
         } else {
             const topicId = shardOrTopicId as ConsensusTopicIdLike;
-            const id = topicId instanceof ConsensusTopicId ?
-                topicId :
-                normalizeEntityId("topic", topicId);
+            const id =
+                      topicId instanceof ConsensusTopicId ?
+                          topicId :
+                          normalizeEntityId("topic", topicId);
 
             this.shard = id.shard;
             this.realm = id.realm;
