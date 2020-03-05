@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>BadKeyError | @hashgraph/sdk</title>
+	<title>MnemonicValidationResult | @hashgraph/sdk</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,29 +52,32 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_errors_badkeyerror_.html">&quot;errors/BadKeyError&quot;</a>
+					<a href="../modules/_crypto_mnemonicvalidationresult_.html">&quot;crypto/MnemonicValidationResult&quot;</a>
 				</li>
 				<li>
-					<a href="_errors_badkeyerror_.badkeyerror.html">BadKeyError</a>
+					<a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html">MnemonicValidationResult</a>
 				</li>
 			</ul>
-			<h1>Class BadKeyError</h1>
+			<h1>Class MnemonicValidationResult</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The output of <code>toString()</code> is not part of the stable API; it only appears in the typedef
+						so that Typescript allows us to define it.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_errors_hbarrangeerror_.hbarrangeerror.html#error" class="tsd-signature-type">Error</a>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">BadKeyError</span>
-							</li>
-						</ul>
+						<span class="target">MnemonicValidationResult</span>
 					</li>
 				</ul>
 			</section>
@@ -85,16 +88,21 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_errors_badkeyerror_.badkeyerror.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_errors_badkeyerror_.badkeyerror.html#message" class="tsd-kind-icon">message</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_errors_badkeyerror_.badkeyerror.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="_errors_badkeyerror_.badkeyerror.html#stack" class="tsd-kind-icon">stack</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="_errors_badkeyerror_.badkeyerror.html#error" class="tsd-kind-icon">Error</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#status" class="tsd-kind-icon">status</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#unknownindices" class="tsd-kind-icon">unknown<wbr>Indices</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#isok" class="tsd-kind-icon">is<wbr>Ok</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,70 +114,94 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Bad<wbr>Key<wbr>Error<span class="tsd-signature-symbol">(</span>msg<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_errors_badkeyerror_.badkeyerror.html" class="tsd-signature-type">BadKeyError</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Mnemonic<wbr>Validation<wbr>Result<span class="tsd-signature-symbol">(</span>status<span class="tsd-signature-symbol">: </span><a href="../enums/_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html" class="tsd-signature-type">MnemonicValidationStatus</a>, unknownIndices<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html" class="tsd-signature-type">MnemonicValidationResult</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/errors/BadKeyError.ts#L1">src/errors/BadKeyError.ts:1</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/MnemonicValidationResult.ts#L16">src/crypto/MnemonicValidationResult.ts:16</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> msg: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<h5>status: <a href="../enums/_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html" class="tsd-signature-type">MnemonicValidationStatus</a></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> unknownIndices: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_errors_badkeyerror_.badkeyerror.html" class="tsd-signature-type">BadKeyError</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html" class="tsd-signature-type">MnemonicValidationResult</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-					<a name="message" class="tsd-anchor"></a>
-					<h3>message</h3>
-					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="status" class="tsd-anchor"></a>
+					<h3>status</h3>
+					<div class="tsd-signature tsd-kind-icon">status<span class="tsd-signature-symbol">:</span> <a href="../enums/_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html" class="tsd-signature-type">MnemonicValidationStatus</a></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_errors_hbarrangeerror_.hbarrangeerror.html">HbarRangeError</a>.<a href="_errors_hbarrangeerror_.hbarrangeerror.html#message">message</a></p>
 						<ul>
-							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:974</li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/MnemonicValidationResult.ts#L8">src/crypto/MnemonicValidationResult.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-					<a name="name" class="tsd-anchor"></a>
-					<h3>name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="unknownindices" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> unknown<wbr>Indices</h3>
+					<div class="tsd-signature tsd-kind-icon">unknown<wbr>Indices<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from <a href="_errors_hbarrangeerror_.hbarrangeerror.html">HbarRangeError</a>.<a href="_errors_hbarrangeerror_.hbarrangeerror.html#name">name</a></p>
 						<ul>
-							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:973</li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/MnemonicValidationResult.ts#L16">src/crypto/MnemonicValidationResult.ts:16</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>If not null, these are the indices in the mnemonic that were not found in the
+							BIP-39 standard English word list.</p>
+						</div>
+						<p>If <a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#status">status</a> is <a href="../enums/_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html#unknownwords">MnemonicValidationStatus.UnknownWords</a> then this will be non-null.</p>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-					<a name="stack" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> stack</h3>
-					<div class="tsd-signature tsd-kind-icon">stack<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="_errors_hbarrangeerror_.hbarrangeerror.html">HbarRangeError</a>.<a href="_errors_hbarrangeerror_.hbarrangeerror.html#stack">stack</a></p>
-						<ul>
-							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:975</li>
-						</ul>
-					</aside>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isok" class="tsd-anchor"></a>
+					<h3>is<wbr>Ok</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Ok<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/MnemonicValidationResult.ts#L23">src/crypto/MnemonicValidationResult.ts:23</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
-					<a name="error" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> Error</h3>
-					<div class="tsd-signature tsd-kind-icon">Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ErrorConstructor</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:984</li>
-						</ul>
-					</aside>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tostring" class="tsd-anchor"></a>
+					<h3>to<wbr>String</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">to<wbr>String<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/MnemonicValidationResult.ts#L27">src/crypto/MnemonicValidationResult.ts:27</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -180,7 +212,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_errors_badkeyerror_.html">&quot;errors/<wbr>Bad<wbr>Key<wbr>Error&quot;</a>
+						<a href="../modules/_crypto_mnemonicvalidationresult_.html">&quot;crypto/<wbr>Mnemonic<wbr>Validation<wbr>Result&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -189,22 +221,22 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_errors_badkeyerror_.badkeyerror.html" class="tsd-kind-icon">Bad<wbr>Key<wbr>Error</a>
+						<a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html" class="tsd-kind-icon">Mnemonic<wbr>Validation<wbr>Result</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_errors_badkeyerror_.badkeyerror.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_errors_badkeyerror_.badkeyerror.html#message" class="tsd-kind-icon">message</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#status" class="tsd-kind-icon">status</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_errors_badkeyerror_.badkeyerror.html#name" class="tsd-kind-icon">name</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#unknownindices" class="tsd-kind-icon">unknown<wbr>Indices</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
-								<a href="_errors_badkeyerror_.badkeyerror.html#stack" class="tsd-kind-icon">stack</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#isok" class="tsd-kind-icon">is<wbr>Ok</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
-								<a href="_errors_badkeyerror_.badkeyerror.html#error" class="tsd-kind-icon">Error</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
 							</li>
 						</ul>
 					</li>

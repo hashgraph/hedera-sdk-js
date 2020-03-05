@@ -101,6 +101,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_mnemonic_.mnemonic.html#toprivatekey" class="tsd-kind-icon">to<wbr>Private<wbr>Key</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_mnemonic_.mnemonic.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_mnemonic_.mnemonic.html#validate" class="tsd-kind-icon">validate</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_crypto_mnemonic_.mnemonic.html#fromstring" class="tsd-kind-icon">from<wbr>String</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_crypto_mnemonic_.mnemonic.html#generate" class="tsd-kind-icon">generate</a></li>
 							</ul>
@@ -120,18 +121,22 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c28063a/src/crypto/Mnemonic.ts#L6">src/crypto/Mnemonic.ts:6</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/Mnemonic.ts#L8">src/crypto/Mnemonic.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Lazily generate the key, providing an optional passphrase to protect it with</p>
+									<p>Recover a mnemonic from a list of 24 words.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>words: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+										</div>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_crypto_mnemonic_.mnemonic.html" class="tsd-signature-type">Mnemonic</a></h4>
@@ -147,7 +152,7 @@
 					<div class="tsd-signature tsd-kind-icon">words<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c28063a/src/crypto/Mnemonic.ts#L6">src/crypto/Mnemonic.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/Mnemonic.ts#L8">src/crypto/Mnemonic.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -164,9 +169,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c28063a/src/crypto/Mnemonic.ts#L13">src/crypto/Mnemonic.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/Mnemonic.ts#L20">src/crypto/Mnemonic.ts:20</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Lazily generate the key, providing an optional passphrase to protect it with</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -187,10 +197,53 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c28063a/src/crypto/Mnemonic.ts#L35">src/crypto/Mnemonic.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/Mnemonic.ts#L96">src/crypto/Mnemonic.ts:96</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="validate" class="tsd-anchor"></a>
+					<h3>validate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">validate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html" class="tsd-signature-type">MnemonicValidationResult</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/Mnemonic.ts#L68">src/crypto/Mnemonic.ts:68</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Validate that this is a valid BIP-39 mnemonic as generated by BIP-39&#39;s rules.</p>
+									<p>
+										Technically, invalid mnemonics can still be used to generate valid private keys,
+										but if they became invalid due to user error then it will be difficult for the user
+										to tell the difference unless they compare the generated keys.
+										<p>
+											During validation, the following conditions are checked in order:
+											<ol>
+												<li>{@link this.words.length} == 24</li>
+												<li>All strings in {@link this.words} exist in the BIP-39 standard English word list (no normalization is done).</li>
+												<li>The calculated checksum for the mnemonic equals the checksum encoded in the mnemonic.</li>
+											</ol>
+											<p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>see</dt>
+									<dd><p><a href="https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki " class="external"> Bitcoin Improvement Project proposal 39 (BIP-39) </a></p>
+									</dd>
+									<dt>see</dt>
+									<dd><p><a href="https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt " class="external"> BIP-39 English word list </a></p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html" class="tsd-signature-type">MnemonicValidationResult</a></h4>
+							<p>the result of the validation.</p>
 						</li>
 					</ul>
 				</section>
@@ -204,13 +257,20 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c28063a/src/crypto/Mnemonic.ts#L31">src/crypto/Mnemonic.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/Mnemonic.ts#L45">src/crypto/Mnemonic.ts:45</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Recover a mnemonic phrase from a string, splitting on spaces.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>mnemonic: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_crypto_mnemonic_.mnemonic.html" class="tsd-signature-type">Mnemonic</a></h4>
@@ -227,16 +287,18 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/c28063a/src/crypto/Mnemonic.ts#L26">src/crypto/Mnemonic.ts:26</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/01cd013/src/crypto/Mnemonic.ts#L35">src/crypto/Mnemonic.ts:35</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Generate a random 24-word mnemonic.</p>
 								</div>
-								<p>If you are happy with the mnemonic produced you can call <code>.generateKey()</code> on the returned object.</p>
+								<p>If you are happy with the mnemonic produced you can call <a href="_crypto_mnemonic_.mnemonic.html#toprivatekey">.toPrivateKey</a> on the
+								returned object.</p>
 								<p>This mnemonics that are compatible with the Android and iOS mobile wallets.</p>
-								<p><strong>NOTE:</strong> Mnemonics must be saved separately as they cannot be later recovered from a given key.</p>
+								<p><strong>NOTE:</strong> Mnemonics must be saved separately as they cannot be later recovered from a given
+								key.</p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <a href="_crypto_mnemonic_.mnemonic.html" class="tsd-signature-type">Mnemonic</a></h4>
 						</li>
@@ -273,6 +335,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_crypto_mnemonic_.mnemonic.html#tostring" class="tsd-kind-icon">to<wbr>String</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_crypto_mnemonic_.mnemonic.html#validate" class="tsd-kind-icon">validate</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_crypto_mnemonic_.mnemonic.html#fromstring" class="tsd-kind-icon">from<wbr>String</a>
