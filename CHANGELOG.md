@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
  * Allow BigNumber or String to be used as Tinybar where Tinybar was accepted
+ 
+ * Add support for decoding `Ed25519PrivateKey` from a PEM file using `Ed25519PrivateKey.fromPem()`
+ 
+ * Add support for passing no argument to `ContractFunctionResult.get*()` methods.
+ 
+ * Add `MnemonicValidationResult` which is the response type for `Mnemonic.validte()`
+ 
+ * Add public method `Mnemonic.validate(): MnemonicValidationResult` which validates if the mnemonic
+   came from the same wordlist, in the right order, and without misspellings.
+   
+ * Add `BadPemFileError` which is thrown when decoding a pem file fails.
+ 
+### Fixed
+
+ * Fixes `Hbar.isNegative()` failing with `undefined`.
+ 
+ * Fixes `CryptoTransferTransaction.addTransfer()` not supporting `BigNumber` or
+   `number` as arguments. 
+ 
+ * Fixes `ConsensusTopicInfoQuery.setTopicId()` not supporting `ConsensusTopicIdLike`.
+ 
+### Deprecated
+
+ * Deprecates `Client.maxTransactionFee` and `Client.maxQueryPayment` getters.
+
+ * Deprecates `ConsensusTopicCreateTransaction.setAutoRenewAccount()` was simply
+   renamed to `ConsensusTopicCreateTransaction.setAutoRenewAccountId()`.
+ 
+ * Deprecates `ConsensusTopicCreateTransaction.setExpirationTime()` with no replacement.
+
+ * Deprecates `ConsensusTopicCreateTransaction.setValidStart()` with no replacement.
+ 
+ * Deprecates `ConsensusTopicUpdateTransaction.setAutoRenewAccount()` with no replacement.
 
 ## v1.1.8
 
