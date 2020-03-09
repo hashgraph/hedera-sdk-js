@@ -1,4 +1,7 @@
 name: Node
+env:
+    OPERATOR_KEY: ${{ secrets.OPERATOR_KEY }}
+    OPERATOR_ID: ${{ secrets.OPERATOR_ID }}
 
 on:
   pull_request:
@@ -38,5 +41,7 @@ jobs:
     - run: yarn
     
     - run: yarn test:unit
+    
+    - run: yarn test:e2e
 
     - run: yarn lint
