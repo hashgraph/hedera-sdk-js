@@ -201,7 +201,7 @@ export abstract class QueryBuilder<T> {
     }
 
     protected _getDefaultExecuteTimeout(): number {
-        return 10000; // 10s
+        return 20000; // 20s
     }
 
     protected _isPaymentRequired(): boolean {
