@@ -5,7 +5,7 @@ import {
 import { TransactionID } from "./generated/BasicTypes_pb";
 import { orThrow } from "./util";
 import { Timestamp } from "./generated/Timestamp_pb";
-import { dateToTimestamp } from "./Timestamp";
+import { dateToTimestamp, Timestamp as JsTimestamp } from "./Timestamp";
 import { BaseClient } from "./BaseClient";
 import { TransactionReceipt } from "./TransactionReceipt";
 import { TransactionRecord } from "./TransactionRecord";
@@ -48,8 +48,7 @@ export class TransactionId {
         if (!(id as TransactionIdLike)[ "validStart" ] && !(id as TransactionIdLike)[ "validStartSeconds" ]) {
             this.accountId = new AccountId(id as AccountIdLike);
 
-            // allows the transaction to be accepted as long as the node isn't 10 seconds behind us
-            const { seconds, nanos } = dateToTimestamp(Date.now() - 10_000);
+            const { seconds, nanos } = getIncreasingInstant();
 
             this.validStart = new Time(seconds, nanos);
         } else {
@@ -156,6 +155,40 @@ export class TransactionId {
 
         return txnId;
     }
+}
+
+let lastInstant: JsTimestamp;
+
+// We need this method to return a timestamp because JS times do not generally
+// handle nanoseconds. So if transactions are created too quickly, duplicate timestamps
+// could be produced. This method ensures the timestamps are always _increasing_ or monotonic.
+function getIncreasingInstant(): JsTimestamp {
+    // Allows the transaction to be accepted as long as the
+    // server is not more than 10 seconds behind us
+    let instant = dateToTimestamp(Date.now() - 10_000);
+
+    // ensures every instant is at least always greater than the last
+    lastInstant = lastInstant != null && instantLessThanOrEqual(instant, lastInstant)
+        ? addNanos(lastInstant, 1)
+        : instant;
+
+    return instant;
+}
+
+function addNanos(a: JsTimestamp, n: number): JsTimestamp {
+    return {
+        seconds: a.seconds,
+        nanos: a.nanos + n
+    };
+}
+
+function instantLessThanOrEqual(a: JsTimestamp, b: JsTimestamp): boolean {
+    if (a.seconds < b.seconds) return true;
+    if (a.seconds > b.seconds) return false;
+    if (a.nanos < b.nanos) return true;
+    if (a.nanos > b.nanos) return false;
+
+    return true;
 }
 
 /**
