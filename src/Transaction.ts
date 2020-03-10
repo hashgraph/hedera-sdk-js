@@ -18,6 +18,7 @@ import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { TransactionRecord } from "./TransactionRecord";
 import { Status } from "./Status";
+import * as base64 from "./encoding/base64";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
 
@@ -196,8 +197,9 @@ export class Transaction {
     public toString(): string {
         const tx = this._toProto().toObject();
         const bodybytes = tx.bodybytes instanceof Uint8Array ?
-            Buffer.from(tx.bodybytes) :
-            Buffer.from(tx.bodybytes, "base64");
+            tx.bodybytes :
+            base64.decode(tx.bodybytes);
+
         tx.body = TransactionBody.deserializeBinary(bodybytes).toObject();
 
         return JSON.stringify(tx, null, 4);

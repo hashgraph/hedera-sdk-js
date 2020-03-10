@@ -1,6 +1,7 @@
 import { AccountID } from "../generated/BasicTypes_pb";
 import { normalizeEntityId } from "../util";
 import BigNumber from "bignumber.js";
+import * as hex from "../encoding/hex";
 
 /** Normalized account ID returned by various methods in the SDK. */
 export class AccountId {
@@ -68,7 +69,7 @@ export class AccountId {
         view.setUint32(8, this.realm);
         view.setUint32(16, this.account);
 
-        return Buffer.from(buffer.buffer).toString("hex");
+        return hex.encode(buffer);
     }
 
     // NOT A STABLE API

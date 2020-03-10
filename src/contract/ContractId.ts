@@ -2,6 +2,7 @@ import { ContractID, Key } from "../generated/BasicTypes_pb";
 import { normalizeEntityId } from "../util";
 import { PublicKey } from "../crypto/PublicKey";
 import BigNumber from "bignumber.js";
+import * as hex from "../encoding/hex";
 
 /** Normalized contract ID returned by various methods in the SDK. */
 export class ContractId extends PublicKey {
@@ -71,7 +72,7 @@ export class ContractId extends PublicKey {
         view.setUint32(8, this.realm);
         view.setUint32(16, this.contract);
 
-        return Buffer.from(buffer).toString("hex");
+        return hex.encode(buffer);
     }
 
     // NOT A STABLE API

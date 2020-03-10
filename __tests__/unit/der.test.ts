@@ -1,5 +1,5 @@
 import { decodeDer } from '../../src/crypto/der';
-import { decodeHex } from '../../src/crypto/util';
+import { decode as decodeHex } from '../../src/encoding/hex';
 
 describe('der.decode()', () => {
     it('decodes an Ed25519 private key as expected', () => {

@@ -2,7 +2,7 @@ import { ContractLogInfo, contractLogInfoListToSdk } from "./ContractLogInfo";
 import * as pb from "../generated/ContractCallLocal_pb";
 import { ContractId } from "./ContractId";
 import BigNumber from "bignumber.js";
-import { encodeHex } from "../crypto/util";
+import * as hex from "../encoding/hex";
 
 /**
  * The result returned by a call to a smart contract function. This is part of the response to
@@ -110,14 +110,14 @@ export class ContractFunctionResult {
 
     public getInt64(index?: number): BigNumber {
         return new BigNumber(
-            encodeHex(this._getBytes32(index ?? 0).subarray(24, 32)),
+            hex.encode(this._getBytes32(index ?? 0).subarray(24, 32)),
             16
         );
     }
 
     public getInt256(index?: number): BigNumber {
         return new BigNumber(
-            encodeHex(this._getBytes32(index ?? 0)),
+            hex.encode(this._getBytes32(index ?? 0)),
             16
         );
     }
@@ -139,23 +139,23 @@ export class ContractFunctionResult {
 
     public getUint64(index?: number): BigNumber {
         return new BigNumber(
-            encodeHex(this._getBytes32(index).subarray(24, 32)),
+            hex.encode(this._getBytes32(index).subarray(24, 32)),
             16
         );
     }
 
     public getUint256(index?: number): BigNumber {
         return new BigNumber(
-            encodeHex(this._getBytes32(index)),
+            hex.encode(this._getBytes32(index)),
             16
         );
     }
 
     public getAddress(index?: number): string {
-        return Buffer.from(this.bytes.subarray(
+        return hex.encode(this.bytes.subarray(
             (index ?? 0) * 32 + 12,
             (index ?? 0) * 32 + 32
-        )).toString("hex");
+        ));
     }
 
     //

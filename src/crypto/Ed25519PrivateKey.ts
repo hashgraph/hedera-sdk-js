@@ -4,10 +4,8 @@ import { Ed25519PublicKey } from "./Ed25519PublicKey";
 import { Mnemonic } from "./Mnemonic";
 import {
     arraysEqual,
-    decodeHex,
     deriveChildKey,
     ed25519PrivKeyPrefix,
-    encodeHex,
     pbkdf2,
     randomBytes
 } from "./util";
@@ -17,6 +15,8 @@ import { BadKeyError } from "../errors/BadKeyError";
 import { BadPemFileError } from "../errors/BadPemFileError";
 import { EncryptedPrivateKeyInfo } from "./pkcs";
 import { decodeDer } from "./der";
+import * as base64 from "../encoding/base64";
+import * as hex from "../encoding/hex";
 
 const beginPrivateKey = "-----BEGIN PRIVATE KEY-----\n";
 const endPrivateKey = "-----END PRIVATE KEY-----\n";
@@ -24,7 +24,7 @@ const endPrivateKey = "-----END PRIVATE KEY-----\n";
 const beginEncryptedPkey = "-----BEGIN ENCRYPTED PRIVATE KEY-----\n";
 const endEncryptedPkey = "-----END ENCRYPTED PRIVATE KEY-----\n";
 
-const derPrefix = decodeHex("302e020100300506032b657004220420");
+const derPrefix = hex.decode("302e020100300506032b657004220420");
 
 function _bytesLengthCases(bytes: Uint8Array): nacl.SignKeyPair {
     // this check is necessary because Jest breaks the prototype chain of Uint8Array
@@ -88,14 +88,14 @@ export class Ed25519PrivateKey {
         switch (keyStr.length) {
             case 64: // lone private key
             case 128: { // private key + public key
-                const newKey = Ed25519PrivateKey.fromBytes(decodeHex(keyStr));
+                const newKey = Ed25519PrivateKey.fromBytes(hex.decode(keyStr));
                 newKey._asStringRaw = keyStr;
                 return newKey;
             }
             case 96:
                 if (keyStr.startsWith(ed25519PrivKeyPrefix)) {
                     const rawStr = keyStr.slice(32);
-                    const newKey = Ed25519PrivateKey.fromBytes(decodeHex(rawStr));
+                    const newKey = Ed25519PrivateKey.fromBytes(hex.decode(rawStr));
                     newKey._asStringRaw = rawStr;
                     return newKey;
                 }
@@ -211,7 +211,7 @@ export class Ed25519PrivateKey {
     public toString(raw = false): string {
         if (this._asStringRaw == null) {
             // only encode the private portion of the private key
-            this._asStringRaw = encodeHex(this._keyData.subarray(0, 32));
+            this._asStringRaw = hex.encode(this._keyData.subarray(0, 32));
         }
 
         return (raw ? "" : ed25519PrivKeyPrefix) + this._asStringRaw;
@@ -253,7 +253,7 @@ export class Ed25519PrivateKey {
 
         const keyEncoded = pem.slice(beginIndex + beginTag.length, endIndex);
 
-        const key = Buffer.from(keyEncoded, "base64");
+        const key = base64.decode(keyEncoded);
 
         if (passphrase) {
             let encrypted;

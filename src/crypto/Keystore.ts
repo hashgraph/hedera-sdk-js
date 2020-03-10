@@ -1,8 +1,9 @@
 import * as crypto from "crypto";
 import * as nacl from "tweetnacl";
-import { hmacAlgo, pbkdf2 } from "./util";
+import { hmacAlgo, pbkdf2, randomBytes } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { KeyMismatchError } from "./KeyMismatchError";
+import * as hex from "../encoding/hex";
 
 const AES_128_CTR = "aes-128-ctr";
 const HMAC_SHA256 = "hmac-sha256";
@@ -42,11 +43,11 @@ export async function createKeystore(
     const dkLen = 32;
     const c = 262144;
     const saltLen = 32;
-    const salt = crypto.randomBytes(saltLen);
+    const salt = await randomBytes(saltLen);
 
     const key = await pbkdf2(passphrase, salt, c, dkLen, "sha256");
 
-    const iv = crypto.randomBytes(16);
+    const iv = await randomBytes(16);
 
     // AES-128-CTR with the first half of the derived key and a random IV
     const cipher = crypto.createCipheriv(AES_128_CTR, key.slice(0, 16), iv);
@@ -58,17 +59,17 @@ export async function createKeystore(
     const keystore: Keystore = {
         version: 1,
         crypto: {
-            ciphertext: cipherText.toString("hex"),
-            cipherparams: { iv: iv.toString("hex") },
+            ciphertext: hex.encode(cipherText),
+            cipherparams: { iv: hex.encode(iv) },
             cipher: AES_128_CTR,
             kdf: "pbkdf2",
             kdfparams: {
                 dkLen,
-                salt: salt.toString("hex"),
+                salt: hex.encode(salt),
                 c,
                 prf: HMAC_SHA256
             },
-            mac: mac.toString("hex")
+            mac: hex.encode(mac)
         }
     };
 
@@ -101,16 +102,16 @@ export async function loadKeystore(
         throw new Error(`unsupported key derivation hash function: ${prf}`);
     }
 
-    const saltBytes = Buffer.from(salt, "hex");
-    const ivBytes = Buffer.from(iv, "hex");
-    const cipherBytes = Buffer.from(ciphertext, "hex");
+    const saltBytes = hex.decode(salt);
+    const ivBytes = hex.decode(iv);
+    const cipherBytes = hex.decode(ciphertext);
 
     const key = await pbkdf2(passphrase, saltBytes, c, dkLen, "sha256");
 
-    const hmac = Buffer.from(mac, "hex");
+    const hmac = hex.decode(mac);
     const verifyHmac = crypto.createHmac(hmacAlgo, key.slice(16)).update(cipherBytes).digest();
 
-    if (!hmac.equals(verifyHmac)) {
+    if (!Buffer.from(hmac).equals(verifyHmac)) {
         throw new KeyMismatchError(hmac, verifyHmac);
     }
 

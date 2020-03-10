@@ -1,8 +1,9 @@
 import * as nacl from "tweetnacl";
 import { Key } from "../generated/BasicTypes_pb";
-import { decodeHex, ed25519PubKeyPrefix, encodeHex } from "./util";
+import { ed25519PubKeyPrefix } from "./util";
 import { PublicKey } from "./PublicKey";
 import { BadKeyError } from "../errors/BadKeyError";
+import * as hex from "../encoding/hex";
 
 export class Ed25519PublicKey implements PublicKey {
     private readonly _keyData: Uint8Array;
@@ -23,14 +24,14 @@ export class Ed25519PublicKey implements PublicKey {
     public static fromString(keyStr: string): Ed25519PublicKey {
         switch (keyStr.length) {
             case 64: { // raw public key
-                const newKey = new Ed25519PublicKey(decodeHex(keyStr));
+                const newKey = new Ed25519PublicKey(hex.decode(keyStr));
                 newKey._asStringRaw = keyStr;
                 return newKey;
             }
             case 88: // DER encoded public key
                 if (keyStr.startsWith(ed25519PubKeyPrefix)) {
                     const rawKey = keyStr.slice(24);
-                    const newKey = new Ed25519PublicKey(decodeHex(rawKey));
+                    const newKey = new Ed25519PublicKey(hex.decode(rawKey));
                     newKey._asStringRaw = rawKey;
                     return newKey;
                 }
@@ -47,7 +48,7 @@ export class Ed25519PublicKey implements PublicKey {
 
     public toString(raw = false): string {
         if (this._asStringRaw == null) {
-            this._asStringRaw = encodeHex(this._keyData);
+            this._asStringRaw = hex.encode(this._keyData);
         }
 
         return (raw ? "" : ed25519PubKeyPrefix) + this._asStringRaw;

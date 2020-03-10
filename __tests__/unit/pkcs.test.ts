@@ -1,5 +1,5 @@
 import { EncryptedPrivateKeyInfo } from "../../src/crypto/pkcs";
-import { decodeHex } from "../../src/crypto/util";
+import { decode as decodeHex } from '../../src/encoding/hex';
 import { decodeDer } from "../../src/crypto/der";
 import { Ed25519PrivateKey } from "../../src/crypto/Ed25519PrivateKey";
 

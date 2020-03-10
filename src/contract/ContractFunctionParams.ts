@@ -1,6 +1,7 @@
 import BigNumber from "bignumber.js";
 import { ArgumentType, ContractFunctionSelector, SolidityType } from "./ContractFunctionSelector";
 import { utf8encode } from "../util";
+import * as hex from "../encoding/hex";
 
 interface Argument {
     dynamic: boolean;
@@ -171,8 +172,8 @@ export class ContractFunctionParams {
         }
 
         const par = value.length === 40 ?
-            Buffer.from(value, "hex") :
-            Buffer.from(value.substring(2), "hex");
+            hex.decode(value) :
+            hex.decode(value.substring(2));
 
         this._selector.addAddress();
 
@@ -189,8 +190,8 @@ export class ContractFunctionParams {
             }
 
             const buf = entry.length === 40 ?
-                Buffer.from(entry, "hex") :
-                Buffer.from(entry.substring(2), "hex");
+                hex.decode(entry) :
+                hex.decode(entry.substring(2));
 
             par.push(buf);
         }
@@ -201,7 +202,7 @@ export class ContractFunctionParams {
     }
 
     public addFunction(address: string, selector: ContractFunctionSelector): this {
-        const addressParam = Buffer.from(address, "hex");
+        const addressParam = hex.decode(address);
         const functionSelector = selector._build(null);
 
         if (addressParam.length !== 20) {
@@ -391,7 +392,7 @@ function argumentToBytes(
                 }
 
                 // eslint-disable-next-line no-case-declarations
-                const buf = Buffer.from(par, "hex");
+                const buf = hex.decode(par);
                 value.set(buf, 32 - buf.length);
             }
             return value;
@@ -403,7 +404,7 @@ function argumentToBytes(
                     par = `0${par}`;
                 }
 
-                const buf = Buffer.from(par, "hex");
+                const buf = hex.decode(par);
                 value.set(buf, 32 - buf.length);
             }
             return value;

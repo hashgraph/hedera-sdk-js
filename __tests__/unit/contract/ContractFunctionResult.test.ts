@@ -1,5 +1,5 @@
 import { ContractFunctionResult } from "../../../src/exports";
-import { decodeHex } from "../../../src/crypto/util";
+import { decode as decodeHex } from '../../../src/encoding/hex';
 
 describe("ContractFunctionResult", () => {
     const byteResult = decodeHex("00000000000000000000000000000000000000000000000000000000ffffffff" +
