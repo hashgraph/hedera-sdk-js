@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SignatureAndKey | @hashgraph/sdk</title>
+	<title>&quot;encoding/hex&quot; | @hashgraph/sdk</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,69 +52,77 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_transaction_.html">&quot;Transaction&quot;</a>
-				</li>
-				<li>
-					<a href="_transaction_.signatureandkey.html">SignatureAndKey</a>
+					<a href="_encoding_hex_.html">&quot;encoding/hex&quot;</a>
 				</li>
 			</ul>
-			<h1>Interface SignatureAndKey</h1>
+			<h1>External module &quot;encoding/hex&quot;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>signature/public key pairs are passed around as objects</p>
-					</div>
-				</div>
-			</section>
-			<section class="tsd-panel tsd-hierarchy">
-				<h3>Hierarchy</h3>
-				<ul class="tsd-hierarchy">
-					<li>
-						<span class="target">SignatureAndKey</span>
-					</li>
-				</ul>
-			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_transaction_.signatureandkey.html#publickey" class="tsd-kind-icon">public<wbr>Key</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_transaction_.signatureandkey.html#signature" class="tsd-kind-icon">signature</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_encoding_hex_.html#decode" class="tsd-kind-icon">decode</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_encoding_hex_.html#encode" class="tsd-kind-icon">encode</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="publickey" class="tsd-anchor"></a>
-					<h3>public<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">public<wbr>Key<span class="tsd-signature-symbol">:</span> <a href="../classes/_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/de11732/src/Transaction.ts#L28">src/Transaction.ts:28</a></li>
-						</ul>
-					</aside>
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="decode" class="tsd-anchor"></a>
+					<h3>decode</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">decode<span class="tsd-signature-symbol">(</span>hex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/de11732/src/encoding/hex.ts#L11">src/encoding/hex.ts:11</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>hex: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="signature" class="tsd-anchor"></a>
-					<h3>signature</h3>
-					<div class="tsd-signature tsd-kind-icon">signature<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/de11732/src/Transaction.ts#L27">src/Transaction.ts:27</a></li>
-						</ul>
-					</aside>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="encode" class="tsd-anchor"></a>
+					<h3>encode</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">encode<span class="tsd-signature-symbol">(</span>bytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/de11732/src/encoding/hex.ts#L1">src/encoding/hex.ts:1</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>bytes: <span class="tsd-signature-type">Uint8Array</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -125,35 +133,17 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_transaction_.html">&quot;<wbr>Transaction&quot;</a>
+						<a href="_encoding_hex_.html">&quot;encoding/hex&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="../classes/_transaction_.transaction.html" class="tsd-kind-icon">Transaction</a>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_encoding_hex_.html#decode" class="tsd-kind-icon">decode</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="_transaction_.signatureandkey.html" class="tsd-kind-icon">Signature<wbr>And<wbr>Key</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_transaction_.signatureandkey.html#publickey" class="tsd-kind-icon">public<wbr>Key</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_transaction_.signatureandkey.html#signature" class="tsd-kind-icon">signature</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-				<ul class="after-current">
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="../modules/_transaction_.html#transactioncall" class="tsd-kind-icon">transaction<wbr>Call</a>
-					</li>
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="../modules/_transaction_.html#transactioncreate" class="tsd-kind-icon">transaction<wbr>Create</a>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_encoding_hex_.html#encode" class="tsd-kind-icon">encode</a>
 					</li>
 				</ul>
 			</nav>
