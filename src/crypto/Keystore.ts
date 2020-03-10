@@ -1,9 +1,10 @@
 import * as crypto from "crypto";
 import * as nacl from "tweetnacl";
-import { hmacAlgo, pbkdf2, randomBytes } from "./util";
+import { pbkdf2, randomBytes } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { KeyMismatchError } from "./KeyMismatchError";
 import * as hex from "@stablelib/hex";
+import { Hmac, HashAlgorithm } from "./Hmac";
 
 const AES_128_CTR = "aes-128-ctr";
 const HMAC_SHA256 = "hmac-sha256";
@@ -54,7 +55,7 @@ export async function createKeystore(
 
     const cipherText = Buffer.concat([ cipher.update(privateKey), cipher[ "final" ]() ]);
 
-    const mac = crypto.createHmac(hmacAlgo, key.slice(16)).update(cipherText).digest();
+    const mac = await Hmac.hash(HashAlgorithm.Sha384, key.slice(16), cipherText);
 
     const keystore: Keystore = {
         version: 1,
@@ -109,7 +110,7 @@ export async function loadKeystore(
     const key = await pbkdf2(passphrase, saltBytes, c, dkLen, "sha256");
 
     const hmac = hex.decode(mac);
-    const verifyHmac = crypto.createHmac(hmacAlgo, key.slice(16)).update(cipherBytes).digest();
+    const verifyHmac = await Hmac.hash(HashAlgorithm.Sha384, key.slice(16), cipherBytes);
 
     if (!Buffer.from(hmac).equals(verifyHmac)) {
         throw new KeyMismatchError(hmac, verifyHmac);

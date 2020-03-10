@@ -1,5 +1,6 @@
 import * as crypto from "crypto";
 import { promisify } from "util";
+import { Hmac, HashAlgorithm } from "./Hmac";
 
 export const pbkdf2 = promisify(crypto.pbkdf2);
 export const randomBytes = promisify(crypto.randomBytes);
@@ -13,14 +14,13 @@ export const ed25519PubKeyPrefix = "302a300506032b6570032100";
 export const hmacAlgo = "sha384";
 
 /** SLIP-10/BIP-32 child key derivation */
-export function deriveChildKey(
+export async function deriveChildKey(
     parentKey: Uint8Array,
     chainCode: Uint8Array,
     index: number
-): { keyBytes: Uint8Array; chainCode: Uint8Array } {
+): Promise<{ keyBytes: Uint8Array; chainCode: Uint8Array }> {
     // webpack version of crypto complains if input types are not `Buffer`
-    const hmac = crypto.createHmac("SHA512", Buffer.from(chainCode));
-    const input = Buffer.alloc(37);
+    const input = new Uint8Array(37);
     // 0x00 + parentKey + index(BE)
     input[ 0 ] = 0;
     input.set(parentKey, 1);
@@ -28,9 +28,7 @@ export function deriveChildKey(
     // set the index to hardened
     input[ 33 ] |= 128;
 
-    hmac.update(input);
-
-    const digest = hmac.digest();
+    const digest = await Hmac.hash(HashAlgorithm.Sha512, chainCode, input);
 
     return { keyBytes: digest.subarray(0, 32), chainCode: digest.subarray(32) };
 }

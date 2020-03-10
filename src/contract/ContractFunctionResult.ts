@@ -3,6 +3,7 @@ import * as pb from "../generated/ContractCallLocal_pb";
 import { ContractId } from "./ContractId";
 import BigNumber from "bignumber.js";
 import * as hex from "@stablelib/hex";
+import * as utf8 from "@stablelib/utf8";
 
 /**
  * The result returned by a call to a smart contract function. This is part of the response to
@@ -66,7 +67,7 @@ export class ContractFunctionResult {
     }
 
     public getString(index?: number): string {
-        return Buffer.from(this.getBytes(index)).toString("utf-8");
+        return utf8.decode(this.getBytes(index));
     }
 
     private getBytes(index?: number): Uint8Array {

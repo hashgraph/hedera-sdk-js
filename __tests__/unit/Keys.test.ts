@@ -120,13 +120,13 @@ describe("Ed25519PrivateKey", () => {
 
     it("derive() produces correct value", async() => {
         const iosKey = await Ed25519PrivateKey.fromMnemonic(iosWalletMnemonic, "");
-        const iosChildKey = iosKey.derive(0);
+        const iosChildKey = await iosKey.derive(0);
 
         expect(iosChildKey.toBytes()).toStrictEqual(iosWalletPrivKeyBytes);
         expect(iosChildKey.publicKey.toBytes()).toStrictEqual(iosWalletPubKeyBytes);
 
         const androidKey = await Ed25519PrivateKey.fromMnemonic(androidWalletMnemonic, "");
-        const androidChildKey = androidKey.derive(0);
+        const androidChildKey = await androidKey.derive(0);
 
         expect(androidChildKey.toBytes()).toStrictEqual(androidWalletPrivKeyBytes);
         expect(androidChildKey.publicKey.toBytes()).toStrictEqual(androidWalletPubKeyBytes);
