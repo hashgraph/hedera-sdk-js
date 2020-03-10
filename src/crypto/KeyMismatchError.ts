@@ -1,4 +1,4 @@
-import * as hex from "../encoding/hex";
+import * as hex from "@stablelib/hex";
 
 export class KeyMismatchError extends Error {
     private readonly _hmac: string;
@@ -8,7 +8,7 @@ export class KeyMismatchError extends Error {
         super("key mismatch when loading from keystore");
 
         this.name = "KeyMismatchError";
-        this._hmac = hex.encode(hmac);
-        this._expectedHmac = hex.encode(expectedHmac);
+        this._hmac = hex.encode(hmac, true);
+        this._expectedHmac = hex.encode(expectedHmac, true);
     }
 }

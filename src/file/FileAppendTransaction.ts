@@ -6,7 +6,7 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { FileService } from "../generated/FileService_pb_service";
 import { FileAppendTransactionBody } from "../generated/FileAppend_pb";
 import { FileId, FileIdLike } from "../file/FileId";
-import { utf8encode } from "../util";
+import * as utf8 from "@stablelib/utf8";
 
 /**
  * Append the given contents to the end of the file. If a file is too big to create with a single
@@ -36,7 +36,7 @@ export class FileAppendTransaction extends TransactionBuilder {
     public setContents(contents: Uint8Array | string): this {
         const bytes = contents instanceof Uint8Array ?
             contents as Uint8Array :
-            utf8encode(contents as string);
+            utf8.encode(contents as string);
 
         this._body.setContents(bytes);
         return this;

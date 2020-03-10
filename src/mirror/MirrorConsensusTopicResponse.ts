@@ -1,5 +1,6 @@
 import { ConsensusTopicResponse } from "../generated/MirrorConsensusService_pb";
 import { Time } from "../Time";
+import * as utf8 from "@stablelib/utf8";
 
 export class MirrorConsensusTopicResponse {
     /**
@@ -31,6 +32,6 @@ export class MirrorConsensusTopicResponse {
     }
 
     public toString(): string {
-        return Buffer.from(this.message).toString("utf8");
+        return utf8.decode(this.message);
     }
 }

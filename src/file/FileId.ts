@@ -1,7 +1,7 @@
 import { FileID } from "../generated/BasicTypes_pb";
 import { normalizeEntityId } from "../util";
 import BigNumber from "bignumber.js";
-import * as hex from "../encoding/hex";
+import * as hex from "@stablelib/hex";
 
 /** Normalized file ID returned by various methods in the SDK. */
 export class FileId {
@@ -84,7 +84,7 @@ export class FileId {
         view.setUint32(8, this.realm);
         view.setUint32(16, this.file);
 
-        return hex.encode(buffer);
+        return hex.encode(buffer, true);
     }
 
     // NOT A STABLE API

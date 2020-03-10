@@ -3,7 +3,7 @@ import * as nacl from "tweetnacl";
 import { hmacAlgo, pbkdf2, randomBytes } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { KeyMismatchError } from "./KeyMismatchError";
-import * as hex from "../encoding/hex";
+import * as hex from "@stablelib/hex";
 
 const AES_128_CTR = "aes-128-ctr";
 const HMAC_SHA256 = "hmac-sha256";
@@ -59,17 +59,17 @@ export async function createKeystore(
     const keystore: Keystore = {
         version: 1,
         crypto: {
-            ciphertext: hex.encode(cipherText),
-            cipherparams: { iv: hex.encode(iv) },
+            ciphertext: hex.encode(cipherText, true),
+            cipherparams: { iv: hex.encode(iv, true) },
             cipher: AES_128_CTR,
             kdf: "pbkdf2",
             kdfparams: {
                 dkLen,
-                salt: hex.encode(salt),
+                salt: hex.encode(salt, true),
                 c,
                 prf: HMAC_SHA256
             },
-            mac: hex.encode(mac)
+            mac: hex.encode(mac, true)
         }
     };
 

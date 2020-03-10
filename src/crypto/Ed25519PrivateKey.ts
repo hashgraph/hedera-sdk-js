@@ -15,8 +15,9 @@ import { BadKeyError } from "../errors/BadKeyError";
 import { BadPemFileError } from "../errors/BadPemFileError";
 import { EncryptedPrivateKeyInfo } from "./pkcs";
 import { decodeDer } from "./der";
+// import * as base64 from "@stablelib/base64";
 import * as base64 from "../encoding/base64";
-import * as hex from "../encoding/hex";
+import * as hex from "@stablelib/hex";
 
 const beginPrivateKey = "-----BEGIN PRIVATE KEY-----\n";
 const endPrivateKey = "-----END PRIVATE KEY-----\n";
@@ -211,7 +212,7 @@ export class Ed25519PrivateKey {
     public toString(raw = false): string {
         if (this._asStringRaw == null) {
             // only encode the private portion of the private key
-            this._asStringRaw = hex.encode(this._keyData.subarray(0, 32));
+            this._asStringRaw = hex.encode(this._keyData.subarray(0, 32), true);
         }
 
         return (raw ? "" : ed25519PrivKeyPrefix) + this._asStringRaw;
@@ -253,6 +254,8 @@ export class Ed25519PrivateKey {
 
         const keyEncoded = pem.slice(beginIndex + beginTag.length, endIndex);
 
+        // Base64 library throws a "Base64Coder: incorrect characters for decoding"
+        // const key = base64.decode(keyEncoded);
         const key = base64.decode(keyEncoded);
 
         if (passphrase) {

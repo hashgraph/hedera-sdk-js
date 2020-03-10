@@ -1,5 +1,6 @@
 import { decodeDer } from '../../src/crypto/der';
-import { decode as decodeHex } from '../../src/encoding/hex';
+import * as base64 from "@stablelib/base64";
+import * as hex from "@stablelib/hex";
 
 describe('der.decode()', () => {
     it('decodes an Ed25519 private key as expected', () => {
@@ -7,8 +8,8 @@ describe('der.decode()', () => {
         const privateKey = "302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10";
         const rawPrivKey = "db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10";
 
-        const privKeyBytes = decodeHex(privateKey);
-        const rawPrivKeyBytes = decodeHex(rawPrivKey);
+        const privKeyBytes = hex.decode(privateKey);
+        const rawPrivKeyBytes = hex.decode(rawPrivKey);
 
         const decoded = decodeDer(privKeyBytes);
 
@@ -35,7 +36,7 @@ describe('der.decode()', () => {
             + "9hlo4YEh3uEaCmfJzWM=";
 
         // otherwise the types produced by `.subarray()` won't match
-        const data = Uint8Array.from(Buffer.from(base64Encoded, 'base64'));
+        const data = base64.decode(base64Encoded);
 
         const decoded = decodeDer(data);
 
@@ -55,7 +56,7 @@ describe('der.decode()', () => {
                                         {
                                             seq: [
                                                 // salt
-                                                { bytes: decodeHex('bc598ec6cb6b5385') },
+                                                { bytes: hex.decode('bc598ec6cb6b5385') },
                                                 // iterations
                                                 { int: 2048 },
                                                 {
@@ -76,7 +77,7 @@ describe('der.decode()', () => {
                                         // AES-128-CBC
                                         { ident: '2.16.840.1.101.3.4.1.2' },
                                         // IV
-                                        { bytes: decodeHex('eab8e8d3ecb39f1c85b8d49f6d0da0ad') }
+                                        { bytes: hex.decode('eab8e8d3ecb39f1c85b8d49f6d0da0ad') }
                                     ]
                                 }
                             ]
@@ -85,7 +86,7 @@ describe('der.decode()', () => {
                 },
                 // encrypted key data
                 {
-                    bytes: decodeHex('6d7147cf212177160ce102b6d3d3365317589b7b5ae7e6d58c0189baf1982ab5'
+                    bytes: hex.decode('6d7147cf212177160ce102b6d3d3365317589b7b5ae7e6d58c0189baf1982ab5'
                         + '432908c93621cb54d9332c723f19585ba695f61968e18121dee11a0a67c9cd63')
                 }
             ]

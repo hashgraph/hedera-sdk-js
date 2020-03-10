@@ -9,7 +9,7 @@ import { FileUpdateTransactionBody } from "../generated/FileUpdate_pb";
 import { FileId, FileIdLike } from "../file/FileId";
 import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { PublicKey } from "../crypto/PublicKey";
-import { utf8encode } from "../util";
+import * as utf8 from "@stablelib/utf8";
 
 /**
  * Modify some of the metadata for a file. Any null field is ignored (left unchanged). Any field
@@ -57,7 +57,7 @@ export class FileUpdateTransaction extends TransactionBuilder {
     public setContents(contents: Uint8Array | string): this {
         const bytes = contents instanceof Uint8Array ?
             contents as Uint8Array :
-            utf8encode(contents as string);
+            utf8.encode(contents as string);
 
         this._body.setContents(bytes);
         return this;

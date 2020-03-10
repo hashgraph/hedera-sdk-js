@@ -6,6 +6,7 @@ import {
     ThresholdKey
 } from "../../src/exports";
 import { KeyList } from "../../src/crypto/KeyList";
+import * as utf8 from "@stablelib/utf8";
 
 // key from hedera-sdk-java tests, not used anywhere
 const privKeyBytes = Uint8Array.of(-37, 72, 75, -126, -114, 100, -78, -40, -15, 44, -29, -64, -96, -23, 58, 11, -116, -50, 122, -15, -69, -113, 57, -55, 119, 50, 57, 68, -126, 83, -114, 16);
@@ -42,7 +43,7 @@ const androidWalletKeyBytes = Uint8Array.from(Buffer.from(androidWalletPrivKey, 
 const androidWalletPrivKeyBytes = androidWalletKeyBytes.subarray(0, 32);
 const androidWalletPubKeyBytes = androidWalletKeyBytes.subarray(32);
 
-const signTestData = Uint8Array.from(Buffer.from("this is the test data to sign", "utf8"));
+const signTestData = utf8.encode("this is the test data to sign");
 
 const passphrase = "asdf1234";
 
