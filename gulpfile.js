@@ -4,28 +4,20 @@ const gulp = require("gulp");
 const exec = require("gulp-exec");
 const fs = require("fs-extra");
 const cp = require("child_process");
-const glob = require('glob');
-const ts = require('gulp-typescript');
+const glob = require("glob");
+const ts = require("gulp-typescript");
 
-const tsProject = ts.createProject("tsconfig.json", {
-    declaration: true
-});
+const tsProject = ts.createProject("tsconfig.json", { declaration: true });
 
-gulp.task("build:tsc", () => {
-    return gulp.src("src/**/*.ts")
-        .pipe(tsProject())
-        .pipe(gulp.dest("lib/"));
-});
+gulp.task("build:tsc", () => gulp.src("src/**/*.ts")
+    .pipe(tsProject())
+    .pipe(gulp.dest("lib/")));
 
-gulp.task("generate:flow", () => {
-    return gulp.src("lib/**/*.d.ts")
-        .pipe(exec("flowgen -o <%= file.path.replace('.d.ts', '.flow.js') %> <%= file.path %>"));
-});
+gulp.task("generate:flow", () => gulp.src("lib/**/*.d.ts")
+    .pipe(exec("flowgen -o <%= file.path.replace('.d.ts', '.flow.js') %> <%= file.path %>")));
 
-gulp.task("copy:proto", () => {
-    return gulp.src("src/generated/*", { base: 'src' })
-        .pipe(gulp.dest("lib/"));
-});
+gulp.task("copy:proto", () => gulp.src("src/generated/*", { base: "src" })
+    .pipe(gulp.dest("lib/")));
 
 gulp.task("build:proto", (cb) => {
     // HACK: This depends on node_modules/
@@ -60,4 +52,5 @@ gulp.task("build:proto", (cb) => {
 gulp.task("build", gulp.series(
     "build:proto",
     "copy:proto",
-    "build:tsc"));
+    "build:tsc"
+));
