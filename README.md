@@ -1,6 +1,6 @@
 ![](https://www.hedera.com/logo-capital-hbar-wordmark.jpg)
 
-# Hedera Hashgraph's Javascript/TypeScript SDK
+# Hedera™ Hashgraph JavaScript/TypeScript SDK
 
 [![Actions Status](https://github.com/hashgraph/hedera-sdk-js/workflows/Node/badge.svg)](https://github.com/hashgraph/hedera-sdk-js/actions?query=workflow%3ANode)
 [![npm](https://img.shields.io/npm/v/@hashgraph/sdk)](https://www.npmjs.com/package/@hashgraph/sdk)
