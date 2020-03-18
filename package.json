@@ -54,6 +54,7 @@
     "@stablelib/hash": "^1.0.0",
     "@stablelib/hex": "^1.0.0",
     "@stablelib/hmac": "^1.0.0",
+    "@stablelib/pbkdf2": "^1.0.0",
     "@stablelib/sha384": "^1.0.0",
     "@stablelib/sha512": "^1.0.0",
     "@stablelib/utf8": "^1.0.0",
