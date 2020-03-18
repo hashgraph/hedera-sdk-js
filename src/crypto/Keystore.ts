@@ -1,10 +1,11 @@
 import * as crypto from "crypto";
 import * as nacl from "tweetnacl";
-import { pbkdf2, randomBytes } from "./util";
+import { randomBytes } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { KeyMismatchError } from "./KeyMismatchError";
 import * as hex from "@stablelib/hex";
 import { Hmac, HashAlgorithm } from "./Hmac";
+import { Pbkdf2 } from "./Pbkdf2";
 
 const AES_128_CTR = "aes-128-ctr";
 const HMAC_SHA256 = "hmac-sha256";
@@ -46,7 +47,7 @@ export async function createKeystore(
     const saltLen = 32;
     const salt = await randomBytes(saltLen);
 
-    const key = await pbkdf2(passphrase, salt, c, dkLen, "sha256");
+    const key = await Pbkdf2.deriveKey(HashAlgorithm.Sha256, passphrase, salt, c, dkLen);
 
     const iv = await randomBytes(16);
 
@@ -107,7 +108,7 @@ export async function loadKeystore(
     const ivBytes = hex.decode(iv);
     const cipherBytes = hex.decode(ciphertext);
 
-    const key = await pbkdf2(passphrase, saltBytes, c, dkLen, "sha256");
+    const key = await Pbkdf2.deriveKey(HashAlgorithm.Sha256, passphrase, saltBytes, c, dkLen);
 
     const hmac = hex.decode(mac);
     const verifyHmac = await Hmac.hash(HashAlgorithm.Sha384, key.slice(16), cipherBytes);

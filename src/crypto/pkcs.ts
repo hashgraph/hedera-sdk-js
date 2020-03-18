@@ -1,6 +1,7 @@
 import * as crypto from "crypto";
 import { AsnType, decodeDer } from "./der";
-import { pbkdf2 } from "./util";
+import { Pbkdf2 } from "./Pbkdf2";
+import { HashAlgorithm } from "./Hmac";
 
 export class AlgorithmIdentifier {
     public readonly algIdent: string;
@@ -146,7 +147,13 @@ export class EncryptedPrivateKeyInfo {
         const keyLen = pbkdf2Params.keyLength || 16;
         const iv = pbes2Params.encScheme.parameters.bytes;
 
-        const key = await pbkdf2(passphrase, pbkdf2Params.salt, pbkdf2Params.iterCount, keyLen, "sha256");
+        const key = await Pbkdf2.deriveKey(
+            HashAlgorithm.Sha256,
+            passphrase,
+            pbkdf2Params.salt,
+            pbkdf2Params.iterCount,
+            keyLen
+        );
 
         const cipher = crypto.createDecipheriv("aes-128-cbc", key, iv);
         const decrypted = Buffer.concat([ cipher.update(this.data), cipher[ "final" ]() ]);

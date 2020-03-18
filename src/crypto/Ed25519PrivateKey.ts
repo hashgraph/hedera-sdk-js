@@ -4,8 +4,8 @@ import { Mnemonic } from "./Mnemonic";
 import {
     arraysEqual,
     deriveChildKey,
+    deriveChildKey2,
     ed25519PrivKeyPrefix,
-    pbkdf2,
     randomBytes
 } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
@@ -18,6 +18,7 @@ import { decodeDer } from "./der";
 import * as base64 from "../encoding/base64";
 import * as hex from "@stablelib/hex";
 import { Hmac, HashAlgorithm } from "./Hmac";
+import { Pbkdf2 } from "./Pbkdf2";
 
 const beginPrivateKey = "-----BEGIN PRIVATE KEY-----\n";
 const endPrivateKey = "-----END PRIVATE KEY-----\n";
@@ -129,7 +130,7 @@ export class Ed25519PrivateKey {
     ): Promise<Ed25519PrivateKey> {
         const input = mnemonic.toString();
         const salt = `mnemonic${passphrase}`;
-        const seed = await pbkdf2(input, salt, 2048, 64, "sha512");
+        const seed = await Pbkdf2.deriveKey(HashAlgorithm.Sha512, input, salt, 2048, 64);
 
         const digest = await Hmac.hash(HashAlgorithm.Sha512, "ed25519 seed", seed);
 
@@ -178,8 +179,11 @@ export class Ed25519PrivateKey {
      * an error.
      *
      * You can check if a key supports derivation with `.supportsDerivation`
+     *
+     * @deprecated `Ed25519PrivateKey.derive()` is deprecated and will eventually be replaced with the async variant `Ed25519PrivateKey.derive2()`
      */
-    public async derive(index: number): Promise<Ed25519PrivateKey> {
+    public derive(index: number): Ed25519PrivateKey {
+        console.warn("`Ed25519PrivateKey.derive()` is deprecated and will eventually be replaced with the async variant `Ed25519PrivateKey.derive2()`");
         if (this._chainCode == null) {
             throw new Error("this Ed25519 private key does not support key derivation");
         }
@@ -187,7 +191,33 @@ export class Ed25519PrivateKey {
         const {
             keyBytes,
             chainCode
-        } = await deriveChildKey(this._keyData.subarray(0, 32), this._chainCode, index);
+        } = deriveChildKey(this._keyData.subarray(0, 32), this._chainCode, index);
+
+        const key = Ed25519PrivateKey.fromBytes(keyBytes);
+        key._chainCode = chainCode;
+
+        return key;
+    }
+
+    /**
+     * Derive a new private key at the given wallet index.
+     *
+     * Only currently supported for keys created with `fromMnemonic()`; other keys will throw
+     * an error.
+     *
+     * You can check if a key supports derivation with `.supportsDerivation`
+     *
+     * Will eventually replace `Ed25519PrivateKey.derive()`
+     */
+    public async derive2(index: number): Promise<Ed25519PrivateKey> {
+        if (this._chainCode == null) {
+            throw new Error("this Ed25519 private key does not support key derivation");
+        }
+
+        const {
+            keyBytes,
+            chainCode
+        } = await deriveChildKey2(this._keyData.subarray(0, 32), this._chainCode, index);
 
         const key = Ed25519PrivateKey.fromBytes(keyBytes);
         key._chainCode = chainCode;
