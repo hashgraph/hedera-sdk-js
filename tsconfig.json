@@ -9,7 +9,8 @@
   "include": [
     "src/index-web.ts",
     "src/index-node.ts",
-    "__tests__"
+    "__tests__",
+    "test"
   ],
   "exclude": [
     "node_modules"
