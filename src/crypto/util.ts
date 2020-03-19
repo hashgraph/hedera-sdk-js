@@ -1,8 +1,5 @@
 import * as crypto from "crypto";
-import { promisify } from "util";
 import { Hmac, HashAlgorithm } from "./Hmac";
-
-export const randomBytes = promisify(crypto.randomBytes);
 
 // we could go through the whole BS of producing a DER-encoded structure but it's quite simple
 // for Ed25519 keys and we don't have to shell out to a potentially broken lib

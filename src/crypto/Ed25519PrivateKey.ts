@@ -5,8 +5,7 @@ import {
     arraysEqual,
     deriveChildKey,
     deriveChildKey2,
-    ed25519PrivKeyPrefix,
-    randomBytes
+    ed25519PrivKeyPrefix
 } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { createKeystore, loadKeystore } from "./Keystore";
@@ -168,8 +167,9 @@ export class Ed25519PrivateKey {
      *
      * This key will _not_ support child key derivation.
      */
+    // eslint-disable-next-line require-await
     public static async generate(): Promise<Ed25519PrivateKey> {
-        return this.fromBytes(await randomBytes(32));
+        return this.fromBytes(nacl.randomBytes(32));
     }
 
     /**

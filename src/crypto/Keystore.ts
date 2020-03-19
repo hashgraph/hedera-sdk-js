@@ -1,6 +1,5 @@
 import * as crypto from "crypto";
 import * as nacl from "tweetnacl";
-import { randomBytes } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { KeyMismatchError } from "./KeyMismatchError";
 import * as hex from "@stablelib/hex";
@@ -45,11 +44,11 @@ export async function createKeystore(
     const dkLen = 32;
     const c = 262144;
     const saltLen = 32;
-    const salt = await randomBytes(saltLen);
+    const salt = nacl.randomBytes(saltLen);
 
     const key = await Pbkdf2.deriveKey(HashAlgorithm.Sha256, passphrase, salt, c, dkLen);
 
-    const iv = await randomBytes(16);
+    const iv = nacl.randomBytes(16);
 
     // AES-128-CTR with the first half of the derived key and a random IV
     const cipher = crypto.createCipheriv(AES_128_CTR, key.slice(0, 16), iv);
