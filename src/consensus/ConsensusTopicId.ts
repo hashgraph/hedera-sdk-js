@@ -1,7 +1,7 @@
 import { TopicID } from "../generated/BasicTypes_pb";
 import { normalizeEntityId } from "../util";
 import BigNumber from "bignumber.js";
-import * as hex from "../encoding/hex";
+import * as hex from "@stablelib/hex";
 
 export class ConsensusTopicId {
     public shard: number;
@@ -73,7 +73,7 @@ export class ConsensusTopicId {
         view.setUint32(8, this.realm);
         view.setUint32(16, this.topic);
 
-        return hex.encode(buffer);
+        return hex.encode(buffer, true);
     }
 
     // NOT A STABLE API

@@ -165,12 +165,12 @@ let lastInstant: JsTimestamp;
 function getIncreasingInstant(): JsTimestamp {
     // Allows the transaction to be accepted as long as the
     // server is not more than 10 seconds behind us
-    let instant = dateToTimestamp(Date.now() - 10_000);
+    const instant = dateToTimestamp(Date.now() - 10_000);
 
     // ensures every instant is at least always greater than the last
-    lastInstant = lastInstant != null && instantLessThanOrEqual(instant, lastInstant)
-        ? addNanos(lastInstant, 1)
-        : instant;
+    lastInstant = lastInstant != null && instantLessThanOrEqual(instant, lastInstant) ?
+        addNanos(lastInstant, 1) :
+        instant;
 
     return instant;
 }

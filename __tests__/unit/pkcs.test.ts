@@ -1,7 +1,8 @@
 import { EncryptedPrivateKeyInfo } from "../../src/crypto/pkcs";
-import { decode as decodeHex } from '../../src/encoding/hex';
 import { decodeDer } from "../../src/crypto/der";
 import { Ed25519PrivateKey } from "../../src/crypto/Ed25519PrivateKey";
+import * as base64 from "@stablelib/base64";
+import * as hex from "@stablelib/hex";
 
 describe("EncryptedPrivateKeyInfo", () => {
     const base64Encoded = "MIGbMFcGCSqGSIb3DQEFDTBKMCkGCSqGSIb3DQEFDDAcBAi8WY7Gy2tThQICCAAw"
@@ -14,7 +15,7 @@ describe("EncryptedPrivateKeyInfo", () => {
     const keyStr = "302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10";
 
     // otherwise the types produced by `.subarray()` won't match
-    const data = Uint8Array.from(Buffer.from(base64Encoded, 'base64'));
+    const data = base64.decode(base64Encoded);
 
     it('decodes', () => {
         const privateKeyInfo = EncryptedPrivateKeyInfo.parse(data);
@@ -34,7 +35,7 @@ describe("EncryptedPrivateKeyInfo", () => {
                                         {
                                             seq: [
                                                 // salt
-                                                { bytes: decodeHex('bc598ec6cb6b5385') },
+                                                { bytes: hex.decode('bc598ec6cb6b5385') },
                                                 // iterations
                                                 { int: 2048 },
                                                 {
@@ -55,7 +56,7 @@ describe("EncryptedPrivateKeyInfo", () => {
                                         // AES-128-CBC
                                         { ident: '2.16.840.1.101.3.4.1.2' },
                                         // IV
-                                        { bytes: decodeHex('eab8e8d3ecb39f1c85b8d49f6d0da0ad') }
+                                        { bytes: hex.decode('eab8e8d3ecb39f1c85b8d49f6d0da0ad') }
                                     ]
                                 }
                             ]
@@ -64,7 +65,7 @@ describe("EncryptedPrivateKeyInfo", () => {
                 },
                 // encrypted key data
                 {
-                    bytes: decodeHex('6d7147cf212177160ce102b6d3d3365317589b7b5ae7e6d58c0189baf1982ab5'
+                    bytes: hex.decode('6d7147cf212177160ce102b6d3d3365317589b7b5ae7e6d58c0189baf1982ab5'
                         + '432908c93621cb54d9332c723f19585ba695f61968e18121dee11a0a67c9cd63')
                 }
             ]

@@ -8,7 +8,7 @@ import { FileCreateTransactionBody } from "../generated/FileCreate_pb";
 import { KeyList } from "../generated/BasicTypes_pb";
 import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
-import { utf8encode } from "../util";
+import * as utf8 from "@stablelib/utf8";
 
 /**
  * Create a new file, containing the given contents.  It is referenced by its FileID, and does not
@@ -86,7 +86,7 @@ export class FileCreateTransaction extends TransactionBuilder {
     public setContents(contents: Uint8Array | string): this {
         const bytes = contents instanceof Uint8Array ?
             contents as Uint8Array :
-            utf8encode(contents as string);
+            utf8.encode(contents as string);
 
         this._body.setContents(bytes);
         return this;

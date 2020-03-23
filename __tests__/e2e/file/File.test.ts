@@ -1,4 +1,5 @@
 import { Client, Ed25519PrivateKey, FileContentsQuery, FileCreateTransaction, FileInfoQuery, FileUpdateTransaction, FileAppendTransaction, FileDeleteTransaction, Hbar } from "../../../src/index-node";
+import * as utf8 from "@stablelib/utf8";
 
 describe("FileCreateTransaction", () => {
     it("can be executed", async () => {
@@ -56,7 +57,7 @@ describe("FileCreateTransaction", () => {
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
 
-        expect(Buffer.from(contents).toString("utf8")).toBe("[e2e::FileCreateTransaction][e2e::FileAppendTransaction]");
+        expect(utf8.decode(contents)).toBe("[e2e::FileCreateTransaction][e2e::FileAppendTransaction]");
 
         transactionId = await new FileUpdateTransaction()
             .setFileId(file)

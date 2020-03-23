@@ -3,7 +3,7 @@ import { Key } from "../generated/BasicTypes_pb";
 import { ed25519PubKeyPrefix } from "./util";
 import { PublicKey } from "./PublicKey";
 import { BadKeyError } from "../errors/BadKeyError";
-import * as hex from "../encoding/hex";
+import * as hex from "@stablelib/hex";
 
 export class Ed25519PublicKey implements PublicKey {
     private readonly _keyData: Uint8Array;
@@ -48,7 +48,7 @@ export class Ed25519PublicKey implements PublicKey {
 
     public toString(raw = false): string {
         if (this._asStringRaw == null) {
-            this._asStringRaw = hex.encode(this._keyData);
+            this._asStringRaw = hex.encode(this._keyData, true);
         }
 
         return (raw ? "" : ed25519PubKeyPrefix) + this._asStringRaw;

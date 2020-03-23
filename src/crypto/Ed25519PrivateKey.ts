@@ -1,13 +1,11 @@
 import * as nacl from "tweetnacl";
-import * as crypto from "crypto";
 import { Ed25519PublicKey } from "./Ed25519PublicKey";
 import { Mnemonic } from "./Mnemonic";
 import {
     arraysEqual,
     deriveChildKey,
-    ed25519PrivKeyPrefix,
-    pbkdf2,
-    randomBytes
+    deriveChildKey2,
+    ed25519PrivKeyPrefix
 } from "./util";
 import { RawKeyPair } from "./RawKeyPair";
 import { createKeystore, loadKeystore } from "./Keystore";
@@ -15,8 +13,11 @@ import { BadKeyError } from "../errors/BadKeyError";
 import { BadPemFileError } from "../errors/BadPemFileError";
 import { EncryptedPrivateKeyInfo } from "./pkcs";
 import { decodeDer } from "./der";
+// import * as base64 from "@stablelib/base64";
 import * as base64 from "../encoding/base64";
-import * as hex from "../encoding/hex";
+import * as hex from "@stablelib/hex";
+import { Hmac, HashAlgorithm } from "./Hmac";
+import { Pbkdf2 } from "./Pbkdf2";
 
 const beginPrivateKey = "-----BEGIN PRIVATE KEY-----\n";
 const endPrivateKey = "-----END PRIVATE KEY-----\n";
@@ -128,18 +129,15 @@ export class Ed25519PrivateKey {
     ): Promise<Ed25519PrivateKey> {
         const input = mnemonic.toString();
         const salt = `mnemonic${passphrase}`;
-        const seed = await pbkdf2(input, salt, 2048, 64, "sha512");
+        const seed = await Pbkdf2.deriveKey(HashAlgorithm.Sha512, input, salt, 2048, 64);
 
-        const hmac = crypto.createHmac("sha512", "ed25519 seed");
-        hmac.update(seed);
-
-        const digest = hmac.digest();
+        const digest = await Hmac.hash(HashAlgorithm.Sha512, "ed25519 seed", seed);
 
         let keyBytes: Uint8Array = digest.subarray(0, 32);
         let chainCode: Uint8Array = digest.subarray(32);
 
         for (const index of [ 44, 3030, 0, 0 ]) {
-            ({ keyBytes, chainCode } = deriveChildKey(keyBytes, chainCode, index));
+            ({ keyBytes, chainCode } = await deriveChildKey(keyBytes, chainCode, index));
         }
 
         const key = Ed25519PrivateKey.fromBytes(keyBytes);
@@ -169,8 +167,9 @@ export class Ed25519PrivateKey {
      *
      * This key will _not_ support child key derivation.
      */
+    // eslint-disable-next-line require-await
     public static async generate(): Promise<Ed25519PrivateKey> {
-        return this.fromBytes(await randomBytes(32));
+        return this.fromBytes(nacl.randomBytes(32));
     }
 
     /**
@@ -180,8 +179,11 @@ export class Ed25519PrivateKey {
      * an error.
      *
      * You can check if a key supports derivation with `.supportsDerivation`
+     *
+     * @deprecated `Ed25519PrivateKey.derive()` is deprecated and will eventually be replaced with the async variant `Ed25519PrivateKey.derive2()`
      */
     public derive(index: number): Ed25519PrivateKey {
+        console.warn("`Ed25519PrivateKey.derive()` is deprecated and will eventually be replaced with the async variant `Ed25519PrivateKey.derive2()`");
         if (this._chainCode == null) {
             throw new Error("this Ed25519 private key does not support key derivation");
         }
@@ -190,6 +192,32 @@ export class Ed25519PrivateKey {
             keyBytes,
             chainCode
         } = deriveChildKey(this._keyData.subarray(0, 32), this._chainCode, index);
+
+        const key = Ed25519PrivateKey.fromBytes(keyBytes);
+        key._chainCode = chainCode;
+
+        return key;
+    }
+
+    /**
+     * Derive a new private key at the given wallet index.
+     *
+     * Only currently supported for keys created with `fromMnemonic()`; other keys will throw
+     * an error.
+     *
+     * You can check if a key supports derivation with `.supportsDerivation`
+     *
+     * Will eventually replace `Ed25519PrivateKey.derive()`
+     */
+    public async derive2(index: number): Promise<Ed25519PrivateKey> {
+        if (this._chainCode == null) {
+            throw new Error("this Ed25519 private key does not support key derivation");
+        }
+
+        const {
+            keyBytes,
+            chainCode
+        } = await deriveChildKey2(this._keyData.subarray(0, 32), this._chainCode, index);
 
         const key = Ed25519PrivateKey.fromBytes(keyBytes);
         key._chainCode = chainCode;
@@ -211,7 +239,7 @@ export class Ed25519PrivateKey {
     public toString(raw = false): string {
         if (this._asStringRaw == null) {
             // only encode the private portion of the private key
-            this._asStringRaw = hex.encode(this._keyData.subarray(0, 32));
+            this._asStringRaw = hex.encode(this._keyData.subarray(0, 32), true);
         }
 
         return (raw ? "" : ed25519PrivKeyPrefix) + this._asStringRaw;
@@ -253,6 +281,8 @@ export class Ed25519PrivateKey {
 
         const keyEncoded = pem.slice(beginIndex + beginTag.length, endIndex);
 
+        // Base64 library throws a "Base64Coder: incorrect characters for decoding"
+        // const key = base64.decode(keyEncoded);
         const key = base64.decode(keyEncoded);
 
         if (passphrase) {

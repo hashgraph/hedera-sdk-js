@@ -2,7 +2,8 @@ import { ContractLogInfo, contractLogInfoListToSdk } from "./ContractLogInfo";
 import * as pb from "../generated/ContractCallLocal_pb";
 import { ContractId } from "./ContractId";
 import BigNumber from "bignumber.js";
-import * as hex from "../encoding/hex";
+import * as hex from "@stablelib/hex";
+import * as utf8 from "@stablelib/utf8";
 
 /**
  * The result returned by a call to a smart contract function. This is part of the response to
@@ -66,7 +67,7 @@ export class ContractFunctionResult {
     }
 
     public getString(index?: number): string {
-        return Buffer.from(this.getBytes(index)).toString("utf-8");
+        return utf8.decode(this.getBytes(index));
     }
 
     private getBytes(index?: number): Uint8Array {
@@ -110,14 +111,14 @@ export class ContractFunctionResult {
 
     public getInt64(index?: number): BigNumber {
         return new BigNumber(
-            hex.encode(this._getBytes32(index ?? 0).subarray(24, 32)),
+            hex.encode(this._getBytes32(index ?? 0).subarray(24, 32), true),
             16
         );
     }
 
     public getInt256(index?: number): BigNumber {
         return new BigNumber(
-            hex.encode(this._getBytes32(index ?? 0)),
+            hex.encode(this._getBytes32(index ?? 0), true),
             16
         );
     }
@@ -139,14 +140,14 @@ export class ContractFunctionResult {
 
     public getUint64(index?: number): BigNumber {
         return new BigNumber(
-            hex.encode(this._getBytes32(index).subarray(24, 32)),
+            hex.encode(this._getBytes32(index).subarray(24, 32), true),
             16
         );
     }
 
     public getUint256(index?: number): BigNumber {
         return new BigNumber(
-            hex.encode(this._getBytes32(index)),
+            hex.encode(this._getBytes32(index), true),
             16
         );
     }
@@ -155,7 +156,7 @@ export class ContractFunctionResult {
         return hex.encode(this.bytes.subarray(
             (index ?? 0) * 32 + 12,
             (index ?? 0) * 32 + 32
-        ));
+        ), true);
     }
 
     //
