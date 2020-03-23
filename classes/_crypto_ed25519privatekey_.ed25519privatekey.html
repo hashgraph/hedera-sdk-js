@@ -94,6 +94,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#derive" class="tsd-kind-icon">derive</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#derive2" class="tsd-kind-icon">derive2</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#tobytes" class="tsd-kind-icon">to<wbr>Bytes</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#tokeystore" class="tsd-kind-icon">to<wbr>Keystore</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_ed25519privatekey_.ed25519privatekey.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
@@ -116,7 +117,7 @@
 					<div class="tsd-signature tsd-kind-icon">_key<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L56">src/crypto/Ed25519PrivateKey.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L57">src/crypto/Ed25519PrivateKey.ts:57</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -126,7 +127,7 @@
 					<div class="tsd-signature tsd-kind-icon">public<wbr>Key<span class="tsd-signature-symbol">:</span> <a href="_crypto_ed25519publickey_.ed25519publickey.html" class="tsd-signature-type">Ed25519PublicKey</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L53">src/crypto/Ed25519PrivateKey.ts:53</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L54">src/crypto/Ed25519PrivateKey.ts:54</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -143,7 +144,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L201">src/crypto/Ed25519PrivateKey.ts:201</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L229">src/crypto/Ed25519PrivateKey.ts:229</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -168,7 +169,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L184">src/crypto/Ed25519PrivateKey.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L185">src/crypto/Ed25519PrivateKey.ts:185</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -178,6 +179,11 @@
 								<p>Only currently supported for keys created with <code>fromMnemonic()</code>; other keys will throw
 								an error.</p>
 								<p>You can check if a key supports derivation with <code>.supportsDerivation</code></p>
+								<dl class="tsd-comment-tags">
+									<dt>deprecated</dt>
+									<dd><p><code>Ed25519PrivateKey.derive()</code> is deprecated and will eventually be replaced with the async variant <code>Ed25519PrivateKey.derive2()</code></p>
+									</dd>
+								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -186,6 +192,38 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="derive2" class="tsd-anchor"></a>
+					<h3>derive2</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">derive2<span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L212">src/crypto/Ed25519PrivateKey.ts:212</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Derive a new private key at the given wallet index.</p>
+								</div>
+								<p>Only currently supported for keys created with <code>fromMnemonic()</code>; other keys will throw
+								an error.</p>
+								<p>You can check if a key supports derivation with <code>.supportsDerivation</code></p>
+								<p>Will eventually replace <code>Ed25519PrivateKey.derive()</code></p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>index: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -199,7 +237,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L205">src/crypto/Ed25519PrivateKey.ts:205</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L233">src/crypto/Ed25519PrivateKey.ts:233</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
@@ -216,7 +254,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L230">src/crypto/Ed25519PrivateKey.ts:230</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L258">src/crypto/Ed25519PrivateKey.ts:258</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -252,7 +290,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L211">src/crypto/Ed25519PrivateKey.ts:211</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L239">src/crypto/Ed25519PrivateKey.ts:239</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -275,7 +313,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L74">src/crypto/Ed25519PrivateKey.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L75">src/crypto/Ed25519PrivateKey.ts:75</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -304,7 +342,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L160">src/crypto/Ed25519PrivateKey.ts:160</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L158">src/crypto/Ed25519PrivateKey.ts:158</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -350,7 +388,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L125">src/crypto/Ed25519PrivateKey.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L126">src/crypto/Ed25519PrivateKey.ts:126</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -397,7 +435,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L243">src/crypto/Ed25519PrivateKey.ts:243</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L271">src/crypto/Ed25519PrivateKey.ts:271</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -432,7 +470,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L87">src/crypto/Ed25519PrivateKey.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L88">src/crypto/Ed25519PrivateKey.ts:88</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -461,7 +499,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/44a3e4b/src/crypto/Ed25519PrivateKey.ts#L172">src/crypto/Ed25519PrivateKey.ts:172</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3f0a70/src/crypto/Ed25519PrivateKey.ts#L171">src/crypto/Ed25519PrivateKey.ts:171</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -505,6 +543,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#derive" class="tsd-kind-icon">derive</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#derive2" class="tsd-kind-icon">derive2</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_crypto_ed25519privatekey_.ed25519privatekey.html#tobytes" class="tsd-kind-icon">to<wbr>Bytes</a>
