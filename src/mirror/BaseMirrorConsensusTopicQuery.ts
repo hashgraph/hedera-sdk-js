@@ -5,10 +5,12 @@ import {
 } from "../consensus/ConsensusTopicId";
 import { Time } from "../Time";
 import { LocalValidationError } from "../errors/LocalValidationError";
+import { EncryptionKey } from "../crypto/EncryptionKey";
 import { MirrorConsensusTopicResponse } from "./MirrorConsensusTopicResponse";
 
 export type Listener = (message: MirrorConsensusTopicResponse) => void;
 export type ErrorHandler = (error: Error) => void;
+export type EncryptionKeyProvider = (fingerprint: Uint8Array) => EncryptionKey;
 
 export class BaseMirrorConsensusTopicQuery {
     protected readonly _builder: ConsensusTopicQuery = new ConsensusTopicQuery();
@@ -30,6 +32,11 @@ export class BaseMirrorConsensusTopicQuery {
 
     public setLimit(limit: number): this {
         this._builder.setLimit(limit);
+        return this;
+    }
+
+    public setEncryptionKeyProvider(provider: EncryptionKeyProvider): this {
+        // TODO [2020-04-01]
         return this;
     }
 
