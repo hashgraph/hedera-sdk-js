@@ -56,7 +56,7 @@ describe("ContractCreateTransaction", () => {
 
         let info = await new ContractInfoQuery()
             .setContractId(contract)
-            .setMaxQueryPayment(new Hbar(1))
+            .setMaxQueryPayment(new Hbar(2))
             .execute(client);
 
         expect(info.contractId).toStrictEqual(contract);
@@ -69,7 +69,7 @@ describe("ContractCreateTransaction", () => {
 
         const bytecode = await new ContractBytecodeQuery()
             .setContractId(contract)
-            .setMaxQueryPayment(new Hbar(1))
+            .setMaxQueryPayment(new Hbar(2))
             .execute(client);
 
         expect(bytecode.length).toBe(798);
@@ -118,7 +118,7 @@ describe("ContractCreateTransaction", () => {
 
         info = await new ContractInfoQuery()
             .setContractId(contract)
-            .setMaxQueryPayment(new Hbar(1))
+            .setMaxQueryPayment(new Hbar(2))
             .execute(client);
 
         expect(info.contractId).toStrictEqual(contract);
@@ -138,7 +138,7 @@ describe("ContractCreateTransaction", () => {
         try {
             await new ContractInfoQuery()
                 .setContractId(contract)
-                .setMaxQueryPayment(new Hbar(1))
+                .setMaxQueryPayment(new Hbar(2))
                 .execute(client);
         } catch {
             errorThrown = true;

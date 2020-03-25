@@ -58,7 +58,7 @@ export class ContractFunctionParams {
             }
         }
 
-        this._selector.addBytes32();
+        this._selector.addBytes32Array();
 
         return this._addParam(value, true);
     }
