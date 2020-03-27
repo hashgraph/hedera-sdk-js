@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  
 ### Fixed
 
+ * Fixes `AddBytes32Array`
+
  * Fixes `Hbar.isNegative()` failing with `undefined`.
  
  * Fixes `CryptoTransferTransaction.addTransfer()` not supporting `BigNumber` or
