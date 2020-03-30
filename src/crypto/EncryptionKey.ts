@@ -33,9 +33,12 @@ export class EncryptionKey {
         return new EncryptionKey(passphrase, key);
     }
 
-    public async encrypt(messageStr: string): Promise<Uint8Array> {
+    public async encrypt(messageStrOrBytes: string | Uint8Array): Promise<Uint8Array> {
         // AES-128-CTR with the first half of the derived key and a random IV
-        const message = utf8.encode(messageStr);
+        const message = typeof messageStrOrBytes === "string" ?
+            utf8.encode(messageStrOrBytes) :
+            messageStrOrBytes;
+
         const iv = nacl.randomBytes(16);
         const cipher = crypto.createCipheriv(AES_128_CTR, this.key.slice(0, 16), iv);
 
@@ -44,10 +47,13 @@ export class EncryptionKey {
         const mac = (await Hmac.hash(HashAlgorithm.Sha384, this.key.slice(16), cipherText))
             .subarray(0, 4);
 
-        const encoded = new Uint8Array(20 + message.length);
-        encoded.set(iv, 0);
-        encoded.set(mac, 16);
-        encoded.set(message, 20);
+        // 8 Bytes for the header containing current chunk number, and total number of chunks.
+        // 16 Bytes for the salt.
+        // 4 Bytes for the key fingerprint.
+        const encoded = new Uint8Array(8 + 16 + 4 + message.length);
+        encoded.set(iv, 8);
+        encoded.set(mac, 24);
+        encoded.set(message, 28);
         return encoded;
     }
 }

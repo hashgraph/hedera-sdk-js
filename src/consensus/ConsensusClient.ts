@@ -28,16 +28,35 @@ export class ConsensusClient {
     }
 
     public async send(message: string): Promise<this> {
-        // TODO [2020-04-01]: Chunk and encrypt the message in that order
         const bytes = utf8.encode(message);
         const pendingTransactions: Promise<TransactionId>[] = [];
         const transactions: TransactionId[] = [];
         const pendingReceipts: Promise<TransactionReceipt>[] = [];
         const receipts: TransactionReceipt[] = [];
 
+        const chunkCount = (bytes.length % 2000) + 1;
+
         for (let i = 0; i < bytes.length; i += 2000) {
+            let msg;
+            if (this.encryptionKey != null) {
+                msg = await this.encryptionKey.encrypt(bytes.subarray(
+                    i,
+                    bytes.length > i + 2000 ? i + 2000 : bytes.length
+                ));
+            } else {
+                msg = new Uint8Array(bytes.length - i > 2000 ?
+                    2000 + 8 :
+                    bytes.length - i + 8);
+                msg.set(bytes.subarray(i, bytes.length > i + 2000 ? i + 2000 : bytes.length), 8);
+            }
+
+            // Set current chunk anc total chunk count.
+            const view = new DataView(msg, 0);
+            view.setUint32(0, i);
+            view.setUint32(4, chunkCount);
+
             pendingTransactions.push(new ConsensusMessageSubmitTransaction()
-                .setMessage(bytes.subarray(i, bytes.length > i + 2000 ? i + 2000 : bytes.length))
+                .setMessage(msg)
                 .execute(this.client));
         }
 
