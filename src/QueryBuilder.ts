@@ -14,6 +14,7 @@ import { TransactionBody } from "./generated/TransactionBody_pb";
 import { AccountId } from "./account/AccountId";
 import { Status } from "./Status";
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
+import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
 
 export abstract class QueryBuilder<T> {
     protected readonly _inner: Query = new Query();
@@ -56,9 +57,6 @@ export abstract class QueryBuilder<T> {
     }
 
     public async getCost(client: BaseClient): Promise<Hbar> {
-        // HACK: Async import because otherwise there would a cycle in the imports which breaks everything
-        const { CryptoTransferTransaction } = await import("./account/CryptoTransferTransaction");
-
         // Skip payment validation and just run general validation
         this._localValidate(false);
 
@@ -227,9 +225,6 @@ export abstract class QueryBuilder<T> {
         const hbar = hbarFromTinybarOrHbar(amount);
         hbar[ hbarCheck ]({ allowNegative: false });
 
-        // HACK: Async import because otherwise there would a cycle in the imports which breaks everything
-        const { CryptoTransferTransaction } = await import("./account/CryptoTransferTransaction");
-
         const paymentTx = await new CryptoTransferTransaction()
             .setNodeAccountId(node.id)
             .addRecipient(node.id, hbar)
@@ -243,3 +238,4 @@ export abstract class QueryBuilder<T> {
         return this;
     }
 }
+

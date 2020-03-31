@@ -8,6 +8,9 @@ import { Response } from "./generated/Response_pb";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 import { TransactionRecord } from "./TransactionRecord";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
+import { BaseClient } from "./BaseClient";
+import { HederaReceiptStatusError } from "./errors/HederaReceiptStatusError";
+import { HederaRecordStatusError } from "./errors/HederaRecordStatusError";
 
 /**
  * Get the record for a transaction. If the transaction requested a record, then the record lasts
@@ -63,3 +66,24 @@ export class TransactionRecordQuery extends QueryBuilder<TransactionRecord> {
         return TransactionRecord._fromProto(receipt.getTransactionrecord()!);
     }
 }
+
+TransactionId.prototype.getRecord =
+    async function(client: BaseClient): Promise<TransactionRecord> {
+    // Wait for consensus using a free query first
+
+        try {
+            await this.getReceipt(client);
+        } catch (error) {
+            if (!(error instanceof HederaReceiptStatusError)) {
+                throw error;
+            }
+        }
+
+        const record = await new TransactionRecordQuery()
+            .setTransactionId(this)
+            .execute(client);
+
+        HederaRecordStatusError._throwIfError(record.receipt!.status.code, record, this);
+
+        return record;
+    };

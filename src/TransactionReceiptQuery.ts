@@ -1,4 +1,5 @@
 import { QueryBuilder } from "./QueryBuilder";
+import { BaseClient } from "./BaseClient";
 import { TransactionGetReceiptQuery as ProtoTransactionGetReceiptQuery } from "./generated/TransactionGetReceipt_pb";
 import { QueryHeader } from "./generated/QueryHeader_pb";
 import { TransactionId, TransactionIdLike } from "./TransactionId";
@@ -9,6 +10,7 @@ import { TransactionReceipt } from "./TransactionReceipt";
 import { CryptoService } from "./generated/CryptoService_pb_service";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
 import { Status } from "./Status";
+import { HederaReceiptStatusError } from "./errors/HederaReceiptStatusError";
 
 export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
     private readonly _builder: ProtoTransactionGetReceiptQuery;
@@ -94,3 +96,15 @@ export class TransactionReceiptQuery extends QueryBuilder<TransactionReceipt> {
         return TransactionReceipt._fromProto(receipt.getReceipt()!);
     }
 }
+
+TransactionId.prototype.getReceipt =
+    async function(client: BaseClient): Promise<TransactionReceipt> {
+        const receipt = await new TransactionReceiptQuery()
+            .setTransactionId(this)
+            .execute(client);
+
+        // Throw an exception on an invalid receipt status
+        HederaReceiptStatusError._throwIfError(receipt.status.code, receipt, this);
+
+        return receipt;
+    };

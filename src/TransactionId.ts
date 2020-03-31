@@ -9,11 +9,7 @@ import { dateToTimestamp, Timestamp as JsTimestamp } from "./Timestamp";
 import { BaseClient } from "./BaseClient";
 import { TransactionReceipt } from "./TransactionReceipt";
 import { TransactionRecord } from "./TransactionRecord";
-import { TransactionReceiptQuery } from "./TransactionReceiptQuery";
-import { TransactionRecordQuery } from "./TransactionRecordQuery";
 import { Time } from "./Time";
-import { HederaReceiptStatusError } from "./errors/HederaReceiptStatusError";
-import { HederaRecordStatusError } from "./errors/HederaRecordStatusError";
 
 /**
  * Normalized transaction ID returned by various methods in the SDK.
@@ -100,35 +96,18 @@ export class TransactionId {
         return `${this.accountId.toString()}@${this.validStart.seconds}.${this.validStart.nanos}`;
     }
 
-    public async getReceipt(client: BaseClient): Promise<TransactionReceipt> {
-        const receipt = await new TransactionReceiptQuery()
-            .setTransactionId(this)
-            .execute(client);
-
-        // Throw an exception on an invalid receipt status
-        HederaReceiptStatusError._throwIfError(receipt.status.code, receipt, this);
-
-        return receipt;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public getReceipt(_: BaseClient): Promise<TransactionReceipt> {
+        return new Promise((_, reject) => {
+            reject(new Error("(BUG) `TransactionId.getReceipt()` declared, but not overwritten."));
+        });
     }
 
-    public async getRecord(client: BaseClient): Promise<TransactionRecord> {
-        // Wait for consensus using a free query first
-
-        try {
-            await this.getReceipt(client);
-        } catch (error) {
-            if (!(error instanceof HederaReceiptStatusError)) {
-                throw error;
-            }
-        }
-
-        const record = await new TransactionRecordQuery()
-            .setTransactionId(this)
-            .execute(client);
-
-        HederaRecordStatusError._throwIfError(record.receipt!.status.code, record, this);
-
-        return record;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public getRecord(_: BaseClient): Promise<TransactionRecord> {
+        return new Promise((_, reject) => {
+            reject(new Error("(BUG) `TransactionId.getRecord()` declared, but not overwritten."));
+        });
     }
 
     // NOT A STABLE API
