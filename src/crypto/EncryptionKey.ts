@@ -8,14 +8,16 @@ const AES_128_CTR = "aes-128-ctr";
 
 export class EncryptionKey {
     private key: Uint8Array;
+    private salt: Uint8Array;
     private passphrase: string;
 
     private static dkLen = 32;
     private static c = 262144;
     private static saltLen = 32;
 
-    private constructor(passphrase: string, key: Uint8Array) {
+    private constructor(passphrase: string, salt: Uint8Array, key: Uint8Array) {
         this.passphrase = passphrase;
+        this.salt = salt;
         this.key = key;
     }
 
@@ -30,7 +32,7 @@ export class EncryptionKey {
             EncryptionKey.dkLen
         );
 
-        return new EncryptionKey(passphrase, key);
+        return new EncryptionKey(passphrase, salt, key);
     }
 
     public async encrypt(messageStrOrBytes: string | Uint8Array): Promise<Uint8Array> {
@@ -44,16 +46,31 @@ export class EncryptionKey {
 
         const cipherText = Buffer.concat([ cipher.update(message), cipher[ "final" ]() ]);
 
-        const mac = (await Hmac.hash(HashAlgorithm.Sha384, this.key.slice(16), cipherText))
+        const keyFingerPrint = (await Hmac.hash(
+            HashAlgorithm.Sha384,
+            this.key.slice(16),
+            new Uint8Array()
+        ))
+            .subarray(0, 4);
+
+        const passphraseFingerPrint = (await Hmac.hash(
+            HashAlgorithm.Sha384,
+            this.passphrase,
+            new Uint8Array()
+        ))
             .subarray(0, 4);
 
         // 8 Bytes for the header containing current chunk number, and total number of chunks.
+        // 16 Bytes for the iv.
         // 16 Bytes for the salt.
         // 4 Bytes for the key fingerprint.
-        const encoded = new Uint8Array(8 + 16 + 4 + message.length);
+        // 4 Bytes for the passphrase fingerprint.
+        const encoded = new Uint8Array(8 + 16 + 16 + 4 + 4 + cipherText.length);
         encoded.set(iv, 8);
-        encoded.set(mac, 24);
-        encoded.set(message, 28);
+        encoded.set(this.salt, 8 + 16);
+        encoded.set(keyFingerPrint, 8 + 16 + 16);
+        encoded.set(passphraseFingerPrint, 8 + 16 + 16);
+        encoded.set(cipherText, 8 + 16 + 16 + 4 + 4);
         return encoded;
     }
 }

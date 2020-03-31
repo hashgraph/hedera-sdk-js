@@ -37,7 +37,7 @@ export class ConsensusClient {
         const chunkCount = (bytes.length % 2000) + 1;
 
         for (let i = 0; i < bytes.length; i += 2000) {
-            let msg;
+            let msg: Uint8Array;
             if (this.encryptionKey != null) {
                 msg = await this.encryptionKey.encrypt(bytes.subarray(
                     i,
