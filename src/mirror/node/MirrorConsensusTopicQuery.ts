@@ -2,9 +2,8 @@ import { ConsensusService } from "../../generated/MirrorConsensusService_pb_serv
 import { ConsensusTopicResponse } from "../../generated/MirrorConsensusService_pb";
 import { MirrorClient } from "./MirrorClient";
 import { MirrorSubscriptionHandle } from "../MirrorSubscriptionHandle";
-import { MirrorConsensusTopicResponse } from "../MirrorConsensusTopicResponse";
 import * as grpc from "grpc";
-import { BaseMirrorConsensusTopicQuery, ErrorHandler, Listener } from "../BaseMirrorConsensusTopicQuery";
+import { BaseMirrorConsensusTopicQuery, ErrorHandler, Listener, handleListener } from "../BaseMirrorConsensusTopicQuery";
 
 export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
     public subscribe(
@@ -13,6 +12,9 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
         errorHandler?: ErrorHandler
     ): MirrorSubscriptionHandle {
         this._validate();
+
+        const provider = this.provider;
+        const messages = this.messages;
 
         const response = client._client.makeServerStreamRequest(
             `/${ConsensusService.serviceName}/${ConsensusService.subscribeTopic.methodName}`,
@@ -23,7 +25,7 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
             null
         )
             .on("data", (message: ConsensusTopicResponse): void => {
-                listener(new MirrorConsensusTopicResponse(message));
+                handleListener(provider, messages, message, listener);
             })
             .on("status", (status: grpc.StatusObject): void => {
                 if (errorHandler != null) {
