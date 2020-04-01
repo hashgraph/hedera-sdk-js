@@ -10,10 +10,15 @@ import { MirrorConsensusTopicResponse } from "./MirrorConsensusTopicResponse";
 
 export type Listener = (message: MirrorConsensusTopicResponse) => void;
 export type ErrorHandler = (error: Error) => void;
-export type EncryptionKeyProvider = (fingerprint: Uint8Array) => EncryptionKey;
+export type EncryptionKeyProvider = (
+    keyFingerPrint: Uint8Array,
+    passphraseFingerPrint: Uint8Array,
+    salt: Uint8Array
+) => EncryptionKey;
 
 export class BaseMirrorConsensusTopicQuery {
     protected readonly _builder: ConsensusTopicQuery = new ConsensusTopicQuery();
+    protected provider: EncryptionKeyProvider | null = null;
 
     public setTopicId(id: ConsensusTopicIdLike): this {
         this._builder.setTopicid(new ConsensusTopicId(id)._toProto());
@@ -36,7 +41,7 @@ export class BaseMirrorConsensusTopicQuery {
     }
 
     public setEncryptionKeyProvider(provider: EncryptionKeyProvider): this {
-        // TODO [2020-04-01]
+        this.provider = provider;
         return this;
     }
 

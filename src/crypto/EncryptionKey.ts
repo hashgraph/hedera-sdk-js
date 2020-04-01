@@ -4,10 +4,22 @@ import { Pbkdf2 } from "./Pbkdf2";
 import { Hmac, HashAlgorithm } from "./Hmac";
 import * as utf8 from "@stablelib/utf8";
 
-const AES_128_CTR = "aes-128-ctr";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const uuid = require("uuid");
+
+export const AES_128_CTR = "aes-128-ctr";
+
+export const currentChunkOffset = 0;
+export const chunkCountOffset = 4;
+export const uuidOffset = 8;
+export const ivOffset = 8 + 16;
+export const saltOffset = 8 + 16 + 16;
+export const keyFingerPrintOffset = 8 + 16 + 16 + 16;
+export const passphraseFingerPrintOffset = 8 + 16 + 16 + 16 + 4;
+export const messageOffset = 8 + 16 + 16 + 16 + 4 + 4;
 
 export class EncryptionKey {
-    private key: Uint8Array;
+    public _key: Uint8Array;
     private salt: Uint8Array;
     private passphrase: string;
 
@@ -18,7 +30,7 @@ export class EncryptionKey {
     private constructor(passphrase: string, salt: Uint8Array, key: Uint8Array) {
         this.passphrase = passphrase;
         this.salt = salt;
-        this.key = key;
+        this._key = key;
     }
 
     public static async fromPassphrase(passphrase: string): Promise<EncryptionKey> {
@@ -42,13 +54,13 @@ export class EncryptionKey {
             messageStrOrBytes;
 
         const iv = nacl.randomBytes(16);
-        const cipher = crypto.createCipheriv(AES_128_CTR, this.key.slice(0, 16), iv);
+        const cipher = crypto.createCipheriv(AES_128_CTR, this._key.slice(0, 16), iv);
 
         const cipherText = Buffer.concat([ cipher.update(message), cipher[ "final" ]() ]);
 
         const keyFingerPrint = (await Hmac.hash(
             HashAlgorithm.Sha384,
-            this.key.slice(16),
+            this._key.slice(16),
             new Uint8Array()
         ))
             .subarray(0, 4);
@@ -61,16 +73,18 @@ export class EncryptionKey {
             .subarray(0, 4);
 
         // 8 Bytes for the header containing current chunk number, and total number of chunks.
+        // 16 bytes for the uuid.
         // 16 Bytes for the iv.
         // 16 Bytes for the salt.
         // 4 Bytes for the key fingerprint.
         // 4 Bytes for the passphrase fingerprint.
-        const encoded = new Uint8Array(8 + 16 + 16 + 4 + 4 + cipherText.length);
-        encoded.set(iv, 8);
-        encoded.set(this.salt, 8 + 16);
-        encoded.set(keyFingerPrint, 8 + 16 + 16);
-        encoded.set(passphraseFingerPrint, 8 + 16 + 16);
-        encoded.set(cipherText, 8 + 16 + 16 + 4 + 4);
+        const encoded = new Uint8Array(8 + 16 + 16 + 16 + 4 + 4 + cipherText.length);
+        encoded.set(utf8.encode(uuid.v4()), uuidOffset);
+        encoded.set(iv, ivOffset);
+        encoded.set(this.salt, saltOffset);
+        encoded.set(keyFingerPrint, keyFingerPrintOffset);
+        encoded.set(passphraseFingerPrint, passphraseFingerPrintOffset);
+        encoded.set(cipherText, messageOffset);
         return encoded;
     }
 }

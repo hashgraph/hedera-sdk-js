@@ -67,7 +67,8 @@
     "google-protobuf": "^3.11.4",
     "grpc": "^1.24.2",
     "js-sha3": "^0.8.0",
-    "tweetnacl": "^1.0.3"
+    "tweetnacl": "^1.0.3",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "@launchbadge/eslint-config": "^0.13.10",
