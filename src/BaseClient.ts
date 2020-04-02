@@ -184,9 +184,19 @@ export abstract class BaseClient {
         return this;
     }
 
-    /** Get the current account balance. */
+    /**
+     * Get the current account balance.
+     * @deprecated `Client.getAccountBalance()` is deprecated with no replacement. Use the `AccountBalanceQuery` directly instead.
+     */
     public getAccountBalance(id: AccountIdLike): Promise<Hbar> {
+        console.warn("`Client.getAccountBalance()` is deprecated with no replacement. Use the `AccountBalanceQuery` directly instead");
         return new AccountBalanceQuery()
+            .setAccountId(id)
+            .execute(this);
+    }
+
+    public async ping(id: AccountIdLike): Promise<void> {
+        await new AccountBalanceQuery()
             .setAccountId(id)
             .execute(this);
     }

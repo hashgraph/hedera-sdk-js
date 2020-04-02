@@ -6,7 +6,6 @@ import {
     ConsensusTopicDeleteTransaction,
     ConsensusTopicInfoQuery,
     ConsensusTopicUpdateTransaction,
-    ConsensusSubmitMessageTransaction,
     ConsensusMessageSubmitTransaction
 } from "../../../src/index-node";
 
@@ -26,7 +25,7 @@ describe("AccountUpdateTransaction", () => {
         let transactionId = await new ConsensusTopicCreateTransaction()
             .setAdminKey(operatorPrivateKey.publicKey)
             .setTopicMemo("[e2e::ConsensusTopicCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(1))
+            .setMaxTransactionFee(new Hbar(2))
             .execute(client);
 
         const receipt = await transactionId.getReceipt(client);
