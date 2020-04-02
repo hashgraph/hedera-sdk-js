@@ -3,7 +3,6 @@ const {
     MirrorClient,
     MirrorConsensusTopicQuery,
     ConsensusTopicCreateTransaction,
-    ConsensusMessageSubmitTransaction,
     EncryptionKey,
     ConsensusClient
 } = require("@hashgraph/sdk");
@@ -42,28 +41,23 @@ async function main() {
         .setTopicId(topicId)
         .setEncryptionKey(encryptionKey);
 
+    /* eslint-disable no-unused-vars */
     new MirrorConsensusTopicQuery()
         .setTopicId(topicId)
         .setEncryptionKeyProvider((
             keyFingerPrint,
             passphraseFingerPrint,
             salt
-        ) => {
-            return encryptionKey;
-        })
+        ) => encryptionKey)
         .subscribe(
             mirrorClient,
             (message) => console.log(message.toString()),
             (error) => console.log(`Error: ${error}`)
         );
+    /* eslint-enable */
 
     for (let i = 0; ; i += 1) {
         // eslint-disable-next-line no-await-in-loop
-        // await (await new ConsensusMessageSubmitTransaction()
-        //     .setTopicId(topicId)
-        //     .setMessage(`Hello, HCS! Message ${i}`)
-        //     .execute(client))
-        //     .getReceipt(client);
         consensusClient.send(`Sent message ${i}`);
 
         console.log(`Sent message ${i}`);

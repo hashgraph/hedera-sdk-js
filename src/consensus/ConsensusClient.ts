@@ -1,7 +1,7 @@
 import { BaseClient } from "../BaseClient";
 import { TransactionId } from "../TransactionId";
 import { TransactionReceipt } from "../TransactionReceipt";
-import { 
+import {
     EncryptionKey,
     currentChunkOffset,
     chunkCountOffset
@@ -68,6 +68,7 @@ export class ConsensusClient {
                 msg = new Uint8Array(length + 8);
                 msg.set(bytes.subarray(i * 2000, (i * 2000) + length), 8);
             }
+            console.log(`[encrypt] msg: ${msg}`);
 
             // Set current chunk anc total chunk count.
             const view = new DataView(msg.buffer, 0);
