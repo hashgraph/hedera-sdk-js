@@ -3,23 +3,27 @@ const {
     MirrorClient,
     MirrorConsensusTopicQuery,
     ConsensusTopicCreateTransaction,
-    ConsensusSubmitMessageTransaction
+    ConsensusMessageSubmitTransaction,
+    EncryptionKey,
+    ConsensusClient
 } = require("@hashgraph/sdk");
 
 async function main() {
     const operatorPrivateKey = process.env.OPERATOR_KEY;
     const operatorAccount = process.env.OPERATOR_ID;
     const mirrorNodeAddress = process.env.MIRROR_NODE_ADDRESS;
-    const nodeAddress = process.env.NODE_ADDRESS;
+    const passphrase = process.env.PASSPHRASE;
 
     if (operatorPrivateKey == null ||
         operatorAccount == null ||
         mirrorNodeAddress == null ||
-        nodeAddress == null) {
-        throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, MIRROR_NODE_ADDRESS, NODE_ADDRESS must be present");
+        passphrase == null) {
+        throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, MIRROR_NODE_ADDRESS, PASSPHRASE must be present");
     }
 
-    const consensusClient = new MirrorClient(mirrorNodeAddress);
+    const encryptionKey = await EncryptionKey.fromPassphrase(passphrase);
+
+    const mirrorClient = new MirrorClient(mirrorNodeAddress);
 
     const client = Client.forTestnet();
     client.setOperator(operatorAccount, operatorPrivateKey);
@@ -34,21 +38,33 @@ async function main() {
 
     console.log(`topicId = ${topicId}`);
 
+    const consensusClient = new ConsensusClient(client)
+        .setTopicId(topicId)
+        .setEncryptionKey(encryptionKey);
+
     new MirrorConsensusTopicQuery()
         .setTopicId(topicId)
+        .setEncryptionKeyProvider((
+            keyFingerPrint,
+            passphraseFingerPrint,
+            salt
+        ) => {
+            return encryptionKey;
+        })
         .subscribe(
-            consensusClient,
+            mirrorClient,
             (message) => console.log(message.toString()),
             (error) => console.log(`Error: ${error}`)
         );
 
     for (let i = 0; ; i += 1) {
         // eslint-disable-next-line no-await-in-loop
-        await (await new ConsensusSubmitMessageTransaction()
-            .setTopicId(topicId)
-            .setMessage(`Hello, HCS! Message ${i}`)
-            .execute(client))
-            .getReceipt(client);
+        // await (await new ConsensusMessageSubmitTransaction()
+        //     .setTopicId(topicId)
+        //     .setMessage(`Hello, HCS! Message ${i}`)
+        //     .execute(client))
+        //     .getReceipt(client);
+        consensusClient.send(`Sent message ${i}`);
 
         console.log(`Sent message ${i}`);
 

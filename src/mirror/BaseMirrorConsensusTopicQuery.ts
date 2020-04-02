@@ -74,9 +74,11 @@ export function handleListener(
     listener: Listener
 ): void {
     if (provider != null) {
-        const view = new DataView(message.getMessage_asU8(), 0);
-        const currentChunk = view.getUint32(currentChunkOffset);
-        const chunkCount = view.getUint32(chunkCountOffset);
+        console.log(`[decrypt] messagea: ${message.getMessage_asU8()}`);
+
+        const view = new DataView(message.getMessage_asU8().buffer, message.getMessage_asU8().byteOffset);
+        const currentChunk = view.getUint32(0);
+        const chunkCount = view.getUint32(1);
         const uuid = utf8.decode(message.getMessage_asU8()
             .subarray(uuidOffset, uuidOffset + 16));
         const iv = message.getMessage_asU8()
@@ -90,22 +92,37 @@ export function handleListener(
         const cipherText = message.getMessage_asU8()
             .subarray(messageOffset, message.getMessage_asU8().length);
 
+        console.log(`[decrypt] currentChunk: ${currentChunk}`);
+        console.log(`[decrypt] chunkCount: ${chunkCount}`);
+        console.log(`[decrypt] uuid: ${uuid}`);
+        console.log(`[decrypt] iv: ${iv}`);
+        console.log(`[decrypt] salt: ${salt}`);
+        console.log(`[decrypt] keyFingerPrint: ${keyFingerPrint}`);
+        console.log(`[decrypt] passphraseFingerPrint: ${passphraseFingerPrint}`);
+        console.log(`[decrypt] cipherText: ${cipherText}`);
+
         const key = provider(keyFingerPrint, passphraseFingerPrint, salt);
 
-        const decipher = crypto.createDecipheriv(AES_128_CTR, key._key, iv);
+        const decipher = crypto.createDecipheriv(AES_128_CTR, key._key.slice(16), iv);
         const msg = Buffer.concat([ decipher.update(cipherText), decipher[ "final" ]() ]);
+
+        console.log(`[decrypt] msg: ${JSON.stringify(msg)}`);
+
         if (messages[ uuid ] == null) {
-            messages[ uuid ] = { read: 0, chunks: new Array(chunkCount) };
+            messages[ uuid ] = { read: 0, chunks: new Array(chunkCount + 1) };
+            console.log(`[decrypt] messages[${uuid}]: ${JSON.stringify(messages[uuid])}`);
         }
 
         // Ignore message if we've already read that current chunk
         if (messages[ uuid ].chunks[ currentChunk ] == null) {
             messages[ uuid ].read += 1;
+            console.log(`[decrypt] messages[${uuid}]: ${JSON.stringify(messages[uuid])}`);
         }
 
         messages[ uuid ].chunks[ currentChunk ] = msg;
+        console.log(`[decrypt] messages[${uuid}]: ${JSON.stringify(messages[uuid])}`);
 
-        if (messages[ uuid ].read === chunkCount) {
+        if (messages[ uuid ].read === chunkCount + 1) {
             let length = 0;
             for (const chunk of messages[ uuid ].chunks) {
                 length += chunk.length;

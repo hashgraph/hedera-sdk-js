@@ -89,6 +89,8 @@ export { ConsensusTopicInfoQuery } from "./consensus/ConsensusTopicInfoQuery";
 export { ConsensusTopicId } from "./consensus/ConsensusTopicId";
 export { ConsensusSubmitMessageTransaction } from "./consensus/ConsensusSubmitMessageTransaction";
 export { ConsensusMessageSubmitTransaction } from "./consensus/ConsensusMessageSubmitTransaction";
+export { ConsensusClient } from "./consensus/ConsensusClient";
+export { EncryptionKey } from "./crypto/EncryptionKey";
 
 // Mirror
 export { MirrorConsensusTopicResponse } from "./mirror/MirrorConsensusTopicResponse";
