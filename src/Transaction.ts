@@ -1,5 +1,5 @@
 import * as nacl from "tweetnacl";
-import { Transaction as Transaction_ } from "./generated/Transaction_pb";
+import { Transaction as ProtoTransaction } from "./generated/Transaction_pb";
 import { TransactionBody } from "./generated/TransactionBody_pb";
 import { BaseClient, TransactionSigner } from "./BaseClient";
 import { SignatureMap, SignaturePair, TransactionID } from "./generated/BasicTypes_pb";
@@ -37,25 +37,22 @@ export const transactionCreate = Symbol("transactionCreate");
 export const transactionCall = Symbol("transactionCall");
 
 export class Transaction {
-    private readonly _node: AccountId;
-    private readonly _inner: Transaction_;
     private readonly _txnId: TransactionID;
     private readonly _validDurationSeconds: number;
-    private readonly _method: UnaryMethodDefinition<Transaction_, TransactionResponse>;
+    private readonly _method: UnaryMethodDefinition<ProtoTransaction, TransactionResponse>;
+    private readonly _txns: ProtoTransaction[];
 
     private static [ transactionCreate ](
-        node: AccountId,
-        inner: Transaction_,
+        proto: ProtoTransaction[],
         body: TransactionBody,
-        method: UnaryMethodDefinition<Transaction_, TransactionResponse>
+        method: UnaryMethodDefinition<ProtoTransaction, TransactionResponse>
     ): Transaction {
         const tx = Object.create(this.prototype);
 
-        tx._node = node;
-        tx._inner = inner;
         tx._txnId = orThrow(body.getTransactionid());
         tx._validDurationSeconds = orThrow(body.getTransactionvalidduration()).getSeconds();
         tx._method = method;
+        tx._txns = proto;
 
         return tx;
     }
@@ -65,14 +62,14 @@ export class Transaction {
     }
 
     public static fromBytes(bytes: Uint8Array): Transaction {
-        const inner = Transaction_.deserializeBinary(bytes);
-        const body = TransactionBody.deserializeBinary(inner.getBodybytes_asU8());
+        const proto: ProtoTransaction = ProtoTransaction.deserializeBinary(bytes);
+        const body = TransactionBody.deserializeBinary(proto.getBodybytes_asU8());
 
-        const nodeId = AccountId._fromProto(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
+        AccountId._fromProto(orThrow(body.getNodeaccountid(), "transaction missing node account ID"));
 
         const method = methodFromTxn(body);
 
-        return Transaction[ transactionCreate ](nodeId, inner, body, method);
+        return Transaction[ transactionCreate ]([ proto ], body, method);
     }
 
     public get id(): TransactionId {
@@ -80,8 +77,8 @@ export class Transaction {
     }
 
     private _checkPubKey(publicKey: Ed25519PublicKey): void {
-        if (this._inner.hasSigmap()) {
-            for (const sig of this._inner.getSigmap()!.getSigpairList()) {
+        if (this._txns[ 0 ].hasSigmap()) {
+            for (const sig of this._txns[ 0 ].getSigmap()!.getSigpairList()) {
                 if (publicKey._bytesEqual(sig.getPubkeyprefix_asU8())) {
                     throw new Error(`transaction ${this._txnId} already signed with public key ${publicKey.toString()}`);
                 }
@@ -89,14 +86,14 @@ export class Transaction {
         }
     }
 
-    private _addSignature({ signature, publicKey }: SignatureAndKey): this {
+    private _addSignature(index: number, { signature, publicKey }: SignatureAndKey): this {
         const sigPair = new SignaturePair();
         sigPair.setPubkeyprefix(publicKey.toBytes());
         sigPair.setEd25519(signature);
 
-        const sigMap = this._inner.getSigmap() || new SignatureMap();
+        const sigMap = this._txns[ index ].getSigmap() || new SignatureMap();
         sigMap.addSigpair(sigPair);
-        this._inner.setSigmap(sigMap);
+        this._txns[ index ].setSigmap(sigMap);
 
         return this;
     }
@@ -104,10 +101,14 @@ export class Transaction {
     public sign(privateKey: Ed25519PrivateKey): this {
         this._checkPubKey(privateKey.publicKey);
 
-        return this._addSignature({
-            signature: nacl.sign(this._inner.getBodybytes_asU8(), privateKey._keyData),
-            publicKey: privateKey.publicKey
-        });
+        for (const [ index, transaction ] of this._txns.entries()) {
+            this._addSignature(index, {
+                signature: nacl.sign(transaction.getBodybytes_asU8(), privateKey._keyData),
+                publicKey: privateKey.publicKey
+            });
+        }
+
+        return this;
     }
 
     /**
@@ -120,12 +121,14 @@ export class Transaction {
     public async signWith(publicKey: Ed25519PublicKey, signer: TransactionSigner): Promise<this> {
         this._checkPubKey(publicKey);
 
-        const signResult = signer(this._inner.getBodybytes_asU8());
-        const signature: Uint8Array = signResult instanceof Promise ?
-            await signResult :
-            signResult;
+        for (const [ index, transaction ] of this._txns.entries()) {
+            const signResult = signer(transaction.getBodybytes_asU8());
+            const signature: Uint8Array = signResult instanceof Promise ?
+                await signResult :
+                signResult;
 
-        this._addSignature({ signature, publicKey });
+            this._addSignature(index, { signature, publicKey });
+        }
         return this;
     }
 
@@ -135,34 +138,39 @@ export class Transaction {
             await this.signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
         }
 
-        const node = client._getNode(this._node);
         const validUntilMs = Date.now() + (this._validDurationSeconds * 1000);
 
-        /* eslint-disable no-await-in-loop */
-        // we want to wait in a loop, that's the whole point here
-        for (let attempt = 0; /* loop will exit when transaction expires */; attempt += 1) {
-            if (attempt > 0) {
-                const delay = Math.floor(receiptRetryDelayMs *
-                    Math.random() * ((2 ** attempt) - 1));
+        for (let attempt = 0; /* loop will exit when transaction expires */;) {
+            for (const transaction of this._txns) {
+                /* eslint-disable no-await-in-loop */
+                const body = TransactionBody.deserializeBinary(transaction.getBodybytes_asU8());
+                const node = client._getNode(AccountId._fromProto(body.getNodeaccountid()!));
 
-                if (Date.now() + delay > validUntilMs) {
-                    throw new Error(`timed out waiting to send transaction ID: ${this._txnId.toString()}`);
+                // we want to wait in a loop, that's the whole point here
+                if (attempt > 0) {
+                    const delay = Math.floor(receiptRetryDelayMs *
+                        Math.random() * ((2 ** attempt) - 1));
+
+                    if (Date.now() + delay > validUntilMs) {
+                        throw new Error(`timed out waiting to send transaction ID: ${this._txnId.toString()}`);
+                    }
+
+                    await setTimeoutAwaitable(delay);
                 }
 
-                await setTimeoutAwaitable(delay);
+                const response = await client._unaryCall(node.url, transaction, this._method);
+                const status: Status = Status._fromCode(response.getNodetransactionprecheckcode());
+
+                // If response code is BUSY we need to timeout and retry
+                if (status._isBusy()) {
+                    attempt += 1;
+                    continue;
+                }
+
+                return response;
+                /* eslint-enable no-await-in-loop */
             }
-
-            const response = await client._unaryCall(node.url, this._inner, this._method);
-            const status: Status = Status._fromCode(response.getNodetransactionprecheckcode());
-
-            // If response code is BUSY we need to timeout and retry
-            if (status._isBusy()) {
-                continue;
-            }
-
-            return response;
         }
-        /* eslint-enable no-await-in-loop */
     }
 
     public async execute(client: BaseClient): Promise<TransactionId> {
@@ -180,18 +188,20 @@ export class Transaction {
         return this.id.getReceipt(client);
     }
 
-    /** @deprecate `Transaction.getRecord()` is deprecrated. Use `(await Transaction.execute()).getRecord()` instead. */
+    /**
+     * @deprecated `Transaction.getRecord()` is deprecrated. Use `(await Transaction.execute()).getRecord()` instead.
+     */
     public getRecord(client: BaseClient): Promise<TransactionRecord> {
         console.warn("`Transaction.getRecord()` is deprecrated. Use `(await Transaction.execute()).getRecord()` instead.");
         return this.id.getRecord(client);
     }
 
-    public _toProto(): Transaction_ {
-        return Message.cloneMessage(this._inner);
+    public _toProto(): ProtoTransaction {
+        return Message.cloneMessage(this._txns[ 0 ]);
     }
 
     public toBytes(): Uint8Array {
-        return this._inner.serializeBinary();
+        return this._txns[ 0 ].serializeBinary();
     }
 
     public toString(): string {
@@ -207,7 +217,7 @@ export class Transaction {
 }
 
 /* eslint-disable-next-line max-len */
-function methodFromTxn(inner: TransactionBody): UnaryMethodDefinition<Transaction_, TransactionResponse> {
+function methodFromTxn(inner: TransactionBody): UnaryMethodDefinition<ProtoTransaction, TransactionResponse> {
     switch (inner.getDataCase()) {
         case TransactionBody.DataCase.CONTRACTCALL:
             return SmartContractService.contractCallMethod;

@@ -5,7 +5,7 @@ import {
     runValidation
 } from "./util";
 import { Transaction, transactionCreate, transactionCall } from "./Transaction";
-import { Transaction as Transaction_ } from "./generated/Transaction_pb";
+import { Transaction as ProtoTransaction } from "./generated/Transaction_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
 
@@ -69,7 +69,7 @@ export abstract class TransactionBuilder {
         return this;
     }
 
-    protected abstract get _method(): UnaryMethodDefinition<Transaction_, TransactionResponse>;
+    protected abstract get _method(): UnaryMethodDefinition<ProtoTransaction, TransactionResponse>;
 
     protected abstract _doValidate(errors: string[]): void;
 
@@ -153,23 +153,40 @@ export abstract class TransactionBuilder {
             throw new Error("`setNodeAccountId` must be called if client is not supplied");
         }
 
+        let transactions: ProtoTransaction[] = [];
+
         if (!this._node) {
-            this._node = client!._randomNode().id;
+            for (const node of client!._nodes) {
+                this._inner.setNodeaccountid(node.id._toProto());
+                const protoTx = new ProtoTransaction();
+                protoTx.setBodybytes(this._inner.serializeBinary());
+                transactions.push(protoTx);
+            }
+
+            shuffle(transactions);
+            transactions = transactions.slice(0, transactions.length / 3);
+        } else {
+            this._inner.setNodeaccountid(this._node._toProto());
+            const protoTx = new ProtoTransaction();
+            protoTx.setBodybytes(this._inner.serializeBinary());
+            transactions.push(protoTx);
         }
 
-        if (this._node && !this._inner.hasNodeaccountid()) {
-            this.setNodeAccountId(this._node);
-        }
-
-        this.validate();
-
-        const protoTx = new Transaction_();
-        protoTx.setBodybytes(this._inner.serializeBinary());
-
-        return Transaction[ transactionCreate ](this._node, protoTx, this._inner, this._method);
+        return Transaction[ transactionCreate ](transactions, this._inner, this._method);
     }
 
     public execute(client: BaseClient): Promise<TransactionId> {
         return this.build(client).execute(client);
+    }
+}
+
+function shuffle<T>(array: T[]): void {
+    for (let i = 0; i < (array.length) ** 2; i += 1) {
+        const left = (Math.random() * array.length) | 0;
+        const right = (Math.random() * array.length) | 0;
+
+        const temp = array[ left ];
+        array[ left ] = array[ right ];
+        array[ right ] = temp;
     }
 }

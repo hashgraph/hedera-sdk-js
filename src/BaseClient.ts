@@ -46,7 +46,7 @@ export abstract class BaseClient {
     private _operatorSigner?: TransactionSigner;
     private _operatorPublicKey?: Ed25519PublicKey;
 
-    protected _nodes: Node[] = [];
+    public _nodes: Node[] = [];
 
     // Default payment and transaction fees to 1 hbar
 
