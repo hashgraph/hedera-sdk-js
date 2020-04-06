@@ -2,7 +2,8 @@ import { BaseClient } from "./BaseClient";
 import { TransactionBody } from "./generated/TransactionBody_pb";
 import {
     newDuration,
-    runValidation
+    runValidation,
+    shuffle
 } from "./util";
 import { Transaction, transactionCreate, transactionCall } from "./Transaction";
 import { Transaction as ProtoTransaction } from "./generated/Transaction_pb";
@@ -164,7 +165,7 @@ export abstract class TransactionBuilder {
             }
 
             shuffle(transactions);
-            transactions = transactions.slice(0, transactions.length / 3);
+            transactions = transactions.slice(0, Math.floor(transactions.length / 3) + 1);
         } else {
             this._inner.setNodeaccountid(this._node._toProto());
             const protoTx = new ProtoTransaction();
@@ -180,13 +181,3 @@ export abstract class TransactionBuilder {
     }
 }
 
-function shuffle<T>(array: T[]): void {
-    for (let i = 0; i < (array.length) ** 2; i += 1) {
-        const left = (Math.random() * array.length) | 0;
-        const right = (Math.random() * array.length) | 0;
-
-        const temp = array[ left ];
-        array[ left ] = array[ right ];
-        array[ right ] = temp;
-    }
-}

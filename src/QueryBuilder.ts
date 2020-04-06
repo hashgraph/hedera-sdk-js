@@ -6,7 +6,7 @@ import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
 import { HederaStatusError } from "./errors/HederaStatusError";
 import { MaxQueryPaymentExceededError } from "./errors/MaxQueryPaymentExceededError";
-import { runValidation, setTimeoutAwaitable, timeoutPromise } from "./util";
+import { runValidation, setTimeoutAwaitable, timeoutPromise, shuffle } from "./util";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Hbar, Tinybar, hbarFromTinybarOrHbar, hbarCheck } from "./Hbar";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
@@ -108,64 +108,92 @@ export abstract class QueryBuilder<T> {
     public execute(client: BaseClient): Promise<T> {
         let respStatus: Status | null = null;
 
+        let nodes = client._nodes.slice();
+        shuffle(nodes);
+        nodes = nodes.slice(0, nodes.length / 3);
+
         return timeoutPromise(this._getDefaultExecuteTimeout(), (async() => {
-            let node: Node;
+            // Check to see if the payment is already set by the user
+            // This is required out of scope of the loop because each iteration
+            // sets payment.
+            const paymentAlreadySet = this._getHeader().hasPayment();
+
+            // Query the cost once and hope that cost works for all nodes
+            let actualCost: Hbar | null = null;
+            let paymentTxBody: TransactionBody | null = null;
 
             if (this._isPaymentRequired()) {
-                if (this._getHeader().hasPayment()) {
-                    const paymentTxBodyBytes = this._getHeader().getPayment()!.getBodybytes_asU8();
-                    const paymentTxBody = TransactionBody.deserializeBinary(paymentTxBodyBytes);
-
-                    const nodeId = AccountId._fromProto(paymentTxBody.getNodeaccountid()!);
-
-                    node = client._getNode(nodeId);
-                } else if (this._paymentAmount != null) {
-                    node = client._randomNode();
-
-                    await this._generatePaymentTransaction(client, node, this._paymentAmount);
-                } else if (this._maxPaymentAmount != null || client._maxQueryPayment != null) {
-                    node = client._randomNode();
-
+                if (paymentAlreadySet) {
+                    const paymentTxBodyBytes =
+                        this._getHeader().getPayment()!.getBodybytes_asU8();
+                    paymentTxBody =
+                        TransactionBody.deserializeBinary(paymentTxBodyBytes);
+                } else if (
+                    this._maxPaymentAmount != null ||
+                    client._maxQueryPayment != null
+                ) {
                     const maxPaymentAmount: Hbar = this._maxPaymentAmount == null ?
                         client._maxQueryPayment! :
                         this._maxPaymentAmount;
 
-                    const actualCost = await this.getCost(client);
+                    actualCost = await this.getCost(client);
 
                     if (actualCost.isGreaterThan(maxPaymentAmount)) {
-                        throw new MaxQueryPaymentExceededError(actualCost, maxPaymentAmount);
+                        throw new MaxQueryPaymentExceededError(
+                            actualCost,
+                            maxPaymentAmount
+                        );
                     }
-
-                    await this._generatePaymentTransaction(client, node, actualCost);
                 }
-            } else {
-                node = client._randomNode();
             }
 
-            // Run validator (after we have set the payment)
-            this._localValidate();
+            for (let attempt = 0; /* this will timeout by [timeoutPromise] */ ;) {
+                for (let node of nodes) {
+                    if (this._isPaymentRequired()) {
+                        if (paymentAlreadySet) {
+                            // If payment has been set manually only retry on the node that the payment is for
+                            node = client
+                                ._getNode(AccountId._fromProto(paymentTxBody!.getNodeaccountid()!));
+                        } else if (this._paymentAmount != null) {
+                            await this._generatePaymentTransaction(
+                                client,
+                                node,
+                                this._paymentAmount
+                            );
+                        } else if (
+                            this._maxPaymentAmount != null ||
+                            client._maxQueryPayment != null
+                        ) {
+                            await this._generatePaymentTransaction(client, node, actualCost!);
+                        }
+                    }
 
-            for (let attempt = 0; /* this will timeout by [timeoutPromise] */ ; attempt += 1) {
-                if (attempt > 0) {
-                    // Wait a bit before the next call if this is not our first rodeo
-                    const delayMs = Math.floor(500 * Math.random() * ((2 ** attempt) - 1));
-                    await setTimeoutAwaitable(delayMs);
+                    // Run validator (after we have set the payment)
+                    this._localValidate();
+
+                    if (attempt > 0) {
+                        // Wait a bit before the next call if this is not our first rodeo
+                        const delayMs = Math.floor(500 * Math.random() * ((2 ** attempt) - 1));
+                        await setTimeoutAwaitable(delayMs);
+                    }
+                    const resp = await client._unaryCall(node!.url, this._inner, this._getMethod());
+                    respStatus = Status._fromCode(this._mapResponseHeader(resp)
+                        .getNodetransactionprecheckcode());
+
+                    if (this._shouldRetry(respStatus, resp)) {
+                        // Clear the payment for the next iteration
+                        this._getHeader().clearPayment();
+                        attempt += 1;
+                        continue;
+                    }
+
+                    HederaPrecheckStatusError._throwIfError(
+                        respStatus.code,
+                        this._transactionId!
+                    );
+
+                    return this._mapResponse(resp);
                 }
-
-                const resp = await client._unaryCall(node!.url, this._inner, this._getMethod());
-                respStatus = Status._fromCode(this._mapResponseHeader(resp)
-                    .getNodetransactionprecheckcode());
-
-                if (this._shouldRetry(respStatus, resp)) {
-                    continue;
-                }
-
-                HederaPrecheckStatusError._throwIfError(
-                    respStatus.code,
-                    this._transactionId!
-                );
-
-                return this._mapResponse(resp);
             }
         })(), (reject) => {
             if (respStatus == null) {

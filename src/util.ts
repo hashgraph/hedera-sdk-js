@@ -118,6 +118,21 @@ export function runValidation(instance: object, doValidate: (errors: string[]) =
     }
 }
 
+export function shuffle<T>(array: T[]): void {
+    if (array.length === 1) {
+        return;
+    }
+
+    for (let i = 0; i < (array.length) ** 2; i += 1) {
+        const left = (Math.random() * array.length) | 0;
+        const right = (Math.random() * array.length) | 0;
+
+        const temp = array[ left ];
+        array[ left ] = array[ right ];
+        array[ right ] = temp;
+    }
+}
+
 export function getResponseHeader(response: Response): ResponseHeader {
     switch (response.getResponseCase()) {
         case Response.ResponseCase.RESPONSE_NOT_SET:
