@@ -483,6 +483,14 @@
     "@stablelib/hmac" "^1.0.0"
     "@stablelib/wipe" "^1.0.0"
 
+"@stablelib/random@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@stablelib/random/-/random-1.0.0.tgz#f441495075cdeaa45de16d7ddcc269c0b8edb16b"
+  integrity sha512-G9vwwKrNCGMI/uHL6XeWe2Nk4BuxkYyWZagGaDU9wrsuV+9hUwNI1lok2WVo8uJDa2zx7ahNwN7Ij983hOUFEw==
+  dependencies:
+    "@stablelib/binary" "^1.0.0"
+    "@stablelib/wipe" "^1.0.0"
+
 "@stablelib/sha256@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@stablelib/sha256/-/sha256-1.0.0.tgz#05fc33814308caedab30068bd26bd31424c502e7"
@@ -512,6 +520,15 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@stablelib/utf8/-/utf8-1.0.0.tgz#7c0c039b6d154da50326003ea92777ddc8f5db2c"
   integrity sha512-Y8QWrK4T0yW0HMFfSI3ZaMHKV37q27hX5ilsmKV358x01mzYfj5fwIf2LjzTlF+UIemHEXSlSN9XJnv1ML4znQ==
+
+"@stablelib/uuid@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@stablelib/uuid/-/uuid-1.0.0.tgz#6269de2f813c8d1693e630df06b66cc38e250053"
+  integrity sha512-J/GrlGSpthAGmL8qseUMIoDA1YxzcwJRzihOCKJgPDuq5fmZAOJv0/BhOjW3zkHaNat5jOQFVZJpxzY7iBty4Q==
+  dependencies:
+    "@stablelib/hex" "^1.0.0"
+    "@stablelib/random" "^1.0.0"
+    "@stablelib/wipe" "^1.0.0"
 
 "@stablelib/wipe@^1.0.0":
   version "1.0.0"

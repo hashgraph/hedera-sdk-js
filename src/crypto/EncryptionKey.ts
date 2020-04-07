@@ -3,20 +3,18 @@ import * as nacl from "tweetnacl";
 import { Pbkdf2 } from "./Pbkdf2";
 import { Hmac, HashAlgorithm } from "./Hmac";
 import * as utf8 from "@stablelib/utf8";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const uuid = require("uuid");
+import { uuid } from "@stablelib/uuid";
 
 export const AES_128_CTR = "aes-128-ctr";
 
 export const currentChunkOffset = 0;
 export const chunkCountOffset = 4;
 export const uuidOffset = 8;
-export const ivOffset = 8 + 16;
-export const saltOffset = 8 + 16 + 16;
-export const keyFingerPrintOffset = 8 + 16 + 16 + 16;
-export const passphraseFingerPrintOffset = 8 + 16 + 16 + 16 + 4;
-export const messageOffset = 8 + 16 + 16 + 16 + 4 + 4;
+export const ivOffset = 8 + 36;
+export const saltOffset = 8 + 36 + 16;
+export const keyFingerPrintOffset = 8 + 36 + 16 + 16;
+export const passphraseFingerPrintOffset = 8 + 36 + 16 + 16 + 4;
+export const messageOffset = 8 + 36 + 16 + 16 + 4 + 4;
 
 export class EncryptionKey {
     public _key: Uint8Array;
@@ -73,18 +71,20 @@ export class EncryptionKey {
             .subarray(0, 4);
 
         // 8 Bytes for the header containing current chunk number, and total number of chunks.
-        // 16 bytes for the uuid.
+        // 36 bytes for the uuid.
         // 16 Bytes for the iv.
         // 16 Bytes for the salt.
         // 4 Bytes for the key fingerprint.
         // 4 Bytes for the passphrase fingerprint.
-        const encoded = new Uint8Array(8 + 16 + 16 + 16 + 4 + 4 + cipherText.length);
-        encoded.set(utf8.encode(uuid.v4()), uuidOffset);
+        const encoded = new Uint8Array(messageOffset + cipherText.length);
+        encoded.set(utf8.encode(uuid()), uuidOffset);
         encoded.set(iv, ivOffset);
         encoded.set(this.salt, saltOffset);
         encoded.set(keyFingerPrint, keyFingerPrintOffset);
         encoded.set(passphraseFingerPrint, passphraseFingerPrintOffset);
         encoded.set(cipherText, messageOffset);
+
+
         return encoded;
     }
 }

@@ -46,19 +46,13 @@ export class ConsensusClient {
         const pendingReceipts: Promise<TransactionReceipt>[] = [];
         const receipts: TransactionReceipt[] = [];
 
-        console.log(`[encrypt] bytes.length: ${bytes.length}`);
-
         const chunkCount = ((bytes.length | 0) / 2000) | 0;
 
-        console.log(`[encrypt] chunkCount: ${chunkCount}`);
-
         for (let i = 0; i < chunkCount + 1; i += 1) {
-            console.log(`[encrypt] currentChunk: ${i}`);
 
             let msg: Uint8Array;
             const length = i === chunkCount ? bytes.length % 2000 : 2000;
 
-            console.log(`[encrypt] length: ${length}`);
             if (this.encryptionKey != null) {
                 msg = await this.encryptionKey.encrypt(bytes.subarray(
                     i * 2000,
@@ -68,14 +62,11 @@ export class ConsensusClient {
                 msg = new Uint8Array(length + 8);
                 msg.set(bytes.subarray(i * 2000, (i * 2000) + length), 8);
             }
-            console.log(`[encrypt] msg: ${msg}`);
 
             // Set current chunk anc total chunk count.
-            const view = new DataView(msg.buffer, 0);
-            view.setUint32(currentChunkOffset, i);
-            view.setUint32(chunkCountOffset, chunkCount);
-
-            console.log(`[encrypt] msg: ${msg}`);
+            const view = new DataView(msg.buffer, msg.byteOffset);
+            view.setUint32(0, i);
+            view.setUint32(1, chunkCount);
 
             pendingTransactions.push(new ConsensusMessageSubmitTransaction()
                 .setTopicId(this.topicId!)
