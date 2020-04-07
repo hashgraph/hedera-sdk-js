@@ -11,8 +11,6 @@ import * as utf8 from "@stablelib/utf8";
 import {
     EncryptionKey,
     AES_128_CTR,
-    currentChunkOffset,
-    chunkCountOffset,
     uuidOffset,
     ivOffset,
     saltOffset,
@@ -74,7 +72,6 @@ export function handleListener(
     listener: Listener
 ): void {
     if (provider != null) {
-
         const view = new DataView(
             message.getMessage_asU8().buffer,
             message.getMessage_asU8().byteOffset
@@ -98,7 +95,6 @@ export function handleListener(
 
         const decipher = crypto.createDecipheriv(AES_128_CTR, key._key.slice(0, 16), iv);
         const msg = Buffer.concat([ decipher.update(cipherText), decipher[ "final" ]() ]);
-
 
         if (messages[ uuid ] == null) {
             messages[ uuid ] = { read: 0, chunks: new Array(chunkCount + 1) };

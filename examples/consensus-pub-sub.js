@@ -58,7 +58,7 @@ async function main() {
 
     for (let i = 0; ; i += 1) {
         // eslint-disable-next-line no-await-in-loop
-        consensusClient.send(`Sent message ${i}`);
+        consensusClient.send(`Hello from Hedera: ${i}`);
 
         console.log(`Sent message ${i}`);
 

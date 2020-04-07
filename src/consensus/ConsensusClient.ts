@@ -1,11 +1,7 @@
 import { BaseClient } from "../BaseClient";
 import { TransactionId } from "../TransactionId";
 import { TransactionReceipt } from "../TransactionReceipt";
-import {
-    EncryptionKey,
-    currentChunkOffset,
-    chunkCountOffset
-} from "../crypto/EncryptionKey";
+import { EncryptionKey } from "../crypto/EncryptionKey";
 import { ConsensusMessageSubmitTransaction } from "./ConsensusMessageSubmitTransaction";
 import { Ed25519PrivateKey } from "../crypto/Ed25519PrivateKey";
 import { ConsensusTopicId } from "./ConsensusTopicId";
@@ -49,7 +45,6 @@ export class ConsensusClient {
         const chunkCount = ((bytes.length | 0) / 2000) | 0;
 
         for (let i = 0; i < chunkCount + 1; i += 1) {
-
             let msg: Uint8Array;
             const length = i === chunkCount ? bytes.length % 2000 : 2000;
 

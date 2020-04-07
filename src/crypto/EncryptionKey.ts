@@ -84,7 +84,6 @@ export class EncryptionKey {
         encoded.set(passphraseFingerPrint, passphraseFingerPrintOffset);
         encoded.set(cipherText, messageOffset);
 
-
         return encoded;
     }
 }
