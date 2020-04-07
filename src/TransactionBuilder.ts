@@ -2,8 +2,7 @@ import { BaseClient } from "./BaseClient";
 import { TransactionBody } from "./generated/TransactionBody_pb";
 import {
     newDuration,
-    runValidation,
-    shuffle
+    runValidation
 } from "./util";
 import { Transaction, transactionCreate, transactionCall } from "./Transaction";
 import { Transaction as ProtoTransaction } from "./generated/Transaction_pb";
@@ -154,23 +153,25 @@ export abstract class TransactionBuilder {
             throw new Error("`setNodeAccountId` must be called if client is not supplied");
         }
 
-        let transactions: ProtoTransaction[] = [];
+        const transactions: ProtoTransaction[] = [];
 
-        if (!this._node) {
-            for (const node of client!._nodes) {
+        if (this._node != null) {
+            this._inner.setNodeaccountid(this._node._toProto());
+            const protoTx = new ProtoTransaction();
+            protoTx.setBodybytes(this._inner.serializeBinary());
+            transactions.push(protoTx);
+        } else {
+            const nodes = new Array(client!._getNumberOfNodesForSuperMajority());
+            for (let i = 0; i < client!._getNumberOfNodesForSuperMajority(); i += 1) {
+                nodes[ i ] = client!._nextNode();
+            }
+
+            for (const node of nodes) {
                 this._inner.setNodeaccountid(node.id._toProto());
                 const protoTx = new ProtoTransaction();
                 protoTx.setBodybytes(this._inner.serializeBinary());
                 transactions.push(protoTx);
             }
-
-            shuffle(transactions);
-            transactions = transactions.slice(0, Math.floor(transactions.length / 3) + 1);
-        } else {
-            this._inner.setNodeaccountid(this._node._toProto());
-            const protoTx = new ProtoTransaction();
-            protoTx.setBodybytes(this._inner.serializeBinary());
-            transactions.push(protoTx);
         }
 
         return Transaction[ transactionCreate ](transactions, this._inner, this._method);

@@ -6,7 +6,7 @@ import { Query } from "./generated/Query_pb";
 import { Response } from "./generated/Response_pb";
 import { HederaStatusError } from "./errors/HederaStatusError";
 import { MaxQueryPaymentExceededError } from "./errors/MaxQueryPaymentExceededError";
-import { runValidation, setTimeoutAwaitable, timeoutPromise, shuffle } from "./util";
+import { runValidation, setTimeoutAwaitable, timeoutPromise } from "./util";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Hbar, Tinybar, hbarFromTinybarOrHbar, hbarCheck } from "./Hbar";
 import { ResponseHeader } from "./generated/ResponseHeader_pb";
@@ -108,9 +108,10 @@ export abstract class QueryBuilder<T> {
     public execute(client: BaseClient): Promise<T> {
         let respStatus: Status | null = null;
 
-        let nodes = client._nodes.slice();
-        shuffle(nodes);
-        nodes = nodes.slice(0, nodes.length / 3);
+        const nodes = new Array(client._getNumberOfNodesForSuperMajority());
+        for (let i = 0; i < client._getNumberOfNodesForSuperMajority(); i += 1) {
+            nodes[ i ] = client._nextNode();
+        }
 
         return timeoutPromise(this._getDefaultExecuteTimeout(), (async() => {
             // Check to see if the payment is already set by the user

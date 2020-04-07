@@ -9,6 +9,7 @@ import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { AccountId, AccountIdLike } from "./account/AccountId";
 import { AccountBalanceQuery } from "./account/AccountBalanceQuery";
+import { shuffle } from "./util";
 
 export type TransactionSigner = (msg: Uint8Array) => Uint8Array | Promise<Uint8Array>;
 
@@ -46,7 +47,9 @@ export abstract class BaseClient {
     private _operatorSigner?: TransactionSigner;
     private _operatorPublicKey?: Ed25519PublicKey;
 
-    public _nodes: Node[] = [];
+    private _nodes: Node[] = [];
+
+    private _nodeIndex = 0;
 
     // Default payment and transaction fees to 1 hbar
 
@@ -118,7 +121,19 @@ export abstract class BaseClient {
                     return { url, id };
                 });
 
+        shuffle(this._nodes);
+
         return this;
+    }
+
+    public _getNumberOfNodesForSuperMajority(): number {
+        return Math.floor(this._nodes.length / 3) + 1;
+    }
+
+    public _nextNode(): Node {
+        const node = this._nodes[ this._nodeIndex ];
+        this._nodeIndex = (this._nodeIndex + 1) % this._nodes.length;
+        return node;
     }
 
     public _getOperatorAccountId(): AccountId | undefined {
