@@ -34,6 +34,8 @@ export class MnemonicValidationResult {
                 return "mnemonic contained words that are not in the standard BIP-39 English word list";
             case MnemonicValidationStatus.ChecksumMismatch:
                 return "checksum byte in mnemonic did not match the rest of the mnemonic";
+            case MnemonicValidationStatus.UnknownLegacyWords:
+                return "legacy mnemonic contained words that are not in the legacy word list";
             default:
                 throw new Error(`(BUG) missing branch for status: ${this.status}`);
         }
