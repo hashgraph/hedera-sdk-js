@@ -41,8 +41,8 @@ export class Mnemonic {
         password.set(entropy, 0);
 
         const view = new DataView(password.buffer, password.byteOffset + entropy.length, 8);
-        view.setInt32(0, index > 0 ? 0 : -1);
-        view.setInt32(4, -1);
+        view.setInt32(0, index);
+        view.setInt32(4, index);
 
         const salt = Uint8Array.from([ 0xFF ]);
         const keyBytes = await Pbkdf2.deriveKey(HashAlgorithm.Sha512, password, salt, 2048, 32);
