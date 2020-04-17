@@ -9,7 +9,7 @@ import { Pbkdf2 } from "./Pbkdf2";
 
 /** result of `generateMnemonic()` */
 export class Mnemonic {
-    private readonly isLegacy: boolean = false;
+    public readonly _isLegacy: boolean = false;
     public readonly words: string[];
 
     /**
@@ -19,24 +19,20 @@ export class Mnemonic {
      */
     public constructor(words: string[]) {
         if (words.length === 22) {
-            this.isLegacy = true;
+            this._isLegacy = true;
         }
         this.words = words;
     }
 
     /** Lazily generate the key, providing an optional passphrase to protect it with */
     public toPrivateKey(passphrase: string): Promise<Ed25519PrivateKey> {
-        if (this.isLegacy) {
-            return this.legacyToPrivateKey();
-        }
-
         return Ed25519PrivateKey.fromMnemonic(this, passphrase);
     }
 
-    private async legacyToPrivateKey(): Promise<Ed25519PrivateKey> {
+    public async _legacyToPrivateKey(): Promise<Ed25519PrivateKey> {
         const index = -1;
 
-        const entropy = this.toLegacyEntropy()!;
+        const entropy = this._toLegacyEntropy()!;
         const password = new Uint8Array(entropy.length + 8);
         password.set(entropy, 0);
 
@@ -94,8 +90,8 @@ export class Mnemonic {
      * @see {@link https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt | BIP-39 English word list }
      */
     public validate(): MnemonicValidationResult {
-        if (this.isLegacy) {
-            return this.validateLegacy();
+        if (this._isLegacy) {
+            return this._validateLegacy();
         }
 
         if (this.words.length !== 24) {
@@ -142,8 +138,8 @@ export class Mnemonic {
      *
      * @return the result of the validation.
      */
-    private validateLegacy(): MnemonicValidationResult {
-        if (!this.isLegacy) {
+    private _validateLegacy(): MnemonicValidationResult {
+        if (!this._isLegacy) {
             throw new Error("`validateLegacy` cannot be called on non-legacy mnemonics");
         }
 
@@ -164,7 +160,7 @@ export class Mnemonic {
         // Checksum validation
         // We already made sure all the words are valid so if this is null we know it was due to the checksum
         try {
-            this.toLegacyEntropy();
+            this._toLegacyEntropy();
         } catch {
             return new MnemonicValidationResult(MnemonicValidationStatus.ChecksumMismatch);
         }
@@ -172,8 +168,8 @@ export class Mnemonic {
         return new MnemonicValidationResult(MnemonicValidationStatus.Ok);
     }
 
-    public toLegacyEntropy(): Uint8Array {
-        if (!this.isLegacy) {
+    private _toLegacyEntropy(): Uint8Array {
+        if (!this._isLegacy) {
             throw new Error("this mnemonic is not a legacy mnemonic");
         }
 
@@ -185,14 +181,14 @@ export class Mnemonic {
         }
 
         const indicies = this.words.map((word) => legacyWordList.indexOf(word.toLowerCase()));
-        const data = convertRadix(indicies, legacyWordList.length, 256, 33);
+        const data = _convertRadix(indicies, legacyWordList.length, 256, 33);
         const crc = data[ data.length - 1 ];
         const result = new Uint8Array(data.length - 1);
         for (let i = 0; i < data.length - 1; i += 1) {
             result[ i ] = data[ i ] ^ crc;
         }
 
-        const crc2 = crc8(result);
+        const crc2 = _crc8(result);
         if (crc !== crc2) {
             throw new Error("Invalid legacy mnemonic: fails the cyclic redundency check");
         }
@@ -205,7 +201,7 @@ export class Mnemonic {
     }
 }
 
-function crc8(data: Uint8Array): number {
+function _crc8(data: Uint8Array): number {
     let crc = 0xFF;
 
     for (let i = 0; i < data.length - 1; i += 1) {
@@ -218,7 +214,7 @@ function crc8(data: Uint8Array): number {
     return crc ^ 0xFF;
 }
 
-function convertRadix(
+function _convertRadix(
     nums: number[],
     fromRadix: number,
     toRadix: number,
