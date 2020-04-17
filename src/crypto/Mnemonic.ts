@@ -4,6 +4,8 @@ import { MnemonicValidationResult } from "./MnemonicValidationResult";
 import { MnemonicValidationStatus } from "./MnemonicValidationStatus";
 import legacyWordList from "./legacyWordList";
 import BigNumber from "bignumber.js";
+import { HashAlgorithm } from "./Hmac";
+import { Pbkdf2 } from "./Pbkdf2";
 
 /** result of `generateMnemonic()` */
 export class Mnemonic {
@@ -25,10 +27,26 @@ export class Mnemonic {
     /** Lazily generate the key, providing an optional passphrase to protect it with */
     public toPrivateKey(passphrase: string): Promise<Ed25519PrivateKey> {
         if (this.isLegacy) {
-            return Ed25519PrivateKey.fromLegacyMnemonic(this);
+            return this.legacyToPrivateKey();
         }
 
         return Ed25519PrivateKey.fromMnemonic(this, passphrase);
+    }
+
+    private async legacyToPrivateKey(): Promise<Ed25519PrivateKey> {
+        const index = -1;
+
+        const entropy = this.toLegacyEntropy()!;
+        const password = new Uint8Array(entropy.length + 8);
+        password.set(entropy, 0);
+
+        const view = new DataView(password.buffer, password.byteOffset + entropy.length, 8);
+        view.setInt32(0, index > 0 ? 0 : -1);
+        view.setInt32(4, -1);
+
+        const salt = Uint8Array.from([ 0xFF ]);
+        const keyBytes = await Pbkdf2.deriveKey(HashAlgorithm.Sha512, password, salt, 2048, 32);
+        return Ed25519PrivateKey.fromBytes(keyBytes);
     }
 
     /**
