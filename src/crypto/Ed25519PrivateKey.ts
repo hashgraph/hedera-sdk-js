@@ -158,7 +158,16 @@ export class Ed25519PrivateKey {
      */
     public static async fromLegacyMnemonic(mnemonic: Mnemonic): Promise<Ed25519PrivateKey> {
         // byte[] edSeed = CryptoUtils.deriveKey(hgcSeed.toBytes(), index, 32);
-        const password = new Uint8Array([ ...mnemonic.toLegacyEntropy()!, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF ]);
+        const index = -1;
+
+        const entropy = mnemonic.toLegacyEntropy()!;
+        const password = new Uint8Array(entropy.length + 8);
+        password.set(entropy, 0);
+
+        const view = new DataView(password.buffer, password.byteOffset + entropy.length, 8);
+        view.setInt32(0, index > 0 ? 0 : -1);
+        view.setInt32(4, -1);
+
         const salt = Uint8Array.from([ 0xFF ]);
         const keyBytes = await Pbkdf2.deriveKey(HashAlgorithm.Sha512, password, salt, 2048, 32);
         return Ed25519PrivateKey.fromBytes(keyBytes);
