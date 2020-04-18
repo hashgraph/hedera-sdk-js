@@ -29,5 +29,12 @@ export const enum MnemonicValidationStatus {
      * replaced with another from the standard word list (as this is only returned if all the words
      * exist in the word list).
      */
-    ChecksumMismatch
+    ChecksumMismatch,
+    /**
+     * The legacy mnemonic contained words which were not found in the legacy word list.
+     *
+     * {@link MnemonicValidationResult.unknownIndices} will be set with the list of word indices
+     * in {@link Mnemonic.words} which were not found in the legacy word list.
+    */
+    UnknownLegacyWords
 }

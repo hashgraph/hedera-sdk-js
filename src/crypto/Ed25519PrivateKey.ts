@@ -107,7 +107,7 @@ export class Ed25519PrivateKey {
     }
 
     /**
-     * Recover a key from a 24-word mnemonic.
+     * Recover a key from a 24 or 22-word mnemonic.
      *
      * There is no corresponding `toMnemonic()` as the mnemonic cannot be recovered from the key.
      *
@@ -118,6 +118,8 @@ export class Ed25519PrivateKey {
      *
      * This key *will* support deriving child keys with `.derive()`.
      *
+     * If the mnemonic has 22 words, the resulting key will not support deriving child keys.
+     *
      * @param mnemonic the mnemonic, either as a string separated by spaces or as a 24-element array
      * @param passphrase the passphrase to protect the private key with
      *
@@ -127,6 +129,10 @@ export class Ed25519PrivateKey {
         mnemonic: Mnemonic,
         passphrase: string
     ): Promise<Ed25519PrivateKey> {
+        if (mnemonic._isLegacy) {
+            return mnemonic._legacyToPrivateKey();
+        }
+
         const input = mnemonic.toString();
         const salt = `mnemonic${passphrase}`;
         const seed = await Pbkdf2.deriveKey(HashAlgorithm.Sha512, input, salt, 2048, 64);
