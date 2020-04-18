@@ -82,6 +82,7 @@
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html#badlength" class="tsd-kind-icon">Bad<wbr>Length</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html#checksummismatch" class="tsd-kind-icon">Checksum<wbr>Mismatch</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html#ok" class="tsd-kind-icon">Ok</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html#unknownlegacywords" class="tsd-kind-icon">Unknown<wbr>Legacy<wbr>Words</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html#unknownwords" class="tsd-kind-icon">Unknown<wbr>Words</a></li>
 							</ul>
 						</section>
@@ -96,7 +97,7 @@
 					<div class="tsd-signature tsd-kind-icon">Bad<wbr>Length<span class="tsd-signature-symbol">:</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d97ef4a/src/crypto/MnemonicValidationStatus.ts#L8">src/crypto/MnemonicValidationStatus.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/MnemonicValidationStatus.ts#L8">src/crypto/MnemonicValidationStatus.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -111,7 +112,7 @@
 					<div class="tsd-signature tsd-kind-icon">Checksum<wbr>Mismatch<span class="tsd-signature-symbol">:</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d97ef4a/src/crypto/MnemonicValidationStatus.ts#L32">src/crypto/MnemonicValidationStatus.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/MnemonicValidationStatus.ts#L32">src/crypto/MnemonicValidationStatus.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -134,7 +135,7 @@
 					<div class="tsd-signature tsd-kind-icon">Ok<span class="tsd-signature-symbol">:</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d97ef4a/src/crypto/MnemonicValidationStatus.ts#L6">src/crypto/MnemonicValidationStatus.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/MnemonicValidationStatus.ts#L6">src/crypto/MnemonicValidationStatus.ts:6</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -144,12 +145,29 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
+					<a name="unknownlegacywords" class="tsd-anchor"></a>
+					<h3>Unknown<wbr>Legacy<wbr>Words</h3>
+					<div class="tsd-signature tsd-kind-icon">Unknown<wbr>Legacy<wbr>Words<span class="tsd-signature-symbol">:</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/MnemonicValidationStatus.ts#L39">src/crypto/MnemonicValidationStatus.ts:39</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The legacy mnemonic contained words which were not found in the legacy word list.</p>
+						</div>
+						<p><a href="../classes/_crypto_mnemonicvalidationresult_.mnemonicvalidationresult.html#unknownindices">MnemonicValidationResult.unknownIndices</a> will be set with the list of word indices
+						in <a href="../classes/_crypto_mnemonic_.mnemonic.html#words">Mnemonic.words</a> which were not found in the legacy word list.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="unknownwords" class="tsd-anchor"></a>
 					<h3>Unknown<wbr>Words</h3>
 					<div class="tsd-signature tsd-kind-icon">Unknown<wbr>Words<span class="tsd-signature-symbol">:</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d97ef4a/src/crypto/MnemonicValidationStatus.ts#L18">src/crypto/MnemonicValidationStatus.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/MnemonicValidationStatus.ts#L18">src/crypto/MnemonicValidationStatus.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -194,6 +212,9 @@
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
 								<a href="_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html#ok" class="tsd-kind-icon">Ok</a>
+							</li>
+							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
+								<a href="_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html#unknownlegacywords" class="tsd-kind-icon">Unknown<wbr>Legacy<wbr>Words</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
 								<a href="_crypto_mnemonicvalidationstatus_.mnemonicvalidationstatus.html#unknownwords" class="tsd-kind-icon">Unknown<wbr>Words</a>

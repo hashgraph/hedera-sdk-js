@@ -93,12 +93,14 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_crypto_mnemonic_.mnemonic.html#_islegacy" class="tsd-kind-icon">_is<wbr>Legacy</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_crypto_mnemonic_.mnemonic.html#words" class="tsd-kind-icon">words</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_mnemonic_.mnemonic.html#_legacytoprivatekey" class="tsd-kind-icon">_legacy<wbr>ToPrivate<wbr>Key</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_mnemonic_.mnemonic.html#toprivatekey" class="tsd-kind-icon">to<wbr>Private<wbr>Key</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_mnemonic_.mnemonic.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_crypto_mnemonic_.mnemonic.html#validate" class="tsd-kind-icon">validate</a></li>
@@ -121,7 +123,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d97ef4a/src/crypto/Mnemonic.ts#L8">src/crypto/Mnemonic.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/Mnemonic.ts#L13">src/crypto/Mnemonic.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -147,18 +149,45 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_islegacy" class="tsd-anchor"></a>
+					<h3>_is<wbr>Legacy</h3>
+					<div class="tsd-signature tsd-kind-icon">_is<wbr>Legacy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/Mnemonic.ts#L12">src/crypto/Mnemonic.ts:12</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="words" class="tsd-anchor"></a>
 					<h3>words</h3>
 					<div class="tsd-signature tsd-kind-icon">words<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d97ef4a/src/crypto/Mnemonic.ts#L8">src/crypto/Mnemonic.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/Mnemonic.ts#L13">src/crypto/Mnemonic.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="_legacytoprivatekey" class="tsd-anchor"></a>
+					<h3>_legacy<wbr>ToPrivate<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">_legacy<wbr>ToPrivate<wbr>Key<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/Mnemonic.ts#L32">src/crypto/Mnemonic.ts:32</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_crypto_ed25519privatekey_.ed25519privatekey.html" class="tsd-signature-type">Ed25519PrivateKey</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="toprivatekey" class="tsd-anchor"></a>
 					<h3>to<wbr>Private<wbr>Key</h3>
@@ -169,7 +198,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d97ef4a/src/crypto/Mnemonic.ts#L20">src/crypto/Mnemonic.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/Mnemonic.ts#L28">src/crypto/Mnemonic.ts:28</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -197,7 +226,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d97ef4a/src/crypto/Mnemonic.ts#L96">src/crypto/Mnemonic.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/Mnemonic.ts#L199">src/crypto/Mnemonic.ts:199</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -214,7 +243,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d97ef4a/src/crypto/Mnemonic.ts#L68">src/crypto/Mnemonic.ts:68</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/Mnemonic.ts#L92">src/crypto/Mnemonic.ts:92</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -257,7 +286,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d97ef4a/src/crypto/Mnemonic.ts#L45">src/crypto/Mnemonic.ts:45</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/Mnemonic.ts#L69">src/crypto/Mnemonic.ts:69</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -287,7 +316,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/d97ef4a/src/crypto/Mnemonic.ts#L35">src/crypto/Mnemonic.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/306f4a8/src/crypto/Mnemonic.ts#L59">src/crypto/Mnemonic.ts:59</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -328,7 +357,13 @@
 								<a href="_crypto_mnemonic_.mnemonic.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_crypto_mnemonic_.mnemonic.html#_islegacy" class="tsd-kind-icon">_is<wbr>Legacy</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_crypto_mnemonic_.mnemonic.html#words" class="tsd-kind-icon">words</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_crypto_mnemonic_.mnemonic.html#_legacytoprivatekey" class="tsd-kind-icon">_legacy<wbr>ToPrivate<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_crypto_mnemonic_.mnemonic.html#toprivatekey" class="tsd-kind-icon">to<wbr>Private<wbr>Key</a>
