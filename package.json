@@ -63,7 +63,7 @@
     "bignumber.js": "^9.0.0",
     "bip39": "^3.0.2",
     "browser-headers": "^0.4.1",
-    "fastestsmallesttextencoderdecoder": "^1.0.14",
+    "fastestsmallesttextencoderdecoder": "^1.0.17",
     "google-protobuf": "^3.11.4",
     "grpc": "^1.24.2",
     "js-sha3": "^0.8.0",
@@ -71,8 +71,8 @@
   },
   "devDependencies": {
     "@launchbadge/eslint-config": "^0.13.10",
-    "@types/jest": "^25.1.4",
-    "@types/node": "^13.9.5",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.13.1",
     "eslint": "^6.8.0",
     "flowgen": "^1.10.0",
     "fs-extra": "^9.0.0",
@@ -83,7 +83,7 @@
     "jest": "25.2.3",
     "ts-jest": "^25.2.1",
     "ts-protoc-gen": "^0.12.0",
-    "typedoc": "^0.17.3",
+    "typedoc": "^0.17.4",
     "typescript": "^3.8.3"
   }
 }
