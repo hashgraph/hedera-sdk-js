@@ -114,7 +114,7 @@ export async function loadKeystore(
     const verifyHmac = await Hmac.hash(HashAlgorithm.Sha384, key.slice(16), cipherBytes);
 
     // compare that these two Uint8Arrays are equivalent
-    if (!hmac.every((b, i) => b == verifyHmac[i])) {
+    if (!hmac.every((b, i) => b === verifyHmac[ i ])) {
         throw new KeyMismatchError(hmac, verifyHmac);
     }
 
