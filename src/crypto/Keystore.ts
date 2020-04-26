@@ -3,6 +3,7 @@ import * as nacl from "tweetnacl";
 import { RawKeyPair } from "./RawKeyPair";
 import { KeyMismatchError } from "./KeyMismatchError";
 import * as hex from "@stablelib/hex";
+import * as utf8 from "@stablelib/utf8";
 import { Hmac, HashAlgorithm } from "./Hmac";
 import { Pbkdf2 } from "./Pbkdf2";
 
@@ -74,7 +75,7 @@ export async function createKeystore(
         }
     };
 
-    return Buffer.from(JSON.stringify(keystore));
+    return utf8.encode(JSON.stringify(keystore));
 }
 
 export async function loadKeystore(
@@ -112,7 +113,8 @@ export async function loadKeystore(
     const hmac = hex.decode(mac);
     const verifyHmac = await Hmac.hash(HashAlgorithm.Sha384, key.slice(16), cipherBytes);
 
-    if (!Buffer.from(hmac).equals(verifyHmac)) {
+    // compare that these two Uint8Arrays are equivalent
+    if (!hmac.every((b, i) => b == verifyHmac[i])) {
         throw new KeyMismatchError(hmac, verifyHmac);
     }
 
