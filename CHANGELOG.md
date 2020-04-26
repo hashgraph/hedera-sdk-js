@@ -4,11 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v1.1.11
+
+### Fixed
+
+ * `Ed25519PrivateKey.fromKeystore` regressed in v1.1.9 and was not working in the browser
+
+## v1.1.10
 
 ### Added
 
   * `Client.ping(id: AccountIdLike)` Pings a node by account ID.
+
+  * `Ed25519PrivateKey.fromMnemonic` works with legacy 22-word phrases.
 
 ### Deprecated
 
@@ -19,47 +27,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
  * Allow BigNumber or String to be used as Tinybar where Tinybar was accepted
- 
+
  * Add support for decoding `Ed25519PrivateKey` from a PEM file using `Ed25519PrivateKey.fromPem()`
- 
+
  * Add support for passing no argument to `ContractFunctionResult.get*()` methods.
- 
+
  * Add `MnemonicValidationResult` which is the response type for `Mnemonic.validte()`
- 
+
  * Add public method `Mnemonic.validate(): MnemonicValidationResult` which validates if the mnemonic
    came from the same wordlist, in the right order, and without misspellings.
-   
+
  * Add `BadPemFileError` which is thrown when decoding a pem file fails.
- 
+
 ### Fixed
 
  * Fixes `AddBytes32Array`
 
  * Fixes `Hbar.isNegative()` failing with `undefined`.
- 
+
  * Fixes `CryptoTransferTransaction.addTransfer()` not supporting `BigNumber` or
-   `number` as arguments. 
- 
+   `number` as arguments.
+
  * Fixes `ConsensusTopicInfoQuery.setTopicId()` not supporting `ConsensusTopicIdLike`.
- 
+
 ### Deprecated
 
  * Deprecates `Client.maxTransactionFee` and `Client.maxQueryPayment` getters.
 
  * Deprecates `ConsensusTopicCreateTransaction.setAutoRenewAccount()` was simply
    renamed to `ConsensusTopicCreateTransaction.setAutoRenewAccountId()`.
- 
+
  * Deprecates `ConsensusTopicCreateTransaction.setExpirationTime()` with no replacement.
 
  * Deprecates `ConsensusTopicCreateTransaction.setValidStart()` with no replacement.
- 
+
  * Deprecates `ConsensusTopicUpdateTransaction.setAutoRenewAccount()` with no replacement.
 
 ## v1.1.8
 
 ### Fixed
 
- * `TransactionRecord.getContractCallResult` and `TransactionRecord.getContractExecuteResult` were swapped 
+ * `TransactionRecord.getContractCallResult` and `TransactionRecord.getContractExecuteResult` were swapped
     internally and neither worked before.
 
  * Export `ConsensusMessageSubmitTransaction`.
@@ -88,7 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
  * Add `TransactionReceipt.getConsensusTopicId()`.
- 
+
  * Add `TransactionReceipt.getConsensusTopicRunningHash()`.
 
  * Add `TransactionReceipt.getConsensusTopicSequenceNumber()`.
@@ -99,22 +107,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * Deprecates `Client.putNode()`. Use `Client.replaceNodes()` instead.
 
- * Depreactes `Transaction.getReceipt()` and `Transaction.getRecord()`. Use `TransactionId.getReceipt()` or 
+ * Depreactes `Transaction.getReceipt()` and `Transaction.getRecord()`. Use `TransactionId.getReceipt()` or
    `TransactionId.getRecord()` instead. The `execute` method on `Transaction` returns a `TransactionId`.
 
- * Deprecates `ConsensusSubmitMessageTransaction`. This was renamed to `ConsensusMessageSubmitTransaction` to 
+ * Deprecates `ConsensusSubmitMessageTransaction`. This was renamed to `ConsensusMessageSubmitTransaction` to
    match the Java SDK.
 
 ## v1.1.2
 
 ### Fixed
- 
+
  * https://github.com/hashgraph/hedera-sdk-js/issues/175
 
 ## v1.1.1
 
 ### Fixed
- 
+
  * `RECEIPT_NOT_FOUND` is properly considered and internally retried within `TransactionReceiptQuery`
 
 ## v1.1.0
@@ -135,7 +143,7 @@ Add support for Hedera Consensus Service (HCS).
 
 ### Changed
 
-Minor version bumps may add deprecations as we improve parity between SDKs 
+Minor version bumps may add deprecations as we improve parity between SDKs
 or fix reported issues. Do not worry about upgrading in a timely manner. All v1+ APIs
 will be continuously supported.
 
@@ -180,11 +188,11 @@ No significant changes since v1.0.0-beta.5
 ### Added
 
  * Add support for unsigned integers (incl. Arrays) for contract encoding and decoding
- 
+
  * Add `AccountUpdateTransaction.setReceiverSignatureRequired`
- 
+
  * Add `AccountUpdateTransaction.setProxyAccountId`
- 
+
 ### Changed
 
  * Rename `ContractExecuteTransaction.setAmount()` to `ContractExecuteTransaction.setPayableAmount()`
@@ -194,26 +202,26 @@ No significant changes since v1.0.0-beta.5
 ### Added
 
  * `Client.forTestnet` makes a new client configured to talk to TestNet (use `.setOperator` to set an operater)
- 
+
  * `Client.forMainnet` makes a new client configured to talk to Mainnet (use `.setOperator` to set an operater)
 
 ### Changed
 
  * Renamed `TransactionReceipt.accountId`, `TransactionReceipt.contractId`, `TransactionReceipt.fileId`, and
-   `TransactionReceipt.contractId` to `TransactionReceipt.getAccountId()`, etc. to add an explicit illegal 
+   `TransactionReceipt.contractId` to `TransactionReceipt.getAccountId()`, etc. to add an explicit illegal
    state check as these fields are mutually exclusive
-   
+
  * Renamed `TransactionRecord.contractCallResult` to `TransactionRecord.getContractExecuteResult()`
- 
+
  * Renamed `TransactionRecord.contractCreateResult` to `TransactionRecord.getContractCreateResult()`
 
 ## v1.0.0-beta.3
 
 ### Changed
 
- * `TransactionBuilder.setMemo` is renamed to `TransactionBuilder.setTransactionMemo` to avoid confusion 
+ * `TransactionBuilder.setMemo` is renamed to `TransactionBuilder.setTransactionMemo` to avoid confusion
    as there are 2 other kinds of memos on transactions
- 
+
 ### Fixed
 
  * Fix usage on Node versions less than 12.x
@@ -234,11 +242,11 @@ No significant changes since v1.0.0-beta.5
 
  * `setFunctionParams(params)` on `ContractCallQuery` and `ContractExecuteTransaction` is now
    `setFunction(name, params)`
-   
+
  * `ContractLogInfo.topicList` -> `ContractLogInfo.topics`
- 
+
  * `FileInfo.deleted` -> `FileInfo.isDeleted`
- 
+
  * `FileContentsQuery.execute` now directly returns `Uint8Array`
 
  * `ContractRecordsQuery.execute` now directly returns `TransactionRecord[]`
@@ -252,14 +260,14 @@ No significant changes since v1.0.0-beta.5
 ### Fixed
 
  * Remove incorrect local validation for FileCreateTransaction and FileUpdateTransaction
- 
+
  * Any `key` fields on response types (e.g., `AccountInfo`) are
    now `PublicKey` and can be any of the applicable key types
-   
+
  * Fix transaction back-off when BUSY is returned
- 
+
  * Default autoRenewPeriod on ContractCreate appropriately
- 
+
 ## v0.8.0-beta.3
 
 ### Changed
@@ -308,8 +316,8 @@ No significant changes since v1.0.0-beta.5
  * `Transaction.toString`. This will dump the transaction (incl. the body) to a stringified JSON object representation of the transaction. Useful for debugging.
 
  * A default of 1 Hbar is now set for both maximum transaction fees and maximum query payments.
- 
- * Smart Contract type encoding and decoding to match Java. 
+
+ * Smart Contract type encoding and decoding to match Java.
 
  * To/From string methods on AccountId, FileId, etc.
 
