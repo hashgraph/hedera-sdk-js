@@ -9,6 +9,24 @@
 
 This project is currently under a re-development effort. Not much is done at the moment.
 
+The goals are as follows:
+
+ * Parity with the new SDK format defined by the v2 of the Java SDK
+
+ * Support for React Native
+
+ * Support for Electron
+
+ * Support for Edge, Firefox, Chrome, and Safari
+
+ * Support for Node 10+ and Deno
+
+ * Produce a **single** bundle for web targets but provide a `lib/` directory for Node.js targets
+
+ * Unit test coverage proving compatibility on modern browsers and Node.js
+
+ * End-to-end test coverage
+
 Join the [Hedera discord](https://hedera.com/discord) for the latest updates and announcements.
 
 ## Contributing to this Project
