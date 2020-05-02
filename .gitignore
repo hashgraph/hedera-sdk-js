@@ -1,1 +1,5 @@
+# editor files
+.idea/
+
+# npm dependencies
 node_modules/
