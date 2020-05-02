@@ -1,0 +1,15 @@
+{
+    "name": "@hashgraph/sdk",
+    "version": "2.0.0-pre",
+    "description": "Hedera™ Hashgraph SDK for JavaScript with support for Node.js 10+ and modern browsers.",
+    "homepage": "https://docs.hedera.com/docs/hedera-sdks",
+    "repository": "https://github.com/hashgraph/hedera-sdk-js",
+    "bugs": "https://github.com/hashgraph/hedera-sdk-js/issues",
+    "author": "Launchbadge <contact@launchbadge.com>",
+    "license": "Apache-2.0",
+    "keywords": [
+        "hedera",
+        "hashgraph",
+        "sdk"
+    ]
+}
