@@ -12,6 +12,9 @@
         "hashgraph",
         "sdk"
     ],
+    "engines": {
+        "node": ">= 0.10.20.1"
+    },
     "main": "lib/index.js",
     "module": "src/index.js",
     "scripts": {
