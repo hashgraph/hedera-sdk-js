@@ -22,7 +22,7 @@
         "compile": "babel src -d lib",
         "check:types": "tsc",
         "check:format": "prettier src test '*.json' '*.js' --check",
-        "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
+        "lint": "eslint --fix 'src/**/*.js' 'test/**/*.js'",
         "format": "prettier src test '*.json' '*.js' --write",
         "build": "run-s check:types lint check:format compile",
         "test": "run-s test:node test:browser:chrome test:browser:firefox",
@@ -50,6 +50,8 @@
         "eslint-plugin-jsdoc": "^24.0.1",
         "eslint-plugin-mocha": "^6.3.0",
         "eslint-plugin-node": "^11.1.0",
+        "husky": "^4.2.5",
+        "lint-staged": "^10.2.2",
         "mocha": "^7.1.2",
         "mocha-webdriver-runner": "^0.6.2",
         "npm-run-all": "^4.1.5",
@@ -57,5 +59,13 @@
         "prettier": "^2.0.5",
         "typedoc": "^0.17.6",
         "typescript": "^3.8.3"
+    },
+    "lint-staged": {
+        "src/**/*.js": "run-s lint format check:types"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
     }
 }
