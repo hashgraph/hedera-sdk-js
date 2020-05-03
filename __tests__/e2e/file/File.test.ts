@@ -17,7 +17,7 @@ describe("FileCreateTransaction", () => {
         let transactionId = await new FileCreateTransaction()
             .addKey(operatorPrivateKey.publicKey)
             .setContents("[e2e::FileCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(5))
+            .setMaxTransactionFee(new Hbar(15))
             .execute(client);
 
         const receipt = await transactionId.getReceipt(client);
