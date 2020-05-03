@@ -143,7 +143,7 @@ export class Ed25519PrivateKey {
         let chainCode: Uint8Array = digest.subarray(32);
 
         for (const index of [ 44, 3030, 0, 0 ]) {
-            ({ keyBytes, chainCode } = await deriveChildKey(keyBytes, chainCode, index));
+            ({ keyBytes, chainCode } = deriveChildKey(keyBytes, chainCode, index));
         }
 
         const key = Ed25519PrivateKey.fromBytes(keyBytes);

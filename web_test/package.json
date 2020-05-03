@@ -1,0 +1,18 @@
+{
+  "name": "web_test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@hashgraph/sdk": "file:..",
+    "expect-puppeteer": "^4.4.0",
+    "jest-puppeteer": "^4.4.0",
+    "puppeteer": "^3.0.2"
+  },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ],
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}

@@ -14,28 +14,29 @@ export enum HashAlgorithm {
 export class Hmac {
     public static async hash(
         algorithm: HashAlgorithm,
-        data: Uint8Array | string,
-        secretKey: Uint8Array
+        secretKey: Uint8Array | string,
+        data: Uint8Array | string
     ): Promise<Uint8Array> {
+        const key = typeof secretKey === "string" ? utf8.encode(secretKey) : secretKey;
         const value = typeof data === "string" ? utf8.encode(data) : data;
 
         if (typeof window !== "undefined") {
             // Try SubtleCrypto if it exists, otherwise fallback to @stablelibs/Hmac
             try {
-                const key = await window!.crypto.subtle.importKey("raw", secretKey, {
+                const key_ = await window!.crypto.subtle.importKey("raw", key, {
                     name: "HMAC",
                     hash: algorithm
                 }, false, [ "sign" ]);
 
-                return new Uint8Array(await window!.crypto.subtle.sign("HMAC", key, value));
+                return new Uint8Array(await window!.crypto.subtle.sign("HMAC", key_, value));
             } catch {
                 switch (algorithm) {
                     case HashAlgorithm.Sha256:
-                        return hmac(SHA256, secretKey, value);
+                        return hmac(SHA256, key, value);
                     case HashAlgorithm.Sha384:
-                        return hmac(SHA384, secretKey, value);
+                        return hmac(SHA384, key, value);
                     case HashAlgorithm.Sha512:
-                        return hmac(SHA512, secretKey, value);
+                        return hmac(SHA512, key, value);
                     default: throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
                 }
             }
@@ -43,11 +44,11 @@ export class Hmac {
 
         switch (algorithm) {
             case HashAlgorithm.Sha256:
-                return crypto.createHmac("SHA256", value).update(secretKey).digest();
+                return crypto.createHmac("SHA256", key).update(value).digest();
             case HashAlgorithm.Sha384:
-                return crypto.createHmac("SHA384", value).update(secretKey).digest();
+                return crypto.createHmac("SHA384", key).update(value).digest();
             case HashAlgorithm.Sha512:
-                return crypto.createHmac("SHA512", value).update(secretKey).digest();
+                return crypto.createHmac("SHA512", key).update(value).digest();
             default: throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
         }
     }

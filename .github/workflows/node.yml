@@ -40,8 +40,14 @@ jobs:
     
     - run: yarn
     
+    - run: yarn lint
+
     - run: yarn test:unit
     
     - run: yarn test:e2e
 
-    - run: yarn lint
+    - run: cd web_test && yarn
+
+    - run: yarn exec parcel index.html &
+
+    - run: yarn exec jest
