@@ -1,6 +1,6 @@
-import * as hex from "../../../src/encoding/hex.js";
+import * as hex from "../../../src/encoding/hex";
 
-describe("hex", () => {
+describe("encoding/hex", () => {
     const bytes1 = Uint8Array.from([1, 2, 3]);
     const bytes2 = Uint8Array.from([
         196, 68, 204, 227, 164, 45, 145, 146, 251, 20, 236, 132, 224, 84,

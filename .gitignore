@@ -11,3 +11,7 @@ lib/
 
 # generated documentation
 docs/
+
+# parcel (bundler) cache
+# parcel is used to bundle for mocha browser tests
+.parcel-cache

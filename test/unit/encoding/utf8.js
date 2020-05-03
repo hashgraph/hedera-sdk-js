@@ -1,6 +1,6 @@
-import * as utf8 from "../../../src/encoding/utf8.js";
+import * as utf8 from "../../../src/encoding/utf8";
 
-describe("utf8", () => {
+describe("encoding/utf8", () => {
     const text = "hello, world";
 
     const bytes = Uint8Array.from([

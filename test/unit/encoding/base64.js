@@ -1,6 +1,6 @@
-import * as base64 from "../../../src/encoding/base64.js";
+import * as base64 from "../../../src/encoding/base64";
 
-describe("base64", () => {
+describe("encoding/base64", () => {
     const text = "dGhpcyBpcyBhIHdvbmRlcmZ1bCBkYXkgaW4gdGhpcyB3b25kZXJmdWwgd29ybGQgb2YgZmxhbWU=";
 
     const bytes = Uint8Array.from([
