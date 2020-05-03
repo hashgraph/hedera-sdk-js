@@ -17,8 +17,8 @@
     "scripts": {
         "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
         "compile": "babel src -d lib",
-        "check": "tsc",
-        "build": "run-s check compile",
+        "tsc": "tsc",
+        "build": "run-s tsc compile",
         "test": "run-s test:node test:browser:chrome test:browser:firefox",
         "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js'",
         "test:browser:chrome": "parcel serve --dist-dir .parcel-cache/dist --no-source-maps --no-autoinstall --log-level=none --no-hmr -p 9001 test/index.html & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/; kill %1",
