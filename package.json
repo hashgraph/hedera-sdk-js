@@ -16,9 +16,10 @@
     "module": "src/index.js",
     "scripts": {
         "build": "babel src -d lib",
-        "test": "run-s test:node test:chrome:headless",
+        "test": "run-p test:node test:browser:chrome test:browser:firefox",
         "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js'",
-        "test:chrome:headless": "serve -l 9876 test/ > /dev/null & mocha-headless-chrome -f http://localhost:9876 && kill %1"
+        "test:browser:chrome": "serve -l 9001 > /dev/null & mocha-webdriver-runner --headless-chrome http://localhost:9001/test/ && kill %1",
+        "test:browser:firefox": "serve -l 9002 > /dev/null & mocha-webdriver-runner --headless-firefox http://localhost:9002/test/ && kill %1"
     },
     "dependencies": {
         "tweetnacl": "^1.0.3"
@@ -33,7 +34,7 @@
         "@types/mocha": "^7.0.2",
         "chai": "^4.2.0",
         "mocha": "^7.1.2",
-        "mocha-headless-chrome": "^3.0.0",
+        "mocha-webdriver-runner": "^0.6.2",
         "npm-run-all": "^4.1.5",
         "serve": "^11.3.0"
     }
