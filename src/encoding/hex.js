@@ -1,4 +1,4 @@
-export function stringify(bytes) {
+export function encode(bytes) {
     let s = "";
 
     for (let i = 0; i < bytes.length; i++) {
@@ -9,7 +9,7 @@ export function stringify(bytes) {
     return s;
 }
 
-export function parse(s) {
+export function decode(s) {
     const bytes = new Uint8Array(s.length / 2);
 
     for (let i = 0; i < s.length; i += 2) {

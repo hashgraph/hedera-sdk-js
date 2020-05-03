@@ -21,12 +21,14 @@ mocha.setup('bdd');
 mocha.checkLeaks();
 </script>
 
-<script type="module" class="chai-init">
+<script class="chai-init">
 window.expect = chai.expect;
 </script>
 
 <!-- NOTE: all unit tests need to be imported here -->
 <script type="module" src="unit/encoding/hex.js"></script>
+<script type="module" src="unit/encoding/utf8.js"></script>
+<script type="module" src="unit/encoding/base64.js"></script>
 
 <script type="module" class="mocha-run">
 mocha.run();
