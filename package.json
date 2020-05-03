@@ -13,7 +13,7 @@
         "sdk"
     ],
     "engines": {
-        "node": ">= 0.10.20.1"
+        "node": ">=0.10.20.1"
     },
     "main": "lib/index.js",
     "module": "src/index.js",
@@ -21,7 +21,8 @@
         "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
         "compile": "babel src -d lib",
         "tsc": "tsc",
-        "build": "run-s tsc compile",
+        "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
+        "build": "run-s tsc lint compile",
         "test": "run-s test:node test:browser:chrome test:browser:firefox",
         "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js'",
         "test:browser:chrome": "parcel serve --dist-dir .parcel-cache/dist --no-source-maps --no-autoinstall --log-level=none --no-hmr -p 9001 test/index.html & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/; kill %1",
@@ -38,7 +39,15 @@
         "@types/chai": "^4.2.11",
         "@types/mocha": "^7.0.2",
         "@types/node": "^13.13.4",
+        "@typescript-eslint/eslint-plugin": "^2.30.0",
+        "@typescript-eslint/parser": "^2.30.0",
         "chai": "^4.2.0",
+        "eslint": "^6.8.0",
+        "eslint-plugin-chai-expect": "^2.1.0",
+        "eslint-plugin-import": "^2.20.2",
+        "eslint-plugin-jsdoc": "^24.0.1",
+        "eslint-plugin-mocha": "^6.3.0",
+        "eslint-plugin-node": "^11.1.0",
         "mocha": "^7.1.2",
         "mocha-webdriver-runner": "^0.6.2",
         "npm-run-all": "^4.1.5",

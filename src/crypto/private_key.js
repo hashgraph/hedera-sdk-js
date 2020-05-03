@@ -43,6 +43,8 @@ export default class PrivateKey {
 
     /**
      * Return the associated Ed25519 public key for this private key.
+     *
+     * @returns {PublicKey}
      */
     get publicKey() {
         return new PublicKey(this._publicKeyData);

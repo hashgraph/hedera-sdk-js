@@ -2,7 +2,10 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "lib": ["ES5", "DOM"],
+        "lib": [
+            "ES5",
+            "DOM"
+        ],
         "allowJs": true,
         "checkJs": true,
         "emitDeclarationOnly": true,
@@ -22,6 +25,6 @@
         "forceConsistentCasingInFileNames": true
     },
     "include": [
-        "src/**/*"
+        "src"
     ]
 }

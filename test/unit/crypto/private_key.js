@@ -19,12 +19,12 @@ const signature = Uint8Array.from([
     164, 106, 186, 125, 157, 140, 234, 96, 15
 ]);
 
-describe("hedera/PrivateKey", () => {
-    it("should sign", () => {
+describe("hedera/PrivateKey", function () {
+    it("should sign", function () {
         expect(privateKey.sign(message)).to.deep.eq(signature);
     });
 
-    it("should verify", () => {
+    it("should verify", function () {
         expect(privateKey.publicKey.verify(message, signature)).to.be.true;
     });
 });
