@@ -1,0 +1,15 @@
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "loose": true,
+                "modules": "commonjs",
+                "bugfixes": true,
+                "targets": {
+                    "node": "10"
+                }
+            }
+        ]
+    ]
+}

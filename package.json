@@ -11,5 +11,30 @@
         "hedera",
         "hashgraph",
         "sdk"
-    ]
+    ],
+    "main": "lib/index.js",
+    "module": "src/index.js",
+    "scripts": {
+        "build": "babel src -d lib",
+        "test": "run-s test:node test:chrome:headless",
+        "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js'",
+        "test:chrome:headless": "serve -l 9876 test/ > /dev/null & mocha-headless-chrome -f http://localhost:9876 && kill %1"
+    },
+    "dependencies": {
+        "tweetnacl": "^1.0.3"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@babel/core": "^7.9.6",
+        "@babel/preset-env": "^7.9.6",
+        "@babel/register": "^7.9.0",
+        "@babel/runtime": "^7.9.6",
+        "@types/chai": "^4.2.11",
+        "@types/mocha": "^7.0.2",
+        "chai": "^4.2.0",
+        "mocha": "^7.1.2",
+        "mocha-headless-chrome": "^3.0.0",
+        "npm-run-all": "^4.1.5",
+        "serve": "^11.3.0"
+    }
 }
