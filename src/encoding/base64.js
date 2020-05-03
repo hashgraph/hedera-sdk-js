@@ -3,7 +3,7 @@
  * @returns {string}
  */
 export function encode(bytes) {
-    if (typeof btoa !== 'undefined') {
+    if (typeof btoa !== "undefined") {
         return btoa(String.fromCharCode(...bytes));
     }
 
@@ -15,7 +15,7 @@ export function encode(bytes) {
  * @returns {Uint8Array}
  */
 export function decode(s) {
-    if (typeof atob !== 'undefined') {
+    if (typeof atob !== "undefined") {
         return Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
     }
 

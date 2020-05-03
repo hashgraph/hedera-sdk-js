@@ -1,8 +1,8 @@
 module.exports = {
-    "env": {
-        "mocha": true
+    env: {
+        mocha: true,
     },
-    "globals": {
-        "expect": "readonly"
-    }
+    globals: {
+        expect: "readonly",
+    },
 };

@@ -1,11 +1,9 @@
-
 /**
  * @param {number} b
  * @returns {string}
  */
 function encodeQuartet(b) {
-    return String.fromCharCode(
-        (b + 48) + (((9 - b) >>> 8) & (-48 + 97 - 10)));
+    return String.fromCharCode(b + 48 + (((9 - b) >>> 8) & (-48 + 97 - 10)));
 }
 
 /**
@@ -53,7 +51,7 @@ export function decode(s) {
         const b0 = decodeQuartet(s.charCodeAt(i));
         const b1 = decodeQuartet(s.charCodeAt(i + 1));
 
-        bytes[i / 2] = b0 << 4 | b1;
+        bytes[i / 2] = (b0 << 4) | b1;
     }
 
     return bytes;

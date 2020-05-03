@@ -1,11 +1,11 @@
 module.exports = {
-    "root": true,
-    "env": {
-        "browser": true,
-        "es6": true,
-        "node": true
+    root: true,
+    env: {
+        browser: true,
+        es6: true,
+        node: true,
     },
-    "extends": [
+    extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
@@ -15,19 +15,17 @@ module.exports = {
         "plugin:import/typescript",
         "plugin:node/recommended",
         "plugin:mocha/recommended",
-        "plugin:chai-expect/recommended"
+        "plugin:chai-expect/recommended",
     ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "tsconfigRootDir": __dirname,
-        "project": [ "./tsconfig.eslint.json" ],
-        "ecmaVersion": 2020,
-        "sourceType": "module"
+    parser: "@typescript-eslint/parser",
+    parserOptions: {
+        tsconfigRootDir: __dirname,
+        project: ["./tsconfig.eslint.json"],
+        ecmaVersion: 2020,
+        sourceType: "module",
     },
-    "plugins": [
-        "@typescript-eslint"
-    ],
-    "rules": {
+    plugins: ["@typescript-eslint"],
+    rules: {
         // does not handle return types being annotated in a type comment
         "@typescript-eslint/explicit-function-return-type": "off",
         // babel takes care of this
@@ -35,6 +33,6 @@ module.exports = {
         // opt-out of providing descriptions at the start
         // FIXME: turn these rules back on
         "jsdoc/require-returns-description": "off",
-        "jsdoc/require-param-description": "off"
-    }
+        "jsdoc/require-param-description": "off",
+    },
 };

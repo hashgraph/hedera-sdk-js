@@ -20,9 +20,11 @@
     "scripts": {
         "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
         "compile": "babel src -d lib",
-        "tsc": "tsc",
+        "check:types": "tsc",
+        "check:format": "prettier src test '*.json' '*.js' --check",
         "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
-        "build": "run-s tsc lint compile",
+        "format": "prettier src test '*.json' '*.js' --write",
+        "build": "run-s check:types lint check:format compile",
         "test": "run-s test:node test:browser:chrome test:browser:firefox",
         "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js'",
         "test:browser:chrome": "parcel serve --dist-dir .parcel-cache/dist --no-source-maps --no-autoinstall --log-level=none --no-hmr -p 9001 test/index.html & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/; kill %1",
@@ -52,6 +54,7 @@
         "mocha-webdriver-runner": "^0.6.2",
         "npm-run-all": "^4.1.5",
         "parcel": "^2.0.0-nightly.248",
+        "prettier": "^2.0.5",
         "typedoc": "^0.17.6",
         "typescript": "^3.8.3"
     }

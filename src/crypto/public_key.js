@@ -16,6 +16,10 @@ export default class PublicKey {
      * @returns {boolean}
      */
     verify(message, signature) {
-        return nacl.sign.detached.verify(message, signature, this._publicKeyData);
+        return nacl.sign.detached.verify(
+            message,
+            signature,
+            this._publicKeyData
+        );
     }
 }
