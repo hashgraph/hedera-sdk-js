@@ -64,19 +64,6 @@ describe("AccountUpdateTransaction", () => {
             expect(record.receipt).toBeDefined();
         }
 
-        let errorThrown = false;
-        try {
-            // NOT-SUPPORTED
-            await new AccountStakersQuery()
-                .setAccountId(account)
-                .setMaxQueryPayment(new Hbar(1))
-                .execute(client);
-        } catch {
-            errorThrown = true;
-        }
-
-        expect(errorThrown).toBe(true);
-
         transactionId = await new AccountUpdateTransaction()
             .setAccountId(account)
             .setKey(key2.publicKey)
@@ -125,17 +112,5 @@ describe("AccountUpdateTransaction", () => {
             .execute(client);
 
         await transactionId.getReceipt(client);
-
-        errorThrown = false;
-        try {
-            await new AccountInfoQuery()
-                .setAccountId(account)
-                .setMaxQueryPayment(new Hbar(1))
-                .execute(client);
-        } catch {
-            errorThrown = true;
-        }
-
-        expect(errorThrown).toBe(true);
     }, 60000);
 });

@@ -134,18 +134,6 @@ describe("ContractCreateTransaction", () => {
 
         await transactionId.getReceipt(client);
 
-        let errorThrown = false;
-        try {
-            await new ContractInfoQuery()
-                .setContractId(contract)
-                .setMaxQueryPayment(new Hbar(2))
-                .execute(client);
-        } catch {
-            errorThrown = true;
-        }
-
-        expect(errorThrown).toBe(true);
-
         transactionId = await new FileDeleteTransaction()
             .setFileId(file)
             .setMaxTransactionFee(new Hbar(5))

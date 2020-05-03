@@ -83,17 +83,5 @@ describe("FileCreateTransaction", () => {
             .execute(client);
 
         await transactionId.getReceipt(client);
-
-        let errorThrown = false;
-        try {
-            await new FileInfoQuery()
-                .setFileId(file)
-                .setMaxQueryPayment(new Hbar(1))
-                .execute(client);
-        } catch {
-            errorThrown = true;
-        }
-
-        expect(errorThrown).toBe(true);
     }, 60000);
 });

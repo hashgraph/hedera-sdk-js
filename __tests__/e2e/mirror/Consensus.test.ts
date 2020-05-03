@@ -81,17 +81,5 @@ describe("AccountUpdateTransaction", () => {
             .execute(client);
 
         await transactionId.getReceipt(client);
-
-        let errorThrown = false;
-        try {
-            await new ConsensusTopicInfoQuery()
-                .setTopicId(topic)
-                .setMaxQueryPayment(new Hbar(1))
-                .execute(client);
-        } catch {
-            errorThrown = true;
-        }
-
-        expect(errorThrown).toBe(true);
     }, 60000);
 });
