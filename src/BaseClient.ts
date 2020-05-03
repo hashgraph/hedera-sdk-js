@@ -92,7 +92,8 @@ export abstract class BaseClient {
         this._operatorAccount = new AccountId(account);
         this._operatorPublicKey = key.publicKey;
         this._operatorSigner =
-            (msg: Uint8Array): Uint8Array => nacl.sign(msg, key._keyData);
+            (msg: Uint8Array): Uint8Array =>
+                nacl.sign.detached(msg, key._keyData);
 
         return this;
     }

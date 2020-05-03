@@ -24,7 +24,7 @@ describe("AccountDeleteTransaction", () => {
                     {
                         contract: "",
                         ecdsa384: "",
-                        ed25519: "io5bJCT8Z0FlntnjG9eIL/ZidTDCnau4ir0PZjdQ5UYejWpFUEefpnID8vLYEeRkvOtqyma1r1flZZJXr7YRBAoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHhiCAoCGAMSAhgD",
+                        ed25519: "io5bJCT8Z0FlntnjG9eIL/ZidTDCnau4ir0PZjdQ5UYejWpFUEefpnID8vLYEeRkvOtqyma1r1flZZJXr7YRBA==",
                         pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
                         rsa3072: ""
                     }

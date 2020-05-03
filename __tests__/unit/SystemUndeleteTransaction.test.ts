@@ -23,7 +23,7 @@ describe("SystemUndeleteTransaction", () => {
                     {
                         contract: "",
                         ecdsa384: "",
-                        ed25519: "qvS+HQClMp+3DO5sB4Ik4t2hnMPeRwUkYTEXOkf1RciQhOnnDdoveVfFzQk0NarOur/mx+eVZjNSLZuUURXBAQoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiqAQQKAhgD",
+                        ed25519: "qvS+HQClMp+3DO5sB4Ik4t2hnMPeRwUkYTEXOkf1RciQhOnnDdoveVfFzQk0NarOur/mx+eVZjNSLZuUURXBAQ==",
                         pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
                         rsa3072: ""
                     }

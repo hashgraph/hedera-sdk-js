@@ -26,7 +26,7 @@ describe("ContractExecuteTransaction", () => {
                     {
                         contract: "",
                         ecdsa384: "",
-                        ed25519: "YdNskiTEGqOeF269LOjhnNJ3PIt2/aZg+HWgNQVTTbiBP7nr1xI9rrO94MNdHhos8yaoq5r1mXfCsxrBcHqgDQoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHg6cAoCGAUQjQEYkE4iZC6YJgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWdGhpcyBpcyByYW5kb20gbWVzc2FnZQAAAAAAAAAAAAA=",
+                        ed25519: "\YdNskiTEGqOeF269LOjhnNJ3PIt2/aZg+HWgNQVTTbiBP7nr1xI9rrO94MNdHhos8yaoq5r1mXfCsxrBcHqgDQ==",
                         pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
                         rsa3072: ""
                     }

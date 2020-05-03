@@ -26,7 +26,7 @@ describe("FileUpdateTransaction", () => {
                     {
                         contract: "",
                         ecdsa384: "",
-                        ed25519: "o6ZiLnUGqONHANKwEsCgYpPcrMAsLhvnWPx9Yzmb4RkzLSMI45jSYcHQaTnTcAw3N85oqhGhlQ/9+0CSwwkFCAoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiaAVIKAhgFEgsI7+6sBxDA+9TzARokCiISIODI7CdYpYef+sImoTwMUWt5nnLjUUGg3YKPlNN5iKS3IhlUaGlzIGlzIHRoZSBmaWxlIGNvbnRlbnRz",
+                        ed25519: "o6ZiLnUGqONHANKwEsCgYpPcrMAsLhvnWPx9Yzmb4RkzLSMI45jSYcHQaTnTcAw3N85oqhGhlQ/9+0CSwwkFCA==",
                         pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
                         rsa3072: ""
                     }

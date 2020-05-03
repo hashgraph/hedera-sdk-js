@@ -3,7 +3,7 @@
 
 
 "@hashgraph/sdk@file:..":
-  version "1.1.9"
+  version "1.1.11"
   dependencies:
     "@improbable-eng/grpc-web" "^0.12.0"
     "@improbable-eng/grpc-web-node-http-transport" "^0.12.0"
@@ -20,7 +20,7 @@
     bignumber.js "^9.0.0"
     bip39 "^3.0.2"
     browser-headers "^0.4.1"
-    fastestsmallesttextencoderdecoder "^1.0.14"
+    fastestsmallesttextencoderdecoder "^1.0.17"
     google-protobuf "^3.11.4"
     grpc "^1.24.2"
     js-sha3 "^0.8.0"
@@ -330,10 +330,10 @@ detect-libc@^1.0.2:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
   integrity sha1-+hN8S9aY7fVc1c0CrFWfkaTEups=
 
-fastestsmallesttextencoderdecoder@^1.0.14:
-  version "1.0.14"
-  resolved "https://registry.yarnpkg.com/fastestsmallesttextencoderdecoder/-/fastestsmallesttextencoderdecoder-1.0.14.tgz#ef5d331ab5aeee83f837187f1571d30f5c365e79"
-  integrity sha512-ov+uDh4DMZHpZvcGwlCb9tfntaHwRI7SK+/6XkdXhksZLJcMoTJ20FZx3GvujnsGjMvJVQ71LkduEUEPwX1BvQ==
+fastestsmallesttextencoderdecoder@^1.0.17:
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/fastestsmallesttextencoderdecoder/-/fastestsmallesttextencoderdecoder-1.0.21.tgz#b67599f879417229bad311c9e1f2918dfd155c63"
+  integrity sha512-43gkbs+ruBXej0jhqcOKZ/DfKJmdWXrHZ5ZeHfYdnJ53aqU+p4JfhZrcNHBLNswieV7DOlj6f4q/+Fw9YMy/5Q==
 
 fs-minipass@^1.2.5:
   version "1.2.7"

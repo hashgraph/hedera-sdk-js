@@ -24,7 +24,7 @@ describe("FileAppendTransaction", () => {
                     {
                         contract: "",
                         ecdsa384: "",
-                        ed25519: "AARYvUSlhpKLrulpEjjC1ccX83MxX68Fgdp+scguTffn3lfXePg/O8b+fvChYqQ1mpCHiby+bp0r97+ag6mSDwoOCggI3MkHENufCRICGAMSAhgDGMCEPSICCHiCAR4SAhgFIhhUaGlzIGlzIHNvbWUgcmFuZG9tIGRhdGE=",
+                        ed25519: "AARYvUSlhpKLrulpEjjC1ccX83MxX68Fgdp+scguTffn3lfXePg/O8b+fvChYqQ1mpCHiby+bp0r97+ag6mSDw==",
                         pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
                         rsa3072: ""
                     }

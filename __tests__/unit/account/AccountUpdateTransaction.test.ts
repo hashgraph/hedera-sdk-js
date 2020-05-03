@@ -28,7 +28,7 @@ describe("AccountUpdateTransaction", () => {
                     {
                         contract: "",
                         ecdsa384: "",
-                        ed25519: "dWLOGFrWzAuuzMX38qISIGyOUyXkqREPtH4AbFR95MhkI1Y7PBzAw7hecW7tttMBqfa1V2Mctk6I2WNfcEu0BQoOCggI3MkHENufCRICGAMSAhgDGIDC1y8iAgh4eigSAhgDGiISIODI7CdYpYef+sImoTwMUWt5nnLjUUGg3YKPlNN5iKS3",
+                        ed25519: "dWLOGFrWzAuuzMX38qISIGyOUyXkqREPtH4AbFR95MhkI1Y7PBzAw7hecW7tttMBqfa1V2Mctk6I2WNfcEu0BQ==",
                         pubkeyprefix: "4MjsJ1ilh5/6wiahPAxRa3mecuNRQaDdgo+U03mIpLc=",
                         rsa3072: ""
                     }

@@ -105,7 +105,7 @@ export class Transaction {
         this._checkPubKey(privateKey.publicKey);
 
         return this._addSignature({
-            signature: nacl.sign(this._inner.getBodybytes_asU8(), privateKey._keyData),
+            signature: nacl.sign.detached(this._inner.getBodybytes_asU8(), privateKey._keyData),
             publicKey: privateKey.publicKey
         });
     }
