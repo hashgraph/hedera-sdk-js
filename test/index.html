@@ -7,16 +7,14 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- NOTE: this should be synced with package.json when mocha is updated -->
-    <link rel="stylesheet" href="https://unpkg.com/mocha@^7.1.2/mocha.css" />
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
 </head>
 <body>
 <div id="mocha"></div>
 
-<!-- NOTE: this should be synced with package.json when mocha and chai are updated -->
-<script src="https://unpkg.com/chai@^4.2.0/chai.js"></script>
-<script src="https://unpkg.com/mocha@^7.1.2/mocha.js"></script>
-<script src="https://unpkg.com/mocha-webdriver-runner@^0.6.2/dist/mocha-webdriver-client.js"></script>
+<script src="../node_modules/chai/chai.js"></script>
+<script src="../node_modules/mocha/mocha.js"></script>
+<script src="../node_modules/mocha-webdriver-runner/dist/mocha-webdriver-client.js"></script>
 
 <script class="mocha-init">
 mocha.setup('bdd');
