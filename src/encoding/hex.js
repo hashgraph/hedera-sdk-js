@@ -1,3 +1,7 @@
+/**
+ * @param {Uint8Array} bytes
+ * @returns {string}
+ */
 export function encode(bytes) {
     let s = "";
 
@@ -9,6 +13,10 @@ export function encode(bytes) {
     return s;
 }
 
+/**
+ * @param {string} s
+ * @returns {Uint8Array}
+ */
 export function decode(s) {
     const bytes = new Uint8Array(s.length / 2);
 
@@ -22,11 +30,19 @@ export function decode(s) {
     return bytes;
 }
 
+/**
+ * @param {number} b
+ * @returns {string}
+ */
 function encodeQuartet(b) {
     return String.fromCharCode(
         (b + 48) + (((9 - b) >>> 8) & (-48 + 97 - 10)));
 }
 
+/**
+ * @param {number} c
+ * @returns {number}
+ */
 function decodeQuartet(c) {
     let result = 255;
 
@@ -40,5 +56,4 @@ function decodeQuartet(c) {
     result += (((96 - c) & (c - 103)) >> 8) & (-255 + c - 97 + 10);
 
     return result;
-
 }

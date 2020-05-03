@@ -11,10 +11,18 @@ const Utf8Decoder = typeof TextDecoder === 'undefined'
 const encoder = new Utf8Encoder();
 const decoder = new Utf8Decoder();
 
+/**
+ * @param {string} s
+ * @returns {Uint8Array}
+ */
 export function encode(s) {
     return encoder.encode(s);
 }
 
+/**
+ * @param {Uint8Array} bytes
+ * @returns {string}
+ */
 export function decode(bytes) {
     return decoder.decode(bytes);
 }
