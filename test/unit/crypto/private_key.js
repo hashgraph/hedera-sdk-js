@@ -115,4 +115,8 @@ describe("hedera/PrivateKey", function () {
     it("should verify", function () {
         expect(privateKey.publicKey.verify(message, signature)).to.be.true;
     });
+
+    it("should have public key getter", function () {
+        expect(privateKey.publicKey).to.not.throw;
+    });
 });

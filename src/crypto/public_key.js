@@ -1,10 +1,15 @@
 import nacl from "tweetnacl";
+import Key from "./key.js";
 
-export default class PublicKey {
+/**
+ * An public key on the Hedera™ network.
+ */
+export default class PublicKey extends Key {
     /**
      * @param {Uint8Array} data
      */
     constructor(data) {
+        super();
         this._publicKeyData = data.slice(0, 32);
     }
 
@@ -22,4 +27,14 @@ export default class PublicKey {
             this._publicKeyData
         );
     }
+
+    /**
+     * Return the Ed25519 public key; simply `this`.
+     *
+     * @override
+     * @returns {PublicKey}
+     */
+    // get publicKey() {
+    //     return this;
+    // }
 }

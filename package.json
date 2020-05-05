@@ -61,7 +61,8 @@
         "typescript": "^3.8.3"
     },
     "lint-staged": {
-        "src/**/*.js": "run-s lint format check:types"
+        "//": "ignore file arguments",
+        "src/**/*.js": "run-s lint format check:types --"
     },
     "husky": {
         "hooks": {

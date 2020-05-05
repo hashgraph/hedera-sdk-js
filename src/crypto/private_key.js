@@ -1,15 +1,17 @@
 import nacl from "tweetnacl";
 
 import PublicKey from "./public_key";
+import Key from "./key";
 
 /**
  * A private key on the Hedera™ network.
  */
-export default class PrivateKey {
+export default class PrivateKey extends Key {
     /**
      * @param {Uint8Array} data
      */
     constructor(data) {
+        super();
         const pair = nacl.sign.keyPair.fromSeed(data.slice(0, 32));
 
         this._secretKeyData = pair.secretKey;
@@ -44,6 +46,7 @@ export default class PrivateKey {
     /**
      * Return the associated Ed25519 public key for this private key.
      *
+     * @override
      * @returns {PublicKey}
      */
     get publicKey() {

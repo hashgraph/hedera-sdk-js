@@ -33,3 +33,5 @@ export function encode(s) {
 export function decode(bytes) {
     return decoder.decode(bytes);
 }
+
+export default { encode, decode };
