@@ -31,6 +31,12 @@
         "test:browser:firefox": "parcel serve --dist-dir .parcel-cache/dist --no-source-maps --no-autoinstall --log-level=none --no-hmr -p 9002 test/index.html & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/; kill %1"
     },
     "dependencies": {
+        "@stablelib/hmac": "^1.0.0",
+        "@stablelib/pbkdf2": "^1.0.0",
+        "@stablelib/sha256": "^1.0.0",
+        "@stablelib/sha384": "^1.0.0",
+        "@stablelib/sha512": "^1.0.0",
+        "bignumber.js": "^9.0.0",
         "tweetnacl": "^1.0.3"
     },
     "devDependencies": {
