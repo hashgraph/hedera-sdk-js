@@ -1,5 +1,8 @@
 const { Client, Ed25519PrivateKey, AccountCreateTransaction, Hbar } = require("@hashgraph/sdk");
 
+require("dotenv").config();
+
+
 async function main() {
     const operatorPrivateKey = process.env.OPERATOR_KEY;
     const operatorAccount = process.env.OPERATOR_ID;
