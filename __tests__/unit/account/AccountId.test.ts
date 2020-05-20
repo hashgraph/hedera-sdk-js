@@ -1,5 +1,4 @@
 import { AccountId } from "../../../src/exports";
-import {mockClient, privateKey} from "../MockClient";
 
 describe("AccountId", () => {
     const expectedAddress = "000000ff00000000000000ff0000000000000400";
