@@ -66,7 +66,7 @@ export class ContractId extends PublicKey {
 
     public toSolidityAddress(): string {
         const buffer = new Uint8Array(20);
-        const view = new DataView(buffer, 0, 20);
+        const view = new DataView(buffer.buffer, 0, 20);
 
         view.setUint32(0, this.shard);
         view.setUint32(8, this.realm);
