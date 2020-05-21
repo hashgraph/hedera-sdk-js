@@ -32,33 +32,49 @@ $ yarn add @hashgraph/sdk
 ```typescript
 import {Client} from "@hashgraph/sdk";
 
-const client = new Client({ 
-    // this key defaults to this url, a public free proxy to the Hedera public testnet
-    // generously hosted by MyHederaWallet.com
-    network: { "https://grpc-web.myhederawallet.com": "0.0.3" },
-    operator: {
-        // the account which signs transactions and query payments by default
-        account: { shard: 0, realm: 0, account: ___ },
-        // the private key used to sign the transactions, either encoded as a string
-        // or as an `Ed25519PrivateKey` type 
-        privateKey: "..."
-    },
-});
+// Create a Testnet client. To create a mainnet client use `Client.forMainnet()`
+// or if using a custom network use `Client.forNetwork()`
+const client = Client.forTestnet()
+    // Set operator AccountId and PrivateKey
+    //
+    // The account ID can be a string, or nubmer, or an `AccountId` type and is used
+    // to sign transcations and query payments built with this client. This example
+    // uses "0.0.101" is used as the operator account ID.
+    //
+    // The private key can be a string or an `Ed25519PrivateKey` type which will be used
+    // to sign transactions built with the client.
+    //
+    // The private key is used to sign the transactions, either encoded as a string
+    // or as an `Ed25519PrivateKey` type 
+    .setOperator("0.0.101", "...");
+
+// To validate the network is up and the client can connect to it you can call 
+// the `Client.ping()` method. If the network is up nothing will happen, if
+// the network is down, or the client failed to connect to the network for some
+// other reason then this call would throw an error.
+await client.ping();
 ```
 
 #### Checking your balance
 
 ```typescript
-console.log('current account balance:', await client.getAccountBalance());
+console.log('current account balance:', await AccountBalanceQuery()
+    .setAccountId("0.0.101")
+    .execute(client)
+);
 ```
 
 #### Sending a transfer
 
 ```typescript
-// the amount parameter can either be a `number` or a bignumber.js type
+// The first parameter to `addSender()` or `.addRecipient()` can be a number,
+// a string, or an `AccountId` type. This uses "0.0.101" and "0.0.102" as examples.
+//
+// The second paramter is the amount and it can be either a `number` or a `bignumber.js`
+// type
 new CryptoTransferTransaction()
-    .addSender({ shard: 0, realm: 0, account: ___ }, 10_000_000)
-    .addRecipient({ shard: 0, realm: 0, account: ___ }, 10_000_000)
+    .addSender("0.0.101", 10_000_000)
+    .addRecipient("0.0.102", 10_000_000)
     .build(client)
     .execute(client);
 ```
