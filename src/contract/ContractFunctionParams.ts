@@ -34,12 +34,7 @@ export class ContractFunctionParams {
         return this._addParam(value, true);
     }
 
-    //public addBytes32(value: Uint8Array): this {
     public addBytes32(value: Uint32Array): this {
-        //if (value.length !== 32) {
-        //    throw new Error(`addBytes32 expected array to be of length 32, but received ${value.length}`);
-        //}
-
         this._selector.addBytes32();
 
         return this._addParam(value, true);
@@ -51,15 +46,7 @@ export class ContractFunctionParams {
         return this._addParam(value, true);
     }
 
-    //public addBytes32Array(value: Uint8Array[]): this {
     public addBytes32Array(value: Uint32Array[]): this {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        //for (const [ _, entry ] of value.entries()) {
-        //    if (entry.length !== 32) {
-        //        throw new Error(`addBytes32 expected array to be of length 32, but received ${entry.length}`);
-        //    }
-        //}
-
         this._selector.addBytes32Array();
 
         return this._addParam(value, true);
