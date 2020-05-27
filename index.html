@@ -91,29 +91,45 @@
 				</a>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {Client} <span class="hljs-keyword">from</span> <span class="hljs-string">"@hashgraph/sdk"</span>;
 
-<span class="hljs-keyword">const</span> client = <span class="hljs-keyword">new</span> Client({ 
-    <span class="hljs-comment">// this key defaults to this url, a public free proxy to the Hedera public testnet</span>
-    <span class="hljs-comment">// generously hosted by MyHederaWallet.com</span>
-    network: { <span class="hljs-string">"https://grpc-web.myhederawallet.com"</span>: <span class="hljs-string">"0.0.3"</span> },
-    operator: {
-        <span class="hljs-comment">// the account which signs transactions and query payments by default</span>
-        account: { shard: <span class="hljs-number">0</span>, realm: <span class="hljs-number">0</span>, account: ___ },
-        <span class="hljs-comment">// the private key used to sign the transactions, either encoded as a string</span>
-        <span class="hljs-comment">// or as an `Ed25519PrivateKey` type </span>
-        privateKey: <span class="hljs-string">"..."</span>
-    },
-});</code></pre>
+<span class="hljs-comment">// Create a Testnet client. To create a mainnet client use `Client.forMainnet()`</span>
+<span class="hljs-comment">// or if using a custom network use `Client.forNetwork()`</span>
+<span class="hljs-keyword">const</span> client = Client.forTestnet()
+    <span class="hljs-comment">// Set operator AccountId and PrivateKey</span>
+    <span class="hljs-comment">//</span>
+    <span class="hljs-comment">// The account ID can be a string, or nubmer, or an `AccountId` type and is used</span>
+    <span class="hljs-comment">// to sign transcations and query payments built with this client. This example</span>
+    <span class="hljs-comment">// uses "0.0.101" is used as the operator account ID.</span>
+    <span class="hljs-comment">//</span>
+    <span class="hljs-comment">// The private key can be a string or an `Ed25519PrivateKey` type which will be used</span>
+    <span class="hljs-comment">// to sign transactions built with the client.</span>
+    <span class="hljs-comment">//</span>
+    <span class="hljs-comment">// The private key is used to sign the transactions, either encoded as a string</span>
+    <span class="hljs-comment">// or as an `Ed25519PrivateKey` type </span>
+    .setOperator(<span class="hljs-string">"0.0.101"</span>, <span class="hljs-string">"..."</span>);
+
+<span class="hljs-comment">// To validate the network is up and the client can connect to it you can call </span>
+<span class="hljs-comment">// the `Client.ping()` method. If the network is up nothing will happen, if</span>
+<span class="hljs-comment">// the network is down, or the client failed to connect to the network for some</span>
+<span class="hljs-comment">// other reason then this call would throw an error.</span>
+<span class="hljs-keyword">await</span> client.ping();</code></pre>
 				<a href="#checking-your-balance" id="checking-your-balance" style="color: inherit; text-decoration: none;">
 					<h4>Checking your balance</h4>
 				</a>
-				<pre><code class="language-typescript"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'current account balance:'</span>, <span class="hljs-keyword">await</span> client.getAccountBalance());</code></pre>
+				<pre><code class="language-typescript"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'current account balance:'</span>, <span class="hljs-keyword">await</span> AccountBalanceQuery()
+    .setAccountId(<span class="hljs-string">"0.0.101"</span>)
+    .execute(client)
+);</code></pre>
 				<a href="#sending-a-transfer" id="sending-a-transfer" style="color: inherit; text-decoration: none;">
 					<h4>Sending a transfer</h4>
 				</a>
-				<pre><code class="language-typescript"><span class="hljs-comment">// the amount parameter can either be a `number` or a bignumber.js type</span>
+				<pre><code class="language-typescript"><span class="hljs-comment">// The first parameter to `addSender()` or `.addRecipient()` can be a number,</span>
+<span class="hljs-comment">// a string, or an `AccountId` type. This uses "0.0.101" and "0.0.102" as examples.</span>
+<span class="hljs-comment">//</span>
+<span class="hljs-comment">// The second paramter is the amount and it can be either a `number` or a `bignumber.js`</span>
+<span class="hljs-comment">// type</span>
 <span class="hljs-keyword">new</span> CryptoTransferTransaction()
-    .addSender({ shard: <span class="hljs-number">0</span>, realm: <span class="hljs-number">0</span>, account: ___ }, <span class="hljs-number">10</span>_000_000)
-    .addRecipient({ shard: <span class="hljs-number">0</span>, realm: <span class="hljs-number">0</span>, account: ___ }, <span class="hljs-number">10</span>_000_000)
+    .addSender(<span class="hljs-string">"0.0.101"</span>, <span class="hljs-number">10</span>_000_000)
+    .addRecipient(<span class="hljs-string">"0.0.102"</span>, <span class="hljs-number">10</span>_000_000)
     .build(client)
     .execute(client);</code></pre>
 				<a href="#creating-a-new-account" id="creating-a-new-account" style="color: inherit; text-decoration: none;">
