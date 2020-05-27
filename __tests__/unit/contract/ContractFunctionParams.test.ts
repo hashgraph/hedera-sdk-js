@@ -270,4 +270,17 @@ describe("ContractFunctionParams", () => {
         expect(sixthSecondValue).toStrictEqual("00000000000000000000000000000000000000000000000000000000000022b8");
         expect(finished).toHaveLength(672);
     });
+
+    it("encodes bytes32 correctly", () => {
+        const bytes = new Uint8Array(32);
+        bytes.set([0xFF, 0xFF], 10);
+
+        const params = new ContractFunctionParams()
+            .addBytes32(bytes)
+
+        const finished          = params._build(null);
+        const firstParam        = Buffer.from(finished.slice((32 * 0), (32 * 1)).buffer).toString("hex");
+        expect(firstParam).toStrictEqual("00000000000000000000ffff0000000000000000000000000000000000000000");
+        expect(finished).toHaveLength(32);
+    });
 });

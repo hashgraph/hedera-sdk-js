@@ -40,8 +40,7 @@ export class ContractFunctionParams {
         }
 
         this._selector.addBytes32();
-
-        return this._addParam(value, true);
+        return this._addParam(value, false);
     }
 
     public addBytesArray(value: Uint8Array[]): this {
