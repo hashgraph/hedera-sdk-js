@@ -36,9 +36,10 @@ async function main() {
 
     new MirrorConsensusTopicQuery()
         .setTopicId(topicId)
+        .setStartTime(0)
         .subscribe(
             consensusClient,
-            (message) => console.log(message.toString()),
+            (message) => console.log(message),
             (error) => console.log(`Error: ${error}`)
         );
 

@@ -14,11 +14,18 @@ export class Time {
     }
 
     public static fromDate(date: number | Date): Time {
-        const ms = typeof date === "number" ?
-            date :
-            date.getMilliseconds();
-        const seconds = ms / 1000;
-        const nanos = ms % 1000 * 1_000_000;
+        let ms;
+
+        if (typeof date === "number") {
+            ms = date;
+        } else if (date instanceof Date) {
+            ms = date.getTime();
+        } else {
+            throw new TypeError(`Invalid type ${JSON.stringify(date)} is not 'number' or 'Date'`);
+        }
+
+        const seconds = Math.floor(ms / 1000);
+        const nanos = Math.floor(ms % 1000) * 1_000_000;
         return new Time(seconds, nanos);
     }
 
