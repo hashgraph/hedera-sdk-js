@@ -151,7 +151,7 @@ function getIncreasingInstant(): JsTimestamp {
         addNanos(lastInstant, 1) :
         instant;
 
-    return instant;
+    return lastInstant;
 }
 
 function addNanos(a: JsTimestamp, n: number): JsTimestamp {
@@ -162,12 +162,13 @@ function addNanos(a: JsTimestamp, n: number): JsTimestamp {
 }
 
 function instantLessThanOrEqual(a: JsTimestamp, b: JsTimestamp): boolean {
-    if (a.seconds < b.seconds) return true;
-    if (a.seconds > b.seconds) return false;
-    if (a.nanos < b.nanos) return true;
-    if (a.nanos > b.nanos) return false;
+    if (a.seconds < b.seconds) {
+        return true;
+    } else if (a.seconds === b.seconds && a.nanos <= b.nanos) {
+        return true;
+    }
 
-    return true;
+    return false;
 }
 
 /**
