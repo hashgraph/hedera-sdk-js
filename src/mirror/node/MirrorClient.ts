@@ -5,9 +5,7 @@ export class MirrorClient {
     public readonly _client: grpc.Client;
 
     public constructor(endpoint: string) {
-        this._client = new grpc.Client(endpoint, grpc.credentials.createInsecure(), {
-            "grpc.keepalive_time_ms": 2000
-        });
+        this._client = new grpc.Client(endpoint, grpc.credentials.createInsecure(), { "grpc.keepalive_time_ms": 2000 });
     }
 
     public close(): void {
