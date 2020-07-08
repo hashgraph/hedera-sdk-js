@@ -49,10 +49,10 @@ describe("AccountUpdateTransaction", () => {
             contractcreateinstance: undefined,
             contractdeleteinstance: undefined,
             contractupdateinstance: undefined,
-            cryptoaddclaim: undefined,
+            cryptoaddlivehash: undefined,
             cryptocreateaccount: undefined,
             cryptodelete: undefined,
-            cryptodeleteclaim: undefined,
+            cryptodeletelivehash: undefined,
             cryptotransfer: undefined,
             cryptoupdateaccount: {
                 accountidtoupdate: {

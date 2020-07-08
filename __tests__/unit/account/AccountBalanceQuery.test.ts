@@ -20,6 +20,7 @@ describe("AccountBalanceQuery", () => {
                     realmnum: 0,
                     shardnum: 0
                 },
+                contractid: undefined,
                 header: {
                     payment: {
                         body: undefined,
@@ -41,13 +42,14 @@ describe("AccountBalanceQuery", () => {
                 }
             },
             cryptogetaccountrecords: undefined,
-            cryptogetclaim: undefined,
             cryptogetinfo: undefined,
+            cryptogetlivehash: undefined,
             cryptogetproxystakers: undefined,
             filegetcontents: undefined,
             filegetinfo: undefined,
             getbykey: undefined,
             getbysolidityid: undefined,
+            networkgetversioninfo: undefined,
             transactiongetfastrecord: undefined,
             transactiongetreceipt: undefined,
             transactiongetrecord: undefined

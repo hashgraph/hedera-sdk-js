@@ -1,4 +1,4 @@
-import { mockClient, mockTransaction } from "../MockClient";
+import { mockTransaction } from "../MockClient";
 import { FileInfoQuery } from "../../../src/exports";
 
 describe("FileInfoQuery", () => {
@@ -16,8 +16,8 @@ describe("FileInfoQuery", () => {
             contractgetrecords: undefined,
             cryptogetaccountbalance: undefined,
             cryptogetaccountrecords: undefined,
-            cryptogetclaim: undefined,
             cryptogetinfo: undefined,
+            cryptogetlivehash: undefined,
             cryptogetproxystakers: undefined,
             filegetcontents: undefined,
             filegetinfo: {
@@ -48,6 +48,7 @@ describe("FileInfoQuery", () => {
             },
             getbykey: undefined,
             getbysolidityid: undefined,
+            networkgetversioninfo: undefined,
             transactiongetfastrecord: undefined,
             transactiongetreceipt: undefined,
             transactiongetrecord: undefined

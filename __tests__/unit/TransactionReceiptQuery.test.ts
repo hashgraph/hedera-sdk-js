@@ -1,5 +1,5 @@
 import { TransactionReceiptQuery, AccountId } from "../../src/exports";
-import {mockClient, mockTransaction} from "./MockClient";
+import { mockClient, mockTransaction } from "./MockClient";
 
 describe("TransactionGetReceiptQuery", () => {
     it("serializes and deserializes correctly; TransactionGetReceiptQuery", () => {
@@ -24,13 +24,14 @@ describe("TransactionGetReceiptQuery", () => {
             contractgetrecords: undefined,
             cryptogetaccountbalance: undefined,
             cryptogetaccountrecords: undefined,
-            cryptogetclaim: undefined,
             cryptogetinfo: undefined,
+            cryptogetlivehash: undefined,
             cryptogetproxystakers: undefined,
             filegetcontents: undefined,
             filegetinfo: undefined,
             getbykey: undefined,
             getbysolidityid: undefined,
+            networkgetversioninfo: undefined,
             transactiongetfastrecord: undefined,
             transactiongetreceipt: {
                 transactionid: {

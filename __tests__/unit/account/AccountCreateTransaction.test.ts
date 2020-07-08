@@ -1,7 +1,6 @@
 import { AccountCreateTransaction, Hbar } from "../../../src/exports";
 import { mockClient, privateKey } from "../MockClient";
 import { TransactionBody } from "../../../src/generated/TransactionBody_pb";
-import {transcode} from "buffer";
 
 describe("AccountCreateTransaction", () => {
     it("serializes correctly", () => {
@@ -51,7 +50,7 @@ describe("AccountCreateTransaction", () => {
             contractcreateinstance: undefined,
             contractdeleteinstance: undefined,
             contractupdateinstance: undefined,
-            cryptoaddclaim: undefined,
+            cryptoaddlivehash: undefined,
             transactionid: {
                 transactionvalidstart: {
                     seconds: 124124,
@@ -92,7 +91,7 @@ describe("AccountCreateTransaction", () => {
                 realmid: undefined,
             },
             cryptodelete: undefined,
-            cryptodeleteclaim: undefined,
+            cryptodeletelivehash: undefined,
             cryptotransfer: undefined,
             cryptoupdateaccount: undefined,
             fileappend: undefined,

@@ -16,8 +16,8 @@ describe("FileContentsQuery", () => {
             contractgetrecords: undefined,
             cryptogetaccountbalance: undefined,
             cryptogetaccountrecords: undefined,
-            cryptogetclaim: undefined,
             cryptogetinfo: undefined,
+            cryptogetlivehash: undefined,
             cryptogetproxystakers: undefined,
             filegetcontents: {
                 fileid: {
@@ -48,6 +48,7 @@ describe("FileContentsQuery", () => {
             filegetinfo: undefined,
             getbykey: undefined,
             getbysolidityid: undefined,
+            networkgetversioninfo: undefined,
             transactiongetfastrecord: undefined,
             transactiongetreceipt: undefined,
             transactiongetrecord: undefined
