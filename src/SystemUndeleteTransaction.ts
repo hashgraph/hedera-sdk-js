@@ -7,7 +7,6 @@ import { Transaction } from "./generated/Transaction_pb";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
 import { SystemUndeleteTransactionBody } from "./generated/SystemUndelete_pb";
 import { normalizeEntityId } from "./util";
-import { ConsensusTopicIdLike, ConsensusTopicId } from "./consensus/ConsensusTopicId";
 
 /**
  * Undelete a file or smart contract that was deleted by AdminDelete - can only be done with a
@@ -53,14 +52,6 @@ export class SystemUndeleteTransaction extends TransactionBuilder {
      */
     public setContractId(id: ContractIdLike): this {
         this._body.setContractid(new ContractId(id)._toProto());
-        return this;
-    }
-
-    /**
-     * The topic ID instance to undelete, in the format used in transactions
-     */
-    public setTopicId(id: ConsensusTopicIdLike): this {
-        this._body.setTopicid(new ConsensusTopicId(id)._toProto());
         return this;
     }
 

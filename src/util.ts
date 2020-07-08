@@ -140,8 +140,6 @@ export function getResponseHeader(response: Response): ResponseHeader {
             return response.getCryptogetaccountrecords()!.getHeader()!;
         case Response.ResponseCase.CRYPTOGETINFO:
             return response.getCryptogetinfo()!.getHeader()!;
-        case Response.ResponseCase.CRYPTOGETCLAIM:
-            return response.getCryptogetclaim()!.getHeader()!;
         case Response.ResponseCase.CRYPTOGETPROXYSTAKERS:
             return response.getCryptogetproxystakers()!.getHeader()!;
         case Response.ResponseCase.FILEGETCONTENTS:

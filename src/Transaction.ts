@@ -217,14 +217,10 @@ function methodFromTxn(inner: TransactionBody): UnaryMethodDefinition<Transactio
             return SmartContractService.updateContract;
         case TransactionBody.DataCase.CONTRACTDELETEINSTANCE:
             return SmartContractService.deleteContract;
-        case TransactionBody.DataCase.CRYPTOADDCLAIM:
-            return CryptoService.addClaim;
         case TransactionBody.DataCase.CRYPTOCREATEACCOUNT:
             return CryptoService.createAccount;
         case TransactionBody.DataCase.CRYPTODELETE:
             return CryptoService.cryptoDelete;
-        case TransactionBody.DataCase.CRYPTODELETECLAIM:
-            return CryptoService.deleteClaim;
         case TransactionBody.DataCase.CRYPTOTRANSFER:
             return CryptoService.cryptoTransfer;
         case TransactionBody.DataCase.CRYPTOUPDATEACCOUNT:
