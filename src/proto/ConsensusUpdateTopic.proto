@@ -18,8 +18,6 @@ message ConsensusUpdateTopicTransactionBody {
     // Short publicly visible memo about the topic. No guarantee of uniqueness. Null for "do not update".
     google.protobuf.StringValue memo = 2;
 
-    Timestamp validStartTime = 3 [deprecated = true]; // Deprecated and to be removed before HCS release.
-
     // Effective consensus timestamp at (and after) which all consensus transactions and queries will fail.
     // The expirationTime may be no longer than MAX_AUTORENEW_PERIOD (8000001 seconds) from the consensus timestamp of
     // this transaction.

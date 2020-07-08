@@ -22,5 +22,3 @@ message GetBySolidityIDResponse {
     FileID fileID = 3; // The file Id for the file
     ContractID contractID = 4; // A smart contract ID for the instance (if this is included, then the associated accountID will also be included)
 }
-
-

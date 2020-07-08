@@ -77,16 +77,16 @@ enum ResponseCodeEnum {
   INVALID_SIGNATURE_TYPE_MISMATCHING_KEY = 51; // the type of key (base ed25519 key, KeyList, or ThresholdKey) does not match the type of signature (base ed25519 signature, SignatureList, or ThresholdKeySignature)
   INVALID_SIGNATURE_COUNT_MISMATCHING_KEY = 52; // the number of key (KeyList, or ThresholdKey) does not match that of signature (SignatureList, or ThresholdKeySignature). e.g. if a keyList has 3 base keys, then the corresponding signatureList should also have 3 base signatures.
 
-  EMPTY_CLAIM_BODY = 53; // the claim body is empty
-  EMPTY_CLAIM_HASH = 54; //the hash for the claim is empty
-  EMPTY_CLAIM_KEYS = 55; // the key list is empty
-  INVALID_CLAIM_HASH_SIZE = 56; // the size of the claim hash is not 48 bytes
+  EMPTY_LIVE_HASH_BODY = 53; // the livehash body is empty
+  EMPTY_LIVE_HASH = 54; // the livehash data is missing
+  EMPTY_LIVE_HASH_KEYS = 55; // the keys for a livehash are missing
+  INVALID_LIVE_HASH_SIZE = 56; // the livehash data is not the output of a SHA-384 digest
 
   EMPTY_QUERY_BODY = 57; // the query body is empty
-  EMPTY_CLAIM_QUERY = 58; // the crypto claim query is empty
-  CLAIM_NOT_FOUND = 59; // the crypto claim doesn't exists in the file system. It expired or was never persisted.
+  EMPTY_LIVE_HASH_QUERY = 58; // the crypto livehash query is empty
+  LIVE_HASH_NOT_FOUND = 59; // the livehash is not present
   ACCOUNT_ID_DOES_NOT_EXIST = 60; // the account id passed has not yet been created.
-  CLAIM_ALREADY_EXISTS = 61; // the claim hash already exists
+  LIVE_HASH_ALREADY_EXISTS = 61; // the livehash already exists for a given account
 
 
   INVALID_FILE_WACL = 62; // File WACL keys are invalid
@@ -135,35 +135,25 @@ enum ResponseCodeEnum {
   FEE_SCHEDULE_FILE_PART_UPLOADED = 104; // Fee Schedule Proto File Part uploaded
   EXCHANGE_RATE_CHANGE_LIMIT_EXCEEDED = 105; // The change on Exchange Rate exceeds Exchange_Rate_Allowed_Percentage
   MAX_CONTRACT_STORAGE_EXCEEDED = 106;  // Contract permanent storage exceeded the currently allowable limit
-  TRANSAFER_ACCOUNT_SAME_AS_DELETE_ACCOUNT = 107; // Transfer Account should not be same as Account to be deleted
+  TRANSFER_ACCOUNT_SAME_AS_DELETE_ACCOUNT = 107; // Transfer Account should not be same as Account to be deleted
   TOTAL_LEDGER_BALANCE_INVALID = 108;
   EXPIRATION_REDUCTION_NOT_ALLOWED = 110; // The expiration date/time on a smart contract may not be reduced
-
-  // New functionality in the HCS release below here
-
+  MAX_GAS_LIMIT_EXCEEDED = 111; //Gas exceeded currently allowable gas limit per transaction
+  MAX_FILE_SIZE_EXCEEDED = 112;  // File size exceeded the currently allowable limit
   INVALID_TOPIC_ID = 150; // The Topic ID specified is not in the system.
-
-  TOPIC_DELETED = 151 [deprecated = true]; // Deprecated and to be removed before HCS release.
-  TOPIC_NOT_ENABLED = 152 [deprecated = true]; // Deprecated and to be removed before HCS release.
-  INVALID_TOPIC_VALID_START_TIME = 153 [deprecated = true]; // Deprecated and to be removed before HCS release.
-
-  INVALID_TOPIC_EXPIRATION_TIME = 154 [deprecated = true];
   INVALID_ADMIN_KEY = 155;
   INVALID_SUBMIT_KEY = 156;
   UNAUTHORIZED = 157; // An attempted operation was not authorized (ie - a deleteTopic for a topic with no adminKey).
   INVALID_TOPIC_MESSAGE = 158; // A ConsensusService message is empty.
+  INVALID_AUTORENEW_ACCOUNT = 159; // The autoRenewAccount specified is not a valid, active account.
 
-  // The autoRenewAccount specified is not a valid, active account.
-  INVALID_AUTORENEW_ACCOUNT = 159;
-
-  // An admin key was not specified on the topic, so there must not be an autorenew account.
+  // An adminKey was not specified on the topic, so there must not be an autoRenewAccount.
   AUTORENEW_ACCOUNT_NOT_ALLOWED = 160;
-
-  // The autoRenewAccount didn't sign the transaction.
-  AUTORENEW_ACCOUNT_SIGNATURE_MISSING = 161;
 
   // The topic has expired, was not automatically renewed, and is in a 7 day grace period before the topic will be
   // deleted unrecoverably. This error response code will not be returned until autoRenew functionality is supported
   // by HAPI.
   TOPIC_EXPIRED = 162;
+  INVALID_CHUNK_NUMBER = 163; // chunk number must be from 1 to total (chunks) inclusive.
+  INVALID_CHUNK_TRANSACTION_ID = 164; // For every chunk, the payer account that is part of initialTransactionID must match the Payer Account of this transaction. The entire initialTransactionID should match the transactionID of the first chunk, but this is not checked or enforced by Hedera except when the chunk number is 1.
 }

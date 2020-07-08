@@ -16,7 +16,7 @@ import "ContractGetRecords.proto";
 import "CryptoGetAccountBalance.proto";
 import "CryptoGetAccountRecords.proto";
 import "CryptoGetInfo.proto";
-import "CryptoGetClaim.proto";
+import "CryptoGetLiveHash.proto";
 import "CryptoGetStakers.proto";
 
 import "FileGetContents.proto";
@@ -28,7 +28,9 @@ import "TransactionGetFastRecord.proto";
 
 import "ConsensusGetTopicInfo.proto";
 
-/* A single query, which is sent from the client to the node. This includes all possible queries. Each Query should not have more than 50 levels. */
+import "NetworkGetVersionInfo.proto";
+
+/* A single query, which is sent from the client to a node. This includes all possible queries. Each Query should not have more than 50 levels. */
 message Query {
     oneof query {
         GetByKeyQuery getByKey = 1; // Get all entities associated with a given key
@@ -41,18 +43,17 @@ message Query {
         CryptoGetAccountBalanceQuery cryptogetAccountBalance = 7; // Get the current balance in a cryptocurrency account
         CryptoGetAccountRecordsQuery cryptoGetAccountRecords = 8; // Get all the records that currently exist for transactions involving an account
         CryptoGetInfoQuery cryptoGetInfo = 9; // Get all information about an account
-        CryptoGetClaimQuery cryptoGetClaim = 10; // Get a single claim from a single account (or null if it doesn't exist)
+        CryptoGetLiveHashQuery cryptoGetLiveHash = 10; // Get a single livehash from a single account, if present
         CryptoGetStakersQuery cryptoGetProxyStakers = 11; // Get all the accounts that proxy stake to a given account, and how much they proxy stake (not yet implemented in the current API)
 
         FileGetContentsQuery fileGetContents = 12; // Get the contents of a file (the bytes stored in it)
         FileGetInfoQuery fileGetInfo = 13; // Get information about a file, such as its expiration date
 
         TransactionGetReceiptQuery transactionGetReceipt = 14; // Get a receipt for a transaction (lasts 180 seconds)
-        TransactionGetRecordQuery transactionGetRecord = 15; // Get a record for a transaction (lasts 1 hour)
+        TransactionGetRecordQuery transactionGetRecord = 15; // Get a record for a transaction
         TransactionGetFastRecordQuery transactionGetFastRecord = 16; // Get a record for a transaction (lasts 180 seconds)
-
-        // New functionality in the HCS release below here
-
         ConsensusGetTopicInfoQuery consensusGetTopicInfo = 50; // Get the parameters of and state of a consensus topic.
+
+        NetworkGetVersionInfoQuery networkGetVersionInfo = 51;
     }
 }

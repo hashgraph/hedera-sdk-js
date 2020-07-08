@@ -20,4 +20,3 @@ message ContractGetBytecodeResponse {
     ResponseHeader header = 1; //standard response from node to client, including the requested fields: cost, or state proof, or both, or neither
     bytes bytecode = 6; // the bytecode
 }
-

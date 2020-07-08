@@ -10,7 +10,7 @@ import "Duration.proto";
 import "BasicTypes.proto";
 import "QueryHeader.proto";
 import "ResponseHeader.proto";
-import "CryptoAddClaim.proto";
+import "CryptoAddLiveHash.proto";
 
 /* Get all the information about an account, including the balance. This does not get the list of account records. */
 message CryptoGetInfoQuery {
@@ -27,15 +27,17 @@ message CryptoGetInfoResponse {
         string contractAccountID = 2; // The Contract Account ID comprising of both the contract instance and the cryptocurrency account owned by the contract instance, in the format used by Solidity
         bool deleted = 3; // If true, then this account has been deleted, it will disappear when it expires, and all transactions for it will fail except the transaction to extend its expiration date
         AccountID proxyAccountID = 4; // The Account ID of the account to which this is proxy staked. If proxyAccountID is null, or is an invalid account, or is an account that isn't a node, then this account is automatically proxy staked to a node chosen by the network, but without earning payments. If the proxyAccountID account refuses to accept proxy staking , or if it is not currently running a node, then it will behave as if proxyAccountID was null.
-        int64 proxyReceived = 6 [ jstype = JS_STRING ]; // The total number of tinybars proxy staked to this account
+        int64 proxyReceived = 6 [jstype=JS_STRING]; // The total number of tinybars proxy staked to this account
         Key key = 7; // The key for the account, which must sign in order to transfer out, or to modify the account in any way other than extending its expiration date.
-        uint64 balance = 8 [ jstype = JS_STRING ]; // The current balance of account in tinybars
-        uint64 generateSendRecordThreshold = 9 [ jstype = JS_STRING ]; // The threshold amount (in tinybars) for which an account record is created (and this account charged for them) for any send/withdraw transaction.
-        uint64 generateReceiveRecordThreshold = 10 [ jstype = JS_STRING ]; // The threshold amount (in tinybars) for which an account record is created  (and this account charged for them) for any transaction above this amount.
+        uint64 balance = 8 [jstype=JS_STRING]; // The current balance of account in tinybars
+        // The threshold amount, in tinybars, at which a record is created of any transaction that decreases the balance of this account by more than the threshold
+        uint64 generateSendRecordThreshold = 9 [jstype=JS_STRING];
+        // The threshold amount, in tinybars, at which a record is created of any transaction that increases the balance of this account by more than the threshold
+        uint64 generateReceiveRecordThreshold = 10 [jstype=JS_STRING];
         bool receiverSigRequired = 11; // If true, no transaction can transfer to this account unless signed by this account's key
         Timestamp expirationTime = 12; // The TimeStamp time at which this account is set to expire
         Duration autoRenewPeriod = 13; // The duration for expiration time will extend every this many seconds. If there are insufficient funds, then it extends as long as possible. If it is empty when it expires, then it is deleted.
-        repeated Claim claims = 14; // All of the claims attached to the account (each of which is a hash along with the keys that authorized it and can delete it )
+        repeated LiveHash liveHashes = 14; // All of the livehashes attached to the account (each of which is a hash along with the keys that authorized it and can delete it)
     }
     AccountInfo accountInfo = 2; // Info about the account (a state proof can be generated for this)
 }

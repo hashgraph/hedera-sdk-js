@@ -6,7 +6,13 @@ option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 import "BasicTypes.proto";
 import "Duration.proto";
-/* Start a new smart contract instance. After the instance is created, the ContractID for it is in the receipt, or can be retrieved with a GetByKey query, or by asking for a Record of the transaction to be created, and retrieving that. The instance will run the bytecode stored in the given file, referenced either by FileID or by the transaction ID of the transaction that created the file. The constructor will be executed using the given amount of gas, and any unspent gas will be refunded to the paying account. Constructor inputs come from the given constructorParameters.
+/*
+Start a new smart contract instance. After the instance is created, the ContractID for it is in the receipt, and can be
+retrieved by the Record or with a GetByKey query. The instance will run the bytecode stored in a previously created
+file, referenced either by FileID or by the transaction ID of the transaction that created the file
+
+
+The constructor will be executed using the given amount of gas, and any unspent gas will be refunded to the paying account. Constructor inputs come from the given constructorParameters.
  *
  * The instance will exist for autoRenewPeriod seconds. When that is reached, it will renew itself for another autoRenewPeriod seconds by charging its associated cryptocurrency account (which it creates here). If it has insufficient cryptocurrency to extend that long, it will extend as long as it can. If its balance is zero, the instance will be deleted.
  *
@@ -23,8 +29,8 @@ import "Duration.proto";
 message ContractCreateTransactionBody {
     FileID fileID = 1; // the file containing the smart contract byte code. A copy will be made and held by the contract instance, and have the same expiration time as the instance. The file is referenced one of two ways:
     Key adminKey = 3; // the state of the instance and its fields can be modified arbitrarily if this key signs a transaction to modify it. If this is null, then such modifications are not possible, and there is no administrator that can override the normal operation of this smart contract instance. Note that if it is created with no admin keys, then there is no administrator to authorize changing the admin keys, so there can never be any admin keys for that instance.
-    int64 gas = 4 [ jstype = JS_STRING ]; // gas to run the constructor
-    int64 initialBalance = 5 [ jstype = JS_STRING ]; // initial number of tinybars to put into the cryptocurrency account associated with and owned by the smart contract
+    int64 gas = 4 [jstype = JS_STRING]; // gas to run the constructor
+    int64 initialBalance = 5 [jstype = JS_STRING]; // initial number of tinybars to put into the cryptocurrency account associated with and owned by the smart contract
     AccountID proxyAccountID = 6; // ID of the account to which this account is proxy staked. If proxyAccountID is null, or is an invalid account, or is an account that isn't a node, then this account is automatically proxy staked to a node chosen by the network, but without earning payments. If the proxyAccountID account refuses to accept proxy staking , or if it is not currently running a node, then it will behave as if  proxyAccountID was null.
     Duration autoRenewPeriod = 8; // the instance will charge its account every this many seconds to renew for this long
     bytes constructorParameters = 9; // parameters to pass to the constructor

@@ -22,5 +22,3 @@ message CryptoGetAccountRecordsResponse {
     AccountID accountID = 2; // The account that this record is for
     repeated TransactionRecord records = 3; // List of records, each with CryptoRecordBody as their body
 }
-
-

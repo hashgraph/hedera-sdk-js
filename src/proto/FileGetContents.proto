@@ -24,5 +24,3 @@ message FileGetContentsResponse {
     }
     FileContents fileContents = 2; // the file ID and contents (a state proof can be generated for this)
 }
-
-

@@ -5,6 +5,7 @@ package proto;
 option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
+import "TransactionResponse.proto";
 import "QueryHeader.proto";
 import "ResponseCode.proto";
 
@@ -12,6 +13,6 @@ import "ResponseCode.proto";
 message ResponseHeader {
     ResponseCodeEnum nodeTransactionPrecheckCode = 1; // Result of fee transaction precheck, saying it passed, or why it failed
     ResponseType responseType = 2; // The requested response is repeated back here, for convenience
-    uint64 cost = 3 [ jstype = JS_STRING ]; // The fee that would be charged to get the requested information (if a cost was requested). Note: This cost only includes the query fee and does not include the transfer fee(which is required to execute the transfer transaction to debit the payer account and credit the node account with query fee)
+    uint64 cost = 3 [jstype=JS_STRING]; // The fee that would be charged to get the requested information (if a cost was requested). Note: This cost only includes the query fee and does not include the transfer fee(which is required to execute the transfer transaction to debit the payer account and credit the node account with query fee)
     bytes stateProof = 4; // The state proof for this information (if a state proof was requested, and is available)
 }

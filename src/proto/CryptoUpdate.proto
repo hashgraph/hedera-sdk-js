@@ -10,12 +10,14 @@ import "Duration.proto";
 import "Timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-/* Change properties for the given account. Any null field is ignored (left unchanged). This transaction must be signed by the existing key for this account. If the transaction is changing the key field, then the transaction must be signed by both the old key (from before the change) and the new key. The old key must sign for security. The new key must sign as a safeguard to avoid accidentally changing to an invalid key, and then having no way to recover. When extending the expiration date, the cost is affected by the size of the list of attached claims, and of the keys associated with the claims and the account. */
+/*
+Change properties for the given account. Any null field is ignored (left unchanged). This transaction must be signed by the existing key for this account. If the transaction is changing the key field, then the transaction must be signed by both the old key (from before the change) and the new key. The old key must sign for security. The new key must sign as a safeguard to avoid accidentally changing to an invalid key, and then having no way to recover.
+*/
 message CryptoUpdateTransactionBody {
     AccountID accountIDToUpdate = 2; // The account ID which is being updated in this transaction
     Key key = 3; // The new key
     AccountID proxyAccountID = 4; // ID of the account to which this account is proxy staked. If proxyAccountID is null, or is an invalid account, or is an account that isn't a node, then this account is automatically proxy staked to a node chosen by the network, but without earning payments. If the proxyAccountID account refuses to accept proxy staking , or if it is not currently running a node, then it will behave as if proxyAccountID was null.
-    int32 proxyFraction = 5 [deprecated = true]; // [Deprecated]. payments earned from proxy staking are shared between the node and this account, with proxyFraction / 10000 going to this account
+    int32 proxyFraction = 5 [deprecated = true]; // [Deprecated]. Payments earned from proxy staking are shared between the node and this account, with proxyFraction / 10000 going to this account
     oneof sendRecordThresholdField {
         uint64 sendRecordThreshold = 6 [deprecated = true]; // [Deprecated]. The new threshold amount (in tinybars) for which an account record is created for any send/withdraw transaction
         google.protobuf.UInt64Value sendRecordThresholdWrapper = 11; // The new threshold amount (in tinybars) for which an account record is created for any send/withdraw transaction

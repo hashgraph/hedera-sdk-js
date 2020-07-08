@@ -4,7 +4,8 @@ package proto;
 
 option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
-/*  The length of a period of time. This is an identical data structure to the protobuf Duration.proto (see the comments in https://github.com/google/protobuf/blob/master/src/google/protobuf/duration.proto) */
+
+/* A length of time in seconds. */
 message Duration {
-    int64 seconds = 1; // number of seconds
+    int64 seconds = 1; // The number of seconds
 }

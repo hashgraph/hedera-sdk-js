@@ -18,7 +18,7 @@ message TransactionRecord {
     Timestamp consensusTimestamp = 3; // The consensus timestamp (or null if didn't reach consensus yet)
     TransactionID transactionID = 4; // The ID of the transaction this record represents
     string memo = 5; // The memo that was submitted as part of the transaction (max 100 bytes)
-    uint64 transactionFee = 6; // The actual transaction fee charged, not the original transactionFee value from TransactionBody
+    uint64 transactionFee = 6 [jstype=JS_STRING]; // The actual transaction fee charged, not the original transactionFee value from TransactionBody
     oneof body {
         ContractFunctionResult contractCallResult = 7; // Record of the value returned by the smart contract function (if it completed and didn't fail) from ContractCallTransaction
         ContractFunctionResult contractCreateResult = 8; // Record of the value returned by the smart contract constructor (if it completed and didn't fail) from ContractCreateTransaction

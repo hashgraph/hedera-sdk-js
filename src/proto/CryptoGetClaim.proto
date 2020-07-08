@@ -22,5 +22,3 @@ message CryptoGetClaimResponse {
     ResponseHeader header = 1; //Standard response from node to client, including the requested fields: cost, or state proof, or both, or neither
     Claim claim = 2; // The claim (account, hash, keys), or null if there is no Claim with the given hash attached to the given account
 }
-
-

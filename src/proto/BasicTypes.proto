@@ -104,27 +104,30 @@ message Signature {
     }
 }
 
-/* A signature corresponding to a ThresholdKey. For an N-of-M threshold key, this is a list of M signatures, at least N of which must be non-null. 
- * This message is deprecated and succeeded by SignaturePair and SignatureMap messages. 
- */
+/*
+A signature corresponding to a ThresholdKey. For an N-of-M threshold key, this is a list of M signatures, at least N of which must be non-null.
+This message is deprecated and succeeded by SignaturePair and SignatureMap messages.
+*/
 message ThresholdSignature {
     option deprecated = true;
     SignatureList sigs = 2; // for an N-of-M threshold key, this is a list of M signatures, at least N of which must be non-null
 }
 
-/* The signatures corresponding to a KeyList of the same length.
- * This message is deprecated and succeeded by SignaturePair and SignatureMap messages. 
- */
+/*
+The signatures corresponding to a KeyList of the same length.
+This message is deprecated and succeeded by SignaturePair and SignatureMap messages.
+*/
 message SignatureList {
     option deprecated = true;
     repeated Signature sigs = 2; // each signature corresponds to a Key in the KeyList
 }
 
-/* The client may use any number of bytes from 0 to the whole length of the public key for pubKeyPrefix. 
- * If 0 bytes is used, then it is assumed that only one public key is used to sign.
- */
+/*
+The client may use any number of bytes from 0 to the whole length of the public key for pubKeyPrefix.
+If 0 bytes is used, then it is assumed that only one public key is used to sign.
+*/
 message SignaturePair {
-    bytes pubKeyPrefix = 1;  // First few bytes of the public key
+    bytes pubKeyPrefix = 1; // First few bytes of the public key
     oneof signature {
         bytes contract = 2; // smart contract virtual signature (always length zero)
         bytes ed25519 = 3; // ed25519 signature
@@ -133,21 +136,25 @@ message SignaturePair {
     }
 }
 
-/* A set of signatures corresponding to every unique public key used to sign a given transaction. 
- * If one public key matches more than one prefixes on the signature map, the transaction containing the map will fail immediately with the response code KEY_PREFIX_MISMATCH.  
- */
+/*
+A set of signatures corresponding to every unique public key used to sign a given transaction. If one public key matches more than one prefixes on the signature map, the transaction containing the map will fail immediately with the response code KEY_PREFIX_MISMATCH.
+*/
 message SignatureMap {
     repeated SignaturePair sigPair = 1; // Each signature pair corresponds to a unique Key required to sign the transaction.
 }
 
-/* The functionality provided by hedera hashgraph */
+/*
+The transactions and queries supported by Hedera Hashgraph.
+*/
 enum HederaFunctionality {
     NONE = 0; // UNSPECIFIED - Need to keep first value as unspecified because first element is ignored and not parsed (0 is ignored by parser)
     CryptoTransfer = 1; // crypto transfer
     CryptoUpdate = 2; // crypto update account
     CryptoDelete = 3; // crypto delete account
-    CryptoAddClaim = 4; // crypto add claim to the account
-    CryptoDeleteClaim = 5; // crypto delete claim to the account
+    // Add a livehash to a crypto account
+    CryptoAddLiveHash = 4;
+    // Delete a livehash from a crypto account
+    CryptoDeleteLiveHash = 5;
     ContractCall = 6; // Smart Contract Call
     ContractCreate = 7; // Smart Contract Create Contract
     ContractUpdate = 8; // Smart Contract update contract
@@ -163,7 +170,8 @@ enum HederaFunctionality {
     ContractGetBytecode = 18; // Smart Contract, get the byte code
     GetBySolidityID = 19; // Smart Contract, get by solidity ID
     GetByKey = 20; // Smart Contract, get by key
-    CryptoGetClaim = 21; // Crypto get the claim
+    // Get a live hash from a crypto account
+    CryptoGetLiveHash = 21;
     CryptoGetStakers = 22; // Crypto, get the stakers for the node
     FileGetContents = 23; // File Operations get file contents
     FileGetInfo = 24; // File Operations get the info of the file
@@ -177,11 +185,8 @@ enum HederaFunctionality {
     CreateTransactionRecord = 32; // Create Tx Record
     CryptoAccountAutoRenew = 33; // Crypto Auto Renew
     ContractAutoRenew = 34; // Contract Auto Renew
-    getVersion = 35; //Get Version
+    GetVersionInfo = 35; //Get Version
     TransactionGetReceipt = 36; // Transaction Get Receipt
-
-    // New functionality in the HCS release below here
-
     ConsensusCreateTopic = 50;
     ConsensusUpdateTopic = 51;
     ConsensusDeleteTopic = 52;
@@ -189,41 +194,53 @@ enum HederaFunctionality {
     ConsensusSubmitMessage = 54;
 }
 
-/* The different components used for fee calculation */
-
+/*
+A set of prices the nodes use in determining transaction and query fees, and constants involved in fee calculations.
+Nodes multiply the amount of resources consumed by a transaction or query by the corresponding price to calculate the
+appropriate fee. Units are one-thousandth of a tinyCent.*/
 message FeeComponents {
-    int64 min = 1; // The minimum fees that needs to be paid
-    int64 max = 2; // The maximum fees that can be submitted
-    int64 constant = 3; // A constant determined by the business to calculate the fees
-    int64 bpt = 4; // Bytes per transaction
-    int64 vpt = 5; // Verifications per transaction
-    int64 rbh = 6; // Ram byte seconds
-    int64 sbh = 7; // Storage byte seconds
-    int64 gas = 8; // Gas for the contract execution
-    int64 tv = 9; // Transaction value (crypto transfers amount, tv is in tiny bars divided by 1000, rounded down)
-    int64 bpr = 10; // Bytes per response
-    int64 sbpr = 11; // Storage bytes per response
+    int64 min = 1 [jstype=JS_STRING]; // A minimum, the calculated fee must be greater than this value
+    int64 max = 2 [jstype=JS_STRING]; // A maximum, the calculated fee must be less than this value
+    int64 constant = 3 [jstype=JS_STRING]; // A constant contribution to the fee
+    int64 bpt = 4 [jstype=JS_STRING]; // The price of bandwidth consumed by a transaction, measured in bytes
+    int64 vpt = 5 [jstype=JS_STRING]; // The price per signature verification for a transaction
+    int64 rbh = 6 [jstype=JS_STRING]; // The price of RAM consumed by a transaction, measured in byte-hours
+    int64 sbh = 7 [jstype=JS_STRING]; // The price of storage consumed by a transaction, measured in byte-hours
+    int64 gas = 8 [jstype=JS_STRING]; // The price of computation for a smart contract transaction, measured in gas
+    int64 tv = 9 [jstype=JS_STRING]; // The price per hbar transferred for a transfer
+    int64 bpr = 10 [jstype=JS_STRING]; // The price of bandwidth for data retrieved from memory for a response, measured in bytes
+    int64 sbpr = 11 [jstype=JS_STRING]; // The price of bandwidth for data retrieved from disk for a response, measured in bytes
 }
 
 /* The fees for a specific transaction or query based on the fee data. */
 message TransactionFeeSchedule {
-    HederaFunctionality hederaFunctionality = 1; // Specific Transaction or Query
-    FeeData feeData = 2; // The fee information about the query/data
+    // A particular transaction or query
+    HederaFunctionality hederaFunctionality = 1;
+    // Resource price coefficients
+    FeeData feeData = 2;
 }
 
-/* The total fees charged for a transaction. It contains three parts namely node data, network data and service data */
+/*
+The total fee charged for a transaction. It is composed of three components – a node fee that compensates the specific node that submitted the transaction, a network fee that compensates the network for assigning the transaction a consensus timestamp, and a service fee that compensates the network for the ongoing maintenance of the consequences of the transaction.
+*/
 message FeeData {
-    FeeComponents nodedata = 1; // Fee charged by Node for this functionality
-    FeeComponents networkdata = 2; // Fee charged for network operations by Hedera
-    FeeComponents servicedata = 3; // Fee charged for providing service by Hedera
+    // Fee paid to the submitting node
+    FeeComponents nodedata = 1;
+    // Fee paid to the network for processing a transaction into consensus
+    FeeComponents networkdata = 2;
+    // Fee paid to the network for providing the service associated with the transaction; for instance, storing a file
+    FeeComponents servicedata = 3;
 }
 
-/* The fee schedule for a specific hedera functionality and the time period this fee schedule will expire  */
+/*
+A list of resource prices fee for different transactions and queries and the time period at which this fee schedule will expire. Nodes use the prices to determine the fees for all transactions based on how much of those resources each transaction uses.
+*/
 message FeeSchedule {
-    repeated TransactionFeeSchedule transactionFeeSchedule = 1; // Contains multiple functionality specific fee schedule.
-    TimestampSeconds expiryTime = 2; // FeeSchedule expiry time
+    // List of price coefficients for network resources
+    repeated TransactionFeeSchedule transactionFeeSchedule = 1;
+    // FeeSchedule expiry time
+    TimestampSeconds expiryTime = 2;
 }
-
 
 /* This contains two Fee Schedules with expiry timestamp. */
 message CurrentAndNextFeeSchedule {
@@ -231,15 +248,38 @@ message CurrentAndNextFeeSchedule {
     FeeSchedule nextFeeSchedule = 2; // Contains next Fee Schedule
 }
 
-/* The information about a node */
+/*
+The metadata for a Node – including IP Address, and the crypto account associated with the Node.
+*/
 message NodeAddress {
     bytes ipAddress = 1; // The ip address of the Node with separator & octets
     int32 portno = 2; // The port number of the grpc server for the node
-    bytes memo = 3; // The memo field of the node
-    string RSA_PubKey = 4; // The RSA public key of the node.
+    bytes memo = 3; // The memo field of the node (usage to store account ID is deprecated)
+    string RSA_PubKey = 4; // The RSA public key of the node
+    int64 nodeId = 5 [jstype=JS_STRING]; // A non-sequential identifier for the node
+    AccountID nodeAccountId = 6; // The account to be paid for queries and transactions sent to this node
+    bytes nodeCertHash = 7; // A hash of the X509 cert used for gRPC traffic to this node
 }
 
-/* Gives the node addresses in the address book */
+/*
+A list of nodes and their metadata.
+*/
 message NodeAddressBook {
     repeated NodeAddress nodeAddress = 1; // Contains multiple Node Address for the network
+}
+
+message SemanticVersion {
+   int32 major = 1; // Increases with incompatible API changes
+   int32 minor = 2; // Increases with backwards-compatible new functionality
+   int32 patch = 3; // Increases with backwards-compatible bug fixes
+}
+
+message Setting {
+    string name = 1; // name of the property
+    string value = 2; // value of the property
+    bytes data = 3; // any data associated with property
+}
+
+message ServicesConfigurationList {
+    repeated Setting nameValue = 1; // list of name value pairs of the application properties
 }

@@ -52,6 +52,7 @@ service ConsensusService {
     /* Create a topic to be used for consensus.
      * If an autoRenewAccount is specified, that account must also sign this transaction.
      * If an adminKey is specified, the adminKey must sign the transaction.
+     * On success, the resulting TransactionReceipt contains the newly created TopicId.
      * Request is [ConsensusCreateTopicTransactionBody](#proto.ConsensusCreateTopicTransactionBody)
      */
     rpc createTopic (Transaction) returns (TransactionResponse);
@@ -83,6 +84,8 @@ service ConsensusService {
      * Valid and authorized messages on valid topics will be ordered by the consensus service, gossipped to the
      * mirror net, and published (in order) to all subscribers (from the mirror net) on this topic.
      * The submitKey (if any) must sign this transaction.
+     * On success, the resulting TransactionReceipt contains the topic's updated topicSequenceNumber and
+     * topicRunningHash.
      * Request is [ConsensusSubmitMessageTransactionBody](#proto.ConsensusSubmitMessageTransactionBody)
      */
     rpc submitMessage (Transaction) returns (TransactionResponse);

@@ -9,34 +9,36 @@ import "Response.proto";
 import "TransactionResponse.proto";
 import "Transaction.proto";
 
-/* The request and responses for different crypto services. */
+/*
+Transactions and queries for the Crypto Service
+*/
 service CryptoService {
-
-    rpc createAccount (Transaction) returns (TransactionResponse); // Creates a new account by submitting the transaction. The grpc server returns the TransactionResponse
-
-    rpc updateAccount (Transaction) returns (TransactionResponse); // Updates an account by submitting the transaction. The grpc server returns the TransactionResponse
-
-    rpc cryptoTransfer (Transaction) returns (TransactionResponse); // Initiates a transfer by submitting the transaction. The grpc server returns the TransactionResponse
-
-    rpc cryptoDelete (Transaction) returns (TransactionResponse); // Deletes and account by submitting the transaction. The grpc server returns the TransactionResponse
-
-    rpc addClaim (Transaction) returns (TransactionResponse); // Adds a claim by submitting the transaction. The grpc server returns the TransactionResponse
-
-    rpc deleteClaim (Transaction) returns (TransactionResponse); // Deletes a claim by submitting the transaction. The grpc server returns the TransactionResponse
-
-    rpc getClaim (Query) returns (Response); // Retrieves the claim for an account by submitting the query.
-
-    rpc getAccountRecords (Query) returns (Response); // Retrieves the record(fetch by AccountID ID) for an account by submitting the query.
-
-    rpc cryptoGetBalance (Query) returns (Response); // Retrieves the balance for an account by submitting the query.
-
-    rpc getAccountInfo (Query) returns (Response); // Retrieves the account information for an account by submitting the query.
-
-    rpc getTransactionReceipts (Query) returns (Response); // Retrieves the transaction receipts for an account by TxId which last for 180sec only for no fee.
-
-    rpc getFastTransactionRecord (Query) returns (Response); // Retrieves the transaction record by TxID which last for 180sec only for no fee.
-
-    rpc getTxRecordByTxID (Query) returns (Response); // Retrieves the transactions record(fetch by Transaction ID) for an account by submitting the query.
-
-    rpc getStakersByAccountID (Query) returns (Response); // Retrieves the stakers for a node by account ID by submitting the query.
+    // Creates a new account by submitting the transaction
+    rpc createAccount (Transaction) returns (TransactionResponse);
+    // Updates an account by submitting the transaction
+    rpc updateAccount (Transaction) returns (TransactionResponse);
+    // Initiates a transfer by submitting the transaction
+    rpc cryptoTransfer (Transaction) returns (TransactionResponse);
+    // Deletes and account by submitting the transaction
+    rpc cryptoDelete (Transaction) returns (TransactionResponse);
+    // (NOT CURRENTLY SUPPORTED) Adds a livehash
+    rpc addLiveHash (Transaction) returns (TransactionResponse);
+    // (NOT CURRENTLY SUPPORTED) Deletes a livehash
+    rpc deleteLiveHash (Transaction) returns (TransactionResponse);
+    // (NOT CURRENTLY SUPPORTED) Retrieves a livehash for an account
+    rpc getLiveHash (Query) returns (Response);
+    // Retrieves the 25-hour records stored for an account
+    rpc getAccountRecords (Query) returns (Response);
+    // Retrieves the balance of an account
+    rpc cryptoGetBalance (Query) returns (Response);
+    // Retrieves the metadata of an account
+    rpc getAccountInfo (Query) returns (Response);
+    // Retrieves the latest receipt for a transaction that is either awaiting consensus, or reached consensus in the last 180 seconds
+    rpc getTransactionReceipts (Query) returns (Response);
+    // (NOT CURRENTLY SUPPORTED) Returns the records of transactions recently funded by an account
+    rpc getFastTransactionRecord (Query) returns (Response);
+    // Retrieves the record of a transaction that is either awaiting consensus, or reached consensus in the last 180 seconds
+    rpc getTxRecordByTxID (Query) returns (Response);
+    // (NOT CURRENTLY SUPPORTED) Retrieves the stakers for a node by account id
+    rpc getStakersByAccountID (Query) returns (Response);
 }

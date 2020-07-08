@@ -13,7 +13,12 @@ import "Timestamp.proto";
 message ConsensusTopicInfo {
     string memo = 1; // Short publicly visible memo about the topic. No guarantee of uniqueness.
 
-    // SHA-384 running hash <previousRunningHash, topicId, consensusTimestamp, sequenceNumber, message>
+    // When a topic is created, its running hash is initialized to 48 bytes of binary zeros.
+    // For each submitted message, the topic's running hash is then updated to the output
+    // of a particular SHA-384 digest whose input data include the previous running hash.
+    //
+    // See the TransactionReceipt.proto documentation for an exact description of the
+    // data included in the SHA-384 digest used for the update.
     bytes runningHash = 2;
 
     // Sequence number (starting at 1 for the first submitMessage) of messages on the topic.

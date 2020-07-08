@@ -23,9 +23,6 @@ message ConsensusCreateTopicTransactionBody {
     // If unspecified, no access control is performed on ConsensusService.submitMessage (all submissions are allowed).
     Key submitKey = 3;
 
-    Timestamp validStartTime = 4 [deprecated = true]; // Deprecated and to be removed before HCS release.
-    Timestamp expirationTime = 5 [deprecated = true]; // Deprecated and to be removed before HCS release.
-
     // The initial lifetime of the topic and the amount of time to attempt to extend the topic's lifetime by
     // automatically at the topic's expirationTime, if the autoRenewAccount is configured (once autoRenew functionality
     // is supported by HAPI).

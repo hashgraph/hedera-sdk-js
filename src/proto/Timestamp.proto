@@ -15,4 +15,3 @@ message Timestamp {
 message TimestampSeconds {
     int64 seconds = 1; // Number of complete seconds since the start of the epoch
 }
-
