@@ -1,5 +1,4 @@
 import {
-    Client,
     Ed25519PrivateKey,
     CryptoTransferTransaction,
     AccountBalanceQuery,
@@ -8,23 +7,14 @@ import {
     AccountDeleteTransaction,
     AccountUpdateTransaction,
     AccountRecordsQuery,
-    AccountStakersQuery,
     Hbar,
     TransactionId
 } from "../../../src/index-node";
+import { getClientForIntegrationTest } from "../client-setup";
 
 describe("AccountUpdateTransaction", () => {
-    it("can be executed", async () => {
-        if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
-            throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
-        }
-
-        const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
-        const operatorAccount = process.env.OPERATOR_ID;
-
-        const client = Client
-            .forTestnet()
-            .setOperator(operatorAccount, operatorPrivateKey);
+    it("can be executed", async() => {
+        const client = await getClientForIntegrationTest();
 
         const key1 = await Ed25519PrivateKey.generate();
         const key2 = await Ed25519PrivateKey.generate();
@@ -60,7 +50,7 @@ describe("AccountUpdateTransaction", () => {
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
 
-        for(const record of records) {
+        for (const record of records) {
             expect(record.receipt).toBeDefined();
         }
 
@@ -87,7 +77,7 @@ describe("AccountUpdateTransaction", () => {
 
         transactionId = await new CryptoTransferTransaction()
             .addSender(account, new Hbar(1).asTinybar().dividedBy(10))
-            .addRecipient(operatorAccount, new Hbar(1).asTinybar().dividedBy(10))
+            .addRecipient(client._getOperatorAccountId()!, new Hbar(1).asTinybar().dividedBy(10))
             .setMaxTransactionFee(new Hbar(1).asTinybar().dividedBy(2))
             .build(client)
             .sign(key2)
@@ -104,7 +94,7 @@ describe("AccountUpdateTransaction", () => {
 
         transactionId = await new AccountDeleteTransaction()
             .setDeleteAccountId(account)
-            .setTransferAccountId(operatorAccount)
+            .setTransferAccountId(client._getOperatorAccountId()!)
             .setMaxTransactionFee(new Hbar(1).asTinybar().dividedBy(2))
             .setTransactionId(new TransactionId(account))
             .build(client)

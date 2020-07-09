@@ -24,7 +24,7 @@ export interface PubKeyAndSigner {
 
 export type SigningOpts = PrivateKey | PubKeyAndSigner;
 
-export type Operator = { account: AccountIdLike } & SigningOpts;
+export type Operator = { accountId: AccountIdLike } & SigningOpts;
 
 export type Nodes = {
     [url: string]: AccountIdLike;
@@ -62,12 +62,12 @@ export abstract class BaseClient {
         if (operator) {
             if ((operator as PrivateKey).privateKey != null) {
                 this.setOperator(
-                    operator.account,
+                    operator.accountId,
                     (operator as PrivateKey).privateKey
                 );
             } else {
                 this.setOperatorWith(
-                    operator.account,
+                    operator.accountId,
                     (operator as PubKeyAndSigner).publicKey as Ed25519PublicKey,
                     (operator as PubKeyAndSigner).signer as TransactionSigner
                 );

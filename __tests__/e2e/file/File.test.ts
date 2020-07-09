@@ -1,21 +1,13 @@
-import { Client, Ed25519PrivateKey, FileContentsQuery, FileCreateTransaction, FileInfoQuery, FileUpdateTransaction, FileAppendTransaction, FileDeleteTransaction, Hbar } from "../../../src/index-node";
+import { FileContentsQuery, FileCreateTransaction, FileInfoQuery, FileUpdateTransaction, FileAppendTransaction, FileDeleteTransaction, Hbar } from "../../../src/index-node";
 import * as utf8 from "@stablelib/utf8";
+import { getClientForIntegrationTest } from "../client-setup";
 
 describe("FileCreateTransaction", () => {
-    it("can be executed", async () => {
-        if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
-            throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
-        }
-
-        const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
-        const operatorAccount = process.env.OPERATOR_ID;
-
-        const client = Client
-            .forTestnet()
-            .setOperator(operatorAccount, operatorPrivateKey);
+    it("can be executed", async() => {
+        const client = await getClientForIntegrationTest();
 
         let transactionId = await new FileCreateTransaction()
-            .addKey(operatorPrivateKey.publicKey)
+            .addKey(client._getOperatorKey()!)
             .setContents("[e2e::FileCreateTransaction]")
             .setMaxTransactionFee(new Hbar(15))
             .execute(client);
@@ -32,7 +24,7 @@ describe("FileCreateTransaction", () => {
         expect(info.fileId).toStrictEqual(file);
         expect(info.size).toBe(28);
         expect(info.isDeleted).toBe(false);
-        expect(info.keys[ 0 ].toString()).toBe(operatorPrivateKey.publicKey.toString());
+        expect(info.keys[ 0 ].toString()).toBe(client._getOperatorKey()!.toString());
 
         transactionId = await new FileAppendTransaction()
             .setFileId(file)
@@ -50,7 +42,7 @@ describe("FileCreateTransaction", () => {
         expect(info.fileId).toStrictEqual(file);
         expect(info.size).toBe(56);
         expect(info.isDeleted).toBe(false);
-        expect(info.keys[ 0 ].toString()).toBe(operatorPrivateKey.publicKey.toString());
+        expect(info.keys[ 0 ].toString()).toBe(client._getOperatorKey()!.toString());
 
         const contents = await new FileContentsQuery()
             .setFileId(file)
@@ -75,7 +67,7 @@ describe("FileCreateTransaction", () => {
         expect(info.fileId).toStrictEqual(file);
         expect(info.size).toBe(28);
         expect(info.isDeleted).toBe(false);
-        expect(info.keys[ 0 ].toString()).toBe(operatorPrivateKey.publicKey.toString());
+        expect(info.keys[ 0 ].toString()).toBe(client._getOperatorKey()!.toString());
 
         transactionId = await new FileDeleteTransaction()
             .setFileId(file)

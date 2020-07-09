@@ -11,7 +11,7 @@ class MockClient extends BaseClient {
         super(
             { "nonexistent-testnet": { shard: 0, realm: 0, account: 3 }},
             {
-                account: { shard: 0, realm: 0, account: 2 },
+                accountId: { shard: 0, realm: 0, account: 2 },
                 privateKey
             }
         );

@@ -1,6 +1,4 @@
 import {
-    Client,
-    Ed25519PrivateKey,
     Hbar,
     ConsensusTopicCreateTransaction,
     ConsensusTopicDeleteTransaction,
@@ -8,22 +6,14 @@ import {
     ConsensusTopicUpdateTransaction,
     ConsensusMessageSubmitTransaction
 } from "../../../src/index-node";
+import { getClientForIntegrationTest } from "../client-setup";
 
 describe("AccountUpdateTransaction", () => {
-    it("can be executed", async () => {
-        if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
-            throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
-        }
-
-        const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
-        const operatorAccount = process.env.OPERATOR_ID;
-
-        const client = Client
-            .forTestnet()
-            .setOperator(operatorAccount, operatorPrivateKey);
+    it("can be executed", async() => {
+        const client = await getClientForIntegrationTest();
 
         let transactionId = await new ConsensusTopicCreateTransaction()
-            .setAdminKey(operatorPrivateKey.publicKey)
+            .setAdminKey(client._getOperatorKey()!)
             .setTopicMemo("[e2e::ConsensusTopicCreateTransaction]")
             .setMaxTransactionFee(new Hbar(2))
             .execute(client);
@@ -39,7 +29,7 @@ describe("AccountUpdateTransaction", () => {
 
         expect(info.topicMemo).toStrictEqual("[e2e::ConsensusTopicCreateTransaction]");
         expect(info.sequenceNumber).toBe(0);
-        expect(info.adminKey!.toString()).toBe(operatorPrivateKey.publicKey.toString());
+        expect(info.adminKey!.toString()).toBe(client._getOperatorKey()!.toString());
 
         transactionId = await new ConsensusMessageSubmitTransaction()
             .setTopicId(topic)
@@ -56,7 +46,7 @@ describe("AccountUpdateTransaction", () => {
 
         expect(info.topicMemo).toStrictEqual("[e2e::ConsensusTopicCreateTransaction]");
         expect(info.sequenceNumber).toBe(1);
-        expect(info.adminKey!.toString()).toBe(operatorPrivateKey.publicKey.toString());
+        expect(info.adminKey!.toString()).toBe(client._getOperatorKey()!.toString());
 
         transactionId = await new ConsensusTopicUpdateTransaction()
             .setTopicId(topic)
@@ -73,7 +63,7 @@ describe("AccountUpdateTransaction", () => {
 
         expect(info.topicMemo).toStrictEqual("[e2e::ConsensusTopicUpdateTransaction]");
         expect(info.sequenceNumber).toBe(1);
-        expect(info.adminKey!.toString()).toBe(operatorPrivateKey.publicKey.toString());
+        expect(info.adminKey!.toString()).toBe(client._getOperatorKey()!.toString());
 
         transactionId = await new ConsensusTopicDeleteTransaction()
             .setTopicId(topic)

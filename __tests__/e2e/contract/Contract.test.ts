@@ -1,6 +1,4 @@
 import {
-    Client,
-    Ed25519PrivateKey,
     FileCreateTransaction,
     ContractFunctionParams,
     FileDeleteTransaction,
@@ -14,25 +12,17 @@ import {
     ContractDeleteTransaction,
     Hbar
 } from "../../../src/index-node";
+import { getClientForIntegrationTest } from "../client-setup";
 
 describe("ContractCreateTransaction", () => {
-    it("can be executed", async () => {
+    it("can be executed", async() => {
         const smartContract = require("../../../examples/stateful.json");
         const smartContractByteCode = smartContract.contracts[ "stateful.sol:StatefulContract" ].bin;
 
-        if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
-            throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
-        }
-
-        const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
-        const operatorAccount = process.env.OPERATOR_ID;
-
-        const client = Client
-            .forTestnet()
-            .setOperator(operatorAccount, operatorPrivateKey);
+        const client = await getClientForIntegrationTest();
 
         let transactionId = await new FileCreateTransaction()
-            .addKey(operatorPrivateKey.publicKey)
+            .addKey(client._getOperatorKey()!)
             .setContents(smartContractByteCode)
             .setMaxTransactionFee(new Hbar(3))
             .execute(client);
@@ -42,7 +32,7 @@ describe("ContractCreateTransaction", () => {
         const file = receipt.getFileId();
 
         transactionId = await new ContractCreateTransaction()
-            .setAdminKey(operatorPrivateKey.publicKey)
+            .setAdminKey(client._getOperatorKey()!)
             .setGas(2000)
             .setConstructorParams(new ContractFunctionParams().addString("hello from hedera"))
             .setBytecodeFileId(file)
@@ -61,7 +51,7 @@ describe("ContractCreateTransaction", () => {
 
         expect(info.contractId).toStrictEqual(contract);
         expect(info.accountId.toString()).toBe(contract.toString());
-        expect(info.adminKey!.toString()).toBe(operatorPrivateKey.publicKey.toString());
+        expect(info.adminKey!.toString()).toBe(client._getOperatorKey()!.toString());
         expect(info.storage).toBe(926);
         expect(info.contractMemo).toBe("[e2e::ContractCreateTransaction]");
 
@@ -104,7 +94,7 @@ describe("ContractCreateTransaction", () => {
             .setMaxQueryPayment(new Hbar(5))
             .execute(client);
 
-        for(const record of records) {
+        for (const record of records) {
             expect(record.receipt).toBeDefined();
         }
 
@@ -123,7 +113,7 @@ describe("ContractCreateTransaction", () => {
 
         expect(info.contractId).toStrictEqual(contract);
         expect(info.accountId.toString()).toBe(contract.toString());
-        expect(info.adminKey!.toString()).toBe(operatorPrivateKey.publicKey.toString());
+        expect(info.adminKey!.toString()).toBe(client._getOperatorKey()!.toString());
         expect(info.storage).toBe(926);
         expect(info.contractMemo).toBe("[e2e::ContractUpdateTransaction]");
 
