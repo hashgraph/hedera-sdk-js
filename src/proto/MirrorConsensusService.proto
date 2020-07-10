@@ -27,6 +27,7 @@ option java_package = "com.hedera.mirror.api.proto";
 
 import "BasicTypes.proto";
 import "Timestamp.proto";
+import "ConsensusSubmitMessage.proto";
 
 message ConsensusTopicQuery {
     .proto.TopicID topicID = 1; // A required topic ID to retrieve messages for.
@@ -45,12 +46,16 @@ message ConsensusTopicQuery {
 message ConsensusTopicResponse {
     .proto.Timestamp consensusTimestamp = 1; // The time at which the transaction reached consensus
 
-    // The message body originally in the ConsensusSubmitMessageTransactionBody. Message size will be less than 4K.
+    // The message body originally in the ConsensusSubmitMessageTransactionBody. Message size will be less than 6KiB.
     bytes message = 2;
 
     bytes runningHash = 3; // The running hash (SHA384) of every message.
 
     uint64 sequenceNumber = 4; // Starts at 1 for first submitted message. Incremented on each submitted message.
+
+    uint64 runningHashVersion = 5; // Version of the SHA-384 digest used to update the running hash.
+
+    .proto.ConsensusMessageChunkInfo chunkInfo = 6; // Optional information of the current chunk in a fragmented message.
 }
 
 //
