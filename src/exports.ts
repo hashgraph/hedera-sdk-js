@@ -34,6 +34,8 @@ export { SystemUndeleteTransaction } from "./SystemUndeleteTransaction";
 export { FreezeTransaction } from "./FreezeTransaction";
 export { GetBySolidityIdQuery } from "./GetBySolidityIdQuery";
 
+export { NetworkVersionInfoQuery, NetworkVersionInfo, SemanticVersion } from "./NetworkVersionInfoQuery";
+
 export { Transaction } from "./Transaction";
 
 export { Status } from "./Status";
