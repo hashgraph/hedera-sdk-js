@@ -1,5 +1,5 @@
 import { TransactionBuilder } from "../TransactionBuilder";
-import { Transaction } from "../generated/Transaction_pb";
+import { Transaction as ProtoTransaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { ConsensusSubmitMessageTransactionBody, ConsensusMessageChunkInfo } from "../generated/ConsensusSubmitMessage_pb";
@@ -8,6 +8,8 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { ConsensusTopicId, ConsensusTopicIdLike } from "./ConsensusTopicId";
 import * as utf8 from "@stablelib/utf8";
 import { TransactionId } from "../TransactionId";
+import { BaseClient } from "../BaseClient";
+import { Transaction } from "../Transaction";
 
 export interface ChunkInfo {
     // TransactionID of the first chunk, gets copied to every subsequent chunk in a fragmented message.
@@ -55,7 +57,55 @@ export class ConsensusMessageSubmitTransaction extends TransactionBuilder {
         return this;
     }
 
-    protected get _method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
+    public chunks(client: BaseClient): Transaction[] {
+        const chunkSize = 4096;
+
+        const bytes = this._body.getMessage() instanceof Uint8Array ?
+            this._body.getMessage_asU8() :
+            utf8.encode(this._body.getMessage_asB64());
+        const chunks = [];
+
+        // split message into one or more "chunks"
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+            chunks.push(bytes.slice(i, i + chunkSize));
+        }
+
+        const initialTransactionId = new TransactionId(client._getOperatorAccountId()!);
+        const transactionBuilders: ConsensusMessageSubmitTransaction[] = [];
+        chunks.forEach((chunk, index) => {
+            const transaction = new ConsensusMessageSubmitTransaction()
+                .setTopicId(ConsensusTopicId._fromProto(this._body.getTopicid()!))
+                .setMessage(chunk)
+                .setChunkInfo({
+                    id: initialTransactionId,
+                    number: index + 1,
+                    total: chunks.length
+                });
+
+            if (this._inner.hasTransactionvalidduration()) {
+                transaction._inner.setTransactionvalidduration(this._inner.getTransactionvalidduration()!);
+            }
+
+            if (this._inner.getTransactionfee().length !== 0) {
+                // TODO: divide by number of chunks?
+                transaction._inner.setTransactionfee(this._inner.getTransactionfee());
+            }
+
+            if (this._inner.getGeneraterecord()) {
+                transaction.setGenerateRecord(true);
+            }
+
+            // TODO: the rest of the stuff
+
+            transactionBuilders.push(transaction);
+        });
+
+        transactionBuilders[ 0 ].setTransactionId(initialTransactionId);
+
+        return transactionBuilders.map((t) => t.build(client));
+    }
+
+    protected get _method(): UnaryMethodDefinition<ProtoTransaction, TransactionResponse> {
         return ConsensusService.submitMessage;
     }
 
