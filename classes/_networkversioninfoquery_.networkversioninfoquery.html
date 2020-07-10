@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ContractRecordsQuery | @hashgraph/sdk</title>
+	<title>NetworkVersionInfoQuery | @hashgraph/sdk</title>
 	<meta name="description" content="Documentation for @hashgraph/sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_contract_contractrecordsquery_.html">&quot;contract/ContractRecordsQuery&quot;</a>
+					<a href="../modules/_networkversioninfoquery_.html">&quot;NetworkVersionInfoQuery&quot;</a>
 				</li>
 				<li>
-					<a href="_contract_contractrecordsquery_.contractrecordsquery.html">ContractRecordsQuery</a>
+					<a href="_networkversioninfoquery_.networkversioninfoquery.html">NetworkVersionInfoQuery</a>
 				</li>
 			</ul>
-			<h1>Class ContractRecordsQuery</h1>
+			<h1>Class NetworkVersionInfoQuery</h1>
 		</div>
 	</div>
 </header>
@@ -68,8 +68,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Get all the records for a smart contract instance, for any function call
-						(or the constructor call) during the last 25 hours, for which a Record was requested.</p>
+						<p>Get the deployed versions of Hedera Services and the HAPI proto in semantic version format.</p>
 					</div>
 				</div>
 			</section>
@@ -77,10 +76,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_querybuilder_.querybuilder.html" class="tsd-signature-type">QueryBuilder</a><span class="tsd-signature-symbol">&lt;</span><a href="_transactionrecord_.transactionrecord.html" class="tsd-signature-type">TransactionRecord</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="_querybuilder_.querybuilder.html" class="tsd-signature-type">QueryBuilder</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_networkversioninfoquery_.networkversioninfo.html" class="tsd-signature-type">NetworkVersionInfo</a><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">ContractRecordsQuery</span>
+								<span class="target">NetworkVersionInfoQuery</span>
 							</li>
 						</ul>
 					</li>
@@ -93,20 +92,19 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_contract_contractrecordsquery_.contractrecordsquery.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_networkversioninfoquery_.networkversioninfoquery.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section ">
+						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_contract_contractrecordsquery_.contractrecordsquery.html#_generatepaymenttransaction" class="tsd-kind-icon">_generate<wbr>Payment<wbr>Transaction</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_contract_contractrecordsquery_.contractrecordsquery.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_contract_contractrecordsquery_.contractrecordsquery.html#execute" class="tsd-kind-icon">execute</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_contract_contractrecordsquery_.contractrecordsquery.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_contract_contractrecordsquery_.contractrecordsquery.html#setcontractid" class="tsd-kind-icon">set<wbr>Contract<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_contract_contractrecordsquery_.contractrecordsquery.html#setmaxquerypayment" class="tsd-kind-icon">set<wbr>Max<wbr>Query<wbr>Payment</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_contract_contractrecordsquery_.contractrecordsquery.html#setquerypayment" class="tsd-kind-icon">set<wbr>Query<wbr>Payment</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_contract_contractrecordsquery_.contractrecordsquery.html#setquerypaymenttransaction" class="tsd-kind-icon">set<wbr>Query<wbr>Payment<wbr>Transaction</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_networkversioninfoquery_.networkversioninfoquery.html#_generatepaymenttransaction" class="tsd-kind-icon">_generate<wbr>Payment<wbr>Transaction</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_networkversioninfoquery_.networkversioninfoquery.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_networkversioninfoquery_.networkversioninfoquery.html#execute" class="tsd-kind-icon">execute</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_networkversioninfoquery_.networkversioninfoquery.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_networkversioninfoquery_.networkversioninfoquery.html#setmaxquerypayment" class="tsd-kind-icon">set<wbr>Max<wbr>Query<wbr>Payment</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_networkversioninfoquery_.networkversioninfoquery.html#setquerypayment" class="tsd-kind-icon">set<wbr>Query<wbr>Payment</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_networkversioninfoquery_.networkversioninfoquery.html#setquerypaymenttransaction" class="tsd-kind-icon">set<wbr>Query<wbr>Payment<wbr>Transaction</a></li>
 							</ul>
 						</section>
 					</div>
@@ -118,22 +116,22 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Contract<wbr>Records<wbr>Query<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_contract_contractrecordsquery_.contractrecordsquery.html" class="tsd-signature-type">ContractRecordsQuery</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Network<wbr>Version<wbr>Info<wbr>Query<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_networkversioninfoquery_.networkversioninfoquery.html" class="tsd-signature-type">NetworkVersionInfoQuery</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides QueryBuilder.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7841c08a/src/contract/ContractRecordsQuery.ts#L17">src/contract/ContractRecordsQuery.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7841c08a/src/NetworkVersionInfoQuery.ts#L30">src/NetworkVersionInfoQuery.ts:30</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_contract_contractrecordsquery_.contractrecordsquery.html" class="tsd-signature-type">ContractRecordsQuery</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_networkversioninfoquery_.networkversioninfoquery.html" class="tsd-signature-type">NetworkVersionInfoQuery</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group ">
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="_generatepaymenttransaction" class="tsd-anchor"></a>
@@ -187,7 +185,7 @@
 					<a name="execute" class="tsd-anchor"></a>
 					<h3>execute</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">execute<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_transactionrecord_.transactionrecord.html" class="tsd-signature-type">TransactionRecord</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">execute<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_networkversioninfoquery_.networkversioninfo.html" class="tsd-signature-type">NetworkVersionInfo</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -203,7 +201,7 @@
 									<h5>client: <a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_transactionrecord_.transactionrecord.html" class="tsd-signature-type">TransactionRecord</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_networkversioninfoquery_.networkversioninfo.html" class="tsd-signature-type">NetworkVersionInfo</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -228,34 +226,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="setcontractid" class="tsd-anchor"></a>
-					<h3>set<wbr>Contract<wbr>Id</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Contract<wbr>Id<span class="tsd-signature-symbol">(</span>contractIdLike<span class="tsd-signature-symbol">: </span><a href="../modules/_contract_contractid_.html#contractidlike" class="tsd-signature-type">ContractIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/7841c08a/src/contract/ContractRecordsQuery.ts#L30">src/contract/ContractRecordsQuery.ts:30</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>The smart contract instance for which the records should be retrieved.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>contractIdLike: <a href="../modules/_contract_contractid_.html#contractidlike" class="tsd-signature-type">ContractIdLike</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -346,7 +316,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_contract_contractrecordsquery_.html">&quot;contract/<wbr>Contract<wbr>Records<wbr>Query&quot;</a>
+						<a href="../modules/_networkversioninfoquery_.html">&quot;<wbr>Network<wbr>Version<wbr>Info<wbr>Query&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -355,39 +325,42 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_contract_contractrecordsquery_.contractrecordsquery.html" class="tsd-kind-icon">Contract<wbr>Records<wbr>Query</a>
+						<a href="_networkversioninfoquery_.networkversioninfoquery.html" class="tsd-kind-icon">Network<wbr>Version<wbr>Info<wbr>Query</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_contract_contractrecordsquery_.contractrecordsquery.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_networkversioninfoquery_.networkversioninfoquery.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_contract_contractrecordsquery_.contractrecordsquery.html#_generatepaymenttransaction" class="tsd-kind-icon">_generate<wbr>Payment<wbr>Transaction</a>
+								<a href="_networkversioninfoquery_.networkversioninfoquery.html#_generatepaymenttransaction" class="tsd-kind-icon">_generate<wbr>Payment<wbr>Transaction</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_contract_contractrecordsquery_.contractrecordsquery.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a>
+								<a href="_networkversioninfoquery_.networkversioninfoquery.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_contract_contractrecordsquery_.contractrecordsquery.html#execute" class="tsd-kind-icon">execute</a>
+								<a href="_networkversioninfoquery_.networkversioninfoquery.html#execute" class="tsd-kind-icon">execute</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_contract_contractrecordsquery_.contractrecordsquery.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_contract_contractrecordsquery_.contractrecordsquery.html#setcontractid" class="tsd-kind-icon">set<wbr>Contract<wbr>Id</a>
+								<a href="_networkversioninfoquery_.networkversioninfoquery.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_contract_contractrecordsquery_.contractrecordsquery.html#setmaxquerypayment" class="tsd-kind-icon">set<wbr>Max<wbr>Query<wbr>Payment</a>
+								<a href="_networkversioninfoquery_.networkversioninfoquery.html#setmaxquerypayment" class="tsd-kind-icon">set<wbr>Max<wbr>Query<wbr>Payment</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_contract_contractrecordsquery_.contractrecordsquery.html#setquerypayment" class="tsd-kind-icon">set<wbr>Query<wbr>Payment</a>
+								<a href="_networkversioninfoquery_.networkversioninfoquery.html#setquerypayment" class="tsd-kind-icon">set<wbr>Query<wbr>Payment</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_contract_contractrecordsquery_.contractrecordsquery.html#setquerypaymenttransaction" class="tsd-kind-icon">set<wbr>Query<wbr>Payment<wbr>Transaction</a>
+								<a href="_networkversioninfoquery_.networkversioninfoquery.html#setquerypaymenttransaction" class="tsd-kind-icon">set<wbr>Query<wbr>Payment<wbr>Transaction</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_networkversioninfoquery_.networkversioninfo.html" class="tsd-kind-icon">Network<wbr>Version<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/_networkversioninfoquery_.semanticversion.html" class="tsd-kind-icon">Semantic<wbr>Version</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -407,7 +380,6 @@
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
