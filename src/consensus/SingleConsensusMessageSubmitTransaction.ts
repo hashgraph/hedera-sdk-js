@@ -7,7 +7,6 @@ import { ConsensusService } from "../generated/ConsensusService_pb_service";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { ConsensusTopicId, ConsensusTopicIdLike } from "./ConsensusTopicId";
 import * as utf8 from "@stablelib/utf8";
-import { TransactionId } from "../TransactionId";
 import { ChunkInfo } from "./ConsensusMessageSubmitTransaction";
 
 export class SingleConsensusMessageSubmitTransaction extends SingleTransactionBuilder {

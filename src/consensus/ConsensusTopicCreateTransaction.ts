@@ -1,4 +1,4 @@
-import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
+import { SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -6,7 +6,6 @@ import { ConsensusCreateTopicTransactionBody } from "../generated/ConsensusCreat
 import { ConsensusService } from "../generated/ConsensusService_pb_service";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { PublicKey } from "../crypto/PublicKey";
-import { Time } from "../Time";
 import { newDuration } from "../util";
 import { AccountId, AccountIdLike } from "../account/AccountId";
 

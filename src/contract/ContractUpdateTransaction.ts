@@ -1,4 +1,4 @@
-import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
+import { SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";

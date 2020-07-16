@@ -1,4 +1,4 @@
-import { TransactionBuilder, SingleTransactionBuilder } from "./TransactionBuilder";
+import { SingleTransactionBuilder } from "./TransactionBuilder";
 import { SystemDeleteTransactionBody } from "./generated/SystemDelete_pb";
 import { dateToTimestamp, timestampToProto } from "./Timestamp";
 import { FileId, FileIdLike } from "./file/FileId";

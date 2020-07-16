@@ -1,4 +1,4 @@
-import { TransactionBuilder, SingleTransactionBuilder } from "./TransactionBuilder";
+import { SingleTransactionBuilder } from "./TransactionBuilder";
 import { FileId, FileIdLike } from "./file/FileId";
 import { ContractId, ContractIdLike } from "./contract/ContractId";
 import { grpc } from "@improbable-eng/grpc-web";
