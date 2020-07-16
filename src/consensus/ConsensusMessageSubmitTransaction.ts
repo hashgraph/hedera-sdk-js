@@ -115,8 +115,12 @@ export class ConsensusMessageSubmitTransaction extends TransactionBuilder<Transa
         throw new Error("Cannot get cost of a transaction list");
     }
 
-    // eslint-disable-next-line require-await
-    public async execute(client: BaseClient): Promise<TransactionId[]> {
+    public async execute(client: BaseClient): Promise<TransactionId> {
+        let ids = await this.executeAll(client);
+        return ids[0];
+    }
+
+    public executeAll(client: BaseClient): Promise<TransactionId[]> {
         return Promise.all(this.build(client).map((tx) => tx.execute(client)));
     }
 

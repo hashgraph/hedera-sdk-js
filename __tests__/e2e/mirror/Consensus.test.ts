@@ -31,16 +31,12 @@ describe("ConsensusMessageSubmitTransaction", () => {
         expect(info.sequenceNumber).toBe(0);
         expect(info.adminKey!.toString()).toBe(client._getOperatorKey()!.toString());
 
-        const transactionIds = await new ConsensusMessageSubmitTransaction()
+        transactionId = await new ConsensusMessageSubmitTransaction()
             .setTopicId(topic)
             .setMessage("[e2e::ConsensusMessageSubmitTransaction]")
             .setMaxTransactionFee(new Hbar(1))
             .execute(client);
         
-        expect(transactionIds.length).toStrictEqual(1);
-
-        transactionId = transactionIds[0];
-
         await transactionId.getReceipt(client);
 
         info = await new ConsensusTopicInfoQuery()
