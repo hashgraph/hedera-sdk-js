@@ -88,6 +88,11 @@ export abstract class TransactionBuilder<O = Transaction> {
         });
     }
 
+    public abstract getCost(client: BaseClient): Promise<Hbar>;
+    public abstract build(client?: BaseClient): O;
+}
+
+export class SingleTransactionBuilder extends TransactionBuilder<Transaction> {
     public async getCost(client: BaseClient): Promise<Hbar> {
         const originalFee = this._inner.getTransactionfee();
 
@@ -131,10 +136,6 @@ export abstract class TransactionBuilder<O = Transaction> {
         return new Hbar(0);
     }
 
-    public abstract build(client?: BaseClient): O;
-}
-
-export class SingleTransactionBuilder extends TransactionBuilder<Transaction> {
     public build(client?: BaseClient): Transaction {
         if (client && this._shouldSetFee && this._inner.getTransactionfee() === "0") {
             // Don't override TransactionFee if it's already set

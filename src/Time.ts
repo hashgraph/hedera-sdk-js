@@ -39,4 +39,12 @@ export class Time {
     public static _fromProto(timestamp: ProtoTimestamp): Time {
         return new Time(timestamp.getSeconds(), timestamp.getNanos());
     }
+
+    public _increment(): Time {
+        if (Math.floor(this.nanos + 1) === 1_000_000_000) {
+            return new Time(this.seconds + 1, 0);
+        } else {
+            return new Time(this.seconds, this.nanos + 1);
+        }
+    }
 }

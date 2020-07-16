@@ -2,22 +2,19 @@ import { SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { ConsensusSubmitMessageTransactionBody } from "../generated/ConsensusSubmitMessage_pb";
+import { ConsensusSubmitMessageTransactionBody, ConsensusMessageChunkInfo } from "../generated/ConsensusSubmitMessage_pb";
 import { ConsensusService } from "../generated/ConsensusService_pb_service";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { ConsensusTopicId, ConsensusTopicIdLike } from "./ConsensusTopicId";
 import * as utf8 from "@stablelib/utf8";
+import { TransactionId } from "../TransactionId";
+import { ChunkInfo } from "./ConsensusMessageSubmitTransaction";
 
-/** @deprecated use `ConsensusMessageSubmitTransaction` instead. */
-export class ConsensusSubmitMessageTransaction extends SingleTransactionBuilder {
+export class SingleConsensusMessageSubmitTransaction extends SingleTransactionBuilder {
     private _body: ConsensusSubmitMessageTransactionBody;
 
-    /** @deprecated use `ConsensusMessageSubmitTransaction` instead. */
     public constructor() {
         super();
-
-        console.warn("deprecated: ConsensusSubmitMessageTransaction has been renamed to ConsensusMessageSubmitTransaction");
-
         const body = new ConsensusSubmitMessageTransactionBody();
         this._body = body;
         this._inner.setConsensussubmitmessage(body);
@@ -37,6 +34,17 @@ export class ConsensusSubmitMessageTransaction extends SingleTransactionBuilder 
         return this;
     }
 
+    public setChunkInfo(info: ChunkInfo): this {
+        const chunkInfo = new ConsensusMessageChunkInfo();
+        chunkInfo.setInitialtransactionid(info.id._toProto());
+        chunkInfo.setNumber(info.number);
+        chunkInfo.setTotal(info.total);
+
+        this._body.setChunkinfo(chunkInfo);
+
+        return this;
+    }
+
     protected get _method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
         return ConsensusService.submitMessage;
     }
@@ -47,3 +55,4 @@ export class ConsensusSubmitMessageTransaction extends SingleTransactionBuilder 
         // No local validation needed
     }
 }
+
