@@ -182,7 +182,7 @@ export class SingleTransactionBuilder extends TransactionBuilder<Transaction> {
         throw new Error("Method not implemented.");
     }
 
-    protected _doValidate(errors: string[]): void {
+    protected _doValidate(): void {
         throw new Error("Method not implemented.");
     }
 }
