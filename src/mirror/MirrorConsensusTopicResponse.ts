@@ -1,7 +1,6 @@
 import { ConsensusTopicResponse } from "../generated/MirrorConsensusService_pb";
 import { Time } from "../Time";
 import * as utf8 from "@stablelib/utf8";
-import {ConsensusMessageChunkInfo} from "../generated/ConsensusSubmitMessage_pb";
 
 export class ConsensusMessageChunk {
     public readonly consensusTimestamp: Time;
@@ -46,8 +45,6 @@ export class MirrorConsensusTopicResponse {
 
     public readonly chunks: ConsensusMessageChunk[] | null = null;
 
-    public readonly contents: Uint8Array | null = null;
-
     public constructor(message: ConsensusTopicResponse[]);
     public constructor(message: ConsensusTopicResponse);
     public constructor(maybeChunkedMessage: ConsensusTopicResponse | ConsensusTopicResponse[]) {
@@ -73,11 +70,11 @@ export class MirrorConsensusTopicResponse {
 
             const size = this.chunks.map((chunk) => chunk.contentSize).reduce((sum, current) => sum += current, 0);
 
-            this.contents = new Uint8Array(size);
+            this.message = new Uint8Array(size);
             let offset = 0;
 
             message.forEach((message) => {
-                this.contents!.set(message.getMessage_asU8(), offset);
+                this.message!.set(message.getMessage_asU8(), offset);
                 offset += message.getMessage_asU8().length;
             })
         } else {

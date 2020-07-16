@@ -25,7 +25,7 @@ export interface ChunkInfo {
 
 export class ConsensusMessageSubmitTransaction extends TransactionBuilder<Transaction[]> {
     private static readonly chunkSize = 4096;
-    private maxChunks = 10;
+    private _maxChunks = 10;
     private topicId: ConsensusTopicId | null = null;
     private message: Uint8Array | null = null;
     private chunkInfo: ChunkInfo | null = null;
@@ -44,20 +44,30 @@ export class ConsensusMessageSubmitTransaction extends TransactionBuilder<Transa
         return this;
     }
 
-    public setChunkInfo(info: ChunkInfo): this {
-        this.chunkInfo = info
+    public setMaxChunks(maxChunks: number): this {
+        this._maxChunks = maxChunks;
+        return this;
+    }
+
+    public setChunkInfo(initialId: TransactionId, total: number, num: number): this {
+        this.chunkInfo = {
+            id: initialId,
+            total,
+            number: num,
+        };
+
         return this;
     }
 
     public build(client: BaseClient): Transaction[] {
-        if (this.message!.length / ConsensusMessageSubmitTransaction.chunkSize > this.maxChunks) {
-            throw new Error(`Message with size ${this.message!.length} too long for ${this.maxChunks} chunks`);
+        if (this.message!.length / ConsensusMessageSubmitTransaction.chunkSize > this._maxChunks) {
+            throw new Error(`Message with size ${this.message!.length} too long for ${this._maxChunks} chunks`);
         }
 
         const initialTransactionId = this._inner.getTransactionid() == null
             ? new TransactionId(client._getOperatorAccountId()!)
             : TransactionId._fromProto(this._inner.getTransactionid()!);
-        
+
         let time = initialTransactionId.validStart;
 
         if (this.chunkInfo != null) {
