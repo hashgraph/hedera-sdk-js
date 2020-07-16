@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PrivateKeyInfo | @hashgraph/sdk</title>
+	<title>ConsensusMessageChunk | @hashgraph/sdk</title>
 	<meta name="description" content="Documentation for @hashgraph/sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_crypto_pkcs_.html">&quot;crypto/pkcs&quot;</a>
+					<a href="../modules/_mirror_mirrorconsensustopicresponse_.html">&quot;mirror/MirrorConsensusTopicResponse&quot;</a>
 				</li>
 				<li>
-					<a href="_crypto_pkcs_.privatekeyinfo.html">PrivateKeyInfo</a>
+					<a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html">ConsensusMessageChunk</a>
 				</li>
 			</ul>
-			<h1>Class PrivateKeyInfo</h1>
+			<h1>Class ConsensusMessageChunk</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">PrivateKeyInfo</span>
+						<span class="target">ConsensusMessageChunk</span>
 					</li>
 				</ul>
 			</section>
@@ -80,21 +80,16 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_crypto_pkcs_.privatekeyinfo.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_crypto_pkcs_.privatekeyinfo.html#algid" class="tsd-kind-icon">alg<wbr>Id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_crypto_pkcs_.privatekeyinfo.html#privatekey" class="tsd-kind-icon">private<wbr>Key</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_crypto_pkcs_.privatekeyinfo.html#version" class="tsd-kind-icon">version</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
-							<h3>Methods</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_crypto_pkcs_.privatekeyinfo.html#parse" class="tsd-kind-icon">parse</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html#consensustimestamp" class="tsd-kind-icon">consensus<wbr>Timestamp</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html#contentsize" class="tsd-kind-icon">content<wbr>Size</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html#runninghash" class="tsd-kind-icon">running<wbr>Hash</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html#sequencenumber" class="tsd-kind-icon">sequence<wbr>Number</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,22 +101,31 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Private<wbr>Key<wbr>Info<span class="tsd-signature-symbol">(</span>asn<span class="tsd-signature-symbol">: </span><a href="../modules/_crypto_der_.html#asntype" class="tsd-signature-type">AsnType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_crypto_pkcs_.privatekeyinfo.html" class="tsd-signature-type">PrivateKeyInfo</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Consensus<wbr>Message<wbr>Chunk<span class="tsd-signature-symbol">(</span>consensusTimestamp<span class="tsd-signature-symbol">: </span><a href="_time_.time.html" class="tsd-signature-type">Time</a>, runningHash<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span>, sequenceNumber<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, contentSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html" class="tsd-signature-type">ConsensusMessageChunk</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/crypto/pkcs.ts#L72">src/crypto/pkcs.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/mirror/MirrorConsensusTopicResponse.ts#L10">src/mirror/MirrorConsensusTopicResponse.ts:10</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>asn: <a href="../modules/_crypto_der_.html#asntype" class="tsd-signature-type">AsnType</a></h5>
+									<h5>consensusTimestamp: <a href="_time_.time.html" class="tsd-signature-type">Time</a></h5>
+								</li>
+								<li>
+									<h5>runningHash: <span class="tsd-signature-type">Uint8Array</span></h5>
+								</li>
+								<li>
+									<h5>sequenceNumber: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>contentSize: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_crypto_pkcs_.privatekeyinfo.html" class="tsd-signature-type">PrivateKeyInfo</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html" class="tsd-signature-type">ConsensusMessageChunk</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -129,60 +133,44 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="algid" class="tsd-anchor"></a>
-					<h3>alg<wbr>Id</h3>
-					<div class="tsd-signature tsd-kind-icon">alg<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="_crypto_pkcs_.algorithmidentifier.html" class="tsd-signature-type">AlgorithmIdentifier</a></div>
+					<a name="consensustimestamp" class="tsd-anchor"></a>
+					<h3>consensus<wbr>Timestamp</h3>
+					<div class="tsd-signature tsd-kind-icon">consensus<wbr>Timestamp<span class="tsd-signature-symbol">:</span> <a href="_time_.time.html" class="tsd-signature-type">Time</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/crypto/pkcs.ts#L71">src/crypto/pkcs.ts:71</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/mirror/MirrorConsensusTopicResponse.ts#L7">src/mirror/MirrorConsensusTopicResponse.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="privatekey" class="tsd-anchor"></a>
-					<h3>private<wbr>Key</h3>
-					<div class="tsd-signature tsd-kind-icon">private<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
+					<a name="contentsize" class="tsd-anchor"></a>
+					<h3>content<wbr>Size</h3>
+					<div class="tsd-signature tsd-kind-icon">content<wbr>Size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/crypto/pkcs.ts#L72">src/crypto/pkcs.ts:72</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/mirror/MirrorConsensusTopicResponse.ts#L10">src/mirror/MirrorConsensusTopicResponse.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="version" class="tsd-anchor"></a>
-					<h3>version</h3>
-					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">0</span></div>
+					<a name="runninghash" class="tsd-anchor"></a>
+					<h3>running<wbr>Hash</h3>
+					<div class="tsd-signature tsd-kind-icon">running<wbr>Hash<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/crypto/pkcs.ts#L70">src/crypto/pkcs.ts:70</a></li>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/mirror/MirrorConsensusTopicResponse.ts#L8">src/mirror/MirrorConsensusTopicResponse.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="parse" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> parse</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">parse<span class="tsd-signature-symbol">(</span>encoded<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_crypto_pkcs_.privatekeyinfo.html" class="tsd-signature-type">PrivateKeyInfo</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/crypto/pkcs.ts#L96">src/crypto/pkcs.ts:96</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>encoded: <span class="tsd-signature-type">Uint8Array</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_crypto_pkcs_.privatekeyinfo.html" class="tsd-signature-type">PrivateKeyInfo</a></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="sequencenumber" class="tsd-anchor"></a>
+					<h3>sequence<wbr>Number</h3>
+					<div class="tsd-signature tsd-kind-icon">sequence<wbr>Number<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/mirror/MirrorConsensusTopicResponse.ts#L9">src/mirror/MirrorConsensusTopicResponse.ts:9</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -193,42 +181,39 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_crypto_pkcs_.html">&quot;crypto/pkcs&quot;</a>
+						<a href="../modules/_mirror_mirrorconsensustopicresponse_.html">&quot;mirror/<wbr>Mirror<wbr>Consensus<wbr>Topic<wbr>Response&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="_crypto_pkcs_.algorithmidentifier.html" class="tsd-kind-icon">Algorithm<wbr>Identifier</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="_crypto_pkcs_.encryptedprivatekeyinfo.html" class="tsd-kind-icon">Encrypted<wbr>Private<wbr>Key<wbr>Info</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_crypto_pkcs_.privatekeyinfo.html" class="tsd-kind-icon">Private<wbr>Key<wbr>Info</a>
+						<a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html" class="tsd-kind-icon">Consensus<wbr>Message<wbr>Chunk</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_crypto_pkcs_.privatekeyinfo.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_crypto_pkcs_.privatekeyinfo.html#algid" class="tsd-kind-icon">alg<wbr>Id</a>
+								<a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html#consensustimestamp" class="tsd-kind-icon">consensus<wbr>Timestamp</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_crypto_pkcs_.privatekeyinfo.html#privatekey" class="tsd-kind-icon">private<wbr>Key</a>
+								<a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html#contentsize" class="tsd-kind-icon">content<wbr>Size</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="_crypto_pkcs_.privatekeyinfo.html#version" class="tsd-kind-icon">version</a>
+								<a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html#runninghash" class="tsd-kind-icon">running<wbr>Hash</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="_crypto_pkcs_.privatekeyinfo.html#parse" class="tsd-kind-icon">parse</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_mirror_mirrorconsensustopicresponse_.consensusmessagechunk.html#sequencenumber" class="tsd-kind-icon">sequence<wbr>Number</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="_mirror_mirrorconsensustopicresponse_.mirrorconsensustopicresponse.html" class="tsd-kind-icon">Mirror<wbr>Consensus<wbr>Topic<wbr>Response</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -255,9 +240,6 @@
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
 			</ul>
 		</div>
 	</div>

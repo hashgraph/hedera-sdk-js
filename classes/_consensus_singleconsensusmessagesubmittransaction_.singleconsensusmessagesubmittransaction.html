@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>FileDeleteTransaction | @hashgraph/sdk</title>
+	<title>SingleConsensusMessageSubmitTransaction | @hashgraph/sdk</title>
 	<meta name="description" content="Documentation for @hashgraph/sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,30 +52,19 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_file_filedeletetransaction_.html">&quot;file/FileDeleteTransaction&quot;</a>
+					<a href="../modules/_consensus_singleconsensusmessagesubmittransaction_.html">&quot;consensus/SingleConsensusMessageSubmitTransaction&quot;</a>
 				</li>
 				<li>
-					<a href="_file_filedeletetransaction_.filedeletetransaction.html">FileDeleteTransaction</a>
+					<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html">SingleConsensusMessageSubmitTransaction</a>
 				</li>
 			</ul>
-			<h1>Class FileDeleteTransaction</h1>
+			<h1>Class SingleConsensusMessageSubmitTransaction</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Delete the given file. After deletion, it will be marked as deleted and will have no contents.
-							But information about it will continue to exist until it expires. A list of keys  was given
-							when the file was created. All the keys on that list must sign transactions to create or modify
-							the file, but any single one of them can be used to delete the file. Each &quot;key&quot; on that list
-						may itself be a threshold key containing other keys (including other threshold keys).</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -83,7 +72,7 @@
 						<a href="_transactionbuilder_.singletransactionbuilder.html" class="tsd-signature-type">SingleTransactionBuilder</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">FileDeleteTransaction</span>
+								<span class="target">SingleConsensusMessageSubmitTransaction</span>
 							</li>
 						</ul>
 					</li>
@@ -96,23 +85,25 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_file_filedeletetransaction_.filedeletetransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#build" class="tsd-kind-icon">build</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#execute" class="tsd-kind-icon">execute</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_file_filedeletetransaction_.filedeletetransaction.html#setfileid" class="tsd-kind-icon">set<wbr>File<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#validate" class="tsd-kind-icon">validate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#build" class="tsd-kind-icon">build</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#execute" class="tsd-kind-icon">execute</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#setchunkinfo" class="tsd-kind-icon">set<wbr>Chunk<wbr>Info</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#setmessage" class="tsd-kind-icon">set<wbr>Message</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#settopicid" class="tsd-kind-icon">set<wbr>Topic<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#validate" class="tsd-kind-icon">validate</a></li>
 							</ul>
 						</section>
 					</div>
@@ -124,17 +115,17 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>File<wbr>Delete<wbr>Transaction<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_file_filedeletetransaction_.filedeletetransaction.html" class="tsd-signature-type">FileDeleteTransaction</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Single<wbr>Consensus<wbr>Message<wbr>Submit<wbr>Transaction<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html" class="tsd-signature-type">SingleConsensusMessageSubmitTransaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides TransactionBuilder.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/file/FileDeleteTransaction.ts#L18">src/file/FileDeleteTransaction.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/consensus/SingleConsensusMessageSubmitTransaction.ts#L14">src/consensus/SingleConsensusMessageSubmitTransaction.ts:14</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_file_filedeletetransaction_.filedeletetransaction.html" class="tsd-signature-type">FileDeleteTransaction</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html" class="tsd-signature-type">SingleConsensusMessageSubmitTransaction</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -216,27 +207,22 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="setfileid" class="tsd-anchor"></a>
-					<h3>set<wbr>File<wbr>Id</h3>
+					<a name="setchunkinfo" class="tsd-anchor"></a>
+					<h3>set<wbr>Chunk<wbr>Info</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>File<wbr>Id<span class="tsd-signature-symbol">(</span>fileIdLike<span class="tsd-signature-symbol">: </span><a href="../modules/_file_fileid_.html#fileidlike" class="tsd-signature-type">FileIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Chunk<wbr>Info<span class="tsd-signature-symbol">(</span>info<span class="tsd-signature-symbol">: </span><a href="../interfaces/_consensus_consensusmessagesubmittransaction_.chunkinfo.html" class="tsd-signature-type">ChunkInfo</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/file/FileDeleteTransaction.ts#L29">src/file/FileDeleteTransaction.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/consensus/SingleConsensusMessageSubmitTransaction.ts#L37">src/consensus/SingleConsensusMessageSubmitTransaction.ts:37</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>The file to delete. It will be marked as deleted until it expires. Then it will disappear.</p>
-								</div>
-							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>fileIdLike: <a href="../modules/_file_fileid_.html#fileidlike" class="tsd-signature-type">FileIdLike</a></h5>
+									<h5>info: <a href="../interfaces/_consensus_consensusmessagesubmittransaction_.chunkinfo.html" class="tsd-signature-type">ChunkInfo</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -291,6 +277,29 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setmessage" class="tsd-anchor"></a>
+					<h3>set<wbr>Message</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Message<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/consensus/SingleConsensusMessageSubmitTransaction.ts#L28">src/consensus/SingleConsensusMessageSubmitTransaction.ts:28</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>message: <span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="setnodeaccountid" class="tsd-anchor"></a>
 					<h3>set<wbr>Node<wbr>Account<wbr>Id</h3>
@@ -309,6 +318,29 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>nodeAccountId: <a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="settopicid" class="tsd-anchor"></a>
+					<h3>set<wbr>Topic<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Topic<wbr>Id<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><a href="../modules/_consensus_consensustopicid_.html#consensustopicidlike" class="tsd-signature-type">ConsensusTopicIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/consensus/SingleConsensusMessageSubmitTransaction.ts#L23">src/consensus/SingleConsensusMessageSubmitTransaction.ts:23</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <a href="../modules/_consensus_consensustopicid_.html#consensustopicidlike" class="tsd-signature-type">ConsensusTopicIdLike</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -414,7 +446,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_file_filedeletetransaction_.html">&quot;file/<wbr>File<wbr>Delete<wbr>Transaction&quot;</a>
+						<a href="../modules/_consensus_singleconsensusmessagesubmittransaction_.html">&quot;consensus/<wbr>Single<wbr>Consensus<wbr>Message<wbr>Submit<wbr>Transaction&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -423,43 +455,49 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_file_filedeletetransaction_.filedeletetransaction.html" class="tsd-kind-icon">File<wbr>Delete<wbr>Transaction</a>
+						<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html" class="tsd-kind-icon">Single<wbr>Consensus<wbr>Message<wbr>Submit<wbr>Transaction</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#build" class="tsd-kind-icon">build</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#build" class="tsd-kind-icon">build</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#execute" class="tsd-kind-icon">execute</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#execute" class="tsd-kind-icon">execute</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#setfileid" class="tsd-kind-icon">set<wbr>File<wbr>Id</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#setchunkinfo" class="tsd-kind-icon">set<wbr>Chunk<wbr>Info</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#setmessage" class="tsd-kind-icon">set<wbr>Message</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#settopicid" class="tsd-kind-icon">set<wbr>Topic<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#validate" class="tsd-kind-icon">validate</a>
+								<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html#validate" class="tsd-kind-icon">validate</a>
 							</li>
 						</ul>
 					</li>

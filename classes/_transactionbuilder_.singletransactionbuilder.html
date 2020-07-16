@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>FileDeleteTransaction | @hashgraph/sdk</title>
+	<title>SingleTransactionBuilder | @hashgraph/sdk</title>
 	<meta name="description" content="Documentation for @hashgraph/sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,38 +52,89 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_file_filedeletetransaction_.html">&quot;file/FileDeleteTransaction&quot;</a>
+					<a href="../modules/_transactionbuilder_.html">&quot;TransactionBuilder&quot;</a>
 				</li>
 				<li>
-					<a href="_file_filedeletetransaction_.filedeletetransaction.html">FileDeleteTransaction</a>
+					<a href="_transactionbuilder_.singletransactionbuilder.html">SingleTransactionBuilder</a>
 				</li>
 			</ul>
-			<h1>Class FileDeleteTransaction</h1>
+			<h1>Class SingleTransactionBuilder</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Delete the given file. After deletion, it will be marked as deleted and will have no contents.
-							But information about it will continue to exist until it expires. A list of keys  was given
-							when the file was created. All the keys on that list must sign transactions to create or modify
-							the file, but any single one of them can be used to delete the file. Each &quot;key&quot; on that list
-						may itself be a threshold key containing other keys (including other threshold keys).</p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_transactionbuilder_.singletransactionbuilder.html" class="tsd-signature-type">SingleTransactionBuilder</a>
+						<a href="_transactionbuilder_.transactionbuilder.html" class="tsd-signature-type">TransactionBuilder</a><span class="tsd-signature-symbol">&lt;</span><a href="_transaction_.transaction.html" class="tsd-signature-type">Transaction</a><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">FileDeleteTransaction</span>
+								<span class="target">SingleTransactionBuilder</span>
+								<ul class="tsd-hierarchy">
+									<li>
+										<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html" class="tsd-signature-type">CryptoTransferTransaction</a>
+									</li>
+									<li>
+										<a href="_freezetransaction_.freezetransaction.html" class="tsd-signature-type">FreezeTransaction</a>
+									</li>
+									<li>
+										<a href="_systemdeletetransaction_.systemdeletetransaction.html" class="tsd-signature-type">SystemDeleteTransaction</a>
+									</li>
+									<li>
+										<a href="_systemundeletetransaction_.systemundeletetransaction.html" class="tsd-signature-type">SystemUndeleteTransaction</a>
+									</li>
+									<li>
+										<a href="_account_accountcreatetransaction_.accountcreatetransaction.html" class="tsd-signature-type">AccountCreateTransaction</a>
+									</li>
+									<li>
+										<a href="_account_accountdeletetransaction_.accountdeletetransaction.html" class="tsd-signature-type">AccountDeleteTransaction</a>
+									</li>
+									<li>
+										<a href="_account_accountupdatetransaction_.accountupdatetransaction.html" class="tsd-signature-type">AccountUpdateTransaction</a>
+									</li>
+									<li>
+										<a href="_consensus_singleconsensusmessagesubmittransaction_.singleconsensusmessagesubmittransaction.html" class="tsd-signature-type">SingleConsensusMessageSubmitTransaction</a>
+									</li>
+									<li>
+										<a href="_consensus_consensussubmitmessagetransaction_.consensussubmitmessagetransaction.html" class="tsd-signature-type">ConsensusSubmitMessageTransaction</a>
+									</li>
+									<li>
+										<a href="_consensus_consensustopiccreatetransaction_.consensustopiccreatetransaction.html" class="tsd-signature-type">ConsensusTopicCreateTransaction</a>
+									</li>
+									<li>
+										<a href="_consensus_consensustopicdeletetransaction_.consensustopicdeletetransaction.html" class="tsd-signature-type">ConsensusTopicDeleteTransaction</a>
+									</li>
+									<li>
+										<a href="_consensus_consensustopicupdatetransaction_.consensustopicupdatetransaction.html" class="tsd-signature-type">ConsensusTopicUpdateTransaction</a>
+									</li>
+									<li>
+										<a href="_contract_contractcreatetransaction_.contractcreatetransaction.html" class="tsd-signature-type">ContractCreateTransaction</a>
+									</li>
+									<li>
+										<a href="_contract_contractdeletetransaction_.contractdeletetransaction.html" class="tsd-signature-type">ContractDeleteTransaction</a>
+									</li>
+									<li>
+										<a href="_contract_contractexecutetransaction_.contractexecutetransaction.html" class="tsd-signature-type">ContractExecuteTransaction</a>
+									</li>
+									<li>
+										<a href="_contract_contractupdatetransaction_.contractupdatetransaction.html" class="tsd-signature-type">ContractUpdateTransaction</a>
+									</li>
+									<li>
+										<a href="_file_filecreatetransaction_.filecreatetransaction.html" class="tsd-signature-type">FileCreateTransaction</a>
+									</li>
+									<li>
+										<a href="_file_filedeletetransaction_.filedeletetransaction.html" class="tsd-signature-type">FileDeleteTransaction</a>
+									</li>
+									<li>
+										<a href="_file_fileupdatetransaction_.fileupdatetransaction.html" class="tsd-signature-type">FileUpdateTransaction</a>
+									</li>
+									<li>
+										<a href="_file_fileappendtransaction_.fileappendtransaction.html" class="tsd-signature-type">FileAppendTransaction</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</li>
@@ -94,63 +145,34 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_file_filedeletetransaction_.filedeletetransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#build" class="tsd-kind-icon">build</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#execute" class="tsd-kind-icon">execute</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_file_filedeletetransaction_.filedeletetransaction.html#setfileid" class="tsd-kind-icon">set<wbr>File<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_file_filedeletetransaction_.filedeletetransaction.html#validate" class="tsd-kind-icon">validate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_transactionbuilder_.singletransactionbuilder.html#build" class="tsd-kind-icon">build</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_transactionbuilder_.singletransactionbuilder.html#execute" class="tsd-kind-icon">execute</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_transactionbuilder_.singletransactionbuilder.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_transactionbuilder_.singletransactionbuilder.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_transactionbuilder_.singletransactionbuilder.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_transactionbuilder_.singletransactionbuilder.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_transactionbuilder_.singletransactionbuilder.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_transactionbuilder_.singletransactionbuilder.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_transactionbuilder_.singletransactionbuilder.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_transactionbuilder_.singletransactionbuilder.html#validate" class="tsd-kind-icon">validate</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>File<wbr>Delete<wbr>Transaction<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_file_filedeletetransaction_.filedeletetransaction.html" class="tsd-signature-type">FileDeleteTransaction</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Overrides TransactionBuilder.__constructor</p>
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/file/FileDeleteTransaction.ts#L18">src/file/FileDeleteTransaction.ts:18</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_file_filedeletetransaction_.filedeletetransaction.html" class="tsd-signature-type">FileDeleteTransaction</a></h4>
-						</li>
-					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 					<a name="build" class="tsd-anchor"></a>
 					<h3>build</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 						<li class="tsd-signature tsd-kind-icon">build<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">?: </span><a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="_transactionbuilder_.singletransactionbuilder.html">SingleTransactionBuilder</a>.<a href="_transactionbuilder_.singletransactionbuilder.html#build">build</a></p>
 								<p>Overrides <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#build">build</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/TransactionBuilder.ts#L139">src/TransactionBuilder.ts:139</a></li>
@@ -166,16 +188,15 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="execute" class="tsd-anchor"></a>
 					<h3>execute</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">execute<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_transactionid_.transactionid.html" class="tsd-signature-type">TransactionId</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="_transactionbuilder_.singletransactionbuilder.html">SingleTransactionBuilder</a>.<a href="_transactionbuilder_.singletransactionbuilder.html#execute">execute</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/TransactionBuilder.ts#L177">src/TransactionBuilder.ts:177</a></li>
 								</ul>
@@ -190,16 +211,15 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 					<a name="getcost" class="tsd-anchor"></a>
 					<h3>get<wbr>Cost</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 						<li class="tsd-signature tsd-kind-icon">get<wbr>Cost<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="_transactionbuilder_.singletransactionbuilder.html">SingleTransactionBuilder</a>.<a href="_transactionbuilder_.singletransactionbuilder.html#getcost">getCost</a></p>
 								<p>Overrides <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#getcost">getCost</a></p>
 								<ul>
 									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/TransactionBuilder.ts#L96">src/TransactionBuilder.ts:96</a></li>
@@ -212,34 +232,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="setfileid" class="tsd-anchor"></a>
-					<h3>set<wbr>File<wbr>Id</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>File<wbr>Id<span class="tsd-signature-symbol">(</span>fileIdLike<span class="tsd-signature-symbol">: </span><a href="../modules/_file_fileid_.html#fileidlike" class="tsd-signature-type">FileIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f3473e71/src/file/FileDeleteTransaction.ts#L29">src/file/FileDeleteTransaction.ts:29</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>The file to delete. It will be marked as deleted until it expires. Then it will disappear.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>fileIdLike: <a href="../modules/_file_fileid_.html#fileidlike" class="tsd-signature-type">FileIdLike</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -414,7 +406,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_file_filedeletetransaction_.html">&quot;file/<wbr>File<wbr>Delete<wbr>Transaction&quot;</a>
+						<a href="../modules/_transactionbuilder_.html">&quot;<wbr>Transaction<wbr>Builder&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -423,48 +415,45 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_file_filedeletetransaction_.filedeletetransaction.html" class="tsd-kind-icon">File<wbr>Delete<wbr>Transaction</a>
+						<a href="_transactionbuilder_.singletransactionbuilder.html" class="tsd-kind-icon">Single<wbr>Transaction<wbr>Builder</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#build" class="tsd-kind-icon">build</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#execute" class="tsd-kind-icon">execute</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="_transactionbuilder_.singletransactionbuilder.html#build" class="tsd-kind-icon">build</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#setfileid" class="tsd-kind-icon">set<wbr>File<wbr>Id</a>
+								<a href="_transactionbuilder_.singletransactionbuilder.html#execute" class="tsd-kind-icon">execute</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="_transactionbuilder_.singletransactionbuilder.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a>
+								<a href="_transactionbuilder_.singletransactionbuilder.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a>
+								<a href="_transactionbuilder_.singletransactionbuilder.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
+								<a href="_transactionbuilder_.singletransactionbuilder.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>
+								<a href="_transactionbuilder_.singletransactionbuilder.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a>
+								<a href="_transactionbuilder_.singletransactionbuilder.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a>
+								<a href="_transactionbuilder_.singletransactionbuilder.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_file_filedeletetransaction_.filedeletetransaction.html#validate" class="tsd-kind-icon">validate</a>
+								<a href="_transactionbuilder_.singletransactionbuilder.html#validate" class="tsd-kind-icon">validate</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="_transactionbuilder_.transactionbuilder.html" class="tsd-kind-icon">Transaction<wbr>Builder</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -483,7 +472,6 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
