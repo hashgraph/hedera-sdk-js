@@ -31,11 +31,11 @@ describe("AccountUpdateTransaction", () => {
         expect(info.sequenceNumber).toBe(0);
         expect(info.adminKey!.toString()).toBe(client._getOperatorKey()!.toString());
 
-        transactionId = await new ConsensusMessageSubmitTransaction()
+        transactionId = (await new ConsensusMessageSubmitTransaction()
             .setTopicId(topic)
             .setMessage("[e2e::ConsensusMessageSubmitTransaction]")
             .setMaxTransactionFee(new Hbar(1))
-            .execute(client);
+            .execute(client))[0];
 
         await transactionId.getReceipt(client);
 
