@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "../TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -12,7 +12,7 @@ import { AccountId, AccountIdLike } from "./AccountId";
  * the ledger, marked as deleted, until it expires. Transfers into it a deleted account fail. But
  * a deleted account can still have its expiration extended in the normal way.
  */
-export class AccountDeleteTransaction extends TransactionBuilder {
+export class AccountDeleteTransaction extends SingleTransactionBuilder {
     private _body: CryptoDeleteTransactionBody;
 
     public constructor() {

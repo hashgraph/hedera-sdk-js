@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "./TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "./TransactionBuilder";
 import { SystemDeleteTransactionBody } from "./generated/SystemDelete_pb";
 import { dateToTimestamp, timestampToProto } from "./Timestamp";
 import { FileId, FileIdLike } from "./file/FileId";
@@ -17,7 +17,7 @@ import { normalizeEntityId } from "./util";
  * deleted, the cryptocurrency account within it continues to exist, and is not affected
  * by the expiration time here.
  */
-export class SystemDeleteTransaction extends TransactionBuilder {
+export class SystemDeleteTransaction extends SingleTransactionBuilder {
     private readonly _body: SystemDeleteTransactionBody;
 
     public constructor() {

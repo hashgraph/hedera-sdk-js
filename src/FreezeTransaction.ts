@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "./TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "./TransactionBuilder";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Transaction } from "./generated/Transaction_pb";
 import { TransactionResponse } from "./generated/TransactionResponse_pb";
@@ -9,7 +9,7 @@ import { FreezeService } from "./generated/FreezeService_pb_service";
  * Set the freezing period in which the platform will stop creating events and accepting
  * transactions. This is used before safely shut down the platform for maintenance.
  */
-export class FreezeTransaction extends TransactionBuilder {
+export class FreezeTransaction extends SingleTransactionBuilder {
     private readonly _body: FreezeTransactionBody;
 
     public constructor() {

@@ -22,11 +22,11 @@ import BigNumber from "bignumber.js";
  */
 const maxValidDuration = 120;
 
-export abstract class TransactionBuilder {
+export abstract class TransactionBuilder<O = Transaction> {
     protected readonly _inner: TransactionBody;
-    private _shouldSetFee = true;
+    protected _shouldSetFee = true;
 
-    private _node?: AccountId;
+    protected _node?: AccountId;
 
     protected constructor() {
         this._inner = new TransactionBody();
@@ -47,9 +47,9 @@ export abstract class TransactionBuilder {
     public setMaxTransactionFee(fee: Tinybar | Hbar): this {
         const hbar = hbarFromTinybarOrHbar(fee);
         // const hbar = typeof fee === "number" ? Hbar.fromTinybar(fee) : fee as Hbar;
-        hbar[ hbarCheck ]({ allowNegative: false });
+        hbar[hbarCheck]({ allowNegative: false });
 
-        this._inner.setTransactionfee(hbar[ hbarToProto ]());
+        this._inner.setTransactionfee(hbar[hbarToProto]());
         return this;
     }
 
@@ -98,7 +98,7 @@ export abstract class TransactionBuilder {
 
             const tx = this.build(client);
 
-            const response = await tx[ transactionCall ](client);
+            const response = await tx[transactionCall](client);
             const status: Status = Status._fromCode(response.getNodetransactionprecheckcode());
 
             if (status === Status.InsufficientTxFee) {
@@ -131,10 +131,14 @@ export abstract class TransactionBuilder {
         return new Hbar(0);
     }
 
+    public abstract build(client?: BaseClient): O;
+}
+
+export class SingleTransactionBuilder extends TransactionBuilder<Transaction> {
     public build(client?: BaseClient): Transaction {
         if (client && this._shouldSetFee && this._inner.getTransactionfee() === "0") {
             // Don't override TransactionFee if it's already set
-            this._inner.setTransactionfee(client._maxTransactionFee[ hbarToProto ]());
+            this._inner.setTransactionfee(client._maxTransactionFee[hbarToProto]());
         }
 
         if (client && !this._inner.hasTransactionid()) {
@@ -166,10 +170,18 @@ export abstract class TransactionBuilder {
         const protoTx = new Transaction_();
         protoTx.setBodybytes(this._inner.serializeBinary());
 
-        return Transaction[ transactionCreate ](this._node, protoTx, this._inner, this._method);
+        return Transaction[transactionCreate](this._node, protoTx, this._inner, this._method);
     }
 
     public execute(client: BaseClient): Promise<TransactionId> {
         return this.build(client).execute(client);
+    }
+
+    protected get _method(): grpc.UnaryMethodDefinition<Transaction_, TransactionResponse> {
+        throw new Error("Method not implemented.");
+    }
+
+    protected _doValidate(errors: string[]): void {
+        throw new Error("Method not implemented.");
     }
 }

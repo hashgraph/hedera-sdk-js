@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "../TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -46,7 +46,7 @@ import * as utf8 from "@stablelib/utf8";
  * shard 0 and realm 0, with a null key. Future versions of the API will support multiple
  * realms and multiple shards.
  */
-export class FileCreateTransaction extends TransactionBuilder {
+export class FileCreateTransaction extends SingleTransactionBuilder {
     private readonly _body: FileCreateTransactionBody;
 
     public constructor() {

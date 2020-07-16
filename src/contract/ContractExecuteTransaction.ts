@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "../TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -17,7 +17,7 @@ import BigNumber from "bignumber.js";
  * maintain that storage until the expiration time, and that fee is added as part of the
  * transaction fee.
  */
-export class ContractExecuteTransaction extends TransactionBuilder {
+export class ContractExecuteTransaction extends SingleTransactionBuilder {
     private readonly _body: ContractCallTransactionBody;
 
     public constructor() {

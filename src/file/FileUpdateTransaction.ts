@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "../TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -21,7 +21,7 @@ import * as utf8 from "@stablelib/utf8";
  * If a file was created without ANY keys in the keys field, ONLY the expirationTime of the file
  * can be changed using this call. The file contents or its keys cannot be changed.
  */
-export class FileUpdateTransaction extends TransactionBuilder {
+export class FileUpdateTransaction extends SingleTransactionBuilder {
     private readonly _body: FileUpdateTransactionBody;
 
     public constructor() {

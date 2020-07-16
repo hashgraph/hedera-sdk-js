@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "../TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -25,7 +25,7 @@ import { AccountId, AccountIdLike } from "./AccountId";
  * receiverSigRequired == true. The signatures are in the same order as the accounts, skipping those
  * accounts that don't need a signature.
  */
-export class CryptoTransferTransaction extends TransactionBuilder {
+export class CryptoTransferTransaction extends SingleTransactionBuilder {
     private readonly _body: CryptoTransferTransactionBody;
 
     public constructor() {

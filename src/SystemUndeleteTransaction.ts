@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "./TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "./TransactionBuilder";
 import { FileId, FileIdLike } from "./file/FileId";
 import { ContractId, ContractIdLike } from "./contract/ContractId";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -16,7 +16,7 @@ import { normalizeEntityId } from "./util";
  * multisig. When a smart contract is deleted, the cryptocurrency account within it continues to
  * exist, and is not affected by the expiration time here.
  */
-export class SystemUndeleteTransaction extends TransactionBuilder {
+export class SystemUndeleteTransaction extends SingleTransactionBuilder {
     private readonly _body: SystemUndeleteTransactionBody;
 
     public constructor() {

@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "../TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -13,7 +13,7 @@ import * as utf8 from "@stablelib/utf8";
  * `FileCreateTransaction``, then it can be created with the first part of its contents, and then
  * appended multiple times to create the entire file.
  */
-export class FileAppendTransaction extends TransactionBuilder {
+export class FileAppendTransaction extends SingleTransactionBuilder {
     private readonly _body: FileAppendTransactionBody;
 
     public constructor() {

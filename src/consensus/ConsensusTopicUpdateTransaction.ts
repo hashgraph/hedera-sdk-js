@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "../TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -12,7 +12,7 @@ import { AccountId, AccountIdLike } from "../account/AccountId";
 import { ConsensusTopicId, ConsensusTopicIdLike } from "./ConsensusTopicId";
 import { StringValue } from "google-protobuf/google/protobuf/wrappers_pb";
 
-export class ConsensusTopicUpdateTransaction extends TransactionBuilder {
+export class ConsensusTopicUpdateTransaction extends SingleTransactionBuilder {
     private _body: ConsensusUpdateTopicTransactionBody;
 
     public constructor() {

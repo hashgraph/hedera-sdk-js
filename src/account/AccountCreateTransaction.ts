@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "../TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -43,7 +43,7 @@ import { AccountId, AccountIdLike } from "./AccountId";
  * shard 0 and realm 0, with a null key. Future versions of the API will support multiple
  * realms and multiple shards.
  */
-export class AccountCreateTransaction extends TransactionBuilder {
+export class AccountCreateTransaction extends SingleTransactionBuilder {
     private _body: CryptoCreateTransactionBody;
 
     public constructor() {

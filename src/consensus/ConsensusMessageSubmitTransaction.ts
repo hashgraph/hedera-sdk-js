@@ -10,6 +10,9 @@ import * as utf8 from "@stablelib/utf8";
 import { TransactionId } from "../TransactionId";
 import { BaseClient } from "../BaseClient";
 import { Transaction } from "../Transaction";
+import { TopicID } from "../generated/BasicTypes_pb";
+import { TransactionBody } from "../generated/TransactionBody_pb";
+import { hbarToProto } from "../Hbar";
 
 export interface ChunkInfo {
     // TransactionID of the first chunk, gets copied to every subsequent chunk in a fragmented message.
@@ -22,28 +25,116 @@ export interface ChunkInfo {
     total: number;
 }
 
-export class ConsensusMessageSubmitTransaction extends TransactionBuilder {
-    private _body: ConsensusSubmitMessageTransactionBody;
+export class ConsensusMessageSubmitTransaction extends TransactionBuilder<Transaction[]> {
+    private static readonly chunkSize = 4096;
+    private maxChunks = 10;
+    private topicId: ConsensusTopicId | null = null;
+    private message: Uint8Array | null = null;
 
     public constructor() {
         super();
-        const body = new ConsensusSubmitMessageTransactionBody();
-        this._body = body;
-        this._inner.setConsensussubmitmessage(body);
+        // const body = new ConsensusSubmitMessageTransactionBody();
+        // this._body = body;
+        // this._inner.setConsensussubmitmessage(body);
     }
 
     public setTopicId(id: ConsensusTopicIdLike): this {
-        this._body.setTopicid(new ConsensusTopicId(id)._toProto());
+        // this._body.setTopicid(new ConsensusTopicId(id)._toProto());
+        this.topicId = new ConsensusTopicId(id);
         return this;
     }
 
     public setMessage(message: Uint8Array | string): this {
+        let bytes: Uint8Array;
         if (message instanceof Uint8Array) {
-            this._body.setMessage(message as Uint8Array);
+            // this._body.setMessage(message as Uint8Array);
+            bytes = message;
         } else {
-            this._body.setMessage(utf8.encode(message as string));
+            bytes = utf8.encode(message);
+            // this._body.setMessage(utf8.encode(message as string));
         }
+
+        if (bytes.length / ConsensusMessageSubmitTransaction.chunkSize > this.maxChunks) {
+            throw new Error(`Message with size ${bytes.length} too long for ${this.maxChunks} chunks`);
+        }
+
+        this.message = bytes;
+
         return this;
+    }
+
+    public build(client: BaseClient): Transaction[] {
+        const chunks = [];
+
+        // split message into one or more "chunks"
+        for (let i = 0; i < this.message!.length; i += ConsensusMessageSubmitTransaction.chunkSize) {
+            chunks.push(this.message!.slice(i, i + ConsensusMessageSubmitTransaction.chunkSize));
+        }
+
+        const initialTransactionId = new TransactionId(client._getOperatorAccountId()!);
+        const transactionBuilders: TransactionBody[] = [];
+        chunks.forEach((chunk, index) => {
+            const chunkInfo = new ConsensusMessageChunkInfo();
+            chunkInfo.setInitialtransactionid(initialTransactionId._toProto());
+            chunkInfo.setNumber(index + 1);
+            chunkInfo.setTotal(chunks.length);
+
+            const body = new ConsensusSubmitMessageTransactionBody();
+                body.setTopicid(this.topicId!._toProto());
+                body.setMessage(this.message!);
+                body.setChunkinfo(chunkInfo);
+
+            const inner = Object.assign(new TransactionBody(), this._inner);
+            inner.setConsensussubmitmessage(body);
+
+            ///
+            if (client && this._shouldSetFee && this._inner.getTransactionfee() === "0") {
+                // Don't override TransactionFee if it's already set
+                inner.setTransactionfee(client._maxTransactionFee[hbarToProto]());
+            }
+    
+            if (client && !this._inner.hasTransactionid()) {
+                if (client._getOperatorAccountId()) {
+                    const tx = new TransactionId(client._getOperatorAccountId()!);
+                    this._inner.setTransactionid(tx._toProto());
+                }
+            }
+    
+            if (!this._inner.hasTransactionvalidduration()) {
+                this.setTransactionValidDuration(maxValidDuration);
+            }
+    
+            // Set `this._node` accordingly if client is supplied otherwise error out
+            if (!this._node && !client) {
+                throw new Error("`setNodeAccountId` must be called if client is not supplied");
+            }
+    
+            if (!this._node) {
+                this._node = client!._randomNode().id;
+            }
+    
+            if (this._node && !this._inner.hasNodeaccountid()) {
+                this.setNodeAccountId(this._node);
+            }
+    
+            this.validate();
+    
+            const protoTx = new Transaction_();
+            protoTx.setBodybytes(this._inner.serializeBinary());
+    
+            return Transaction[transactionCreate](this._node, protoTx, this._inner, this._method);
+            ///
+
+            transactionBuilders.push(inner);
+        });
+
+        transactionBuilders[0].setTransactionid(initialTransactionId._toProto());
+
+        return transactionBuilders.map((t) => t.build(client));
+    }
+
+    public execute(client: BaseClient): Promise<TransactionId[]> {
+        this.build(client).map(async (tx) => await tx.execute(client));
     }
 
     public setChunkInfo(info: ChunkInfo): this {
@@ -52,57 +143,9 @@ export class ConsensusMessageSubmitTransaction extends TransactionBuilder {
         chunkInfo.setNumber(info.number);
         chunkInfo.setTotal(info.total);
 
-        this._body.setChunkinfo(chunkInfo);
+        // this._body.setChunkinfo(chunkInfo);
 
         return this;
-    }
-
-    public chunks(client: BaseClient): Transaction[] {
-        const chunkSize = 4096;
-
-        const bytes = this._body.getMessage() instanceof Uint8Array ?
-            this._body.getMessage_asU8() :
-            utf8.encode(this._body.getMessage_asB64());
-        const chunks = [];
-
-        // split message into one or more "chunks"
-        for (let i = 0; i < bytes.length; i += chunkSize) {
-            chunks.push(bytes.slice(i, i + chunkSize));
-        }
-
-        const initialTransactionId = new TransactionId(client._getOperatorAccountId()!);
-        const transactionBuilders: ConsensusMessageSubmitTransaction[] = [];
-        chunks.forEach((chunk, index) => {
-            const transaction = new ConsensusMessageSubmitTransaction()
-                .setTopicId(ConsensusTopicId._fromProto(this._body.getTopicid()!))
-                .setMessage(chunk)
-                .setChunkInfo({
-                    id: initialTransactionId,
-                    number: index + 1,
-                    total: chunks.length
-                });
-
-            if (this._inner.hasTransactionvalidduration()) {
-                transaction._inner.setTransactionvalidduration(this._inner.getTransactionvalidduration()!);
-            }
-
-            if (this._inner.getTransactionfee().length !== 0) {
-                // TODO: divide by number of chunks?
-                transaction._inner.setTransactionfee(this._inner.getTransactionfee());
-            }
-
-            if (this._inner.getGeneraterecord()) {
-                transaction.setGenerateRecord(true);
-            }
-
-            // TODO: the rest of the stuff
-
-            transactionBuilders.push(transaction);
-        });
-
-        transactionBuilders[ 0 ].setTransactionId(initialTransactionId);
-
-        return transactionBuilders.map((t) => t.build(client));
     }
 
     protected get _method(): UnaryMethodDefinition<ProtoTransaction, TransactionResponse> {

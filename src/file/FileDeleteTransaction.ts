@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "../TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -14,7 +14,7 @@ import { FileId, FileIdLike } from "../file/FileId";
  * the file, but any single one of them can be used to delete the file. Each "key" on that list
  * may itself be a threshold key containing other keys (including other threshold keys).
  */
-export class FileDeleteTransaction extends TransactionBuilder {
+export class FileDeleteTransaction extends SingleTransactionBuilder {
     private readonly _body: FileDeleteTransactionBody;
 
     public constructor() {

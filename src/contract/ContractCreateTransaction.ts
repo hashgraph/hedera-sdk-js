@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "../TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -67,7 +67,7 @@ import { ContractFunctionParams } from "./ContractFunctionParams";
  * changed using the admin keys. If there are no admin keys, then it cannot be changed
  * after the smart contract is created.
  */
-export class ContractCreateTransaction extends TransactionBuilder {
+export class ContractCreateTransaction extends SingleTransactionBuilder {
     private readonly _body: ContractCreateTransactionBody;
 
     public constructor() {

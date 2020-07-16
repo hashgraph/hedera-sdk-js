@@ -1,4 +1,4 @@
-import { TransactionBuilder } from "../TransactionBuilder";
+import { TransactionBuilder, SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
@@ -21,7 +21,7 @@ import { BoolValue } from "google-protobuf/google/protobuf/wrappers_pb";
  * having no way to recover. When extending the expiration date, the cost is affected by the
  * size of the list of attached claims, and of the keys associated with the claims and the account.
  */
-export class AccountUpdateTransaction extends TransactionBuilder {
+export class AccountUpdateTransaction extends SingleTransactionBuilder {
     private _body: CryptoUpdateTransactionBody;
 
     public constructor() {
