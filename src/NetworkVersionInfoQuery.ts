@@ -38,7 +38,9 @@ export class NetworkVersionInfoQuery extends QueryBuilder<NetworkVersionInfo> {
         this._inner.setNetworkgetversioninfo(this._builder);
     }
 
-    protected _doLocalValidate(): void {}
+    protected _doLocalValidate(): void {
+        // do nothing
+    }
 
     protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
         return NetworkService.getVersionInfo;

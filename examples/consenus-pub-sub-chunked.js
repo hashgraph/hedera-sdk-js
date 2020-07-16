@@ -31,7 +31,7 @@ async function main() {
     const topicId = transactionReceipt.getConsensusTopicId();
 
     console.log(`for topicId ${topicId}`);
-    console.log("waiting for propagation for 10s...")
+    console.log("waiting for propagation for 10s...");
 
     await sleep(10000);
 

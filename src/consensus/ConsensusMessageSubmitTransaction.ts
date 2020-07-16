@@ -10,7 +10,7 @@ import * as utf8 from "@stablelib/utf8";
 import { TransactionId } from "../TransactionId";
 import { BaseClient } from "../BaseClient";
 import { Transaction } from "../Transaction";
-import {Hbar} from "../Hbar";
+import { Hbar } from "../Hbar";
 
 export interface ChunkInfo {
     // TransactionID of the first chunk, gets copied to every subsequent chunk in a fragmented message.
@@ -53,7 +53,7 @@ export class ConsensusMessageSubmitTransaction extends TransactionBuilder<Transa
         this.chunkInfo = {
             id: initialId,
             total,
-            number: num,
+            number: num
         };
 
         return this;
@@ -64,25 +64,30 @@ export class ConsensusMessageSubmitTransaction extends TransactionBuilder<Transa
             throw new Error(`Message with size ${this.message!.length} too long for ${this._maxChunks} chunks`);
         }
 
-        const initialTransactionId = this._inner.getTransactionid() == null
-            ? new TransactionId(client._getOperatorAccountId()!)
-            : TransactionId._fromProto(this._inner.getTransactionid()!);
+        const initialTransactionId = this._inner.getTransactionid() == null ?
+            new TransactionId(client._getOperatorAccountId()!) :
+            TransactionId._fromProto(this._inner.getTransactionid()!);
 
         let time = initialTransactionId.validStart;
 
         if (this.chunkInfo != null) {
-            return [new SingleConsensusMessageSubmitTransaction()
-                .setTopicId(this.topicId!)
-                .setMessage(this.message!)
-                .setChunkInfo(this.chunkInfo!)
-                .build(client)
+            return [
+                new SingleConsensusMessageSubmitTransaction()
+                    .setTopicId(this.topicId!)
+                    .setMessage(this.message!)
+                    .setChunkInfo(this.chunkInfo!)
+                    .build(client)
             ];
         }
 
         const chunks = [];
 
         // split message into one or more "chunks"
-        for (let i = 0; i < this.message!.length; i += ConsensusMessageSubmitTransaction.chunkSize) {
+        for (
+            let i = 0;
+            i < this.message!.length;
+            i += ConsensusMessageSubmitTransaction.chunkSize
+        ) {
             chunks.push(this.message!.slice(i, i + ConsensusMessageSubmitTransaction.chunkSize));
         }
 
@@ -93,8 +98,9 @@ export class ConsensusMessageSubmitTransaction extends TransactionBuilder<Transa
                 .setChunkInfo({
                     id: initialTransactionId,
                     total: chunks.length,
-                    number: index + 1,
+                    number: index + 1
                 })
+                // eslint-disable-next-line max-len
                 .setTransactionId(TransactionId.withValidStart(initialTransactionId.accountId, time))
                 .build(client);
 
@@ -104,13 +110,15 @@ export class ConsensusMessageSubmitTransaction extends TransactionBuilder<Transa
         });
     }
 
+    // eslint-disable-next-line require-await
     public async getCost(_: BaseClient): Promise<Hbar> {
         throw new Error("Cannot get cost of a transaction list");
     }
 
+    // eslint-disable-next-line require-await
     public async execute(client: BaseClient): Promise<TransactionId[]> {
         const ids: TransactionId[] = [];
-        this.build(client).forEach(async (tx) => ids.push(await tx.execute(client)));
+        this.build(client).forEach(async(tx) => ids.push(await tx.execute(client)));
         return ids;
     }
 

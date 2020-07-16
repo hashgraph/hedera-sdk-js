@@ -15,7 +15,7 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
     ): MirrorSubscriptionHandle {
         this._validate();
 
-        const list: { [ id: string]: ConsensusTopicResponse[] | undefined } = {};
+        const list: { [ id: string]: ConsensusTopicResponse[] | null } = {};
 
         const response = client._client.makeServerStreamRequest(
             `/${ConsensusService.serviceName}/${ConsensusService.subscribeTopic.methodName}`,
@@ -29,16 +29,18 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                 if (message.getChunkinfo() == null) {
                     listener(new MirrorConsensusTopicResponse(message));
                 } else {
+                    // eslint-disable-next-line max-len
                     const txId = TransactionId._fromProto(message.getChunkinfo()!.getInitialtransactionid()!).toString();
-                    if (list[txId] === undefined) {
-                        list[txId] = [];
+
+                    if (list[ txId ] == null) {
+                        list[ txId ] = [];
                     }
 
-                    list[txId]!.push(message);
+                    list[ txId ]!.push(message);
 
-                    if (list[txId]!.length == message.getChunkinfo()!.getTotal()) {
-                        const m = list[txId]!;
-                        list[txId] = undefined;
+                    if (list[ txId ]!.length === message.getChunkinfo()!.getTotal()) {
+                        const m = list[ txId ]!;
+                        list[ txId ] = null;
                         listener(new MirrorConsensusTopicResponse(m));
                     }
                 }

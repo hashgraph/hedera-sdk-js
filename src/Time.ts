@@ -43,8 +43,7 @@ export class Time {
     public _increment(): Time {
         if (Math.floor(this.nanos + 1) === 1_000_000_000) {
             return new Time(this.seconds + 1, 0);
-        } else {
-            return new Time(this.seconds, this.nanos + 1);
         }
+        return new Time(this.seconds, this.nanos + 1);
     }
 }

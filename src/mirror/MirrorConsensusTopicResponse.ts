@@ -4,9 +4,9 @@ import * as utf8 from "@stablelib/utf8";
 
 export class ConsensusMessageChunk {
     public readonly consensusTimestamp: Time;
-	public readonly runningHash: Uint8Array;
-	public readonly sequenceNumber: number;
-	public readonly contentSize: number;
+    public readonly runningHash: Uint8Array;
+    public readonly sequenceNumber: number;
+    public readonly contentSize: number;
 
     public constructor(
         consensusTimestamp: Time,
@@ -52,23 +52,25 @@ export class MirrorConsensusTopicResponse {
             const message = maybeChunkedMessage as ConsensusTopicResponse[];
             const length = message.length;
 
-            this.consensusTimestamp = Time._fromProto(message[length - 1].getConsensustimestamp()!);
-            this.message = new Uint8Array();
-            this.runningHash = message[length - 1].getRunninghash_asU8();
-            this.sequenceNumber = message[length - 1].getSequencenumber();
+            this.consensusTimestamp =
+                Time._fromProto(message[ length - 1 ].getConsensustimestamp()!);
 
+            this.message = new Uint8Array();
+            this.runningHash = message[ length - 1 ].getRunninghash_asU8();
+            this.sequenceNumber = message[ length - 1 ].getSequencenumber();
+
+            // eslint-disable-next-line max-len
             message.sort((a, b) => a.getChunkinfo()!.getNumber() < b.getChunkinfo()!.getNumber() ? -1 : 1);
 
-            this.chunks = message.map((m) => {
-                return new ConsensusMessageChunk(
-                    Time._fromProto(m.getConsensustimestamp()!),
-                    m.getRunninghash_asU8(),
-                    m.getSequencenumber(),
-                    m.getMessage_asU8().length
-                );
-            });
+            this.chunks = message.map((m) => new ConsensusMessageChunk(
+                Time._fromProto(m.getConsensustimestamp()!),
+                m.getRunninghash_asU8(),
+                m.getSequencenumber(),
+                m.getMessage_asU8().length
+            ));
 
-            const size = this.chunks.map((chunk) => chunk.contentSize).reduce((sum, current) => sum += current, 0);
+            // eslint-disable-next-line max-len
+            const size = this.chunks.map((chunk) => chunk.contentSize).reduce((sum, current) => sum + current, 0);
 
             this.message = new Uint8Array(size);
             let offset = 0;
@@ -76,7 +78,7 @@ export class MirrorConsensusTopicResponse {
             message.forEach((message) => {
                 this.message!.set(message.getMessage_asU8(), offset);
                 offset += message.getMessage_asU8().length;
-            })
+            });
         } else {
             const message = maybeChunkedMessage as ConsensusTopicResponse;
             this.consensusTimestamp = Time._fromProto(message.getConsensustimestamp()!);

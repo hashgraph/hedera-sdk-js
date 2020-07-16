@@ -47,9 +47,9 @@ export abstract class TransactionBuilder<O = Transaction> {
     public setMaxTransactionFee(fee: Tinybar | Hbar): this {
         const hbar = hbarFromTinybarOrHbar(fee);
         // const hbar = typeof fee === "number" ? Hbar.fromTinybar(fee) : fee as Hbar;
-        hbar[hbarCheck]({ allowNegative: false });
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-        this._inner.setTransactionfee(hbar[hbarToProto]());
+        this._inner.setTransactionfee(hbar[ hbarToProto ]());
         return this;
     }
 
@@ -103,7 +103,7 @@ export class SingleTransactionBuilder extends TransactionBuilder<Transaction> {
 
             const tx = this.build(client);
 
-            const response = await tx[transactionCall](client);
+            const response = await tx[ transactionCall ](client);
             const status: Status = Status._fromCode(response.getNodetransactionprecheckcode());
 
             if (status === Status.InsufficientTxFee) {
@@ -139,7 +139,7 @@ export class SingleTransactionBuilder extends TransactionBuilder<Transaction> {
     public build(client?: BaseClient): Transaction {
         if (client && this._shouldSetFee && this._inner.getTransactionfee() === "0") {
             // Don't override TransactionFee if it's already set
-            this._inner.setTransactionfee(client._maxTransactionFee[hbarToProto]());
+            this._inner.setTransactionfee(client._maxTransactionFee[ hbarToProto ]());
         }
 
         if (client && !this._inner.hasTransactionid()) {
@@ -171,7 +171,7 @@ export class SingleTransactionBuilder extends TransactionBuilder<Transaction> {
         const protoTx = new Transaction_();
         protoTx.setBodybytes(this._inner.serializeBinary());
 
-        return Transaction[transactionCreate](this._node, protoTx, this._inner, this._method);
+        return Transaction[ transactionCreate ](this._node, protoTx, this._inner, this._method);
     }
 
     public execute(client: BaseClient): Promise<TransactionId> {
