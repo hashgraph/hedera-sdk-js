@@ -8,7 +8,7 @@ import {
 } from "../../../src/index-node";
 import { getClientForIntegrationTest } from "../client-setup";
 
-describe("AccountUpdateTransaction", () => {
+describe("ConsensusMessageSubmitTransaction", () => {
     it("can be executed", async() => {
         const client = await getClientForIntegrationTest();
 
@@ -31,11 +31,15 @@ describe("AccountUpdateTransaction", () => {
         expect(info.sequenceNumber).toBe(0);
         expect(info.adminKey!.toString()).toBe(client._getOperatorKey()!.toString());
 
-        transactionId = (await new ConsensusMessageSubmitTransaction()
+        const transactionIds = await new ConsensusMessageSubmitTransaction()
             .setTopicId(topic)
             .setMessage("[e2e::ConsensusMessageSubmitTransaction]")
             .setMaxTransactionFee(new Hbar(1))
-            .execute(client))[0];
+            .execute(client);
+        
+        expect(transactionIds.length).toStrictEqual(1);
+
+        transactionId = transactionIds[0];
 
         await transactionId.getReceipt(client);
 

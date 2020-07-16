@@ -117,9 +117,7 @@ export class ConsensusMessageSubmitTransaction extends TransactionBuilder<Transa
 
     // eslint-disable-next-line require-await
     public async execute(client: BaseClient): Promise<TransactionId[]> {
-        const ids: TransactionId[] = [];
-        this.build(client).forEach(async(tx) => ids.push(await tx.execute(client)));
-        return ids;
+        return Promise.all(this.build(client).map((tx) => tx.execute(client)));
     }
 
     protected get _method(): UnaryMethodDefinition<ProtoTransaction, TransactionResponse> {
