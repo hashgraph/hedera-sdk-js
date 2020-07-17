@@ -1,11 +1,11 @@
-import { ConsensusService } from "../../generated/MirrorConsensusService_pb_service";
-import { ConsensusTopicResponse } from "../../generated/MirrorConsensusService_pb";
-import { MirrorClient } from "./MirrorClient";
-import { TransactionId } from "../../TransactionId";
-import { MirrorSubscriptionHandle } from "../MirrorSubscriptionHandle";
-import { MirrorConsensusTopicResponse } from "../MirrorConsensusTopicResponse";
 import * as grpc from "grpc";
+import { ConsensusTopicResponse } from "../../generated/MirrorConsensusService_pb";
+import { ConsensusService } from "../../generated/MirrorConsensusService_pb_service";
+import { TransactionId } from "../../TransactionId";
 import { BaseMirrorConsensusTopicQuery, ErrorHandler, Listener } from "../BaseMirrorConsensusTopicQuery";
+import { MirrorConsensusTopicResponse } from "../MirrorConsensusTopicResponse";
+import { MirrorSubscriptionHandle } from "../MirrorSubscriptionHandle";
+import { MirrorClient } from "./MirrorClient";
 
 export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
     public subscribe(
@@ -26,7 +26,7 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
             null
         )
             .on("data", (message: ConsensusTopicResponse): void => {
-                if (message.getChunkinfo() == null) {
+                if (!message.hasChunkinfo()) {
                     listener(new MirrorConsensusTopicResponse(message));
                 } else {
                     // eslint-disable-next-line max-len
