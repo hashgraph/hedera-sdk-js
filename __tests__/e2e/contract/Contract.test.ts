@@ -44,6 +44,8 @@ describe("ContractCreateTransaction", () => {
 
         const contract = receipt.getContractId();
 
+        await new Promise((r) => setTimeout(r, 5000));
+
         let info = await new ContractInfoQuery()
             .setContractId(contract)
             .setMaxQueryPayment(new Hbar(2))
@@ -81,6 +83,8 @@ describe("ContractCreateTransaction", () => {
 
         await transactionId.getReceipt(client);
 
+        await new Promise((r) => setTimeout(r, 5000));
+
         result = await new ContractCallQuery()
             .setContractId(contract)
             .setGas(1000) // ~897
@@ -105,6 +109,8 @@ describe("ContractCreateTransaction", () => {
             .execute(client);
 
         await transactionId.getReceipt(client);
+
+        await new Promise((r) => setTimeout(r, 5000));
 
         info = await new ContractInfoQuery()
             .setContractId(contract)

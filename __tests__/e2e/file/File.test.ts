@@ -16,6 +16,8 @@ describe("FileCreateTransaction", () => {
 
         const file = receipt.getFileId();
 
+        await new Promise((r) => setTimeout(r, 5000));
+
         let info = await new FileInfoQuery()
             .setFileId(file)
             .setMaxQueryPayment(new Hbar(1))
@@ -33,6 +35,8 @@ describe("FileCreateTransaction", () => {
             .execute(client);
 
         await transactionId.getReceipt(client);
+
+        await new Promise((r) => setTimeout(r, 5000));
 
         info = await new FileInfoQuery()
             .setFileId(file)
@@ -58,6 +62,8 @@ describe("FileCreateTransaction", () => {
             .execute(client);
 
         await transactionId.getReceipt(client);
+
+        await new Promise((r) => setTimeout(r, 5000));
 
         info = await new FileInfoQuery()
             .setFileId(file)

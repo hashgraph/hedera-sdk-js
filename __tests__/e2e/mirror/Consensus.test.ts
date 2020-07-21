@@ -22,6 +22,8 @@ describe("ConsensusMessageSubmitTransaction", () => {
 
         const topic = receipt.getConsensusTopicId();
 
+        await new Promise((r) => setTimeout(r, 5000));
+
         let info = await new ConsensusTopicInfoQuery()
             .setTopicId(topic)
             .setMaxQueryPayment(new Hbar(1))
@@ -36,8 +38,10 @@ describe("ConsensusMessageSubmitTransaction", () => {
             .setMessage("[e2e::ConsensusMessageSubmitTransaction]")
             .setMaxTransactionFee(new Hbar(1))
             .execute(client);
-        
+
         await transactionId.getReceipt(client);
+
+        await new Promise((r) => setTimeout(r, 5000));
 
         info = await new ConsensusTopicInfoQuery()
             .setTopicId(topic)
@@ -55,6 +59,8 @@ describe("ConsensusMessageSubmitTransaction", () => {
             .execute(client);
 
         await transactionId.getReceipt(client);
+
+        await new Promise((r) => setTimeout(r, 5000));
 
         info = await new ConsensusTopicInfoQuery()
             .setTopicId(topic)

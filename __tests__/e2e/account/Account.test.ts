@@ -29,6 +29,8 @@ describe("AccountUpdateTransaction", () => {
 
         const account = receipt.getAccountId();
 
+        await new Promise((r) => setTimeout(r, 5000));
+
         let balance = await new AccountBalanceQuery()
             .setAccountId(account)
             .execute(client);
@@ -65,6 +67,8 @@ describe("AccountUpdateTransaction", () => {
 
         await transactionId.getReceipt(client);
 
+        await new Promise((r) => setTimeout(r, 5000));
+
         info = await new AccountInfoQuery()
             .setAccountId(account)
             .setMaxQueryPayment(new Hbar(1))
@@ -84,6 +88,8 @@ describe("AccountUpdateTransaction", () => {
             .execute(client);
 
         await transactionId.getReceipt(client);
+
+        await new Promise((r) => setTimeout(r, 5000));
 
         balance = await new AccountBalanceQuery()
             .setAccountId(account)
