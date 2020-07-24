@@ -15,7 +15,23 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
     ): MirrorSubscriptionHandle {
         this._validate();
 
+        const handle = new MirrorSubscriptionHandle();
+
+        this._makeServerStreamRequest(handle, true, 0, client, listener, errorHandler);
+
+        return handle;
+    }
+
+    private _makeServerStreamRequest(
+        handle: MirrorSubscriptionHandle,
+        shouldRetry: boolean,
+        attempt: number,
+        client: MirrorClient,
+        listener: Listener,
+        errorHandler?: ErrorHandler,
+    ) {
         const list: { [ id: string]: ConsensusTopicResponse[] | null } = {};
+        const _makeServerStreamRequest = this._makeServerStreamRequest;
 
         const response = grpc.invoke(ConsensusService.subscribeTopic, {
             host: client.endpoint,
@@ -43,12 +59,19 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                 }
             },
             onEnd(code: grpc.Code, message: string): void {
-                if (errorHandler != null) {
-                    errorHandler(new Error(`Received status code: ${code} and message: ${message}`));
+                if (!shouldRetry || attempt > 10) {
+                    if (errorHandler != null) {
+                        errorHandler(new Error(`Received status code: ${code} and message: ${message}`));
+                    }
+                } else if (attempt < 10 && shouldRetry && (code == grpc.Code.NotFound || code == grpc.Code.Unavailable)) {
+                    setTimeout(() => {
+                        _makeServerStreamRequest(handle, shouldRetry, attempt + 1, client, listener, errorHandler)
+                    }, 250 * 2 ** attempt);
                 }
             }
         });
 
-        return new MirrorSubscriptionHandle(response.close);
+        handle._setCall(response.close);
+
     }
 }

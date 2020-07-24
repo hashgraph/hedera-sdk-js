@@ -17,11 +17,12 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
 
         const handle = new MirrorSubscriptionHandle();
 
-        this.makeServerStreamRequest(handle, true, 0, client, listener, errorHandler);
+        this._makeServerStreamRequest(handle, true, 0, client, listener, errorHandler);
 
         return handle;
     }
-    private makeServerStreamRequest(
+
+    private _makeServerStreamRequest(
         handle: MirrorSubscriptionHandle,
         shouldRetry: boolean,
         attempt: number,
@@ -68,7 +69,7 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                     }
                 } else if (attempt < 10 && shouldRetry && (status.code == grpc.status.NOT_FOUND || status.code == grpc.status.UNAVAILABLE)) {
                     setTimeout(() => {
-                        this.makeServerStreamRequest(handle, shouldRetry, attempt + 1, client, listener, errorHandler)
+                        this._makeServerStreamRequest(handle, shouldRetry, attempt + 1, client, listener, errorHandler)
                     }, 250 * 2 ** attempt);
                 }
             })
