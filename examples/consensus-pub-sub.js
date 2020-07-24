@@ -3,20 +3,18 @@ const {
     MirrorClient,
     MirrorConsensusTopicQuery,
     ConsensusTopicCreateTransaction,
-    ConsensusSubmitMessageTransaction
+    ConsensusMessageSubmitTransaction
 } = require("@hashgraph/sdk");
 
 async function main() {
     const operatorPrivateKey = process.env.OPERATOR_KEY;
     const operatorAccount = process.env.OPERATOR_ID;
     const mirrorNodeAddress = process.env.MIRROR_NODE_ADDRESS;
-    const nodeAddress = process.env.NODE_ADDRESS;
 
     if (operatorPrivateKey == null ||
         operatorAccount == null ||
-        mirrorNodeAddress == null ||
-        nodeAddress == null) {
-        throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, MIRROR_NODE_ADDRESS, NODE_ADDRESS must be present");
+        mirrorNodeAddress == null) {
+        throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, and MIRROR_NODE_ADDRESS must be present");
     }
 
     const consensusClient = new MirrorClient(mirrorNodeAddress);
@@ -45,7 +43,7 @@ async function main() {
 
     for (let i = 0; ; i += 1) {
         // eslint-disable-next-line no-await-in-loop
-        await (await new ConsensusSubmitMessageTransaction()
+        await (await new ConsensusMessageSubmitTransaction()
             .setTopicId(topicId)
             .setMessage(`Hello, HCS! Message ${i}`)
             .execute(client))
