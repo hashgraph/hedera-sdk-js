@@ -20,7 +20,9 @@ import { TransactionRecord } from "./TransactionRecord";
 import { Status } from "./Status";
 import * as base64 from "@stablelib/base64";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
+import { hash as sha384Hash } from "@stablelib/sha384";
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
+import { decode } from "@stablelib/base64";
 
 /** signature/public key pairs are passed around as objects */
 export interface SignatureAndKey {
@@ -90,11 +92,19 @@ export class Transaction {
     }
 
     private _addSignature({ signature, publicKey }: SignatureAndKey): this {
+        const pubKeyBytes = publicKey.toBytes();
+        const sigMap = this._inner.getSigmap() || new SignatureMap();
+        sigMap.getSigpairList().forEach((sigPair) => {
+            const sigPairBytes = decode(sigPair.getPubkeyprefix_asB64());
+            if (pubKeyBytes.toString() === sigPairBytes.toString()) {
+                throw new Error(`transaction already signed with key ${publicKey.toString()}`);
+            }
+        });
+
         const sigPair = new SignaturePair();
         sigPair.setPubkeyprefix(publicKey.toBytes());
         sigPair.setEd25519(signature);
 
-        const sigMap = this._inner.getSigmap() || new SignatureMap();
         sigMap.addSigpair(sigPair);
         this._inner.setSigmap(sigMap);
 
@@ -129,10 +139,26 @@ export class Transaction {
         return this;
     }
 
+    public hash(): Uint8Array {
+        const body = TransactionBody.deserializeBinary(this._inner.getBodybytes_asU8());
+        if (!body.hasNodeaccountid()) {
+            throw new Error("transaction must have node id set");
+        }
+        if ((this._inner.getSigmap()?.getSigpairList().length ?? 0) === 0) {
+            throw new Error("transaction must be signed");
+        }
+
+        return sha384Hash(this.toBytes());
+    }
+
     public async [ transactionCall ](client: BaseClient): Promise<TransactionResponse> {
         // If client is supplied make sure to sign transaction if we have not already
         if (client._getOperatorKey() && client._getOperatorSigner()) {
-            await this.signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
+            try {
+                await this.signWith(client._getOperatorKey()!, client._getOperatorSigner()!);
+            } catch {
+                // ignored. This means the operator has already signed the transaction
+            }
         }
 
         const node = client._getNode(this._node);
