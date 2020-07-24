@@ -1,4 +1,4 @@
-import * as grpc from "grpc";
+import * as grpc from "@grpc/grpc-js";
 
 export class MirrorClient {
     // NOT PART OF THE STABLE API

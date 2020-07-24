@@ -1,4 +1,4 @@
-import * as grpc from "grpc";
+import * as grpc from "@grpc/grpc-js";
 import { ConsensusTopicResponse } from "../../generated/MirrorConsensusService_pb";
 import { ConsensusService } from "../../generated/MirrorConsensusService_pb_service";
 import { TransactionId } from "../../TransactionId";
@@ -37,8 +37,8 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
             (req) => Buffer.from(req.serializeBinary()),
             ConsensusTopicResponse.deserializeBinary,
             this._builder,
-            null,
-            null
+            new grpc.Metadata(),
+            {}
         )
             .on("data", (message: ConsensusTopicResponse): void => {
                 shouldRetry = false;

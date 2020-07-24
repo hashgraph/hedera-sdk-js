@@ -3,7 +3,7 @@ import { grpc as grpcWeb } from "@improbable-eng/grpc-web";
 import * as fs from "fs";
 import * as util from "util";
 
-import * as grpc from "grpc";
+import * as grpc from "@grpc/grpc-js";
 import ProtobufMessage = grpcWeb.ProtobufMessage;
 import UnaryMethodDefinition = grpcWeb.UnaryMethodDefinition;
 
@@ -85,8 +85,8 @@ export class Client extends BaseClient {
             (req) => Buffer.from(req.serializeBinary()),
             (bytes) => method.responseType.deserializeBinary(bytes),
             request,
-            null,
-            null,
+            new grpc.Metadata(),
+            {},
             (err, val) => {
                 if (err != null) {
                     reject(err);
