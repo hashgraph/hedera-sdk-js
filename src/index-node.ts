@@ -34,6 +34,13 @@ const testnetNodes: Nodes = {
     "3.testnet.hedera.com:50211": "0.0.6"
 };
 
+const previewnetNodes: Nodes = {
+    "0.previewnet.hedera.com:50211": "0.0.3",
+    "1.previewnet.hedera.com:50211": "0.0.4",
+    "2.previewnet.hedera.com:50211": "0.0.5",
+    "3.previewnet.hedera.com:50211": "0.0.6"
+};
+
 /**
  * This implementation of `BaseClient` is exported for Node.js usage.
  */
@@ -57,6 +64,10 @@ export class Client extends BaseClient {
 
     public static forTestnet(): Client {
         return new Client({ network: testnetNodes });
+    }
+
+    public static forPreviewnet(): Client {
+        return new Client({ network: previewnetNodes });
     }
 
     public static async fromFile(filename: string): Promise<Client> {
