@@ -20,8 +20,6 @@ describe("AccountCreateTransaction", () => {
 
         const tx = transaction._toProto().toObject();
         const expectedTx = {
-            body: undefined as undefined | Record<string, any>,
-            bodybytes,
             sigmap: {
                 sigpairList: [
                     {
@@ -33,7 +31,9 @@ describe("AccountCreateTransaction", () => {
                     }
                 ]
             },
-            sigs: undefined
+            sigs: undefined,
+            body: undefined as undefined | Record<string, any>,
+            bodybytes
         };
 
         expect(tx).toStrictEqual(expectedTx);
