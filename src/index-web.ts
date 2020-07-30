@@ -10,6 +10,8 @@ const mainnetProxy = { "https://grpc-web.myhbarwallet.com": { shard: 0, realm: 0
 
 const testnetProxy = { "https://grpc-web.testnet.myhbarwallet.com": { shard: 0, realm: 0, account: 3 }};
 
+const previewnetProxy = { "https://grpc-web.previewnet.myhbarwallet.com": { shard: 0, realm: 0, account: 3 }};
+
 /** This implementation of `BaseClient` is exported for browser usage. */
 export class Client extends BaseClient {
     /**
@@ -26,6 +28,10 @@ export class Client extends BaseClient {
 
     public static forTestnet(): Client {
         return new Client({ network: testnetProxy });
+    }
+
+    public static forPreviewnet(): Client {
+        return new Client({ network: previewnetProxy });
     }
 
     public static fromFile(): Promise<Client> {
