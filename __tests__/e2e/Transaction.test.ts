@@ -28,8 +28,8 @@ describe("Transaction", () => {
         const record = await transactionId.getRecord(client);
         const recordHash = record.transactionHash;
 
-        console.log(`after signing:\n${hash}`);
-        console.log(`the result:\n${recordHash}`);
+        // console.log(`after signing:\n${hash}`);
+        // console.log(`the result:\n${recordHash}`);
         expect(hash).toStrictEqual(recordHash);
 
         const account = record.receipt?.getAccountId()!;
