@@ -17,20 +17,20 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
 
         const handle = new MirrorSubscriptionHandle();
 
-        this._makeServerStreamRequest(handle, true, 0, client, listener, errorHandler);
+        this._makeServerStreamRequest(handle, 0, client, listener, errorHandler);
 
         return handle;
     }
 
     private _makeServerStreamRequest(
         handle: MirrorSubscriptionHandle,
-        shouldRetry: boolean,
         attempt: number,
         client: MirrorClient,
         listener: Listener,
-        errorHandler?: ErrorHandler,
-    ) {
+        errorHandler?: ErrorHandler
+    ): void {
         const list: { [ id: string]: ConsensusTopicResponse[] | null } = {};
+        let shouldRetry = true;
 
         const response = client._client.makeServerStreamRequest(
             `/${ConsensusService.serviceName}/${ConsensusService.subscribeTopic.methodName}`,
@@ -67,9 +67,18 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                     if (errorHandler != null) {
                         errorHandler(new Error(`Received status code: ${status.code} and message: ${status.details}`));
                     }
-                } else if (attempt < 10 && shouldRetry && (status.code == grpc.status.NOT_FOUND || status.code == grpc.status.UNAVAILABLE)) {
+                } else if (attempt < 10 &&
+                    shouldRetry &&
+                    (status.code === grpc.status.NOT_FOUND ||
+                        status.code === grpc.status.UNAVAILABLE)) {
                     setTimeout(() => {
-                        this._makeServerStreamRequest(handle, shouldRetry, attempt + 1, client, listener, errorHandler)
+                        this._makeServerStreamRequest(
+                            handle,
+                            attempt + 1,
+                            client,
+                            listener,
+                            errorHandler
+                        );
                     }, 250 * 2 ** attempt);
                 }
             })

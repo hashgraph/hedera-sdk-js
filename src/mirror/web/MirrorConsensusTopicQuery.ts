@@ -17,26 +17,28 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
 
         const handle = new MirrorSubscriptionHandle();
 
-        this._makeServerStreamRequest(handle, true, 0, client, listener, errorHandler);
+        this._makeServerStreamRequest(handle, 0, client, listener, errorHandler);
 
         return handle;
     }
 
     private _makeServerStreamRequest(
         handle: MirrorSubscriptionHandle,
-        shouldRetry: boolean,
         attempt: number,
         client: MirrorClient,
         listener: Listener,
-        errorHandler?: ErrorHandler,
-    ) {
+        errorHandler?: ErrorHandler
+    ): void {
         const list: { [ id: string]: ConsensusTopicResponse[] | null } = {};
         const _makeServerStreamRequest = this._makeServerStreamRequest;
+        let shouldRetry = true;
 
         const response = grpc.invoke(ConsensusService.subscribeTopic, {
             host: client.endpoint,
             request: this._builder,
             onMessage(message: ConsensusTopicResponse): void {
+                shouldRetry = false;
+
                 if (!message.hasChunkinfo()) {
                     listener(new MirrorConsensusTopicResponse(message));
                 } else {
@@ -63,15 +65,23 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                     if (errorHandler != null) {
                         errorHandler(new Error(`Received status code: ${code} and message: ${message}`));
                     }
-                } else if (attempt < 10 && shouldRetry && (code == grpc.Code.NotFound || code == grpc.Code.Unavailable)) {
+                } else if (attempt < 10 &&
+                    shouldRetry &&
+                    (code === grpc.Code.NotFound ||
+                         code === grpc.Code.Unavailable)) {
                     setTimeout(() => {
-                        _makeServerStreamRequest(handle, shouldRetry, attempt + 1, client, listener, errorHandler)
+                        _makeServerStreamRequest(
+                            handle,
+                            attempt + 1,
+                            client,
+                            listener,
+                            errorHandler
+                        );
                     }, 250 * 2 ** attempt);
                 }
             }
         });
 
         handle._setCall(response.close);
-
     }
 }

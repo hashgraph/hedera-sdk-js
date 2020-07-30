@@ -22,7 +22,6 @@ import * as base64 from "@stablelib/base64";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { hash as sha384Hash } from "@stablelib/sha384";
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
-import { decode } from "@stablelib/base64";
 
 /** signature/public key pairs are passed around as objects */
 export interface SignatureAndKey {
@@ -95,7 +94,7 @@ export class Transaction {
         const pubKeyBytes = publicKey.toBytes();
         const sigMap = this._inner.getSigmap() || new SignatureMap();
         sigMap.getSigpairList().forEach((sigPair) => {
-            const sigPairBytes = decode(sigPair.getPubkeyprefix_asB64());
+            const sigPairBytes = base64.decode(sigPair.getPubkeyprefix_asB64());
             if (pubKeyBytes.toString() === sigPairBytes.toString()) {
                 throw new Error(`transaction already signed with key ${publicKey.toString()}`);
             }
