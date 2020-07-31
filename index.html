@@ -89,7 +89,7 @@
 				<a href="#creating-a-client" id="creating-a-client" style="color: inherit; text-decoration: none;">
 					<h4>Creating a client</h4>
 				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {Client} <span class="hljs-keyword">from</span> <span class="hljs-string">"@hashgraph/sdk"</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {Client} <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@hashgraph/sdk&quot;</span>;
 
 <span class="hljs-comment">// Create a Testnet client. To create a mainnet client use `Client.forMainnet()`</span>
 <span class="hljs-comment">// or if using a custom network use `Client.forNetwork()`</span>
@@ -98,14 +98,14 @@
     <span class="hljs-comment">//</span>
     <span class="hljs-comment">// The account ID can be a string, or nubmer, or an `AccountId` type and is used</span>
     <span class="hljs-comment">// to sign transcations and query payments built with this client. This example</span>
-    <span class="hljs-comment">// uses "0.0.101" is used as the operator account ID.</span>
+    <span class="hljs-comment">// uses &quot;0.0.101&quot; is used as the operator account ID.</span>
     <span class="hljs-comment">//</span>
     <span class="hljs-comment">// The private key can be a string or an `Ed25519PrivateKey` type which will be used</span>
     <span class="hljs-comment">// to sign transactions built with the client.</span>
     <span class="hljs-comment">//</span>
     <span class="hljs-comment">// The private key is used to sign the transactions, either encoded as a string</span>
     <span class="hljs-comment">// or as an `Ed25519PrivateKey` type </span>
-    .setOperator(<span class="hljs-string">"0.0.101"</span>, <span class="hljs-string">"..."</span>);
+    .setOperator(<span class="hljs-string">&quot;0.0.101&quot;</span>, <span class="hljs-string">&quot;...&quot;</span>);
 
 <span class="hljs-comment">// To validate the network is up and the client can connect to it you can call </span>
 <span class="hljs-comment">// the `Client.ping()` method. If the network is up nothing will happen, if</span>
@@ -115,27 +115,27 @@
 				<a href="#checking-your-balance" id="checking-your-balance" style="color: inherit; text-decoration: none;">
 					<h4>Checking your balance</h4>
 				</a>
-				<pre><code class="language-typescript"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'current account balance:'</span>, <span class="hljs-keyword">await</span> AccountBalanceQuery()
-    .setAccountId(<span class="hljs-string">"0.0.101"</span>)
+				<pre><code class="language-typescript"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;current account balance:&#x27;</span>, <span class="hljs-keyword">await</span> AccountBalanceQuery()
+    .setAccountId(<span class="hljs-string">&quot;0.0.101&quot;</span>)
     .execute(client)
 );</code></pre>
 				<a href="#sending-a-transfer" id="sending-a-transfer" style="color: inherit; text-decoration: none;">
 					<h4>Sending a transfer</h4>
 				</a>
 				<pre><code class="language-typescript"><span class="hljs-comment">// The first parameter to `addSender()` or `.addRecipient()` can be a number,</span>
-<span class="hljs-comment">// a string, or an `AccountId` type. This uses "0.0.101" and "0.0.102" as examples.</span>
+<span class="hljs-comment">// a string, or an `AccountId` type. This uses &quot;0.0.101&quot; and &quot;0.0.102&quot; as examples.</span>
 <span class="hljs-comment">//</span>
 <span class="hljs-comment">// The second paramter is the amount and it can be either a `number` or a `bignumber.js`</span>
 <span class="hljs-comment">// type</span>
 <span class="hljs-keyword">new</span> CryptoTransferTransaction()
-    .addSender(<span class="hljs-string">"0.0.101"</span>, <span class="hljs-number">10</span>_000_000)
-    .addRecipient(<span class="hljs-string">"0.0.102"</span>, <span class="hljs-number">10</span>_000_000)
+    .addSender(<span class="hljs-string">&quot;0.0.101&quot;</span>, <span class="hljs-number">10</span>_000_000)
+    .addRecipient(<span class="hljs-string">&quot;0.0.102&quot;</span>, <span class="hljs-number">10</span>_000_000)
     .build(client)
     .execute(client);</code></pre>
 				<a href="#creating-a-new-account" id="creating-a-new-account" style="color: inherit; text-decoration: none;">
 					<h4>Creating a new Account</h4>
 				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Ed25519PrivateKey } <span class="hljs-keyword">from</span> <span class="hljs-string">"@hashgraph/sdk"</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { Ed25519PrivateKey } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@hashgraph/sdk&quot;</span>;
 
 <span class="hljs-keyword">const</span> privateKey = <span class="hljs-keyword">await</span> Ed25519PrivateKey.generate();
 <span class="hljs-keyword">const</span> publicKey = privateKey.publicKey;
@@ -149,7 +149,7 @@
 <span class="hljs-keyword">const</span> receipt = <span class="hljs-keyword">await</span> tx.getReceipt(client);
 <span class="hljs-keyword">const</span> newAccount = receipt.accountId;
 
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'new account: '</span>, newAccount, <span class="hljs-string">'public key: '</span>, publicKey.toString(), <span class="hljs-string">' private key: '</span>, privateKey.toString());</code></pre>
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;new account: &#x27;</span>, newAccount, <span class="hljs-string">&#x27;public key: &#x27;</span>, publicKey.toString(), <span class="hljs-string">&#x27; private key: &#x27;</span>, privateKey.toString());</code></pre>
 				<a href="#running-locally" id="running-locally" style="color: inherit; text-decoration: none;">
 					<h2>Running locally</h2>
 				</a>
@@ -521,6 +521,5 @@
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>
