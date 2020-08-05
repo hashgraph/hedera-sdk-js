@@ -19,7 +19,7 @@ gulp.task("build:tsc", () => {
 
 gulp.task("generate:flow", () => {
     return gulp.src("lib/**/*.d.ts")
-        .pipe(exec("flowgen -o <%= file.path.replace('.d.ts', '.flow.js') %> <%= file.path %>"));
+        .pipe(exec(file => `flowgen -o ${file.path.replace('.d.ts', '.flow.js')} ${file.path}`));
 });
 
 gulp.task("copy:proto", () => {
