@@ -1,6 +1,6 @@
 import { grpc } from "@improbable-eng/grpc-web";
 import { ConsensusTopicResponse } from "../../generated/MirrorConsensusService_pb";
-import { ConsensusService } from "../../generated/MirrorConsensusService_pb_service";
+import { MirrorConsensusService } from "../../generated/MirrorConsensusService_pb_service";
 import { TransactionId } from "../../TransactionId";
 import { BaseMirrorConsensusTopicQuery, ErrorHandler, Listener } from "../BaseMirrorConsensusTopicQuery";
 import { MirrorConsensusTopicResponse } from "../MirrorConsensusTopicResponse";
@@ -33,7 +33,7 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
         const _makeServerStreamRequest = this._makeServerStreamRequest;
         let shouldRetry = true;
 
-        const response = grpc.invoke(ConsensusService.subscribeTopic, {
+        const response = grpc.invoke(MirrorConsensusService.subscribeTopic, {
             host: client.endpoint,
             request: this._builder,
             onMessage(message: ConsensusTopicResponse): void {

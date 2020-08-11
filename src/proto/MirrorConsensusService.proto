@@ -20,8 +20,6 @@
 
 syntax = "proto3";
 
-package com.hedera.mirror.api.proto;
-
 option java_multiple_files = true; // Required for the reactor-grpc generator to work correctly
 option java_package = "com.hedera.mirror.api.proto";
 
@@ -30,13 +28,13 @@ import "Timestamp.proto";
 import "ConsensusSubmitMessage.proto";
 
 message ConsensusTopicQuery {
-    .proto.TopicID topicID = 1; // A required topic ID to retrieve messages for.
+    TopicID topicID = 1; // A required topic ID to retrieve messages for.
 
     // Include messages which reached consensus on or after this time. Defaults to current time if not set.
-    .proto.Timestamp consensusStartTime = 2;
+    Timestamp consensusStartTime = 2;
 
     // Include messages which reached consensus before this time. If not set it will receive indefinitely.
-    .proto.Timestamp consensusEndTime = 3;
+    Timestamp consensusEndTime = 3;
 
     // The maximum number of messages to receive before stopping. If not set or set to zero it will return messages
     // indefinitely.
@@ -44,7 +42,7 @@ message ConsensusTopicQuery {
 }
 
 message ConsensusTopicResponse {
-    .proto.Timestamp consensusTimestamp = 1; // The time at which the transaction reached consensus
+    Timestamp consensusTimestamp = 1; // The time at which the transaction reached consensus
 
     // The message body originally in the ConsensusSubmitMessageTransactionBody. Message size will be less than 6KiB.
     bytes message = 2;
@@ -55,13 +53,13 @@ message ConsensusTopicResponse {
 
     uint64 runningHashVersion = 5; // Version of the SHA-384 digest used to update the running hash.
 
-    .proto.ConsensusMessageChunkInfo chunkInfo = 6; // Optional information of the current chunk in a fragmented message.
+    ConsensusMessageChunkInfo chunkInfo = 6; // Optional information of the current chunk in a fragmented message.
 }
 
 //
 // The Mirror Service provides the ability to query a stream of Hedera Consensus Service (HCS) messages for an
 // HCS Topic via a specific (possibly open-ended) time range.
 //
-service ConsensusService {
+service MirrorConsensusService {
     rpc subscribeTopic (ConsensusTopicQuery) returns (stream ConsensusTopicResponse);
 }

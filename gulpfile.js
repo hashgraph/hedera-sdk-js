@@ -43,7 +43,7 @@ gulp.task("build:proto", (cb) => {
     const cmd = "protoc " +
         `--plugin="protoc-gen-ts=${plugin}" ` +
         `--ts_out="service=grpc-web:${out}" ` +
-        `--js_out="import_style=commonjs,binary:${out}" ` +
+        `--js_out="import_style=commonjs_strict,binary:${out}" ` +
         `-I "${include}" ` +
         ` ${files}`;
 
