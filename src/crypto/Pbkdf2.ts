@@ -1,8 +1,4 @@
 import { HashAlgorithm } from "./Hmac";
-import { SHA256 } from "@stablelib/sha256";
-import { SHA384 } from "@stablelib/sha384";
-import { SHA512 } from "@stablelib/sha512";
-import { deriveKey } from "@stablelib/pbkdf2";
 import * as utf8 from "@stablelib/utf8";
 import * as crypto from "crypto";
 import { promisify } from "util";
@@ -41,15 +37,7 @@ export class Pbkdf2 {
                     iterations
                 }, key, length << 3));
             } catch {
-                switch (algorithm) {
-                    case HashAlgorithm.Sha256:
-                        return deriveKey(SHA256, pass, nacl, iterations, length);
-                    case HashAlgorithm.Sha384:
-                        return deriveKey(SHA384, pass, nacl, iterations, length);
-                    case HashAlgorithm.Sha512:
-                        return deriveKey(SHA512, pass, nacl, iterations, length);
-                    default: throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
-                }
+                // will fall through to crypto, which can be polyfilled using crypto-browserify
             }
         }
 
