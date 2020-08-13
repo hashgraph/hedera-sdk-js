@@ -1,6 +1,6 @@
 import * as grpc from "@grpc/grpc-js";
 import { ConsensusTopicResponse } from "../../generated/MirrorConsensusService_pb";
-import { MirrorConsensusService } from "../../generated/MirrorConsensusService_pb_service";
+import { ConsensusService } from "../../generated/MirrorConsensusService_pb_service";
 import { TransactionId } from "../../TransactionId";
 import { BaseMirrorConsensusTopicQuery, ErrorHandler, Listener } from "../BaseMirrorConsensusTopicQuery";
 import { MirrorConsensusTopicResponse } from "../MirrorConsensusTopicResponse";
@@ -33,7 +33,7 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
         let shouldRetry = true;
 
         const response = client._client.makeServerStreamRequest(
-            `/${MirrorConsensusService.serviceName}/${MirrorConsensusService.subscribeTopic.methodName}`,
+            `/${ConsensusService.serviceName}/${ConsensusService.subscribeTopic.methodName}`,
             (req) => Buffer.from(req.serializeBinary()),
             ConsensusTopicResponse.deserializeBinary,
             this._builder,
