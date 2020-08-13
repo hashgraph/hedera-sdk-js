@@ -18,7 +18,7 @@ import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { Ed25519PrivateKey } from "./crypto/Ed25519PrivateKey";
 import { TransactionRecord } from "./TransactionRecord";
 import { Status } from "./Status";
-import * as base64 from "@stablelib/base64";
+import * as base64 from "./encoding/base64";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { hash as sha384Hash } from "@stablelib/sha384";
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
