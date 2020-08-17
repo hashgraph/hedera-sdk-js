@@ -16,7 +16,7 @@ function createHederaClient() {
         new Client({
             network: { "0.testnet.hedera.com:50211": "0.0.3" },
             operator: {
-                account: operatorAccount,
+                accountId: operatorAccount,
                 privateKey: operatorPrivateKey
             }
         })
