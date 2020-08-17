@@ -32,12 +32,16 @@ async function main() {
 
     console.log(`topicId = ${topicId}`);
 
+    // wait 10s to ensure new topic id propagates to mirror nodes
+    console.log("waiting 10s for topic Id propagation to mirror node");
+    await sleep(10000);
+
     new MirrorConsensusTopicQuery()
         .setTopicId(topicId)
         .setStartTime(0)
         .subscribe(
             consensusClient,
-            (message) => console.log(message),
+            (message) => console.log(`received ${message}`),
             (error) => console.log(`Error: ${error}`)
         );
 
