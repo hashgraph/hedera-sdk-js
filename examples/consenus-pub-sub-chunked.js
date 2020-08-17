@@ -40,7 +40,7 @@ async function main() {
         .setStartTime(0)
         .subscribe(
             consensusClient,
-            (resp) => console.log(`recevied message of ${resp.message.length} bytes`),
+            (resp) => console.log(`received message of ${resp.message.length} bytes`),
             (error) => console.log(`Error: ${error}`)
         );
 
