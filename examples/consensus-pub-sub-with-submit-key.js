@@ -3,7 +3,7 @@ const {
     MirrorClient,
     MirrorConsensusTopicQuery,
     ConsensusTopicCreateTransaction,
-    ConsensusSubmitMessageTransaction,
+    ConsensusMessageSubmitTransaction,
     Ed25519PrivateKey
 } = require("@hashgraph/sdk");
 
@@ -11,13 +11,14 @@ async function main() {
     const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
     const operatorAccount = process.env.OPERATOR_ID;
     const mirrorNodeAddress = process.env.MIRROR_NODE_ADDRESS;
-    const nodeAddress = process.env.NODE_ADDRESS;
+
+    // generate a new key to use for signing messages
+    const topicSigner = await Ed25519PrivateKey.generate();
 
     if (operatorPrivateKey == null ||
       operatorAccount == null ||
-      mirrorNodeAddress == null ||
-      nodeAddress == null) {
-        throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, MIRROR_NODE_ADDRESS, NODE_ADDRESS must be present");
+      mirrorNodeAddress == null) {
+        throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, MIRROR_NODE_ADDRESS must be present");
     }
 
     const consensusClient = new MirrorClient(mirrorNodeAddress);
@@ -29,13 +30,17 @@ async function main() {
         .setTopicMemo("sdk example create_pub_sub.js")
         .setMaxTransactionFee(100000000000)
     // .setAdminKey(operatorPrivateKey.publicKey) // allows updateTopic
-        .setSubmitKey(operatorPrivateKey.publicKey) // allows control access to submit messages
+        .setSubmitKey(topicSigner.publicKey) // allows control access to submit messages
         .execute(client);
 
     const transactionReceipt = await transactionId.getReceipt(client);
-    const topicId = transactionReceipt.getTopicId();
+    const topicId = transactionReceipt.getConsensusTopicId();
 
     console.log(`topicId = ${topicId}`);
+
+    // wait 10s to ensure new topic id propagates to mirror nodes
+    console.log("waiting 10s for topic Id propagation to mirror node");
+    await sleep(10000);
 
     new MirrorConsensusTopicQuery()
         .setTopicId(topicId)
@@ -47,10 +52,10 @@ async function main() {
 
     for (let i = 0; ; i += 1) {
         // eslint-disable-next-line no-await-in-loop
-        await (await new ConsensusSubmitMessageTransaction()
+        await (await new ConsensusMessageSubmitTransaction()
             .setTopicId(topicId)
             .setMessage(`Hello, HCS! Message ${i}`)
-            .sign(operatorPrivateKey) // Must sign by the topic's submitKey
+            .sign(topicSigner) // Must sign by the topic's submitKey
             .execute(client))
             .getReceipt(client);
 
