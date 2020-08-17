@@ -2,18 +2,18 @@ const {
     Client,
     FileCreateTransaction,
     FileDeleteTransaction,
-    Ed25519PublicKey,
+    Ed25519PrivateKey,
     Hbar
 } = require("@hashgraph/sdk");
 
 async function main() {
     const operatorAccount = process.env.OPERATOR_ID;
     const operatorPrivateKey = process.env.OPERATOR_KEY;
-    const operatorPublicKey = Ed25519PublicKey.fromString(process.env.OPERATOR_PUB_KEY);
 
     if (operatorPrivateKey == null || operatorAccount == null) {
         throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
     }
+    const operatorPublicKey = Ed25519PrivateKey.fromString(operatorPrivateKey).publicKey;
 
     const client = Client.forTestnet();
     client.setOperator(operatorAccount, operatorPrivateKey);
@@ -27,7 +27,7 @@ async function main() {
 
     // The receipt will contain the FileId, or where it exists on the network
     const createFileReceipt = await transactionId.getReceipt(client);
-    console.log("create file receipt", `${JSON.stringify(createFileReceipt)}\n`);
+    console.log("create file receipt", `${createFileReceipt.getFileId()}\n`);
 
     // Then we'll delete this newly created file
     const deleteFileTransactionId = await new FileDeleteTransaction()
@@ -37,7 +37,7 @@ async function main() {
 
     // After deletion, the receipt should NOT contain a file ID
     const deleteFileReceipt = await deleteFileTransactionId.getReceipt(client);
-    console.log("deleted file receipt, won't contain a file ID", `${deleteFileReceipt.getFileId()}\n`);
+    console.log("deleted file receipt, doesn't contain a file ID - status=", `${deleteFileReceipt.status}\n`);
 }
 
 main();
