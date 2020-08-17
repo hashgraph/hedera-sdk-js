@@ -1,5 +1,4 @@
 const { Client, Ed25519PrivateKey, AccountCreateTransaction, AccountUpdateTransaction, AccountInfoQuery } = require("@hashgraph/sdk");
-require("dotenv").config();
 
 async function main() {
     const operatorPrivateKey = process.env.OPERATOR_KEY;
@@ -12,7 +11,7 @@ async function main() {
     const client = new Client({
         network: { "0.testnet.hedera.com:50211": "0.0.3" },
         operator: {
-            account: operatorAccount,
+            accountId: operatorAccount,
             privateKey: operatorPrivateKey
         }
     });
