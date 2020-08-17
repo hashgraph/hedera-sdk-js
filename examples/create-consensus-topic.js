@@ -15,7 +15,7 @@ async function main() {
     console.log("tx:", tx);
 
     const receipt = await tx.getReceipt(client);
-    const newTopicId = receipt.getTopicId();
+    const newTopicId = receipt.getConsensusTopicId();
     console.log("new HCS topic ID:", newTopicId);
 }
 
