@@ -46,7 +46,7 @@ export class TransactionReceipt {
 
     /** @deprecated */
     public get accountId(): AccountId {
-        console.warn("`TransactionReceipt.accountId` is deprecrated. Use `TransactionReceipt.getAccountId()` instead.");
+        console.warn("`TransactionReceipt.accountId` is deprecated. Use `TransactionReceipt.getAccountId()` instead.");
         return this.getAccountId();
     }
 
@@ -63,7 +63,7 @@ export class TransactionReceipt {
 
     /** @deprecated */
     public get fileId(): FileId {
-        console.warn("`TransactionReceipt.fileId` is deprecrated. Use `TransactionReceipt.getfileId()` instead.");
+        console.warn("`TransactionReceipt.fileId` is deprecated. Use `TransactionReceipt.getfileId()` instead.");
         return this.getFileId();
     }
 
@@ -80,7 +80,7 @@ export class TransactionReceipt {
 
     /** @deprecated */
     public get contractId(): ContractId {
-        console.warn("`TransactionReceipt.contractId` is deprecrated. Use `TransactionReceipt.getcontractId()` instead.");
+        console.warn("`TransactionReceipt.contractId` is deprecated. Use `TransactionReceipt.getcontractId()` instead.");
         return this.getContractId();
     }
 
@@ -106,9 +106,9 @@ export class TransactionReceipt {
         return this._topicId!;
     }
 
-    /** @deprecated `TransactionReceipt.getTopicId()` is deprecrated. Use `TransactionReceipt.getConsensusTopicId()` instead. */
+    /** @deprecated `TransactionReceipt.getTopicId()` is deprecated. Use `TransactionReceipt.getConsensusTopicId()` instead. */
     public getTopicId(): ConsensusTopicId {
-        console.warn("`TransactionReceipt.getTopicId()` is deprecrated. Use `TransactionReceipt.getConsensusTopicId()` instead.");
+        console.warn("`TransactionReceipt.getTopicId()` is deprecated. Use `TransactionReceipt.getConsensusTopicId()` instead.");
         return this.getConsensusTopicId();
     }
 
