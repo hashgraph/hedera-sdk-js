@@ -1,5 +1,5 @@
 import Key from "./Key.js";
-import Mnemonnic from "./Mnemonnic.js";
+import Mnemonnic from "./Mnemonic.js";
 import MnemonicValidationResult from "./MnemonicValidationResult.js";
 import MnemonicValidationStatus from "./MnemonicValidationStatus.js";
 import PrivateKey from "./PrivateKey.js";

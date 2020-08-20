@@ -1,14 +1,14 @@
 import * as bip39 from "bip39";
-import { Ed25519PrivateKey } from "./PrivateKey";
-import { MnemonicValidationResult } from "./MnemonicValidationResult.js";
-import { MnemonicValidationStatus } from "./MnemonicValidationStatus.js";
+import PrivateKey from "./PrivateKey.js";
+import MnemonicValidationResult from "./MnemonicValidationResult.js";
+import MnemonicValidationStatus from "./MnemonicValidationStatus.js";
 import legacyWordList from "./legacyWordList";
-import BigNumber from "bignumber.js";
+import Long from "long";
 import { HashAlgorithm } from "./hmac.js";
 import * as pbkdf2 from "./pbkdf2.js";
 
 /** result of `generateMnemonic()` */
-export class Mnemonic {
+export default class Mnemonic {
     /**
      * Recover a mnemonic from a list of 24 words.
      *
@@ -27,7 +27,7 @@ export class Mnemonic {
         /**
          * @type {boolean}
          */
-        this.#isLegacy = false;
+        this._isLegacy = false;
     }
 
     /**
@@ -37,7 +37,7 @@ export class Mnemonic {
      * @returns {Promise<PrivateKey>}
      */
     toPrivateKey(passphrase) {
-        return Ed25519PrivateKey.fromMnemonic(this, passphrase);
+        return PrivateKey.fromMnemonic(this, passphrase);
     }
 
     /**
@@ -46,17 +46,27 @@ export class Mnemonic {
     async _legacyToPrivateKey() {
         const index = -1;
 
-        const entropy = this.#toLegacyEntropy();
+        const entropy = this._toLegacyEntropy();
         const password = new Uint8Array(entropy.length + 8);
         password.set(entropy, 0);
 
-        const view = new DataView(password.buffer, password.byteOffset + entropy.length, 8);
+        const view = new DataView(
+            password.buffer,
+            password.byteOffset + entropy.length,
+            8
+        );
         view.setInt32(0, index);
         view.setInt32(4, index);
 
-        const salt = Uint8Array.from([ 0xFF ]);
-        const keyBytes = await pbkdf2.deriveKey(HashAlgorithm.Sha512, password, salt, 2048, 32);
-        return Ed25519PrivateKey.fromBytes(keyBytes);
+        const salt = Uint8Array.from([0xff]);
+        const keyBytes = await pbkdf2.deriveKey(
+            HashAlgorithm.Sha512,
+            password,
+            salt,
+            2048,
+            32
+        );
+        return PrivateKey.fromBytes(keyBytes);
     }
 
     /**
@@ -108,17 +118,35 @@ export class Mnemonic {
      */
     validate() {
         if (this._isLegacy) {
-            return this.#validateLegacy();
+            return this._validateLegacy();
         }
 
         if (this.words.length !== 24) {
-            return new MnemonicValidationResult(MnemonicValidationStatus.BadLength);
+            return new MnemonicValidationResult(
+                MnemonicValidationStatus.BadLength,
+                undefined
+            );
         }
 
         const unknownIndices = this.words.reduce(
-            (unknowns, word, index) =>
+            (
+                /**
+                 * @type {number[]}
+                 */
+                unknowns,
+                /**
+                 * @type {string}
+                 */
+                word,
+                /**
+                 * @type {number}
+                 */
+                index
+            ) =>
                 // eslint-disable-next-line implicit-arrow-linebreak
-                bip39.wordlists.english.includes(word) ? unknowns : [ ...unknowns, index ],
+                bip39.wordlists.english.includes(word)
+                    ? unknowns
+                    : [...unknowns, index],
             []
         );
 
@@ -131,11 +159,22 @@ export class Mnemonic {
 
         // this would cover length and unknown words but it only gives us a `boolean`
         // we validate those first and then let `bip39` do the non-trivial checksum verification
-        if (!bip39.validateMnemonic(this.words.join(" "), bip39.wordlists.english)) {
-            return new MnemonicValidationResult(MnemonicValidationStatus.ChecksumMismatch);
+        if (
+            !bip39.validateMnemonic(
+                this.words.join(" "),
+                bip39.wordlists.english
+            )
+        ) {
+            return new MnemonicValidationResult(
+                MnemonicValidationStatus.ChecksumMismatch,
+                undefined
+            );
         }
 
-        return new MnemonicValidationResult(MnemonicValidationStatus.Ok);
+        return new MnemonicValidationResult(
+            MnemonicValidationStatus.Ok,
+            undefined
+        );
     }
 
     /**
@@ -155,15 +194,30 @@ export class Mnemonic {
      *
      * @returns {MnemonicValidationResult} the result of the validation.
      */
-    #validateLegacy() {
+    _validateLegacy() {
         if (!this._isLegacy) {
-            throw new Error("`validateLegacy` cannot be called on non-legacy mnemonics");
+            throw new Error(
+                "`validateLegacy` cannot be called on non-legacy mnemonics"
+            );
         }
 
         const unknownIndices = this.words.reduce(
-            (unknowns, word, index) =>
+            (
+                /**
+                 * @type {number[]}
+                 */
+                unknowns,
+                /**
+                 * @type {string}
+                 */
+                word,
+                /**
+                 * @type {number}
+                 */
+                index
+            ) =>
                 // eslint-disable-next-line implicit-arrow-linebreak
-                legacyWordList.includes(word) ? unknowns : [ ...unknowns, index ],
+                legacyWordList.includes(word) ? unknowns : [...unknowns, index],
             []
         );
 
@@ -179,10 +233,16 @@ export class Mnemonic {
         try {
             this._toLegacyEntropy();
         } catch {
-            return new MnemonicValidationResult(MnemonicValidationStatus.ChecksumMismatch);
+            return new MnemonicValidationResult(
+                MnemonicValidationStatus.ChecksumMismatch,
+                undefined
+            );
         }
 
-        return new MnemonicValidationResult(MnemonicValidationStatus.Ok);
+        return new MnemonicValidationResult(
+            MnemonicValidationStatus.Ok,
+            undefined
+        );
     }
 
     /**
@@ -193,24 +253,32 @@ export class Mnemonic {
             throw new Error("this mnemonic is not a legacy mnemonic");
         }
 
-        const len256Bits = Math.ceil((256 + 8) / Math.log2(legacyWordList.length));
+        const len256Bits = Math.ceil(
+            (256 + 8) / Math.log2(legacyWordList.length)
+        );
         const numWords = this.words.length;
 
         if (numWords !== len256Bits) {
-            throw new Error(`there should be ${len256Bits} words, not ${numWords}`);
+            throw new Error(
+                `there should be ${len256Bits} words, not ${numWords}`
+            );
         }
 
-        const indicies = this.words.map((word) => legacyWordList.indexOf(word.toLowerCase()));
+        const indicies = this.words.map((word) =>
+            legacyWordList.indexOf(word.toLowerCase())
+        );
         const data = _convertRadix(indicies, legacyWordList.length, 256, 33);
-        const crc = data[ data.length - 1 ];
+        const crc = data[data.length - 1];
         const result = new Uint8Array(data.length - 1);
         for (let i = 0; i < data.length - 1; i += 1) {
-            result[ i ] = data[ i ] ^ crc;
+            result[i] = data[i] ^ crc;
         }
 
         const crc2 = _crc8(result);
         if (crc !== crc2) {
-            throw new Error("Invalid legacy mnemonic: fails the cyclic redundency check");
+            throw new Error(
+                "Invalid legacy mnemonic: fails the cyclic redundency check"
+            );
         }
 
         return result;
@@ -229,16 +297,16 @@ export class Mnemonic {
  * @returns {number}
  */
 function _crc8(data) {
-    let crc = 0xFF;
+    let crc = 0xff;
 
     for (let i = 0; i < data.length - 1; i += 1) {
-        crc ^= data[ i ];
+        crc ^= data[i];
         for (let j = 0; j < 8; j += 1) {
-            crc = (crc >>> 1) ^ (((crc & 1) === 0) ? 0 : 0xB2);
+            crc = (crc >>> 1) ^ ((crc & 1) === 0 ? 0 : 0xb2);
         }
     }
 
-    return crc ^ 0xFF;
+    return crc ^ 0xff;
 }
 
 /**
@@ -249,18 +317,17 @@ function _crc8(data) {
  * @returns {Uint8Array}
  */
 function _convertRadix(nums, fromRadix, toRadix, toLength) {
-    let num = new BigNumber(0);
+    let num = Long.fromValue(0);
     for (const element of nums) {
-        num = num.times(fromRadix);
-        num = num.plus(element);
+        num = num.mul(fromRadix);
+        num = num.add(element);
     }
     const result = new Uint8Array(toLength);
     for (let i = toLength - 1; i >= 0; i -= 1) {
-        const tem = num.dividedToIntegerBy(toRadix);
+        const tem = num.divide(toRadix);
         const rem = num.modulo(toRadix);
         num = tem;
-        result[ i ] = rem.toNumber();
+        result[i] = rem.toNumber();
     }
     return result;
 }
-

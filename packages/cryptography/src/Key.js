@@ -1,2 +1,1 @@
-export default class Key {
-}
+export default class Key {}

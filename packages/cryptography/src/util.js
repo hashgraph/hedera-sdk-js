@@ -11,6 +11,7 @@ export const HMAC_ALGORITHM = "sha384";
 
 /**
  * SLIP-10/BIP-32 child key derivation
+ *
  * @param {Uint8Array} parentKey
  * @param {Uint8Array} chainCode
  * @param {number} index
@@ -20,11 +21,11 @@ export async function deriveChildKey2(parentKey, chainCode, index) {
     // webpack version of crypto complains if input types are not `Buffer`
     const input = new Uint8Array(37);
     // 0x00 + parentKey + index(BE)
-    input[ 0 ] = 0;
+    input[0] = 0;
     input.set(parentKey, 1);
     new DataView(input.buffer).setUint32(33, index, false);
     // set the index to hardened
-    input[ 33 ] |= 128;
+    input[33] |= 128;
 
     const digest = await hmac.hash(hmac.HashAlgorithm.Sha512, chainCode, input);
 
@@ -33,6 +34,7 @@ export async function deriveChildKey2(parentKey, chainCode, index) {
 
 /**
  * SLIP-10/BIP-32 child key derivation
+ *
  * @param {Uint8Array} parentKey
  * @param {Uint8Array} chainCode
  * @param {number} index
@@ -43,11 +45,11 @@ export function deriveChildKey(parentKey, chainCode, index) {
     const mac = crypto.createHmac("SHA512", Buffer.from(chainCode));
     const input = new Uint8Array(37);
     // 0x00 + parentKey + index(BE)
-    input[ 0 ] = 0;
+    input[0] = 0;
     input.set(parentKey, 1);
     new DataView(input.buffer).setUint32(33, index, false);
     // set the index to hardened
-    input[ 33 ] |= 128;
+    input[33] |= 128;
 
     mac.update(input);
 
@@ -58,6 +60,7 @@ export function deriveChildKey(parentKey, chainCode, index) {
 
 /**
  * SLIP-10/BIP-32 child key derivation
+ *
  * @param {Uint8Array} a
  * @param {Uint8Array} b
  * @returns {boolean}
@@ -67,8 +70,25 @@ export function arraysEqual(a, b) {
     if (a == null || b == null) return false;
     if (a.length !== b.length) return false;
 
-    for (const [ i, element ] of a.entries()) {
-        if (element !== b[ i ]) return false;
+    for (const [i, element] of a.entries()) {
+        if (element !== b[i]) return false;
     }
     return true;
+}
+
+/**
+ * @param {string} prop
+ * @returns {boolean}
+ */
+export function isAccessible(prop) {
+    if (typeof self !== "undefined") {
+        return prop in self;
+    }
+    if (typeof window !== "undefined") {
+        return prop in window;
+    }
+    if (typeof global !== "undefined") {
+        return prop in global;
+    }
+    throw new Error("unable to locate global object");
 }

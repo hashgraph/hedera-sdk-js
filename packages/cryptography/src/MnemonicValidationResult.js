@@ -1,17 +1,17 @@
-import { MnemonicValidationStatus } from "./MnemonicValidationStatus.js";
+import MnemonicValidationStatus from "./MnemonicValidationStatus.js";
 
 /**
  * The output of `toString()` is not part of the stable API; it only appears in the typedef
  * so that Typescript allows us to define it.
  */
-export class MnemonicValidationResult {
+export default class MnemonicValidationResult {
     /**
-     * @param {MnemonicValidationStatus} status
-     * @param {number[] | undefined} unknownIndicies
+     * @param {string} status
+     * @param {number[] | undefined} unknownIndices
      */
     constructor(status, unknownIndices) {
         /**
-         * @type {MnemonicValidationStatus}
+         * @type {string}
          */
         this.status = status;
 
@@ -49,8 +49,9 @@ export class MnemonicValidationResult {
             case MnemonicValidationStatus.UnknownLegacyWords:
                 return "legacy mnemonic contained words that are not in the legacy word list";
             default:
-                throw new Error(`(BUG) missing branch for status: ${this.status}`);
+                throw new Error(
+                    `(BUG) missing branch for status: ${this.status}`
+                );
         }
     }
 }
-

@@ -1,26 +1,27 @@
 import nacl from "tweetnacl";
-import { PublicKey } from "./PublicKey.js";
+import PublicKey from "./PublicKey.js";
+import Mnemonic from "./Mnemonic.js";
 import {
     arraysEqual,
     deriveChildKey,
     deriveChildKey2,
-    ED25519PRIVATEKEY_PREFIX
+    ED25519PRIVATEKEY_PREFIX,
 } from "./util.js";
-import { createKeystore, loadKeystore } from "./Keystore.js";
-import { BadKeyError } from "../errors/BadKeyError.js";
-import { BadPemFileError } from "../errors/BadPemFileError.js";
-import { EncryptedPrivateKeyInfo } from "./pkcs.js";
-import { decodeDer } from "./der.js";
-import * as base64 from "../encoding/base64.js";
+// import { createKeystore, loadKeystore } from "./Keystore.js";
+import BadKeyError from "./BadKeyError.js";
+// import { BadPemFileError } from "../errors/BadPemFileError.js";
+// import { EncryptedPrivateKeyInfo } from "./pkcs.js";
+// import { decodeDer } from "./der.js";
+// import * as base64 from "./base64.js";
 import * as hex from "./hex.js";
 import * as hmac from "./hmac.js";
 import * as pbkdf2 from "./pbkdf2.js";
 
-const BEGIN_PRIVATEKEY = "-----BEGIN PRIVATE KEY-----\n";
-const END_PRIVATEKEY = "-----END PRIVATE KEY-----\n";
+// const BEGIN_PRIVATEKEY = "-----BEGIN PRIVATE KEY-----\n";
+// const END_PRIVATEKEY = "-----END PRIVATE KEY-----\n";
 
-const BEGIN_ENCRYPTED_PRIVATEKEY = "-----BEGIN ENCRYPTED PRIVATE KEY-----\n";
-const END_ENCRYPTED_PRIVATEKEY = "-----END ENCRYPTED PRIVATE KEY-----\n";
+// const BEGIN_ENCRYPTED_PRIVATEKEY = "-----BEGIN ENCRYPTED PRIVATE KEY-----\n";
+// const END_ENCRYPTED_PRIVATEKEY = "-----END ENCRYPTED PRIVATE KEY-----\n";
 
 const DER_PREFIX = hex.decode("302e020100300506032b657004220420");
 
@@ -31,7 +32,8 @@ const DER_PREFIX = hex.decode("302e020100300506032b657004220420");
 function _bytesLengthCases(bytes) {
     // this check is necessary because Jest breaks the prototype chain of Uint8Array
     // noinspection SuspiciousTypeOfGuard
-    const bytesArray = bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
+    const bytesArray =
+        bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
 
     switch (bytes.length) {
         case 48:
@@ -48,22 +50,25 @@ function _bytesLengthCases(bytes) {
             return nacl.sign.keyPair.fromSecretKey(bytesArray);
         default:
     }
-    throw new BadKeyError();
+
+    throw new BadKeyError(undefined);
 }
 
-export class PrivateKey {
+export default class PrivateKey {
     /**
-     * @param {{privateKey: Uint8Array, publicKey: Uint8Array }}
+     * @param {{privateKey: Uint8Array, publicKey: Uint8Array }} keyPair
      */
-    constructor({ privateKey, publicKey }) {
+    constructor(keyPair) {
+        const { privateKey, publicKey } = keyPair;
+
         if (privateKey.length !== nacl.sign.secretKeyLength) {
-            throw new BadKeyError();
+            throw new BadKeyError(undefined);
         }
 
         /**
          * @type {Uint8Array}
          */
-        this.#keyData = privateKey;
+        this._keyData = privateKey;
 
         /**
          * @type {PublicKey}
@@ -73,12 +78,12 @@ export class PrivateKey {
         /**
          * @type {Uint8Array | null}
          */
-        this.#chainCode = null;
+        this._chainCode = null;
 
         /**
          * @type {string | null}
          */
-        this.#asStringRaw = null;
+        this._asStringRaw = null;
     }
 
     /**
@@ -108,7 +113,8 @@ export class PrivateKey {
     static fromString(keyStr) {
         switch (keyStr.length) {
             case 64: // lone private key
-            case 128: { // private key + key
+            case 128: {
+                // private key + key
                 const newKey = PrivateKey.fromBytes(hex.decode(keyStr));
                 newKey._asStringRaw = keyStr;
                 return newKey;
@@ -122,8 +128,9 @@ export class PrivateKey {
                 }
                 break;
             default:
-            throw new BadKeyError();
         }
+
+        throw new BadKeyError(undefined);
     }
 
     /**
@@ -153,9 +160,19 @@ export class PrivateKey {
 
         const input = mnemonic.toString();
         const salt = `mnemonic${passphrase}`;
-        const seed = await pbkdf2.deriveKey(hmac.HashAlgorithm.Sha512, input, salt, 2048, 64);
+        const seed = await pbkdf2.deriveKey(
+            hmac.HashAlgorithm.Sha512,
+            input,
+            salt,
+            2048,
+            64
+        );
 
-        const digest = await hmac.hash(hmac.HashAlgorithm.Sha512, "ed25519 seed", seed);
+        const digest = await hmac.hash(
+            hmac.HashAlgorithm.Sha512,
+            "ed25519 seed",
+            seed
+        );
 
         /**
          * @type {Uint8Array}
@@ -167,12 +184,16 @@ export class PrivateKey {
          */
         let chainCode = digest.subarray(32);
 
-        for (const index of [ 44, 3030, 0, 0 ]) {
-            ({ keyBytes, chainCode } = deriveChildKey(keyBytes, chainCode, index));
+        for (const index of [44, 3030, 0, 0]) {
+            ({ keyBytes, chainCode } = deriveChildKey(
+                keyBytes,
+                chainCode,
+                index
+            ));
         }
 
         const key = PrivateKey.fromBytes(keyBytes);
-        key.#chainCode = chainCode;
+        key._chainCode = chainCode;
         return key;
     }
 
@@ -181,24 +202,25 @@ export class PrivateKey {
      *
      * This key will _not_ support child key derivation.
      *
-     * @param {Uint8Array} keystore the keystore blob
-     * @param {string} passphrase the passphrase used to create the keystore
+     * param {Uint8Array} keystore - the keystore blob
+     * param {string} passphrase - the passphrase used to create the keystore
+     *
      * @returns {Promise<PrivateKey>}
      * @throws KeyMismatchError if the passphrase is incorrect or the hash fails to validate
      * @link createKeystore
      */
-    static async fromKeystore(keystore, passphrase) {
-        return new PrivateKey(await loadKeystore(keystore, passphrase));
-    }
+    // static async fromKeystore(keystore, passphrase) {
+    //     return new PrivateKey(await loadKeystore(keystore, passphrase));
+    // }
 
     /**
      * Generate a new, cryptographically random private key.
      *
      * This key will _not_ support child key derivation.
      *
-     * @returns {Promise<PrivateKey>}
+     * @returns {PrivateKey}
      */
-    static async generate() {
+    static generate() {
         return this.fromBytes(nacl.randomBytes(32));
     }
 
@@ -216,26 +238,30 @@ export class PrivateKey {
      * @returns {Promise<PrivateKey>}
      */
     async derive(index) {
-        if (this.#chainCode == null) {
-            throw new Error("this  private key does not support key derivation");
+        if (this._chainCode == null) {
+            throw new Error(
+                "this  private key does not support key derivation"
+            );
         }
 
-        const {
-            keyBytes,
-            chainCode
-        } = await deriveChildKey2(this.#keyData.subarray(0, 32), this.#chainCode, index);
+        const { keyBytes, chainCode } = await deriveChildKey2(
+            this._keyData.subarray(0, 32),
+            this._chainCode,
+            index
+        );
 
         const key = PrivateKey.fromBytes(keyBytes);
-        key.#chainCode = chainCode;
+        key._chainCode = chainCode;
 
         return key;
     }
 
     /** Check if this private key supports deriving child keys
+     *
      * @returns {boolean}
      */
     get supportsDerivation() {
-        return this.#chainCode != null;
+        return this._chainCode != null;
     }
 
     /**
@@ -244,7 +270,7 @@ export class PrivateKey {
     toBytes() {
         // copy the bytes so they can't be modified accidentally
         // only copy the private key portion since that's what we're expecting on the other end
-        return this.#keyData.slice(0, 32);
+        return this._keyData.slice(0, 32);
     }
 
     /**
@@ -254,7 +280,7 @@ export class PrivateKey {
     toString(raw = false) {
         if (this._asStringRaw == null) {
             // only encode the private portion of the private key
-            this._asStringRaw = hex.encode(this.#keyData.subarray(0, 32), true);
+            this._asStringRaw = hex.encode(this._keyData.subarray(0, 32));
         }
 
         return (raw ? "" : ED25519PRIVATEKEY_PREFIX) + this._asStringRaw;
@@ -272,9 +298,9 @@ export class PrivateKey {
      * @returns {Promise<Uint8Array>}
      * @link fromKeystore
      */
-    toKeystore(passphrase) {
-        return createKeystore(this.#keyData, passphrase);
-    }
+    // toKeystore(passphrase) {
+    //     return createKeystore(this._keyData, passphrase);
+    // }
 
     /**
      * Recover a private key from a pem string; the private key may be encrypted.
@@ -289,45 +315,45 @@ export class PrivateKey {
      * @param {string | undefined} passphrase
      * @returns {Promise<PrivateKey>}
      */
-    static async fromPem(pem, passphrase) {
-        const beginTag = passphrase ? BEGIN_ENCRYPTED_PRIVATEKEY : BEGIN_PRIVATEKEY;
-        const endTag = passphrase ? END_ENCRYPTED_PRIVATEKEY : END_PRIVATEKEY;
+    // static async fromPem(pem, passphrase) {
+    //     const beginTag = passphrase ? BEGIN_ENCRYPTED_PRIVATEKEY : BEGIN_PRIVATEKEY;
+    //     const endTag = passphrase ? END_ENCRYPTED_PRIVATEKEY : END_PRIVATEKEY;
 
-        const beginIndex = pem.indexOf(beginTag);
-        const endIndex = pem.indexOf(endTag);
+    //     const beginIndex = pem.indexOf(beginTag);
+    //     const endIndex = pem.indexOf(endTag);
 
-        if (beginIndex === -1 || endIndex === -1) {
-            throw new BadPemFileError();
-        }
+    //     if (beginIndex === -1 || endIndex === -1) {
+    //         throw new BadPemFileError();
+    //     }
 
-        const keyEncoded = pem.slice(beginIndex + beginTag.length, endIndex);
+    //     const keyEncoded = pem.slice(beginIndex + beginTag.length, endIndex);
 
-        const key = base64.decode(keyEncoded);
+    //     const key = base64.decode(keyEncoded);
 
-        if (passphrase) {
-            let encrypted;
+    //     if (passphrase) {
+    //         let encrypted;
 
-            try {
-                encrypted = EncryptedPrivateKeyInfo.parse(key);
-            } catch (error) {
-                throw new BadKeyError(`failed to parse encrypted private key: ${error.message}`);
-            }
+    //         try {
+    //             encrypted = EncryptedPrivateKeyInfo.parse(key);
+    //         } catch (error) {
+    //             throw new BadKeyError(`failed to parse encrypted private key: ${error.message}`);
+    //         }
 
-            const decrypted = await encrypted.decrypt(passphrase);
+    //         const decrypted = await encrypted.decrypt(passphrase);
 
-            if (decrypted.algId.algIdent !== "1.3.101.112") {
-                throw new BadKeyError(`unknown private key algorithm ${decrypted.algId}`);
-            }
+    //         if (decrypted.algId.algIdent !== "1.3.101.112") {
+    //             throw new BadKeyError(`unknown private key algorithm ${decrypted.algId}`);
+    //         }
 
-            const keyData = decodeDer(decrypted.privateKey);
+    //         const keyData = decodeDer(decrypted.privateKey);
 
-            if ("bytes" in keyData) {
-                return PrivateKey.fromBytes(keyData.bytes);
-            }
+    //         if ("bytes" in keyData) {
+    //             return PrivateKey.fromBytes(keyData.bytes);
+    //         }
 
-            throw new BadKeyError(`expected ASN bytes, got ${JSON.stringify(keyData)}`);
-        }
+    //         throw new BadKeyError(`expected ASN bytes, got ${JSON.stringify(keyData)}`);
+    //     }
 
-        return PrivateKey.fromBytes(key);
-    }
+    //     return PrivateKey.fromBytes(key);
+    // }
 }
