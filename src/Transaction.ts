@@ -11,6 +11,7 @@ import { CryptoService } from "./generated/CryptoService_pb_service";
 import { SmartContractService } from "./generated/SmartContractService_pb_service";
 import { FileService } from "./generated/FileService_pb_service";
 import { FreezeService } from "./generated/FreezeService_pb_service";
+import { ConsensusService } from "./generated/ConsensusService_pb_service";
 import { AccountId } from "./account/AccountId";
 import { TransactionId } from "./TransactionId";
 import { TransactionReceipt } from "./TransactionReceipt";
@@ -264,6 +265,14 @@ function methodFromTxn(inner: TransactionBody): UnaryMethodDefinition<Transactio
             return SmartContractService.systemUndelete;
         case TransactionBody.DataCase.FREEZE:
             return FreezeService.freeze;
+        case TransactionBody.DataCase.CONSENSUSCREATETOPIC:
+            return ConsensusService.createTopic;
+        case TransactionBody.DataCase.CONSENSUSUPDATETOPIC:
+            return ConsensusService.updateTopic;
+        case TransactionBody.DataCase.CONSENSUSDELETETOPIC:
+            return ConsensusService.deleteTopic;
+        case TransactionBody.DataCase.CONSENSUSSUBMITMESSAGE:
+            return ConsensusService.submitMessage;
         case TransactionBody.DataCase.DATA_NOT_SET:
             throw new Error("transaction body missing");
         default:
