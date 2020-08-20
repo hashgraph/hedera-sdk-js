@@ -13,6 +13,7 @@ import { BadKeyError } from "../errors/BadKeyError";
 import { BadPemFileError } from "../errors/BadPemFileError";
 import { EncryptedPrivateKeyInfo } from "./pkcs";
 import { decodeDer } from "./der";
+// import * as base64 from "@stablelib/base64";
 import * as base64 from "../encoding/base64";
 import * as hex from "@stablelib/hex";
 import { Hmac, HashAlgorithm } from "./Hmac";
@@ -286,6 +287,8 @@ export class Ed25519PrivateKey {
 
         const keyEncoded = pem.slice(beginIndex + beginTag.length, endIndex);
 
+        // Base64 library throws a "Base64Coder: incorrect characters for decoding"
+        // const key = base64.decode(keyEncoded);
         const key = base64.decode(keyEncoded);
 
         if (passphrase) {
