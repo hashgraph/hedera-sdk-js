@@ -1,7 +1,7 @@
 import PrivateKey from "../../src/PrivateKey.js";
 import * as utf8 from "../../src/utf8.js";
 
-const privateKey = new PrivateKey(
+const privateKey = PrivateKey.fromBytes(
     Uint8Array.from([
         33,
         208,

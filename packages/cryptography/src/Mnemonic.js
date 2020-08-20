@@ -2,7 +2,7 @@ import * as bip39 from "bip39";
 import PrivateKey from "./PrivateKey.js";
 import MnemonicValidationResult from "./MnemonicValidationResult.js";
 import MnemonicValidationStatus from "./MnemonicValidationStatus.js";
-import legacyWordList from "./legacyWordList";
+import legacyWordList from "./legacyWordList.js";
 import Long from "long";
 import { HashAlgorithm } from "./hmac.js";
 import * as pbkdf2 from "./pbkdf2.js";

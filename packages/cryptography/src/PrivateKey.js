@@ -71,6 +71,11 @@ export default class PrivateKey {
         this._keyData = privateKey;
 
         /**
+         * @type {nacl.SignKeyPair}
+         */
+        this._signingKey = nacl.sign.keyPair.fromSecretKey(privateKey);
+
+        /**
          * @type {PublicKey}
          */
         this.publicKey = PublicKey.fromBytes(publicKey);
@@ -254,6 +259,14 @@ export default class PrivateKey {
         key._chainCode = chainCode;
 
         return key;
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {Uint8Array} - The signature bytes without the message
+     */
+    sign(bytes) {
+        return nacl.sign.detached(bytes, this._signingKey.secretKey);
     }
 
     /** Check if this private key supports deriving child keys
