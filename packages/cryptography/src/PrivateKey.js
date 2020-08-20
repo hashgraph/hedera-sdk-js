@@ -7,7 +7,7 @@ import {
     deriveChildKey2,
     ED25519PRIVATEKEY_PREFIX,
 } from "./util.js";
-// import { createKeystore, loadKeystore } from "./Keystore.js";
+import { createKeystore, loadKeystore } from "./Keystore.js";
 import BadKeyError from "./BadKeyError.js";
 // import { BadPemFileError } from "../errors/BadPemFileError.js";
 // import { EncryptedPrivateKeyInfo } from "./pkcs.js";
@@ -207,16 +207,15 @@ export default class PrivateKey {
      *
      * This key will _not_ support child key derivation.
      *
-     * param {Uint8Array} keystore - the keystore blob
-     * param {string} passphrase - the passphrase used to create the keystore
-     *
+     * @param {Uint8Array} keystore - the keystore blob
+     * @param {string} passphrase - the passphrase used to create the keystore
      * @returns {Promise<PrivateKey>}
      * @throws KeyMismatchError if the passphrase is incorrect or the hash fails to validate
      * @link createKeystore
      */
-    // static async fromKeystore(keystore, passphrase) {
-    //     return new PrivateKey(await loadKeystore(keystore, passphrase));
-    // }
+    static async fromKeystore(keystore, passphrase) {
+        return new PrivateKey(await loadKeystore(keystore, passphrase));
+    }
 
     /**
      * Generate a new, cryptographically random private key.
@@ -311,9 +310,9 @@ export default class PrivateKey {
      * @returns {Promise<Uint8Array>}
      * @link fromKeystore
      */
-    // toKeystore(passphrase) {
-    //     return createKeystore(this._keyData, passphrase);
-    // }
+    toKeystore(passphrase) {
+        return createKeystore(this._keyData, passphrase);
+    }
 
     /**
      * Recover a private key from a pem string; the private key may be encrypted.
