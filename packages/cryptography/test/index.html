@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+
+        <title>Hedera™ JavaScript SDK > Cryptography > Tests</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    </head>
+    <body>
+        <div id="mocha"></div>
+
+        <!--<script src="../node_modules/chai/chai.js"></script>-->
+        <script src="https://unpkg.com/chai@^4.2.0/chai.js"></script>
+        <script src="https://unpkg.com/mocha@^7.1.2/mocha.js"></script>
+        <script src="https://unpkg.com/mocha-webdriver-runner@^0.6.2/dist/mocha-webdriver-client.js"></script>
+        <!--<script src="../node_modules/mocha-webdriver-runner/dist/mocha-webdriver-client.js"></script>-->
+
+        <script class="mocha-init">
+            mocha.setup("bdd");
+            mocha.checkLeaks();
+        </script>
+
+        <script class="chai-init">
+            window.expect = chai.expect;
+        </script>
+
+        <!-- NOTE: all unit tests need to be imported here -->
+        <script src="unit/encoding/hex.js"></script>
+        <script src="unit/encoding/utf8.js"></script>
+        <script src="unit/encoding/base64.js"></script>
+        <script src="unit/crypto/private_key.js"></script>
+
+        <script class="mocha-run">
+            mocha.run();
+        </script>
+    </body>
+</html>

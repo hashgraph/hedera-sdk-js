@@ -13,16 +13,15 @@ module.exports = {
         "plugin:jsdoc/recommended",
         "plugin:import/errors",
         "plugin:import/typescript",
-        "plugin:node/recommended",
-        "plugin:mocha/recommended",
-        "plugin:chai-expect/recommended",
+        "plugin:node/recommended"
     ],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         tsconfigRootDir: __dirname,
-        project: ["./tsconfig.eslint.json"],
+        project: ["./tsconfig.json"],
         ecmaVersion: 2020,
         sourceType: "module",
+        warnOnUnsupportedTypeScriptVersion: false
     },
     plugins: ["@typescript-eslint"],
     rules: {
