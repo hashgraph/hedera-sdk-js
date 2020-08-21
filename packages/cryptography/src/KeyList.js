@@ -1,40 +1,79 @@
 import PublicKey from "./PublicKey";
 
 export default class KeyList {
-    constructor() {
+    /**
+     * @param {number | undefined} threshold
+     */
+    constructor(threshold) {
         /**
-         * @type number[]
+         * @type PublicKey[]
          */
         this._keys = []
+
+        /**
+         * @type {number | undefined}
+         */
+        this.threshold = threshold;
     }
 
     /**
-     * @param {PublicKey} key
-     * @returns {KeyList}
+     * @param {number | undefined} threshold
      */
-    add(key) {
-        // this._keys.push(key._toProtoKey());
-        return this;
+    static withThreshold(threshold) {
+        return new KeyList(threshold);
     }
 
     /**
      * @param {PublicKey[]} keys
      * @returns {KeyList}
      */
-    addAll(...keys) {
-        // this._keys.push(...keys.map((key) => key._toProtoKey()));
+    static of(...keys) {
+        return new KeyList(undefined).push(...keys);
+    }
+
+    /**
+     * @template T
+     * @param {ArrayLike<PublicKey>} arrayLike
+     * @param {(key: PublicKey) => PublicKey} mapFn
+     * @param {T} thisArg
+     * @returns {KeyList}
+     */
+    static from(arrayLike, mapFn, thisArg) {
+        return new KeyList(undefined).push(...Array.from(arrayLike, mapFn, thisArg));
+    }
+
+    /**
+     * @param {PublicKey[]} keys
+     * @returns {KeyList}
+     */
+    push(...keys) {
+        this._keys.push(...keys);
         return this;
     }
 
-    // /* eslint-disable-next-line @typescript-eslint/member-naming */
-    // _toProtoKey(): proto.Key {
-    //     const keyList = new proto.KeyList();
-    //     keyList.setKeysList(this._keys);
+    /**
+     * @param {number} start
+     * @param {number} deleteCount
+     * @param {PublicKey[]} items
+     * @returns {KeyList}
+     */
+    splice(start, deleteCount, ...items) {
+        return new KeyList(this.threshold)
+            .push(...this._keys.splice(start, deleteCount, ...items));
+    }
 
-    //     const protoKey = new proto.Key();
-    //     protoKey.setKeylist(keyList);
+    /**
+     * @param {number | undefined} start
+     * @param {number | undefined} end
+     * @returns {KeyList}
+     */
+    slice(start, end) {
+        return new KeyList(this.threshold)
+            .push(...this._keys.slice(start, end));
+    }
 
-    //     return protoKey;
-    // }
+    [ Symbol.iterator ]() {
+        return this._keys[Symbol.iterator];
+    }
 }
 
