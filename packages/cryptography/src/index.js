@@ -5,8 +5,6 @@ import MnemonicValidationStatus from "./MnemonicValidationStatus.js";
 import PrivateKey from "./PrivateKey.js";
 import PublicKey from "./PublicKey.js";
 
-import * as protobuf from "protobufjs";
-
 export default {
     Key,
     Mnemonnic,

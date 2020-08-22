@@ -8,7 +8,7 @@ export default class KeyList {
         /**
          * @type PublicKey[]
          */
-        this._keys = []
+        this._keys = [];
 
         /**
          * @type {number | undefined}
@@ -18,6 +18,7 @@ export default class KeyList {
 
     /**
      * @param {number | undefined} threshold
+     * @returns {KeyList}
      */
     static withThreshold(threshold) {
         return new KeyList(threshold);
@@ -39,7 +40,9 @@ export default class KeyList {
      * @returns {KeyList}
      */
     static from(arrayLike, mapFn, thisArg) {
-        return new KeyList(undefined).push(...Array.from(arrayLike, mapFn, thisArg));
+        return new KeyList(undefined).push(
+            ...Array.from(arrayLike, mapFn, thisArg)
+        );
     }
 
     /**
@@ -58,8 +61,9 @@ export default class KeyList {
      * @returns {KeyList}
      */
     splice(start, deleteCount, ...items) {
-        return new KeyList(this.threshold)
-            .push(...this._keys.splice(start, deleteCount, ...items));
+        return new KeyList(this.threshold).push(
+            ...this._keys.splice(start, deleteCount, ...items)
+        );
     }
 
     /**
@@ -68,12 +72,12 @@ export default class KeyList {
      * @returns {KeyList}
      */
     slice(start, end) {
-        return new KeyList(this.threshold)
-            .push(...this._keys.slice(start, end));
+        return new KeyList(this.threshold).push(
+            ...this._keys.slice(start, end)
+        );
     }
 
-    [ Symbol.iterator ]() {
+    [Symbol.iterator]() {
         return this._keys[Symbol.iterator];
     }
 }
-

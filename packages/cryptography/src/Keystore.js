@@ -1,10 +1,10 @@
 import nacl from "tweetnacl";
-import KeyMismatchError from "./KeyMismatchError.js";
-import * as crypto from "crypto";
+import BadKeyError from "./BadKeyError.js";
 import * as hex from "./hex.js";
 import * as utf8 from "./utf8.js";
 import * as hmac from "./hmac.js";
 import * as pbkdf2 from "./pbkdf2.js";
+import { isAccessible } from "./util.js";
 
 const AES_128_CTR = "aes-128-ctr";
 const HMAC_SHA256 = "hmac-sha256";
@@ -60,41 +60,49 @@ export async function createKeystore(privateKey, passphrase) {
 
     const iv = nacl.randomBytes(16);
 
-    // AES-128-CTR with the first half of the derived key and a random IV
-    const cipher = crypto.createCipheriv(AES_128_CTR, key.slice(0, 16), iv);
+    if (isAccessible("Buffer")) {
+        // AES-128-CTR with the first half of the derived key and a random IV
+        const cipher = (await import("crypto")).createCipheriv(
+            AES_128_CTR,
+            key.slice(0, 16),
+            iv
+        );
 
-    const cipherText = Buffer.concat([
-        cipher.update(privateKey),
-        cipher["final"](),
-    ]);
+        const cipherText = Buffer.concat([
+            cipher.update(privateKey),
+            cipher["final"](),
+        ]);
 
-    const mac = await hmac.hash(
-        hmac.HashAlgorithm.Sha384,
-        key.slice(16),
-        cipherText
-    );
+        const mac = await hmac.hash(
+            hmac.HashAlgorithm.Sha384,
+            key.slice(16),
+            cipherText
+        );
 
-    /**
-     * @type {Keystore}
-     */
-    const keystore = {
-        version: 1,
-        crypto: {
-            ciphertext: hex.encode(cipherText),
-            cipherparams: { iv: hex.encode(iv) },
-            cipher: AES_128_CTR,
-            kdf: "pbkdf2",
-            kdfparams: {
-                dkLen,
-                salt: hex.encode(salt),
-                c,
-                prf: HMAC_SHA256,
+        /**
+         * @type {Keystore}
+         */
+        const keystore = {
+            version: 1,
+            crypto: {
+                ciphertext: hex.encode(cipherText),
+                cipherparams: { iv: hex.encode(iv) },
+                cipher: AES_128_CTR,
+                kdf: "pbkdf2",
+                kdfparams: {
+                    dkLen,
+                    salt: hex.encode(salt),
+                    c,
+                    prf: HMAC_SHA256,
+                },
+                mac: hex.encode(mac),
             },
-            mac: hex.encode(mac),
-        },
-    };
+        };
 
-    return utf8.encode(JSON.stringify(keystore));
+        return utf8.encode(JSON.stringify(keystore));
+    } else {
+        throw new Error("Cannot create keystore on web");
+    }
 }
 
 /**
@@ -151,20 +159,28 @@ export async function loadKeystore(keystoreBytes, passphrase) {
 
     // compare that these two Uint8Arrays are equivalent
     if (!macHex.every((b, i) => b === verifyHmac[i])) {
-        throw new KeyMismatchError(macHex, verifyHmac);
+        throw new BadKeyError("HMAC mismatch; passphrase is incorrect");
     }
 
-    const decipher = crypto.createDecipheriv(cipher, key.slice(0, 16), ivBytes);
-    const privateKeyBytes = Buffer.concat([
-        decipher.update(cipherBytes),
-        decipher["final"](),
-    ]);
+    if (isAccessible("Buffer")) {
+        const decipher = (await import("crypto")).createDecipheriv(
+            cipher,
+            key.slice(0, 16),
+            ivBytes
+        );
+        const privateKeyBytes = Buffer.concat([
+            decipher.update(cipherBytes),
+            decipher["final"](),
+        ]);
 
-    // `Buffer instanceof Uint8Array` doesn't work in Jest because the prototype chain is different
-    const {
-        secretKey: privateKey,
-        publicKey,
-    } = nacl.sign.keyPair.fromSecretKey(Uint8Array.from(privateKeyBytes));
+        // `Buffer instanceof Uint8Array` doesn't work in Jest because the prototype chain is different
+        const {
+            secretKey: privateKey,
+            publicKey,
+        } = nacl.sign.keyPair.fromSecretKey(Uint8Array.from(privateKeyBytes));
 
-    return { privateKey, publicKey };
+        return { privateKey, publicKey };
+    } else {
+        throw new Error("Cannot load keystore on web");
+    }
 }
