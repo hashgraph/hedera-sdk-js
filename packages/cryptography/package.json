@@ -30,14 +30,12 @@
         "format": "prettier src test '*.json' 'src/*.js' --write",
         "build": "run-s lint compile",
         "test": "run-s test:node test:browser:chrome test:browser:firefox",
-        "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js'",
+        "test:node": "mocha -r @babel/register -r chai/register-should -r chai/register-expect 'test/unit/**/*.js'",
         "test:browser:chrome": "parcel serve --no-source-maps --no-autoinstall --log-level=none --no-hmr -p 9001 test/index.html & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/; kill %1",
         "test:browser:firefox": "parcel serve --no-source-maps --no-autoinstall --log-level=none --no-hmr -p 9002 test/index.html & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/; kill %1"
     },
     "dependencies": {
-        "@types/chai-as-promised": "^7.1.3",
         "bip39": "^3.0.2",
-        "chai-as-promised": "^7.1.1",
         "js-sha3": "^0.8.0",
         "long": "^4.0.0",
         "tweetnacl": "^1.0.3"

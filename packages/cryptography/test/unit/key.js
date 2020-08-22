@@ -7,14 +7,6 @@ import Mnemonic from "../../src/Mnemonic.js";
 // import * as utf8 from "../../src/utf8.js";
 
 
-// if (typeof Buffer != "undefined") {
-//     const chai = await import("chai");
-//     const chaiAsPromised = await import("chai-as-promised");
-
-//     chai.use(chaiAsPromised);
-//     chai.should();
-// }
-
 // key from hedera-sdk-java tests, not used anywhere
 const privKeyBytes = Uint8Array.of(
     -37,
@@ -208,8 +200,8 @@ describe("PrivateKey", function () {
         expect(key1.toBytes()).to.deep.equal(key2.toBytes());
 
         // keystore with the wrong password should reject with a `KeyMismatchError`
-        // TODO: fix chai + mocha + chai-as-promised not working
-        // expect(PrivateKey.fromKeystore(keystoreBytes, "some random password")).to.eventually.throw();
+        await PrivateKey.fromKeystore(keystoreBytes, "some random password")
+            .catch(err => err.should.have.property("message", "HMAC mismatch; passphrase is incorrect"));
     });
 
     // it("derive() produces correct value", async() => {
