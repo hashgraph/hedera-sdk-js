@@ -6,7 +6,6 @@ import legacyWordList from "./legacyWordList.js";
 import Long from "long";
 import { HashAlgorithm } from "./hmac.js";
 import * as pbkdf2 from "./pbkdf2.js";
-import { isAccessible } from "./util.js";
 
 /** result of `generateMnemonic()` */
 export default class Mnemonic {
@@ -44,33 +43,33 @@ export default class Mnemonic {
     /**
      * @returns {Promise<PrivateKey>}
      */
-    // async _legacyToPrivateKey() {
-    //     const index = -1;
+    async _legacyToPrivateKey() {
+        const index = -1;
 
-    //     const entropy = this._toLegacyEntropy();
-    //     const password = new Uint8Array(entropy.length + 8);
-    //     password.set(entropy, 0);
+        const entropy = this._toLegacyEntropy();
+        const password = new Uint8Array(entropy.length + 8);
+        password.set(entropy, 0);
 
-    //     const view = new DataView(
-    //         password.buffer,
-    //         password.byteOffset + entropy.length,
-    //         8
-    //     );
-    //     view.setInt32(0, index);
-    //     view.setInt32(4, index);
+        const view = new DataView(
+            password.buffer,
+            password.byteOffset + entropy.length,
+            8
+        );
+        view.setInt32(0, index);
+        view.setInt32(4, index);
 
-    //     const salt = Uint8Array.from([0xff]);
+        const salt = Uint8Array.from([0xff]);
 
-    //     const keyBytes = await pbkdf2.deriveKey(
-    //         HashAlgorithm.Sha512,
-    //         password,
-    //         salt,
-    //         2048,
-    //         32
-    //     );
+        const keyBytes = await pbkdf2.deriveKey(
+            HashAlgorithm.Sha512,
+            password,
+            salt,
+            2048,
+            32
+        );
 
-    //     return PrivateKey.fromBytes(keyBytes);
-    // }
+        return PrivateKey.fromBytes(keyBytes);
+    }
 
     /**
      * Generate a random 24-word mnemonic.

@@ -160,8 +160,7 @@ export default class PrivateKey {
      */
     static async fromMnemonic(mnemonic, passphrase) {
         if (mnemonic._isLegacy) {
-            throw new Error("asdfsadf");
-            // return mnemonic._legacyToPrivateKey();
+            return mnemonic._legacyToPrivateKey();
         }
 
         const input = mnemonic.toString();

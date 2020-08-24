@@ -17,7 +17,11 @@ export function encode(bytes) {
     if (isAccessible("Buffer")) {
         return Buffer.from(bytes).toString("hex");
     } else {
-        return bytes.map((b) => parseInt(byteToHex[b])).join("");
+        let string = "";
+        for (const byte of bytes) {
+            string += byteToHex[byte];
+        }
+        return string;
     }
 }
 
