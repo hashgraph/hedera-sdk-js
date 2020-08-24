@@ -1,4 +1,4 @@
-import * as utf8 from "../../src/utf8.js";
+import * as utf8 from "../../../src/encoding/utf8.js";
 
 const string =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus consectetur ex diam, et faucibus libero ultricies id. Cras consectetur velit lacus, vel pulvinar mauris dignissim sit amet. Nulla ut molestie massa, quis vulputate erat. Vivamus a mauris quam. Nulla vulputate consectetur convallis. Curabitur ut tempor lacus. Morbi auctor velit et nibh faucibus maximus. Vestibulum eu tortor ultricies, condimentum felis vel, suscipit leo. Vestibulum laoreet, orci ut suscipit sollicitudin, nisi sapien aliquet enim, eu varius risus magna vitae nisl. Donec mauris lacus, pharetra nec varius eget, scelerisque scelerisque purus. Pellentesque porta volutpat enim vitae blandit.";

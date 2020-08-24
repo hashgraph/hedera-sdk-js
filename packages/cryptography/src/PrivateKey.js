@@ -13,7 +13,7 @@ import BadKeyError from "./BadKeyError.js";
 // import { EncryptedPrivateKeyInfo } from "./pkcs.js";
 // import { decodeDer } from "./der.js";
 // import * as base64 from "./base64.js";
-import * as hex from "./hex.js";
+import * as hex from "./encoding/hex.js";
 import * as hmac from "./hmac.js";
 import * as pbkdf2 from "./pbkdf2.js";
 

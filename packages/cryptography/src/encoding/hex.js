@@ -1,4 +1,4 @@
-import { isAccessible } from "./util.js";
+import { isAccessible } from "../util.js";
 
 /**
  * @type {string[]}

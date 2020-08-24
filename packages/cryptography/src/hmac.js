@@ -1,4 +1,4 @@
-import * as utf8 from "./utf8.js";
+import * as utf8 from "./encoding/utf8.js";
 import { isAccessible } from "./util.js";
 
 /**

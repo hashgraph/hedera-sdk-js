@@ -1,6 +1,6 @@
 import PrivateKey from "../../src/PrivateKey.js";
-import * as utf8 from "../../src/utf8.js";
-import * as hex from "../../src/hex.js";
+import * as utf8 from "../../src/encoding/utf8.js";
+import * as hex from "../../src/encoding/hex.js";
 // import PublicKey from "../../src/PrivateKey.js";
 // import Mnemonic from "../../src/Mnemonic.js";
 // import BadKeyError from "../../src/BadKeyError.js";

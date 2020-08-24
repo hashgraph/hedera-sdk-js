@@ -1,7 +1,7 @@
 import nacl from "tweetnacl";
 import BadKeyError from "./BadKeyError.js";
-import * as hex from "./hex.js";
-import * as utf8 from "./utf8.js";
+import * as hex from "./encoding/hex.js";
+import * as utf8 from "./encoding/utf8.js";
 import * as hmac from "./hmac.js";
 import * as pbkdf2 from "./pbkdf2.js";
 import { isAccessible } from "./util.js";

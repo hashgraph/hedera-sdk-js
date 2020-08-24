@@ -1,4 +1,4 @@
-import * as hex from "../../src/hex.js";
+import * as hex from "../../../src/encoding/hex.js";
 
 const bytes = Uint8Array.of(
     -37,

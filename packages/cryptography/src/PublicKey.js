@@ -2,7 +2,7 @@ import nacl from "tweetnacl";
 import Key from "./Key.js";
 import BadKeyError from "./BadKeyError.js";
 import { ED25519PUBLICKEY_PREFIX } from "./util.js";
-import * as hex from "./hex.js";
+import * as hex from "./encoding/hex.js";
 
 /**
  * An public key on the Hedera™ network.
