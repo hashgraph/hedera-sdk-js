@@ -1,10 +1,6 @@
 import { HashAlgorithm } from "./hmac.js";
-import * as utf8 from "./utf8.js";
-import * as crypto from "crypto";
 import { isAccessible } from "./util.js";
-import { promisify } from "util";
-
-export const pbkdf2 = promisify(crypto.pbkdf2);
+import * as utf8 from "./utf8.js";
 
 /**
  * @param {HashAlgorithm} algorithm
@@ -50,38 +46,15 @@ export async function deriveKey(algorithm, password, salt, iterations, length) {
                 )
             );
         } catch {
-            switch (algorithm) {
-                case HashAlgorithm.Sha256:
-                    return pbkdf2(
-                        pass,
-                        nacl,
-                        iterations,
-                        length,
-                        HashAlgorithm.Sha256
-                    );
-                case HashAlgorithm.Sha384:
-                    return pbkdf2(
-                        pass,
-                        nacl,
-                        iterations,
-                        length,
-                        HashAlgorithm.Sha384
-                    );
-                case HashAlgorithm.Sha512:
-                    return pbkdf2(
-                        pass,
-                        nacl,
-                        iterations,
-                        length,
-                        HashAlgorithm.Sha512
-                    );
-                default:
-                    throw new Error(
-                        "(BUG) Non-Exhaustive switch statement for algorithms"
-                    );
-            }
+            throw new Error(
+                "(BUG) Non-Exhaustive switch statement for algorithms"
+            );
         }
     }
+
+    const util = await import("util");
+    const crypto = await import("crypto");
+    const pbkdf2 = util.promisify(crypto.pbkdf2);
 
     switch (algorithm) {
         case HashAlgorithm.Sha256:

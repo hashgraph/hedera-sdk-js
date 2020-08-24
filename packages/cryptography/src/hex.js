@@ -23,7 +23,7 @@ export function encode(bytes) {
 
 /**
  * @param {string} s
- * @returns {Uint8Array | Buffer}
+ * @returns {Uint8Array}
  */
 export function decode(s) {
     const str = s.startsWith("0x") ? s.substring(2) : s;

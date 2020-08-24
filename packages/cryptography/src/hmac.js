@@ -1,4 +1,3 @@
-import * as crypto from "crypto";
 import * as utf8 from "./utf8.js";
 import { isAccessible } from "./util.js";
 
@@ -45,6 +44,8 @@ export async function hash(algorithm, secretKey, data) {
             );
         }
     }
+
+    const crypto = await import("crypto");
 
     switch (algorithm) {
         case HashAlgorithm.Sha256:

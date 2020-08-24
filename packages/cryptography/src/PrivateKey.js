@@ -160,7 +160,8 @@ export default class PrivateKey {
      */
     static async fromMnemonic(mnemonic, passphrase) {
         if (mnemonic._isLegacy) {
-            return mnemonic._legacyToPrivateKey();
+            throw new Error("asdfsadf");
+            // return mnemonic._legacyToPrivateKey();
         }
 
         const input = mnemonic.toString();
@@ -190,7 +191,7 @@ export default class PrivateKey {
         let chainCode = digest.subarray(32);
 
         for (const index of [44, 3030, 0, 0]) {
-            ({ keyBytes, chainCode } = deriveChildKey(
+            ({ keyBytes, chainCode } = await deriveChildKey(
                 keyBytes,
                 chainCode,
                 index

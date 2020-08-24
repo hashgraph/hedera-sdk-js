@@ -115,7 +115,7 @@ export async function loadKeystore(keystoreBytes, passphrase) {
      * @type {Keystore}
      */
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const keystore = JSON.parse(Buffer.from(keystoreBytes).toString());
+    const keystore = JSON.parse(utf8.decode(keystoreBytes));
 
     if (keystore.version !== 1) {
         throw new Error(`unsupported keystore version: ${keystore.version}`);

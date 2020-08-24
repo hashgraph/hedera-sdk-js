@@ -20,6 +20,10 @@
     "engines": {
         "node": ">=10.0.0"
     },
+    "browserslist": [
+        "last 1 Chrome versions",
+        "last 1 Firefox versions"
+    ],
     "scripts": {
         "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
         "compile": "babel src -d lib",
