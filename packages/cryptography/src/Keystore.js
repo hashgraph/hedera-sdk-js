@@ -1,12 +1,11 @@
 import nacl from "tweetnacl";
 import BadKeyError from "./BadKeyError.js";
+import * as crypto from "./crypto.js";
 import * as hex from "./encoding/hex.js";
 import * as utf8 from "./encoding/utf8.js";
 import * as hmac from "./hmac.js";
 import * as pbkdf2 from "./pbkdf2.js";
-import { isAccessible } from "./util.js";
 
-const AES_128_CTR = "aes-128-ctr";
 const HMAC_SHA256 = "hmac-sha256";
 
 /**
@@ -60,49 +59,41 @@ export async function createKeystore(privateKey, passphrase) {
 
     const iv = nacl.randomBytes(16);
 
-    if (isAccessible("Buffer")) {
-        // AES-128-CTR with the first half of the derived key and a random IV
-        const cipher = (await import("crypto")).createCipheriv(
-            AES_128_CTR,
-            key.slice(0, 16),
-            iv
-        );
+    // AES-128-CTR with the first half of the derived key and a random IV
+    const cipherText = await crypto.createCipheriv(
+        crypto.CipherAlgorithm.Aes128Ctr,
+        key.slice(0, 16),
+        iv,
+        privateKey
+    );
 
-        const cipherText = Buffer.concat([
-            cipher.update(privateKey),
-            cipher["final"](),
-        ]);
+    const mac = await hmac.hash(
+        hmac.HashAlgorithm.Sha384,
+        key.slice(16),
+        cipherText
+    );
 
-        const mac = await hmac.hash(
-            hmac.HashAlgorithm.Sha384,
-            key.slice(16),
-            cipherText
-        );
-
-        /**
-         * @type {Keystore}
-         */
-        const keystore = {
-            version: 1,
-            crypto: {
-                ciphertext: hex.encode(cipherText),
-                cipherparams: { iv: hex.encode(iv) },
-                cipher: AES_128_CTR,
-                kdf: "pbkdf2",
-                kdfparams: {
-                    dkLen,
-                    salt: hex.encode(salt),
-                    c,
-                    prf: HMAC_SHA256,
-                },
-                mac: hex.encode(mac),
+    /**
+     * @type {Keystore}
+     */
+    const keystore = {
+        version: 1,
+        crypto: {
+            ciphertext: hex.encode(cipherText),
+            cipherparams: { iv: hex.encode(iv) },
+            cipher: crypto.CipherAlgorithm.Aes128Ctr,
+            kdf: "pbkdf2",
+            kdfparams: {
+                dkLen,
+                salt: hex.encode(salt),
+                c,
+                prf: HMAC_SHA256,
             },
-        };
+            mac: hex.encode(mac),
+        },
+    };
 
-        return utf8.encode(JSON.stringify(keystore));
-    } else {
-        throw new Error("Cannot create keystore on web");
-    }
+    return utf8.encode(JSON.stringify(keystore));
 }
 
 /**
@@ -162,25 +153,17 @@ export async function loadKeystore(keystoreBytes, passphrase) {
         throw new BadKeyError("HMAC mismatch; passphrase is incorrect");
     }
 
-    if (isAccessible("Buffer")) {
-        const decipher = (await import("crypto")).createDecipheriv(
-            cipher,
-            key.slice(0, 16),
-            ivBytes
-        );
-        const privateKeyBytes = Buffer.concat([
-            decipher.update(cipherBytes),
-            decipher["final"](),
-        ]);
+    const bytes = await crypto.createDecipheriv(
+        cipher,
+        key.slice(0, 16),
+        ivBytes,
+        cipherBytes
+    );
 
-        // `Buffer instanceof Uint8Array` doesn't work in Jest because the prototype chain is different
-        const {
-            secretKey: privateKey,
-            publicKey,
-        } = nacl.sign.keyPair.fromSecretKey(Uint8Array.from(privateKeyBytes));
+    const {
+        secretKey: privateKey,
+        publicKey,
+    } = nacl.sign.keyPair.fromSecretKey(Uint8Array.from(bytes));
 
-        return { privateKey, publicKey };
-    } else {
-        throw new Error("Cannot load keystore on web");
-    }
+    return { privateKey, publicKey };
 }

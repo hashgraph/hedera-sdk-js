@@ -16,7 +16,7 @@ export const HMAC_ALGORITHM = "sha384";
  * @param {number} index
  * @returns {Promise<{ keyBytes: Uint8Array; chainCode: Uint8Array }>}
  */
-export async function deriveChildKey2(parentKey, chainCode, index) {
+export async function deriveChildKey(parentKey, chainCode, index) {
     // webpack version of crypto complains if input types are not `Buffer`
     const input = new Uint8Array(37);
     // 0x00 + parentKey + index(BE)
@@ -32,42 +32,6 @@ export async function deriveChildKey2(parentKey, chainCode, index) {
 }
 
 /**
- * SLIP-10/BIP-32 child key derivation
- *
- * @param {Uint8Array} parentKey
- * @param {Uint8Array} chainCode
- * @param {number} index
- * @returns {Promise<{ keyBytes: Uint8Array; chainCode: Uint8Array }>}
- */
-export async function deriveChildKey(parentKey, chainCode, index) {
-    if (isAccessible("Buffer")) {
-        // webpack version of crypto complains if input types are not `Buffer`
-        const crypto = await import("crypto");
-        const mac = crypto.createHmac("SHA512", Buffer.from(chainCode));
-        const input = new Uint8Array(37);
-        // 0x00 + parentKey + index(BE)
-        input[0] = 0;
-        input.set(parentKey, 1);
-        new DataView(input.buffer).setUint32(33, index, false);
-        // set the index to hardened
-        input[33] |= 128;
-
-        mac.update(input);
-
-        const digest = mac.digest();
-
-        return {
-            keyBytes: digest.subarray(0, 32),
-            chainCode: digest.subarray(32),
-        };
-    } else {
-        throw new Error("deriveChildKey on web is not implemented");
-    }
-}
-
-/**
- * SLIP-10/BIP-32 child key derivation
- *
  * @param {Uint8Array} a
  * @param {Uint8Array} b
  * @returns {boolean}

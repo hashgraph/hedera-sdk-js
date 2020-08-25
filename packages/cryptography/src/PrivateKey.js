@@ -4,7 +4,6 @@ import Mnemonic from "./Mnemonic.js";
 import {
     arraysEqual,
     deriveChildKey,
-    deriveChildKey2,
     ED25519PRIVATEKEY_PREFIX,
 } from "./util.js";
 import { createKeystore, loadKeystore } from "./Keystore.js";
@@ -248,7 +247,7 @@ export default class PrivateKey {
             );
         }
 
-        const { keyBytes, chainCode } = await deriveChildKey2(
+        const { keyBytes, chainCode } = await deriveChildKey(
             this._keyData.subarray(0, 32),
             this._chainCode,
             index
