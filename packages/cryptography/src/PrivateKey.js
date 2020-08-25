@@ -8,19 +8,19 @@ import {
 } from "./util.js";
 import { createKeystore, loadKeystore } from "./Keystore.js";
 import BadKeyError from "./BadKeyError.js";
-// import { BadPemFileError } from "../errors/BadPemFileError.js";
-// import { EncryptedPrivateKeyInfo } from "./pkcs.js";
-// import { decodeDer } from "./der.js";
-// import * as base64 from "./base64.js";
+import { BadPemFileError } from "./BadPemFileError.js";
+import { EncryptedPrivateKeyInfo } from "./pkcs.js";
+import { decodeDer } from "./encoding/der.js";
+import * as base64 from "./encoding/base64.js";
 import * as hex from "./encoding/hex.js";
 import * as hmac from "./hmac.js";
 import * as pbkdf2 from "./pbkdf2.js";
 
-// const BEGIN_PRIVATEKEY = "-----BEGIN PRIVATE KEY-----\n";
-// const END_PRIVATEKEY = "-----END PRIVATE KEY-----\n";
+const BEGIN_PRIVATEKEY = "-----BEGIN PRIVATE KEY-----\n";
+const END_PRIVATEKEY = "-----END PRIVATE KEY-----\n";
 
-// const BEGIN_ENCRYPTED_PRIVATEKEY = "-----BEGIN ENCRYPTED PRIVATE KEY-----\n";
-// const END_ENCRYPTED_PRIVATEKEY = "-----END ENCRYPTED PRIVATE KEY-----\n";
+const BEGIN_ENCRYPTED_PRIVATEKEY = "-----BEGIN ENCRYPTED PRIVATE KEY-----\n";
+const END_ENCRYPTED_PRIVATEKEY = "-----END ENCRYPTED PRIVATE KEY-----\n";
 
 const DER_PREFIX = hex.decode("302e020100300506032b657004220420");
 
@@ -326,45 +326,54 @@ export default class PrivateKey {
      * @param {string | undefined} passphrase
      * @returns {Promise<PrivateKey>}
      */
-    // static async fromPem(pem, passphrase) {
-    //     const beginTag = passphrase ? BEGIN_ENCRYPTED_PRIVATEKEY : BEGIN_PRIVATEKEY;
-    //     const endTag = passphrase ? END_ENCRYPTED_PRIVATEKEY : END_PRIVATEKEY;
+    static async fromPem(pem, passphrase) {
+        const beginTag = passphrase
+            ? BEGIN_ENCRYPTED_PRIVATEKEY
+            : BEGIN_PRIVATEKEY;
+        const endTag = passphrase ? END_ENCRYPTED_PRIVATEKEY : END_PRIVATEKEY;
 
-    //     const beginIndex = pem.indexOf(beginTag);
-    //     const endIndex = pem.indexOf(endTag);
+        const beginIndex = pem.indexOf(beginTag);
+        const endIndex = pem.indexOf(endTag);
 
-    //     if (beginIndex === -1 || endIndex === -1) {
-    //         throw new BadPemFileError();
-    //     }
+        if (beginIndex === -1 || endIndex === -1) {
+            throw new BadPemFileError();
+        }
 
-    //     const keyEncoded = pem.slice(beginIndex + beginTag.length, endIndex);
+        const keyEncoded = pem.slice(beginIndex + beginTag.length, endIndex);
 
-    //     const key = base64.decode(keyEncoded);
+        const key = base64.decode(keyEncoded);
 
-    //     if (passphrase) {
-    //         let encrypted;
+        if (passphrase) {
+            let encrypted;
 
-    //         try {
-    //             encrypted = EncryptedPrivateKeyInfo.parse(key);
-    //         } catch (error) {
-    //             throw new BadKeyError(`failed to parse encrypted private key: ${error.message}`);
-    //         }
+            try {
+                encrypted = EncryptedPrivateKeyInfo.parse(key);
+            } catch (error) {
+                throw new BadKeyError(
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/explicit-module-boundary-types
+                    `failed to parse encrypted private key: ${error.message}`
+                );
+            }
 
-    //         const decrypted = await encrypted.decrypt(passphrase);
+            const decrypted = await encrypted.decrypt(passphrase);
 
-    //         if (decrypted.algId.algIdent !== "1.3.101.112") {
-    //             throw new BadKeyError(`unknown private key algorithm ${decrypted.algId}`);
-    //         }
+            if (decrypted.algId.algIdent !== "1.3.101.112") {
+                throw new BadKeyError(
+                    `unknown private key algorithm ${decrypted.algId.toString()}`
+                );
+            }
 
-    //         const keyData = decodeDer(decrypted.privateKey);
+            const keyData = decodeDer(decrypted.privateKey);
 
-    //         if ("bytes" in keyData) {
-    //             return PrivateKey.fromBytes(keyData.bytes);
-    //         }
+            if ("bytes" in keyData) {
+                return PrivateKey.fromBytes(keyData.bytes);
+            }
 
-    //         throw new BadKeyError(`expected ASN bytes, got ${JSON.stringify(keyData)}`);
-    //     }
+            throw new BadKeyError(
+                `expected ASN bytes, got ${JSON.stringify(keyData)}`
+            );
+        }
 
-    //     return PrivateKey.fromBytes(key);
-    // }
+        return PrivateKey.fromBytes(key);
+    }
 }

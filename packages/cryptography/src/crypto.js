@@ -2,6 +2,7 @@ import { isAccessible } from "./util.js";
 
 export const CipherAlgorithm = {
     Aes128Ctr: "AES-128-CTR",
+    Aes128Cbc: "AES-128-CBC",
 };
 
 /**
@@ -21,24 +22,38 @@ export async function createCipheriv(algorithm, key, iv, data) {
 
         return Buffer.concat([cipher.update(data), cipher["final"]()]);
     } else {
+        let algorithm_;
+
+        switch (algorithm) {
+            case CipherAlgorithm.Aes128Ctr:
+                algorithm_ = {
+                    name: "AES-CTR",
+                    counter: iv,
+                    length: 128,
+                };
+                break;
+            case CipherAlgorithm.Aes128Cbc:
+                algorithm_ = {
+                    name: "AES-CBC",
+                    length: 128,
+                };
+                break;
+            default:
+                throw new Error(
+                    "(BUG) non-exhaustive switch statement for CipherAlgorithm"
+                );
+        }
+
         const key_ = await window.crypto.subtle.importKey(
             "raw",
             key,
-            "AES-CTR",
+            algorithm_.name,
             false,
             ["encrypt"]
         );
 
         return new Uint8Array(
-            await window.crypto.subtle.encrypt(
-                {
-                    name: "AES-CTR",
-                    counter: iv,
-                    length: 128,
-                },
-                key_,
-                data
-            )
+            await window.crypto.subtle.encrypt(algorithm_, key_, data)
         );
     }
 }
@@ -60,24 +75,38 @@ export async function createDecipheriv(algorithm, key, iv, data) {
 
         return Buffer.concat([decipher.update(data), decipher["final"]()]);
     } else {
+        let algorithm_;
+
+        switch (algorithm) {
+            case CipherAlgorithm.Aes128Ctr:
+                algorithm_ = {
+                    name: "AES-CTR",
+                    counter: iv,
+                    length: 128,
+                };
+                break;
+            case CipherAlgorithm.Aes128Cbc:
+                algorithm_ = {
+                    name: "AES-CBC",
+                    iv,
+                };
+                break;
+            default:
+                throw new Error(
+                    "(BUG) non-exhaustive switch statement for CipherAlgorithm"
+                );
+        }
+
         const key_ = await window.crypto.subtle.importKey(
             "raw",
             key,
-            "AES-CTR",
+            algorithm_.name,
             false,
             ["decrypt"]
         );
 
         return new Uint8Array(
-            await window.crypto.subtle.decrypt(
-                {
-                    name: "AES-CTR",
-                    counter: iv,
-                    length: 128,
-                },
-                key_,
-                data
-            )
+            await window.crypto.subtle.decrypt(algorithm_, key_, data)
         );
     }
 }
