@@ -1,0 +1,63 @@
+{
+    "name": "@hashgraph/transactions",
+    "version": "0.0.1",
+    "description": "Transaction utilities and primitives for the Hedera™ Hashgraph SDK",
+    "main": "lib/index.js",
+    "license": "Apache-2.0",
+    "author": "Launchbadge <contact@launchbadge.com>",
+    "repository": "https://github.com/hashgraph/hedera-sdk-js",
+    "bugs": "https://github.com/hashgraph/hedera-sdk-js/issues",
+    "type": "module",
+    "keywords": [
+        "hedera",
+        "hashgraph",
+        "sdk",
+        "transactions"
+    ],
+    "files": [
+        "lib/"
+    ],
+    "engines": {
+        "node": ">=10.0.0"
+    },
+    "browserslist": [
+        "last 1 Chrome versions",
+        "last 1 Firefox versions"
+    ],
+    "scripts": {
+        "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
+        "compile": "babel src -d lib",
+        "lint": "run-s lint:*",
+        "lint:types": "tsc",
+        "lint:format": "prettier src test '*.json' 'src/*.js' --check",
+        "lint:js": "eslint --fix 'src/**/*.js' 'test/**/*.js'",
+        "format": "prettier src test '*.json' 'src/*.js' --write",
+        "build": "run-s lint compile",
+        "test": "run-s test:node test:browser:chrome test:browser:firefox",
+        "test:node": "mocha -r @babel/register -r chai/register-should -r chai/register-expect 'test/unit/**/*.js'",
+        "test:browser:chrome": "parcel serve --no-source-maps --no-autoinstall --log-level=none --no-hmr -p 9001 test/index.html & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/; kill %1",
+        "test:browser:firefox": "parcel serve --no-source-maps --no-autoinstall --log-level=none --no-hmr -p 9002 test/index.html & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/; kill %1"
+    },
+    "dependencies": {
+        "protobufjs": "^6.10.1"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.11.4",
+        "@babel/register": "^7.10.5",
+        "@types/chai": "^4.2.12",
+        "@types/google-protobuf": "^3.7.3",
+        "@types/long": "^4.0.1",
+        "@types/node": "^14.6.0",
+        "@types/protobufjs": "^6.0.0",
+        "chai": "^4.2.0",
+        "chromedriver": "^84.0.1",
+        "eslint": "^7.7.0",
+        "geckodriver": "^1.20.0",
+        "mocha": "^8.1.1",
+        "mocha-webdriver-runner": "^0.6.3",
+        "npm-run-all": "^4.1.5",
+        "parcel": "^1.12.4",
+        "prettier": "^2.0.5",
+        "typescript": "^4.0.2"
+    }
+}
