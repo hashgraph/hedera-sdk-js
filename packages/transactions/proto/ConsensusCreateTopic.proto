@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package proto;
 
-option java_package = "com.hederahashgraph.api.proto.java";
+option java_package = "com.hedera.hashgraph.sdk.proto";
 option java_multiple_files = true;
 
 import "BasicTypes.proto";
