@@ -39,7 +39,8 @@
         "test:browser:firefox": "parcel serve --no-source-maps --no-autoinstall --log-level=none --no-hmr -p 9002 test/index.html & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/; kill %1"
     },
     "dependencies": {
-        "protobufjs": "^6.10.1"
+        "protobufjs": "^6.10.1",
+        "tweetnacl": "^1.0.3"
     },
     "devDependencies": {
         "@babel/core": "^7.11.4",
