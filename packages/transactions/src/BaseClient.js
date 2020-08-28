@@ -1,6 +1,9 @@
-import * as nacl from "tweetnacl";
+import nacl from "tweetnacl";
+import Long from "long";
 import Hbar from "./Hbar.js";
 import AccountId from "./AccountId.js";
+import * as protobuf from "protobufjs";
+import * as grpc from "@grpc/grpc-js";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 
 /**
@@ -54,14 +57,14 @@ export default class BaseClient {
          *
          * @type {Hbar}
          */
-        this._maxTransactionFee = new Hbar(1);
+        this._maxTransactionFee = new Hbar(Long.fromValue(1));
 
         /**
          * NOTE: This is a package-private API
          *
          * @type {Hbar}
          */
-        this._maxQueryPayment = new Hbar(1);
+        this._maxQueryPayment = new Hbar(Long.fromNumber(1));
         this.replaceNodes(network);
 
         if (operator) {
@@ -255,15 +258,17 @@ export default class BaseClient {
         throw new Error(`could not find node: ${JSON.stringify(node)}`);
     }
 
-    /* eslint-disable-next-line @typescript-eslint/member-naming */
     /**
-     * @template {ProtobufMessage} Rq
-     * @template {ProtobufMessage} Rs
+     * NOT A STABLE API
+     *
+     * @template {protobuf.Message} Rq
+     * @template {protobuf.Message} Rs
      * @param {string} _url
      * @param {Rq} _request
-     * @param {UnaryMethodDefinition<Rq, Rs>} _method
+     * @param {grpc.MethodDefinition<Rq, Rs>} _method
      * @returns {Promise<Rs>}
      */
+    // eslint-disable-next-line @typescript-eslint/member-naming
     _unaryCall(_url, _request, _method) {
         throw new Error("(BUG) BaseClient._unaryCall() was not overriden");
     }
