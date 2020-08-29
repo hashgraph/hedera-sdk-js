@@ -1,5 +1,5 @@
 import { EncryptedPrivateKeyInfo } from "../../src/pkcs.js";
-import { decodeDer } from "../../src/encoding/der.js";
+import * as der from "../../src/encoding/der.js";
 import PrivateKey from "../../src/PrivateKey.js";
 import * as base64 from "../../src/encoding/base64.js";
 import * as hex from "../../src/encoding/hex.js";
@@ -95,7 +95,7 @@ describe("EncryptedPrivateKeyInfo", function () {
         expect(decrypted.algId.algIdent).to.deep.equal("1.3.101.112");
 
         // for  the private key data is a DER encoded octet string
-        const keyData = decodeDer(decrypted.privateKey);
+        const keyData = der.decode(decrypted.privateKey);
         expect("bytes" in keyData).to.be.true;
 
         // @ts-ignore Typescript doesn't see that we just checked `keyData`

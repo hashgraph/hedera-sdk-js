@@ -1,5 +1,5 @@
 import * as crypto from "./crypto.js";
-import { decodeDer } from "./encoding/der.js";
+import * as der from "./encoding/der.js";
 import * as pbkdf2 from "./pbkdf2.js";
 import * as hmac from "./hmac.js";
 
@@ -153,7 +153,7 @@ export class PrivateKeyInfo {
      * @returns {PrivateKeyInfo}
      */
     static parse(encoded) {
-        return new PrivateKeyInfo(decodeDer(encoded));
+        return new PrivateKeyInfo(der.decode(encoded));
     }
 }
 
@@ -185,7 +185,7 @@ export class EncryptedPrivateKeyInfo {
      * @returns {EncryptedPrivateKeyInfo}
      */
     static parse(encoded) {
-        return new EncryptedPrivateKeyInfo(decodeDer(encoded));
+        return new EncryptedPrivateKeyInfo(der.decode(encoded));
     }
 
     /**

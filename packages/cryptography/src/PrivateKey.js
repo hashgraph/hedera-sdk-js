@@ -10,7 +10,7 @@ import { createKeystore, loadKeystore } from "./Keystore.js";
 import BadKeyError from "./BadKeyError.js";
 import { BadPemFileError } from "./BadPemFileError.js";
 import { EncryptedPrivateKeyInfo } from "./pkcs.js";
-import { decodeDer } from "./encoding/der.js";
+import * as der from "./encoding/der.js";
 import * as base64 from "./encoding/base64.js";
 import * as hex from "./encoding/hex.js";
 import * as hmac from "./hmac.js";
@@ -363,7 +363,7 @@ export default class PrivateKey {
                 );
             }
 
-            const keyData = decodeDer(decrypted.privateKey);
+            const keyData = der.decode(decrypted.privateKey);
 
             if ("bytes" in keyData) {
                 return PrivateKey.fromBytes(keyData.bytes);

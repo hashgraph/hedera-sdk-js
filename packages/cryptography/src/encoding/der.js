@@ -29,12 +29,11 @@
 /**
  * Note: may throw weird errors on malformed input. Catch and rethrow with, e.g. `BadKeyError`.
  *
- *@param {Uint8Array} derBytes
+ *@param {Uint8Array} data
  *@returns {AsnType}
  */
-export function decodeDer(derBytes) {
-    const [asn] = decodeIncremental(derBytes);
-    return asn;
+export function decode(data) {
+    return decodeIncremental(data)[0];
 }
 
 /**

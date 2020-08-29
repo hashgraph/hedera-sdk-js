@@ -681,12 +681,12 @@ const bytes = new Uint8Array([
     46,
 ]);
 
-describe("hedera/utf8", function () {
-    it("should encode correctly", function () {
+describe("encoding/utf8", function () {
+    it("should encode", function () {
         expect(utf8.encode(string)).to.deep.equal(bytes);
     });
 
-    it("should decode correctly", function () {
+    it("should decode", function () {
         expect(utf8.decode(bytes)).to.deep.equal(string);
     });
 });

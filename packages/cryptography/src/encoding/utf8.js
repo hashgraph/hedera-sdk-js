@@ -1,27 +1,26 @@
-import { isAccessible } from "../util.js";
 
 /**
- * @param {Uint8Array} bytes
+ * @param {Uint8Array} data
  * @returns {string}
  */
-export function decode(bytes) {
-    if (isAccessible("Buffer")) {
-        return Buffer.from(bytes).toString("utf8");
-    } else {
-        // eslint-disable-next-line node/no-unsupported-features/node-builtins
-        return new TextDecoder().decode(bytes);
+export function decode(data) {
+    if (typeof Buffer !== "undefined") {
+        return Buffer.from(data).toString("utf8");
     }
+
+    // eslint-disable-next-line node/no-unsupported-features/node-builtins
+    return new TextDecoder().decode(data);
 }
 
 /**
- * @param {string} string
+ * @param {string} text
  * @returns {Uint8Array}
  */
-export function encode(string) {
-    if (isAccessible("Buffer")) {
-        return Buffer.from(string, "utf8");
-    } else {
-        // eslint-disable-next-line node/no-unsupported-features/node-builtins
-        return new TextEncoder().encode(string);
+export function encode(text) {
+    if (typeof Buffer !== "undefined") {
+        return Buffer.from(text, "utf8");
     }
+
+    // eslint-disable-next-line node/no-unsupported-features/node-builtins
+    return new TextEncoder().encode(text);
 }

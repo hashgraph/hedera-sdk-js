@@ -1,9 +1,9 @@
-import { decodeDer } from "../../../src/encoding/der.js";
+import * as der from "../../../src/encoding/der.js";
 import * as base64 from "../../../src/encoding/base64.js";
 import * as hex from "../../../src/encoding/hex.js";
 
-describe("der.decode()", function () {
-    it("decodes an Ed25519 private key as expected", function () {
+describe("encoding/der", function () {
+    it("should decode ed25519 private key", function () {
         // taken from Keys.test.js
         const privateKey =
             "302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10";
@@ -13,7 +13,7 @@ describe("der.decode()", function () {
         const privKeyBytes = hex.decode(privateKey);
         const rawPrivKeyBytes = hex.decode(rawPrivKey);
 
-        const decoded = decodeDer(privKeyBytes);
+        const decoded = der.decode(privKeyBytes);
 
         expect(decoded).to.deep.equal({
             seq: [
@@ -29,7 +29,7 @@ describe("der.decode()", function () {
         });
     });
 
-    it("decodes an EncryptedPrivateKeyInfo struct", function () {
+    it("should decode EncryptedPrivateKeyInfo", function () {
         const base64Encoded =
             "MIGbMFcGCSqGSIb3DQEFDTBKMCkGCSqGSIb3DQEFDDAcBAi8WY7Gy2tThQICCAAw" +
             "DAYIKoZIhvcNAgkFADAdBglghkgBZQMEAQIEEOq46NPss58chbjUn20NoK0EQG1x" +
@@ -39,7 +39,7 @@ describe("der.decode()", function () {
         // otherwise the types produced by `.subarray()` won't match
         const data = base64.decode(base64Encoded);
 
-        const decoded = decodeDer(data);
+        const decoded = der.decode(data);
 
         expect(decoded).to.deep.equal({
             seq: [

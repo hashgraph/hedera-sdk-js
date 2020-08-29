@@ -38,12 +38,12 @@ const bytes = Uint8Array.of(
 const string =
     "db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10";
 
-describe("hedera/hex", function () {
-    it("should encode correctly", function () {
+describe("encoding/hex", function () {
+    it("should encode", function () {
         expect(hex.encode(bytes)).to.deep.equal(string);
     });
 
-    it("should decode correctly", function () {
+    it("should decode", function () {
         expect(hex.decode(string)).to.deep.equal(bytes);
     });
 });
