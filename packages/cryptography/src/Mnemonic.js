@@ -234,7 +234,7 @@ export default class Mnemonic {
         // We already made sure all the words are valid so if this is null we know it was due to the checksum
         try {
             this._toLegacyEntropy();
-        } catch {
+        } catch (_) {
             return new MnemonicValidationResult(
                 MnemonicValidationStatus.ChecksumMismatch,
                 undefined

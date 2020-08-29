@@ -1,5 +1,5 @@
 import { root } from "./generated/proto.js";
-import { PublicKey } from "@hashgraph/cryptography";
+// import { PublicKey } from "@hashgraph/cryptography";
 
 /**
  * @typedef {object} GetHeader

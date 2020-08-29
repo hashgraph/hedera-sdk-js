@@ -3,34 +3,34 @@ import * as hex from "@hashgraph/cryptography/encoding/hex.js";
 import { normalizeEntityId } from "./util.js";
 
 /**
- * Input type for an ID of an account on the network.
+ * Input type for an ID of a topic on the network.
  *
  * In any form, `shard` and `realm` are assumed to be 0 if not provided.
  *
- * Strings may take the form `'<shard>.<realm>.<account>'` or `'<account>'`.
+ * Strings may take the form `'<shard>.<realm>.<topic>'` or `'<topic>'`.
  *
- * A bare `number` will be taken as the account number with shard and realm of 0.
+ * A bare `number` will be taken as the topic number with shard and realm of 0.
  *
- * @typedef {{ shard?: number; realm?: number; account: number } | string | number | AccountId} AccountIdLike
+ * @typedef {{ shard?: number; realm?: number; topic: number } | string | number | TopicId} TopicIdLike
  */
 
-/** Normalized account ID returned by various methods in the SDK. */
-export default class AccountId {
+/** Normalized topic ID returned by various methods in the SDK. */
+export default class TopicId {
     /**
-     * @param {AccountIdLike} shardOrAccountId
+     * @param {TopicIdLike} shardOrTopicId
      * @param {number | undefined} realm
-     * @param {number | undefined} account
+     * @param {number | undefined} topic
      */
-    constructor(shardOrAccountId, realm, account) {
+    constructor(shardOrTopicId, realm, topic) {
         if (
-            typeof shardOrAccountId === "number" &&
+            typeof shardOrTopicId === "number" &&
             realm != null &&
-            account != null
+            topic != null
         ) {
             /**
              * @type {number}
              */
-            this.shard = shardOrAccountId;
+            this.shard = shardOrTopicId;
 
             /**
              * @type {number}
@@ -40,40 +40,40 @@ export default class AccountId {
             /**
              * @type {number}
              */
-            this.account = account;
+            this.topic = topic;
         } else {
-            const accountId = shardOrAccountId;
+            const topicId = shardOrTopicId;
             const id =
-                accountId instanceof AccountId
-                    ? accountId
-                    : normalizeEntityId("account", accountId);
+                topicId instanceof TopicId
+                    ? topicId
+                    : normalizeEntityId("topic", topicId);
 
             this.shard = id.shard ?? 0;
             this.realm = id.realm ?? 0;
-            this.account = id instanceof AccountId ? id.account : id.entity;
+            this.topic = id instanceof TopicId ? id.topic : id.entity;
         }
     }
 
     /**
      * @param {string} id
-     * @returns {AccountId}
+     * @returns {TopicId}
      */
     static fromString(id) {
-        return new AccountId(id, undefined, undefined);
+        return new TopicId(id, undefined, undefined);
     }
 
     /**
      * NOT A STABLE API
      *
-     * @param {root.proto.AccountID} accountId
-     * @param accountId
-     * @returns {AccountId}
+     * @param {root.proto.TopicID} topicId
+     * @param topicId
+     * @returns {TopicId}
      */
-    static _fromProtobuf(accountId) {
-        return new AccountId({
-            shard: accountId.getShardnum(),
-            realm: accountId.getRealmnum(),
-            account: accountId.getAccountnum(),
+    static _fromProtobuf(topicId) {
+        return new TopicId({
+            shard: topicId.getShardnum(),
+            realm: topicId.getRealmnum(),
+            topic: topicId.getTopicnum(),
         }, undefined, undefined);
     }
 
@@ -81,12 +81,12 @@ export default class AccountId {
      * @returns {string}
      */
     toString() {
-        return `${this.shard}.${this.realm}.${this.account}`;
+        return `${this.shard}.${this.realm}.${this.topic}`;
     }
 
     // /**
     //  * @param {string} address
-    //  * @returns {AccountId}
+    //  * @returns {TopicId}
     //  */
     // static fromSolidityAddress(address) {
     //     if (address.length !== 40) {
@@ -99,9 +99,9 @@ export default class AccountId {
     //     // Next 8 bytes encoded as 16 characters
     //     const realm = new BigNumber(address.slice(8, 24), 16).toNumber();
     //     // Next 8 bytes encoded as 16 characters
-    //     const account = new BigNumber(address.slice(24, 40), 16).toNumber();
+    //     const topic = new BigNumber(address.slice(24, 40), 16).toNumber();
 
-    //     return new AccountId(shard, realm, account);
+    //     return new TopicId(shard, realm, topic);
     // }
 
     /**
@@ -113,7 +113,7 @@ export default class AccountId {
 
         view.setUint32(0, this.shard);
         view.setUint32(8, this.realm);
-        view.setUint32(16, this.account);
+        view.setUint32(16, this.topic);
 
         return hex.encode(buffer);
     }
@@ -121,13 +121,13 @@ export default class AccountId {
     /**
      * NOT A STABLE API
      *
-     * @returns {root.proto.AccountID}
+     * @returns {root.proto.TopicID}
      */
     _toProtobuf() {
-        const proto = new root.proto.AccountID();
+        const proto = new root.proto.TopicID();
         proto.setShardnum(this.shard);
         proto.setRealmnum(this.realm);
-        proto.setAccountnum(this.account);
+        proto.setTopicnum(this.topic);
         return proto;
     }
 }

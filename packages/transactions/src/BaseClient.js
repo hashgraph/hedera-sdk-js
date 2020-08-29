@@ -2,9 +2,8 @@ import nacl from "tweetnacl";
 import Long from "long";
 import Hbar from "./Hbar.js";
 import AccountId from "./AccountId.js";
-import * as protobuf from "protobufjs";
-import * as grpc from "@grpc/grpc-js";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
+import { grpc as grpcWeb } from "@improbable-eng/grpc-web";
 
 /**
  * @typedef {(msg: Uint8Array) => Uint8Array | Promise<Uint8Array>} TransactionSigner
@@ -34,6 +33,12 @@ import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
  * @typedef {object} Node
  * @property {string} url
  * @property {AccountId} id
+ */
+
+/**
+ * @typedef {object} ClientConfig
+ * @property {Nodes | undefined} network
+ * @property {Operator | undefined} operator
  */
 
 export default class BaseClient {
@@ -261,11 +266,11 @@ export default class BaseClient {
     /**
      * NOT A STABLE API
      *
-     * @template {protobuf.Message} Rq
-     * @template {protobuf.Message} Rs
+     * @template {grpcWeb.ProtobufMessage} Rq
+     * @template {grpcWeb.ProtobufMessage} Rs
      * @param {string} _url
      * @param {Rq} _request
-     * @param {grpc.MethodDefinition<Rq, Rs>} _method
+     * @param {grpcWeb.UnaryMethodDefinition<Rq, Rs>} _method
      * @returns {Promise<Rs>}
      */
     // eslint-disable-next-line @typescript-eslint/member-naming

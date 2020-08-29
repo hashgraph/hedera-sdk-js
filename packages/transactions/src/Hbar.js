@@ -1,7 +1,7 @@
 import HbarRangeError from "./HbarRangeError.js";
 import HbarUnit from "./HbarUnit.js";
-import { UInt64Value } from "google-protobuf/google/protobuf/wrappers_pb";
 import Long from "long";
+import { root } from "./generated/proto.js";
 
 /**
  * @param {Long} amount
@@ -127,39 +127,6 @@ export default class Hbar {
     }
 
     /**
-     * @param {Long} amount
-     * @returns {Hbar}
-     */
-    mul(amount) {
-        return new Hbar(this._tinybar.mul(amount)
-            .div(HbarUnit.Hbar._toTinybarCount()));
-    }
-
-    /**
-     * @param {Hbar | Long} amount
-     * @param {HbarUnit | undefined} unit
-     * @returns {Hbar}
-     */
-    add(amount, unit) {
-        return new Hbar((amount instanceof Hbar ?
-            this._tinybar.add(amount._tinybar) :
-            this._tinybar.add(convertToTinybar(amount, unit ?? HbarUnit.Hbar))
-        ).div(HbarUnit.Hbar._toTinybarCount()));
-    }
-
-    /**
-     * @param {Hbar | Long} amount
-     * @param {HbarUnit | undefined} unit
-     * @returns {Hbar}
-     */
-    sub(amount, unit) {
-        return new Hbar((amount instanceof Hbar ?
-            this._tinybar.sub(amount._tinybar) :
-            this._tinybar.sub(convertToTinybar(amount, unit ?? HbarUnit.Hbar))
-        ).div(HbarUnit.Hbar._toTinybarCount()));
-    }
-
-    /**
      * @param {Hbar | Long} amount
      * @param {HbarUnit | undefined} unit
      * @returns {boolean}
@@ -168,50 +135,6 @@ export default class Hbar {
         return amount instanceof Hbar ?
             this._tinybar.equals(amount._tinybar) :
             this._tinybar.equals(convertToTinybar(amount, unit ?? HbarUnit.Hbar));
-    }
-
-    /**
-     * @param {Hbar | Long} amount
-     * @param {HbarUnit | undefined} unit
-     * @returns {boolean}
-     */
-    greaterThan(amount, unit) {
-        return amount instanceof Hbar ?
-            this._tinybar.greaterThan(amount._tinybar) :
-            this._tinybar.greaterThan(convertToTinybar(amount, unit ?? HbarUnit.Hbar));
-    }
-
-    /**
-     * @param {Hbar | Long} amount
-     * @param {HbarUnit | undefined} unit
-     * @returns {boolean}
-     */
-    greaterThanOrEqual(amount, unit) {
-        return amount instanceof Hbar ?
-            this._tinybar.greaterThanOrEqual(amount._tinybar) :
-            this._tinybar.greaterThanOrEqual(convertToTinybar(amount, unit ?? HbarUnit.Hbar));
-    }
-
-    /**
-     * @param {Hbar | Long} amount
-     * @param {HbarUnit | undefined} unit
-     * @returns {boolean}
-     */
-    lessThan(amount, unit) {
-        return amount instanceof Hbar ?
-            this._tinybar.lessThan(amount._tinybar) :
-            this._tinybar.lessThan(convertToTinybar(amount, unit ?? HbarUnit.Hbar));
-    }
-
-    /**
-     * @param {Hbar | Long} amount
-     * @param {HbarUnit | undefined} unit
-     * @returns {boolean}
-     */
-    isLessThanOrEqual(amount, unit) {
-        return amount instanceof Hbar ?
-            this._tinybar.lessThanOrEqual(amount._tinybar) :
-            this._tinybar.lessThanOrEqual(convertToTinybar(amount, unit ?? HbarUnit.Hbar));
     }
 
     /**
@@ -272,10 +195,10 @@ export default class Hbar {
     }
 
     /**
-     * @returns {UInt64Value}
+     * @returns {root.UInt64Value}
      */
     toProtobufValue() {
-        const value = new UInt64Value();
+        const value = new root.UInt64Value();
         value.setValue(this._tinybar.toNumber());
         return value;
     }
