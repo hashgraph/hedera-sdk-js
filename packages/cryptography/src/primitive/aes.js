@@ -1,4 +1,3 @@
-import { isAccessible } from "./util.js";
 
 export const CipherAlgorithm = {
     Aes128Ctr: "AES-128-CTR",
@@ -13,7 +12,7 @@ export const CipherAlgorithm = {
  * @returns {Promise<Uint8Array>}
  */
 export async function createCipheriv(algorithm, key, iv, data) {
-    if (isAccessible("Buffer")) {
+    if (typeof Buffer !== "undefined") {
         const cipher = (await import("crypto")).createCipheriv(
             algorithm,
             key.slice(0, 16),
@@ -66,7 +65,7 @@ export async function createCipheriv(algorithm, key, iv, data) {
  * @returns {Promise<Uint8Array>}
  */
 export async function createDecipheriv(algorithm, key, iv, data) {
-    if (isAccessible("Buffer")) {
+    if (typeof Buffer !== "undefined") {
         const decipher = (await import("crypto")).createDecipheriv(
             algorithm,
             key.slice(0, 16),

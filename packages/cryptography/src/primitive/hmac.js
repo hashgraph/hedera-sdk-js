@@ -1,5 +1,4 @@
-import * as utf8 from "./encoding/utf8.js";
-import { isAccessible } from "./util.js";
+import * as utf8 from "../encoding/utf8.js";
 
 /**
  * @enum {string}
@@ -21,8 +20,7 @@ export async function hash(algorithm, secretKey, data) {
         typeof secretKey === "string" ? utf8.encode(secretKey) : secretKey;
     const value = typeof data === "string" ? utf8.encode(data) : data;
 
-    if (!isAccessible("Buffer")) {
-        // Try SubtleCrypto if it exists, otherwise fallback to @stablelibs/Hmac
+    if (typeof Buffer === "undefined") {
         try {
             const key_ = await window.crypto.subtle.importKey(
                 "raw",

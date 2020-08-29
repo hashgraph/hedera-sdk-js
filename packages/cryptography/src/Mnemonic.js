@@ -4,8 +4,8 @@ import MnemonicValidationResult from "./MnemonicValidationResult.js";
 import MnemonicValidationStatus from "./MnemonicValidationStatus.js";
 import legacyWordList from "./legacyWordList.js";
 import Long from "long";
-import { HashAlgorithm } from "./hmac.js";
-import * as pbkdf2 from "./pbkdf2.js";
+import { HashAlgorithm } from "./primitive/hmac.js";
+import * as pbkdf2 from "./primitive/pbkdf2.js";
 
 /** result of `generateMnemonic()` */
 export default class Mnemonic {

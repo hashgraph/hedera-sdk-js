@@ -1,4 +1,4 @@
-import * as hmac from "./hmac.js";
+import * as hmac from "./primitive/hmac.js";
 
 // we could go through the whole BS of producing a DER-encoded structure but it's quite simple
 // for Ed25519 keys and we don't have to shell out to a potentially broken lib

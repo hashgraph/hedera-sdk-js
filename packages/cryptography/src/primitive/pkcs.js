@@ -1,11 +1,11 @@
-import * as crypto from "./crypto.js";
-import * as der from "./encoding/der.js";
+import * as crypto from "./aes.js";
+import * as der from "../encoding/der.js";
 import * as pbkdf2 from "./pbkdf2.js";
 import * as hmac from "./hmac.js";
 
 export class AlgorithmIdentifier {
     /**
-     * @param {import("./encoding/der.js").AsnType} asn
+     * @param {import("../encoding/der.js").AsnType} asn
      */
     constructor(asn) {
         if ("seq" in asn && asn.seq.length >= 1 && "ident" in asn.seq[0]) {
@@ -15,7 +15,7 @@ export class AlgorithmIdentifier {
             this.algIdent = asn.seq[0].ident;
 
             /**
-             * @type {import("./encoding/der.js").AsnType | undefined}
+             * @type {import("../encoding/der.js").AsnType | undefined}
              */
             this.parameters = asn.seq[1];
         } else {
@@ -35,7 +35,7 @@ export class AlgorithmIdentifier {
 
 class PBES2Params {
     /**
-     * @param {import("./encoding/der.js").AsnType} asn
+     * @param {import("../encoding/der.js").AsnType} asn
      */
     constructor(asn) {
         if ("seq" in asn && asn.seq.length === 2) {
@@ -58,7 +58,7 @@ class PBES2Params {
 
 class PBKDF2Params {
     /**
-     * @param {import("./encoding/der.js").AsnType} asn
+     * @param {import("../encoding/der.js").AsnType} asn
      */
     constructor(asn) {
         if (
@@ -107,7 +107,7 @@ class PBKDF2Params {
 
 export class PrivateKeyInfo {
     /**
-     * @param {import("./encoding/der.js").AsnType} asn
+     * @param {import("../encoding/der.js").AsnType} asn
      */
     constructor(asn) {
         if ("seq" in asn && asn.seq.length === 3) {
@@ -159,7 +159,7 @@ export class PrivateKeyInfo {
 
 export class EncryptedPrivateKeyInfo {
     /**
-     * @param {import("./encoding/der.js").AsnType} asn
+     * @param {import("../encoding/der.js").AsnType} asn
      */
     constructor(asn) {
         if ("seq" in asn && asn.seq.length === 2 && "bytes" in asn.seq[1]) {

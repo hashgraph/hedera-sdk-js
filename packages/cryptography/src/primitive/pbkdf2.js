@@ -1,6 +1,5 @@
 import { HashAlgorithm } from "./hmac.js";
-import { isAccessible } from "./util.js";
-import * as utf8 from "./encoding/utf8.js";
+import * as utf8 from "../encoding/utf8.js";
 
 /**
  * @param {HashAlgorithm} algorithm
@@ -20,7 +19,7 @@ export async function deriveKey(algorithm, password, salt, iterations, length) {
 
     const nacl = typeof salt === "string" ? utf8.encode(salt) : salt;
 
-    if (!isAccessible("Buffer")) {
+    if (typeof Buffer === "undefined") {
         try {
             const key = await window.crypto.subtle.importKey(
                 "raw",

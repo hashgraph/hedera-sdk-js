@@ -3,7 +3,7 @@
  *
  * @enum {string}
  */
-const MnemonicValidationStatus = {
+const MnemonicValidationStatus = Object.freeze({
     /** Validation passed. */
     Ok: "Ok",
 
@@ -43,6 +43,6 @@ const MnemonicValidationStatus = {
      * in {@link Mnemonic.words} which were not found in the legacy word list.
      */
     UnknownLegacyWords: "UnknownLegacyWords",
-};
+});
 
 export default MnemonicValidationStatus;
