@@ -27,11 +27,11 @@ module.exports = {
     rules: {
         // does not handle return types being annotated in a type comment
         "@typescript-eslint/explicit-function-return-type": "off",
-        // babel takes care of this
-        "node/no-unsupported-features/es-syntax": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+
         // opt-out of providing descriptions at the start
         // FIXME: turn these rules back on
         "jsdoc/require-returns-description": "off",
-        "jsdoc/require-param-description": "off",
+        "jsdoc/require-param-description": "off"
     },
 };
