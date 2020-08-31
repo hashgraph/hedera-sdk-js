@@ -1,52 +1,298 @@
-import * as bip39 from "bip39";
 import PrivateKey from "./PrivateKey.js";
-import MnemonicValidationResult from "./MnemonicValidationResult.js";
-import MnemonicValidationStatus from "./MnemonicValidationStatus.js";
-import legacyWordList from "./legacyWordList.js";
-import Long from "long";
-import { HashAlgorithm } from "./primitive/hmac.js";
+import BadMnemonicError from "./BadMnemonicError";
+import BadMnemonicReason from "./BadMnemonicReason";
+import legacyWords from "./words/legacy.js";
+import bip39Words from "./words/bip39.js";
+import BigNumber from "bignumber.js";
+import * as sha256 from "./primitive/sha256.js";
 import * as pbkdf2 from "./primitive/pbkdf2.js";
+import nacl from "tweetnacl";
+import * as hmac from "./primitive/hmac";
+import { deriveChildKey } from "./util";
 
-/** result of `generateMnemonic()` */
+/**
+ * Multi-word mnemonic phrase (BIP-39).
+ *
+ * Compatible with the official Hedera mobile
+ * wallets (24-words or 22-words) and BRD (12-words).
+ */
 export default class Mnemonic {
     /**
-     * Recover a mnemonic from a list of 24 words.
-     *
-     * @param {string[]} words
+     * @param {Object} props
+     * @param {string[]} props.words
+     * @param {boolean} props.legacy
+     * @throws {BadMnemonicError}
+     * @hideconstructor
+     * @private
      */
-    constructor(words) {
-        if (words.length === 22) {
-            this._isLegacy = true;
-        }
-
-        /**
-         * @type {string[]}
-         */
+    constructor({ words, legacy }) {
         this.words = words;
-
-        /**
-         * @type {boolean}
-         */
-        this._isLegacy = false;
+        this._isLegacy = legacy;
     }
 
     /**
-     * Lazily generate the key, providing an optional passphrase to protect it with
+     * Returns a new random 24-word mnemonic from the BIP-39
+     * standard English word list.
+     *
+     * @returns {Promise<Mnemonic>}
+     */
+    static generate24() {
+        return Mnemonic._generate(24);
+    }
+
+    /**
+     * Returns a new random 12-word mnemonic from the BIP-39
+     * standard English word list.
+     *
+     * @returns {Promise<Mnemonic>}
+     */
+    static generate12() {
+        return Mnemonic._generate(12);
+    }
+
+    /**
+     * Returns a new random mnemonic, of the given word length, from
+     * the BIP-39 standard English word list.
+     *
+     * @param {number} length
+     * @returns {Promise<Mnemonic>}
+     */
+    static async _generate(length) {
+        // only 12-word or 24-word lengths are supported
+        let neededEntropy;
+
+        if (length === 12) neededEntropy = 16;
+        else if (length === 24) neededEntropy = 32;
+        else {
+            throw new Error(
+                `unsupported phrase length ${length}, only 12 or 24 are supported`
+            );
+        }
+
+        // inlined from (ISC) with heavy alternations for modern crypto
+        // https://github.com/bitcoinjs/bip39/blob/8461e83677a1d2c685d0d5a9ba2a76bd228f74c6/ts_src/index.ts#L125
+        const entropy = nacl.randomBytes(neededEntropy);
+        const entropyBits = bytesToBinary(Array.from(entropy));
+        const checksumBits = await deriveChecksumBits(entropy);
+        const bits = entropyBits + checksumBits;
+        const chunks = bits.match(/(.{1,11})/g);
+
+        // @ts-ignore
+        const words = chunks.map((binary) => bip39Words[binaryToByte(binary)]);
+
+        return new Mnemonic({ words, legacy: false });
+    }
+
+    /**
+     * Construct a mnemonic from a list of words. Handles 12, 22 (legacy), and 24 words.
+     *
+     * An exception of BadMnemonicError will be thrown if the mnemonic
+     * contains unknown words or fails the checksum. An invalid mnemonic
+     * can still be used to create private keys, the exception will
+     * contain the failing mnemonic in case you wish to ignore the
+     * validation error and continue.
+     *
+     * @param {string[]} words
+     * @throws {BadMnemonicError}
+     * @returns {Promise<Mnemonic>}
+     */
+    static async fromWords(words) {
+        return await new Mnemonic({
+            words,
+            legacy: words.length === 22,
+        })._validate();
+    }
+
+    /**
+     * Recover a private key from this mnemonic phrase, with an
+     * optional password.
      *
      * @param {string} passphrase
      * @returns {Promise<PrivateKey>}
      */
-    toPrivateKey(passphrase) {
-        return PrivateKey.fromMnemonic(this, passphrase);
+    async toPrivateKey(passphrase = "") {
+        if (this._isLegacy) {
+            return this._toLegacyPrivateKey();
+        }
+
+        return await this._toPrivateKey(passphrase);
     }
 
     /**
+     * Recover a mnemonic phrase from a string, splitting on spaces. Handles 12, 22 (legacy), and 24 words.
+     *
+     * @param {string} mnemonic
+     * @returns {Promise<Mnemonic>}
+     */
+    static async fromString(mnemonic) {
+        return Mnemonic.fromWords(mnemonic.split(/\s|,/));
+    }
+
+    /**
+     * @returns {Promise<Mnemonic>}
+     * @private
+     */
+    async _validate() {
+        // Validate that this is a valid BIP-39 mnemonic
+        // as generated by BIP-39's rules.
+
+        // Technically, invalid mnemonics can still be used to generate valid private keys,
+        // but if they became invalid due to user error then it will be difficult for the user
+        // to tell the difference unless they compare the generated keys.
+
+        // During validation, the following conditions are checked in order
+
+        //  1)) 24 or 12 words
+
+        //  2) All strings in {@link this.words} exist in the BIP-39
+        //     standard English word list (no normalization is done)
+
+        //  3) The calculated checksum for the mnemonic equals the
+        //     checksum encoded in the mnemonic
+
+        if (this._isLegacy) {
+            if (this.words.length !== 22) {
+                throw new BadMnemonicError(
+                    this,
+                    BadMnemonicReason.BadLength,
+                    []
+                );
+            }
+
+            const unknownWordIndices = this.words.reduce(
+                (/** @type {number[]} */ unknowns, word, index) =>
+                    legacyWords.includes(word.toLowerCase())
+                        ? unknowns
+                        : [...unknowns, index],
+                []
+            );
+
+            if (unknownWordIndices.length > 0) {
+                throw new BadMnemonicError(
+                    this,
+                    BadMnemonicReason.UnknownWords,
+                    unknownWordIndices
+                );
+            }
+
+            const [entropy, checksum] = this._toLegacyEntropy();
+            const newChecksum = _crc8(entropy);
+
+            if (checksum !== newChecksum) {
+                throw new BadMnemonicError(
+                    this,
+                    BadMnemonicReason.ChecksumMismatch,
+                    []
+                );
+            }
+        } else {
+            if (!(this.words.length === 12 || this.words.length === 24)) {
+                throw new BadMnemonicError(
+                    this,
+                    BadMnemonicReason.BadLength,
+                    []
+                );
+            }
+
+            const unknownWordIndices = this.words.reduce(
+                (/** @type {number[]} */ unknowns, word, index) =>
+                    bip39Words.includes(word) ? unknowns : [...unknowns, index],
+                []
+            );
+
+            if (unknownWordIndices.length > 0) {
+                throw new BadMnemonicError(
+                    this,
+                    BadMnemonicReason.UnknownWords,
+                    unknownWordIndices
+                );
+            }
+
+            // FIXME: calculate checksum and compare
+            // https://github.com/bitcoinjs/bip39/blob/master/ts_src/index.ts#L112
+
+            const bits = this.words
+                .map((word) => {
+                    return bip39Words
+                        .indexOf(word)
+                        .toString(2)
+                        .padStart(11, "0");
+                })
+                .join("");
+
+            const dividerIndex = Math.floor(bits.length / 33) * 32;
+            const entropyBits = bits.slice(0, dividerIndex);
+            const checksumBits = bits.slice(dividerIndex);
+
+            // @ts-ignore
+            const entropyBytes = entropyBits
+                .match(/(.{1,8})/g)
+                .map(binaryToByte);
+
+            const newChecksum = await deriveChecksumBits(
+                Uint8Array.from(entropyBytes)
+            );
+
+            if (newChecksum !== checksumBits) {
+                throw new BadMnemonicError(
+                    this,
+                    BadMnemonicReason.ChecksumMismatch,
+                    []
+                );
+            }
+        }
+
+        return this;
+    }
+
+    /**
+     * @private
+     * @param {string} passphrase
      * @returns {Promise<PrivateKey>}
      */
-    async _legacyToPrivateKey() {
-        const index = -1;
+    async _toPrivateKey(passphrase = "") {
+        const input = this.words.join(" ");
+        const salt = `mnemonic${passphrase}`;
 
-        const entropy = this._toLegacyEntropy();
+        const seed = await pbkdf2.deriveKey(
+            hmac.HashAlgorithm.Sha512,
+            input,
+            salt,
+            2048,
+            64
+        );
+
+        const digest = await hmac.hash(
+            hmac.HashAlgorithm.Sha512,
+            "ed25519 seed",
+            seed
+        );
+
+        let keyBytes = digest.subarray(0, 32);
+        let chainCode = digest.subarray(32);
+
+        for (const index of [44, 3030, 0, 0]) {
+            ({ keyBytes, chainCode } = await deriveChildKey(
+                keyBytes,
+                chainCode,
+                index
+            ));
+        }
+
+        const key = PrivateKey.fromBytes(keyBytes);
+        key._chainCode = chainCode;
+
+        return key;
+    }
+
+    /**
+     * @private
+     * @returns {Promise<PrivateKey>}
+     */
+    async _toLegacyPrivateKey() {
+        const index = -1;
+        const [entropy] = this._toLegacyEntropy();
+
         const password = new Uint8Array(entropy.length + 8);
         password.set(entropy, 0);
 
@@ -59,231 +305,34 @@ export default class Mnemonic {
         view.setInt32(4, index);
 
         const salt = Uint8Array.from([0xff]);
-
-        const keyBytes = await pbkdf2.deriveKey(
-            HashAlgorithm.Sha512,
+        const keyData = await pbkdf2.deriveKey(
+            hmac.HashAlgorithm.Sha512,
             password,
             salt,
             2048,
             32
         );
 
-        return PrivateKey.fromBytes(keyBytes);
+        return PrivateKey.fromBytes(keyData);
     }
 
     /**
-     * Generate a random 24-word mnemonic.
-     *
-     * If you are happy with the mnemonic produced you can call {@link .toPrivateKey} on the
-     * returned object.
-     *
-     * This mnemonics that are compatible with the Android and iOS mobile wallets.
-     *
-     * **NOTE:** Mnemonics must be saved separately as they cannot be later recovered from a given
-     * key.
-     *
-     * @returns {Mnemonic}
-     */
-    static generate() {
-        // 256-bit entropy gives us 24 words
-        return new Mnemonic(bip39.generateMnemonic(256).split(" "));
-    }
-
-    /**
-     * Recover a mnemonic phrase from a string, splitting on spaces.
-     *
-     * @param {string} mnemonic
-     * @returns {Mnemonic}
-     */
-    static fromString(mnemonic) {
-        return new Mnemonic(mnemonic.split(" "));
-    }
-
-    /**
-     * Validate that this is a valid BIP-39 mnemonic as generated by BIP-39's rules.
-     * <p>
-     * Technically, invalid mnemonics can still be used to generate valid private keys,
-     * but if they became invalid due to user error then it will be difficult for the user
-     * to tell the difference unless they compare the generated keys.
-     * <p>
-     * During validation, the following conditions are checked in order:
-     * <ol>
-     *     <li>{@link this.words.length} == 24</li>
-     *     <li>All strings in {@link this.words} exist in the BIP-39 standard English word list (no normalization is done).</li>
-     *     <li>The calculated checksum for the mnemonic equals the checksum encoded in the mnemonic.</li>
-     * </ol>
-     * <p>
-     *
-     * @returns {MnemonicValidationResult} the result of the validation.
-     * @see {@link https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki | Bitcoin Improvement Project proposal 39 (BIP-39) }
-     * @see {@link https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt | BIP-39 English word list }
-     */
-    validate() {
-        if (this._isLegacy) {
-            return this._validateLegacy();
-        }
-
-        if (this.words.length !== 24) {
-            return new MnemonicValidationResult(
-                MnemonicValidationStatus.BadLength,
-                undefined
-            );
-        }
-
-        const unknownIndices = this.words.reduce(
-            (
-                /**
-                 * @type {number[]}
-                 */
-                unknowns,
-                /**
-                 * @type {string}
-                 */
-                word,
-                /**
-                 * @type {number}
-                 */
-                index
-            ) =>
-                // eslint-disable-next-line implicit-arrow-linebreak
-                bip39.wordlists.english.includes(word)
-                    ? unknowns
-                    : [...unknowns, index],
-            []
-        );
-
-        if (unknownIndices.length > 0) {
-            return new MnemonicValidationResult(
-                MnemonicValidationStatus.UnknownWords,
-                unknownIndices
-            );
-        }
-
-        // this would cover length and unknown words but it only gives us a `boolean`
-        // we validate those first and then let `bip39` do the non-trivial checksum verification
-        if (
-            !bip39.validateMnemonic(
-                this.words.join(" "),
-                bip39.wordlists.english
-            )
-        ) {
-            return new MnemonicValidationResult(
-                MnemonicValidationStatus.ChecksumMismatch,
-                undefined
-            );
-        }
-
-        return new MnemonicValidationResult(
-            MnemonicValidationStatus.Ok,
-            undefined
-        );
-    }
-
-    /**
-     * Validate that this is a valid legacy mnemonic as generated by the Android and iOS wallets.
-     * <p>
-     * Technically, invalid mnemonics can still be used to generate valid private keys,
-     * but if they became invalid due to user error then it will be difficult for the user
-     * to tell the difference unless they compare the generated keys.
-     * <p>
-     * During validation, the following conditions are checked in order:
-     * <ol>
-     *     <li>{@link this.words.length} == 22</li>
-     *     <li>All strings in {@link this.words} exist in the legacy word list (no normalization is done).</li>
-     *     <li>The calculated checksum for the mnemonic equals the checksum encoded in the mnemonic.</li>
-     * </ol>
-     * <p>
-     *
-     * @returns {MnemonicValidationResult} the result of the validation.
-     */
-    _validateLegacy() {
-        if (!this._isLegacy) {
-            throw new Error(
-                "`validateLegacy` cannot be called on non-legacy mnemonics"
-            );
-        }
-
-        const unknownIndices = this.words.reduce(
-            (
-                /**
-                 * @type {number[]}
-                 */
-                unknowns,
-                /**
-                 * @type {string}
-                 */
-                word,
-                /**
-                 * @type {number}
-                 */
-                index
-            ) =>
-                // eslint-disable-next-line implicit-arrow-linebreak
-                legacyWordList.includes(word) ? unknowns : [...unknowns, index],
-            []
-        );
-
-        if (unknownIndices.length > 0) {
-            return new MnemonicValidationResult(
-                MnemonicValidationStatus.UnknownLegacyWords,
-                unknownIndices
-            );
-        }
-
-        // Checksum validation
-        // We already made sure all the words are valid so if this is null we know it was due to the checksum
-        try {
-            this._toLegacyEntropy();
-        } catch (_) {
-            return new MnemonicValidationResult(
-                MnemonicValidationStatus.ChecksumMismatch,
-                undefined
-            );
-        }
-
-        return new MnemonicValidationResult(
-            MnemonicValidationStatus.Ok,
-            undefined
-        );
-    }
-
-    /**
-     * @returns {Uint8Array}
+     * @private
+     * @returns {[Uint8Array, number]}
      */
     _toLegacyEntropy() {
-        if (!this._isLegacy) {
-            throw new Error("this mnemonic is not a legacy mnemonic");
-        }
-
-        const len256Bits = Math.ceil(
-            (256 + 8) / Math.log2(legacyWordList.length)
-        );
-        const numWords = this.words.length;
-
-        if (numWords !== len256Bits) {
-            throw new Error(
-                `there should be ${len256Bits} words, not ${numWords}`
-            );
-        }
-
         const indicies = this.words.map((word) =>
-            legacyWordList.indexOf(word.toLowerCase())
+            legacyWords.indexOf(word.toLowerCase())
         );
-        const data = _convertRadix(indicies, legacyWordList.length, 256, 33);
-        const crc = data[data.length - 1];
+        const data = _convertRadix(indicies, legacyWords.length, 256, 33);
+        const checksum = data[data.length - 1];
         const result = new Uint8Array(data.length - 1);
+
         for (let i = 0; i < data.length - 1; i += 1) {
-            result[i] = data[i] ^ crc;
+            result[i] = data[i] ^ checksum;
         }
 
-        const crc2 = _crc8(result);
-        if (crc !== crc2) {
-            throw new Error(
-                "Invalid legacy mnemonic: fails the cyclic redundency check"
-            );
-        }
-
-        return result;
+        return [result, checksum];
     }
 
     /**
@@ -319,17 +368,49 @@ function _crc8(data) {
  * @returns {Uint8Array}
  */
 function _convertRadix(nums, fromRadix, toRadix, toLength) {
-    let num = Long.fromValue(0);
+    let num = new BigNumber(0);
+
     for (const element of nums) {
-        num = num.mul(fromRadix);
-        num = num.add(element);
+        num = num.times(fromRadix);
+        num = num.plus(element);
     }
+
     const result = new Uint8Array(toLength);
+
     for (let i = toLength - 1; i >= 0; i -= 1) {
-        const tem = num.divide(toRadix);
+        const tem = num.dividedToIntegerBy(toRadix);
         const rem = num.modulo(toRadix);
         num = tem;
         result[i] = rem.toNumber();
     }
+
     return result;
+}
+
+/**
+ * @param {string} bin
+ * @returns {number}
+ */
+function binaryToByte(bin) {
+    return parseInt(bin, 2);
+}
+
+/**
+ * @param {number[]} bytes
+ * @returns {string}
+ */
+function bytesToBinary(bytes) {
+    return bytes.map((x) => x.toString(2).padStart(8, "0")).join("");
+}
+
+/**
+ * @param {Uint8Array} entropyBuffer
+ * @returns {Promise<string>}
+ */
+async function deriveChecksumBits(entropyBuffer) {
+    const ENT = entropyBuffer.length * 8;
+    const CS = ENT / 32;
+    const hash = await sha256.digest(entropyBuffer);
+
+    return bytesToBinary(Array.from(hash)).slice(0, CS);
 }

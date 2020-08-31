@@ -9,7 +9,7 @@ const vectors = [
     ["foo", "Zm9v"],
     ["foob", "Zm9vYg=="],
     ["fooba", "Zm9vYmE="],
-    ["foobar", "Zm9vYmFy"]
+    ["foobar", "Zm9vYmFy"],
 ];
 
 describe("encoding/base64", function () {

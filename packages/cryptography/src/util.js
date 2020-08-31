@@ -46,20 +46,3 @@ export function arraysEqual(a, b) {
     }
     return true;
 }
-
-/**
- * @param {string} prop
- * @returns {boolean}
- */
-export function isAccessible(prop) {
-    if (typeof self !== "undefined") {
-        return prop in self;
-    }
-    if (typeof window !== "undefined") {
-        return prop in window;
-    }
-    if (typeof global !== "undefined") {
-        return prop in global;
-    }
-    throw new Error("unable to locate global object");
-}

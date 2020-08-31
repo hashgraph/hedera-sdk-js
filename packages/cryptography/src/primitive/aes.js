@@ -1,4 +1,3 @@
-
 export const CipherAlgorithm = {
     Aes128Ctr: "AES-128-CTR",
     Aes128Cbc: "AES-128-CBC",

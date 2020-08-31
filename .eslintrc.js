@@ -29,6 +29,12 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
 
+        // handled with babel
+        "node/no-unsupported-features/es-syntax": "off",
+
+        // sometimes we need this with jsdoc typing
+        "@typescript-eslint/ban-ts-comment": "off",
+
         // opt-out of providing descriptions at the start
         // FIXME: turn these rules back on
         "jsdoc/require-returns-description": "off",

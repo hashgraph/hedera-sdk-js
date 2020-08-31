@@ -1,8 +1,8 @@
-import { EncryptedPrivateKeyInfo } from "../../src/primitive/pkcs.js";
-import * as der from "../../src/encoding/der.js";
-import PrivateKey from "../../src/PrivateKey.js";
-import * as base64 from "../../src/encoding/base64.js";
-import * as hex from "../../src/encoding/hex.js";
+import { EncryptedPrivateKeyInfo } from "../../../src/primitive/pkcs.js";
+import * as der from "../../../src/encoding/der.js";
+import PrivateKey from "../../../src/PrivateKey.js";
+import * as base64 from "../../../src/encoding/base64.js";
+import * as hex from "../../../src/encoding/hex.js";
 
 const base64Encoded =
     "MIGbMFcGCSqGSIb3DQEFDTBKMCkGCSqGSIb3DQEFDDAcBAi8WY7Gy2tThQICCAAw" +
@@ -18,8 +18,8 @@ const keyStr =
 // otherwise the types produced by `.subarray()` won't match
 const data = base64.decode(base64Encoded);
 
-describe("EncryptedPrivateKeyInfo", function () {
-    it("decodes", function () {
+describe("primitive/pkcs", function () {
+    it("decodes EncryptedPrivateKeyInfo", function () {
         const privateKeyInfo = EncryptedPrivateKeyInfo.parse(data);
         expect(privateKeyInfo).to.deep.equal(
             new EncryptedPrivateKeyInfo({

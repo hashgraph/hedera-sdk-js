@@ -1,4 +1,4 @@
-const legacyWords = [
+export default [
     "aback",
     "abbey",
     "abbot",
@@ -4096,5 +4096,3 @@ const legacyWords = [
     "zombie",
     "zone",
 ];
-
-export default legacyWords;

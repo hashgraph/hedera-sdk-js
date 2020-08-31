@@ -1,4 +1,3 @@
-
 /**
  * @param {Uint8Array} data
  * @returns {string}
