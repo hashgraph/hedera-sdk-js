@@ -1,5 +1,7 @@
 import proto from "@hashgraph/proto";
 import Client from "./Client.js";
+import Hbar from "./Hbar";
+import AccountId from "./account/AccountId";
 
 /**
  * Base class for all queries that can be submitted to Hedera.
@@ -8,6 +10,61 @@ import Client from "./Client.js";
  * @template O
  */
 export default class Query {
+    constructor() {
+        /** @type {?Object} */
+        this._paymentTransactionId = null;
+
+        /** @type {Object[]} */
+        this._paymentTransactions = [];
+
+        /** @type {AccountId[]} */
+        this._paymentTransactionNodeIds = [];
+
+        /** @type {number} */
+        this._nextPaymentTransactionIndex = 0;
+
+        /** @type {?Hbar} */
+        this._queryPayment = null;
+
+        /** @type {?Hbar} */
+        this._maxQueryPayment = null;
+
+        /**
+         * Explicit node account ID. If set, this query will be executed on this node and not chose a node
+         * from the client's network.
+         *
+         * @type {?AccountId}
+         */
+        this._nodeId = null;
+    }
+
+    /**
+     * Set an explicit payment amount for this query.
+     *
+     * The client will submit exactly this amount for the payment of this query. Hedera
+     * will not return any remainder.
+     *
+     * @param {Hbar} queryPayment
+     * @returns {this}
+     */
+    setQueryPayment(queryPayment) {
+        this._queryPayment = queryPayment;
+
+        return this;
+    }
+
+    /**
+     * Set the maximum payment allowable for this query.
+     *
+     * @param {Hbar} maxQueryPayment
+     * @returns {this}
+     */
+    setMaxQueryPayment(maxQueryPayment) {
+        this._maxQueryPayment = maxQueryPayment;
+
+        return this;
+    }
+
     /**
      * @param {Client} client
      * @returns {Promise<O>}
@@ -17,7 +74,9 @@ export default class Query {
             responseType: proto.ResponseType.ANSWER_ONLY,
         });
 
-        const channel = client.channel;
+        const nodeId = this._nodeId ?? client._getNextNodeId();
+
+        const channel = client._getNetworkChannel(nodeId);
 
         const response = await channel.crypto.cryptoGetBalance(request);
 

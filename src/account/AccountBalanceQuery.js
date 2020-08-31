@@ -1,10 +1,10 @@
 import Query from "../Query";
 import AccountId from "./AccountId";
 import proto from "@hashgraph/proto";
-import Long from "long";
+import Hbar from "../Hbar";
 
 /**
- * @augments {Query<Long>}
+ * @augments {Query<Hbar>}
  */
 export default class AccountBalanceQuery extends Query {
     /**
@@ -44,10 +44,10 @@ export default class AccountBalanceQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {Long}
+     * @returns {Hbar}
      */
     _mapResponse(response) {
-        return Long.fromValue(response.cryptogetAccountBalance?.balance ?? 0);
+        return Hbar.fromTinybars(response.cryptogetAccountBalance?.balance ?? 0);
     }
 
     /**
