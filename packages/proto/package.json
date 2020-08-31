@@ -1,7 +1,7 @@
 {
-    "name": "@hashgraph/cryptography",
+    "name": "@hashgraph/proto",
     "version": "0.1.0-pre",
-    "description": "Cryptographic utilities and primitives for the Hedera™ Hashgraph SDK",
+    "description": "Protobufs for the Hedera™ Hashgraph SDK",
     "main": "lib/index.js",
     "browser": "src/index.js",
     "license": "Apache-2.0",
@@ -13,7 +13,7 @@
         "hedera",
         "hashgraph",
         "sdk",
-        "cryptography"
+        "transactions"
     ],
     "files": [
         "lib/",
@@ -28,34 +28,28 @@
     ],
     "scripts": {
         "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
-        "compile": "babel src -d lib",
+        "compile:js": "babel src -d lib",
+        "compile:proto": "pbjs -t static-module -w es6 -o src/proto.js src/proto/*.proto",
         "lint": "run-s lint:*",
         "lint:types": "tsc",
         "lint:format": "prettier src test '*.json' 'src/*.js' --check",
         "lint:js": "eslint --fix 'src/**/*.js' 'test/**/*.js'",
         "format": "prettier src test '*.json' 'src/*.js' --write",
-        "build": "run-s lint compile",
-        "prepare": "run-s compile",
+        "build": "run-s lint compile:proto compile:js",
+        "prepare": "run-s compile:proto compile:js",
         "test": "run-s test:node test:browser:chrome test:browser:firefox",
         "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js'",
         "test:browser:chrome": "vite serve --port 9001 test/ & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/; kill %1",
         "test:browser:firefox": "vite serve --port 9002 test/ & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/; kill %1"
     },
     "dependencies": {
-        "bignumber.js": "^9.0.0",
-        "tweetnacl": "^1.0.3"
+        "protobufjs": "^6.10.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.10.5",
         "@babel/core": "^7.11.4",
-        "chromedriver": "^85.0.0",
         "eslint": "^7.7.0",
-        "geckodriver": "^1.20.0",
-        "mocha": "^8.1.3",
-        "mocha-webdriver-runner": "^0.6.3",
         "npm-run-all": "^4.1.5",
-        "serve": "^11.3.2",
-        "typescript": "^4.0.2",
-        "vite": "^1.0.0-rc.4"
+        "typescript": "^4.0.2"
     }
 }
