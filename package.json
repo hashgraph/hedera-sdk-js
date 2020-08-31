@@ -1,6 +1,54 @@
 {
-    "private": true,
+    "name": "@hashgraph/sdk",
+    "version": "2.0.0-pre",
+    "description": "Hedera™ Hashgraph SDK",
+    "main": "lib/index.js",
+    "browser": "src/index.js",
+    "license": "Apache-2.0",
+    "author": "Launchbadge <contact@launchbadge.com>",
+    "repository": "https://github.com/hashgraph/hedera-sdk-js",
+    "bugs": "https://github.com/hashgraph/hedera-sdk-js/issues",
+    "type": "module",
+    "keywords": [
+        "hedera",
+        "hashgraph",
+        "sdk",
+        "transactions"
+    ],
+    "files": [
+        "lib/",
+        "src/"
+    ],
+    "engines": {
+        "node": ">=10.0.0"
+    },
+    "browserslist": [
+        "last 1 Chrome versions",
+        "last 1 Firefox versions"
+    ],
+    "scripts": {
+        "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
+        "compile:js": "babel src -d lib",
+        "lint": "run-s lint:*",
+        "lint:types": "tsc",
+        "lint:format": "prettier src test '*.json' 'src/*.js' --check",
+        "lint:js": "eslint --fix 'src/**/*.js' 'test/**/*.js'",
+        "format": "prettier src test '*.json' 'src/*.js' --write",
+        "build": "run-s lint compile:js",
+        "prepare": "run-s compile:js",
+        "test": "run-s test:node test:browser:chrome test:browser:firefox",
+        "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js'",
+        "test:browser:chrome": "vite serve --port 9001 test/ & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/; kill %1",
+        "test:browser:firefox": "vite serve --port 9002 test/ & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/; kill %1"
+    },
+    "dependencies": {
+        "@grpc/grpc-js": "^1.1.5",
+        "@hashgraph/cryptograph": "file:packages/cryptography",
+        "@hashgraph/proto": "file:packages/proto",
+        "long": "^4.0.0"
+    },
     "devDependencies": {
+        "@babel/cli": "^7.10.5",
         "@babel/core": "^7.11.4",
         "@babel/preset-env": "^7.11.0",
         "@babel/register": "^7.10.5",
@@ -11,15 +59,20 @@
         "@typescript-eslint/parser": "^3.9.1",
         "babel-eslint": "^10.1.0",
         "chai": "^4.2.0",
+        "chromedriver": "^85.0.0",
         "eslint": "^7.7.0",
         "eslint-plugin-chai-expect": "^2.2.0",
         "eslint-plugin-import": "^2.22.0",
         "eslint-plugin-jsdoc": "^30.2.4",
         "eslint-plugin-mocha": "^8.0.0",
         "eslint-plugin-node": "^11.1.0",
+        "geckodriver": "^1.20.0",
         "lerna": "^3.22.1",
+        "mocha": "^8.1.3",
+        "mocha-webdriver-runner": "^0.6.3",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.0.5",
-        "typescript": "^4.0.2"
+        "typescript": "^4.0.2",
+        "vite": "^1.0.0-rc.4"
     }
 }

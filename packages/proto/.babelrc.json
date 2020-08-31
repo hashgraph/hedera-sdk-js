@@ -3,11 +3,12 @@
         [
             "@babel/preset-env",
             {
-                "targets": {
-                    "node": true
-                },
+                "loose": true,
+                "modules": "commonjs",
                 "bugfixes": true,
-                "loose": true
+                "targets": {
+                    "node": "10"
+                }
             }
         ]
     ]

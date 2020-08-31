@@ -4,7 +4,7 @@
         "module": "esnext",
         "lib": ["ESNext", "DOM"],
         "allowJs": true,
-        "checkJs": true,
+        "checkJs": false,
         "noEmit": true,
         "declaration": true,
         "rootDir": "src/",
