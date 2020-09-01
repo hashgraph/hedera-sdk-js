@@ -9,7 +9,7 @@ import ContractFunctionResult from "./contract/ContractFunctionResult";
 /**
  * Response when the client sends the node TransactionGetRecordResponse.
  */
-export class TransactionRecord {
+export default class TransactionRecord {
     /**
      * @param {object} properties
      * @param {ContractFunctionResult} [properties.callResult=null]
