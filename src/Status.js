@@ -2,728 +2,6 @@ import HederaStatusError from "./HederaStatusError";
 import proto from "@hashgraph/proto";
 
 export default class Status {
-    /**
-     * The transaction passed the precheck validations.
-     */
-    static Ok = new Status(0);
-
-    /**
-     * For any error not handled by specific error codes listed below.
-     */
-    static InvalidTransaction = new Status(1);
-
-    /**
-     * Payer account does not exist.
-     */
-    static PayerAccountNotFound = new Status(2);
-
-    /**
-     * Node Account provided does not match the node account of the node the transaction was submitted to.
-     */
-    static InvalidNodeAccount = new Status(3);
-
-    /**
-     * Pre-Check error when TransactionValidStart + transactionValidDuration is less than current consensus time.
-     */
-    static TransactionExpired = new Status(4);
-
-    /**
-     * Transaction start time is greater than current consensus time
-     */
-    static InvalidTransactionStart = new Status(5);
-
-    /**
-     * Valid transaction duration is a positive non zero number that does not exceed 120 seconds
-     */
-    static InvalidTransactionDuration = new Status(6);
-
-    /**
-     * The transaction signature is not valid
-     */
-    static InvalidSignature = new Status(7);
-
-    /**
-     * Transaction memo size exceeded 100 bytes
-     */
-    static MemoTooLong = new Status(8);
-
-    /**
-     * The fee provided in the transaction is insufficient for this type of transaction
-     */
-    static InsufficientTxFee = new Status(9);
-
-    /**
-     * The payer account has insufficient cryptocurrency to pay the transaction fee
-     */
-    static InsufficientPayerBalance = new Status(10);
-
-    /**
-     * This transaction ID is a duplicate of one that was submitted to this node or reached consensus in the last 180 seconds (receipt period)
-     */
-    static DuplicateTransaction = new Status(11);
-
-    /**
-     * If API is throttled out
-     */
-    static Busy = new Status(12);
-
-    /**
-     * The API is not currently supported
-     */
-    static NotSupported = new Status(13);
-
-    /**
-     * The file id is invalid or does not exist
-     */
-    static InvalidFileId = new Status(14);
-
-    /**
-     * The account id is invalid or does not exist
-     */
-    static InvalidAccountId = new Status(15);
-
-    /**
-     * The contract id is invalid or does not exist
-     */
-    static InvalidContractId = new Status(16);
-
-    /**
-     * Transaction id is not valid
-     */
-    static InvalidTransactionId = new Status(17);
-
-    /**
-     * Receipt for given transaction id does not exist
-     */
-    static ReceiptNotFound = new Status(18);
-
-    /**
-     * Record for given transaction id does not exist
-     */
-    static RecordNotFound = new Status(19);
-
-    /**
-     * The solidity id is invalid or entity with this solidity id does not exist
-     */
-    static InvalidSolidityId = new Status(20);
-
-    /**
-     * Transaction hasn't yet reached consensus, or has already expired
-     */
-    static Unknown = new Status(21);
-
-    /**
-     * The transaction succeeded
-     */
-    static Success = new Status(22);
-
-    /**
-     * There was a system error and the transaction failed because of invalid request parameters.
-     */
-    static FailInvalid = new Status(23);
-
-    /**
-     * There was a system error while performing fee calculation, reserved for future.
-     */
-    static FailFee = new Status(24);
-
-    /**
-     * There was a system error while performing balance checks, reserved for future.
-     */
-    static FailBalance = new Status(25);
-
-    /**
-     * Key not provided in the transaction body
-     */
-    static KeyRequired = new Status(26);
-
-    /**
-     * Unsupported algorithm/encoding used for keys in the transaction
-     */
-    static BadEncoding = new Status(27);
-
-    /**
-     * When the account balance is not sufficient for the transfer
-     */
-    static InsufficientAccountBalance = new Status(28);
-
-    /**
-     * During an update transaction when the system is not able to find the Users Solidity address
-     */
-    static InvalidSolidityAddress = new Status(29);
-
-    /**
-     * Not enough gas was supplied to execute transaction
-     */
-    static InsufficientGas = new Status(30);
-
-    /**
-     * Contract byte code size is over the limit
-     */
-    static ContractSizeLimitExceeded = new Status(31);
-
-    /**
-     * local execution (query) is requested for a function which changes state
-     */
-    static LocalCallModificationException = new Status(32);
-
-    /**
-     * Contract REVERT OPCODE executed
-     */
-    static ContractRevertExecuted = new Status(33);
-
-    /**
-     * For any contract execution related error not handled by specific error codes listed above.
-     */
-    static ContractExecutionException = new Status(34);
-
-    /**
-     * In Query validation, account with +ve(amount) value should be Receiving node account,
-     * the receiver account should be only one account in the list
-     */
-    static InvalidReceivingNodeAccount = new Status(35);
-
-    /**
-     * Header is missing in Query request
-     */
-    static MissingQueryHeader = new Status(36);
-
-    /**
-     * The update of the account failed
-     */
-    static AccountUpdateFailed = new Status(37);
-
-    /**
-     * Provided key encoding was not supported by the system
-     */
-    static InvalidKeyEncoding = new Status(38);
-
-    /**
-     * Null solidity address
-     */
-    static NullSolidityAddress = new Status(39);
-
-    /**
-     * Update of the contract failed
-     */
-    static ContractUpdateFailed = new Status(40);
-
-    /**
-     * The query header is invalid
-     */
-    static InvalidQueryHeader = new Status(41);
-
-    /**
-     * Invalid fee submitted
-     */
-    static InvalidFeeSubmitted = new Status(42);
-
-    /**
-     * Payer signature is invalid
-     */
-    static InvalidPayerSignature = new Status(43);
-
-    /**
-     * The keys were not provided in the request.
-     */
-    static KeyNotProvided = new Status(44);
-
-    /**
-     * Expiration time provided in the transaction was invalid.
-     */
-    static InvalidExpirationTime = new Status(45);
-
-    /**
-     * WriteAccess Control Keys are not provided for the file
-     */
-    static NoWaclKey = new Status(46);
-
-    /**
-     * The contents of file are provided as empty.
-     */
-    static FileContentEmpty = new Status(47);
-
-    /**
-     * The crypto transfer credit and debit do not sum equal to 0
-     */
-    static InvalidAccountAmounts = new Status(48);
-
-    /**
-     * Transaction body provided is empty
-     */
-    static EmptyTransactionBody = new Status(49);
-
-    /**
-     * Invalid transaction body provided
-     */
-    static InvalidTransactionBody = new Status(50);
-
-    /**
-     * The type of key (base ed25519 key, KeyList, or ThresholdKey) does not match the type of
-     * signature (base ed25519 signature, SignatureList, or ThresholdKeySignature).
-     */
-    static InvalidSignatureTypeMismatchingKey = new Status(51);
-
-    /**
-     * The number of key (KeyList, or ThresholdKey) does not match that of signature
-     * (SignatureList, or ThresholdKeySignature). e.g. if a keyList has 3 base keys,
-     * then the corresponding signatureList should also have 3 base signatures.
-     */
-    static InvalidSignatureCountMismatchingKey = new Status(52);
-
-    /**
-     * The claim body is empty.
-     */
-    static EmptyClaimBody = new Status(53);
-
-    /**
-     * The hash for the claim is empty
-     */
-    static EmptyClaimHash = new Status(54);
-
-    /**
-     * The key list is empty
-     */
-    static EmptyClaimKeys = new Status(55);
-
-    /**
-     * The size of the claim hash is not 48 bytes
-     */
-    static InvalidClaimHashSize = new Status(56);
-
-    /**
-     * The query body is empty
-     */
-    static EmptyQueryBody = new Status(57);
-
-    /**
-     * The crypto claim query is empty
-     */
-    static EmptyClaimQuery = new Status(58);
-
-    /**
-     * The crypto claim doesn't exists in the file system. It expired or was never persisted.
-     */
-    static ClaimNotFound = new Status(59);
-
-    /**
-     * The account id passed has not yet been created.
-     */
-    static AccountIdDoesNotExist = new Status(60);
-
-    /**
-     * The claim hash already exists
-     */
-    static ClaimAlreadyExists = new Status(61);
-
-    /**
-     * File WACL keys are invalid
-     */
-    static InvalidFileWacl = new Status(62);
-
-    /**
-     * Serialization failure
-     */
-    static SerializationFailed = new Status(63);
-
-    /**
-     * The size of the Transaction is greater than transactionMaxBytes
-     */
-    static TransactionOversize = new Status(64);
-
-    /**
-     * The Transaction has more than 50 levels
-     */
-    static TransactionTooManyLayers = new Status(65);
-
-    /**
-     * Contract is marked as deleted
-     */
-    static ContractDeleted = new Status(66);
-
-    /**
-     * The platform node is either disconnected or lagging behind.
-     */
-    static PlatformNotActive = new Status(67);
-
-    /**
-     * One key matches more than one prefixes on the signature map.
-     */
-    static KeyPrefixMismatch = new Status(68);
-
-    /**
-     * Transaction not created by platform due to either large backlog or
-     * message size exceeded transactionMaxBytes.
-     */
-    static PlatformTransactionNotCreated = new Status(69);
-
-    /**
-     * Auto renewal period is not a positive number of seconds.
-     */
-    static InvalidRenewalPeriod = new Status(70);
-
-    /**
-     * The response code when a smart contract id is passed for a crypto API request.
-     */
-    static InvalidPayerAccountId = new Status(71);
-
-    /**
-     * The account has been marked as deleted.
-     */
-    static AccountDeleted = new Status(72);
-
-    /**
-     * The file has been marked as deleted.
-     */
-    static FileDeleted = new Status(73);
-
-    /**
-     * Same accounts repeated in the transfer account list.
-     */
-    static AccountRepeatedInAccountAmounts = new Status(74);
-
-    /**
-     * Attempting to set negative balance value for crypto account.
-     */
-    static SettingNegativeAccountBalance = new Status(75);
-
-    /**
-     * When deleting smart contract that has crypto balance either transfer account or transfer.
-     * smart contract is required.
-     */
-    static ObtainerRequired = new Status(76);
-
-    /**
-     * When deleting smart contract that has crypto balance you can not use the same contract id
-     * as transferContractId as the one being deleted.
-     */
-    static ObtainerSameContractId = new Status(77);
-
-    /**
-     * TransferAccountId or transferContractId specified for contract delete does not exist.
-     */
-    static ObtainerDoesNotExist = new Status(78);
-
-    /**
-     * Attempting to modify (update or delete a immutable smart contract,
-     * i.e. one created without a admin key).
-     */
-    static ModifyingImmutableContract = new Status(79);
-
-    /**
-     * Unexpected exception thrown by file system functions.
-     */
-    static FileSystemException = new Status(80);
-
-    /**
-     * The duration is not a subset of [MINIMUM_AUTORENEW_DURATION,MAXIMUM_AUTORENEW_DURATION].
-     */
-    static AutorenewDurationNotInRange = new Status(81);
-
-    /**
-     * Decoding the smart contract binary to a byte array failed.
-     * Check that the input is a valid hex string.
-     */
-    static ErrorDecodingBytestring = new Status(82);
-
-    /**
-     * File to create a smart contract was of length zero.
-     */
-    static ContractFileEmpty = new Status(83);
-
-    /**
-     * Bytecode for smart contract is of length zero.
-     */
-    static ContractBytecodeEmpty = new Status(84);
-
-    /**
-     * Attempt to set negative initial balance.
-     */
-    static InvalidInitialBalance = new Status(85);
-
-    /**
-     * Attempt to set negative receive record threshold.
-     */
-    static InvalidReceiveRecordThreshold = new Status(86);
-
-    /**
-     * Attempt to set negative send record threshold.
-     */
-    static InvalidSendRecordThreshold = new Status(87);
-
-    /**
-     * Special Account Operations should be performed by only Genesis account, return this code if it is not Genesis Account
-     */
-    static AccountIsNotGenesisAccount = new Status(88);
-
-    /**
-     * The fee payer account doesn't have permission to submit such Transaction
-     */
-    static PayerAccountUnauthorized = new Status(89);
-
-    /**
-     * FreezeTransactionBody is invalid
-     */
-    static InvalidFreezeTransactionBody = new Status(90);
-
-    /**
-     * FreezeTransactionBody does not exist
-     */
-    static FreezeTransactionBodyNotFound = new Status(91);
-
-    /**
-     * Exceeded the number of accounts (both from and to) allowed for crypto transfer list.
-     */
-    static TransferListSizeLimitExceeded = new Status(92);
-
-    /**
-     * Smart contract result size greater than specified maxResultSize.
-     */
-    static ResultSizeLimitExceeded = new Status(93);
-
-    /**
-     * The payer account is not a special account(account 0.0.55).
-     */
-    static NotSpecialAccount = new Status(94);
-
-    /**
-     * Negative gas was offered in smart contract call.
-     */
-    static ContractNegativeGas = new Status(95);
-
-    /**
-     * Negative value / initial balance was specified in a smart contract call / create.
-     */
-    static ContractNegativeValue = new Status(96);
-
-    /**
-     * Failed to update fee file.
-     */
-    static InvalidFeeFile = new Status(97);
-
-    /**
-     * Failed to update exchange rate file.
-     */
-    static InvalidExchangeRateFile = new Status(98);
-
-    /**
-     * Payment tendered for contract local call cannot cover both the fee and the gas.
-     */
-    static InsufficientLocalCallGas = new Status(99);
-
-    /**
-     * Entities with Entity ID below 1000 are not allowed to be deleted.
-     */
-    static EntityNotAllowedToDelete = new Status(100);
-
-    /**
-     * Violating one of these rules: 1) treasury account can update all entities below 0.0.1000, 2)
-     * account 0.0.50 can update all entities from 0.0.51 - 0.0.80, 3) Network Function Master
-     * Account A/c 0.0.50 - Update all Network Function accounts & perform all the Network Functions
-     * listed below, 4) Network Function Accounts: i) A/c 0.0.55 - Update Address Book files
-     * (0.0.101/102), ii) A/c 0.0.56 - Update Fee schedule (0.0.111), iii) A/c 0.0.57 -
-     * Update Exchange Rate (0.0.112).
-     */
-    static AuthorizationFailed = new Status(101);
-
-    /**
-     * Fee Schedule Proto uploaded but not valid (append or update is required).
-     */
-    static FileUploadedProtoInvalid = new Status(102);
-
-    /**
-     * Fee Schedule Proto uploaded but not valid (append or update is required).
-     */
-    static FileUploadedProtoNotSavedToDisk = new Status(103);
-
-    /**
-     * Fee Schedule Proto File Part uploaded.
-     */
-    static FeeScheduleFilePartUploaded = new Status(104);
-
-    /**
-     * The change on Exchange Rate exceeds Exchange_Rate_Allowed_Percentage.
-     */
-    static ExchangeRateChangeLimitExceeded = new Status(105);
-
-    /**
-     * Contract permanent storage exceeded the currently allowable limit
-     */
-    static MaxContractStorageExceeded = new Status(106);
-
-    /**
-     * Transfer Account should not be same as Account to be deleted
-     */
-    static TransferAccountSameAsDeleteAccount = new Status(107);
-
-    static TotalLedgerBalanceInvalid = new Status(108);
-
-    /**
-     * The expiration date/time on a smart contract may not be reduced.
-     */
-    static ExpirationReductionNotAllowed = new Status(110);
-
-    /**
-     * The Topic ID specified is not in the system.
-     */
-    static InvalidTopicId = new Status(150);
-
-    static InvalidTopicExpirationTime = new Status(154);
-    static InvalidAdminKey = new Status(155);
-    static InvalidSubmitKey = new Status(156);
-
-    /**
-     * An attempted operation was not authorized (ie - a deleteTopic for a topic with no adminKey).
-     */
-    static Unauthorized = new Status(157);
-
-    /**
-     * A ConsensusService message is empty.
-     */
-    static InvalidTopicMessage = new Status(158);
-
-    /**
-     * The autoRenewAccount specified is not a valid, active account.
-     */
-    static InvalidAutorenewAccount = new Status(159);
-
-    /**
-     * An admin key was not specified on the topic, so there must not be an autorenew account.
-     */
-    static AutoRenewAccountNotAllowed = new Status(160);
-
-    /**
-     * The autoRenewAccount didn't sign the transaction.
-     */
-    static AutoRenewAccountSignatureMissing = new Status(161);
-
-    /**
-     * The topic has expired, was not automatically renewed, and is in a 7 day grace period before
-     * the topic will be deleted unrecoverably. This error response code will not be returned
-     * until autoRenew functionality is supported by HAPI.
-     */
-    static TopicExpired = new Status(162);
-
-    static [0] = Status.Ok;
-    static [1] = Status.InvalidTransaction;
-    static [2] = Status.PayerAccountNotFound;
-    static [3] = Status.InvalidNodeAccount;
-    static [4] = Status.TransactionExpired;
-    static [5] = Status.InvalidTransactionStart;
-    static [6] = Status.InvalidTransactionDuration;
-    static [7] = Status.InvalidSignature;
-    static [8] = Status.MemoTooLong;
-    static [9] = Status.InsufficientTxFee;
-    static [10] = Status.InsufficientPayerBalance;
-    static [11] = Status.DuplicateTransaction;
-    static [12] = Status.Busy;
-    static [13] = Status.NotSupported;
-    static [14] = Status.InvalidFileId;
-    static [15] = Status.InvalidAccountId;
-    static [16] = Status.InvalidContractId;
-    static [17] = Status.InvalidTransactionId;
-    static [18] = Status.ReceiptNotFound;
-    static [19] = Status.RecordNotFound;
-    static [20] = Status.InvalidSolidityId;
-    static [21] = Status.Unknown;
-    static [22] = Status.Success;
-    static [23] = Status.FailInvalid;
-    static [24] = Status.FailFee;
-    static [25] = Status.FailBalance;
-    static [26] = Status.KeyRequired;
-    static [27] = Status.BadEncoding;
-    static [28] = Status.InsufficientAccountBalance;
-    static [29] = Status.InvalidSolidityAddress;
-    static [30] = Status.InsufficientGas;
-    static [31] = Status.ContractSizeLimitExceeded;
-    static [32] = Status.LocalCallModificationException;
-    static [33] = Status.ContractRevertExecuted;
-    static [34] = Status.ContractExecutionException;
-    static [35] = Status.InvalidReceivingNodeAccount;
-    static [36] = Status.MissingQueryHeader;
-    static [37] = Status.AccountUpdateFailed;
-    static [38] = Status.InvalidKeyEncoding;
-    static [39] = Status.NullSolidityAddress;
-    static [40] = Status.ContractUpdateFailed;
-    static [41] = Status.InvalidQueryHeader;
-    static [42] = Status.InvalidFeeSubmitted;
-    static [43] = Status.InvalidPayerSignature;
-    static [44] = Status.KeyNotProvided;
-    static [45] = Status.InvalidExpirationTime;
-    static [46] = Status.NoWaclKey;
-    static [47] = Status.FileContentEmpty;
-    static [48] = Status.InvalidAccountAmounts;
-    static [49] = Status.EmptyTransactionBody;
-    static [50] = Status.InvalidTransactionBody;
-    static [51] = Status.InvalidSignatureTypeMismatchingKey;
-    static [52] = Status.InvalidSignatureCountMismatchingKey;
-    static [53] = Status.EmptyClaimBody;
-    static [54] = Status.EmptyClaimHash;
-    static [55] = Status.EmptyClaimKeys;
-    static [56] = Status.InvalidClaimHashSize;
-    static [57] = Status.EmptyQueryBody;
-    static [58] = Status.EmptyClaimQuery;
-    static [59] = Status.ClaimNotFound;
-    static [60] = Status.AccountIdDoesNotExist;
-    static [61] = Status.ClaimAlreadyExists;
-    static [62] = Status.InvalidFileWacl;
-    static [63] = Status.SerializationFailed;
-    static [64] = Status.TransactionOversize;
-    static [65] = Status.TransactionTooManyLayers;
-    static [66] = Status.ContractDeleted;
-    static [67] = Status.PlatformNotActive;
-    static [68] = Status.KeyPrefixMismatch;
-    static [69] = Status.PlatformTransactionNotCreated;
-    static [70] = Status.InvalidRenewalPeriod;
-    static [71] = Status.InvalidPayerAccountId;
-    static [72] = Status.AccountDeleted;
-    static [73] = Status.FileDeleted;
-    static [74] = Status.AccountRepeatedInAccountAmounts;
-    static [75] = Status.SettingNegativeAccountBalance;
-    static [76] = Status.ObtainerRequired;
-    static [77] = Status.ObtainerSameContractId;
-    static [78] = Status.ObtainerDoesNotExist;
-    static [79] = Status.ModifyingImmutableContract;
-    static [80] = Status.FileSystemException;
-    static [81] = Status.AutorenewDurationNotInRange;
-    static [82] = Status.ErrorDecodingBytestring;
-    static [83] = Status.ContractFileEmpty;
-    static [84] = Status.ContractBytecodeEmpty;
-    static [85] = Status.InvalidInitialBalance;
-    static [86] = Status.InvalidReceiveRecordThreshold;
-    static [87] = Status.InvalidSendRecordThreshold;
-    static [88] = Status.AccountIsNotGenesisAccount;
-    static [89] = Status.PayerAccountUnauthorized;
-    static [90] = Status.InvalidFreezeTransactionBody;
-    static [91] = Status.FreezeTransactionBodyNotFound;
-    static [92] = Status.TransferListSizeLimitExceeded;
-    static [93] = Status.ResultSizeLimitExceeded;
-    static [94] = Status.NotSpecialAccount;
-    static [95] = Status.ContractNegativeGas;
-    static [96] = Status.ContractNegativeValue;
-    static [97] = Status.InvalidFeeFile;
-    static [98] = Status.InvalidExchangeRateFile;
-    static [99] = Status.InsufficientLocalCallGas;
-    static [100] = Status.EntityNotAllowedToDelete;
-    static [101] = Status.AuthorizationFailed;
-    static [102] = Status.FileUploadedProtoInvalid;
-    static [103] = Status.FileUploadedProtoNotSavedToDisk;
-    static [104] = Status.FeeScheduleFilePartUploaded;
-    static [105] = Status.ExchangeRateChangeLimitExceeded;
-    static [106] = Status.ExchangeRateChangeLimitExceeded;
-    static [107] = Status.ExchangeRateChangeLimitExceeded;
-    static [108] = Status.ExchangeRateChangeLimitExceeded;
-    static [110] = Status.ExchangeRateChangeLimitExceeded;
-    static [150] = Status.InvalidTopicId;
-    static [154] = Status.InvalidTopicExpirationTime;
-    static [155] = Status.InvalidAdminKey;
-    static [156] = Status.InvalidSubmitKey;
-    static [157] = Status.Unauthorized;
-    static [158] = Status.InvalidTopicMessage;
-    static [159] = Status.InvalidAutorenewAccount;
-    static [160] = Status.AutoRenewAccountNotAllowed;
-    static [161] = Status.AutoRenewAccountSignatureMissing;
-    static [162] = Status.TopicExpired;
 
     /**
      * @param {number} code
@@ -1036,3 +314,726 @@ export default class Status {
         return this.code;
     }
 }
+
+/**
+ * The transaction passed the precheck validations.
+ */
+Status.Ok = new Status(0);
+
+/**
+ * For any error not handled by specific error codes listed below.
+ */
+Status.InvalidTransaction = new Status(1);
+
+/**
+ * Payer account does not exist.
+ */
+Status.PayerAccountNotFound = new Status(2);
+
+/**
+ * Node Account provided does not match the node account of the node the transaction was submitted to.
+ */
+Status.InvalidNodeAccount = new Status(3);
+
+/**
+ * Pre-Check error when TransactionValidStart + transactionValidDuration is less than current consensus time.
+ */
+Status.TransactionExpired = new Status(4);
+
+/**
+ * Transaction start time is greater than current consensus time
+ */
+Status.InvalidTransactionStart = new Status(5);
+
+/**
+ * Valid transaction duration is a positive non zero number that does not exceed 120 seconds
+ */
+Status.InvalidTransactionDuration = new Status(6);
+
+/**
+ * The transaction signature is not valid
+ */
+Status.InvalidSignature = new Status(7);
+
+/**
+ * Transaction memo size exceeded 100 bytes
+ */
+Status.MemoTooLong = new Status(8);
+
+/**
+ * The fee provided in the transaction is insufficient for this type of transaction
+ */
+Status.InsufficientTxFee = new Status(9);
+
+/**
+ * The payer account has insufficient cryptocurrency to pay the transaction fee
+ */
+Status.InsufficientPayerBalance = new Status(10);
+
+/**
+ * This transaction ID is a duplicate of one that was submitted to this node or reached consensus in the last 180 seconds (receipt period)
+ */
+Status.DuplicateTransaction = new Status(11);
+
+/**
+ * If API is throttled out
+ */
+Status.Busy = new Status(12);
+
+/**
+ * The API is not currently supported
+ */
+Status.NotSupported = new Status(13);
+
+/**
+ * The file id is invalid or does not exist
+ */
+Status.InvalidFileId = new Status(14);
+
+/**
+ * The account id is invalid or does not exist
+ */
+Status.InvalidAccountId = new Status(15);
+
+/**
+ * The contract id is invalid or does not exist
+ */
+Status.InvalidContractId = new Status(16);
+
+/**
+ * Transaction id is not valid
+ */
+Status.InvalidTransactionId = new Status(17);
+
+/**
+ * Receipt for given transaction id does not exist
+ */
+Status.ReceiptNotFound = new Status(18);
+
+/**
+ * Record for given transaction id does not exist
+ */
+Status.RecordNotFound = new Status(19);
+
+/**
+ * The solidity id is invalid or entity with this solidity id does not exist
+ */
+Status.InvalidSolidityId = new Status(20);
+
+/**
+ * Transaction hasn't yet reached consensus, or has already expired
+ */
+Status.Unknown = new Status(21);
+
+/**
+ * The transaction succeeded
+ */
+Status.Success = new Status(22);
+
+/**
+ * There was a system error and the transaction failed because of invalid request parameters.
+ */
+Status.FailInvalid = new Status(23);
+
+/**
+ * There was a system error while performing fee calculation, reserved for future.
+ */
+Status.FailFee = new Status(24);
+
+/**
+ * There was a system error while performing balance checks, reserved for future.
+ */
+Status.FailBalance = new Status(25);
+
+/**
+ * Key not provided in the transaction body
+ */
+Status.KeyRequired = new Status(26);
+
+/**
+ * Unsupported algorithm/encoding used for keys in the transaction
+ */
+Status.BadEncoding = new Status(27);
+
+/**
+ * When the account balance is not sufficient for the transfer
+ */
+Status.InsufficientAccountBalance = new Status(28);
+
+/**
+ * During an update transaction when the system is not able to find the Users Solidity address
+ */
+Status.InvalidSolidityAddress = new Status(29);
+
+/**
+ * Not enough gas was supplied to execute transaction
+ */
+Status.InsufficientGas = new Status(30);
+
+/**
+ * Contract byte code size is over the limit
+ */
+Status.ContractSizeLimitExceeded = new Status(31);
+
+/**
+ * local execution (query) is requested for a function which changes state
+ */
+Status.LocalCallModificationException = new Status(32);
+
+/**
+ * Contract REVERT OPCODE executed
+ */
+Status.ContractRevertExecuted = new Status(33);
+
+/**
+ * For any contract execution related error not handled by specific error codes listed above.
+ */
+Status.ContractExecutionException = new Status(34);
+
+/**
+ * In Query validation, account with +ve(amount) value should be Receiving node account,
+ * the receiver account should be only one account in the list
+ */
+Status.InvalidReceivingNodeAccount = new Status(35);
+
+/**
+ * Header is missing in Query request
+ */
+Status.MissingQueryHeader = new Status(36);
+
+/**
+ * The update of the account failed
+ */
+Status.AccountUpdateFailed = new Status(37);
+
+/**
+ * Provided key encoding was not supported by the system
+ */
+Status.InvalidKeyEncoding = new Status(38);
+
+/**
+ * Null solidity address
+ */
+Status.NullSolidityAddress = new Status(39);
+
+/**
+ * Update of the contract failed
+ */
+Status.ContractUpdateFailed = new Status(40);
+
+/**
+ * The query header is invalid
+ */
+Status.InvalidQueryHeader = new Status(41);
+
+/**
+ * Invalid fee submitted
+ */
+Status.InvalidFeeSubmitted = new Status(42);
+
+/**
+ * Payer signature is invalid
+ */
+Status.InvalidPayerSignature = new Status(43);
+
+/**
+ * The keys were not provided in the request.
+ */
+Status.KeyNotProvided = new Status(44);
+
+/**
+ * Expiration time provided in the transaction was invalid.
+ */
+Status.InvalidExpirationTime = new Status(45);
+
+/**
+ * WriteAccess Control Keys are not provided for the file
+ */
+Status.NoWaclKey = new Status(46);
+
+/**
+ * The contents of file are provided as empty.
+ */
+Status.FileContentEmpty = new Status(47);
+
+/**
+ * The crypto transfer credit and debit do not sum equal to 0
+ */
+Status.InvalidAccountAmounts = new Status(48);
+
+/**
+ * Transaction body provided is empty
+ */
+Status.EmptyTransactionBody = new Status(49);
+
+/**
+ * Invalid transaction body provided
+ */
+Status.InvalidTransactionBody = new Status(50);
+
+/**
+ * The type of key (base ed25519 key, KeyList, or ThresholdKey) does not match the type of
+ * signature (base ed25519 signature, SignatureList, or ThresholdKeySignature).
+ */
+Status.InvalidSignatureTypeMismatchingKey = new Status(51);
+
+/**
+ * The number of key (KeyList, or ThresholdKey) does not match that of signature
+ * (SignatureList, or ThresholdKeySignature). e.g. if a keyList has 3 base keys,
+ * then the corresponding signatureList should also have 3 base signatures.
+ */
+Status.InvalidSignatureCountMismatchingKey = new Status(52);
+
+/**
+ * The claim body is empty.
+ */
+Status.EmptyClaimBody = new Status(53);
+
+/**
+ * The hash for the claim is empty
+ */
+Status.EmptyClaimHash = new Status(54);
+
+/**
+ * The key list is empty
+ */
+Status.EmptyClaimKeys = new Status(55);
+
+/**
+ * The size of the claim hash is not 48 bytes
+ */
+Status.InvalidClaimHashSize = new Status(56);
+
+/**
+ * The query body is empty
+ */
+Status.EmptyQueryBody = new Status(57);
+
+/**
+ * The crypto claim query is empty
+ */
+Status.EmptyClaimQuery = new Status(58);
+
+/**
+ * The crypto claim doesn't exists in the file system. It expired or was never persisted.
+ */
+Status.ClaimNotFound = new Status(59);
+
+/**
+ * The account id passed has not yet been created.
+ */
+Status.AccountIdDoesNotExist = new Status(60);
+
+/**
+ * The claim hash already exists
+ */
+Status.ClaimAlreadyExists = new Status(61);
+
+/**
+ * File WACL keys are invalid
+ */
+Status.InvalidFileWacl = new Status(62);
+
+/**
+ * Serialization failure
+ */
+Status.SerializationFailed = new Status(63);
+
+/**
+ * The size of the Transaction is greater than transactionMaxBytes
+ */
+Status.TransactionOversize = new Status(64);
+
+/**
+ * The Transaction has more than 50 levels
+ */
+Status.TransactionTooManyLayers = new Status(65);
+
+/**
+ * Contract is marked as deleted
+ */
+Status.ContractDeleted = new Status(66);
+
+/**
+ * The platform node is either disconnected or lagging behind.
+ */
+Status.PlatformNotActive = new Status(67);
+
+/**
+ * One key matches more than one prefixes on the signature map.
+ */
+Status.KeyPrefixMismatch = new Status(68);
+
+/**
+ * Transaction not created by platform due to either large backlog or
+ * message size exceeded transactionMaxBytes.
+ */
+Status.PlatformTransactionNotCreated = new Status(69);
+
+/**
+ * Auto renewal period is not a positive number of seconds.
+ */
+Status.InvalidRenewalPeriod = new Status(70);
+
+/**
+ * The response code when a smart contract id is passed for a crypto API request.
+ */
+Status.InvalidPayerAccountId = new Status(71);
+
+/**
+ * The account has been marked as deleted.
+ */
+Status.AccountDeleted = new Status(72);
+
+/**
+ * The file has been marked as deleted.
+ */
+Status.FileDeleted = new Status(73);
+
+/**
+ * Same accounts repeated in the transfer account list.
+ */
+Status.AccountRepeatedInAccountAmounts = new Status(74);
+
+/**
+ * Attempting to set negative balance value for crypto account.
+ */
+Status.SettingNegativeAccountBalance = new Status(75);
+
+/**
+ * When deleting smart contract that has crypto balance either transfer account or transfer.
+ * smart contract is required.
+ */
+Status.ObtainerRequired = new Status(76);
+
+/**
+ * When deleting smart contract that has crypto balance you can not use the same contract id
+ * as transferContractId as the one being deleted.
+ */
+Status.ObtainerSameContractId = new Status(77);
+
+/**
+ * TransferAccountId or transferContractId specified for contract delete does not exist.
+ */
+Status.ObtainerDoesNotExist = new Status(78);
+
+/**
+ * Attempting to modify (update or delete a immutable smart contract,
+ * i.e. one created without a admin key).
+ */
+Status.ModifyingImmutableContract = new Status(79);
+
+/**
+ * Unexpected exception thrown by file system functions.
+ */
+Status.FileSystemException = new Status(80);
+
+/**
+ * The duration is not a subset of [MINIMUM_AUTORENEW_DURATION,MAXIMUM_AUTORENEW_DURATION].
+ */
+Status.AutorenewDurationNotInRange = new Status(81);
+
+/**
+ * Decoding the smart contract binary to a byte array failed.
+ * Check that the input is a valid hex string.
+ */
+Status.ErrorDecodingBytestring = new Status(82);
+
+/**
+ * File to create a smart contract was of length zero.
+ */
+Status.ContractFileEmpty = new Status(83);
+
+/**
+ * Bytecode for smart contract is of length zero.
+ */
+Status.ContractBytecodeEmpty = new Status(84);
+
+/**
+ * Attempt to set negative initial balance.
+ */
+Status.InvalidInitialBalance = new Status(85);
+
+/**
+ * Attempt to set negative receive record threshold.
+ */
+Status.InvalidReceiveRecordThreshold = new Status(86);
+
+/**
+ * Attempt to set negative send record threshold.
+ */
+Status.InvalidSendRecordThreshold = new Status(87);
+
+/**
+ * Special Account Operations should be performed by only Genesis account, return this code if it is not Genesis Account
+ */
+Status.AccountIsNotGenesisAccount = new Status(88);
+
+/**
+ * The fee payer account doesn't have permission to submit such Transaction
+ */
+Status.PayerAccountUnauthorized = new Status(89);
+
+/**
+ * FreezeTransactionBody is invalid
+ */
+Status.InvalidFreezeTransactionBody = new Status(90);
+
+/**
+ * FreezeTransactionBody does not exist
+ */
+Status.FreezeTransactionBodyNotFound = new Status(91);
+
+/**
+ * Exceeded the number of accounts (both from and to) allowed for crypto transfer list.
+ */
+Status.TransferListSizeLimitExceeded = new Status(92);
+
+/**
+ * Smart contract result size greater than specified maxResultSize.
+ */
+Status.ResultSizeLimitExceeded = new Status(93);
+
+/**
+ * The payer account is not a special account(account 0.0.55).
+ */
+Status.NotSpecialAccount = new Status(94);
+
+/**
+ * Negative gas was offered in smart contract call.
+ */
+Status.ContractNegativeGas = new Status(95);
+
+/**
+ * Negative value / initial balance was specified in a smart contract call / create.
+ */
+Status.ContractNegativeValue = new Status(96);
+
+/**
+ * Failed to update fee file.
+ */
+Status.InvalidFeeFile = new Status(97);
+
+/**
+ * Failed to update exchange rate file.
+ */
+Status.InvalidExchangeRateFile = new Status(98);
+
+/**
+ * Payment tendered for contract local call cannot cover both the fee and the gas.
+ */
+Status.InsufficientLocalCallGas = new Status(99);
+
+/**
+ * Entities with Entity ID below 1000 are not allowed to be deleted.
+ */
+Status.EntityNotAllowedToDelete = new Status(100);
+
+/**
+ * Violating one of these rules: 1) treasury account can update all entities below 0.0.1000, 2)
+ * account 0.0.50 can update all entities from 0.0.51 - 0.0.80, 3) Network Function Master
+ * Account A/c 0.0.50 - Update all Network Function accounts & perform all the Network Functions
+ * listed below, 4) Network Function Accounts: i) A/c 0.0.55 - Update Address Book files
+ * (0.0.101/102), ii) A/c 0.0.56 - Update Fee schedule (0.0.111), iii) A/c 0.0.57 -
+ * Update Exchange Rate (0.0.112).
+ */
+Status.AuthorizationFailed = new Status(101);
+
+/**
+ * Fee Schedule Proto uploaded but not valid (append or update is required).
+ */
+Status.FileUploadedProtoInvalid = new Status(102);
+
+/**
+ * Fee Schedule Proto uploaded but not valid (append or update is required).
+ */
+Status.FileUploadedProtoNotSavedToDisk = new Status(103);
+
+/**
+ * Fee Schedule Proto File Part uploaded.
+ */
+Status.FeeScheduleFilePartUploaded = new Status(104);
+
+/**
+ * The change on Exchange Rate exceeds Exchange_Rate_Allowed_Percentage.
+ */
+Status.ExchangeRateChangeLimitExceeded = new Status(105);
+
+/**
+ * Contract permanent storage exceeded the currently allowable limit
+ */
+Status.MaxContractStorageExceeded = new Status(106);
+
+/**
+ * Transfer Account should not be same as Account to be deleted
+ */
+Status.TransferAccountSameAsDeleteAccount = new Status(107);
+
+Status.TotalLedgerBalanceInvalid = new Status(108);
+
+/**
+ * The expiration date/time on a smart contract may not be reduced.
+ */
+Status.ExpirationReductionNotAllowed = new Status(110);
+
+/**
+ * The Topic ID specified is not in the system.
+ */
+Status.InvalidTopicId = new Status(150);
+
+Status.InvalidTopicExpirationTime = new Status(154);
+Status.InvalidAdminKey = new Status(155);
+Status.InvalidSubmitKey = new Status(156);
+
+/**
+ * An attempted operation was not authorized (ie - a deleteTopic for a topic with no adminKey).
+ */
+Status.Unauthorized = new Status(157);
+
+/**
+ * A ConsensusService message is empty.
+ */
+Status.InvalidTopicMessage = new Status(158);
+
+/**
+ * The autoRenewAccount specified is not a valid, active account.
+ */
+Status.InvalidAutorenewAccount = new Status(159);
+
+/**
+ * An admin key was not specified on the topic, so there must not be an autorenew account.
+ */
+Status.AutoRenewAccountNotAllowed = new Status(160);
+
+/**
+ * The autoRenewAccount didn't sign the transaction.
+ */
+Status.AutoRenewAccountSignatureMissing = new Status(161);
+
+/**
+ * The topic has expired, was not automatically renewed, and is in a 7 day grace period before
+ * the topic will be deleted unrecoverably. This error response code will not be returned
+ * until autoRenew functionality is supported by HAPI.
+ */
+Status.TopicExpired = new Status(162);
+
+Status[0] = Status.Ok;
+Status[1] = Status.InvalidTransaction;
+Status[2] = Status.PayerAccountNotFound;
+Status[3] = Status.InvalidNodeAccount;
+Status[4] = Status.TransactionExpired;
+Status[5] = Status.InvalidTransactionStart;
+Status[6] = Status.InvalidTransactionDuration;
+Status[7] = Status.InvalidSignature;
+Status[8] = Status.MemoTooLong;
+Status[9] = Status.InsufficientTxFee;
+Status[10] = Status.InsufficientPayerBalance;
+Status[11] = Status.DuplicateTransaction;
+Status[12] = Status.Busy;
+Status[13] = Status.NotSupported;
+Status[14] = Status.InvalidFileId;
+Status[15] = Status.InvalidAccountId;
+Status[16] = Status.InvalidContractId;
+Status[17] = Status.InvalidTransactionId;
+Status[18] = Status.ReceiptNotFound;
+Status[19] = Status.RecordNotFound;
+Status[20] = Status.InvalidSolidityId;
+Status[21] = Status.Unknown;
+Status[22] = Status.Success;
+Status[23] = Status.FailInvalid;
+Status[24] = Status.FailFee;
+Status[25] = Status.FailBalance;
+Status[26] = Status.KeyRequired;
+Status[27] = Status.BadEncoding;
+Status[28] = Status.InsufficientAccountBalance;
+Status[29] = Status.InvalidSolidityAddress;
+Status[30] = Status.InsufficientGas;
+Status[31] = Status.ContractSizeLimitExceeded;
+Status[32] = Status.LocalCallModificationException;
+Status[33] = Status.ContractRevertExecuted;
+Status[34] = Status.ContractExecutionException;
+Status[35] = Status.InvalidReceivingNodeAccount;
+Status[36] = Status.MissingQueryHeader;
+Status[37] = Status.AccountUpdateFailed;
+Status[38] = Status.InvalidKeyEncoding;
+Status[39] = Status.NullSolidityAddress;
+Status[40] = Status.ContractUpdateFailed;
+Status[41] = Status.InvalidQueryHeader;
+Status[42] = Status.InvalidFeeSubmitted;
+Status[43] = Status.InvalidPayerSignature;
+Status[44] = Status.KeyNotProvided;
+Status[45] = Status.InvalidExpirationTime;
+Status[46] = Status.NoWaclKey;
+Status[47] = Status.FileContentEmpty;
+Status[48] = Status.InvalidAccountAmounts;
+Status[49] = Status.EmptyTransactionBody;
+Status[50] = Status.InvalidTransactionBody;
+Status[51] = Status.InvalidSignatureTypeMismatchingKey;
+Status[52] = Status.InvalidSignatureCountMismatchingKey;
+Status[53] = Status.EmptyClaimBody;
+Status[54] = Status.EmptyClaimHash;
+Status[55] = Status.EmptyClaimKeys;
+Status[56] = Status.InvalidClaimHashSize;
+Status[57] = Status.EmptyQueryBody;
+Status[58] = Status.EmptyClaimQuery;
+Status[59] = Status.ClaimNotFound;
+Status[60] = Status.AccountIdDoesNotExist;
+Status[61] = Status.ClaimAlreadyExists;
+Status[62] = Status.InvalidFileWacl;
+Status[63] = Status.SerializationFailed;
+Status[64] = Status.TransactionOversize;
+Status[65] = Status.TransactionTooManyLayers;
+Status[66] = Status.ContractDeleted;
+Status[67] = Status.PlatformNotActive;
+Status[68] = Status.KeyPrefixMismatch;
+Status[69] = Status.PlatformTransactionNotCreated;
+Status[70] = Status.InvalidRenewalPeriod;
+Status[71] = Status.InvalidPayerAccountId;
+Status[72] = Status.AccountDeleted;
+Status[73] = Status.FileDeleted;
+Status[74] = Status.AccountRepeatedInAccountAmounts;
+Status[75] = Status.SettingNegativeAccountBalance;
+Status[76] = Status.ObtainerRequired;
+Status[77] = Status.ObtainerSameContractId;
+Status[78] = Status.ObtainerDoesNotExist;
+Status[79] = Status.ModifyingImmutableContract;
+Status[80] = Status.FileSystemException;
+Status[81] = Status.AutorenewDurationNotInRange;
+Status[82] = Status.ErrorDecodingBytestring;
+Status[83] = Status.ContractFileEmpty;
+Status[84] = Status.ContractBytecodeEmpty;
+Status[85] = Status.InvalidInitialBalance;
+Status[86] = Status.InvalidReceiveRecordThreshold;
+Status[87] = Status.InvalidSendRecordThreshold;
+Status[88] = Status.AccountIsNotGenesisAccount;
+Status[89] = Status.PayerAccountUnauthorized;
+Status[90] = Status.InvalidFreezeTransactionBody;
+Status[91] = Status.FreezeTransactionBodyNotFound;
+Status[92] = Status.TransferListSizeLimitExceeded;
+Status[93] = Status.ResultSizeLimitExceeded;
+Status[94] = Status.NotSpecialAccount;
+Status[95] = Status.ContractNegativeGas;
+Status[96] = Status.ContractNegativeValue;
+Status[97] = Status.InvalidFeeFile;
+Status[98] = Status.InvalidExchangeRateFile;
+Status[99] = Status.InsufficientLocalCallGas;
+Status[100] = Status.EntityNotAllowedToDelete;
+Status[101] = Status.AuthorizationFailed;
+Status[102] = Status.FileUploadedProtoInvalid;
+Status[103] = Status.FileUploadedProtoNotSavedToDisk;
+Status[104] = Status.FeeScheduleFilePartUploaded;
+Status[105] = Status.ExchangeRateChangeLimitExceeded;
+Status[106] = Status.ExchangeRateChangeLimitExceeded;
+Status[107] = Status.ExchangeRateChangeLimitExceeded;
+Status[108] = Status.ExchangeRateChangeLimitExceeded;
+Status[110] = Status.ExchangeRateChangeLimitExceeded;
+Status[150] = Status.InvalidTopicId;
+Status[154] = Status.InvalidTopicExpirationTime;
+Status[155] = Status.InvalidAdminKey;
+Status[156] = Status.InvalidSubmitKey;
+Status[157] = Status.Unauthorized;
+Status[158] = Status.InvalidTopicMessage;
+Status[159] = Status.InvalidAutorenewAccount;
+Status[160] = Status.AutoRenewAccountNotAllowed;
+Status[161] = Status.AutoRenewAccountSignatureMissing;
+Status[162] = Status.TopicExpired;
