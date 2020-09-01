@@ -61,12 +61,24 @@ export default class Hbar {
     }
 
     /**
+     * @returns {Long}
+     */
+    _toProtobuf() {
+        return Long.fromString(this._valueInTinybar.toString(10));
+    }
+
+    /**
      * @override
      * @returns {string}
      */
     toString() {
-        if (this._valueInTinybar.isLessThan(10_000) && this._valueInTinybar.isGreaterThan(-10_000)) {
-            return `${this._valueInTinybar} ${HbarUnit.Tinybar._symbol}`;
+        if (
+            this._valueInTinybar.isLessThan(10_000) &&
+            this._valueInTinybar.isGreaterThan(-10_000)
+        ) {
+            return `${this._valueInTinybar.toString(10)} ${
+                HbarUnit.Tinybar._symbol
+            }`;
         }
 
         return `${this.to(HbarUnit.Hbar).toString()} ${HbarUnit.Hbar._symbol}`;

@@ -61,6 +61,7 @@ export default class Client {
          * @private
          * @type {Map<AccountId, string>}
          */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this._network = new Map();
 
         /**
@@ -79,6 +80,7 @@ export default class Client {
          * @private
          * @type {Map<AccountId, Channel>}
          */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this._networkChannels = new Map();
 
         /**
@@ -122,7 +124,10 @@ export default class Client {
         }
 
         if (props.operator != null) {
-            this.setOperator(props.operator.accountId, props.operator.privateKey);
+            this.setOperator(
+                props.operator.accountId,
+                props.operator.privateKey
+            );
         }
     }
 
@@ -136,8 +141,10 @@ export default class Client {
         this._network.clear();
 
         for (const [url, accountId] of Object.entries(network)) {
-            const key = accountId instanceof AccountId
-                ? accountId : AccountId.fromString(accountId);
+            const key =
+                accountId instanceof AccountId
+                    ? accountId
+                    : AccountId.fromString(accountId);
 
             this._network.set(key, url);
         }
@@ -169,7 +176,7 @@ export default class Client {
      * @returns {Client}
      */
     static forMainnet() {
-        return new Client({network: "mainnet"});
+        return new Client({ network: "mainnet" });
     }
 
     /**
@@ -178,7 +185,7 @@ export default class Client {
      * @returns {Client}
      */
     static forTestnet() {
-        return new Client({network: "testnet"});
+        return new Client({ network: "testnet" });
     }
 
     /**
@@ -187,7 +194,7 @@ export default class Client {
      * @returns {Client}
      */
     static forPreviewnet() {
-        return new Client({network: "previewnet"});
+        return new Client({ network: "previewnet" });
     }
 
     /**
@@ -197,10 +204,14 @@ export default class Client {
      * @param {PrivateKey | string} privateKey
      */
     setOperator(accountId, privateKey) {
-        const key = typeof privateKey === "string"
-            ? PrivateKey.fromString(privateKey) : privateKey;
+        const key =
+            typeof privateKey === "string"
+                ? PrivateKey.fromString(privateKey)
+                : privateKey;
 
-        return this.setOperatorWith(accountId, key.publicKey, (message) => Promise.resolve(key.sign(message)));
+        return this.setOperatorWith(accountId, key.publicKey, (message) =>
+            Promise.resolve(key.sign(message))
+        );
     }
 
     /**
@@ -215,13 +226,15 @@ export default class Client {
         this._operator = {
             transactionSigner,
 
-            accountId: accountId instanceof AccountId
-                ? accountId
-                : AccountId.fromString(accountId),
+            accountId:
+                accountId instanceof AccountId
+                    ? accountId
+                    : AccountId.fromString(accountId),
 
-            publicKey: publicKey instanceof PublicKey
-                ? publicKey
-                : PublicKey.fromString(publicKey),
+            publicKey:
+                publicKey instanceof PublicKey
+                    ? publicKey
+                    : PublicKey.fromString(publicKey),
         };
 
         return this;
@@ -295,7 +308,7 @@ export default class Client {
         const address = this._network.get(nodeId);
 
         if (address == null) {
-            throw new Error(`unknown node: ${nodeId}`);
+            throw new Error(`unknown node: ${nodeId.toString()}`);
         }
 
         networkChannel = new Channel(address);

@@ -1,12 +1,12 @@
 import Query from "../Query";
 import AccountId from "./AccountId";
+import AccountInfo from "./AccountInfo";
 import proto from "@hashgraph/proto";
-import Hbar from "../Hbar";
 
 /**
- * @augments {Query<Hbar>}
+ * @augments {Query<AccountInfo>}
  */
-export default class AccountBalanceQuery extends Query {
+export default class AccountInfoQuery extends Query {
     /**
      * @param {object} properties
      * @param {(AccountId | string)=} properties.accountId
@@ -26,10 +26,10 @@ export default class AccountBalanceQuery extends Query {
     }
 
     /**
-     * Set the account ID for which the balance is being requested.
+     * Set the account ID for which the info is being requested.
      *
      * @param {AccountId | string} accountId
-     * @returns {AccountBalanceQuery}
+     * @returns {AccountInfoQuery}
      */
     setAccountId(accountId) {
         this._accountId =
@@ -44,12 +44,11 @@ export default class AccountBalanceQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {Hbar}
+     * @returns {AccountInfo}
      */
     _mapResponse(response) {
-        return Hbar.fromTinybars(
-            response.cryptogetAccountBalance?.balance ?? 0
-        );
+        // @ts-ignore
+        return AccountInfo._fromProtobuf(response.cryptoGetInfo.accountInfo);
     }
 
     /**
@@ -60,10 +59,9 @@ export default class AccountBalanceQuery extends Query {
      */
     _makeRequest(queryHeader) {
         return {
-            cryptogetAccountBalance: {
+            cryptoGetInfo: {
                 header: queryHeader,
                 accountID: this._accountId?._toProtobuf(),
-                contractID: null,
             },
         };
     }

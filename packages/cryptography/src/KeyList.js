@@ -1,23 +1,23 @@
-import PublicKey from "./PublicKey";
+import Key from "./Key";
 
 export default class KeyList {
     /**
-     * @param {number | undefined} threshold
+     * @param {number=} threshold
      */
     constructor(threshold) {
         /**
-         * @type PublicKey[]
+         * @type Key[]
          */
         this._keys = [];
 
         /**
-         * @type {number | undefined}
+         * @type {number=}
          */
         this.threshold = threshold;
     }
 
     /**
-     * @param {number | undefined} threshold
+     * @param {number=} threshold
      * @returns {KeyList}
      */
     static withThreshold(threshold) {
@@ -25,28 +25,26 @@ export default class KeyList {
     }
 
     /**
-     * @param {PublicKey[]} keys
+     * @param {Key[]} keys
      * @returns {KeyList}
      */
     static of(...keys) {
-        return new KeyList(undefined).push(...keys);
+        return new KeyList().push(...keys);
     }
 
     /**
      * @template T
-     * @param {ArrayLike<PublicKey>} arrayLike
-     * @param {(key: PublicKey) => PublicKey} mapFn
+     * @param {ArrayLike<Key>} arrayLike
+     * @param {(key: Key) => Key} mapFn
      * @param {T} thisArg
      * @returns {KeyList}
      */
     static from(arrayLike, mapFn, thisArg) {
-        return new KeyList(undefined).push(
-            ...Array.from(arrayLike, mapFn, thisArg)
-        );
+        return new KeyList().push(...Array.from(arrayLike, mapFn, thisArg));
     }
 
     /**
-     * @param {PublicKey[]} keys
+     * @param {Key[]} keys
      * @returns {KeyList}
      */
     push(...keys) {
@@ -57,7 +55,7 @@ export default class KeyList {
     /**
      * @param {number} start
      * @param {number} deleteCount
-     * @param {PublicKey[]} items
+     * @param {Key[]} items
      * @returns {KeyList}
      */
     splice(start, deleteCount, ...items) {
@@ -67,8 +65,8 @@ export default class KeyList {
     }
 
     /**
-     * @param {number | undefined} start
-     * @param {number | undefined} end
+     * @param {number=} start
+     * @param {number=} end
      * @returns {KeyList}
      */
     slice(start, end) {

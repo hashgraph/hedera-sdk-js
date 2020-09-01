@@ -3,9 +3,9 @@ import proto from "@hashgraph/proto";
 import Long from "long";
 
 /**
- * The ID for a crypto-currency account on Hedera.
+ * The ID for a crypto-currency topic on Hedera.
  */
-export default class AccountId extends EntityId {
+export default class TopicId extends EntityId {
     /**
      * @param {number | Long | import("../EntityId").IEntityId} properties
      * @param {(number | Long)=} realm
@@ -17,31 +17,31 @@ export default class AccountId extends EntityId {
 
     /**
      * @param {string} text
-     * @returns {AccountId}
+     * @returns {TopicId}
      */
     static fromString(text) {
-        return new AccountId(...fromString(text));
+        return new TopicId(...fromString(text));
     }
 
     /**
-     * @param {proto.IAccountID} id
-     * @returns {AccountId}
+     * @param {proto.ITopicID} id
+     * @returns {TopicId}
      */
     static _fromProtobuf(id) {
-        return new AccountId({
+        return new TopicId({
             shard: id.shardNum ?? 0,
             realm: id.realmNum ?? 0,
-            num: id.accountNum ?? 0,
+            num: id.topicNum ?? 0,
         });
     }
 
     /**
      * @override
-     * @returns {proto.IAccountID}
+     * @returns {proto.ITopicID}
      */
     _toProtobuf() {
         return {
-            accountNum: this.num,
+            topicNum: this.num,
             shardNum: this.shard,
             realmNum: this.realm,
         };
