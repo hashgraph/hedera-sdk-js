@@ -11,10 +11,11 @@ import ContractFunctionResult from "./contract/ContractFunctionResult";
  */
 export default class TransactionRecord {
     /**
+     * @private
      * @param {object} properties
-     * @param {ContractFunctionResult} [properties.callResult=null]
-     * @param {boolean} [properties.callResultIsCreate=false]
-     * @param {TransactionReceipt | null} properties.receipt
+     * @param {(ContractFunctionResult)=} properties.callResult
+     * @param {(boolean)=} properties.callResultIsCreate
+     * @param {TransactionReceipt} properties.receipt
      * @param {Uint8Array} properties.transactionHash
      * @param {Time} properties.consensusTimestamp
      * @param {TransactionId} properties.transactionId
@@ -26,33 +27,45 @@ export default class TransactionRecord {
         /**
          * The status (reach consensus, or failed, or is unknown) and the ID of
          * any new account/file/instance created.
+         *
+         * @type {TransactionReceipt}
          */
         this.receipt = properties.receipt;
 
         /**
          * The hash of the Transaction that executed (not the hash of any Transaction that failed
          * for having a duplicate TransactionID).
+         *
+         * @type {Uint8Array}
          */
         this.transactionHash = properties.transactionHash;
 
         /**
          * The consensus timestamp (or null if didn't reach consensus yet).
+         *
+         * @type {Time}
          */
         this.consensusTimestamp = properties.consensusTimestamp;
 
         /**
          * The ID of the transaction this record represents.
+         *
+         * @type {TransactionId}
          */
         this.transactionId = properties.transactionId;
 
         /**
          * The memo that was submitted as part of the transaction (max 100 bytes).
+         *
+         * @type {string}
          */
         this.transactionMemo = properties.transactionMemo;
 
         /**
          * The actual transaction fee charged,
          * not the original transactionFee value from TransactionBody.
+         *
+         * @type {Hbar}
          */
         this.transactionFee = properties.transactionFee;
 
@@ -60,18 +73,26 @@ export default class TransactionRecord {
          * All hbar transfers as a result of this transaction, such as fees, or transfers performed
          * by the transaction, or by a smart contract it calls, or by the creation of threshold
          * records that it triggers.
+         *
+         * @type {Transfer[]}
          */
         this.transfers = properties.transfers;
 
         /**
          * @private
+         *
+         * @type {ContractFunctionResult | null}
          */
-        this._callResult = properties.callResult;
+        this._callResult = properties.callResult ?? null;
 
         /**
          * @private
+         *
+         * @type {boolean}
          */
-        this._callResultIsCreate = properties.callResultIsCreate;
+        this._callResultIsCreate = properties.callResultIsCreate ?? false;
+
+        Object.freeze(this);
     }
 
     /**

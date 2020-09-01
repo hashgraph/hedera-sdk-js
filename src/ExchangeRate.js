@@ -3,6 +3,7 @@ import Long from "long";
 
 export default class ExchangeRate {
     /**
+     * @private
      * @param {object} properties
      * @param {number} properties.hbarEquiv
      * @param {number} properties.centEquiv
@@ -10,19 +11,27 @@ export default class ExchangeRate {
      */
     constructor(properties) {
         /**
+         * Denotes Hbar equivalent to cents (USD)
+         *
          * @type {number}
          */
         this.hbarEquiv = properties.hbarEquiv;
 
         /**
+         * Denotes cents (USD) equivalent to Hbar
+         *
          * @type {number}
          */
         this.centEquiv = properties.centEquiv;
 
         /**
+         * Expiration time of this exchange rate
+         *
          * @type {Date}
          */
         this.expirationTime = properties.expirationTime;
+
+        Object.freeze(this);
     }
 
     /**

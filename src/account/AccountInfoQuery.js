@@ -9,7 +9,7 @@ import proto from "@hashgraph/proto";
 export default class AccountInfoQuery extends Query {
     /**
      * @param {object} properties
-     * @param {(AccountId | string)=} properties.accountId
+     * @param {AccountId | string} [properties.accountId]
      */
     constructor(properties) {
         super();
@@ -19,7 +19,6 @@ export default class AccountInfoQuery extends Query {
          * @private
          */
         this._accountId = null;
-
         if (properties?.accountId != null) {
             this.setAccountId(properties?.accountId);
         }

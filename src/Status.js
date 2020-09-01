@@ -568,21 +568,6 @@ export default class Status {
      */
     static InvalidTopicId = new Status(150);
 
-    /**
-     * Deprecated and to be removed before HCS release.
-     */
-    static TopicDeleted = new Status(151);
-
-    /**
-     * Deprecated and to be removed before HCS release.
-     */
-    static TopicNotEnabled = new Status(152);
-
-    /**
-     * Deprecated and to be removed before HCS release.
-     */
-    static InvalidTopicValidStartTime = new Status(153);
-
     static InvalidTopicExpirationTime = new Status(154);
     static InvalidAdminKey = new Status(155);
     static InvalidSubmitKey = new Status(156);
@@ -619,10 +604,6 @@ export default class Status {
      */
     static TopicExpired = new Status(162);
 
-    /**
-     * Deprecated and to be removed before HCS release.
-     */
-    static TOPIC_DELETED = new Status(151);
     static [0] = Status.Ok;
     static [1] = Status.InvalidTransaction;
     static [2] = Status.PayerAccountNotFound;
@@ -733,12 +714,7 @@ export default class Status {
     static [107] = Status.ExchangeRateChangeLimitExceeded;
     static [108] = Status.ExchangeRateChangeLimitExceeded;
     static [110] = Status.ExchangeRateChangeLimitExceeded;
-
-    // New functionality in the HCS release below here
     static [150] = Status.InvalidTopicId;
-    static [151] = Status.TopicDeleted;
-    static [152] = Status.TopicNotEnabled;
-    static [153] = Status.InvalidTopicValidStartTime;
     static [154] = Status.InvalidTopicExpirationTime;
     static [155] = Status.InvalidAdminKey;
     static [156] = Status.InvalidSubmitKey;
@@ -748,16 +724,14 @@ export default class Status {
     static [160] = Status.AutoRenewAccountNotAllowed;
     static [161] = Status.AutoRenewAccountSignatureMissing;
     static [162] = Status.TopicExpired;
-    // New functionality in the HCS release above here
 
     /**
      * @param {number} code
      */
     constructor(code) {
-        /**
-         * @type {number}
-         */
         this.code = code;
+
+        Object.freeze(this);
     }
 
     /**
@@ -987,12 +961,6 @@ export default class Status {
                 return "EXPIRATION_REDUCTION_NOT_ALLOWED";
             case Status.InvalidTopicId:
                 return "INVALID_TOPIC_ID";
-            case Status.TopicDeleted:
-                return "TOPIC_DELETED";
-            case Status.TopicNotEnabled:
-                return "TOPIC_NOT_ENABLED";
-            case Status.InvalidTopicValidStartTime:
-                return "INVALID_TOPIC_VALID_START_TIME";
             case Status.InvalidTopicExpirationTime:
                 return "INVALID_TOPIC_EXPIRATION_TIME";
             case Status.InvalidAdminKey:

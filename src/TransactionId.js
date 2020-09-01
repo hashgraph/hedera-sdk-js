@@ -19,40 +19,35 @@ import Long from "long";
  */
 export default class TransactionId {
     /**
-     * @private
-     * @param {object} properties
-     * @param {AccountId} properties.accountId
-     * @param {Time=} properties.validStart
+     * @param {AccountId} accountId
+     * @param {Time} validStart
      */
-    constructor(properties) {
+    constructor(accountId, validStart) {
         /**
          * The Account ID that paid for this transaction.
-         *
-         * @type {AccountId}
          */
-        this.accountId = properties.accountId;
+        this.accountId = accountId;
 
         /**
-         * The transaction is invalid if consensusTimestamp < transactionID.transactionStartValid.
+         * The time from when this transaction is valid.
          *
-         * @type {Time}
+         * When a transaction is submitted there is additionally a validDuration (defaults to 120s)
+         * and together they define a time window that a transaction may be processed in.
          */
-        this.validStart = properties.validStart ?? new Time();
+        this.validStart = validStart;
+
+        Object.freeze(this);
     }
 
     /**
-     * @param {AccountId | string} accountId
-     * @param {Time} validStart
+     * @param {AccountId | string} id
      * @returns {TransactionId}
      */
-    static withValidStart(accountId, validStart) {
-        return new TransactionId({
-            accountId:
-                typeof accountId === "string"
-                    ? AccountId.fromString(accountId)
-                    : accountId,
-            validStart,
-        });
+    static generate(id) {
+        return new TransactionId(
+            typeof id === "string" ? AccountId.fromString(id) : id,
+            new Time()
+        );
     }
 
     /**
@@ -63,10 +58,10 @@ export default class TransactionId {
         const [account, time] = id.split("@");
         const [seconds, nanos] = time.split(".");
 
-        return new TransactionId({
-            accountId: AccountId.fromString(account),
-            validStart: new Time(Number(seconds), Number(nanos)),
-        });
+        return new TransactionId(
+            AccountId.fromString(account),
+            new Time(Number(seconds), Number(nanos))
+        );
     }
 
     /**
@@ -89,11 +84,11 @@ export default class TransactionId {
                 : id.transactionValidStart?.seconds ?? 0;
         const nanos = id.transactionValidStart?.nanos ?? 0;
 
-        return new TransactionId({
+        return new TransactionId(
             // @ts-ignore
-            accountId: AccountId._fromProtobuf(id.accountID),
-            validStart: new Time(seconds, nanos),
-        });
+            AccountId._fromProtobuf(id.accountID),
+            new Time(seconds, nanos)
+        );
     }
 
     /**

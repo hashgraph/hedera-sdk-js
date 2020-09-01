@@ -7,6 +7,7 @@ import proto from "@hashgraph/proto";
  */
 export default class ProxyStaker {
     /**
+     * @private
      * @param {object} properties
      * @param {AccountId} properties.accountId
      * @param {Hbar} properties.amount
@@ -14,17 +15,15 @@ export default class ProxyStaker {
     constructor(properties) {
         /**
          * The Account ID that sends or receives cryptocurrency.
-         *
-         * @type {AccountId}
          */
         this.accountId = properties.accountId;
 
         /**
          * The amount of tinybars that the account sends(negative) or receives(positive).
-         *
-         * @type {Hbar}
          */
         this.amount = properties.amount;
+
+        Object.freeze(this);
     }
 
     /**

@@ -7,24 +7,22 @@ import proto from "@hashgraph/proto";
  */
 export default class Transfer {
     /**
-     * @param {object} properties
-     * @param {AccountId} properties.accountId
-     * @param {Hbar} properties.amount
+     * @private
+     * @param {AccountId} accountId
+     * @param {Hbar} amount
      */
-    constructor(properties) {
+    constructor(accountId, amount) {
         /**
          * The Account ID that sends or receives cryptocurrency.
-         *
-         * @type {AccountId}
          */
-        this.accountId = properties.accountId;
+        this.accountId = accountId;
 
         /**
          * The amount of tinybars that the account sends(negative) or receives(positive).
-         *
-         * @type {Hbar}
          */
-        this.amount = properties.amount;
+        this.amount = amount;
+
+        Object.freeze(this);
     }
 
     /**
@@ -32,11 +30,11 @@ export default class Transfer {
      * @returns {Transfer}
      */
     static _fromProtobuf(transfer) {
-        return new Transfer({
+        return new Transfer(
             // @ts-ignore
-            accountId: AccountId._fromProtobuf(transfer.accountID),
-            amount: Hbar.fromTinybars(transfer.amount ?? 0),
-        });
+            AccountId._fromProtobuf(transfer.accountID),
+            Hbar.fromTinybars(transfer.amount ?? 0)
+        );
     }
 
     /**

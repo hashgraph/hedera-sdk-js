@@ -13,29 +13,90 @@ import Long from "long";
  */
 export default class TransactionReceipt {
     /**
+     * @private
      * @param {object} properties
      * @param {Status} properties.status
-     * @param {AccountId | null} properties.accountId
-     * @param {FileId | null} properties.fileId
-     * @param {ContractId | null} properties.contractId
-     * @param {TopicId | null} properties.topicId
-     * @param {ExchangeRate | null} properties.exchangeRate
-     * @param {number} properties.topicSequenceNubmer
-     * @param {Uint8Array} properties.topicRunningHash
+     * @param {AccountId} [properties.accountId]
+     * @param {FileId} [properties.fileId]
+     * @param {ContractId} [properties.contractId]
+     * @param {TopicId} [properties.topicId]
+     * @param {ExchangeRate} [properties.exchangeRate]
+     * @param {number} [properties.topicSequenceNubmer]
+     * @param {Uint8Array} [properties.topicRunningHash]
      */
     constructor(properties) {
         /**
          * Whether the transaction succeeded or failed (or is unknown).
+         *
+         * @type {Status}
          */
         this.status = properties.status;
 
-        this._accountId = properties.accountId;
-        this._fileId = properties.fileId;
-        this._contractId = properties.contractId;
-        this._topicId = properties.topicId;
-        this._exchangeRate = properties.exchangeRate;
-        this._topicSequenceNumber = properties.topicSequenceNubmer;
-        this._topicRunningHash = properties.topicRunningHash;
+        /**
+         * The account ID, if a new account was created.
+         *
+         * @type {AccountId | null}
+         */
+        this._accountId = null;
+        if (properties.accountId != null) {
+            this._accountId = properties.accountId;
+        }
+
+        /**
+         * The file ID, if a new file was created.
+         *
+         * @type {FileId | null}
+         */
+        this._fileId = null;
+        if (properties.fileId != null) {
+            this._fileId = properties.fileId;
+        }
+
+        /**
+         * The contract ID, if a new contract was created.
+         *
+         * @type {ContractId | null}
+         */
+        this._contractId = null;
+        if (properties.contractId != null) {
+            this._contractId = properties.contractId;
+        }
+
+        /**
+         * The topic ID, if a new topic was created.
+         *
+         * @type {TopicId | null}
+         */
+        this._topicId = null;
+        if (properties.topicId != null) {
+            this._topicId = properties.topicId;
+        }
+
+        /**
+         * The exchange rate of Hbars to cents (USD).
+         *
+         * @type {ExchangeRate | null}
+         */
+        this._exchangeRate = null;
+        if (properties.exchangeRate != null) {
+            this._exchangeRate = properties.exchangeRate;
+        }
+
+        /**
+         * Updated sequence number for a consensus service topic.
+         *
+         * @type {number | null}
+         */
+        this._topicSequenceNumber = properties.topicSequenceNubmer ?? null;
+
+        /**
+         * Updated running hash for a consensus service topic.
+         *
+         * @type {Uint8Array | null}
+         */
+        this._topicRunningHash = properties.topicRunningHash ?? null;
+
+        Object.freeze(this);
     }
 
     /**
@@ -96,7 +157,7 @@ export default class TransactionReceipt {
      * @returns {Uint8Array}
      */
     getConsensusTopicRunningHash() {
-        if (this._topicRunningHash.byteLength === 0) {
+        if (this._topicRunningHash == null) {
             throw new Error(
                 "receipt was not for a consensus topic transaction"
             );
@@ -111,7 +172,7 @@ export default class TransactionReceipt {
      * @returns {number}
      */
     getConsensusTopicSequenceNumber() {
-        if (this._topicSequenceNumber === 0) {
+        if (this._topicSequenceNumber == null) {
             throw new Error(
                 "receipt was not for a consensus topic transaction"
             );
@@ -131,12 +192,12 @@ export default class TransactionReceipt {
             contractId: this._contractId?.toString(),
             consensusTopicId: this._topicId?.toString(),
             consensusTopicRunningHash:
-                this._topicRunningHash.byteLength === 0
+                this._topicRunningHash == null
                     ? /* eslint-disable-next-line no-undefined */
                       undefined
                     : this._topicRunningHash.toString(),
             consensusTopicSequenceNumber:
-                this._topicSequenceNumber === 0
+                this._topicSequenceNumber == null
                     ? /* eslint-disable-next-line no-undefined */
                       undefined
                     : this._topicSequenceNumber,
@@ -155,9 +216,7 @@ export default class TransactionReceipt {
             contractID: this._contractId?._toProtobuf(),
             topicID: this._topicId?._toProtobuf(),
             topicRunningHash:
-                this._topicRunningHash.byteLength === 0
-                    ? null
-                    : this._topicRunningHash,
+                this._topicRunningHash == null ? null : this._topicRunningHash,
             topicSequenceNumber: this._topicSequenceNumber,
             exchangeRate: {
                 nextRate: null,
@@ -184,31 +243,33 @@ export default class TransactionReceipt {
             accountId:
                 receipt.accountID != null
                     ? AccountId._fromProtobuf(receipt.accountID)
-                    : null,
+                    : undefined,
             fileId:
                 receipt.fileID != null
                     ? FileId._fromProtobuf(receipt.fileID)
-                    : null,
+                    : undefined,
             contractId:
                 receipt.contractID != null
                     ? ContractId._fromProtobuf(receipt.contractID)
-                    : null,
+                    : undefined,
             topicId:
                 receipt.topicID != null
                     ? TopicId._fromProtobuf(receipt.topicID)
-                    : null,
+                    : undefined,
             exchangeRate:
                 receipt.exchangeRate != null
                     ? ExchangeRate._fromProtobuf(
                           // @ts-ignore
                           receipt.exchangeRate.currentRate
                       )
-                    : null,
+                    : undefined,
+            // @ts-ignore
             topicSequenceNubmer:
                 receipt.topicSequenceNumber instanceof Long
                     ? receipt.topicSequenceNumber.toInt()
-                    : receipt.topicSequenceNumber ?? 0,
-            topicRunningHash: receipt.topicRunningHash ?? new Uint8Array(),
+                    : receipt.topicSequenceNumber,
+            // @ts-ignore
+            topicRunningHash: receipt.topicRunningHash,
         });
     }
 }
