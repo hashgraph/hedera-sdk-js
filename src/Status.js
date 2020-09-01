@@ -2,7 +2,6 @@ import HederaStatusError from "./HederaStatusError";
 import proto from "@hashgraph/proto";
 
 export default class Status {
-
     /**
      * @param {number} code
      */
