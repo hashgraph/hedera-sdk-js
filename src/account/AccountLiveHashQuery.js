@@ -1,34 +1,44 @@
 import Query from "../Query";
 import AccountId from "./AccountId";
-import AccountInfo from "./AccountInfo";
+import LiveHash from "./LiveHash";
 import proto from "@hashgraph/proto";
 
 /**
- * @augments {Query<AccountInfo>}
+ * @augments {Query<LiveHash>}
  */
-export default class AccountInfoQuery extends Query {
+export default class LiveHashQuery extends Query {
     /**
      * @param {object} properties
      * @param {AccountId | string} [properties.accountId]
+     * @param {Uint8Array} [properties.hash]
      */
     constructor(properties) {
         super();
 
         /**
-         * @private
          * @type {?AccountId}
+         * @private
          */
         this._accountId = null;
         if (properties?.accountId != null) {
             this.setAccountId(properties?.accountId);
         }
+
+        /**
+         * @type {?Uint8Array}
+         * @private
+         */
+        this._hash = null;
+        if (properties?.hash != null) {
+            this.setHash(properties?.hash);
+        }
     }
 
     /**
-     * Set the account ID for which the info is being requested.
+     * The account to which the livehash is associated
      *
      * @param {AccountId | string} accountId
-     * @returns {AccountInfoQuery}
+     * @returns {LiveHashQuery}
      */
     setAccountId(accountId) {
         this._accountId =
@@ -40,14 +50,23 @@ export default class AccountInfoQuery extends Query {
     }
 
     /**
+     * @param {Uint8Array} hash
+     * @returns {LiveHashQuery}
+     */
+    setHash(hash) {
+        this._hash = hash;
+        return this;
+    }
+
+    /**
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {AccountInfo}
+     * @returns {LiveHash}
      */
     _mapResponse(response) {
         // @ts-ignore
-        return AccountInfo._fromProtobuf(response.cryptoGetInfo.accountInfo);
+        return LiveHash._fromProtobuf(response.cryptoGetLiveHash.liveHash);
     }
 
     /**
@@ -58,9 +77,10 @@ export default class AccountInfoQuery extends Query {
      */
     _makeRequest(queryHeader) {
         return {
-            cryptoGetInfo: {
+            cryptoGetLiveHash: {
                 header: queryHeader,
                 accountID: this._accountId?._toProtobuf(),
+                hash: this._hash,
             },
         };
     }
