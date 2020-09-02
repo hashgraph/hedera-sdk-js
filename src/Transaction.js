@@ -6,8 +6,13 @@ import TransactionId from "./TransactionId";
 import Client from "./Client";
 import Channel from "./Channel";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
+import Long from "long";
 
 export const DEFAULT_AUTO_RENEW_PERIOD = 7776000; // 90 days (in seconds)
+
+export const DEFAULT_RECORD_THRESHOLD = Hbar.fromTinybars(
+    Long.fromString("9223372036854775807")
+);
 
 const DEFAULT_TRANSACTION_VALID_DURATION = 120; // seconds
 

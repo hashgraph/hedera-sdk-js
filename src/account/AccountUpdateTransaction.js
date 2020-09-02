@@ -1,27 +1,31 @@
 import Hbar from "../Hbar";
 import proto from "@hashgraph/proto";
 import Channel from "../Channel";
-import Transaction, {
-    DEFAULT_AUTO_RENEW_PERIOD,
-    DEFAULT_RECORD_THRESHOLD,
-} from "../Transaction";
+import Transaction from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _toProtoKey } from "../util";
 import { AccountId } from "..";
 
-export default class AccountCreateTransaction extends Transaction {
+export default class AccountUpdateTransaction extends Transaction {
     /**
      * @param {object} props
-     * @param {Key=} props.key
-     * @param {Hbar=} props.initialBalance
-     * @param {Hbar=} props.sendRecordThreshold
-     * @param {Hbar=} props.receiveRecordThreshold
-     * @param {boolean=} props.receiverSignatureRequired
-     * @param {AccountId=} props.proxyAccountId
-     * @param {number=} props.autoRenewPeriod
+     * @param {AccountId} [props.accountId]
+     * @param {Key} [props.key]
+     * @param {Hbar} [props.initialBalance]
+     * @param {Hbar} [props.sendRecordThreshold]
+     * @param {Hbar} [props.receiveRecordThreshold]
+     * @param {boolean} [props.receiverSignatureRequired]
+     * @param {AccountId} [props.proxyAccountId]
+     * @param {number} [props.autoRenewPeriod]
      */
     constructor(props = {}) {
         super();
+
+        /**
+         * @private
+         * @type {?AccountId}
+         */
+        this._accountId = null;
 
         /**
          * @private
@@ -37,15 +41,15 @@ export default class AccountCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {Hbar}
+         * @type {?Hbar}
          */
-        this._sendRecordThreshold = DEFAULT_RECORD_THRESHOLD;
+        this._sendRecordThreshold = null;
 
         /**
          * @private
-         * @type {Hbar}
+         * @type {?Hbar}
          */
-        this._receiveRecordThreshold = DEFAULT_RECORD_THRESHOLD;
+        this._receiveRecordThreshold = null;
 
         /**
          * @private
@@ -61,9 +65,13 @@ export default class AccountCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {number}
+         * @type {?number}
          */
-        this._autoRenewPeriod = DEFAULT_AUTO_RENEW_PERIOD;
+        this._autoRenewPeriod = null;
+
+        if (props.accountId != null) {
+            this.setAccountId(props.accountId);
+        }
 
         if (props.key != null) {
             this.setKey(props.key);
@@ -92,6 +100,29 @@ export default class AccountCreateTransaction extends Transaction {
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
         }
+    }
+
+    /**
+     * @returns {?AccountId}
+     */
+    getAccountId() {
+        return this._accountId;
+    }
+
+    /**
+     * Sets the account ID which is being updated in this transaction.
+     *
+     * @param {AccountId | string} accountId
+     * @returns {AccountUpdateTransaction}
+     */
+    setAccountId(accountId) {
+        this._requireNotFrozen();
+        this._accountId =
+            accountId instanceof AccountId
+                ? accountId
+                : AccountId.fromString(accountId);
+
+        return this;
     }
 
     /**
@@ -133,7 +164,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {Hbar}
+     * @returns {?Hbar}
      */
     getSendRecordThreshold() {
         return this._sendRecordThreshold;
@@ -151,7 +182,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {Hbar}
+     * @returns {?Hbar}
      */
     getReceiveRecordThreshold() {
         return this._receiveRecordThreshold;
@@ -205,7 +236,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {number}
+     * @returns {?number}
      */
     getAutoRenewPeriod() {
         return this._autoRenewPeriod;
@@ -229,7 +260,7 @@ export default class AccountCreateTransaction extends Transaction {
      * @returns {(transaction: proto.ITransaction) => Promise<proto.TransactionResponse>}
      */
     _getTransactionMethod(channel) {
-        return (transaction) => channel.crypto.createAccount(transaction);
+        return (transaction) => channel.crypto.updateAccount(transaction);
     }
 
     /**
@@ -238,24 +269,24 @@ export default class AccountCreateTransaction extends Transaction {
      * @returns {proto.TransactionBody["data"]}
      */
     _getTransactionDataCase() {
-        return "cryptoCreateAccount";
+        return "cryptoUpdateAccount";
     }
 
     /**
      * @override
      * @protected
-     * @returns {proto.ICryptoCreateTransactionBody}
+     * @returns {proto.ICryptoUpdateTransactionBody}
      */
     _makeTransactionData() {
         return {
+            accountIDToUpdate: this._accountId?._toProtobuf(),
             key: this._key != null ? _toProtoKey(this._key) : null,
-            initialBalance: this._initialBalance?.toTinybars(),
             autoRenewPeriod: {
                 seconds: this._autoRenewPeriod,
             },
             proxyAccountID: this._proxyAccountId?._toProtobuf(),
-            receiveRecordThreshold: this._receiveRecordThreshold.toTinybars(),
-            sendRecordThreshold: this._sendRecordThreshold.toTinybars(),
+            receiveRecordThreshold: this._receiveRecordThreshold?.toTinybars(),
+            sendRecordThreshold: this._sendRecordThreshold?.toTinybars(),
             receiverSigRequired: this._receiverSignatureRequired,
         };
     }

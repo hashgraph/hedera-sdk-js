@@ -340,6 +340,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
+     * @internal
      * @param {string | boolean | number | Uint8Array | BigNumber | string[] | boolean[] | number[] | Uint8Array[] | BigNumber[]} param
      * @param {boolean} dynamic
      * @returns {ContractFunctionParameters}
@@ -354,6 +355,7 @@ export default class ContractFunctionParameters {
     }
 
     /**
+     * @internal
      * @param {string=} name
      * @returns {Uint8Array}
      */
