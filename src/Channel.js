@@ -23,6 +23,18 @@ export default class Channel {
          * @type {?proto.SmartContractService}
          */
         this._smartContract = null;
+
+        /**
+         * @private
+         * @type {?proto.FileService}
+         */
+        this._file = null;
+
+        /**
+         * @private
+         * @type {?proto.ConsensusService}
+         */
+        this._consensus = null;
     }
 
     /**
@@ -73,5 +85,55 @@ export default class Channel {
         );
 
         return this._smartContract;
+    }
+
+    /**
+     * @returns {proto.FileService}
+     */
+    get file() {
+        if (this._file != null) {
+            return this._file;
+        }
+
+        this._file = proto.FileService.create(
+            (method, requestData, callback) => {
+                this._client.makeUnaryRequest(
+                    `/proto.${proto.FileService.name}/${method.name}`,
+                    (value) => value,
+                    (value) => value,
+                    Buffer.from(requestData),
+                    callback
+                );
+            },
+            false,
+            false
+        );
+
+        return this._file;
+    }
+
+    /**
+     * @returns {proto.ConsensusService}
+     */
+    get consensus() {
+        if (this._consensus != null) {
+            return this._consensus;
+        }
+
+        this._consensus = proto.ConsensusService.create(
+            (method, requestData, callback) => {
+                this._client.makeUnaryRequest(
+                    `/proto.${proto.ConsensusService.name}/${method.name}`,
+                    (value) => value,
+                    (value) => value,
+                    Buffer.from(requestData),
+                    callback
+                );
+            },
+            false,
+            false
+        );
+
+        return this._consensus;
     }
 }
