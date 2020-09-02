@@ -68,6 +68,13 @@ export default class Hbar {
     }
 
     /**
+     * @returns {Hbar}
+     */
+    negated() {
+        return Hbar.fromTinybars(this._valueInTinybar.negate());
+    }
+
+    /**
      * @override
      * @returns {string}
      */
