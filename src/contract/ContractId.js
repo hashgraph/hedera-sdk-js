@@ -24,6 +24,7 @@ export default class ContractId extends EntityId {
     }
 
     /**
+     * @internal
      * @param {proto.IContractID} id
      * @returns {ContractId}
      */
@@ -37,6 +38,7 @@ export default class ContractId extends EntityId {
 
     /**
      * @override
+     * @internal
      * @returns {proto.IContractID}
      */
     _toProtobuf() {

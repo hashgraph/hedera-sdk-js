@@ -6,6 +6,7 @@ export default class Status {
      * @param {number} code
      */
     constructor(code) {
+        /** @readonly */
         this.code = code;
 
         Object.freeze(this);

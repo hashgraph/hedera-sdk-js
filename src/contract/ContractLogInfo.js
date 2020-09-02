@@ -16,26 +16,37 @@ export default class ContractLogInfo {
     constructor(properties) {
         /**
          * Address of a contract that emitted the event.
+         *
+         * @readonly
          */
         this.contractId = properties.contractId;
 
         /**
          * Bloom filter for a particular log.
+         *
+         * @readonly
          */
         this.bloom = properties.bloom;
 
         /**
          * Topics of a particular event.
+         *
+         * @readonly
          */
         this.topics = properties.topics;
 
         /**
          * Event data.
+         *
+         * @readonly
          */
         this.data = properties.data;
+
+        Object.freeze(this);
     }
 
     /**
+     * @internal
      * @param {proto.IContractLoginfo} info
      * @returns {ContractLogInfo}
      */
@@ -53,6 +64,7 @@ export default class ContractLogInfo {
     }
 
     /**
+     * @internal
      * @returns {proto.IContractLoginfo}
      */
     _toProtobuf() {

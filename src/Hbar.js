@@ -19,7 +19,9 @@ export default class Hbar {
         /**
          * @type {Long}
          */
-        this._valueInTinybar = Long.fromString(bigAmount.multipliedBy(unit._tinybar).toFixed(0));
+        this._valueInTinybar = Long.fromString(
+            bigAmount.multipliedBy(unit._tinybar).toFixed(0)
+        );
     }
 
     /**
@@ -53,7 +55,9 @@ export default class Hbar {
      * @returns {BigNumber}
      */
     to(unit) {
-        return new BigNumber(this._valueInTinybar.toString()).dividedBy(unit._tinybar);
+        return new BigNumber(this._valueInTinybar.toString()).dividedBy(
+            unit._tinybar
+        );
     }
 
     /**

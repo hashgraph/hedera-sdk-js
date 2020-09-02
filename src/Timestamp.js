@@ -21,7 +21,7 @@ export default class Timestamp {
      */
     static generate() {
         let now = Date.now();
-        let jitter = (Math.random() * 5000) + 8000
+        let jitter = Math.random() * 5000 + 8000;
 
         return Timestamp.fromDate(now - jitter);
     }

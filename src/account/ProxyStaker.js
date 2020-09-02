@@ -15,11 +15,15 @@ export default class ProxyStaker {
     constructor(properties) {
         /**
          * The Account ID that sends or receives cryptocurrency.
+         *
+         * @readonly
          */
         this.accountId = properties.accountId;
 
         /**
          * The amount of tinybars that the account sends(negative) or receives(positive).
+         *
+         * @readonly
          */
         this.amount = properties.amount;
 
@@ -27,6 +31,7 @@ export default class ProxyStaker {
     }
 
     /**
+     * @internal
      * @param {proto.IProxyStaker} transfer
      * @returns {ProxyStaker}
      */
@@ -39,6 +44,7 @@ export default class ProxyStaker {
     }
 
     /**
+     * @internal
      * @returns {proto.IAccountAmount}
      */
     _toProtobuf() {

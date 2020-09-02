@@ -24,6 +24,7 @@ export default class FileId extends EntityId {
     }
 
     /**
+     * @internal
      * @param {proto.IFileID} id
      * @returns {FileId}
      */
@@ -37,6 +38,7 @@ export default class FileId extends EntityId {
 
     /**
      * @override
+     * @internal
      * @returns {proto.IFileID}
      */
     _toProtobuf() {

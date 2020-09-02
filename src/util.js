@@ -20,6 +20,22 @@ export function _toProtoKey(key) {
 }
 
 /**
+ * @param {KeyList} list
+ * @returns {proto.IKeyList}
+ */
+export function _toProtoKeyList(list) {
+    const keys = [];
+
+    for (const key of list) {
+        keys.push(_toProtoKey(key));
+    }
+
+    return {
+        keys,
+    };
+}
+
+/**
  * @param {proto.IKey} key
  * @returns {Key}
  */
@@ -53,9 +69,9 @@ export function _fromProtoKey(key) {
 
 /**
  * @param {proto.IKeyList} keys
- * @returns {Key[]}
+ * @returns {KeyList}
  */
 export function _fromProtoKeyList(keys) {
     // @ts-ignore
-    return keys.keys.map(_fromProtoKey);
+    return new KeyList().push(...keys.keys.map((key) => _fromProtoKey(key)));
 }

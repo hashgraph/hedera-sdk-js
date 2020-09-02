@@ -17,6 +17,13 @@ export default class EntityId {
      * @param {(number | null | Long)=} num
      */
     constructor(properties, realm, num) {
+        /** @readonly */
+        this.shard;
+        /** @readonly */
+        this.realm;
+        /** @readonly */
+        this.num;
+
         if (typeof properties === "number" || properties instanceof Long) {
             if (realm == null) {
                 this.realm = 0;

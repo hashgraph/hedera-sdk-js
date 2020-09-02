@@ -1,5 +1,8 @@
 import Key from "./Key";
 
+/**
+ * @implements Iterable<Key>
+ */
 export default class KeyList {
     /**
      * @param {number=} threshold
@@ -75,7 +78,10 @@ export default class KeyList {
         );
     }
 
+    /**
+     * @returns {Iterator<Key>}
+     */
     [Symbol.iterator]() {
-        return this._keys[Symbol.iterator];
+        return this._keys[Symbol.iterator]();
     }
 }

@@ -8,14 +8,25 @@ export default class HbarUnit {
      * @param {BigNumber} tinybar
      */
     constructor(name, symbol, tinybar) {
-        /** @internal */
+        /**
+         * @internal
+         * @readonly
+         */
         this._name = name;
 
-        /** @internal */
+        /**
+         * @internal
+         * @readonly
+         */
         this._symbol = symbol;
 
-        /** @internal */
+        /**
+         * @internal
+         * @readonly
+         */
         this._tinybar = tinybar;
+
+        Object.freeze(this);
     }
 }
 

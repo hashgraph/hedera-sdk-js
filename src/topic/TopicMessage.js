@@ -1,4 +1,4 @@
-import Time from "../Time";
+import Timestamp from "../Timestamp";
 import TopicMessageChunk from "./TopicMessageChunk";
 import proto from "@hashgraph/proto";
 import Long from "long";
@@ -7,28 +7,38 @@ export default class TopicMessage {
     /**
      * @private
      * @param {object} properties
-     * @param {Time} properties.consensusTimestamp
+     * @param {Timestamp} properties.consensusTimestamp
      * @param {Uint8Array} properties.contents
      * @param {Uint8Array} properties.runningHash
      * @param {Long} properties.sequenceNumber
      * @param {TopicMessageChunk[]} properties.chunks
      */
     constructor(properties) {
+        /** @readonly */
         this.consensusTimestamp = properties.consensusTimestamp;
+        /** @readonly */
         this.contents = properties.contents;
+        /** @readonly */
         this.runningHash = properties.runningHash;
+        /** @readonly */
         this.sequenceNumber = properties.sequenceNumber;
+        /** @readonly */
         this.chunks = properties.chunks;
+
+        Object.freeze(this);
     }
 
     /**
+     * @internal
      * @param {proto.IConsensusTopicResponse} response
      * @returns {TopicMessage}
      */
     static _ofSingle(response) {
         return new TopicMessage({
-            // @ts-ignore
-            consensusTimestamp: Time._fromProtobuf(response.consensusTimestamp),
+            consensusTimestamp: Timestamp._fromProtobuf(
+                // @ts-ignore
+                response.consensusTimestamp
+            ),
             // @ts-ignore
             contents: response.message,
             // @ts-ignore
@@ -44,6 +54,7 @@ export default class TopicMessage {
     }
 
     /**
+     * @internal
      * @param {proto.IConsensusTopicResponse[]} responses
      * @returns {TopicMessage}
      */
@@ -57,10 +68,12 @@ export default class TopicMessage {
         const last = responses[length - 1];
 
         /**
-         * @type {Time}
+         * @type {Timestamp}
          */
-        // @ts-ignore
-        const consensusTimestamp = Time._fromProtobuf(last.consensusTimestamp);
+        const consensusTimestamp = Timestamp._fromProtobuf(
+            // @ts-ignore
+            last.consensusTimestamp
+        );
 
         /**
          * @type {Uint8Array}

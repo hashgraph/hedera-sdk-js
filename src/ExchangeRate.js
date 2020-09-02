@@ -13,6 +13,7 @@ export default class ExchangeRate {
         /**
          * Denotes Hbar equivalent to cents (USD)
          *
+         * @readonly
          * @type {number}
          */
         this.hbarEquiv = properties.hbarEquiv;
@@ -20,6 +21,7 @@ export default class ExchangeRate {
         /**
          * Denotes cents (USD) equivalent to Hbar
          *
+         * @readonly
          * @type {number}
          */
         this.centEquiv = properties.centEquiv;
@@ -27,6 +29,7 @@ export default class ExchangeRate {
         /**
          * Expiration time of this exchange rate
          *
+         * @readonly
          * @type {Date}
          */
         this.expirationTime = properties.expirationTime;
@@ -35,6 +38,7 @@ export default class ExchangeRate {
     }
 
     /**
+     * @internal
      * @param {proto.IExchangeRate} rate
      * @returns {ExchangeRate}
      */
@@ -53,6 +57,7 @@ export default class ExchangeRate {
     }
 
     /**
+     * @internal
      * @returns {proto.IExchangeRate}
      */
     _toProtobuf() {

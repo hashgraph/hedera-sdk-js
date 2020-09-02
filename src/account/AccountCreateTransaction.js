@@ -7,7 +7,9 @@ import { _toProtoKey } from "../util";
 import Long from "long";
 import { AccountId } from "..";
 
-const DEFAULT_RECORD_THRESHOLD = Hbar.fromTinybars(Long.fromString("9223372036854775807"));
+const DEFAULT_RECORD_THRESHOLD = Hbar.fromTinybars(
+    Long.fromString("9223372036854775807")
+);
 
 export default class AccountCreateTransaction extends Transaction {
     /**
@@ -229,7 +231,7 @@ export default class AccountCreateTransaction extends Transaction {
      * @returns {(transaction: proto.ITransaction) => Promise<proto.TransactionResponse>}
      */
     _getTransactionMethod(channel) {
-        return (transaction) => channel.crypto.createAccount(transaction)
+        return (transaction) => channel.crypto.createAccount(transaction);
     }
 
     /**

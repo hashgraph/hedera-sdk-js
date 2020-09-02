@@ -28,6 +28,7 @@ export default class TransactionReceipt {
         /**
          * Whether the transaction succeeded or failed (or is unknown).
          *
+         * @readonly
          * @type {Status}
          */
         this.status = properties.status;
@@ -35,56 +36,50 @@ export default class TransactionReceipt {
         /**
          * The account ID, if a new account was created.
          *
+         * @readonly
          * @type {AccountId | null}
          */
-        this._accountId = null;
-        if (properties.accountId != null) {
-            this._accountId = properties.accountId;
-        }
+        this._accountId =
+            properties.accountId != null ? properties.accountId : null;
 
         /**
          * The file ID, if a new file was created.
          *
+         * @readonly
          * @type {FileId | null}
          */
-        this._fileId = null;
-        if (properties.fileId != null) {
-            this._fileId = properties.fileId;
-        }
+        this._fileId = properties.fileId != null ? properties.fileId : null;
 
         /**
          * The contract ID, if a new contract was created.
          *
+         * @readonly
          * @type {ContractId | null}
          */
-        this._contractId = null;
-        if (properties.contractId != null) {
-            this._contractId = properties.contractId;
-        }
+        this._contractId =
+            properties.contractId != null ? properties.contractId : null;
 
         /**
          * The topic ID, if a new topic was created.
          *
+         * @readonly
          * @type {TopicId | null}
          */
-        this._topicId = null;
-        if (properties.topicId != null) {
-            this._topicId = properties.topicId;
-        }
+        this._topicId = properties.topicId != null ? properties.topicId : null;
 
         /**
          * The exchange rate of Hbars to cents (USD).
          *
+         * @readonly
          * @type {ExchangeRate | null}
          */
-        this._exchangeRate = null;
-        if (properties.exchangeRate != null) {
-            this._exchangeRate = properties.exchangeRate;
-        }
+        this._exchangeRate =
+            properties.exchangeRate != null ? properties.exchangeRate : null;
 
         /**
          * Updated sequence number for a consensus service topic.
          *
+         * @readonly
          * @type {number | null}
          */
         this._topicSequenceNumber = properties.topicSequenceNubmer ?? null;
@@ -92,6 +87,7 @@ export default class TransactionReceipt {
         /**
          * Updated running hash for a consensus service topic.
          *
+         * @readonly
          * @type {Uint8Array | null}
          */
         this._topicRunningHash = properties.topicRunningHash ?? null;
@@ -205,7 +201,7 @@ export default class TransactionReceipt {
     }
 
     /**
-     * @protected
+     * @internal
      * @returns {proto.ITransactionReceipt}
      */
     _toProtobuf() {
@@ -233,6 +229,7 @@ export default class TransactionReceipt {
     }
 
     /**
+     * @internal
      * @param {proto.ITransactionReceipt} receipt
      * @returns {TransactionReceipt}
      */

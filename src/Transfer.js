@@ -14,11 +14,15 @@ export default class Transfer {
     constructor(accountId, amount) {
         /**
          * The Account ID that sends or receives cryptocurrency.
+         *
+         * @readonly
          */
         this.accountId = accountId;
 
         /**
          * The amount of tinybars that the account sends(negative) or receives(positive).
+         *
+         * @readonly
          */
         this.amount = amount;
 
@@ -26,6 +30,7 @@ export default class Transfer {
     }
 
     /**
+     * @internal
      * @param {proto.IAccountAmount} transfer
      * @returns {Transfer}
      */
@@ -38,6 +43,7 @@ export default class Transfer {
     }
 
     /**
+     * @internal
      * @returns {proto.IAccountAmount}
      */
     _toProtobuf() {

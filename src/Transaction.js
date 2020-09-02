@@ -249,7 +249,9 @@ export default class Transaction {
         const operator = client._operator;
 
         if (operator == null) {
-            throw new Error("`client` must have an operator to sign with the operator");
+            throw new Error(
+                "`client` must have an operator to sign with the operator"
+            );
         }
 
         return this.signWith(operator.publicKey, operator.transactionSigner);
@@ -335,7 +337,8 @@ export default class Transaction {
         // on execute, sign each transaction with the operator, if present
         // and we are signing a transaction that used the default transaction ID
 
-        const transactionId = /** @type {TransactionId} */ (this._transactionId);
+        const transactionId = /** @type {TransactionId} */ (this
+            ._transactionId);
         const operatorId = client.getOperatorId();
 
         if (operatorId != null && operatorId.equals(transactionId.accountId)) {
@@ -354,12 +357,15 @@ export default class Transaction {
 
         const response = await method(request);
 
-        console.log("nodeTransactionPrecheckCode >", response.nodeTransactionPrecheckCode);
+        console.log(
+            "nodeTransactionPrecheckCode >",
+            response.nodeTransactionPrecheckCode
+        );
 
         return new TransactionResponse({
             nodeId,
             transactionHash: Uint8Array.of(),
-            transactionId
+            transactionId,
         });
     }
 
