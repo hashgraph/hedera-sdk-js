@@ -1,5 +1,23 @@
 import proto from "@hashgraph/proto";
-import { Key, PublicKey, KeyList } from "@hashgraph/cryptography";
+import { Key, PublicKey, KeyList, PrivateKey } from "@hashgraph/cryptography";
+
+/**
+ * @param {Key} key
+ * @returns {proto.IKey}
+ */
+export function _toProtoKey(key) {
+    if (key instanceof PrivateKey) {
+        key = key.publicKey;
+    }
+
+    if (key instanceof PublicKey) {
+        return {
+            ed25519: key.toBytes(),
+        };
+    }
+
+    throw new Error("toProtoKey: unsupported KeyList");
+}
 
 /**
  * @param {proto.IKey} key
