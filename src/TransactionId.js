@@ -1,7 +1,8 @@
 import AccountId from "./account/AccountId";
-import Time from "./Time";
+import Time from "./Timestamp";
 import proto from "@hashgraph/proto";
 import Long from "long";
+import Timestamp from "./Timestamp";
 
 /**
  * Normalized transaction ID returned by various methods in the SDK.
@@ -46,7 +47,7 @@ export default class TransactionId {
     static generate(id) {
         return new TransactionId(
             typeof id === "string" ? AccountId.fromString(id) : id,
-            new Time()
+            Timestamp.generate()
         );
     }
 

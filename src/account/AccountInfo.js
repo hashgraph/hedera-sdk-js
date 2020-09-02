@@ -1,7 +1,7 @@
 import AccountId from "./AccountId";
 import proto from "@hashgraph/proto";
 import Hbar from "../Hbar";
-import Time from "../Time";
+import Time from "../Timestamp";
 import { _fromProtoKey } from "../util";
 import { Key } from "@hashgraph/cryptography";
 import Long from "long";
