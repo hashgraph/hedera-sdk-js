@@ -37,6 +37,12 @@ export default class Transaction {
 
         /**
          * @private
+         * @type {Set<Uint8Array>}
+         */
+        this._signers = new Set();
+
+        /**
+         * @private
          * @type {AccountId[]}
          */
         this._nodeIds = [];
@@ -198,7 +204,7 @@ export default class Transaction {
 
     /**
      * @param {PrivateKey} privateKey
-     * @returns {this}
+     * @returns {Promise<this>}
      */
     sign(privateKey) {
         // FIXME: .getPublicKey()
@@ -210,22 +216,43 @@ export default class Transaction {
     /**
      * @param {PublicKey} publicKey
      * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
-     * @returns {this}
+     * @returns {Promise<this>}
      */
-    signWith(publicKey, transactionSigner) {
-        // TODO
+    async signWith(publicKey, transactionSigner) {
+        const publicKeyData = publicKey.toBytes();
+
+        if (this._signers.has(publicKeyData)) {
+            // this public key has already signed this transaction
+            return this;
+        }
+
+        for (const transaction of this._transactions) {
+            const message = /** @type {Uint8Array} */ (transaction.bodyBytes);
+            const signature = await transactionSigner(message);
+
+            transaction.sigMap?.sigPair?.push({
+                pubKeyPrefix: publicKeyData,
+                ed25519: signature,
+            });
+        }
+
+        this._signers.add(publicKeyData);
 
         return this;
     }
 
     /**
      * @param {Client} client
-     * @returns {this}
+     * @returns {Promise<this>}
      */
     signWithOperator(client) {
-        // TODO
+        const operator = client._operator;
 
-        return this;
+        if (operator == null) {
+            throw new Error("`client` must have an operator to sign with the operator");
+        }
+
+        return this.signWith(operator.publicKey, operator.transactionSigner);
     }
 
     /**
@@ -262,7 +289,7 @@ export default class Transaction {
                 );
             }
 
-            // TODO: this.setTransactionId(TransactionId.generate(operator.accountId));
+            this.setTransactionId(TransactionId.generate(operator.accountId));
         }
 
         if (this._transactionId == null) {
@@ -312,7 +339,7 @@ export default class Transaction {
         const operatorId = client.getOperatorId();
 
         if (operatorId != null && operatorId.equals(transactionId.accountId)) {
-            this.signWithOperator(client);
+            await this.signWithOperator(client);
         }
 
         // TODO: Add retries
