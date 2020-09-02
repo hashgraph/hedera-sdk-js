@@ -950,12 +950,6 @@
     protobufjs "^6.9.0"
     yargs "^15.3.1"
 
-"@hashgraph/cryptograph@file:packages/cryptography":
-  version "0.1.0-pre"
-  dependencies:
-    bignumber.js "^9.0.0"
-    tweetnacl "^1.0.3"
-
 "@hashgraph/cryptography@file:packages/cryptography":
   version "0.1.0-pre"
   dependencies:

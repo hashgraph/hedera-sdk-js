@@ -1,7 +1,7 @@
 import AccountId from "./account/AccountId";
 import Channel from "./Channel";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
-import Long from "long";
+import Hbar from "./Hbar";
 
 /**
  * @typedef {"mainnet" | "testnet" | "previewnet"} NetworkName
@@ -84,22 +84,22 @@ export default class Client {
         this._networkChannels = new Map();
 
         /**
-         * @private
+         * @internal
          * @type {?ClientOperator}
          */
         this._operator = null;
 
         /**
-         * @private
-         * @type {Long}
+         * @internal
+         * @type {Hbar}
          */
-        this._maxTransactionFee = Long.ONE;
+        this._maxTransactionFee = new Hbar(1);
 
         /**
-         * @private
-         * @type {Long}
+         * @internal
+         * @type {Hbar}
          */
-        this._maxQueryPayment = Long.ONE;
+        this._maxQueryPayment = new Hbar(1);
 
         if (typeof props.network === "string") {
             switch (props.network) {
@@ -261,7 +261,7 @@ export default class Client {
     /**
      * Set the maximum fee to be paid for transactions executed by this client.
      *
-     * @param {Long} maxTransactionFee
+     * @param {Hbar} maxTransactionFee
      * @returns {Client}
      */
     setMaxTransactionFee(maxTransactionFee) {
@@ -273,13 +273,21 @@ export default class Client {
     /**
      * Set the maximum payment allowable for queries.
      *
-     * @param {Long} maxQueryPayment
+     * @param {Hbar} maxQueryPayment
      * @returns {Client}
      */
     setMaxQueryPayment(maxQueryPayment) {
         this._maxQueryPayment = maxQueryPayment;
 
         return this;
+    }
+
+    /**
+     * @internal
+     * @returns {number}
+     */
+    _getNumberOfNodesForTransaction() {
+        return (this._network.size + 3 - 1) / 3;
     }
 
     /**

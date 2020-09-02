@@ -40,6 +40,18 @@ export default class EntityId {
     toString() {
         return `${this.shard}.${this.realm}.${this.num}`;
     }
+
+    /**
+     * @param {this} other
+     * @returns {boolean}
+     */
+    equals(other) {
+        return (
+            this.shard === other.shard &&
+            this.realm === other.realm &&
+            this.num === other.num
+        );
+    }
 }
 
 /**

@@ -16,7 +16,10 @@ export default class Hbar {
             bigAmount = new BigNumber(bigAmount);
         }
 
-        this._valueInTinybar = bigAmount.multipliedBy(unit._tinybar);
+        /**
+         * @type {Long}
+         */
+        this._valueInTinybar = Long.fromString(bigAmount.multipliedBy(unit._tinybar).toFixed(0));
     }
 
     /**
@@ -50,21 +53,14 @@ export default class Hbar {
      * @returns {BigNumber}
      */
     to(unit) {
-        return this._valueInTinybar.dividedBy(unit._tinybar);
-    }
-
-    /**
-     * @returns {BigNumber}
-     */
-    toTinybars() {
-        return this._valueInTinybar;
+        return new BigNumber(this._valueInTinybar.toString()).dividedBy(unit._tinybar);
     }
 
     /**
      * @returns {Long}
      */
-    _toProtobuf() {
-        return Long.fromString(this._valueInTinybar.toString(10));
+    toTinybars() {
+        return this._valueInTinybar;
     }
 
     /**
@@ -73,10 +69,10 @@ export default class Hbar {
      */
     toString() {
         if (
-            this._valueInTinybar.isLessThan(10_000) &&
-            this._valueInTinybar.isGreaterThan(-10_000)
+            this._valueInTinybar.lessThan(10_000) &&
+            this._valueInTinybar.greaterThan(-10_000)
         ) {
-            return `${this._valueInTinybar.toString(10)} ${
+            return `${this._valueInTinybar.toString()} ${
                 HbarUnit.Tinybar._symbol
             }`;
         }

@@ -44,7 +44,7 @@ export default class ProxyStaker {
     _toProtobuf() {
         return {
             accountID: this.accountId._toProtobuf(),
-            amount: this.amount._toProtobuf(),
+            amount: this.amount.toTinybars(),
         };
     }
 }

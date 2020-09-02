@@ -92,7 +92,7 @@ export default class TransactionId {
     }
 
     /**
-     * @protected
+     * @internal
      * @returns {proto.ITransactionID}
      */
     _toProtobuf() {

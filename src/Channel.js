@@ -1,6 +1,8 @@
 import { Client as NativeClient, credentials } from "@grpc/grpc-js";
 import proto from "@hashgraph/proto";
 
+// FIXME: Collpase the duplicated code in unaryRequest
+
 export default class Channel {
     /**
      * @param {string} address
