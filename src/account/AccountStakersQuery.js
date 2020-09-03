@@ -63,10 +63,9 @@ export default class AccountStakersQuery extends Query {
      * @returns {ProxyStaker[]}
      */
     _mapResponse(response) {
-        // @ts-ignore
-        return response.cryptoGetProxyStakers.stakers.proxyStaker.map(
-            (staker) => ProxyStaker._fromProtobuf(staker)
-        );
+        return (
+            response.cryptoGetProxyStakers?.stakers?.proxyStaker ?? []
+        ).map((staker) => ProxyStaker._fromProtobuf(staker));
     }
 
     /**

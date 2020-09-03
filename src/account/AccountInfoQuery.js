@@ -57,8 +57,11 @@ export default class AccountInfoQuery extends Query {
      * @returns {AccountInfo}
      */
     _mapResponse(response) {
-        // @ts-ignore
-        return AccountInfo._fromProtobuf(response.cryptoGetInfo.accountInfo);
+        const info = /** @type {proto.ICryptoGetInfoResponse} */ (response.cryptoGetInfo);
+
+        return AccountInfo._fromProtobuf(
+            /** @type {proto.CryptoGetInfoResponse.IAccountInfo} */ (info.accountInfo)
+        );
     }
 
     /**

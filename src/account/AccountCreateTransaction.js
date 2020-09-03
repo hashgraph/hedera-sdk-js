@@ -1,13 +1,14 @@
 import Hbar from "../Hbar";
 import proto from "@hashgraph/proto";
 import Channel from "../Channel";
+import AccountId from "./AccountId";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     DEFAULT_RECORD_THRESHOLD,
 } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _toProtoKey } from "../util";
-import { AccountId } from "..";
+import Long from "long";
 
 /**
  * Create a new Hedera™ crypto-currency account.
@@ -21,7 +22,7 @@ export default class AccountCreateTransaction extends Transaction {
      * @param {Hbar} [props.receiveRecordThreshold]
      * @param {boolean} [props.receiverSignatureRequired]
      * @param {AccountId} [props.proxyAccountId]
-     * @param {number} [props.autoRenewPeriod]
+     * @param {number | Long} [props.autoRenewPeriod]
      */
     constructor(props = {}) {
         super();
@@ -64,7 +65,7 @@ export default class AccountCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {number}
+         * @type {Long}
          */
         this._autoRenewPeriod = DEFAULT_AUTO_RENEW_PERIOD;
 
@@ -226,7 +227,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {number}
+     * @returns {Long}
      */
     getAutoRenewPeriod() {
         return this._autoRenewPeriod;
@@ -235,12 +236,15 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * Set the auto renew period for this account.
      *
-     * @param {number} autoRenewPeriod
+     * @param {number | Long} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
-        this._autoRenewPeriod = autoRenewPeriod;
+        this._autoRenewPeriod =
+            autoRenewPeriod instanceof Long
+                ? autoRenewPeriod
+                : Long.fromValue(autoRenewPeriod);
 
         return this;
     }

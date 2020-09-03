@@ -28,7 +28,6 @@ export default class TransactionRecord {
          * any new account/file/instance created.
          *
          * @readonly
-         * @type {TransactionReceipt}
          */
         this.receipt = properties.receipt;
 
@@ -37,7 +36,6 @@ export default class TransactionRecord {
          * for having a duplicate TransactionID).
          *
          * @readonly
-         * @type {Uint8Array}
          */
         this.transactionHash = properties.transactionHash;
 
@@ -45,7 +43,6 @@ export default class TransactionRecord {
          * The consensus timestamp (or null if didn't reach consensus yet).
          *
          * @readonly
-         * @type {Timestamp}
          */
         this.consensusTimestampstamp = properties.consensusTimestampstamp;
 
@@ -53,7 +50,6 @@ export default class TransactionRecord {
          * The ID of the transaction this record represents.
          *
          * @readonly
-         * @type {TransactionId}
          */
         this.transactionId = properties.transactionId;
 
@@ -61,7 +57,6 @@ export default class TransactionRecord {
          * The memo that was submitted as part of the transaction (max 100 bytes).
          *
          * @readonly
-         * @type {string}
          */
         this.transactionMemo = properties.transactionMemo;
 
@@ -69,7 +64,7 @@ export default class TransactionRecord {
          * The actual transaction fee charged,
          * not the original transactionFee value from TransactionBody.
          *
-         * @type {Hbar}
+         * @readonly
          */
         this.transactionFee = properties.transactionFee;
 
@@ -79,17 +74,15 @@ export default class TransactionRecord {
          * records that it triggers.
          *
          * @readonly
-         * @type {Transfer[]}
          */
         this.transfers = properties.transfers;
 
         /**
-         * @private
+         * Record of the value returned by the smart contract function or constructor.
+         *
          * @readonly
-         * @type {ContractFunctionResult | null}
          */
-        this._contractFunctionResult =
-            properties.contractFunctionResult ?? null;
+        this.contractFunctionResult = properties.contractFunctionResult ?? null;
 
         Object.freeze(this);
     }
@@ -112,24 +105,20 @@ export default class TransactionRecord {
                 : undefined;
 
         return new TransactionRecord({
-            // @ts-ignore
-            receipt: TransactionReceipt._fromProtobuf(record.receipt),
-            // @ts-ignore
-            transactionHash: record.transactionHash,
-            consensusTimestampstamp: Timestamp._fromProtobuf(
-                // @ts-ignore
-                record.consensusTimestampstamp
+            receipt: TransactionReceipt._fromProtobuf(
+                /** @type {proto.ITransactionReceipt} */ (record.receipt)
             ),
-            // @ts-ignore
-            transactionId: TransactionId._fromProtobuf(record.transactionID),
-            // @ts-ignore
-            transactionMemo: record.memo,
-            // @ts-ignore
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-assignment
-            transactionFee: Hbar.fromTinybar(record.transactionFee),
-            // @ts-ignore
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            transfers: record.transferList.accountAmounts.map((aa) =>
+            transactionHash: record.transactionHash ?? new Uint8Array(),
+            consensusTimestampstamp: Timestamp._fromProtobuf(
+                /** @type {proto.ITimestamp} */
+                (record.consensusTimestamp)
+            ),
+            transactionId: TransactionId._fromProtobuf(
+                /** @type {proto.ITransactionID} */ (record.transactionID)
+            ),
+            transactionMemo: record.memo ?? "",
+            transactionFee: Hbar.fromTinybars(record.transactionFee ?? 0),
+            transfers: (record.transferList?.accountAmounts ?? []).map((aa) =>
                 Transfer._fromProtobuf(aa)
             ),
             contractFunctionResult,

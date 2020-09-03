@@ -36,7 +36,7 @@ export const ArgumentType = {
 
 export default class ContractFunctionSelector {
     /**
-     * @param {string=} name
+     * @param {string} [name]
      */
     constructor(name) {
         /**
@@ -257,7 +257,7 @@ export default class ContractFunctionSelector {
     }
 
     /**
-     * @param {string=} name
+     * @param {string} [name]
      * @returns {Uint8Array}
      */
     _build(name) {

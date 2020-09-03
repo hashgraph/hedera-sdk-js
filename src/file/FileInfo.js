@@ -3,6 +3,7 @@ import Timestamp from "../Timestamp";
 import proto from "@hashgraph/proto";
 import { _fromProtoKeyList, _toProtoKeyList } from "../util";
 import { KeyList } from "@hashgraph/cryptography";
+import Long from "long";
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -12,7 +13,7 @@ export default class FileInfo {
      * @private
      * @param {object} properties
      * @param {FileId} properties.fileId
-     * @param {number} properties.size
+     * @param {Long} properties.size
      * @param {Timestamp} properties.expirationTime
      * @param {boolean} properties.deleted
      * @param {KeyList} properties.keys
@@ -62,15 +63,17 @@ export default class FileInfo {
      * @param {proto.FileGetInfoResponse.IFileInfo} info
      */
     static _fromProtobuf(info) {
+        const size = /** @type {Long | number} */ (info.size);
+
         return new FileInfo({
-            // @ts-ignore
-            fileId: FileId._fromProtobuf(info.fileID),
-            // @ts-ignore
-            size: info.size,
-            // @ts-ignore
-            expirationTime: Timestamp._fromProtobuf(info.expirationTime),
-            // @ts-ignore
-            deleted: info.deleted,
+            fileId: FileId._fromProtobuf(
+                /** @type {proto.IFileID} */ (info.fileID)
+            ),
+            size: size instanceof Long ? size : Long.fromValue(size),
+            expirationTime: Timestamp._fromProtobuf(
+                /** @type {proto.ITimestamp} */ (info.expirationTime)
+            ),
+            deleted: /** @type {boolean} */ (info.deleted),
             keys:
                 info.keys != null
                     ? _fromProtoKeyList(info.keys)

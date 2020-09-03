@@ -8,9 +8,9 @@ import AccountId from "../account/AccountId";
 export default class ContractDeleteTransaction extends Transaction {
     /**
      * @param {object} props
-     * @param {ContractId} [props.contractId]
-     * @param {ContractId} [props.transferContractId]
-     * @param {AccountId} [props.transferAccountId]
+     * @param {ContractId | string} [props.contractId]
+     * @param {ContractId | string} [props.transferContractId]
+     * @param {AccountId | string} [props.transferAccountId]
      */
     constructor(props = {}) {
         super();
@@ -23,7 +23,7 @@ export default class ContractDeleteTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?ContractId}
+         * @type {?AccountId}
          */
         this._transferAccountId = null;
 

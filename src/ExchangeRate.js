@@ -44,10 +44,8 @@ export default class ExchangeRate {
      */
     static _fromProtobuf(rate) {
         return new ExchangeRate({
-            // @ts-ignore
-            hbarEquiv: rate.hbarEquiv,
-            // @ts-ignore
-            centEquiv: rate.centEquiv,
+            hbarEquiv: /** @type {number} */ (rate.hbarEquiv),
+            centEquiv: /** @type {number} */ (rate.centEquiv),
             expirationTime: new Date(
                 rate.expirationTime?.seconds instanceof Long
                     ? rate.expirationTime.seconds.toInt()

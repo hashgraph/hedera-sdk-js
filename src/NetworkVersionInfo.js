@@ -37,12 +37,12 @@ export default class NetworkVersionInfo {
     static _fromProtobuf(info) {
         return new NetworkVersionInfo({
             protobufVersion: SemanticVersion._fromProtobuf(
-                // @ts-ignore
-                info.hapiProtoVersion
+                /** @type {proto.ISemanticVersion} */
+                (info.hapiProtoVersion)
             ),
             servicesVesion: SemanticVersion._fromProtobuf(
-                // @ts-ignore
-                info.hederaServicesVersion
+                /** @type {proto.ISemanticVersion} */
+                (info.hederaServicesVersion)
             ),
         });
     }

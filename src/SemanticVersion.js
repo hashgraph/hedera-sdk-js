@@ -26,12 +26,9 @@ export default class SemanticVersion {
      */
     static _fromProtobuf(version) {
         return new SemanticVersion({
-            // @ts-ignore
-            major: version.major,
-            // @ts-ignore
-            minor: version.minor,
-            // @ts-ignore
-            patch: version.patch,
+            major: /** @type {number} */ (version.major),
+            minor: /** @type {number} */ (version.minor),
+            patch: /** @type {number} */ (version.patch),
         });
     }
 

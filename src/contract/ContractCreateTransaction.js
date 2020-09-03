@@ -12,12 +12,12 @@ import Long from "long";
 export default class ContractCreateTransaction extends Transaction {
     /**
      * @param {object} props
-     * @param {FileId} [props.bytecodeFileId]
+     * @param {FileId | string} [props.bytecodeFileId]
      * @param {Key} [props.adminKey]
      * @param {number | Long} [props.gas]
      * @param {Hbar} [props.initialBalance]
-     * @param {AccountId} [props.proxyAccountId]
-     * @param {number} [props.autoRenewPeriod]
+     * @param {AccountId | string} [props.proxyAccountId]
+     * @param {number | Long} [props.autoRenewPeriod]
      * @param {Uint8Array} [props.constructorParameters]
      * @param {string} [props.contractMemo]
      */
@@ -56,7 +56,7 @@ export default class ContractCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {number}
+         * @type {Long}
          */
         this._autoRenewPeriod = DEFAULT_AUTO_RENEW_PERIOD;
 
@@ -113,12 +113,15 @@ export default class ContractCreateTransaction extends Transaction {
     }
 
     /**
-     * @param {FileId} bytecodeFileId
+     * @param {FileId | string} bytecodeFileId
      * @returns {this}
      */
     setBytecodeFileId(bytecodeFileId) {
         this._requireNotFrozen();
-        this._bytecodeFileId = bytecodeFileId;
+        this._bytecodeFileId =
+            bytecodeFileId instanceof FileId
+                ? bytecodeFileId
+                : FileId.fromString(bytecodeFileId);
 
         return this;
     }
@@ -201,19 +204,22 @@ export default class ContractCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {number}
+     * @returns {Long}
      */
     getAutoRenewPeriod() {
         return this._autoRenewPeriod;
     }
 
     /**
-     * @param {number} autoRenewPeriod
+     * @param {number | Long} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
-        this._autoRenewPeriod = autoRenewPeriod;
+        this._autoRenewPeriod =
+            autoRenewPeriod instanceof Long
+                ? autoRenewPeriod
+                : Long.fromValue(autoRenewPeriod);
 
         return this;
     }

@@ -4,6 +4,7 @@ import BigNumber from "bignumber.js";
 import proto from "@hashgraph/proto";
 import * as hex from "../encoding/hex";
 import * as utf8 from "../encoding/utf8";
+import Long from "long";
 
 /**
  * The result returned by a call to a smart contract function. This is part of the response to
@@ -16,10 +17,10 @@ export default class ContractFunctionResult {
      * Constructor isn't part of the stable API
      *
      * @param {object} result
-     * @param {ContractId=} result.contractId
-     * @param {string} result.errorMessage
+     * @param {?ContractId} result.contractId
+     * @param {?string} result.errorMessage
      * @param {Uint8Array} result.bloom
-     * @param {number} result.gasUsed
+     * @param {Long} result.gasUsed
      * @param {ContractLogInfo[]} result.logs
      * @param {Uint8Array} result.bytes
      */
@@ -50,17 +51,6 @@ export default class ContractFunctionResult {
          * The log info for events returned by the function.
          */
         this.logs = result.logs;
-
-        // this.bytes = result.contractCallResult;
-
-        // this.contractId = result.hasContractid() ?
-        //     ContractId._fromProto(result.contractID) :
-        //     null;
-
-        // this.errorMessage = result.getErrormessage();
-        // this.bloom = result.getBloom_asU8();
-        // this.gasUsed = result.getGasused();
-        // this.logs = contractLogInfoListToSdk(result.getLoginfoList());
     }
 
     /**
@@ -68,22 +58,19 @@ export default class ContractFunctionResult {
      * @returns {ContractFunctionResult}
      */
     static _fromProtobuf(result) {
+        const contractId = /** @type {proto.IContractID | null} */ (result.contractID);
+        const gas = /** @type {Long | number} */ (result.gasUsed);
+
         return new ContractFunctionResult({
-            // @ts-ignore
-            bytes: result.contractCallResult,
-            // @ts-ignore
+            bytes: /** @type {Uint8Array} */ (result.contractCallResult),
             contractId:
-                result.contractID != null
-                    ? ContractId._fromProtobuf(result.contractID)
+                contractId != null
+                    ? ContractId._fromProtobuf(contractId)
                     : null,
-            // @ts-ignore
-            errorMessage: result.errorMessage,
-            // @ts-ignore
-            bloom: result.bloom,
-            // @ts-ignore
-            gasUsed: result.gasUsed,
-            // @ts-ignore
-            logs: result.logInfo.map((info) =>
+            errorMessage: result.errorMessage ?? null,
+            bloom: /** @type {Uint8Array} */ (result.bloom),
+            gasUsed: gas instanceof Long ? gas : Long.fromValue(gas),
+            logs: (result.logInfo ?? []).map((info) =>
                 ContractLogInfo._fromProtobuf(info)
             ),
         });
@@ -97,7 +84,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {string}
      */
     getString(index) {
@@ -106,7 +93,7 @@ export default class ContractFunctionResult {
 
     /**
      * @private
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {Uint8Array}
      */
     getBytes(index) {
@@ -126,7 +113,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {Uint8Array}
      */
     getBytes32(index) {
@@ -134,7 +121,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {boolean}
      */
     getBool(index) {
@@ -142,7 +129,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {number}
      */
     getInt8(index) {
@@ -150,11 +137,11 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {number}
      */
     getInt32(index) {
-        // .getUint32() interprets as big-endian
+        // .getInt32() interprets as big-endian
         // Using DataView instead of Uint32Array because the latter interprets
         // using platform endianness which is little-endian on x86
         return new DataView(
@@ -165,7 +152,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {BigNumber}
      */
     getInt64(index) {
@@ -176,7 +163,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {BigNumber}
      */
     getInt256(index) {
@@ -184,7 +171,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {number}
      */
     getUint8(index) {
@@ -192,7 +179,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {number}
      */
     getUint32(index) {
@@ -207,7 +194,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {BigNumber}
      */
     getUint64(index) {
@@ -218,7 +205,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {BigNumber}
      */
     getUint256(index) {
@@ -226,7 +213,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {string}
      */
     getAddress(index) {
@@ -236,7 +223,7 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {number=} index
+     * @param {number} [index]
      * @returns {Uint8Array}
      */
     _getBytes32(index) {

@@ -62,8 +62,8 @@ export default class AccountRecordsQuery extends Query {
      */
     _mapResponse(response) {
         return (
-            response.cryptoGetAccountRecords?.records?.map(
-                TransactionRecord._fromProtobuf
+            response.cryptoGetAccountRecords?.records?.map((record) =>
+                TransactionRecord._fromProtobuf(record)
             ) ?? []
         );
     }

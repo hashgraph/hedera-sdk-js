@@ -52,14 +52,12 @@ export default class ContractLogInfo {
      */
     static _fromProtobuf(info) {
         return new ContractLogInfo({
-            // @ts-ignore
-            contractId: ContractId._fromProtobuf(info.contractID),
-            // @ts-ignore
-            bloom: info.bloom,
-            // @ts-ignore
-            topics: info.topic,
-            // @ts-ignore
-            data: info.data,
+            contractId: ContractId._fromProtobuf(
+                /** @type {proto.IContractID} */ (info.contractID)
+            ),
+            bloom: info.bloom ?? new Uint8Array(),
+            topics: info.topic ?? [],
+            data: info.data ?? new Uint8Array(),
         });
     }
 

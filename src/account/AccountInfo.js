@@ -25,7 +25,7 @@ export default class AccountInfo {
      * @param {Hbar} props.receiveRecordThreshold
      * @param {boolean} props.isReceiverSignatureRequired
      * @param {Time} props.expirationTime
-     * @param {number} props.autoRenewPeriod
+     * @param {Long} props.autoRenewPeriod
      * @param {LiveHash[]} props.liveHashes
      */
     constructor(props) {
@@ -155,14 +155,16 @@ export default class AccountInfo {
             ),
             autoRenewPeriod:
                 info.autoRenewPeriod?.seconds instanceof Long
-                    ? info.autoRenewPeriod.seconds.toInt()
-                    : info.autoRenewPeriod?.seconds ?? 0,
+                    ? info.autoRenewPeriod.seconds
+                    : Long.fromValue(info.autoRenewPeriod?.seconds ?? 0),
             proxyAccountId:
                 info.proxyAccountID != null
                     ? AccountId._fromProtobuf(info.proxyAccountID)
                     : null,
             proxyReceived: Hbar.fromTinybars(info.proxyReceived ?? 0),
-            liveHashes: (info.liveHashes ?? []).map(LiveHash._fromProtobuf),
+            liveHashes: (info.liveHashes ?? []).map((hash) =>
+                LiveHash._fromProtobuf(hash)
+            ),
         });
     }
 

@@ -3,6 +3,7 @@ import ContractId from "./ContractId";
 import ContractFunctionParameters from "./ContractFunctionParameters";
 import ContractFunctionResult from "./ContractFunctionResult";
 import proto from "@hashgraph/proto";
+import Long from "long";
 
 /**
  * @typedef {object} FunctionParameters
@@ -17,7 +18,7 @@ export default class ContractCallQuery extends Query {
     /**
      * @param {object} properties
      * @param {ContractId | string} [properties.contractId]
-     * @param {number} [properties.gas]
+     * @param {number | Long} [properties.gas]
      * @param {FunctionParameters | Uint8Array} [properties.functionParameters]
      * @param {number} [properties.maxResultSize]
      */
@@ -35,7 +36,7 @@ export default class ContractCallQuery extends Query {
 
         /**
          * @private
-         * @type {?number}
+         * @type {?Long}
          */
         this._gas = null;
         if (properties?.gas != null) {
@@ -84,11 +85,11 @@ export default class ContractCallQuery extends Query {
     }
 
     /**
-     * @param {number} gas
+     * @param {number | Long} gas
      * @returns {ContractCallQuery}
      */
     setGas(gas) {
-        this._gas = gas;
+        this._gas = gas instanceof Long ? gas : Long.fromValue(gas);
         return this;
     }
 
@@ -103,7 +104,7 @@ export default class ContractCallQuery extends Query {
 
     /**
      * @param {string} name
-     * @param {ContractFunctionParameters=} params
+     * @param {?ContractFunctionParameters} [params]
      * @returns {ContractCallQuery}
      */
     setFunction(name, params) {
@@ -129,9 +130,17 @@ export default class ContractCallQuery extends Query {
      * @returns {ContractFunctionResult}
      */
     _mapResponse(response) {
+        const call =
+            /**
+             *@type {proto.IContractCallLocalResponse}
+             */
+            (response.contractCallLocal);
+
         return ContractFunctionResult._fromProtobuf(
-            // @ts-ignore
-            response.contractCallLocal.functionResult
+            /**
+             * @type {proto.IContractFunctionResult}
+             */
+            (call.functionResult)
         );
     }
 

@@ -42,9 +42,10 @@ export default class TransactionRecordQuery extends Query {
      * @returns {TransactionRecord}
      */
     _mapResponse(response) {
+        const record = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
+
         return TransactionRecord._fromProtobuf(
-            // @ts-ignore
-            response.transactionGetRecord?.transactionRecord
+            /** @type {proto.ITransactionRecord} */ (record.transactionRecord)
         );
     }
 

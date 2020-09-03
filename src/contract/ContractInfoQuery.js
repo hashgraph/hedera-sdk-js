@@ -46,9 +46,10 @@ export default class ContractInfoQuery extends Query {
      * @returns {ContractInfo}
      */
     _mapResponse(response) {
+        const info = /** @type {proto.IContractGetInfoResponse} */ (response.contractGetInfo);
+
         return ContractInfo._fromProtobuf(
-            // @ts-ignore
-            response.contractGetInfo.contractInfo
+            /** @type {proto.ContractGetInfoResponse.IContractInfo} */ (info.contractInfo)
         );
     }
 

@@ -17,8 +17,9 @@ export default class NetworkInfoQuery extends Query {
      * @returns {NetworkVersionInfo}
      */
     _mapResponse(response) {
-        // @ts-ignore
-        return NetworkVersionInfo._fromProtobuf(response.networkGetVersionInfo);
+        const info = /** @type {proto.INetworkGetVersionInfoResponse} */ (response.networkGetVersionInfo);
+
+        return NetworkVersionInfo._fromProtobuf(info);
     }
 
     /**

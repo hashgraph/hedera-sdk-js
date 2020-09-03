@@ -7,16 +7,17 @@ import Channel from "../Channel";
 import Transaction from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _toProtoKey } from "../util";
+import Long from "long";
 
 export default class ContractUpdateTransaction extends Transaction {
     /**
      * @param {object} props
-     * @param {ContractId} [props.contractId]
-     * @param {FileId} [props.bytecodeFileId]
+     * @param {ContractId | string} [props.contractId]
+     * @param {FileId | string} [props.bytecodeFileId]
      * @param {Timestamp} [props.expirationTime]
      * @param {Key} [props.adminKey]
-     * @param {AccountId} [props.proxyAccountId]
-     * @param {number} [props.autoRenewPeriod]
+     * @param {AccountId | string} [props.proxyAccountId]
+     * @param {number | Long} [props.autoRenewPeriod]
      * @param {Uint8Array} [props.constructorParameters]
      * @param {string} [props.contractMemo]
      */
@@ -49,7 +50,7 @@ export default class ContractUpdateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?number}
+         * @type {?Long}
          */
         this._autoRenewPeriod = null;
 
@@ -177,19 +178,22 @@ export default class ContractUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?number}
+     * @returns {?Long}
      */
     getAutoRenewPeriod() {
         return this._autoRenewPeriod;
     }
 
     /**
-     * @param {number} autoRenewPeriod
+     * @param {number | Long} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
-        this._autoRenewPeriod = autoRenewPeriod;
+        this._autoRenewPeriod =
+            autoRenewPeriod instanceof Long
+                ? autoRenewPeriod
+                : Long.fromValue(autoRenewPeriod);
 
         return this;
     }
@@ -202,12 +206,15 @@ export default class ContractUpdateTransaction extends Transaction {
     }
 
     /**
-     * @param {FileId} bytecodeFileId
+     * @param {FileId | string} bytecodeFileId
      * @returns {this}
      */
     setBytecodeFileId(bytecodeFileId) {
         this._requireNotFrozen();
-        this._bytecodeFileId = bytecodeFileId;
+        this._bytecodeFileId =
+            bytecodeFileId instanceof FileId
+                ? bytecodeFileId
+                : FileId.fromString(bytecodeFileId);
 
         return this;
     }

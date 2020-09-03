@@ -5,6 +5,7 @@ import { _toProtoKey } from "../util";
 import ContractId from "./ContractId";
 import Hbar from "../Hbar";
 import ContractFunctionParameters from "./ContractFunctionParameters";
+import Long from "long";
 
 /**
  * @typedef {object} FunctionParameters
@@ -15,8 +16,8 @@ import ContractFunctionParameters from "./ContractFunctionParameters";
 export default class ContractExecuteTransaction extends Transaction {
     /**
      * @param {object} props
-     * @param {ContractId} [props.contractId]
-     * @param {number} [props.gas]
+     * @param {ContractId | string} [props.contractId]
+     * @param {number | Long} [props.gas]
      * @param {Hbar} [props.amount]
      * @param {Uint8Array | FunctionParameters} [props.functionParameters]
      */
@@ -31,7 +32,7 @@ export default class ContractExecuteTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?number}
+         * @type {?Long}
          */
         this._gas = null;
 
@@ -95,7 +96,7 @@ export default class ContractExecuteTransaction extends Transaction {
     }
 
     /**
-     * @returns {?number}
+     * @returns {?Long}
      */
     getGas() {
         return this._gas;
@@ -104,12 +105,12 @@ export default class ContractExecuteTransaction extends Transaction {
     /**
      * Sets the contract ID which is being executed in this transaction.
      *
-     * @param {number} gas
+     * @param {number | Long} gas
      * @returns {ContractExecuteTransaction}
      */
     setGas(gas) {
         this._requireNotFrozen();
-        this._gas = gas;
+        this._gas = gas instanceof Long ? gas : Long.fromValue(gas);
 
         return this;
     }
@@ -151,7 +152,7 @@ export default class ContractExecuteTransaction extends Transaction {
 
     /**
      * @param {string} name
-     * @param {ContractFunctionParameters=} functionParameters
+     * @param {ContractFunctionParameters} [functionParameters]
      * @returns {this}
      */
     setFunction(name, functionParameters) {

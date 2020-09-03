@@ -81,8 +81,10 @@ export default class LiveHashQuery extends Query {
      * @returns {LiveHash}
      */
     _mapResponse(response) {
-        // @ts-ignore
-        return LiveHash._fromProtobuf(response.cryptoGetLiveHash.liveHash);
+        const hashes = /** @type {proto.ICryptoGetLiveHashResponse} */ (response.cryptoGetLiveHash);
+        return LiveHash._fromProtobuf(
+            /** @type {proto.ILiveHash} */ (hashes.liveHash)
+        );
     }
 
     /**

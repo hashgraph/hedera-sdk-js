@@ -9,7 +9,7 @@ import proto from "@hashgraph/proto";
 export default class ContractRecordQuery extends Query {
     /**
      * @param {object} properties
-     * @param {(ContractId | string)=} properties.contractId
+     * @param {ContractId | string} [properties.contractId]
      */
     constructor(properties) {
         super();
@@ -47,10 +47,9 @@ export default class ContractRecordQuery extends Query {
      * @returns {TransactionRecord[]}
      */
     _mapResponse(response) {
-        // @ts-ignore
-        return response.contractGetRecordsResponse.records.map((record) =>
-            TransactionRecord._fromProtobuf(record)
-        );
+        return (
+            response.contractGetRecordsResponse?.records ?? []
+        ).map((record) => TransactionRecord._fromProtobuf(record));
     }
 
     /**

@@ -290,7 +290,7 @@ export default class ContractFunctionParameters {
      */
     addAddressArray(value) {
         /**
-         * @ts-ignore
+         * @type {Uint8Array[]}
          */
         const par = [];
 
@@ -406,6 +406,7 @@ export default class ContractFunctionParameters {
 function argumentToBytes(param, ty) {
     let value = new Uint8Array(32);
     let valueView = new DataView(value.buffer, 0);
+    /** @type {Uint8Array} */
     let par;
 
     if (ty.array) {
@@ -416,7 +417,7 @@ function argumentToBytes(param, ty) {
         }
 
         /**
-         * @ts-ignore
+         * @type {Uint8Array[]}
          */
         const values = [];
 
@@ -505,48 +506,42 @@ function argumentToBytes(param, ty) {
     switch (ty.ty) {
         case ArgumentType.uint8:
             numberToBytes(
-                /** @ts-ignore */
-                param,
+                /** @type {number | BigNumber } */ (param),
                 31,
                 valueView.setUint8.bind(valueView)
             );
             return value;
         case ArgumentType.int8:
             numberToBytes(
-                /** @ts-ignore */
-                param,
+                /** @type {number | BigNumber } */ (param),
                 31,
                 valueView.setInt8.bind(valueView)
             );
             return value;
         case ArgumentType.uint16:
             numberToBytes(
-                /** @ts-ignore */
-                param,
+                /** @type {number | BigNumber } */ (param),
                 30,
                 valueView.setUint16.bind(valueView)
             );
             return value;
         case ArgumentType.int16:
             numberToBytes(
-                /** @ts-ignore */
-                param,
+                /** @type {number | BigNumber } */ (param),
                 30,
                 valueView.setInt16.bind(valueView)
             );
             return value;
         case ArgumentType.uint32:
             numberToBytes(
-                /** @ts-ignore */
-                param,
+                /** @type {number | BigNumber } */ (param),
                 28,
                 valueView.setUint32.bind(valueView)
             );
             return value;
         case ArgumentType.int32:
             numberToBytes(
-                /** @ts-ignore */
-                param,
+                /** @type {number | BigNumber } */ (param),
                 28,
                 valueView.setInt32.bind(valueView)
             );
@@ -589,28 +584,16 @@ function argumentToBytes(param, ty) {
             }
             return value;
         case ArgumentType.address:
-            value.set(
-                /** @ts-ignore */
-                param,
-                32 - 20
-            );
+            value.set(/** @type {Uint8Array} */ (param), 32 - 20);
             return value;
         case ArgumentType.bool:
-            value[31] = /** @ts-ignore */ param ? 1 : 0;
+            value[31] = /** @type {boolean} */ (param) ? 1 : 0;
             return value;
         case ArgumentType.func:
-            value.set(
-                /** @ts-ignore */
-                param,
-                32 - 24
-            );
+            value.set(/** @type {Uint8Array} */ (param), 32 - 24);
             return value;
         case ArgumentType.bytes32:
-            value.set(
-                /** @ts-ignore */
-                param,
-                0
-            );
+            value.set(/** @type {Uint8Array} */ (param), 0);
             return value;
         // Bytes should have not the length already encoded
         // JS String type is encoded as UTF-16 whilst Solidity `string` type is UTF-8 encoded.
@@ -620,14 +603,10 @@ function argumentToBytes(param, ty) {
             // If value is of type string, encode it in UTF-8 format and conver it to Uint8Array
             // Required because JS Strings are UTF-16
             // eslint-disable-next-line no-case-declarations
-            /** @ts-ignore */
             par =
                 param instanceof Uint8Array
                     ? param
-                    : utf8.encode(
-                          /** @ts-ignore */
-                          param
-                      );
+                    : utf8.encode(/** @type {string} */ (param));
 
             // Resize value to a 32 byte boundary if needed
             if (

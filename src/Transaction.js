@@ -8,7 +8,7 @@ import Channel from "./Channel";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Long from "long";
 
-export const DEFAULT_AUTO_RENEW_PERIOD = 7776000; // 90 days (in seconds)
+export const DEFAULT_AUTO_RENEW_PERIOD = Long.fromValue(7776000); // 90 days (in seconds)
 
 export const DEFAULT_RECORD_THRESHOLD = Hbar.fromTinybars(
     Long.fromString("9223372036854775807")

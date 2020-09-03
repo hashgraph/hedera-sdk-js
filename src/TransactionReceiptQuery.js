@@ -33,9 +33,10 @@ export default class TransactionReceiptQuery extends Query {
      * @returns {this}
      */
     setTransactionId(transactionId) {
-        this._transactionId = transactionId instanceof TransactionId
-            ? transactionId
-            : TransactionId.fromString(transactionId);
+        this._transactionId =
+            transactionId instanceof TransactionId
+                ? transactionId
+                : TransactionId.fromString(transactionId);
 
         return this;
     }
@@ -67,7 +68,8 @@ export default class TransactionReceiptQuery extends Query {
      */
     _mapResponse(response) {
         return TransactionReceipt._fromProtobuf(
-            /** @type {proto.ITransactionReceipt} */ (response.transactionGetReceipt?.receipt)
+            /** @type {proto.ITransactionReceipt} */ (response
+                .transactionGetReceipt?.receipt)
         );
     }
 

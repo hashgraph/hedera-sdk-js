@@ -17,9 +17,9 @@ export default class ContractInfo {
      * @param {ContractId} properties.contractId
      * @param {AccountId} properties.accountId
      * @param {string} properties.contractAccountId
-     * @param {Key} [properties.adminKey]
+     * @param {?Key} properties.adminKey
      * @param {Timestamp} properties.expirationTime
-     * @param {number} properties.autoRenewPeriod
+     * @param {Long} properties.autoRenewPeriod
      * @param {Long} properties.storage
      * @param {string} properties.contractMemo
      * @param {Hbar} properties.balance
@@ -107,24 +107,27 @@ export default class ContractInfo {
      * @param {proto.ContractGetInfoResponse.IContractInfo} info
      */
     static _fromProtobuf(info) {
+        const autoRenewPeriod = /** @type {Long | number} */ (
+            /** @type {proto.IDuration} */ (info.autoRenewPeriod).seconds
+        );
+
         return new ContractInfo({
-            // @ts-ignore
-            contractId: ContractId._fromProtobuf(info.contractID),
-            // @ts-ignore
-            accountId: AccountId._fromProtobuf(info.accountID),
-            // @ts-ignore
-            contractAccountId: info.contractAccountID,
-            // @ts-ignore
+            contractId: ContractId._fromProtobuf(
+                /** @type {proto.IContractID} */ (info.contractID)
+            ),
+            accountId: AccountId._fromProtobuf(
+                /** @type {proto.IAccountID} */ (info.accountID)
+            ),
+            contractAccountId: info.contractAccountID ?? "",
             adminKey:
-                info.adminKey != null
-                    ? _fromProtoKey(info.adminKey)
-                    : undefined,
-            // @ts-ignore
-            expirationTime: Timestamp._fromProtobuf(info.expirationTime),
+                info.adminKey != null ? _fromProtoKey(info.adminKey) : null,
+            expirationTime: Timestamp._fromProtobuf(
+                /** @type {proto.ITimestamp} */ (info.expirationTime)
+            ),
             autoRenewPeriod:
-                info.autoRenewPeriod?.seconds instanceof Long
-                    ? info.autoRenewPeriod.seconds.toInt()
-                    : info.autoRenewPeriod?.seconds ?? 0,
+                autoRenewPeriod instanceof Long
+                    ? autoRenewPeriod
+                    : Long.fromValue(autoRenewPeriod),
             storage:
                 info.storage != null
                     ? info.storage instanceof Long
@@ -132,8 +135,7 @@ export default class ContractInfo {
                         : Long.fromValue(info.storage)
                     : Long.ZERO,
             contractMemo: info.memo ?? "",
-            // @ts-ignore
-            balance: Hbar.fromTinybars(info.balance),
+            balance: Hbar.fromTinybars(info.balance ?? 0),
         });
     }
 
