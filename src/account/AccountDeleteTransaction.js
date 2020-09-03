@@ -4,6 +4,13 @@ import Transaction from "../Transaction";
 import { _toProtoKey } from "../util";
 import { AccountId } from "..";
 
+/**
+ * Marks an account as deleted, moving all its current hbars to another account.
+ *
+ * It will remain in the ledger, marked as deleted, until it expires.
+ * Transfers into it a deleted account fail. But a deleted account can still have its
+ * expiration extended in the normal way.
+ */
 export default class AccountDeleteTransaction extends Transaction {
     /**
      * @param {object} props
@@ -42,7 +49,7 @@ export default class AccountDeleteTransaction extends Transaction {
     }
 
     /**
-     * Sets the account ID which is being deleted in this transaction.
+     * Set the account ID which is being deleted in this transaction.
      *
      * @param {AccountId | string} accountId
      * @returns {AccountDeleteTransaction}
@@ -65,7 +72,7 @@ export default class AccountDeleteTransaction extends Transaction {
     }
 
     /**
-     * Sets the account ID which will receive all remaining hbars.
+     * Set the account ID which will receive all remaining hbars.
      *
      * @param {AccountId | string} transferAccountId
      * @returns {AccountDeleteTransaction}

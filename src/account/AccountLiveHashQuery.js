@@ -2,17 +2,18 @@ import Query from "../Query";
 import AccountId from "./AccountId";
 import LiveHash from "./LiveHash";
 import proto from "@hashgraph/proto";
+import Channel from "../Channel";
 
 /**
  * @augments {Query<LiveHash>}
  */
 export default class LiveHashQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {AccountId | string} [properties.accountId]
-     * @param {Uint8Array} [properties.hash]
+     * @param {object} props
+     * @param {AccountId | string} [props.accountId]
+     * @param {Uint8Array} [props.hash]
      */
-    constructor(properties) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -20,8 +21,9 @@ export default class LiveHashQuery extends Query {
          * @private
          */
         this._accountId = null;
-        if (properties?.accountId != null) {
-            this.setAccountId(properties?.accountId);
+
+        if (props.accountId != null) {
+            this.setAccountId(props.accountId);
         }
 
         /**
@@ -29,16 +31,17 @@ export default class LiveHashQuery extends Query {
          * @private
          */
         this._hash = null;
-        if (properties?.hash != null) {
-            this.setHash(properties?.hash);
+
+        if (props.hash != null) {
+            this.setHash(props.hash);
         }
     }
 
     /**
-     * The account to which the livehash is associated
+     * Set the account to which the livehash is associated.
      *
      * @param {AccountId | string} accountId
-     * @returns {LiveHashQuery}
+     * @returns {this}
      */
     setAccountId(accountId) {
         this._accountId =
@@ -50,12 +53,25 @@ export default class LiveHashQuery extends Query {
     }
 
     /**
+     * Set the SHA-384 data in the livehash.
+     *
      * @param {Uint8Array} hash
-     * @returns {LiveHashQuery}
+     * @returns {this}
      */
     setHash(hash) {
         this._hash = hash;
+
         return this;
+    }
+
+    /**
+     * @protected
+     * @override
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getQueryMethod(channel) {
+        return (query) => channel.crypto.getLiveHash(query);
     }
 
     /**

@@ -9,16 +9,19 @@ import { Key } from "@hashgraph/cryptography";
 import { _toProtoKey } from "../util";
 import { AccountId } from "..";
 
+/**
+ * Create a new Hedera™ crypto-currency account.
+ */
 export default class AccountCreateTransaction extends Transaction {
     /**
      * @param {object} props
-     * @param {Key=} props.key
-     * @param {Hbar=} props.initialBalance
-     * @param {Hbar=} props.sendRecordThreshold
-     * @param {Hbar=} props.receiveRecordThreshold
-     * @param {boolean=} props.receiverSignatureRequired
-     * @param {AccountId=} props.proxyAccountId
-     * @param {number=} props.autoRenewPeriod
+     * @param {Key} [props.key]
+     * @param {Hbar} [props.initialBalance]
+     * @param {Hbar} [props.sendRecordThreshold]
+     * @param {Hbar} [props.receiveRecordThreshold]
+     * @param {boolean} [props.receiverSignatureRequired]
+     * @param {AccountId} [props.proxyAccountId]
+     * @param {number} [props.autoRenewPeriod]
      */
     constructor(props = {}) {
         super();
@@ -102,6 +105,13 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * Set the key for this account.
+     *
+     * This is the key that must sign each transfer out of the account.
+     *
+     * If `receiverSignatureRequired` is true, then the key must also sign
+     * any transfer into the account.
+     *
      * @param {Key} key
      * @returns {this}
      */
@@ -140,6 +150,9 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * Set the threshold amount for which a transaction record is created for any transfer of hbars
+     * from this account.
+     *
      * @param {Hbar} sendRecordThreshold
      * @returns {this}
      */
@@ -158,6 +171,9 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * Set the threshold amount for which a transaction record is created for any transfer of hbars
+     * to this account.
+     *
      * @param {Hbar} receiveRecordThreshold
      * @returns {this}
      */
@@ -176,6 +192,9 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * Set to true to require the key for this account to sign any transfer of
+     * hbars to this account.
+     *
      * @param {boolean} receiverSignatureRequired
      * @returns {this}
      */
@@ -194,6 +213,8 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * Set the ID of the account to which this account is proxy staked.
+     *
      * @param {AccountId} proxyAccountId
      * @returns {this}
      */
@@ -212,6 +233,8 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * Set the auto renew period for this account.
+     *
      * @param {number} autoRenewPeriod
      * @returns {this}
      */

@@ -2,6 +2,7 @@ import AccountId from "./AccountId";
 import proto from "@hashgraph/proto";
 import { _fromProtoKeyList, _toProtoKeyList } from "../util";
 import { KeyList } from "@hashgraph/cryptography";
+import Long from "long";
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -9,21 +10,24 @@ import { KeyList } from "@hashgraph/cryptography";
 export default class LiveHash {
     /**
      * @private
-     * @param {object} properties
-     * @param {AccountId} properties.accountId
-     * @param {Uint8Array} properties.hash
-     * @param {KeyList} properties.keys
-     * @param {number} properties.duration
+     * @param {object} props
+     * @param {AccountId} props.accountId
+     * @param {Uint8Array} props.hash
+     * @param {KeyList} props.keys
+     * @param {number} props.duration
      */
-    constructor(properties) {
+    constructor(props) {
         /** @readonly */
-        this.accountId = properties.accountId;
+        this.accountId = props.accountId;
+
         /** @readonly */
-        this.hash = properties.hash;
+        this.hash = props.hash;
+
         /** @readonly */
-        this.keys = properties.keys;
+        this.keys = props.keys;
+
         /** @readonly */
-        this.duration = properties.duration;
+        this.duration = props.duration;
 
         Object.freeze(this);
     }
@@ -33,17 +37,22 @@ export default class LiveHash {
      * @param {proto.ILiveHash} liveHash
      */
     static _fromProtobuf(liveHash) {
+        const durationSeconds = liveHash.duration?.seconds ?? 0;
+
         return new LiveHash({
-            // @ts-ignore
-            accountId: AccountId._fromProtobuf(liveHash.accountId),
-            // @ts-ignore
-            hash: liveHash.hash,
+            accountId: AccountId._fromProtobuf(
+                /** @type {proto.IAccountID} */ (liveHash.accountId)
+            ),
+            hash: liveHash.hash ?? new Uint8Array(),
             keys:
                 liveHash?.keys != null
-                    ? new KeyList().push(..._fromProtoKeyList(liveHash?.keys))
+                    ? _fromProtoKeyList(liveHash?.keys)
                     : new KeyList(),
-            // @ts-ignore
-            duration: liveHash.duration,
+            // TODO: util.fromLong could be nice
+            duration:
+                durationSeconds instanceof Long
+                    ? durationSeconds.toInt()
+                    : durationSeconds,
         });
     }
 

@@ -2,6 +2,7 @@ import Query from "../Query";
 import AccountId from "./AccountId";
 import AccountInfo from "./AccountInfo";
 import proto from "@hashgraph/proto";
+import Channel from "../Channel";
 
 /**
  * @augments {Query<AccountInfo>}
@@ -37,6 +38,16 @@ export default class AccountInfoQuery extends Query {
                 : AccountId.fromString(accountId);
 
         return this;
+    }
+
+    /**
+     * @protected
+     * @override
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getQueryMethod(channel) {
+        return (query) => channel.crypto.getAccountInfo(query);
     }
 
     /**

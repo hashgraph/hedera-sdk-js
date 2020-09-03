@@ -1,6 +1,8 @@
 import proto from "@hashgraph/proto";
 import { Key, PublicKey, KeyList, PrivateKey } from "@hashgraph/cryptography";
 
+// TODO: Remove _ prefix on functions. They are private if we don't export them. We don't need to _ prefix as well.
+
 /**
  * @param {Key} key
  * @returns {proto.IKey}

@@ -3,6 +3,7 @@ import AccountId from "./AccountId";
 import ContractId from "../contract/ContractId";
 import proto from "@hashgraph/proto";
 import Hbar from "../Hbar";
+import Channel from "../Channel";
 
 /**
  * Get the balance of a Hedera™ crypto-currency account.
@@ -16,11 +17,11 @@ import Hbar from "../Hbar";
  */
 export default class AccountBalanceQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {(AccountId | string)=} properties.accountId
-     * @param {(ContractId | string)=} properties.contractId
+     * @param {object} props
+     * @param {AccountId | string} [props.accountId]
+     * @param {ContractId | string} [props.contractId]
      */
-    constructor(properties) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -34,12 +35,12 @@ export default class AccountBalanceQuery extends Query {
          * @private
          */
 
-        if (properties?.accountId != null) {
-            this.setAccountId(properties?.accountId);
+        if (props.accountId != null) {
+            this.setAccountId(props.accountId);
         }
 
-        if (properties?.contractId != null) {
-            this.setContractId(properties?.contractId);
+        if (props.contractId != null) {
+            this.setContractId(props.contractId);
         }
     }
 
@@ -75,6 +76,25 @@ export default class AccountBalanceQuery extends Query {
                 : ContractId.fromString(contractId);
 
         return this;
+    }
+
+    /**
+     * @protected
+     * @override
+     * @returns {boolean}
+     */
+    _isPaymentRequired() {
+        return false;
+    }
+
+    /**
+     * @protected
+     * @override
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getQueryMethod(channel) {
+        return (query) => channel.crypto.cryptoGetBalance(query);
     }
 
     /**

@@ -8,33 +8,33 @@ import { Key } from "@hashgraph/cryptography";
 import Long from "long";
 
 /**
- * Response when the client sends the node CryptoGetInfoQuery.
+ * Current information about an account, including the balance.
  */
 export default class AccountInfo {
     /**
      * @private
-     * @param {object} properties
-     * @param {AccountId} properties.accountId
-     * @param {string} [properties.contractAccountId]
-     * @param {boolean} properties.isDeleted
-     * @param {AccountId} [properties.proxyAccountId]
-     * @param {Hbar} properties.proxyReceived
-     * @param {Key} properties.key
-     * @param {Hbar} properties.balance
-     * @param {Hbar} properties.generateSendRecordThreshold
-     * @param {Hbar} properties.generateReceiveRecordThreshold
-     * @param {boolean} properties.isReceiverSignatureRequired
-     * @param {Time} properties.expirationTime
-     * @param {number} properties.autoRenewPeriod
-     * @param {LiveHash[]} properties.liveHashes
+     * @param {object} props
+     * @param {AccountId} props.accountId
+     * @param {?string} props.contractAccountId
+     * @param {boolean} props.isDeleted
+     * @param {?AccountId} props.proxyAccountId
+     * @param {Hbar} props.proxyReceived
+     * @param {Key} props.key
+     * @param {Hbar} props.balance
+     * @param {Hbar} props.sendRecordThreshold
+     * @param {Hbar} props.receiveRecordThreshold
+     * @param {boolean} props.isReceiverSignatureRequired
+     * @param {Time} props.expirationTime
+     * @param {number} props.autoRenewPeriod
+     * @param {LiveHash[]} props.liveHashes
      */
-    constructor(properties) {
+    constructor(props) {
         /**
          * The account ID for which this information applies.
          *
          * @readonly
          */
-        this.accountId = properties.accountId;
+        this.accountId = props.accountId;
 
         /**
          * The Contract Account ID comprising of both the contract instance and the cryptocurrency
@@ -42,10 +42,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.contractAccountId =
-            properties.contractAccountId != null
-                ? properties.contractAccountId
-                : null;
+        this.contractAccountId = props.contractAccountId;
 
         /**
          * If true, then this account has been deleted, it will disappear when it expires, and
@@ -53,7 +50,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.isDeleted = properties.isDeleted;
+        this.isDeleted = props.isDeleted;
 
         /**
          * The Account ID of the account to which this is proxy staked. If proxyAccountID is null,
@@ -64,17 +61,14 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.proxyAccountId =
-            properties.proxyAccountId != null
-                ? properties.proxyAccountId
-                : null;
+        this.proxyAccountId = props.proxyAccountId;
 
         /**
          * The total number of tinybars proxy staked to this account.
          *
          * @readonly
          */
-        this.proxyReceived = properties.proxyReceived;
+        this.proxyReceived = props.proxyReceived;
 
         /**
          * The key for the account, which must sign in order to transfer out, or to modify the account
@@ -82,14 +76,14 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.key = properties.key;
+        this.key = props.key;
 
         /**
-         * The current balance of account in tinybars.
+         * The current balance of account.
          *
          * @readonly
          */
-        this.balance = properties.balance;
+        this.balance = props.balance;
 
         /**
          * The threshold amount (in tinybars) for which an account record is created (and this account
@@ -97,8 +91,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.generateSendRecordThreshold =
-            properties.generateSendRecordThreshold;
+        this.sendRecordThreshold = props.sendRecordThreshold;
 
         /**
          * The threshold amount (in tinybars) for which an account record is created
@@ -106,23 +99,21 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.generateReceiveRecordThreshold =
-            properties.generateReceiveRecordThreshold;
+        this.receiveRecordThreshold = props.receiveRecordThreshold;
 
         /**
          * If true, no transaction can transfer to this account unless signed by this account's key.
          *
          * @readonly
          */
-        this.isReceiverSignatureRequired =
-            properties.isReceiverSignatureRequired;
+        this.isReceiverSignatureRequired = props.isReceiverSignatureRequired;
 
         /**
          * The TimeStamp time at which this account is set to expire.
          *
          * @readonly
          */
-        this.expirationTime = properties.expirationTime;
+        this.expirationTime = props.expirationTime;
 
         /**
          * The duration for expiration time will extend every this many seconds. If there are
@@ -131,10 +122,10 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.autoRenewPeriod = properties.autoRenewPeriod;
+        this.autoRenewPeriod = props.autoRenewPeriod;
 
         /** @readonly */
-        this.liveHashes = properties.liveHashes;
+        this.liveHashes = props.liveHashes;
 
         Object.freeze(this);
     }
@@ -144,32 +135,24 @@ export default class AccountInfo {
      * @param {proto.CryptoGetInfoResponse.IAccountInfo} info
      */
     static _fromProtobuf(info) {
-        const sendThreshold = Hbar.fromTinybars(
-            // @ts-ignore
-            info.generateSendRecordThreshold
-        );
-        const receiveThreshold = Hbar.fromTinybars(
-            // @ts-ignore
-            info.generateReceiveRecordThreshold
-        );
-
         return new AccountInfo({
-            // @ts-ignore
-            accountId: AccountId._fromProtobuf(info.accountID),
-            // @ts-ignore
-            contractAccountId: info.contractAccountID,
-            // @ts-ignore
-            isDeleted: info.deleted,
-            // @ts-ignore
-            key: _fromProtoKey(info.key),
-            // @ts-ignore
-            balance: Hbar.fromTinybars(info.balance),
-            generateSendRecordThreshold: sendThreshold,
-            generateReceiveRecordThreshold: receiveThreshold,
-            // @ts-ignore
-            isReceiverSignatureRequired: info.receiverSigRequired,
-            // @ts-ignore
-            expirationTime: Time._fromProtobuf(info.expirationTime),
+            accountId: AccountId._fromProtobuf(
+                /** @type {proto.IAccountID} */ (info.accountID)
+            ),
+            contractAccountId: info.contractAccountID ?? null,
+            isDeleted: info.deleted ?? false,
+            key: _fromProtoKey(/** @type {proto.IKey} */ (info.key)),
+            balance: Hbar.fromTinybars(info.balance ?? 0),
+            sendRecordThreshold: Hbar.fromTinybars(
+                info.generateSendRecordThreshold ?? 0
+            ),
+            receiveRecordThreshold: Hbar.fromTinybars(
+                info.generateReceiveRecordThreshold ?? 0
+            ),
+            isReceiverSignatureRequired: info.receiverSigRequired ?? false,
+            expirationTime: Time._fromProtobuf(
+                /** @type {proto.ITimestamp} */ (info.expirationTime)
+            ),
             autoRenewPeriod:
                 info.autoRenewPeriod?.seconds instanceof Long
                     ? info.autoRenewPeriod.seconds.toInt()
@@ -177,11 +160,9 @@ export default class AccountInfo {
             proxyAccountId:
                 info.proxyAccountID != null
                     ? AccountId._fromProtobuf(info.proxyAccountID)
-                    : undefined,
+                    : null,
             proxyReceived: Hbar.fromTinybars(info.proxyReceived ?? 0),
-            liveHashes: (info.liveHashes ?? []).map((hash) =>
-                LiveHash._fromProtobuf(hash)
-            ),
+            liveHashes: (info.liveHashes ?? []).map(LiveHash._fromProtobuf),
         });
     }
 
@@ -197,8 +178,8 @@ export default class AccountInfo {
             proxyReceived: this.proxyReceived.toTinybars(),
             key: _toProtoKey(this.key),
             balance: this.balance.toTinybars(),
-            generateSendRecordThreshold: this.generateSendRecordThreshold.toTinybars(),
-            generateReceiveRecordThreshold: this.generateReceiveRecordThreshold.toTinybars(),
+            generateSendRecordThreshold: this.sendRecordThreshold.toTinybars(),
+            generateReceiveRecordThreshold: this.receiveRecordThreshold.toTinybars(),
             receiverSigRequired: this.isReceiverSignatureRequired,
             expirationTime: this.expirationTime._toProtobuf(),
             autoRenewPeriod: {

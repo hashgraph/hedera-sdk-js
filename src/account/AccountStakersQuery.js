@@ -2,16 +2,22 @@ import Query from "../Query";
 import AccountId from "./AccountId";
 import ProxyStaker from "./ProxyStaker";
 import proto from "@hashgraph/proto";
+import Channel from "../Channel";
 
 /**
+ * Get all the accounts that are proxy staking to this account.
+ * For each of them, give the amount currently staked.
+ *
+ * This is not yet implemented, but will be in a future version of the API.
+ *
  * @augments {Query<ProxyStaker[]>}
  */
-export default class AccountStakerQuery extends Query {
+export default class AccountStakersQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {(AccountId | string)=} properties.accountId
+     * @param {object} props
+     * @param {(AccountId | string)=} props.accountId
      */
-    constructor(properties) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -20,16 +26,16 @@ export default class AccountStakerQuery extends Query {
          */
         this._accountId = null;
 
-        if (properties?.accountId != null) {
-            this.setAccountId(properties?.accountId);
+        if (props.accountId != null) {
+            this.setAccountId(props.accountId);
         }
     }
 
     /**
-     * Set the account ID for which the staker is being requested.
+     * Set the account ID for which the stakers are being requested.
      *
      * @param {AccountId | string} accountId
-     * @returns {AccountStakerQuery}
+     * @returns {this}
      */
     setAccountId(accountId) {
         this._accountId =
@@ -38,6 +44,16 @@ export default class AccountStakerQuery extends Query {
                 : AccountId.fromString(accountId);
 
         return this;
+    }
+
+    /**
+     * @protected
+     * @override
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getQueryMethod(channel) {
+        return (query) => channel.crypto.getStakersByAccountID(query);
     }
 
     /**

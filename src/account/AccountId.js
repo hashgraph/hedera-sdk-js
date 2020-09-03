@@ -24,6 +24,7 @@ export default class AccountId extends EntityId {
     }
 
     /**
+     * @internal
      * @param {proto.IAccountID} id
      * @returns {AccountId}
      */
@@ -36,6 +37,7 @@ export default class AccountId extends EntityId {
     }
 
     /**
+     * @internal
      * @override
      * @returns {proto.IAccountID}
      */

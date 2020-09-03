@@ -6,6 +6,9 @@ import Transfer from "../Transfer";
 import Transaction from "../Transaction";
 import { _toProtoKey } from "../util";
 
+/**
+ * Transfer cryptocurrency from some accounts to other accounts.
+ */
 export default class CryptoTransferTransaction extends Transaction {
     /**
      * @param {object} props

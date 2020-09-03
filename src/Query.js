@@ -2,6 +2,7 @@ import proto from "@hashgraph/proto";
 import Client from "./Client.js";
 import Hbar from "./Hbar";
 import AccountId from "./account/AccountId";
+import Channel from "./Channel.js";
 
 /**
  * Base class for all queries that can be submitted to Hedera.
@@ -78,7 +79,9 @@ export default class Query {
 
         const channel = client._getNetworkChannel(nodeId);
 
-        const response = await channel.crypto.cryptoGetBalance(request);
+        const method = this._getQueryMethod(channel);
+
+        const response = await method(request);
 
         const output = this._mapResponse(response);
 
@@ -90,7 +93,18 @@ export default class Query {
      * @returns {boolean}
      */
     _isPaymentRequired() {
-        return false;
+        return true;
+    }
+
+    /**
+     * @abstract
+     * @protected
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    // @ts-ignore
+    _getQueryMethod(channel) {
+        throw new Error("not implemented");
     }
 
     /**

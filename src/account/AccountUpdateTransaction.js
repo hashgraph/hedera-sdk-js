@@ -5,7 +5,11 @@ import Transaction from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _toProtoKey } from "../util";
 import { AccountId } from "..";
+import Timestamp from "../Timestamp";
 
+/**
+ * Change properties for the given account.
+ */
 export default class AccountUpdateTransaction extends Transaction {
     /**
      * @param {object} props
@@ -17,6 +21,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @param {boolean} [props.receiverSignatureRequired]
      * @param {AccountId} [props.proxyAccountId]
      * @param {number} [props.autoRenewPeriod]
+     * @param {Timestamp | Date} [props.expirationTime]
      */
     constructor(props = {}) {
         super();
@@ -27,17 +32,19 @@ export default class AccountUpdateTransaction extends Transaction {
          */
         this._accountId = null;
 
+        if (props.accountId != null) {
+            this.setAccountId(props.accountId);
+        }
+
         /**
          * @private
          * @type {?Key}
          */
         this._key = null;
 
-        /**
-         * @private
-         * @type {?Hbar}
-         */
-        this._initialBalance = null;
+        if (props.key != null) {
+            this.setKey(props.key);
+        }
 
         /**
          * @private
@@ -45,11 +52,19 @@ export default class AccountUpdateTransaction extends Transaction {
          */
         this._sendRecordThreshold = null;
 
+        if (props.sendRecordThreshold != null) {
+            this.setSendRecordThreshold(props.sendRecordThreshold);
+        }
+
         /**
          * @private
          * @type {?Hbar}
          */
         this._receiveRecordThreshold = null;
+
+        if (props.receiveRecordThreshold != null) {
+            this.setReceiveRecordThreshold(props.receiveRecordThreshold);
+        }
 
         /**
          * @private
@@ -57,11 +72,19 @@ export default class AccountUpdateTransaction extends Transaction {
          */
         this._receiverSignatureRequired = false;
 
+        if (props.receiverSignatureRequired != null) {
+            this.setReceiverSignatureRequired(props.receiverSignatureRequired);
+        }
+
         /**
          * @private
          * @type {?AccountId}
          */
         this._proxyAccountId = null;
+
+        if (props.proxyAccountId != null) {
+            this.setProxyAccountId(props.proxyAccountId);
+        }
 
         /**
          * @private
@@ -69,36 +92,18 @@ export default class AccountUpdateTransaction extends Transaction {
          */
         this._autoRenewPeriod = null;
 
-        if (props.accountId != null) {
-            this.setAccountId(props.accountId);
-        }
-
-        if (props.key != null) {
-            this.setKey(props.key);
-        }
-
-        if (props.sendRecordThreshold != null) {
-            this.setSendRecordThreshold(props.sendRecordThreshold);
-        }
-
-        if (props.receiveRecordThreshold != null) {
-            this.setReceiveRecordThreshold(props.receiveRecordThreshold);
-        }
-
-        if (props.receiverSignatureRequired != null) {
-            this.setReceiverSignatureRequired(props.receiverSignatureRequired);
-        }
-
-        if (props.initialBalance != null) {
-            this.setInitialBalance(props.initialBalance);
-        }
-
-        if (props.proxyAccountId != null) {
-            this.setProxyAccountId(props.proxyAccountId);
-        }
-
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
+        }
+
+        /**
+         * @private
+         * @type {?Timestamp}
+         */
+        this._expirationTime = null;
+
+        if (props.expirationTime != null) {
+            this.setExpirationTime(props.expirationTime);
         }
     }
 
@@ -139,26 +144,6 @@ export default class AccountUpdateTransaction extends Transaction {
     setKey(key) {
         this._requireNotFrozen();
         this._key = key;
-
-        return this;
-    }
-
-    /**
-     * @returns {?Hbar}
-     */
-    getInitialBalance() {
-        return this._initialBalance;
-    }
-
-    /**
-     * Set the initial amount to transfer into this account.
-     *
-     * @param {Hbar} initialBalance
-     * @returns {this}
-     */
-    setInitialBalance(initialBalance) {
-        this._requireNotFrozen();
-        this._initialBalance = initialBalance;
 
         return this;
     }
@@ -254,6 +239,27 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?Timestamp}
+     */
+    getExpirationTime() {
+        return this._expirationTime;
+    }
+
+    /**
+     * @param {Timestamp | Date} expirationTime
+     * @returns {this}
+     */
+    setExpirationTime(expirationTime) {
+        this._requireNotFrozen();
+        this._expirationTime =
+            expirationTime instanceof Date
+                ? Timestamp.fromDate(expirationTime)
+                : expirationTime;
+
+        return this;
+    }
+
+    /**
      * @override
      * @protected
      * @param {Channel} channel
@@ -281,13 +287,32 @@ export default class AccountUpdateTransaction extends Transaction {
         return {
             accountIDToUpdate: this._accountId?._toProtobuf(),
             key: this._key != null ? _toProtoKey(this._key) : null,
-            autoRenewPeriod: {
-                seconds: this._autoRenewPeriod,
-            },
+            expirationTime: this._expirationTime,
             proxyAccountID: this._proxyAccountId?._toProtobuf(),
-            receiveRecordThreshold: this._receiveRecordThreshold?.toTinybars(),
-            sendRecordThreshold: this._sendRecordThreshold?.toTinybars(),
-            receiverSigRequired: this._receiverSignatureRequired,
+            autoRenewPeriod:
+                this._autoRenewPeriod == null
+                    ? null
+                    : {
+                          seconds: this._autoRenewPeriod,
+                      },
+            receiveRecordThresholdWrapper:
+                this._receiveRecordThreshold == null
+                    ? null
+                    : {
+                          value: this._receiveRecordThreshold.toTinybars(),
+                      },
+            sendRecordThresholdWrapper:
+                this._sendRecordThreshold == null
+                    ? null
+                    : {
+                          value: this._sendRecordThreshold.toTinybars(),
+                      },
+            receiverSigRequiredWrapper:
+                this._receiverSignatureRequired == null
+                    ? null
+                    : {
+                          value: this._receiverSignatureRequired,
+                      },
         };
     }
 }

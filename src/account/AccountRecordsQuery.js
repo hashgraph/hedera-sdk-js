@@ -2,16 +2,20 @@ import Query from "../Query";
 import AccountId from "./AccountId";
 import TransactionRecord from "../TransactionRecord";
 import proto from "@hashgraph/proto";
+import Channel from "../Channel";
 
 /**
+ * Get all the records for an account for any transfers into it and out of it,
+ * that were above the threshold, during the last 25 hours.
+ *
  * @augments {Query<TransactionRecord[]>}
  */
-export default class AccountRecordQuery extends Query {
+export default class AccountRecordsQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {(AccountId | string)=} properties.accountId
+     * @param {object} props
+     * @param {AccountId | string} [props.accountId]
      */
-    constructor(properties) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -20,16 +24,16 @@ export default class AccountRecordQuery extends Query {
          */
         this._accountId = null;
 
-        if (properties?.accountId != null) {
-            this.setAccountId(properties?.accountId);
+        if (props.accountId != null) {
+            this.setAccountId(props.accountId);
         }
     }
 
     /**
-     * Set the account ID for which the record is being requested.
+     * Set the account ID for which the records are being requested.
      *
      * @param {AccountId | string} accountId
-     * @returns {AccountRecordQuery}
+     * @returns {this}
      */
     setAccountId(accountId) {
         this._accountId =
@@ -43,13 +47,24 @@ export default class AccountRecordQuery extends Query {
     /**
      * @protected
      * @override
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getQueryMethod(channel) {
+        return (query) => channel.crypto.getAccountRecords(query);
+    }
+
+    /**
+     * @protected
+     * @override
      * @param {proto.IResponse} response
      * @returns {TransactionRecord[]}
      */
     _mapResponse(response) {
-        // @ts-ignore
-        return response.cryptoGetAccountRecords.records.map((record) =>
-            TransactionRecord._fromProtobuf(record)
+        return (
+            response.cryptoGetAccountRecords?.records?.map(
+                TransactionRecord._fromProtobuf
+            ) ?? []
         );
     }
 
