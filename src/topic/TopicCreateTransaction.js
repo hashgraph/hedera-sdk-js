@@ -4,6 +4,7 @@ import Transaction, { DEFAULT_AUTO_RENEW_PERIOD } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _toProtoKey } from "../util";
 import AccountId from "../account/AccountId";
+import Long from "long";
 
 /**
  * Create a topic to be used for consensus.
@@ -14,7 +15,7 @@ export default class TopicCreateTransaction extends Transaction {
      * @param {string} [props.topicMemo]
      * @param {Key} [props.adminKey]
      * @param {Key} [props.submitKey]
-     * @param {number} [props.autoRenewPeriod]
+     * @param {Long} [props.autoRenewPeriod]
      * @param {AccountId | string} [props.autoRenewAccountId]
      */
     constructor(props = {}) {
@@ -62,7 +63,7 @@ export default class TopicCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {number}
+         * @type {Long}
          */
         this._autoRenewPeriod = DEFAULT_AUTO_RENEW_PERIOD;
 
@@ -169,12 +170,12 @@ export default class TopicCreateTransaction extends Transaction {
     /**
      * Set the auto renew period for this account.
      *
-     * @param {number} autoRenewPeriod
+     * @param {number | Long} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
-        this._autoRenewPeriod = autoRenewPeriod;
+        this._autoRenewPeriod = autoRenewPeriod instanceof Long ? autoRenewPeriod : Long.fromValue(autoRenewPeriod);
 
         return this;
     }
