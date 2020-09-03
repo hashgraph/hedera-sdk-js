@@ -25,9 +25,9 @@ package proto;
 option java_multiple_files = true; // Required for the reactor-grpc generator to work correctly
 option java_package = "com.hedera.hashgraph.sdk.proto.mirror";
 
-import "BasicTypes.proto";
-import "Timestamp.proto";
-import "ConsensusSubmitMessage.proto";
+import "../BasicTypes.proto";
+import "../Timestamp.proto";
+import "../ConsensusSubmitMessage.proto";
 
 message ConsensusTopicQuery {
     TopicID topicID = 1; // A required topic ID to retrieve messages for.
@@ -62,6 +62,6 @@ message ConsensusTopicResponse {
 // The Mirror Service provides the ability to query a stream of Hedera Consensus Service (HCS) messages for an
 // HCS Topic via a specific (possibly open-ended) time range.
 //
-service ConsensusService {
+service MirrorConsensusService {
     rpc subscribeTopic (ConsensusTopicQuery) returns (stream ConsensusTopicResponse);
 }

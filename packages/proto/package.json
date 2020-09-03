@@ -26,8 +26,9 @@
     ],
     "scripts": {
         "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
-        "compile:js": "babel src -d lib",
         "cp:ts": "copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/",
+        "compile": "run-s compile:proto compile:proto_ts compile:js",
+        "compile:js": "babel src -d lib",
         "compile:proto": "pbjs -t static-module -w es6 -o src/proto.js src/proto/*.proto",
         "compile:proto_ts": "pbts -o src/proto.d.ts src/proto.js",
         "lint": "run-s lint:*",
@@ -35,8 +36,8 @@
         "lint:format": "prettier src test '*.json' 'src/*.js' --check",
         "lint:js": "eslint --fix 'src/**/*.js'",
         "format": "prettier src test '*.json' 'src/*.js' --write",
-        "build": "run-s lint compile:proto compile:proto_ts compile:js cp:ts",
-        "prepare": "run-s compile:proto compile:proto_ts compile:js cp:ts"
+        "build": "run-s lint compile cp:ts",
+        "prepare": "run-s compile cp:ts"
     },
     "dependencies": {
         "protobufjs": "^6.10.1"
