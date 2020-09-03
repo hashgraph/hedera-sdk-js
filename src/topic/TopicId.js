@@ -3,7 +3,7 @@ import proto from "@hashgraph/proto";
 import Long from "long";
 
 /**
- * The ID for a crypto-currency topic on Hedera.
+ * Unique identifier for a topic (used by the consensus service).
  */
 export default class TopicId extends EntityId {
     /**

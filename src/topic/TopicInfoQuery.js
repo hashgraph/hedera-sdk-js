@@ -2,16 +2,19 @@ import Query from "../Query";
 import TopicId from "./TopicId";
 import TopicInfo from "./TopicInfo";
 import proto from "@hashgraph/proto";
+import Channel from "../Channel";
 
 /**
+ * Retrieve the latest state of a topic.
+ *
  * @augments {Query<TopicInfo>}
  */
 export default class TopicInfoQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {TopicId | string} [properties.topicId]
+     * @param {object} props
+     * @param {TopicId | string} [props.topicId]
      */
-    constructor(properties) {
+    constructor(props) {
         super();
 
         /**
@@ -19,8 +22,9 @@ export default class TopicInfoQuery extends Query {
          * @type {?TopicId}
          */
         this._topicId = null;
-        if (properties?.topicId != null) {
-            this.setTopicId(properties?.topicId);
+
+        if (props?.topicId != null) {
+            this.setTopicId(props?.topicId);
         }
     }
 
@@ -35,6 +39,16 @@ export default class TopicInfoQuery extends Query {
             topicId instanceof TopicId ? topicId : TopicId.fromString(topicId);
 
         return this;
+    }
+
+    /**
+     * @protected
+     * @override
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getQueryMethod(channel) {
+        return (query) => channel.consensus.getTopicInfo(query);
     }
 
     /**

@@ -7,134 +7,145 @@ import { Key } from "@hashgraph/cryptography";
 import Long from "long";
 
 /**
- * Response when the client sends the node CryptoGetInfoQuery.
+ * Current state of a topic.
  */
 export default class TopicInfo {
     /**
      * @private
-     * @param {object} properties
-     * @param {TopicId} properties.topicId
-     * @param {string} properties.topicMemo
-     * @param {Uint8Array} properties.runningHash
-     * @param {Long} properties.sequenceNumber
-     * @param {Timestamp} properties.expirationTime
-     * @param {Key} properties.adminKey
-     * @param {Key} properties.submitKey
-     * @param {number} properties.autoRenewPeriod
-     * @param {AccountId} properties.autoRenewAccountId
+     * @param {object} props
+     * @param {TopicId} props.topicId
+     * @param {string} props.topicMemo
+     * @param {Uint8Array} props.runningHash
+     * @param {Long} props.sequenceNumber
+     * @param {Timestamp} props.expirationTime
+     * @param {?Key} props.adminKey
+     * @param {?Key} props.submitKey
+     * @param {number} props.autoRenewPeriod
+     * @param {?AccountId} props.autoRenewAccountId
      */
-    constructor(properties) {
+    constructor(props) {
         /**
-         * this.ID = properties.ID this.the = properties.the this.for = properties.for this.information = properties.information this.requested = properties.requested.
+         * The ID of the topic for which information is requested.
          *
          * @readonly
          */
-        this.topicId = properties.topicId;
+        this.topicId = props.topicId;
 
         /**
-         * this.publicly = properties.publicly this.memo = properties.memo this.the = properties.the topic. this.guarantee = properties.guarantee this.uniqueness = properties.uniqueness.
+         * Short publicly visible memo about the topic. No guarantee of uniqueness.
          *
          * @readonly
          */
-        this.topicMemo = properties.topicMemo;
+        this.topicMemo = props.topicMemo;
 
         /**
-         * SHA-384 this.hash = properties.hash of (previousRunningHash, topicId, consensusTimestamp, sequenceNumber, message).
+         * SHA-384 running hash of (previousRunningHash, topicId, consensusTimestamp, sequenceNumber, message).
          *
          * @readonly
          */
-        this.runningHash = properties.runningHash;
+        this.runningHash = props.runningHash;
 
         /**
-         * this.number = properties.number (starting this.1 = properties.1 this.the = properties.the this.submitMessage = properties.submitMessage) this.messages = properties.messages this.the = properties.the topic.
+         * Sequence number (starting at 1 for the first submitMessage) of messages on the topic.
          *
          * @readonly
          */
-        this.sequenceNumber = properties.sequenceNumber;
+        this.sequenceNumber = props.sequenceNumber;
 
         /**
-         * this.consensus = properties.consensus this.at = properties.at (and after) this.submitMessage = properties.submitMessage this.will = properties.will this.longer = properties.longer this.on = properties.on this.topic = properties.topic.
+         * Effective consensus timestamp at (and after) which submitMessage calls will no longer succeed on the topic.
          *
          * @readonly
          */
-        this.expirationTime = properties.expirationTime;
+        this.expirationTime = props.expirationTime;
 
         /**
-         * this.control = properties.control this.update = properties.update/delete this.the = properties.the topic. this.if = properties.if this.is = properties.is this.key = properties.key.
+         * Access control for update/delete of the topic. Null if there is no key.
          *
          * @readonly
          */
-        this.adminKey = properties.adminKey;
+        this.adminKey = props.adminKey;
 
         /**
-         * this.control = properties.control this.ConsensusService = properties.ConsensusService.submitMessage. this.if = properties.if this.is = properties.is this.key = properties.key.
+         * Access control for ConsensusService.submitMessage. Null if there is no key.
          *
          * @readonly
          */
-        this.submitKey = properties.submitKey;
+        this.submitKey = props.submitKey;
 
         /**
          * @readonly
          */
-        this.autoRenewPeriod = properties.autoRenewPeriod;
+        this.autoRenewPeriod = props.autoRenewPeriod;
 
         /**
          * @readonly
          */
-        this.autoRenewAccountId = properties.autoRenewAccountId;
+        this.autoRenewAccountId = props.autoRenewAccountId;
 
         Object.freeze(this);
     }
 
     /**
      * @internal
-     * @param {proto.IConsensusTopicInfo} info
+     * @param {proto.IConsensusGetTopicInfoResponse} infoResponse
+     * @returns {TopicInfo}
      */
-    static _fromProtobuf(info) {
+    static _fromProtobuf(infoResponse) {
+        const info = /** @type {proto.IConsensusTopicInfo} */ (infoResponse.topicInfo);
+
         return new TopicInfo({
-            // @ts-ignore
-            topicId: TopicId._fromProtobuf(info.topicID),
-            // @ts-ignore
-            topicMemo: info.memo,
-            // @ts-ignore
-            runningHash: info.runningHash,
+            topicId: TopicId._fromProtobuf(
+                /** @type {proto.ITopicID} */ (infoResponse.topicID)
+            ),
+            topicMemo: info.memo ?? "",
+            runningHash: info.runningHash ?? new Uint8Array(),
             sequenceNumber:
                 info.sequenceNumber != null
                     ? info.sequenceNumber instanceof Long
                         ? info.sequenceNumber
                         : Long.fromValue(info.sequenceNumber)
                     : Long.ZERO,
-            // @ts-ignore
-            expirationTime: Timestamp._fromProtobuf(info.expirationTime),
-            // @ts-ignore
-            adminKey: _fromProtoKey(info.adminKey),
-            // @ts-ignore
-            submitKey: _fromProtoKey(info.submitKey),
+            expirationTime:
+                info.expirationTime != null
+                    ? Timestamp._fromProtobuf(info.expirationTime)
+                    : new Timestamp(0, 0),
+            adminKey:
+                info.adminKey != null ? _fromProtoKey(info.adminKey) : null,
+            submitKey:
+                info.submitKey != null ? _fromProtoKey(info.submitKey) : null,
             autoRenewPeriod:
                 info.autoRenewPeriod?.seconds instanceof Long
                     ? info.autoRenewPeriod.seconds.toNumber()
                     : info.autoRenewPeriod?.seconds ?? 0,
-            // @ts-ignore
-            autoRenewAccountId: AccountId._fromProtobuf(info.autoRenewAccount),
+            autoRenewAccountId:
+                info.autoRenewAccount != null
+                    ? AccountId._fromProtobuf(info.autoRenewAccount)
+                    : null,
         });
     }
 
     /**
      * @internal
-     * @returns {proto.IConsensusTopicInfo}
+     * @returns {proto.IConsensusGetTopicInfoResponse}
      */
     _toProtobuf() {
         return {
-            memo: this.topicMemo,
-            runningHash: this.runningHash,
-            sequenceNumber: this.sequenceNumber,
-            expirationTime: this.expirationTime._toProtobuf(),
-            adminKey: _toProtoKey(this.adminKey),
-            submitKey: _toProtoKey(this.submitKey),
-            autoRenewPeriod: {
-                seconds: this.autoRenewPeriod,
+            topicID: this.topicId._toProtobuf(),
+            topicInfo: {
+                memo: this.topicMemo,
+                runningHash: this.runningHash,
+                sequenceNumber: this.sequenceNumber,
+                expirationTime: this.expirationTime._toProtobuf(),
+                adminKey:
+                    this.adminKey != null ? _toProtoKey(this.adminKey) : null,
+                submitKey:
+                    this.submitKey != null ? _toProtoKey(this.submitKey) : null,
+                autoRenewPeriod: {
+                    seconds: this.autoRenewPeriod,
+                },
+                autoRenewAccount: this.autoRenewAccountId?._toProtobuf(),
             },
-            autoRenewAccount: this.autoRenewAccountId._toProtobuf(),
         };
     }
 }
