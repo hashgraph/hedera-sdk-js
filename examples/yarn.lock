@@ -23,7 +23,7 @@
     protobufjs "^6.9.0"
     yargs "^15.3.1"
 
-"@hashgraph/cryptograph@file:../packages/cryptography":
+"@hashgraph/cryptography@file:../packages/cryptography":
   version "0.1.0-pre"
   dependencies:
     bignumber.js "^9.0.0"
@@ -38,8 +38,10 @@
   version "2.0.0-pre"
   dependencies:
     "@grpc/grpc-js" "^1.1.5"
-    "@hashgraph/cryptograph" "file:../../../../../../../.cache/yarn/v6/npm-@hashgraph-sdk-2.0.0-pre-d03d4f8e-3d8a-42ae-8fc9-b0db5014a978-1598853755031/node_modules/@hashgraph/sdk/packages/cryptography"
-    "@hashgraph/proto" "file:../../../../../../../.cache/yarn/v6/npm-@hashgraph-sdk-2.0.0-pre-d03d4f8e-3d8a-42ae-8fc9-b0db5014a978-1598853755031/node_modules/@hashgraph/sdk/packages/proto"
+    "@hashgraph/cryptography" "file:../../../../../../../.cache/yarn/v6/npm-@hashgraph-sdk-2.0.0-pre-8a5f25e0-8d3e-42f3-8c7f-6e7cbba95325-1599126885982/node_modules/@hashgraph/sdk/packages/cryptography"
+    "@hashgraph/proto" "file:../../../../../../../.cache/yarn/v6/npm-@hashgraph-sdk-2.0.0-pre-8a5f25e0-8d3e-42f3-8c7f-6e7cbba95325-1599126885982/node_modules/@hashgraph/sdk/packages/proto"
+    bignumber.js "^9.0.0"
+    js-sha3 "^0.8.0"
     long "^4.0.0"
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
@@ -200,6 +202,11 @@ decamelize@^1.2.0:
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
   integrity sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=
 
+dotenv@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
+  integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
+
 ecdsa-sig-formatter@1.0.11, ecdsa-sig-formatter@^1.0.11:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.11.tgz#ae0f0fa2d85045ef14a817daa3ce9acd0489e5bf"
@@ -308,6 +315,11 @@ is-stream@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-2.0.0.tgz#bde9c32680d6fae04129d6ac9d921ce7815f78e3"
   integrity sha512-XCoy+WlUr7d1+Z8GgSuXmpuUFC9fOhRXglJMx+dwLKTkL44Cjd4W1Z5P+BQZpr+cR93aGP4S/s7Ftw6Nd/kiEw==
+
+js-sha3@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.8.0.tgz#b9b7a5da73afad7dedd0f8c463954cbde6818840"
+  integrity sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==
 
 json-bigint@^1.0.0:
   version "1.0.0"

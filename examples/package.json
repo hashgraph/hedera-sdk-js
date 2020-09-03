@@ -2,6 +2,7 @@
     "name": "@hashgraph/examples",
     "private": true,
     "dependencies": {
-        "@hashgraph/sdk": "file:.."
+        "@hashgraph/sdk": "file:..",
+        "dotenv": "^8.2.0"
     }
 }

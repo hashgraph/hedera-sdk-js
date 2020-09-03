@@ -40,6 +40,18 @@ export default class Query {
     }
 
     /**
+     * Set an explicit node ID to use for this query.
+     *
+     * @param {AccountId} nodeId
+     * @returns {this}
+     */
+    setNodeId(nodeId) {
+        this._nodeId = nodeId;
+
+        return this;
+    }
+
+    /**
      * Set an explicit payment amount for this query.
      *
      * The client will submit exactly this amount for the payment of this query. Hedera

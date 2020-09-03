@@ -7,7 +7,7 @@ async function main() {
         .setAccountId("0.0.3")
         .execute(client);
 
-    console.log("0.0.3 balance =", balance.toString());
+    console.log(`0.0.3 balance = ${balance}`);
 }
 
 void main();

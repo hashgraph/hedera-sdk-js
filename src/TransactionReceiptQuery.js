@@ -2,16 +2,17 @@ import Query from "./Query";
 import TransactionReceipt from "./TransactionReceipt";
 import TransactionId from "./TransactionId";
 import proto from "@hashgraph/proto";
+import Channel from "./Channel";
 
 /**
  * @augments {Query<TransactionReceipt>}
  */
 export default class TransactionReceiptQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {TransactionId} [properties.transactionId]
+     * @param {object} props
+     * @param {TransactionId | string} [props.transactionId]
      */
-    constructor(properties) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -19,20 +20,43 @@ export default class TransactionReceiptQuery extends Query {
          * @type {?TransactionId}
          */
         this._transactionId = null;
-        if (properties?.transactionId != null) {
-            this.setTransactionId(properties?.transactionId);
+
+        if (props.transactionId != null) {
+            this.setTransactionId(props.transactionId);
         }
     }
 
     /**
      * Set the transaction ID for which the receipt is being requested.
      *
-     * @param {TransactionId} transactionId
-     * @returns {TransactionReceiptQuery}
+     * @param {TransactionId | string} transactionId
+     * @returns {this}
      */
     setTransactionId(transactionId) {
-        this._transactionId = transactionId;
+        this._transactionId = transactionId instanceof TransactionId
+            ? transactionId
+            : TransactionId.fromString(transactionId);
+
         return this;
+    }
+
+    /**
+     * @protected
+     * @override
+     * @returns {boolean}
+     */
+    _isPaymentRequired() {
+        return false;
+    }
+
+    /**
+     * @protected
+     * @override
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getQueryMethod(channel) {
+        return (query) => channel.crypto.getTransactionReceipts(query);
     }
 
     /**
@@ -43,8 +67,7 @@ export default class TransactionReceiptQuery extends Query {
      */
     _mapResponse(response) {
         return TransactionReceipt._fromProtobuf(
-            // @ts-ignore
-            response.transactionGetReceipt?.receipt
+            /** @type {proto.ITransactionReceipt} */ (response.transactionGetReceipt?.receipt)
         );
     }
 

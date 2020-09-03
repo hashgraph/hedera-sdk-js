@@ -1,5 +1,8 @@
 import AccountId from "./account/AccountId";
 import TransactionId from "./TransactionId";
+import Client from "./Client";
+import TransactionReceipt from "./TransactionReceipt";
+import TransactionReceiptQuery from "./TransactionReceiptQuery";
 
 export default class TransactionResponse {
     /**
@@ -20,5 +23,16 @@ export default class TransactionResponse {
         this.transactionId = props.transactionId;
 
         Object.freeze(this);
+    }
+
+    /**
+     * @param {Client} client
+     * @returns {Promise<TransactionReceipt>}
+     */
+    getReceipt(client) {
+        return new TransactionReceiptQuery()
+            .setTransactionId(this.transactionId)
+            .setNodeId(this.nodeId)
+            .execute(client);
     }
 }

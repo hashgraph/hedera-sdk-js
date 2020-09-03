@@ -11,3 +11,6 @@ lib/
 
 # generated documentation
 docs/
+
+# local environment (for examples)
+.env
