@@ -5,6 +5,13 @@ import AccountId from "../account/AccountId";
 import Transfer from "../Transfer";
 import Transaction from "../Transaction";
 import { _toProtoKey } from "../util";
+import BigNumber from "bignumber.js";
+
+/**
+ * @typedef {object} TransferObject
+ * @property {AccountId | string} accountId
+ * @property {number | string | Long | BigNumber | Hbar} amount
+ */
 
 /**
  * Transfer cryptocurrency from some accounts to other accounts.
@@ -12,7 +19,7 @@ import { _toProtoKey } from "../util";
 export default class CryptoTransferTransaction extends Transaction {
     /**
      * @param {object} props
-     * @param {Transfer[]} [props.transfers]
+     * @param {(Transfer | TransferObject)[]} [props.transfers]
      */
     constructor(props = {}) {
         super();
@@ -24,7 +31,21 @@ export default class CryptoTransferTransaction extends Transaction {
         this._transfers = [];
 
         if (props.transfers != null) {
-            this._transfers = props.transfers;
+            this._transfers = props.transfers.map((transfer) => {
+                if (transfer instanceof Transfer) {
+                    return transfer;
+                } else {
+                    const amount =
+                        transfer.amount instanceof Hbar
+                            ? transfer.amount
+                            : new Hbar(transfer.amount);
+
+                    return new Transfer({
+                        accountId: transfer.accountId,
+                        amount,
+                    });
+                }
+            });
         }
     }
 

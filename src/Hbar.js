@@ -4,7 +4,7 @@ import HbarUnit from "./HbarUnit";
 
 export default class Hbar {
     /**
-     * @param {number | Long | BigNumber} amount
+     * @param {number | string | Long | BigNumber} amount
      * @param {HbarUnit=} unit
      */
     constructor(amount, unit = HbarUnit.Hbar) {
