@@ -32,14 +32,11 @@ export default class TopicMessageChunk {
     static _fromProtobuf(response) {
         return new TopicMessageChunk({
             consensusTimestamp: Timestamp._fromProtobuf(
-                // @ts-ignore
-                response.consensusTimestamp
+                /** @type {proto.ITimestamp} */
+                (response.consensusTimestamp)
             ),
-            // @ts-ignore
-            contents: response.message,
-            // @ts-ignore
-            runningHash: response.runningHash,
-            // @ts-ignore
+            contents: response.message ?? new Uint8Array(),
+            runningHash: response.runningHash ?? new Uint8Array(),
             sequenceNumber:
                 response.sequenceNumber != null
                     ? response.sequenceNumber instanceof Long

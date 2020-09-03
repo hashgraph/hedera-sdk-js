@@ -77,8 +77,7 @@ export default class Mnemonic {
         const bits = entropyBits + checksumBits;
         const chunks = bits.match(/(.{1,11})/g);
 
-        // @ts-ignore
-        const words = chunks.map((binary) => bip39Words[binaryToByte(binary)]);
+        const words = (chunks ?? []).map((binary) => bip39Words[binaryToByte(binary)]);
 
         return new Mnemonic({ words, legacy: false });
     }
@@ -224,9 +223,7 @@ export default class Mnemonic {
             const entropyBits = bits.slice(0, dividerIndex);
             const checksumBits = bits.slice(dividerIndex);
 
-            // @ts-ignore
-            const entropyBytes = entropyBits
-                .match(/(.{1,8})/g)
+            const entropyBytes = (entropyBits.match(/(.{1,8})/g) ?? [])
                 .map(binaryToByte);
 
             const newChecksum = await deriveChecksumBits(

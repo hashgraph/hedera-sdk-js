@@ -36,13 +36,11 @@ export default class TopicMessage {
     static _ofSingle(response) {
         return new TopicMessage({
             consensusTimestamp: Timestamp._fromProtobuf(
-                // @ts-ignore
-                response.consensusTimestamp
+                /** @type {proto.ITimestamp} */
+                (response.consensusTimestamp)
             ),
-            // @ts-ignore
-            contents: response.message,
-            // @ts-ignore
-            runningHash: response.runningHash,
+            contents: response.message ?? new Uint8Array(),
+            runningHash: response.runningHash ?? new Uint8Array(),
             sequenceNumber:
                 response.sequenceNumber != null
                     ? response.sequenceNumber instanceof Long
@@ -61,25 +59,16 @@ export default class TopicMessage {
     static _ofMany(responses) {
         const length = responses.length;
 
-        /**
-         * @type {proto.IConsensusTopicResponse}
-         * @ts-ignore
-         */
-        const last = responses[length - 1];
+        const last = /** @type {proto.IConsensusTopicResponse} */ (responses[
+            length - 1
+        ]);
 
-        /**
-         * @type {Timestamp}
-         */
         const consensusTimestamp = Timestamp._fromProtobuf(
-            // @ts-ignore
-            last.consensusTimestamp
+            /** @type {proto.ITimestamp} */
+            (last.consensusTimestamp)
         );
 
-        /**
-         * @type {Uint8Array}
-         */
-        // @ts-ignore
-        const runningHash = last.runningHash;
+        const runningHash = /** @type {Uint8Array} */ (last.runningHash);
 
         /**
          * @type {Long}
@@ -91,34 +80,29 @@ export default class TopicMessage {
                     : Long.fromValue(last.sequenceNumber)
                 : Long.ZERO;
 
-        // @ts-ignore
         responses.sort((a, b) =>
-            // @ts-ignore
-            a.chunkInfo.number < b.chunkInfo.number ? -1 : 1
+            (a?.chunkInfo?.number ?? 0) < (b?.chunkInfo?.number ?? 0) ? -1 : 1
         );
 
         /**
          * @type {TopicMessageChunk[]}
-         * @ts-ignore
          */
-        const chunks = responses.map((m) => TopicMessageChunk._fromProtobuf(m));
+        const chunks = responses.map(
+            /**
+             * @type {proto.IConsensusTopicResponse}
+             */ (m) => TopicMessageChunk._fromProtobuf(m)
+        );
 
-        // @ts-ignore
         const size = chunks
             .map((chunk) => chunk.contents.length)
             .reduce((sum, current) => sum + current, 0);
 
-        /**
-         * @type {Uint8Array}
-         */
         const contents = new Uint8Array(size);
         let offset = 0;
 
         responses.forEach((value) => {
-            // @ts-ignore
-            contents.set(value.message, offset);
-            // @ts-ignore
-            offset += value.message.length;
+            contents.set(/** @type {Uint8Array} */ (value.message), offset);
+            offset += /** @type {Uint8Array} */ (value.message).length;
         });
 
         return new TopicMessage({

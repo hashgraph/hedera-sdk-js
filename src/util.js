@@ -43,7 +43,6 @@ export function _toProtoKeyList(list) {
  */
 export function _fromProtoKey(key) {
     if (key.ed25519) {
-        // @ts-ignore
         return new PublicKey(key.ed25519);
     }
 
@@ -54,15 +53,12 @@ export function _fromProtoKey(key) {
 
     if (key.thresholdKey) {
         const tk = key.thresholdKey;
-        // @ts-ignore
-        return KeyList.withThreshold(tk.threshold).push(
-            // @ts-ignore
-            ..._fromProtoKeyList(tk.keys)
+        return KeyList.withThreshold(tk.threshold ?? 0).push(
+            ..._fromProtoKeyList(/** @type {proto.IKeyList} */ (tk.keys))
         );
     }
 
     if (key.keyList) {
-        // @ts-ignore
         return new KeyList().push(..._fromProtoKeyList(key.keyList));
     }
 
@@ -74,6 +70,7 @@ export function _fromProtoKey(key) {
  * @returns {KeyList}
  */
 export function _fromProtoKeyList(keys) {
-    // @ts-ignore
-    return new KeyList().push(...keys.keys.map((key) => _fromProtoKey(key)));
+    return new KeyList().push(
+        ...(keys.keys ?? []).map((key) => _fromProtoKey(key))
+    );
 }

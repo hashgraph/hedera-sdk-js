@@ -44,9 +44,10 @@ export default class FileInfoQuery extends Query {
      * @returns {FileInfo}
      */
     _mapResponse(response) {
+        const info = /** @type {proto.IFileGetInfoResponse} */ (response.fileGetInfo);
+
         return FileInfo._fromProtobuf(
-            // @ts-ignore
-            response.fileGetInfo.fileInfo
+            /** @type {proto.FileGetInfoResponse.IFileInfo} */ (info.fileInfo)
         );
     }
 

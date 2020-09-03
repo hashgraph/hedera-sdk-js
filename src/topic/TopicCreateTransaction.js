@@ -153,15 +153,16 @@ export default class TopicCreateTransaction extends Transaction {
      */
     setAutoRenewAccountId(autoRenewAccountId) {
         this._requireNotFrozen();
-        this._autoRenewAccountId = autoRenewAccountId instanceof AccountId
-            ? autoRenewAccountId
-            : AccountId.fromString(autoRenewAccountId);
+        this._autoRenewAccountId =
+            autoRenewAccountId instanceof AccountId
+                ? autoRenewAccountId
+                : AccountId.fromString(autoRenewAccountId);
 
         return this;
     }
 
     /**
-     * @returns {number}
+     * @returns {Long}
      */
     getAutoRenewPeriod() {
         return this._autoRenewPeriod;
@@ -175,7 +176,10 @@ export default class TopicCreateTransaction extends Transaction {
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
-        this._autoRenewPeriod = autoRenewPeriod instanceof Long ? autoRenewPeriod : Long.fromValue(autoRenewPeriod);
+        this._autoRenewPeriod =
+            autoRenewPeriod instanceof Long
+                ? autoRenewPeriod
+                : Long.fromValue(autoRenewPeriod);
 
         return this;
     }
@@ -206,8 +210,10 @@ export default class TopicCreateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            adminKey: this._adminKey != null ? _toProtoKey(this._adminKey) : null,
-            submitKey: this._submitKey != null ? _toProtoKey(this._submitKey) : null,
+            adminKey:
+                this._adminKey != null ? _toProtoKey(this._adminKey) : null,
+            submitKey:
+                this._submitKey != null ? _toProtoKey(this._submitKey) : null,
             memo: this._topicMemo,
             autoRenewAccount: this._autoRenewAccountId?._toProtobuf(),
             autoRenewPeriod: {

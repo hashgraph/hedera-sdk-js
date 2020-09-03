@@ -59,8 +59,7 @@ export default class TopicInfoQuery extends Query {
      */
     _mapResponse(response) {
         return TopicInfo._fromProtobuf(
-            // @ts-ignore
-            response.consensusGetTopicInfo.topicInfo
+            /** @type {proto.IConsensusGetTopicInfoResponse} */ (response.consensusGetTopicInfo)
         );
     }
 
