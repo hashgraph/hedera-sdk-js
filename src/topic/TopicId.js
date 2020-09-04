@@ -1,9 +1,12 @@
 import EntityId, { fromString } from "../EntityId";
 import proto from "@hashgraph/proto";
 import Long from "long";
+import * as hex from "../encoding/hex";
 
 /**
  * Unique identifier for a topic (used by the consensus service).
+ *
+ * @augments {EntityId<proto.ITopicID>}
  */
 export default class TopicId extends EntityId {
     /**
@@ -36,6 +39,35 @@ export default class TopicId extends EntityId {
     }
 
     /**
+     * @param {Uint8Array} bytes
+     * @returns {TopicId}
+     */
+    static fromBytes(bytes) {
+        return TopicId._fromProtobuf(proto.TopicID.decode(bytes));
+    }
+
+    /**
+     * @param {string} address
+     * @returns {TopicId}
+     */
+    static fromSolidityAddress(address) {
+        const addr = address.startsWith("0x")
+            ? hex.decode(address.slice(2))
+            : hex.decode(address);
+
+        if (addr.length !== 20) {
+            throw new Error(`Invalid hex encoded solidity address length:
+                    expected length 40, got length ${address.length}`);
+        }
+
+        const shard = Long.fromBytesBE(Array.from(addr.slice(0, 4)));
+        const realm = Long.fromBytesBE(Array.from(addr.slice(4, 12)));
+        const topic = Long.fromBytesBE(Array.from(addr.slice(12, 20)));
+
+        return new TopicId(shard, realm, topic);
+    }
+
+    /**
      * @override
      * @returns {proto.ITopicID}
      */
@@ -45,5 +77,12 @@ export default class TopicId extends EntityId {
             shardNum: this.shard,
             realmNum: this.realm,
         };
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.TopicID.encode(this._toProtobuf()).finish();
     }
 }

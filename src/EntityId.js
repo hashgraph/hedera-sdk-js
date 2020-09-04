@@ -1,4 +1,5 @@
 import Long from "long";
+import * as hex from "./encoding/hex";
 
 /**
  * @typedef {object} IEntityId
@@ -9,6 +10,7 @@ import Long from "long";
 
 /**
  * @abstract
+ * @template T
  */
 export default class EntityId {
     /**
@@ -17,35 +19,64 @@ export default class EntityId {
      * @param {(number | null | Long)=} num
      */
     constructor(properties, realm, num) {
-        /** @readonly */
-        this.shard;
-        /** @readonly */
-        this.realm;
-        /** @readonly */
-        this.num;
-
         if (typeof properties === "number" || properties instanceof Long) {
             if (realm == null) {
-                this.realm = 0;
-                this.shard = 0;
-                this.num = Long.fromValue(properties).toNumber();
+                /**
+                 * @readonly
+                 * @type {Long}
+                 */
+                this.realm = Long.ZERO;
+
+                /**
+                 * @readonly
+                 * @type {Long}
+                 */
+                this.shard = Long.ZERO;
+
+                /**
+                 * @readonly
+                 * @type {Long}
+                 */
+                this.num = Long.fromValue(properties);
             } else {
-                this.shard = Long.fromValue(properties).toNumber();
-                this.realm = Long.fromValue(realm).toNumber();
-                this.num = Long.fromValue(num ?? 0).toNumber();
+                this.shard = Long.fromValue(properties);
+                this.realm = Long.fromValue(realm);
+                this.num = Long.fromValue(num ?? 0);
             }
         } else {
-            this.shard = Long.fromValue(properties.shard ?? 0).toNumber();
-            this.realm = Long.fromValue(properties.realm ?? 0).toNumber();
-            this.num = Long.fromValue(properties.num ?? 0).toNumber();
+            this.shard = Long.fromValue(properties.shard ?? 0);
+            this.realm = Long.fromValue(properties.realm ?? 0);
+            this.num = Long.fromValue(properties.num ?? 0);
         }
+    }
+
+    /**
+     * @abstract
+     * @internal
+     * @returns {T}
+     */
+    _toProtobuf() {
+        throw new Error("not implemented");
+    }
+
+    /**
+     * @returns {string}
+     */
+    toSolidityAddress() {
+        const buffer = new Uint8Array(20);
+
+        buffer.set(this.shard.toBytesBE().slice(4, 8), 0);
+        buffer.set(this.realm.toBytesBE(), 4);
+        buffer.set(this.num.toBytesBE(), 12);
+
+        return "0x" + hex.encode(buffer);
     }
 
     /**
      * @override
      */
     toString() {
-        return `${this.shard}.${this.realm}.${this.num}`;
+        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
     }
 
     /**
@@ -54,9 +85,9 @@ export default class EntityId {
      */
     equals(other) {
         return (
-            this.shard === other.shard &&
-            this.realm === other.realm &&
-            this.num === other.num
+            this.shard.eq(other.shard) &&
+            this.realm.eq(other.realm) &&
+            this.num.eq(other.num)
         );
     }
 }
