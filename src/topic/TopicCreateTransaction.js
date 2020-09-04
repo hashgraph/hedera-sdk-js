@@ -73,6 +73,7 @@ export default class TopicCreateTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {TopicCreateTransaction}
      */

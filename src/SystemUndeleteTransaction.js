@@ -37,6 +37,7 @@ export default class SystemUndeleteTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {SystemUndeleteTransaction}
      */

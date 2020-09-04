@@ -42,6 +42,7 @@ export default class AccountDeleteTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {AccountDeleteTransaction}
      */

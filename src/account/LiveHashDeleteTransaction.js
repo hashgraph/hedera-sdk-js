@@ -39,6 +39,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {LiveHashDeleteTransaction}
      */

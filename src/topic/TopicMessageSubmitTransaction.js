@@ -35,6 +35,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {TopicMessageSubmitTransaction}
      */

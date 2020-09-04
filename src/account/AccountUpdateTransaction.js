@@ -109,6 +109,7 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {AccountUpdateTransaction}
      */

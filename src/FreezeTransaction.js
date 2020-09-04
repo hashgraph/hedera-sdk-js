@@ -39,6 +39,7 @@ export default class FreezeTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {FreezeTransaction}
      */

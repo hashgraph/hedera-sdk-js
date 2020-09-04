@@ -59,6 +59,7 @@ export default class LiveHashAddTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {LiveHashAddTransaction}
      */

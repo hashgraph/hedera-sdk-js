@@ -32,6 +32,7 @@ export default class TopicDeleteTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {TopicDeleteTransaction}
      */

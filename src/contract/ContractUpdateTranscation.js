@@ -95,6 +95,7 @@ export default class ContractUpdateTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {ContractUpdateTransaction}
      */

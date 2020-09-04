@@ -74,6 +74,7 @@ export default class ContractExecuteTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {ContractExecuteTransaction}
      */

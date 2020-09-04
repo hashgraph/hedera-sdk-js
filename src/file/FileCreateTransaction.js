@@ -55,6 +55,7 @@ export default class FileCreateTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {FileCreateTransaction}
      */

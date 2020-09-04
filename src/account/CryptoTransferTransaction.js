@@ -50,6 +50,7 @@ export default class CryptoTransferTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {CryptoTransferTransaction}
      */

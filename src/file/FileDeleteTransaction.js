@@ -34,6 +34,7 @@ export default class FileDeleteTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {FileDeleteTransaction}
      */

@@ -63,6 +63,7 @@ export default class FileUpdateTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {FileUpdateTransaction}
      */

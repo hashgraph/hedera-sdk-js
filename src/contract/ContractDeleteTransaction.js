@@ -47,6 +47,7 @@ export default class ContractDeleteTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {ContractDeleteTransaction}
      */

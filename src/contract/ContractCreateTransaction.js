@@ -107,6 +107,7 @@ export default class ContractCreateTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {ContractCreateTransaction}
      */

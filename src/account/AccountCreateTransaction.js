@@ -100,6 +100,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {AccountCreateTransaction}
      */

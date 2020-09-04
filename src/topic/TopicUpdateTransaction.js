@@ -92,6 +92,7 @@ export default class TopicUpdateTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {TopicUpdateTransaction}
      */

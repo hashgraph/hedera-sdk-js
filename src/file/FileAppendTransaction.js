@@ -40,6 +40,7 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
+     * @internal
      * @param {proto.TransactionBody} body
      * @returns {FileAppendTransaction}
      */
