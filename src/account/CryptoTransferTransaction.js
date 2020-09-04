@@ -58,7 +58,7 @@ export default class CryptoTransferTransaction extends Transaction {
 
     /**
      * @param {AccountId | string} accountId
-     * @param {Hbar} amount
+     * @param {number | string | Long | BigNumber | Hbar} amount
      * @returns {CryptoTransferTransaction}
      */
     addTransfer(accountId, amount) {
@@ -78,16 +78,17 @@ export default class CryptoTransferTransaction extends Transaction {
 
     /**
      * @param {AccountId | string} accountId
-     * @param {Hbar} amount
+     * @param {number | string | Long | BigNumber | Hbar} amount
      * @returns {CryptoTransferTransaction}
      */
     addSender(accountId, amount) {
-        return this.addTransfer(accountId, amount.negated());
+        const value = amount instanceof Hbar ? amount : new Hbar(amount);
+        return this.addTransfer(accountId, value.negated());
     }
 
     /**
      * @param {AccountId | string} accountId
-     * @param {Hbar} amount
+     * @param {number | string | Long | BigNumber | Hbar} amount
      * @returns {CryptoTransferTransaction}
      */
     addRecipient(accountId, amount) {

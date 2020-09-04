@@ -9,6 +9,7 @@ import Transaction, {
 import { Key } from "@hashgraph/cryptography";
 import { _toProtoKey } from "../util";
 import Long from "long";
+import BigNumber from "bignumber.js";
 
 /**
  * Create a new Hedera™ crypto-currency account.
@@ -17,9 +18,9 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * @param {object} props
      * @param {Key} [props.key]
-     * @param {Hbar} [props.initialBalance]
-     * @param {Hbar} [props.sendRecordThreshold]
-     * @param {Hbar} [props.receiveRecordThreshold]
+     * @param {number | string | Long | BigNumber | Hbar} [props.initialBalance]
+     * @param {number | string | Long | BigNumber | Hbar} [props.sendRecordThreshold]
+     * @param {number | string | Long | BigNumber | Hbar} [props.receiveRecordThreshold]
      * @param {boolean} [props.receiverSignatureRequired]
      * @param {AccountId} [props.proxyAccountId]
      * @param {number | Long} [props.autoRenewPeriod]
@@ -133,12 +134,15 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * Set the initial amount to transfer into this account.
      *
-     * @param {Hbar} initialBalance
+     * @param {number | string | Long | BigNumber | Hbar} initialBalance
      * @returns {this}
      */
     setInitialBalance(initialBalance) {
         this._requireNotFrozen();
-        this._initialBalance = initialBalance;
+        this._initialBalance =
+            initialBalance instanceof Hbar
+                ? initialBalance
+                : new Hbar(initialBalance);
 
         return this;
     }
@@ -154,12 +158,15 @@ export default class AccountCreateTransaction extends Transaction {
      * Set the threshold amount for which a transaction record is created for any transfer of hbars
      * from this account.
      *
-     * @param {Hbar} sendRecordThreshold
+     * @param {number | string | Long | BigNumber | Hbar} sendRecordThreshold
      * @returns {this}
      */
     setSendRecordThreshold(sendRecordThreshold) {
         this._requireNotFrozen();
-        this._sendRecordThreshold = sendRecordThreshold;
+        this._sendRecordThreshold =
+            sendRecordThreshold instanceof Hbar
+                ? sendRecordThreshold
+                : new Hbar(sendRecordThreshold);
 
         return this;
     }
@@ -175,12 +182,15 @@ export default class AccountCreateTransaction extends Transaction {
      * Set the threshold amount for which a transaction record is created for any transfer of hbars
      * to this account.
      *
-     * @param {Hbar} receiveRecordThreshold
+     * @param {number | string | Long | BigNumber | Hbar} receiveRecordThreshold
      * @returns {this}
      */
     setReceiveRecordThreshold(receiveRecordThreshold) {
         this._requireNotFrozen();
-        this._receiveRecordThreshold = receiveRecordThreshold;
+        this._receiveRecordThreshold =
+            receiveRecordThreshold instanceof Hbar
+                ? receiveRecordThreshold
+                : new Hbar(receiveRecordThreshold);
 
         return this;
     }

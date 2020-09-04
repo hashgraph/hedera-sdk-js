@@ -1,6 +1,7 @@
 import AccountId from "./AccountId";
 import Hbar from "../Hbar";
 import proto from "@hashgraph/proto";
+import BigNumber from "bignumber.js";
 
 /**
  * An account, and the amount that it sends or receives during a cryptocurrency transfer.
@@ -10,7 +11,7 @@ export default class ProxyStaker {
      * @private
      * @param {object} props
      * @param {AccountId} props.accountId
-     * @param {Hbar} props.amount
+     * @param {number | string | Long | BigNumber | Hbar} props.amount
      */
     constructor(props) {
         /**
@@ -26,7 +27,10 @@ export default class ProxyStaker {
          *
          * @readonly
          */
-        this.amount = props.amount;
+        this.amount =
+            props.amount instanceof Hbar
+                ? props.amount
+                : new Hbar(props.amount);
 
         Object.freeze(this);
     }

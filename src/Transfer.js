@@ -1,6 +1,7 @@
 import AccountId from "./account/AccountId";
 import Hbar from "./Hbar";
 import proto from "@hashgraph/proto";
+import BigNumber from "bignumber.js";
 
 /**
  * An account, and the amount that it sends or receives during a cryptocurrency transfer.
@@ -10,7 +11,7 @@ export default class Transfer {
      * @internal
      * @param {object} props
      * @param {AccountId | string} props.accountId
-     * @param {Hbar} props.amount
+     * @param {number | string | Long | BigNumber | Hbar} props.amount
      */
     constructor(props) {
         /**
@@ -28,7 +29,10 @@ export default class Transfer {
          *
          * @readonly
          */
-        this.amount = props.amount;
+        this.amount =
+            props.amount instanceof Hbar
+                ? props.amount
+                : new Hbar(props.amount);
 
         Object.freeze(this);
     }

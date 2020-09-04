@@ -6,6 +6,7 @@ import { Key } from "@hashgraph/cryptography";
 import { _toProtoKey } from "../util";
 import { AccountId } from "..";
 import Timestamp from "../Timestamp";
+import BigNumber from "bignumber.js";
 
 /**
  * Change properties for the given account.
@@ -15,9 +16,9 @@ export default class AccountUpdateTransaction extends Transaction {
      * @param {object} props
      * @param {AccountId} [props.accountId]
      * @param {Key} [props.key]
-     * @param {Hbar} [props.initialBalance]
-     * @param {Hbar} [props.sendRecordThreshold]
-     * @param {Hbar} [props.receiveRecordThreshold]
+     * @param {number | string | Long | BigNumber | Hbar} [props.initialBalance]
+     * @param {number | string | Long | BigNumber | Hbar} [props.sendRecordThreshold]
+     * @param {number | string | Long | BigNumber | Hbar} [props.receiveRecordThreshold]
      * @param {boolean} [props.receiverSignatureRequired]
      * @param {AccountId} [props.proxyAccountId]
      * @param {number} [props.autoRenewPeriod]
@@ -156,12 +157,15 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
-     * @param {Hbar} sendRecordThreshold
+     * @param {number | string | Long | BigNumber | Hbar} sendRecordThreshold
      * @returns {this}
      */
     setSendRecordThreshold(sendRecordThreshold) {
         this._requireNotFrozen();
-        this._sendRecordThreshold = sendRecordThreshold;
+        this._sendRecordThreshold =
+            sendRecordThreshold instanceof Hbar
+                ? sendRecordThreshold
+                : new Hbar(sendRecordThreshold);
 
         return this;
     }
@@ -174,12 +178,15 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
-     * @param {Hbar} receiveRecordThreshold
+     * @param {number | string | Long | BigNumber | Hbar} receiveRecordThreshold
      * @returns {this}
      */
     setReceiveRecordThreshold(receiveRecordThreshold) {
         this._requireNotFrozen();
-        this._receiveRecordThreshold = receiveRecordThreshold;
+        this._receiveRecordThreshold =
+            receiveRecordThreshold instanceof Hbar
+                ? receiveRecordThreshold
+                : new Hbar(receiveRecordThreshold);
 
         return this;
     }

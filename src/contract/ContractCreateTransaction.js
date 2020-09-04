@@ -8,6 +8,7 @@ import Transaction, { DEFAULT_AUTO_RENEW_PERIOD } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _toProtoKey } from "../util";
 import Long from "long";
+import BigNumber from "bignumber.js";
 
 export default class ContractCreateTransaction extends Transaction {
     /**
@@ -15,7 +16,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @param {FileId | string} [props.bytecodeFileId]
      * @param {Key} [props.adminKey]
      * @param {number | Long} [props.gas]
-     * @param {Hbar} [props.initialBalance]
+     * @param {number | string | Long | BigNumber | Hbar} [props.initialBalance]
      * @param {AccountId | string} [props.proxyAccountId]
      * @param {number | Long} [props.autoRenewPeriod]
      * @param {Uint8Array} [props.constructorParameters]
@@ -172,12 +173,15 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * Set the initial amount to transfer into this contract.
      *
-     * @param {Hbar} initialBalance
+     * @param {number | string | Long | BigNumber | Hbar} initialBalance
      * @returns {this}
      */
     setInitialBalance(initialBalance) {
         this._requireNotFrozen();
-        this._initialBalance = initialBalance;
+        this._initialBalance =
+            initialBalance instanceof Hbar
+                ? initialBalance
+                : new Hbar(initialBalance);
 
         return this;
     }

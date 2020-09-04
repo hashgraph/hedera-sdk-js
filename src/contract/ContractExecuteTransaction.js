@@ -6,6 +6,7 @@ import ContractId from "./ContractId";
 import Hbar from "../Hbar";
 import ContractFunctionParameters from "./ContractFunctionParameters";
 import Long from "long";
+import BigNumber from "bignumber.js";
 
 /**
  * @typedef {object} FunctionParameters
@@ -18,7 +19,7 @@ export default class ContractExecuteTransaction extends Transaction {
      * @param {object} props
      * @param {ContractId | string} [props.contractId]
      * @param {number | Long} [props.gas]
-     * @param {Hbar} [props.amount]
+     * @param {number | string | Long | BigNumber | Hbar} [props.amount]
      * @param {Uint8Array | FunctionParameters} [props.functionParameters]
      */
     constructor(props = {}) {
@@ -125,12 +126,12 @@ export default class ContractExecuteTransaction extends Transaction {
     /**
      * Sets the contract ID which is being executed in this transaction.
      *
-     * @param {Hbar} amount
+     * @param {number | string | Long | BigNumber | Hbar} amount
      * @returns {ContractExecuteTransaction}
      */
     setPayableAmount(amount) {
         this._requireNotFrozen();
-        this._amount = amount;
+        this._amount = amount instanceof Hbar ? amount : new Hbar(amount);
 
         return this;
     }
