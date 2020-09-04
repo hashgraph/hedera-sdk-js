@@ -7,7 +7,7 @@ import Transaction, {
     DEFAULT_RECORD_THRESHOLD,
 } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _toProtoKey } from "../util";
+import { _fromProtoKey, _toProtoKey } from "../util";
 import Long from "long";
 import BigNumber from "bignumber.js";
 
@@ -97,6 +97,29 @@ export default class AccountCreateTransaction extends Transaction {
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
         }
+    }
+
+    /**
+     * @param {proto.TransactionBody} body
+     * @returns {AccountCreateTransaction}
+     */
+    static _fromProtobuf(body) {
+        const create = /** @type {proto.ICryptoCreateTransactionBody} */ (body.cryptoCreateAccount);
+
+        return new AccountCreateTransaction({
+            key: create.key != null ? _fromProtoKey(create.key) : undefined,
+            initialBalance: create.initialBalance ?? undefined,
+            sendRecordThreshold: create.sendRecordThreshold ?? undefined,
+            receiveRecordThreshold: create.receiveRecordThreshold ?? undefined,
+            receiverSignatureRequired: create.receiverSigRequired ?? undefined,
+            proxyAccountId:
+                create.proxyAccountID != null
+                    ? AccountId._fromProtobuf(
+                          /** @type {proto.IAccountID} */ (create.proxyAccountID)
+                      )
+                    : undefined,
+            autoRenewPeriod: create.autoRenewPeriod?.seconds ?? undefined,
+        });
     }
 
     /**

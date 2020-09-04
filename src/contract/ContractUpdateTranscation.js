@@ -6,7 +6,7 @@ import proto from "@hashgraph/proto";
 import Channel from "../Channel";
 import Transaction from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _toProtoKey } from "../util";
+import { _toProtoKey, _fromProtoKey } from "../util";
 import Long from "long";
 
 export default class ContractUpdateTransaction extends Transaction {
@@ -18,7 +18,6 @@ export default class ContractUpdateTransaction extends Transaction {
      * @param {Key} [props.adminKey]
      * @param {AccountId | string} [props.proxyAccountId]
      * @param {number | Long} [props.autoRenewPeriod]
-     * @param {Uint8Array} [props.constructorParameters]
      * @param {string} [props.contractMemo]
      */
     constructor(props = {}) {
@@ -93,6 +92,45 @@ export default class ContractUpdateTransaction extends Transaction {
         if (props.contractMemo != null) {
             this.setContractMemo(props.contractMemo);
         }
+    }
+
+    /**
+     * @param {proto.TransactionBody} body
+     * @returns {ContractUpdateTransaction}
+     */
+    static _fromProtobuf(body) {
+        const update = /** @type {proto.IContractUpdateTransactionBody} */ (body.contractUpdateInstance);
+
+        return new ContractUpdateTransaction({
+            contractId:
+                update.contractID != null
+                    ? ContractId._fromProtobuf(
+                          /** @type {proto.ContractID} */ (update.contractID)
+                      )
+                    : undefined,
+            bytecodeFileId:
+                update.fileID != null
+                    ? FileId._fromProtobuf(
+                          /** @type {proto.IFileID} */ (update.fileID)
+                      )
+                    : undefined,
+            expirationTime:
+                update.expirationTime != null
+                    ? Timestamp._fromProtobuf(update.expirationTime)
+                    : undefined,
+            adminKey:
+                update.adminKey != null
+                    ? _fromProtoKey(update.adminKey)
+                    : undefined,
+            proxyAccountId:
+                update.proxyAccountID != null
+                    ? AccountId._fromProtobuf(
+                          /** @type {proto.IAccountID} */ (update.proxyAccountID)
+                      )
+                    : undefined,
+            autoRenewPeriod: update.autoRenewPeriod?.seconds ?? undefined,
+            contractMemo: update.memo ?? undefined,
+        });
     }
 
     /**

@@ -2,7 +2,7 @@ import proto from "@hashgraph/proto";
 import Channel from "../Channel";
 import Transaction, { DEFAULT_AUTO_RENEW_PERIOD } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _toProtoKey } from "../util";
+import { _fromProtoKey, _toProtoKey } from "../util";
 import Long from "long";
 import Timestamp from "../Timestamp";
 import * as utf8 from "../encoding/utf8";
@@ -52,6 +52,26 @@ export default class FileCreateTransaction extends Transaction {
         if (props.contents != null) {
             this.setContents(props.contents);
         }
+    }
+
+    /**
+     * @param {proto.TransactionBody} body
+     * @returns {FileCreateTransaction}
+     */
+    static _fromProtobuf(body) {
+        const create = /** @type {proto.IFileCreateTransactionBody} */ (body.fileCreate);
+
+        return new FileCreateTransaction({
+            keys:
+                create.keys?.keys != null
+                    ? create.keys.keys.map((key) => _fromProtoKey(key))
+                    : undefined,
+            expirationTime:
+                create.expirationTime != null
+                    ? Timestamp._fromProtobuf(create.expirationTime)
+                    : undefined,
+            contents: create.contents ?? undefined,
+        });
     }
 
     /**

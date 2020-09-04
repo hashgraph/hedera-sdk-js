@@ -47,6 +47,35 @@ export default class ContractDeleteTransaction extends Transaction {
     }
 
     /**
+     * @param {proto.TransactionBody} body
+     * @returns {ContractDeleteTransaction}
+     */
+    static _fromProtobuf(body) {
+        const contractDelete = /** @type {proto.IContractDeleteTransactionBody} */ (body.contractDeleteInstance);
+
+        return new ContractDeleteTransaction({
+            contractId:
+                contractDelete.contractID != null
+                    ? ContractId._fromProtobuf(
+                          /** @type {proto.ContractID} */ (contractDelete.contractID)
+                      )
+                    : undefined,
+            transferAccountId:
+                contractDelete.transferAccountID != null
+                    ? AccountId._fromProtobuf(
+                          /** @type {proto.AccountID} */ (contractDelete.transferAccountID)
+                      )
+                    : undefined,
+            transferContractId:
+                contractDelete.transferContractID != null
+                    ? ContractId._fromProtobuf(
+                          /** @type {proto.ContractID} */ (contractDelete.transferContractID)
+                      )
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?ContractId}
      */
     getContractId() {

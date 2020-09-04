@@ -2,7 +2,7 @@ import proto from "@hashgraph/proto";
 import Channel from "../Channel";
 import Transaction from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _toProtoKey } from "../util";
+import { _fromProtoKey, _toProtoKey } from "../util";
 import Timestamp from "../Timestamp";
 import * as utf8 from "../encoding/utf8";
 import FileId from "./FileId";
@@ -60,6 +60,30 @@ export default class FileUpdateTransaction extends Transaction {
         if (props.contents != null) {
             this.setContents(props.contents);
         }
+    }
+
+    /**
+     * @param {proto.TransactionBody} body
+     * @returns {FileUpdateTransaction}
+     */
+    static _fromProtobuf(body) {
+        const update = /** @type {proto.IFileUpdateTransactionBody} */ (body.fileUpdate);
+
+        return new FileUpdateTransaction({
+            fileId:
+                update.fileID != null
+                    ? FileId._fromProtobuf(update.fileID)
+                    : undefined,
+            keys:
+                update.keys?.keys != null
+                    ? update.keys.keys.map((key) => _fromProtoKey(key))
+                    : undefined,
+            expirationTime:
+                update.expirationTime != null
+                    ? Timestamp._fromProtobuf(update.expirationTime)
+                    : undefined,
+            contents: update.contents ?? undefined,
+        });
     }
 
     /**

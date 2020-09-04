@@ -138,4 +138,29 @@ export default class Channel {
 
         return this._consensus;
     }
+
+    /**
+     * @returns {proto.FreezeService}
+     */
+    get freeze() {
+        if (this._freeze != null) {
+            return this._freeze;
+        }
+
+        this._freeze = proto.FreezeService.create(
+            (method, requestData, callback) => {
+                this._client.makeUnaryRequest(
+                    `/proto.${proto.FreezeService.name}/${method.name}`,
+                    (value) => value,
+                    (value) => value,
+                    Buffer.from(requestData),
+                    callback
+                );
+            },
+            false,
+            false
+        );
+
+        return this._freeze;
+    }
 }

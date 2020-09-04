@@ -3,10 +3,11 @@ import proto from "@hashgraph/proto";
 import Channel from "../Channel";
 import Transaction from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _toProtoKey } from "../util";
+import { _fromProtoKey, _toProtoKey } from "../util";
 import { AccountId } from "..";
 import Timestamp from "../Timestamp";
 import BigNumber from "bignumber.js";
+import Long from "long";
 
 /**
  * Change properties for the given account.
@@ -16,12 +17,11 @@ export default class AccountUpdateTransaction extends Transaction {
      * @param {object} props
      * @param {AccountId} [props.accountId]
      * @param {Key} [props.key]
-     * @param {number | string | Long | BigNumber | Hbar} [props.initialBalance]
      * @param {number | string | Long | BigNumber | Hbar} [props.sendRecordThreshold]
      * @param {number | string | Long | BigNumber | Hbar} [props.receiveRecordThreshold]
      * @param {boolean} [props.receiverSignatureRequired]
      * @param {AccountId} [props.proxyAccountId]
-     * @param {number} [props.autoRenewPeriod]
+     * @param {number | Long} [props.autoRenewPeriod]
      * @param {Timestamp | Date} [props.expirationTime]
      */
     constructor(props = {}) {
@@ -89,7 +89,7 @@ export default class AccountUpdateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?number}
+         * @type {?Long}
          */
         this._autoRenewPeriod = null;
 
@@ -106,6 +106,38 @@ export default class AccountUpdateTransaction extends Transaction {
         if (props.expirationTime != null) {
             this.setExpirationTime(props.expirationTime);
         }
+    }
+
+    /**
+     * @param {proto.TransactionBody} body
+     * @returns {AccountUpdateTransaction}
+     */
+    static _fromProtobuf(body) {
+        const update = /** @type {proto.ICryptoUpdateTransactionBody} */ (body.cryptoUpdateAccount);
+
+        return new AccountUpdateTransaction({
+            accountId:
+                update.accountIDToUpdate != null
+                    ? AccountId._fromProtobuf(
+                          /** @type {proto.IAccountID} */ (update.accountIDToUpdate)
+                      )
+                    : undefined,
+            key: update.key != null ? _fromProtoKey(update.key) : undefined,
+            sendRecordThreshold: update.sendRecordThreshold ?? undefined,
+            receiveRecordThreshold: update.receiveRecordThreshold ?? undefined,
+            receiverSignatureRequired: update.receiverSigRequired ?? undefined,
+            proxyAccountId:
+                update.proxyAccountID != null
+                    ? AccountId._fromProtobuf(
+                          /** @type {proto.IAccountID} */ (update.proxyAccountID)
+                      )
+                    : undefined,
+            autoRenewPeriod: update.autoRenewPeriod?.seconds ?? undefined,
+            expirationTime:
+                update.expirationTime != null
+                    ? Timestamp._fromProtobuf(update.expirationTime)
+                    : undefined,
+        });
     }
 
     /**
@@ -228,19 +260,22 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?number}
+     * @returns {?Long}
      */
     getAutoRenewPeriod() {
         return this._autoRenewPeriod;
     }
 
     /**
-     * @param {number} autoRenewPeriod
+     * @param {number | Long} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
-        this._autoRenewPeriod = autoRenewPeriod;
+        this._autoRenewPeriod =
+            autoRenewPeriod instanceof Long
+                ? autoRenewPeriod
+                : Long.fromValue(autoRenewPeriod);
 
         return this;
     }

@@ -40,6 +40,24 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
+     * @param {proto.TransactionBody} body
+     * @returns {FileAppendTransaction}
+     */
+    static _fromProtobuf(body) {
+        const append = /** @type {proto.IFileAppendTransactionBody} */ (body.fileAppend);
+
+        return new FileAppendTransaction({
+            fileId:
+                append.fileID != null
+                    ? FileId._fromProtobuf(
+                          /** @type {proto.IFileID} */ (append.fileID)
+                      )
+                    : undefined,
+            contents: append.contents ?? undefined,
+        });
+    }
+
+    /**
      * @returns {?FileId}
      */
     getFileId() {

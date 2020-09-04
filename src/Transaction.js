@@ -7,6 +7,27 @@ import Client from "./Client";
 import Channel from "./Channel";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Long from "long";
+import ContractExecuteTransaction from "./contract/ContractExecuteTransaction";
+import ContractCreateTransaction from "./contract/ContractCreateTransaction";
+import ContractUpdateTransaction from "./contract/ContractUpdateTranscation";
+import ContractDeleteTransaction from "./contract/ContractDeleteTransaction";
+import AccountCreateTransaction from "./account/AccountCreateTransaction";
+import AccountDeleteTransaction from "./account/AccountDeleteTransaction";
+import CryptoTransferTransaction from "./account/CryptoTransferTransaction";
+import AccountUpdateTransaction from "./account/AccountUpdateTransaction";
+import LiveHashAddTransaction from "./account/LiveHashAddTransaction";
+import LiveHashDeleteTransaction from "./account/LiveHashDeleteTransaction";
+import FileAppendTransaction from "./file/FileAppendTransaction";
+import FileCreateTransaction from "./file/FileCreateTransaction";
+import FileDeleteTransaction from "./file/FileDeleteTransaction";
+import FileUpdateTransaction from "./file/FileUpdateTransaction";
+import TopicCreateTransaction from "./topic/TopicCreateTransaction";
+import TopicUpdateTransaction from "./topic/TopicUpdateTransaction";
+import TopicDeleteTransaction from "./topic/TopicDeleteTransacton";
+import TopicMessageSubmitTransaction from "./topic/TopicMessageSubmitTransaction";
+import SystemDeleteTransaction from "./SystemDeleteTransaction";
+import SystemUndeleteTransaction from "./SystemUndeleteTransaction";
+import FreezeTransaction from "./FreezeTransaction";
 
 export const DEFAULT_AUTO_RENEW_PERIOD = Long.fromValue(7776000); // 90 days (in seconds)
 
@@ -83,6 +104,101 @@ export default class Transaction {
          * @type {?TransactionId}
          */
         this._transactionId = null;
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {Transaction}
+     */
+    static fromBytes(bytes) {
+        const transaction = proto.Transaction.decode(bytes);
+        const isFrozen = transaction.sigMap?.sigPair?.length ?? 0 > 0;
+        const body = proto.TransactionBody.decode(transaction.bodyBytes);
+
+        /**
+         * @type {Transaction}
+         */
+        let instance;
+
+        switch (body.data) {
+            case "contractCall":
+                instance = ContractExecuteTransaction._fromProtobuf(body);
+                break;
+            case "contractCreateInstance":
+                instance = ContractCreateTransaction._fromProtobuf(body);
+                break;
+            case "contractUpdateInstance":
+                instance = ContractUpdateTransaction._fromProtobuf(body);
+                break;
+            case "contractDeleteInstance":
+                instance = ContractDeleteTransaction._fromProtobuf(body);
+                break;
+            case "cryptoAddLiveHash":
+                instance = LiveHashAddTransaction._fromProtobuf(body);
+                break;
+            case "cryptoCreateAccount":
+                instance = AccountCreateTransaction._fromProtobuf(body);
+                break;
+            case "cryptoDelete":
+                instance = AccountDeleteTransaction._fromProtobuf(body);
+                break;
+            case "cryptoDeleteLiveHash":
+                instance = LiveHashDeleteTransaction._fromProtobuf(body);
+                break;
+            case "cryptoTransfer":
+                instance = CryptoTransferTransaction._fromProtobuf(body);
+                break;
+            case "cryptoUpdateAccount":
+                instance = AccountUpdateTransaction._fromProtobuf(body);
+                break;
+            case "fileAppend":
+                instance = FileAppendTransaction._fromProtobuf(body);
+                break;
+            case "fileCreate":
+                instance = FileCreateTransaction._fromProtobuf(body);
+                break;
+            case "fileDelete":
+                instance = FileDeleteTransaction._fromProtobuf(body);
+                break;
+            case "fileUpdate":
+                instance = FileUpdateTransaction._fromProtobuf(body);
+                break;
+            case "systemDelete":
+                instance = SystemDeleteTransaction._fromProtobuf(body);
+                break;
+            case "systemUndelete":
+                instance = SystemUndeleteTransaction._fromProtobuf(body);
+                break;
+            case "freeze":
+                instance = FreezeTransaction._fromProtobuf(body);
+                break;
+            case "consensusCreateTopic":
+                instance = TopicCreateTransaction._fromProtobuf(body);
+                break;
+            case "consensusUpdateTopic":
+                instance = TopicUpdateTransaction._fromProtobuf(body);
+                break;
+            case "consensusDeleteTopic":
+                instance = TopicDeleteTransaction._fromProtobuf(body);
+                break;
+            case "consensusSubmitMessage":
+                instance = TopicMessageSubmitTransaction._fromProtobuf(body);
+                break;
+            default:
+                throw new Error(
+                    `(BUG) Transaction.fromBytes() not implemented for type ${
+                        body.data ?? ""
+                    }`
+                );
+        }
+
+        if (isFrozen) {
+            // FIXME: convert this to JS
+            // instance.signatures = Collections.singletonList(tx.getSigMap().toBuilder());
+            instance._transactions = [transaction];
+        }
+
+        return instance;
     }
 
     /**
@@ -328,6 +444,13 @@ export default class Transaction {
         }
 
         return this;
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.Transaction.encode(this._transactions[0]).finish();
     }
 
     /**

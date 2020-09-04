@@ -74,6 +74,26 @@ export default class ContractExecuteTransaction extends Transaction {
     }
 
     /**
+     * @param {proto.TransactionBody} body
+     * @returns {ContractExecuteTransaction}
+     */
+    static _fromProtobuf(body) {
+        const call = /** @type {proto.IContractCallTransactionBody} */ (body.contractCall);
+
+        return new ContractExecuteTransaction({
+            contractId:
+                call.contractID != null
+                    ? ContractId._fromProtobuf(
+                          /** @type {proto.ContractID} */ (call.contractID)
+                      )
+                    : undefined,
+            gas: call.gas ?? undefined,
+            amount: call.amount ?? undefined,
+            functionParameters: call.functionParameters ?? undefined,
+        });
+    }
+
+    /**
      * @returns {?ContractId}
      */
     getContractId() {

@@ -50,6 +50,23 @@ export default class CryptoTransferTransaction extends Transaction {
     }
 
     /**
+     * @param {proto.TransactionBody} body
+     * @returns {CryptoTransferTransaction}
+     */
+    static _fromProtobuf(body) {
+        const update = /** @type {proto.ICryptoTransferTransactionBody} */ (body.cryptoTransfer);
+
+        return new CryptoTransferTransaction({
+            transfers:
+                update.transfers?.accountAmounts != null
+                    ? update.transfers?.accountAmounts.map((aa) =>
+                          Transfer._fromProtobuf(aa)
+                      )
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {Transfer[]}
      */
     getTransfers() {

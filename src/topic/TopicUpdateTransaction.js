@@ -2,7 +2,7 @@ import proto from "@hashgraph/proto";
 import Channel from "../Channel";
 import Transaction from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _toProtoKey } from "../util";
+import { _fromProtoKey, _toProtoKey } from "../util";
 import AccountId from "../account/AccountId";
 import TopicId from "./TopicId";
 import Long from "long";
@@ -24,7 +24,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @param {string} [props.topicMemo]
      * @param {Key} [props.adminKey]
      * @param {Key} [props.submitKey]
-     * @param {Long} [props.autoRenewPeriod]
+     * @param {number | Long} [props.autoRenewPeriod]
      * @param {AccountId | string} [props.autoRenewAccountId]
      */
     constructor(props = {}) {
@@ -89,6 +89,35 @@ export default class TopicUpdateTransaction extends Transaction {
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
         }
+    }
+
+    /**
+     * @param {proto.TransactionBody} body
+     * @returns {TopicUpdateTransaction}
+     */
+    static _fromProtobuf(body) {
+        const update = /** @type {proto.IConsensusUpdateTopicTransactionBody} */ (body.consensusUpdateTopic);
+
+        return new TopicUpdateTransaction({
+            topicId:
+                update.topicID != null
+                    ? TopicId._fromProtobuf(update.topicID)
+                    : undefined,
+            topicMemo: update?.memo?.value ?? undefined,
+            adminKey:
+                update.adminKey != null
+                    ? _fromProtoKey(update.adminKey)
+                    : undefined,
+            submitKey:
+                update.submitKey != null
+                    ? _fromProtoKey(update.submitKey)
+                    : undefined,
+            autoRenewAccountId:
+                update.autoRenewAccount != null
+                    ? AccountId._fromProtobuf(update.autoRenewAccount)
+                    : undefined,
+            autoRenewPeriod: update.autoRenewPeriod?.seconds ?? undefined,
+        });
     }
 
     /**

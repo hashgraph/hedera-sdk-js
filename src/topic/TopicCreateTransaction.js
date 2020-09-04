@@ -2,7 +2,7 @@ import proto from "@hashgraph/proto";
 import Channel from "../Channel";
 import Transaction, { DEFAULT_AUTO_RENEW_PERIOD } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _toProtoKey } from "../util";
+import { _fromProtoKey, _toProtoKey } from "../util";
 import AccountId from "../account/AccountId";
 import Long from "long";
 
@@ -15,7 +15,7 @@ export default class TopicCreateTransaction extends Transaction {
      * @param {string} [props.topicMemo]
      * @param {Key} [props.adminKey]
      * @param {Key} [props.submitKey]
-     * @param {Long} [props.autoRenewPeriod]
+     * @param {number | Long} [props.autoRenewPeriod]
      * @param {AccountId | string} [props.autoRenewAccountId]
      */
     constructor(props = {}) {
@@ -35,20 +35,20 @@ export default class TopicCreateTransaction extends Transaction {
          * @private
          * @type {?Key}
          */
-        this._submitKey = null;
+        this._adminKey = null;
 
-        if (props.submitKey != null) {
-            this.setSubmitKey(props.submitKey);
+        if (props.adminKey != null) {
+            this.setAdminKey(props.adminKey);
         }
 
         /**
          * @private
          * @type {?Key}
          */
-        this._adminKey = null;
+        this._submitKey = null;
 
-        if (props.adminKey != null) {
-            this.setAdminKey(props.adminKey);
+        if (props.submitKey != null) {
+            this.setSubmitKey(props.submitKey);
         }
 
         /**
@@ -70,6 +70,31 @@ export default class TopicCreateTransaction extends Transaction {
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
         }
+    }
+
+    /**
+     * @param {proto.TransactionBody} body
+     * @returns {TopicCreateTransaction}
+     */
+    static _fromProtobuf(body) {
+        const create = /** @type {proto.IConsensusCreateTopicTransactionBody} */ (body.consensusCreateTopic);
+
+        return new TopicCreateTransaction({
+            topicMemo: create.memo ?? undefined,
+            adminKey:
+                create.adminKey != null
+                    ? _fromProtoKey(create.adminKey)
+                    : undefined,
+            submitKey:
+                create.submitKey != null
+                    ? _fromProtoKey(create.submitKey)
+                    : undefined,
+            autoRenewAccountId:
+                create.autoRenewAccount != null
+                    ? AccountId._fromProtobuf(create.autoRenewAccount)
+                    : undefined,
+            autoRenewPeriod: create.autoRenewPeriod?.seconds ?? undefined,
+        });
     }
 
     /**

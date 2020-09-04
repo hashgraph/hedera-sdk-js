@@ -34,6 +34,21 @@ export default class FileDeleteTransaction extends Transaction {
     }
 
     /**
+     * @param {proto.TransactionBody} body
+     * @returns {FileDeleteTransaction}
+     */
+    static _fromProtobuf(body) {
+        const fileDelete = /** @type {proto.IFileDeleteTransactionBody} */ (body.fileDelete);
+
+        return new FileDeleteTransaction({
+            fileId:
+                fileDelete.fileID != null
+                    ? FileId._fromProtobuf(fileDelete.fileID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?FileId}
      */
     getFileId() {

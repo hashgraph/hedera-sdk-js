@@ -32,6 +32,21 @@ export default class TopicDeleteTransaction extends Transaction {
     }
 
     /**
+     * @param {proto.TransactionBody} body
+     * @returns {TopicDeleteTransaction}
+     */
+    static _fromProtobuf(body) {
+        const topicDelete = /** @type {proto.IConsensusDeleteTopicTransactionBody} */ (body.consensusDeleteTopic);
+
+        return new TopicDeleteTransaction({
+            topicId:
+                topicDelete.topicID != null
+                    ? TopicId._fromProtobuf(topicDelete.topicID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?TopicId}
      */
     getTopicId() {

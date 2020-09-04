@@ -35,6 +35,22 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     }
 
     /**
+     * @param {proto.TransactionBody} body
+     * @returns {TopicMessageSubmitTransaction}
+     */
+    static _fromProtobuf(body) {
+        const message = /** @type {proto.IConsensusSubmitMessageTransactionBody} */ (body.consensusSubmitMessage);
+
+        return new TopicMessageSubmitTransaction({
+            topicId:
+                message.topicID != null
+                    ? TopicId._fromProtobuf(message.topicID)
+                    : undefined,
+            message: message.message ?? undefined,
+        });
+    }
+
+    /**
      * @returns {?TopicId}
      */
     getTopicId() {

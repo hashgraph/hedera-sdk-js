@@ -6,7 +6,7 @@ import proto from "@hashgraph/proto";
 import Channel from "../Channel";
 import Transaction, { DEFAULT_AUTO_RENEW_PERIOD } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _toProtoKey } from "../util";
+import { _fromProtoKey, _toProtoKey } from "../util";
 import Long from "long";
 import BigNumber from "bignumber.js";
 
@@ -104,6 +104,38 @@ export default class ContractCreateTransaction extends Transaction {
         if (props.contractMemo != null) {
             this.setContractMemo(props.contractMemo);
         }
+    }
+
+    /**
+     * @param {proto.TransactionBody} body
+     * @returns {ContractCreateTransaction}
+     */
+    static _fromProtobuf(body) {
+        const create = /** @type {proto.IContractCreateTransactionBody} */ (body.contractCreateInstance);
+
+        return new ContractCreateTransaction({
+            bytecodeFileId:
+                create.fileID != null
+                    ? FileId._fromProtobuf(
+                          /** @type {proto.IFileID} */ (create.fileID)
+                      )
+                    : undefined,
+            adminKey:
+                create.adminKey != null
+                    ? _fromProtoKey(create.adminKey)
+                    : undefined,
+            gas: create.gas ?? undefined,
+            initialBalance: create.initialBalance ?? undefined,
+            proxyAccountId:
+                create.proxyAccountID != null
+                    ? AccountId._fromProtobuf(
+                          /** @type {proto.IAccountID} */ (create.proxyAccountID)
+                      )
+                    : undefined,
+            autoRenewPeriod: create.autoRenewPeriod?.seconds ?? undefined,
+            constructorParameters: create.constructorParameters ?? undefined,
+            contractMemo: create.memo ?? undefined,
+        });
     }
 
     /**
