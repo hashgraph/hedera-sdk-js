@@ -24,6 +24,13 @@ export default class ContractByteCodeQuery extends Query {
     }
 
     /**
+     * @returns {?ContractId}
+     */
+    getContractId() {
+        return this._contractId;
+    }
+
+    /**
      * Set the contract ID for which the info is being requested.
      *
      * @param {ContractId | string} contractId

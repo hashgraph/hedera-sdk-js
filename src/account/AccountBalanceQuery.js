@@ -45,6 +45,13 @@ export default class AccountBalanceQuery extends Query {
     }
 
     /**
+     * @returns {?AccountId}
+     */
+    getAccountId() {
+        return this._accountId;
+    }
+
+    /**
      * Set the account ID for which the balance is being requested.
      *
      * This is mutually exclusive with `setContractId`.

@@ -26,6 +26,13 @@ export default class AccountInfoQuery extends Query {
     }
 
     /**
+     * @returns {?AccountId}
+     */
+    getAccountId() {
+        return this._accountId;
+    }
+
+    /**
      * Set the account ID for which the info is being requested.
      *
      * @param {AccountId | string} accountId

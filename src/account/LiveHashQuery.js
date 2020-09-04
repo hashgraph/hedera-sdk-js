@@ -38,6 +38,13 @@ export default class LiveHashQuery extends Query {
     }
 
     /**
+     * @returns {?AccountId}
+     */
+    getAccountId() {
+        return this._accountId;
+    }
+
+    /**
      * Set the account to which the livehash is associated.
      *
      * @param {AccountId | string} accountId
@@ -50,6 +57,13 @@ export default class LiveHashQuery extends Query {
                 : AccountId.fromString(accountId);
 
         return this;
+    }
+
+    /**
+     * @returns {?Uint8Array}
+     */
+    getLiveHash() {
+        return this._hash;
     }
 
     /**

@@ -70,6 +70,13 @@ export default class ContractCallQuery extends Query {
     }
 
     /**
+     * @returns {?ContractId}
+     */
+    getContractId() {
+        return this._contractId;
+    }
+
+    /**
      * Set the contract ID for which the call is being requested.
      *
      * @param {ContractId | string} contractId
@@ -85,12 +92,26 @@ export default class ContractCallQuery extends Query {
     }
 
     /**
+     * @returns {?Long}
+     */
+    getGas() {
+        return this._gas;
+    }
+
+    /**
      * @param {number | Long} gas
      * @returns {ContractCallQuery}
      */
     setGas(gas) {
         this._gas = gas instanceof Long ? gas : Long.fromValue(gas);
         return this;
+    }
+
+    /**
+     * @returns {?Uint8Array}
+     */
+    getFunctionParameters() {
+        return this._functionParameters;
     }
 
     /**

@@ -29,6 +29,13 @@ export default class TopicInfoQuery extends Query {
     }
 
     /**
+     * @returns {?TopicId}
+     */
+    getTopicId() {
+        return this._topicId;
+    }
+
+    /**
      * Set the topic ID for which the info is being requested.
      *
      * @param {TopicId | string} topicId

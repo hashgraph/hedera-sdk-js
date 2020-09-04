@@ -26,6 +26,13 @@ export default class ContractRecordQuery extends Query {
     }
 
     /**
+     * @returns {?ContractId}
+     */
+    getContractId() {
+        return this._contractId;
+    }
+
+    /**
      * Set the contract ID for which the record is being requested.
      *
      * @param {ContractId | string} contractId

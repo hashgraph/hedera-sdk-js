@@ -24,6 +24,13 @@ export default class FileContentsQuery extends Query {
     }
 
     /**
+     * @returns {?FileId}
+     */
+    getFileId() {
+        return this._fileId;
+    }
+
+    /**
      * Set the file ID for which the info is being requested.
      *
      * @param {FileId | string} fileId
