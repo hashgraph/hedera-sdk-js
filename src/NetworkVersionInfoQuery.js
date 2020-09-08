@@ -5,9 +5,17 @@ import proto from "@hashgraph/proto";
 /**
  * @augments {Query<NetworkVersionInfo>}
  */
-export default class NetworkInfoQuery extends Query {
+export default class NetworkVersionInfoQuery extends Query {
     constructor() {
         super();
+    }
+
+    /**
+     * @param {proto.Query} _
+     * @returns {NetworkVersionInfoQuery}
+     */
+    static _fromProtobuf(_) {
+        return new NetworkVersionInfoQuery();
     }
 
     /**

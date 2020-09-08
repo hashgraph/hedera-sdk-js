@@ -6,7 +6,7 @@ import proto from "@hashgraph/proto";
 /**
  * @augments {Query<TransactionRecord[]>}
  */
-export default class ContractRecordQuery extends Query {
+export default class ContractRecordsQuery extends Query {
     /**
      * @param {object} properties
      * @param {ContractId | string} [properties.contractId]
@@ -26,6 +26,21 @@ export default class ContractRecordQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {ContractRecordsQuery}
+     */
+    static _fromProtobuf(query) {
+        const records = /** @type {proto.IContractGetRecordsQuery} */ (query.ContractGetRecords);
+
+        return new ContractRecordsQuery({
+            contractId:
+                records.contractID != null
+                    ? ContractId._fromProtobuf(records.contractID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?ContractId}
      */
     getContractId() {
@@ -36,7 +51,7 @@ export default class ContractRecordQuery extends Query {
      * Set the contract ID for which the record is being requested.
      *
      * @param {ContractId | string} contractId
-     * @returns {ContractRecordQuery}
+     * @returns {ContractRecordsQuery}
      */
     setContractId(contractId) {
         this._contractId =

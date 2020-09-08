@@ -25,6 +25,21 @@ export default class FileInfoQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {FileInfoQuery}
+     */
+    static _fromProtobuf(query) {
+        const info = /** @type {proto.IFileGetInfoQuery} */ (query.fileGetInfo);
+
+        return new FileInfoQuery({
+            fileId:
+                info.fileID != null
+                    ? FileId._fromProtobuf(info.fileID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?FileId}
      */
     getFileId() {

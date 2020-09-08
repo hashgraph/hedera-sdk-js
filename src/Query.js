@@ -3,6 +3,21 @@ import Client from "./Client.js";
 import Hbar from "./Hbar";
 import AccountId from "./account/AccountId";
 import Channel from "./Channel.js";
+import ContractCallQuery from "./contract/ContractCallQuery.js";
+import NetworkVersionInfoQuery from "./NetworkVersionInfoQuery.js";
+import TopicInfoQuery from "./topic/TopicInfoQuery.js";
+import TransactionRecordQuery from "./TransactionRecordQuery.js";
+import TransactionReceiptQuery from "./TransactionReceiptQuery.js";
+import FileInfoQuery from "./file/FileInfoQuery.js";
+import FileContentsQuery from "./file/FileContentsQuery.js";
+import AccountStakersQuery from "./account/AccountStakersQuery.js";
+import LiveHashQuery from "./account/LiveHashQuery.js";
+import AccountInfoQuery from "./account/AccountInfoQuery.js";
+import AccountBalanceQuery from "./account/AccountBalanceQuery.js";
+import AccountRecordsQuery from "./account/AccountRecordsQuery.js";
+import ContractRecordQuery from "./contract/ContractRecordsQuery.js";
+import ContractByteCodeQuery from "./contract/ContractByteCodeQuery.js";
+import ContractInfoQuery from "./contract/ContractInfoQuery.js";
 
 /**
  * Base class for all queries that can be submitted to Hedera.
@@ -37,6 +52,75 @@ export default class Query {
          * @type {?AccountId}
          */
         this._nodeId = null;
+    }
+
+    /**
+     * @template T
+     * @param {Uint8Array} bytes
+     * @returns {Query<T>}
+     */
+    static fromBytes(bytes) {
+        const query = proto.Query.decode(bytes);
+
+        let instance;
+        switch (query.query) {
+            case "contractCallLocal":
+                instance = ContractCallQuery._fromProtobuf(query);
+                break;
+            case "contractGetInfo":
+                instance = ContractInfoQuery._fromProtobuf(query);
+                break;
+            case "contractGetBytecode":
+                instance = ContractByteCodeQuery._fromProtobuf(query);
+                break;
+            case "ContractGetRecords":
+                instance = ContractRecordQuery._fromProtobuf(query);
+                break;
+            case "cryptogetAccountBalance":
+                instance = AccountBalanceQuery._fromProtobuf(query);
+                break;
+            case "cryptoGetAccountRecords":
+                instance = AccountRecordsQuery._fromProtobuf(query);
+                break;
+            case "cryptoGetInfo":
+                instance = AccountInfoQuery._fromProtobuf(query);
+                break;
+            case "cryptoGetLiveHash":
+                instance = LiveHashQuery._fromProtobuf(query);
+                break;
+            case "cryptoGetProxyStakers":
+                instance = AccountStakersQuery._fromProtobuf(query);
+                break;
+            case "fileGetContents":
+                instance = FileContentsQuery._fromProtobuf(query);
+                break;
+            case "fileGetInfo":
+                instance = FileInfoQuery._fromProtobuf(query);
+                break;
+            case "transactionGetReceipt":
+                instance = TransactionReceiptQuery._fromProtobuf(query);
+                break;
+            case "transactionGetRecord":
+                instance = TransactionRecordQuery._fromProtobuf(query);
+                break;
+            case "transactionGetFastRecord":
+                instance = TransactionRecordQuery._fromProtobuf(query);
+                break;
+            case "consensusGetTopicInfo":
+                instance = TopicInfoQuery._fromProtobuf(query);
+                break;
+            case "networkGetVersionInfo":
+                instance = NetworkVersionInfoQuery._fromProtobuf(query);
+                break;
+            default:
+                throw new Error(
+                    `(BUG) Query.fromBytes() not implemented for type ${
+                        query.query ?? ""
+                    }`
+                );
+        }
+
+        return /** @type {Query<T>} */ (/** @type {unknown} */ (instance));
     }
 
     /**

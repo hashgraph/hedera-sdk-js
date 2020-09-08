@@ -37,8 +37,6 @@ export const DEFAULT_RECORD_THRESHOLD = Hbar.fromTinybars(
 
 const DEFAULT_TRANSACTION_VALID_DURATION = 120; // seconds
 
-// TODO: toBytes()
-// TODO: fromBytes()
 // TODO: getTransactionHash()
 
 /**

@@ -25,6 +25,21 @@ export default class ContractInfoQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {ContractInfoQuery}
+     */
+    static _fromProtobuf(query) {
+        const info = /** @type {proto.IContractGetInfoQuery} */ (query.contractGetInfo);
+
+        return new ContractInfoQuery({
+            contractId:
+                info.contractID != null
+                    ? ContractId._fromProtobuf(info.contractID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?ContractId}
      */
     getContractId() {

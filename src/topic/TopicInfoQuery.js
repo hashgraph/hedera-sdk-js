@@ -29,6 +29,21 @@ export default class TopicInfoQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {TopicInfoQuery}
+     */
+    static _fromProtobuf(query) {
+        const info = /** @type {proto.IConsensusTopicQuery} */ (query.consensusGetTopicInfo);
+
+        return new TopicInfoQuery({
+            topicId:
+                info.topicID != null
+                    ? TopicId._fromProtobuf(info.topicID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?TopicId}
      */
     getTopicId() {

@@ -27,6 +27,20 @@ export default class TransactionReceiptQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {TransactionReceiptQuery}
+     */
+    static _fromProtobuf(query) {
+        const receipt = /** @type {proto.ITransactionGetReceiptQuery} */ (query.transactionGetReceipt);
+
+        return new TransactionReceiptQuery({
+            transactionId: receipt.transactionID
+                ? TransactionId._fromProtobuf(receipt.transactionID)
+                : undefined,
+        });
+    }
+
+    /**
      * Set the transaction ID for which the receipt is being requested.
      *
      * @param {TransactionId | string} transactionId

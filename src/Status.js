@@ -1,4 +1,3 @@
-import HederaStatusError from "./HederaStatusError";
 import proto from "@hashgraph/proto";
 
 export default class Status {
@@ -295,15 +294,6 @@ export default class Status {
 
             default:
                 return true;
-        }
-    }
-
-    /**
-     * @returns {void}
-     */
-    _throwIfError() {
-        if (this._isError()) {
-            throw new HederaStatusError(this);
         }
     }
 

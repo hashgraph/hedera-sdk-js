@@ -45,6 +45,21 @@ export default class AccountBalanceQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {AccountBalanceQuery}
+     */
+    static _fromProtobuf(query) {
+        const balance = /** @type {proto.ICryptoGetAccountBalanceQuery} */ (query.cryptogetAccountBalance);
+
+        return new AccountBalanceQuery({
+            accountId:
+                balance.accountID != null
+                    ? AccountId._fromProtobuf(balance.accountID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?AccountId}
      */
     getAccountId() {

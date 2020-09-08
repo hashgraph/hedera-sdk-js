@@ -38,6 +38,22 @@ export default class LiveHashQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {LiveHashQuery}
+     */
+    static _fromProtobuf(query) {
+        const hash = /** @type {proto.ICryptoGetLiveHashQuery} */ (query.cryptoGetLiveHash);
+
+        return new LiveHashQuery({
+            accountId:
+                hash.accountID != null
+                    ? AccountId._fromProtobuf(hash.accountID)
+                    : undefined,
+            hash: hash.hash ?? undefined,
+        });
+    }
+
+    /**
      * @returns {?AccountId}
      */
     getAccountId() {

@@ -25,6 +25,20 @@ export default class TransactionRecordQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {TransactionRecordQuery}
+     */
+    static _fromProtobuf(query) {
+        const record = /** @type {proto.ITransactionGetRecordQuery} */ (query.transactionGetRecord);
+
+        return new TransactionRecordQuery({
+            transactionId: record.transactionID
+                ? TransactionId._fromProtobuf(record.transactionID)
+                : undefined,
+        });
+    }
+
+    /**
      * Set the transaction ID for which the record is being requested.
      *
      * @param {TransactionId} transactionId

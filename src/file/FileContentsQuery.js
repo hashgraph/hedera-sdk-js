@@ -24,6 +24,21 @@ export default class FileContentsQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {FileContentsQuery}
+     */
+    static _fromProtobuf(query) {
+        const contents = /** @type {proto.IFileGetContentsQuery} */ (query.fileGetContents);
+
+        return new FileContentsQuery({
+            fileId:
+                contents.fileID != null
+                    ? FileId._fromProtobuf(contents.fileID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?FileId}
      */
     getFileId() {

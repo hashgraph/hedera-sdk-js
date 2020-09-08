@@ -30,6 +30,21 @@ export default class AccountRecordsQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {AccountRecordsQuery}
+     */
+    static _fromProtobuf(query) {
+        const records = /** @type {proto.ICryptoGetAccountRecordsQuery} */ (query.cryptoGetAccountRecords);
+
+        return new AccountRecordsQuery({
+            accountId:
+                records.accountID != null
+                    ? AccountId._fromProtobuf(records.accountID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?AccountId}
      */
     getAccountId() {

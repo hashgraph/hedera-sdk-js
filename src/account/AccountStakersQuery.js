@@ -32,6 +32,21 @@ export default class AccountStakersQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {AccountStakersQuery}
+     */
+    static _fromProtobuf(query) {
+        const stakers = /** @type {proto.ICryptoGetStakersQuery} */ (query.cryptoGetProxyStakers);
+
+        return new AccountStakersQuery({
+            accountId:
+                stakers.accountID != null
+                    ? AccountId._fromProtobuf(stakers.accountID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?AccountId}
      */
     getAccountId() {

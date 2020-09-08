@@ -24,6 +24,21 @@ export default class ContractByteCodeQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {ContractByteCodeQuery}
+     */
+    static _fromProtobuf(query) {
+        const bytecode = /** @type {proto.IContractGetBytecodeQuery} */ (query.contractGetBytecode);
+
+        return new ContractByteCodeQuery({
+            contractId:
+                bytecode.contractID != null
+                    ? ContractId._fromProtobuf(bytecode.contractID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?ContractId}
      */
     getContractId() {

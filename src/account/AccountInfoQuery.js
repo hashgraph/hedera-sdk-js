@@ -26,6 +26,21 @@ export default class AccountInfoQuery extends Query {
     }
 
     /**
+     * @param {proto.Query} query
+     * @returns {AccountInfoQuery}
+     */
+    static _fromProtobuf(query) {
+        const info = /** @type {proto.ICryptoGetInfoQuery} */ (query.cryptoGetInfo);
+
+        return new AccountInfoQuery({
+            accountId:
+                info.accountID != null
+                    ? AccountId._fromProtobuf(info.accountID)
+                    : undefined,
+        });
+    }
+
+    /**
      * @returns {?AccountId}
      */
     getAccountId() {
