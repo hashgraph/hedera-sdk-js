@@ -124,6 +124,17 @@ export default class Query {
     }
 
     /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        const request = this._makeRequest({
+            responseType: proto.ResponseType.ANSWER_ONLY,
+        });
+
+        return proto.Query.encode(request).finish();
+    }
+
+    /**
      * Set an explicit node ID to use for this query.
      *
      * @param {AccountId} nodeId
