@@ -29,6 +29,7 @@ export default class TopicInfoQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {TopicInfoQuery}
      */

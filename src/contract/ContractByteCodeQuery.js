@@ -24,6 +24,7 @@ export default class ContractByteCodeQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {ContractByteCodeQuery}
      */

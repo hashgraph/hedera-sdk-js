@@ -26,6 +26,7 @@ export default class ContractRecordsQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {ContractRecordsQuery}
      */

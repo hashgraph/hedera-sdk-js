@@ -25,6 +25,7 @@ export default class ContractInfoQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {ContractInfoQuery}
      */

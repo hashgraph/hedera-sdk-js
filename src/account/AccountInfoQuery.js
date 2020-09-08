@@ -26,6 +26,7 @@ export default class AccountInfoQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {AccountInfoQuery}
      */

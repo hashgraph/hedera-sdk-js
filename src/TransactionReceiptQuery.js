@@ -27,6 +27,7 @@ export default class TransactionReceiptQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {TransactionReceiptQuery}
      */

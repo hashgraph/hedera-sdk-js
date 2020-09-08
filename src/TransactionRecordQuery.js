@@ -25,6 +25,7 @@ export default class TransactionRecordQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {TransactionRecordQuery}
      */

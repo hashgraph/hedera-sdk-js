@@ -24,6 +24,7 @@ export default class FileContentsQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {FileContentsQuery}
      */

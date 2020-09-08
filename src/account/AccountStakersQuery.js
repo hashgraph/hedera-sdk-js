@@ -32,6 +32,7 @@ export default class AccountStakersQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {AccountStakersQuery}
      */

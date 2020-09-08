@@ -38,6 +38,7 @@ export default class LiveHashQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {LiveHashQuery}
      */

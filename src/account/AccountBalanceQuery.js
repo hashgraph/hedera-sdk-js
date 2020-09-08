@@ -45,6 +45,7 @@ export default class AccountBalanceQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {AccountBalanceQuery}
      */

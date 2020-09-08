@@ -70,6 +70,7 @@ export default class ContractCallQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {ContractCallQuery}
      */

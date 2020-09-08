@@ -30,6 +30,7 @@ export default class AccountRecordsQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {AccountRecordsQuery}
      */

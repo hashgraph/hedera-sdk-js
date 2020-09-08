@@ -25,6 +25,7 @@ export default class FileInfoQuery extends Query {
     }
 
     /**
+     * @internal
      * @param {proto.Query} query
      * @returns {FileInfoQuery}
      */
