@@ -74,15 +74,16 @@ export default class ContractByteCodeQuery extends Query {
     }
 
     /**
-     * @protected
+     * @internal
      * @override
-     * @param {proto.IQueryHeader} queryHeader
      * @returns {proto.IQuery}
      */
-    _makeRequest(queryHeader) {
+    _makeRequest() {
         return {
             contractGetBytecode: {
-                header: queryHeader,
+                header: {
+                    responseType: proto.ResponseType.ANSWER_ONLY,
+                },
                 contractID: this._contractId?._toProtobuf(),
             },
         };

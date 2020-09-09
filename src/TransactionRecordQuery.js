@@ -65,15 +65,16 @@ export default class TransactionRecordQuery extends Query {
     }
 
     /**
-     * @protected
+     * @internal
      * @override
-     * @param {proto.IQueryHeader} queryHeader
      * @returns {proto.IQuery}
      */
-    _makeRequest(queryHeader) {
+    _makeRequest() {
         return {
             transactionGetRecord: {
-                header: queryHeader,
+                header: {
+                    responseType: proto.ResponseType.ANSWER_ONLY,
+                },
                 transactionID: this._transactionId?._toProtobuf(),
             },
         };

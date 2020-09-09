@@ -69,7 +69,7 @@ export default class AccountInfoQuery extends Query {
      * @param {Channel} channel
      * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
      */
-    _getQueryMethod(channel) {
+    _getMethod(channel) {
         return (query) => channel.crypto.getAccountInfo(query);
     }
 
@@ -88,15 +88,16 @@ export default class AccountInfoQuery extends Query {
     }
 
     /**
-     * @protected
+     * @internal
      * @override
-     * @param {proto.IQueryHeader} queryHeader
      * @returns {proto.IQuery}
      */
-    _makeRequest(queryHeader) {
+    _makeRequest() {
         return {
             cryptoGetInfo: {
-                header: queryHeader,
+                header: {
+                    responseType: proto.ResponseType.ANSWER_ONLY,
+                },
                 accountID: this._accountId?._toProtobuf(),
             },
         };

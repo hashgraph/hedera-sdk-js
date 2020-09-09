@@ -40,6 +40,7 @@
         "prepare": "run-s compile cp:ts"
     },
     "dependencies": {
+        "@babel/preset-env": "^7.11.5",
         "protobufjs": "^6.10.1"
     },
     "devDependencies": {

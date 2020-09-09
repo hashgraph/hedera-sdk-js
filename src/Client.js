@@ -243,6 +243,15 @@ export default class Client {
     /**
      * Get the account ID of the operator.
      *
+     * @returns {?ClientOperator}
+     */
+    getOperator() {
+        return this._operator ?? null;
+    }
+
+    /**
+     * Get the account ID of the operator.
+     *
      * @returns {?AccountId}
      */
     getOperatorId() {

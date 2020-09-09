@@ -70,7 +70,7 @@ export default class TopicInfoQuery extends Query {
      * @param {Channel} channel
      * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
      */
-    _getQueryMethod(channel) {
+    _getMethod(channel) {
         return (query) => channel.consensus.getTopicInfo(query);
     }
 
@@ -87,15 +87,16 @@ export default class TopicInfoQuery extends Query {
     }
 
     /**
-     * @protected
+     * @internal
      * @override
-     * @param {proto.IQueryHeader} queryHeader
      * @returns {proto.IQuery}
      */
-    _makeRequest(queryHeader) {
+    _makeRequest() {
         return {
             consensusGetTopicInfo: {
-                header: queryHeader,
+                header: {
+                    responseType: proto.ResponseType.ANSWER_ONLY,
+                },
                 topicID: this._topicId?._toProtobuf(),
             },
         };

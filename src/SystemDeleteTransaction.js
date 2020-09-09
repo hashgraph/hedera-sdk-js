@@ -137,7 +137,7 @@ export default class SystemDeleteTransaction extends Transaction {
      * @param {Channel} channel
      * @returns {(transaction: proto.ITransaction) => Promise<proto.TransactionResponse>}
      */
-    _getTransactionMethod(channel) {
+    _getMethod(channel) {
         if (this._fileId != null) {
             return (transaction) => channel.file.systemDelete(transaction);
         } else {

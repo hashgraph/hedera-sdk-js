@@ -116,7 +116,7 @@ export default class AccountBalanceQuery extends Query {
      * @param {Channel} channel
      * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
      */
-    _getQueryMethod(channel) {
+    _getMethod(channel) {
         return (query) => channel.crypto.cryptoGetBalance(query);
     }
 
@@ -133,15 +133,16 @@ export default class AccountBalanceQuery extends Query {
     }
 
     /**
-     * @protected
+     * @internal
      * @override
-     * @param {proto.IQueryHeader} queryHeader
      * @returns {proto.IQuery}
      */
-    _makeRequest(queryHeader) {
+    _makeRequest() {
         return {
             cryptogetAccountBalance: {
-                header: queryHeader,
+                header: {
+                    responseType: proto.ResponseType.ANSWER_ONLY,
+                },
                 accountID: this._accountId?._toProtobuf(),
                 contractID: this._contractId?._toProtobuf(),
             },

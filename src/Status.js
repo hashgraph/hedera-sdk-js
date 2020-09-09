@@ -236,6 +236,8 @@ export default class Status {
                 return "TOTAL_LEDGER_BALANCE_INVALID";
             case Status.ExpirationReductionNotAllowed:
                 return "EXPIRATION_REDUCTION_NOT_ALLOWED";
+            case Status.MaxGasLimitExceeded:
+                return "MAX_GAS_LIMIT_EXCEEDED";
             case Status.InvalidTopicId:
                 return "INVALID_TOPIC_ID";
             case Status.InvalidTopicExpirationTime:
@@ -276,25 +278,6 @@ export default class Status {
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return Status[code] ?? new Status(code);
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    _isError() {
-        switch (this) {
-            case Status.Success:
-            case Status.Ok:
-                return false;
-
-            case Status.Unknown:
-            case Status.ReceiptNotFound:
-            case Status.RecordNotFound:
-                return true;
-
-            default:
-                return true;
-        }
     }
 
     /**
@@ -865,6 +848,11 @@ Status.TotalLedgerBalanceInvalid = new Status(108);
  * The expiration date/time on a smart contract may not be reduced.
  */
 Status.ExpirationReductionNotAllowed = new Status(110);
+
+/**
+ * Gas exceeded currently allowable gas limit per transaction
+ */
+Status.MaxGasLimitExceeded = new Status(111);
 
 /**
  * The Topic ID specified is not in the system.

@@ -71,7 +71,7 @@ export default class TransactionReceiptQuery extends Query {
      * @param {Channel} channel
      * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
      */
-    _getQueryMethod(channel) {
+    _getMethod(channel) {
         return (query) => channel.crypto.getTransactionReceipts(query);
     }
 
@@ -89,15 +89,16 @@ export default class TransactionReceiptQuery extends Query {
     }
 
     /**
-     * @protected
+     * @internal
      * @override
-     * @param {proto.IQueryHeader} queryHeader
      * @returns {proto.IQuery}
      */
-    _makeRequest(queryHeader) {
+    _makeRequest() {
         return {
             transactionGetReceipt: {
-                header: queryHeader,
+                header: {
+                    responseType: proto.ResponseType.ANSWER_ONLY,
+                },
                 transactionID: this._transactionId?._toProtobuf(),
             },
         };

@@ -211,7 +211,7 @@ export default class FileUpdateTransaction extends Transaction {
      * @param {Channel} channel
      * @returns {(transaction: proto.ITransaction) => Promise<proto.TransactionResponse>}
      */
-    _getTransactionMethod(channel) {
+    _getMethod(channel) {
         return (transaction) => channel.file.updateFile(transaction);
     }
 

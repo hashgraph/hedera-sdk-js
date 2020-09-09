@@ -100,7 +100,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
      * @param {Channel} channel
      * @returns {(transaction: proto.ITransaction) => Promise<proto.TransactionResponse>}
      */
-    _getTransactionMethod(channel) {
+    _getMethod(channel) {
         return (transaction) => channel.crypto.deleteLiveHash(transaction);
     }
 

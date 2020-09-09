@@ -75,7 +75,7 @@ export default class AccountStakersQuery extends Query {
      * @param {Channel} channel
      * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
      */
-    _getQueryMethod(channel) {
+    _getMethod(channel) {
         return (query) => channel.crypto.getStakersByAccountID(query);
     }
 
@@ -92,15 +92,16 @@ export default class AccountStakersQuery extends Query {
     }
 
     /**
-     * @protected
+     * @internal
      * @override
-     * @param {proto.IQueryHeader} queryHeader
      * @returns {proto.IQuery}
      */
-    _makeRequest(queryHeader) {
+    _makeRequest() {
         return {
             cryptoGetProxyStakers: {
-                header: queryHeader,
+                header: {
+                    responseType: proto.ResponseType.ANSWER_ONLY,
+                },
                 accountID: this._accountId?._toProtobuf(),
             },
         };

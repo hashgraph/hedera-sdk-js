@@ -186,15 +186,16 @@ export default class ContractCallQuery extends Query {
     }
 
     /**
-     * @protected
+     * @internal
      * @override
-     * @param {proto.IQueryHeader} queryHeader
      * @returns {proto.IQuery}
      */
-    _makeRequest(queryHeader) {
+    _makeRequest() {
         return {
             contractCallLocal: {
-                header: queryHeader,
+                header: {
+                    responseType: proto.ResponseType.ANSWER_ONLY,
+                },
                 contractID: this._contractId?._toProtobuf(),
                 gas: this._gas,
                 functionParameters: this._functionParameters,
