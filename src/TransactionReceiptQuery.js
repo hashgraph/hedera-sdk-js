@@ -1,4 +1,5 @@
 import Query from "./Query";
+import Status from "./Status";
 import AccountId from "./account/AccountId";
 import TransactionReceipt from "./TransactionReceipt";
 import TransactionId from "./TransactionId";
@@ -64,6 +65,34 @@ export default class TransactionReceiptQuery extends Query {
      */
     _isPaymentRequired() {
         return false;
+    }
+
+    /**
+     * @abstract
+     * @protected
+     * @param {Status} responseStatus
+     * @param {proto.IResponse} response
+     * @returns {boolean}
+     */
+    _shouldRetry(responseStatus, response) {
+        if (super._shouldRetry(responseStatus, response)) {
+            return true;
+        }
+
+        const status = Status._fromCode(
+            /** @type {proto.ResponseCodeEnum} */ (response
+                .transactionGetReceipt?.receipt?.status)
+        );
+
+        switch (status.code) {
+            case Status.Ok.code:
+            case Status.Busy.code:
+            case Status.Unknown.code:
+            case Status.ReceiptNotFound.code:
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**

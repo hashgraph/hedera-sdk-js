@@ -334,13 +334,8 @@ async function _makePaymentTransaction(
         },
     };
 
-    console.log(JSON.stringify(body));
-
     const bodyBytes = proto.TransactionBody.encode(body).finish();
     const signature = await operator.transactionSigner(bodyBytes);
-
-    console.log(JSON.stringify(bodyBytes));
-    console.log(JSON.stringify(signature));
 
     return {
         bodyBytes,

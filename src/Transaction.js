@@ -241,9 +241,6 @@ export default class Transaction extends HederaExecutable {
                 pubKeyPrefix: publicKeyData,
                 ed25519: signature,
             });
-
-            console.log("--------------------");
-            console.log(JSON.stringify(transaction));
         }
 
         this._signers.add(publicKeyData);

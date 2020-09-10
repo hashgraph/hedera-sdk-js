@@ -16,7 +16,7 @@ export default class HederaExecutable {
      * @abstract
      * @protected
      * @param {Client} _
-     * @returns {void}
+     * @returns {Promise<void>}
      */
     _onExecute(_) {
         throw new Error("not implemented");
@@ -97,11 +97,10 @@ export default class HederaExecutable {
      * @returns {Promise<OutputT>}
      */
     async execute(client) {
-        this._onExecute(client);
+        await this._onExecute(client);
 
         for (let attempt = 0 /* loop forever */; ; attempt += 1) {
             const delay = Math.floor(250 * Math.pow(2, attempt));
-
             const request = this._makeRequest();
             const nodeId = /** @type {AccountId} */ (this._getNodeId(client));
             const channel = client._getNetworkChannel(nodeId);
@@ -109,16 +108,12 @@ export default class HederaExecutable {
 
             this._advanceRequest();
 
-            console.log("Node:", nodeId.toString());
-            console.log("Request:", JSON.stringify(request));
-
             const response = await method(request);
-            console.log("Response:", JSON.stringify(response));
             const responseStatus = this._mapResponseStatus(response);
-            console.log("ResponseStatus:", responseStatus.toString());
 
             if (this._shouldRetry(responseStatus, response)) {
                 await sleep(delay);
+                continue;
             }
 
             if (responseStatus.code != Status.Ok.code) {

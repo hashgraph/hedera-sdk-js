@@ -19,9 +19,9 @@ async function main() {
         .setKey(newKey.publicKey)
         .execute(client);
 
-    // const receipt = await response.getReceipt(client);
+    const receipt = await response.getReceipt(client);
 
-    // console.log(`account id = ${receipt.accountId}`);
+    console.log(`account id = ${receipt.accountId}`);
 }
 
 void main();
