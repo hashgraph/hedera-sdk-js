@@ -62,6 +62,16 @@ export default class FileInfoQuery extends Query {
 
     /**
      * @protected
+     * @param {proto.IResponse} response
+     * @returns {proto.IResponseHeader}
+     */
+    _mapResponseHeader(response) {
+        return /** @type {proto.IResponseHeader} */ (response.fileGetInfo
+            ?.header);
+    }
+
+    /**
+     * @protected
      * @override
      * @param {proto.IResponse} response
      * @returns {FileInfo}

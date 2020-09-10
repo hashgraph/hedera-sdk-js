@@ -79,6 +79,16 @@ export default class AccountRecordsQuery extends Query {
 
     /**
      * @protected
+     * @param {proto.IResponse} response
+     * @returns {proto.IResponseHeader}
+     */
+    _mapResponseHeader(response) {
+        return /** @type {proto.IResponseHeader} */ (response
+            .cryptoGetAccountRecords?.header);
+    }
+
+    /**
+     * @protected
      * @override
      * @param {proto.IResponse} response
      * @returns {TransactionRecord[]}

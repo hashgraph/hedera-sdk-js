@@ -115,7 +115,7 @@ export default class TransactionReceipt {
      * @returns {TransactionReceipt}
      */
     static _fromProtobuf(receipt) {
-        const exchangeRate = /** @type {proto.IExchangeRateSet} */ (receipt.exchangeRate);
+        const exchangeRateSet = /** @type {proto.IExchangeRateSet} */ (receipt.exchangeRate);
 
         return new TransactionReceipt({
             status: Status._fromCode(receipt.status ?? 0),
@@ -144,7 +144,7 @@ export default class TransactionReceipt {
                 receipt.exchangeRate != null
                     ? ExchangeRate._fromProtobuf(
                           /** @type {proto.IExchangeRate} */
-                          (exchangeRate.currentRate)
+                          (exchangeRateSet.currentRate)
                       )
                     : null,
 

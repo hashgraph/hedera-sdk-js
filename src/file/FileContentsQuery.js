@@ -61,6 +61,16 @@ export default class FileContentsQuery extends Query {
 
     /**
      * @protected
+     * @param {proto.IResponse} response
+     * @returns {proto.IResponseHeader}
+     */
+    _mapResponseHeader(response) {
+        return /** @type {proto.IResponseHeader} */ (response.fileGetContents
+            ?.header);
+    }
+
+    /**
+     * @protected
      * @override
      * @param {proto.IResponse} response
      * @returns {Uint8Array}

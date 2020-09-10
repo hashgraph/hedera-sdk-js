@@ -1,4 +1,5 @@
 import Query from "./Query";
+import AccountId from "./account/AccountId";
 import TransactionReceipt from "./TransactionReceipt";
 import TransactionId from "./TransactionId";
 import proto from "@hashgraph/proto";
@@ -77,11 +78,23 @@ export default class TransactionReceiptQuery extends Query {
 
     /**
      * @protected
+     * @param {proto.IResponse} response
+     * @returns {proto.IResponseHeader}
+     */
+    _mapResponseHeader(response) {
+        return /** @type {proto.IResponseHeader} */ (response
+            .transactionGetReceipt?.header);
+    }
+
+    /**
+     * @protected
      * @override
      * @param {proto.IResponse} response
+     * @param {AccountId} __
+     * @param {proto.IQuery} ___
      * @returns {TransactionReceipt}
      */
-    _mapResponse(response) {
+    _mapResponse(response, __, ___) {
         return TransactionReceipt._fromProtobuf(
             /** @type {proto.ITransactionReceipt} */ (response
                 .transactionGetReceipt?.receipt)

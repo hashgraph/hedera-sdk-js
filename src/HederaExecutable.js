@@ -1,5 +1,6 @@
 import Client from "./Client";
 import Channel from "./Channel";
+import HederaPreCheckStatusError from "./HederaPreCheckStatusError";
 import AccountId from "./account/AccountId";
 import Status from "./Status";
 import { sleep } from "./util";
@@ -101,29 +102,32 @@ export default class HederaExecutable {
         for (let attempt = 0 /* loop forever */; ; attempt += 1) {
             const delay = Math.floor(250 * Math.pow(2, attempt));
 
-            try {
-                const request = this._makeRequest();
-                const nodeId = /** @type {AccountId} */ (this._getNodeId(
-                    client
-                ));
-                const channel = client._getNetworkChannel(nodeId);
-                const method = this._getMethod(channel);
+            const request = this._makeRequest();
+            const nodeId = /** @type {AccountId} */ (this._getNodeId(client));
+            const channel = client._getNetworkChannel(nodeId);
+            const method = this._getMethod(channel);
 
-                this._advanceRequest();
+            this._advanceRequest();
 
-                const response = await method(request);
-                const responseStatus = this._mapResponseStatus(response);
+            console.log("Node:", nodeId.toString());
+            console.log("Request:", JSON.stringify(request));
 
-                if (this._shouldRetry(responseStatus, response)) {
-                    console.log("Bad response status:", responseStatus);
-                    await sleep(delay);
-                }
+            const response = await method(request);
+            console.log("Response:", JSON.stringify(response));
+            const responseStatus = this._mapResponseStatus(response);
+            console.log("ResponseStatus:", responseStatus.toString());
 
-                return this._mapResponse(response, nodeId, request);
-            } catch (e) {
-                console.log("Grpc Error:", e);
+            if (this._shouldRetry(responseStatus, response)) {
                 await sleep(delay);
             }
+
+            if (responseStatus.code != Status.Ok.code) {
+                throw new HederaPreCheckStatusError({
+                    status: responseStatus,
+                });
+            }
+
+            return this._mapResponse(response, nodeId, request);
         }
     }
 }

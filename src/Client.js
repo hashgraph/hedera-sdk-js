@@ -59,7 +59,7 @@ export default class Client {
     constructor(props) {
         /**
          * @private
-         * @type {Map<AccountId, string>}
+         * @type {Map<string, string>}
          */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this._network = new Map();
@@ -146,10 +146,10 @@ export default class Client {
                     ? accountId
                     : AccountId.fromString(accountId);
 
-            this._network.set(key, url);
+            this._network.set(key.toString(), url);
+            this._networkNodes.push(key);
         }
 
-        this._networkNodes = Array.from(this._network.keys());
         this._nextNetworkNodeIndex = 0;
     }
 
@@ -322,7 +322,7 @@ export default class Client {
             return networkChannel;
         }
 
-        const address = this._network.get(nodeId);
+        const address = this._network.get(nodeId.toString());
 
         if (address == null) {
             throw new Error(`unknown node: ${nodeId.toString()}`);

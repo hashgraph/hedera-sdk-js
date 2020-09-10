@@ -63,6 +63,16 @@ export default class ContractByteCodeQuery extends Query {
 
     /**
      * @protected
+     * @param {proto.IResponse} response
+     * @returns {proto.IResponseHeader}
+     */
+    _mapResponseHeader(response) {
+        return /** @type {proto.IResponseHeader} */ (response
+            .contractGetBytecodeResponse?.header);
+    }
+
+    /**
+     * @protected
      * @override
      * @param {proto.IResponse} response
      * @returns {Uint8Array}

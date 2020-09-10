@@ -1,27 +1,10 @@
 import proto from "@hashgraph/proto";
 import Client from "./Client";
-import TransactionId from "./TransactionId";
 import Status from "./Status";
 import Hbar from "./Hbar";
 import AccountId from "./account/AccountId";
 import Channel from "./Channel";
 import HederaExecutable from "./HederaExecutable";
-import CryptoTransferTransaction from "./account/CryptoTransferTransaction";
-// import ContractCallQuery from "./contract/ContractCallQuery";
-// import NetworkVersionInfoQuery from "./NetworkVersionInfoQuery";
-// import TopicInfoQuery from "./topic/TopicInfoQuery";
-// import TransactionRecordQuery from "./TransactionRecordQuery";
-// import TransactionReceiptQuery from "./TransactionReceiptQuery";
-// import FileInfoQuery from "./file/FileInfoQuery";
-// import FileContentsQuery from "./file/FileContentsQuery";
-// import AccountStakersQuery from "./account/AccountStakersQuery";
-// import LiveHashQuery from "./account/LiveHashQuery";
-// import AccountInfoQuery from "./account/AccountInfoQuery";
-// import AccountBalanceQuery from "./account/AccountBalanceQuery";
-// import AccountRecordsQuery from "./account/AccountRecordsQuery";
-// import ContractRecordQuery from "./contract/ContractRecordsQuery";
-// import ContractByteCodeQuery from "./contract/ContractByteCodeQuery";
-// import ContractInfoQuery from "./contract/ContractInfoQuery";
 
 /**
  * Base class for all queries that can be submitted to Hedera.
@@ -34,7 +17,7 @@ export default class Query extends HederaExecutable {
     constructor() {
         super();
 
-        /** @type {?TransactionId} */
+        /** @type {?import("./TransactionId").default} */
         this._paymentTransactionId = null;
 
         /** @type {proto.ITransaction[]} */
@@ -224,7 +207,7 @@ export default class Query extends HederaExecutable {
                 this._paymentTransactionNodeIds.push(nodeId);
                 this._paymentTransactions.push(
                     await _makePaymentTransaction(
-                        /** @type {TransactionId} */ (this
+                        /** @type {import("./TransactionId").default} */ (this
                             ._paymentTransactionId),
                         nodeId,
                         operator,
@@ -236,6 +219,8 @@ export default class Query extends HederaExecutable {
     }
 
     /**
+     * @abstract
+     * @protected
      * @param {proto.IResponse} _
      * @returns {proto.IResponseHeader}
      */
@@ -253,7 +238,6 @@ export default class Query extends HederaExecutable {
     }
 
     /**
-     * @abstract
      * @protected
      * @param {proto.IResponse} response
      * @returns {Status}
@@ -289,7 +273,6 @@ export default class Query extends HederaExecutable {
     }
 
     /**
-     * @abstract
      * @param {Client} client
      * @returns {AccountId}
      */
@@ -298,7 +281,6 @@ export default class Query extends HederaExecutable {
     }
 
     /**
-     * @abstract
      * @protected
      * @returns {void}
      */
@@ -314,7 +296,7 @@ export default class Query extends HederaExecutable {
 }
 
 /**
- * @param {TransactionId} paymentTransactionId
+ * @param {import("./TransactionId").default} paymentTransactionId
  * @param {AccountId} nodeId
  * @param {import("./Client").ClientOperator} operator
  * @param {Hbar} paymentAmount
@@ -326,13 +308,49 @@ async function _makePaymentTransaction(
     operator,
     paymentAmount
 ) {
-    return (
-        await new CryptoTransferTransaction()
-            .setTransactionId(paymentTransactionId)
-            .setNodeId(nodeId)
-            .setMaxTransactionFee(new Hbar(1)) // 1 Hbar
-            .addSender(operator.accountId, paymentAmount)
-            .addRecipient(nodeId, paymentAmount)
-            .signWith(operator.publicKey, operator.transactionSigner)
-    )._makeRequest();
+    /**
+     * @type {proto.ITransactionBody}
+     */
+    const body = {
+        transactionID: paymentTransactionId._toProtobuf(),
+        nodeAccountID: nodeId._toProtobuf(),
+        transactionFee: new Hbar(1).toTinybars(),
+        transactionValidDuration: {
+            seconds: 120,
+        },
+        cryptoTransfer: {
+            transfers: {
+                accountAmounts: [
+                    {
+                        accountID: operator.accountId._toProtobuf(),
+                        amount: paymentAmount.negated().toTinybars(),
+                    },
+                    {
+                        accountID: nodeId._toProtobuf(),
+                        amount: paymentAmount.toTinybars(),
+                    },
+                ],
+            },
+        },
+    };
+
+    console.log(JSON.stringify(body));
+
+    const bodyBytes = proto.TransactionBody.encode(body).finish();
+    const signature = await operator.transactionSigner(bodyBytes);
+
+    console.log(JSON.stringify(bodyBytes));
+    console.log(JSON.stringify(signature));
+
+    return {
+        bodyBytes,
+        sigMap: {
+            sigPair: [
+                {
+                    pubKeyPrefix: operator.publicKey.toBytes(),
+                    ed25519: signature,
+                },
+            ],
+        },
+    };
 }

@@ -20,6 +20,16 @@ export default class NetworkVersionInfoQuery extends Query {
 
     /**
      * @protected
+     * @param {proto.IResponse} response
+     * @returns {proto.IResponseHeader}
+     */
+    _mapResponseHeader(response) {
+        return /** @type {proto.IResponseHeader} */ (response
+            .networkGetVersionInfo?.header);
+    }
+
+    /**
+     * @protected
      * @override
      * @param {proto.IResponse} response
      * @returns {NetworkVersionInfo}
