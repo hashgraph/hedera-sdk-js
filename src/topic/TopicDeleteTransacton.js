@@ -1,7 +1,6 @@
 import proto from "@hashgraph/proto";
 import Channel from "../Channel";
-import Transaction from "../Transaction";
-import { _toProtoKey } from "../util";
+import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import TopicId from "./TopicId";
 
 /**
@@ -98,3 +97,9 @@ export default class TopicDeleteTransaction extends Transaction {
         };
     }
 }
+
+TRANSACTION_REGISTRY.set(
+    "consensusDeleteTopic",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    TopicDeleteTransaction._fromProtobuf
+);

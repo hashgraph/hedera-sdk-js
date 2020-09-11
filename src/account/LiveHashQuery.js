@@ -1,4 +1,4 @@
-import Query from "../Query";
+import Query, { QUERY_REGISTRY } from "../Query";
 import AccountId from "./AccountId";
 import LiveHash from "./LiveHash";
 import proto from "@hashgraph/proto";
@@ -145,3 +145,7 @@ export default class LiveHashQuery extends Query {
         };
     }
 }
+
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/unbound-method
+QUERY_REGISTRY.set("cryptoGetLiveHash", LiveHashQuery._fromProtobuf);

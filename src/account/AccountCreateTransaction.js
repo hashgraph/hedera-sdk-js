@@ -5,6 +5,7 @@ import AccountId from "./AccountId";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     DEFAULT_RECORD_THRESHOLD,
+    TRANSACTION_REGISTRY,
 } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _fromProtoKey, _toProtoKey } from "../util";
@@ -321,3 +322,9 @@ export default class AccountCreateTransaction extends Transaction {
         };
     }
 }
+
+TRANSACTION_REGISTRY.set(
+    "cryptoCreateAccount",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    AccountCreateTransaction._fromProtobuf
+);

@@ -1,4 +1,4 @@
-import Transaction from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import TopicId from "./TopicId";
 import Channel from "../Channel";
 import * as utf8 from "../encoding/utf8";
@@ -60,7 +60,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 
     /**
      * @param {TopicId} topicId
-     * @returns {this}
+     * @returns {TopicMessageSubmitTransaction}
      */
     setTopicId(topicId) {
         this._requireNotFrozen();
@@ -78,7 +78,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 
     /**
      * @param {string | Uint8Array} message
-     * @returns {this}
+     * @returns {TopicMessageSubmitTransaction}
      */
     setMessage(message) {
         this._requireNotFrozen();
@@ -119,3 +119,9 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         };
     }
 }
+
+TRANSACTION_REGISTRY.set(
+    "consensusSubmitMessage",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    TopicMessageSubmitTransaction._fromProtobuf
+);

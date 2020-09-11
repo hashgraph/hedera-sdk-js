@@ -1,4 +1,4 @@
-import Query from "../Query";
+import Query, { QUERY_REGISTRY } from "../Query";
 import AccountId from "./AccountId";
 import AccountInfo from "./AccountInfo";
 import proto from "@hashgraph/proto";
@@ -113,3 +113,7 @@ export default class AccountInfoQuery extends Query {
         };
     }
 }
+
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/unbound-method
+QUERY_REGISTRY.set("cryptoGetInfo", AccountInfoQuery._fromProtobuf);

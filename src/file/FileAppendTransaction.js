@@ -1,6 +1,6 @@
 import proto from "@hashgraph/proto";
 import Channel from "../Channel";
-import Transaction from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import * as utf8 from "../encoding/utf8";
 import FileId from "./FileId";
 
@@ -151,3 +151,6 @@ export default class FileAppendTransaction extends Transaction {
         };
     }
 }
+
+// eslint-disable-next-line @typescript-eslint/unbound-method
+TRANSACTION_REGISTRY.set("fileAppend", FileAppendTransaction._fromProtobuf);

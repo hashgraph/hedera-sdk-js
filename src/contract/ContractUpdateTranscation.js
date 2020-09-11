@@ -4,7 +4,7 @@ import FileId from "../file/FileId";
 import Timestamp from "../Timestamp";
 import proto from "@hashgraph/proto";
 import Channel from "../Channel";
-import Transaction from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _toProtoKey, _fromProtoKey } from "../util";
 import Long from "long";
@@ -316,3 +316,9 @@ export default class ContractUpdateTransaction extends Transaction {
         };
     }
 }
+
+TRANSACTION_REGISTRY.set(
+    "contractUpdateInstance",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    ContractUpdateTransaction._fromProtobuf
+);

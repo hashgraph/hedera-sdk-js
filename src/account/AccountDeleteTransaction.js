@@ -1,6 +1,6 @@
 import proto from "@hashgraph/proto";
 import Channel from "../Channel";
-import Transaction from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import { _toProtoKey } from "../util";
 import { AccountId } from "..";
 
@@ -142,3 +142,9 @@ export default class AccountDeleteTransaction extends Transaction {
         };
     }
 }
+
+TRANSACTION_REGISTRY.set(
+    "cryptoDelete",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    AccountDeleteTransaction._fromProtobuf
+);

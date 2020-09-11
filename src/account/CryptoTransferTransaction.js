@@ -3,7 +3,7 @@ import Channel from "../Channel";
 import Hbar from "../Hbar";
 import AccountId from "../account/AccountId";
 import Transfer from "../Transfer";
-import Transaction from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import { _toProtoKey } from "../util";
 import BigNumber from "bignumber.js";
 
@@ -147,3 +147,9 @@ export default class CryptoTransferTransaction extends Transaction {
         };
     }
 }
+
+TRANSACTION_REGISTRY.set(
+    "cryptoTransfer",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    CryptoTransferTransaction._fromProtobuf
+);

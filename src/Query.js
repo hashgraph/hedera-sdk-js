@@ -7,6 +7,12 @@ import Channel from "./Channel";
 import HederaExecutable from "./HederaExecutable";
 
 /**
+ * @template OutputT
+ * @type {Map<proto.Query["query"], (query: proto.Query) => Query<OutputT>>}
+ */
+export const QUERY_REGISTRY = new Map();
+
+/**
  * Base class for all queries that can be submitted to Hedera.
  *
  * @abstract
@@ -42,6 +48,33 @@ export default class Query extends HederaExecutable {
          * @type {?AccountId}
          */
         this._nodeId = null;
+    }
+
+    /**
+     * @template T
+     * @param {Uint8Array} bytes
+     * @returns {Query<T>}
+     */
+    static fromBytes(bytes) {
+        const query = proto.Query.decode(bytes);
+
+        if (query.query == null) {
+            throw new Error("query.query was not set in the protobuf");
+        }
+
+        const fromProtobuf = QUERY_REGISTRY.get(query.query);
+
+        if (fromProtobuf == null) {
+            throw new Error(
+                `(BUG) Transaction.fromBytes() not implemented for type ${
+                    query.query ?? ""
+                }`
+            );
+        }
+
+        return /** @type {Query<T>} */ (
+            /** @type {unknown} */ (fromProtobuf(query))
+        );
     }
 
     // /**

@@ -1,4 +1,4 @@
-import Query from "./Query";
+import Query, { QUERY_REGISTRY } from "./Query";
 import TransactionRecord from "./TransactionRecord";
 import TransactionId from "./TransactionId";
 import proto from "@hashgraph/proto";
@@ -90,3 +90,10 @@ export default class TransactionRecordQuery extends Query {
         };
     }
 }
+
+QUERY_REGISTRY.set(
+    "transactionGetRecord",
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    TransactionRecordQuery._fromProtobuf
+);

@@ -1,4 +1,4 @@
-import Query from "./Query";
+import Query, { QUERY_REGISTRY } from "./Query";
 import NetworkVersionInfo from "./NetworkVersionInfo";
 import proto from "@hashgraph/proto";
 
@@ -55,3 +55,10 @@ export default class NetworkVersionInfoQuery extends Query {
         };
     }
 }
+
+QUERY_REGISTRY.set(
+    "networkGetVersionInfo",
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    NetworkVersionInfoQuery._fromProtobuf
+);

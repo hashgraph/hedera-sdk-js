@@ -1,4 +1,4 @@
-import Query from "../Query";
+import Query, { QUERY_REGISTRY } from "../Query";
 import ContractId from "./ContractId";
 import ContractFunctionParameters from "./ContractFunctionParameters";
 import ContractFunctionResult from "./ContractFunctionResult";
@@ -214,3 +214,7 @@ export default class ContractCallQuery extends Query {
         };
     }
 }
+
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/unbound-method
+QUERY_REGISTRY.set("contractCallLocal", ContractCallQuery._fromProtobuf);

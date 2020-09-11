@@ -1,6 +1,9 @@
 import proto from "@hashgraph/proto";
 import Channel from "../Channel";
-import Transaction, { DEFAULT_AUTO_RENEW_PERIOD } from "../Transaction";
+import Transaction, {
+    DEFAULT_AUTO_RENEW_PERIOD,
+    TRANSACTION_REGISTRY,
+} from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _fromProtoKey, _toProtoKey } from "../util";
 import AccountId from "../account/AccountId";
@@ -248,3 +251,9 @@ export default class TopicCreateTransaction extends Transaction {
         };
     }
 }
+
+TRANSACTION_REGISTRY.set(
+    "consensusCreateTopic",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    TopicCreateTransaction._fromProtobuf
+);

@@ -1,6 +1,6 @@
 import proto from "@hashgraph/proto";
 import Channel from "../Channel";
-import Transaction from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import { _toProtoKey } from "../util";
 import FileId from "./FileId";
 
@@ -100,3 +100,6 @@ export default class FileDeleteTransaction extends Transaction {
         };
     }
 }
+
+// eslint-disable-next-line @typescript-eslint/unbound-method
+TRANSACTION_REGISTRY.set("fileDelete", FileDeleteTransaction._fromProtobuf);

@@ -1,6 +1,6 @@
 import proto from "@hashgraph/proto";
 import Channel from "./Channel";
-import Transaction from "./Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "./Transaction";
 
 /**
  * @typedef {object} Time
@@ -133,3 +133,6 @@ export default class FreezeTransaction extends Transaction {
         };
     }
 }
+
+// eslint-disable-next-line @typescript-eslint/unbound-method
+TRANSACTION_REGISTRY.set("freeze", FreezeTransaction._fromProtobuf);

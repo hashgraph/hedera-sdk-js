@@ -1,4 +1,4 @@
-import Query from "../Query";
+import Query, { QUERY_REGISTRY } from "../Query";
 import AccountId from "./AccountId";
 import TransactionRecord from "../TransactionRecord";
 import proto from "@hashgraph/proto";
@@ -117,3 +117,10 @@ export default class AccountRecordsQuery extends Query {
         };
     }
 }
+
+QUERY_REGISTRY.set(
+    "cryptoGetAccountRecords",
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    AccountRecordsQuery._fromProtobuf
+);

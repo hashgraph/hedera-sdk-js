@@ -1,4 +1,4 @@
-import Query from "../Query";
+import Query, { QUERY_REGISTRY } from "../Query";
 import FileId from "./FileId";
 import FileInfo from "./FileInfo";
 import proto from "@hashgraph/proto";
@@ -100,3 +100,7 @@ export default class FileInfoQuery extends Query {
         };
     }
 }
+
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/unbound-method
+QUERY_REGISTRY.set("fileGetInfo", FileInfoQuery._fromProtobuf);

@@ -1,6 +1,6 @@
 import proto from "@hashgraph/proto";
 import Channel from "../Channel";
-import Transaction from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import { _toProtoKey } from "../util";
 import ContractId from "./ContractId";
 import AccountId from "../account/AccountId";
@@ -178,3 +178,9 @@ export default class ContractDeleteTransaction extends Transaction {
         };
     }
 }
+
+TRANSACTION_REGISTRY.set(
+    "contractDeleteInstance",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    ContractDeleteTransaction._fromProtobuf
+);

@@ -1,4 +1,4 @@
-import Query from "../Query";
+import Query, { QUERY_REGISTRY } from "../Query";
 import TopicId from "./TopicId";
 import TopicInfo from "./TopicInfo";
 import proto from "@hashgraph/proto";
@@ -112,3 +112,7 @@ export default class TopicInfoQuery extends Query {
         };
     }
 }
+
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/unbound-method
+QUERY_REGISTRY.set("consensusGetTopicInfo", TopicInfoQuery._fromProtobuf);

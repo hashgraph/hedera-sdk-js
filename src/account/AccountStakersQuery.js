@@ -1,4 +1,4 @@
-import Query from "../Query";
+import Query, { QUERY_REGISTRY } from "../Query";
 import AccountId from "./AccountId";
 import ProxyStaker from "./ProxyStaker";
 import proto from "@hashgraph/proto";
@@ -117,3 +117,7 @@ export default class AccountStakersQuery extends Query {
         };
     }
 }
+
+// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/unbound-method
+QUERY_REGISTRY.set("cryptoGetProxyStakers", AccountStakersQuery._fromProtobuf);

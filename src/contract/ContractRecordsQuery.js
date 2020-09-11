@@ -1,4 +1,4 @@
-import Query from "../Query";
+import Query, { QUERY_REGISTRY } from "../Query";
 import ContractId from "./ContractId";
 import TransactionRecord from "../TransactionRecord";
 import proto from "@hashgraph/proto";
@@ -101,3 +101,10 @@ export default class ContractRecordsQuery extends Query {
         };
     }
 }
+
+QUERY_REGISTRY.set(
+    "ContractGetRecords",
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    ContractRecordsQuery._fromProtobuf
+);

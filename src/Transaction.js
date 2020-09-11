@@ -17,6 +17,11 @@ export const DEFAULT_RECORD_THRESHOLD = Hbar.fromTinybars(
 
 const DEFAULT_TRANSACTION_VALID_DURATION = 120; // seconds
 
+/**
+ * @type {Map<proto.TransactionBody["data"], (body: proto.TransactionBody) => Transaction>}
+ */
+export const TRANSACTION_REGISTRY = new Map();
+
 // TODO: getTransactionHash()
 
 /**
@@ -85,6 +90,40 @@ export default class Transaction extends HederaExecutable {
          * @type {?TransactionId}
          */
         this._transactionId = null;
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {Transaction}
+     */
+    static fromBytes(bytes) {
+        const transaction = proto.Transaction.decode(bytes);
+        const isFrozen = transaction.sigMap?.sigPair?.length ?? 0 > 0;
+        const body = proto.TransactionBody.decode(transaction.bodyBytes);
+
+        if (body.data == null) {
+            throw new Error("body.data was not set in the protobuf");
+        }
+
+        const fromProtobuf = TRANSACTION_REGISTRY.get(body.data);
+
+        if (fromProtobuf == null) {
+            throw new Error(
+                `(BUG) Transaction.fromBytes() not implemented for type ${
+                    body.data ?? ""
+                }`
+            );
+        }
+
+        const instance = fromProtobuf(body);
+
+        if (isFrozen) {
+            // FIXME: convert this to JS
+            // instance.signatures = Collections.singletonList(tx.getSigMap().toBuilder());
+            instance._transactions = [transaction];
+        }
+
+        return instance;
     }
 
     /**

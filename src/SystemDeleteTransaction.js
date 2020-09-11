@@ -1,6 +1,6 @@
 import proto from "@hashgraph/proto";
 import Channel from "./Channel";
-import Transaction from "./Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "./Transaction";
 import FileId from "./file/FileId";
 import ContractId from "./contract/ContractId";
 import Timestamp from "./Timestamp";
@@ -168,3 +168,6 @@ export default class SystemDeleteTransaction extends Transaction {
         };
     }
 }
+
+// eslint-disable-next-line @typescript-eslint/unbound-method
+TRANSACTION_REGISTRY.set("systemDelete", SystemDeleteTransaction._fromProtobuf);

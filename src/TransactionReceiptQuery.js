@@ -1,4 +1,4 @@
-import Query from "./Query";
+import Query, { QUERY_REGISTRY } from "./Query";
 import Status from "./Status";
 import AccountId from "./account/AccountId";
 import TransactionReceipt from "./TransactionReceipt";
@@ -146,3 +146,10 @@ export default class TransactionReceiptQuery extends Query {
         };
     }
 }
+
+QUERY_REGISTRY.set(
+    "transactionGetReceipt",
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    TransactionReceiptQuery._fromProtobuf
+);

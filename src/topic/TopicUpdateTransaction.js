@@ -1,6 +1,6 @@
 import proto from "@hashgraph/proto";
 import Channel from "../Channel";
-import Transaction from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _fromProtoKey, _toProtoKey } from "../util";
 import AccountId from "../account/AccountId";
@@ -130,7 +130,7 @@ export default class TopicUpdateTransaction extends Transaction {
 
     /**
      * @param {TopicId | string} topicId
-     * @returns {this}
+     * @returns {TopicUpdateTransaction}
      */
     setTopicId(topicId) {
         this._requireNotFrozen();
@@ -149,7 +149,7 @@ export default class TopicUpdateTransaction extends Transaction {
 
     /**
      * @param {string} topicMemo
-     * @returns {this}
+     * @returns {TopicUpdateTransaction}
      */
     setTopicMemo(topicMemo) {
         this._requireNotFrozen();
@@ -167,7 +167,7 @@ export default class TopicUpdateTransaction extends Transaction {
 
     /**
      * @param {Key} adminKey
-     * @returns {this}
+     * @returns {TopicUpdateTransaction}
      */
     setAdminKey(adminKey) {
         this._requireNotFrozen();
@@ -185,7 +185,7 @@ export default class TopicUpdateTransaction extends Transaction {
 
     /**
      * @param {Key} submitKey
-     * @returns {this}
+     * @returns {TopicUpdateTransaction}
      */
     setSubmitKey(submitKey) {
         this._requireNotFrozen();
@@ -199,7 +199,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * hbars to this account.
      *
      * @param {boolean} receiverSignatureRequired
-     * @returns {this}
+     * @returns {TopicUpdateTransaction}
      */
     setReceiverSignatureRequired(receiverSignatureRequired) {
         this._requireNotFrozen();
@@ -217,7 +217,7 @@ export default class TopicUpdateTransaction extends Transaction {
 
     /**
      * @param {AccountId | string} autoRenewAccountId
-     * @returns {this}
+     * @returns {TopicUpdateTransaction}
      */
     setAutoRenewAccountId(autoRenewAccountId) {
         this._requireNotFrozen();
@@ -240,7 +240,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * Set the auto renew period for this account.
      *
      * @param {number | Long} autoRenewPeriod
-     * @returns {this}
+     * @returns {TopicUpdateTransaction}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
@@ -296,3 +296,9 @@ export default class TopicUpdateTransaction extends Transaction {
         };
     }
 }
+
+TRANSACTION_REGISTRY.set(
+    "consensusUpdateTopic",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    TopicUpdateTransaction._fromProtobuf
+);
