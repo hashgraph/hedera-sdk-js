@@ -35,8 +35,8 @@ export default class TopicMessageChunk {
                 /** @type {proto.ITimestamp} */
                 (response.consensusTimestamp)
             ),
-            contents: response.message ?? new Uint8Array(),
-            runningHash: response.runningHash ?? new Uint8Array(),
+            contents: (response.message != null) ? response.message : new Uint8Array(),
+            runningHash: (response.runningHash != null) ? response.runningHash : new Uint8Array(),
             sequenceNumber:
                 response.sequenceNumber != null
                     ? response.sequenceNumber instanceof Long

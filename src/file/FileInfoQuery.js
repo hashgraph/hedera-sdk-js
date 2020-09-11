@@ -11,7 +11,7 @@ export default class FileInfoQuery extends Query {
      * @param {object} properties
      * @param {FileId | string} [properties.fileId]
      */
-    constructor(properties) {
+    constructor(properties = {}) {
         super();
 
         /**
@@ -19,8 +19,8 @@ export default class FileInfoQuery extends Query {
          * @private
          */
         this._fileId = null;
-        if (properties?.fileId != null) {
-            this.setFileId(properties?.fileId);
+        if (properties.fileId != null) {
+            this.setFileId(properties.fileId);
         }
     }
 

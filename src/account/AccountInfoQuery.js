@@ -12,7 +12,7 @@ export default class AccountInfoQuery extends Query {
      * @param {object} properties
      * @param {AccountId | string} [properties.accountId]
      */
-    constructor(properties) {
+    constructor(properties = {}) {
         super();
 
         /**
@@ -20,8 +20,8 @@ export default class AccountInfoQuery extends Query {
          * @type {?AccountId}
          */
         this._accountId = null;
-        if (properties?.accountId != null) {
-            this.setAccountId(properties?.accountId);
+        if (properties.accountId != null) {
+            this.setAccountId(properties.accountId);
         }
     }
 
@@ -79,8 +79,7 @@ export default class AccountInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response.cryptoGetInfo
-            ?.header);
+        return /** @type {proto.IResponseHeader} */ ((response.cryptoGetInfo != null) ? response.cryptoGetInfo.header : null);
     }
 
     /**

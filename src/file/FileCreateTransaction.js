@@ -67,8 +67,10 @@ export default class FileCreateTransaction extends Transaction {
 
         return new FileCreateTransaction({
             keys:
-                create.keys?.keys != null
-                    ? create.keys.keys.map((key) => _fromProtoKey(key))
+                (create.keys != null)
+                    ? create.keys.keys != null
+                        ? create.keys.keys.map((key) => _fromProtoKey(key))
+                        : undefined
                     : undefined,
             expirationTime:
                 create.expirationTime != null

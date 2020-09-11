@@ -39,8 +39,8 @@ export default class TopicMessage {
                 /** @type {proto.ITimestamp} */
                 (response.consensusTimestamp)
             ),
-            contents: response.message ?? new Uint8Array(),
-            runningHash: response.runningHash ?? new Uint8Array(),
+            contents: (response.message != null) ? response.message : new Uint8Array(),
+            runningHash: (response.runningHash != null) ? response.runningHash : new Uint8Array(),
             sequenceNumber:
                 response.sequenceNumber != null
                     ? response.sequenceNumber instanceof Long
@@ -81,7 +81,21 @@ export default class TopicMessage {
                 : Long.ZERO;
 
         responses.sort((a, b) =>
-            (a?.chunkInfo?.number ?? 0) < (b?.chunkInfo?.number ?? 0) ? -1 : 1
+            ((a != null)
+                ? (a.chunkInfo != null)
+                    ? (a.chunkInfo.number != null)
+                        ? a.chunkInfo.number
+                        : 0
+                    : 0
+                : 0)
+            < ((b != null)
+                ? (b.chunkInfo != null)
+                    ? (b.chunkInfo.number != null)
+                        ? b.chunkInfo.number
+                        :0
+                    :0
+                :0)
+              ? -1 : 1
         );
 
         /**

@@ -65,23 +65,31 @@ export default class LiveHashAddTransaction extends Transaction {
      */
     static _fromProtobuf(body) {
         const hashes = /** @type {proto.ICryptoAddLiveHashTransactionBody} */ (body.cryptoAddLiveHash);
+        const liveHash_ = /** @type {proto.LiveHash} */ (hashes.liveHash);
+
 
         return new LiveHashAddTransaction({
             hash:
-                hashes.liveHash?.hash != null
-                    ? hashes.liveHash.hash
+                liveHash_.hash != null
+                    ? liveHash_.hash
                     : undefined,
             keys:
-                hashes.liveHash?.keys?.keys != null
-                    ? hashes.liveHash.keys.keys.map((key) => _fromProtoKey(key))
-                    : undefined,
+                (liveHash_.keys != null)
+                    ? (liveHash_.keys.keys != null)
+                        ? liveHash_.keys.keys.map((key) => _fromProtoKey(key))
+                        : undefined
+                    :undefined,
             duration:
-                hashes.liveHash?.duration?.seconds != null
-                    ? hashes.liveHash.duration?.seconds
+                (liveHash_.duration != null)
+                    ? (
+                        (liveHash_.duration.seconds != null)
+                        ? liveHash_.duration.seconds
+                        : undefined
+                    )
                     : undefined,
             accountId:
-                hashes.liveHash?.accountId != null
-                    ? AccountId._fromProtobuf(hashes.liveHash.accountId)
+                liveHash_.accountId != null
+                    ? AccountId._fromProtobuf(liveHash_.accountId)
                     : undefined,
         });
     }
@@ -199,7 +207,7 @@ export default class LiveHashAddTransaction extends Transaction {
                 duration: {
                     seconds: this._duration,
                 },
-                accountId: this._accountId?._toProtobuf(),
+                accountId: (this._accountId != null) ? this._accountId._toProtobuf() : null,
             },
         };
     }

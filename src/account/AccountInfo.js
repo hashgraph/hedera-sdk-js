@@ -139,30 +139,34 @@ export default class AccountInfo {
             accountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (info.accountID)
             ),
-            contractAccountId: info.contractAccountID ?? null,
-            isDeleted: info.deleted ?? false,
+            contractAccountId: (info.contractAccountID != null) ? info.contractAccountID : null,
+            isDeleted: (info.deleted != null) ? info.deleted : false,
             key: _fromProtoKey(/** @type {proto.IKey} */ (info.key)),
-            balance: Hbar.fromTinybars(info.balance ?? 0),
+            balance: Hbar.fromTinybars((info.balance != null) ? info.balance : 0),
             sendRecordThreshold: Hbar.fromTinybars(
-                info.generateSendRecordThreshold ?? 0
+                (info.generateSendRecordThreshold != null ) ? info.generateSendRecordThreshold : 0
             ),
             receiveRecordThreshold: Hbar.fromTinybars(
-                info.generateReceiveRecordThreshold ?? 0
+                (info.generateReceiveRecordThreshold != null ) ? info.generateReceiveRecordThreshold : 0
             ),
-            isReceiverSignatureRequired: info.receiverSigRequired ?? false,
+            isReceiverSignatureRequired: (info.receiverSigRequired != null) ? info.receiverSigRequired : false,
             expirationTime: Time._fromProtobuf(
                 /** @type {proto.ITimestamp} */ (info.expirationTime)
             ),
             autoRenewPeriod:
                 info.autoRenewPeriod?.seconds instanceof Long
                     ? info.autoRenewPeriod.seconds
-                    : Long.fromValue(info.autoRenewPeriod?.seconds ?? 0),
+                    : Long.fromValue((info.autoRenewPeriod != null)
+                                        ? ((info.autoRenewPeriod.seconds != null)
+                                            ? info.autoRenewPeriod.seconds
+                                            : 0)
+                                        :0),
             proxyAccountId:
                 info.proxyAccountID != null
                     ? AccountId._fromProtobuf(info.proxyAccountID)
                     : null,
-            proxyReceived: Hbar.fromTinybars(info.proxyReceived ?? 0),
-            liveHashes: (info.liveHashes ?? []).map((hash) =>
+            proxyReceived: Hbar.fromTinybars((info.proxyReceived != null) ? info.proxyReceived : 0),
+            liveHashes: ((info.liveHashes != null) ? info.liveHashes : []).map((hash) =>
                 LiveHash._fromProtobuf(hash)
             ),
         });

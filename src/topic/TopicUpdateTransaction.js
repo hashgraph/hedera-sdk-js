@@ -104,7 +104,11 @@ export default class TopicUpdateTransaction extends Transaction {
                 update.topicID != null
                     ? TopicId._fromProtobuf(update.topicID)
                     : undefined,
-            topicMemo: update?.memo?.value ?? undefined,
+            topicMemo: (update.memo != null)
+                        ? (update.memo.value != null)
+                            ? update.memo.value
+                            : undefined
+                        : undefined,
             adminKey:
                 update.adminKey != null
                     ? _fromProtoKey(update.adminKey)
@@ -117,7 +121,11 @@ export default class TopicUpdateTransaction extends Transaction {
                 update.autoRenewAccount != null
                     ? AccountId._fromProtobuf(update.autoRenewAccount)
                     : undefined,
-            autoRenewPeriod: update.autoRenewPeriod?.seconds ?? undefined,
+            autoRenewPeriod: (update.autoRenewPeriod != null)
+                                ? (update.autoRenewPeriod.seconds != null)
+                                    ? update.autoRenewPeriod.seconds
+                                    : undefined
+                                : undefined,
         });
     }
 
@@ -278,7 +286,7 @@ export default class TopicUpdateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            topicID: this._topicId?._toProtobuf(),
+            topicID: (this._topicId != null) ? this._topicId._toProtobuf() : null,
             adminKey:
                 this._adminKey != null ? _toProtoKey(this._adminKey) : null,
             submitKey:
@@ -289,7 +297,7 @@ export default class TopicUpdateTransaction extends Transaction {
                           value: this._topicMemo,
                       }
                     : null,
-            autoRenewAccount: this._autoRenewAccountId?._toProtobuf(),
+            autoRenewAccount: (this._autoRenewAccountId != null) ? this._autoRenewAccountId._toProtobuf() : null,
             autoRenewPeriod: {
                 seconds: this._autoRenewPeriod,
             },

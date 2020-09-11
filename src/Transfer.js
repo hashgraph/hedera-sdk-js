@@ -47,7 +47,7 @@ export default class Transfer {
             accountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (transfer.accountID)
             ),
-            amount: Hbar.fromTinybars(transfer.amount ?? 0),
+            amount: Hbar.fromTinybars((transfer.amount != null) ? transfer.amount : 0),
         });
     }
 

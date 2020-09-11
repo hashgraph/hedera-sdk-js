@@ -54,7 +54,7 @@ export default class FileAppendTransaction extends Transaction {
                           /** @type {proto.IFileID} */ (append.fileID)
                       )
                     : undefined,
-            contents: append.contents ?? undefined,
+            contents: (append.contents != null) ? append.contents : undefined,
         });
     }
 
@@ -146,7 +146,7 @@ export default class FileAppendTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            fileID: this._fileId?._toProtobuf(),
+            fileID: (this._fileId != null) ? this._fileId._toProtobuf() : null,
             contents: this._contents,
         };
     }

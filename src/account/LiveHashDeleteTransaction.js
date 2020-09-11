@@ -47,7 +47,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
         const hashes = /** @type {proto.ICryptoDeleteLiveHashTransactionBody} */ (body.cryptoDeleteLiveHash);
 
         return new LiveHashDeleteTransaction({
-            hash: hashes.liveHashToDelete ?? undefined,
+            hash: (hashes.liveHashToDelete != null || hashes.liveHashToDelete != undefined) ? hashes.liveHashToDelete : undefined,
             accountId:
                 hashes.accountOfLiveHash != null
                     ? AccountId._fromProtobuf(hashes.accountOfLiveHash)

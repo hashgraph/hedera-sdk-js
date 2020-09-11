@@ -77,9 +77,15 @@ export default class FileContentsQuery extends Query {
      */
     _mapResponse(response) {
         return (
-            response?.fileGetContents?.fileContents?.contents ??
-            new Uint8Array()
-        );
+            (response != null)
+            ?((response.fileGetContents != null)
+                ?((response.fileGetContents.fileContents != null)
+                    ?((response.fileGetContents.fileContents.contents != null)
+                       ? response.fileGetContents.fileContents.contents
+                       : new Uint8Array())
+                    : new Uint8Array())
+                : new Uint8Array())
+            : new Uint8Array());
     }
 
     /**

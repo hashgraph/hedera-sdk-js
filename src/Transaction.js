@@ -444,7 +444,9 @@ export default class Transaction extends HederaExecutable {
      * @returns {AccountId}
      */
     _getNodeId(client) {
-        return this.getNodeId() ?? client._getNextNodeId();
+        // return this.getNodeId() ?? client._getNextNodeId();
+        const node = this._getNodeId(client)
+        return (this.getNodeId() != null) ? node : client._getNextNodeId();
     }
 
     /**

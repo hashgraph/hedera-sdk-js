@@ -82,7 +82,7 @@ export default class TransactionRecord {
          *
          * @readonly
          */
-        this.contractFunctionResult = properties.contractFunctionResult ?? null;
+        this.contractFunctionResult = (properties.contractFunctionResult != null) ? properties.contractFunctionResult : null;
 
         Object.freeze(this);
     }
@@ -108,7 +108,7 @@ export default class TransactionRecord {
             receipt: TransactionReceipt._fromProtobuf(
                 /** @type {proto.ITransactionReceipt} */ (record.receipt)
             ),
-            transactionHash: record.transactionHash ?? new Uint8Array(),
+            transactionHash: (record.transactionHash != null) ? record.transactionHash : new Uint8Array(),
             consensusTimestampstamp: Timestamp._fromProtobuf(
                 /** @type {proto.ITimestamp} */
                 (record.consensusTimestamp)
@@ -116,9 +116,14 @@ export default class TransactionRecord {
             transactionId: TransactionId._fromProtobuf(
                 /** @type {proto.ITransactionID} */ (record.transactionID)
             ),
-            transactionMemo: record.memo ?? "",
-            transactionFee: Hbar.fromTinybars(record.transactionFee ?? 0),
-            transfers: (record.transferList?.accountAmounts ?? []).map((aa) =>
+            transactionMemo: (record.memo != null) ? record.memo : "",
+            transactionFee: Hbar.fromTinybars((record.transactionFee != null) ? record.transactionFee : 0),
+            transfers: ((record.transferList != null)
+                ? ((record.transferList.accountAmounts != null)
+                    ? record.transferList.accountAmounts
+                    : [])
+                : []
+            ).map((aa) =>
                 Transfer._fromProtobuf(aa)
             ),
             contractFunctionResult,

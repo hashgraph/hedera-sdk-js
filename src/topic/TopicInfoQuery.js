@@ -14,7 +14,7 @@ export default class TopicInfoQuery extends Query {
      * @param {object} props
      * @param {TopicId | string} [props.topicId]
      */
-    constructor(props) {
+    constructor(props= {}) {
         super();
 
         /**
@@ -23,8 +23,8 @@ export default class TopicInfoQuery extends Query {
          */
         this._topicId = null;
 
-        if (props?.topicId != null) {
-            this.setTopicId(props?.topicId);
+        if (props.topicId != null) {
+            this.setTopicId(props.topicId);
         }
     }
 
@@ -107,7 +107,7 @@ export default class TopicInfoQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                topicID: this._topicId?._toProtobuf(),
+                topicID: (this._topicId != null) ? this._topicId._toProtobuf() : null,
             },
         };
     }

@@ -110,17 +110,21 @@ export default class AccountCreateTransaction extends Transaction {
 
         return new AccountCreateTransaction({
             key: create.key != null ? _fromProtoKey(create.key) : undefined,
-            initialBalance: create.initialBalance ?? undefined,
-            sendRecordThreshold: create.sendRecordThreshold ?? undefined,
-            receiveRecordThreshold: create.receiveRecordThreshold ?? undefined,
-            receiverSignatureRequired: create.receiverSigRequired ?? undefined,
+            initialBalance: (create.initialBalance != null) ? create.initialBalance : undefined,
+            sendRecordThreshold: (create.sendRecordThreshold != null) ? create.sendRecordThreshold : undefined,
+            receiveRecordThreshold: (create.receiveRecordThreshold != null) ? create.receiveRecordThreshold : undefined,
+            receiverSignatureRequired: (create.receiverSigRequired != null) ? create.receiverSigRequired : undefined,
             proxyAccountId:
                 create.proxyAccountID != null
                     ? AccountId._fromProtobuf(
                           /** @type {proto.IAccountID} */ (create.proxyAccountID)
                       )
                     : undefined,
-            autoRenewPeriod: create.autoRenewPeriod?.seconds ?? undefined,
+            autoRenewPeriod: (create.autoRenewPeriod != null)
+                                ?((create.autoRenewPeriod.seconds != null)
+                                    ? create.autoRenewPeriod.seconds
+                                    : undefined)
+                                : undefined,
         });
     }
 

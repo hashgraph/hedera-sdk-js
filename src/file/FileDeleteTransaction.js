@@ -96,7 +96,7 @@ export default class FileDeleteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            fileID: this._fileId?._toProtobuf(),
+            fileID: (this._fileId != null) ? this._fileId._toProtobuf() : null,
         };
     }
 }
