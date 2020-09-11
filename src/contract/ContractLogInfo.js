@@ -55,9 +55,9 @@ export default class ContractLogInfo {
             contractId: ContractId._fromProtobuf(
                 /** @type {proto.IContractID} */ (info.contractID)
             ),
-            bloom: info.bloom ?? new Uint8Array(),
-            topics: info.topic ?? [],
-            data: info.data ?? new Uint8Array(),
+            bloom: info.bloom != null ? info.bloom : new Uint8Array(),
+            topics: info.topic != null ? info.topic : [],
+            data: info.data != null ? info.data : new Uint8Array(),
         });
     }
 

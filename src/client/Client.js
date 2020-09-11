@@ -164,7 +164,7 @@ export default class Client {
      * @returns {?ClientOperator}
      */
     getOperator() {
-        return this._operator != null ? this._operator : null;
+        return this._operator;
     }
 
     /**
@@ -173,11 +173,7 @@ export default class Client {
      * @returns {?AccountId}
      */
     getOperatorId() {
-        return this._operator != null
-            ? this._operator.accountId != null
-                ? this._operator.accountId
-                : null
-            : null;
+        return this._operator != null ? this._operator.accountId : null;
     }
 
     /**
@@ -186,11 +182,7 @@ export default class Client {
      * @returns {?PublicKey}
      */
     getOperatorKey() {
-        return this._operator != null
-            ? this._operator.publicKey != null
-                ? this._operator.publicKey
-                : null
-            : null;
+        return this._operator != null ? this._operator.publicKey : null;
     }
 
     /**

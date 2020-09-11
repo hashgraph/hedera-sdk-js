@@ -272,10 +272,16 @@ export default class Transaction extends HederaExecutable {
             const message = /** @type {Uint8Array} */ (transaction.bodyBytes);
             const signature = await transactionSigner(message);
 
-            transaction.sigMap?.sigPair?.push({
-                pubKeyPrefix: publicKeyData,
-                ed25519: signature,
-            });
+            transaction.sigMap != null
+                ? transaction.sigMap.sigPair != null
+                    ? transaction.sigMap.sigPair.push({
+                          pubKeyPrefix: publicKeyData,
+                          ed25519: signature,
+                      })
+                    : null
+                : null;
+            console.log("--------------------");
+            console.log(JSON.stringify(transaction));
         }
 
         this._signers.add(publicKeyData);
@@ -463,9 +469,8 @@ export default class Transaction extends HederaExecutable {
      * @returns {AccountId}
      */
     _getNodeId(client) {
-        // return this.getNodeId() ?? client._getNextNodeId();
-        const node = this._getNodeId(client);
-        return this.getNodeId() != null ? node : client._getNextNodeId();
+        const node = this.getNodeId();
+        return node != null ? node : client._getNextNodeId();
     }
 
     /**
@@ -512,9 +517,15 @@ export default class Transaction extends HederaExecutable {
 
         return {
             [dataCase]: this._makeTransactionData(),
-            transactionFee: this._maxTransactionFee?.toTinybars(),
+            transactionFee:
+                this._maxTransactionFee != null
+                    ? this._maxTransactionFee.toTinybars()
+                    : null,
             memo: this._transactionMemo,
-            transactionID: this._transactionId?._toProtobuf(),
+            transactionID:
+                this._transactionId != null
+                    ? this._transactionId._toProtobuf()
+                    : null,
             nodeAccountID: nodeId._toProtobuf(),
             transactionValidDuration: {
                 seconds: this._transactionValidDuration,

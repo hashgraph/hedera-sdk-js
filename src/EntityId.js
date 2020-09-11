@@ -41,7 +41,7 @@ export default class EntityId {
             } else {
                 this.shard = Long.fromValue(properties);
                 this.realm = Long.fromValue(realm);
-                this.num = Long.fromValue(num != null ? num : 0);
+                this.num = num != null ? Long.fromValue(num) : Long.ZERO;
             }
         } else {
             this.shard = Long.fromValue(

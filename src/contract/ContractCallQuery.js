@@ -22,7 +22,7 @@ export default class ContractCallQuery extends Query {
      * @param {FunctionParameters | Uint8Array} [properties.functionParameters]
      * @param {number | Long} [properties.maxResultSize]
      */
-    constructor(properties) {
+    constructor(properties = {}) {
         super();
 
         /**
@@ -30,8 +30,8 @@ export default class ContractCallQuery extends Query {
          * @type {?ContractId}
          */
         this._contractId = null;
-        if (properties?.contractId != null) {
-            this.setContractId(properties?.contractId);
+        if (properties.contractId != null) {
+            this.setContractId(properties.contractId);
         }
 
         /**
@@ -39,8 +39,8 @@ export default class ContractCallQuery extends Query {
          * @type {?Long}
          */
         this._gas = null;
-        if (properties?.gas != null) {
-            this.setGas(properties?.gas);
+        if (properties.gas != null) {
+            this.setGas(properties.gas);
         }
 
         /**
@@ -48,7 +48,7 @@ export default class ContractCallQuery extends Query {
          * @type {?Uint8Array}
          */
         this._functionParameters = null;
-        if (properties?.functionParameters != null) {
+        if (properties.functionParameters != null) {
             if (properties.functionParameters instanceof Uint8Array) {
                 this.setFunctionParameters(properties.functionParameters);
             } else {
@@ -64,8 +64,8 @@ export default class ContractCallQuery extends Query {
          * @type {?Long}
          */
         this._maxResultSize = null;
-        if (properties?.maxResultSize != null) {
-            this.setMaxResultSize(properties?.maxResultSize);
+        if (properties.maxResultSize != null) {
+            this.setMaxResultSize(properties.maxResultSize);
         }
     }
 
@@ -82,9 +82,13 @@ export default class ContractCallQuery extends Query {
                 call.contractID != null
                     ? ContractId._fromProtobuf(call.contractID)
                     : undefined,
-            gas: call.gas ?? undefined,
-            functionParameters: call.functionParameters ?? undefined,
-            maxResultSize: call.maxResultSize ?? undefined,
+            gas: call.gas != null ? call.gas : undefined,
+            functionParameters:
+                call.functionParameters != null
+                    ? call.functionParameters
+                    : undefined,
+            maxResultSize:
+                call.maxResultSize != null ? call.maxResultSize : undefined,
         });
     }
 
@@ -148,8 +152,9 @@ export default class ContractCallQuery extends Query {
      * @returns {ContractCallQuery}
      */
     setFunction(name, params) {
-        this._functionParameters = (
-            params ?? new ContractFunctionParameters()
+        this._functionParameters = (params != null
+            ? params
+            : new ContractFunctionParameters()
         )._build(name);
         return this;
     }
@@ -170,8 +175,8 @@ export default class ContractCallQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response.contractCallLocal
-            ?.header);
+        const contractCallLocal = /** @type {proto.IContractCallLocalResponse} */ (response.contractCallLocal);
+        return /** @type {proto.IResponseHeader} */ (contractCallLocal.header);
     }
 
     /**
@@ -206,7 +211,10 @@ export default class ContractCallQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                contractID: this._contractId?._toProtobuf(),
+                contractID:
+                    this._contractId != null
+                        ? this._contractId._toProtobuf()
+                        : null,
                 gas: this._gas,
                 functionParameters: this._functionParameters,
                 maxResultSize: this._maxResultSize,

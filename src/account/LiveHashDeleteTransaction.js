@@ -48,8 +48,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
 
         return new LiveHashDeleteTransaction({
             hash:
-                hashes.liveHashToDelete != null ||
-                hashes.liveHashToDelete != undefined
+                hashes.liveHashToDelete != null
                     ? hashes.liveHashToDelete
                     : undefined,
             accountId:
@@ -125,7 +124,8 @@ export default class LiveHashDeleteTransaction extends Transaction {
     _makeTransactionData() {
         return {
             liveHashToDelete: this._hash,
-            accountOfLiveHash: this._accountId?._toProtobuf(),
+            accountOfLiveHash:
+                this._accountId != null ? this._accountId._toProtobuf() : null,
         };
     }
 }

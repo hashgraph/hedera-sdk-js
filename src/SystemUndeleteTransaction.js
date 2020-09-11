@@ -131,8 +131,11 @@ export default class SystemUndeleteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            fileID: this._fileId?._toProtobuf(),
-            contractID: this._contractId?._toProtobuf(),
+            fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
+            contractID:
+                this._contractId != null
+                    ? this._contractId._toProtobuf()
+                    : null,
         };
     }
 }

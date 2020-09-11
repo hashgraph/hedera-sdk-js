@@ -124,16 +124,30 @@ export default class AccountUpdateTransaction extends Transaction {
                       )
                     : undefined,
             key: update.key != null ? _fromProtoKey(update.key) : undefined,
-            sendRecordThreshold: update.sendRecordThreshold ?? undefined,
-            receiveRecordThreshold: update.receiveRecordThreshold ?? undefined,
-            receiverSignatureRequired: update.receiverSigRequired ?? undefined,
+            sendRecordThreshold:
+                update.sendRecordThreshold != null
+                    ? update.sendRecordThreshold
+                    : undefined,
+            receiveRecordThreshold:
+                update.receiveRecordThreshold != null
+                    ? update.receiveRecordThreshold
+                    : undefined,
+            receiverSignatureRequired:
+                update.receiverSigRequired != null
+                    ? update.receiverSigRequired
+                    : undefined,
             proxyAccountId:
                 update.proxyAccountID != null
                     ? AccountId._fromProtobuf(
                           /** @type {proto.IAccountID} */ (update.proxyAccountID)
                       )
                     : undefined,
-            autoRenewPeriod: update.autoRenewPeriod?.seconds ?? undefined,
+            autoRenewPeriod:
+                update.autoRenewPeriod != null
+                    ? update.autoRenewPeriod.seconds != null
+                        ? update.autoRenewPeriod.seconds
+                        : undefined
+                    : undefined,
             expirationTime:
                 update.expirationTime != null
                     ? Timestamp._fromProtobuf(update.expirationTime)
@@ -328,10 +342,14 @@ export default class AccountUpdateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            accountIDToUpdate: this._accountId?._toProtobuf(),
+            accountIDToUpdate:
+                this._accountId != null ? this._accountId._toProtobuf() : null,
             key: this._key != null ? _toProtoKey(this._key) : null,
             expirationTime: this._expirationTime,
-            proxyAccountID: this._proxyAccountId?._toProtobuf(),
+            proxyAccountID:
+                this._proxyAccountId != null
+                    ? this._proxyAccountId._toProtobuf()
+                    : null,
             autoRenewPeriod:
                 this._autoRenewPeriod == null
                     ? null

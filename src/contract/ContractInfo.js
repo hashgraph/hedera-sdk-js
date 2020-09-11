@@ -118,7 +118,8 @@ export default class ContractInfo {
             accountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (info.accountID)
             ),
-            contractAccountId: info.contractAccountID ?? "",
+            contractAccountId:
+                info.contractAccountID != null ? info.contractAccountID : "",
             adminKey:
                 info.adminKey != null ? _fromProtoKey(info.adminKey) : null,
             expirationTime: Timestamp._fromProtobuf(
@@ -134,8 +135,8 @@ export default class ContractInfo {
                         ? info.storage
                         : Long.fromValue(info.storage)
                     : Long.ZERO,
-            contractMemo: info.memo ?? "",
-            balance: Hbar.fromTinybars(info.balance ?? 0),
+            contractMemo: info.memo != null ? info.memo : "",
+            balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),
         });
     }
 

@@ -83,8 +83,8 @@ export default class AccountRecordsQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response
-            .cryptoGetAccountRecords?.header);
+        const cryptoGetAccountRecords = /** @type {proto.ICryptoGetAccountRecordsResponse} */ (response.cryptoGetAccountRecords);
+        return /** @type {proto.IResponseHeader} */ (cryptoGetAccountRecords.header);
     }
 
     /**
@@ -94,11 +94,9 @@ export default class AccountRecordsQuery extends Query {
      * @returns {TransactionRecord[]}
      */
     _mapResponse(response) {
-        return (
-            response.cryptoGetAccountRecords?.records?.map((record) =>
-                TransactionRecord._fromProtobuf(record)
-            ) ?? []
-        );
+        const cryptoGetAccountRecords = /** @type {proto.ICryptoGetAccountRecordsResponse} */ (response.cryptoGetAccountRecords);
+        const records = /** @type {proto.ITransactionRecord[]} */ (cryptoGetAccountRecords.records);
+        return records.map((record) => TransactionRecord._fromProtobuf(record));
     }
 
     /**
@@ -112,7 +110,10 @@ export default class AccountRecordsQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                accountID: this._accountId?._toProtobuf(),
+                accountID:
+                    this._accountId != null
+                        ? this._accountId._toProtobuf()
+                        : null,
             },
         };
     }

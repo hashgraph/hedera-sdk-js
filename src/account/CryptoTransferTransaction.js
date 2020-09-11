@@ -59,10 +59,12 @@ export default class CryptoTransferTransaction extends Transaction {
 
         return new CryptoTransferTransaction({
             transfers:
-                update.transfers?.accountAmounts != null
-                    ? update.transfers?.accountAmounts.map((aa) =>
-                          Transfer._fromProtobuf(aa)
-                      )
+                update.transfers != null
+                    ? update.transfers.accountAmounts != null
+                        ? update.transfers.accountAmounts.map((aa) =>
+                              Transfer._fromProtobuf(aa)
+                          )
+                        : undefined
                     : undefined,
         });
     }

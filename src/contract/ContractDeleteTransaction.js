@@ -172,9 +172,17 @@ export default class ContractDeleteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            contractID: this._contractId?._toProtobuf(),
-            transferAccountID: this._transferAccountId?._toProtobuf(),
-            transferContractID: this._transferContractId?._toProtobuf(),
+            contractID:
+                this._contractId != null
+                    ? this._contractId._toProtobuf()
+                    : null,
+            transferAccountID: this._transferAccountId
+                ? this._transferAccountId._toProtobuf()
+                : null,
+            transferContractID:
+                this._transferContractId != null
+                    ? this._transferContractId._toProtobuf()
+                    : null,
         };
     }
 }

@@ -10,7 +10,7 @@ export default class ContractByteCodeQuery extends Query {
      * @param {object} properties
      * @param {ContractId | string} [properties.contractId]
      */
-    constructor(properties) {
+    constructor(properties = {}) {
         super();
 
         /**
@@ -18,8 +18,8 @@ export default class ContractByteCodeQuery extends Query {
          * @private
          */
         this._contractId = null;
-        if (properties?.contractId != null) {
-            this.setContractId(properties?.contractId);
+        if (properties.contractId != null) {
+            this.setContractId(properties.contractId);
         }
     }
 
@@ -67,8 +67,8 @@ export default class ContractByteCodeQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response
-            .contractGetBytecodeResponse?.header);
+        const contractGetBytecodeResponse = /** @type {proto.IContractGetBytecodeResponse} */ (response.contractGetBytecodeResponse);
+        return /** @type {proto.IResponseHeader} */ (contractGetBytecodeResponse.header);
     }
 
     /**
@@ -78,9 +78,10 @@ export default class ContractByteCodeQuery extends Query {
      * @returns {Uint8Array}
      */
     _mapResponse(response) {
-        return (
-            response?.contractGetBytecodeResponse?.bytecode ?? new Uint8Array()
-        );
+        const contractGetBytecodeResponse = /** @type {proto.IContractGetBytecodeResponse} */ (response.contractGetBytecodeResponse);
+        return contractGetBytecodeResponse.bytecode != null
+            ? contractGetBytecodeResponse.bytecode
+            : new Uint8Array();
     }
 
     /**
@@ -94,7 +95,10 @@ export default class ContractByteCodeQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                contractID: this._contractId?._toProtobuf(),
+                contractID:
+                    this._contractId != null
+                        ? this._contractId._toProtobuf()
+                        : null,
             },
         };
     }

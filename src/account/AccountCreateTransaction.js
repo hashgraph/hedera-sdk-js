@@ -328,11 +328,17 @@ export default class AccountCreateTransaction extends Transaction {
     _makeTransactionData() {
         return {
             key: this._key != null ? _toProtoKey(this._key) : null,
-            initialBalance: this._initialBalance?.toTinybars(),
+            initialBalance:
+                this._initialBalance != null
+                    ? this._initialBalance.toTinybars()
+                    : null,
             autoRenewPeriod: {
                 seconds: this._autoRenewPeriod,
             },
-            proxyAccountID: this._proxyAccountId?._toProtobuf(),
+            proxyAccountID:
+                this._proxyAccountId != null
+                    ? this._proxyAccountId._toProtobuf()
+                    : null,
             receiveRecordThreshold: this._receiveRecordThreshold.toTinybars(),
             sendRecordThreshold: this._sendRecordThreshold.toTinybars(),
             receiverSigRequired: this._receiverSignatureRequired,

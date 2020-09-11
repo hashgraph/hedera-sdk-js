@@ -111,8 +111,8 @@ export default class TransactionReceiptQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response
-            .transactionGetReceipt?.header);
+        const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);
+        return /** @type {proto.IResponseHeader} */ (transactionGetReceipt.header);
     }
 
     /**
@@ -124,9 +124,9 @@ export default class TransactionReceiptQuery extends Query {
      * @returns {TransactionReceipt}
      */
     _mapResponse(response, __, ___) {
+        const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);
         return TransactionReceipt._fromProtobuf(
-            /** @type {proto.ITransactionReceipt} */ (response
-                .transactionGetReceipt?.receipt)
+            /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt)
         );
     }
 
@@ -141,7 +141,10 @@ export default class TransactionReceiptQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                transactionID: this._transactionId?._toProtobuf(),
+                transactionID:
+                    this._transactionId != null
+                        ? this._transactionId._toProtobuf()
+                        : null,
             },
         };
     }

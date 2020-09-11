@@ -224,11 +224,8 @@ export default class Mnemonic {
             const dividerIndex = Math.floor(bits.length / 33) * 32;
             const entropyBits = bits.slice(0, dividerIndex);
             const checksumBits = bits.slice(dividerIndex);
-
-            // @ts-expect-error
-            const entropyBytes = entropyBits
-                .match(/(.{1,8})/g)
-                .map(binaryToByte);
+            const entropyBitsRegex = entropyBits.match(/(.{1,8})/g);
+            const entropyBytes = /** @type {RegExpMatchArray} */ (entropyBitsRegex).map(binaryToByte);
 
             const newChecksum = await deriveChecksumBits(
                 Uint8Array.from(entropyBytes)

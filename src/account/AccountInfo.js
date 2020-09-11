@@ -162,15 +162,17 @@ export default class AccountInfo {
                 /** @type {proto.ITimestamp} */ (info.expirationTime)
             ),
             autoRenewPeriod:
-                info.autoRenewPeriod?.seconds instanceof Long
-                    ? info.autoRenewPeriod.seconds
-                    : Long.fromValue(
-                          info.autoRenewPeriod != null
-                              ? info.autoRenewPeriod.seconds != null
-                                  ? info.autoRenewPeriod.seconds
-                                  : 0
-                              : 0
-                      ),
+                info.autoRenewPeriod != null
+                    ? info.autoRenewPeriod.seconds instanceof Long
+                        ? info.autoRenewPeriod.seconds
+                        : Long.fromValue(
+                              info.autoRenewPeriod != null
+                                  ? info.autoRenewPeriod.seconds != null
+                                      ? info.autoRenewPeriod.seconds
+                                      : Long.ZERO
+                                  : Long.ZERO
+                          )
+                    : Long.fromValue(0),
             proxyAccountId:
                 info.proxyAccountID != null
                     ? AccountId._fromProtobuf(info.proxyAccountID)
@@ -193,7 +195,10 @@ export default class AccountInfo {
             accountID: this.accountId._toProtobuf(),
             contractAccountID: this.contractAccountId,
             deleted: this.isDeleted,
-            proxyAccountID: this.proxyAccountId?._toProtobuf(),
+            proxyAccountID:
+                this.proxyAccountId != null
+                    ? this.proxyAccountId._toProtobuf()
+                    : null,
             proxyReceived: this.proxyReceived.toTinybars(),
             key: _toProtoKey(this.key),
             balance: this.balance.toTinybars(),

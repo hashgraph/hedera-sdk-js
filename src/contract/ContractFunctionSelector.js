@@ -275,7 +275,9 @@ export default class ContractFunctionSelector {
      * @returns {string}
      */
     toString() {
-        return `${this._name?.toString() ?? ""}(${this._params})`;
+        return `${this._name != null ? this._name.toString() : ""}(${
+            this._params
+        })`;
     }
 }
 

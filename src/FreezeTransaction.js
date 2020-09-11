@@ -126,10 +126,10 @@ export default class FreezeTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            startHour: this._startTime?.hour,
-            startMin: this._startTime?.min,
-            endHour: this._endTime?.hour,
-            endMin: this._endTime?.min,
+            startHour: this._startTime != null ? this._startTime.hour : null,
+            startMin: this._startTime != null ? this._startTime.min : null,
+            endHour: this._endTime != null ? this._endTime.hour : null,
+            endMin: this._endTime != null ? this._endTime.min : null,
         };
     }
 }

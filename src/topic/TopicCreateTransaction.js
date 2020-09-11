@@ -249,7 +249,10 @@ export default class TopicCreateTransaction extends Transaction {
             submitKey:
                 this._submitKey != null ? _toProtoKey(this._submitKey) : null,
             memo: this._topicMemo,
-            autoRenewAccount: this._autoRenewAccountId?._toProtobuf(),
+            autoRenewAccount:
+                this._autoRenewAccountId != null
+                    ? this._autoRenewAccountId._toProtobuf()
+                    : null,
             autoRenewPeriod: {
                 seconds: this._autoRenewPeriod,
             },

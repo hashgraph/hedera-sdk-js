@@ -162,9 +162,15 @@ export default class SystemDeleteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            fileID: this._fileId?._toProtobuf(),
-            contractID: this._contractId?._toProtobuf(),
-            expirationTime: this._expirationTime?._toProtobuf(),
+            fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
+            contractID:
+                this._contractId != null
+                    ? this._contractId._toProtobuf()
+                    : null,
+            expirationTime:
+                this._expirationTime != null
+                    ? this._expirationTime._toProtobuf()
+                    : null,
         };
     }
 }

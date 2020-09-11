@@ -66,8 +66,8 @@ export default class FileInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response.fileGetInfo
-            ?.header);
+        const fileGetInfo = /** @type {proto.IFileGetInfoResponse} */ (response.fileGetInfo);
+        return /** @type {proto.IResponseHeader} */ (fileGetInfo.header);
     }
 
     /**
@@ -95,7 +95,8 @@ export default class FileInfoQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                fileID: this._fileId?._toProtobuf(),
+                fileID:
+                    this._fileId != null ? this._fileId._toProtobuf() : null,
             },
         };
     }

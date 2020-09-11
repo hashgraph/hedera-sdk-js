@@ -11,7 +11,7 @@ export default class ContractInfoQuery extends Query {
      * @param {object} properties
      * @param {ContractId | string} [properties.contractId]
      */
-    constructor(properties) {
+    constructor(properties = {}) {
         super();
 
         /**
@@ -19,8 +19,8 @@ export default class ContractInfoQuery extends Query {
          * @private
          */
         this._contractId = null;
-        if (properties?.contractId != null) {
-            this.setContractId(properties?.contractId);
+        if (properties.contractId != null) {
+            this.setContractId(properties.contractId);
         }
     }
 
@@ -68,8 +68,8 @@ export default class ContractInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response.contractGetInfo
-            ?.header);
+        const contractGetInfo = /** @type {proto.IContractGetInfoResponse} */ (response.contractGetInfo);
+        return /** @type {proto.IResponseHeader} */ (contractGetInfo.header);
     }
 
     /**
@@ -97,7 +97,10 @@ export default class ContractInfoQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                contractID: this._contractId?._toProtobuf(),
+                contractID:
+                    this._contractId != null
+                        ? this._contractId._toProtobuf()
+                        : null,
             },
         };
     }

@@ -56,8 +56,8 @@ export default class TransactionRecordQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response
-            .transactionGetRecord?.header);
+        const transactionGetRecord = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
+        return /** @type {proto.IResponseHeader} */ (transactionGetRecord.header);
     }
 
     /**
@@ -68,7 +68,6 @@ export default class TransactionRecordQuery extends Query {
      */
     _mapResponse(response) {
         const record = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
-
         return TransactionRecord._fromProtobuf(
             /** @type {proto.ITransactionRecord} */ (record.transactionRecord)
         );
@@ -85,7 +84,10 @@ export default class TransactionRecordQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                transactionID: this._transactionId?._toProtobuf(),
+                transactionID:
+                    this._transactionId != null
+                        ? this._transactionId._toProtobuf()
+                        : null,
             },
         };
     }

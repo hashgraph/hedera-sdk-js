@@ -76,7 +76,7 @@ export default class FileCreateTransaction extends Transaction {
                 create.expirationTime != null
                     ? Timestamp._fromProtobuf(create.expirationTime)
                     : undefined,
-            contents: create.contents ?? undefined,
+            contents: create.contents != null ? create.contents : undefined,
         });
     }
 

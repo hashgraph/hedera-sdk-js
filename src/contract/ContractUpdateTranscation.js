@@ -129,8 +129,13 @@ export default class ContractUpdateTransaction extends Transaction {
                           /** @type {proto.IAccountID} */ (update.proxyAccountID)
                       )
                     : undefined,
-            autoRenewPeriod: update.autoRenewPeriod?.seconds ?? undefined,
-            contractMemo: update.memo ?? undefined,
+            autoRenewPeriod:
+                update.autoRenewPeriod != null
+                    ? update.autoRenewPeriod.seconds != null
+                        ? update.autoRenewPeriod.seconds
+                        : undefined
+                    : undefined,
+            contractMemo: update.memo != null ? update.memo : undefined,
         });
     }
 
@@ -303,15 +308,26 @@ export default class ContractUpdateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            contractID: this._contractId?._toProtobuf(),
-            expirationTime: this._expirationTime?._toProtobuf(),
+            contractID:
+                this._contractId != null
+                    ? this._contractId._toProtobuf()
+                    : null,
+            expirationTime:
+                this._expirationTime != null
+                    ? this._expirationTime._toProtobuf()
+                    : null,
             adminKey:
                 this._adminKey != null ? _toProtoKey(this._adminKey) : null,
-            proxyAccountID: this._proxyAccountId?._toProtobuf(),
+            proxyAccountID:
+                this._proxyAccountId != null
+                    ? this._proxyAccountId._toProtobuf()
+                    : null,
             autoRenewPeriod: {
                 seconds: this._autoRenewPeriod,
             },
-            fileID: this._bytecodeFileId?._toProtobuf(),
+            fileID: this._bytecodeFileId
+                ? this._bytecodeFileId._toProtobuf()
+                : null,
             memo: this._contractMemo,
         };
     }

@@ -92,10 +92,12 @@ export default class TransactionReceipt {
         return {
             status: this.status._toProtobuf(),
 
-            accountID: this.accountId?._toProtobuf(),
-            fileID: this.fileId?._toProtobuf(),
-            contractID: this.contractId?._toProtobuf(),
-            topicID: this.topicId?._toProtobuf(),
+            accountID:
+                this.accountId != null ? this.accountId._toProtobuf() : null,
+            fileID: this.fileId != null ? this.fileId._toProtobuf() : null,
+            contractID:
+                this.contractId != null ? this.contractId._toProtobuf() : null,
+            topicID: this.topicId != null ? this.topicId._toProtobuf() : null,
 
             topicRunningHash:
                 this.topicRunningHash == null ? null : this.topicRunningHash,
@@ -104,7 +106,10 @@ export default class TransactionReceipt {
 
             exchangeRate: {
                 nextRate: null,
-                currentRate: this.exchangeRate?._toProtobuf(),
+                currentRate:
+                    this.exchangeRate != null
+                        ? this.exchangeRate._toProtobuf()
+                        : null,
             },
         };
     }

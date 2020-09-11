@@ -85,8 +85,8 @@ export default class AccountStakersQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response
-            .cryptoGetProxyStakers?.header);
+        const cryptoGetProxyStakers = /** @type {proto.ICryptoGetStakersResponse} */ (response.cryptoGetProxyStakers);
+        return /** @type {proto.IResponseHeader} */ (cryptoGetProxyStakers.header);
     }
 
     /**
@@ -96,8 +96,11 @@ export default class AccountStakersQuery extends Query {
      * @returns {ProxyStaker[]}
      */
     _mapResponse(response) {
-        return (
-            response.cryptoGetProxyStakers?.stakers?.proxyStaker ?? []
+        const cryptoGetProxyStakers = /** @type {proto.ICryptoGetStakersResponse} */ (response.cryptoGetProxyStakers);
+        const stakers = /** @type {proto.IAllProxyStakers} */ (cryptoGetProxyStakers.stakers);
+        return (stakers.proxyStaker != null
+            ? stakers.proxyStaker
+            : []
         ).map((staker) => ProxyStaker._fromProtobuf(staker));
     }
 
@@ -112,7 +115,10 @@ export default class AccountStakersQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                accountID: this._accountId?._toProtobuf(),
+                accountID:
+                    this._accountId != null
+                        ? this._accountId._toProtobuf()
+                        : null,
             },
         };
     }

@@ -10,7 +10,7 @@ export default class FileContentsQuery extends Query {
      * @param {object} properties
      * @param {FileId | string} [properties.fileId]
      */
-    constructor(properties) {
+    constructor(properties = {}) {
         super();
 
         /**
@@ -18,8 +18,8 @@ export default class FileContentsQuery extends Query {
          * @private
          */
         this._fileId = null;
-        if (properties?.fileId != null) {
-            this.setFileId(properties?.fileId);
+        if (properties.fileId != null) {
+            this.setFileId(properties.fileId);
         }
     }
 
@@ -65,8 +65,8 @@ export default class FileContentsQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response.fileGetContents
-            ?.header);
+        const fileGetContents = /** @type {proto.IFileGetContentsResponse} */ (response.fileGetContents);
+        return /** @type {proto.IResponseHeader} */ (fileGetContents.header);
     }
 
     /**
@@ -76,15 +76,10 @@ export default class FileContentsQuery extends Query {
      * @returns {Uint8Array}
      */
     _mapResponse(response) {
-        return response != null
-            ? response.fileGetContents != null
-                ? response.fileGetContents.fileContents != null
-                    ? response.fileGetContents.fileContents.contents != null
-                        ? response.fileGetContents.fileContents.contents
-                        : new Uint8Array()
-                    : new Uint8Array()
-                : new Uint8Array()
-            : new Uint8Array();
+        const fileContentsResponse = /** @type {proto.IFileGetContentsResponse} */ (response.fileGetContents);
+        const fileConents = /** @type {proto.FileGetContentsResponse.IFileContents} */ (fileContentsResponse.fileContents);
+        const contents = /** @type {Uint8Array} */ (fileConents.contents);
+        return contents;
     }
 
     /**
@@ -98,7 +93,8 @@ export default class FileContentsQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                fileID: this._fileId?._toProtobuf(),
+                fileID:
+                    this._fileId != null ? this._fileId._toProtobuf() : null,
             },
         };
     }

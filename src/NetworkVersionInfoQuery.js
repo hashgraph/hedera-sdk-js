@@ -24,8 +24,8 @@ export default class NetworkVersionInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response
-            .networkGetVersionInfo?.header);
+        const networkGetVersionInfo = /** @type {proto.INetworkGetVersionInfoResponse} */ (response.networkGetVersionInfo);
+        return /** @type {proto.IResponseHeader} */ (networkGetVersionInfo.header);
     }
 
     /**
@@ -36,7 +36,6 @@ export default class NetworkVersionInfoQuery extends Query {
      */
     _mapResponse(response) {
         const info = /** @type {proto.INetworkGetVersionInfoResponse} */ (response.networkGetVersionInfo);
-
         return NetworkVersionInfo._fromProtobuf(info);
     }
 

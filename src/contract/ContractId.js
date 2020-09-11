@@ -33,9 +33,9 @@ export default class ContractId extends EntityId {
      */
     static _fromProtobuf(id) {
         return new ContractId({
-            shard: id.shardNum ?? 0,
-            realm: id.realmNum ?? 0,
-            num: id.contractNum ?? 0,
+            shard: id.shardNum != null ? id.shardNum : 0,
+            realm: id.realmNum != null ? id.realmNum : 0,
+            num: id.contractNum != null ? id.contractNum : 0,
         });
     }
 

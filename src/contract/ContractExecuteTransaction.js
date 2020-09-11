@@ -88,9 +88,12 @@ export default class ContractExecuteTransaction extends Transaction {
                           /** @type {proto.ContractID} */ (call.contractID)
                       )
                     : undefined,
-            gas: call.gas ?? undefined,
-            amount: call.amount ?? undefined,
-            functionParameters: call.functionParameters ?? undefined,
+            gas: call.gas != null ? call.gas : undefined,
+            amount: call.amount ? call.amount : undefined,
+            functionParameters:
+                call.functionParameters != null
+                    ? call.functionParameters
+                    : undefined,
         });
     }
 
@@ -214,9 +217,12 @@ export default class ContractExecuteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            contractID: this._contractId?._toProtobuf(),
+            contractID:
+                this._contractId != null
+                    ? this._contractId._toProtobuf()
+                    : null,
             gas: this._gas,
-            amount: this._amount?.toTinybars(),
+            amount: this._amount != null ? this._amount.toTinybars() : null,
             functionParameters: this._functionParameters,
         };
     }

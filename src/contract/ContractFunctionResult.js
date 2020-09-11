@@ -67,10 +67,11 @@ export default class ContractFunctionResult {
                 contractId != null
                     ? ContractId._fromProtobuf(contractId)
                     : null,
-            errorMessage: result.errorMessage ?? null,
+            errorMessage:
+                result.errorMessage != null ? result.errorMessage : null,
             bloom: /** @type {Uint8Array} */ (result.bloom),
             gasUsed: gas instanceof Long ? gas : Long.fromValue(gas),
-            logs: (result.logInfo ?? []).map((info) =>
+            logs: (result.logInfo != null ? result.logInfo : []).map((info) =>
                 ContractLogInfo._fromProtobuf(info)
             ),
         });
@@ -117,7 +118,10 @@ export default class ContractFunctionResult {
      * @returns {Uint8Array}
      */
     getBytes32(index) {
-        return this.bytes.subarray((index ?? 0) * 32, (index ?? 0) * 32 + 32);
+        return this.bytes.subarray(
+            (index != null ? index : 0) * 32,
+            (index != null ? index : 0) * 32 + 32
+        );
     }
 
     /**
@@ -125,7 +129,7 @@ export default class ContractFunctionResult {
      * @returns {boolean}
      */
     getBool(index) {
-        return this.bytes[(index ?? 0) * 32 + 31] !== 0;
+        return this.bytes[(index != null ? index : 0) * 32 + 31] !== 0;
     }
 
     /**
@@ -133,7 +137,7 @@ export default class ContractFunctionResult {
      * @returns {number}
      */
     getInt8(index) {
-        return this.bytes[(index ?? 0) * 32 + 31];
+        return this.bytes[(index != null ? index : 0) * 32 + 31];
     }
 
     /**
@@ -146,7 +150,7 @@ export default class ContractFunctionResult {
         // using platform endianness which is little-endian on x86
         return new DataView(
             this.bytes.buffer,
-            this.bytes.byteOffset + (index ?? 0) * 32 + 28,
+            this.bytes.byteOffset + (index != null ? index : 0) * 32 + 28,
             4
         ).getInt32(0);
     }
@@ -157,7 +161,9 @@ export default class ContractFunctionResult {
      */
     getInt64(index) {
         return new BigNumber(
-            hex.encode(this._getBytes32(index ?? 0).subarray(24, 32)),
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(24, 32)
+            ),
             16
         );
     }
@@ -167,7 +173,10 @@ export default class ContractFunctionResult {
      * @returns {BigNumber}
      */
     getInt256(index) {
-        return new BigNumber(hex.encode(this._getBytes32(index ?? 0)), 16);
+        return new BigNumber(
+            hex.encode(this._getBytes32(index != null ? index : 0)),
+            16
+        );
     }
 
     /**
@@ -175,7 +184,7 @@ export default class ContractFunctionResult {
      * @returns {number}
      */
     getUint8(index) {
-        return this.bytes[(index ?? 0) * 32 + 31];
+        return this.bytes[(index != null ? index : 0) * 32 + 31];
     }
 
     /**
@@ -188,7 +197,7 @@ export default class ContractFunctionResult {
         // using platform endianness which is little-endian on x86
         return new DataView(
             this.bytes.buffer,
-            this.bytes.byteOffset + (index ?? 0) * 32 + 28,
+            this.bytes.byteOffset + (index != null ? index : 0) * 32 + 28,
             4
         ).getUint32(0);
     }
@@ -218,7 +227,10 @@ export default class ContractFunctionResult {
      */
     getAddress(index) {
         return hex.encode(
-            this.bytes.subarray((index ?? 0) * 32 + 12, (index ?? 0) * 32 + 32)
+            this.bytes.subarray(
+                (index != null ? index : 0) * 32 + 12,
+                (index != null ? index : 0) * 32 + 32
+            )
         );
     }
 
@@ -227,6 +239,9 @@ export default class ContractFunctionResult {
      * @returns {Uint8Array}
      */
     _getBytes32(index) {
-        return this.bytes.subarray((index ?? 0) * 32, (index ?? 0) * 32 + 32);
+        return this.bytes.subarray(
+            (index != null ? index : 0) * 32,
+            (index != null ? index : 0) * 32 + 32
+        );
     }
 }

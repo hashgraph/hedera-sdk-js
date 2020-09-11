@@ -137,8 +137,12 @@ export default class AccountDeleteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            deleteAccountID: this._accountId?._toProtobuf(),
-            transferAccountID: this._transferAccountId?._toProtobuf(),
+            deleteAccountID:
+                this._accountId != null ? this._accountId._toProtobuf() : null,
+            transferAccountID:
+                this._transferAccountId != null
+                    ? this._transferAccountId._toProtobuf()
+                    : null,
         };
     }
 }

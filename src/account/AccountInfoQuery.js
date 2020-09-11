@@ -79,10 +79,8 @@ export default class AccountInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response.cryptoGetInfo !=
-        null
-            ? response.cryptoGetInfo.header
-            : null);
+        const cryptoGetInfo = /** @type {proto.ICryptoGetInfoResponse} */ (response.cryptoGetInfo);
+        return /** @type {proto.IResponseHeader} */ (cryptoGetInfo.header);
     }
 
     /**
@@ -93,7 +91,6 @@ export default class AccountInfoQuery extends Query {
      */
     _mapResponse(response) {
         const info = /** @type {proto.ICryptoGetInfoResponse} */ (response.cryptoGetInfo);
-
         return AccountInfo._fromProtobuf(
             /** @type {proto.CryptoGetInfoResponse.IAccountInfo} */ (info.accountInfo)
         );
@@ -110,7 +107,10 @@ export default class AccountInfoQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                accountID: this._accountId?._toProtobuf(),
+                accountID:
+                    this._accountId != null
+                        ? this._accountId._toProtobuf()
+                        : null,
             },
         };
     }

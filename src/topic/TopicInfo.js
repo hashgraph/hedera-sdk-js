@@ -117,10 +117,10 @@ export default class TopicInfo {
                 info.submitKey != null ? _fromProtoKey(info.submitKey) : null,
             autoRenewPeriod:
                 info.autoRenewPeriod != null
-                    ? info.autoRenewPeriod.seconds instanceof Long
-                        ? info.autoRenewPeriod.seconds.toNumber()
-                        : info.autoRenewPeriod.seconds != null
-                        ? info.autoRenewPeriod.seconds
+                    ? info.autoRenewPeriod.seconds != null
+                        ? info.autoRenewPeriod.seconds instanceof Long
+                            ? info.autoRenewPeriod.seconds.toNumber()
+                            : info.autoRenewPeriod.seconds
                         : 0
                     : 0,
             autoRenewAccountId:

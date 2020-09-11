@@ -1,8 +1,8 @@
 import proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
-import { Key } from "@hashgraph/cryptography";
-import { _fromProtoKey, _toProtoKey } from "../util";
+import { Key, KeyList } from "@hashgraph/cryptography";
+import { _fromProtoKeyList, _toProtoKeyList } from "../util";
 import Timestamp from "../Timestamp";
 import * as utf8 from "../encoding/utf8";
 import FileId from "./FileId";
@@ -14,7 +14,7 @@ export default class FileUpdateTransaction extends Transaction {
     /**
      * @param {object} props
      * @param {FileId | string} [props.fileId]
-     * @param {Key[]} [props.keys]
+     * @param {KeyList} [props.keys]
      * @param {Timestamp} [props.expirationTime]
      * @param {Uint8Array | string} [props.contents]
      */
@@ -29,7 +29,7 @@ export default class FileUpdateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Key[]}
+         * @type {?KeyList}
          */
         this._keys = null;
 
@@ -69,18 +69,14 @@ export default class FileUpdateTransaction extends Transaction {
      */
     static _fromProtobuf(body) {
         const update = /** @type {proto.IFileUpdateTransactionBody} */ (body.fileUpdate);
+        const keys = /** @type {proto.IKeyList} */ (update.keys);
 
         return new FileUpdateTransaction({
             fileId:
                 update.fileID != null
                     ? FileId._fromProtobuf(update.fileID)
                     : undefined,
-            keys:
-                update.keys != null
-                    ? update.keys.keys != null
-                        ? update.keys.keys.map((key) => _fromProtoKey(key))
-                        : undefined
-                    : undefined,
+            keys: _fromProtoKeyList(keys),
             expirationTime:
                 update.expirationTime != null
                     ? Timestamp._fromProtobuf(update.expirationTime)
@@ -121,7 +117,7 @@ export default class FileUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?Key[]}
+     * @returns {?KeyList}
      */
     getKeys() {
         return this._keys;
@@ -145,7 +141,7 @@ export default class FileUpdateTransaction extends Transaction {
      */
     setKeys(...keys) {
         this._requireNotFrozen();
-        this._keys = keys;
+        this._keys != null ? this._keys.push(keys) : null;
 
         return this;
     }
@@ -233,13 +229,8 @@ export default class FileUpdateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            fileID: this._fileId?._toProtobuf(),
-            keys:
-                this._keys != null
-                    ? {
-                          keys: this._keys.map((key) => _toProtoKey(key)),
-                      }
-                    : null,
+            fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
+            keys: this._keys != null ? _toProtoKeyList(this._keys) : null,
             expirationTime:
                 this._expirationTime != null
                     ? this._expirationTime._toProtobuf()

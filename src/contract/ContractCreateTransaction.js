@@ -128,17 +128,28 @@ export default class ContractCreateTransaction extends Transaction {
                 create.adminKey != null
                     ? _fromProtoKey(create.adminKey)
                     : undefined,
-            gas: create.gas ?? undefined,
-            initialBalance: create.initialBalance ?? undefined,
+            gas: create.gas != null ? create.gas : undefined,
+            initialBalance:
+                create.initialBalance != null
+                    ? create.initialBalance
+                    : undefined,
             proxyAccountId:
                 create.proxyAccountID != null
                     ? AccountId._fromProtobuf(
                           /** @type {proto.IAccountID} */ (create.proxyAccountID)
                       )
                     : undefined,
-            autoRenewPeriod: create.autoRenewPeriod?.seconds ?? undefined,
-            constructorParameters: create.constructorParameters ?? undefined,
-            contractMemo: create.memo ?? undefined,
+            autoRenewPeriod:
+                create.autoRenewPeriod != null
+                    ? create.autoRenewPeriod.seconds != null
+                        ? create.autoRenewPeriod.seconds
+                        : undefined
+                    : undefined,
+            constructorParameters:
+                create.constructorParameters != null
+                    ? create.constructorParameters
+                    : undefined,
+            contractMemo: create.memo != null ? create.memo : undefined,
         });
     }
 
@@ -330,12 +341,21 @@ export default class ContractCreateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            fileID: this._bytecodeFileId?._toProtobuf(),
+            fileID:
+                this._bytecodeFileId != null
+                    ? this._bytecodeFileId._toProtobuf()
+                    : null,
             adminKey:
                 this._adminKey != null ? _toProtoKey(this._adminKey) : null,
             gas: this._gas,
-            initialBalance: this._initialBalance?.toTinybars(),
-            proxyAccountID: this._proxyAccountId?._toProtobuf(),
+            initialBalance:
+                this._initialBalance != null
+                    ? this._initialBalance.toTinybars()
+                    : null,
+            proxyAccountID:
+                this._proxyAccountId != null
+                    ? this._proxyAccountId._toProtobuf()
+                    : null,
             autoRenewPeriod: {
                 seconds: this._autoRenewPeriod,
             },

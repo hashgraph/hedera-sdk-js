@@ -47,12 +47,12 @@ export default class ExchangeRate {
             cents: /** @type {number} */ (rate.centEquiv),
             expirationTime: new Date(
                 rate.expirationTime != null
-                    ? rate.expirationTime.seconds instanceof Long
-                        ? rate.expirationTime.seconds.toInt()
-                        : rate.expirationTime.seconds != null
-                        ? rate.expirationTime.seconds
+                    ? rate.expirationTime.seconds != null
+                        ? rate.expirationTime.seconds instanceof Long
+                            ? rate.expirationTime.seconds.toInt()
+                            : rate.expirationTime.seconds
                         : 0 * 1000
-                    : 0
+                    : 0 * 1000
             ),
         });
     }

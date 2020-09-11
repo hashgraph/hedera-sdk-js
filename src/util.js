@@ -73,7 +73,9 @@ export function _fromProtoKeyList(keys) {
 
     // FIXME: add types
     // @ts-ignore
-    return KeyList.of(...(keys.keys ?? []).map((key) => _fromProtoKey(key)));
+    return KeyList.of(
+        ...(keys.keys != null ? keys.keys : []).map((key) => _fromProtoKey(key))
+    );
 }
 
 /**

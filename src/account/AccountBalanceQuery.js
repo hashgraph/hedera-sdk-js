@@ -126,8 +126,8 @@ export default class AccountBalanceQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response
-            .cryptogetAccountBalance?.header);
+        const cryptogetAccountBalance = /** @type {proto.ICryptoGetAccountBalanceResponse} */ (response.cryptogetAccountBalance);
+        return /** @type {proto.IResponseHeader} */ (cryptogetAccountBalance.header);
     }
 
     /**
@@ -137,11 +137,10 @@ export default class AccountBalanceQuery extends Query {
      * @returns {Hbar}
      */
     _mapResponse(response) {
+        const cryptogetAccountBalance = /** @type {proto.ICryptoGetAccountBalanceResponse} */ (response.cryptogetAccountBalance);
         return Hbar.fromTinybars(
-            response.cryptogetAccountBalance != null
-                ? response.cryptogetAccountBalance.balance != null
-                    ? response.cryptogetAccountBalance.balance
-                    : 0
+            cryptogetAccountBalance.balance != null
+                ? cryptogetAccountBalance.balance
                 : 0
         );
     }
@@ -157,8 +156,14 @@ export default class AccountBalanceQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                accountID: this._accountId?._toProtobuf(),
-                contractID: this._contractId?._toProtobuf(),
+                accountID:
+                    this._accountId != null
+                        ? this._accountId._toProtobuf()
+                        : null,
+                contractID:
+                    this._contractId != null
+                        ? this._contractId._toProtobuf()
+                        : null,
             },
         };
     }

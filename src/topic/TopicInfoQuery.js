@@ -80,8 +80,8 @@ export default class TopicInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response
-            .consensusGetTopicInfo?.header);
+        const consensusGetTopicInfo = /** @type {proto.IConsensusGetTopicInfoResponse} */ (response.consensusGetTopicInfo);
+        return /** @type {proto.IResponseHeader} */ (consensusGetTopicInfo.header);
     }
 
     /**

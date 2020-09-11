@@ -11,7 +11,7 @@ export default class ContractRecordsQuery extends Query {
      * @param {object} properties
      * @param {ContractId | string} [properties.contractId]
      */
-    constructor(properties) {
+    constructor(properties = {}) {
         super();
 
         /**
@@ -20,8 +20,8 @@ export default class ContractRecordsQuery extends Query {
          */
         this._contractId = null;
 
-        if (properties?.contractId != null) {
-            this.setContractId(properties?.contractId);
+        if (properties.contractId != null) {
+            this.setContractId(properties.contractId);
         }
     }
 
@@ -69,8 +69,8 @@ export default class ContractRecordsQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ (response
-            .contractGetRecordsResponse?.header);
+        const contractGetRecordsResponse = /** @type {proto.IContractGetRecordsResponse} */ (response.contractGetRecordsResponse);
+        return /** @type {proto.IResponseHeader} */ (contractGetRecordsResponse.header);
     }
 
     /**
@@ -80,9 +80,9 @@ export default class ContractRecordsQuery extends Query {
      * @returns {TransactionRecord[]}
      */
     _mapResponse(response) {
-        return (
-            response.contractGetRecordsResponse?.records ?? []
-        ).map((record) => TransactionRecord._fromProtobuf(record));
+        const contractGetRecordResponse = /** @type {proto.IContractGetRecordsResponse} */ (response.contractGetRecordsResponse);
+        const records = /** @type {proto.ITransactionRecord[]} */ (contractGetRecordResponse.records);
+        return records.map((record) => TransactionRecord._fromProtobuf(record));
     }
 
     /**
@@ -96,7 +96,10 @@ export default class ContractRecordsQuery extends Query {
                 header: {
                     responseType: proto.ResponseType.ANSWER_ONLY,
                 },
-                contractID: this._contractId?._toProtobuf(),
+                contractID:
+                    this._contractId != null
+                        ? this._contractId._toProtobuf()
+                        : null,
             },
         };
     }
