@@ -44,6 +44,7 @@
         "@grpc/grpc-js": "^1.1.5",
         "@hashgraph/cryptography": "file:packages/cryptography",
         "@hashgraph/proto": "file:packages/proto",
+        "@improbable-eng/grpc-web": "^0.13.0",
         "bignumber.js": "^9.0.0",
         "js-sha3": "^0.8.0",
         "long": "^4.0.0"

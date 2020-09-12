@@ -8,6 +8,7 @@ import HederaExecutable from "./HederaExecutable";
 import Status from "./Status";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Long from "long";
+import { sha3_384 } from "js-sha3";
 
 export const DEFAULT_AUTO_RENEW_PERIOD = Long.fromValue(7776000); // 90 days (in seconds)
 
@@ -21,8 +22,6 @@ const DEFAULT_TRANSACTION_VALID_DURATION = 120; // seconds
  * @type {Map<proto.TransactionBody["data"], (body: proto.TransactionBody) => Transaction>}
  */
 export const TRANSACTION_REGISTRY = new Map();
-
-// TODO: getTransactionHash()
 
 /**
  * Base class for all transactions that may be submitted to Hedera.
@@ -378,6 +377,25 @@ export default class Transaction extends HederaExecutable {
     }
 
     /**
+     * @returns {Uint8Array}
+     */
+    getTransactionHash() {
+        if (!this._isFrozen()) {
+            throw new Error(
+                "transaction must have been frozen before calculating the hash will be stable, try calling `freeze`"
+            );
+        }
+
+        if (this._transactions.length != 1) {
+            throw new Error(
+                "transaction must have an explicit node ID set, try calling `setNodeId`"
+            );
+        }
+
+        return hash(proto.Transaction.encode(this._makeRequest()).finish());
+    }
+
+    /**
      * @protected
      * @param {Client} client
      * @returns {Promise<void>}
@@ -537,4 +555,12 @@ export default class Transaction extends HederaExecutable {
             );
         }
     }
+}
+
+/**
+ * @param {Uint8Array} bytes
+ * @returns {Uint8Array}
+ */
+function hash(bytes) {
+    return new Uint8Array(sha3_384.digest(bytes));
 }
