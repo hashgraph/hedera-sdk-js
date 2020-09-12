@@ -42,13 +42,13 @@
         "test:browser:firefox": "vite serve --port 9002 test/ & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/; kill %1"
     },
     "dependencies": {
-        "@babel/preset-env": "^7.11.5",
         "bignumber.js": "^9.0.0",
         "tweetnacl": "^1.0.3"
     },
     "devDependencies": {
         "@babel/cli": "^7.11.6",
         "@babel/core": "^7.11.6",
+        "@babel/plugin-transform-modules-commonjs": "^7.10.4",
         "chai": "^4.2.0",
         "chromedriver": "^85.0.0",
         "eslint": "^7.8.1",

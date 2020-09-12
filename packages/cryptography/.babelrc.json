@@ -1,14 +1,3 @@
 {
-    "presets": [
-        [
-            "@babel/preset-env",
-            {
-                "targets": {
-                    "node": true
-                },
-                "bugfixes": true,
-                "loose": true
-            }
-        ]
-    ]
+    "plugins": ["@babel/plugin-transform-modules-commonjs"]
 }
