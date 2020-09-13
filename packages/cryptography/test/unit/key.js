@@ -207,7 +207,7 @@ describe("PrivateKey", function () {
     });
 
     it("should correctly verify signature", function () {
-        expect(privateKey.publicKey.verify(message, signature)).to.be.true;
+        expect(privateKey.getPublicKey().verify(message, signature)).to.be.true;
     });
 
     it("should produce correctly encoded string when toString() is called", function () {
@@ -216,7 +216,7 @@ describe("PrivateKey", function () {
     });
 
     it("should produce same publicKey", function () {
-        expect(privateKey.publicKey.toBytes()).to.deep.equal(pubKeyBytes);
+        expect(privateKey.getPublicKey().toBytes()).to.deep.equal(pubKeyBytes);
     });
 
     it("should return correct value when using fromString", function () {
@@ -231,18 +231,18 @@ describe("PrivateKey", function () {
 
         const privateKey4 = PrivateKey.fromString(iosWalletPrivKey);
         expect(privateKey4.toBytes()).to.deep.equal(iosWalletPrivKeyBytes);
-        expect(privateKey4.publicKey.toBytes()).to.deep.equal(
+        expect(privateKey4.getPublicKey().toBytes()).to.deep.equal(
             iosWalletPubKeyBytes
         );
 
         const privateKey5 = PrivateKey.fromString(androidWalletPrivKey);
         expect(privateKey5.toBytes()).to.deep.equal(androidWalletPrivKeyBytes);
-        expect(privateKey5.publicKey.toBytes()).to.deep.equal(
+        expect(privateKey5.getPublicKey().toBytes()).to.deep.equal(
             androidWalletPubKeyBytes
         );
     });
 
-    it("tokeystore() creates loadable keystores", async function () {
+    it("toKeystore() creates loadable keystores", async function () {
         const keystoreBytes = await privateKey.toKeystore(passphrase);
         const key = await PrivateKey.fromKeystore(keystoreBytes, passphrase);
 
@@ -266,7 +266,7 @@ describe("PrivateKey", function () {
         const iosChildKey = await iosKey.derive(0);
 
         expect(iosChildKey.toBytes()).to.deep.equal(iosWalletPrivKeyBytes);
-        expect(iosChildKey.publicKey.toBytes()).to.deep.equal(
+        expect(iosChildKey.getPublicKey().toBytes()).to.deep.equal(
             iosWalletPubKeyBytes
         );
 
@@ -279,7 +279,7 @@ describe("PrivateKey", function () {
         expect(androidChildKey.toBytes()).to.deep.equal(
             androidWalletPrivKeyBytes
         );
-        expect(androidChildKey.publicKey.toBytes()).to.deep.equal(
+        expect(androidChildKey.getPublicKey().toBytes()).to.deep.equal(
             androidWalletPubKeyBytes
         );
     });

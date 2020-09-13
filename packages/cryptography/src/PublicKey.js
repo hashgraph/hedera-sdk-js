@@ -1,27 +1,25 @@
 import nacl from "tweetnacl";
 import Key from "./Key.js";
+import { arraysEqual } from "./util";
 import BadKeyError from "./BadKeyError.js";
-import { ED25519PUBLICKEY_PREFIX } from "./util.js";
 import * as hex from "./encoding/hex.js";
+
+const derPrefix = "302a300506032b6570032100";
+const derPrefixBytes = hex.decode(derPrefix);
 
 /**
  * An public key on the Hedera™ network.
  */
 export default class PublicKey extends Key {
     /**
-     * @param {Uint8Array} data
+     * @private
+     * @hideconstructor
+     * @param {Uint8Array} keyData
      */
-    constructor(data) {
+    constructor(keyData) {
         super();
-        /**
-         * @type {Uint8Array}
-         */
-        this._keyData = data.slice(0, 32);
 
-        /**
-         * @type {string | null}
-         */
-        this._asStringRaw = null;
+        this._keyData = keyData;
     }
 
     /**
@@ -29,37 +27,35 @@ export default class PublicKey extends Key {
      * @returns {PublicKey}
      */
     static fromBytes(bytes) {
-        return new PublicKey(bytes);
-    }
+        switch (bytes.length) {
+            case 32:
+                return new PublicKey(bytes);
 
-    /**
-     * @param {string} keyStr
-     * @returns {PublicKey}
-     */
-    static fromString(keyStr) {
-        switch (keyStr.length) {
-            case 64: {
-                // raw public key
-                const newKey = new PublicKey(hex.decode(keyStr));
-                newKey._asStringRaw = keyStr;
-                return newKey;
-            }
-            case 88: // DER encoded public key
-                if (keyStr.startsWith(ED25519PUBLICKEY_PREFIX)) {
-                    const rawKey = keyStr.slice(24);
-                    const newKey = new PublicKey(hex.decode(rawKey));
-                    newKey._asStringRaw = rawKey;
-                    return newKey;
+            case 48:
+                if (arraysEqual(bytes.subarray(0, 12), derPrefixBytes)) {
+                    return new PublicKey(bytes.subarray(12));
                 }
+
                 break;
+
             default:
         }
 
-        throw new BadKeyError(undefined);
+        throw new BadKeyError(
+            `invalid public key length: ${bytes.length} bytes`
+        );
     }
 
     /**
-     * Sign a message with this private key.
+     * @param {string} publicKey
+     * @returns {PublicKey}
+     */
+    static fromString(publicKey) {
+        return PublicKey.fromBytes(hex.decode(publicKey));
+    }
+
+    /**
+     * Verify a signature on a message with this public key.
      *
      * @param {Uint8Array} message
      * @param {Uint8Array} signature
@@ -77,9 +73,18 @@ export default class PublicKey extends Key {
     }
 
     /**
+     * @param {boolean} [raw]
      * @returns {string}
      */
-    toString() {
-        return ED25519PUBLICKEY_PREFIX + hex.encode(this._keyData);
+    toString(raw = false) {
+        return (raw ? "" : derPrefix) + hex.encode(this._keyData);
+    }
+
+    /**
+     * @param {PublicKey} other
+     * @returns {boolean}
+     */
+    equals(other) {
+        return arraysEqual(this._keyData, other._keyData);
     }
 }

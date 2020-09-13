@@ -1,268 +1,125 @@
 import nacl from "tweetnacl";
-import PublicKey from "./PublicKey.js";
-import Mnemonic from "./Mnemonic.js";
-import {
-    arraysEqual,
-    deriveChildKey,
-    ED25519PRIVATEKEY_PREFIX,
-} from "./util.js";
-import { createKeystore, loadKeystore } from "./Keystore.js";
-import BadKeyError from "./BadKeyError.js";
-import { EncryptedPrivateKeyInfo } from "./primitive/pkcs.js";
-import * as der from "./encoding/der.js";
-import * as base64 from "./encoding/base64.js";
-import * as hex from "./encoding/hex.js";
+import PublicKey from "./PublicKey";
+import Mnemonic from "./Mnemonic";
+import { arraysEqual } from "./util";
+import { createKeystore, loadKeystore } from "./Keystore";
+import BadKeyError from "./BadKeyError";
+import * as hex from "./encoding/hex";
+import { read as readPem } from "./encoding/pem";
+import * as slip10 from "./primitive/slip10";
 
-const BEGIN_PRIVATEKEY = "-----BEGIN PRIVATE KEY-----\n";
-const END_PRIVATEKEY = "-----END PRIVATE KEY-----\n";
-
-const BEGIN_ENCRYPTED_PRIVATEKEY = "-----BEGIN ENCRYPTED PRIVATE KEY-----\n";
-const END_ENCRYPTED_PRIVATEKEY = "-----END ENCRYPTED PRIVATE KEY-----\n";
-
-const DER_PREFIX = hex.decode("302e020100300506032b657004220420");
+const derPrefix = "302e020100300506032b657004220420";
+const derPrefixBytes = hex.decode(derPrefix);
 
 /**
- * @param {Uint8Array} bytes
- * @returns {nacl.SignKeyPair}
+ * A private key on the Hedera™ network.
  */
-function _bytesLengthCases(bytes) {
-    // this check is necessary because Jest breaks the prototype chain of Uint8Array
-    // noinspection SuspiciousTypeOfGuard
-    const bytesArray =
-        bytes instanceof Uint8Array ? bytes : Uint8Array.from(bytes);
-
-    switch (bytes.length) {
-        case 48:
-            // key with prefix
-            if (arraysEqual(bytesArray.subarray(0, 16), DER_PREFIX)) {
-                return nacl.sign.keyPair.fromSeed(bytesArray.subarray(16));
-            }
-            break;
-        case 32:
-            // fromSeed takes the private key bytes and calculates the public key
-            return nacl.sign.keyPair.fromSeed(bytesArray);
-        case 64:
-            // priv + pub key pair
-            return nacl.sign.keyPair.fromSecretKey(bytesArray);
-        default:
-    }
-
-    throw new BadKeyError(undefined);
-}
-
 export default class PrivateKey {
     /**
-     * @param {{privateKey: Uint8Array, publicKey: Uint8Array }} keyPair
+     * @hideconstructor
+     * @internal
+     * @param {nacl.SignKeyPair} keyPair
+     * @param {?Uint8Array} chainCode
      */
-    constructor(keyPair) {
-        const { privateKey, publicKey } = keyPair;
-
-        if (privateKey.length !== nacl.sign.secretKeyLength) {
-            throw new BadKeyError(undefined);
-        }
-
-        /**
-         * @type {Uint8Array}
-         */
-        this._keyData = privateKey;
-
-        /**
-         * @type {nacl.SignKeyPair}
-         */
-        this._signingKey = nacl.sign.keyPair.fromSecretKey(privateKey);
-
-        /**
-         * @type {PublicKey}
-         */
-        this.publicKey = PublicKey.fromBytes(publicKey);
-
-        /**
-         * @type {Uint8Array | null}
-         */
-        this._chainCode = null;
-
-        /**
-         * @type {string | null}
-         */
-        this._asStringRaw = null;
+    constructor(keyPair, chainCode) {
+        this._keyPair = keyPair;
+        this._chainCode = chainCode;
     }
 
     /**
-     * Recover a private key from its raw bytes form.
+     * Generate a random Ed25519 private key.
      *
-     * This key will _not_ support child key derivation.
+     * @returns {PrivateKey}
+     */
+    static generate() {
+        // 32 bytes for the secret key
+        // 32 bytes for the chain code (to support derivation)
+        const entropy = nacl.randomBytes(64);
+
+        console.log("[0].0 =", entropy.subarray(0, 32));
+        console.log("[0].1 =", entropy.subarray(32));
+
+        return new PrivateKey(
+            nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
+            entropy.subarray(32)
+        );
+    }
+
+    /**
+     * Construct a private key from bytes.
      *
      * @param {Uint8Array} bytes
      * @returns {PrivateKey}
      */
     static fromBytes(bytes) {
-        const keypair = _bytesLengthCases(bytes);
+        switch (bytes.length) {
+            case 48:
+                // key with prefix
+                if (arraysEqual(bytes.subarray(0, 16), derPrefixBytes)) {
+                    const keyPair = nacl.sign.keyPair.fromSeed(
+                        bytes.subarray(16)
+                    );
 
-        const { secretKey: privateKey, publicKey } = keypair;
-
-        return new PrivateKey({ privateKey, publicKey });
-    }
-
-    /**
-     * Recover a key from a hex-encoded string.
-     *
-     * This key will _not_ support child key derivation.
-     *
-     * @param {string} keyStr
-     * @returns {PrivateKey}
-     */
-    static fromString(keyStr) {
-        switch (keyStr.length) {
-            case 64: // lone private key
-            case 128: {
-                // private key + key
-                const newKey = PrivateKey.fromBytes(hex.decode(keyStr));
-                newKey._asStringRaw = keyStr;
-                return newKey;
-            }
-            case 96:
-                if (keyStr.startsWith(ED25519PRIVATEKEY_PREFIX)) {
-                    const rawStr = keyStr.slice(32);
-                    const newKey = PrivateKey.fromBytes(hex.decode(rawStr));
-                    newKey._asStringRaw = rawStr;
-                    return newKey;
+                    return new PrivateKey(keyPair, null);
                 }
+
                 break;
+
+            case 32:
+                const keyPair = nacl.sign.keyPair.fromSeed(bytes);
+                return new PrivateKey(keyPair, null);
+
+            case 64:
+                // priv + pub key
+                return new PrivateKey(
+                    nacl.sign.keyPair.fromSecretKey(bytes),
+                    null
+                );
+
             default:
         }
 
-        throw new BadKeyError(undefined);
+        throw new BadKeyError(
+            `invalid private key length: ${bytes.length} bytes`
+        );
     }
 
     /**
-     * Recover a key from a 24 or 22-word mnemonic.
+     * Construct a private key from a hex-encoded string.
      *
-     * There is no corresponding `toMnemonic()` as the mnemonic cannot be recovered from the key.
-     *
-     * This accepts mnemonics generated by the Android and iOS mobile wallets.
-     *
-     * This key *will* support deriving child keys with `.derive()`.
-     *
-     * If the mnemonic has 22 words, the resulting key will not support deriving child keys.
-     *
-     * @param {Mnemonic} mnemonic the mnemonic, either as a string separated by spaces or as a 24-element array
-     * @param {string} passphrase the passphrase to protect the private key with
-     * @returns {Promise<PrivateKey>}
-     */
-    static async fromMnemonic(mnemonic, passphrase) {
-        return mnemonic.toPrivateKey(passphrase);
-    }
-
-    /**
-     * Recover a private key from a keystore blob previously created by `.createKeystore()`.
-     *
-     * This key will _not_ support child key derivation.
-     *
-     * @param {Uint8Array} keystore - the keystore blob
-     * @param {string} passphrase - the passphrase used to create the keystore
-     * @returns {Promise<PrivateKey>}
-     * @throws KeyMismatchError if the passphrase is incorrect or the hash fails to validate
-     * @link createKeystore
-     */
-    static async fromKeystore(keystore, passphrase) {
-        return new PrivateKey(await loadKeystore(keystore, passphrase));
-    }
-
-    /**
-     * Generate a new, cryptographically random private key.
-     *
-     * This key will _not_ support child key derivation.
-     *
+     * @param {string} privateKey
      * @returns {PrivateKey}
      */
-    static generate() {
-        return this.fromBytes(nacl.randomBytes(32));
+    static fromString(privateKey) {
+        return PrivateKey.fromBytes(hex.decode(privateKey));
     }
 
     /**
-     * Derive a new private key at the given wallet index.
+     * Recover a private key from a mnemonic phrase (and optionally a password).
      *
-     * Only currently supported for keys created with `fromMnemonic()`; other keys will throw
-     * an error.
-     *
-     * You can check if a key supports derivation with `.supportsDerivation`
-     *
-     * Will eventually replace `PrivateKey.derive()`
-     *
-     * @param {number} index
+     * @param {Mnemonic | string} mnemonic
+     * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
      */
-    async derive(index) {
-        if (this._chainCode == null) {
-            throw new Error(
-                "this  private key does not support key derivation"
-            );
-        }
-
-        const { keyBytes, chainCode } = await deriveChildKey(
-            this._keyData.subarray(0, 32),
-            this._chainCode,
-            index
-        );
-
-        const key = PrivateKey.fromBytes(keyBytes);
-        key._chainCode = chainCode;
-
-        return key;
+    static async fromMnemonic(mnemonic, passphrase = "") {
+        return (typeof mnemonic === "string"
+            ? await Mnemonic.fromString(mnemonic)
+            : mnemonic
+        ).toPrivateKey(passphrase);
     }
 
     /**
-     * @param {Uint8Array} bytes
-     * @returns {Uint8Array} - The signature bytes without the message
-     */
-    sign(bytes) {
-        return nacl.sign.detached(bytes, this._signingKey.secretKey);
-    }
-
-    /** Check if this private key supports deriving child keys
+     * Recover a private key from a keystore, previously created by `.toKeystore()`.
      *
-     * @returns {boolean}
-     */
-    get supportsDerivation() {
-        return this._chainCode != null;
-    }
-
-    /**
-     * @returns {Uint8Array}
-     */
-    toBytes() {
-        // copy the bytes so they can't be modified accidentally
-        // only copy the private key portion since that's what we're expecting on the other end
-        return this._keyData.slice(0, 32);
-    }
-
-    /**
-     * @param {boolean} raw
-     * @returns {string}
-     */
-    toString(raw = false) {
-        if (this._asStringRaw == null) {
-            // only encode the private portion of the private key
-            this._asStringRaw = hex.encode(this._keyData.subarray(0, 32));
-        }
-
-        return (raw ? "" : ED25519PRIVATEKEY_PREFIX) + this._asStringRaw;
-    }
-
-    /**
-     * Create a keystore blob with a given passphrase.
+     * This key will _not_ support child key derivation.
      *
-     * The key can be recovered later with `fromKeystore()`.
-     *
-     * Note that this will not retain the ancillary data used for deriving child keys,
-     * thus `.derive()` on the restored key will throw even if this instance supports derivation.
-     *
+     * @param {Uint8Array} keystore
      * @param {string} passphrase
-     * @returns {Promise<Uint8Array>}
-     * @link fromKeystore
+     * @returns {Promise<PrivateKey>}
+     * @throws {BadKeyError} If the passphrase is incorrect or the hash fails to validate.
      */
-    toKeystore(passphrase) {
-        return createKeystore(this._keyData, passphrase);
+    static async fromKeystore(keystore, passphrase) {
+        return new PrivateKey(await loadKeystore(keystore, passphrase), null);
     }
 
     /**
@@ -275,57 +132,103 @@ export default class PrivateKey {
      * section and decodes that as a DER-encoded  private key.
      *
      * @param {string} pem
-     * @param {string | undefined} passphrase
+     * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
      */
     static async fromPem(pem, passphrase) {
-        const beginTag = passphrase
-            ? BEGIN_ENCRYPTED_PRIVATEKEY
-            : BEGIN_PRIVATEKEY;
-        const endTag = passphrase ? END_ENCRYPTED_PRIVATEKEY : END_PRIVATEKEY;
+        return new PrivateKey(await readPem(pem, passphrase), null);
+    }
 
-        const beginIndex = pem.indexOf(beginTag);
-        const endIndex = pem.indexOf(endTag);
-
-        if (beginIndex === -1 || endIndex === -1) {
-            throw new BadKeyError(undefined);
+    /**
+     * Derive a new private key at the given wallet index.
+     *
+     * Only currently supported for keys created with `fromMnemonic()`; other keys will throw
+     * an error.
+     *
+     * You can check if a key supports derivation with `.supportsDerivation()`
+     *
+     * @param {number} index
+     * @returns {Promise<PrivateKey>}
+     * @throws If this key does not support derivation.
+     */
+    async derive(index) {
+        if (this._chainCode == null) {
+            throw new Error("this private key does not support key derivation");
         }
 
-        const keyEncoded = pem.slice(beginIndex + beginTag.length, endIndex);
+        const { keyData, chainCode } = await slip10.derive(
+            this.toBytes(),
+            this._chainCode,
+            index
+        );
 
-        const key = base64.decode(keyEncoded);
+        const keyPair = nacl.sign.keyPair.fromSeed(keyData);
 
-        if (passphrase) {
-            let encrypted;
+        return new PrivateKey(keyPair, chainCode);
+    }
 
-            try {
-                encrypted = EncryptedPrivateKeyInfo.parse(key);
-            } catch (error) {
-                throw new BadKeyError(
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/explicit-module-boundary-types
-                    `failed to parse encrypted private key: ${error.message}`
-                );
-            }
+    /**
+     * Get the public key associated with this private key.
+     *
+     * The public key can be freely given and used by other parties to verify
+     * the signatures generated by this private key.
+     *
+     * @returns {PublicKey}
+     */
+    getPublicKey() {
+        return PublicKey.fromBytes(this._keyPair.publicKey);
+    }
 
-            const decrypted = await encrypted.decrypt(passphrase);
+    /**
+     * Sign a message with this private key.
+     *
+     * @param {Uint8Array} bytes
+     * @returns {Uint8Array} - The signature bytes without the message
+     */
+    sign(bytes) {
+        return nacl.sign.detached(bytes, this._keyPair.secretKey);
+    }
 
-            if (decrypted.algId.algIdent !== "1.3.101.112") {
-                throw new BadKeyError(
-                    `unknown private key algorithm ${decrypted.algId.toString()}`
-                );
-            }
+    /**
+     * Check if `derive` can be called on this private key.
+     *
+     * This is only the case if the key was created from a mnemonic.
+     *
+     * @returns {boolean}
+     */
+    isDerivable() {
+        return this._chainCode != null;
+    }
 
-            const keyData = der.decode(decrypted.privateKey);
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        // copy the bytes so they can't be modified accidentally
+        return this._keyPair.secretKey.slice(0, 32);
+    }
 
-            if ("bytes" in keyData) {
-                return PrivateKey.fromBytes(keyData.bytes);
-            }
+    /**
+     * @param {boolean} [raw]
+     * @returns {string}
+     */
+    toString(raw = false) {
+        return (raw ? "" : derPrefix) + hex.encode(this.toBytes());
+    }
 
-            throw new BadKeyError(
-                `expected ASN bytes, got ${JSON.stringify(keyData)}`
-            );
-        }
-
-        return PrivateKey.fromBytes(key);
+    /**
+     * Create a keystore with a given passphrase.
+     *
+     * The key can be recovered later with `fromKeystore()`.
+     *
+     * Note that this will not retain the ancillary data used for
+     * deriving child keys, thus `.derive()` on the restored key will
+     * throw even if this instance supports derivation.
+     *
+     * @param {string} passphrase
+     * @returns {Promise<Uint8Array>}
+     */
+    toKeystore(passphrase) {
+        return createKeystore(this.toBytes(), passphrase);
     }
 }

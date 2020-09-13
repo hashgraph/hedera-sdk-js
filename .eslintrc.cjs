@@ -13,15 +13,15 @@ module.exports = {
         "plugin:jsdoc/recommended",
         "plugin:import/errors",
         "plugin:import/typescript",
-        "plugin:node/recommended"
+        "plugin:node/recommended",
     ],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         tsconfigRootDir: __dirname,
         project: ["./tsconfig.json"],
-        ecmaVersion: 2020,
+        ecmaVersion: 6,
         sourceType: "module",
-        warnOnUnsupportedTypeScriptVersion: false
+        warnOnUnsupportedTypeScriptVersion: false,
     },
     plugins: ["@typescript-eslint"],
     rules: {
@@ -29,15 +29,27 @@ module.exports = {
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
 
-        // handled with babel
-        "node/no-unsupported-features/es-syntax": "off",
+        // allow import syntax as we compile that away with babel for node
+        "node/no-unsupported-features/es-syntax": [
+            "error",
+            {
+                ignores: ["dynamicImport", "modules"],
+            },
+        ],
 
         // sometimes we need this with jsdoc typing
         "@typescript-eslint/ban-ts-comment": "off",
 
         // opt-out of providing descriptions at the start
         // FIXME: turn these rules back on
+        "jsdoc/require-property-description": "off",
         "jsdoc/require-returns-description": "off",
-        "jsdoc/require-param-description": "off"
+        "jsdoc/require-param-description": "off",
+        "jsdoc/check-tag-names": [
+            "warn",
+            {
+                definedTags: ["internal"],
+            },
+        ],
     },
 };

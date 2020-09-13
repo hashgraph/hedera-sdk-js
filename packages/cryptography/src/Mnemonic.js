@@ -8,7 +8,7 @@ import * as sha256 from "./primitive/sha256.js";
 import * as pbkdf2 from "./primitive/pbkdf2.js";
 import nacl from "tweetnacl";
 import * as hmac from "./primitive/hmac";
-import { deriveChildKey } from "./util";
+import * as slip10 from "./primitive/slip10";
 
 /**
  * Multi-word mnemonic phrase (BIP-39).
@@ -77,7 +77,9 @@ export default class Mnemonic {
         const bits = entropyBits + checksumBits;
         const chunks = bits.match(/(.{1,11})/g);
 
-        const words = ((chunks != null) ? chunks : []).map((binary) => bip39Words[binaryToByte(binary)]);
+        const words = (chunks != null ? chunks : []).map(
+            (binary) => bip39Words[binaryToByte(binary)]
+        );
 
         return new Mnemonic({ words, legacy: false });
     }
@@ -223,7 +225,9 @@ export default class Mnemonic {
             const entropyBits = bits.slice(0, dividerIndex);
             const checksumBits = bits.slice(dividerIndex);
 
-            const entropyBytes = (entropyBits.match(/(.{1,8})/g) != null) ? entropyBits.match(/(.{1,8})/g) : []
+            // @ts-expect-error
+            const entropyBytes = entropyBits
+                .match(/(.{1,8})/g)
                 .map(binaryToByte);
 
             const newChecksum = await deriveChecksumBits(
@@ -265,21 +269,20 @@ export default class Mnemonic {
             seed
         );
 
-        let keyBytes = digest.subarray(0, 32);
+        let keyData = digest.subarray(0, 32);
         let chainCode = digest.subarray(32);
 
         for (const index of [44, 3030, 0, 0]) {
-            ({ keyBytes, chainCode } = await deriveChildKey(
-                keyBytes,
+            ({ keyData, chainCode } = await slip10.derive(
+                keyData,
                 chainCode,
                 index
             ));
         }
 
-        const key = PrivateKey.fromBytes(keyBytes);
-        key._chainCode = chainCode;
+        const keyPair = nacl.sign.keyPair.fromSeed(keyData);
 
-        return key;
+        return new PrivateKey(keyPair, chainCode);
     }
 
     /**

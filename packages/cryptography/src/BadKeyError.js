@@ -1,10 +1,23 @@
+/**
+ * Signals that a key could not be realized from the input.
+ */
 export default class BadKeyError extends Error {
     /**
-     * @param {string | undefined} msg
+     * @param {Error | string} messageOrCause
      */
-    constructor(msg) {
-        super();
-        this.message = msg ? msg : "Failed to parse correct key";
+    constructor(messageOrCause) {
+        super(
+            messageOrCause instanceof Error
+                ? messageOrCause.message
+                : messageOrCause
+        );
+
         this.name = "BadKeyError";
+
+        if (messageOrCause instanceof Error) {
+            /** @type {?Error} */
+            this.cause = messageOrCause;
+            this.stack = messageOrCause.stack;
+        }
     }
 }

@@ -34,7 +34,6 @@
         "lint:format": "prettier src test '*.json' 'src/*.js' --check",
         "lint:js": "eslint --fix 'src/**/*.js' 'test/**/*.js'",
         "format": "prettier src test '*.json' 'src/*.js' --write",
-        "build": "run-s lint compile:js",
         "prepare": "run-s compile:js",
         "test": "run-s test:node test:browser:chrome test:browser:firefox",
         "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js'",
@@ -52,9 +51,9 @@
     "devDependencies": {
         "@babel/cli": "^7.11.6",
         "@babel/core": "^7.11.6",
-        "@babel/preset-env": "^7.11.5",
         "@babel/register": "^7.11.5",
         "@types/chai": "^4.2.12",
+        "@babel/plugin-transform-modules-commonjs": "^7.10.4",
         "@types/long": "^4.0.1",
         "@types/node": "^14.6.3",
         "@typescript-eslint/eslint-plugin": "^4.0.1",

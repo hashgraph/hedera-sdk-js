@@ -10,31 +10,31 @@ const HMAC_SHA256 = "hmac-sha256";
 
 /**
  * @typedef {Object} KeystoreKdfParams
- * @property {number} KeystoreKdfParams.dkLen
- * @property {string} KeystoreKdfParams.salt
- * @property {number} KeystoreKdfParams.c
- * @property {string} KeystoreKdfParams.prf
+ * @property {number} dkLen
+ * @property {string} salt
+ * @property {number} c
+ * @property {string} prf
  */
 
 /**
  * @typedef {Object} KeystoreCipherParams
- * @property {string} KeystoreCipherParams.iv
+ * @property {string} iv
  */
 
 /**
  * @typedef {Object} KeystoreCrypto
- * @property {string} KeystoreCrypto.ciphertext
- * @property {KeystoreCipherParams} KeystoreCrypto.cipherparams
- * @property {string} KeystoreCrypto.cipher
- * @property {string} KeystoreCrypto.kdf
- * @property {KeystoreKdfParams} KeystoreCrypto.kdfparams
- * @property {string} KeystoreCrypto.mac
+ * @property {string} ciphertext
+ * @property {KeystoreCipherParams} cipherparams
+ * @property {string} cipher
+ * @property {string} kdf
+ * @property {KeystoreKdfParams} kdfparams
+ * @property {string} mac
  */
 
 /**
  * @typedef {Object} Keystore
- * @property {number} Keystore.version
- * @property {KeystoreCrypto} Keystore.crypto
+ * @property {number} version
+ * @property {KeystoreCrypto} crypto
  */
 
 /**
@@ -99,7 +99,7 @@ export async function createKeystore(privateKey, passphrase) {
 /**
  * @param {Uint8Array} keystoreBytes
  * @param {string} passphrase
- * @returns {Promise<{privateKey: Uint8Array, publicKey: Uint8Array}>}
+ * @returns {Promise<nacl.SignKeyPair>}
  */
 export async function loadKeystore(keystoreBytes, passphrase) {
     /**
@@ -109,7 +109,9 @@ export async function loadKeystore(keystoreBytes, passphrase) {
     const keystore = JSON.parse(utf8.decode(keystoreBytes));
 
     if (keystore.version !== 1) {
-        throw new Error(`unsupported keystore version: ${keystore.version}`);
+        throw new BadKeyError(
+            `unsupported keystore version: ${keystore.version}`
+        );
     }
 
     const {
@@ -122,11 +124,13 @@ export async function loadKeystore(keystoreBytes, passphrase) {
     } = keystore.crypto;
 
     if (kdf !== "pbkdf2") {
-        throw new Error(`unsupported key derivation function:" + ${kdf}`);
+        throw new BadKeyError(`unsupported key derivation function:" + ${kdf}`);
     }
 
     if (prf !== HMAC_SHA256) {
-        throw new Error(`unsupported key derivation hash function: ${prf}`);
+        throw new BadKeyError(
+            `unsupported key derivation hash function: ${prf}`
+        );
     }
 
     const saltBytes = hex.decode(salt);
@@ -160,10 +164,5 @@ export async function loadKeystore(keystoreBytes, passphrase) {
         cipherBytes
     );
 
-    const {
-        secretKey: privateKey,
-        publicKey,
-    } = nacl.sign.keyPair.fromSecretKey(Uint8Array.from(bytes));
-
-    return { privateKey, publicKey };
+    return nacl.sign.keyPair.fromSeed(Uint8Array.from(bytes));
 }
