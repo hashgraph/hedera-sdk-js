@@ -33,9 +33,9 @@ export default class AccountId extends EntityId {
      */
     static _fromProtobuf(id) {
         return new AccountId({
-            shard: (id.shardNum != null) ? id.shardNum : 0,
-            realm: (id.realmNum != null) ? id.realmNum : 0,
-            num: (id.accountNum != null) ? id.accountNum : 0,
+            shard: id.shardNum != null ? id.shardNum : 0,
+            realm: id.realmNum != null ? id.realmNum : 0,
+            num: id.accountNum != null ? id.accountNum : 0,
         });
     }
 

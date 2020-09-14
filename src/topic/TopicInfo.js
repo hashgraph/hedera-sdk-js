@@ -98,8 +98,9 @@ export default class TopicInfo {
             topicId: TopicId._fromProtobuf(
                 /** @type {proto.ITopicID} */ (infoResponse.topicID)
             ),
-            topicMemo: (info.memo != null) ? info.memo : "",
-            runningHash: (info.runningHash != null) ? info.runningHash : new Uint8Array(),
+            topicMemo: info.memo != null ? info.memo : "",
+            runningHash:
+                info.runningHash != null ? info.runningHash : new Uint8Array(),
             sequenceNumber:
                 info.sequenceNumber != null
                     ? info.sequenceNumber instanceof Long
@@ -115,12 +116,12 @@ export default class TopicInfo {
             submitKey:
                 info.submitKey != null ? _fromProtoKey(info.submitKey) : null,
             autoRenewPeriod:
-                (info.autoRenewPeriod != null)
-                    ? (info.autoRenewPeriod.seconds instanceof Long)
+                info.autoRenewPeriod != null
+                    ? info.autoRenewPeriod.seconds instanceof Long
                         ? info.autoRenewPeriod.seconds.toNumber()
-                        : (info.autoRenewPeriod.seconds != null)
-                            ? info.autoRenewPeriod.seconds
-                            : 0
+                        : info.autoRenewPeriod.seconds != null
+                        ? info.autoRenewPeriod.seconds
+                        : 0
                     : 0,
             autoRenewAccountId:
                 info.autoRenewAccount != null
@@ -148,7 +149,10 @@ export default class TopicInfo {
                 autoRenewPeriod: {
                     seconds: this.autoRenewPeriod,
                 },
-                autoRenewAccount: (this.autoRenewAccountId != null) ? this.autoRenewAccountId._toProtobuf() : null,
+                autoRenewAccount:
+                    this.autoRenewAccountId != null
+                        ? this.autoRenewAccountId._toProtobuf()
+                        : null,
             },
         };
     }

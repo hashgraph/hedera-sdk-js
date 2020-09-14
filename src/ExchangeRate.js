@@ -1,22 +1,21 @@
-import proto from "@hashgraph/proto";
 import Long from "long";
 
 export default class ExchangeRate {
     /**
      * @private
-     * @param {object} properties
-     * @param {number} properties.hbarEquiv
-     * @param {number} properties.centEquiv
-     * @param {Date} properties.expirationTime
+     * @param {object} props
+     * @param {number} props.hbars
+     * @param {number} props.cents
+     * @param {Date} props.expirationTime
      */
-    constructor(properties) {
+    constructor(props) {
         /**
          * Denotes Hbar equivalent to cents (USD)
          *
          * @readonly
          * @type {number}
          */
-        this.hbarEquiv = properties.hbarEquiv;
+        this.hbars = props.hbars;
 
         /**
          * Denotes cents (USD) equivalent to Hbar
@@ -24,7 +23,7 @@ export default class ExchangeRate {
          * @readonly
          * @type {number}
          */
-        this.centEquiv = properties.centEquiv;
+        this.cents = props.cents;
 
         /**
          * Expiration time of this exchange rate
@@ -32,40 +31,40 @@ export default class ExchangeRate {
          * @readonly
          * @type {Date}
          */
-        this.expirationTime = properties.expirationTime;
+        this.expirationTime = props.expirationTime;
 
         Object.freeze(this);
     }
 
     /**
      * @internal
-     * @param {proto.IExchangeRate} rate
+     * @param {import("@hashgraph/proto").default.IExchangeRate} rate
      * @returns {ExchangeRate}
      */
     static _fromProtobuf(rate) {
         return new ExchangeRate({
-            hbarEquiv: /** @type {number} */ (rate.hbarEquiv),
-            centEquiv: /** @type {number} */ (rate.centEquiv),
+            hbars: /** @type {number} */ (rate.hbarEquiv),
+            cents: /** @type {number} */ (rate.centEquiv),
             expirationTime: new Date(
-                (rate.expirationTime != null)
-                ?(rate.expirationTime.seconds instanceof Long
-                    ? rate.expirationTime.seconds.toInt()
-                    : ((rate.expirationTime.seconds != null)
+                rate.expirationTime != null
+                    ? rate.expirationTime.seconds instanceof Long
+                        ? rate.expirationTime.seconds.toInt()
+                        : rate.expirationTime.seconds != null
                         ? rate.expirationTime.seconds
-                        : 0 * 1000))
-                : 0
+                        : 0 * 1000
+                    : 0
             ),
         });
     }
 
     /**
      * @internal
-     * @returns {proto.IExchangeRate}
+     * @returns {import("@hashgraph/proto").default.IExchangeRate}
      */
     _toProtobuf() {
         return {
-            hbarEquiv: this.hbarEquiv,
-            centEquiv: this.centEquiv,
+            hbarEquiv: this.hbars,
+            centEquiv: this.cents,
             expirationTime: {
                 seconds: this.expirationTime.getSeconds(),
             },

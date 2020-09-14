@@ -10,7 +10,7 @@ import Transaction, { TRANSACTION_REGISTRY } from "./Transaction";
 
 export default class FreezeTransaction extends Transaction {
     /**
-     * @param {object} props
+     * @param {Object} props
      * @param {Time} [props.startTime]
      * @param {Time} [props.endTime]
      */
@@ -48,14 +48,14 @@ export default class FreezeTransaction extends Transaction {
 
         return new FreezeTransaction({
             startTime:
-                freeze.startHour != null && freeze.startMin != null
+                (freeze.startHour != null && freeze.startMin != null)
                     ? {
                           hour: freeze.startHour,
                           min: freeze.startMin,
                       }
                     : undefined,
             endTime:
-                freeze.endHour != null && freeze.endMin != null
+                (freeze.endHour != null && freeze.endMin != null)
                     ? {
                           hour: freeze.endHour,
                           min: freeze.endMin,

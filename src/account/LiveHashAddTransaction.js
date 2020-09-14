@@ -67,25 +67,19 @@ export default class LiveHashAddTransaction extends Transaction {
         const hashes = /** @type {proto.ICryptoAddLiveHashTransactionBody} */ (body.cryptoAddLiveHash);
         const liveHash_ = /** @type {proto.LiveHash} */ (hashes.liveHash);
 
-
         return new LiveHashAddTransaction({
-            hash:
-                liveHash_.hash != null
-                    ? liveHash_.hash
-                    : undefined,
+            hash: liveHash_.hash != null ? liveHash_.hash : undefined,
             keys:
-                (liveHash_.keys != null)
-                    ? (liveHash_.keys.keys != null)
+                liveHash_.keys != null
+                    ? liveHash_.keys.keys != null
                         ? liveHash_.keys.keys.map((key) => _fromProtoKey(key))
                         : undefined
-                    :undefined,
+                    : undefined,
             duration:
-                (liveHash_.duration != null)
-                    ? (
-                        (liveHash_.duration.seconds != null)
+                liveHash_.duration != null
+                    ? liveHash_.duration.seconds != null
                         ? liveHash_.duration.seconds
                         : undefined
-                    )
                     : undefined,
             accountId:
                 liveHash_.accountId != null
@@ -207,7 +201,10 @@ export default class LiveHashAddTransaction extends Transaction {
                 duration: {
                     seconds: this._duration,
                 },
-                accountId: (this._accountId != null) ? this._accountId._toProtobuf() : null,
+                accountId:
+                    this._accountId != null
+                        ? this._accountId._toProtobuf()
+                        : null,
             },
         };
     }

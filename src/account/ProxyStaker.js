@@ -45,7 +45,9 @@ export default class ProxyStaker {
             accountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (transfer.accountID)
             ),
-            amount: Hbar.fromTinybars((transfer.amount != null) ? transfer.amount : 0),
+            amount: Hbar.fromTinybars(
+                transfer.amount != null ? transfer.amount : 0
+            ),
         });
     }
 

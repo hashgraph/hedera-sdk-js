@@ -41,12 +41,18 @@ export default class EntityId {
             } else {
                 this.shard = Long.fromValue(properties);
                 this.realm = Long.fromValue(realm);
-                this.num = Long.fromValue((num != null) ? num : 0);
+                this.num = Long.fromValue(num != null ? num : 0);
             }
         } else {
-            this.shard = Long.fromValue((properties.shard != null) ? properties.shard : 0);
-            this.realm = Long.fromValue((properties.realm != null) ? properties.realm : 0);
-            this.num = Long.fromValue((properties.num != null) ? properties.num : 0);
+            this.shard = Long.fromValue(
+                properties.shard != null ? properties.shard : 0
+            );
+            this.realm = Long.fromValue(
+                properties.realm != null ? properties.realm : 0
+            );
+            this.num = Long.fromValue(
+                properties.num != null ? properties.num : 0
+            );
         }
     }
 

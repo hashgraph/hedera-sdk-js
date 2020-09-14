@@ -32,9 +32,9 @@ export default class TopicId extends EntityId {
      */
     static _fromProtobuf(id) {
         return new TopicId({
-            shard: (id.shardNum != null) ? id.shardNum : 0,
-            realm: (id.realmNum != null) ? id.realmNum : 0,
-            num: (id.topicNum != null) ? id.topicNum : 0,
+            shard: id.shardNum != null ? id.shardNum : 0,
+            realm: id.realmNum != null ? id.realmNum : 0,
+            num: id.topicNum != null ? id.topicNum : 0,
         });
     }
 

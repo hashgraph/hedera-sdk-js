@@ -310,7 +310,7 @@ export default class Query extends HederaExecutable {
      * @returns {AccountId}
      */
     _getNodeId(client) {
-        return (this._nodeId != null) ? this._nodeId : client._getNextNodeId();
+        return this._nodeId != null ? this._nodeId : client._getNextNodeId();
     }
 
     /**

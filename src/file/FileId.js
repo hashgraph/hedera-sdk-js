@@ -33,9 +33,9 @@ export default class FileId extends EntityId {
      */
     static _fromProtobuf(id) {
         return new FileId({
-            shard: (id.shardNum != null) ? id.shardNum : 0,
-            realm: (id.realmNum != null) ? id.realmNum : 0,
-            num: (id.fileNum != null) ? id.fileNum : 0,
+            shard: id.shardNum != null ? id.shardNum : 0,
+            realm: id.realmNum != null ? id.realmNum : 0,
+            num: id.fileNum != null ? id.fileNum : 0,
         });
     }
 

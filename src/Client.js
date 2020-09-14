@@ -202,6 +202,7 @@ export default class Client {
      *
      * @param {AccountId | string} accountId
      * @param {PrivateKey | string} privateKey
+     * @returns {this}
      */
     setOperator(accountId, privateKey) {
         const key =
@@ -209,7 +210,7 @@ export default class Client {
                 ? PrivateKey.fromString(privateKey)
                 : privateKey;
 
-        return this.setOperatorWith(accountId, key.publicKey, (message) =>
+        return this.setOperatorWith(accountId, key.getPublicKey(), (message) =>
             Promise.resolve(key.sign(message))
         );
     }
@@ -221,6 +222,7 @@ export default class Client {
      * @param {AccountId | string} accountId
      * @param {PublicKey | string} publicKey
      * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
+     * @returns {this}
      */
     setOperatorWith(accountId, publicKey, transactionSigner) {
         this._operator = {
@@ -246,7 +248,7 @@ export default class Client {
      * @returns {?ClientOperator}
      */
     getOperator() {
-        return (this._operator != null) ? this._operator : null
+        return this._operator != null ? this._operator : null;
     }
 
     /**
@@ -255,11 +257,11 @@ export default class Client {
      * @returns {?AccountId}
      */
     getOperatorId() {
-        return (this._operator != null)
-                    ?((this._operator.accountId != null)
-                        ? this._operator.accountId
-                        : null)
-                    : null
+        return this._operator != null
+            ? this._operator.accountId != null
+                ? this._operator.accountId
+                : null
+            : null;
     }
 
     /**
@@ -268,11 +270,11 @@ export default class Client {
      * @returns {?PublicKey}
      */
     getOperatorKey() {
-        return (this._operator != null)
-                ?((this._operator.publicKey != null)
-                    ? this._operator.publicKey
-                    : null)
+        return this._operator != null
+            ? this._operator.publicKey != null
+                ? this._operator.publicKey
                 : null
+            : null;
     }
 
     /**

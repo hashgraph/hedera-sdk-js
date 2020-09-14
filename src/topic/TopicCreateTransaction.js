@@ -84,7 +84,7 @@ export default class TopicCreateTransaction extends Transaction {
         const create = /** @type {proto.IConsensusCreateTopicTransactionBody} */ (body.consensusCreateTopic);
 
         return new TopicCreateTransaction({
-            topicMemo: (create.memo != null) ? create.memo : undefined,
+            topicMemo: create.memo != null ? create.memo : undefined,
             adminKey:
                 create.adminKey != null
                     ? _fromProtoKey(create.adminKey)
@@ -97,11 +97,12 @@ export default class TopicCreateTransaction extends Transaction {
                 create.autoRenewAccount != null
                     ? AccountId._fromProtobuf(create.autoRenewAccount)
                     : undefined,
-            autoRenewPeriod: (create.autoRenewPeriod != null)
-                                ?((create.autoRenewPeriod.seconds != null)
-                                    ? create.autoRenewPeriod.seconds
-                                    : undefined)
-                                : undefined,
+            autoRenewPeriod:
+                create.autoRenewPeriod != null
+                    ? create.autoRenewPeriod.seconds != null
+                        ? create.autoRenewPeriod.seconds
+                        : undefined
+                    : undefined,
         });
     }
 

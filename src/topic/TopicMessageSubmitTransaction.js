@@ -47,7 +47,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                 message.topicID != null
                     ? TopicId._fromProtobuf(message.topicID)
                     : undefined,
-            message: (message.message != null) ? message.message : undefined,
+            message: message.message != null ? message.message : undefined,
         });
     }
 
@@ -114,7 +114,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            topicID: (this._topicId != null) ? this._topicId._toProtobuf() : null,
+            topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
             message: this._message,
         };
     }

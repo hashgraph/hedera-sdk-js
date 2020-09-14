@@ -9,7 +9,7 @@ import { Key, PublicKey, KeyList, PrivateKey } from "@hashgraph/cryptography";
  */
 export function _toProtoKey(key) {
     if (key instanceof PrivateKey) {
-        key = key.publicKey;
+        key = key.getPublicKey();
     }
 
     if (key instanceof PublicKey) {
@@ -39,27 +39,24 @@ export function _toProtoKeyList(list) {
 
 /**
  * @param {proto.IKey} key
- * @returns {Key}
+ * @returns {KeyList | PublicKey}
  */
 export function _fromProtoKey(key) {
     if (key.ed25519) {
-        return new PublicKey(key.ed25519);
+        return PublicKey.fromBytes(key.ed25519);
     }
-
-    // TODO: Update ContractId to extend Key?
-    // if (key.contractID) {
-    //     return ContractId._fromProtobuf(requireNonNull(key.contractID));
-    // }
 
     if (key.thresholdKey) {
         const tk = key.thresholdKey;
-        return KeyList.withThreshold(tk.threshold ?? 0).push(
-            ..._fromProtoKeyList(/** @type {proto.IKeyList} */ (tk.keys))
-        );
+        const kl = new KeyList(tk.threshold);
+
+        kl.push(..._fromProtoKeyList(/** @type {proto.IKeyList} */ (tk.keys)));
+
+        return kl;
     }
 
     if (key.keyList) {
-        return new KeyList().push(..._fromProtoKeyList(key.keyList));
+        return _fromProtoKeyList(key.keyList);
     }
 
     throw new Error(`not implemented key case: ${JSON.stringify(key)}`);
@@ -70,9 +67,11 @@ export function _fromProtoKey(key) {
  * @returns {KeyList}
  */
 export function _fromProtoKeyList(keys) {
-    return new KeyList().push(
-        ...(keys.keys ?? []).map((key) => _fromProtoKey(key))
-    );
+    if (keys.keys == null) {
+        return new KeyList();
+    }
+
+    return KeyList.from(keys.keys, _fromProtoKey);
 }
 
 /**

@@ -253,8 +253,7 @@ export default class Transaction extends HederaExecutable {
      * @returns {Promise<this>}
      */
     sign(privateKey) {
-        // FIXME: .getPublicKey()
-        return this.signWith(privateKey.publicKey, (message) =>
+        return this.signWith(privateKey.getPublicKey(), (message) =>
             Promise.resolve(privateKey.sign(message))
         );
     }
@@ -445,8 +444,8 @@ export default class Transaction extends HederaExecutable {
      */
     _getNodeId(client) {
         // return this.getNodeId() ?? client._getNextNodeId();
-        const node = this._getNodeId(client)
-        return (this.getNodeId() != null) ? node : client._getNextNodeId();
+        const node = this._getNodeId(client);
+        return this.getNodeId() != null ? node : client._getNextNodeId();
     }
 
     /**

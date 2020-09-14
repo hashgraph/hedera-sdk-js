@@ -93,7 +93,7 @@ export default class TopicDeleteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            topicID: (this._topicId != null) ? this._topicId._toProtobuf() : null,
+            topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
         };
     }
 }

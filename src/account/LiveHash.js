@@ -38,25 +38,22 @@ export default class LiveHash {
      */
     static _fromProtobuf(liveHash) {
         const liveHash_ = /** @type {proto.LiveHash} */ (liveHash);
-        const durationSeconds = (liveHash_.duration != null)
-            ? ((liveHash_.duration.seconds != null)
-                ? liveHash_.duration.seconds
-                : 0)
-            : 0
-
-
-
+        const durationSeconds =
+            liveHash_.duration != null
+                ? liveHash_.duration.seconds != null
+                    ? liveHash_.duration.seconds
+                    : 0
+                : 0;
 
         return new LiveHash({
             accountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (liveHash_.accountId)
             ),
-            hash: (liveHash_.hash != null)
-                    ? liveHash_.hash
-                    : new Uint8Array(),
-            keys:(liveHash_.keys != null)
-                        ? _fromProtoKeyList(liveHash_.keys)
-                        : new KeyList(),
+            hash: liveHash_.hash != null ? liveHash_.hash : new Uint8Array(),
+            keys:
+                liveHash_.keys != null
+                    ? _fromProtoKeyList(liveHash_.keys)
+                    : new KeyList(),
             // TODO: util.fromLong could be nice
             duration:
                 durationSeconds instanceof Long

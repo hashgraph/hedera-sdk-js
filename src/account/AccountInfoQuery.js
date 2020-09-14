@@ -79,7 +79,10 @@ export default class AccountInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ ((response.cryptoGetInfo != null) ? response.cryptoGetInfo.header : null);
+        return /** @type {proto.IResponseHeader} */ (response.cryptoGetInfo !=
+        null
+            ? response.cryptoGetInfo.header
+            : null);
     }
 
     /**

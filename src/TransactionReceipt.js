@@ -118,7 +118,9 @@ export default class TransactionReceipt {
         const exchangeRateSet = /** @type {proto.IExchangeRateSet} */ (receipt.exchangeRate);
 
         return new TransactionReceipt({
-            status: Status._fromCode((receipt.status != null) ? receipt.status : 0),
+            status: Status._fromCode(
+                receipt.status != null ? receipt.status : 0
+            ),
 
             accountId:
                 receipt.accountID != null
@@ -151,10 +153,13 @@ export default class TransactionReceipt {
             topicSequenceNumber:
                 receipt.topicSequenceNumber instanceof Long
                     ? receipt.topicSequenceNumber.toInt()
-                    : ((receipt.topicSequenceNumber != null)
-                        ? receipt.topicSequenceNumber
-                        : 0),
-            topicRunningHash: (receipt.topicRunningHash != null) ? receipt.topicRunningHash : null,
+                    : receipt.topicSequenceNumber != null
+                    ? receipt.topicSequenceNumber
+                    : 0,
+            topicRunningHash:
+                receipt.topicRunningHash != null
+                    ? receipt.topicRunningHash
+                    : null,
         });
     }
 }

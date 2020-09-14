@@ -34,7 +34,7 @@
         "lint:format": "prettier src test '*.json' 'src/*.js' --check",
         "lint:js": "eslint --fix 'src/**/*.js' 'test/**/*.js'",
         "format": "prettier src test '*.json' 'src/*.js' --write",
-        "prepare": "run-s compile",
+        "prepare": "run-s compile lint:types",
         "test": "run-s test:node test:browser:chrome test:browser:firefox",
         "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js'",
         "test:browser:chrome": "vite serve --port 9001 test/ & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/; kill %1",

@@ -277,7 +277,7 @@ export default class Status {
     static _fromCode(code) {
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return (Status[code] != null) ? Status[code] : new Status(code);
+        return Status[code] != null ? Status[code] : new Status(code);
     }
 
     /**

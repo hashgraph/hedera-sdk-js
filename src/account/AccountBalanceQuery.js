@@ -138,12 +138,11 @@ export default class AccountBalanceQuery extends Query {
      */
     _mapResponse(response) {
         return Hbar.fromTinybars(
-            (response.cryptogetAccountBalance != null)
-            ?((response.cryptogetAccountBalance.balance != null)
-                ? response.cryptogetAccountBalance.balance
+            response.cryptogetAccountBalance != null
+                ? response.cryptogetAccountBalance.balance != null
+                    ? response.cryptogetAccountBalance.balance
+                    : 0
                 : 0
-                )
-            :0
         );
     }
 

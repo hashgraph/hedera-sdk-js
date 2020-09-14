@@ -76,16 +76,15 @@ export default class FileContentsQuery extends Query {
      * @returns {Uint8Array}
      */
     _mapResponse(response) {
-        return (
-            (response != null)
-            ?((response.fileGetContents != null)
-                ?((response.fileGetContents.fileContents != null)
-                    ?((response.fileGetContents.fileContents.contents != null)
-                       ? response.fileGetContents.fileContents.contents
-                       : new Uint8Array())
-                    : new Uint8Array())
-                : new Uint8Array())
-            : new Uint8Array());
+        return response != null
+            ? response.fileGetContents != null
+                ? response.fileGetContents.fileContents != null
+                    ? response.fileGetContents.fileContents.contents != null
+                        ? response.fileGetContents.fileContents.contents
+                        : new Uint8Array()
+                    : new Uint8Array()
+                : new Uint8Array()
+            : new Uint8Array();
     }
 
     /**

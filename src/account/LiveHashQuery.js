@@ -50,7 +50,10 @@ export default class LiveHashQuery extends Query {
                 hash.accountID != null
                     ? AccountId._fromProtobuf(hash.accountID)
                     : undefined,
-            hash: (hash.hash != null || hash.hash != undefined) ? hash.hash : undefined,
+            hash:
+                hash.hash != null || hash.hash != undefined
+                    ? hash.hash
+                    : undefined,
         });
     }
 
@@ -111,8 +114,10 @@ export default class LiveHashQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        return /** @type {proto.IResponseHeader} */ ((response.cryptoGetLiveHash != null)
-            ? response.cryptoGetLiveHash.header : null);
+        return /** @type {proto.IResponseHeader} */ (response.cryptoGetLiveHash !=
+        null
+            ? response.cryptoGetLiveHash.header
+            : null);
     }
 
     /**

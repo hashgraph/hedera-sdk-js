@@ -76,16 +76,16 @@ export default class FileUpdateTransaction extends Transaction {
                     ? FileId._fromProtobuf(update.fileID)
                     : undefined,
             keys:
-                (update.keys != null)
-                    ? (update.keys.keys != null
+                update.keys != null
+                    ? update.keys.keys != null
                         ? update.keys.keys.map((key) => _fromProtoKey(key))
-                        : undefined)
+                        : undefined
                     : undefined,
             expirationTime:
                 update.expirationTime != null
                     ? Timestamp._fromProtobuf(update.expirationTime)
                     : undefined,
-            contents: (update.contents != null) ? update.contents : undefined,
+            contents: update.contents != null ? update.contents : undefined,
         });
     }
 
@@ -240,7 +240,10 @@ export default class FileUpdateTransaction extends Transaction {
                           keys: this._keys.map((key) => _toProtoKey(key)),
                       }
                     : null,
-            expirationTime: (this._expirationTime != null) ? this._expirationTime._toProtobuf() : null,
+            expirationTime:
+                this._expirationTime != null
+                    ? this._expirationTime._toProtobuf()
+                    : null,
             contents: this._contents,
         };
     }

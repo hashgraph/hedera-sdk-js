@@ -1,3 +1,12 @@
 {
-    "plugins": ["@babel/plugin-transform-modules-commonjs"]
+    "plugins": [
+        "@babel/plugin-transform-modules-commonjs",
+        "@babel/plugin-syntax-dynamic-import",
+        [
+            "babel-plugin-dynamic-import-node",
+            {
+                "noInterop": true
+            }
+        ]
+    ]
 }

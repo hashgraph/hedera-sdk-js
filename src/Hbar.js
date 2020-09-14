@@ -80,8 +80,8 @@ export default class Hbar {
      */
     toString() {
         if (
-            this._valueInTinybar.lessThan(10_000) &&
-            this._valueInTinybar.greaterThan(-10_000)
+            this._valueInTinybar.lessThan(10000) &&
+            this._valueInTinybar.greaterThan(-10000)
         ) {
             return `${this._valueInTinybar.toString()} ${
                 HbarUnit.Tinybar._symbol

@@ -78,13 +78,11 @@ export default class Timestamp {
         return new Timestamp(
             timestamp.seconds instanceof Long
                 ? timestamp.seconds.toInt()
-                : ((timestamp.seconds != null)
-                    ? timestamp.seconds
-                    : 0),
+                : timestamp.seconds != null
+                ? timestamp.seconds
+                : 0,
 
-            (timestamp.nanos != null)
-                ? timestamp.nanos
-                : 0
+            timestamp.nanos != null ? timestamp.nanos : 0
         );
     }
 }
