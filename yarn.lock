@@ -5739,11 +5739,6 @@ jest-worker@^24.9.0:
     merge-stream "^2.0.0"
     supports-color "^6.1.0"
 
-js-sha3@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.8.0.tgz#b9b7a5da73afad7dedd0f8c463954cbde6818840"
-  integrity sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==
-
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
@@ -5853,6 +5848,11 @@ jsprim@^1.2.2:
     extsprintf "1.3.0"
     json-schema "0.2.3"
     verror "1.10.0"
+
+jssha@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/jssha/-/jssha-3.1.2.tgz#e7b6daae8ae353a38da8e5b6afc106688fd24a59"
+  integrity sha512-6fEObA9he4vcCpz+dt9b5DjqhqvSsz9XMfNPU6/IyKHDQpCHsYayPRkWmAZG61lZC9XVJcjsQNAiUUd0NpskeQ==
 
 jszip@^3.2.2:
   version "3.5.0"

@@ -4,7 +4,7 @@ import AccountId from "./account/AccountId";
 import TransactionReceipt from "./TransactionReceipt";
 import TransactionId from "./TransactionId";
 import proto from "@hashgraph/proto";
-import Channel from "./Channel";
+import Channel from "./channel/Channel";
 
 /**
  * @augments {Query<TransactionReceipt>}

@@ -1,5 +1,4 @@
-import Client from "./Client";
-import Channel from "./Channel";
+import Channel from "./channel/Channel";
 import HederaPreCheckStatusError from "./HederaPreCheckStatusError";
 import AccountId from "./account/AccountId";
 import Status from "./Status";
@@ -15,7 +14,8 @@ export default class HederaExecutable {
     /**
      * @abstract
      * @protected
-     * @param {Client} _
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} _
      * @returns {Promise<void>}
      */
     _onExecute(_) {
@@ -65,7 +65,8 @@ export default class HederaExecutable {
 
     /**
      * @abstract
-     * @param {Client} _
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} _
      * @returns {AccountId}
      */
     _getNodeId(_) {
@@ -93,7 +94,8 @@ export default class HederaExecutable {
     }
 
     /**
-     * @param {Client} client
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
      * @returns {Promise<OutputT>}
      */
     async execute(client) {
@@ -103,7 +105,7 @@ export default class HederaExecutable {
             const delay = Math.floor(250 * Math.pow(2, attempt));
             const request = this._makeRequest();
             const nodeId = /** @type {AccountId} */ (this._getNodeId(client));
-            const channel = client._getNetworkChannel(nodeId);
+            const channel = await client._getNetworkChannel(nodeId);
             const method = this._getMethod(channel);
 
             this._advanceRequest();

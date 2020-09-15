@@ -12,7 +12,7 @@ async function main() {
     const newKey = PrivateKey.generate();
 
     console.log(`private key = ${newKey}`);
-    console.log(`public key = ${newKey.publicKey}`);
+    console.log(`public key = ${newKey.getPublicKey()}`);
 
     const response = await new AccountCreateTransaction()
         .setInitialBalance(new Hbar(10)) // 10 h

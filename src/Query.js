@@ -1,9 +1,8 @@
 import proto from "@hashgraph/proto";
-import Client from "./Client";
 import Status from "./Status";
 import Hbar from "./Hbar";
 import AccountId from "./account/AccountId";
-import Channel from "./Channel";
+import Channel from "./channel/Channel";
 import HederaExecutable from "./HederaExecutable";
 
 /**
@@ -132,7 +131,8 @@ export default class Query extends HederaExecutable {
     }
 
     /**
-     * @param {Client} client
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
      * @returns {Promise<void>}
      */
     async _onExecute(client) {
@@ -237,7 +237,8 @@ export default class Query extends HederaExecutable {
     }
 
     /**
-     * @param {Client} client
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
      * @returns {AccountId}
      */
     _getNodeId(client) {
@@ -262,7 +263,7 @@ export default class Query extends HederaExecutable {
 /**
  * @param {import("./TransactionId").default} paymentTransactionId
  * @param {AccountId} nodeId
- * @param {import("./Client").ClientOperator} operator
+ * @param {import("./client/Client").ClientOperator} operator
  * @param {Hbar} paymentAmount
  * @returns {Promise<proto.ITransaction>}
  */

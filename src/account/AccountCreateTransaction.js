@@ -1,6 +1,6 @@
 import Hbar from "../Hbar";
 import proto from "@hashgraph/proto";
-import Channel from "../Channel";
+import Channel from "../channel/Channel";
 import AccountId from "./AccountId";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,

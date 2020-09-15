@@ -3,12 +3,10 @@ import AccountId from "./account/AccountId";
 import Hbar from "./Hbar";
 import TransactionResponse from "./TransactionResponse";
 import TransactionId from "./TransactionId";
-import Client from "./Client";
 import HederaExecutable from "./HederaExecutable";
 import Status from "./Status";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Long from "long";
-import { sha3_384 } from "js-sha3";
 
 export const DEFAULT_AUTO_RENEW_PERIOD = Long.fromValue(7776000); // 90 days (in seconds)
 
@@ -286,7 +284,8 @@ export default class Transaction extends HederaExecutable {
     }
 
     /**
-     * @param {Client} client
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
      * @returns {Promise<this>}
      */
     signWithOperator(client) {
@@ -318,7 +317,8 @@ export default class Transaction extends HederaExecutable {
      * Will use the `Client`, if available, to generate a default Transaction ID and select 1/3
      * nodes to prepare this transaction for.
      *
-     * @param {Client | null} client
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT> | null} client
      * @returns {this}
      */
     freezeWith(client) {
@@ -376,28 +376,29 @@ export default class Transaction extends HederaExecutable {
         return proto.Transaction.encode(this._transactions[0]).finish();
     }
 
-    /**
-     * @returns {Uint8Array}
-     */
-    getTransactionHash() {
-        if (!this._isFrozen()) {
-            throw new Error(
-                "transaction must have been frozen before calculating the hash will be stable, try calling `freeze`"
-            );
-        }
+    // /**
+    //  * @returns {Uint8Array}
+    //  */
+    // getTransactionHash() {
+    //     if (!this._isFrozen()) {
+    //         throw new Error(
+    //             "transaction must have been frozen before calculating the hash will be stable, try calling `freeze`"
+    //         );
+    //     }
 
-        if (this._transactions.length != 1) {
-            throw new Error(
-                "transaction must have an explicit node ID set, try calling `setNodeId`"
-            );
-        }
+    //     if (this._transactions.length != 1) {
+    //         throw new Error(
+    //             "transaction must have an explicit node ID set, try calling `setNodeId`"
+    //         );
+    //     }
 
-        return hash(proto.Transaction.encode(this._makeRequest()).finish());
-    }
+    //     return hash(proto.Transaction.encode(this._makeRequest()).finish());
+    // }
 
     /**
      * @protected
-     * @param {Client} client
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
      * @returns {Promise<void>}
      */
     async _onExecute(client) {
@@ -457,7 +458,8 @@ export default class Transaction extends HederaExecutable {
 
     /**
      * @abstract
-     * @param {Client} client
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
      * @returns {AccountId}
      */
     _getNodeId(client) {
@@ -557,10 +559,10 @@ export default class Transaction extends HederaExecutable {
     }
 }
 
-/**
- * @param {Uint8Array} bytes
- * @returns {Uint8Array}
- */
-function hash(bytes) {
-    return new Uint8Array(sha3_384.digest(bytes));
-}
+// /**
+//  * @param {Uint8Array} bytes
+//  * @returns {Uint8Array}
+//  */
+// function hash(bytes) {
+//     return new Uint8Array(sha3_384.digest(bytes));
+// }

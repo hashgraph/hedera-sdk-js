@@ -1,5 +1,5 @@
 import proto from "@hashgraph/proto";
-import Channel from "./Channel";
+import Channel from "./channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "./Transaction";
 import FileId from "./file/FileId";
 import ContractId from "./contract/ContractId";

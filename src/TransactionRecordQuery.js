@@ -8,10 +8,10 @@ import proto from "@hashgraph/proto";
  */
 export default class TransactionRecordQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {TransactionId} [properties.transactionId]
+     * @param {object} props
+     * @param {TransactionId} [props.transactionId]
      */
-    constructor(properties) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -19,8 +19,8 @@ export default class TransactionRecordQuery extends Query {
          * @type {?TransactionId}
          */
         this._transactionId = null;
-        if (properties?.transactionId != null) {
-            this.setTransactionId(properties?.transactionId);
+        if (props?.transactionId != null) {
+            this.setTransactionId(props?.transactionId);
         }
     }
 

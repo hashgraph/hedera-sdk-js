@@ -3,7 +3,7 @@ import AccountId from "../account/AccountId";
 import FileId from "../file/FileId";
 import ContractFunctionParameters from "./ContractFunctionParameters";
 import proto from "@hashgraph/proto";
-import Channel from "../Channel";
+import Channel from "../channel/Channel";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,

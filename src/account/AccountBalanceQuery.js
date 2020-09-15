@@ -3,7 +3,7 @@ import AccountId from "./AccountId";
 import ContractId from "../contract/ContractId";
 import proto from "@hashgraph/proto";
 import Hbar from "../Hbar";
-import Channel from "../Channel";
+import Channel from "../channel/Channel";
 
 /**
  * Get the balance of a Hedera™ crypto-currency account.

@@ -1,6 +1,10 @@
 import AccountId from "./account/AccountId";
 import Timestamp from "./Timestamp";
 import proto from "@hashgraph/proto";
+import TransactionReceipt from "./TransactionReceipt";
+import TransactionReceiptQuery from "./TransactionReceiptQuery";
+import TransactionRecord from "./TransactionRecord";
+import TransactionRecordQuery from "./TransactionRecordQuery";
 
 /**
  * The client-generated ID for a transaction.
@@ -72,6 +76,28 @@ export default class TransactionId {
         return `${this.accountId.toString()}@${this.validStart.seconds}.${
             this.validStart.nanos
         }`;
+    }
+
+    /**
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
+     * @returns {Promise<TransactionReceipt>}
+     */
+    getReceipt(client) {
+        return new TransactionReceiptQuery()
+            .setTransactionId(this)
+            .execute(client);
+    }
+
+    /**
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
+     * @returns {Promise<TransactionRecord>}
+     */
+    getRecord(client) {
+        return new TransactionRecordQuery()
+            .setTransactionId(this)
+            .execute(client);
     }
 
     /**

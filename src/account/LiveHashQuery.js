@@ -2,7 +2,7 @@ import Query, { QUERY_REGISTRY } from "../Query";
 import AccountId from "./AccountId";
 import LiveHash from "./LiveHash";
 import proto from "@hashgraph/proto";
-import Channel from "../Channel";
+import Channel from "../channel/Channel";
 
 /**
  * @augments {Query<LiveHash>}

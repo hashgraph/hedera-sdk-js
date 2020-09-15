@@ -1,4 +1,4 @@
-import { keccak256 } from "js-sha3";
+// import { keccak256 } from "jssha";
 
 /**
  * @enum {number}
@@ -268,7 +268,7 @@ export default class ContractFunctionSelector {
         }
 
         return new Uint8Array(
-            keccak256.arrayBuffer(this.toString()).slice(0, 4)
+            // keccak256.arrayBuffer(this.toString()).slice(0, 4)
         );
     }
 

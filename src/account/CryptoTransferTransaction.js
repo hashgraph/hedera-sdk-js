@@ -1,5 +1,5 @@
 import proto from "@hashgraph/proto";
-import Channel from "../Channel";
+import Channel from "../channel/Channel";
 import Hbar from "../Hbar";
 import AccountId from "../account/AccountId";
 import Transfer from "../Transfer";

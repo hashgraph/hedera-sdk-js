@@ -1,7 +1,8 @@
-import AccountId from "./account/AccountId";
-import Channel from "./Channel";
+import AccountId from "../account/AccountId";
+import Channel from "../channel/Channel.js";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
-import Hbar from "./Hbar";
+import Hbar from "../Hbar";
+import WebChannel from "../channel/WebChannel";
 
 /**
  * @typedef {"mainnet" | "testnet" | "previewnet"} NetworkName
@@ -20,64 +21,45 @@ import Hbar from "./Hbar";
  * @property {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
  */
 
-const MAINNET = {
-    "35.237.200.180:50211": new AccountId(3),
-    "35.186.191.247:50211": new AccountId(4),
-    "35.192.2.25:50211": new AccountId(5),
-    "35.199.161.108:50211": new AccountId(6),
-    "35.203.82.240:50211": new AccountId(7),
-    "35.236.5.219:50211": new AccountId(8),
-    "35.197.192.225:50211": new AccountId(9),
-    "35.242.233.154:50211": new AccountId(10),
-    "35.240.118.96:50211": new AccountId(11),
-    "35.204.86.32:50211": new AccountId(12),
-};
+/**
+ * @typedef {object} ClientConstructorParameter
+ * @property {{[key: string]: (string | AccountId)} | NetworkName} network
+ * @property {string[] | NetworkName} [mirrorNetwork]
+ * @property {Operator} [operator]
+ */
 
-const TESTNET = {
-    "0.testnet.hedera.com:50211": new AccountId(3),
-    "1.testnet.hedera.com:50211": new AccountId(4),
-    "2.testnet.hedera.com:50211": new AccountId(5),
-    "3.testnet.hedera.com:50211": new AccountId(6),
-};
-
-const PREVIEWNET = {
-    "0.previewnet.hedera.com:50211": new AccountId(3),
-    "1.previewnet.hedera.com:50211": new AccountId(4),
-    "2.previewnet.hedera.com:50211": new AccountId(5),
-    "3.previewnet.hedera.com:50211": new AccountId(6),
-};
-
+/**
+ * @abstract
+ * @template ChannelT
+ */
 export default class Client {
     /**
-     * @private
+     * @protected
      * @hideconstructor
-     * @param {object} props
-     * @param {{[key: string]: (string | AccountId)} | NetworkName} props.network
-     * @param {string[] | NetworkName} [props.mirrorNetwork]
-     * @param {Operator} [props.operator]
+     * @param {ClientConstructorParameter} props
      */
     constructor(props) {
         /**
-         * @private
+         * @protected
          * @type {Map<string, string>}
          */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this._network = new Map();
 
         /**
-         * @private
+         * @protected
          * @type {AccountId[]}
          */
         this._networkNodes = [];
 
         /**
-         * @private
+         * @protected
          * @type {number}
          */
         this._nextNetworkNodeIndex = 0;
 
         /**
-         * @private
+         * @protected
          * @type {Map<AccountId, Channel>}
          */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -101,28 +83,6 @@ export default class Client {
          */
         this._maxQueryPayment = new Hbar(1);
 
-        if (typeof props.network === "string") {
-            switch (props.network) {
-                case "mainnet":
-                    this._setNetwork(MAINNET);
-                    break;
-
-                case "testnet":
-                    this._setNetwork(TESTNET);
-                    break;
-
-                case "previewnet":
-                    this._setNetwork(PREVIEWNET);
-                    break;
-
-                default:
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    throw new Error(`unknown network: ${props.network}`);
-            }
-        } else {
-            this._setNetwork(props.network);
-        }
-
         if (props.operator != null) {
             this.setOperator(
                 props.operator.accountId,
@@ -132,7 +92,7 @@ export default class Client {
     }
 
     /**
-     * @private
+     * @protected
      * @param {{[key: string]: (string | AccountId)} | NetworkName} network
      */
     _setNetwork(network) {
@@ -151,50 +111,6 @@ export default class Client {
         }
 
         this._nextNetworkNodeIndex = 0;
-    }
-
-    /**
-     * Construct a client for a specific network.
-     *
-     * It is the responsibility of the caller to ensure that all nodes in the map are part of the
-     * same Hedera network. Failure to do so will result in undefined behavior.
-     *
-     * The client will load balance all requests to Hedera using a simple round-robin scheme to
-     * chose nodes to send transactions to. For one transaction, at most 1/3 of the nodes will be
-     * tried.
-     *
-     * @param {{[key: string]: (string | AccountId)} | NetworkName} network
-     * @returns {Client}
-     */
-    static forNetwork(network) {
-        return new Client({ network });
-    }
-
-    /**
-     * Construct a Hedera client pre-configured for Mainnet access.
-     *
-     * @returns {Client}
-     */
-    static forMainnet() {
-        return new Client({ network: "mainnet" });
-    }
-
-    /**
-     * Construct a Hedera client pre-configured for Testnet access.
-     *
-     * @returns {Client}
-     */
-    static forTestnet() {
-        return new Client({ network: "testnet" });
-    }
-
-    /**
-     * Construct a Hedera client pre-configured for Previewnet access.
-     *
-     * @returns {Client}
-     */
-    static forPreviewnet() {
-        return new Client({ network: "previewnet" });
     }
 
     /**
@@ -281,7 +197,7 @@ export default class Client {
      * Set the maximum fee to be paid for transactions executed by this client.
      *
      * @param {Hbar} maxTransactionFee
-     * @returns {Client}
+     * @returns {Client<ChannelT>}
      */
     setMaxTransactionFee(maxTransactionFee) {
         this._maxTransactionFee = maxTransactionFee;
@@ -293,7 +209,7 @@ export default class Client {
      * Set the maximum payment allowable for queries.
      *
      * @param {Hbar} maxQueryPayment
-     * @returns {Client}
+     * @returns {Client<ChannelT>}
      */
     setMaxQueryPayment(maxQueryPayment) {
         this._maxQueryPayment = maxQueryPayment;
@@ -323,9 +239,9 @@ export default class Client {
     /**
      * @internal
      * @param {AccountId} nodeId
-     * @returns {Channel}
+     * @returns {Promise<Channel>}
      */
-    _getNetworkChannel(nodeId) {
+    async _getNetworkChannel(nodeId) {
         let networkChannel = this._networkChannels.get(nodeId);
 
         if (networkChannel != null) {
@@ -338,10 +254,25 @@ export default class Client {
             throw new Error(`unknown node: ${nodeId.toString()}`);
         }
 
-        networkChannel = new Channel(address);
+        networkChannel = await this._createNewChannel(address);
 
         this._networkChannels.set(nodeId, networkChannel);
 
         return networkChannel;
+    }
+
+    /**
+     * @abstract
+     * @param {string} address
+     * @returns {Promise<Channel>}
+     */
+    async _createNewChannel(address) {
+        if (typeof Buffer === "undefined") {
+            return new WebChannel(address);
+        } else {
+            return new (await import("../channel/NodeChannel")).default(
+                address
+            );
+        }
     }
 }

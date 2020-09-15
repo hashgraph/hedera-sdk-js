@@ -1,42 +1,19 @@
 import { Client as NativeClient, credentials } from "@grpc/grpc-js";
 import proto from "@hashgraph/proto";
+import Channel from "./Channel";
 
-// FIXME: Collpase the duplicated code in unaryRequest
-
-export default class Channel {
+export default class NodeChannel extends Channel {
     /**
      * @param {string} address
      */
     constructor(address) {
+        super(address);
+
         /**
          * @type {NativeClient}
          * @private
          */
         this._client = new NativeClient(address, credentials.createInsecure());
-
-        /**
-         * @private
-         * @type {?proto.CryptoService}
-         */
-        this._crypto = null;
-
-        /**
-         * @private
-         * @type {?proto.SmartContractService}
-         */
-        this._smartContract = null;
-
-        /**
-         * @private
-         * @type {?proto.FileService}
-         */
-        this._file = null;
-
-        /**
-         * @private
-         * @type {?proto.ConsensusService}
-         */
-        this._consensus = null;
     }
 
     /**

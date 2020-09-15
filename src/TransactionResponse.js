@@ -1,6 +1,5 @@
 import AccountId from "./account/AccountId";
 import TransactionId from "./TransactionId";
-import Client from "./Client";
 import TransactionReceipt from "./TransactionReceipt";
 import TransactionReceiptQuery from "./TransactionReceiptQuery";
 
@@ -26,7 +25,8 @@ export default class TransactionResponse {
     }
 
     /**
-     * @param {Client} client
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
      * @returns {Promise<TransactionReceipt>}
      */
     getReceipt(client) {

@@ -1,6 +1,6 @@
 import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import TopicId from "./TopicId";
-import Channel from "../Channel";
+import Channel from "../channel/Channel";
 import * as utf8 from "../encoding/utf8";
 import proto from "@hashgraph/proto";
 

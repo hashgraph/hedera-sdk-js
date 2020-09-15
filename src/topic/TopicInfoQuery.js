@@ -2,7 +2,7 @@ import Query, { QUERY_REGISTRY } from "../Query";
 import TopicId from "./TopicId";
 import TopicInfo from "./TopicInfo";
 import proto from "@hashgraph/proto";
-import Channel from "../Channel";
+import Channel from "../channel/Channel";
 
 /**
  * Retrieve the latest state of a topic.
