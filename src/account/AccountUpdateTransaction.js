@@ -4,7 +4,7 @@ import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _fromProtoKey, _toProtoKey } from "../util";
-import { AccountId } from "..";
+import AccountId from "./AccountId";
 import Timestamp from "../Timestamp";
 import BigNumber from "bignumber.js";
 import Long from "long";

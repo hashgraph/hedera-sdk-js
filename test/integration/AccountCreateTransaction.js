@@ -1,24 +1,26 @@
-// import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
-// import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
-// import AccountInfoQuery from "../src/account/AccountInfoQuery";
-// import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
-// import Hbar from "../src/Hbar";
-// import TransactionId from "../src/TransactionId";
-// import PrivateKey from "../src/PrivateKey";
-// import newClient from "./IntegrationClient";
-// import Long from "long";
-import { AccountCreateTransaction } from "../src/index";
+import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
+import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
+import AccountInfoQuery from "../src/account/AccountInfoQuery";
+import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
+import Hbar from "../src/Hbar";
+import TransactionId from "../src/TransactionId";
+import newClient from "./IntegrationClient";
+import Long from "long";
+import { Client, PrivateKey } from "../src/browser";
 
 describe("AccountCreateTransaction", function () {
     it("should be exectuable", async function () {
-        // const client = newClient();
-        // const operatorId = client.getOperatorId();
-        // const key = PrivateKey.generate();
-        // const response = await new AccountCreateTransaction()
-        //     .setKey(key.getPublicKey())
-        //     .setMaxTransactionFee(new Hbar(2))
-        //     .setInitialBalance(new Hbar(1))
-        //     .execute(client);
+        const client = newClient();
+        const operatorId = client.getOperatorId();
+        const key = PrivateKey.generate();
+
+        const response = await new AccountCreateTransaction()
+            .setKey(key.publicKey)
+            .setMaxTransactionFee(new Hbar(2))
+            .setInitialBalance(new Hbar(1))
+            .execute(client);
+
+        console.log("aaaaaaaaaaaaaaaaa");
         // const receipt = await new TransactionReceiptQuery()
         //     .setTransactionId(response.transactionId)
         //     .setNodeId(response.nodeId)

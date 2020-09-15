@@ -267,9 +267,8 @@ export default class ContractFunctionSelector {
             throw new Error("`name` required for ContractFunctionSelector");
         }
 
-        return new Uint8Array(
-            // keccak256.arrayBuffer(this.toString()).slice(0, 4)
-        );
+        return new Uint8Array();
+        // keccak256.arrayBuffer(this.toString()).slice(0, 4)
     }
 
     /**

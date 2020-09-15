@@ -508,6 +508,7 @@ export default class Transaction extends HederaExecutable {
         /** @type {string} */
         // @ts-ignore
         const dataCase = this._getTransactionDataCase();
+        console.log(proto);
 
         return {
             [dataCase]: this._makeTransactionData(),
