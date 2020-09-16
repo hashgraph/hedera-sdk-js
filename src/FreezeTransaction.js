@@ -48,14 +48,14 @@ export default class FreezeTransaction extends Transaction {
 
         return new FreezeTransaction({
             startTime:
-                (freeze.startHour != null && freeze.startMin != null)
+                freeze.startHour != null && freeze.startMin != null
                     ? {
                           hour: freeze.startHour,
                           min: freeze.startMin,
                       }
                     : undefined,
             endTime:
-                (freeze.endHour != null && freeze.endMin != null)
+                freeze.endHour != null && freeze.endMin != null
                     ? {
                           hour: freeze.endHour,
                           min: freeze.endMin,
