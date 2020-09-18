@@ -137,7 +137,10 @@ export default class Query extends HederaExecutable {
      * @returns {Promise<void>}
      */
     async _onExecute(client) {
-        if (this._paymentTransactions.length != 0 || !this._isPaymentRequired()) {
+        if (
+            this._paymentTransactions.length != 0 ||
+            !this._isPaymentRequired()
+        ) {
             return;
         }
 
@@ -183,15 +186,14 @@ export default class Query extends HederaExecutable {
                 );
             }
         } else {
-            const tx = 
+            this._paymentTransactions = [
                 await _makePaymentTransaction(
                     /** @type {import("./TransactionId").default} */ (this
                         ._paymentTransactionId),
                     this._nodeId,
                     operator,
                     /** @type {Hbar} */ (cost)
-                );
-            this._paymentTransactions = [tx
+                ),
             ];
             this._paymentTransactionNodeIds = [this._nodeId];
         }

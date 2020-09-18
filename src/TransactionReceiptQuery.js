@@ -75,22 +75,20 @@ export default class TransactionReceiptQuery extends Query {
      * @returns {boolean}
      */
     _shouldRetry(responseStatus, response) {
-        if (super._shouldRetry(responseStatus, response)) {
-            return true;
+        switch (responseStatus.code) {
+            case Status.Busy.code:
+            case Status.Unknown.code:
+            case Status.ReceiptNotFound.code:
+                return true;
+            default:
+            // Do nothing
         }
 
         const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);
-
-        let code;
-        if (transactionGetReceipt.receipt != null) {
-            const receipt = /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt);
-            code = /** @type {proto.ResponseCodeEnum} */ (receipt.status);
-        } else {
-            const header = /** @type {proto.IResponseHeader} */ (transactionGetReceipt.header);
-            code = /** @type {proto.ResponseCodeEnum} */ (header.nodeTransactionPrecheckCode);
-        }
-
-        const status = Status._fromCode(code);
+        const receipt = /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt);
+        const status = Status._fromCode(
+            /** @type {proto.ResponseCodeEnum} */ (receipt.status)
+        );
 
         switch (status.code) {
             case Status.Ok.code:

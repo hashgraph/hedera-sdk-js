@@ -1,4 +1,5 @@
 import Query, { QUERY_REGISTRY } from "./Query";
+import Status from "./Status";
 import TransactionRecord from "./TransactionRecord";
 import TransactionId from "./TransactionId";
 import proto from "@hashgraph/proto";
@@ -50,6 +51,43 @@ export default class TransactionRecordQuery extends Query {
         return this;
     }
 
+    /**
+     * @abstract
+     * @protected
+     * @param {Status} responseStatus
+     * @param {proto.IResponse} response
+     * @returns {boolean}
+     */
+    _shouldRetry(responseStatus, response) {
+        switch (responseStatus.code) {
+            case Status.Ok.code:
+            case Status.Busy.code:
+            case Status.Unknown.code:
+            case Status.ReceiptNotFound.code:
+            case Status.RecordNotFound.code:
+                return true;
+            default:
+            // Do nothing
+        }
+
+        const transactionGetRecord = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
+        const record = /** @type {proto.ITransactionRecord} */ (transactionGetRecord.transactionRecord);
+        const receipt = /** @type {proto.ITransactionReceipt} */ (record.receipt);
+        const status = Status._fromCode(
+            /** @type {proto.ResponseCodeEnum} */ (receipt.status)
+        );
+
+        switch (status.code) {
+            case Status.Ok.code:
+            case Status.Busy.code:
+            case Status.Unknown.code:
+            case Status.ReceiptNotFound.code:
+            case Status.RecordNotFound.code:
+                return true;
+            default:
+                return false;
+        }
+    }
     /**
      * @protected
      * @param {proto.IResponse} response

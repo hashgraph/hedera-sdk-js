@@ -6,7 +6,7 @@ import Hbar from "../src/Hbar";
 import TransactionId from "../src/TransactionId";
 import newClient from "./IntegrationClient";
 import Long from "long";
-import { Client, PrivateKey } from "../src/index";
+import { PrivateKey } from "../src/index";
 
 describe("AccountCreateTransaction", function () {
     it("should be exectuable", async function () {
@@ -39,8 +39,12 @@ describe("AccountCreateTransaction", function () {
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.getPublicKey().toString());
-        expect(info.balance.toTinybars().toInt()).to.be.equal(new Hbar(1).toTinybars().toInt());
-        expect(info.autoRenewPeriod.toInt()).to.be.equal(Long.fromValue(7776000).toInt());
+        expect(info.balance.toTinybars().toInt()).to.be.equal(
+            new Hbar(1).toTinybars().toInt()
+        );
+        expect(info.autoRenewPeriod.toInt()).to.be.equal(
+            Long.fromValue(7776000).toInt()
+        );
         expect(info.receiveRecordThreshold.toTinybars().toInt()).to.be.equal(
             Long.MAX_VALUE.toInt()
         );
@@ -52,7 +56,8 @@ describe("AccountCreateTransaction", function () {
             new Hbar(0).toTinybars().toInt()
         );
 
-        const id = (await (
+        const id = (
+            await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
                     .setNodeId(response.nodeId)
@@ -60,7 +65,8 @@ describe("AccountCreateTransaction", function () {
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)
                     .sign(key)
-            ).execute(client)).transactionId;
+            ).execute(client)
+        ).transactionId;
 
         await id.getReceipt(client);
     });
