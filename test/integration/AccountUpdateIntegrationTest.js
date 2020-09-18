@@ -5,19 +5,22 @@ import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
 import Hbar from "../src/Hbar";
 import TransactionId from "../src/TransactionId";
 import newClient from "./IntegrationClient";
-import Long from "long";
 import { PrivateKey } from "../src/index";
+import Long from "long";
+import AccountUpdateTransaction from "../../lib/Transaction";
 
-describe("AccountCreate", function () {
+describe("AccountUpdate", function () {
     it("should be executable", async function () {
         this.timeout(10000);
 
         const client = newClient();
         const operatorId = client.getOperatorId();
-        const key = PrivateKey.generate();
+
+        const key1 = PrivateKey.generate();
+        const key2 = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
-            .setKey(key.getPublicKey())
+            .setKey(key1.getPublicKey())
             .setMaxTransactionFee(new Hbar(2))
             .setInitialBalance(new Hbar(1))
             .execute(client);
@@ -30,29 +33,62 @@ describe("AccountCreate", function () {
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
 
-        const info = await new AccountInfoQuery()
+        let info = await new AccountInfoQuery()
             .setNodeId(response.nodeId)
             .setAccountId(account)
             .execute(client);
 
-        expect(info.accountId.toString()).to.be.equal(account.toString());
+        expect(info.accountId).to.be.equal(account);
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.getPublicKey().toString());
-        expect(info.balance.toTinybars().toInt()).to.be.equal(
-            new Hbar(1).toTinybars().toInt()
-        );
-        expect(info.autoRenewPeriod.toInt()).to.be.equal(
-            Long.fromValue(7776000).toInt()
-        );
+        expect(info.balance).to.be.equal(new Hbar(1));
+        expect(info.autoRenewPeriod.toInt()).to.be.equal(Long.fromInt(90));
         expect(info.receiveRecordThreshold.toTinybars().toInt()).to.be.equal(
             Long.MAX_VALUE.toInt()
         );
         expect(info.sendRecordThreshold.toTinybars().toInt()).to.be.equal(
             Long.MAX_VALUE.toInt()
         );
-        expect(info.proxyAccountId).to.be.null;
-        expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(
-            new Hbar(0).toTinybars().toInt()
+        expect(info.proxyAccountID).to.be.null;
+        expect(info.proxyReceived).to.be.equal(
+            new Hbar.fromTinybars(Long.ZERO.toInt())
+        );
+
+        await (
+            await (
+                await new AccountUpdateTransaction()
+                    .setNodeId(response.nodeId)
+                    .setAccountId(account)
+                    .setKey(key2.getPublicKey())
+                    .setMaxTransactionFee(new Hbar(1))
+                    .freezeWith(client)
+                    .sign(key1)
+            ).sign(key2)
+        ).execute(client);
+
+        await new TransactionReceiptQuery()
+            .setNodeId(response.nodeId)
+            .setTransactionId(response.transactionId)
+            .execute(client);
+
+        info = await new AccountInfoQuery()
+            .setAccountId(account)
+            .execute(client);
+
+        expect(info.accountId).to.be.equal(account);
+        expect(info.isDeleted).to.be.false;
+        expect(info.key.toString()).to.be.equal(key.getPublicKey().toString());
+        expect(info.balance).to.be.equal(new Hbar(1));
+        expect(info.autoRenewPeriod.toInt()).to.be.equal(Long.fromInt(90));
+        expect(info.receiveRecordThreshold.toTinybars().toInt()).to.be.equal(
+            Long.MAX_VALUE.toInt()
+        );
+        expect(info.sendRecordThreshold.toTinybars().toInt()).to.be.equal(
+            Long.MAX_VALUE.toInt()
+        );
+        expect(info.proxyAccountID).to.be.null;
+        expect(info.proxyReceived).to.be.equal(
+            new Hbar.fromTinybars(Long.ZERO.toInt())
         );
 
         const id = (

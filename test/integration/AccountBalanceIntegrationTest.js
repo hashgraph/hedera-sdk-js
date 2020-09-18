@@ -1,14 +1,12 @@
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
-import AccountInfoQuery from "../src/account/AccountInfoQuery";
 import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
 import Hbar from "../src/Hbar";
 import TransactionId from "../src/TransactionId";
 import newClient from "./IntegrationClient";
-import Long from "long";
 import { PrivateKey } from "../src/index";
 
-describe("AccountCreate", function () {
+describe("AccountBalance", function () {
     it("should be executable", async function () {
         this.timeout(10000);
 
@@ -29,31 +27,13 @@ describe("AccountCreate", function () {
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
-
-        const info = await new AccountInfoQuery()
-            .setNodeId(response.nodeId)
+        s;
+        const balance = await new AccountBalanceQuery()
             .setAccountId(account)
+            .setNodeId(response.nodeId)
             .execute(client);
 
-        expect(info.accountId.toString()).to.be.equal(account.toString());
-        expect(info.isDeleted).to.be.false;
-        expect(info.key.toString()).to.be.equal(key.getPublicKey().toString());
-        expect(info.balance.toTinybars().toInt()).to.be.equal(
-            new Hbar(1).toTinybars().toInt()
-        );
-        expect(info.autoRenewPeriod.toInt()).to.be.equal(
-            Long.fromValue(7776000).toInt()
-        );
-        expect(info.receiveRecordThreshold.toTinybars().toInt()).to.be.equal(
-            Long.MAX_VALUE.toInt()
-        );
-        expect(info.sendRecordThreshold.toTinybars().toInt()).to.be.equal(
-            Long.MAX_VALUE.toInt()
-        );
-        expect(info.proxyAccountId).to.be.null;
-        expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(
-            new Hbar(0).toTinybars().toInt()
-        );
+        expect(balance).to.be.equal(new Hbar(1));
 
         const id = (
             await (
