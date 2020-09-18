@@ -79,10 +79,10 @@ export default class TransactionReceiptQuery extends Query {
             return true;
         }
 
-        const status = Status._fromCode(
-            /** @type {proto.ResponseCodeEnum} */ (response
-                .transactionGetReceipt?.receipt?.status)
-        );
+        const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);
+        const receipt = /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt);
+        const code = /** @type {proto.ResponseCodeEnum} */ (receipt.status);
+        const status = Status._fromCode(code);
 
         switch (status.code) {
             case Status.Ok.code:

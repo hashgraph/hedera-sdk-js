@@ -1,4 +1,4 @@
-import { Client, PrivateKey, AccountId } from "../src/browser";
+import { Client, PrivateKey, AccountId } from "../src/index";
 
 export default function newClient() {
     let client;

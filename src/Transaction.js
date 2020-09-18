@@ -95,7 +95,12 @@ export default class Transaction extends HederaExecutable {
      */
     static fromBytes(bytes) {
         const transaction = proto.Transaction.decode(bytes);
-        const isFrozen = transaction.sigMap?.sigPair?.length ?? 0 > 0;
+        const isFrozen =
+            transaction.sigMap != null
+                ? transaction.sigMap.sigPair != null
+                    ? transaction.sigMap.sigPair.length
+                    : 0
+                : 0 > 0;
         const body = proto.TransactionBody.decode(transaction.bodyBytes);
 
         if (body.data == null) {
@@ -107,7 +112,7 @@ export default class Transaction extends HederaExecutable {
         if (fromProtobuf == null) {
             throw new Error(
                 `(BUG) Transaction.fromBytes() not implemented for type ${
-                    body.data ?? ""
+                    body.data != null ? body.data : ""
                 }`
             );
         }
@@ -280,8 +285,6 @@ export default class Transaction extends HederaExecutable {
                       })
                     : null
                 : null;
-            console.log("--------------------");
-            console.log(JSON.stringify(transaction));
         }
 
         this._signers.add(publicKeyData);
@@ -513,7 +516,6 @@ export default class Transaction extends HederaExecutable {
         /** @type {string} */
         // @ts-ignore
         const dataCase = this._getTransactionDataCase();
-        console.log(proto);
 
         return {
             [dataCase]: this._makeTransactionData(),

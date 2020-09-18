@@ -66,7 +66,7 @@ export default class Query extends HederaExecutable {
         if (fromProtobuf == null) {
             throw new Error(
                 `(BUG) Transaction.fromBytes() not implemented for type ${
-                    query.query ?? ""
+                    query.query != null ? query.query : ""
                 }`
             );
         }
@@ -152,7 +152,7 @@ export default class Query extends HederaExecutable {
 
         // if (this._queryPayment == null) {
         //     const cost = this.getCost(client);
-        //     const maxCost = this._maxQueryPayment ?? client._maxQueryPayment;
+        //     const maxCost = this._maxQueryPayment != null ? this._maxQueryPayment : client._maxQueryPayment;
 
         //     if (cost.compareTo(maxCost) > 0) {
         //         return new MaxQueryPaymentExceeded(this, cost, maxCost);
@@ -179,6 +179,17 @@ export default class Query extends HederaExecutable {
                     )
                 );
             }
+        } else {
+            this._paymentTransactions = [
+                await _makePaymentTransaction(
+                    /** @type {import("./TransactionId").default} */ (this
+                        ._paymentTransactionId),
+                    this._nodeId,
+                    operator,
+                    /** @type {Hbar} */ (cost)
+                ),
+            ];
+            this._paymentTransactionNodeIds = [this._nodeId];
         }
     }
 
@@ -193,11 +204,30 @@ export default class Query extends HederaExecutable {
     }
 
     /**
-     * @abstract
      * @internal
      * @returns {proto.IQuery}
      */
     _makeRequest() {
+        /** @type {proto.IQueryHeader} */
+        let header = {};
+
+        if (this._isPaymentRequired() && this._paymentTransactions != null) {
+            header = {
+                payment: this._paymentTransactions[this._nextPaymentTransactionIndex],
+                responseType: proto.ResponseType.ANSWER_ONLY,
+            };
+        }
+
+        return this._onMakeRequest(header);
+    }
+    
+    /**
+     * @abstract
+     * @internal
+     * @param {proto.IQueryHeader} _
+     * @returns {proto.IQuery}
+     */
+    _onMakeRequest(_) {
         throw new Error("not implemented");
     }
 

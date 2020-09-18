@@ -19,8 +19,8 @@ export default class TransactionRecordQuery extends Query {
          * @type {?TransactionId}
          */
         this._transactionId = null;
-        if (props?.transactionId != null) {
-            this.setTransactionId(props?.transactionId);
+        if (props.transactionId != null) {
+            this.setTransactionId(props.transactionId);
         }
     }
 

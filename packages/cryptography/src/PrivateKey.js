@@ -36,9 +36,6 @@ export default class PrivateKey {
         // 32 bytes for the chain code (to support derivation)
         const entropy = nacl.randomBytes(64);
 
-        console.log("[0].0 =", entropy.subarray(0, 32));
-        console.log("[0].1 =", entropy.subarray(32));
-
         return new PrivateKey(
             nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
             entropy.subarray(32)

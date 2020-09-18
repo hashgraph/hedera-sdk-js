@@ -46,7 +46,7 @@ export default class Timestamp {
         }
 
         const seconds = Math.floor(ms / 1000);
-        const nanos = Math.floor(ms % 1000) * 1_000_000;
+        const nanos = Math.floor(ms % 1000) * 1000000;
 
         return new Timestamp(seconds, nanos);
     }
@@ -55,9 +55,7 @@ export default class Timestamp {
      * @returns {Date}
      */
     toDate() {
-        return new Date(
-            this.seconds * 1000 + Math.floor(this.nanos / 1_000_000)
-        );
+        return new Date(this.seconds * 1000 + Math.floor(this.nanos / 1000000));
     }
 
     /**
