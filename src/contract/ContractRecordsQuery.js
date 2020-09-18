@@ -86,16 +86,15 @@ export default class ContractRecordsQuery extends Query {
     }
 
     /**
-     * @internal
      * @override
+     * @internal
+     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _makeRequest() {
+    _onMakeRequest(header) {
         return {
             ContractGetRecords: {
-                header: {
-                    responseType: proto.ResponseType.ANSWER_ONLY,
-                },
+                header,
                 contractID:
                     this._contractId != null
                         ? this._contractId._toProtobuf()

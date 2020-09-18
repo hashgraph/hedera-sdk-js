@@ -105,16 +105,15 @@ export default class AccountStakersQuery extends Query {
     }
 
     /**
-     * @internal
      * @override
+     * @internal
+     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _makeRequest() {
+    _onMakeRequest(header) {
         return {
             cryptoGetProxyStakers: {
-                header: {
-                    responseType: proto.ResponseType.ANSWER_ONLY,
-                },
+                header,
                 accountID:
                     this._accountId != null
                         ? this._accountId._toProtobuf()

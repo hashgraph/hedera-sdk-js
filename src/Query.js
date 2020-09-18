@@ -4,6 +4,7 @@ import Hbar from "./Hbar";
 import AccountId from "./account/AccountId";
 import Channel from "./channel/Channel";
 import HederaExecutable from "./HederaExecutable";
+import TransactionId from "./TransactionId";
 
 /**
  * @template OutputT
@@ -136,7 +137,7 @@ export default class Query extends HederaExecutable {
      * @returns {Promise<void>}
      */
     async _onExecute(client) {
-        if (this._paymentTransactions != null || !this._isPaymentRequired()) {
+        if (this._paymentTransactions.length != 0 || !this._isPaymentRequired()) {
             return;
         }
 
@@ -148,7 +149,7 @@ export default class Query extends HederaExecutable {
             );
         }
 
-        const cost = this._queryPayment;
+        const cost = client._maxQueryPayment;
 
         // if (this._queryPayment == null) {
         //     const cost = this.getCost(client);
@@ -159,6 +160,8 @@ export default class Query extends HederaExecutable {
         //     }
         // } else {
         // }
+
+        this._paymentTransactionId = TransactionId.generate(operator.accountId);
 
         if (this._nodeId == null) {
             const size = client._getNumberOfNodesForTransaction();
@@ -180,14 +183,15 @@ export default class Query extends HederaExecutable {
                 );
             }
         } else {
-            this._paymentTransactions = [
+            const tx = 
                 await _makePaymentTransaction(
                     /** @type {import("./TransactionId").default} */ (this
                         ._paymentTransactionId),
                     this._nodeId,
                     operator,
                     /** @type {Hbar} */ (cost)
-                ),
+                );
+            this._paymentTransactions = [tx
             ];
             this._paymentTransactionNodeIds = [this._nodeId];
         }
@@ -204,6 +208,7 @@ export default class Query extends HederaExecutable {
     }
 
     /**
+     * @override
      * @internal
      * @returns {proto.IQuery}
      */
@@ -213,14 +218,16 @@ export default class Query extends HederaExecutable {
 
         if (this._isPaymentRequired() && this._paymentTransactions != null) {
             header = {
-                payment: this._paymentTransactions[this._nextPaymentTransactionIndex],
+                payment: this._paymentTransactions[
+                    this._nextPaymentTransactionIndex
+                ],
                 responseType: proto.ResponseType.ANSWER_ONLY,
             };
         }
 
         return this._onMakeRequest(header);
     }
-    
+
     /**
      * @abstract
      * @internal

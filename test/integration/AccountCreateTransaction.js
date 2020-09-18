@@ -36,32 +36,32 @@ describe("AccountCreateTransaction", function () {
             .setAccountId(account)
             .execute(client);
 
-        expect(info.accountId).to.be.equal(account);
-        expect(info.deleted).to.be.false;
+        expect(info.accountId.toString()).to.be.equal(account.toString());
+        expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.getPublicKey().toString());
-        expect(info.balance.toTinybars()).to.be.equal(new Hbar(1).toTinybars());
-        expect(info.autoRenewPeriod).to.be.equal(Long.fromValue(7776000));
-        expect(info.receiveRecordThreshold.toTinybars()).to.be.equal(
-            Long.MAX_VALUE
+        expect(info.balance.toTinybars().toInt()).to.be.equal(new Hbar(1).toTinybars().toInt());
+        expect(info.autoRenewPeriod.toInt()).to.be.equal(Long.fromValue(7776000).toInt());
+        expect(info.receiveRecordThreshold.toTinybars().toInt()).to.be.equal(
+            Long.MAX_VALUE.toInt()
         );
-        expect(info.sendRecordThreshold.toTinybars()).to.be.equal(
-            Long.MAX_VALUE
+        expect(info.sendRecordThreshold.toTinybars().toInt()).to.be.equal(
+            Long.MAX_VALUE.toInt()
         );
         expect(info.proxyAccountId).to.be.null;
-        expect(info.proxyReceived.toTinybars()).to.be.equal(
-            new Hbar(0).toTinybars()
+        expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(
+            new Hbar(0).toTinybars().toInt()
         );
 
-        // await (
-        //     await (
-        //         await new AccountDeleteTransaction()
-        //             .setAccountId(account)
-        //             .setNodeId(response.nodeId)
-        //             .setTransferAccountId(operatorId)
-        //             .setTransactionId(TransactionId.generate(account))
-        //             .freezeWith(client)
-        //             .sign(key)
-        //     ).execute(client)
-        // ).transactionId.getReceipt(client);
+        const id = (await (
+                await new AccountDeleteTransaction()
+                    .setAccountId(account)
+                    .setNodeId(response.nodeId)
+                    .setTransferAccountId(operatorId)
+                    .setTransactionId(TransactionId.generate(account))
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)).transactionId;
+
+        await id.getReceipt(client);
     });
 });

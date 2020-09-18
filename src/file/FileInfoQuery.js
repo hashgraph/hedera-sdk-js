@@ -85,16 +85,15 @@ export default class FileInfoQuery extends Query {
     }
 
     /**
-     * @internal
      * @override
+     * @internal
+     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _makeRequest() {
+    _onMakeRequest(header) {
         return {
             fileGetInfo: {
-                header: {
-                    responseType: proto.ResponseType.ANSWER_ONLY,
-                },
+                header,
                 fileID:
                     this._fileId != null ? this._fileId._toProtobuf() : null,
             },

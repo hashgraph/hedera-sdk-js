@@ -40,16 +40,15 @@ export default class NetworkVersionInfoQuery extends Query {
     }
 
     /**
-     * @internal
      * @override
+     * @internal
+     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _makeRequest() {
+    _onMakeRequest(header) {
         return {
             networkGetVersionInfo: {
-                header: {
-                    responseType: proto.ResponseType.ANSWER_ONLY,
-                },
+                header,
             },
         };
     }

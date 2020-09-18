@@ -80,8 +80,16 @@ export default class TransactionReceiptQuery extends Query {
         }
 
         const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);
-        const receipt = /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt);
-        const code = /** @type {proto.ResponseCodeEnum} */ (receipt.status);
+
+        let code;
+        if (transactionGetReceipt.receipt != null) {
+            const receipt = /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt);
+            code = /** @type {proto.ResponseCodeEnum} */ (receipt.status);
+        } else {
+            const header = /** @type {proto.IResponseHeader} */ (transactionGetReceipt.header);
+            code = /** @type {proto.ResponseCodeEnum} */ (header.nodeTransactionPrecheckCode);
+        }
+
         const status = Status._fromCode(code);
 
         switch (status.code) {
@@ -131,16 +139,15 @@ export default class TransactionReceiptQuery extends Query {
     }
 
     /**
-     * @internal
      * @override
+     * @internal
+     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _makeRequest() {
+    _onMakeRequest(header) {
         return {
             transactionGetReceipt: {
-                header: {
-                    responseType: proto.ResponseType.ANSWER_ONLY,
-                },
+                header,
                 transactionID:
                     this._transactionId != null
                         ? this._transactionId._toProtobuf()

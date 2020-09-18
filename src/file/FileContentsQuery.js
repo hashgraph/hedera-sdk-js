@@ -83,16 +83,15 @@ export default class FileContentsQuery extends Query {
     }
 
     /**
-     * @internal
      * @override
+     * @internal
+     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _makeRequest() {
+    _onMakeRequest(header) {
         return {
             fileGetContents: {
-                header: {
-                    responseType: proto.ResponseType.ANSWER_ONLY,
-                },
+                header,
                 fileID:
                     this._fileId != null ? this._fileId._toProtobuf() : null,
             },
