@@ -1,5 +1,6 @@
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
+import AccountBalanceQuery from "../src/account/AccountBalanceQuery";
 import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
 import Hbar from "../src/Hbar";
 import TransactionId from "../src/TransactionId";
@@ -27,13 +28,13 @@ describe("AccountBalance", function () {
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
-        s;
+
         const balance = await new AccountBalanceQuery()
             .setAccountId(account)
             .setNodeId(response.nodeId)
             .execute(client);
 
-        expect(balance).to.be.equal(new Hbar(1));
+        expect(balance.toTinybars().toInt()).to.be.equal(new Hbar(1).toTinybars().toInt());
 
         const id = (
             await (
@@ -47,6 +48,9 @@ describe("AccountBalance", function () {
             ).execute(client)
         ).transactionId;
 
-        await id.getReceipt(client);
+        await new TransactionReceiptQuery()
+            .setNodeId(response.nodeId)
+            .setTransactionId(id)
+            .execute(client);
     });
 });

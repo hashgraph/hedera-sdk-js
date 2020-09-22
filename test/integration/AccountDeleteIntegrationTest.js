@@ -35,21 +35,19 @@ describe("AccountDelete", function () {
             .setAccountId(account)
             .execute(client);
 
-        expect(info.accountId).to.be.equal(account);
+        expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.getPublicKey().toString());
-        expect(info.balance).to.be.equal(new Hbar(1));
-        expect(info.autoRenewPeriod.toInt()).to.be.equal(Long.fromInt(90));
+        expect(info.balance.toTinybars().toInt()).to.be.equal(new Hbar(1).toTinybars().toInt());
+        expect(info.autoRenewPeriod.toInt()).to.be.equal(7776000);
         expect(info.receiveRecordThreshold.toTinybars().toInt()).to.be.equal(
             Long.MAX_VALUE.toInt()
         );
         expect(info.sendRecordThreshold.toTinybars().toInt()).to.be.equal(
             Long.MAX_VALUE.toInt()
         );
-        expect(info.proxyAccountID).to.be.null;
-        expect(info.proxyReceived).to.be.equal(
-            new Hbar.fromTinybars(Long.ZERO.toInt())
-        );
+        expect(info.proxyAccountId).to.be.null;
+        expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(0);
 
         const id = (
             await (
@@ -63,6 +61,9 @@ describe("AccountDelete", function () {
             ).execute(client)
         ).transactionId;
 
-        await id.getReceipt(client);
+        await new TransactionReceiptQuery()
+            .setNodeId(response.nodeId)
+            .setTransactionId(id)
+            .execute(client);
     });
 });

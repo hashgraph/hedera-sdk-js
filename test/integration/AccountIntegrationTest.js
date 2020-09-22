@@ -1,14 +1,16 @@
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
+import AccountUpdateTransaction from "../src/account/AccountUpdateTransaction";
 import AccountInfoQuery from "../src/account/AccountInfoQuery";
+import AccountBalanceQuery from "../src/account/AccountBalanceQuery";
+import AccountStakersQuery from "../src/account/AccountStakersQuery";
+import AccountRecordsQuery from "../src/account/AccountRecordsQuery";
 import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
 import Hbar from "../src/Hbar";
 import TransactionId from "../src/TransactionId";
 import newClient from "./IntegrationClient";
-import PrivateKey from "../../packages/cryptography/src/PrivateKey";
 import Long from "long";
-import { AccountRecordsQuery, AccountStakersQuery } from "../../lib";
-import HederaPreCheckStatusError from "../src/HederaPreCheckStatusError";
+import { PrivateKey } from "../src/index";
 
 describe("AccountIntegration", function () {
     it("should be executable", async function () {
@@ -20,7 +22,7 @@ describe("AccountIntegration", function () {
         const key1 = PrivateKey.generate();
         const key2 = PrivateKey.generate();
 
-        const response = await new AccountCreateTransaction()
+        let response = await new AccountCreateTransaction()
             .setKey(key1.getPublicKey())
             .setMaxTransactionFee(new Hbar(2))
             .setInitialBalance(new Hbar(1))
@@ -40,28 +42,26 @@ describe("AccountIntegration", function () {
             .setNodeId(response.nodeId)
             .execute(client);
 
-        expect(balance).to.be.equal(new Hbar(1));
+        expect(balance.toTinybars().toInt()).to.be.equal(new Hbar(1).toTinybars().toInt());
 
         const info = await new AccountInfoQuery()
             .setNodeId(response.nodeId)
             .setAccountId(account)
             .execute(client);
 
-        expect(info.accountId).to.be.equal(account);
+        expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
-        expect(info.key.toString()).to.be.equal(key.getPublicKey().toString());
-        expect(info.balance).to.be.equal(new Hbar(1));
-        expect(info.autoRenewPeriod.toInt()).to.be.equal(Long.fromInt(90));
+        expect(info.key.toString()).to.be.equal(key1.getPublicKey().toString());
+        expect(info.balance.toTinybars().toInt()).to.be.equal(new Hbar(1).toTinybars().toInt());
+        expect(info.autoRenewPeriod.toInt()).to.be.equal(7776000);
         expect(info.receiveRecordThreshold.toTinybars().toInt()).to.be.equal(
             Long.MAX_VALUE.toInt()
         );
         expect(info.sendRecordThreshold.toTinybars().toInt()).to.be.equal(
             Long.MAX_VALUE.toInt()
         );
-        expect(info.proxyAccountID).to.be.null;
-        expect(info.proxyReceived).to.be.equal(
-            new Hbar.fromTinybars(Long.ZERO.toInt())
-        );
+        expect(info.proxyAccountId).to.be.null;
+        expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(0);
 
         await new AccountRecordsQuery()
             .setNodeId(response.nodeId)
@@ -69,15 +69,20 @@ describe("AccountIntegration", function () {
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
 
-        expect(
+        let errorThrown = false;
+
+        try {
             await new AccountStakersQuery()
-                .setNodeId(response.nodeId)
-                .setAccountId(account)
+                .setAccountId(operatorId)
                 .setMaxQueryPayment(new Hbar(1))
                 .execute(client)
-        ).to.throw(HederaPreCheckStatusError.class);
+        } catch (_) {
+            errorThrown = true;
+        }
 
-        await (
+        expect(errorThrown).to.be.true;
+
+        response = await (
             await (
                 await new AccountUpdateTransaction()
                     .setNodeId(response.nodeId)
@@ -100,7 +105,7 @@ describe("AccountIntegration", function () {
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
 
-        expect(balance).to.be.equal(new Hbar(1));
+        expect(balance.toTinybars().toInt()).to.be.equal(new Hbar(1).toTinybars().toInt());
 
         const id = (
             await (
@@ -114,13 +119,22 @@ describe("AccountIntegration", function () {
             ).execute(client)
         ).transactionId;
 
-        expect(
-            await new AccountStakersQuery()
-                .setNodeId(response.nodeId)
-                .setAccountId(account)
-                .execute(client)
-        ).to.throw(HederaPreCheckStatusError.class);
+        errorThrown = false;
 
-        await id.getReceipt(client);
+        try {
+            await new AccountStakersQuery()
+                .setAccountId(operatorId)
+                .setMaxQueryPayment(new Hbar(1))
+                .execute(client)
+        } catch (_) {
+            errorThrown = true;
+        }
+
+        expect(errorThrown).to.be.true;
+
+        await new TransactionReceiptQuery()
+            .setNodeId(response.nodeId)
+            .setTransactionId(id)
+            .execute(client);
     });
 });

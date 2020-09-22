@@ -1,16 +1,17 @@
-import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
-import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
-import { PrivateKey } from "../../packages/cryptography/src";
+import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
+import Hbar from "../src/Hbar";
 import LiveHashAddTransaction from "../src/account/LiveHashAddTransaction";
-import Status from "../src/Status";
 import LiveHashDeleteTransaction from "../src/account/LiveHashDeleteTransaction";
 import LiveHashQuery from "../src/account/LiveHashQuery";
+import Status from "../src/Status";
+import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
+import newClient from "./IntegrationClient";
+import { PrivateKey } from "../src/index";
+import * as hex from "../src/encoding/hex";
 
 describe("LiveHash", function () {
-    const _hash = decode(
+    const _hash = hex.decode(
         "100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002"
     );
     it("should be executable", async function () {

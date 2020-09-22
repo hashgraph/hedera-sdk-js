@@ -1,5 +1,7 @@
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
+import AccountRecordsQuery from "../src/account/AccountRecordsQuery";
+import CryptoTransferTransaction from "../src/account/CryptoTransferTransaction";
 import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
 import Hbar from "../src/Hbar";
 import TransactionId from "../src/TransactionId";
@@ -40,7 +42,7 @@ describe("AccountRecords", function () {
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
 
-        expect(records.isEmpty()).to.be.true;
+        expect(records.length).to.be.equal(0);
 
         const id = (
             await (
@@ -54,6 +56,9 @@ describe("AccountRecords", function () {
             ).execute(client)
         ).transactionId;
 
-        await id.getReceipt(client);
+        await new TransactionReceiptQuery()
+            .setNodeId(response.nodeId)
+            .setTransactionId(id)
+            .execute(client);
     });
 });

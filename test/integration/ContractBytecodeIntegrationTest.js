@@ -6,7 +6,7 @@ import ContractCreateTransaction from "../src/contract/ContractCreateTransaction
 import ContractFunctionParameters from "../src/contract/ContractFunctionParameters";
 import ContractDeleteTransaction from "../src/contract/ContractDeleteTransaction";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
-import ContractByteCodeQuery from "../../lib/contract/ContractByteCodeQuery";
+import ContractByteCodeQuery from "../../src/contract/ContractByteCodeQuery";
 
 describe("ContractBytecode", function () {
     it("should be executable", async function () {

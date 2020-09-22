@@ -41,9 +41,7 @@ describe("AccountCreate", function () {
         expect(info.balance.toTinybars().toInt()).to.be.equal(
             new Hbar(1).toTinybars().toInt()
         );
-        expect(info.autoRenewPeriod.toInt()).to.be.equal(
-            Long.fromValue(7776000).toInt()
-        );
+        expect(info.autoRenewPeriod.toInt()).to.be.equal(7776000);
         expect(info.receiveRecordThreshold.toTinybars().toInt()).to.be.equal(
             Long.MAX_VALUE.toInt()
         );
@@ -51,9 +49,7 @@ describe("AccountCreate", function () {
             Long.MAX_VALUE.toInt()
         );
         expect(info.proxyAccountId).to.be.null;
-        expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(
-            new Hbar(0).toTinybars().toInt()
-        );
+        expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(0);
 
         const id = (
             await (
@@ -67,6 +63,9 @@ describe("AccountCreate", function () {
             ).execute(client)
         ).transactionId;
 
-        await id.getReceipt(client);
+        await new TransactionReceiptQuery()
+            .setNodeId(response.nodeId)
+            .setTransactionId(id)
+            .execute(client);
     });
 });
