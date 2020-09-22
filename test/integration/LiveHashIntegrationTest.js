@@ -1,24 +1,26 @@
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
 import Hbar from "../src/Hbar";
 import LiveHashAddTransaction from "../src/account/LiveHashAddTransaction";
 import LiveHashDeleteTransaction from "../src/account/LiveHashDeleteTransaction";
 import LiveHashQuery from "../src/account/LiveHashQuery";
-import Status from "../src/Status";
 import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
 import newClient from "./IntegrationClient";
 import { PrivateKey } from "../src/index";
+import Long from "long";
 import * as hex from "../src/encoding/hex";
+import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
 
 describe("LiveHash", function () {
-    const _hash = hex.decode(
-        "100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002"
-    );
     it("should be executable", async function () {
         this.timeout(10000);
 
+        const _hash = hex.decode(
+            "100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002"
+        );
+
         const client = newClient();
         const operatorId = client.getOperatorId();
+        let errorThrown = false;
 
         const key = PrivateKey.generate();
 
@@ -42,39 +44,49 @@ describe("LiveHash", function () {
         try {
             await new LiveHashAddTransaction()
                 .setAccountId(account)
+                .setNodeId(response.nodeId)
                 .setDuration(Long.fromInt(30))
                 .setHash(_hash)
                 .setKeys(key)
                 .execute(client);
-        } catch (err) {
-            throw Status.NotSupported.toString();
+        } catch (_) {
+            errorThrown = true;
         }
+
+        expect(errorThrown).to.be.true;
+        errorThrown = false;
 
         try {
             await new LiveHashDeleteTransaction()
                 .setAccountId(account)
+                .setNodeId(response.nodeId)
                 .setHash(_hash)
                 .execute(client);
-        } catch (err) {
-            throw Status.NotSupported.toString();
+        } catch (_) {
+            errorThrown = true;
         }
 
-        assert.doesNotThrow(() => {
-            new LiveHashQuery()
+        expect(errorThrown).to.be.true;
+        errorThrown = false;
+
+        try {
+            await new LiveHashQuery()
                 .setAccountId(account)
+                .setNodeId(response.nodeId)
                 .setHash(_hash)
                 .execute(client);
-        }, Status.NotSupported.toString());
+        } catch (_) {
+            errorThrown = true;
+        }
 
-        await new FileDeleteTransaction()
-            .setFileId(file)
-            .setNodeId(response.nodeId)
-            .execute(client);
+        expect(errorThrown).to.be.false;
 
-        await new TransactionReceiptQuery()
-            .setNodeId(response.nodeId)
-            .execute(client);
-
-        client.close();
+        await (
+            await new AccountDeleteTransaction()
+                .setAccountId(account)
+                .setNodeId(response.nodeId)
+                .setTransferAccountId(operatorId)
+                .execute(client)
+        ).getReceipt(client);
     });
 });

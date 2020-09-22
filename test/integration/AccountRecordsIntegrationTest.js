@@ -2,7 +2,6 @@ import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
 import AccountRecordsQuery from "../src/account/AccountRecordsQuery";
 import CryptoTransferTransaction from "../src/account/CryptoTransferTransaction";
-import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
 import Hbar from "../src/Hbar";
 import TransactionId from "../src/TransactionId";
 import newClient from "./IntegrationClient";
@@ -22,10 +21,7 @@ describe("AccountRecords", function () {
             .setInitialBalance(new Hbar(1))
             .execute(client);
 
-        const receipt = await new TransactionReceiptQuery()
-            .setNodeId(response.nodeId)
-            .setTransactionId(response.transactionId)
-            .execute(client);
+        const receipt = await response.getReceipt(client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
