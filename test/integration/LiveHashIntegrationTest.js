@@ -35,8 +35,8 @@ describe("LiveHash", function () {
             .setTransactionId(response.transactionId)
             .execute(client);
 
-        expect(receipt.fileId).to.not.be.null;
-        expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
+        expect(receipt.accountId).to.not.be.null;
+        expect(receipt.accountId != null ? receipt.accountId.num > 0 : false).to.be
             .true;
 
         const account = receipt.accountId;
@@ -79,7 +79,7 @@ describe("LiveHash", function () {
             errorThrown = true;
         }
 
-        expect(errorThrown).to.be.false;
+        expect(errorThrown).to.be.true;
 
         await (
             await new AccountDeleteTransaction()
