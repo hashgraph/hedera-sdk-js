@@ -4,6 +4,7 @@ import ContractFunctionParameters from "./ContractFunctionParameters";
 import ContractFunctionResult from "./ContractFunctionResult";
 import proto from "@hashgraph/proto";
 import Long from "long";
+import Channel from "../channel/Channel";
 
 /**
  * @typedef {object} FunctionParameters
@@ -167,6 +168,16 @@ export default class ContractCallQuery extends Query {
         this._maxResultSize =
             size instanceof Long ? size : Long.fromValue(size);
         return this;
+    }
+
+    /**
+     * @protected
+     * @override
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getMethod(channel) {
+        return (query) => channel.smartContract.contractCallLocalMethod(query);
     }
 
     /**

@@ -2,6 +2,7 @@ import Query, { QUERY_REGISTRY } from "../Query";
 import ContractId from "./ContractId";
 import ContractInfo from "./ContractInfo";
 import proto from "@hashgraph/proto";
+import Channel from "../channel/Channel";
 
 /**
  * @augments {Query<ContractInfo>}
@@ -60,6 +61,16 @@ export default class ContractInfoQuery extends Query {
                 : ContractId.fromString(contractId);
 
         return this;
+    }
+
+    /**
+     * @protected
+     * @override
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getMethod(channel) {
+        return (query) => channel.smartContract.getContractInfo(query);
     }
 
     /**

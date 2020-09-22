@@ -322,9 +322,10 @@ export default class ContractUpdateTransaction extends Transaction {
                 this._proxyAccountId != null
                     ? this._proxyAccountId._toProtobuf()
                     : null,
-            autoRenewPeriod: {
+            autoRenewPeriod: this._autoRenewPeriod != null ?
+            {
                 seconds: this._autoRenewPeriod,
-            },
+            } : null,
             fileID: this._bytecodeFileId
                 ? this._bytecodeFileId._toProtobuf()
                 : null,
