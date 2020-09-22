@@ -44,7 +44,7 @@ describe("AccountRecords", function () {
 
         expect(records.length).to.be.equal(0);
 
-        const id = (
+        await (
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
@@ -54,11 +54,6 @@ describe("AccountRecords", function () {
                     .freezeWith(client)
                     .sign(key)
             ).execute(client)
-        ).transactionId;
-
-        await new TransactionReceiptQuery()
-            .setNodeId(response.nodeId)
-            .setTransactionId(id)
-            .execute(client);
+        ).getReceipt(client);
     });
 });

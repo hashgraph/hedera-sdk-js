@@ -1,6 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../Query";
 import FileId from "./FileId";
 import proto from "@hashgraph/proto";
+import Channel from "../channel/Channel";
 
 /**
  * @augments {Query<Uint8Array>}
@@ -37,6 +38,16 @@ export default class FileContentsQuery extends Query {
                     ? FileId._fromProtobuf(contents.fileID)
                     : undefined,
         });
+    }
+
+    /**
+     * @abstract
+     * @protected
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getMethod(channel) {
+        return (query) => channel.file.getFileContent(query);
     }
 
     /**

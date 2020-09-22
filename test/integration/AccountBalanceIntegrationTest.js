@@ -34,9 +34,11 @@ describe("AccountBalance", function () {
             .setNodeId(response.nodeId)
             .execute(client);
 
-        expect(balance.toTinybars().toInt()).to.be.equal(new Hbar(1).toTinybars().toInt());
+        expect(balance.toTinybars().toInt()).to.be.equal(
+            new Hbar(1).toTinybars().toInt()
+        );
 
-        const id = (
+        await (
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
@@ -46,11 +48,6 @@ describe("AccountBalance", function () {
                     .freezeWith(client)
                     .sign(key)
             ).execute(client)
-        ).transactionId;
-
-        await new TransactionReceiptQuery()
-            .setNodeId(response.nodeId)
-            .setTransactionId(id)
-            .execute(client);
+        ).getReceipt(client);
     });
 });

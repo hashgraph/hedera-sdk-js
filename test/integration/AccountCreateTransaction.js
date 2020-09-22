@@ -51,7 +51,7 @@ describe("AccountCreate", function () {
         expect(info.proxyAccountId).to.be.null;
         expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(0);
 
-        const id = (
+        await (
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
@@ -61,11 +61,6 @@ describe("AccountCreate", function () {
                     .freezeWith(client)
                     .sign(key)
             ).execute(client)
-        ).transactionId;
-
-        await new TransactionReceiptQuery()
-            .setNodeId(response.nodeId)
-            .setTransactionId(id)
-            .execute(client);
+        ).getReceipt(client);
     });
 });

@@ -2,6 +2,7 @@ import Query, { QUERY_REGISTRY } from "../Query";
 import FileId from "./FileId";
 import FileInfo from "./FileInfo";
 import proto from "@hashgraph/proto";
+import Channel from "../channel/Channel";
 
 /**
  * @augments {Query<FileInfo>}
@@ -58,6 +59,16 @@ export default class FileInfoQuery extends Query {
             fileId instanceof FileId ? fileId : FileId.fromString(fileId);
 
         return this;
+    }
+
+    /**
+     * @protected
+     * @override
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getMethod(channel) {
+        return (query) => channel.file.getFileInfo(query);
     }
 
     /**

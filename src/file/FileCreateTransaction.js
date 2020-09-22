@@ -1,12 +1,8 @@
 import proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
-import Transaction, {
-    DEFAULT_AUTO_RENEW_PERIOD,
-    TRANSACTION_REGISTRY,
-} from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import { Key } from "@hashgraph/cryptography";
 import { _fromProtoKey, _toProtoKey } from "../util";
-import Long from "long";
 import Timestamp from "../Timestamp";
 import * as utf8 from "../encoding/utf8";
 
@@ -34,7 +30,7 @@ export default class FileCreateTransaction extends Transaction {
          * @type {Timestamp}
          */
         this._expirationTime = new Timestamp(
-            Long.fromNumber(Date.now()).add(DEFAULT_AUTO_RENEW_PERIOD).toInt(),
+            Math.floor(Date.now() / 1000) + 7890000,
             0
         );
 

@@ -1,9 +1,8 @@
-import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
-import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
-import FileCreateTransaction from "../src/account/AccountCreateTransaction";
+import FileCreateTransaction from "../src/file/FileCreateTransaction";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
 import FileContentsQuery from "../src/file/FileContentsQuery";
+import Hbar from "../src/Hbar";
+import newClient from "./IntegrationClient";
 
 describe("FileContents", function () {
     it("should be executable", async function () {
@@ -12,16 +11,13 @@ describe("FileContents", function () {
         const client = newClient();
         const operatorKey = client.getOperatorKey();
 
-        const response = await new FileCreateTransaction()
-            .setKey(operatorKey)
+        let response = await new FileCreateTransaction()
+            .setKeys(operatorKey)
             .setContents("[e2e::FileCreateTransaction]")
             .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
-        let receipt = await new TransactionReceiptQuery()
-            .setNodeId(response.nodeId)
-            .setTransactionId(response.transactionId)
-            .execute(client);
+        let receipt = await response.getReceipt(client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -29,7 +25,7 @@ describe("FileContents", function () {
 
         const file = receipt.fileId;
 
-        let contents = await new FileContentsQuery()
+        const contents = await new FileContentsQuery()
             .setFileId(file)
             .setNodeId(response.nodeId)
             .setQueryPayment(new Hbar(1))
@@ -37,15 +33,11 @@ describe("FileContents", function () {
 
         expect(contents.toString()).to.be.equal("[e2e::FileCreateTransaction]");
 
-        await new FileDeleteTransaction()
-            .setFileId(file)
-            .setNodeId(response.nodeId)
-            .execute(client);
-
-        await new TransactionReceiptQuery()
-            .setNodeId(response.nodeId)
-            .execute(client);
-
-        client.close();
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
     });
 });

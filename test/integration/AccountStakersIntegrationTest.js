@@ -15,7 +15,7 @@ describe("AccountStakers", function () {
             await new AccountStakersQuery()
                 .setAccountId(operatorId)
                 .setMaxQueryPayment(new Hbar(1))
-                .execute(client)
+                .execute(client);
         } catch (_) {
             errorThrown = true;
         }

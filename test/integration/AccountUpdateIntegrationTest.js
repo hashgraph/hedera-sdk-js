@@ -41,7 +41,9 @@ describe("AccountUpdate", function () {
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key1.getPublicKey().toString());
-        expect(info.balance.toTinybars().toInt()).to.be.equal(new Hbar(1).toTinybars().toInt());
+        expect(info.balance.toTinybars().toInt()).to.be.equal(
+            new Hbar(1).toTinybars().toInt()
+        );
         expect(info.autoRenewPeriod.toInt()).to.be.equal(7776000);
         expect(info.receiveRecordThreshold.toTinybars().toInt()).to.be.equal(
             Long.MAX_VALUE.toInt()
@@ -77,7 +79,9 @@ describe("AccountUpdate", function () {
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key2.getPublicKey().toString());
-        expect(info.balance.toTinybars().toInt()).to.be.equal(new Hbar(1).toTinybars().toInt());
+        expect(info.balance.toTinybars().toInt()).to.be.equal(
+            new Hbar(1).toTinybars().toInt()
+        );
         expect(info.autoRenewPeriod.toInt()).to.be.equal(7776000);
         expect(info.receiveRecordThreshold.toTinybars().toInt()).to.be.equal(
             Long.MAX_VALUE.toInt()
@@ -88,7 +92,7 @@ describe("AccountUpdate", function () {
         expect(info.proxyAccountId).to.be.null;
         expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(0);
 
-        const id = (
+        await (
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
@@ -98,11 +102,6 @@ describe("AccountUpdate", function () {
                     .freezeWith(client)
                     .sign(key2)
             ).execute(client)
-        ).transactionId;
-
-        await new TransactionReceiptQuery()
-            .setNodeId(response.nodeId)
-            .setTransactionId(id)
-            .execute(client);
+        ).getReceipt(client);
     });
 });

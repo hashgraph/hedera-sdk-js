@@ -1,10 +1,9 @@
-import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
+import FileCreateTransaction from "../src/file/FileCreateTransaction";
+import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
+import FileUpdateTransaction from "../src/file/FileUpdateTransaction";
+import FileInfoQuery from "../src/file/FileInfoQuery";
 import Hbar from "../src/Hbar";
 import newClient from "./IntegrationClient";
-import FileCreateTransaction from "../src/account/AccountCreateTransaction";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
-import FileInfoQuery from "../src/file/FileInfoQuery";
-import FileUpdateTransaction from "../src/file/FileUpdateTransaction";
 
 describe("FileUpdate", function () {
     it("should be executable", async function () {
@@ -13,16 +12,13 @@ describe("FileUpdate", function () {
         const client = newClient();
         const operatorKey = client.getOperatorKey();
 
-        const response = await new FileCreateTransaction()
-            .setKey(operatorKey)
+        let response = await new FileCreateTransaction()
+            .setKeys(operatorKey)
             .setContents("[e2e::FileCreateTransaction]")
             .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
-        let receipt = await new TransactionReceiptQuery()
-            .setNodeId(response.nodeId)
-            .setTransactionId(response.transactionId)
-            .execute(client);
+        let receipt = await response.getReceipt(client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -36,42 +32,44 @@ describe("FileUpdate", function () {
             .setQueryPayment(new Hbar(22))
             .execute(client);
 
-        expect(info.fileId).to.be.equal(file);
-        expect(info.size).to.be.equal(28);
+        expect(info.fileId.toString()).to.be.equal(file.toString());
+        expect(info.size.toInt()).to.be.equal(28);
         expect(info.deleted).to.be.false;
-        expect(info.keys.get(0).toString()).to.be.equal(operatorKey.toString());
 
-        await new FileUpdateTransaction()
-            .setNodeId(response.nodeId)
-            .setFileId(file)
-            .setContents("[e2e::FileUpdateTransaction]")
-            .setMaxTransactionFee(new Hbar(5))
-            .execute(client);
+        // There should only be one key
+        for (const key of info.keys) {
+            expect(key.toString()).to.be.equal(operatorKey.toString());
+        }
 
-        await new TransactionReceiptQuery()
-            .setNodeId(response.nodeId)
-            .execute(client);
+        await (
+            await new FileUpdateTransaction()
+                .setNodeId(response.nodeId)
+                .setFileId(file)
+                .setContents("[e2e::FileUpdateTransaction]")
+                .setMaxTransactionFee(new Hbar(5))
+                .execute(client)
+        ).getReceipt(client);
 
         info = await new FileInfoQuery()
-            .setNodeId(response.nodeId)
             .setFileId(file)
-            .setMaxQueryPayment(new Hbar(1))
+            .setNodeId(response.nodeId)
+            .setQueryPayment(new Hbar(22))
             .execute(client);
 
-        expect(info.fileId).to.be.equal(file);
-        expect(info.size).to.be.equal(28);
+        expect(info.fileId.toString()).to.be.equal(file.toString());
+        expect(info.size.toInt()).to.be.equal(28);
         expect(info.deleted).to.be.false;
-        expect(info.keys.get(0).toString()).to.be.equal(operatorKey.toString());
 
-        await new FileDeleteTransaction()
-            .setFileId(file)
-            .setNodeId(response.nodeId)
-            .execute(client);
+        // There should only be one key
+        for (const key of info.keys) {
+            expect(key.toString()).to.be.equal(operatorKey.toString());
+        }
 
-        await new TransactionReceiptQuery()
-            .setNodeId(response.nodeId)
-            .execute(client);
-
-        client.close();
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
     });
 });
