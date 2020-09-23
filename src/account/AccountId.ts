@@ -66,8 +66,8 @@ export class AccountId {
         const view = new DataView(buffer.buffer, 0, 20);
 
         view.setUint32(0, this.shard);
-        view.setUint32(8, this.realm);
-        view.setUint32(16, this.account);
+        view.setBigUint64(4, BigInt(this.realm));
+        view.setBigUint64(12, BigInt(this.account));
 
         return hex.encode(buffer, true);
     }
