@@ -20,6 +20,9 @@ __tests__/**/*.js
 # IDEA
 .idea
 
+# VSCode
+.vscode/
+
 # Docs
 docs/
 
