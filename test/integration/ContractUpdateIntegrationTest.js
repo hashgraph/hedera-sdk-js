@@ -71,13 +71,14 @@ describe("ContractUpdate", function () {
             "[e2e::ContractCreateTransaction]"
         );
 
-        await (await new ContractUpdateTransaction()
-            .setContractId(contract)
-            .setNodeId(response.nodeId)
-            .setContractMemo("[e2e::ContractUpdateTransaction]")
-            .setMaxTransactionFee(new Hbar(5))
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new ContractUpdateTransaction()
+                .setContractId(contract)
+                .setNodeId(response.nodeId)
+                .setContractMemo("[e2e::ContractUpdateTransaction]")
+                .setMaxTransactionFee(new Hbar(5))
+                .execute(client)
+        ).getReceipt(client);
 
         info = await new ContractInfoQuery()
             .setContractId(contract)
@@ -99,16 +100,18 @@ describe("ContractUpdate", function () {
             "[e2e::ContractUpdateTransaction]"
         );
 
-        await (await new ContractDeleteTransaction()
-            .setContractId(contract)
-            .setNodeId(response.nodeId)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new ContractDeleteTransaction()
+                .setContractId(contract)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
 
-        await (await new FileDeleteTransaction()
-            .setFileId(file)
-            .setNodeId(response.nodeId)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
     });
 });

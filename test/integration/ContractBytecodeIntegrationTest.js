@@ -10,7 +10,7 @@ import newClient from "./IntegrationClient";
 
 describe("ContractBytecode", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(15000);
 
         const client = newClient();
         const operatorKey = client.getOperatorKey();
@@ -35,23 +35,25 @@ describe("ContractBytecode", function () {
 
         let file = receipt.fileId;
 
-        receipt = await (await new ContractCreateTransaction()
-            .setAdminKey(operatorKey)
-            .setNodeId(response.nodeId)
-            .setGas(2000)
-            .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
-            )
-            .setBytecodeFileId(file)
-            .setContractMemo("[e2e::ContractCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(20))
-            .execute(client))
-            .getReceipt(client);
-
+        receipt = await (
+            await new ContractCreateTransaction()
+                .setAdminKey(operatorKey)
+                .setNodeId(response.nodeId)
+                .setGas(2000)
+                .setConstructorParameters(
+                    new ContractFunctionParameters().addString(
+                        "Hello from Hedera."
+                    )
+                )
+                .setBytecodeFileId(file)
+                .setContractMemo("[e2e::ContractCreateTransaction]")
+                .setMaxTransactionFee(new Hbar(20))
+                .execute(client)
+        ).getReceipt(client);
 
         expect(receipt.contractId).to.not.be.null;
-        expect(receipt.contractId != null ? receipt.contractId.num > 0 : false).to
-            .be.true;
+        expect(receipt.contractId != null ? receipt.contractId.num > 0 : false)
+            .to.be.true;
 
         const contract = receipt.contractId;
 
@@ -63,16 +65,18 @@ describe("ContractBytecode", function () {
 
         expect(bytecode.length).to.be.equal(798);
 
-        await (await new ContractDeleteTransaction()
-            .setContractId(contract)
-            .setNodeId(response.nodeId)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new ContractDeleteTransaction()
+                .setContractId(contract)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
 
-        await (await new FileDeleteTransaction()
-            .setFileId(file)
-            .setNodeId(response.nodeId)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
     });
 });

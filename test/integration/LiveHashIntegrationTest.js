@@ -36,8 +36,8 @@ describe("LiveHash", function () {
             .execute(client);
 
         expect(receipt.accountId).to.not.be.null;
-        expect(receipt.accountId != null ? receipt.accountId.num > 0 : false).to.be
-            .true;
+        expect(receipt.accountId != null ? receipt.accountId.num > 0 : false).to
+            .be.true;
 
         const account = receipt.accountId;
 

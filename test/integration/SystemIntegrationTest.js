@@ -1,6 +1,6 @@
 import newClient from "./IntegrationClient";
 import SystemDeleteTransaction from "../src/SystemDeleteTransaction";
-import ContractId from "../src/contract/ContractId"
+import ContractId from "../src/contract/ContractId";
 import FileId from "../src/file/FileId";
 import Timestamp from "../src/Timestamp";
 

@@ -1,12 +1,8 @@
-import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
 import Hbar from "../src/Hbar";
 import newClient from "./IntegrationClient";
 import ContractCreateTransaction from "../src/contract/ContractCreateTransaction";
-import ContractExecuteTransaction from "../src/contract/ContractExecuteTransaction";
 import ContractFunctionParameters from "../src/contract/ContractFunctionParameters";
-import ContractDeleteTransaction from "../src/contract/ContractDeleteTransaction";
 import ContractCallQuery from "../src/contract/ContractCallQuery";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
 import FileCreateTransaction from "../src/file/FileCreateTransaction";
 
 describe("ContractCallIntegration", function () {
@@ -32,17 +28,21 @@ describe("ContractCallIntegration", function () {
 
         const file = receipt.fileId;
 
-        receipt = await (await new ContractCreateTransaction()
-            .setNodeId(response.nodeId)
-            .setAdminKey(operatorKey)
-            .setGas(2000)
-            .setConstructorParameters(
-                new ContractFunctionParameters().addString("Hello from Hedera.")
-            )
-            .setBytecodeFileId(file)
-            .setContractMemo("[e2e::ContractCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(20))
-            .execute(client)).getReceipt(client);
+        receipt = await (
+            await new ContractCreateTransaction()
+                .setNodeId(response.nodeId)
+                .setAdminKey(operatorKey)
+                .setGas(2000)
+                .setConstructorParameters(
+                    new ContractFunctionParameters().addString(
+                        "Hello from Hedera."
+                    )
+                )
+                .setBytecodeFileId(file)
+                .setContractMemo("[e2e::ContractCreateTransaction]")
+                .setMaxTransactionFee(new Hbar(20))
+                .execute(client)
+        ).getReceipt(client);
 
         expect(receipt.contractId).to.not.be.null;
         expect(receipt.contractId != null ? receipt.contractId.num > 0 : false)

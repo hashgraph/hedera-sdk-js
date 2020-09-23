@@ -9,7 +9,7 @@ import newClient from "./IntegrationClient";
 
 describe("ContractCreate", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(20000);
 
         const client = newClient();
         const operatorKey = client.getOperatorKey();
@@ -70,16 +70,18 @@ describe("ContractCreate", function () {
             "[e2e::ContractCreateTransaction]"
         );
 
-        await (await new ContractDeleteTransaction()
-            .setContractId(contract)
-            .setNodeId(response.nodeId)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new ContractDeleteTransaction()
+                .setContractId(contract)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
 
-        await (await new FileDeleteTransaction()
-            .setFileId(file)
-            .setNodeId(response.nodeId)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
     });
 });

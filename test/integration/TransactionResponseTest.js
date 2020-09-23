@@ -3,7 +3,6 @@ import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
 import AccountId from "../src/account/AccountId";
 import Hbar from "../src/Hbar";
-import TransactionId from "../src/TransactionId";
 import newClient from "./IntegrationClient";
 import { PrivateKey } from "../src/index";
 
@@ -25,9 +24,12 @@ describe("TransactionResponse", function () {
 
         const record = await transaction.getRecord(client);
 
-        expect(hex.encode(record.transactionHash)).to.be.equal(hex.encode(transaction.transactionHash));
+        expect(hex.encode(record.transactionHash)).to.be.equal(
+            hex.encode(transaction.transactionHash)
+        );
 
         const account = record.receipt.accountId;
+        console.log(account + " node ");
         expect(account).to.not.be.null;
 
         await (
@@ -36,7 +38,6 @@ describe("TransactionResponse", function () {
                     .setAccountId(account)
                     .setNodeId(transaction.nodeId)
                     .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)
                     .sign(key)
             ).execute(client)

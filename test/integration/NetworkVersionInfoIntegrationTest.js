@@ -9,8 +9,7 @@ describe("NetworkVersionInfo", function () {
         let errorThrown = false;
 
         try {
-            await new NetworkVersionInfoQuery()
-                .execute(client);
+            await new NetworkVersionInfoQuery().execute(client);
         } catch (error) {
             errorThrown = true;
         }

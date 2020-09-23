@@ -4,8 +4,7 @@ import { PrivateKey } from "../src/index";
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
 import AccountId from "../src/account/AccountId";
 import AccountDeleteTransaction from "../../src/account/AccountDeleteTransaction";
-import TransactionId from "../../src/TransactionId";
-
+import * as hex from "../../src/encoding/hex";
 
 describe("TransactionIntegration", function () {
     it("should be executable", async function () {
@@ -24,13 +23,15 @@ describe("TransactionIntegration", function () {
             .freezeWith(client)
             .signWithOperator(client);
 
-        const expectedHash = transaction.getTransactionHash();
+        const expectedHash = await transaction.getTransactionHash();
 
         const response = await transaction.execute(client);
 
         const record = await response.getRecord(client);
 
-        expect(expectedHash).to.be.equal(record.transactionHash);
+        expect(hex.encode(expectedHash)).to.be.equal(
+            hex.encode(record.transactionHash)
+        );
 
         const account = record.receipt.accountId;
 
@@ -41,8 +42,8 @@ describe("TransactionIntegration", function () {
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
                     .setNodeId(response.nodeId)
+                    .setTransactionId(response.getTransactionId())
                     .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)
                     .sign(key)
             ).execute(client)

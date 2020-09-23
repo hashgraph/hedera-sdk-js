@@ -50,27 +50,31 @@ describe("ContractExecute", function () {
 
         const contract = receipt.contractId;
 
-        await (await new ContractExecuteTransaction()
-            .setContractId(contract)
-            .setNodeId(response.nodeId)
-            .setGas(10000)
-            .setFunction(
-                "setMessage",
-                new ContractFunctionParameters().addString("new message")
-            )
-            .setMaxTransactionFee(new Hbar(5))
-            .execute(client)).getReceipt(client);
+        await (
+            await new ContractExecuteTransaction()
+                .setContractId(contract)
+                .setNodeId(response.nodeId)
+                .setGas(10000)
+                .setFunction(
+                    "setMessage",
+                    new ContractFunctionParameters().addString("new message")
+                )
+                .setMaxTransactionFee(new Hbar(5))
+                .execute(client)
+        ).getReceipt(client);
 
-        await (await new ContractDeleteTransaction()
-            .setContractId(contract)
-            .setNodeId(response.nodeId)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new ContractDeleteTransaction()
+                .setContractId(contract)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
 
-        await (await new FileDeleteTransaction()
-            .setFileId(file)
-            .setNodeId(response.nodeId)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
     });
 });

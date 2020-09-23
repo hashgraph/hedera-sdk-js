@@ -58,16 +58,18 @@ describe("ContractRecords", function () {
 
         expect(records.length).to.be.equal(1);
 
-        await (await new ContractDeleteTransaction()
-            .setContractId(contract)
-            .setNodeId(response.nodeId)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new ContractDeleteTransaction()
+                .setContractId(contract)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
 
-        await (await new FileDeleteTransaction()
-            .setFileId(file)
-            .setNodeId(response.nodeId)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
     });
 });
