@@ -29,7 +29,6 @@ describe("TransactionResponse", function () {
         );
 
         const account = record.receipt.accountId;
-        console.log(account + " node ");
         expect(account).to.not.be.null;
 
         await (

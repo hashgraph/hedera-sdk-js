@@ -23,7 +23,7 @@ describe("TransactionIntegration", function () {
             .freezeWith(client)
             .signWithOperator(client);
 
-        const expectedHash = await transaction.getTransactionHash();
+        const expectedHash = transaction.getTransactionHash();
 
         const response = await transaction.execute(client);
 
@@ -34,7 +34,6 @@ describe("TransactionIntegration", function () {
         );
 
         const account = record.receipt.accountId;
-
         expect(account).to.not.be.null;
 
         await (
@@ -42,7 +41,6 @@ describe("TransactionIntegration", function () {
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
                     .setNodeId(response.nodeId)
-                    .setTransactionId(response.getTransactionId())
                     .setTransferAccountId(operatorId)
                     .freezeWith(client)
                     .sign(key)

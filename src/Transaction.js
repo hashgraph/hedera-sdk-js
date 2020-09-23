@@ -7,7 +7,6 @@ import HederaExecutable from "./HederaExecutable";
 import Status from "./Status";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Long from "long";
-// import { sha3_384 } from "js-sha3";
 import { hash as sha3_384 } from "@stablelib/sha384";
 
 export const DEFAULT_AUTO_RENEW_PERIOD = Long.fromValue(7776000); // 90 days (in seconds)
@@ -48,7 +47,7 @@ export default class Transaction extends HederaExecutable {
 
         /**
          * @private
-         * @type {Set<Uint8Array>}
+         * @type {Set<string>}
          */
         this._signers = new Set();
 
@@ -269,8 +268,9 @@ export default class Transaction extends HederaExecutable {
      */
     async signWith(publicKey, transactionSigner) {
         const publicKeyData = publicKey.toBytes();
+        const publicKeyString = publicKey.toString();
 
-        if (this._signers.has(publicKeyData)) {
+        if (this._signers.has(publicKeyString)) {
             // this public key has already signed this transaction
             return this;
         }
@@ -279,17 +279,15 @@ export default class Transaction extends HederaExecutable {
             const message = /** @type {Uint8Array} */ (transaction.bodyBytes);
             const signature = await transactionSigner(message);
 
-            transaction.sigMap != null
-                ? transaction.sigMap.sigPair != null
-                    ? transaction.sigMap.sigPair.push({
-                          pubKeyPrefix: publicKeyData,
-                          ed25519: signature,
-                      })
-                    : null
-                : null;
+            if (transaction.sigMap != null && transaction.sigMap.sigPair != null) {
+                transaction.sigMap.sigPair.push({
+                      pubKeyPrefix: publicKeyData,
+                      ed25519: signature,
+                  });
+            }
         }
 
-        this._signers.add(publicKeyData);
+        this._signers.add(publicKeyString);
 
         return this;
     }
@@ -306,6 +304,10 @@ export default class Transaction extends HederaExecutable {
             throw new Error(
                 "`client` must have an operator to sign with the operator"
             );
+        }
+
+        if (!this._isFrozen()) {
+            this.freezeWith(client);
         }
 
         return this.signWith(operator.publicKey, operator.transactionSigner);
@@ -500,10 +502,10 @@ export default class Transaction extends HederaExecutable {
         const bodyBytes = proto.TransactionBody.encode(body).finish();
 
         return {
-            bodyBytes,
             sigMap: {
                 sigPair: [],
             },
+            bodyBytes,
         };
     }
 
@@ -580,8 +582,5 @@ export default class Transaction extends HederaExecutable {
  * @returns {Uint8Array}
  */
 function hash(bytes) {
-    // const hasher = sha3_384.create();
-    // hasher.update(bytes);
-    // const hash = hasher.digest();
     return new Uint8Array(sha3_384(bytes));
 }
