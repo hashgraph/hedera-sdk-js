@@ -3,6 +3,7 @@ import Status from "./Status";
 import TransactionRecord from "./TransactionRecord";
 import TransactionId from "./TransactionId";
 import proto from "@hashgraph/proto";
+import Channel from "./channel/Channel";
 
 /**
  * @augments {Query<TransactionRecord>}
@@ -88,6 +89,16 @@ export default class TransactionRecordQuery extends Query {
                 return false;
         }
     }
+    /**
+     * @protected
+     * @override
+     * @param {Channel} channel
+     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     */
+    _getMethod(channel) {
+        return (query) => channel.crypto.getTxRecordByTxID(query);
+    }
+
     /**
      * @protected
      * @param {proto.IResponse} response

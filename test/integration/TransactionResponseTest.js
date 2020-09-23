@@ -1,11 +1,11 @@
+import * as hex from "../src/encoding/hex";
+import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
+import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
+import AccountId from "../src/account/AccountId";
 import Hbar from "../src/Hbar";
+import TransactionId from "../src/TransactionId";
 import newClient from "./IntegrationClient";
 import { PrivateKey } from "../src/index";
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
-import AccountId from "../src/account/AccountId";
-import AccountDeleteTransaction from "../../src/account/AccountDeleteTransaction";
-import TransactionId from "../../src/TransactionId";
-
 
 describe("TransactionResponse", function () {
     it("should be executable", async function () {
@@ -17,17 +17,15 @@ describe("TransactionResponse", function () {
 
         const key = PrivateKey.generate();
 
-        const transaction = await (await new AccountCreateTransaction()
+        const transaction = await new AccountCreateTransaction()
             .setKey(key.getPublicKey())
             .setNodeId(new AccountId(5))
             .setMaxTransactionFee(new Hbar(2))
-            .freezeWith(client)
-            .signWithOperator(client))
             .execute(client);
 
         const record = await transaction.getRecord(client);
 
-        expect(record.transactionHash).to.be.equal(transaction.transactionHash);
+        expect(hex.encode(record.transactionHash)).to.be.equal(hex.encode(transaction.transactionHash));
 
         const account = record.receipt.accountId;
         expect(account).to.not.be.null;

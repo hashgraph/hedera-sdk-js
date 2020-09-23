@@ -36,7 +36,7 @@
         "format": "prettier src test '*.json' 'src/*.js' --write",
         "prepare": "run-s compile:js lint:types",
         "test": "run-s test:node test:browser:chrome test:browser:firefox",
-        "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js' 'test/integration/**/*.js'",
+        "test:node": "mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js' 'test/integration/**/TransactionResponse*.js'",
         "test:browser:chrome": "vite serve --port 9001 test/ & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/; kill %1",
         "test:browser:firefox": "vite serve --port 9002 test/ & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/; kill %1"
     },
@@ -45,6 +45,7 @@
         "@hashgraph/cryptography": "file:packages/cryptography",
         "@hashgraph/proto": "file:packages/proto",
         "@improbable-eng/grpc-web": "^0.13.0",
+        "@stablelib/sha384": "^1.0.0",
         "bignumber.js": "^9.0.0",
         "js-sha3": "^0.8.0",
         "long": "^4.0.0"

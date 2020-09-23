@@ -7,7 +7,8 @@ import HederaExecutable from "./HederaExecutable";
 import Status from "./Status";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Long from "long";
-import { sha3_384 } from "js-sha3";
+// import { sha3_384 } from "js-sha3";
+import { hash as sha3_384 } from "@stablelib/sha384";
 
 export const DEFAULT_AUTO_RENEW_PERIOD = Long.fromValue(7776000); // 90 days (in seconds)
 
@@ -455,13 +456,13 @@ export default class Transaction extends HederaExecutable {
      * @protected
      * @param {proto.ITransactionResponse} _
      * @param {AccountId} nodeId
-     * @param {proto.ITransaction} ___
+     * @param {proto.ITransaction} request
      * @returns {TransactionResponse}
      */
-    _mapResponse(_, nodeId, ___) {
+    _mapResponse(_, nodeId, request) {
         return new TransactionResponse({
             nodeId,
-            transactionHash: Uint8Array.of(),
+            transactionHash: hash(proto.Transaction.encode(request).finish()),
             transactionId: /** @type {TransactionId} */ (this._transactionId),
         });
     }
@@ -579,5 +580,8 @@ export default class Transaction extends HederaExecutable {
  * @returns {Uint8Array}
  */
 function hash(bytes) {
-    return new Uint8Array(sha3_384.digest(bytes));
+    // const hasher = sha3_384.create();
+    // hasher.update(bytes);
+    // const hash = hasher.digest();
+    return new Uint8Array(sha3_384(bytes));
 }

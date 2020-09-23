@@ -43,7 +43,9 @@ export default class TransactionResponse {
      * @param {import("./client/Client").default<ChannelT>} client
      * @returns {Promise<TransactionRecord>}
      */
-    getRecord(client) {
+    async getRecord(client) {
+        await this.getReceipt(client);
+
         return new TransactionRecordQuery()
             .setTransactionId(this.transactionId)
             .setNodeId(this.nodeId)
