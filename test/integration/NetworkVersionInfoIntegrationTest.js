@@ -11,10 +11,10 @@ describe("NetworkVersionInfo", function () {
         try {
             await new NetworkVersionInfoQuery()
                 .execute(client);
-        } catch (_) {
+        } catch (error) {
             errorThrown = true;
         }
 
-        expect(errorThrown).to.be.false;
+        expect(errorThrown).to.be.true;
     });
 });

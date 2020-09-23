@@ -31,6 +31,18 @@ export default class Channel {
          * @type {?proto.ConsensusService}
          */
         this._consensus = null;
+
+        /**
+         * @protected
+         * @type {?proto.FreezeService}
+         */
+        this._freeze = null;
+
+        /**
+         * @protected
+         * @type {?proto.NetworkService}
+         */
+        this._network = null;
     }
 
     /**
@@ -70,6 +82,14 @@ export default class Channel {
      * @returns {proto.FreezeService}
      */
     get freeze() {
+        throw new Error("not implemented");
+    }
+
+    /**
+     * @abstract
+     * @returns {proto.NetworkService}
+     */
+    get network() {
         throw new Error("not implemented");
     }
 }

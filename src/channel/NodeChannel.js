@@ -140,4 +140,29 @@ export default class NodeChannel extends Channel {
 
         return this._freeze;
     }
+
+    /**
+     * @returns {proto.NetworkService}
+     */
+    get network() {
+        if (this._network != null) {
+            return this._network;
+        }
+
+        this._network = proto.NetworkService.create(
+            (method, requestData, callback) => {
+                this._client.makeUnaryRequest(
+                    `/proto.${proto.NetworkService.name}/${method.name}`,
+                    (value) => value,
+                    (value) => value,
+                    Buffer.from(requestData),
+                    callback
+                );
+            },
+            false,
+            false
+        );
+
+        return this._network;
+    }
 }
