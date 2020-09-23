@@ -1,7 +1,9 @@
 import AccountId from "./account/AccountId";
 import TransactionId from "./TransactionId";
 import TransactionReceipt from "./TransactionReceipt";
+import TransactionRecord from "./TransactionRecord";
 import TransactionReceiptQuery from "./TransactionReceiptQuery";
+import TransactionRecordQuery from "./TransactionRecordQuery";
 
 export default class TransactionResponse {
     /**
@@ -31,6 +33,18 @@ export default class TransactionResponse {
      */
     getReceipt(client) {
         return new TransactionReceiptQuery()
+            .setTransactionId(this.transactionId)
+            .setNodeId(this.nodeId)
+            .execute(client);
+    }
+
+    /**
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
+     * @returns {Promise<TransactionRecord>}
+     */
+    getRecord(client) {
+        return new TransactionRecordQuery()
             .setTransactionId(this.transactionId)
             .setNodeId(this.nodeId)
             .execute(client);
