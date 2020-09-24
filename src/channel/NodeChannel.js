@@ -1,4 +1,4 @@
-import { Client as NativeClient, credentials } from "@grpc/grpc-js";
+import * as grpc from "@grpc/grpc-js";
 import proto from "@hashgraph/proto";
 import Channel from "./Channel";
 
@@ -10,10 +10,13 @@ export default class NodeChannel extends Channel {
         super(address);
 
         /**
-         * @type {NativeClient}
+         * @type {grpc.Client}
          * @private
          */
-        this._client = new NativeClient(address, credentials.createInsecure());
+        this._client = new grpc.Client(
+            address,
+            grpc.credentials.createInsecure()
+        );
     }
 
     /**
@@ -164,5 +167,39 @@ export default class NodeChannel extends Channel {
         );
 
         return this._network;
+    }
+
+    /**
+     * Cannot make this a simple getter becasue the call within the `create()`
+     * needs to save the request handle to `SubscriptionHandle`
+     *
+     * @param {import("../topic/SubscriptionHandle").default} handle
+     * @returns {proto.MirrorConsensusService}
+     */
+    mirror(handle) {
+        return proto.MirrorConsensusService.create(
+            (method, requestData, callback) => {
+                const request = this._client
+                    .makeServerStreamRequest(
+                        `/${proto.MirrorConsensusService.name}/${method.name}`,
+                        (value) => value,
+                        (value) => value,
+                        Buffer.from(requestData)
+                    )
+                    .on("data", callback)
+                    .on("status", (status) => {
+                        // Only propagate the error if it is `NOT_FOUND` or `UNAVAILABLE`
+                        // Otherwise finish here
+                        if (
+                            status.code === grpc.status.NOT_FOUND ||
+                            status.code === grpc.status.UNAVAILABLE
+                        ) {
+                            callback(new Error(status.code.toString()));
+                        }
+                    });
+
+                handle._setCall(() => request.cancel());
+            }
+        );
     }
 }

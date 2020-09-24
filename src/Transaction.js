@@ -279,11 +279,14 @@ export default class Transaction extends HederaExecutable {
             const message = /** @type {Uint8Array} */ (transaction.bodyBytes);
             const signature = await transactionSigner(message);
 
-            if (transaction.sigMap != null && transaction.sigMap.sigPair != null) {
+            if (
+                transaction.sigMap != null &&
+                transaction.sigMap.sigPair != null
+            ) {
                 transaction.sigMap.sigPair.push({
-                      pubKeyPrefix: publicKeyData,
-                      ed25519: signature,
-                  });
+                    pubKeyPrefix: publicKeyData,
+                    ed25519: signature,
+                });
             }
         }
 

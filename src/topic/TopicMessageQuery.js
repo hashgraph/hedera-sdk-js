@@ -1,7 +1,11 @@
 import TopicId from "./TopicId";
+import TransactionId from "../TransactionId";
+import SubscriptionHandle from "./SubscriptionHandle";
 import TopicMessage from "./TopicMessage";
 import Client from "../client/Client";
 import proto from "@hashgraph/proto";
+import Timestamp from "../Timestamp";
+import Long from "long";
 
 export default class TopicMessageQuery {
     /**
@@ -57,11 +61,13 @@ export default class TopicMessageQuery {
     }
 
     /**
-     * @param {TopicId} topicId
+     * @param {TopicId | string} topicId
      * @returns {TopicMessageQuery}
      */
     setTopicId(topicId) {
-        this._topicId = topicId;
+        this._topicId =
+            topicId instanceof TopicId ? topicId : TopicId.fromString(topicId);
+
         return this;
     }
 
@@ -109,14 +115,27 @@ export default class TopicMessageQuery {
      * @returns {TopicMessageQuery}
      */
     setLimit(limit) {
-        this._limit = limit instanceof Long ?
-            limit :
-            Long.fromValue(limit);
+        this._limit = limit instanceof Long ? limit : Long.fromValue(limit);
         return this;
     }
 
     /**
-     * @param {Client} client
+     * @returns {proto.IConsensusTopicQuery}
+     */
+    _toProtobuf() {
+        return {
+            topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
+            consensusStartTime:
+                this._startTime != null ? this._startTime._toProtobuf() : null,
+            consensusEndTime:
+                this._endTime != null ? this._endTime._toProtobuf() : null,
+            limit: this._limit != null ? this._limit : null,
+        };
+    }
+
+    /**
+     * @template ChannelT
+     * @param {Client<ChannelT>} client
      * @param {(message: TopicMessage) => void} onNext
      * @returns {SubscriptionHandle}
      */
@@ -130,7 +149,8 @@ export default class TopicMessageQuery {
 }
 
 /**
- * @param {Client} client
+ * @template ChannelT
+ * @param {Client<ChannelT>} client
  * @param {SubscriptionHandle} handle
  * @param {proto.IConsensusTopicQuery} query
  * @param {(message: TopicMessage) => void} onNext
@@ -143,10 +163,68 @@ function makeStreamingCall(client, handle, query, onNext, attempt) {
     }
 
     /**
-     * @type {{ [ id: string]: ConsensusTopicResponse[] | null }}
+     * @type { Map<string, proto.ConsensusTopicResponse[]>}
      */
-    const list = {};
+    const list = new Map();
 
-    client._mirrorClient
+    void client
+        ._getMirrorChannel(client._getNextMirrorAddress())
+        .then((channel) => {
+            channel.mirror(handle).subscribeTopic(query, (error, response) => {
+                if (error != null) {
+                    console.log("Error:", error);
+                    if (attempt > 10) {
+                        throw error;
+                    }
 
+                    // If the error is `grpc.status.NOT_FOUND` (5) or `grpc.status.UNAVAILABLE` (14)
+                    // we need to try and make the connection again
+                    if (error.message === "5" || error.message === "14") {
+                        setTimeout(
+                            () =>
+                                makeStreamingCall(
+                                    client,
+                                    handle,
+                                    query,
+                                    onNext,
+                                    attempt + 1
+                                ),
+                            250 * 2 ** attempt
+                        );
+                    }
+                }
+
+                if (response != null && response.chunkInfo == null) {
+                    onNext(
+                        TopicMessage._ofSingle(
+                            /** @type {proto.IConsensusTopicResponse} */ (response)
+                        )
+                    );
+                } else if (response != null && response.chunkInfo != null) {
+                    const txId = TransactionId._fromProtobuf(
+                        /** @type {proto.TransactionID} */ (response.chunkInfo
+                            .initialTransactionID)
+                    ).toString();
+
+                    if (list.get(txId) == null) {
+                        list.set(txId, []);
+                    }
+
+                    const messages = /** @type {proto.ConsensusTopicResponse[]} */ (list.get(
+                        txId
+                    ));
+
+                    messages.push(response);
+
+                    if (
+                        messages.length ===
+                        /** @type {number} */ (response.chunkInfo.total)
+                    ) {
+                        const m = messages;
+                        list.delete(txId);
+                        onNext(TopicMessage._ofMany(m));
+                    }
+                }
+            });
+        });
 }

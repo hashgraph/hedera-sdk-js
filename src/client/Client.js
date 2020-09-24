@@ -55,6 +55,12 @@ export default class Client {
 
         /**
          * @protected
+         * @type {number}
+         */
+        this._nextMirrorIndex = 0;
+
+        /**
+         * @protected
          * @type {Map<string, string>}
          */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -277,14 +283,21 @@ export default class Client {
 
     /**
      * @internal
+     * @returns {string}
+     */
+    _getNextMirrorAddress() {
+        const address = this._mirrorNetwork[this._nextMirrorIndex++];
+        this._nextMirrorIndex %= this._networkNodes.length;
+
+        return address;
+    }
+
+    /**
+     * @internal
      * @param {string} address
      * @returns {Promise<Channel>}
      */
-    async _getNextMirrorChannel(address) {
-        if (address == null) {
-            throw new Error(`unknown mirror address: ${address}`);
-        }
-
+    async _getMirrorChannel(address) {
         let mirrorChannel = this._mirrorChannels.get(address);
 
         if (mirrorChannel != null) {
