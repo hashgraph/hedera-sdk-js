@@ -187,12 +187,18 @@ export default class NodeChannel extends Channel {
                         (value) => value,
                         Buffer.from(requestData)
                     )
-                    .on("close", () => {})
+                    .on("close", function () {
+                        // Do nothing
+                    })
+                    .on("end", function () {
+                        // Do nothing
+                    })
+                    .on("error", function () {
+                        // Do nothing
+                    })
                     .on("data", (message) => {
                         callback(null, message);
                     })
-                    .on("end", () => {})
-                    .on("error", (_) => {})
                     .on("status", (status) => {
                         // Only propagate the error if it is `NOT_FOUND` or `UNAVAILABLE`
                         // Otherwise finish here

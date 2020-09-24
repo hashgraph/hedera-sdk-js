@@ -179,23 +179,19 @@ function makeStreamingCall(client, handle, query, onNext, attempt) {
                     // If the error is `grpc.status.NOT_FOUND` (5) or `grpc.status.UNAVAILABLE` (14)
                     // we need to try and make the connection again
                     if (error.message === "5" || error.message === "14") {
-                        setTimeout(
-                            () => {
-                                makeStreamingCall(
-                                    client,
-                                    handle,
-                                    query,
-                                    onNext,
-                                    attempt + 1
-                                )
-                            },
-                            250 * (Math.pow(2, attempt))
-                        );
+                        setTimeout(() => {
+                            makeStreamingCall(
+                                client,
+                                handle,
+                                query,
+                                onNext,
+                                attempt + 1
+                            );
+                        }, 250 * Math.pow(2, attempt));
                     }
 
                     return;
                 }
-
 
                 if (response != null && response.chunkInfo == null) {
                     onNext(

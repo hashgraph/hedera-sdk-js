@@ -36,24 +36,26 @@ describe("TopicMessage", function () {
         expect(info.topicId.toString()).to.be.equal(topic.toString());
         expect(info.adminKey.toString()).to.be.equal(operatorKey.toString());
 
-        await (await new TopicMessageSubmitTransaction()
-            .setNodeId(response.nodeId)
-            .setTopicId(topic)
-            .setMessage("Hello from JS-SDK")
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new TopicMessageSubmitTransaction()
+                .setNodeId(response.nodeId)
+                .setTopicId(topic)
+                .setMessage("Hello from JS-SDK")
+                .execute(client)
+        ).getReceipt(client);
 
         let receivedMessage = false;
 
-        const stop = Date.now() + (30 * 1000);
+        const stop = Date.now() + 30 * 1000;
 
         const handle = new TopicMessageQuery()
             .setTopicId(topic)
             .subscribe(client, (message) => {
-                receivedMessage = utf8.decode(message.contents) === "Hello from JS-SDK";
+                receivedMessage =
+                    utf8.decode(message.contents) === "Hello from JS-SDK";
             });
 
-        while(!receivedMessage || Date.now() > stop) {
+        while (!receivedMessage || Date.now() > stop) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
         }
 

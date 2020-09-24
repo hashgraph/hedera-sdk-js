@@ -29,11 +29,10 @@ const PREVIEWNET = {
     "3.previewnet.hedera.com:50211": new AccountId(6),
 };
 
-
-const MAINNET_MIRROR = [ "" ];
+const MAINNET_MIRROR = [""];
 // const TESTNET_MIRROR = [ "hcs.testnet.mirrornode.hedera.com:5600" ];
-const TESTNET_MIRROR = [ "api.testnet.kabuto.sh:50211" ];
-const PREVIEWNET_MIRROR = [ "" ];
+const TESTNET_MIRROR = ["api.testnet.kabuto.sh:50211"];
+const PREVIEWNET_MIRROR = [""];
 
 /**
  * @augments {Client<NodeChannel>}
@@ -82,8 +81,10 @@ export default class NodeClient extends Client {
                     break;
 
                 default:
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    throw new Error(`unknown mirrorNetwork: ${props.mirrorNetwork}`);
+                    throw new Error(
+                        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                        `unknown mirrorNetwork: ${props.mirrorNetwork}`
+                    );
             }
         } else if (props.mirrorNetwork != null) {
             this.setMirrorNetwork(...props.mirrorNetwork);
@@ -131,6 +132,9 @@ export default class NodeClient extends Client {
      * @returns {NodeClient}
      */
     static forPreviewnet() {
-        return new NodeClient({ network: "previewnet", mirrorNetwork: "previewnet" });
+        return new NodeClient({
+            network: "previewnet",
+            mirrorNetwork: "previewnet",
+        });
     }
 }
