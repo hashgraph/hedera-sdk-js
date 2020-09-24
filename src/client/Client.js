@@ -41,6 +41,20 @@ export default class Client {
     constructor(props) {
         /**
          * @protected
+         * @type {string[]}
+         */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this._mirrorNetwork = [];
+
+        /**
+         * @protected
+         * @type {Map<string, Channel>}
+         */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this._mirrorChannels = new Map();
+
+        /**
+         * @protected
          * @type {Map<string, string>}
          */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -111,6 +125,14 @@ export default class Client {
         }
 
         this._nextNetworkNodeIndex = 0;
+    }
+
+    /**
+     * @param {string[]} mirrorNetwork
+     * @returns {void}
+     */
+    setMirrorNetwork(...mirrorNetwork) {
+        this._mirrorNetwork = mirrorNetwork;
     }
 
     /**
@@ -251,6 +273,29 @@ export default class Client {
         this._networkChannels.set(nodeId, networkChannel);
 
         return networkChannel;
+    }
+
+    /**
+     * @internal
+     * @param {string} address
+     * @returns {Promise<Channel>}
+     */
+    async _getNextMirrorChannel(address) {
+        if (address == null) {
+            throw new Error(`unknown mirror address: ${address}`);
+        }
+
+        let mirrorChannel = this._mirrorChannels.get(address);
+
+        if (mirrorChannel != null) {
+            return mirrorChannel;
+        }
+
+        mirrorChannel = await this._createNewChannel(address);
+
+        this._mirrorChannels.set(address, mirrorChannel);
+
+        return mirrorChannel;
     }
 
     /**
