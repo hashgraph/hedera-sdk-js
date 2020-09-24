@@ -287,8 +287,7 @@ export default class Client {
      */
     _getNextMirrorAddress() {
         const address = this._mirrorNetwork[this._nextMirrorIndex++];
-        this._nextMirrorIndex %= this._networkNodes.length;
-
+        this._nextMirrorIndex %= this._mirrorNetwork.length;
         return address;
     }
 

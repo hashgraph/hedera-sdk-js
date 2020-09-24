@@ -29,6 +29,12 @@ const PREVIEWNET = {
     "3.previewnet.hedera.com:50211": new AccountId(6),
 };
 
+
+const MAINNET_MIRROR = [ "" ];
+// const TESTNET_MIRROR = [ "hcs.testnet.mirrornode.hedera.com:5600" ];
+const TESTNET_MIRROR = [ "api.testnet.kabuto.sh:50211" ];
+const PREVIEWNET_MIRROR = [ "" ];
+
 /**
  * @augments {Client<NodeChannel>}
  */
@@ -60,6 +66,28 @@ export default class NodeClient extends Client {
         } else {
             this._setNetwork(props.network);
         }
+
+        if (typeof props.mirrorNetwork === "string") {
+            switch (props.mirrorNetwork) {
+                case "mainnet":
+                    this.setMirrorNetwork(...MAINNET_MIRROR);
+                    break;
+
+                case "testnet":
+                    this.setMirrorNetwork(...TESTNET_MIRROR);
+                    break;
+
+                case "previewnet":
+                    this.setMirrorNetwork(...PREVIEWNET_MIRROR);
+                    break;
+
+                default:
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    throw new Error(`unknown mirrorNetwork: ${props.mirrorNetwork}`);
+            }
+        } else if (props.mirrorNetwork != null) {
+            this.setMirrorNetwork(...props.mirrorNetwork);
+        }
     }
 
     /**
@@ -85,7 +113,7 @@ export default class NodeClient extends Client {
      * @returns {NodeClient}
      */
     static forMainnet() {
-        return new NodeClient({ network: "mainnet" });
+        return new NodeClient({ network: "mainnet", mirrorNetwork: "mainnet" });
     }
 
     /**
@@ -94,7 +122,7 @@ export default class NodeClient extends Client {
      * @returns {NodeClient}
      */
     static forTestnet() {
-        return new NodeClient({ network: "testnet" });
+        return new NodeClient({ network: "testnet", mirrorNetwork: "testnet" });
     }
 
     /**
@@ -103,6 +131,6 @@ export default class NodeClient extends Client {
      * @returns {NodeClient}
      */
     static forPreviewnet() {
-        return new NodeClient({ network: "previewnet" });
+        return new NodeClient({ network: "previewnet", mirrorNetwork: "previewnet" });
     }
 }

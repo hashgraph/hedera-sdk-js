@@ -181,12 +181,18 @@ export default class NodeChannel extends Channel {
             (method, requestData, callback) => {
                 const request = this._client
                     .makeServerStreamRequest(
-                        `/${proto.MirrorConsensusService.name}/${method.name}`,
+                        // Note that for `MirrorConsensusService` the name is `ConsensusService`
+                        `/com.hedera.mirror.api.proto.ConsensusService/${method.name}`,
                         (value) => value,
                         (value) => value,
                         Buffer.from(requestData)
                     )
-                    .on("data", callback)
+                    .on("close", () => {})
+                    .on("data", (message) => {
+                        callback(null, message);
+                    })
+                    .on("end", () => {})
+                    .on("error", (_) => {})
                     .on("status", (status) => {
                         // Only propagate the error if it is `NOT_FOUND` or `UNAVAILABLE`
                         // Otherwise finish here

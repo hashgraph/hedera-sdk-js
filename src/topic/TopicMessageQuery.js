@@ -15,7 +15,7 @@ export default class TopicMessageQuery {
      * @param {Timestamp} [props.endTime]
      * @param {Long | number} [props.limit]
      */
-    constructor(props) {
+    constructor(props = {}) {
         /**
          * @type {?TopicId}
          */
@@ -172,7 +172,6 @@ function makeStreamingCall(client, handle, query, onNext, attempt) {
         .then((channel) => {
             channel.mirror(handle).subscribeTopic(query, (error, response) => {
                 if (error != null) {
-                    console.log("Error:", error);
                     if (attempt > 10) {
                         throw error;
                     }
@@ -181,18 +180,22 @@ function makeStreamingCall(client, handle, query, onNext, attempt) {
                     // we need to try and make the connection again
                     if (error.message === "5" || error.message === "14") {
                         setTimeout(
-                            () =>
+                            () => {
                                 makeStreamingCall(
                                     client,
                                     handle,
                                     query,
                                     onNext,
                                     attempt + 1
-                                ),
-                            250 * 2 ** attempt
+                                )
+                            },
+                            250 * (Math.pow(2, attempt))
                         );
                     }
+
+                    return;
                 }
+
 
                 if (response != null && response.chunkInfo == null) {
                     onNext(
