@@ -12,6 +12,7 @@ describe("TopicMessage", function () {
         this.timeout(60000);
 
         const client = newClient();
+        client.setMirrorNetwork("api.testnet.kabuto.sh:50211");
         const operatorKey = client.getOperatorKey();
 
         let response = await new TopicCreateTransaction()
@@ -46,7 +47,7 @@ describe("TopicMessage", function () {
 
         let receivedMessage = false;
 
-        const stop = Date.now() + 30 * 1000;
+        const stop = Date.now() + 50 * 1000;
 
         const handle = new TopicMessageQuery()
             .setTopicId(topic)
@@ -55,7 +56,7 @@ describe("TopicMessage", function () {
                     utf8.decode(message.contents) === "Hello from JS-SDK";
             });
 
-        while (!receivedMessage || Date.now() > stop) {
+        while (!receivedMessage && Date.now() < stop) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
         }
 

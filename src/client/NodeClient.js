@@ -29,10 +29,9 @@ const PREVIEWNET = {
     "3.previewnet.hedera.com:50211": new AccountId(6),
 };
 
-const MAINNET_MIRROR = [""];
-// const TESTNET_MIRROR = [ "hcs.testnet.mirrornode.hedera.com:5600" ];
-const TESTNET_MIRROR = ["api.testnet.kabuto.sh:50211"];
-const PREVIEWNET_MIRROR = [""];
+const MAINNET_MIRROR = [ "hcs.mainnet.mirrornode.hedera.com:5600" ];
+const TESTNET_MIRROR = [ "hcs.testnet.mirrornode.hedera.com:5600" ];
+const PREVIEWNET_MIRROR = [ "hcs.previewnet.mirrornode.hedera.com:5600" ];
 
 /**
  * @augments {Client<NodeChannel>}
@@ -48,14 +47,17 @@ export default class NodeClient extends Client {
             switch (props.network) {
                 case "mainnet":
                     this._setNetwork(MAINNET);
+                    this.setMirrorNetwork(...MAINNET_MIRROR);
                     break;
 
                 case "testnet":
                     this._setNetwork(TESTNET);
+                    this.setMirrorNetwork(...TESTNET_MIRROR);
                     break;
 
                 case "previewnet":
                     this._setNetwork(PREVIEWNET);
+                    this.setMirrorNetwork(...PREVIEWNET_MIRROR);
                     break;
 
                 default:
