@@ -29,9 +29,9 @@ const PREVIEWNET = {
     "3.previewnet.hedera.com:50211": new AccountId(6),
 };
 
-const MAINNET_MIRROR = [ "hcs.mainnet.mirrornode.hedera.com:5600" ];
-const TESTNET_MIRROR = [ "hcs.testnet.mirrornode.hedera.com:5600" ];
-const PREVIEWNET_MIRROR = [ "hcs.previewnet.mirrornode.hedera.com:5600" ];
+const MAINNET_MIRROR = ["hcs.mainnet.mirrornode.hedera.com:5600"];
+const TESTNET_MIRROR = ["hcs.testnet.mirrornode.hedera.com:5600"];
+const PREVIEWNET_MIRROR = ["hcs.previewnet.mirrornode.hedera.com:5600"];
 
 /**
  * @augments {Client<NodeChannel>}
