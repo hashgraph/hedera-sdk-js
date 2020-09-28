@@ -1,4 +1,3 @@
-import Hbar from "../Hbar";
 import proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
@@ -6,7 +5,6 @@ import { Key } from "@hashgraph/cryptography";
 import { _fromProtoKey, _toProtoKey } from "../util";
 import AccountId from "./AccountId";
 import Timestamp from "../Timestamp";
-import BigNumber from "bignumber.js";
 import Long from "long";
 
 /**
@@ -17,8 +15,6 @@ export default class AccountUpdateTransaction extends Transaction {
      * @param {object} props
      * @param {AccountId} [props.accountId]
      * @param {Key} [props.key]
-     * @param {number | string | Long | BigNumber | Hbar} [props.sendRecordThreshold]
-     * @param {number | string | Long | BigNumber | Hbar} [props.receiveRecordThreshold]
      * @param {boolean} [props.receiverSignatureRequired]
      * @param {AccountId} [props.proxyAccountId]
      * @param {number | Long} [props.autoRenewPeriod]
@@ -45,26 +41,6 @@ export default class AccountUpdateTransaction extends Transaction {
 
         if (props.key != null) {
             this.setKey(props.key);
-        }
-
-        /**
-         * @private
-         * @type {?Hbar}
-         */
-        this._sendRecordThreshold = null;
-
-        if (props.sendRecordThreshold != null) {
-            this.setSendRecordThreshold(props.sendRecordThreshold);
-        }
-
-        /**
-         * @private
-         * @type {?Hbar}
-         */
-        this._receiveRecordThreshold = null;
-
-        if (props.receiveRecordThreshold != null) {
-            this.setReceiveRecordThreshold(props.receiveRecordThreshold);
         }
 
         /**
@@ -124,14 +100,6 @@ export default class AccountUpdateTransaction extends Transaction {
                       )
                     : undefined,
             key: update.key != null ? _fromProtoKey(update.key) : undefined,
-            sendRecordThreshold:
-                update.sendRecordThreshold != null
-                    ? update.sendRecordThreshold
-                    : undefined,
-            receiveRecordThreshold:
-                update.receiveRecordThreshold != null
-                    ? update.receiveRecordThreshold
-                    : undefined,
             receiverSignatureRequired:
                 update.receiverSigRequired != null
                     ? update.receiverSigRequired
@@ -192,48 +160,6 @@ export default class AccountUpdateTransaction extends Transaction {
     setKey(key) {
         this._requireNotFrozen();
         this._key = key;
-
-        return this;
-    }
-
-    /**
-     * @returns {?Hbar}
-     */
-    getSendRecordThreshold() {
-        return this._sendRecordThreshold;
-    }
-
-    /**
-     * @param {number | string | Long | BigNumber | Hbar} sendRecordThreshold
-     * @returns {this}
-     */
-    setSendRecordThreshold(sendRecordThreshold) {
-        this._requireNotFrozen();
-        this._sendRecordThreshold =
-            sendRecordThreshold instanceof Hbar
-                ? sendRecordThreshold
-                : new Hbar(sendRecordThreshold);
-
-        return this;
-    }
-
-    /**
-     * @returns {?Hbar}
-     */
-    getReceiveRecordThreshold() {
-        return this._receiveRecordThreshold;
-    }
-
-    /**
-     * @param {number | string | Long | BigNumber | Hbar} receiveRecordThreshold
-     * @returns {this}
-     */
-    setReceiveRecordThreshold(receiveRecordThreshold) {
-        this._requireNotFrozen();
-        this._receiveRecordThreshold =
-            receiveRecordThreshold instanceof Hbar
-                ? receiveRecordThreshold
-                : new Hbar(receiveRecordThreshold);
 
         return this;
     }
@@ -355,18 +281,6 @@ export default class AccountUpdateTransaction extends Transaction {
                     ? null
                     : {
                           seconds: this._autoRenewPeriod,
-                      },
-            receiveRecordThresholdWrapper:
-                this._receiveRecordThreshold == null
-                    ? null
-                    : {
-                          value: this._receiveRecordThreshold.toTinybars(),
-                      },
-            sendRecordThresholdWrapper:
-                this._sendRecordThreshold == null
-                    ? null
-                    : {
-                          value: this._sendRecordThreshold.toTinybars(),
                       },
             receiverSigRequiredWrapper:
                 this._receiverSignatureRequired == null

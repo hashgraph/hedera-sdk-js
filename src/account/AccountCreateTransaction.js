@@ -20,8 +20,6 @@ export default class AccountCreateTransaction extends Transaction {
      * @param {object} props
      * @param {Key} [props.key]
      * @param {number | string | Long | BigNumber | Hbar} [props.initialBalance]
-     * @param {number | string | Long | BigNumber | Hbar} [props.sendRecordThreshold]
-     * @param {number | string | Long | BigNumber | Hbar} [props.receiveRecordThreshold]
      * @param {boolean} [props.receiverSignatureRequired]
      * @param {AccountId} [props.proxyAccountId]
      * @param {number | Long} [props.autoRenewPeriod]
@@ -75,14 +73,6 @@ export default class AccountCreateTransaction extends Transaction {
             this.setKey(props.key);
         }
 
-        if (props.sendRecordThreshold != null) {
-            this.setSendRecordThreshold(props.sendRecordThreshold);
-        }
-
-        if (props.receiveRecordThreshold != null) {
-            this.setReceiveRecordThreshold(props.receiveRecordThreshold);
-        }
-
         if (props.receiverSignatureRequired != null) {
             this.setReceiverSignatureRequired(props.receiverSignatureRequired);
         }
@@ -113,14 +103,6 @@ export default class AccountCreateTransaction extends Transaction {
             initialBalance:
                 create.initialBalance != null
                     ? create.initialBalance
-                    : undefined,
-            sendRecordThreshold:
-                create.sendRecordThreshold != null
-                    ? create.sendRecordThreshold
-                    : undefined,
-            receiveRecordThreshold:
-                create.receiveRecordThreshold != null
-                    ? create.receiveRecordThreshold
                     : undefined,
             receiverSignatureRequired:
                 create.receiverSigRequired != null
@@ -185,54 +167,6 @@ export default class AccountCreateTransaction extends Transaction {
             initialBalance instanceof Hbar
                 ? initialBalance
                 : new Hbar(initialBalance);
-
-        return this;
-    }
-
-    /**
-     * @returns {Hbar}
-     */
-    getSendRecordThreshold() {
-        return this._sendRecordThreshold;
-    }
-
-    /**
-     * Set the threshold amount for which a transaction record is created for any transfer of hbars
-     * from this account.
-     *
-     * @param {number | string | Long | BigNumber | Hbar} sendRecordThreshold
-     * @returns {this}
-     */
-    setSendRecordThreshold(sendRecordThreshold) {
-        this._requireNotFrozen();
-        this._sendRecordThreshold =
-            sendRecordThreshold instanceof Hbar
-                ? sendRecordThreshold
-                : new Hbar(sendRecordThreshold);
-
-        return this;
-    }
-
-    /**
-     * @returns {Hbar}
-     */
-    getReceiveRecordThreshold() {
-        return this._receiveRecordThreshold;
-    }
-
-    /**
-     * Set the threshold amount for which a transaction record is created for any transfer of hbars
-     * to this account.
-     *
-     * @param {number | string | Long | BigNumber | Hbar} receiveRecordThreshold
-     * @returns {this}
-     */
-    setReceiveRecordThreshold(receiveRecordThreshold) {
-        this._requireNotFrozen();
-        this._receiveRecordThreshold =
-            receiveRecordThreshold instanceof Hbar
-                ? receiveRecordThreshold
-                : new Hbar(receiveRecordThreshold);
 
         return this;
     }
