@@ -97,6 +97,8 @@ export class AccountUpdateTransaction extends SingleTransactionBuilder {
     }
 
     /**
+     * @deprecated
+     *
      * The new threshold amount (in tinybars) for which an account record is created for any receive/deposit transaction.
      */
     public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
@@ -108,6 +110,8 @@ export class AccountUpdateTransaction extends SingleTransactionBuilder {
     }
 
     /**
+     * @deprecated
+     *
      * The new expiration time to extend to (ignored if equal to or before the current one).
      */
     public setSendRecordThreshold(threshold: Tinybar | Hbar): this {

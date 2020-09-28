@@ -90,6 +90,8 @@ export class AccountCreateTransaction extends SingleTransactionBuilder {
     }
 
     /**
+     * @deprecated
+     *
      * The threshold amount (in tinybars) for which an account record is created for any receive/deposit transaction.
      */
     public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
@@ -101,6 +103,8 @@ export class AccountCreateTransaction extends SingleTransactionBuilder {
     }
 
     /**
+     * @deprecated
+     *
      * The threshold amount (in tinybars) for which an account record is created for any send/withdraw transaction.
      */
     public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
