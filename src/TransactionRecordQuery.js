@@ -4,6 +4,7 @@ import TransactionRecord from "./TransactionRecord";
 import TransactionId from "./TransactionId";
 import proto from "@hashgraph/proto";
 import Channel from "./channel/Channel";
+import { TRANSACTION_RECORD_QUERY } from "./TransactionId";
 
 /**
  * @augments {Query<TransactionRecord>}
@@ -24,6 +25,14 @@ export default class TransactionRecordQuery extends Query {
         if (props.transactionId != null) {
             this.setTransactionId(props.transactionId);
         }
+    }
+
+    /**
+     * @internal
+     * @returns {TransactionRecordQuery}
+     */
+    static _new() {
+        return new TransactionRecordQuery();
     }
 
     /**
@@ -61,7 +70,6 @@ export default class TransactionRecordQuery extends Query {
      */
     _shouldRetry(responseStatus, response) {
         switch (responseStatus.code) {
-            case Status.Ok.code:
             case Status.Busy.code:
             case Status.Unknown.code:
             case Status.ReceiptNotFound.code:
@@ -147,3 +155,5 @@ QUERY_REGISTRY.set(
     // eslint-disable-next-line @typescript-eslint/unbound-method
     TransactionRecordQuery._fromProtobuf
 );
+
+TRANSACTION_RECORD_QUERY.push(() => new TransactionRecordQuery());

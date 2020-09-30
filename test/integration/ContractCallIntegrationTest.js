@@ -68,20 +68,18 @@ describe("ContractCallIntegration", function () {
 
         expect(result.getString(0)).to.be.equal("Hello from Hedera.");
 
-        const params = new ContractFunctionParameters()
-            .addString("new message");
-
-        await (await new ContractExecuteTransaction()
-            .setContractId(contract)
-            .setNodeId(response.nodeId)
-            .setGas(10000)
-            .setFunction(
-                "setMessage",
-                (new ContractFunctionParameters()).addString("new message")
-            )
-            .setMaxTransactionFee(new Hbar(5))
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new ContractExecuteTransaction()
+                .setContractId(contract)
+                .setNodeId(response.nodeId)
+                .setGas(10000)
+                .setFunction(
+                    "setMessage",
+                    new ContractFunctionParameters().addString("new message")
+                )
+                .setMaxTransactionFee(new Hbar(5))
+                .execute(client)
+        ).getReceipt(client);
 
         result = await new ContractCallQuery()
             .setContractId(contract)

@@ -7,6 +7,16 @@ import proto from "@hashgraph/proto";
 // import TransactionRecordQuery from "./TransactionRecordQuery";
 
 /**
+ * @type {(() => import("./TransactionRecordQuery").default)[]}
+ */
+export const TRANSACTION_RECORD_QUERY = [];
+
+/**
+ * @type {(() => import("./TransactionReceiptQuery").default)[]}
+ */
+export const TRANSACTION_RECEIPT_QUERY = [];
+
+/**
  * The client-generated ID for a transaction.
  *
  * This is used for retrieving receipts and records for a transaction, for appending to a file
@@ -78,27 +88,35 @@ export default class TransactionId {
         }`;
     }
 
-    // /**
-    //  * @template ChannelT
-    //  * @param {import("./client/Client").default<ChannelT>} client
-    //  * @returns {Promise<TransactionReceipt>}
-    //  */
-    // getReceipt(client) {
-    //     return new TransactionReceiptQuery()
-    //         .setTransactionId(this)
-    //         .execute(client);
-    // }
+    /**
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
+     * @returns {Promise<import("./TransactionReceipt").default>}
+     */
+    getReceipt(client) {
+        if (TRANSACTION_RECEIPT_QUERY.length == 1) {
+            return TRANSACTION_RECEIPT_QUERY[0]()
+                .setTransactionId(this)
+                .execute(client);
+        } else {
+            throw new Error("TransactionReceiptQuery has not been loaded yet");
+        }
+    }
 
-    // /**
-    //  * @template ChannelT
-    //  * @param {import("./client/Client").default<ChannelT>} client
-    //  * @returns {Promise<TransactionRecord>}
-    //  */
-    // getRecord(client) {
-    //     return new TransactionRecordQuery()
-    //         .setTransactionId(this)
-    //         .execute(client);
-    // }
+    /**
+     * @template ChannelT
+     * @param {import("./client/Client").default<ChannelT>} client
+     * @returns {Promise<import("./TransactionRecord").default>}
+     */
+    getRecord(client) {
+        if (TRANSACTION_RECORD_QUERY.length == 1) {
+            return TRANSACTION_RECORD_QUERY[0]()
+                .setTransactionId(this)
+                .execute(client);
+        } else {
+            throw new Error("TransactionRecordQuery has not been loaded yet");
+        }
+    }
 
     /**
      * @internal

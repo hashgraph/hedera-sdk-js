@@ -5,6 +5,7 @@ import TransactionReceipt from "./TransactionReceipt";
 import TransactionId from "./TransactionId";
 import proto from "@hashgraph/proto";
 import Channel from "./channel/Channel";
+import { TRANSACTION_RECEIPT_QUERY } from "./TransactionId";
 
 /**
  * @augments {Query<TransactionReceipt>}
@@ -26,6 +27,14 @@ export default class TransactionReceiptQuery extends Query {
         if (props.transactionId != null) {
             this.setTransactionId(props.transactionId);
         }
+    }
+
+    /**
+     * @internal
+     * @returns {TransactionReceiptQuery}
+     */
+    static _new() {
+        return new TransactionReceiptQuery();
     }
 
     /**
@@ -161,3 +170,5 @@ QUERY_REGISTRY.set(
     // eslint-disable-next-line @typescript-eslint/unbound-method
     TransactionReceiptQuery._fromProtobuf
 );
+
+TRANSACTION_RECEIPT_QUERY.push(() => new TransactionReceiptQuery());
