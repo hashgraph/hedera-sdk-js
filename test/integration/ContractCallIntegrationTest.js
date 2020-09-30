@@ -3,7 +3,10 @@ import newClient from "./IntegrationClient";
 import ContractCreateTransaction from "../src/contract/ContractCreateTransaction";
 import ContractFunctionParameters from "../src/contract/ContractFunctionParameters";
 import ContractCallQuery from "../src/contract/ContractCallQuery";
+import ContractExecuteTransaction from "../src/contract/ContractExecuteTransaction";
+import ContractDeleteTransaction from "../src/contract/ContractDeleteTransaction";
 import FileCreateTransaction from "../src/file/FileCreateTransaction";
+import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
 
 describe("ContractCallIntegration", function () {
     it("should be executable", async function () {
@@ -65,47 +68,43 @@ describe("ContractCallIntegration", function () {
 
         expect(result.getString(0)).to.be.equal("Hello from Hedera.");
 
-        // const params = new ContractFunctionParameters()
-        //     .addString("new message");
+        const params = new ContractFunctionParameters()
+            .addString("new message");
 
-        // await (await new ContractExecuteTransaction()
-        //     .setContractId(contract)
-        //     .setNodeId(response.nodeId)
-        //     .setGas(10000)
-        //     .setFunction(
-        //         "setMessage",
-        //         (new ContractFunctionParameters()).addString("new message")
-        //     )
-        //     .setMaxTransactionFee(new Hbar(5))
-        //     .execute(client))
-        //     .getReceipt(client);
+        await (await new ContractExecuteTransaction()
+            .setContractId(contract)
+            .setNodeId(response.nodeId)
+            .setGas(10000)
+            .setFunction(
+                "setMessage",
+                (new ContractFunctionParameters()).addString("new message")
+            )
+            .setMaxTransactionFee(new Hbar(5))
+            .execute(client))
+            .getReceipt(client);
 
-        // result = await new ContractCallQuery()
-        //     .setContractId(contract)
-        //     .setNodeId(response.nodeId)
-        //     .setQueryPayment(new Hbar(5))
-        //     .setGas(2000)
-        //     .setFunction("getMessage")
-        //     .execute(client);
+        result = await new ContractCallQuery()
+            .setContractId(contract)
+            .setNodeId(response.nodeId)
+            .setQueryPayment(new Hbar(5))
+            .setGas(2000)
+            .setFunction("getMessage")
+            .execute(client);
 
-        // expect(result.getString(0)).to.be.equal("new message");
+        expect(result.getString(0)).to.be.equal("new message");
 
-        // await new ContractDeleteTransaction()
-        //     .setContractId(contract)
-        //     .setNodeId(response.nodeId)
-        //     .execute(client);
+        await (
+            await new ContractDeleteTransaction()
+                .setContractId(contract)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
 
-        // await new TransactionReceiptQuery()
-        //     .setNodeId(response.nodeId)
-        //     .execute(client);
-
-        // await new FileDeleteTransaction()
-        //     .setFileId(file)
-        //     .setNodeId(response.node)
-        //     .execute(client);
-
-        // await new TransactionReceiptQuery()
-        //     .setNodeId(response.nodeId)
-        //     .execute(client);
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .setNodeId(response.nodeId)
+                .execute(client)
+        ).getReceipt(client);
     });
 });
