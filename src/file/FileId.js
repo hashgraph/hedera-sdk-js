@@ -48,27 +48,6 @@ export default class FileId extends EntityId {
     }
 
     /**
-     * @param {string} address
-     * @returns {FileId}
-     */
-    static fromSolidityAddress(address) {
-        const addr = address.startsWith("0x")
-            ? hex.decode(address.slice(2))
-            : hex.decode(address);
-
-        if (addr.length !== 20) {
-            throw new Error(`Invalid hex encoded solidity address length:
-                    expected length 40, got length ${address.length}`);
-        }
-
-        const shard = Long.fromBytesBE(Array.from(addr.slice(0, 4)));
-        const realm = Long.fromBytesBE(Array.from(addr.slice(4, 12)));
-        const file = Long.fromBytesBE(Array.from(addr.slice(12, 20)));
-
-        return new FileId(shard, realm, file);
-    }
-
-    /**
      * @override
      * @internal
      * @returns {proto.IFileID}
