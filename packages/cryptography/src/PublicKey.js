@@ -77,7 +77,6 @@ export default class PublicKey extends Key {
     }
 
     /**
-     * @override
      * @returns {Uint8Array}
      */
     toBytes() {

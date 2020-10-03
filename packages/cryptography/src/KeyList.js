@@ -1,14 +1,16 @@
-/** @typedef {import("./Key").default} Key */
+import Key from "./Key";
 
 /**
  * A list of Keys (`Key`) with an optional threshold.
  */
-export default class KeyList {
+export default class KeyList extends Key {
     /**
      * @param {?Key[]} [keys]
      * @param {?number} [threshold]
      */
     constructor(keys, threshold) {
+        super();
+
         /**
          * @private
          * @type {Key[]}
