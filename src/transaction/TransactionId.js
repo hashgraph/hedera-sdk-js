@@ -106,4 +106,19 @@ export default class TransactionId {
             transactionValidStart: this.validStart._toProtobuf(),
         };
     }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {TransactionId}
+     */
+    static fromBytes(bytes) {
+        return TransactionId._fromProtobuf(proto.TransactionID.decode(bytes));
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.TransactionID.encode(this._toProtobuf()).finish();
+    }
 }

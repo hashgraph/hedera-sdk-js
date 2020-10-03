@@ -14,12 +14,12 @@ import * as hex from "./encoding/hex.js";
  */
 export default class EntityId {
     /**
-     * @param {number | Long | IEntityId} properties
+     * @param {number | Long | IEntityId} props
      * @param {(number | null | Long)=} realm
      * @param {(number | null | Long)=} num
      */
-    constructor(properties, realm, num) {
-        if (typeof properties === "number" || properties instanceof Long) {
+    constructor(props, realm, num) {
+        if (typeof props === "number" || props instanceof Long) {
             if (realm == null) {
                 /**
                  * @readonly
@@ -37,22 +37,16 @@ export default class EntityId {
                  * @readonly
                  * @type {Long}
                  */
-                this.num = Long.fromValue(properties);
+                this.num = Long.fromValue(props);
             } else {
-                this.shard = Long.fromValue(properties);
+                this.shard = Long.fromValue(props);
                 this.realm = Long.fromValue(realm);
                 this.num = num != null ? Long.fromValue(num) : Long.ZERO;
             }
         } else {
-            this.shard = Long.fromValue(
-                properties.shard != null ? properties.shard : 0
-            );
-            this.realm = Long.fromValue(
-                properties.realm != null ? properties.realm : 0
-            );
-            this.num = Long.fromValue(
-                properties.num != null ? properties.num : 0
-            );
+            this.shard = Long.fromValue(props.shard != null ? props.shard : 0);
+            this.realm = Long.fromValue(props.realm != null ? props.realm : 0);
+            this.num = Long.fromValue(props.num != null ? props.num : 0);
         }
     }
 

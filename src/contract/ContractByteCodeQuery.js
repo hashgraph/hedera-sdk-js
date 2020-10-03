@@ -20,10 +20,10 @@ import ContractId from "./ContractId.js";
  */
 export default class ContractByteCodeQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {ContractId | string} [properties.contractId]
+     * @param {object} props
+     * @param {ContractId | string} [props.contractId]
      */
-    constructor(properties = {}) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -31,8 +31,8 @@ export default class ContractByteCodeQuery extends Query {
          * @private
          */
         this._contractId = null;
-        if (properties.contractId != null) {
-            this.setContractId(properties.contractId);
+        if (props.contractId != null) {
+            this.setContractId(props.contractId);
         }
     }
 

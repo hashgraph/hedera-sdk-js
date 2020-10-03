@@ -24,24 +24,24 @@ import Long from "long";
 export default class ContractInfo {
     /**
      * @private
-     * @param {object} properties
-     * @param {ContractId} properties.contractId
-     * @param {AccountId} properties.accountId
-     * @param {string} properties.contractAccountId
-     * @param {?Key} properties.adminKey
-     * @param {Timestamp} properties.expirationTime
-     * @param {Long} properties.autoRenewPeriod
-     * @param {Long} properties.storage
-     * @param {string} properties.contractMemo
-     * @param {Hbar} properties.balance
+     * @param {object} props
+     * @param {ContractId} props.contractId
+     * @param {AccountId} props.accountId
+     * @param {string} props.contractAccountId
+     * @param {?Key} props.adminKey
+     * @param {Timestamp} props.expirationTime
+     * @param {Long} props.autoRenewPeriod
+     * @param {Long} props.storage
+     * @param {string} props.contractMemo
+     * @param {Hbar} props.balance
      */
-    constructor(properties) {
+    constructor(props) {
         /**
          * ID of the contract instance, in the format used in transactions.
          *
          * @readonly
          */
-        this.contractId = properties.contractId;
+        this.contractId = props.contractId;
 
         /**
          * ID of the cryptocurrency account owned by the contract instance,
@@ -49,7 +49,7 @@ export default class ContractInfo {
          *
          * @readonly
          */
-        this.accountId = properties.accountId;
+        this.accountId = props.accountId;
 
         /**
          * ID of both the contract instance and the cryptocurrency account owned by the contract
@@ -57,7 +57,7 @@ export default class ContractInfo {
          *
          * @readonly
          */
-        this.contractAccountId = properties.contractAccountId;
+        this.contractAccountId = props.contractAccountId;
 
         /**
          * The state of the instance and its fields can be modified arbitrarily if this key signs a
@@ -69,15 +69,14 @@ export default class ContractInfo {
          *
          * @readonly
          */
-        this.adminKey =
-            properties.adminKey != null ? properties.adminKey : null;
+        this.adminKey = props.adminKey != null ? props.adminKey : null;
 
         /**
          * The current time at which this contract instance (and its account) is set to expire.
          *
          * @readonly
          */
-        this.expirationTime = properties.expirationTime;
+        this.expirationTime = props.expirationTime;
 
         /**
          * The expiration time will extend every this many seconds. If there are insufficient funds,
@@ -86,7 +85,7 @@ export default class ContractInfo {
          *
          * @readonly
          */
-        this.autoRenewPeriod = properties.autoRenewPeriod;
+        this.autoRenewPeriod = props.autoRenewPeriod;
 
         /**
          * Number of bytes of storage being used by this instance (which affects the cost to
@@ -94,21 +93,21 @@ export default class ContractInfo {
          *
          * @readonly
          */
-        this.storage = properties.storage;
+        this.storage = props.storage;
 
         /**
          * The memo associated with the contract (max 100 bytes).
          *
          * @readonly
          */
-        this.contractMemo = properties.contractMemo;
+        this.contractMemo = props.contractMemo;
 
         /**
          * The current balance of the contract.
          *
          * @readonly
          */
-        this.balance = properties.balance;
+        this.balance = props.balance;
 
         Object.freeze(this);
     }
@@ -171,5 +170,24 @@ export default class ContractInfo {
             memo: this.contractMemo,
             balance: this.balance.toTinybars(),
         };
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {ContractInfo}
+     */
+    static fromBytes(bytes) {
+        return ContractInfo._fromProtobuf(
+            proto.ContractGetInfoResponse.ContractInfo.decode(bytes)
+        );
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.ContractGetInfoResponse.ContractInfo.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

@@ -33,8 +33,7 @@ export default class ContractCallQuery extends Query {
      * @param {object} [props]
      * @param {ContractId | string} [props.contractId]
      * @param {number | Long} [props.gas]
-     * @param {Uint8Array} [props.functionParameters]
-     * @param {FunctionParameters} [props.function]
+     * @param {FunctionParameters | Uint8Array} [props.functionParameters]
      * @param {number | Long} [props.maxResultSize]
      */
     constructor(props = {}) {
@@ -45,7 +44,6 @@ export default class ContractCallQuery extends Query {
          * @type {?ContractId}
          */
         this._contractId = null;
-
         if (props.contractId != null) {
             this.setContractId(props.contractId);
         }
@@ -55,7 +53,6 @@ export default class ContractCallQuery extends Query {
          * @type {?Long}
          */
         this._gas = null;
-
         if (props.gas != null) {
             this.setGas(props.gas);
         }
@@ -65,11 +62,15 @@ export default class ContractCallQuery extends Query {
          * @type {?Uint8Array}
          */
         this._functionParameters = null;
-
         if (props.functionParameters != null) {
-            this.setFunctionParameters(props.functionParameters);
-        } else if (props.function != null) {
-            this.setFunction(props.function.name, props.function.parameters);
+            if (props.functionParameters instanceof Uint8Array) {
+                this.setFunctionParameters(props.functionParameters);
+            } else {
+                this.setFunction(
+                    props.functionParameters.name,
+                    props.functionParameters.parameters
+                );
+            }
         }
 
         /**

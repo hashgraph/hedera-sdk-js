@@ -99,6 +99,52 @@ export default class TransactionRecord {
 
     /**
      * @internal
+     * @returns {proto.ITransactionRecord}
+     */
+    _toProtobuf() {
+        return {
+            receipt: this.receipt._toProtobuf(),
+
+            transactionHash:
+                this.transactionHash != null ? this.transactionHash : null,
+            consensusTimestamp:
+                this.consensusTimestampstamp != null
+                    ? this.consensusTimestampstamp
+                    : null,
+            transactionID:
+                this.transactionId != null
+                    ? this.transactionId._toProtobuf()
+                    : null,
+            memo: this.transactionMemo != null ? this.transactionMemo : null,
+
+            transactionFee:
+                this.transactionFee != null
+                    ? this.transactionFee.toTinybars()
+                    : null,
+
+            contractCallResult:
+                this.contractFunctionResult != null
+                    ? this.contractFunctionResult
+                    : null,
+
+            contractCreateResult:
+                this.contractFunctionResult != null
+                    ? this.contractFunctionResult
+                    : null,
+
+            transferList:
+                this.transfers != null
+                    ? {
+                          accountAmounts: this.transfers.map((transfer) =>
+                              transfer._toProtobuf()
+                          ),
+                      }
+                    : null,
+        };
+    }
+
+    /**
+     * @internal
      * @param {proto.ITransactionRecord} record
      * @returns {TransactionRecord}
      */
@@ -141,5 +187,22 @@ export default class TransactionRecord {
             ).map((aa) => Transfer._fromProtobuf(aa)),
             contractFunctionResult,
         });
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {TransactionRecord}
+     */
+    static fromBytes(bytes) {
+        return TransactionRecord._fromProtobuf(
+            proto.TransactionRecord.decode(bytes)
+        );
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.TransactionRecord.encode(this._toProtobuf()).finish();
     }
 }

@@ -239,4 +239,23 @@ export default class AccountInfo {
             liveHashes: this.liveHashes.map((hash) => hash._toProtobuf()),
         };
     }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {AccountInfo}
+     */
+    static fromBytes(bytes) {
+        return AccountInfo._fromProtobuf(
+            proto.CryptoGetInfoResponse.AccountInfo.decode(bytes)
+        );
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.CryptoGetInfoResponse.AccountInfo.encode(
+            this._toProtobuf()
+        ).finish();
+    }
 }

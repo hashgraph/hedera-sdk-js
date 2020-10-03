@@ -187,4 +187,21 @@ export default class TransactionReceipt {
                     : null,
         });
     }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {TransactionReceipt}
+     */
+    static fromBytes(bytes) {
+        return TransactionReceipt._fromProtobuf(
+            proto.TransactionReceipt.decode(bytes)
+        );
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.TransactionReceipt.encode(this._toProtobuf()).finish();
+    }
 }

@@ -104,4 +104,23 @@ export default class FileInfo {
             keys: keyListToProtobuf(this.keys),
         };
     }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {FileInfo}
+     */
+    static fromBytes(bytes) {
+        return FileInfo._fromProtobuf(
+            proto.FileGetInfoResponse.FileInfo.decode(bytes)
+        );
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.FileGetInfoResponse.FileInfo.encode(
+            this._toProtobuf()
+        ).finish();
+    }
 }

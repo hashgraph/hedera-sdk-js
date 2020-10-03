@@ -22,10 +22,10 @@ import AccountInfo from "./AccountInfo.js";
  */
 export default class AccountInfoQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {AccountId | string} [properties.accountId]
+     * @param {object} props
+     * @param {AccountId | string} [props.accountId]
      */
-    constructor(properties = {}) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -33,8 +33,8 @@ export default class AccountInfoQuery extends Query {
          * @type {?AccountId}
          */
         this._accountId = null;
-        if (properties.accountId != null) {
-            this.setAccountId(properties.accountId);
+        if (props.accountId != null) {
+            this.setAccountId(props.accountId);
         }
     }
 

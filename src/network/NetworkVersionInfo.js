@@ -63,4 +63,23 @@ export default class NetworkVersionInfo {
             hederaServicesVersion: this.servicesVesion._toProtobuf(),
         };
     }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {NetworkVersionInfo}
+     */
+    static fromBytes(bytes) {
+        return NetworkVersionInfo._fromProtobuf(
+            proto.NetworkGetVersionInfoResponse.decode(bytes)
+        );
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.NetworkGetVersionInfoResponse.encode(
+            this.toProtobuf()
+        ).finish();
+    }
 }

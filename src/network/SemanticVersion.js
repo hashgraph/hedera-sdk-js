@@ -1,25 +1,20 @@
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").ISemanticVersion} proto.ISemanticVersion
- */
+import proto from "@hashgraph/proto";
 
 export default class SemanticVersion {
     /**
      * @private
-     * @param {object} proto
-     * @param {number} proto.major
-     * @param {number} proto.minor
-     * @param {number} proto.patch
+     * @param {object} props
+     * @param {number} props.major
+     * @param {number} props.minor
+     * @param {number} props.patch
      */
-    constructor(proto) {
+    constructor(props) {
         /** @readonly */
-        this.major = proto.major;
-
+        this.major = props.major;
         /** @readonly */
-        this.minor = proto.minor;
-
+        this.minor = props.minor;
         /** @readonly */
-        this.patch = proto.patch;
+        this.patch = props.patch;
 
         Object.freeze(this);
     }
@@ -47,5 +42,22 @@ export default class SemanticVersion {
             minor: this.minor,
             patch: this.patch,
         };
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {SemanticVersion}
+     */
+    static fromBytes(bytes) {
+        return SemanticVersion._fromProtobuf(
+            proto.SemanticVersion.decode(bytes)
+        );
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.SemanticVersion.encode(this._toProtobuf()).finish();
     }
 }

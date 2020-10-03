@@ -10,12 +10,12 @@ import * as hex from "../encoding/hex.js";
  */
 export default class ContractId extends EntityId {
     /**
-     * @param {number | Long | import("../EntityId.js").IEntityId} properties
+     * @param {number | Long | import("../EntityId").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
      */
-    constructor(properties, realm, num) {
-        super(properties, realm, num);
+    constructor(props, realm, num) {
+        super(props, realm, num);
     }
 
     /**

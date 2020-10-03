@@ -22,10 +22,10 @@ import TransactionRecord from "../transaction/TransactionRecord.js";
  */
 export default class ContractRecordsQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {ContractId | string} [properties.contractId]
+     * @param {object} props
+     * @param {ContractId | string} [props.contractId]
      */
-    constructor(properties = {}) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -34,8 +34,8 @@ export default class ContractRecordsQuery extends Query {
          */
         this._contractId = null;
 
-        if (properties.contractId != null) {
-            this.setContractId(properties.contractId);
+        if (props.contractId != null) {
+            this.setContractId(props.contractId);
         }
     }
 
