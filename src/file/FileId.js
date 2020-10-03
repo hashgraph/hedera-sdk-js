@@ -1,7 +1,6 @@
 import EntityId, { fromString } from "../EntityId";
 import proto from "@hashgraph/proto";
 import Long from "long";
-import * as hex from "../encoding/hex";
 
 /**
  * The ID for a crypto-currency file on Hedera.

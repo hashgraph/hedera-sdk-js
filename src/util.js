@@ -46,11 +46,12 @@ export function _fromProtoKey(key) {
         return PublicKey.fromBytes(key.ed25519);
     }
 
-    if (key.thresholdKey) {
-        const tk = key.thresholdKey;
-        const kl = KeyList.withThreshold(tk.threshold);
+    if (key.thresholdKey != null && key.thresholdKey.threshold != null) {
+        const kl = _fromProtoKeyList(
+            /** @type {proto.IKeyList} */ (key.thresholdKey.keys)
+        );
 
-        kl.push(..._fromProtoKeyList(/** @type {proto.IKeyList} */ (tk.keys)));
+        kl.threshold = key.thresholdKey.threshold;
 
         return kl;
     }
@@ -71,11 +72,7 @@ export function _fromProtoKeyList(keys) {
         return new KeyList();
     }
 
-    // FIXME: add types
-    // @ts-ignore
-    return KeyList.of(
-        ...(keys.keys != null ? keys.keys : []).map((key) => _fromProtoKey(key))
-    );
+    return KeyList.from(keys.keys, _fromProtoKey);
 }
 
 /**
