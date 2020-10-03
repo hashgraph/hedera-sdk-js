@@ -1,4 +1,4 @@
-/** @typedef {import("./Key")} Key */
+/** @typedef {import("./Key").default} Key */
 
 /**
  * A list of Keys (`Key`) with an optional threshold.
