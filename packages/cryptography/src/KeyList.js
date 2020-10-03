@@ -1,13 +1,14 @@
-import Key from "./Key";
+/** @typedef {import("./Key")} Key */
 
+/**
+ * A list of Keys (`Key`) with an optional threshold.
+ */
 export default class KeyList {
     /**
-     * @internal
-     * @hideconstructor
+     * @param {?Key[]} [keys]
      * @param {?number} [threshold]
-     * @param {Key[]} [keys]
      */
-    constructor(threshold, keys) {
+    constructor(keys, threshold) {
         /**
          * @private
          * @type {Key[]}
@@ -26,7 +27,7 @@ export default class KeyList {
      * @returns {KeyList}
      */
     static withThreshold(threshold) {
-        return new KeyList(threshold);
+        return new KeyList(null, threshold);
     }
 
     /**
@@ -34,7 +35,7 @@ export default class KeyList {
      * @returns {KeyList}
      */
     static of(...keys) {
-        return new KeyList(null, keys);
+        return new KeyList(keys, null);
     }
 
     /**
@@ -46,10 +47,10 @@ export default class KeyList {
      */
     static from(arrayLike, mapFn, thisArg) {
         if (mapFn == null) {
-            return new KeyList(null, Array.from(arrayLike));
+            return new KeyList(Array.from(arrayLike));
         }
 
-        return new KeyList(null, Array.from(arrayLike, mapFn, thisArg));
+        return new KeyList(Array.from(arrayLike, mapFn, thisArg));
     }
 
     /**
@@ -68,8 +69,8 @@ export default class KeyList {
      */
     splice(start, deleteCount, ...items) {
         return new KeyList(
-            this.threshold,
-            this._keys.splice(start, deleteCount, ...items)
+            this._keys.splice(start, deleteCount, ...items),
+            this.threshold
         );
     }
 
@@ -79,7 +80,7 @@ export default class KeyList {
      * @returns {KeyList}
      */
     slice(start, end) {
-        return new KeyList(this.threshold, this._keys.slice(start, end));
+        return new KeyList(this._keys.slice(start, end), this.threshold);
     }
 
     /**

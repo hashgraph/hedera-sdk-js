@@ -1,5 +1,5 @@
-import Mnemonic from "./Mnemonic.js";
-import BadMnemonicReason from "./BadMnemonicReason.js";
+/** @typedef {import("./Mnemonic").default} Mnemonic */
+import BadMnemonicReason from "./BadMnemonicReason";
 
 export default class BadMnemonicError extends Error {
     /**
@@ -12,6 +12,10 @@ export default class BadMnemonicError extends Error {
         let reasonMessage;
 
         switch (reason) {
+            case BadMnemonicReason.BadLength:
+                reasonMessage = "mnemonic is of an unexpected number of words";
+                break;
+
             case BadMnemonicReason.ChecksumMismatch:
                 reasonMessage =
                     "checksum byte in mnemonic did not match the rest of the mnemonic";

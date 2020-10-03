@@ -36,7 +36,7 @@ export default class Mnemonic {
      *
      * @returns {Promise<Mnemonic>}
      */
-    static generate24() {
+    static generate() {
         return Mnemonic._generate(24);
     }
 
@@ -51,9 +51,6 @@ export default class Mnemonic {
     }
 
     /**
-     * Returns a new random mnemonic, of the given word length, from
-     * the BIP-39 standard English word list.
-     *
      * @param {number} length
      * @returns {Promise<Mnemonic>}
      */
@@ -106,13 +103,19 @@ export default class Mnemonic {
 
     /**
      * Recover a private key from this mnemonic phrase, with an
-     * optional password.
+     * optional passphrase.
      *
-     * @param {string} passphrase
+     * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
      */
     async toPrivateKey(passphrase = "") {
         if (this._isLegacy) {
+            if (passphrase.length > 0) {
+                throw new Error(
+                    "legacy 22-word mnemonics do not support passphrases"
+                );
+            }
+
             return this._toLegacyPrivateKey();
         }
 
@@ -225,7 +228,9 @@ export default class Mnemonic {
             const entropyBits = bits.slice(0, dividerIndex);
             const checksumBits = bits.slice(dividerIndex);
             const entropyBitsRegex = entropyBits.match(/(.{1,8})/g);
-            const entropyBytes = /** @type {RegExpMatchArray} */ (entropyBitsRegex).map(binaryToByte);
+            const entropyBytes = /** @type {RegExpMatchArray} */ (entropyBitsRegex).map(
+                binaryToByte
+            );
 
             const newChecksum = await deriveChecksumBits(
                 Uint8Array.from(entropyBytes)

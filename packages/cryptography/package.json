@@ -41,6 +41,7 @@
         "test:browser:firefox": "vite serve --port 9002 test/ & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/; kill %1"
     },
     "dependencies": {
+        "arraybuffer-equal": "^1.0.4",
         "bignumber.js": "^9.0.0",
         "tweetnacl": "^1.0.3"
     },

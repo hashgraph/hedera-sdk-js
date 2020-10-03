@@ -1,12 +1,14 @@
 import nacl from "tweetnacl";
 import PublicKey from "./PublicKey";
 import Mnemonic from "./Mnemonic";
-import { arraysEqual } from "./util";
-import { createKeystore, loadKeystore } from "./Keystore";
+// @ts-ignore
+import isArrayEqual from "arraybuffer-equal";
+import { createKeystore, loadKeystore } from "./primitive/keystore";
 import BadKeyError from "./BadKeyError";
 import * as hex from "./encoding/hex";
 import { read as readPem } from "./encoding/pem";
 import * as slip10 from "./primitive/slip10";
+import Key from "./Key";
 
 const derPrefix = "302e020100300506032b657004220420";
 const derPrefixBytes = hex.decode(derPrefix);
@@ -14,7 +16,7 @@ const derPrefixBytes = hex.decode(derPrefix);
 /**
  * A private key on the Hedera™ network.
  */
-export default class PrivateKey {
+export default class PrivateKey extends Key {
     /**
      * @hideconstructor
      * @internal
@@ -22,7 +24,20 @@ export default class PrivateKey {
      * @param {?Uint8Array} chainCode
      */
     constructor(keyPair, chainCode) {
+        super();
+
+        /**
+         * @type {nacl.SignKeyPair}
+         * @readonly
+         * @private
+         */
         this._keyPair = keyPair;
+
+        /**
+         * @type {?Uint8Array}
+         * @readonly
+         * @private
+         */
         this._chainCode = chainCode;
     }
 
@@ -45,16 +60,16 @@ export default class PrivateKey {
     /**
      * Construct a private key from bytes.
      *
-     * @param {Uint8Array} bytes
+     * @param {Uint8Array} data
      * @returns {PrivateKey}
      */
-    static fromBytes(bytes) {
-        switch (bytes.length) {
+    static fromBytes(data) {
+        switch (data.length) {
             case 48:
                 // key with prefix
-                if (arraysEqual(bytes.subarray(0, 16), derPrefixBytes)) {
+                if (isArrayEqual(data.subarray(0, 16), derPrefixBytes)) {
                     const keyPair = nacl.sign.keyPair.fromSeed(
-                        bytes.subarray(16)
+                        data.subarray(16)
                     );
 
                     return new PrivateKey(keyPair, null);
@@ -63,13 +78,13 @@ export default class PrivateKey {
                 break;
 
             case 32:
-                const keyPair = nacl.sign.keyPair.fromSeed(bytes);
+                const keyPair = nacl.sign.keyPair.fromSeed(data);
                 return new PrivateKey(keyPair, null);
 
             case 64:
                 // priv + pub key
                 return new PrivateKey(
-                    nacl.sign.keyPair.fromSecretKey(bytes),
+                    nacl.sign.keyPair.fromSecretKey(data),
                     null
                 );
 
@@ -77,18 +92,18 @@ export default class PrivateKey {
         }
 
         throw new BadKeyError(
-            `invalid private key length: ${bytes.length} bytes`
+            `invalid private key length: ${data.length} bytes`
         );
     }
 
     /**
      * Construct a private key from a hex-encoded string.
      *
-     * @param {string} privateKey
+     * @param {string} text
      * @returns {PrivateKey}
      */
-    static fromString(privateKey) {
-        return PrivateKey.fromBytes(hex.decode(privateKey));
+    static fromString(text) {
+        return PrivateKey.fromBytes(hex.decode(text));
     }
 
     /**
@@ -110,13 +125,13 @@ export default class PrivateKey {
      *
      * This key will _not_ support child key derivation.
      *
-     * @param {Uint8Array} keystore
-     * @param {string} passphrase
+     * @param {Uint8Array} data
+     * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
      * @throws {BadKeyError} If the passphrase is incorrect or the hash fails to validate.
      */
-    static async fromKeystore(keystore, passphrase) {
-        return new PrivateKey(await loadKeystore(keystore, passphrase), null);
+    static async fromKeystore(data, passphrase = "") {
+        return new PrivateKey(await loadKeystore(data, passphrase), null);
     }
 
     /**
@@ -128,12 +143,12 @@ export default class PrivateKey {
      * section and uses `passphrase` to decrypt it; otherwise, it looks for the first `PRIVATE KEY`
      * section and decodes that as a DER-encoded  private key.
      *
-     * @param {string} pem
+     * @param {string} data
      * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
      */
-    static async fromPem(pem, passphrase) {
-        return new PrivateKey(await readPem(pem, passphrase), null);
+    static async fromPem(data, passphrase = "") {
+        return new PrivateKey(await readPem(data, passphrase), null);
     }
 
     /**
@@ -172,8 +187,8 @@ export default class PrivateKey {
      *
      * @returns {PublicKey}
      */
-    getPublicKey() {
-        return PublicKey.fromBytes(this._keyPair.publicKey);
+    get publicKey() {
+        return new PublicKey(this._keyPair.publicKey);
     }
 
     /**
@@ -206,11 +221,10 @@ export default class PrivateKey {
     }
 
     /**
-     * @param {boolean} [raw]
      * @returns {string}
      */
-    toString(raw = false) {
-        return (raw ? "" : derPrefix) + hex.encode(this.toBytes());
+    toString() {
+        return derPrefix + hex.encode(this.toBytes());
     }
 
     /**
@@ -222,10 +236,10 @@ export default class PrivateKey {
      * deriving child keys, thus `.derive()` on the restored key will
      * throw even if this instance supports derivation.
      *
-     * @param {string} passphrase
+     * @param {string} [passphrase]
      * @returns {Promise<Uint8Array>}
      */
-    toKeystore(passphrase) {
+    toKeystore(passphrase = "") {
         return createKeystore(this.toBytes(), passphrase);
     }
 }

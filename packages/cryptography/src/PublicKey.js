@@ -1,6 +1,7 @@
 import nacl from "tweetnacl";
 import Key from "./Key.js";
-import { arraysEqual } from "./util";
+// @ts-ignore
+import isArrayEqual from "arraybuffer-equal";
 import BadKeyError from "./BadKeyError.js";
 import * as hex from "./encoding/hex.js";
 
@@ -12,28 +13,33 @@ const derPrefixBytes = hex.decode(derPrefix);
  */
 export default class PublicKey extends Key {
     /**
-     * @private
+     * @internal
      * @hideconstructor
      * @param {Uint8Array} keyData
      */
     constructor(keyData) {
         super();
 
+        /**
+         * @type {Uint8Array}
+         * @private
+         * @readonly
+         */
         this._keyData = keyData;
     }
 
     /**
-     * @param {Uint8Array} bytes
+     * @param {Uint8Array} data
      * @returns {PublicKey}
      */
-    static fromBytes(bytes) {
-        switch (bytes.length) {
+    static fromBytes(data) {
+        switch (data.length) {
             case 32:
-                return new PublicKey(bytes);
+                return new PublicKey(data);
 
             case 48:
-                if (arraysEqual(bytes.subarray(0, 12), derPrefixBytes)) {
-                    return new PublicKey(bytes.subarray(12));
+                if (isArrayEqual(data.subarray(0, 12), derPrefixBytes)) {
+                    return new PublicKey(data.subarray(12));
                 }
 
                 break;
@@ -42,16 +48,21 @@ export default class PublicKey extends Key {
         }
 
         throw new BadKeyError(
-            `invalid public key length: ${bytes.length} bytes`
+            `invalid public key length: ${data.length} bytes`
         );
     }
 
     /**
-     * @param {string} publicKey
+     * Parse a public key from a string of hexadecimal digits.
+     *
+     * The public key may optionally be prefixed with
+     * the DER header.
+     *
+     * @param {string} text
      * @returns {PublicKey}
      */
-    static fromString(publicKey) {
-        return PublicKey.fromBytes(hex.decode(publicKey));
+    static fromString(text) {
+        return PublicKey.fromBytes(hex.decode(text));
     }
 
     /**
@@ -66,6 +77,7 @@ export default class PublicKey extends Key {
     }
 
     /**
+     * @override
      * @returns {Uint8Array}
      */
     toBytes() {
@@ -73,11 +85,10 @@ export default class PublicKey extends Key {
     }
 
     /**
-     * @param {boolean} [raw]
      * @returns {string}
      */
-    toString(raw = false) {
-        return (raw ? "" : derPrefix) + hex.encode(this._keyData);
+    toString() {
+        return derPrefix + hex.encode(this._keyData);
     }
 
     /**
@@ -85,6 +96,6 @@ export default class PublicKey extends Key {
      * @returns {boolean}
      */
     equals(other) {
-        return arraysEqual(this._keyData, other._keyData);
+        return isArrayEqual(this._keyData, other._keyData);
     }
 }

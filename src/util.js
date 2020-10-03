@@ -48,7 +48,7 @@ export function _fromProtoKey(key) {
 
     if (key.thresholdKey) {
         const tk = key.thresholdKey;
-        const kl = new KeyList(tk.threshold);
+        const kl = KeyList.withThreshold(tk.threshold);
 
         kl.push(..._fromProtoKeyList(/** @type {proto.IKeyList} */ (tk.keys)));
 

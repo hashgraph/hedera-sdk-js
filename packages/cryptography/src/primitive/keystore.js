@@ -1,10 +1,10 @@
 import nacl from "tweetnacl";
-import BadKeyError from "./BadKeyError.js";
-import * as crypto from "./primitive/aes.js";
-import * as hex from "./encoding/hex.js";
-import * as utf8 from "./encoding/utf8.js";
-import * as hmac from "./primitive/hmac.js";
-import * as pbkdf2 from "./primitive/pbkdf2.js";
+import BadKeyError from "../BadKeyError.js";
+import * as crypto from "./aes.js";
+import * as hex from "../encoding/hex.js";
+import * as utf8 from "../encoding/utf8.js";
+import * as hmac from "./hmac.js";
+import * as pbkdf2 from "./pbkdf2.js";
 
 const HMAC_SHA256 = "hmac-sha256";
 
