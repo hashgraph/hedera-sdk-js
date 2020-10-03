@@ -6,7 +6,7 @@ import Timestamp from "../src/Timestamp.js";
 
 describe("SystemIntegration", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(15000);
 
         const client = newClient();
         let errorThrown = false;

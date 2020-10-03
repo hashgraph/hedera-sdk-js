@@ -12,7 +12,7 @@ import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
 
 describe("ContractCallIntegration", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(15000);
 
         const client = newClient();
         const operatorKey = client.operatorPublicKey;

@@ -155,13 +155,10 @@ export default class Executable {
                 );
             }
 
-<<<<<<< Updated upstream
             if (!nodeId.isHealthy()) {
                 continue;
             }
 
-=======
->>>>>>> Stashed changes
             const channel = client._getNetworkChannel(nodeAccountId);
             const request = this._makeRequest();
 

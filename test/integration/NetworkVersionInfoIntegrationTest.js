@@ -3,7 +3,7 @@ import NetworkVersionInfoQuery from "../../src/network/NetworkVersionInfoQuery.j
 
 describe("NetworkVersionInfo", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(15000);
 
         const client = newClient();
         let errorThrown = false;

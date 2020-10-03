@@ -4,11 +4,13 @@ import dotenv from "dotenv";
 // load .env (if available)
 dotenv.config();
 
-export function newIntegrationClient() {
-    // TODO: support reading from a configuration file
-    const client = Client.forTestnet();
+export async function newIntegrationClient() {
+    let client;
 
-    if (process.env.HEDERA_NETWORK != null && process.env.HEDERA_NETWORK == "previewnet") {
+    if (
+        process.env.HEDERA_NETWORK != null &&
+        process.env.HEDERA_NETWORK == "previewnet"
+    ) {
         client = Client.forPreviewnet();
     } else {
         try {

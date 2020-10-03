@@ -9,7 +9,7 @@ import { PrivateKey } from "../src/index.js";
 
 describe("AccountRecords", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(15000);
 
         const client = newClient();
         const operatorId = client.operatorAccountId;

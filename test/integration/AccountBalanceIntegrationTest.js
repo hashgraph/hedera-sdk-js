@@ -3,8 +3,7 @@ import AccountBalanceQuery from "../src/account/AccountBalanceQuery.js";
 import { newIntegrationClient } from "./client/index.js";
 
 describe("AccountBalanceQuery", function () {
-    this.timeout(10000);
-
+    this.timeout(15000);
     let client;
 
     before(function () {

@@ -7,7 +7,7 @@ import * as utf8 from "../src/encoding/utf8.js";
 
 describe("FileContents", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(15000);
 
         const client = newClient();
         const operatorKey = client.operatorPublicKey;

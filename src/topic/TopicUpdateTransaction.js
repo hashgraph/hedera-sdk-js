@@ -200,6 +200,16 @@ export default class TopicUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {TopicUpdateTransaction}
+     */
+    clearAdminKey() {
+        this._requireNotFrozen();
+        this._adminKey = null;
+
+        return this;
+    }
+
+    /**
      * @returns {?Key}
      */
     get submitKey() {
@@ -213,6 +223,16 @@ export default class TopicUpdateTransaction extends Transaction {
     setSubmitKey(submitKey) {
         this._requireNotFrozen();
         this._submitKey = submitKey;
+
+        return this;
+    }
+
+    /**
+     * @returns {TopicUpdateTransaction}
+     */
+    clearSubmitKey() {
+        this._requireNotFrozen();
+        this._submitKey = null;
 
         return this;
     }
@@ -234,6 +254,16 @@ export default class TopicUpdateTransaction extends Transaction {
             autoRenewAccountId instanceof AccountId
                 ? autoRenewAccountId
                 : AccountId.fromString(autoRenewAccountId);
+
+        return this;
+    }
+
+    /**
+     * @returns {TopicUpdateTransaction}
+     */
+    clearAutoRenewAccountId() {
+        this._requireNotFrozen();
+        this._autoRenewAccountId = null;
 
         return this;
     }
