@@ -9,7 +9,7 @@ import { Key, PublicKey, KeyList, PrivateKey } from "@hashgraph/cryptography";
  */
 export function _toProtoKey(key) {
     if (key instanceof PrivateKey) {
-        key = key.getPublicKey();
+        key = key.publicKey;
     }
 
     if (key instanceof PublicKey) {

@@ -19,7 +19,7 @@ describe("AccountUpdate", function () {
         const key2 = PrivateKey.generate();
 
         let response = await new AccountCreateTransaction()
-            .setKey(key1.getPublicKey())
+            .setKey(key1.publicKey)
             .setMaxTransactionFee(new Hbar(2))
             .setInitialBalance(new Hbar(1))
             .execute(client);
@@ -36,7 +36,7 @@ describe("AccountUpdate", function () {
 
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
-        expect(info.key.toString()).to.be.equal(key1.getPublicKey().toString());
+        expect(info.key.toString()).to.be.equal(key1.publicKey.toString());
         expect(info.balance.toTinybars().toInt()).to.be.equal(
             new Hbar(1).toTinybars().toInt()
         );
@@ -55,7 +55,7 @@ describe("AccountUpdate", function () {
                 await new AccountUpdateTransaction()
                     .setNodeId(response.nodeId)
                     .setAccountId(account)
-                    .setKey(key2.getPublicKey())
+                    .setKey(key2.publicKey)
                     .setMaxTransactionFee(new Hbar(1))
                     .freezeWith(client)
                     .sign(key1)
@@ -71,7 +71,7 @@ describe("AccountUpdate", function () {
 
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
-        expect(info.key.toString()).to.be.equal(key2.getPublicKey().toString());
+        expect(info.key.toString()).to.be.equal(key2.publicKey.toString());
         expect(info.balance.toTinybars().toInt()).to.be.equal(
             new Hbar(1).toTinybars().toInt()
         );

@@ -16,7 +16,7 @@ describe("AccountInfo", function () {
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
-            .setKey(key.getPublicKey())
+            .setKey(key.publicKey)
             .setMaxTransactionFee(new Hbar(2))
             .setInitialBalance(new Hbar(1))
             .execute(client);
@@ -33,7 +33,7 @@ describe("AccountInfo", function () {
 
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
-        expect(info.key.toString()).to.be.equal(key.getPublicKey().toString());
+        expect(info.key.toString()).to.be.equal(key.publicKey.toString());
         expect(info.balance.toTinybars().toInt()).to.be.equal(
             new Hbar(1).toTinybars().toInt()
         );

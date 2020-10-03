@@ -154,7 +154,7 @@ export default class Client {
                 ? PrivateKey.fromString(privateKey)
                 : privateKey;
 
-        return this.setOperatorWith(accountId, key.getPublicKey(), (message) =>
+        return this.setOperatorWith(accountId, key.publicKey, (message) =>
             Promise.resolve(key.sign(message))
         );
     }

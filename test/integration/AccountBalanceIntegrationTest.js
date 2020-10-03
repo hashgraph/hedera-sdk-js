@@ -15,7 +15,7 @@ describe("AccountBalance", function () {
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
-            .setKey(key.getPublicKey())
+            .setKey(key.publicKey)
             .setMaxTransactionFee(new Hbar(2))
             .setInitialBalance(new Hbar(1))
             .execute(client);

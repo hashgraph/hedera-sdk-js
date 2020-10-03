@@ -3,7 +3,7 @@ const { assert } = require("console");
 
 async function main() {
     // generate a 24-word mnemonic
-    const mnemonic = await Mnemonic.generate24();
+    const mnemonic = await Mnemonic.generate();
 
     console.log(`mnemonic = ${mnemonic}`);
 

@@ -256,7 +256,7 @@ export default class Transaction extends HederaExecutable {
      * @returns {Promise<this>}
      */
     sign(privateKey) {
-        return this.signWith(privateKey.getPublicKey(), (message) =>
+        return this.signWith(privateKey.publicKey, (message) =>
             Promise.resolve(privateKey.sign(message))
         );
     }

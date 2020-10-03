@@ -4,7 +4,7 @@ import BadMnemonicReason from "../src/BadMnemonicReason.js";
 
 describe("Mnemonic", function () {
     it("should generate 24 words", async function () {
-        const m = await Mnemonic.generate24();
+        const m = await Mnemonic.generate();
 
         expect(m.words).to.have.length(24);
 
@@ -22,7 +22,7 @@ describe("Mnemonic", function () {
     });
 
     it("should detect an invalid checksum", async function () {
-        const m = await Mnemonic.generate24();
+        const m = await Mnemonic.generate();
 
         // swap words so the checksum will be invalid
         m.words[m.words.length - 1] = m.words[0];

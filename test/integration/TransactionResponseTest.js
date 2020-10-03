@@ -17,7 +17,7 @@ describe("TransactionResponse", function () {
         const key = PrivateKey.generate();
 
         const transaction = await new AccountCreateTransaction()
-            .setKey(key.getPublicKey())
+            .setKey(key.publicKey)
             .setNodeId(new AccountId(5))
             .setMaxTransactionFee(new Hbar(2))
             .execute(client);
