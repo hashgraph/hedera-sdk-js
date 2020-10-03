@@ -67,6 +67,7 @@ export default class PrivateKey extends Key {
         switch (data.length) {
             case 48:
                 // key with prefix
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 if (isArrayEqual(data.subarray(0, 16), derPrefixBytes)) {
                     const keyPair = nacl.sign.keyPair.fromSeed(
                         data.subarray(16)
@@ -78,8 +79,7 @@ export default class PrivateKey extends Key {
                 break;
 
             case 32:
-                const keyPair = nacl.sign.keyPair.fromSeed(data);
-                return new PrivateKey(keyPair, null);
+                return new PrivateKey(nacl.sign.keyPair.fromSeed(data), null);
 
             case 64:
                 // priv + pub key

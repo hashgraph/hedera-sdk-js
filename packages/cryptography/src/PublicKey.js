@@ -38,6 +38,7 @@ export default class PublicKey extends Key {
                 return new PublicKey(data);
 
             case 48:
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 if (isArrayEqual(data.subarray(0, 12), derPrefixBytes)) {
                     return new PublicKey(data.subarray(12));
                 }
@@ -96,6 +97,7 @@ export default class PublicKey extends Key {
      * @returns {boolean}
      */
     equals(other) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-return
         return isArrayEqual(this._keyData, other._keyData);
     }
 }
