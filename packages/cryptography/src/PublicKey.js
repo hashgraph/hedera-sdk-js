@@ -1,7 +1,6 @@
 import nacl from "tweetnacl";
 import Key from "./Key.js";
-// @ts-ignore
-import isArrayEqual from "arraybuffer-equal";
+import { arrayEqual, arrayStartsWith } from "./util/array";
 import BadKeyError from "./BadKeyError.js";
 import * as hex from "./encoding/hex.js";
 
@@ -39,7 +38,7 @@ export default class PublicKey extends Key {
 
             case 48:
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                if (isArrayEqual(data.subarray(0, 12), derPrefixBytes)) {
+                if (arrayStartsWith(data, derPrefixBytes)) {
                     return new PublicKey(data.subarray(12));
                 }
 
@@ -97,7 +96,6 @@ export default class PublicKey extends Key {
      * @returns {boolean}
      */
     equals(other) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-return
-        return isArrayEqual(this._keyData, other._keyData);
+        return arrayEqual(this._keyData, other._keyData);
     }
 }

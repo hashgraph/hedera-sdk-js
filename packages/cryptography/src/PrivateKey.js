@@ -1,8 +1,7 @@
 import nacl from "tweetnacl";
 import PublicKey from "./PublicKey";
 import Mnemonic from "./Mnemonic";
-// @ts-ignore
-import isArrayEqual from "arraybuffer-equal";
+import { arrayStartsWith } from "./util/array";
 import { createKeystore, loadKeystore } from "./primitive/keystore";
 import BadKeyError from "./BadKeyError";
 import * as hex from "./encoding/hex";
@@ -66,9 +65,7 @@ export default class PrivateKey extends Key {
     static fromBytes(data) {
         switch (data.length) {
             case 48:
-                // key with prefix
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                if (isArrayEqual(data.subarray(0, 16), derPrefixBytes)) {
+                if (arrayStartsWith(data, derPrefixBytes)) {
                     const keyPair = nacl.sign.keyPair.fromSeed(
                         data.subarray(16)
                     );
