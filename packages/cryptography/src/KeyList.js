@@ -18,7 +18,6 @@ export default class KeyList extends Key {
         this._keys = keys == null ? [] : keys;
 
         /**
-         * @private
          * @type {?number}
          */
         this.threshold = threshold == null ? null : threshold;
