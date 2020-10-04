@@ -139,4 +139,13 @@ export default class NodeClient extends Client {
             mirrorNetwork: "previewnet",
         });
     }
+
+    /**
+     * @override
+     * @param {string} address
+     * @returns {NodeChannel}
+     */
+    _createNewChannel(address) {
+        return new NodeChannel(address);
+    }
 }

@@ -2,7 +2,6 @@ import AccountId from "../account/AccountId";
 import Channel from "../channel/Channel";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Hbar from "../Hbar";
-import WebChannel from "../channel/WebChannel";
 
 /**
  * @typedef {"mainnet" | "testnet" | "previewnet"} NetworkName
@@ -313,15 +312,9 @@ export default class Client {
     /**
      * @abstract
      * @param {string} address
-     * @returns {Promise<Channel>}
+     * @returns {Channel}
      */
-    async _createNewChannel(address) {
-        if (typeof Buffer === "undefined") {
-            return new WebChannel(address);
-        } else {
-            return new (await import("../channel/NodeChannel")).default(
-                address
-            );
-        }
+    _createNewChannel(address) {
+        throw new Error("not implemented");
     }
 }

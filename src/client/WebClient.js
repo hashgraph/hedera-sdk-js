@@ -90,4 +90,13 @@ export default class WebClient extends Client {
     static forPreviewnet() {
         return new WebClient({ network: "previewnet" });
     }
+
+    /**
+     * @override
+     * @param {string} address
+     * @returns {WebChannel}
+     */
+    _createNewChannel(address) {
+        return new WebChannel(address);
+    }
 }
