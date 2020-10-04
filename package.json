@@ -52,8 +52,7 @@
     "dependencies": {
         "@grpc/grpc-js": "^1.1.7",
         "@hashgraph/cryptography": "^1.0.3",
-        "@hashgraph/proto": "1.0.3",
-        "@improbable-eng/grpc-web": "^0.13.0",
+        "@hashgraph/proto": "1.0.4",
         "bignumber.js": "^9.0.1",
         "long": "^4.0.0"
     },
