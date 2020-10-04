@@ -72,6 +72,7 @@
         "babel-plugin-dynamic-import-node": "^2.3.3",
         "chai": "^4.2.0",
         "chromedriver": "^85.0.1",
+        "dotenv": "^8.2.0",
         "eslint": "^7.10.0",
         "eslint-plugin-chai-expect": "^2.2.0",
         "eslint-plugin-import": "^2.22.1",
