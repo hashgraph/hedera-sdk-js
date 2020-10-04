@@ -4,7 +4,7 @@ import AccountUpdateTransaction from "../src/account/AccountUpdateTransaction";
 import AccountInfoQuery from "../src/account/AccountInfoQuery";
 import Hbar from "../src/Hbar";
 import TransactionId from "../src/TransactionId";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 import { PrivateKey } from "../src/index";
 import Long from "long";
 

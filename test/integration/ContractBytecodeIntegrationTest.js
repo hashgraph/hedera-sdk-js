@@ -6,7 +6,7 @@ import FileCreateTransaction from "../src/file/FileCreateTransaction";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
 import Hbar from "../src/Hbar";
 import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 
 describe("ContractBytecode", function () {
     it("should be executable", async function () {

@@ -4,7 +4,7 @@ import AccountRecordsQuery from "../src/account/AccountRecordsQuery";
 import CryptoTransferTransaction from "../src/account/CryptoTransferTransaction";
 import Hbar from "../src/Hbar";
 import TransactionId from "../src/TransactionId";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 import { PrivateKey } from "../src/index";
 
 describe("AccountRecords", function () {

@@ -1,5 +1,5 @@
 import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 import ContractCreateTransaction from "../src/contract/ContractCreateTransaction";
 import ContractFunctionParameters from "../src/contract/ContractFunctionParameters";
 import ContractCallQuery from "../src/contract/ContractCallQuery";

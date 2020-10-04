@@ -5,7 +5,7 @@ import ContractFunctionParameters from "../src/contract/ContractFunctionParamete
 import FileCreateTransaction from "../src/file/FileCreateTransaction";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
 import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 
 describe("ContractExecute", function () {
     it("should be executable", async function () {

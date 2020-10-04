@@ -1,5 +1,5 @@
 import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 import FileCreateTransaction from "../src/file/FileCreateTransaction";
 import FileInfoQuery from "../src/file/FileInfoQuery";
 import FileAppendTransaction from "../src/file/FileAppendTransaction";

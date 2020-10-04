@@ -2,7 +2,7 @@ import FileCreateTransaction from "../src/file/FileCreateTransaction";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
 import FileInfoQuery from "../src/file/FileInfoQuery";
 import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 
 describe("FileInfo", function () {
     it("should be executable", async function () {

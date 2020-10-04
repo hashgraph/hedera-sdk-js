@@ -1,5 +1,5 @@
 import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 import { PrivateKey } from "../src/index";
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
 import AccountId from "../src/account/AccountId";

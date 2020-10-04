@@ -3,7 +3,7 @@ import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
 import FileUpdateTransaction from "../src/file/FileUpdateTransaction";
 import FileInfoQuery from "../src/file/FileInfoQuery";
 import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 
 describe("FileUpdate", function () {
     it("should be executable", async function () {

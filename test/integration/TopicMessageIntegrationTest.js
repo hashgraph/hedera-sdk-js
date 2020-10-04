@@ -2,7 +2,7 @@ import TopicCreateTransaction from "../src/topic/TopicCreateTransaction";
 import TopicInfoQuery from "../src/topic/TopicInfoQuery";
 import TopicMessageQuery from "../src/topic/TopicMessageQuery";
 import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 import TopicDeleteTransaction from "../src/topic/TopicDeleteTransacton";
 import TopicMessageSubmitTransaction from "../src/topic/TopicMessageSubmitTransaction";
 import * as utf8 from "../src/encoding/utf8";

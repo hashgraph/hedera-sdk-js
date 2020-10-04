@@ -4,7 +4,7 @@ import LiveHashAddTransaction from "../src/account/LiveHashAddTransaction";
 import LiveHashDeleteTransaction from "../src/account/LiveHashDeleteTransaction";
 import LiveHashQuery from "../src/account/LiveHashQuery";
 import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 import { PrivateKey } from "../src/index";
 import Long from "long";
 import * as hex from "../src/encoding/hex";

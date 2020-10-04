@@ -1,4 +1,4 @@
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 import NetworkVersionInfoQuery from "../src/NetworkVersionInfoQuery";
 
 describe("NetworkVersionInfo", function () {

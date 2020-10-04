@@ -3,7 +3,7 @@ import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
 import AccountId from "../src/account/AccountId";
 import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 import { PrivateKey } from "../src/index";
 
 describe("TransactionResponse", function () {

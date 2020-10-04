@@ -1,5 +1,5 @@
 import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
+import newClient from "./client";
 import AccountBalanceQuery from "../src/account/AccountBalanceQuery";
 import AccountId from "../src/account/AccountId";
 
