@@ -1,4 +1,4 @@
-import Hbar from "../src/Hbar.js";
+import Hbar from "../src/Hbar";
 
 describe("Hbar", function () {
     it("should stringify to hbars", function () {
