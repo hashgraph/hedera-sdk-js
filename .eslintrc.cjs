@@ -40,11 +40,6 @@ module.exports = {
         // sometimes we need this with jsdoc typing
         "@typescript-eslint/ban-ts-comment": "off",
 
-        // ignore the `import proto` as its used for typing only
-        "@typescript-eslint/no-unused-vars": ["warn", {
-            "varsIgnorePattern": "proto"
-        }],
-
         // some typescript type productions do not parse
         "jsdoc/valid-types": "off",
         "jsdoc/no-undefined-types": "off",

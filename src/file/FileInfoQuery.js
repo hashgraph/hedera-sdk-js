@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../Query";
 import FileId from "./FileId";
 import FileInfo from "./FileInfo";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 
 /**
@@ -85,13 +85,15 @@ export default class FileInfoQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {FileInfo}
+     * @returns {Promise<FileInfo>}
      */
     _mapResponse(response) {
         const info = /** @type {proto.IFileGetInfoResponse} */ (response.fileGetInfo);
 
-        return FileInfo._fromProtobuf(
-            /** @type {proto.FileGetInfoResponse.IFileInfo} */ (info.fileInfo)
+        return Promise.resolve(
+            FileInfo._fromProtobuf(
+                /** @type {proto.IFileInfo} */ (info.fileInfo)
+            )
         );
     }
 

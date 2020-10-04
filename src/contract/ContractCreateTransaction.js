@@ -2,7 +2,7 @@ import Hbar from "../Hbar";
 import AccountId from "../account/AccountId";
 import FileId from "../file/FileId";
 import ContractFunctionParameters from "./ContractFunctionParameters";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
@@ -318,7 +318,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.TransactionResponse>}
+     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
      */
     _getMethod(channel) {
         return (transaction) =>

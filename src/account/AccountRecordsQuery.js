@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../Query";
 import AccountId from "./AccountId";
 import TransactionRecord from "../TransactionRecord";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 
 /**
@@ -91,12 +91,15 @@ export default class AccountRecordsQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {TransactionRecord[]}
+     * @returns {Promise<TransactionRecord[]>}
      */
     _mapResponse(response) {
         const cryptoGetAccountRecords = /** @type {proto.ICryptoGetAccountRecordsResponse} */ (response.cryptoGetAccountRecords);
         const records = /** @type {proto.ITransactionRecord[]} */ (cryptoGetAccountRecords.records);
-        return records.map((record) => TransactionRecord._fromProtobuf(record));
+
+        return Promise.resolve(
+            records.map((record) => TransactionRecord._fromProtobuf(record))
+        );
     }
 
     /**

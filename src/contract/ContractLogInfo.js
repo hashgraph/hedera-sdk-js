@@ -1,5 +1,5 @@
 import ContractId from "./ContractId";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 
 /**
  * The log information for an event returned by a smart contract function call. One function call

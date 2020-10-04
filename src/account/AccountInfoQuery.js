@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../Query";
 import AccountId from "./AccountId";
 import AccountInfo from "./AccountInfo";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 
 /**
@@ -87,12 +87,15 @@ export default class AccountInfoQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {AccountInfo}
+     * @returns {Promise<AccountInfo>}
      */
     _mapResponse(response) {
         const info = /** @type {proto.ICryptoGetInfoResponse} */ (response.cryptoGetInfo);
-        return AccountInfo._fromProtobuf(
-            /** @type {proto.CryptoGetInfoResponse.IAccountInfo} */ (info.accountInfo)
+
+        return Promise.resolve(
+            AccountInfo._fromProtobuf(
+                /** @type {proto.IAccountInfo} */ (info.accountInfo)
+            )
         );
     }
 

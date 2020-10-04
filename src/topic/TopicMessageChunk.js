@@ -1,5 +1,5 @@
 import Timestamp from "../Timestamp";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Long from "long";
 
 export default class TopicMessageChunk {

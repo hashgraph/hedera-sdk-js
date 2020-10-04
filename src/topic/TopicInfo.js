@@ -1,7 +1,7 @@
 import TopicId from "./TopicId";
 import AccountId from "../account/AccountId";
 import Timestamp from "../Timestamp";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import { _fromProtoKey, _toProtoKey } from "../util";
 import { Key } from "@hashgraph/cryptography";
 import Long from "long";

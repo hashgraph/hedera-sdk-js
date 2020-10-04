@@ -1,9 +1,8 @@
 import TopicId from "./TopicId";
-import TransactionId from "../TransactionId";
 import SubscriptionHandle from "./SubscriptionHandle";
 import TopicMessage from "./TopicMessage";
 import Client from "../client/Client";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Timestamp from "../Timestamp";
 import Long from "long";
 
@@ -140,90 +139,92 @@ export default class TopicMessageQuery {
      * @returns {SubscriptionHandle}
      */
     subscribe(client, onNext) {
-        const handle = new SubscriptionHandle();
+        // const handle = new SubscriptionHandle();
 
-        makeStreamingCall(client, handle, this._toProtobuf(), onNext, 0);
+        throw new Error("unimplemented");
 
-        return handle;
+        // makeStreamingCall(client, handle, this._toProtobuf(), onNext, 0);
+
+        // return handle;
     }
 }
 
-/**
- * @template ChannelT
- * @param {Client<ChannelT>} client
- * @param {SubscriptionHandle} handle
- * @param {proto.IConsensusTopicQuery} query
- * @param {(message: TopicMessage) => void} onNext
- * @param {number} attempt
- * @returns {void}
- */
-function makeStreamingCall(client, handle, query, onNext, attempt) {
-    if (attempt > 10) {
-        throw new Error("Failed to connect to mirror node");
-    }
-
-    /**
-     * @type { Map<string, proto.ConsensusTopicResponse[]>}
-     */
-    const list = new Map();
-
-    void client
-        ._getMirrorChannel(client._getNextMirrorAddress())
-        .then((channel) => {
-            channel.mirror(handle).subscribeTopic(query, (error, response) => {
-                if (error != null) {
-                    if (attempt > 10) {
-                        throw error;
-                    }
-
-                    // If the error is `grpc.status.NOT_FOUND` (5) or `grpc.status.UNAVAILABLE` (14)
-                    // we need to try and make the connection again
-                    if (error.message === "5" || error.message === "14") {
-                        setTimeout(() => {
-                            makeStreamingCall(
-                                client,
-                                handle,
-                                query,
-                                onNext,
-                                attempt + 1
-                            );
-                        }, 250 * Math.pow(2, attempt));
-                    }
-
-                    return;
-                }
-
-                if (response != null && response.chunkInfo == null) {
-                    onNext(
-                        TopicMessage._ofSingle(
-                            /** @type {proto.IConsensusTopicResponse} */ (response)
-                        )
-                    );
-                } else if (response != null && response.chunkInfo != null) {
-                    const txId = TransactionId._fromProtobuf(
-                        /** @type {proto.TransactionID} */ (response.chunkInfo
-                            .initialTransactionID)
-                    ).toString();
-
-                    if (list.get(txId) == null) {
-                        list.set(txId, []);
-                    }
-
-                    const messages = /** @type {proto.ConsensusTopicResponse[]} */ (list.get(
-                        txId
-                    ));
-
-                    messages.push(response);
-
-                    if (
-                        messages.length ===
-                        /** @type {number} */ (response.chunkInfo.total)
-                    ) {
-                        const m = messages;
-                        list.delete(txId);
-                        onNext(TopicMessage._ofMany(m));
-                    }
-                }
-            });
-        });
-}
+// /**
+//  * @template ChannelT
+//  * @param {Client<ChannelT>} client
+//  * @param {SubscriptionHandle} handle
+//  * @param {proto.IConsensusTopicQuery} query
+//  * @param {(message: TopicMessage) => void} onNext
+//  * @param {number} attempt
+//  * @returns {void}
+//  */
+// function makeStreamingCall(client, handle, query, onNext, attempt) {
+//     if (attempt > 10) {
+//         throw new Error("Failed to connect to mirror node");
+//     }
+//
+//     /**
+//      * @type { Map<string, proto.ConsensusTopicResponse[]>}
+//      */
+//     const list = new Map();
+//
+//     void client
+//         ._getMirrorChannel(client._getNextMirrorAddress())
+//         .then((channel) => {
+//             channel.mirror(handle).subscribeTopic(query, (error, response) => {
+//                 if (error != null) {
+//                     if (attempt > 10) {
+//                         throw error;
+//                     }
+//
+//                     // If the error is `grpc.status.NOT_FOUND` (5) or `grpc.status.UNAVAILABLE` (14)
+//                     // we need to try and make the connection again
+//                     if (error.message === "5" || error.message === "14") {
+//                         setTimeout(() => {
+//                             makeStreamingCall(
+//                                 client,
+//                                 handle,
+//                                 query,
+//                                 onNext,
+//                                 attempt + 1
+//                             );
+//                         }, 250 * Math.pow(2, attempt));
+//                     }
+//
+//                     return;
+//                 }
+//
+//                 if (response != null && response.chunkInfo == null) {
+//                     onNext(
+//                         TopicMessage._ofSingle(
+//                             /** @type {proto.IConsensusTopicResponse} */ (response)
+//                         )
+//                     );
+//                 } else if (response != null && response.chunkInfo != null) {
+//                     const txId = TransactionId._fromProtobuf(
+//                         /** @type {proto.TransactionID} */ (response.chunkInfo
+//                             .initialTransactionID)
+//                     ).toString();
+//
+//                     if (list.get(txId) == null) {
+//                         list.set(txId, []);
+//                     }
+//
+//                     const messages = /** @type {proto.ConsensusTopicResponse[]} */ (list.get(
+//                         txId
+//                     ));
+//
+//                     messages.push(response);
+//
+//                     if (
+//                         messages.length ===
+//                         /** @type {number} */ (response.chunkInfo.total)
+//                     ) {
+//                         const m = messages;
+//                         list.delete(txId);
+//                         onNext(TopicMessage._ofMany(m));
+//                     }
+//                 }
+//             });
+//         });
+// }

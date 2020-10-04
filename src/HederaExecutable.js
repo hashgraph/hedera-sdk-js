@@ -44,12 +44,13 @@ export default class HederaExecutable {
     /**
      * @abstract
      * @protected
-     * @param {ResponseT} _
-     * @param {AccountId} __
-     * @param {RequestT} ___
-     * @returns {OutputT}
+     * @param {ResponseT} response
+     * @param {AccountId} nodeId
+     * @param {RequestT} request
+     * @returns {Promise<OutputT>}
      */
-    _mapResponse(_, __, ___) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeId, request) {
         throw new Error("not implemented");
     }
 

@@ -1,4 +1,4 @@
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 import AccountId from "./AccountId";
 import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
@@ -115,7 +115,7 @@ export default class AccountDeleteTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.TransactionResponse>}
+     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
      */
     _getMethod(channel) {
         return (transaction) => channel.crypto.cryptoDelete(transaction);

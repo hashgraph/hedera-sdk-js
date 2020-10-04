@@ -1,6 +1,6 @@
 import Query, { QUERY_REGISTRY } from "../Query";
 import FileId from "./FileId";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 
 /**
@@ -84,13 +84,14 @@ export default class FileContentsQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {Uint8Array}
+     * @returns {Promise<Uint8Array>}
      */
     _mapResponse(response) {
         const fileContentsResponse = /** @type {proto.IFileGetContentsResponse} */ (response.fileGetContents);
-        const fileConents = /** @type {proto.FileGetContentsResponse.IFileContents} */ (fileContentsResponse.fileContents);
+        const fileConents = /** @type {proto.IFileContents} */ (fileContentsResponse.fileContents);
         const contents = /** @type {Uint8Array} */ (fileConents.contents);
-        return contents;
+
+        return Promise.resolve(contents);
     }
 
     /**

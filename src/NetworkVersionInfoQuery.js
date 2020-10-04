@@ -1,6 +1,6 @@
 import Query, { QUERY_REGISTRY } from "./Query";
 import NetworkVersionInfo from "./NetworkVersionInfo";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "./channel/Channel";
 
 /**
@@ -43,11 +43,11 @@ export default class NetworkVersionInfoQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {NetworkVersionInfo}
+     * @returns {Promise<NetworkVersionInfo>}
      */
     _mapResponse(response) {
         const info = /** @type {proto.INetworkGetVersionInfoResponse} */ (response.networkGetVersionInfo);
-        return NetworkVersionInfo._fromProtobuf(info);
+        return Promise.resolve(NetworkVersionInfo._fromProtobuf(info));
     }
 
     /**

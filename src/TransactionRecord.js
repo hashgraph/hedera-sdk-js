@@ -3,7 +3,7 @@ import TransactionId from "./TransactionId";
 import Timestamp from "./Timestamp";
 import Hbar from "./Hbar";
 import Transfer from "./Transfer";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import ContractFunctionResult from "./contract/ContractFunctionResult";
 
 /**

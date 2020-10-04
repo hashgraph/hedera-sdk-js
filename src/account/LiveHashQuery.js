@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../Query";
 import AccountId from "./AccountId";
 import LiveHash from "./LiveHash";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 
 /**
@@ -119,12 +119,15 @@ export default class LiveHashQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {LiveHash}
+     * @returns {Promise<LiveHash>}
      */
     _mapResponse(response) {
         const hashes = /** @type {proto.ICryptoGetLiveHashResponse} */ (response.cryptoGetLiveHash);
-        return LiveHash._fromProtobuf(
-            /** @type {proto.ILiveHash} */ (hashes.liveHash)
+
+        return Promise.resolve(
+            LiveHash._fromProtobuf(
+                /** @type {proto.ILiveHash} */ (hashes.liveHash)
+            )
         );
     }
 

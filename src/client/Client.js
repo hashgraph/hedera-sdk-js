@@ -1,5 +1,5 @@
 import AccountId from "../account/AccountId";
-import Channel from "../channel/Channel.js";
+import Channel from "../channel/Channel";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Hbar from "../Hbar";
 import WebChannel from "../channel/WebChannel";

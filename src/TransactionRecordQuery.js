@@ -2,7 +2,7 @@ import Query, { QUERY_REGISTRY } from "./Query";
 import Status from "./Status";
 import TransactionRecord from "./TransactionRecord";
 import TransactionId from "./TransactionId";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "./channel/Channel";
 import { TRANSACTION_RECORD_QUERY } from "./TransactionId";
 
@@ -121,12 +121,15 @@ export default class TransactionRecordQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {TransactionRecord}
+     * @returns {Promise<TransactionRecord>}
      */
     _mapResponse(response) {
         const record = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
-        return TransactionRecord._fromProtobuf(
-            /** @type {proto.ITransactionRecord} */ (record.transactionRecord)
+
+        return Promise.resolve(
+            TransactionRecord._fromProtobuf(
+                /** @type {proto.ITransactionRecord} */ (record.transactionRecord)
+            )
         );
     }
 

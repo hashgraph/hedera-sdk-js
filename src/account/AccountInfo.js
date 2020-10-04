@@ -1,6 +1,6 @@
 import AccountId from "./AccountId";
 import LiveHash from "./LiveHash";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Hbar from "../Hbar";
 import Time from "../Timestamp";
 import { _fromProtoKey, _toProtoKey } from "../util";
@@ -132,7 +132,7 @@ export default class AccountInfo {
 
     /**
      * @internal
-     * @param {proto.CryptoGetInfoResponse.IAccountInfo} info
+     * @param {proto.IAccountInfo} info
      */
     static _fromProtobuf(info) {
         return new AccountInfo({
@@ -191,7 +191,7 @@ export default class AccountInfo {
     }
 
     /**
-     * @returns {proto.CryptoGetInfoResponse.IAccountInfo}
+     * @returns {proto.IAccountInfo}
      */
     _toProtobuf() {
         return {

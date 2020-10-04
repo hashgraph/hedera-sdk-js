@@ -1,7 +1,7 @@
 import ContractId from "./ContractId";
 import AccountId from "../account/AccountId";
 import Timestamp from "../Timestamp";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Hbar from "../Hbar";
 import { _fromProtoKey, _toProtoKey } from "../util";
 import { Key } from "@hashgraph/cryptography";
@@ -104,7 +104,7 @@ export default class ContractInfo {
 
     /**
      * @internal
-     * @param {proto.ContractGetInfoResponse.IContractInfo} info
+     * @param {proto.IContractInfo} info
      */
     static _fromProtobuf(info) {
         const autoRenewPeriod = /** @type {Long | number} */ (
@@ -142,7 +142,7 @@ export default class ContractInfo {
 
     /**
      * @internal
-     * @returns {proto.ContractGetInfoResponse.IContractInfo}
+     * @returns {proto.IContractInfo}
      */
     _toProtobuf() {
         return {

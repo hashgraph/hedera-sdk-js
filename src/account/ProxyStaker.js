@@ -1,6 +1,6 @@
 import AccountId from "./AccountId";
 import Hbar from "../Hbar";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import BigNumber from "bignumber.js";
 
 /**

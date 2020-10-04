@@ -3,7 +3,7 @@ import Status from "./Status";
 import AccountId from "./account/AccountId";
 import TransactionReceipt from "./TransactionReceipt";
 import TransactionId from "./TransactionId";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "./channel/Channel";
 import { TRANSACTION_RECEIPT_QUERY } from "./TransactionId";
 
@@ -136,12 +136,15 @@ export default class TransactionReceiptQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} __
      * @param {proto.IQuery} ___
-     * @returns {TransactionReceipt}
+     * @returns {Promise<TransactionReceipt>}
      */
     _mapResponse(response, __, ___) {
         const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);
-        return TransactionReceipt._fromProtobuf(
-            /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt)
+
+        return Promise.resolve(
+            TransactionReceipt._fromProtobuf(
+                /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt)
+            )
         );
     }
 

@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../Query";
 import ContractId from "./ContractId";
 import ContractInfo from "./ContractInfo";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 
 /**
@@ -87,13 +87,15 @@ export default class ContractInfoQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {ContractInfo}
+     * @returns {Promise<ContractInfo>}
      */
     _mapResponse(response) {
         const info = /** @type {proto.IContractGetInfoResponse} */ (response.contractGetInfo);
 
-        return ContractInfo._fromProtobuf(
-            /** @type {proto.ContractGetInfoResponse.IContractInfo} */ (info.contractInfo)
+        return Promise.resolve(
+            ContractInfo._fromProtobuf(
+                /** @type {proto.IContractInfo} */ (info.contractInfo)
+            )
         );
     }
 

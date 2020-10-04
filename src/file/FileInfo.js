@@ -1,6 +1,6 @@
 import FileId from "./FileId";
 import Timestamp from "../Timestamp";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import { _fromProtoKeyList, _toProtoKeyList } from "../util";
 import { KeyList } from "@hashgraph/cryptography";
 import Long from "long";
@@ -60,7 +60,7 @@ export default class FileInfo {
 
     /**
      * @internal
-     * @param {proto.FileGetInfoResponse.IFileInfo} info
+     * @param {proto.IFileInfo} info
      */
     static _fromProtobuf(info) {
         const size = /** @type {Long | number} */ (info.size);
@@ -83,7 +83,7 @@ export default class FileInfo {
 
     /**
      * @internal
-     * @returns {proto.FileGetInfoResponse.IFileInfo}
+     * @returns {proto.IFileInfo}
      */
     _toProtobuf() {
         return {

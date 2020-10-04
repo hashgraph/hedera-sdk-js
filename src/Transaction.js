@@ -1,4 +1,4 @@
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import AccountId from "./account/AccountId";
 import Hbar from "./Hbar";
 import TransactionResponse from "./TransactionResponse";
@@ -7,7 +7,7 @@ import HederaExecutable from "./HederaExecutable";
 import Status from "./Status";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Long from "long";
-import { hash as sha3_384 } from "@stablelib/sha384";
+import * as sha384 from "./sha384";
 
 export const DEFAULT_AUTO_RENEW_PERIOD = Long.fromValue(7776000); // 90 days (in seconds)
 
@@ -393,7 +393,7 @@ export default class Transaction extends HederaExecutable {
     }
 
     /**
-     * @returns {Uint8Array}
+     * @returns {Promise<Uint8Array>}
      */
     getTransactionHash() {
         if (!this._isFrozen()) {
@@ -402,13 +402,15 @@ export default class Transaction extends HederaExecutable {
             );
         }
 
-        if (this._transactions.length != 1) {
+        if (this._transactions.length !== 1) {
             throw new Error(
                 "transaction must have an explicit node ID set, try calling `setNodeId`"
             );
         }
 
-        return hash(proto.Transaction.encode(this._makeRequest()).finish());
+        return sha384.digest(
+            proto.Transaction.encode(this._makeRequest()).finish()
+        );
     }
 
     /**
@@ -457,17 +459,19 @@ export default class Transaction extends HederaExecutable {
     }
 
     /**
-     * @abstract
+     * @override
      * @protected
-     * @param {proto.ITransactionResponse} _
+     * @param {proto.ITransactionResponse} response
      * @param {AccountId} nodeId
      * @param {proto.ITransaction} request
-     * @returns {TransactionResponse}
+     * @returns {Promise<TransactionResponse>}
      */
-    _mapResponse(_, nodeId, request) {
+    async _mapResponse(response, nodeId, request) {
         return new TransactionResponse({
             nodeId,
-            transactionHash: hash(proto.Transaction.encode(request).finish()),
+            transactionHash: await sha384.digest(
+                proto.Transaction.encode(request).finish()
+            ),
             transactionId: /** @type {TransactionId} */ (this._transactionId),
         });
     }
@@ -578,12 +582,4 @@ export default class Transaction extends HederaExecutable {
             );
         }
     }
-}
-
-/**
- * @param {Uint8Array} bytes
- * @returns {Uint8Array}
- */
-function hash(bytes) {
-    return new Uint8Array(sha3_384(bytes));
 }

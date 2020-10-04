@@ -1,53 +1,52 @@
-import proto from "@hashgraph/proto";
-
 /**
+ * @internal
  * @abstract
  */
 export default class Channel {
     /**
-     * @param {string} _
+     * @param {string} address
      */
-    constructor(_) {
+    constructor(address) {
         /**
          * @protected
-         * @type {?proto.CryptoService}
+         * @type {?import("@hashgraph/proto").CryptoService}
          */
         this._crypto = null;
 
         /**
          * @protected
-         * @type {?proto.SmartContractService}
+         * @type {?import("@hashgraph/proto").SmartContractService}
          */
         this._smartContract = null;
 
         /**
          * @protected
-         * @type {?proto.FileService}
+         * @type {?import("@hashgraph/proto").FileService}
          */
         this._file = null;
 
         /**
          * @protected
-         * @type {?proto.ConsensusService}
+         * @type {?import("@hashgraph/proto").ConsensusService}
          */
         this._consensus = null;
 
         /**
          * @protected
-         * @type {?proto.FreezeService}
+         * @type {?import("@hashgraph/proto").FreezeService}
          */
         this._freeze = null;
 
         /**
          * @protected
-         * @type {?proto.NetworkService}
+         * @type {?import("@hashgraph/proto").NetworkService}
          */
         this._network = null;
     }
 
     /**
      * @abstract
-     * @returns {proto.CryptoService}
+     * @returns {import("@hashgraph/proto").CryptoService}
      */
     get crypto() {
         throw new Error("not implemented");
@@ -55,7 +54,7 @@ export default class Channel {
 
     /**
      * @abstract
-     * @returns {proto.SmartContractService}
+     * @returns {import("@hashgraph/proto").SmartContractService}
      */
     get smartContract() {
         throw new Error("not implemented");
@@ -63,7 +62,7 @@ export default class Channel {
 
     /**
      * @abstract
-     * @returns {proto.FileService}
+     * @returns {import("@hashgraph/proto").FileService}
      */
     get file() {
         throw new Error("not implemented");
@@ -71,7 +70,7 @@ export default class Channel {
 
     /**
      * @abstract
-     * @returns {proto.ConsensusService}
+     * @returns {import("@hashgraph/proto").ConsensusService}
      */
     get consensus() {
         throw new Error("not implemented");
@@ -79,7 +78,7 @@ export default class Channel {
 
     /**
      * @abstract
-     * @returns {proto.FreezeService}
+     * @returns {import("@hashgraph/proto").FreezeService}
      */
     get freeze() {
         throw new Error("not implemented");
@@ -87,7 +86,7 @@ export default class Channel {
 
     /**
      * @abstract
-     * @returns {proto.NetworkService}
+     * @returns {import("@hashgraph/proto").NetworkService}
      */
     get network() {
         throw new Error("not implemented");
@@ -96,7 +95,7 @@ export default class Channel {
     /**
      * @abstract
      * @param {import("../topic/SubscriptionHandle").default} _
-     * @returns {proto.MirrorConsensusService}
+     * @returns {import("@hashgraph/proto").MirrorConsensusService}
      */
     mirror(_) {
         throw new Error("not implemented");

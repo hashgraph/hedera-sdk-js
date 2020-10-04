@@ -1,4 +1,4 @@
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import AccountId from "./AccountId";
@@ -65,7 +65,7 @@ export default class LiveHashAddTransaction extends Transaction {
      */
     static _fromProtobuf(body) {
         const hashes = /** @type {proto.ICryptoAddLiveHashTransactionBody} */ (body.cryptoAddLiveHash);
-        const liveHash_ = /** @type {proto.LiveHash} */ (hashes.liveHash);
+        const liveHash_ = /** @type {proto.ILiveHash} */ (hashes.liveHash);
 
         return new LiveHashAddTransaction({
             hash: liveHash_.hash != null ? liveHash_.hash : undefined,
@@ -168,7 +168,7 @@ export default class LiveHashAddTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.TransactionResponse>}
+     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
      */
     _getMethod(channel) {
         return (transaction) => channel.crypto.addLiveHash(transaction);

@@ -1,7 +1,15 @@
-import * as grpc from "@grpc/grpc-js";
-import proto from "@hashgraph/proto";
+import { Client, credentials, status } from "@grpc/grpc-js";
+import * as proto from "@hashgraph/proto";
 import Channel from "./Channel";
 
+/**
+ * @property {?proto.CryptoService} _crypto
+ * @property {?proto.SmartContractService} _smartContract
+ * @property {?proto.FileService} _file
+ * @property {?proto.FreezeService} _freeze
+ * @property {?proto.ConsensusService} _consensus
+ * @property {?proto.NetworkService} _network
+ */
 export default class NodeChannel extends Channel {
     /**
      * @param {string} address
@@ -10,13 +18,10 @@ export default class NodeChannel extends Channel {
         super(address);
 
         /**
-         * @type {grpc.Client}
+         * @type {Client}
          * @private
          */
-        this._client = new grpc.Client(
-            address,
-            grpc.credentials.createInsecure()
-        );
+        this._client = new Client(address, credentials.createInsecure());
     }
 
     /**
@@ -28,17 +33,7 @@ export default class NodeChannel extends Channel {
         }
 
         this._crypto = proto.CryptoService.create(
-            (method, requestData, callback) => {
-                this._client.makeUnaryRequest(
-                    `/proto.${proto.CryptoService.name}/${method.name}`,
-                    (value) => value,
-                    (value) => value,
-                    Buffer.from(requestData),
-                    callback
-                );
-            },
-            false,
-            false
+            this._createUnaryRequester("CryptoService")
         );
 
         return this._crypto;
@@ -53,17 +48,7 @@ export default class NodeChannel extends Channel {
         }
 
         this._smartContract = proto.SmartContractService.create(
-            (method, requestData, callback) => {
-                this._client.makeUnaryRequest(
-                    `/proto.${proto.SmartContractService.name}/${method.name}`,
-                    (value) => value,
-                    (value) => value,
-                    Buffer.from(requestData),
-                    callback
-                );
-            },
-            false,
-            false
+            this._createUnaryRequester(proto.SmartContractService.name)
         );
 
         return this._smartContract;
@@ -78,17 +63,7 @@ export default class NodeChannel extends Channel {
         }
 
         this._file = proto.FileService.create(
-            (method, requestData, callback) => {
-                this._client.makeUnaryRequest(
-                    `/proto.${proto.FileService.name}/${method.name}`,
-                    (value) => value,
-                    (value) => value,
-                    Buffer.from(requestData),
-                    callback
-                );
-            },
-            false,
-            false
+            this._createUnaryRequester(proto.FileService.name)
         );
 
         return this._file;
@@ -103,17 +78,7 @@ export default class NodeChannel extends Channel {
         }
 
         this._consensus = proto.ConsensusService.create(
-            (method, requestData, callback) => {
-                this._client.makeUnaryRequest(
-                    `/proto.${proto.ConsensusService.name}/${method.name}`,
-                    (value) => value,
-                    (value) => value,
-                    Buffer.from(requestData),
-                    callback
-                );
-            },
-            false,
-            false
+            this._createUnaryRequester(proto.ConsensusService.name)
         );
 
         return this._consensus;
@@ -128,17 +93,7 @@ export default class NodeChannel extends Channel {
         }
 
         this._freeze = proto.FreezeService.create(
-            (method, requestData, callback) => {
-                this._client.makeUnaryRequest(
-                    `/proto.${proto.FreezeService.name}/${method.name}`,
-                    (value) => value,
-                    (value) => value,
-                    Buffer.from(requestData),
-                    callback
-                );
-            },
-            false,
-            false
+            this._createUnaryRequester(proto.FreezeService.name)
         );
 
         return this._freeze;
@@ -153,20 +108,27 @@ export default class NodeChannel extends Channel {
         }
 
         this._network = proto.NetworkService.create(
-            (method, requestData, callback) => {
-                this._client.makeUnaryRequest(
-                    `/proto.${proto.NetworkService.name}/${method.name}`,
-                    (value) => value,
-                    (value) => value,
-                    Buffer.from(requestData),
-                    callback
-                );
-            },
-            false,
-            false
+            this._createUnaryRequester(proto.NetworkService.name)
         );
 
         return this._network;
+    }
+
+    /**
+     * @param {string} serviceName
+     * @returns {import("protobufjs").RPCImpl}
+     * @private
+     */
+    _createUnaryRequester(serviceName) {
+        return (method, requestData, callback) => {
+            this._client.makeUnaryRequest(
+                `/proto.${serviceName}/${method.name}`,
+                (value) => value,
+                (value) => value,
+                Buffer.from(requestData),
+                callback
+            );
+        };
     }
 
     /**
@@ -199,14 +161,14 @@ export default class NodeChannel extends Channel {
                     .on("data", (message) => {
                         callback(null, message);
                     })
-                    .on("status", (status) => {
+                    .on("status", (currentStatus) => {
                         // Only propagate the error if it is `NOT_FOUND` or `UNAVAILABLE`
                         // Otherwise finish here
                         if (
-                            status.code === grpc.status.NOT_FOUND ||
-                            status.code === grpc.status.UNAVAILABLE
+                            currentStatus.code === status.NOT_FOUND ||
+                            currentStatus.code === status.UNAVAILABLE
                         ) {
-                            callback(new Error(status.code.toString()));
+                            callback(new Error(currentStatus.code.toString()));
                         }
                     });
 

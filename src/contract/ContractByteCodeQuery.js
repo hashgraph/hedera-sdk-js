@@ -1,6 +1,6 @@
 import Query, { QUERY_REGISTRY } from "../Query";
 import ContractId from "./ContractId";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 
 /**
@@ -86,13 +86,16 @@ export default class ContractByteCodeQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {Uint8Array}
+     * @returns {Promise<Uint8Array>}
      */
     _mapResponse(response) {
         const contractGetBytecodeResponse = /** @type {proto.IContractGetBytecodeResponse} */ (response.contractGetBytecodeResponse);
-        return contractGetBytecodeResponse.bytecode != null
-            ? contractGetBytecodeResponse.bytecode
-            : new Uint8Array();
+
+        return Promise.resolve(
+            contractGetBytecodeResponse.bytecode != null
+                ? contractGetBytecodeResponse.bytecode
+                : new Uint8Array()
+        );
     }
 
     /**

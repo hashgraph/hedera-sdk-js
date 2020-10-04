@@ -1,7 +1,7 @@
 import ContractLogInfo from "./ContractLogInfo";
 import ContractId from "./ContractId";
 import BigNumber from "bignumber.js";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import * as hex from "../encoding/hex";
 import * as utf8 from "../encoding/utf8";
 import Long from "long";

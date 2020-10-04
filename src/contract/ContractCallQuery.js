@@ -2,7 +2,7 @@ import Query, { QUERY_REGISTRY } from "../Query";
 import ContractId from "./ContractId";
 import ContractFunctionParameters from "./ContractFunctionParameters";
 import ContractFunctionResult from "./ContractFunctionResult";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Long from "long";
 import Channel from "../channel/Channel";
 
@@ -194,7 +194,7 @@ export default class ContractCallQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {ContractFunctionResult}
+     * @returns {Promise<ContractFunctionResult>}
      */
     _mapResponse(response) {
         const call =
@@ -203,11 +203,13 @@ export default class ContractCallQuery extends Query {
              */
             (response.contractCallLocal);
 
-        return ContractFunctionResult._fromProtobuf(
-            /**
-             * @type {proto.IContractFunctionResult}
-             */
-            (call.functionResult)
+        return Promise.resolve(
+            ContractFunctionResult._fromProtobuf(
+                /**
+                 * @type {proto.IContractFunctionResult}
+                 */
+                (call.functionResult)
+            )
         );
     }
 

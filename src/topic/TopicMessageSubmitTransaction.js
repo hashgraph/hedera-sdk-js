@@ -2,7 +2,7 @@ import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
 import TopicId from "./TopicId";
 import Channel from "../channel/Channel";
 import * as utf8 from "../encoding/utf8";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 
 export default class TopicMessageSubmitTransaction extends Transaction {
     /**
@@ -92,7 +92,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.TransactionResponse>}
+     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
      */
     _getMethod(channel) {
         return (transaction) => channel.consensus.submitMessage(transaction);

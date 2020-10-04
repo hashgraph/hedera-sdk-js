@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../Query";
 import AccountId from "./AccountId";
 import ContractId from "../contract/ContractId";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Hbar from "../Hbar";
 import Channel from "../channel/Channel";
 
@@ -134,14 +134,16 @@ export default class AccountBalanceQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {Hbar}
+     * @returns {Promise<Hbar>}
      */
     _mapResponse(response) {
         const cryptogetAccountBalance = /** @type {proto.ICryptoGetAccountBalanceResponse} */ (response.cryptogetAccountBalance);
-        return Hbar.fromTinybars(
-            cryptogetAccountBalance.balance != null
-                ? cryptogetAccountBalance.balance
-                : 0
+        return Promise.resolve(
+            Hbar.fromTinybars(
+                cryptogetAccountBalance.balance != null
+                    ? cryptogetAccountBalance.balance
+                    : 0
+            )
         );
     }
 

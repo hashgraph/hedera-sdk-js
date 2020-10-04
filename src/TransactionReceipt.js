@@ -4,7 +4,7 @@ import FileId from "./file/FileId";
 import TopicId from "./topic/TopicId";
 import ExchangeRate from "./ExchangeRate";
 import Status from "./Status";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Long from "long";
 
 /**

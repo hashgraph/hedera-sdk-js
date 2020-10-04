@@ -1,6 +1,6 @@
 import AccountId from "./account/AccountId";
 import Timestamp from "./Timestamp";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 // import TransactionReceipt from "./TransactionReceipt";
 // import TransactionReceiptQuery from "./TransactionReceiptQuery";
 // import TransactionRecord from "./TransactionRecord";

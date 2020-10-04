@@ -1,5 +1,5 @@
 import EntityId, { fromString } from "../EntityId";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Long from "long";
 
 /**

@@ -1,14 +1,28 @@
-import proto from "@hashgraph/proto";
 import Status from "./Status";
 import Hbar from "./Hbar";
 import AccountId from "./account/AccountId";
 import Channel from "./channel/Channel";
 import HederaExecutable from "./HederaExecutable";
 import TransactionId from "./TransactionId";
+import {
+    Query as ProtoQuery,
+    TransactionBody as ProtoTransactionBody,
+    ResponseType as ProtoResponseType,
+} from "@hashgraph/proto";
 
 /**
- * @template OutputT
- * @type {Map<proto.Query["query"], (query: proto.Query) => Query<OutputT>>}
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
+ */
+
+/**
+ * @type {Map<ProtoQuery["query"], (query: proto.IQuery) => Query<*>>}
  */
 export const QUERY_REGISTRY = new Map();
 
@@ -23,7 +37,7 @@ export default class Query extends HederaExecutable {
     constructor() {
         super();
 
-        /** @type {?import("./TransactionId").default} */
+        /** @type {?TransactionId} */
         this._paymentTransactionId = null;
 
         /** @type {proto.ITransaction[]} */
@@ -56,32 +70,30 @@ export default class Query extends HederaExecutable {
      * @returns {Query<T>}
      */
     static fromBytes(bytes) {
-        const query = proto.Query.decode(bytes);
+        const query = ProtoQuery.decode(bytes);
 
         if (query.query == null) {
-            throw new Error("query.query was not set in the protobuf");
+            throw new Error("(BUG) query.query was not set in the protobuf");
         }
 
-        const fromProtobuf = QUERY_REGISTRY.get(query.query);
+        const fromProtobuf = /** @type {(query: proto.IQuery) => Query<T>} */ (QUERY_REGISTRY.get(
+            query.query
+        ));
 
         if (fromProtobuf == null) {
             throw new Error(
-                `(BUG) Transaction.fromBytes() not implemented for type ${
-                    query.query != null ? query.query : ""
-                }`
+                `(BUG) Query.fromBytes() not implemented for type ${query.query}`
             );
         }
 
-        return /** @type {Query<T>} */ (
-            /** @type {unknown} */ (fromProtobuf(query))
-        );
+        return fromProtobuf(query);
     }
 
     /**
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.Query.encode(this._makeRequest()).finish();
+        return ProtoQuery.encode(this._makeRequest()).finish();
     }
 
     /**
@@ -223,7 +235,7 @@ export default class Query extends HederaExecutable {
                 payment: this._paymentTransactions[
                     this._nextPaymentTransactionIndex
                 ],
-                responseType: proto.ResponseType.ANSWER_ONLY,
+                responseType: ProtoResponseType.ANSWER_ONLY,
             };
         }
 
@@ -259,7 +271,7 @@ export default class Query extends HederaExecutable {
      * @param {proto.IResponse} _
      * @param {AccountId} __
      * @param {proto.IQuery} ___
-     * @returns {OutputT}
+     * @returns {Promise<OutputT>}
      */
     _mapResponse(_, __, ___) {
         throw new Error("not implemented");
@@ -338,7 +350,7 @@ async function _makePaymentTransaction(
         },
     };
 
-    const bodyBytes = proto.TransactionBody.encode(body).finish();
+    const bodyBytes = ProtoTransactionBody.encode(body).finish();
     const signature = await operator.transactionSigner(bodyBytes);
 
     return {

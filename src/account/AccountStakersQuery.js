@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../Query";
 import AccountId from "./AccountId";
 import ProxyStaker from "./ProxyStaker";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 
 /**
@@ -93,15 +93,18 @@ export default class AccountStakersQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {ProxyStaker[]}
+     * @returns {Promise<ProxyStaker[]>}
      */
     _mapResponse(response) {
         const cryptoGetProxyStakers = /** @type {proto.ICryptoGetStakersResponse} */ (response.cryptoGetProxyStakers);
         const stakers = /** @type {proto.IAllProxyStakers} */ (cryptoGetProxyStakers.stakers);
-        return (stakers.proxyStaker != null
-            ? stakers.proxyStaker
-            : []
-        ).map((staker) => ProxyStaker._fromProtobuf(staker));
+
+        return Promise.resolve(
+            (stakers.proxyStaker != null
+                ? stakers.proxyStaker
+                : []
+            ).map((staker) => ProxyStaker._fromProtobuf(staker))
+        );
     }
 
     /**

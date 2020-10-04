@@ -1,8 +1,21 @@
 import Query, { QUERY_REGISTRY } from "../Query";
 import TopicId from "./TopicId";
 import TopicInfo from "./TopicInfo";
-import proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ */
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IConsensusTopicQuery} proto.IConsensusTopicQuery
+ * @typedef {import("@hashgraph/proto").IConsensusGetTopicInfoResponse} proto.IConsensusGetTopicInfoResponse
+ */
 
 /**
  * Retrieve the latest state of a topic.
@@ -30,7 +43,7 @@ export default class TopicInfoQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {TopicInfoQuery}
      */
     static _fromProtobuf(query) {
@@ -88,11 +101,13 @@ export default class TopicInfoQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @returns {TopicInfo}
+     * @returns {Promise<TopicInfo>}
      */
     _mapResponse(response) {
-        return TopicInfo._fromProtobuf(
-            /** @type {proto.IConsensusGetTopicInfoResponse} */ (response.consensusGetTopicInfo)
+        return Promise.resolve(
+            TopicInfo._fromProtobuf(
+                /** @type {proto.IConsensusGetTopicInfoResponse} */ (response.consensusGetTopicInfo)
+            )
         );
     }
 
@@ -113,6 +128,5 @@ export default class TopicInfoQuery extends Query {
     }
 }
 
-// @ts-ignore
 // eslint-disable-next-line @typescript-eslint/unbound-method
 QUERY_REGISTRY.set("consensusGetTopicInfo", TopicInfoQuery._fromProtobuf);

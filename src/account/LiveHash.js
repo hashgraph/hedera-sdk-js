@@ -1,5 +1,5 @@
 import AccountId from "./AccountId";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import { _fromProtoKeyList, _toProtoKeyList } from "../util";
 import { KeyList } from "@hashgraph/cryptography";
 import Long from "long";
@@ -37,7 +37,7 @@ export default class LiveHash {
      * @param {proto.ILiveHash} liveHash
      */
     static _fromProtobuf(liveHash) {
-        const liveHash_ = /** @type {proto.LiveHash} */ (liveHash);
+        const liveHash_ = /** @type {proto.ILiveHash} */ (liveHash);
         const durationSeconds =
             liveHash_.duration != null
                 ? liveHash_.duration.seconds != null

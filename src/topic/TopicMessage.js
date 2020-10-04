@@ -1,6 +1,6 @@
 import Timestamp from "../Timestamp";
 import TopicMessageChunk from "./TopicMessageChunk";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Long from "long";
 
 export default class TopicMessage {
