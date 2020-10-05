@@ -12,7 +12,7 @@ describe("AccountRecords", function () {
         this.timeout(10000);
 
         const client = newClient();
-        const operatorId = client.getOperatorId();
+        const operatorId = client.operatorAccountId;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()

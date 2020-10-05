@@ -10,7 +10,7 @@ describe("FileUpdate", function () {
         this.timeout(10000);
 
         const client = newClient();
-        const operatorKey = client.getOperatorKey();
+        const operatorKey = client.operatorPublicKey;
 
         let response = await new FileCreateTransaction()
             .setKeys(operatorKey)

@@ -11,7 +11,7 @@ describe("TransactionIntegration", function () {
         this.timeout(10000);
 
         const client = newClient();
-        const operatorId = client.getOperatorId();
+        const operatorId = client.operatorAccountId;
         expect(operatorId).to.not.be.null;
 
         const key = PrivateKey.generate();

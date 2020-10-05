@@ -13,7 +13,7 @@ describe("TopicMessage", function () {
 
         const client = newClient();
         client.setMirrorNetwork("api.testnet.kabuto.sh:50211");
-        const operatorKey = client.getOperatorKey();
+        const operatorKey = client.operatorPublicKey;
 
         let response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)

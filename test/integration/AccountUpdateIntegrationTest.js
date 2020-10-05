@@ -13,7 +13,7 @@ describe("AccountUpdate", function () {
         this.timeout(10000);
 
         const client = newClient();
-        const operatorId = client.getOperatorId();
+        const operatorId = client.operatorAccountId;
 
         const key1 = PrivateKey.generate();
         const key2 = PrivateKey.generate();

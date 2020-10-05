@@ -54,8 +54,6 @@ export { default as TopicDeleteTransacton } from "./topic/TopicDeleteTransacton"
 export { default as TopicId } from "./topic/TopicId";
 export { default as TopicInfo } from "./topic/TopicInfo";
 export { default as TopicInfoQuery } from "./topic/TopicInfoQuery";
-export { default as TopicMessage } from "./topic/TopicMessage";
-export { default as TopicMessageChunk } from "./topic/TopicMessageChunk";
 export { default as TopicMessageSubmitTransaction } from "./topic/TopicMessageSubmitTransaction";
 export { default as TopicUpdateTransaction } from "./topic/TopicUpdateTransaction";
 export { default as Transaction } from "./Transaction";

@@ -1,20 +1,12 @@
 import AccountId from "./account/AccountId";
 import Timestamp from "./Timestamp";
-import * as proto from "@hashgraph/proto";
-// import TransactionReceipt from "./TransactionReceipt";
-// import TransactionReceiptQuery from "./TransactionReceiptQuery";
-// import TransactionRecord from "./TransactionRecord";
-// import TransactionRecordQuery from "./TransactionRecordQuery";
 
 /**
- * @type {(() => import("./TransactionRecordQuery").default)[]}
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransactionID} proto.ITransactionID
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
  */
-export const TRANSACTION_RECORD_QUERY = [];
-
-/**
- * @type {(() => import("./TransactionReceiptQuery").default)[]}
- */
-export const TRANSACTION_RECEIPT_QUERY = [];
 
 /**
  * The client-generated ID for a transaction.
@@ -86,36 +78,6 @@ export default class TransactionId {
         return `${this.accountId.toString()}@${this.validStart.seconds}.${
             this.validStart.nanos
         }`;
-    }
-
-    /**
-     * @template ChannelT
-     * @param {import("./client/Client").default<ChannelT>} client
-     * @returns {Promise<import("./TransactionReceipt").default>}
-     */
-    getReceipt(client) {
-        if (TRANSACTION_RECEIPT_QUERY.length == 1) {
-            return TRANSACTION_RECEIPT_QUERY[0]()
-                .setTransactionId(this)
-                .execute(client);
-        } else {
-            throw new Error("TransactionReceiptQuery has not been loaded yet");
-        }
-    }
-
-    /**
-     * @template ChannelT
-     * @param {import("./client/Client").default<ChannelT>} client
-     * @returns {Promise<import("./TransactionRecord").default>}
-     */
-    getRecord(client) {
-        if (TRANSACTION_RECORD_QUERY.length == 1) {
-            return TRANSACTION_RECORD_QUERY[0]()
-                .setTransactionId(this)
-                .execute(client);
-        } else {
-            throw new Error("TransactionRecordQuery has not been loaded yet");
-        }
     }
 
     /**

@@ -149,7 +149,7 @@ export default class SystemDeleteTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.TransactionBody["data"]}
+     * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "systemDelete";

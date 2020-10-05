@@ -16,10 +16,12 @@ export function newIntegrationClient() {
             process.env.OPERATOR_KEY || process.env.VITE_OPERATOR_KEY;
 
         client.setOperator(operatorId, operatorKey);
-    } catch (err) {}
+    } catch (err) {
+        // ignore error and complain later
+    }
 
-    expect(client.getOperatorId()).to.not.be.null;
-    expect(client.getOperatorKey()).to.not.be.null;
+    expect(client.operatorAccountId).to.not.be.null;
+    expect(client.operatorPublicKey).to.not.be.null;
 
     return client;
 }

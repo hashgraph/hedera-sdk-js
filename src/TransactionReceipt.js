@@ -90,7 +90,7 @@ export default class TransactionReceipt {
      */
     _toProtobuf() {
         return {
-            status: this.status._toProtobuf(),
+            status: this.status.valueOf(),
 
             accountID:
                 this.accountId != null ? this.accountId._toProtobuf() : null,

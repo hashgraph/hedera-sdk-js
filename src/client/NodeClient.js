@@ -1,96 +1,125 @@
+import { promises as fs } from "fs";
 import Client from "./Client";
 import NodeChannel from "../channel/NodeChannel";
 import AccountId from "../account/AccountId";
 
-const MAINNET = {
-    "35.237.200.180:50211": new AccountId(3),
-    "35.186.191.247:50211": new AccountId(4),
-    "35.192.2.25:50211": new AccountId(5),
-    "35.199.161.108:50211": new AccountId(6),
-    "35.203.82.240:50211": new AccountId(7),
-    "35.236.5.219:50211": new AccountId(8),
-    "35.197.192.225:50211": new AccountId(9),
-    "35.242.233.154:50211": new AccountId(10),
-    "35.240.118.96:50211": new AccountId(11),
-    "35.204.86.32:50211": new AccountId(12),
+/**
+ * @typedef {import("./Client").ClientConfiguration} ClientConfiguration
+ */
+
+export const Network = {
+    MAINNET: {
+        "35.237.200.180:50211": new AccountId(3),
+        "35.186.191.247:50211": new AccountId(4),
+        "35.192.2.25:50211": new AccountId(5),
+        "35.199.161.108:50211": new AccountId(6),
+        "35.203.82.240:50211": new AccountId(7),
+        "35.236.5.219:50211": new AccountId(8),
+        "35.197.192.225:50211": new AccountId(9),
+        "35.242.233.154:50211": new AccountId(10),
+        "35.240.118.96:50211": new AccountId(11),
+        "35.204.86.32:50211": new AccountId(12),
+    },
+
+    TESTNET: {
+        "0.testnet.hedera.com:50211": new AccountId(3),
+        "1.testnet.hedera.com:50211": new AccountId(4),
+        "2.testnet.hedera.com:50211": new AccountId(5),
+        "3.testnet.hedera.com:50211": new AccountId(6),
+    },
+
+    PREVIEWNET: {
+        "0.previewnet.hedera.com:50211": new AccountId(3),
+        "1.previewnet.hedera.com:50211": new AccountId(4),
+        "2.previewnet.hedera.com:50211": new AccountId(5),
+        "3.previewnet.hedera.com:50211": new AccountId(6),
+    },
 };
 
-const TESTNET = {
-    "0.testnet.hedera.com:50211": new AccountId(3),
-    "1.testnet.hedera.com:50211": new AccountId(4),
-    "2.testnet.hedera.com:50211": new AccountId(5),
-    "3.testnet.hedera.com:50211": new AccountId(6),
+export const MirrorNetwork = {
+    MAINNET: ["hcs.mainnet.mirrornode.hedera.com:5600"],
+    TESTNET: ["hcs.testnet.mirrornode.hedera.com:5600"],
+    PREVIEWNET: ["hcs.previewnet.mirrornode.hedera.com:5600"],
 };
-
-const PREVIEWNET = {
-    "0.previewnet.hedera.com:50211": new AccountId(3),
-    "1.previewnet.hedera.com:50211": new AccountId(4),
-    "2.previewnet.hedera.com:50211": new AccountId(5),
-    "3.previewnet.hedera.com:50211": new AccountId(6),
-};
-
-const MAINNET_MIRROR = ["hcs.mainnet.mirrornode.hedera.com:5600"];
-const TESTNET_MIRROR = ["hcs.testnet.mirrornode.hedera.com:5600"];
-const PREVIEWNET_MIRROR = ["hcs.previewnet.mirrornode.hedera.com:5600"];
 
 /**
- * @augments {Client<NodeChannel>}
+ * @augments {Client<NodeChannel, void>}
  */
 export default class NodeClient extends Client {
     /**
-     * @param {import("./Client").ClientConstructorParameter} props
+     * @param {ClientConfiguration} [props]
      */
     constructor(props) {
         super(props);
 
-        if (typeof props.network === "string") {
-            switch (props.network) {
-                case "mainnet":
-                    this._setNetwork(MAINNET);
-                    this.setMirrorNetwork(...MAINNET_MIRROR);
-                    break;
+        if (props != null) {
+            if (typeof props.network === "string") {
+                switch (props.network) {
+                    case "mainnet":
+                        this.setNetwork(Network.MAINNET);
+                        this.setMirrorNetwork(MirrorNetwork.MAINNET);
+                        break;
 
-                case "testnet":
-                    this._setNetwork(TESTNET);
-                    this.setMirrorNetwork(...TESTNET_MIRROR);
-                    break;
+                    case "testnet":
+                        this.setNetwork(Network.TESTNET);
+                        this.setMirrorNetwork(MirrorNetwork.TESTNET);
+                        break;
 
-                case "previewnet":
-                    this._setNetwork(PREVIEWNET);
-                    this.setMirrorNetwork(...PREVIEWNET_MIRROR);
-                    break;
+                    case "previewnet":
+                        this.setNetwork(Network.PREVIEWNET);
+                        this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
+                        break;
 
-                default:
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    throw new Error(`unknown network: ${props.network}`);
+                    default:
+                        throw new Error(
+                            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                            `unknown network: ${props.network}`
+                        );
+                }
+            } else if (props.network != null) {
+                this.setNetwork(props.network);
             }
-        } else {
-            this._setNetwork(props.network);
-        }
 
-        if (typeof props.mirrorNetwork === "string") {
-            switch (props.mirrorNetwork) {
-                case "mainnet":
-                    this.setMirrorNetwork(...MAINNET_MIRROR);
-                    break;
+            if (typeof props.mirrorNetwork === "string") {
+                switch (props.mirrorNetwork) {
+                    case "mainnet":
+                        this.setMirrorNetwork(MirrorNetwork.MAINNET);
+                        break;
 
-                case "testnet":
-                    this.setMirrorNetwork(...TESTNET_MIRROR);
-                    break;
+                    case "testnet":
+                        this.setMirrorNetwork(MirrorNetwork.TESTNET);
+                        break;
 
-                case "previewnet":
-                    this.setMirrorNetwork(...PREVIEWNET_MIRROR);
-                    break;
+                    case "previewnet":
+                        this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
+                        break;
 
-                default:
-                    throw new Error(
-                        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                        `unknown mirrorNetwork: ${props.mirrorNetwork}`
-                    );
+                    default:
+                        this.setMirrorNetwork([props.mirrorNetwork]);
+                        break;
+                }
+            } else if (props.mirrorNetwork != null) {
+                this.setMirrorNetwork(props.mirrorNetwork);
             }
-        } else if (props.mirrorNetwork != null) {
-            this.setMirrorNetwork(...props.mirrorNetwork);
         }
+    }
+
+    /**
+     * @param {string | ClientConfiguration} data
+     * @returns {NodeClient}
+     */
+    static fromConfig(data) {
+        return new NodeClient(
+            typeof data === "string" ? JSON.parse(data) : data
+        );
+    }
+
+    /**
+     * @param {string} filename
+     * @returns {Promise<NodeClient>}
+     */
+    static async fromConfigFile(filename) {
+        return NodeClient.fromConfig(await fs.readFile(filename, "utf8"));
     }
 
     /**
@@ -103,7 +132,7 @@ export default class NodeClient extends Client {
      * chose nodes to send transactions to. For one transaction, at most 1/3 of the nodes will be
      * tried.
      *
-     * @param {{[key: string]: (string | AccountId)} | import("./Client").NetworkName} network
+     * @param {{[key: string]: (string | AccountId)}} network
      * @returns {NodeClient}
      */
     static forNetwork(network) {
@@ -116,7 +145,7 @@ export default class NodeClient extends Client {
      * @returns {NodeClient}
      */
     static forMainnet() {
-        return new NodeClient({ network: "mainnet", mirrorNetwork: "mainnet" });
+        return new NodeClient({ network: "mainnet" });
     }
 
     /**
@@ -125,7 +154,7 @@ export default class NodeClient extends Client {
      * @returns {NodeClient}
      */
     static forTestnet() {
-        return new NodeClient({ network: "testnet", mirrorNetwork: "testnet" });
+        return new NodeClient({ network: "testnet" });
     }
 
     /**
@@ -134,10 +163,7 @@ export default class NodeClient extends Client {
      * @returns {NodeClient}
      */
     static forPreviewnet() {
-        return new NodeClient({
-            network: "previewnet",
-            mirrorNetwork: "previewnet",
-        });
+        return new NodeClient({ network: "previewnet" });
     }
 
     /**
@@ -145,7 +171,7 @@ export default class NodeClient extends Client {
      * @param {string} address
      * @returns {NodeChannel}
      */
-    _createNewChannel(address) {
+    _createNetworkChannel(address) {
         return new NodeChannel(address);
     }
 }

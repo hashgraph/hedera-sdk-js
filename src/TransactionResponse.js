@@ -1,9 +1,15 @@
-import AccountId from "./account/AccountId";
-import TransactionId from "./TransactionId";
-import TransactionReceipt from "./TransactionReceipt";
-import TransactionRecord from "./TransactionRecord";
+import ReceiptStatusError from "./ReceiptStatusError";
+import Status from "./Status";
 import TransactionReceiptQuery from "./TransactionReceiptQuery";
 import TransactionRecordQuery from "./TransactionRecordQuery";
+
+/**
+ * @typedef {import("./client/Client").default<*, *>} Client
+ * @typedef {import("./account/AccountId").default} AccountId
+ * @typedef {import("./TransactionId").default} TransactionId
+ * @typedef {import("./TransactionReceipt").default} TransactionReceipt
+ * @typedef {import("./TransactionRecord").default} TransactionRecord
+ */
 
 export default class TransactionResponse {
     /**
@@ -27,20 +33,28 @@ export default class TransactionResponse {
     }
 
     /**
-     * @template ChannelT
-     * @param {import("./client/Client").default<ChannelT>} client
+     * @param {Client} client
      * @returns {Promise<TransactionReceipt>}
      */
-    getReceipt(client) {
-        return new TransactionReceiptQuery()
+    async getReceipt(client) {
+        const receipt = await new TransactionReceiptQuery()
             .setTransactionId(this.transactionId)
-            .setNodeId(this.nodeId)
+            .setNodeAccountId(this.nodeId)
             .execute(client);
+
+        if (receipt.status !== Status.Success) {
+            throw new ReceiptStatusError({
+                transactionReceipt: receipt,
+                status: receipt.status,
+                transactionId: this.transactionId,
+            });
+        }
+
+        return receipt;
     }
 
     /**
-     * @template ChannelT
-     * @param {import("./client/Client").default<ChannelT>} client
+     * @param {Client} client
      * @returns {Promise<TransactionRecord>}
      */
     async getRecord(client) {
@@ -48,7 +62,7 @@ export default class TransactionResponse {
 
         return new TransactionRecordQuery()
             .setTransactionId(this.transactionId)
-            .setNodeId(this.nodeId)
+            .setNodeAccountId(this.nodeId)
             .execute(client);
     }
 }

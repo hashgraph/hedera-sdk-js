@@ -2,49 +2,69 @@ import Client from "./Client";
 import WebChannel from "../channel/WebChannel";
 import AccountId from "../account/AccountId";
 
-const MAINNET = {
-    "https://grpc-web.myhbarwallet.com": new AccountId(3),
-};
+/**
+ * @typedef {import("./Client").ClientConfiguration} ClientConfiguration
+ */
 
-const TESTNET = {
-    "https://grpc-web.testnet.myhbarwallet.com": new AccountId(3),
-};
+export const Network = {
+    MAINNET: {
+        "https://grpc-web.myhbarwallet.com": new AccountId(3),
+    },
 
-const PREVIEWNET = {
-    "https://grpc-web.previewnet.myhbarwallet.com": new AccountId(3),
+    TESTNET: {
+        "https://grpc-web.testnet.myhbarwallet.com": new AccountId(3),
+    },
+
+    PREVIEWNET: {
+        "https://grpc-web.previewnet.myhbarwallet.com": new AccountId(3),
+    },
 };
 
 /**
- * @augments {Client<WebChannel>}
+ * @augments {Client<WebChannel, void>}
  */
 export default class WebClient extends Client {
     /**
-     * @param {import("./Client").ClientConstructorParameter} props
+     * @param {ClientConfiguration} [props]
      */
     constructor(props) {
         super(props);
 
-        if (typeof props.network === "string") {
-            switch (props.network) {
-                case "mainnet":
-                    this._setNetwork(MAINNET);
-                    break;
+        if (props != null) {
+            if (typeof props.network === "string") {
+                switch (props.network) {
+                    case "mainnet":
+                        this.setNetwork(Network.MAINNET);
+                        break;
 
-                case "testnet":
-                    this._setNetwork(TESTNET);
-                    break;
+                    case "testnet":
+                        this.setNetwork(Network.TESTNET);
+                        break;
 
-                case "previewnet":
-                    this._setNetwork(PREVIEWNET);
-                    break;
+                    case "previewnet":
+                        this.setNetwork(Network.PREVIEWNET);
+                        break;
 
-                default:
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    throw new Error(`unknown network: ${props.network}`);
+                    default:
+                        throw new Error(
+                            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                            `unknown network: ${props.network}`
+                        );
+                }
+            } else if (props.network != null) {
+                this.setNetwork(props.network);
             }
-        } else {
-            this._setNetwork(props.network);
         }
+    }
+
+    /**
+     * @param {string | ClientConfiguration} data
+     * @returns {WebClient}
+     */
+    static fromConfig(data) {
+        return new WebClient(
+            typeof data === "string" ? JSON.parse(data) : data
+        );
     }
 
     /**
@@ -96,7 +116,7 @@ export default class WebClient extends Client {
      * @param {string} address
      * @returns {WebChannel}
      */
-    _createNewChannel(address) {
+    _createNetworkChannel(address) {
         return new WebChannel(address);
     }
 }

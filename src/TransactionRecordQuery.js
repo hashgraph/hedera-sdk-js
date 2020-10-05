@@ -4,7 +4,6 @@ import TransactionRecord from "./TransactionRecord";
 import TransactionId from "./TransactionId";
 import * as proto from "@hashgraph/proto";
 import Channel from "./channel/Channel";
-import { TRANSACTION_RECORD_QUERY } from "./TransactionId";
 
 /**
  * @augments {Query<TransactionRecord>}
@@ -69,34 +68,37 @@ export default class TransactionRecordQuery extends Query {
      * @returns {boolean}
      */
     _shouldRetry(responseStatus, response) {
-        switch (responseStatus.code) {
-            case Status.Busy.code:
-            case Status.Unknown.code:
-            case Status.ReceiptNotFound.code:
-            case Status.RecordNotFound.code:
-                return true;
-            default:
-            // Do nothing
-        }
+        return false;
+        // TODO:
+        // switch (responseStatus.code) {
+        //     case Status.Busy.code:
+        //     case Status.Unknown.code:
+        //     case Status.ReceiptNotFound.code:
+        //     case Status.RecordNotFound.code:
+        //         return true;
+        //     default:
+        //     // Do nothing
+        // }
 
-        const transactionGetRecord = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
-        const record = /** @type {proto.ITransactionRecord} */ (transactionGetRecord.transactionRecord);
-        const receipt = /** @type {proto.ITransactionReceipt} */ (record.receipt);
-        const status = Status._fromCode(
-            /** @type {proto.ResponseCodeEnum} */ (receipt.status)
-        );
+        // const transactionGetRecord = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
+        // const record = /** @type {proto.ITransactionRecord} */ (transactionGetRecord.transactionRecord);
+        // const receipt = /** @type {proto.ITransactionReceipt} */ (record.receipt);
+        // const status = Status._fromCode(
+        //     /** @type {proto.ResponseCodeEnum} */ (receipt.status)
+        // );
 
-        switch (status.code) {
-            case Status.Ok.code:
-            case Status.Busy.code:
-            case Status.Unknown.code:
-            case Status.ReceiptNotFound.code:
-            case Status.RecordNotFound.code:
-                return true;
-            default:
-                return false;
-        }
+        // switch (status.code) {
+        //     case Status.Ok.code:
+        //     case Status.Busy.code:
+        //     case Status.Unknown.code:
+        //     case Status.ReceiptNotFound.code:
+        //     case Status.RecordNotFound.code:
+        //         return true;
+        //     default:
+        //         return false;
+        // }
     }
+
     /**
      * @protected
      * @override
@@ -154,9 +156,6 @@ export default class TransactionRecordQuery extends Query {
 
 QUERY_REGISTRY.set(
     "transactionGetRecord",
-    // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/unbound-method
     TransactionRecordQuery._fromProtobuf
 );
-
-TRANSACTION_RECORD_QUERY.push(() => new TransactionRecordQuery());

@@ -176,7 +176,7 @@ export default class FileCreateTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.TransactionBody["data"]}
+     * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "fileCreate";

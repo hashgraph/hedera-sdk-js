@@ -19,7 +19,7 @@ describe("LiveHash", function () {
         );
 
         const client = newClient();
-        const operatorId = client.getOperatorId();
+        const operatorId = client.operatorAccountId;
         let errorThrown = false;
 
         const key = PrivateKey.generate();

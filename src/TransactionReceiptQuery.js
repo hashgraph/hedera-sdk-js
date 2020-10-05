@@ -1,18 +1,31 @@
 import Query, { QUERY_REGISTRY } from "./Query";
 import Status from "./Status";
-import AccountId from "./account/AccountId";
 import TransactionReceipt from "./TransactionReceipt";
 import TransactionId from "./TransactionId";
-import * as proto from "@hashgraph/proto";
-import Channel from "./channel/Channel";
-import { TRANSACTION_RECEIPT_QUERY } from "./TransactionId";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").ITransactionReceipt} proto.ITransactionReceipt
+ * @typedef {import("@hashgraph/proto").ITransactionGetReceiptQuery} proto.ITransactionGetReceiptQuery
+ * @typedef {import("@hashgraph/proto").ITransactionGetReceiptResponse} proto.ITransactionGetReceiptResponse
+ * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
+ */
+
+/**
+ * @typedef {import("./account/AccountId").default} AccountId
+ * @typedef {import("./channel/Channel").default} Channel
+ */
 
 /**
  * @augments {Query<TransactionReceipt>}
  */
 export default class TransactionReceiptQuery extends Query {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {TransactionId | string} [props.transactionId]
      */
     constructor(props = {}) {
@@ -31,15 +44,7 @@ export default class TransactionReceiptQuery extends Query {
 
     /**
      * @internal
-     * @returns {TransactionReceiptQuery}
-     */
-    static _new() {
-        return new TransactionReceiptQuery();
-    }
-
-    /**
-     * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {TransactionReceiptQuery}
      */
     static _fromProtobuf(query) {
@@ -50,6 +55,13 @@ export default class TransactionReceiptQuery extends Query {
                 ? TransactionId._fromProtobuf(receipt.transactionID)
                 : undefined,
         });
+    }
+
+    /**
+     * @returns {?TransactionId}
+     */
+    get transactionId() {
+        return this._transactionId;
     }
 
     /**
@@ -68,8 +80,8 @@ export default class TransactionReceiptQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @returns {boolean}
      */
     _isPaymentRequired() {
@@ -77,47 +89,51 @@ export default class TransactionReceiptQuery extends Query {
     }
 
     /**
-     * @abstract
+     * @override
      * @protected
      * @param {Status} responseStatus
      * @param {proto.IResponse} response
      * @returns {boolean}
      */
     _shouldRetry(responseStatus, response) {
-        switch (responseStatus.code) {
-            case Status.Busy.code:
-            case Status.Unknown.code:
-            case Status.ReceiptNotFound.code:
+        switch (responseStatus) {
+            case Status.Busy:
+            case Status.Unknown:
+            case Status.ReceiptNotFound:
                 return true;
+
             default:
-            // Do nothing
+            // continue to checking receipt status
         }
 
         const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);
         const receipt = /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt);
-        const status = Status._fromCode(
-            /** @type {proto.ResponseCodeEnum} */ (receipt.status)
-        );
+        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (receipt.status);
+        const receiptStatus = Status._fromCode(receiptStatusCode);
 
-        switch (status.code) {
-            case Status.Ok.code:
-            case Status.Busy.code:
-            case Status.Unknown.code:
-            case Status.ReceiptNotFound.code:
+        switch (receiptStatus) {
+            case Status.Ok:
+            case Status.Busy:
+            case Status.Unknown:
+            case Status.ReceiptNotFound:
                 return true;
+
             default:
-                return false;
+            // looks like its either success or some other error
         }
+
+        return false;
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
      */
-    _getMethod(channel) {
-        return (query) => channel.crypto.getTransactionReceipts(query);
+    _execute(channel, request) {
+        return channel.crypto.getTransactionReceipts(request);
     }
 
     /**
@@ -134,30 +150,27 @@ export default class TransactionReceiptQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
-     * @param {AccountId} __
-     * @param {proto.IQuery} ___
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
      * @returns {Promise<TransactionReceipt>}
      */
-    _mapResponse(response, __, ___) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request) {
         const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);
+        const receipt = /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt);
 
-        return Promise.resolve(
-            TransactionReceipt._fromProtobuf(
-                /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt)
-            )
-        );
+        return Promise.resolve(TransactionReceipt._fromProtobuf(receipt));
     }
 
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             transactionGetReceipt: {
-                header,
+                header: this._makeRequestHeader(),
                 transactionID:
                     this._transactionId != null
                         ? this._transactionId._toProtobuf()
@@ -169,9 +182,6 @@ export default class TransactionReceiptQuery extends Query {
 
 QUERY_REGISTRY.set(
     "transactionGetReceipt",
-    // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/unbound-method
     TransactionReceiptQuery._fromProtobuf
 );
-
-TRANSACTION_RECEIPT_QUERY.push(() => new TransactionReceiptQuery());

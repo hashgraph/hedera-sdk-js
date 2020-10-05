@@ -1,21 +1,42 @@
-import * as proto from "@hashgraph/proto";
-import AccountId from "./account/AccountId";
 import Hbar from "./Hbar";
 import TransactionResponse from "./TransactionResponse";
 import TransactionId from "./TransactionId";
-import HederaExecutable from "./HederaExecutable";
+import Executable from "./Executable";
 import Status from "./Status";
-import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Long from "long";
 import * as sha384 from "./sha384";
+import * as hex from "./encoding/hex";
+import {
+    Transaction as ProtoTransaction,
+    TransactionBody as ProtoTransactionBody,
+} from "@hashgraph/proto";
 
-export const DEFAULT_AUTO_RENEW_PERIOD = Long.fromValue(7776000); // 90 days (in seconds)
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ */
 
+/**
+ * @typedef {import("@hashgraph/cryptography").PrivateKey} PrivateKey
+ * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
+ * @typedef {import("./account/AccountId").default} AccountId
+ * @typedef {import("./channel/Channel").default} Channel
+ */
+
+// 90 days (in seconds)
+export const DEFAULT_AUTO_RENEW_PERIOD = Long.fromValue(7776000);
+
+// maximum value of i64 (so there is never a record generated)
 export const DEFAULT_RECORD_THRESHOLD = Hbar.fromTinybars(
     Long.fromString("9223372036854775807")
 );
 
-const DEFAULT_TRANSACTION_VALID_DURATION = 120; // seconds
+// 120 seconds
+const DEFAULT_TRANSACTION_VALID_DURATION = 120;
 
 /**
  * @type {Map<proto.TransactionBody["data"], (body: proto.TransactionBody) => Transaction>}
@@ -26,9 +47,9 @@ export const TRANSACTION_REGISTRY = new Map();
  * Base class for all transactions that may be submitted to Hedera.
  *
  * @abstract
- * @augments {HederaExecutable<proto.ITransaction, proto.ITransactionResponse, TransactionResponse>}
+ * @augments {Executable<proto.ITransaction, proto.ITransactionResponse, TransactionResponse>}
  */
-export default class Transaction extends HederaExecutable {
+export default class Transaction extends Executable {
     // A SDK transaction is composed of multiple, raw protobuf transactions.
     // These should be functionally identicasl, with the exception of pointing to
     // different nodes.
@@ -40,18 +61,27 @@ export default class Transaction extends HederaExecutable {
         super();
 
         /**
-         * @internal
+         * List of proto transactions that have been built from this SDK
+         * transaction. Each one should share the same transaction ID.
+         *
+         * @private
          * @type {proto.ITransaction[]}
          */
         this._transactions = [];
 
         /**
+         * Set of public keys (as string) who have signed this transaction so
+         * we do not allow them to sign it again.
+         *
          * @private
          * @type {Set<string>}
          */
-        this._signers = new Set();
+        this._signerPublicKeys = new Set();
 
         /**
+         * List of node account IDs for each transaction that has been
+         * built.
+         *
          * @private
          * @type {AccountId[]}
          */
@@ -95,35 +125,44 @@ export default class Transaction extends HederaExecutable {
      * @returns {Transaction}
      */
     static fromBytes(bytes) {
-        const transaction = proto.Transaction.decode(bytes);
-        const isFrozen =
-            transaction.sigMap != null
-                ? transaction.sigMap.sigPair != null
-                    ? transaction.sigMap.sigPair.length
-                    : 0
-                : 0 > 0;
-        const body = proto.TransactionBody.decode(transaction.bodyBytes);
+        const transaction = ProtoTransaction.decode(bytes);
+
+        const signaturePairs =
+            transaction.sigMap != null ? transaction.sigMap.sigPair : null;
+
+        // if a transaction is frozen we need to propagate that state
+        const isFrozen = signaturePairs != null && signaturePairs.length > 0;
+
+        const body = ProtoTransactionBody.decode(transaction.bodyBytes);
 
         if (body.data == null) {
-            throw new Error("body.data was not set in the protobuf");
+            throw new Error("(BUG) body.data was not set in the protobuf");
         }
 
         const fromProtobuf = TRANSACTION_REGISTRY.get(body.data);
 
         if (fromProtobuf == null) {
             throw new Error(
-                `(BUG) Transaction.fromBytes() not implemented for type ${
-                    body.data != null ? body.data : ""
-                }`
+                `(BUG) Transaction.fromBytes() not implemented for type ${body.data}`
             );
         }
 
         const instance = fromProtobuf(body);
 
         if (isFrozen) {
-            // FIXME: convert this to JS
-            // instance.signatures = Collections.singletonList(tx.getSigMap().toBuilder());
             instance._transactions = [transaction];
+
+            // collate those that have signed the transaction
+            // this is so that we don't allow someone to sign more than once
+            if (signaturePairs != null) {
+                for (const signaturePair of signaturePairs) {
+                    if (signaturePair.pubKeyPrefix == null) continue;
+
+                    instance._signerPublicKeys.add(
+                        hex.encode(signaturePair.pubKeyPrefix)
+                    );
+                }
+            }
         }
 
         return instance;
@@ -132,7 +171,7 @@ export default class Transaction extends HederaExecutable {
     /**
      * @returns {?AccountId}
      */
-    getNodeId() {
+    get nodeAccountId() {
         if (this._nodeIds.length > 0) {
             return this._nodeIds[this._nextTransactionIndex];
         }
@@ -141,15 +180,12 @@ export default class Transaction extends HederaExecutable {
     }
 
     /**
-     * Set the account ID of the node that this transaction will be
-     * exclusively submitted to.
-     *
-     * @param {AccountId} nodeId
+     * @param {AccountId} nodeAccountId
      * @returns {this}
      */
-    setNodeId(nodeId) {
+    setNodeAccountId(nodeAccountId) {
         this._requireNotFrozen();
-        this._nodeIds = [nodeId];
+        this._nodeIds = [nodeAccountId];
 
         return this;
     }
@@ -157,7 +193,7 @@ export default class Transaction extends HederaExecutable {
     /**
      * @returns {number}
      */
-    getTransactionValidDuration() {
+    get transactionValidDuration() {
         return this._transactionValidDuration;
     }
 
@@ -179,7 +215,7 @@ export default class Transaction extends HederaExecutable {
     /**
      * @returns {?Hbar}
      */
-    getMaxTransactionFee() {
+    get maxTransactionFee() {
         return this._maxTransactionFee;
     }
 
@@ -200,7 +236,7 @@ export default class Transaction extends HederaExecutable {
     /**
      * @returns {string}
      */
-    getTransactionMemo() {
+    get transactionMemo() {
         return this._transactionMemo;
     }
 
@@ -221,7 +257,7 @@ export default class Transaction extends HederaExecutable {
     /**
      * @returns {TransactionId}
      */
-    getTransactionId() {
+    get transactionId() {
         if (this._transactionId == null) {
             throw new Error(
                 "transaction must have been frozen before getting the transaction ID, try calling `freeze`"
@@ -268,9 +304,14 @@ export default class Transaction extends HederaExecutable {
      */
     async signWith(publicKey, transactionSigner) {
         const publicKeyData = publicKey.toBytes();
-        const publicKeyString = publicKey.toString();
 
-        if (this._signers.has(publicKeyString)) {
+        // note: this omits the DER prefix on purpose because Hedera doesn't
+        // support that in the protobuf. this means that we woudl fail
+        // to re-inflate [this._signerPublicKeys] during [fromBytes] if we used DER
+        // prefixes here
+        const publicKeyHex = hex.encode(publicKeyData);
+
+        if (this._signerPublicKeys.has(publicKeyHex)) {
             // this public key has already signed this transaction
             return this;
         }
@@ -279,25 +320,27 @@ export default class Transaction extends HederaExecutable {
             const message = /** @type {Uint8Array} */ (transaction.bodyBytes);
             const signature = await transactionSigner(message);
 
-            if (
-                transaction.sigMap != null &&
-                transaction.sigMap.sigPair != null
-            ) {
-                transaction.sigMap.sigPair.push({
-                    pubKeyPrefix: publicKeyData,
-                    ed25519: signature,
-                });
+            if (transaction.sigMap == null) {
+                transaction.sigMap = {};
             }
+
+            if (transaction.sigMap.sigPair == null) {
+                transaction.sigMap.sigPair = [];
+            }
+
+            transaction.sigMap.sigPair.push({
+                pubKeyPrefix: publicKeyData,
+                ed25519: signature,
+            });
         }
 
-        this._signers.add(publicKeyString);
+        this._signerPublicKeys.add(publicKeyHex);
 
         return this;
     }
 
     /**
-     * @template ChannelT
-     * @param {import("./client/Client").default<ChannelT>} client
+     * @param {import("./client/Client").default<Channel, *>} client
      * @returns {Promise<this>}
      */
     signWithOperator(client) {
@@ -333,13 +376,12 @@ export default class Transaction extends HederaExecutable {
      * Will use the `Client`, if available, to generate a default Transaction ID and select 1/3
      * nodes to prepare this transaction for.
      *
-     * @template ChannelT
-     * @param {import("./client/Client").default<ChannelT> | null} client
+     * @param {?import("./client/Client").default<Channel, *>} client
      * @returns {this}
      */
     freezeWith(client) {
         if (client != null && this._maxTransactionFee == null) {
-            this._maxTransactionFee = client._maxTransactionFee;
+            this._maxTransactionFee = client.maxTransactionFee;
         }
 
         if (client != null && this._transactionId == null) {
@@ -356,7 +398,7 @@ export default class Transaction extends HederaExecutable {
 
         if (this._transactionId == null) {
             throw new Error(
-                "`client` must be provided or `transactionId` must be set"
+                "`transactionId` must be set or `client` must be provided with `freezeWith`"
             );
         }
 
@@ -378,7 +420,7 @@ export default class Transaction extends HederaExecutable {
             }
         } else {
             throw new Error(
-                "`client` must be provided or `nodeId` must be set"
+                "`nodeAccountId` must be set or `client` must be provided with `freezeWith`"
             );
         }
 
@@ -389,37 +431,40 @@ export default class Transaction extends HederaExecutable {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.Transaction.encode(this._transactions[0]).finish();
+        let tx;
+
+        // return a partial transaction _or_ return exactly one
+        // frozen transaction
+
+        if (!this._isFrozen()) {
+            tx = this._makeTransaction(null);
+        } else {
+            this._requireExactlyOneFrozen();
+
+            tx = this._transactions[0];
+        }
+
+        return ProtoTransaction.encode(tx).finish();
     }
 
     /**
      * @returns {Promise<Uint8Array>}
      */
     getTransactionHash() {
-        if (!this._isFrozen()) {
-            throw new Error(
-                "transaction must have been frozen before calculating the hash will be stable, try calling `freeze`"
-            );
-        }
-
-        if (this._transactions.length !== 1) {
-            throw new Error(
-                "transaction must have an explicit node ID set, try calling `setNodeId`"
-            );
-        }
+        this._requireExactlyOneFrozen();
 
         return sha384.digest(
-            proto.Transaction.encode(this._makeRequest()).finish()
+            ProtoTransaction.encode(this._makeRequest()).finish()
         );
     }
 
     /**
+     * @override
      * @protected
-     * @template ChannelT
-     * @param {import("./client/Client").default<ChannelT>} client
+     * @param {import("./client/Client").default<Channel, *>} client
      * @returns {Promise<void>}
      */
-    async _onExecute(client) {
+    async _beforeExecute(client) {
         if (!this._isFrozen()) {
             this.freezeWith(client);
         }
@@ -427,18 +472,20 @@ export default class Transaction extends HederaExecutable {
         // on execute, sign each transaction with the operator, if present
         // and we are signing a transaction that used the default transaction ID
 
-        const transactionId = /** @type {TransactionId} */ (this
-            ._transactionId);
-        const operatorId = client.getOperatorId();
+        const transactionId = this.transactionId;
+        const operatorAccountId = client.operatorAccountId;
 
-        if (operatorId != null && operatorId.equals(transactionId.accountId)) {
+        if (
+            operatorAccountId != null &&
+            operatorAccountId.equals(transactionId.accountId)
+        ) {
             await this.signWithOperator(client);
         }
     }
 
     /**
-     * @internal
      * @override
+     * @internal
      * @returns {proto.ITransaction}
      */
     _makeRequest() {
@@ -446,16 +493,17 @@ export default class Transaction extends HederaExecutable {
     }
 
     /**
-     * @abstract
+     * @override
      * @protected
      * @param {proto.ITransactionResponse} response
      * @returns {Status}
      */
     _mapResponseStatus(response) {
-        return Status._fromCode(
-            /** @type {proto.ResponseCodeEnum} */
-            (response.nodeTransactionPrecheckCode)
-        );
+        const { nodeTransactionPrecheckCode } = response;
+
+        return nodeTransactionPrecheckCode == null
+            ? Status.Ok
+            : Status._fromCode(nodeTransactionPrecheckCode);
     }
 
     /**
@@ -467,69 +515,74 @@ export default class Transaction extends HederaExecutable {
      * @returns {Promise<TransactionResponse>}
      */
     async _mapResponse(response, nodeId, request) {
+        const transactionHash = await sha384.digest(
+            ProtoTransaction.encode(request).finish()
+        );
+
         return new TransactionResponse({
             nodeId,
-            transactionHash: await sha384.digest(
-                proto.Transaction.encode(request).finish()
-            ),
-            transactionId: /** @type {TransactionId} */ (this._transactionId),
+            transactionHash,
+            transactionId: this.transactionId,
         });
     }
 
     /**
-     * @abstract
+     * @override
      * @template ChannelT
-     * @param {import("./client/Client").default<ChannelT>} client
+     * @template MirrorChannelT
+     * @param {?import("./client/Client").default<ChannelT, MirrorChannelT>} client
      * @returns {AccountId}
      */
-    _getNodeId(client) {
-        const node = this.getNodeId();
-        return node != null ? node : client._getNextNodeId();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _getNodeAccountId(client) {
+        const nodeAccountId = this.nodeAccountId;
+
+        if (nodeAccountId != null) {
+            return nodeAccountId;
+        }
+
+        throw new Error(
+            "(BUG) Transaction::_getNodeAccountId called before transaction has been frozen"
+        );
     }
 
     /**
-     * @abstract
+     * @override
      * @protected
      * @returns {void}
      */
     _advanceRequest() {
-        // each time buildNext is called we move our cursor to the next transaction
+        // each time we move our cursor to the next transaction
         // wrapping around to ensure we are cycling
         this._nextTransactionIndex =
             (this._nextTransactionIndex + 1) % this._transactions.length;
     }
 
     /**
-     * @private
-     * @param {AccountId} nodeId
+     * @internal
+     * @param {?AccountId} nodeId
      * @returns {proto.ITransaction}
      */
     _makeTransaction(nodeId) {
         const body = this._makeTransactionBody(nodeId);
-        const bodyBytes = proto.TransactionBody.encode(body).finish();
+        const bodyBytes = ProtoTransactionBody.encode(body).finish();
 
         return {
+            bodyBytes,
             sigMap: {
                 sigPair: [],
             },
-            bodyBytes,
         };
     }
 
     /**
      * @private
-     * @param {AccountId} nodeId
+     * @param {?AccountId} nodeId
      * @returns {proto.ITransactionBody}
      */
     _makeTransactionBody(nodeId) {
-        /** @assert {this._transactionId != null} */
-
-        /** @type {string} */
-        // @ts-ignore
-        const dataCase = this._getTransactionDataCase();
-
         return {
-            [dataCase]: this._makeTransactionData(),
+            [this._getTransactionDataCase()]: this._makeTransactionData(),
             transactionFee:
                 this._maxTransactionFee != null
                     ? this._maxTransactionFee.toTinybars()
@@ -539,7 +592,7 @@ export default class Transaction extends HederaExecutable {
                 this._transactionId != null
                     ? this._transactionId._toProtobuf()
                     : null,
-            nodeAccountID: nodeId._toProtobuf(),
+            nodeAccountID: nodeId != null ? nodeId._toProtobuf() : null,
             transactionValidDuration: {
                 seconds: this._transactionValidDuration,
             },
@@ -549,7 +602,7 @@ export default class Transaction extends HederaExecutable {
     /**
      * @abstract
      * @protected
-     * @returns {proto.TransactionBody["data"]}
+     * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         throw new Error("not implemented");
@@ -579,6 +632,23 @@ export default class Transaction extends HederaExecutable {
         if (this._isFrozen()) {
             throw new Error(
                 "transaction is immutable; it has at least one signature or has been explicitly frozen"
+            );
+        }
+    }
+
+    /**
+     * @private
+     */
+    _requireExactlyOneFrozen() {
+        if (!this._isFrozen()) {
+            throw new Error(
+                "transaction must have been frozen before calculating the hash will be stable, try calling `freeze`"
+            );
+        }
+
+        if (this._transactions.length !== 1) {
+            throw new Error(
+                "transaction must have an explicit node ID set, try calling `setNodeAccountId`"
             );
         }
     }

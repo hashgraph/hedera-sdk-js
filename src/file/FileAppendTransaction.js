@@ -133,7 +133,7 @@ export default class FileAppendTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.TransactionBody["data"]}
+     * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "fileAppend";

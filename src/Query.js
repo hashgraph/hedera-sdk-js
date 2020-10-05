@@ -1,13 +1,12 @@
 import Status from "./Status";
 import Hbar from "./Hbar";
-import AccountId from "./account/AccountId";
-import Channel from "./channel/Channel";
-import HederaExecutable from "./HederaExecutable";
+import Executable from "./Executable";
 import TransactionId from "./TransactionId";
 import {
     Query as ProtoQuery,
     TransactionBody as ProtoTransactionBody,
     ResponseType as ProtoResponseType,
+    ResponseCodeEnum,
 } from "@hashgraph/proto";
 
 /**
@@ -22,6 +21,11 @@ import {
  */
 
 /**
+ * @typedef {import("./account/AccountId").default} AccountId
+ * @typedef {import("./client/Client").ClientOperator} ClientOperator
+ */
+
+/**
  * @type {Map<ProtoQuery["query"], (query: proto.IQuery) => Query<*>>}
  */
 export const QUERY_REGISTRY = new Map();
@@ -31,9 +35,9 @@ export const QUERY_REGISTRY = new Map();
  *
  * @abstract
  * @template OutputT
- * @augments {HederaExecutable<proto.IQuery, proto.IResponse, OutputT>}
+ * @augments {Executable<proto.IQuery, proto.IResponse, OutputT>}
  */
-export default class Query extends HederaExecutable {
+export default class Query extends Executable {
     constructor() {
         super();
 
@@ -97,12 +101,16 @@ export default class Query extends HederaExecutable {
     }
 
     /**
-     * Set an explicit node ID to use for this query.
+     * Set the account ID of the node that will be used to submit this
+     * query to the network.
+     *
+     * This node must exist in the network on the client that is used to later
+     * execute this query.
      *
      * @param {AccountId} nodeId
      * @returns {this}
      */
-    setNodeId(nodeId) {
+    setNodeAccountId(nodeId) {
         this._nodeId = nodeId;
 
         return this;
@@ -144,19 +152,24 @@ export default class Query extends HederaExecutable {
     }
 
     /**
+     * @override
      * @template ChannelT
-     * @param {import("./client/Client").default<ChannelT>} client
+     * @template MirrorChannelT
+     * @param {import("./client/Client").default<ChannelT, MirrorChannelT>} client
      * @returns {Promise<void>}
      */
-    async _onExecute(client) {
+    async _beforeExecute(client) {
         if (
-            this._paymentTransactions.length != 0 ||
+            this._paymentTransactions.length !== 0 ||
             !this._isPaymentRequired()
         ) {
             return;
         }
 
-        const operator = client.getOperator();
+        // generate payment transactions if one was
+        // not set and payment is required
+
+        const operator = client._operator;
 
         if (operator == null) {
             throw new Error(
@@ -164,21 +177,20 @@ export default class Query extends HederaExecutable {
             );
         }
 
-        const cost = client._maxQueryPayment;
+        const paymentAmount = this._queryPayment;
 
-        // if (this._queryPayment == null) {
-        //     const cost = this.getCost(client);
-        //     const maxCost = this._maxQueryPayment != null ? this._maxQueryPayment : client._maxQueryPayment;
-
-        //     if (cost.compareTo(maxCost) > 0) {
-        //         return new MaxQueryPaymentExceeded(this, cost, maxCost);
-        //     }
-        // } else {
-        // }
+        if (paymentAmount == null) {
+            throw new Error(
+                "query cost estimator not implemented, use setQueryPayment"
+            );
+        }
 
         this._paymentTransactionId = TransactionId.generate(operator.accountId);
 
         if (this._nodeId == null) {
+            // like how TransactionBuilder has to build (N / 3) native transactions
+            // to handle multi - node retry, so too does the QueryBuilder for payment transactions
+
             const size = client._getNumberOfNodesForTransaction();
             this._paymentTransactions = [];
             this._paymentTransactionNodeIds = [];
@@ -189,67 +201,58 @@ export default class Query extends HederaExecutable {
                 this._paymentTransactionNodeIds.push(nodeId);
                 this._paymentTransactions.push(
                     await _makePaymentTransaction(
-                        /** @type {import("./TransactionId").default} */ (this
-                            ._paymentTransactionId),
+                        this._paymentTransactionId,
                         nodeId,
                         operator,
-                        /** @type {Hbar} */ (cost)
+                        paymentAmount
                     )
                 );
             }
         } else {
+            // explicit node account ID being set means that we only
+            // need to generate one payment transaction
+
+            this._paymentTransactionNodeIds = [this._nodeId];
             this._paymentTransactions = [
                 await _makePaymentTransaction(
-                    /** @type {import("./TransactionId").default} */ (this
-                        ._paymentTransactionId),
+                    this._paymentTransactionId,
                     this._nodeId,
                     operator,
-                    /** @type {Hbar} */ (cost)
+                    paymentAmount
                 ),
             ];
-            this._paymentTransactionNodeIds = [this._nodeId];
         }
     }
 
     /**
      * @abstract
      * @protected
-     * @param {proto.IResponse} _
+     * @param {proto.IResponse} response
      * @returns {proto.IResponseHeader}
      */
-    _mapResponseHeader(_) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponseHeader(response) {
         throw new Error("not implemented");
     }
 
     /**
-     * @override
-     * @internal
-     * @returns {proto.IQuery}
+     * @protected
+     * @returns {proto.IQueryHeader}
      */
-    _makeRequest() {
+    _makeRequestHeader() {
         /** @type {proto.IQueryHeader} */
         let header = {};
 
-        if (this._isPaymentRequired() && this._paymentTransactions != null) {
+        if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             header = {
+                responseType: ProtoResponseType.ANSWER_ONLY,
                 payment: this._paymentTransactions[
                     this._nextPaymentTransactionIndex
                 ],
-                responseType: ProtoResponseType.ANSWER_ONLY,
             };
         }
 
-        return this._onMakeRequest(header);
-    }
-
-    /**
-     * @abstract
-     * @internal
-     * @param {proto.IQueryHeader} _
-     * @returns {proto.IQuery}
-     */
-    _onMakeRequest(_) {
-        throw new Error("not implemented");
+        return header;
     }
 
     /**
@@ -258,50 +261,55 @@ export default class Query extends HederaExecutable {
      * @returns {Status}
      */
     _mapResponseStatus(response) {
+        const { nodeTransactionPrecheckCode } = this._mapResponseHeader(
+            response
+        );
+
         return Status._fromCode(
-            /** @type {proto.ResponseCodeEnum} */ (this._mapResponseHeader(
-                response
-            ).nodeTransactionPrecheckCode)
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
         );
     }
 
     /**
-     * @abstract
-     * @protected
-     * @param {proto.IResponse} _
-     * @param {AccountId} __
-     * @param {proto.IQuery} ___
-     * @returns {Promise<OutputT>}
-     */
-    _mapResponse(_, __, ___) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @protected
-     * @param {Channel} _
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
-     */
-    _getMethod(_) {
-        throw new Error("not implemented");
-    }
-
-    /**
      * @template ChannelT
-     * @param {import("./client/Client").default<ChannelT>} client
+     * @template MirrorChannelT
+     * @param {import("./client/Client").default<ChannelT, MirrorChannelT>} client
      * @returns {AccountId}
      */
-    _getNodeId(client) {
-        return this._nodeId != null ? this._nodeId : client._getNextNodeId();
+    _getNodeAccountId(client) {
+        if (this._paymentTransactionNodeIds.length > 0) {
+            // if there are payment transactions,
+            // we need to use the node of the current payment transaction
+            return this._paymentTransactionNodeIds[
+                this._nextPaymentTransactionIndex
+            ];
+        }
+
+        if (this._nodeId != null) {
+            // free queries with an explicit node
+            return this._nodeId;
+        }
+
+        if (client == null) {
+            throw new Error(
+                "requires a client to pick the next node ID for a query"
+            );
+        }
+
+        // otherwise just pick the next node in the round robin
+        // this is hit for free queries without an explicit node
+        return client._getNextNodeId();
     }
 
     /**
+     * @override
      * @protected
      * @returns {void}
      */
     _advanceRequest() {
-        if (this._isPaymentRequired() && this._paymentTransactions != null) {
+        if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             // each time we move our cursor to the next transaction
             // wrapping around to ensure we are cycling
             this._nextPaymentTransactionIndex =
@@ -312,9 +320,9 @@ export default class Query extends HederaExecutable {
 }
 
 /**
- * @param {import("./TransactionId").default} paymentTransactionId
+ * @param {TransactionId} paymentTransactionId
  * @param {AccountId} nodeId
- * @param {import("./client/Client").ClientOperator} operator
+ * @param {ClientOperator} operator
  * @param {Hbar} paymentAmount
  * @returns {Promise<proto.ITransaction>}
  */

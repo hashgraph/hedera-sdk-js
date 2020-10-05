@@ -1,5 +1,4 @@
 import AccountId from "../account/AccountId";
-import Channel from "../channel/Channel";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Hbar from "../Hbar";
 
@@ -21,68 +20,75 @@ import Hbar from "../Hbar";
  */
 
 /**
- * @typedef {object} ClientConstructorParameter
+ * @typedef {object} ClientConfiguration
  * @property {{[key: string]: (string | AccountId)} | NetworkName} network
- * @property {string[] | NetworkName} [mirrorNetwork]
+ * @property {string[] | NetworkName | string} [mirrorNetwork]
  * @property {Operator} [operator]
  */
 
 /**
  * @abstract
  * @template ChannelT
+ * @template MirrorChannelT
  */
 export default class Client {
     /**
      * @protected
      * @hideconstructor
-     * @param {ClientConstructorParameter} props
+     * @param {ClientConfiguration} [props]
      */
     constructor(props) {
         /**
-         * @protected
+         * List of mirror network URLs.
+         *
+         * @private
          * @type {string[]}
          */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this._mirrorNetwork = [];
 
         /**
-         * @protected
-         * @type {Map<string, Channel>}
+         * Map of the mirror network URL to
+         * its gRPC channel implementation.
+         *
+         * @private
+         * @type {Map<string, MirrorChannelT>}
          */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this._mirrorChannels = new Map();
+        this._mirrorChannels = new Map(null);
 
         /**
-         * @protected
+         * @private
          * @type {number}
          */
         this._nextMirrorIndex = 0;
 
         /**
-         * @protected
+         * Map of node account ID (as a string)
+         * to the node URL.
+         *
+         * @private
          * @type {Map<string, string>}
          */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this._network = new Map();
+        this._network = new Map(null);
 
         /**
-         * @protected
+         * List of node account IDs.
+         *
+         * @private
          * @type {AccountId[]}
          */
         this._networkNodes = [];
 
         /**
-         * @protected
+         * @private
          * @type {number}
          */
         this._nextNetworkNodeIndex = 0;
 
         /**
-         * @protected
-         * @type {Map<AccountId, Channel>}
+         * @private
+         * @type {Map<AccountId, ChannelT>}
          */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this._networkChannels = new Map();
+        this._networkChannels = new Map(null);
 
         /**
          * @internal
@@ -91,33 +97,36 @@ export default class Client {
         this._operator = null;
 
         /**
-         * @internal
+         * @private
          * @type {Hbar}
          */
-        this._maxTransactionFee = new Hbar(1);
+        this._maxTransactionFee = new Hbar(2);
 
         /**
-         * @internal
+         * @private
          * @type {Hbar}
          */
         this._maxQueryPayment = new Hbar(1);
 
-        if (props.operator != null) {
-            this.setOperator(
-                props.operator.accountId,
-                props.operator.privateKey
-            );
+        if (props != null) {
+            if (props.operator != null) {
+                this.setOperator(
+                    props.operator.accountId,
+                    props.operator.privateKey
+                );
+            }
         }
     }
 
     /**
      * @protected
-     * @param {{[key: string]: (string | AccountId)} | NetworkName} network
+     * @param {{[key: string]: (string | AccountId)}} network
      */
-    _setNetwork(network) {
+    setNetwork(network) {
         // TODO: close existing channels
         this._networkChannels.clear();
         this._network.clear();
+        this._nextNetworkNodeIndex = 0;
 
         for (const [url, accountId] of Object.entries(network)) {
             const key =
@@ -128,15 +137,16 @@ export default class Client {
             this._network.set(key.toString(), url);
             this._networkNodes.push(key);
         }
-
-        this._nextNetworkNodeIndex = 0;
     }
 
     /**
      * @param {string[]} mirrorNetwork
      * @returns {void}
      */
-    setMirrorNetwork(...mirrorNetwork) {
+    setMirrorNetwork(mirrorNetwork) {
+        // TODO: close existing channels
+        this._mirrorChannels.clear();
+        this._nextMirrorIndex = 0;
         this._mirrorNetwork = mirrorNetwork;
     }
 
@@ -186,53 +196,53 @@ export default class Client {
     }
 
     /**
-     * Get the account ID of the operator.
-     *
-     * @returns {?ClientOperator}
-     */
-    getOperator() {
-        return this._operator;
-    }
-
-    /**
-     * Get the account ID of the operator.
-     *
      * @returns {?AccountId}
      */
-    getOperatorId() {
+    get operatorAccountId() {
         return this._operator != null ? this._operator.accountId : null;
     }
 
     /**
-     * Get the public key of the operator.
-     *
      * @returns {?PublicKey}
      */
-    getOperatorKey() {
+    get operatorPublicKey() {
         return this._operator != null ? this._operator.publicKey : null;
     }
 
     /**
-     * Set the maximum fee to be paid for transactions executed by this client.
+     * @returns {Hbar}
+     */
+    get maxTransactionFee() {
+        return this._maxTransactionFee;
+    }
+
+    /**
+     * Set the maximum fee to be paid for transactions
+     * executed by this client.
      *
      * @param {Hbar} maxTransactionFee
-     * @returns {Client<ChannelT>}
+     * @returns {this}
      */
     setMaxTransactionFee(maxTransactionFee) {
         this._maxTransactionFee = maxTransactionFee;
-
         return this;
+    }
+
+    /**
+     * @returns {Hbar}
+     */
+    get maxQueryPayment() {
+        return this._maxQueryPayment;
     }
 
     /**
      * Set the maximum payment allowable for queries.
      *
      * @param {Hbar} maxQueryPayment
-     * @returns {Client<ChannelT>}
+     * @returns {Client<ChannelT, MirrorChannelT>}
      */
     setMaxQueryPayment(maxQueryPayment) {
         this._maxQueryPayment = maxQueryPayment;
-
         return this;
     }
 
@@ -258,9 +268,9 @@ export default class Client {
     /**
      * @internal
      * @param {AccountId} nodeId
-     * @returns {Promise<Channel>}
+     * @returns {ChannelT}
      */
-    async _getNetworkChannel(nodeId) {
+    _getNetworkChannel(nodeId) {
         let networkChannel = this._networkChannels.get(nodeId);
 
         if (networkChannel != null) {
@@ -273,7 +283,7 @@ export default class Client {
             throw new Error(`unknown node: ${nodeId.toString()}`);
         }
 
-        networkChannel = await this._createNewChannel(address);
+        networkChannel = this._createNetworkChannel(address);
 
         this._networkChannels.set(nodeId, networkChannel);
 
@@ -287,22 +297,23 @@ export default class Client {
     _getNextMirrorAddress() {
         const address = this._mirrorNetwork[this._nextMirrorIndex++];
         this._nextMirrorIndex %= this._mirrorNetwork.length;
+
         return address;
     }
 
     /**
      * @internal
      * @param {string} address
-     * @returns {Promise<Channel>}
+     * @returns {MirrorChannelT}
      */
-    async _getMirrorChannel(address) {
+    _getMirrorChannel(address) {
         let mirrorChannel = this._mirrorChannels.get(address);
 
         if (mirrorChannel != null) {
             return mirrorChannel;
         }
 
-        mirrorChannel = await this._createNewChannel(address);
+        mirrorChannel = this._createMirrorNetworkChannel(address);
 
         this._mirrorChannels.set(address, mirrorChannel);
 
@@ -312,9 +323,20 @@ export default class Client {
     /**
      * @abstract
      * @param {string} address
-     * @returns {Channel}
+     * @returns {ChannelT}
      */
-    _createNewChannel(address) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _createNetworkChannel(address) {
+        throw new Error("not implemented");
+    }
+
+    /**
+     * @abstract
+     * @param {string} address
+     * @returns {MirrorChannelT}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _createMirrorNetworkChannel(address) {
         throw new Error("not implemented");
     }
 }

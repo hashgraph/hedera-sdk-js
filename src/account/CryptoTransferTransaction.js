@@ -128,7 +128,7 @@ export default class CryptoTransferTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.TransactionBody["data"]}
+     * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "cryptoTransfer";

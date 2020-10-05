@@ -14,7 +14,7 @@ describe("ClientIntegration", function () {
             "1.testnet.hedera.com:50211": new AccountId(4),
         });
 
-        const operatorId = client.getOperatorId();
+        const operatorId = client.operatorAccountId;
         expect(operatorId).to.not.be.null;
 
         await new AccountBalanceQuery()

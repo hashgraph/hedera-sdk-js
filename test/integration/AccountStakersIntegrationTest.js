@@ -7,7 +7,7 @@ describe("AccountStakers", function () {
         this.timeout(10000);
 
         const client = newClient();
-        const operatorId = client.getOperatorId();
+        const operatorId = client.operatorAccountId;
 
         let errorThrown = false;
 

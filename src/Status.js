@@ -1,12 +1,17 @@
-import * as proto from "@hashgraph/proto";
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
+ */
 
 export default class Status {
     /**
+     * @hideconstructor
+     * @internal
      * @param {number} code
      */
     constructor(code) {
         /** @readonly */
-        this.code = code;
+        this._code = code;
 
         Object.freeze(this);
     }
@@ -259,18 +264,12 @@ export default class Status {
             case Status.TopicExpired:
                 return "TOPIC_EXPIRED";
             default:
-                return `UNKNOWN STATUS CODE (${this.code})`;
+                return `UNKNOWN (${this._code})`;
         }
     }
 
     /**
-     * @returns {boolean}
-     */
-    _isBusy() {
-        return Status.Busy === this;
-    }
-
-    /**
+     * @internal
      * @param {number} code
      * @returns {Status}
      */
@@ -283,8 +282,8 @@ export default class Status {
     /**
      * @returns {proto.ResponseCodeEnum}
      */
-    _toProtobuf() {
-        return this.code;
+    valueOf() {
+        return this._code;
     }
 }
 
