@@ -14,3 +14,7 @@ docs/
 
 # local environment (for examples)
 .env
+
+# instabul (code coverage)
+.nyc_output/
+.coverage/
