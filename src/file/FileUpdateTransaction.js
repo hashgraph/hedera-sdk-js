@@ -1,11 +1,8 @@
 import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import { Key, KeyList } from "@hashgraph/cryptography";
-import {
-    keyListFromProtobuf,
-    keyListToProtobuf,
-} from "../cryptography/protobuf";
+import { Key } from "@hashgraph/cryptography";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import Timestamp from "../Timestamp";
 import * as utf8 from "../encoding/utf8";
 import FileId from "./FileId";
@@ -17,7 +14,7 @@ export default class FileUpdateTransaction extends Transaction {
     /**
      * @param {object} props
      * @param {FileId | string} [props.fileId]
-     * @param {KeyList} [props.keys]
+     * @param {Key[]} [props.keys]
      * @param {Timestamp} [props.expirationTime]
      * @param {Uint8Array | string} [props.contents]
      */
@@ -32,7 +29,7 @@ export default class FileUpdateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?KeyList}
+         * @type {?Key[]}
          */
         this._keys = null;
 
@@ -53,7 +50,7 @@ export default class FileUpdateTransaction extends Transaction {
         }
 
         if (props.keys != null) {
-            this.setKeys(...props.keys);
+            this.setKeys(props.keys);
         }
 
         if (props.expirationTime != null) {
@@ -72,14 +69,18 @@ export default class FileUpdateTransaction extends Transaction {
      */
     static _fromProtobuf(body) {
         const update = /** @type {proto.IFileUpdateTransactionBody} */ (body.fileUpdate);
-        const keys = /** @type {proto.IKeyList} */ (update.keys);
 
         return new FileUpdateTransaction({
             fileId:
                 update.fileID != null
                     ? FileId._fromProtobuf(update.fileID)
                     : undefined,
-            keys: keyListFromProtobuf(keys),
+            keys:
+                update.keys != null
+                    ? update.keys.keys != null
+                        ? update.keys.keys.map((key) => keyFromProtobuf(key))
+                        : undefined
+                    : undefined,
             expirationTime:
                 update.expirationTime != null
                     ? Timestamp._fromProtobuf(update.expirationTime)
@@ -91,7 +92,7 @@ export default class FileUpdateTransaction extends Transaction {
     /**
      * @returns {?FileId}
      */
-    getFileId() {
+    get fileId() {
         return this._fileId;
     }
 
@@ -120,9 +121,9 @@ export default class FileUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?KeyList}
+     * @returns {?Key[]}
      */
-    getKeys() {
+    get keys() {
         return this._keys;
     }
 
@@ -142,9 +143,9 @@ export default class FileUpdateTransaction extends Transaction {
      * @param {Key[]} keys
      * @returns {this}
      */
-    setKeys(...keys) {
+    setKeys(keys) {
         this._requireNotFrozen();
-        this._keys != null ? this._keys.push(keys) : null;
+        this._keys = keys;
 
         return this;
     }
@@ -152,7 +153,7 @@ export default class FileUpdateTransaction extends Transaction {
     /**
      * @returns {?Timestamp}
      */
-    getExpirationTime() {
+    get expirationTime() {
         return this._expirationTime;
     }
 
@@ -178,7 +179,7 @@ export default class FileUpdateTransaction extends Transaction {
     /**
      * @returns {?Uint8Array}
      */
-    getContents() {
+    get contents() {
         return this._contents;
     }
 
@@ -233,7 +234,12 @@ export default class FileUpdateTransaction extends Transaction {
     _makeTransactionData() {
         return {
             fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
-            keys: this._keys != null ? keyListToProtobuf(this._keys) : null,
+            keys:
+                this._keys != null
+                    ? {
+                          keys: this._keys.map((key) => keyToProtobuf(key)),
+                      }
+                    : null,
             expirationTime:
                 this._expirationTime != null
                     ? this._expirationTime._toProtobuf()

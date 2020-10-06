@@ -44,7 +44,7 @@ export default class ContractInfoQuery extends Query {
     /**
      * @returns {?ContractId}
      */
-    getContractId() {
+    get contractId() {
         return this._contractId;
     }
 

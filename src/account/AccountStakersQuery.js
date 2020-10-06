@@ -50,7 +50,7 @@ export default class AccountStakersQuery extends Query {
     /**
      * @returns {?AccountId}
      */
-    getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 

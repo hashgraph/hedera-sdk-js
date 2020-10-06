@@ -48,7 +48,7 @@ export default class AccountRecordsQuery extends Query {
     /**
      * @returns {?AccountId}
      */
-    getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 

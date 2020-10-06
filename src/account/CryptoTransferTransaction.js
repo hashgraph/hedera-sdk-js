@@ -71,7 +71,7 @@ export default class CryptoTransferTransaction extends Transaction {
     /**
      * @returns {Transfer[]}
      */
-    getTransfers() {
+    get transfers() {
         return this._transfers;
     }
 

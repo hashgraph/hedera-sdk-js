@@ -1,8 +1,21 @@
 import Query, { QUERY_REGISTRY } from "../query/Query";
 import AccountId from "./AccountId";
 import AccountInfo from "./AccountInfo";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").IAccountInfo} proto.IAccountInfo
+ * @typedef {import("@hashgraph/proto").ICryptoGetInfoQuery} proto.ICryptoGetInfoQuery
+ * @typedef {import("@hashgraph/proto").ICryptoGetInfoResponse} proto.ICryptoGetInfoResponse
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * @augments {Query<AccountInfo>}
@@ -27,7 +40,7 @@ export default class AccountInfoQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {AccountInfoQuery}
      */
     static _fromProtobuf(query) {
@@ -44,7 +57,7 @@ export default class AccountInfoQuery extends Query {
     /**
      * @returns {?AccountId}
      */
-    getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 
@@ -64,13 +77,14 @@ export default class AccountInfoQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
      */
-    _getMethod(channel) {
-        return (query) => channel.crypto.getAccountInfo(query);
+    _execute(channel, request) {
+        return channel.crypto.getAccountInfo(request);
     }
 
     /**
@@ -84,8 +98,8 @@ export default class AccountInfoQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {proto.IResponse} response
      * @returns {Promise<AccountInfo>}
      */
@@ -102,13 +116,12 @@ export default class AccountInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             cryptoGetInfo: {
-                header,
+                header: this._makeRequestHeader(),
                 accountID:
                     this._accountId != null
                         ? this._accountId._toProtobuf()
@@ -118,6 +131,5 @@ export default class AccountInfoQuery extends Query {
     }
 }
 
-// @ts-ignore
 // eslint-disable-next-line @typescript-eslint/unbound-method
 QUERY_REGISTRY.set("cryptoGetInfo", AccountInfoQuery._fromProtobuf);

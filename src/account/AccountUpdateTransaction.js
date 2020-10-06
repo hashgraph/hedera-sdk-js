@@ -126,7 +126,7 @@ export default class AccountUpdateTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 
@@ -149,7 +149,7 @@ export default class AccountUpdateTransaction extends Transaction {
     /**
      * @returns {?Key}
      */
-    getKey() {
+    get key() {
         return this._key;
     }
 
@@ -167,7 +167,7 @@ export default class AccountUpdateTransaction extends Transaction {
     /**
      * @returns {boolean}
      */
-    getReceiverSignatureRequired() {
+    get receiverSignatureRequired() {
         return this._receiverSignatureRequired;
     }
 
@@ -185,7 +185,7 @@ export default class AccountUpdateTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    getProxyAccountId() {
+    get proxyAccountId() {
         return this._proxyAccountId;
     }
 
@@ -203,7 +203,7 @@ export default class AccountUpdateTransaction extends Transaction {
     /**
      * @returns {?Long}
      */
-    getAutoRenewPeriod() {
+    get autoRenewPeriod() {
         return this._autoRenewPeriod;
     }
 
@@ -224,7 +224,7 @@ export default class AccountUpdateTransaction extends Transaction {
     /**
      * @returns {?Timestamp}
      */
-    getExpirationTime() {
+    get expirationTime() {
         return this._expirationTime;
     }
 

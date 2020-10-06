@@ -67,7 +67,7 @@ export default class FreezeTransaction extends Transaction {
     /**
      * @returns {?Time}
      */
-    getStartTime() {
+    get startTime() {
         return this._startTime;
     }
 
@@ -85,7 +85,7 @@ export default class FreezeTransaction extends Transaction {
     /**
      * @returns {?Time}
      */
-    getEndTime() {
+    get endTime() {
         return this._endTime;
     }
 

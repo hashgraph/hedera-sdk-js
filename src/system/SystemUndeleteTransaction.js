@@ -63,7 +63,7 @@ export default class SystemUndeleteTransaction extends Transaction {
     /**
      * @returns {?FileId}
      */
-    getFileId() {
+    get fileId() {
         return this._fileId;
     }
 
@@ -82,7 +82,7 @@ export default class SystemUndeleteTransaction extends Transaction {
     /**
      * @returns {?ContractId}
      */
-    getContractId() {
+    get contractId() {
         return this._contractId;
     }
 

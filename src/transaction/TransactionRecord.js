@@ -3,8 +3,15 @@ import TransactionId from "./TransactionId";
 import Timestamp from "../Timestamp";
 import Hbar from "../Hbar";
 import Transfer from "../Transfer";
-import * as proto from "@hashgraph/proto";
 import ContractFunctionResult from "../contract/ContractFunctionResult";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransactionRecord} proto.ITransactionRecord
+ * @typedef {import("@hashgraph/proto").ITransactionReceipt} proto.ITransactionReceipt
+ * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").ITransactionID} proto.ITransactionID
+ */
 
 /**
  * Response when the client sends the node TransactionGetRecordResponse.
@@ -12,24 +19,24 @@ import ContractFunctionResult from "../contract/ContractFunctionResult";
 export default class TransactionRecord {
     /**
      * @private
-     * @param {object} properties
-     * @param {ContractFunctionResult} [properties.contractFunctionResult]
-     * @param {TransactionReceipt} properties.receipt
-     * @param {Uint8Array} properties.transactionHash
-     * @param {Timestamp} properties.consensusTimestampstamp
-     * @param {TransactionId} properties.transactionId
-     * @param {string} properties.transactionMemo
-     * @param {Hbar} properties.transactionFee
-     * @param {Transfer[]} properties.transfers
+     * @param {object} props
+     * @param {ContractFunctionResult} [props.contractFunctionResult]
+     * @param {TransactionReceipt} props.receipt
+     * @param {Uint8Array} props.transactionHash
+     * @param {Timestamp} props.consensusTimestampstamp
+     * @param {TransactionId} props.transactionId
+     * @param {string} props.transactionMemo
+     * @param {Hbar} props.transactionFee
+     * @param {Transfer[]} props.transfers
      */
-    constructor(properties) {
+    constructor(props) {
         /**
          * The status (reach consensus, or failed, or is unknown) and the ID of
          * any new account/file/instance created.
          *
          * @readonly
          */
-        this.receipt = properties.receipt;
+        this.receipt = props.receipt;
 
         /**
          * The hash of the Transaction that executed (not the hash of any Transaction that failed
@@ -37,28 +44,28 @@ export default class TransactionRecord {
          *
          * @readonly
          */
-        this.transactionHash = properties.transactionHash;
+        this.transactionHash = props.transactionHash;
 
         /**
          * The consensus timestamp (or null if didn't reach consensus yet).
          *
          * @readonly
          */
-        this.consensusTimestampstamp = properties.consensusTimestampstamp;
+        this.consensusTimestampstamp = props.consensusTimestampstamp;
 
         /**
          * The ID of the transaction this record represents.
          *
          * @readonly
          */
-        this.transactionId = properties.transactionId;
+        this.transactionId = props.transactionId;
 
         /**
          * The memo that was submitted as part of the transaction (max 100 bytes).
          *
          * @readonly
          */
-        this.transactionMemo = properties.transactionMemo;
+        this.transactionMemo = props.transactionMemo;
 
         /**
          * The actual transaction fee charged,
@@ -66,7 +73,7 @@ export default class TransactionRecord {
          *
          * @readonly
          */
-        this.transactionFee = properties.transactionFee;
+        this.transactionFee = props.transactionFee;
 
         /**
          * All hbar transfers as a result of this transaction, such as fees, or transfers performed
@@ -75,7 +82,7 @@ export default class TransactionRecord {
          *
          * @readonly
          */
-        this.transfers = properties.transfers;
+        this.transfers = props.transfers;
 
         /**
          * Record of the value returned by the smart contract function or constructor.
@@ -83,8 +90,8 @@ export default class TransactionRecord {
          * @readonly
          */
         this.contractFunctionResult =
-            properties.contractFunctionResult != null
-                ? properties.contractFunctionResult
+            props.contractFunctionResult != null
+                ? props.contractFunctionResult
                 : null;
 
         Object.freeze(this);

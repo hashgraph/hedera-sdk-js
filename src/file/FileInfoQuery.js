@@ -44,7 +44,7 @@ export default class FileInfoQuery extends Query {
     /**
      * @returns {?FileId}
      */
-    getFileId() {
+    get fileId() {
         return this._fileId;
     }
 

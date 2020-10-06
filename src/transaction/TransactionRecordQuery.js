@@ -1,16 +1,31 @@
 import Query, { QUERY_REGISTRY } from "../query/Query";
-import Status from "../Status";
 import TransactionRecord from "./TransactionRecord";
 import TransactionId from "./TransactionId";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
+import Status from "../Status";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").ITransactionRecord} proto.ITransactionRecord
+ * @typedef {import("@hashgraph/proto").ITransactionReceipt} proto.ITransactionReceipt
+ * @typedef {import("@hashgraph/proto").ITransactionGetRecordResponse} proto.ITransactionGetRecordResponse
+ * @typedef {import("@hashgraph/proto").ITransactionGetRecordQuery} proto.ITransactionGetRecordQuery
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * @augments {Query<TransactionRecord>}
  */
 export default class TransactionRecordQuery extends Query {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {TransactionId} [props.transactionId]
      */
     constructor(props = {}) {
@@ -21,22 +36,22 @@ export default class TransactionRecordQuery extends Query {
          * @type {?TransactionId}
          */
         this._transactionId = null;
+
         if (props.transactionId != null) {
             this.setTransactionId(props.transactionId);
         }
     }
 
     /**
-     * @internal
-     * @returns {TransactionRecordQuery}
+     * @returns {?TransactionId}
      */
-    static _new() {
-        return new TransactionRecordQuery();
+    get transactionId() {
+        return this._transactionId;
     }
 
     /**
      * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {TransactionRecordQuery}
      */
     static _fromProtobuf(query) {
@@ -61,55 +76,58 @@ export default class TransactionRecordQuery extends Query {
     }
 
     /**
-     * @abstract
+     * @override
      * @protected
      * @param {Status} responseStatus
      * @param {proto.IResponse} response
      * @returns {boolean}
      */
     _shouldRetry(responseStatus, response) {
+        switch (responseStatus) {
+            case Status.Busy:
+            case Status.Unknown:
+            case Status.ReceiptNotFound:
+            case Status.RecordNotFound:
+                return true;
+
+            default:
+            // continue to checking receipt status
+        }
+
+        const transactionGetRecord = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
+        const record = /** @type {proto.ITransactionRecord} */ (transactionGetRecord.transactionRecord);
+        const receipt = /** @type {proto.ITransactionReceipt} */ (record.receipt);
+        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (receipt.status);
+        const receiptStatus = Status._fromCode(receiptStatusCode);
+
+        switch (receiptStatus) {
+            case Status.Ok:
+            case Status.Busy:
+            case Status.Unknown:
+            case Status.ReceiptNotFound:
+            case Status.RecordNotFound:
+                return true;
+
+            default:
+            // looks like its either success or some other error
+        }
+
         return false;
-        // TODO:
-        // switch (responseStatus.code) {
-        //     case Status.Busy.code:
-        //     case Status.Unknown.code:
-        //     case Status.ReceiptNotFound.code:
-        //     case Status.RecordNotFound.code:
-        //         return true;
-        //     default:
-        //     // Do nothing
-        // }
-
-        // const transactionGetRecord = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
-        // const record = /** @type {proto.ITransactionRecord} */ (transactionGetRecord.transactionRecord);
-        // const receipt = /** @type {proto.ITransactionReceipt} */ (record.receipt);
-        // const status = Status._fromCode(
-        //     /** @type {proto.ResponseCodeEnum} */ (receipt.status)
-        // );
-
-        // switch (status.code) {
-        //     case Status.Ok.code:
-        //     case Status.Busy.code:
-        //     case Status.Unknown.code:
-        //     case Status.ReceiptNotFound.code:
-        //     case Status.RecordNotFound.code:
-        //         return true;
-        //     default:
-        //         return false;
-        // }
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
      */
-    _getMethod(channel) {
-        return (query) => channel.crypto.getTxRecordByTxID(query);
+    _execute(channel, request) {
+        return channel.crypto.getTxRecordByTxID(request);
     }
 
     /**
+     * @override
      * @protected
      * @param {proto.IResponse} response
      * @returns {proto.IResponseHeader}
@@ -120,8 +138,8 @@ export default class TransactionRecordQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {proto.IResponse} response
      * @returns {Promise<TransactionRecord>}
      */
@@ -138,13 +156,12 @@ export default class TransactionRecordQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             transactionGetRecord: {
-                header,
+                header: this._makeRequestHeader(),
                 transactionID:
                     this._transactionId != null
                         ? this._transactionId._toProtobuf()

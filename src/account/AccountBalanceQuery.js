@@ -1,9 +1,21 @@
 import Query, { QUERY_REGISTRY } from "../query/Query";
 import AccountId from "./AccountId";
 import ContractId from "../contract/ContractId";
-import * as proto from "@hashgraph/proto";
 import Hbar from "../Hbar";
-import Channel from "../channel/Channel";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").ICryptoGetAccountBalanceQuery} proto.ICryptoGetAccountBalanceQuery
+ * @typedef {import("@hashgraph/proto").ICryptoGetAccountBalanceResponse} proto.ICryptoGetAccountBalanceResponse
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * Get the balance of a Hedera™ crypto-currency account.
@@ -17,7 +29,7 @@ import Channel from "../channel/Channel";
  */
 export default class AccountBalanceQuery extends Query {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {AccountId | string} [props.accountId]
      * @param {ContractId | string} [props.contractId]
      */
@@ -34,6 +46,7 @@ export default class AccountBalanceQuery extends Query {
          * @type {?ContractId}
          * @private
          */
+        this._contractId = null;
 
         if (props.accountId != null) {
             this.setAccountId(props.accountId);
@@ -46,7 +59,7 @@ export default class AccountBalanceQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {AccountBalanceQuery}
      */
     static _fromProtobuf(query) {
@@ -57,13 +70,17 @@ export default class AccountBalanceQuery extends Query {
                 balance.accountID != null
                     ? AccountId._fromProtobuf(balance.accountID)
                     : undefined,
+            contractId:
+                balance.contractID != null
+                    ? ContractId._fromProtobuf(balance.contractID)
+                    : undefined,
         });
     }
 
     /**
      * @returns {?AccountId}
      */
-    getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 
@@ -82,6 +99,13 @@ export default class AccountBalanceQuery extends Query {
                 : AccountId.fromString(accountId);
 
         return this;
+    }
+
+    /**
+     * @returns {?ContractId}
+     */
+    get contractId() {
+        return this._contractId;
     }
 
     /**
@@ -122,6 +146,7 @@ export default class AccountBalanceQuery extends Query {
     }
 
     /**
+     * @override
      * @protected
      * @param {proto.IResponse} response
      * @returns {proto.IResponseHeader}
@@ -132,8 +157,8 @@ export default class AccountBalanceQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {proto.IResponse} response
      * @returns {Promise<Hbar>}
      */
@@ -172,7 +197,6 @@ export default class AccountBalanceQuery extends Query {
 
 QUERY_REGISTRY.set(
     "cryptogetAccountBalance",
-    // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/unbound-method
     AccountBalanceQuery._fromProtobuf
 );

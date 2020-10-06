@@ -1,13 +1,24 @@
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
+import AccountId from "../account/AccountId";
+import Long from "long";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction";
-import { Key } from "@hashgraph/cryptography";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
-import AccountId from "../account/AccountId";
-import Long from "long";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IConsensusCreateTopicTransactionBody} proto.IConsensusCreateTopicTransactionBody
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ */
+
+/**
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * Create a topic to be used for consensus.
@@ -109,7 +120,7 @@ export default class TopicCreateTransaction extends Transaction {
     /**
      * @returns {?string}
      */
-    getTopicMemo() {
+    get topicMemo() {
         return this._topicMemo;
     }
 
@@ -127,7 +138,7 @@ export default class TopicCreateTransaction extends Transaction {
     /**
      * @returns {?Key}
      */
-    getAdminKey() {
+    get adminKey() {
         return this._adminKey;
     }
 
@@ -145,7 +156,7 @@ export default class TopicCreateTransaction extends Transaction {
     /**
      * @returns {?Key}
      */
-    getSubmitKey() {
+    get submitKey() {
         return this._submitKey;
     }
 
@@ -161,23 +172,9 @@ export default class TopicCreateTransaction extends Transaction {
     }
 
     /**
-     * Set to true to require the key for this account to sign any transfer of
-     * hbars to this account.
-     *
-     * @param {boolean} receiverSignatureRequired
-     * @returns {this}
-     */
-    setReceiverSignatureRequired(receiverSignatureRequired) {
-        this._requireNotFrozen();
-        this._receiverSignatureRequired = receiverSignatureRequired;
-
-        return this;
-    }
-
-    /**
      * @returns {?AccountId}
      */
-    getAutoRenewAccountId() {
+    get autoRenewAccountId() {
         return this._autoRenewAccountId;
     }
 
@@ -198,7 +195,7 @@ export default class TopicCreateTransaction extends Transaction {
     /**
      * @returns {Long}
      */
-    getAutoRenewPeriod() {
+    get autoRenewPeriod() {
         return this._autoRenewPeriod;
     }
 
@@ -222,10 +219,11 @@ export default class TopicCreateTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
      */
-    _getMethod(channel) {
-        return (transaction) => channel.consensus.createTopic(transaction);
+    _execute(channel, request) {
+        return channel.consensus.createTopic(request);
     }
 
     /**

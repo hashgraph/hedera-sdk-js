@@ -99,7 +99,7 @@ export default class ContractExecuteTransaction extends Transaction {
     /**
      * @returns {?ContractId}
      */
-    getContractId() {
+    get contractId() {
         return this._contractId;
     }
 
@@ -122,7 +122,7 @@ export default class ContractExecuteTransaction extends Transaction {
     /**
      * @returns {?Long}
      */
-    getGas() {
+    get gas() {
         return this._gas;
     }
 
@@ -142,7 +142,7 @@ export default class ContractExecuteTransaction extends Transaction {
     /**
      * @returns {?Hbar}
      */
-    getPayableAmount() {
+    get payableAmount() {
         return this._amount;
     }
 
@@ -162,7 +162,7 @@ export default class ContractExecuteTransaction extends Transaction {
     /**
      * @returns {?Uint8Array}
      */
-    getFunctionParameters() {
+    get functionParameters() {
         return this._functionParameters;
     }
 

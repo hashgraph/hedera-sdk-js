@@ -1,10 +1,19 @@
 import TopicId from "./TopicId";
 import AccountId from "../account/AccountId";
 import Timestamp from "../Timestamp";
-import * as proto from "@hashgraph/proto";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
-import { Key } from "@hashgraph/cryptography";
 import Long from "long";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IConsensusTopicInfo} proto.IConsensusTopicInfo
+ * @typedef {import("@hashgraph/proto").IConsensusGetTopicInfoResponse} proto.IConsensusGetTopicInfoResponse
+ * @typedef {import("@hashgraph/proto").ITopicID} proto.ITopicID
+ */
+
+/**
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ */
 
 /**
  * Current state of a topic.
@@ -145,7 +154,9 @@ export default class TopicInfo {
                 adminKey:
                     this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
                 submitKey:
-                    this.submitKey != null ? keyToProtobuf(this.submitKey) : null,
+                    this.submitKey != null
+                        ? keyToProtobuf(this.submitKey)
+                        : null,
                 autoRenewPeriod: {
                     seconds: this.autoRenewPeriod,
                 },

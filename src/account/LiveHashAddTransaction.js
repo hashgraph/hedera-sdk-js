@@ -91,7 +91,7 @@ export default class LiveHashAddTransaction extends Transaction {
     /**
      * @returns {?Uint8Array}
      */
-    getHash() {
+    get hash() {
         return this._hash;
     }
 
@@ -101,7 +101,7 @@ export default class LiveHashAddTransaction extends Transaction {
      */
     setHash(hash) {
         this._requireNotFrozen();
-        this.hash = hash;
+        this._hash = hash;
 
         return this;
     }
@@ -109,7 +109,7 @@ export default class LiveHashAddTransaction extends Transaction {
     /**
      * @returns {?Key[]}
      */
-    getKeys() {
+    get keys() {
         return this._keys;
     }
 
@@ -117,9 +117,9 @@ export default class LiveHashAddTransaction extends Transaction {
      * @param {Key[]} keys
      * @returns {LiveHashAddTransaction}
      */
-    setKeys(...keys) {
+    setKeys(keys) {
         this._requireNotFrozen();
-        this.keys = keys;
+        this._keys = keys;
 
         return this;
     }
@@ -127,7 +127,7 @@ export default class LiveHashAddTransaction extends Transaction {
     /**
      * @returns {?Long}
      */
-    getDuration() {
+    get duration() {
         return this._duration;
     }
 
@@ -137,7 +137,7 @@ export default class LiveHashAddTransaction extends Transaction {
      */
     setDuration(duration) {
         this._requireNotFrozen();
-        this.duration =
+        this._duration =
             duration instanceof Long ? duration : Long.fromValue(duration);
 
         return this;
@@ -146,7 +146,7 @@ export default class LiveHashAddTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 
@@ -156,7 +156,7 @@ export default class LiveHashAddTransaction extends Transaction {
      */
     setAccountId(accountId) {
         this._requireNotFrozen();
-        this.accountId =
+        this._accountId =
             accountId instanceof AccountId
                 ? accountId
                 : AccountId.fromString(accountId);

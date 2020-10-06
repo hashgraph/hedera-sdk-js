@@ -60,7 +60,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
     /**
      * @returns {?Uint8Array}
      */
-    getHash() {
+    get hash() {
         return this._hash;
     }
 
@@ -70,7 +70,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
      */
     setHash(hash) {
         this._requireNotFrozen();
-        this.hash = hash;
+        this._hash = hash;
 
         return this;
     }
@@ -78,7 +78,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 
@@ -88,7 +88,7 @@ export default class LiveHashDeleteTransaction extends Transaction {
      */
     setAccountId(accountId) {
         this._requireNotFrozen();
-        this.accountId =
+        this._accountId =
             accountId instanceof AccountId
                 ? accountId
                 : AccountId.fromString(accountId);

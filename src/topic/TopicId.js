@@ -1,6 +1,14 @@
 import EntityId, { fromString } from "../EntityId";
-import * as proto from "@hashgraph/proto";
-import Long from "long";
+import { TopicID as ProtoTopicID } from "@hashgraph/proto";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITopicID} proto.ITopicID
+ */
+
+/**
+ * @typedef {import("long")} Long
+ */
 
 /**
  * Unique identifier for a topic (used by the consensus service).
@@ -9,12 +17,12 @@ import Long from "long";
  */
 export default class TopicId extends EntityId {
     /**
-     * @param {number | Long | import("../EntityId").IEntityId} properties
+     * @param {number | Long | import("../EntityId").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
      */
-    constructor(properties, realm, num) {
-        super(properties, realm, num);
+    constructor(props, realm, num) {
+        super(props, realm, num);
     }
 
     /**
@@ -42,7 +50,7 @@ export default class TopicId extends EntityId {
      * @returns {TopicId}
      */
     static fromBytes(bytes) {
-        return TopicId._fromProtobuf(proto.TopicID.decode(bytes));
+        return TopicId._fromProtobuf(ProtoTopicID.decode(bytes));
     }
 
     /**
@@ -61,6 +69,6 @@ export default class TopicId extends EntityId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.TopicID.encode(this._toProtobuf()).finish();
+        return ProtoTopicID.encode(this._toProtobuf()).finish();
     }
 }

@@ -57,7 +57,7 @@ export default class LiveHashQuery extends Query {
     /**
      * @returns {?AccountId}
      */
-    getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 
@@ -79,7 +79,7 @@ export default class LiveHashQuery extends Query {
     /**
      * @returns {?Uint8Array}
      */
-    getLiveHash() {
+    get liveHash() {
         return this._hash;
     }
 

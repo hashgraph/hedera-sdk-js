@@ -78,7 +78,7 @@ export default class ContractDeleteTransaction extends Transaction {
     /**
      * @returns {?ContractId}
      */
-    getContractId() {
+    get contractId() {
         return this._contractId;
     }
 
@@ -101,7 +101,7 @@ export default class ContractDeleteTransaction extends Transaction {
     /**
      * @returns {?ContractId}
      */
-    getTransferContractId() {
+    get transferContractId() {
         return this._transferContractId;
     }
 
@@ -124,7 +124,7 @@ export default class ContractDeleteTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    getTransferAccountId() {
+    get transferAccountId() {
         return this._transferAccountId;
     }
 

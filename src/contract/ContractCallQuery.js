@@ -96,7 +96,7 @@ export default class ContractCallQuery extends Query {
     /**
      * @returns {?ContractId}
      */
-    getContractId() {
+    get contractId() {
         return this._contractId;
     }
 
@@ -118,7 +118,7 @@ export default class ContractCallQuery extends Query {
     /**
      * @returns {?Long}
      */
-    getGas() {
+    get gas() {
         return this._gas;
     }
 
@@ -134,7 +134,7 @@ export default class ContractCallQuery extends Query {
     /**
      * @returns {?Uint8Array}
      */
-    getFunctionParameters() {
+    get functionParameters() {
         return this._functionParameters;
     }
 

@@ -51,7 +51,7 @@ export default class FileDeleteTransaction extends Transaction {
     /**
      * @returns {?FileId}
      */
-    getFileId() {
+    get fileId() {
         return this._fileId;
     }
 

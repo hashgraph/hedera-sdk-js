@@ -61,7 +61,7 @@ export default class FileAppendTransaction extends Transaction {
     /**
      * @returns {?FileId}
      */
-    getFileId() {
+    get fileId() {
         return this._fileId;
     }
 
@@ -92,7 +92,7 @@ export default class FileAppendTransaction extends Transaction {
     /**
      * @returns {?Uint8Array}
      */
-    getContents() {
+    get contents() {
         return this._contents;
     }
 

@@ -1,7 +1,6 @@
 import Query, { QUERY_REGISTRY } from "../query/Query";
 import TopicId from "./TopicId";
 import TopicInfo from "./TopicInfo";
-import Channel from "../channel/Channel";
 
 /**
  * @namespace proto
@@ -9,12 +8,12 @@ import Channel from "../channel/Channel";
  * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
  * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
  * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").IConsensusTopicQuery} proto.IConsensusTopicQuery
+ * @typedef {import("@hashgraph/proto").IConsensusGetTopicInfoResponse} proto.IConsensusGetTopicInfoResponse
  */
 
 /**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").IConsensusTopicQuery} proto.IConsensusTopicQuery
- * @typedef {import("@hashgraph/proto").IConsensusGetTopicInfoResponse} proto.IConsensusGetTopicInfoResponse
+ * @typedef {import("../channel/Channel").default} Channel
  */
 
 /**
@@ -60,7 +59,7 @@ export default class TopicInfoQuery extends Query {
     /**
      * @returns {?TopicId}
      */
-    getTopicId() {
+    get topicId() {
         return this._topicId;
     }
 
@@ -78,13 +77,14 @@ export default class TopicInfoQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
      */
-    _getMethod(channel) {
-        return (query) => channel.consensus.getTopicInfo(query);
+    _execute(channel, request) {
+        return channel.consensus.getTopicInfo(request);
     }
 
     /**
@@ -114,13 +114,12 @@ export default class TopicInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             consensusGetTopicInfo: {
-                header,
+                header: this._makeRequestHeader(),
                 topicID:
                     this._topicId != null ? this._topicId._toProtobuf() : null,
             },

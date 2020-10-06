@@ -4,8 +4,14 @@ import FileId from "../file/FileId";
 import TopicId from "../topic/TopicId";
 import ExchangeRate from "../ExchangeRate";
 import Status from "../Status";
-import * as proto from "@hashgraph/proto";
 import Long from "long";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransactionReceipt} proto.ITransactionReceipt
+ * @typedef {import("@hashgraph/proto").IExchangeRateSet} proto.IExchangeRateSet
+ * @typedef {import("@hashgraph/proto").IExchangeRate} proto.IExchangeRate
+ */
 
 /**
  * The consensus result for a transaction, which might not be currently known,

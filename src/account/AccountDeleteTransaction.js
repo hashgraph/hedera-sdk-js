@@ -67,7 +67,7 @@ export default class AccountDeleteTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    getAccountId() {
+    get accountId() {
         return this._accountId;
     }
 
@@ -90,7 +90,7 @@ export default class AccountDeleteTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    getTransferAccountId() {
+    get transferAccountId() {
         return this._transferAccountId;
     }
 

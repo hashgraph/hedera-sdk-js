@@ -1,4 +1,4 @@
-import { Client, credentials, status } from "@grpc/grpc-js";
+import { Client, credentials } from "@grpc/grpc-js";
 import * as proto from "@hashgraph/proto";
 import Channel from "./Channel";
 
@@ -129,51 +129,5 @@ export default class NodeChannel extends Channel {
                 callback
             );
         };
-    }
-
-    /**
-     * Cannot make this a simple getter becasue the call within the `create()`
-     * needs to save the request handle to `SubscriptionHandle`
-     *
-     * @param {import("../topic/SubscriptionHandle").default} handle
-     * @returns {proto.MirrorConsensusService}
-     */
-    mirror(handle) {
-        return proto.MirrorConsensusService.create(
-            (method, requestData, callback) => {
-                const request = this._client
-                    .makeServerStreamRequest(
-                        // Note that for `MirrorConsensusService` the name is `ConsensusService`
-                        `/com.hedera.mirror.api.proto.ConsensusService/${method.name}`,
-                        (value) => value,
-                        (value) => value,
-                        Buffer.from(requestData)
-                    )
-                    .on("close", function () {
-                        // Do nothing
-                    })
-                    .on("end", function () {
-                        // Do nothing
-                    })
-                    .on("error", function () {
-                        // Do nothing
-                    })
-                    .on("data", (message) => {
-                        callback(null, message);
-                    })
-                    .on("status", (currentStatus) => {
-                        // Only propagate the error if it is `NOT_FOUND` or `UNAVAILABLE`
-                        // Otherwise finish here
-                        if (
-                            currentStatus.code === status.NOT_FOUND ||
-                            currentStatus.code === status.UNAVAILABLE
-                        ) {
-                            callback(new Error(currentStatus.code.toString()));
-                        }
-                    });
-
-                handle._setCall(() => request.cancel());
-            }
-        );
     }
 }

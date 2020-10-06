@@ -91,13 +91,4 @@ export default class Channel {
     get network() {
         throw new Error("not implemented");
     }
-
-    /**
-     * @abstract
-     * @param {import("../topic/SubscriptionHandle").default} _
-     * @returns {import("@hashgraph/proto").MirrorConsensusService}
-     */
-    mirror(_) {
-        throw new Error("not implemented");
-    }
 }

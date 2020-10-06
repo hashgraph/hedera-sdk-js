@@ -41,7 +41,7 @@ export default class FileCreateTransaction extends Transaction {
         this._contents = null;
 
         if (props.keys != null) {
-            this.setKeys(...props.keys);
+            this.setKeys(props.keys);
         }
 
         if (props.expirationTime != null) {
@@ -79,7 +79,7 @@ export default class FileCreateTransaction extends Transaction {
     /**
      * @returns {?Key[]}
      */
-    getKeys() {
+    get keys() {
         return this._keys;
     }
 
@@ -99,7 +99,7 @@ export default class FileCreateTransaction extends Transaction {
      * @param {Key[]} keys
      * @returns {this}
      */
-    setKeys(...keys) {
+    setKeys(keys) {
         this._requireNotFrozen();
         this._keys = keys;
 
@@ -109,7 +109,7 @@ export default class FileCreateTransaction extends Transaction {
     /**
      * @returns {Timestamp}
      */
-    getExpirationTime() {
+    get expirationTime() {
         return this._expirationTime;
     }
 
@@ -135,7 +135,7 @@ export default class FileCreateTransaction extends Transaction {
     /**
      * @returns {?Uint8Array}
      */
-    getContents() {
+    get contents() {
         return this._contents;
     }
 

@@ -77,7 +77,7 @@ export default class SystemDeleteTransaction extends Transaction {
     /**
      * @returns {?FileId}
      */
-    getFileId() {
+    get fileId() {
         return this._fileId;
     }
 
@@ -96,7 +96,7 @@ export default class SystemDeleteTransaction extends Transaction {
     /**
      * @returns {?ContractId}
      */
-    getContractId() {
+    get contractId() {
         return this._contractId;
     }
 
@@ -117,7 +117,7 @@ export default class SystemDeleteTransaction extends Transaction {
     /**
      * @returns {?Timestamp}
      */
-    getExpirationTime() {
+    get expirationTime() {
         return this._expirationTime;
     }
 

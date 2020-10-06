@@ -126,7 +126,7 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * @returns {?Key}
      */
-    getKey() {
+    get key() {
         return this._key;
     }
 
@@ -151,7 +151,7 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * @returns {?Hbar}
      */
-    getInitialBalance() {
+    get initialBalance() {
         return this._initialBalance;
     }
 
@@ -174,7 +174,7 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * @returns {boolean}
      */
-    getReceiverSignatureRequired() {
+    get receiverSignatureRequired() {
         return this._receiverSignatureRequired;
     }
 
@@ -195,7 +195,7 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    getProxyAccountId() {
+    get proxyAccountId() {
         return this._proxyAccountId;
     }
 
@@ -215,7 +215,7 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * @returns {Long}
      */
-    getAutoRenewPeriod() {
+    get autoRenewPeriod() {
         return this._autoRenewPeriod;
     }
 

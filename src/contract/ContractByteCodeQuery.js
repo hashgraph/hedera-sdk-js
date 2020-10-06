@@ -43,7 +43,7 @@ export default class ContractByteCodeQuery extends Query {
     /**
      * @returns {?ContractId}
      */
-    getContractId() {
+    get contractId() {
         return this._contractId;
     }
 

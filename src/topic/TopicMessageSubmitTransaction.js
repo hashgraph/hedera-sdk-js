@@ -1,8 +1,19 @@
 import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import TopicId from "./TopicId";
-import Channel from "../channel/Channel";
 import * as utf8 from "../encoding/utf8";
-import * as proto from "@hashgraph/proto";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IConsensusSubmitMessageTransactionBody} proto.IConsensusSubmitMessageTransactionBody
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 export default class TopicMessageSubmitTransaction extends Transaction {
     /**
@@ -54,7 +65,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     /**
      * @returns {?TopicId}
      */
-    getTopicId() {
+    get topicId() {
         return this._topicId;
     }
 
@@ -72,7 +83,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     /**
      * @returns {?Uint8Array}
      */
-    getMessage() {
+    get message() {
         return this._message;
     }
 
@@ -92,10 +103,11 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
      */
-    _getMethod(channel) {
-        return (transaction) => channel.consensus.submitMessage(transaction);
+    _execute(channel, request) {
+        return channel.consensus.submitMessage(request);
     }
 
     /**

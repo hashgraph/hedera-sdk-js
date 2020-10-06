@@ -450,7 +450,7 @@ export default class Transaction extends Executable {
     /**
      * @returns {Promise<Uint8Array>}
      */
-    getTransactionHash() {
+    get transactionHash() {
         this._requireExactlyOneFrozen();
 
         return sha384.digest(

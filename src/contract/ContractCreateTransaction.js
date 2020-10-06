@@ -156,7 +156,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @returns {?FileId}
      */
-    getBytecodeFileId() {
+    get bytecodeFileId() {
         return this._bytecodeFileId;
     }
 
@@ -177,7 +177,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @returns {?Key}
      */
-    getAdminKey() {
+    get adminKey() {
         return this._adminKey;
     }
 
@@ -195,7 +195,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @returns {?Long}
      */
-    getGas() {
+    get gas() {
         return this._gas;
     }
 
@@ -213,7 +213,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @returns {?Hbar}
      */
-    getInitialBalance() {
+    get initialBalance() {
         return this._initialBalance;
     }
 
@@ -236,7 +236,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    getProxyAccountId() {
+    get proxyAccountId() {
         return this._proxyAccountId;
     }
 
@@ -257,7 +257,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @returns {Long}
      */
-    getAutoRenewPeriod() {
+    get autoRenewPeriod() {
         return this._autoRenewPeriod;
     }
 
@@ -278,7 +278,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @returns {?Uint8Array}
      */
-    getConstructorParameters() {
+    get constructorParameters() {
         return this._constructorParameters;
     }
 
@@ -299,7 +299,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @returns {?string}
      */
-    getContractMemo() {
+    get contractMemo() {
         return this._contractMemo;
     }
 
