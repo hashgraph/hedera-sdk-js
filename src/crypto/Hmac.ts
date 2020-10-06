@@ -6,9 +6,9 @@ import { SHA384 } from "@stablelib/sha384";
 import { SHA256 } from "@stablelib/sha256";
 
 export enum HashAlgorithm {
-    Sha256 = "SHA-256",
-    Sha384 = "SHA-384",
-    Sha512 = "SHA-512"
+  Sha256 = "SHA-256",
+  Sha384 = "SHA-384",
+  Sha512 = "SHA-512",
 }
 
 export class Hmac {
@@ -17,16 +17,23 @@ export class Hmac {
         secretKey: Uint8Array | string,
         data: Uint8Array | string
     ): Promise<Uint8Array> {
-        const key = typeof secretKey === "string" ? utf8.encode(secretKey) : secretKey;
+        const key =
+      typeof secretKey === "string" ? utf8.encode(secretKey) : secretKey;
         const value = typeof data === "string" ? utf8.encode(data) : data;
 
         if (typeof window !== "undefined") {
             // Try SubtleCrypto if it exists, otherwise fallback to @stablelibs/Hmac
             try {
-                const key_ = await window!.crypto.subtle.importKey("raw", key, {
-                    name: "HMAC",
-                    hash: algorithm
-                }, false, [ "sign" ]);
+                const key_ = await window!.crypto.subtle.importKey(
+                    "raw",
+                    key,
+                    {
+                        name: "HMAC",
+                        hash: algorithm
+                    },
+                    false,
+                    [ "sign" ]
+                );
 
                 return new Uint8Array(await window!.crypto.subtle.sign("HMAC", key_, value));
             } catch {
@@ -37,7 +44,8 @@ export class Hmac {
                         return hmac(SHA384, key, value);
                     case HashAlgorithm.Sha512:
                         return hmac(SHA512, key, value);
-                    default: throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
+                    default:
+                        throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
                 }
             }
         }
@@ -49,8 +57,8 @@ export class Hmac {
                 return crypto.createHmac("SHA384", key).update(value).digest();
             case HashAlgorithm.Sha512:
                 return crypto.createHmac("SHA512", key).update(value).digest();
-            default: throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
+            default:
+                throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
         }
     }
 }
-

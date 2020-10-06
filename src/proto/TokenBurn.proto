@@ -35,5 +35,5 @@ Token A has 2 decimals. In order to burn 100 tokens, one must provide amount of 
  */
 message TokenBurnTransactionBody {
     TokenID token = 1; // The token for which to burn tokens. If token does not exist, transaction results in INVALID_TOKEN_ID
-    uint64 amount = 2; // The amount to burn from the Treasury Account. Amount must be a positive non-zero number, not bigger than the token balance of the treasury account (0; balance], represented in the lowest denomination.
+    uint64 amount = 2 [jstype=JS_STRING]; // The amount to burn from the Treasury Account. Amount must be a positive non-zero number, not bigger than the token balance of the treasury account (0; balance], represented in the lowest denomination.
 }

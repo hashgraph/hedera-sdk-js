@@ -17,29 +17,37 @@ export class Pbkdf2 {
         iterations: number,
         length: number
     ): Promise<Uint8Array> {
-        const pass = typeof password === "string" ?
-        // Valid ASCII is also valid UTF-8 so encoding the password as UTF-8
-        // should be fine if only valid ASCII characters are used in the password
-            utf8.encode(password) :
-            password;
+        const pass =
+      typeof password === "string" ? // Valid ASCII is also valid UTF-8 so encoding the password as UTF-8
+          // should be fine if only valid ASCII characters are used in the password
+          utf8.encode(password) :
+          password;
 
-        const nacl = typeof salt === "string" ?
-            utf8.encode(salt) :
-            salt;
+        const nacl = typeof salt === "string" ? utf8.encode(salt) : salt;
 
         if (typeof window !== "undefined" && window != null) {
             try {
-                const key = await window.crypto.subtle.importKey("raw", pass, {
-                    name: "PBKDF2",
-                    hash: algorithm
-                }, false, [ "deriveBits" ]);
+                const key = await window.crypto.subtle.importKey(
+                    "raw",
+                    pass,
+                    {
+                        name: "PBKDF2",
+                        hash: algorithm
+                    },
+                    false,
+                    [ "deriveBits" ]
+                );
 
-                return new Uint8Array(await window.crypto.subtle.deriveBits({
-                    name: "PBKDF2",
-                    hash: algorithm,
-                    salt: nacl,
-                    iterations
-                }, key, length << 3));
+                return new Uint8Array(await window.crypto.subtle.deriveBits(
+                    {
+                        name: "PBKDF2",
+                        hash: algorithm,
+                        salt: nacl,
+                        iterations
+                    },
+                    key,
+                    length << 3
+                ));
             } catch {
                 switch (algorithm) {
                     case HashAlgorithm.Sha256:
@@ -48,7 +56,8 @@ export class Pbkdf2 {
                         return deriveKey(SHA384, pass, nacl, iterations, length);
                     case HashAlgorithm.Sha512:
                         return deriveKey(SHA512, pass, nacl, iterations, length);
-                    default: throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
+                    default:
+                        throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
                 }
             }
         }
@@ -60,7 +69,8 @@ export class Pbkdf2 {
                 return pbkdf2(password, nacl, iterations, length, "sha384");
             case HashAlgorithm.Sha512:
                 return pbkdf2(password, nacl, iterations, length, "sha512");
-            default: throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
+            default:
+                throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
         }
     }
 }

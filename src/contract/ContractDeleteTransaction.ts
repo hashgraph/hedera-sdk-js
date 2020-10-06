@@ -24,49 +24,52 @@ import { AccountIdLike, AccountId } from "../account/AccountId";
  * without an admin key, then such a key can never be added, and its bytecode will be immutable.
  */
 export class ContractDeleteTransaction extends SingleTransactionBuilder {
-    private readonly _body: ContractDeleteTransactionBody;
+  private readonly _body: ContractDeleteTransactionBody;
 
-    public constructor() {
-        super();
-        this._body = new ContractDeleteTransactionBody();
-        this._inner.setContractdeleteinstance(this._body);
-    }
+  public constructor() {
+      super();
+      this._body = new ContractDeleteTransactionBody();
+      this._inner.setContractdeleteinstance(this._body);
+  }
 
-    /**
-     * The Contract ID instance to delete (this can't be changed).
-     */
-    public setContractId(contractIdLike: ContractIdLike): this {
-        this._body.setContractid(new ContractId(contractIdLike)._toProto());
-        return this;
-    }
+  /**
+   * The Contract ID instance to delete (this can't be changed).
+   */
+  public setContractId(contractIdLike: ContractIdLike): this {
+      this._body.setContractid(new ContractId(contractIdLike)._toProto());
+      return this;
+  }
 
-    /**
-     * The account ID which will receive all remaining hbars.
-     *
-     * Note: Can only transfer to either an `AccountId` *or* `ContractId` not both.
-     */
-    public setTransferAccountId(id: AccountIdLike): this {
-        this._body.setTransferaccountid(new AccountId(id)._toProto());
-        return this;
-    }
+  /**
+   * The account ID which will receive all remaining hbars.
+   *
+   * Note: Can only transfer to either an `AccountId` *or* `ContractId` not both.
+   */
+  public setTransferAccountId(id: AccountIdLike): this {
+      this._body.setTransferaccountid(new AccountId(id)._toProto());
+      return this;
+  }
 
-    /**
-     * The contract ID which will receive all remaining hbars
-     *
-     * Note: Can only transfer to either an `AccountId` *or* `ContractId` not both.
-     */
-    public setTransferContractid(id: ContractIdLike): this {
-        this._body.setTransfercontractid(new ContractId(id)._toProto());
-        return this;
-    }
+  /**
+   * The contract ID which will receive all remaining hbars
+   *
+   * Note: Can only transfer to either an `AccountId` *or* `ContractId` not both.
+   */
+  public setTransferContractid(id: ContractIdLike): this {
+      this._body.setTransfercontractid(new ContractId(id)._toProto());
+      return this;
+  }
 
-    protected _doValidate(errors: string[]): void {
-        if (!this._body.hasContractid()) {
-            errors.push(".setContractId() required");
-        }
-    }
+  protected _doValidate(errors: string[]): void {
+      if (!this._body.hasContractid()) {
+          errors.push(".setContractId() required");
+      }
+  }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
-        return SmartContractService.deleteContract;
-    }
+  protected get _method(): grpc.UnaryMethodDefinition<
+    Transaction,
+    TransactionResponse
+    > {
+      return SmartContractService.deleteContract;
+  }
 }

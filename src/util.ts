@@ -19,7 +19,7 @@ export function newDuration(seconds: number): Duration {
     return duration;
 }
 
-type EntityKind = "account" | "contract" | "file" | "topic";
+type EntityKind = "account" | "contract" | "file" | "topic" | "token";
 
 type EntityId<Kind extends EntityKind> =
     ({ shard?: number; realm?: number } & Record<Kind, number>)

@@ -2,7 +2,11 @@ import * as grpc from "@grpc/grpc-js";
 import { ConsensusTopicResponse } from "../../generated/MirrorConsensusService_pb";
 import { ConsensusService } from "../../generated/MirrorConsensusService_pb_service";
 import { TransactionId } from "../../TransactionId";
-import { BaseMirrorConsensusTopicQuery, ErrorHandler, Listener } from "../BaseMirrorConsensusTopicQuery";
+import {
+    BaseMirrorConsensusTopicQuery,
+    ErrorHandler,
+    Listener
+} from "../BaseMirrorConsensusTopicQuery";
 import { MirrorConsensusTopicResponse } from "../MirrorConsensusTopicResponse";
 import { MirrorSubscriptionHandle } from "../MirrorSubscriptionHandle";
 import { MirrorClient } from "./MirrorClient";
@@ -29,17 +33,18 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
         listener: Listener,
         errorHandler?: ErrorHandler
     ): void {
-        const list: { [ id: string]: ConsensusTopicResponse[] | null } = {};
+        const list: { [id: string]: ConsensusTopicResponse[] | null } = {};
         let shouldRetry = true;
 
-        const response = client._client.makeServerStreamRequest(
-            `/${ConsensusService.serviceName}/${ConsensusService.subscribeTopic.methodName}`,
-            (req) => Buffer.from(req.serializeBinary()),
-            ConsensusTopicResponse.deserializeBinary,
-            this._builder,
-            new grpc.Metadata(),
-            {}
-        )
+        const response = client._client
+            .makeServerStreamRequest(
+                `/${ConsensusService.serviceName}/${ConsensusService.subscribeTopic.methodName}`,
+                (req) => Buffer.from(req.serializeBinary()),
+                ConsensusTopicResponse.deserializeBinary,
+                this._builder,
+                new grpc.Metadata(),
+                {}
+            )
             .on("data", (message: ConsensusTopicResponse): void => {
                 shouldRetry = false;
 
@@ -53,13 +58,13 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                         list[ txId ] = [];
                     }
 
-                    list[ txId ]!.push(message);
+          list[ txId ]!.push(message);
 
-                    if (list[ txId ]!.length === message.getChunkinfo()!.getTotal()) {
-                        const m = list[ txId ]!;
-                        list[ txId ] = null;
-                        listener(new MirrorConsensusTopicResponse(m));
-                    }
+          if (list[ txId ]!.length === message.getChunkinfo()!.getTotal()) {
+              const m = list[ txId ]!;
+              list[ txId ] = null;
+              listener(new MirrorConsensusTopicResponse(m));
+          }
                 }
             })
             .on("status", (status: grpc.StatusObject): void => {
@@ -67,10 +72,12 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                     if (errorHandler != null) {
                         errorHandler(new Error(`Received status code: ${status.code} and message: ${status.details}`));
                     }
-                } else if (attempt < 10 &&
-                    shouldRetry &&
-                    (status.code === grpc.status.NOT_FOUND ||
-                        status.code === grpc.status.UNAVAILABLE)) {
+                } else if (
+                    attempt < 10 &&
+          shouldRetry &&
+          (status.code === grpc.status.NOT_FOUND ||
+            status.code === grpc.status.UNAVAILABLE)
+                ) {
                     setTimeout(() => {
                         this._makeServerStreamRequest(
                             handle,

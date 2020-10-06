@@ -2,7 +2,11 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { ConsensusTopicResponse } from "../../generated/MirrorConsensusService_pb";
 import { ConsensusService } from "../../generated/MirrorConsensusService_pb_service";
 import { TransactionId } from "../../TransactionId";
-import { BaseMirrorConsensusTopicQuery, ErrorHandler, Listener } from "../BaseMirrorConsensusTopicQuery";
+import {
+    BaseMirrorConsensusTopicQuery,
+    ErrorHandler,
+    Listener
+} from "../BaseMirrorConsensusTopicQuery";
 import { MirrorConsensusTopicResponse } from "../MirrorConsensusTopicResponse";
 import { MirrorSubscriptionHandle } from "../MirrorSubscriptionHandle";
 import { MirrorClient } from "./MirrorClient";
@@ -29,7 +33,7 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
         listener: Listener,
         errorHandler?: ErrorHandler
     ): void {
-        const list: { [ id: string]: ConsensusTopicResponse[] | null } = {};
+        const list: { [id: string]: ConsensusTopicResponse[] | null } = {};
         const _makeServerStreamRequest = this._makeServerStreamRequest;
         let shouldRetry = true;
 
@@ -51,13 +55,13 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                         list[ txId ] = [];
                     }
 
-                    list[ txId ]!.push(message);
+          list[ txId ]!.push(message);
 
-                    if (list[ txId ]!.length === chunkInfo.getTotal()) {
-                        const m = list[ txId ]!;
-                        list[ txId ] = null;
-                        listener(new MirrorConsensusTopicResponse(m));
-                    }
+          if (list[ txId ]!.length === chunkInfo.getTotal()) {
+              const m = list[ txId ]!;
+              list[ txId ] = null;
+              listener(new MirrorConsensusTopicResponse(m));
+          }
                 }
             },
             onEnd(code: grpc.Code, message: string): void {
@@ -65,10 +69,11 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                     if (errorHandler != null) {
                         errorHandler(new Error(`Received status code: ${code} and message: ${message}`));
                     }
-                } else if (attempt < 10 &&
-                    shouldRetry &&
-                    (code === grpc.Code.NotFound ||
-                         code === grpc.Code.Unavailable)) {
+                } else if (
+                    attempt < 10 &&
+          shouldRetry &&
+          (code === grpc.Code.NotFound || code === grpc.Code.Unavailable)
+                ) {
                     setTimeout(() => {
                         _makeServerStreamRequest(
                             handle,

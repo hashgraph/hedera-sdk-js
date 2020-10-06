@@ -7,7 +7,13 @@ import { newDuration } from "../util";
 import BigNumber from "bignumber.js";
 import { SmartContractService } from "../generated/SmartContractService_pb_service";
 
-import { Hbar, Tinybar, hbarFromTinybarOrHbar, hbarCheck, hbarToProto } from "../Hbar";
+import {
+    Hbar,
+    Tinybar,
+    hbarFromTinybarOrHbar,
+    hbarCheck,
+    hbarToProto
+} from "../Hbar";
 import { PublicKey } from "../crypto/PublicKey";
 import { FileId, FileIdLike } from "../file/FileId";
 import { AccountId, AccountIdLike } from "../account/AccountId";
@@ -68,101 +74,104 @@ import { ContractFunctionParams } from "./ContractFunctionParams";
  * after the smart contract is created.
  */
 export class ContractCreateTransaction extends SingleTransactionBuilder {
-    private readonly _body: ContractCreateTransactionBody;
+  private readonly _body: ContractCreateTransactionBody;
 
-    public constructor() {
-        super();
-        this._body = new ContractCreateTransactionBody();
-        this._inner.setContractcreateinstance(this._body);
+  public constructor() {
+      super();
+      this._body = new ContractCreateTransactionBody();
+      this._inner.setContractcreateinstance(this._body);
 
-        // Default autoRenewPeriod to a value within the required range (~1/4 a year)
-        this.setAutoRenewPeriod(131500 * 60);
-    }
+      // Default autoRenewPeriod to a value within the required range (~1/4 a year)
+      this.setAutoRenewPeriod(131500 * 60);
+  }
 
-    /**
-     * The file containing the smart contract byte code. A copy will be made and held by
-     * the contract instance, and have the same expiration time as the instance.
-     */
-    public setBytecodeFileId(fileIdLike: FileIdLike): this {
-        this._body.setFileid(new FileId(fileIdLike)._toProto());
-        return this;
-    }
+  /**
+   * The file containing the smart contract byte code. A copy will be made and held by
+   * the contract instance, and have the same expiration time as the instance.
+   */
+  public setBytecodeFileId(fileIdLike: FileIdLike): this {
+      this._body.setFileid(new FileId(fileIdLike)._toProto());
+      return this;
+  }
 
-    /**
-     * The state of the instance and its fields can be modified arbitrarily if this
-     * key signs a transaction to modify it. If this is null, then such modifications
-     * are not possible, and there is no administrator that can override the normal operation
-     * of this smart contract instance. Note that if it is created with no admin keys, then
-     * there is no administrator to authorize changing the admin keys, so there can never be
-     * any admin keys for that instance.
-     */
-    public setAdminKey(publicKey: PublicKey): this {
-        this._body.setAdminkey(publicKey._toProtoKey());
-        return this;
-    }
+  /**
+   * The state of the instance and its fields can be modified arbitrarily if this
+   * key signs a transaction to modify it. If this is null, then such modifications
+   * are not possible, and there is no administrator that can override the normal operation
+   * of this smart contract instance. Note that if it is created with no admin keys, then
+   * there is no administrator to authorize changing the admin keys, so there can never be
+   * any admin keys for that instance.
+   */
+  public setAdminKey(publicKey: PublicKey): this {
+      this._body.setAdminkey(publicKey._toProtoKey());
+      return this;
+  }
 
-    /**
-     * Gas to run the constructor.
-     */
-    public setGas(gas: number | BigNumber): this {
-        this._body.setGas(String(gas));
-        return this;
-    }
+  /**
+   * Gas to run the constructor.
+   */
+  public setGas(gas: number | BigNumber): this {
+      this._body.setGas(String(gas));
+      return this;
+  }
 
-    /**
-     * Initial number of tinybars to put into the cryptocurrency account associated with and owned by the smart contract.
-     */
-    public setInitialBalance(balance: Tinybar | Hbar): this {
-        const balanceHbar = hbarFromTinybarOrHbar(balance);
-        balanceHbar[ hbarCheck ]({ allowNegative: false });
+  /**
+   * Initial number of tinybars to put into the cryptocurrency account associated with and owned by the smart contract.
+   */
+  public setInitialBalance(balance: Tinybar | Hbar): this {
+      const balanceHbar = hbarFromTinybarOrHbar(balance);
+      balanceHbar[ hbarCheck ]({ allowNegative: false });
 
-        this._body.setInitialbalance(balanceHbar[ hbarToProto ]());
-        return this;
-    }
+      this._body.setInitialbalance(balanceHbar[ hbarToProto ]());
+      return this;
+  }
 
-    /**
-     * ID of the account to which this account is proxy staked. If proxyAccountID is null, or is
-     *  an invalid account, or is an account that isn't a node, then this account is automatically
-     * proxy staked to a node chosen by the network, but without earning payments. If the
-     * proxyAccountID account refuses to accept proxy staking , or if it is not currently running
-     * a node, then it will behave as if  proxyAccountID was null.
-     */
-    public setProxyAccountId(proxyAccountId: AccountIdLike): this {
-        this._body.setProxyaccountid(new AccountId(proxyAccountId)._toProto());
-        return this;
-    }
+  /**
+   * ID of the account to which this account is proxy staked. If proxyAccountID is null, or is
+   *  an invalid account, or is an account that isn't a node, then this account is automatically
+   * proxy staked to a node chosen by the network, but without earning payments. If the
+   * proxyAccountID account refuses to accept proxy staking , or if it is not currently running
+   * a node, then it will behave as if  proxyAccountID was null.
+   */
+  public setProxyAccountId(proxyAccountId: AccountIdLike): this {
+      this._body.setProxyaccountid(new AccountId(proxyAccountId)._toProto());
+      return this;
+  }
 
-    /**
-     * The instance will charge its account every this many seconds to renew for this long.
-     */
-    public setAutoRenewPeriod(seconds: number): this {
-        this._body.setAutorenewperiod(newDuration(seconds));
-        return this;
-    }
+  /**
+   * The instance will charge its account every this many seconds to renew for this long.
+   */
+  public setAutoRenewPeriod(seconds: number): this {
+      this._body.setAutorenewperiod(newDuration(seconds));
+      return this;
+  }
 
-    /**
-     * Parameters to pass to the constructor.
-     */
-    public setConstructorParams(constructorParams: ContractFunctionParams): this {
-        this._body.setConstructorparameters(constructorParams._build(null));
-        return this;
-    }
+  /**
+   * Parameters to pass to the constructor.
+   */
+  public setConstructorParams(constructorParams: ContractFunctionParams): this {
+      this._body.setConstructorparameters(constructorParams._build(null));
+      return this;
+  }
 
-    /**
-     * The memo that was submitted as part of the contract (max 100 bytes).
-     */
-    public setContractMemo(memo: string): this {
-        this._body.setMemo(memo);
-        return this;
-    }
+  /**
+   * The memo that was submitted as part of the contract (max 100 bytes).
+   */
+  public setContractMemo(memo: string): this {
+      this._body.setMemo(memo);
+      return this;
+  }
 
-    protected _doValidate(errors: string[]): void {
-        if (!this._body.hasFileid()) {
-            errors.push(".setBytecodeFile() required");
-        }
-    }
+  protected _doValidate(errors: string[]): void {
+      if (!this._body.hasFileid()) {
+          errors.push(".setBytecodeFile() required");
+      }
+  }
 
-    protected get _method(): grpc.UnaryMethodDefinition<Transaction, TransactionResponse> {
-        return SmartContractService.createContract;
-    }
+  protected get _method(): grpc.UnaryMethodDefinition<
+    Transaction,
+    TransactionResponse
+    > {
+      return SmartContractService.createContract;
+  }
 }

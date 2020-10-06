@@ -11,30 +11,30 @@ const AES_128_CTR = "aes-128-ctr";
 const HMAC_SHA256 = "hmac-sha256";
 
 export interface Keystore {
-    version: 1;
-    crypto: {
-        /** hex-encoded ciphertext */
-        ciphertext: string;
-        /** hex-encoded initialization vector */
-        cipherparams: { iv: string };
-        /** cipher being used */
-        cipher: typeof AES_128_CTR;
-        /** key derivation function being used */
-        kdf: "pbkdf2";
-        /** params for key derivation function */
-        kdfparams: {
-            /** derived key length */
-            dkLen: number;
-            /** hex-encoded salt */
-            salt: string;
-            /** iteration count */
-            c: number;
-            /** hash function */
-            prf: typeof HMAC_SHA256;
-        };
-        /** hex-encoded HMAC-SHA384 */
-        mac: string;
+  version: 1;
+  crypto: {
+    /** hex-encoded ciphertext */
+    ciphertext: string;
+    /** hex-encoded initialization vector */
+    cipherparams: { iv: string };
+    /** cipher being used */
+    cipher: typeof AES_128_CTR;
+    /** key derivation function being used */
+    kdf: "pbkdf2";
+    /** params for key derivation function */
+    kdfparams: {
+      /** derived key length */
+      dkLen: number;
+      /** hex-encoded salt */
+      salt: string;
+      /** iteration count */
+      c: number;
+      /** hash function */
+      prf: typeof HMAC_SHA256;
     };
+    /** hex-encoded HMAC-SHA384 */
+    mac: string;
+  };
 }
 
 export async function createKeystore(
@@ -47,14 +47,23 @@ export async function createKeystore(
     const saltLen = 32;
     const salt = nacl.randomBytes(saltLen);
 
-    const key = await Pbkdf2.deriveKey(HashAlgorithm.Sha256, passphrase, salt, c, dkLen);
+    const key = await Pbkdf2.deriveKey(
+        HashAlgorithm.Sha256,
+        passphrase,
+        salt,
+        c,
+        dkLen
+    );
 
     const iv = nacl.randomBytes(16);
 
     // AES-128-CTR with the first half of the derived key and a random IV
     const cipher = crypto.createCipheriv(AES_128_CTR, key.slice(0, 16), iv);
 
-    const cipherText = Buffer.concat([ cipher.update(privateKey), cipher[ "final" ]() ]);
+    const cipherText = Buffer.concat([
+        cipher.update(privateKey),
+        cipher[ "final" ]()
+    ]);
 
     const mac = await Hmac.hash(HashAlgorithm.Sha384, key.slice(16), cipherText);
 
@@ -93,7 +102,8 @@ export async function loadKeystore(
         cipherparams: { iv },
         cipher,
         kdf,
-        kdfparams: { dkLen, salt, c, prf }, mac
+        kdfparams: { dkLen, salt, c, prf },
+        mac
     } = keystore.crypto;
 
     if (kdf !== "pbkdf2") {
@@ -108,10 +118,20 @@ export async function loadKeystore(
     const ivBytes = hex.decode(iv);
     const cipherBytes = hex.decode(ciphertext);
 
-    const key = await Pbkdf2.deriveKey(HashAlgorithm.Sha256, passphrase, saltBytes, c, dkLen);
+    const key = await Pbkdf2.deriveKey(
+        HashAlgorithm.Sha256,
+        passphrase,
+        saltBytes,
+        c,
+        dkLen
+    );
 
     const hmac = hex.decode(mac);
-    const verifyHmac = await Hmac.hash(HashAlgorithm.Sha384, key.slice(16), cipherBytes);
+    const verifyHmac = await Hmac.hash(
+        HashAlgorithm.Sha384,
+        key.slice(16),
+        cipherBytes
+    );
 
     // compare that these two Uint8Arrays are equivalent
     if (!hmac.every((b, i) => b === verifyHmac[ i ])) {
@@ -119,13 +139,14 @@ export async function loadKeystore(
     }
 
     const decipher = crypto.createDecipheriv(cipher, key.slice(0, 16), ivBytes);
-    const privateKeyBytes = Buffer.concat([ decipher.update(cipherBytes), decipher[ "final" ]() ]);
+    const privateKeyBytes = Buffer.concat([
+        decipher.update(cipherBytes),
+        decipher[ "final" ]()
+    ]);
 
     // `Buffer instanceof Uint8Array` doesn't work in Jest because the prototype chain is different
-    const {
-        secretKey: privateKey,
-        publicKey
-    } = nacl.sign.keyPair.fromSecretKey(Uint8Array.from(privateKeyBytes));
+    const { secretKey: privateKey, publicKey } =
+        nacl.sign.keyPair.fromSecretKey(Uint8Array.from(privateKeyBytes));
 
     return { privateKey, publicKey };
 }

@@ -15,49 +15,52 @@ import { Hbar } from "../Hbar";
  * currently staked. This is not yet implemented, but will be in a future version of the API.
  */
 export class AccountStakersQuery extends QueryBuilder<Transfer[]> {
-    private readonly _builder: CryptoGetStakersQuery;
+  private readonly _builder: CryptoGetStakersQuery;
 
-    public constructor() {
-        super();
+  public constructor() {
+      super();
 
-        this._builder = new CryptoGetStakersQuery();
-        this._builder.setHeader(new QueryHeader());
+      this._builder = new CryptoGetStakersQuery();
+      this._builder.setHeader(new QueryHeader());
 
-        this._inner.setCryptogetproxystakers(this._builder);
-    }
+      this._inner.setCryptogetproxystakers(this._builder);
+  }
 
-    /**
-     * The Account ID that is being proxy staked to.
-     */
-    public setAccountId(accountId: AccountIdLike): this {
-        this._builder.setAccountid(new AccountId(accountId)._toProto());
-        return this;
-    }
+  /**
+   * The Account ID that is being proxy staked to.
+   */
+  public setAccountId(accountId: AccountIdLike): this {
+      this._builder.setAccountid(new AccountId(accountId)._toProto());
+      return this;
+  }
 
-    protected _doLocalValidate(errors: string[]): void {
-        if (!this._builder.hasAccountid()) {
-            errors.push("`.setAccountId()` required");
-        }
-    }
+  protected _doLocalValidate(errors: string[]): void {
+      if (!this._builder.hasAccountid()) {
+          errors.push("`.setAccountId()` required");
+      }
+  }
 
-    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
-        return CryptoService.getStakersByAccountID;
-    }
+  protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+      return CryptoService.getStakersByAccountID;
+  }
 
-    protected _getHeader(): QueryHeader {
-        return this._builder.getHeader()!;
-    }
+  protected _getHeader(): QueryHeader {
+      return this._builder.getHeader()!;
+  }
 
-    protected _mapResponseHeader(response: Response): ResponseHeader {
-        return response.getCryptogetproxystakers()!.getHeader()!;
-    }
+  protected _mapResponseHeader(response: Response): ResponseHeader {
+      return response.getCryptogetproxystakers()!.getHeader()!;
+  }
 
-    protected _mapResponse(response: Response): Transfer[] {
-        const allStakers = response.getCryptogetproxystakers()!;
+  protected _mapResponse(response: Response): Transfer[] {
+      const allStakers = response.getCryptogetproxystakers()!;
 
-        return allStakers.getStakers()!.getProxystakerList().map((proto) => ({
-            accountId: AccountId._fromProto(proto.getAccountid()!),
-            amount: Hbar.fromTinybar(proto.getAmount())
-        }));
-    }
+      return allStakers
+          .getStakers()!
+          .getProxystakerList()
+          .map((proto) => ({
+              accountId: AccountId._fromProto(proto.getAccountid()!),
+              amount: Hbar.fromTinybar(proto.getAmount())
+          }));
+  }
 }

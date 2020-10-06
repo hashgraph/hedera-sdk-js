@@ -10,40 +10,43 @@ import * as utf8 from "@stablelib/utf8";
 
 /** @deprecated use `ConsensusMessageSubmitTransaction` instead. */
 export class ConsensusSubmitMessageTransaction extends SingleTransactionBuilder {
-    private _body: ConsensusSubmitMessageTransactionBody;
+  private _body: ConsensusSubmitMessageTransactionBody;
 
-    /** @deprecated use `ConsensusMessageSubmitTransaction` instead. */
-    public constructor() {
-        super();
+  /** @deprecated use `ConsensusMessageSubmitTransaction` instead. */
+  public constructor() {
+      super();
 
-        console.warn("deprecated: ConsensusSubmitMessageTransaction has been renamed to ConsensusMessageSubmitTransaction");
+      console.warn("deprecated: ConsensusSubmitMessageTransaction has been renamed to ConsensusMessageSubmitTransaction");
 
-        const body = new ConsensusSubmitMessageTransactionBody();
-        this._body = body;
-        this._inner.setConsensussubmitmessage(body);
-    }
+      const body = new ConsensusSubmitMessageTransactionBody();
+      this._body = body;
+      this._inner.setConsensussubmitmessage(body);
+  }
 
-    public setTopicId(id: ConsensusTopicIdLike): this {
-        this._body.setTopicid(new ConsensusTopicId(id)._toProto());
-        return this;
-    }
+  public setTopicId(id: ConsensusTopicIdLike): this {
+      this._body.setTopicid(new ConsensusTopicId(id)._toProto());
+      return this;
+  }
 
-    public setMessage(message: Uint8Array | string): this {
-        if (message instanceof Uint8Array) {
-            this._body.setMessage(message as Uint8Array);
-        } else {
-            this._body.setMessage(utf8.encode(message as string));
-        }
-        return this;
-    }
+  public setMessage(message: Uint8Array | string): this {
+      if (message instanceof Uint8Array) {
+          this._body.setMessage(message as Uint8Array);
+      } else {
+          this._body.setMessage(utf8.encode(message as string));
+      }
+      return this;
+  }
 
-    protected get _method(): UnaryMethodDefinition<Transaction, TransactionResponse> {
-        return ConsensusService.submitMessage;
-    }
+  protected get _method(): UnaryMethodDefinition<
+    Transaction,
+    TransactionResponse
+    > {
+      return ConsensusService.submitMessage;
+  }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected _doValidate(_: string[]): void {
-        // No local validation needed
-    }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected _doValidate(_: string[]): void {
+      // No local validation needed
+  }
 }
