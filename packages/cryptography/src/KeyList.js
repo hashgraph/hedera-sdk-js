@@ -20,15 +20,7 @@ export default class KeyList extends Key {
         /**
          * @type {?number}
          */
-        this.threshold = threshold == null ? null : threshold;
-    }
-
-    /**
-     * @param {number} threshold
-     * @returns {KeyList}
-     */
-    static withThreshold(threshold) {
-        return new KeyList(null, threshold);
+        this._threshold = threshold == null ? null : threshold;
     }
 
     /**
@@ -52,6 +44,22 @@ export default class KeyList extends Key {
         }
 
         return new KeyList(Array.from(arrayLike, mapFn, thisArg));
+    }
+
+    /**
+     * @returns {?number}
+     */
+    get threshold() {
+        return this._threshold;
+    }
+
+    /**
+     * @param {number} threshold
+     * @returns {this}
+     */
+    setThreshold(threshold) {
+        this._threshold = threshold;
+        return this;
     }
 
     /**
@@ -89,5 +97,12 @@ export default class KeyList extends Key {
      */
     [Symbol.iterator]() {
         return this._keys[Symbol.iterator]();
+    }
+
+    /**
+     * @returns {Key[]}
+     */
+    toArray() {
+        return this._keys.slice();
     }
 }
