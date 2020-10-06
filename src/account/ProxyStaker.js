@@ -1,7 +1,15 @@
 import AccountId from "./AccountId";
 import Hbar from "../Hbar";
-import * as proto from "@hashgraph/proto";
-import BigNumber from "bignumber.js";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IProxyStaker} proto.IProxyStaker
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ */
+
+/**
+ * @typedef {import("bignumber.js").default} BigNumber
+ */
 
 /**
  * An account, and the amount that it sends or receives during a cryptocurrency transfer.
@@ -53,7 +61,7 @@ export default class ProxyStaker {
 
     /**
      * @internal
-     * @returns {proto.IAccountAmount}
+     * @returns {proto.IProxyStaker}
      */
     _toProtobuf() {
         return {

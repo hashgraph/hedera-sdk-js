@@ -1,7 +1,19 @@
 import Query, { QUERY_REGISTRY } from "../query/Query";
 import NetworkVersionInfo from "./NetworkVersionInfo";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").INetworkGetVersionInfoQuery} proto.INetworkGetVersionInfoQuery
+ * @typedef {import("@hashgraph/proto").INetworkGetVersionInfoResponse} proto.INetworkGetVersionInfoResponse
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * @augments {Query<NetworkVersionInfo>}
@@ -12,21 +24,23 @@ export default class NetworkVersionInfoQuery extends Query {
     }
 
     /**
-     * @param {proto.Query} _
+     * @param {proto.IQuery} query
      * @returns {NetworkVersionInfoQuery}
      */
-    static _fromProtobuf(_) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    static _fromProtobuf(query) {
         return new NetworkVersionInfoQuery();
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
      */
-    _getMethod(channel) {
-        return (query) => channel.network.getVersionInfo(query);
+    _execute(channel, request) {
+        return channel.network.getVersionInfo(request);
     }
 
     /**
@@ -53,13 +67,12 @@ export default class NetworkVersionInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             networkGetVersionInfo: {
-                header,
+                header: this._makeRequestHeader(),
             },
         };
     }
@@ -67,7 +80,6 @@ export default class NetworkVersionInfoQuery extends Query {
 
 QUERY_REGISTRY.set(
     "networkGetVersionInfo",
-    // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/unbound-method
     NetworkVersionInfoQuery._fromProtobuf
 );

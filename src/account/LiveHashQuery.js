@@ -1,15 +1,28 @@
 import Query, { QUERY_REGISTRY } from "../query/Query";
 import AccountId from "./AccountId";
 import LiveHash from "./LiveHash";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").ICryptoGetLiveHashQuery} proto.ICryptoGetLiveHashQuery
+ * @typedef {import("@hashgraph/proto").ICryptoGetLiveHashResponse} proto.ICryptoGetLiveHashResponse
+ * @typedef {import("@hashgraph/proto").ILiveHash} proto.ILiveHash
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * @augments {Query<LiveHash>}
  */
 export default class LiveHashQuery extends Query {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {AccountId | string} [props.accountId]
      * @param {Uint8Array} [props.hash]
      */
@@ -39,7 +52,7 @@ export default class LiveHashQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {LiveHashQuery}
      */
     static _fromProtobuf(query) {
@@ -134,13 +147,12 @@ export default class LiveHashQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             cryptoGetLiveHash: {
-                header,
+                header: this._makeRequestHeader(),
                 accountID:
                     this._accountId != null
                         ? this._accountId._toProtobuf()

@@ -1,40 +1,51 @@
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 
 /**
- * @typedef {object} Time
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").IFreezeTransactionBody} proto.IFreezeTransactionBody
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
+
+/**
+ * @typedef {object} HourMinute
  * @property {number} hour
- * @property {number} min
+ * @property {number} minute
  */
 
 export default class FreezeTransaction extends Transaction {
     /**
-     * @param {Object} props
-     * @param {Time} [props.startTime]
-     * @param {Time} [props.endTime]
+     * @param {Object} [props]
+     * @param {HourMinute} [props.startTime]
+     * @param {HourMinute} [props.endTime]
      */
     constructor(props = {}) {
         super();
 
         /**
          * @private
-         * @type {?Time}
+         * @type {?HourMinute}
          */
         this._startTime = null;
 
         /**
          * @private
-         * @type {?Time}
+         * @type {?HourMinute}
          */
         this._endTime = null;
 
         if (props.startTime != null) {
-            this.setStartTime(props.startTime);
+            this.setStartTime(props.startTime.hour, props.startTime.minute);
         }
 
         if (props.endTime != null) {
-            this.setEndTime(props.endTime);
+            this.setEndTime(props.endTime.hour, props.endTime.minute);
         }
     }
 
@@ -51,51 +62,53 @@ export default class FreezeTransaction extends Transaction {
                 freeze.startHour != null && freeze.startMin != null
                     ? {
                           hour: freeze.startHour,
-                          min: freeze.startMin,
+                          minute: freeze.startMin,
                       }
                     : undefined,
             endTime:
                 freeze.endHour != null && freeze.endMin != null
                     ? {
                           hour: freeze.endHour,
-                          min: freeze.endMin,
+                          minute: freeze.endMin,
                       }
                     : undefined,
         });
     }
 
     /**
-     * @returns {?Time}
+     * @returns {?HourMinute}
      */
     get startTime() {
         return this._startTime;
     }
 
     /**
-     * @param {Time} startTime
+     * @param {number} startHour
+     * @param {number} startMinute
      * @returns {FreezeTransaction}
      */
-    setStartTime(startTime) {
+    setStartTime(startHour, startMinute) {
         this._requireNotFrozen();
-        this._startTime = startTime;
+        this._startTime = { hour: startHour, minute: startMinute };
 
         return this;
     }
 
     /**
-     * @returns {?Time}
+     * @returns {?HourMinute}
      */
     get endTime() {
         return this._endTime;
     }
 
     /**
-     * @param {Time} endTime
+     * @param {number} endHour
+     * @param {number} endMinute
      * @returns {FreezeTransaction}
      */
-    setEndTime(endTime) {
+    setEndTime(endHour, endMinute) {
         this._requireNotFrozen();
-        this._endTime = endTime;
+        this._endTime = { hour: endHour, minute: endMinute };
 
         return this;
     }
@@ -127,9 +140,9 @@ export default class FreezeTransaction extends Transaction {
     _makeTransactionData() {
         return {
             startHour: this._startTime != null ? this._startTime.hour : null,
-            startMin: this._startTime != null ? this._startTime.min : null,
+            startMin: this._startTime != null ? this._startTime.minute : null,
             endHour: this._endTime != null ? this._endTime.hour : null,
-            endMin: this._endTime != null ? this._endTime.min : null,
+            endMin: this._endTime != null ? this._endTime.minute : null,
         };
     }
 }

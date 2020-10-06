@@ -1,18 +1,31 @@
 import Query, { QUERY_REGISTRY } from "../query/Query";
 import ContractId from "./ContractId";
 import ContractInfo from "./ContractInfo";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").IContractGetInfoQuery} proto.IContractGetInfoQuery
+ * @typedef {import("@hashgraph/proto").IContractGetInfoResponse} proto.IContractGetInfoResponse
+ * @typedef {import("@hashgraph/proto").IContractInfo} proto.IContractInfo
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * @augments {Query<ContractInfo>}
  */
 export default class ContractInfoQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {ContractId | string} [properties.contractId]
+     * @param {object} [props]
+     * @param {ContractId | string} [props.contractId]
      */
-    constructor(properties = {}) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -20,14 +33,14 @@ export default class ContractInfoQuery extends Query {
          * @private
          */
         this._contractId = null;
-        if (properties.contractId != null) {
-            this.setContractId(properties.contractId);
+        if (props.contractId != null) {
+            this.setContractId(props.contractId);
         }
     }
 
     /**
      * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {ContractInfoQuery}
      */
     static _fromProtobuf(query) {
@@ -64,13 +77,14 @@ export default class ContractInfoQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
      */
-    _getMethod(channel) {
-        return (query) => channel.smartContract.getContractInfo(query);
+    _execute(channel, request) {
+        return channel.smartContract.getContractInfo(request);
     }
 
     /**
@@ -102,13 +116,12 @@ export default class ContractInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             contractGetInfo: {
-                header,
+                header: this._makeRequestHeader(),
                 contractID:
                     this._contractId != null
                         ? this._contractId._toProtobuf()
@@ -118,6 +131,5 @@ export default class ContractInfoQuery extends Query {
     }
 }
 
-// @ts-ignore
 // eslint-disable-next-line @typescript-eslint/unbound-method
 QUERY_REGISTRY.set("contractGetInfo", ContractInfoQuery._fromProtobuf);

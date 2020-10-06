@@ -2,12 +2,26 @@ import AccountId from "../account/AccountId";
 import ContractId from "./ContractId";
 import FileId from "../file/FileId";
 import Timestamp from "../Timestamp";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import { Key } from "@hashgraph/cryptography";
 import { keyToProtobuf, keyFromProtobuf } from "../cryptography/protobuf";
 import Long from "long";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").IContractUpdateTransactionBody} proto.IContractUpdateTransactionBody
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ */
+
+/**
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 export default class ContractUpdateTransaction extends Transaction {
     /**
@@ -106,7 +120,7 @@ export default class ContractUpdateTransaction extends Transaction {
             contractId:
                 update.contractID != null
                     ? ContractId._fromProtobuf(
-                          /** @type {proto.ContractID} */ (update.contractID)
+                          /** @type {proto.IContractID} */ (update.contractID)
                       )
                     : undefined,
             bytecodeFileId:
@@ -285,11 +299,11 @@ export default class ContractUpdateTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
      */
-    _getMethod(channel) {
-        return (transaction) =>
-            channel.smartContract.updateContract(transaction);
+    _execute(channel, request) {
+        return channel.smartContract.updateContract(request);
     }
 
     /**

@@ -1,7 +1,19 @@
 import Query, { QUERY_REGISTRY } from "../query/Query";
 import ContractId from "./ContractId";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").IContractGetBytecodeQuery} proto.IContractGetBytecodeQuery
+ * @typedef {import("@hashgraph/proto").IContractGetBytecodeResponse} proto.IContractGetBytecodeResponse
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * @augments {Query<Uint8Array>}
@@ -26,7 +38,7 @@ export default class ContractByteCodeQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {ContractByteCodeQuery}
      */
     static _fromProtobuf(query) {
@@ -63,13 +75,14 @@ export default class ContractByteCodeQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
      */
-    _getMethod(channel) {
-        return (query) => channel.smartContract.contractGetBytecode(query);
+    _execute(channel, request) {
+        return channel.smartContract.contractGetBytecode(request);
     }
 
     /**
@@ -101,13 +114,12 @@ export default class ContractByteCodeQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             contractGetBytecode: {
-                header,
+                header: this._makeRequestHeader(),
                 contractID:
                     this._contractId != null
                         ? this._contractId._toProtobuf()
@@ -117,6 +129,5 @@ export default class ContractByteCodeQuery extends Query {
     }
 }
 
-// @ts-ignore
 // eslint-disable-next-line @typescript-eslint/unbound-method
 QUERY_REGISTRY.set("contractGetBytecode", ContractByteCodeQuery._fromProtobuf);

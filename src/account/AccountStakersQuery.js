@@ -1,8 +1,21 @@
 import Query, { QUERY_REGISTRY } from "../query/Query";
 import AccountId from "./AccountId";
 import ProxyStaker from "./ProxyStaker";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").ICryptoGetStakersQuery} proto.ICryptoGetStakersQuery
+ * @typedef {import("@hashgraph/proto").ICryptoGetStakersResponse} proto.ICryptoGetStakersResponse
+ * @typedef {import("@hashgraph/proto").IAllProxyStakers} proto.IAllProxyStakers
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * Get all the accounts that are proxy staking to this account.
@@ -14,7 +27,7 @@ import Channel from "../channel/Channel";
  */
 export default class AccountStakersQuery extends Query {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {(AccountId | string)=} props.accountId
      */
     constructor(props = {}) {
@@ -33,7 +46,7 @@ export default class AccountStakersQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {AccountStakersQuery}
      */
     static _fromProtobuf(query) {
@@ -70,13 +83,14 @@ export default class AccountStakersQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
      */
-    _getMethod(channel) {
-        return (query) => channel.crypto.getStakersByAccountID(query);
+    _execute(channel, request) {
+        return channel.crypto.getStakersByAccountID(request);
     }
 
     /**
@@ -110,13 +124,12 @@ export default class AccountStakersQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             cryptoGetProxyStakers: {
-                header,
+                header: this._makeRequestHeader(),
                 accountID:
                     this._accountId != null
                         ? this._accountId._toProtobuf()

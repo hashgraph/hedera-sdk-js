@@ -1,8 +1,16 @@
 import AccountId from "./AccountId";
-import * as proto from "@hashgraph/proto";
-import { keyListFromProtobuf, keyListToProtobuf } from "../cryptography/protobuf";
 import { KeyList } from "@hashgraph/cryptography";
 import Long from "long";
+import {
+    keyListFromProtobuf,
+    keyListToProtobuf,
+} from "../cryptography/protobuf";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").ILiveHash} proto.ILiveHash
+ */
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -35,6 +43,7 @@ export default class LiveHash {
     /**
      * @internal
      * @param {proto.ILiveHash} liveHash
+     * @returns {LiveHash}
      */
     static _fromProtobuf(liveHash) {
         const liveHash_ = /** @type {proto.ILiveHash} */ (liveHash);

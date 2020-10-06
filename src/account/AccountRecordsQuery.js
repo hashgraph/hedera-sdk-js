@@ -1,8 +1,21 @@
 import Query, { QUERY_REGISTRY } from "../query/Query";
 import AccountId from "./AccountId";
 import TransactionRecord from "../transaction/TransactionRecord";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").ICryptoGetAccountRecordsQuery} proto.ICryptoGetAccountRecordsQuery
+ * @typedef {import("@hashgraph/proto").ICryptoGetAccountRecordsResponse} proto.ICryptoGetAccountRecordsResponse
+ * @typedef {import("@hashgraph/proto").ITransactionRecord} proto.ITransactionRecord
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * Get all the records for an account for any transfers into it and out of it,
@@ -12,7 +25,7 @@ import Channel from "../channel/Channel";
  */
 export default class AccountRecordsQuery extends Query {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {AccountId | string} [props.accountId]
      */
     constructor(props = {}) {
@@ -31,7 +44,7 @@ export default class AccountRecordsQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {AccountRecordsQuery}
      */
     static _fromProtobuf(query) {
@@ -68,13 +81,14 @@ export default class AccountRecordsQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
      */
-    _getMethod(channel) {
-        return (query) => channel.crypto.getAccountRecords(query);
+    _execute(channel, request) {
+        return channel.crypto.getAccountRecords(request);
     }
 
     /**
@@ -105,13 +119,12 @@ export default class AccountRecordsQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             cryptoGetAccountRecords: {
-                header,
+                header: this._makeRequestHeader(),
                 accountID:
                     this._accountId != null
                         ? this._accountId._toProtobuf()
@@ -123,7 +136,6 @@ export default class AccountRecordsQuery extends Query {
 
 QUERY_REGISTRY.set(
     "cryptoGetAccountRecords",
-    // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/unbound-method
     AccountRecordsQuery._fromProtobuf
 );

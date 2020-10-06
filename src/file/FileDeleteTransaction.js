@@ -1,7 +1,19 @@
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import FileId from "./FileId";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").IFileDeleteTransactionBody} proto.IFileDeleteTransactionBody
+ */
+
+/**
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * A transaction to delete a file on the Hedera network.
@@ -15,7 +27,7 @@ import FileId from "./FileId";
  */
 export default class FileDeleteTransaction extends Transaction {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {FileId | string} [props.fileId]
      */
     constructor(props = {}) {
@@ -73,10 +85,11 @@ export default class FileDeleteTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
      */
-    _getMethod(channel) {
-        return (transaction) => channel.file.deleteFile(transaction);
+    _execute(channel, request) {
+        return channel.file.deleteFile(request);
     }
 
     /**

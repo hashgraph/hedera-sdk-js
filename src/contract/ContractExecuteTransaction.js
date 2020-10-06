@@ -1,25 +1,41 @@
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import ContractId from "./ContractId";
 import Hbar from "../Hbar";
 import ContractFunctionParameters from "./ContractFunctionParameters";
 import Long from "long";
-import BigNumber from "bignumber.js";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").IContractCallTransactionBody} proto.IContractCallTransactionBody
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ */
+
+/**
+ * @typedef {import("bignumber.js").default} BigNumber
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * @typedef {object} FunctionParameters
  * @property {string} name
- * @property {ContractFunctionParameters} functionParameters
+ * @property {ContractFunctionParameters} parameters
  */
 
 export default class ContractExecuteTransaction extends Transaction {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {ContractId | string} [props.contractId]
      * @param {number | Long} [props.gas]
      * @param {number | string | Long | BigNumber | Hbar} [props.amount]
-     * @param {Uint8Array | FunctionParameters} [props.functionParameters]
+     * @param {Uint8Array} [props.functionParameters]
+     * @param {FunctionParameters} [props.function]
      */
     constructor(props = {}) {
         super();
@@ -61,14 +77,9 @@ export default class ContractExecuteTransaction extends Transaction {
         }
 
         if (props.functionParameters != null) {
-            if (props.functionParameters instanceof Uint8Array) {
-                this.setFunctionParameters(props.functionParameters);
-            } else {
-                this.setFunction(
-                    props.functionParameters.name,
-                    props.functionParameters.functionParameters
-                );
-            }
+            this.setFunctionParameters(props.functionParameters);
+        } else if (props.function != null) {
+            this.setFunction(props.function.name, props.function.parameters);
         }
     }
 
@@ -84,7 +95,7 @@ export default class ContractExecuteTransaction extends Transaction {
             contractId:
                 call.contractID != null
                     ? ContractId._fromProtobuf(
-                          /** @type {proto.ContractID} */ (call.contractID)
+                          /** @type {proto.IContractID} */ (call.contractID)
                       )
                     : undefined,
             gas: call.gas != null ? call.gas : undefined,
@@ -193,11 +204,11 @@ export default class ContractExecuteTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
      */
-    _getMethod(channel) {
-        return (transaction) =>
-            channel.smartContract.contractCallMethod(transaction);
+    _execute(channel, request) {
+        return channel.smartContract.contractCallMethod(request);
     }
 
     /**

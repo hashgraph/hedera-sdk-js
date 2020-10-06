@@ -2,20 +2,33 @@ import Hbar from "../Hbar";
 import AccountId from "../account/AccountId";
 import FileId from "../file/FileId";
 import ContractFunctionParameters from "./ContractFunctionParameters";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction";
-import { Key } from "@hashgraph/cryptography";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import Long from "long";
-import BigNumber from "bignumber.js";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").IContractCreateTransactionBody} proto.IContractCreateTransactionBody
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ */
+
+/**
+ * @typedef {import("bignumber.js").default} BigNumber
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 export default class ContractCreateTransaction extends Transaction {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {FileId | string} [props.bytecodeFileId]
      * @param {Key} [props.adminKey]
      * @param {number | Long} [props.gas]
@@ -289,9 +302,9 @@ export default class ContractCreateTransaction extends Transaction {
     setConstructorParameters(constructorParameters) {
         this._requireNotFrozen();
         this._constructorParameters =
-            constructorParameters instanceof Uint8Array
-                ? constructorParameters
-                : constructorParameters._build();
+            constructorParameters instanceof ContractFunctionParameters
+                ? constructorParameters._build()
+                : constructorParameters;
 
         return this;
     }
@@ -318,11 +331,11 @@ export default class ContractCreateTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
      */
-    _getMethod(channel) {
-        return (transaction) =>
-            channel.smartContract.createContract(transaction);
+    _execute(channel, request) {
+        return channel.smartContract.createContract(request);
     }
 
     /**

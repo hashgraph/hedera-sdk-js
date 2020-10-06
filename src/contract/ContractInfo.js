@@ -1,11 +1,22 @@
 import ContractId from "./ContractId";
 import AccountId from "../account/AccountId";
 import Timestamp from "../Timestamp";
-import * as proto from "@hashgraph/proto";
 import Hbar from "../Hbar";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
-import { Key } from "@hashgraph/cryptography";
 import Long from "long";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").IDuration} proto.IDuration
+ * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").IContractInfo} proto.IContractInfo
+ */
+
+/**
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ */
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -105,6 +116,7 @@ export default class ContractInfo {
     /**
      * @internal
      * @param {proto.IContractInfo} info
+     * @returns {ContractInfo}
      */
     static _fromProtobuf(info) {
         const autoRenewPeriod = /** @type {Long | number} */ (
@@ -149,7 +161,8 @@ export default class ContractInfo {
             contractID: this.contractId._toProtobuf(),
             accountID: this.accountId._toProtobuf(),
             contractAccountID: this.contractAccountId,
-            adminKey: this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
+            adminKey:
+                this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
             expirationTime: this.expirationTime._toProtobuf(),
             autoRenewPeriod: {
                 seconds: this.autoRenewPeriod,

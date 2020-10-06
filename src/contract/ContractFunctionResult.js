@@ -1,11 +1,15 @@
 import ContractLogInfo from "./ContractLogInfo";
 import ContractId from "./ContractId";
 import BigNumber from "bignumber.js";
-import * as proto from "@hashgraph/proto";
 import * as hex from "../encoding/hex";
 import * as utf8 from "../encoding/utf8";
 import Long from "long";
 
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IContractFunctionResult} proto.IContractFunctionResult
+ * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ */
 /**
  * The result returned by a call to a smart contract function. This is part of the response to
  * a ContractCallLocal query, and is in the record for a ContractCall or ContractCreateInstance

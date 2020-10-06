@@ -23,7 +23,7 @@ import TopicInfo from "./TopicInfo";
  */
 export default class TopicInfoQuery extends Query {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {TopicId | string} [props.topicId]
      */
     constructor(props = {}) {

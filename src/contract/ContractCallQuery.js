@@ -2,9 +2,22 @@ import Query, { QUERY_REGISTRY } from "../query/Query";
 import ContractId from "./ContractId";
 import ContractFunctionParameters from "./ContractFunctionParameters";
 import ContractFunctionResult from "./ContractFunctionResult";
-import * as proto from "@hashgraph/proto";
 import Long from "long";
-import Channel from "../channel/Channel";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").IContractCallLocalQuery} proto.IContractCallLocalQuery
+ * @typedef {import("@hashgraph/proto").IContractCallLocalResponse} proto.IContractCallLocalResponse
+ * @typedef {import("@hashgraph/proto").IContractFunctionResult} proto.IContractFunctionResult
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * @typedef {object} FunctionParameters
@@ -17,13 +30,14 @@ import Channel from "../channel/Channel";
  */
 export default class ContractCallQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {ContractId | string} [properties.contractId]
-     * @param {number | Long} [properties.gas]
-     * @param {FunctionParameters | Uint8Array} [properties.functionParameters]
-     * @param {number | Long} [properties.maxResultSize]
+     * @param {object} [props]
+     * @param {ContractId | string} [props.contractId]
+     * @param {number | Long} [props.gas]
+     * @param {Uint8Array} [props.functionParameters]
+     * @param {FunctionParameters} [props.function]
+     * @param {number | Long} [props.maxResultSize]
      */
-    constructor(properties = {}) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -31,8 +45,9 @@ export default class ContractCallQuery extends Query {
          * @type {?ContractId}
          */
         this._contractId = null;
-        if (properties.contractId != null) {
-            this.setContractId(properties.contractId);
+
+        if (props.contractId != null) {
+            this.setContractId(props.contractId);
         }
 
         /**
@@ -40,8 +55,9 @@ export default class ContractCallQuery extends Query {
          * @type {?Long}
          */
         this._gas = null;
-        if (properties.gas != null) {
-            this.setGas(properties.gas);
+
+        if (props.gas != null) {
+            this.setGas(props.gas);
         }
 
         /**
@@ -49,15 +65,11 @@ export default class ContractCallQuery extends Query {
          * @type {?Uint8Array}
          */
         this._functionParameters = null;
-        if (properties.functionParameters != null) {
-            if (properties.functionParameters instanceof Uint8Array) {
-                this.setFunctionParameters(properties.functionParameters);
-            } else {
-                this.setFunction(
-                    properties.functionParameters.name,
-                    properties.functionParameters.parameters
-                );
-            }
+
+        if (props.functionParameters != null) {
+            this.setFunctionParameters(props.functionParameters);
+        } else if (props.function != null) {
+            this.setFunction(props.function.name, props.function.parameters);
         }
 
         /**
@@ -65,14 +77,14 @@ export default class ContractCallQuery extends Query {
          * @type {?Long}
          */
         this._maxResultSize = null;
-        if (properties.maxResultSize != null) {
-            this.setMaxResultSize(properties.maxResultSize);
+        if (props.maxResultSize != null) {
+            this.setMaxResultSize(props.maxResultSize);
         }
     }
 
     /**
      * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {ContractCallQuery}
      */
     static _fromProtobuf(query) {
@@ -157,6 +169,7 @@ export default class ContractCallQuery extends Query {
             ? params
             : new ContractFunctionParameters()
         )._build(name);
+
         return this;
     }
 
@@ -171,13 +184,14 @@ export default class ContractCallQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
      */
-    _getMethod(channel) {
-        return (query) => channel.smartContract.contractCallLocalMethod(query);
+    _execute(channel, request) {
+        return channel.smartContract.contractCallLocalMethod(request);
     }
 
     /**
@@ -216,13 +230,12 @@ export default class ContractCallQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             contractCallLocal: {
-                header,
+                header: this._makeRequestHeader(),
                 contractID:
                     this._contractId != null
                         ? this._contractId._toProtobuf()
@@ -235,6 +248,5 @@ export default class ContractCallQuery extends Query {
     }
 }
 
-// @ts-ignore
 // eslint-disable-next-line @typescript-eslint/unbound-method
 QUERY_REGISTRY.set("contractCallLocal", ContractCallQuery._fromProtobuf);

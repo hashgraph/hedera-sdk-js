@@ -1,7 +1,16 @@
 import AccountId from "./account/AccountId";
 import Hbar from "./Hbar";
-import * as proto from "@hashgraph/proto";
-import BigNumber from "bignumber.js";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ */
+
+/**
+ * @typedef {import("bignumber.js").default} BigNumber
+ * @typedef {import("long")} Long
+ */
 
 /**
  * An account, and the amount that it sends or receives during a cryptocurrency transfer.

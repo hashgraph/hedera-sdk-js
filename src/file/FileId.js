@@ -1,6 +1,9 @@
 import EntityId, { fromString } from "../EntityId";
 import * as proto from "@hashgraph/proto";
-import Long from "long";
+
+/**
+ * @typedef {import("long")} Long
+ */
 
 /**
  * The ID for a crypto-currency file on Hedera.

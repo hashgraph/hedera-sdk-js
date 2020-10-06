@@ -1,11 +1,21 @@
 import AccountId from "./AccountId";
 import LiveHash from "./LiveHash";
-import * as proto from "@hashgraph/proto";
 import Hbar from "../Hbar";
 import Time from "../Timestamp";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
-import { Key } from "@hashgraph/cryptography";
 import Long from "long";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IAccountInfo} proto.IAccountInfo
+ * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").IKey} proto.IKey
+ */
+
+/**
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ */
 
 /**
  * Current information about an account, including the balance.
@@ -133,6 +143,7 @@ export default class AccountInfo {
     /**
      * @internal
      * @param {proto.IAccountInfo} info
+     * @returns {AccountInfo}
      */
     static _fromProtobuf(info) {
         return new AccountInfo({
@@ -166,18 +177,16 @@ export default class AccountInfo {
                     ? info.autoRenewPeriod.seconds instanceof Long
                         ? info.autoRenewPeriod.seconds
                         : Long.fromValue(
-                              info.autoRenewPeriod != null
-                                  ? info.autoRenewPeriod.seconds != null
-                                      ? info.autoRenewPeriod.seconds
-                                      : Long.ZERO
+                              info.autoRenewPeriod.seconds != null
+                                  ? info.autoRenewPeriod.seconds
                                   : Long.ZERO
                           )
                     : Long.fromValue(0),
             proxyAccountId:
                 info.proxyAccountID != null &&
-                info.proxyAccountID.shardNum != 0 &&
-                info.proxyAccountID.realmNum != 0 &&
-                info.proxyAccountID.accountNum != 0
+                info.proxyAccountID.shardNum !== 0 &&
+                info.proxyAccountID.realmNum !== 0 &&
+                info.proxyAccountID.accountNum !== 0
                     ? AccountId._fromProtobuf(info.proxyAccountID)
                     : null,
             proxyReceived: Hbar.fromTinybars(

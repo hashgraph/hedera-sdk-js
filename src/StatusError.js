@@ -5,10 +5,10 @@
 
 export default class StatusError extends Error {
     /**
-     * @param {string} message
      * @param {object} props
      * @param {Status} props.status
      * @param {TransactionId} props.transactionId
+     * @param {string} message
      */
     constructor(props, message) {
         super(message);

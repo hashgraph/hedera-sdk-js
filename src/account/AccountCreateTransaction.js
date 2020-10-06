@@ -1,23 +1,35 @@
 import Hbar from "../Hbar";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
 import AccountId from "./AccountId";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     DEFAULT_RECORD_THRESHOLD,
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction";
-import { Key } from "@hashgraph/cryptography";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import Long from "long";
-import BigNumber from "bignumber.js";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").ICryptoCreateTransactionBody} proto.ICryptoCreateTransactionBody
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ */
+
+/**
+ * @typedef {import("bignumber.js").default} BigNumber
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * Create a new Hedera™ crypto-currency account.
  */
 export default class AccountCreateTransaction extends Transaction {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {Key} [props.key]
      * @param {number | string | Long | BigNumber | Hbar} [props.initialBalance]
      * @param {boolean} [props.receiverSignatureRequired]
@@ -92,7 +104,7 @@ export default class AccountCreateTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.TransactionBody} body
+     * @param {proto.ITransactionBody} body
      * @returns {AccountCreateTransaction}
      */
     static _fromProtobuf(body) {
@@ -239,10 +251,11 @@ export default class AccountCreateTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
      */
-    _getMethod(channel) {
-        return (transaction) => channel.crypto.createAccount(transaction);
+    _execute(channel, request) {
+        return channel.crypto.createAccount(request);
     }
 
     /**

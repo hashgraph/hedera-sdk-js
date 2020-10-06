@@ -1,13 +1,23 @@
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import AccountId from "./AccountId";
-import { Key } from "@hashgraph/cryptography";
-import Long from "long";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").ICryptoDeleteLiveHashTransactionBody} proto.ICryptoDeleteLiveHashTransactionBody
+ */
+
+/**
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 export default class LiveHashDeleteTransaction extends Transaction {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {Uint8Array} [props.hash]
      * @param {Key[]} [props.keys]
      * @param {number | Long} [props.duration]
@@ -100,10 +110,11 @@ export default class LiveHashDeleteTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
      */
-    _getMethod(channel) {
-        return (transaction) => channel.crypto.deleteLiveHash(transaction);
+    _execute(channel, request) {
+        return channel.crypto.deleteLiveHash(request);
     }
 
     /**

@@ -1,13 +1,26 @@
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import FileId from "../file/FileId";
 import ContractId from "../contract/ContractId";
 import Timestamp from "../Timestamp";
 
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").ISystemDeleteTransactionBody} proto.ISystemDeleteTransactionBody
+ * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
+
 export default class SystemDeleteTransaction extends Transaction {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {FileId | string} [props.fileId]
      * @param {ContractId | string} [props.contractId]
      * @param {Timestamp} [props.expirationTime]
@@ -135,14 +148,14 @@ export default class SystemDeleteTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
      */
-    _getMethod(channel) {
+    _execute(channel, request) {
         if (this._fileId != null) {
-            return (transaction) => channel.file.systemDelete(transaction);
+            return channel.file.systemDelete(request);
         } else {
-            return (transaction) =>
-                channel.smartContract.systemDelete(transaction);
+            return channel.smartContract.systemDelete(request);
         }
     }
 

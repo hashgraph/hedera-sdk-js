@@ -1,12 +1,25 @@
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
 import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import ContractId from "./ContractId";
 import AccountId from "../account/AccountId";
 
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").IContractDeleteTransactionBody} proto.IContractDeleteTransactionBody
+ * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
+
 export default class ContractDeleteTransaction extends Transaction {
     /**
-     * @param {object} props
+     * @param {object} [props]
      * @param {ContractId | string} [props.contractId]
      * @param {ContractId | string} [props.transferContractId]
      * @param {AccountId | string} [props.transferAccountId]
@@ -57,19 +70,19 @@ export default class ContractDeleteTransaction extends Transaction {
             contractId:
                 contractDelete.contractID != null
                     ? ContractId._fromProtobuf(
-                          /** @type {proto.ContractID} */ (contractDelete.contractID)
+                          /** @type {proto.IContractID} */ (contractDelete.contractID)
                       )
                     : undefined,
             transferAccountId:
                 contractDelete.transferAccountID != null
                     ? AccountId._fromProtobuf(
-                          /** @type {proto.AccountID} */ (contractDelete.transferAccountID)
+                          /** @type {proto.IAccountID} */ (contractDelete.transferAccountID)
                       )
                     : undefined,
             transferContractId:
                 contractDelete.transferContractID != null
                     ? ContractId._fromProtobuf(
-                          /** @type {proto.ContractID} */ (contractDelete.transferContractID)
+                          /** @type {proto.IContractID} */ (contractDelete.transferContractID)
                       )
                     : undefined,
         });
@@ -148,11 +161,11 @@ export default class ContractDeleteTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
      */
-    _getMethod(channel) {
-        return (transaction) =>
-            channel.smartContract.deleteContract(transaction);
+    _execute(channel, request) {
+        return channel.smartContract.deleteContract(request);
     }
 
     /**

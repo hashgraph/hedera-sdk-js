@@ -1,5 +1,14 @@
-import * as proto from "@hashgraph/proto";
-import { Key, KeyList, PrivateKey, PublicKey } from "@hashgraph/cryptography";
+import { KeyList, PrivateKey, PublicKey } from "@hashgraph/cryptography";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IKey} proto.IKey
+ * @typedef {import("@hashgraph/proto").IKeyList} proto.IKeyList
+ */
+
+/**
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ */
 
 /**
  * @param {Key} key

@@ -1,5 +1,10 @@
-import * as proto from "@hashgraph/proto";
 import SemanticVersion from "./SemanticVersion";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").INetworkGetVersionInfoResponse} proto.INetworkGetVersionInfoResponse
+ * @typedef {import("@hashgraph/proto").ISemanticVersion} proto.ISemanticVersion
+ */
 
 /**
  * Response when the client sends the node CryptoGetVersionInfoQuery.
@@ -7,25 +12,25 @@ import SemanticVersion from "./SemanticVersion";
 export default class NetworkVersionInfo {
     /**
      * @private
-     * @param {object} properties
-     * @param {SemanticVersion} properties.protobufVersion
-     * @param {SemanticVersion} properties.servicesVesion
+     * @param {object} props
+     * @param {SemanticVersion} props.protobufVersion
+     * @param {SemanticVersion} props.servicesVesion
      *
      */
-    constructor(properties) {
+    constructor(props) {
         /**
          * The account ID for which this information applies.
          *
          * @readonly
          */
-        this.protobufVersion = properties.protobufVersion;
+        this.protobufVersion = props.protobufVersion;
 
         /**
          * The account ID for which this information applies.
          *
          * @readonly
          */
-        this.servicesVesion = properties.servicesVesion;
+        this.servicesVesion = props.servicesVesion;
 
         Object.freeze(this);
     }
@@ -33,6 +38,7 @@ export default class NetworkVersionInfo {
     /**
      * @internal
      * @param {proto.INetworkGetVersionInfoResponse} info
+     * @returns {NetworkVersionInfo}
      */
     static _fromProtobuf(info) {
         return new NetworkVersionInfo({
@@ -51,7 +57,7 @@ export default class NetworkVersionInfo {
      * @internal
      * @returns {proto.INetworkGetVersionInfoResponse}
      */
-    toProtobuf() {
+    _toProtobuf() {
         return {
             hapiProtoVersion: this.protobufVersion._toProtobuf(),
             hederaServicesVersion: this.servicesVesion._toProtobuf(),

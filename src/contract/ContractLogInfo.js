@@ -1,5 +1,10 @@
 import ContractId from "./ContractId";
-import * as proto from "@hashgraph/proto";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IContractLoginfo} proto.IContractLoginfo
+ * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ */
 
 /**
  * The log information for an event returned by a smart contract function call. One function call
@@ -7,40 +12,40 @@ import * as proto from "@hashgraph/proto";
  */
 export default class ContractLogInfo {
     /**
-     * @param {object} properties
-     * @param {ContractId} properties.contractId
-     * @param {Uint8Array} properties.bloom
-     * @param {Uint8Array[]} properties.topics
-     * @param {Uint8Array} properties.data
+     * @param {object} props
+     * @param {ContractId} props.contractId
+     * @param {Uint8Array} props.bloom
+     * @param {Uint8Array[]} props.topics
+     * @param {Uint8Array} props.data
      */
-    constructor(properties) {
+    constructor(props) {
         /**
          * Address of a contract that emitted the event.
          *
          * @readonly
          */
-        this.contractId = properties.contractId;
+        this.contractId = props.contractId;
 
         /**
          * Bloom filter for a particular log.
          *
          * @readonly
          */
-        this.bloom = properties.bloom;
+        this.bloom = props.bloom;
 
         /**
          * Topics of a particular event.
          *
          * @readonly
          */
-        this.topics = properties.topics;
+        this.topics = props.topics;
 
         /**
          * Event data.
          *
          * @readonly
          */
-        this.data = properties.data;
+        this.data = props.data;
 
         Object.freeze(this);
     }

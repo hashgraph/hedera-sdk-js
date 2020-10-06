@@ -1,20 +1,25 @@
-import * as proto from "@hashgraph/proto";
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ISemanticVersion} proto.ISemanticVersion
+ */
 
 export default class SemanticVersion {
     /**
      * @private
-     * @param {object} properties
-     * @param {number} properties.major
-     * @param {number} properties.minor
-     * @param {number} properties.patch
+     * @param {object} proto
+     * @param {number} proto.major
+     * @param {number} proto.minor
+     * @param {number} proto.patch
      */
-    constructor(properties) {
+    constructor(proto) {
         /** @readonly */
-        this.major = properties.major;
+        this.major = proto.major;
+
         /** @readonly */
-        this.minor = properties.minor;
+        this.minor = proto.minor;
+
         /** @readonly */
-        this.patch = properties.patch;
+        this.patch = proto.patch;
 
         Object.freeze(this);
     }

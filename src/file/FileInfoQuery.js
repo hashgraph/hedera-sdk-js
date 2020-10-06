@@ -1,18 +1,31 @@
 import Query, { QUERY_REGISTRY } from "../query/Query";
 import FileId from "./FileId";
 import FileInfo from "./FileInfo";
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").IFileGetInfoQuery} proto.IFileGetInfoQuery
+ * @typedef {import("@hashgraph/proto").IFileGetInfoResponse} proto.IFileGetInfoResponse
+ * @typedef {import("@hashgraph/proto").IFileInfo} proto.IFileInfo
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * @augments {Query<FileInfo>}
  */
 export default class FileInfoQuery extends Query {
     /**
-     * @param {object} properties
-     * @param {FileId | string} [properties.fileId]
+     * @param {object} [props]
+     * @param {FileId | string} [props.fileId]
      */
-    constructor(properties = {}) {
+    constructor(props = {}) {
         super();
 
         /**
@@ -20,14 +33,14 @@ export default class FileInfoQuery extends Query {
          * @private
          */
         this._fileId = null;
-        if (properties.fileId != null) {
-            this.setFileId(properties.fileId);
+        if (props.fileId != null) {
+            this.setFileId(props.fileId);
         }
     }
 
     /**
      * @internal
-     * @param {proto.Query} query
+     * @param {proto.IQuery} query
      * @returns {FileInfoQuery}
      */
     static _fromProtobuf(query) {
@@ -62,13 +75,14 @@ export default class FileInfoQuery extends Query {
     }
 
     /**
-     * @protected
      * @override
+     * @protected
      * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
      */
-    _getMethod(channel) {
-        return (query) => channel.file.getFileInfo(query);
+    _execute(channel, request) {
+        return channel.file.getFileInfo(request);
     }
 
     /**
@@ -100,13 +114,12 @@ export default class FileInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _onMakeRequest(header) {
+    _makeRequest() {
         return {
             fileGetInfo: {
-                header,
+                header: this._makeRequestHeader(),
                 fileID:
                     this._fileId != null ? this._fileId._toProtobuf() : null,
             },
@@ -114,6 +127,5 @@ export default class FileInfoQuery extends Query {
     }
 }
 
-// @ts-ignore
 // eslint-disable-next-line @typescript-eslint/unbound-method
 QUERY_REGISTRY.set("fileGetInfo", FileInfoQuery._fromProtobuf);

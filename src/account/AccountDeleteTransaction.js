@@ -1,7 +1,19 @@
-import * as proto from "@hashgraph/proto";
-import Channel from "../channel/Channel";
 import AccountId from "./AccountId";
 import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").ICryptoDeleteTransactionBody} proto.ICryptoDeleteTransactionBody
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ */
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * Marks an account as deleted, moving all its current hbars to another account.
@@ -114,10 +126,11 @@ export default class AccountDeleteTransaction extends Transaction {
      * @override
      * @protected
      * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
      */
-    _getMethod(channel) {
-        return (transaction) => channel.crypto.cryptoDelete(transaction);
+    _execute(channel, request) {
+        return channel.crypto.cryptoDelete(request);
     }
 
     /**
