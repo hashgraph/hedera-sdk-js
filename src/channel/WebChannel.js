@@ -1,4 +1,3 @@
-import * as proto from "@hashgraph/proto";
 import * as utf8 from "../encoding/utf8";
 import Channel from "./Channel";
 
@@ -7,7 +6,7 @@ export default class WebChannel extends Channel {
      * @param {string} address
      */
     constructor(address) {
-        super(address);
+        super();
 
         /**
          * @type {string}
@@ -18,48 +17,31 @@ export default class WebChannel extends Channel {
 
     /**
      * @override
-     * @returns {proto.CryptoService}
+     * @protected
+     * @param {string} serviceName
+     * @returns {import("protobufjs").RPCImpl}
      */
-    get crypto() {
-        if (this._crypto != null) {
-            return this._crypto;
-        }
+    _createUnaryClient(serviceName) {
+        return async (method, requestData, callback) => {
+            const response = await fetch(
+                `${this._address}/proto.${serviceName}/${method.name}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/grpc-web+proto",
+                        "x-user-agent": "hedera-sdk-js/v2",
+                        "x-grpc-web": "1",
+                    },
+                    body: encodeRequest(requestData),
+                }
+            );
 
-        this._crypto = proto.CryptoService.create(
-            unary(this._address, "CryptoService")
-        );
+            const responseBuffer = await response.arrayBuffer();
+            const unaryResponse = decodeUnaryResponse(responseBuffer);
 
-        return this._crypto;
+            callback(null, unaryResponse);
+        };
     }
-}
-
-/**
- * https://github.com/grpc/grpc-web/issues/80
- *
- * @param {string} host
- * @param {string} serviceName
- * @returns {import("protobufjs").RPCImpl}
- */
-function unary(host, serviceName) {
-    return async (method, requestData, callback) => {
-        const response = await fetch(
-            `${host}/proto.${serviceName}/${method.name}`,
-            {
-                method: "POST",
-                headers: {
-                    "content-type": "application/grpc-web+proto",
-                    "x-user-agent": "hedera-sdk-js/v2",
-                    "x-grpc-web": "1",
-                },
-                body: encodeRequest(requestData),
-            }
-        );
-
-        const responseBuffer = await response.arrayBuffer();
-        const unaryResponse = decodeUnaryResponse(responseBuffer);
-
-        callback(null, unaryResponse);
-    };
 }
 
 // grpc-web+proto is a series of data or trailer frames

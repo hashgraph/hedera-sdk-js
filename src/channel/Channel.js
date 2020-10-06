@@ -1,94 +1,154 @@
+import {
+    CryptoService,
+    SmartContractService,
+    FileService,
+    ConsensusService,
+    NetworkService,
+    FreezeService,
+} from "@hashgraph/proto";
+
 /**
  * @internal
  * @abstract
  */
 export default class Channel {
     /**
-     * @param {string} address
+     * @protected
      */
-    constructor(address) {
+    constructor() {
         /**
          * @protected
-         * @type {?import("@hashgraph/proto").CryptoService}
+         * @type {?CryptoService}
          */
         this._crypto = null;
 
         /**
          * @protected
-         * @type {?import("@hashgraph/proto").SmartContractService}
+         * @type {?SmartContractService}
          */
         this._smartContract = null;
 
         /**
          * @protected
-         * @type {?import("@hashgraph/proto").FileService}
+         * @type {?FileService}
          */
         this._file = null;
 
         /**
          * @protected
-         * @type {?import("@hashgraph/proto").ConsensusService}
+         * @type {?ConsensusService}
          */
         this._consensus = null;
 
         /**
          * @protected
-         * @type {?import("@hashgraph/proto").FreezeService}
+         * @type {?FreezeService}
          */
         this._freeze = null;
 
         /**
          * @protected
-         * @type {?import("@hashgraph/proto").NetworkService}
+         * @type {?NetworkService}
          */
         this._network = null;
     }
 
     /**
-     * @abstract
-     * @returns {import("@hashgraph/proto").CryptoService}
+     * @returns {CryptoService}
      */
     get crypto() {
-        throw new Error("not implemented");
+        if (this._crypto != null) {
+            return this._crypto;
+        }
+
+        this._crypto = CryptoService.create(
+            this._createUnaryClient("CryptoService")
+        );
+
+        return this._crypto;
     }
 
     /**
-     * @abstract
-     * @returns {import("@hashgraph/proto").SmartContractService}
+     * @returns {SmartContractService}
      */
     get smartContract() {
-        throw new Error("not implemented");
+        if (this._smartContract != null) {
+            return this._smartContract;
+        }
+
+        this._smartContract = SmartContractService.create(
+            this._createUnaryClient("SmartContractService")
+        );
+
+        return this._smartContract;
     }
 
     /**
-     * @abstract
-     * @returns {import("@hashgraph/proto").FileService}
+     * @returns {FileService}
      */
     get file() {
-        throw new Error("not implemented");
+        if (this._file != null) {
+            return this._file;
+        }
+
+        this._file = FileService.create(this._createUnaryClient("FileService"));
+
+        return this._file;
     }
 
     /**
-     * @abstract
-     * @returns {import("@hashgraph/proto").ConsensusService}
+     * @returns {ConsensusService}
      */
     get consensus() {
-        throw new Error("not implemented");
+        if (this._consensus != null) {
+            return this._consensus;
+        }
+
+        this._consensus = ConsensusService.create(
+            this._createUnaryClient("ConsensusService")
+        );
+
+        return this._consensus;
     }
 
     /**
-     * @abstract
-     * @returns {import("@hashgraph/proto").FreezeService}
+     * @returns {FreezeService}
      */
     get freeze() {
-        throw new Error("not implemented");
+        if (this._freeze != null) {
+            return this._freeze;
+        }
+
+        this._freeze = FreezeService.create(
+            this._createUnaryClient("FreezeService")
+        );
+
+        return this._freeze;
+    }
+
+    /**
+     * @returns {NetworkService}
+     */
+    get network() {
+        if (this._network != null) {
+            return this._network;
+        }
+
+        this._network = NetworkService.create(
+            this._createUnaryClient("NetworkService")
+        );
+
+        return this._network;
     }
 
     /**
      * @abstract
-     * @returns {import("@hashgraph/proto").NetworkService}
+     * @protected
+     * @param {string} serviceName
+     * @returns {import("protobufjs").RPCImpl}
      */
-    get network() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _createUnaryClient(serviceName) {
         throw new Error("not implemented");
     }
 }
