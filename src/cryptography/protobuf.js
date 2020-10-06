@@ -57,7 +57,7 @@ export function keyListToProtobuf(list) {
  * @returns {KeyList | PublicKey}
  */
 export function keyFromProtobuf(key) {
-    if (key.ed25519) {
+    if (key.ed25519 != null && key.ed25519.byteLength > 0) {
         return PublicKey.fromBytes(key.ed25519);
     }
 
@@ -72,7 +72,7 @@ export function keyFromProtobuf(key) {
         return kl;
     }
 
-    if (key.keyList) {
+    if (key.keyList != null) {
         return keyListFromProtobuf(key.keyList);
     }
 
