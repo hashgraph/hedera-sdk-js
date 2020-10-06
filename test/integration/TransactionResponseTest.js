@@ -18,7 +18,7 @@ describe("TransactionResponse", function () {
 
         const transaction = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeId(new AccountId(5))
+            .setNodeAccountId(new AccountId(5))
             .setMaxTransactionFee(new Hbar(2))
             .execute(client);
 
@@ -35,7 +35,7 @@ describe("TransactionResponse", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeId(transaction.nodeId)
+                    .setNodeAccountId(transaction.nodeId)
                     .setTransferAccountId(operatorId)
                     .freezeWith(client)
                     .sign(key)

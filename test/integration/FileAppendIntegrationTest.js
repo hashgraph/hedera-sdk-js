@@ -28,7 +28,7 @@ describe("FileAppend", function () {
 
         let info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeId(response.nodeId)
+            .setNodeAccountId(response.nodeId)
             .setQueryPayment(new Hbar(22))
             .execute(client);
 
@@ -44,7 +44,7 @@ describe("FileAppend", function () {
         await (
             await new FileAppendTransaction()
                 .setFileId(file)
-                .setNodeId(response.nodeId)
+                .setNodeAccountId(response.nodeId)
                 .setContents("[e2e::FileAppendTransaction]")
                 .setMaxTransactionFee(new Hbar(5))
                 .execute(client)
@@ -52,7 +52,7 @@ describe("FileAppend", function () {
 
         info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeId(response.nodeId)
+            .setNodeAccountId(response.nodeId)
             .setQueryPayment(new Hbar(1))
             .execute(client);
 
@@ -68,7 +68,7 @@ describe("FileAppend", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeId(response.nodeId)
+                .setNodeAccountId(response.nodeId)
                 .execute(client)
         ).getReceipt(client);
     });

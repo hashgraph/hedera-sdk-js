@@ -32,7 +32,7 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeId(response.nodeId)
+            .setNodeAccountId(response.nodeId)
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -53,7 +53,7 @@ describe("ContractExecute", function () {
         await (
             await new ContractExecuteTransaction()
                 .setContractId(contract)
-                .setNodeId(response.nodeId)
+                .setNodeAccountId(response.nodeId)
                 .setGas(10000)
                 .setFunction(
                     "setMessage",
@@ -66,14 +66,14 @@ describe("ContractExecute", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeId(response.nodeId)
+                .setNodeAccountId(response.nodeId)
                 .execute(client)
         ).getReceipt(client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeId(response.nodeId)
+                .setNodeAccountId(response.nodeId)
                 .execute(client)
         ).getReceipt(client);
     });

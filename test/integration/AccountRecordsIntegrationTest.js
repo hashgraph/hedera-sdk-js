@@ -27,13 +27,13 @@ describe("AccountRecords", function () {
         const account = receipt.accountId;
 
         await new CryptoTransferTransaction()
-            .setNodeId(response.nodeId)
+            .setNodeAccountId(response.nodeId)
             .addRecipient(account, new Hbar(1))
             .addSender(operatorId, new Hbar(1))
             .execute(client);
 
         const records = await new AccountRecordsQuery()
-            .setNodeId(response.nodeId)
+            .setNodeAccountId(response.nodeId)
             .setAccountId(operatorId)
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
@@ -44,7 +44,7 @@ describe("AccountRecords", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeId(response.nodeId)
+                    .setNodeAccountId(response.nodeId)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)

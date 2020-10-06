@@ -27,7 +27,7 @@ describe("AccountInfo", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
-            .setNodeId(response.nodeId)
+            .setNodeAccountId(response.nodeId)
             .setAccountId(account)
             .execute(client);
 
@@ -51,7 +51,7 @@ describe("AccountInfo", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeId(response.nodeId)
+                    .setNodeAccountId(response.nodeId)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)

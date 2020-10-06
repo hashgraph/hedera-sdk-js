@@ -30,7 +30,7 @@ describe("AccountUpdate", function () {
         const account = receipt.accountId;
 
         let info = await new AccountInfoQuery()
-            .setNodeId(response.nodeId)
+            .setNodeAccountId(response.nodeId)
             .setAccountId(account)
             .execute(client);
 
@@ -53,7 +53,7 @@ describe("AccountUpdate", function () {
         response = await (
             await (
                 await new AccountUpdateTransaction()
-                    .setNodeId(response.nodeId)
+                    .setNodeAccountId(response.nodeId)
                     .setAccountId(account)
                     .setKey(key2.publicKey)
                     .setMaxTransactionFee(new Hbar(1))
@@ -65,7 +65,7 @@ describe("AccountUpdate", function () {
         await response.getReceipt(client);
 
         info = await new AccountInfoQuery()
-            .setNodeId(response.nodeId)
+            .setNodeAccountId(response.nodeId)
             .setAccountId(account)
             .execute(client);
 
@@ -89,7 +89,7 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeId(response.nodeId)
+                    .setNodeAccountId(response.nodeId)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)

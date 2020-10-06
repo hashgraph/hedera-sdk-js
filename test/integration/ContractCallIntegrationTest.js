@@ -33,7 +33,7 @@ describe("ContractCallIntegration", function () {
 
         receipt = await (
             await new ContractCreateTransaction()
-                .setNodeId(response.nodeId)
+                .setNodeAccountId(response.nodeId)
                 .setAdminKey(operatorKey)
                 .setGas(2000)
                 .setConstructorParameters(
@@ -54,7 +54,7 @@ describe("ContractCallIntegration", function () {
         const contract = receipt.contractId;
 
         const callQuery = new ContractCallQuery()
-            .setNodeId(response.nodeId)
+            .setNodeAccountId(response.nodeId)
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .setGas(2000)
@@ -71,7 +71,7 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractExecuteTransaction()
                 .setContractId(contract)
-                .setNodeId(response.nodeId)
+                .setNodeAccountId(response.nodeId)
                 .setGas(10000)
                 .setFunction(
                     "setMessage",
@@ -83,7 +83,7 @@ describe("ContractCallIntegration", function () {
 
         result = await new ContractCallQuery()
             .setContractId(contract)
-            .setNodeId(response.nodeId)
+            .setNodeAccountId(response.nodeId)
             .setQueryPayment(new Hbar(5))
             .setGas(2000)
             .setFunction("getMessage")
@@ -94,14 +94,14 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeId(response.nodeId)
+                .setNodeAccountId(response.nodeId)
                 .execute(client)
         ).getReceipt(client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeId(response.nodeId)
+                .setNodeAccountId(response.nodeId)
                 .execute(client)
         ).getReceipt(client);
     });
