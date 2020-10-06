@@ -2,6 +2,26 @@ syntax = "proto3";
 
 package proto;
 
+/*-
+ * ‌
+ * Hedera Network Services Protobuf
+ * ​
+ * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * ​
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ‍
+ */
+
 option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
@@ -22,7 +42,6 @@ enum ResponseCodeEnum {
   BUSY = 12; //If API is throttled out
   NOT_SUPPORTED = 13; //The API is not currently supported
 
-
   INVALID_FILE_ID = 14; //The file id is invalid or does not exist
   INVALID_ACCOUNT_ID = 15; //The account id is invalid or does not exist
   INVALID_CONTRACT_ID = 16; //The contract id is invalid or does not exist
@@ -32,7 +51,7 @@ enum ResponseCodeEnum {
   INVALID_SOLIDITY_ID = 20; //The solidity id is invalid or entity with this solidity id does not exist
 
 
-  UNKNOWN = 21; // Transaction hasn't yet reached consensus, or has already expired
+  UNKNOWN = 21; // The responding node has submitted the transaction to the network. Its final status is still unknown.
   SUCCESS = 22; // The transaction succeeded
   FAIL_INVALID = 23; // There was a system error and the transaction failed because of invalid request parameters.
   FAIL_FEE = 24; // There was a system error while performing fee calculation, reserved for future.
@@ -97,7 +116,7 @@ enum ResponseCodeEnum {
 
   PLATFORM_NOT_ACTIVE = 67; // the platform node is either disconnected or lagging behind.
   KEY_PREFIX_MISMATCH = 68; // one public key matches more than one prefixes on the signature map
-  PLATFORM_TRANSACTION_NOT_CREATED = 69; // transaction not created by platform due to either large backlog or message size exceeded transactionMaxBytes
+  PLATFORM_TRANSACTION_NOT_CREATED = 69; // transaction not created by platform due to large backlog
   INVALID_RENEWAL_PERIOD = 70; // auto renewal period is not a positive number of seconds
   INVALID_PAYER_ACCOUNT_ID = 71; // the response code when a smart contract id is passed for a crypto API request
   ACCOUNT_DELETED = 72; // the account has been marked as deleted
@@ -114,8 +133,8 @@ enum ResponseCodeEnum {
   CONTRACT_FILE_EMPTY = 83; // File to create a smart contract was of length zero
   CONTRACT_BYTECODE_EMPTY = 84; // Bytecode for smart contract is of length zero
   INVALID_INITIAL_BALANCE=85; // Attempt to set negative initial balance
-  INVALID_RECEIVE_RECORD_THRESHOLD=86; // attempt to set negative receive record threshold
-  INVALID_SEND_RECORD_THRESHOLD=87; // attempt to set negative send record threshold
+  INVALID_RECEIVE_RECORD_THRESHOLD=86 [deprecated=true]; // [Deprecated]. attempt to set negative receive record threshold
+  INVALID_SEND_RECORD_THRESHOLD=87 [deprecated=true]; // [Deprecated]. attempt to set negative send record threshold
   ACCOUNT_IS_NOT_GENESIS_ACCOUNT = 88; // Special Account Operations should be performed by only Genesis account, return this code if it is not Genesis Account
   PAYER_ACCOUNT_UNAUTHORIZED = 89; // The fee payer account doesn't have permission to submit such Transaction
   INVALID_FREEZE_TRANSACTION_BODY = 90; // FreezeTransactionBody is invalid
@@ -156,4 +175,41 @@ enum ResponseCodeEnum {
   TOPIC_EXPIRED = 162;
   INVALID_CHUNK_NUMBER = 163; // chunk number must be from 1 to total (chunks) inclusive.
   INVALID_CHUNK_TRANSACTION_ID = 164; // For every chunk, the payer account that is part of initialTransactionID must match the Payer Account of this transaction. The entire initialTransactionID should match the transactionID of the first chunk, but this is not checked or enforced by Hedera except when the chunk number is 1.
+
+  ACCOUNT_FROZEN_FOR_TOKEN = 165; // Account is frozen and cannot transact with the token
+  TOKENS_PER_ACCOUNT_LIMIT_EXCEEDED = 166; // Maximum number of token relations for agiven account is exceeded
+  INVALID_TOKEN_ID = 167; // The token is invalid or does not exist
+  INVALID_TOKEN_DECIMALS = 168; // Invalid token decimals
+  INVALID_TOKEN_INITIAL_SUPPLY = 169; // Invalid token initial supply
+  INVALID_TREASURY_ACCOUNT_FOR_TOKEN = 170; // Treasury Account does not exist or is deleted
+  INVALID_TOKEN_SYMBOL = 171; // Token Symbol is not UTF-8 capitalized alphabetical string
+  TOKEN_HAS_NO_FREEZE_KEY = 172; // Freeze key is not set on token
+  TRANSFERS_NOT_ZERO_SUM_FOR_TOKEN = 173; // Amounts in transfer list are not net zero
+  MISSING_TOKEN_SYMBOL = 174; // Token Symbol is not provided
+  TOKEN_SYMBOL_TOO_LONG = 175; // Token Symbol is too long
+  ACCOUNT_KYC_NOT_GRANTED_FOR_TOKEN = 176; // KYC must be granted and account does not have KYC granted
+  TOKEN_HAS_NO_KYC_KEY = 177; // KYC key is not set on token
+  INSUFFICIENT_TOKEN_BALANCE = 178; // Token balance is not sufficient for the transaction
+  TOKEN_WAS_DELETED = 179; // Token transactions cannot be executed on deleted token
+  TOKEN_HAS_NO_SUPPLY_KEY = 180; // Supply key is not set on token
+  TOKEN_HAS_NO_WIPE_KEY = 181; // Wipe key is not set on token
+  INVALID_TOKEN_MINT_AMOUNT = 182;
+  INVALID_TOKEN_BURN_AMOUNT = 183;
+  TOKEN_NOT_ASSOCIATED_TO_ACCOUNT = 184;
+  CANNOT_WIPE_TOKEN_TREASURY_ACCOUNT = 185; // Cannot execute wipe operation on treasury account
+  INVALID_KYC_KEY = 186;
+  INVALID_WIPE_KEY = 187;
+  INVALID_FREEZE_KEY = 188;
+  INVALID_SUPPLY_KEY = 189;
+  MISSING_TOKEN_NAME = 190; // Token Name is not provided
+  TOKEN_NAME_TOO_LONG = 191; // Token Name is too long
+  INVALID_WIPING_AMOUNT = 192; // The provided wipe amount must not be negative, zero or bigger than the token holder balance
+  TOKEN_IS_IMMUTABLE = 193; // Token does not have Admin key set, thus update/delete transactions cannot be performed
+  TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT = 194; // An <tt>associateToken</tt> operation specified a token already associated to the account
+  TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES = 195; // An attempted operation is invalid until all token balances for the target account are zero
+  ACCOUNT_IS_TREASURY = 196; // An attempted operation is invalid because the account is a treasury
+  TOKEN_ID_REPEATED_IN_TOKEN_LIST = 197; // Same TokenIDs present in the token list
+  TOKEN_TRANSFER_LIST_SIZE_LIMIT_EXCEEDED = 198; // Exceeded the number of token transfers (both from and to) allowed for token transfer list
+  EMPTY_TOKEN_TRANSFER_BODY = 199; // TokenTransfersTransactionBody has no TokenTransferList
+  EMPTY_TOKEN_TRANSFER_ACCOUNT_AMOUNTS = 200; // TokenTransfersTransactionBody has a TokenTransferList with no AccountAmounts
 }

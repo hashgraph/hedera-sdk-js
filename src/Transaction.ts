@@ -222,12 +222,6 @@ export class Transaction {
 
     public toString(): string {
         const tx = this._toProto().toObject();
-        const bodybytes = tx.bodybytes instanceof Uint8Array ?
-            tx.bodybytes :
-            base64.decode(tx.bodybytes);
-
-        tx.body = TransactionBody.deserializeBinary(bodybytes).toObject();
-
         return JSON.stringify(tx, null, 4);
     }
 }

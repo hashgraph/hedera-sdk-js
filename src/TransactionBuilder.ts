@@ -182,6 +182,7 @@ export class SingleTransactionBuilder extends TransactionBuilder<Transaction> {
         throw new Error("Method not implemented.");
     }
 
+    // eslint-ignore-next-line @typescript-eslint/no-unused-vars
     protected _doValidate(_: string[]): void {
         throw new Error("Method not implemented.");
     }

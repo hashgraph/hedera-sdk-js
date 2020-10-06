@@ -3,12 +3,12 @@ import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import {
-    AccountAmount,
     CryptoTransferTransactionBody,
     TransferList
 } from "../generated/CryptoTransfer_pb";
 import BigNumber from "bignumber.js";
 import { CryptoService } from "../generated/CryptoService_pb_service";
+import { AccountAmount } from "../generated/BasicTypes_pb";
 
 import { Hbar, Tinybar, hbarCheck, hbarFromTinybarOrHbar, hbarToProto } from "../Hbar";
 import { AccountId, AccountIdLike } from "./AccountId";
