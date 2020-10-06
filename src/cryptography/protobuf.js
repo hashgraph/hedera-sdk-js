@@ -74,11 +74,3 @@ export function _fromProtoKeyList(keys) {
 
     return KeyList.from(keys.keys, _fromProtoKey);
 }
-
-/**
- * @param {number} ms
- * @returns {Promise<void>}
- */
-export function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
