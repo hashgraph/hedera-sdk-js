@@ -59,6 +59,7 @@ export default class Timestamp {
     }
 
     /**
+     * @internal
      * @returns {proto.ITimestamp}
      */
     _toProtobuf() {
@@ -69,6 +70,7 @@ export default class Timestamp {
     }
 
     /**
+     * @internal
      * @param {proto.ITimestamp} timestamp
      * @returns {Timestamp}
      */

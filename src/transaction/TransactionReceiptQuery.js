@@ -1,5 +1,5 @@
-import Query, { QUERY_REGISTRY } from "./Query";
-import Status from "./Status";
+import Query, { QUERY_REGISTRY } from "../query/Query";
+import Status from "../Status";
 import TransactionReceipt from "./TransactionReceipt";
 import TransactionId from "./TransactionId";
 
@@ -16,8 +16,8 @@ import TransactionId from "./TransactionId";
  */
 
 /**
- * @typedef {import("./account/AccountId").default} AccountId
- * @typedef {import("./channel/Channel").default} Channel
+ * @typedef {import("../account/AccountId").default} AccountId
+ * @typedef {import("../channel/Channel").default} Channel
  */
 
 /**

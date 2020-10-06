@@ -1,7 +1,7 @@
 import FileId from "./FileId";
 import Timestamp from "../Timestamp";
 import * as proto from "@hashgraph/proto";
-import { _fromProtoKeyList, _toProtoKeyList } from "../util";
+import { keyListFromProtobuf, keyListToProtobuf } from "../cryptography/protobuf";
 import { KeyList } from "@hashgraph/cryptography";
 import Long from "long";
 
@@ -76,7 +76,7 @@ export default class FileInfo {
             deleted: /** @type {boolean} */ (info.deleted),
             keys:
                 info.keys != null
-                    ? _fromProtoKeyList(info.keys)
+                    ? keyListFromProtobuf(info.keys)
                     : new KeyList(),
         });
     }
@@ -91,7 +91,7 @@ export default class FileInfo {
             size: this.size,
             expirationTime: this.expirationTime._toProtobuf(),
             deleted: this.deleted,
-            keys: _toProtoKeyList(this.keys),
+            keys: keyListToProtobuf(this.keys),
         };
     }
 }

@@ -1,5 +1,5 @@
 import newClient from "./client";
-import NetworkVersionInfoQuery from "../src/NetworkVersionInfoQuery";
+import NetworkVersionInfoQuery from "../../src/network/NetworkVersionInfoQuery";
 
 describe("NetworkVersionInfo", function () {
     it("should be executable", async function () {

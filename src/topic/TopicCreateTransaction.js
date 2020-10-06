@@ -3,9 +3,9 @@ import Channel from "../channel/Channel";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
-} from "../Transaction";
+} from "../transaction/Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _fromProtoKey, _toProtoKey } from "../util";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import AccountId from "../account/AccountId";
 import Long from "long";
 
@@ -87,11 +87,11 @@ export default class TopicCreateTransaction extends Transaction {
             topicMemo: create.memo != null ? create.memo : undefined,
             adminKey:
                 create.adminKey != null
-                    ? _fromProtoKey(create.adminKey)
+                    ? keyFromProtobuf(create.adminKey)
                     : undefined,
             submitKey:
                 create.submitKey != null
-                    ? _fromProtoKey(create.submitKey)
+                    ? keyFromProtobuf(create.submitKey)
                     : undefined,
             autoRenewAccountId:
                 create.autoRenewAccount != null
@@ -245,9 +245,9 @@ export default class TopicCreateTransaction extends Transaction {
     _makeTransactionData() {
         return {
             adminKey:
-                this._adminKey != null ? _toProtoKey(this._adminKey) : null,
+                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
             submitKey:
-                this._submitKey != null ? _toProtoKey(this._submitKey) : null,
+                this._submitKey != null ? keyToProtobuf(this._submitKey) : null,
             memo: this._topicMemo,
             autoRenewAccount:
                 this._autoRenewAccountId != null

@@ -1,7 +1,7 @@
-import Status from "./Status";
-import Hbar from "./Hbar";
-import Executable from "./Executable";
-import TransactionId from "./TransactionId";
+import Status from "../Status";
+import Hbar from "../Hbar";
+import Executable from "../Executable";
+import TransactionId from "../transaction/TransactionId";
 import {
     Query as ProtoQuery,
     TransactionBody as ProtoTransactionBody,
@@ -21,8 +21,8 @@ import {
  */
 
 /**
- * @typedef {import("./account/AccountId").default} AccountId
- * @typedef {import("./client/Client").ClientOperator} ClientOperator
+ * @typedef {import("../account/AccountId").default} AccountId
+ * @typedef {import("../client/Client").ClientOperator} ClientOperator
  */
 
 /**
@@ -155,7 +155,7 @@ export default class Query extends Executable {
      * @override
      * @template ChannelT
      * @template MirrorChannelT
-     * @param {import("./client/Client").default<ChannelT, MirrorChannelT>} client
+     * @param {import("../client/Client").default<ChannelT, MirrorChannelT>} client
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
@@ -275,7 +275,7 @@ export default class Query extends Executable {
     /**
      * @template ChannelT
      * @template MirrorChannelT
-     * @param {import("./client/Client").default<ChannelT, MirrorChannelT>} client
+     * @param {import("../client/Client").default<ChannelT, MirrorChannelT>} client
      * @returns {AccountId}
      */
     _getNodeAccountId(client) {

@@ -3,7 +3,7 @@ import LiveHash from "./LiveHash";
 import * as proto from "@hashgraph/proto";
 import Hbar from "../Hbar";
 import Time from "../Timestamp";
-import { _fromProtoKey, _toProtoKey } from "../util";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import { Key } from "@hashgraph/cryptography";
 import Long from "long";
 
@@ -142,7 +142,7 @@ export default class AccountInfo {
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : null,
             isDeleted: info.deleted != null ? info.deleted : false,
-            key: _fromProtoKey(/** @type {proto.IKey} */ (info.key)),
+            key: keyFromProtobuf(/** @type {proto.IKey} */ (info.key)),
             balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),
             sendRecordThreshold: Hbar.fromTinybars(
                 info.generateSendRecordThreshold != null
@@ -203,7 +203,7 @@ export default class AccountInfo {
                     ? this.proxyAccountId._toProtobuf()
                     : null,
             proxyReceived: this.proxyReceived.toTinybars(),
-            key: _toProtoKey(this.key),
+            key: keyToProtobuf(this.key),
             balance: this.balance.toTinybars(),
             generateSendRecordThreshold: this.sendRecordThreshold.toTinybars(),
             generateReceiveRecordThreshold: this.receiveRecordThreshold.toTinybars(),

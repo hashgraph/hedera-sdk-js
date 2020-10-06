@@ -1,9 +1,9 @@
-import AccountId from "./account/AccountId";
-import ContractId from "./contract/ContractId";
-import FileId from "./file/FileId";
-import TopicId from "./topic/TopicId";
-import ExchangeRate from "./ExchangeRate";
-import Status from "./Status";
+import AccountId from "../account/AccountId";
+import ContractId from "../contract/ContractId";
+import FileId from "../file/FileId";
+import TopicId from "../topic/TopicId";
+import ExchangeRate from "../ExchangeRate";
+import Status from "../Status";
 import * as proto from "@hashgraph/proto";
 import Long from "long";
 

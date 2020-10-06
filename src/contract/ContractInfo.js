@@ -3,7 +3,7 @@ import AccountId from "../account/AccountId";
 import Timestamp from "../Timestamp";
 import * as proto from "@hashgraph/proto";
 import Hbar from "../Hbar";
-import { _fromProtoKey, _toProtoKey } from "../util";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import { Key } from "@hashgraph/cryptography";
 import Long from "long";
 
@@ -121,7 +121,7 @@ export default class ContractInfo {
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : "",
             adminKey:
-                info.adminKey != null ? _fromProtoKey(info.adminKey) : null,
+                info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
             expirationTime: Timestamp._fromProtobuf(
                 /** @type {proto.ITimestamp} */ (info.expirationTime)
             ),
@@ -149,7 +149,7 @@ export default class ContractInfo {
             contractID: this.contractId._toProtobuf(),
             accountID: this.accountId._toProtobuf(),
             contractAccountID: this.contractAccountId,
-            adminKey: this.adminKey != null ? _toProtoKey(this.adminKey) : null,
+            adminKey: this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
             expirationTime: this.expirationTime._toProtobuf(),
             autoRenewPeriod: {
                 seconds: this.autoRenewPeriod,

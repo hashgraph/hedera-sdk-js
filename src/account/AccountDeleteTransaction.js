@@ -1,8 +1,7 @@
 import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
 import AccountId from "./AccountId";
-import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
-import { _toProtoKey } from "../util";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 
 /**
  * Marks an account as deleted, moving all its current hbars to another account.

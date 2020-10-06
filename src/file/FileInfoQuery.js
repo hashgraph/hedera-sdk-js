@@ -1,4 +1,4 @@
-import Query, { QUERY_REGISTRY } from "../Query";
+import Query, { QUERY_REGISTRY } from "../query/Query";
 import FileId from "./FileId";
 import FileInfo from "./FileInfo";
 import * as proto from "@hashgraph/proto";

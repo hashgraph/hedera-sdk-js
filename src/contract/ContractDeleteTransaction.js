@@ -1,7 +1,6 @@
 import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
-import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
-import { _toProtoKey } from "../util";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import ContractId from "./ContractId";
 import AccountId from "../account/AccountId";
 

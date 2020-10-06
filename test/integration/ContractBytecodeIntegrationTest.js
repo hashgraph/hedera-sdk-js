@@ -5,7 +5,7 @@ import ContractFunctionParameters from "../src/contract/ContractFunctionParamete
 import FileCreateTransaction from "../src/file/FileCreateTransaction";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
 import Hbar from "../src/Hbar";
-import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
+import TransactionReceiptQuery from "../../src/transaction/TransactionReceiptQuery";
 import newClient from "./client";
 
 describe("ContractBytecode", function () {

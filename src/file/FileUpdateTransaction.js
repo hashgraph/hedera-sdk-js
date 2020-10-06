@@ -1,8 +1,11 @@
 import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
-import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import { Key, KeyList } from "@hashgraph/cryptography";
-import { _fromProtoKeyList, _toProtoKeyList } from "../util";
+import {
+    keyListFromProtobuf,
+    keyListToProtobuf,
+} from "../cryptography/protobuf";
 import Timestamp from "../Timestamp";
 import * as utf8 from "../encoding/utf8";
 import FileId from "./FileId";
@@ -76,7 +79,7 @@ export default class FileUpdateTransaction extends Transaction {
                 update.fileID != null
                     ? FileId._fromProtobuf(update.fileID)
                     : undefined,
-            keys: _fromProtoKeyList(keys),
+            keys: keyListFromProtobuf(keys),
             expirationTime:
                 update.expirationTime != null
                     ? Timestamp._fromProtobuf(update.expirationTime)
@@ -230,7 +233,7 @@ export default class FileUpdateTransaction extends Transaction {
     _makeTransactionData() {
         return {
             fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
-            keys: this._keys != null ? _toProtoKeyList(this._keys) : null,
+            keys: this._keys != null ? keyListToProtobuf(this._keys) : null,
             expirationTime:
                 this._expirationTime != null
                     ? this._expirationTime._toProtobuf()

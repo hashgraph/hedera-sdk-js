@@ -1,13 +1,11 @@
 import * as proto from "@hashgraph/proto";
-import { Key, PublicKey, KeyList, PrivateKey } from "@hashgraph/cryptography";
-
-// TODO: Remove _ prefix on functions. They are private if we don't export them. We don't need to _ prefix as well.
+import { Key, KeyList, PrivateKey, PublicKey } from "@hashgraph/cryptography";
 
 /**
  * @param {Key} key
  * @returns {proto.IKey}
  */
-export function _toProtoKey(key) {
+export function keyToProtobuf(key) {
     if (key instanceof PrivateKey) {
         key = key.publicKey;
     }
@@ -18,18 +16,26 @@ export function _toProtoKey(key) {
         };
     }
 
-    throw new Error("toProtoKey: unsupported KeyList");
+    if (key instanceof KeyList) {
+        return {
+            keyList: keyListToProtobuf(key),
+        };
+    }
+
+    throw new Error(
+        `(BUG) keyToProtobuf: unsupported key type: ${key.constructor.name}`
+    );
 }
 
 /**
  * @param {KeyList} list
  * @returns {proto.IKeyList}
  */
-export function _toProtoKeyList(list) {
+export function keyListToProtobuf(list) {
     const keys = [];
 
     for (const key of list) {
-        keys.push(_toProtoKey(key));
+        keys.push(keyToProtobuf(key));
     }
 
     return {
@@ -41,15 +47,16 @@ export function _toProtoKeyList(list) {
  * @param {proto.IKey} key
  * @returns {KeyList | PublicKey}
  */
-export function _fromProtoKey(key) {
+export function keyFromProtobuf(key) {
     if (key.ed25519) {
         return PublicKey.fromBytes(key.ed25519);
     }
 
     if (key.thresholdKey != null && key.thresholdKey.threshold != null) {
-        const kl = _fromProtoKeyList(
-            /** @type {proto.IKeyList} */ (key.thresholdKey.keys)
-        );
+        const kl =
+            key.thresholdKey.keys != null
+                ? keyListFromProtobuf(key.thresholdKey.keys)
+                : new KeyList();
 
         kl.threshold = key.thresholdKey.threshold;
 
@@ -57,20 +64,24 @@ export function _fromProtoKey(key) {
     }
 
     if (key.keyList) {
-        return _fromProtoKeyList(key.keyList);
+        return keyListFromProtobuf(key.keyList);
     }
 
-    throw new Error(`not implemented key case: ${JSON.stringify(key)}`);
+    throw new Error(
+        `(BUG) keyFromProtobuf: not implemented key case: ${JSON.stringify(
+            key
+        )}`
+    );
 }
 
 /**
  * @param {proto.IKeyList} keys
  * @returns {KeyList}
  */
-export function _fromProtoKeyList(keys) {
+export function keyListFromProtobuf(keys) {
     if (keys.keys == null) {
         return new KeyList();
     }
 
-    return KeyList.from(keys.keys, _fromProtoKey);
+    return KeyList.from(keys.keys, keyFromProtobuf);
 }

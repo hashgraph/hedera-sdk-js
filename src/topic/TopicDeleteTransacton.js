@@ -1,6 +1,6 @@
 import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
-import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import TopicId from "./TopicId";
 
 /**

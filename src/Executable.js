@@ -1,12 +1,12 @@
 import PrecheckStatusError from "./PrecheckStatusError";
-import GrpcServiceError from "./GrpcServiceError";
-import GrpcStatus from "./GrpcStatus";
+import GrpcServiceError from "./grpc/GrpcServiceError";
+import GrpcStatus from "./grpc/GrpcStatus";
 import Status from "./Status";
 
 /**
  * @typedef {import("./account/AccountId").default} AccountId
  * @typedef {import("./channel/Channel").default} Channel
- * @typedef {import("./TransactionId").default} TransactionId
+ * @typedef {import("./transaction/TransactionId").default} TransactionId
  */
 
 // maximum number of attempts for executing the transaction

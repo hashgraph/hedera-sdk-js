@@ -1,4 +1,4 @@
-import Query, { QUERY_REGISTRY } from "../Query";
+import Query, { QUERY_REGISTRY } from "../query/Query";
 import TopicId from "./TopicId";
 import TopicInfo from "./TopicInfo";
 import Channel from "../channel/Channel";

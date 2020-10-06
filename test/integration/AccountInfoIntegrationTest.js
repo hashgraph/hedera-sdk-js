@@ -2,7 +2,7 @@ import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
 import AccountInfoQuery from "../src/account/AccountInfoQuery";
 import Hbar from "../src/Hbar";
-import TransactionId from "../src/TransactionId";
+import TransactionId from "../../src/transaction/TransactionId";
 import newClient from "./client";
 import { PrivateKey } from "../src/index";
 import Long from "long";

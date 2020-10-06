@@ -6,9 +6,9 @@ import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     DEFAULT_RECORD_THRESHOLD,
     TRANSACTION_REGISTRY,
-} from "../Transaction";
+} from "../transaction/Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _fromProtoKey, _toProtoKey } from "../util";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import Long from "long";
 import BigNumber from "bignumber.js";
 
@@ -99,7 +99,7 @@ export default class AccountCreateTransaction extends Transaction {
         const create = /** @type {proto.ICryptoCreateTransactionBody} */ (body.cryptoCreateAccount);
 
         return new AccountCreateTransaction({
-            key: create.key != null ? _fromProtoKey(create.key) : undefined,
+            key: create.key != null ? keyFromProtobuf(create.key) : undefined,
             initialBalance:
                 create.initialBalance != null
                     ? create.initialBalance
@@ -261,7 +261,7 @@ export default class AccountCreateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            key: this._key != null ? _toProtoKey(this._key) : null,
+            key: this._key != null ? keyToProtobuf(this._key) : null,
             initialBalance:
                 this._initialBalance != null
                     ? this._initialBalance.toTinybars()

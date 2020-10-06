@@ -1,4 +1,4 @@
-import Query, { QUERY_REGISTRY } from "../Query";
+import Query, { QUERY_REGISTRY } from "../query/Query";
 import AccountId from "./AccountId";
 import LiveHash from "./LiveHash";
 import * as proto from "@hashgraph/proto";

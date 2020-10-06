@@ -1,9 +1,9 @@
 import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
-import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import AccountId from "./AccountId";
 import { Key } from "@hashgraph/cryptography";
-import { _fromProtoKey, _toProtoKey } from "../util";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import Long from "long";
 
 export default class LiveHashAddTransaction extends Transaction {
@@ -72,7 +72,7 @@ export default class LiveHashAddTransaction extends Transaction {
             keys:
                 liveHash_.keys != null
                     ? liveHash_.keys.keys != null
-                        ? liveHash_.keys.keys.map((key) => _fromProtoKey(key))
+                        ? liveHash_.keys.keys.map((key) => keyFromProtobuf(key))
                         : undefined
                     : undefined,
             duration:
@@ -195,7 +195,7 @@ export default class LiveHashAddTransaction extends Transaction {
                 keys:
                     this._keys != null
                         ? {
-                              keys: this._keys.map((key) => _toProtoKey(key)),
+                              keys: this._keys.map((key) => keyToProtobuf(key)),
                           }
                         : undefined,
                 duration: {

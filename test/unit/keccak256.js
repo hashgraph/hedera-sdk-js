@@ -1,4 +1,4 @@
-import { keccak256 } from "../src/keccak";
+import { keccak256 } from "../../src/cryptography/keccak";
 import * as hex from "../src/encoding/hex";
 
 describe("keccak256", function () {

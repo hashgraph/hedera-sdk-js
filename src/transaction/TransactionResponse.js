@@ -1,11 +1,11 @@
-import ReceiptStatusError from "./ReceiptStatusError";
-import Status from "./Status";
+import ReceiptStatusError from "../ReceiptStatusError";
+import Status from "../Status";
 import TransactionReceiptQuery from "./TransactionReceiptQuery";
 import TransactionRecordQuery from "./TransactionRecordQuery";
 
 /**
- * @typedef {import("./client/Client").default<*, *>} Client
- * @typedef {import("./account/AccountId").default} AccountId
+ * @typedef {import("../client/Client").default<*, *>} Client
+ * @typedef {import("../account/AccountId").default} AccountId
  * @typedef {import("./TransactionId").default} TransactionId
  * @typedef {import("./TransactionReceipt").default} TransactionReceipt
  * @typedef {import("./TransactionRecord").default} TransactionRecord

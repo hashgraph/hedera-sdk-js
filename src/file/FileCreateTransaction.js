@@ -1,8 +1,8 @@
 import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
-import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _fromProtoKey, _toProtoKey } from "../util";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import Timestamp from "../Timestamp";
 import * as utf8 from "../encoding/utf8";
 
@@ -65,7 +65,7 @@ export default class FileCreateTransaction extends Transaction {
             keys:
                 create.keys != null
                     ? create.keys.keys != null
-                        ? create.keys.keys.map((key) => _fromProtoKey(key))
+                        ? create.keys.keys.map((key) => keyFromProtobuf(key))
                         : undefined
                     : undefined,
             expirationTime:
@@ -192,7 +192,7 @@ export default class FileCreateTransaction extends Transaction {
             keys:
                 this._keys != null
                     ? {
-                          keys: this._keys.map((key) => _toProtoKey(key)),
+                          keys: this._keys.map((key) => keyToProtobuf(key)),
                       }
                     : null,
             expirationTime: this._expirationTime._toProtobuf(),

@@ -1,5 +1,5 @@
 import newClient from "./client";
-import SystemDeleteTransaction from "../src/SystemDeleteTransaction";
+import SystemDeleteTransaction from "../../src/system/SystemDeleteTransaction";
 import ContractId from "../src/contract/ContractId";
 import FileId from "../src/file/FileId";
 import Timestamp from "../src/Timestamp";

@@ -3,7 +3,7 @@ import Hbar from "../src/Hbar";
 import LiveHashAddTransaction from "../src/account/LiveHashAddTransaction";
 import LiveHashDeleteTransaction from "../src/account/LiveHashDeleteTransaction";
 import LiveHashQuery from "../src/account/LiveHashQuery";
-import TransactionReceiptQuery from "../src/TransactionReceiptQuery";
+import TransactionReceiptQuery from "../../src/transaction/TransactionReceiptQuery";
 import newClient from "./client";
 import { PrivateKey } from "../src/index";
 import Long from "long";

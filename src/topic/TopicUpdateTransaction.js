@@ -1,8 +1,8 @@
 import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
-import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _fromProtoKey, _toProtoKey } from "../util";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import AccountId from "../account/AccountId";
 import TopicId from "./TopicId";
 import Long from "long";
@@ -112,11 +112,11 @@ export default class TopicUpdateTransaction extends Transaction {
                     : undefined,
             adminKey:
                 update.adminKey != null
-                    ? _fromProtoKey(update.adminKey)
+                    ? keyFromProtobuf(update.adminKey)
                     : undefined,
             submitKey:
                 update.submitKey != null
-                    ? _fromProtoKey(update.submitKey)
+                    ? keyFromProtobuf(update.submitKey)
                     : undefined,
             autoRenewAccountId:
                 update.autoRenewAccount != null
@@ -290,9 +290,9 @@ export default class TopicUpdateTransaction extends Transaction {
         return {
             topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
             adminKey:
-                this._adminKey != null ? _toProtoKey(this._adminKey) : null,
+                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
             submitKey:
-                this._submitKey != null ? _toProtoKey(this._submitKey) : null,
+                this._submitKey != null ? keyToProtobuf(this._submitKey) : null,
             memo:
                 this._topicId != null
                     ? {

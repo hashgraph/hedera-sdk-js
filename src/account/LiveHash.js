@@ -1,6 +1,6 @@
 import AccountId from "./AccountId";
 import * as proto from "@hashgraph/proto";
-import { _fromProtoKeyList, _toProtoKeyList } from "../util";
+import { keyListFromProtobuf, keyListToProtobuf } from "../cryptography/protobuf";
 import { KeyList } from "@hashgraph/cryptography";
 import Long from "long";
 
@@ -52,7 +52,7 @@ export default class LiveHash {
             hash: liveHash_.hash != null ? liveHash_.hash : new Uint8Array(),
             keys:
                 liveHash_.keys != null
-                    ? _fromProtoKeyList(liveHash_.keys)
+                    ? keyListFromProtobuf(liveHash_.keys)
                     : new KeyList(),
             // TODO: util.fromLong could be nice
             duration:
@@ -70,7 +70,7 @@ export default class LiveHash {
         return {
             accountId: this.accountId._toProtobuf(),
             hash: this.hash,
-            keys: _toProtoKeyList(this.keys),
+            keys: keyListToProtobuf(this.keys),
             duration: {
                 seconds: this.duration,
             },

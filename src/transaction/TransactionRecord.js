@@ -1,10 +1,10 @@
 import TransactionReceipt from "./TransactionReceipt";
 import TransactionId from "./TransactionId";
-import Timestamp from "./Timestamp";
-import Hbar from "./Hbar";
-import Transfer from "./Transfer";
+import Timestamp from "../Timestamp";
+import Hbar from "../Hbar";
+import Transfer from "../Transfer";
 import * as proto from "@hashgraph/proto";
-import ContractFunctionResult from "./contract/ContractFunctionResult";
+import ContractFunctionResult from "../contract/ContractFunctionResult";
 
 /**
  * Response when the client sends the node TransactionGetRecordResponse.

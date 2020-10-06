@@ -1,8 +1,8 @@
 import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
-import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _fromProtoKey, _toProtoKey } from "../util";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import AccountId from "./AccountId";
 import Timestamp from "../Timestamp";
 import Long from "long";
@@ -99,7 +99,7 @@ export default class AccountUpdateTransaction extends Transaction {
                           /** @type {proto.IAccountID} */ (update.accountIDToUpdate)
                       )
                     : undefined,
-            key: update.key != null ? _fromProtoKey(update.key) : undefined,
+            key: update.key != null ? keyFromProtobuf(update.key) : undefined,
             receiverSignatureRequired:
                 update.receiverSigRequired != null
                     ? update.receiverSigRequired
@@ -270,7 +270,7 @@ export default class AccountUpdateTransaction extends Transaction {
         return {
             accountIDToUpdate:
                 this._accountId != null ? this._accountId._toProtobuf() : null,
-            key: this._key != null ? _toProtoKey(this._key) : null,
+            key: this._key != null ? keyToProtobuf(this._key) : null,
             expirationTime: this._expirationTime,
             proxyAccountID:
                 this._proxyAccountId != null

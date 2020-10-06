@@ -2,7 +2,7 @@ import TopicId from "./TopicId";
 import AccountId from "../account/AccountId";
 import Timestamp from "../Timestamp";
 import * as proto from "@hashgraph/proto";
-import { _fromProtoKey, _toProtoKey } from "../util";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import { Key } from "@hashgraph/cryptography";
 import Long from "long";
 
@@ -112,9 +112,9 @@ export default class TopicInfo {
                     ? Timestamp._fromProtobuf(info.expirationTime)
                     : new Timestamp(0, 0),
             adminKey:
-                info.adminKey != null ? _fromProtoKey(info.adminKey) : null,
+                info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
             submitKey:
-                info.submitKey != null ? _fromProtoKey(info.submitKey) : null,
+                info.submitKey != null ? keyFromProtobuf(info.submitKey) : null,
             autoRenewPeriod:
                 info.autoRenewPeriod != null
                     ? info.autoRenewPeriod.seconds != null
@@ -143,9 +143,9 @@ export default class TopicInfo {
                 sequenceNumber: this.sequenceNumber,
                 expirationTime: this.expirationTime._toProtobuf(),
                 adminKey:
-                    this.adminKey != null ? _toProtoKey(this.adminKey) : null,
+                    this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
                 submitKey:
-                    this.submitKey != null ? _toProtoKey(this.submitKey) : null,
+                    this.submitKey != null ? keyToProtobuf(this.submitKey) : null,
                 autoRenewPeriod: {
                     seconds: this.autoRenewPeriod,
                 },

@@ -1,9 +1,9 @@
 import * as proto from "@hashgraph/proto";
-import Channel from "./channel/Channel";
-import Transaction, { TRANSACTION_REGISTRY } from "./Transaction";
-import FileId from "./file/FileId";
-import ContractId from "./contract/ContractId";
-import Timestamp from "./Timestamp";
+import Channel from "../channel/Channel";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
+import FileId from "../file/FileId";
+import ContractId from "../contract/ContractId";
+import Timestamp from "../Timestamp";
 
 export default class SystemDeleteTransaction extends Transaction {
     /**

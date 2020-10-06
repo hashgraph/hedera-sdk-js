@@ -3,8 +3,7 @@ import Channel from "../channel/Channel";
 import Hbar from "../Hbar";
 import AccountId from "../account/AccountId";
 import Transfer from "../Transfer";
-import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
-import { _toProtoKey } from "../util";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import BigNumber from "bignumber.js";
 
 /**

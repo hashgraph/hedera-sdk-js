@@ -1,9 +1,9 @@
-import Query, { QUERY_REGISTRY } from "./Query";
-import Status from "./Status";
+import Query, { QUERY_REGISTRY } from "../query/Query";
+import Status from "../Status";
 import TransactionRecord from "./TransactionRecord";
 import TransactionId from "./TransactionId";
 import * as proto from "@hashgraph/proto";
-import Channel from "./channel/Channel";
+import Channel from "../channel/Channel";
 
 /**
  * @augments {Query<TransactionRecord>}

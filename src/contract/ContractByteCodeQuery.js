@@ -1,4 +1,4 @@
-import Query, { QUERY_REGISTRY } from "../Query";
+import Query, { QUERY_REGISTRY } from "../query/Query";
 import ContractId from "./ContractId";
 import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";

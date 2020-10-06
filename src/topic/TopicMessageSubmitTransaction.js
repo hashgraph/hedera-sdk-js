@@ -1,4 +1,4 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import TopicId from "./TopicId";
 import Channel from "../channel/Channel";
 import * as utf8 from "../encoding/utf8";

@@ -7,9 +7,9 @@ import Channel from "../channel/Channel";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
-} from "../Transaction";
+} from "../transaction/Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _fromProtoKey, _toProtoKey } from "../util";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
 import Long from "long";
 import BigNumber from "bignumber.js";
 
@@ -126,7 +126,7 @@ export default class ContractCreateTransaction extends Transaction {
                     : undefined,
             adminKey:
                 create.adminKey != null
-                    ? _fromProtoKey(create.adminKey)
+                    ? keyFromProtobuf(create.adminKey)
                     : undefined,
             gas: create.gas != null ? create.gas : undefined,
             initialBalance:
@@ -346,7 +346,7 @@ export default class ContractCreateTransaction extends Transaction {
                     ? this._bytecodeFileId._toProtobuf()
                     : null,
             adminKey:
-                this._adminKey != null ? _toProtoKey(this._adminKey) : null,
+                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
             gas: this._gas,
             initialBalance:
                 this._initialBalance != null

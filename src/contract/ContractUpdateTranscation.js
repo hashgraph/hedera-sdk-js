@@ -4,9 +4,9 @@ import FileId from "../file/FileId";
 import Timestamp from "../Timestamp";
 import * as proto from "@hashgraph/proto";
 import Channel from "../channel/Channel";
-import Transaction, { TRANSACTION_REGISTRY } from "../Transaction";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
 import { Key } from "@hashgraph/cryptography";
-import { _toProtoKey, _fromProtoKey } from "../util";
+import { keyToProtobuf, keyFromProtobuf } from "../cryptography/protobuf";
 import Long from "long";
 
 export default class ContractUpdateTransaction extends Transaction {
@@ -121,7 +121,7 @@ export default class ContractUpdateTransaction extends Transaction {
                     : undefined,
             adminKey:
                 update.adminKey != null
-                    ? _fromProtoKey(update.adminKey)
+                    ? keyFromProtobuf(update.adminKey)
                     : undefined,
             proxyAccountId:
                 update.proxyAccountID != null
@@ -317,7 +317,7 @@ export default class ContractUpdateTransaction extends Transaction {
                     ? this._expirationTime._toProtobuf()
                     : null,
             adminKey:
-                this._adminKey != null ? _toProtoKey(this._adminKey) : null,
+                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
             proxyAccountID:
                 this._proxyAccountId != null
                     ? this._proxyAccountId._toProtobuf()
