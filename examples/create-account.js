@@ -1,13 +1,17 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const { AccountId, Client, PrivateKey, AccountCreateTransaction, Hbar } = require("@hashgraph/sdk");
+const {
+    Client,
+    PrivateKey,
+    AccountCreateTransaction,
+    Hbar,
+} = require("@hashgraph/sdk");
 
 async function main() {
-    const client = Client.forTestnet();
-    const operatorId = AccountId.fromString("0.0.9523");
-    const operatorKey = PrivateKey.fromString("302e020100300506032b65700422042091dad4f120ca225ce66deb1d6fb7ecad0e53b5e879aa45b0c5e0db7923f26d08");
-
-    client.setOperator(operatorId, operatorKey);
+    const client = Client.forTestnet().setOperator(
+        process.env.OPERATOR_ID,
+        process.env.OPERATOR_KEY
+    );
 
     const newKey = PrivateKey.generate();
 
