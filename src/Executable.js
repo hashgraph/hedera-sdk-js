@@ -1,6 +1,6 @@
 import PrecheckStatusError from "./PrecheckStatusError";
-import ProtocolError from "./ProtocolError";
-import ProtocolStatus from "./ProtocolStatus";
+import GrpcServiceError from "./GrpcServiceError";
+import GrpcStatus from "./GrpcStatus";
 import Status from "./Status";
 
 /**
@@ -126,13 +126,13 @@ export default class Executable {
     /**
      * @abstract
      * @protected
-     * @param {ProtocolError} error
+     * @param {GrpcServiceError} error
      * @returns {boolean}
      */
     _shouldRetryExceptionally(error) {
         return (
-            error.status === ProtocolStatus.Unavailable ||
-            error.status === ProtocolStatus.ResourceExhausted
+            error.status === GrpcStatus.Unavailable ||
+            error.status === GrpcStatus.ResourceExhausted
         );
     }
 
@@ -161,7 +161,7 @@ export default class Executable {
                 response = await this._execute(channel, request);
             } catch (err) {
                 if (
-                    err instanceof ProtocolError &&
+                    err instanceof GrpcServiceError &&
                     this._shouldRetryExceptionally(err) &&
                     attempt <= maxAttempts
                 ) {
