@@ -53,7 +53,8 @@ export default class Client {
          * @private
          * @type {Map<string, MirrorChannelT>}
          */
-        this._mirrorChannels = new Map(null);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this._mirrorChannels = new Map();
 
         /**
          * @private
@@ -68,7 +69,8 @@ export default class Client {
          * @private
          * @type {Map<string, string>}
          */
-        this._network = new Map(null);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this._network = new Map();
 
         /**
          * List of node account IDs.
@@ -88,7 +90,8 @@ export default class Client {
          * @private
          * @type {Map<AccountId, ChannelT>}
          */
-        this._networkChannels = new Map(null);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this._networkChannels = new Map();
 
         /**
          * @internal

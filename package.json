@@ -23,8 +23,11 @@
         "node": "^10.17.0"
     },
     "browserslist": [
-        "last 1 Chrome versions",
-        "last 1 Firefox versions"
+        "> 0.5%",
+        "last 2 versions",
+        "not dead",
+        "not op_mini all",
+        "not ie > 0"
     ],
     "scripts": {
         "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
@@ -76,7 +79,9 @@
         "dpdm": "^3.4.3",
         "eslint": "^7.10.0",
         "eslint-plugin-chai-expect": "^2.2.0",
+        "eslint-plugin-compat": "^3.8.0",
         "eslint-plugin-deprecation": "^1.1.0",
+        "eslint-plugin-ie11": "^1.0.0",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-jsdoc": "^30.6.3",
         "eslint-plugin-mocha": "^8.0.0",
