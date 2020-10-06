@@ -23,7 +23,7 @@ module.exports = {
         sourceType: "module",
         warnOnUnsupportedTypeScriptVersion: false,
     },
-    plugins: ["@typescript-eslint"],
+    plugins: ["@typescript-eslint", "deprecation"],
     rules: {
         // does not handle return types being annotated in a type comment
         "@typescript-eslint/explicit-function-return-type": "off",
@@ -44,8 +44,7 @@ module.exports = {
         "jsdoc/valid-types": "off",
         "jsdoc/no-undefined-types": "off",
 
-        // opt-out of providing descriptions at the start
-        // FIXME: turn these rules back on
+        // opt-out of providing descriptions for params, returns, and property
         "jsdoc/require-property-description": "off",
         "jsdoc/require-returns-description": "off",
         "jsdoc/require-param-description": "off",
@@ -55,5 +54,9 @@ module.exports = {
                 definedTags: ["internal"],
             },
         ],
+
+        // reports usage of deprecated code
+        // <https://github.com/gund/eslint-plugin-deprecation>
+        "deprecation/deprecation": "warn",
     },
 };
