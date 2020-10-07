@@ -110,7 +110,7 @@ export default class FileCreateTransaction extends Transaction {
      * @param {Key[]} keys
      * @returns {this}
      */
-    setKeys(keys) {
+    setKeys(...keys) {
         this._requireNotFrozen();
         this._keys = keys;
 
@@ -176,7 +176,7 @@ export default class FileCreateTransaction extends Transaction {
 
     /**
      * @override
-     * @protected
+     * @internal
      * @param {Channel} channel
      * @param {proto.ITransaction} request
      * @returns {Promise<proto.ITransactionResponse>}

@@ -184,9 +184,9 @@ export default class AccountInfo {
                     : Long.fromValue(0),
             proxyAccountId:
                 info.proxyAccountID != null &&
-                info.proxyAccountID.shardNum !== 0 &&
-                info.proxyAccountID.realmNum !== 0 &&
-                info.proxyAccountID.accountNum !== 0
+                Long.fromValue(/** @type {Long | number} */ (info.proxyAccountID.shardNum)).toInt() !== 0 &&
+                Long.fromValue(/** @type {Long | number} */ (info.proxyAccountID.realmNum)).toInt() !== 0 &&
+                Long.fromValue(/** @type {Long | number} */ (info.proxyAccountID.accountNum)).toInt() !== 0
                     ? AccountId._fromProtobuf(info.proxyAccountID)
                     : null,
             proxyReceived: Hbar.fromTinybars(

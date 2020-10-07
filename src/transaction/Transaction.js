@@ -169,6 +169,18 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * @override
+     * @returns {TransactionId}
+     */
+    _getTransactionId() {
+        if (this._transactionId == null) {
+            throw new Error("Attemping to get `TransactionId` before it field was set");
+        }
+
+        return this._transactionId;
+    }
+
+    /**
      * @returns {?AccountId}
      */
     get nodeAccountId() {
@@ -494,7 +506,7 @@ export default class Transaction extends Executable {
 
     /**
      * @override
-     * @protected
+     * @internal
      * @param {proto.ITransactionResponse} response
      * @returns {Status}
      */

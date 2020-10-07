@@ -23,7 +23,7 @@ describe("TransactionIntegration", function () {
             .freezeWith(client)
             .signWithOperator(client);
 
-        const expectedHash = transaction.getTransactionHash();
+        const expectedHash = await transaction.transactionHash;
 
         const response = await transaction.execute(client);
 

@@ -51,6 +51,7 @@ describe("AccountCreate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
+                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountId(response.nodeId)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))

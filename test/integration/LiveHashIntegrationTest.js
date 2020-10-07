@@ -1,5 +1,6 @@
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
 import Hbar from "../src/Hbar";
+import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
+import TransactionId from "../src/transaction/TransactionId";
 import LiveHashAddTransaction from "../src/account/LiveHashAddTransaction";
 import LiveHashDeleteTransaction from "../src/account/LiveHashDeleteTransaction";
 import LiveHashQuery from "../src/account/LiveHashQuery";
@@ -82,11 +83,16 @@ describe("LiveHash", function () {
         expect(errorThrown).to.be.true;
 
         await (
-            await new AccountDeleteTransaction()
-                .setAccountId(account)
-                .setNodeAccountId(response.nodeId)
-                .setTransferAccountId(operatorId)
-                .execute(client)
+            await (
+                await new AccountDeleteTransaction()
+                    .setAccountId(account)
+                    .setMaxTransactionFee(new Hbar(1))
+                    .setNodeAccountId(response.nodeId)
+                    .setTransferAccountId(operatorId)
+                    .setTransactionId(TransactionId.generate(account))
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)
         ).getReceipt(client);
     });
 });

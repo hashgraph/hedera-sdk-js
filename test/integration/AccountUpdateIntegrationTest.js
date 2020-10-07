@@ -55,6 +55,7 @@ describe("AccountUpdate", function () {
                 await new AccountUpdateTransaction()
                     .setNodeAccountId(response.nodeId)
                     .setAccountId(account)
+                    .setMaxTransactionFee(new Hbar(1))
                     .setKey(key2.publicKey)
                     .setMaxTransactionFee(new Hbar(1))
                     .freezeWith(client)
@@ -89,6 +90,7 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
+                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountId(response.nodeId)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))

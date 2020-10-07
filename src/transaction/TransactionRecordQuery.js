@@ -117,7 +117,7 @@ export default class TransactionRecordQuery extends Query {
 
     /**
      * @override
-     * @protected
+     * @internal
      * @param {Channel} channel
      * @param {proto.IQuery} request
      * @returns {Promise<proto.IResponse>}
@@ -128,7 +128,8 @@ export default class TransactionRecordQuery extends Query {
 
     /**
      * @override
-     * @protected
+     * @override
+     * @internal
      * @param {proto.IResponse} response
      * @returns {proto.IResponseHeader}
      */
@@ -139,7 +140,8 @@ export default class TransactionRecordQuery extends Query {
 
     /**
      * @override
-     * @protected
+     * @override
+     * @internal
      * @param {proto.IResponse} response
      * @returns {Promise<TransactionRecord>}
      */
@@ -156,12 +158,13 @@ export default class TransactionRecordQuery extends Query {
     /**
      * @override
      * @internal
+     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _makeRequest() {
+    _onMakeRequest(header) {
         return {
             transactionGetRecord: {
-                header: this._makeRequestHeader(),
+                header,
                 transactionID:
                     this._transactionId != null
                         ? this._transactionId._toProtobuf()

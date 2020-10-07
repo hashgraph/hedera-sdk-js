@@ -67,7 +67,7 @@ export function keyFromProtobuf(key) {
                 ? keyListFromProtobuf(key.thresholdKey.keys)
                 : new KeyList();
 
-        kl.threshold = key.thresholdKey.threshold;
+        kl.setThreshold(key.thresholdKey.threshold);
 
         return kl;
     }

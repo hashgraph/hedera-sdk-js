@@ -8,6 +8,11 @@ import {
     ResponseType as ProtoResponseType,
     ResponseCodeEnum,
 } from "@hashgraph/proto";
+import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded";
+
+/**
+ * @typedef {import("../channel/Channel").default} Channel
+ */
 
 /**
  * @namespace proto
@@ -144,6 +149,23 @@ export default class Query extends Executable {
     }
 
     /**
+     * @template MirrorChannelT
+     * @param {import("../client/Client").default<Channel, MirrorChannelT>} client
+     * @returns {Promise<Hbar>}
+     */
+    getCost(client) {
+        if (this._paymentTransactionNodeIds.length == 0) {
+            this._setPaymentNodeIds(client);
+        }
+
+        if (COST_QUERY.length != 1) {
+            throw new Error("CostQuery has not been loaded yet");
+        }
+
+        return COST_QUERY[0](this).execute(client);
+    }
+
+    /**
      * @protected
      * @returns {boolean}
      */
@@ -156,9 +178,9 @@ export default class Query extends Executable {
      * @template ChannelT
      * @template MirrorChannelT
      * @param {import("../client/Client").default<ChannelT, MirrorChannelT>} client
-     * @returns {Promise<void>}
+     * @returns {void}
      */
-    async _beforeExecute(client) {
+    _setPaymentNodeIds(client) {
         if (
             this._paymentTransactions.length !== 0 ||
             !this._isPaymentRequired()
@@ -177,56 +199,77 @@ export default class Query extends Executable {
             );
         }
 
-        const paymentAmount = this._queryPayment;
-
-        if (paymentAmount == null) {
-            throw new Error(
-                "query cost estimator not implemented, use setQueryPayment"
-            );
-        }
+        this._paymentTransactions = [];
+        this._paymentTransactionNodeIds = [];
 
         this._paymentTransactionId = TransactionId.generate(operator.accountId);
 
         if (this._nodeId == null) {
-            // like how TransactionBuilder has to build (N / 3) native transactions
-            // to handle multi - node retry, so too does the QueryBuilder for payment transactions
-
             const size = client._getNumberOfNodesForTransaction();
-            this._paymentTransactions = [];
-            this._paymentTransactionNodeIds = [];
-
             for (let i = 0; i < size; i += 1) {
-                const nodeId = client._getNextNodeId();
-
-                this._paymentTransactionNodeIds.push(nodeId);
-                this._paymentTransactions.push(
-                    await _makePaymentTransaction(
-                        this._paymentTransactionId,
-                        nodeId,
-                        operator,
-                        paymentAmount
-                    )
-                );
+                this._paymentTransactionNodeIds.push(client._getNextNodeId());
             }
         } else {
-            // explicit node account ID being set means that we only
-            // need to generate one payment transaction
+            this._paymentTransactionNodeIds.push(this._nodeId);
+        }
+    }
 
-            this._paymentTransactionNodeIds = [this._nodeId];
-            this._paymentTransactions = [
+    /**
+     * @template MirrorChannelT
+     * @param {import("../client/Client").default<Channel, MirrorChannelT>} client
+     * @returns {Promise<void>}
+     */
+    async _beforeExecute(client) {
+        if (
+            this._paymentTransactions.length != 0 ||
+            !this._isPaymentRequired()
+        ) {
+            return;
+        }
+
+        const operator = client._operator;
+
+        if (operator == null) {
+            throw new Error(
+                "`client` must have an `operator` or an explicit payment transaction must be provided"
+            );
+        }
+
+        let cost =
+            this._queryPayment != null
+                ? this._queryPayment
+                : client.maxQueryPayment;
+
+        if (this._queryPayment == null) {
+            const actualCost = await this.getCost(client);
+
+            if (cost.toTinybars() > actualCost.toTinybars()) {
+                throw new MaxQueryPaymentExceeded(cost, actualCost);
+            }
+
+            cost = actualCost;
+        }
+
+        if (this._paymentTransactionNodeIds.length == 0) {
+            this._setPaymentNodeIds(client);
+        }
+
+        for (const node of this._paymentTransactionNodeIds) {
+            this._paymentTransactions.push(
                 await _makePaymentTransaction(
-                    this._paymentTransactionId,
-                    this._nodeId,
+                    /** @type {import("../transaction/TransactionId").default} */ (this
+                        ._paymentTransactionId),
+                    node,
                     operator,
-                    paymentAmount
-                ),
-            ];
+                    /** @type {Hbar} */ (cost)
+                )
+            );
         }
     }
 
     /**
      * @abstract
-     * @protected
+     * @internal
      * @param {proto.IResponse} response
      * @returns {proto.IResponseHeader}
      */
@@ -256,7 +299,40 @@ export default class Query extends Executable {
     }
 
     /**
-     * @protected
+     * @abstract
+     * @internal
+     * @param {proto.IQueryHeader} header
+     * @returns {proto.IQuery}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _onMakeRequest(header) {
+        throw new Error("not implemented");
+    }
+
+    /**
+     * @override
+     * @internal
+     * @returns {proto.IQuery}
+     */
+    _makeRequest() {
+        /** @type {proto.IQueryHeader} */
+        let header = {};
+
+        if (this._isPaymentRequired() && this._paymentTransactions != null) {
+            header = {
+                payment: this._paymentTransactions[
+                    this._nextPaymentTransactionIndex
+                ],
+                responseType: ProtoResponseType.ANSWER_ONLY,
+            };
+        }
+
+        return this._onMakeRequest(header);
+    }
+
+    /**
+     * @override
+     * @internal
      * @param {proto.IResponse} response
      * @returns {Status}
      */
@@ -326,7 +402,7 @@ export default class Query extends Executable {
  * @param {Hbar} paymentAmount
  * @returns {Promise<proto.ITransaction>}
  */
-async function _makePaymentTransaction(
+export async function _makePaymentTransaction(
     paymentTransactionId,
     nodeId,
     operator,
@@ -373,3 +449,8 @@ async function _makePaymentTransaction(
         },
     };
 }
+
+/**
+ * @type {((query: Query<*>) => import("./CostQuery").default<*>)[]}
+ */
+export const COST_QUERY = [];

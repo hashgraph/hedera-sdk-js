@@ -202,7 +202,7 @@ export default class ContractExecuteTransaction extends Transaction {
 
     /**
      * @override
-     * @protected
+     * @internal
      * @param {Channel} channel
      * @param {proto.ITransaction} request
      * @returns {Promise<proto.ITransactionResponse>}

@@ -76,7 +76,7 @@ export default class FileInfoQuery extends Query {
 
     /**
      * @override
-     * @protected
+     * @internal
      * @param {Channel} channel
      * @param {proto.IQuery} request
      * @returns {Promise<proto.IResponse>}
@@ -86,7 +86,8 @@ export default class FileInfoQuery extends Query {
     }
 
     /**
-     * @protected
+     * @override
+     * @internal
      * @param {proto.IResponse} response
      * @returns {proto.IResponseHeader}
      */
@@ -114,12 +115,13 @@ export default class FileInfoQuery extends Query {
     /**
      * @override
      * @internal
+     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _makeRequest() {
+    _onMakeRequest(header) {
         return {
             fileGetInfo: {
-                header: this._makeRequestHeader(),
+                header,
                 fileID:
                     this._fileId != null ? this._fileId._toProtobuf() : null,
             },

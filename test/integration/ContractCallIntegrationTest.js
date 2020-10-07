@@ -1,3 +1,5 @@
+import "../src/query/CostQuery";
+
 import Hbar from "../src/Hbar";
 import newClient from "./client";
 import ContractCreateTransaction from "../src/contract/ContractCreateTransaction";
@@ -60,11 +62,9 @@ describe("ContractCallIntegration", function () {
             .setGas(2000)
             .setFunction("getMessage");
 
-        // let cost = callQuery.getCost(client);
+        const cost = callQuery.getCost(client);
 
-        let result = await callQuery
-            .setMaxQueryPayment(new Hbar(100))
-            .execute(client);
+        let result = await callQuery.setMaxQueryPayment(cost).execute(client);
 
         expect(result.getString(0)).to.be.equal("Hello from Hedera.");
 

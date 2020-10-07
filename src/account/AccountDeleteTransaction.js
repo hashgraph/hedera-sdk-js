@@ -124,7 +124,7 @@ export default class AccountDeleteTransaction extends Transaction {
 
     /**
      * @override
-     * @protected
+     * @internal
      * @param {Channel} channel
      * @param {proto.ITransaction} request
      * @returns {Promise<proto.ITransactionResponse>}

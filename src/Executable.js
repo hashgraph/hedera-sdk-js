@@ -43,7 +43,7 @@ export default class Executable {
 
     /**
      * @abstract
-     * @protected
+     * @internal
      * @param {ResponseT} response
      * @returns {Status}
      */
@@ -67,7 +67,7 @@ export default class Executable {
 
     /**
      * @abstract
-     * @protected
+     * @internal
      * @param {Channel} channel
      * @param {RequestT} request
      * @returns {Promise<ResponseT>}

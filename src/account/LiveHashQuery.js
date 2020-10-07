@@ -119,7 +119,8 @@ export default class LiveHashQuery extends Query {
     }
 
     /**
-     * @protected
+     * @override
+     * @internal
      * @param {proto.IResponse} response
      * @returns {proto.IResponseHeader}
      */
@@ -147,12 +148,13 @@ export default class LiveHashQuery extends Query {
     /**
      * @override
      * @internal
+     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _makeRequest() {
+    _onMakeRequest(header) {
         return {
             cryptoGetLiveHash: {
-                header: this._makeRequestHeader(),
+                header,
                 accountID:
                     this._accountId != null
                         ? this._accountId._toProtobuf()

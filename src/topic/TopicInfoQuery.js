@@ -78,7 +78,7 @@ export default class TopicInfoQuery extends Query {
 
     /**
      * @override
-     * @protected
+     * @internal
      * @param {Channel} channel
      * @param {proto.IQuery} request
      * @returns {Promise<proto.IResponse>}
@@ -88,7 +88,8 @@ export default class TopicInfoQuery extends Query {
     }
 
     /**
-     * @protected
+     * @override
+     * @internal
      * @param {proto.IResponse} response
      * @returns {proto.IResponseHeader}
      */
@@ -114,12 +115,13 @@ export default class TopicInfoQuery extends Query {
     /**
      * @override
      * @internal
+     * @param {proto.IQueryHeader} header
      * @returns {proto.IQuery}
      */
-    _makeRequest() {
+    _onMakeRequest(header) {
         return {
             consensusGetTopicInfo: {
-                header: this._makeRequestHeader(),
+                header,
                 topicID:
                     this._topicId != null ? this._topicId._toProtobuf() : null,
             },
