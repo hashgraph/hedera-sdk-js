@@ -1,5 +1,5 @@
 import Long from "long";
-import * as hex from "./encoding/hex";
+import * as hex from "./encoding/hex.js";
 
 /**
  * @typedef {object} IEntityId

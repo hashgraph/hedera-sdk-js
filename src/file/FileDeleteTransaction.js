@@ -1,5 +1,5 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import FileId from "./FileId";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import FileId from "./FileId.js";
 
 /**
  * @namespace proto
@@ -12,7 +12,7 @@ import FileId from "./FileId";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

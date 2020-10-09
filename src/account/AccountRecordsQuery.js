@@ -1,6 +1,6 @@
-import Query, { QUERY_REGISTRY } from "../query/Query";
-import AccountId from "./AccountId";
-import TransactionRecord from "../transaction/TransactionRecord";
+import Query, { QUERY_REGISTRY } from "../query/Query.js";
+import AccountId from "./AccountId.js";
+import TransactionRecord from "../transaction/TransactionRecord.js";
 
 /**
  * @namespace proto
@@ -14,7 +14,7 @@ import TransactionRecord from "../transaction/TransactionRecord";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

@@ -1,5 +1,5 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import TopicId from "./TopicId";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import TopicId from "./TopicId.js";
 
 /**
  * @namespace proto
@@ -11,7 +11,7 @@ import TopicId from "./TopicId";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

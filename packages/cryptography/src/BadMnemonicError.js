@@ -1,5 +1,5 @@
-/** @typedef {import("./Mnemonic").default} Mnemonic */
-import BadMnemonicReason from "./BadMnemonicReason";
+/** @typedef {import("./Mnemonic.js").default} Mnemonic */
+import BadMnemonicReason from "./BadMnemonicReason.js";
 
 export default class BadMnemonicError extends Error {
     /**

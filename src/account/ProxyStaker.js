@@ -1,5 +1,5 @@
-import AccountId from "./AccountId";
-import Hbar from "../Hbar";
+import AccountId from "./AccountId.js";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto

@@ -1,4 +1,4 @@
-import { proto } from "./proto";
+import { proto } from "./proto.js";
 
 import ConsensusService = proto.ConsensusService;
 import CryptoService = proto.CryptoService;

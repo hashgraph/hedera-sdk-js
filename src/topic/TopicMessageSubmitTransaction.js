@@ -1,6 +1,6 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import TopicId from "./TopicId";
-import * as utf8 from "../encoding/utf8";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import TopicId from "./TopicId.js";
+import * as utf8 from "../encoding/utf8.js";
 
 /**
  * @namespace proto
@@ -12,7 +12,7 @@ import * as utf8 from "../encoding/utf8";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 export default class TopicMessageSubmitTransaction extends Transaction {

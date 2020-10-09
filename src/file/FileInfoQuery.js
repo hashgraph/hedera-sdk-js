@@ -1,6 +1,6 @@
-import Query, { QUERY_REGISTRY } from "../query/Query";
-import FileId from "./FileId";
-import FileInfo from "./FileInfo";
+import Query, { QUERY_REGISTRY } from "../query/Query.js";
+import FileId from "./FileId.js";
+import FileInfo from "./FileInfo.js";
 
 /**
  * @namespace proto
@@ -14,7 +14,7 @@ import FileInfo from "./FileInfo";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

@@ -1,5 +1,5 @@
 /**
- * @typedef {import("./Hbar").default} Hbar
+ * @typedef {import("./Hbar.js").default} Hbar
  */
 
 export default class MaxQueryPaymentExceeded extends Error {

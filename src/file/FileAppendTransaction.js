@@ -1,6 +1,6 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import * as utf8 from "../encoding/utf8";
-import FileId from "./FileId";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import * as utf8 from "../encoding/utf8.js";
+import FileId from "./FileId.js";
 
 /**
  * @namespace proto
@@ -13,7 +13,7 @@ import FileId from "./FileId";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

@@ -1,7 +1,7 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import ContractId from "./ContractId";
-import Hbar from "../Hbar";
-import ContractFunctionParameters from "./ContractFunctionParameters";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import ContractId from "./ContractId.js";
+import Hbar from "../Hbar.js";
+import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import Long from "long";
 
 /**
@@ -19,7 +19,7 @@ import Long from "long";
 /**
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

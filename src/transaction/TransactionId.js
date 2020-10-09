@@ -1,5 +1,5 @@
-import AccountId from "../account/AccountId";
-import Timestamp from "../Timestamp";
+import AccountId from "../account/AccountId.js";
+import Timestamp from "../Timestamp.js";
 
 /**
  * @namespace proto

@@ -1,9 +1,9 @@
-import TransactionReceipt from "./TransactionReceipt";
-import TransactionId from "./TransactionId";
-import Timestamp from "../Timestamp";
-import Hbar from "../Hbar";
-import Transfer from "../Transfer";
-import ContractFunctionResult from "../contract/ContractFunctionResult";
+import TransactionReceipt from "./TransactionReceipt.js";
+import TransactionId from "./TransactionId.js";
+import Timestamp from "../Timestamp.js";
+import Hbar from "../Hbar.js";
+import Transfer from "../Transfer.js";
+import ContractFunctionResult from "../contract/ContractFunctionResult.js";
 
 /**
  * @namespace proto

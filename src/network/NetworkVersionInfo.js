@@ -1,4 +1,4 @@
-import SemanticVersion from "./SemanticVersion";
+import SemanticVersion from "./SemanticVersion.js";
 
 /**
  * @namespace proto

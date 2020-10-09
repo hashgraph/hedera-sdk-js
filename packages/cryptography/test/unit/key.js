@@ -1,13 +1,8 @@
 import PrivateKey from "../../src/PrivateKey.js";
 import * as utf8 from "../../src/encoding/utf8.js";
 import * as hex from "../../src/encoding/hex.js";
-// import PublicKey from "../../src/PrivateKey.js";
 import Mnemonic from "../../src/Mnemonic.js";
-import BadKeyError from "../../src/BadKeyError";
-// import BadKeyError from "../../src/BadKeyError.js";
-// import * as assert from "assert";
-// import KeyList from "../../src/PrivateKey.js";
-// import * as utf8 from "../../src/utf8.js";
+import BadKeyError from "../../src/BadKeyError.js";
 
 // key from hedera-sdk-java tests, not used anywhere
 const privKeyBytes = Uint8Array.of(

@@ -1,11 +1,11 @@
-import Hbar from "../Hbar";
-import AccountId from "./AccountId";
+import Hbar from "../Hbar.js";
+import AccountId from "./AccountId.js";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     DEFAULT_RECORD_THRESHOLD,
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 
 /**
@@ -21,7 +21,7 @@ import Long from "long";
 /**
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

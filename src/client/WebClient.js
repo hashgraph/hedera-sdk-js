@@ -1,9 +1,9 @@
-import Client from "./Client";
-import WebChannel from "../channel/WebChannel";
-import AccountId from "../account/AccountId";
+import Client from "./Client.js";
+import WebChannel from "../channel/WebChannel.js";
+import AccountId from "../account/AccountId.js";
 
 /**
- * @typedef {import("./Client").ClientConfiguration} ClientConfiguration
+ * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
  */
 
 export const Network = {
@@ -77,7 +77,7 @@ export default class WebClient extends Client {
      * chose nodes to send transactions to. For one transaction, at most 1/3 of the nodes will be
      * tried.
      *
-     * @param {{[key: string]: (string | AccountId)} | import("./Client").NetworkName} network
+     * @param {{[key: string]: (string | AccountId)} | import("./Client.js").NetworkName} network
      * @returns {WebClient}
      */
     static forNetwork(network) {

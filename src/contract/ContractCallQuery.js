@@ -1,7 +1,7 @@
-import Query, { QUERY_REGISTRY } from "../query/Query";
-import ContractId from "./ContractId";
-import ContractFunctionParameters from "./ContractFunctionParameters";
-import ContractFunctionResult from "./ContractFunctionResult";
+import Query, { QUERY_REGISTRY } from "../query/Query.js";
+import ContractId from "./ContractId.js";
+import ContractFunctionParameters from "./ContractFunctionParameters.js";
+import ContractFunctionResult from "./ContractFunctionResult.js";
 import Long from "long";
 
 /**
@@ -16,7 +16,7 @@ import Long from "long";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

@@ -1,5 +1,5 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import AccountId from "./AccountId";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import AccountId from "./AccountId.js";
 
 /**
  * @namespace proto
@@ -12,7 +12,7 @@ import AccountId from "./AccountId";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 export default class LiveHashDeleteTransaction extends Transaction {

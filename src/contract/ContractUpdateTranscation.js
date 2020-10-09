@@ -1,9 +1,9 @@
-import AccountId from "../account/AccountId";
-import ContractId from "./ContractId";
-import FileId from "../file/FileId";
-import Timestamp from "../Timestamp";
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import { keyToProtobuf, keyFromProtobuf } from "../cryptography/protobuf";
+import AccountId from "../account/AccountId.js";
+import ContractId from "./ContractId.js";
+import FileId from "../file/FileId.js";
+import Timestamp from "../Timestamp.js";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import { keyToProtobuf, keyFromProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 
 /**
@@ -20,7 +20,7 @@ import Long from "long";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 export default class ContractUpdateTransaction extends Transaction {

@@ -1,4 +1,4 @@
-import AccountId from "./AccountId";
+import AccountId from "./AccountId.js";
 import { KeyList } from "@hashgraph/cryptography";
 import Long from "long";
 import {

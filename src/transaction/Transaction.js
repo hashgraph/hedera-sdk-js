@@ -1,11 +1,11 @@
-import Hbar from "../Hbar";
-import TransactionResponse from "./TransactionResponse";
-import TransactionId from "./TransactionId";
-import Executable from "../Executable";
-import Status from "../Status";
+import Hbar from "../Hbar.js";
+import TransactionResponse from "./TransactionResponse.js";
+import TransactionId from "./TransactionId.js";
+import Executable from "../Executable.js";
+import Status from "../Status.js";
 import Long from "long";
-import * as sha384 from "../cryptography/sha384";
-import * as hex from "../encoding/hex";
+import * as sha384 from "../cryptography/sha384.js";
+import * as hex from "../encoding/hex.js";
 import {
     Transaction as ProtoTransaction,
     TransactionBody as ProtoTransactionBody,
@@ -23,8 +23,8 @@ import {
 /**
  * @typedef {import("@hashgraph/cryptography").PrivateKey} PrivateKey
  * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
- * @typedef {import("../account/AccountId").default} AccountId
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 // 90 days (in seconds)
@@ -352,7 +352,7 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * @param {import("../client/Client").default<Channel, *>} client
+     * @param {import("../client/Client.js").default<Channel, *>} client
      * @returns {Promise<this>}
      */
     signWithOperator(client) {
@@ -388,7 +388,7 @@ export default class Transaction extends Executable {
      * Will use the `Client`, if available, to generate a default Transaction ID and select 1/3
      * nodes to prepare this transaction for.
      *
-     * @param {?import("../client/Client").default<Channel, *>} client
+     * @param {?import("../client/Client.js").default<Channel, *>} client
      * @returns {this}
      */
     freezeWith(client) {
@@ -473,7 +473,7 @@ export default class Transaction extends Executable {
     /**
      * @override
      * @protected
-     * @param {import("../client/Client").default<Channel, *>} client
+     * @param {import("../client/Client.js").default<Channel, *>} client
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
@@ -542,7 +542,7 @@ export default class Transaction extends Executable {
      * @override
      * @template ChannelT
      * @template MirrorChannelT
-     * @param {?import("../client/Client").default<ChannelT, MirrorChannelT>} client
+     * @param {?import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @returns {AccountId}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

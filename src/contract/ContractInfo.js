@@ -1,8 +1,8 @@
-import ContractId from "./ContractId";
-import AccountId from "../account/AccountId";
-import Timestamp from "../Timestamp";
-import Hbar from "../Hbar";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
+import ContractId from "./ContractId.js";
+import AccountId from "../account/AccountId.js";
+import Timestamp from "../Timestamp.js";
+import Hbar from "../Hbar.js";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 
 /**

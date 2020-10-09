@@ -1,7 +1,7 @@
-import Query, { QUERY_REGISTRY } from "../query/Query";
-import AccountId from "./AccountId";
-import ContractId from "../contract/ContractId";
-import Hbar from "../Hbar";
+import Query, { QUERY_REGISTRY } from "../query/Query.js";
+import AccountId from "./AccountId.js";
+import ContractId from "../contract/ContractId.js";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
@@ -14,7 +14,7 @@ import Hbar from "../Hbar";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

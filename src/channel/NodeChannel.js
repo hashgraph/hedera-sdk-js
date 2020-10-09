@@ -1,5 +1,5 @@
 import { Client, credentials } from "@grpc/grpc-js";
-import Channel from "./Channel";
+import Channel from "./Channel.js";
 
 /**
  * @property {?proto.CryptoService} _crypto

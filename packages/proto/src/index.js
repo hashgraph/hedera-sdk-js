@@ -1,4 +1,4 @@
-import { proto } from "./proto";
+import { proto } from "./proto.js";
 
 export const ConsensusService = proto.ConsensusService;
 export const CryptoService = proto.CryptoService;

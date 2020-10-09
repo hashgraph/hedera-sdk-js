@@ -1,10 +1,10 @@
 import { promises as fs } from "fs";
-import Client from "./Client";
-import NodeChannel from "../channel/NodeChannel";
-import AccountId from "../account/AccountId";
+import Client from "./Client.js";
+import NodeChannel from "../channel/NodeChannel.js";
+import AccountId from "../account/AccountId.js";
 
 /**
- * @typedef {import("./Client").ClientConfiguration} ClientConfiguration
+ * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
  */
 
 export const Network = {

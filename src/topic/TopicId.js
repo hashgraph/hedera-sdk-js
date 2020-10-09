@@ -1,4 +1,4 @@
-import EntityId, { fromString } from "../EntityId";
+import EntityId, { fromString } from "../EntityId.js";
 import { TopicID as ProtoTopicID } from "@hashgraph/proto";
 
 /**
@@ -17,7 +17,7 @@ import { TopicID as ProtoTopicID } from "@hashgraph/proto";
  */
 export default class TopicId extends EntityId {
     /**
-     * @param {number | Long | import("../EntityId").IEntityId} props
+     * @param {number | Long | import("../EntityId.js").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
      */

@@ -1,6 +1,6 @@
-import Query, { QUERY_REGISTRY } from "../query/Query";
-import TopicId from "./TopicId";
-import TopicInfo from "./TopicInfo";
+import Query, { QUERY_REGISTRY } from "../query/Query.js";
+import TopicId from "./TopicId.js";
+import TopicInfo from "./TopicInfo.js";
 
 /**
  * @namespace proto
@@ -13,7 +13,7 @@ import TopicInfo from "./TopicInfo";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

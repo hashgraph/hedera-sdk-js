@@ -1,14 +1,14 @@
 import PrivateKey from "./PrivateKey.js";
-import BadMnemonicError from "./BadMnemonicError";
-import BadMnemonicReason from "./BadMnemonicReason";
+import BadMnemonicError from "./BadMnemonicError.js";
+import BadMnemonicReason from "./BadMnemonicReason.js";
 import legacyWords from "./words/legacy.js";
 import bip39Words from "./words/bip39.js";
 import BigNumber from "bignumber.js";
 import * as sha256 from "./primitive/sha256.js";
 import * as pbkdf2 from "./primitive/pbkdf2.js";
 import nacl from "tweetnacl";
-import * as hmac from "./primitive/hmac";
-import * as slip10 from "./primitive/slip10";
+import * as hmac from "./primitive/hmac.js";
+import * as slip10 from "./primitive/slip10.js";
 
 /**
  * Multi-word mnemonic phrase (BIP-39).

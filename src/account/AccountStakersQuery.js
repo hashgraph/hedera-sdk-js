@@ -1,6 +1,6 @@
-import Query, { QUERY_REGISTRY } from "../query/Query";
-import AccountId from "./AccountId";
-import ProxyStaker from "./ProxyStaker";
+import Query, { QUERY_REGISTRY } from "../query/Query.js";
+import AccountId from "./AccountId.js";
+import ProxyStaker from "./ProxyStaker.js";
 
 /**
  * @namespace proto
@@ -14,7 +14,7 @@ import ProxyStaker from "./ProxyStaker";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

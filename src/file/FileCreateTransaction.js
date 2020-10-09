@@ -1,7 +1,7 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
-import Timestamp from "../Timestamp";
-import * as utf8 from "../encoding/utf8";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
+import Timestamp from "../Timestamp.js";
+import * as utf8 from "../encoding/utf8.js";
 
 /**
  * @namespace proto
@@ -14,7 +14,7 @@ import * as utf8 from "../encoding/utf8";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

@@ -1,7 +1,7 @@
-import EntityId, { fromString } from "../EntityId";
+import EntityId, { fromString } from "../EntityId.js";
 import * as proto from "@hashgraph/proto";
 import Long from "long";
-import * as hex from "../encoding/hex";
+import * as hex from "../encoding/hex.js";
 
 /**
  * The ID for a crypto-currency contract on Hedera.
@@ -10,7 +10,7 @@ import * as hex from "../encoding/hex";
  */
 export default class ContractId extends EntityId {
     /**
-     * @param {number | Long | import("../EntityId").IEntityId} properties
+     * @param {number | Long | import("../EntityId.js").IEntityId} properties
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
      */

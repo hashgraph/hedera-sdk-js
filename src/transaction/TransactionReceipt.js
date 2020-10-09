@@ -1,9 +1,9 @@
-import AccountId from "../account/AccountId";
-import ContractId from "../contract/ContractId";
-import FileId from "../file/FileId";
-import TopicId from "../topic/TopicId";
-import ExchangeRate from "../ExchangeRate";
-import Status from "../Status";
+import AccountId from "../account/AccountId.js";
+import ContractId from "../contract/ContractId.js";
+import FileId from "../file/FileId.js";
+import TopicId from "../topic/TopicId.js";
+import ExchangeRate from "../ExchangeRate.js";
+import Status from "../Status.js";
 import Long from "long";
 
 /**

@@ -1,6 +1,6 @@
 /**
- * @typedef {import("./Status").default} Status
- * @typedef {import("./transaction/TransactionId").default} TransactionId
+ * @typedef {import("./Status.js").default} Status
+ * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  */
 
 export default class StatusError extends Error {

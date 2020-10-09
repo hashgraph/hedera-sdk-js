@@ -1,4 +1,4 @@
-import ContractId from "./ContractId";
+import ContractId from "./ContractId.js";
 
 /**
  * @namespace proto

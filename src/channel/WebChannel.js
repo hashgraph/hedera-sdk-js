@@ -1,5 +1,5 @@
-import * as utf8 from "../encoding/utf8";
-import Channel from "./Channel";
+import * as utf8 from "../encoding/utf8.js";
+import Channel from "./Channel.js";
 
 export default class WebChannel extends Channel {
     /**

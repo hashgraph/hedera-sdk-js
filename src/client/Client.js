@@ -1,6 +1,6 @@
-import AccountId from "../account/AccountId";
+import AccountId from "../account/AccountId.js";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
-import Hbar from "../Hbar";
+import Hbar from "../Hbar.js";
 
 /**
  * @typedef {"mainnet" | "testnet" | "previewnet"} NetworkName

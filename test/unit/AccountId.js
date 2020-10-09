@@ -1,4 +1,4 @@
-import AccountId from "../src/account/AccountId";
+import AccountId from "../src/account/AccountId.js";
 
 describe("AccountId", function () {
     it("should construct from (shard, realm, num)", function () {

@@ -1,14 +1,14 @@
-import ReceiptStatusError from "../ReceiptStatusError";
-import Status from "../Status";
-import TransactionReceiptQuery from "./TransactionReceiptQuery";
-import TransactionRecordQuery from "./TransactionRecordQuery";
+import ReceiptStatusError from "../ReceiptStatusError.js";
+import Status from "../Status.js";
+import TransactionReceiptQuery from "./TransactionReceiptQuery.js";
+import TransactionRecordQuery from "./TransactionRecordQuery.js";
 
 /**
- * @typedef {import("../client/Client").default<*, *>} Client
- * @typedef {import("../account/AccountId").default} AccountId
- * @typedef {import("./TransactionId").default} TransactionId
- * @typedef {import("./TransactionReceipt").default} TransactionReceipt
- * @typedef {import("./TransactionRecord").default} TransactionRecord
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../account/AccountId.js").default} AccountId
+ * @typedef {import("./TransactionId.js").default} TransactionId
+ * @typedef {import("./TransactionReceipt.js").default} TransactionReceipt
+ * @typedef {import("./TransactionRecord.js").default} TransactionRecord
  */
 
 export default class TransactionResponse {

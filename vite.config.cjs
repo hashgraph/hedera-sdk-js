@@ -16,7 +16,7 @@ module.exports = {
         exclude: ["@grpc/grpc-js"],
         // allows the package to _reference_ node builtins statically as long as the code branches
         // that use them are never reached
-        allowNodeBuiltins: ["@hashgraph/cryptography"],
+        allowNodeBuiltins: ["@hashgraph/cryptography", "@hashgraph/sdk"],
     },
     env: {
         // forward OPERATOR_KEY and OPERATOR_ID as VITE_ prefixed

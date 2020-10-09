@@ -1,4 +1,4 @@
-import { keccak256 } from "../cryptography/keccak";
+import { keccak256 } from "../cryptography/keccak.js";
 
 /**
  * @enum {number}

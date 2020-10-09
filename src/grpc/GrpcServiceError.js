@@ -1,5 +1,5 @@
 /**
- * @typedef {import("./GrpcStatus").default} GrpcStatus
+ * @typedef {import("./GrpcStatus.js").default} GrpcStatus
  */
 
 /**

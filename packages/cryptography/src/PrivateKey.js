@@ -1,13 +1,13 @@
 import nacl from "tweetnacl";
-import PublicKey from "./PublicKey";
-import Mnemonic from "./Mnemonic";
-import { arrayStartsWith } from "./util/array";
-import { createKeystore, loadKeystore } from "./primitive/keystore";
-import BadKeyError from "./BadKeyError";
-import * as hex from "./encoding/hex";
-import { read as readPem } from "./encoding/pem";
-import * as slip10 from "./primitive/slip10";
-import Key from "./Key";
+import PublicKey from "./PublicKey.js";
+import Mnemonic from "./Mnemonic.js";
+import { arrayStartsWith } from "./util/array.js";
+import { createKeystore, loadKeystore } from "./primitive/keystore.js";
+import BadKeyError from "./BadKeyError.js";
+import * as hex from "./encoding/hex.js";
+import { read as readPem } from "./encoding/pem.js";
+import * as slip10 from "./primitive/slip10.js";
+import Key from "./Key.js";
 
 const derPrefix = "302e020100300506032b657004220420";
 const derPrefixBytes = hex.decode(derPrefix);

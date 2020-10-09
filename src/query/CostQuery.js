@@ -1,8 +1,8 @@
-import TransactionId from "../transaction/TransactionId";
-import Hbar from "../Hbar";
-import Executable from "../Executable";
-import AccountId from "../account/AccountId";
-import { _makePaymentTransaction, COST_QUERY } from "./Query";
+import TransactionId from "../transaction/TransactionId.js";
+import Hbar from "../Hbar.js";
+import Executable from "../Executable.js";
+import AccountId from "../account/AccountId.js";
+import { _makePaymentTransaction, COST_QUERY } from "./Query.js";
 import {
     ResponseType as ProtoResponseType
 } from "@hashgraph/proto";
@@ -15,8 +15,8 @@ import {
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
- * @typedef {import("../Status").default} Status
+ * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../Status.js").default} Status
  */
 
 /**
@@ -25,7 +25,7 @@ import {
  */
 export default class CostQuery extends Executable {
     /**
-     * @param {import("./Query").default<OutputT>} query
+     * @param {import("./Query.js").default<OutputT>} query
      */
     constructor(query) {
         super();
@@ -43,7 +43,7 @@ export default class CostQuery extends Executable {
     /**
      * @abstract
      * @protected
-     * @param {import("../client/Client").default<*, *>} client
+     * @param {import("../client/Client.js").default<*, *>} client
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
@@ -61,7 +61,7 @@ export default class CostQuery extends Executable {
 
         this._header = {
             payment: await _makePaymentTransaction(
-                /** @type {import("../transaction/TransactionId").default} */
+                /** @type {import("../transaction/TransactionId.js").default} */
                 (TransactionId.generate(new AccountId(0))),
                 new AccountId(0),
                 operator,
@@ -119,7 +119,7 @@ export default class CostQuery extends Executable {
 
     /**
      * @override
-     * @param {import("../client/Client").default<*, *>} client
+     * @param {import("../client/Client.js").default<*, *>} client
      * @returns {AccountId}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

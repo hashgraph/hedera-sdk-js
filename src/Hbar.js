@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import Long from "long";
-import HbarUnit from "./HbarUnit";
+import HbarUnit from "./HbarUnit.js";
 
 export default class Hbar {
     /**

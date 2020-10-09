@@ -1,7 +1,7 @@
-import BadKeyError from "../BadKeyError";
-import { EncryptedPrivateKeyInfo } from "../primitive/pkcs";
-import * as der from "./der";
-import * as base64 from "./base64";
+import BadKeyError from "../BadKeyError.js";
+import { EncryptedPrivateKeyInfo } from "../primitive/pkcs.js";
+import * as der from "./der.js";
+import * as base64 from "./base64.js";
 import nacl from "tweetnacl";
 
 const BEGIN_PRIVATEKEY = "-----BEGIN PRIVATE KEY-----\n";

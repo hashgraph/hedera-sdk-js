@@ -1,7 +1,7 @@
-import TopicId from "./TopicId";
-import AccountId from "../account/AccountId";
-import Timestamp from "../Timestamp";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
+import TopicId from "./TopicId.js";
+import AccountId from "../account/AccountId.js";
+import Timestamp from "../Timestamp.js";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 
 /**

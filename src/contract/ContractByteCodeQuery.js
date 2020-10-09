@@ -1,5 +1,5 @@
-import Query, { QUERY_REGISTRY } from "../query/Query";
-import ContractId from "./ContractId";
+import Query, { QUERY_REGISTRY } from "../query/Query.js";
+import ContractId from "./ContractId.js";
 
 /**
  * @namespace proto
@@ -12,7 +12,7 @@ import ContractId from "./ContractId";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

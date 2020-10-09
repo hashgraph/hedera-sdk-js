@@ -1,8 +1,8 @@
 import ContractFunctionSelector, {
     ArgumentType,
 } from "./ContractFunctionSelector";
-import * as utf8 from "../encoding/utf8";
-import * as hex from "../encoding/hex";
+import * as utf8 from "../encoding/utf8.js";
+import * as hex from "../encoding/hex.js";
 import BigNumber from "bignumber.js";
 
 export default class ContractFunctionParameters {
@@ -13,7 +13,7 @@ export default class ContractFunctionParameters {
         this._selector = new ContractFunctionSelector();
 
         /**
-         * @type {import("./ContractFunctionSelector").Argument[]}
+         * @type {import("./ContractFunctionSelector.js").Argument[]}
          */
         this._arguments = [];
     }
@@ -400,7 +400,7 @@ export default class ContractFunctionParameters {
 
 /**
  * @param {string | boolean | number | Uint8Array | BigNumber | string[] | boolean[] | number[] | Uint8Array[] | BigNumber[]} param
- * @param {import("./ContractFunctionSelector").SolidityType} ty
+ * @param {import("./ContractFunctionSelector.js").SolidityType} ty
  * @returns {Uint8Array}
  */
 function argumentToBytes(param, ty) {

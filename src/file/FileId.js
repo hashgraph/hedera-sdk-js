@@ -1,4 +1,4 @@
-import EntityId, { fromString } from "../EntityId";
+import EntityId, { fromString } from "../EntityId.js";
 import * as proto from "@hashgraph/proto";
 
 /**
@@ -12,7 +12,7 @@ import * as proto from "@hashgraph/proto";
  */
 export default class FileId extends EntityId {
     /**
-     * @param {number | Long | import("../EntityId").IEntityId} properties
+     * @param {number | Long | import("../EntityId.js").IEntityId} properties
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
      */

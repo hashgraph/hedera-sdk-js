@@ -1,7 +1,7 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
-import AccountId from "../account/AccountId";
-import TopicId from "./TopicId";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
+import AccountId from "../account/AccountId.js";
+import TopicId from "./TopicId.js";
 import Long from "long";
 
 /**
@@ -15,7 +15,7 @@ import Long from "long";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

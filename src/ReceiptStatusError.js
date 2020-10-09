@@ -1,9 +1,9 @@
-import StatusError from "./StatusError";
+import StatusError from "./StatusError.js";
 
 /**
- * @typedef {import("./Status").default} Status
- * @typedef {import("./transaction/TransactionId").default} TransactionId
- * @typedef {import("./transaction/TransactionReceipt").default} TransactionReceipt
+ * @typedef {import("./Status.js").default} Status
+ * @typedef {import("./transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("./transaction/TransactionReceipt.js").default} TransactionReceipt
  */
 
 export default class ReceiptStatusError extends StatusError {

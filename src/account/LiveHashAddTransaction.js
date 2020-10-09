@@ -1,6 +1,6 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import AccountId from "./AccountId";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import AccountId from "./AccountId.js";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 
 /**
@@ -15,7 +15,7 @@ import Long from "long";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 export default class LiveHashAddTransaction extends Transaction {

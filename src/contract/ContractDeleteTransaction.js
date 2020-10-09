@@ -1,6 +1,6 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import ContractId from "./ContractId";
-import AccountId from "../account/AccountId";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import ContractId from "./ContractId.js";
+import AccountId from "../account/AccountId.js";
 
 /**
  * @namespace proto
@@ -14,7 +14,7 @@ import AccountId from "../account/AccountId";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 export default class ContractDeleteTransaction extends Transaction {

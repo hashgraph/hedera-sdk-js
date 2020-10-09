@@ -1,8 +1,8 @@
-import ContractLogInfo from "./ContractLogInfo";
-import ContractId from "./ContractId";
+import ContractLogInfo from "./ContractLogInfo.js";
+import ContractId from "./ContractId.js";
 import BigNumber from "bignumber.js";
-import * as hex from "../encoding/hex";
-import * as utf8 from "../encoding/utf8";
+import * as hex from "../encoding/hex.js";
+import * as utf8 from "../encoding/utf8.js";
 import Long from "long";
 
 /**

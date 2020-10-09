@@ -1,5 +1,5 @@
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
-import AccountId from "../account/AccountId";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
+import AccountId from "../account/AccountId.js";
 import Long from "long";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
@@ -17,7 +17,7 @@ import Transaction, {
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**

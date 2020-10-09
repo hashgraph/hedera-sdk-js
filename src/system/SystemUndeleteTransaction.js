@@ -1,6 +1,6 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction";
-import FileId from "../file/FileId";
-import ContractId from "../contract/ContractId";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import FileId from "../file/FileId.js";
+import ContractId from "../contract/ContractId.js";
 
 /**
  * @namespace proto
@@ -14,8 +14,8 @@ import ContractId from "../contract/ContractId";
  */
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
- * @typedef {import("../Timestamp").default} Timestamp
+ * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../Timestamp.js").default} Timestamp
  */
 
 export default class SystemUndeleteTransaction extends Transaction {

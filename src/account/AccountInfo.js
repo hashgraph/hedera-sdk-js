@@ -1,8 +1,8 @@
-import AccountId from "./AccountId";
-import LiveHash from "./LiveHash";
-import Hbar from "../Hbar";
-import Time from "../Timestamp";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf";
+import AccountId from "./AccountId.js";
+import LiveHash from "./LiveHash.js";
+import Hbar from "../Hbar.js";
+import Time from "../Timestamp.js";
+import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 
 /**

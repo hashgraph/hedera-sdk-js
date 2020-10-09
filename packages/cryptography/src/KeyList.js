@@ -1,4 +1,4 @@
-import Key from "./Key";
+import Key from "./Key.js";
 
 /**
  * A list of Keys (`Key`) with an optional threshold.

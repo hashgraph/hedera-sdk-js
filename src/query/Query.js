@@ -1,17 +1,17 @@
-import Status from "../Status";
-import Hbar from "../Hbar";
-import Executable from "../Executable";
-import TransactionId from "../transaction/TransactionId";
+import Status from "../Status.js";
+import Hbar from "../Hbar.js";
+import Executable from "../Executable.js";
+import TransactionId from "../transaction/TransactionId.js";
 import {
     Query as ProtoQuery,
     TransactionBody as ProtoTransactionBody,
     ResponseType as ProtoResponseType,
     ResponseCodeEnum,
 } from "@hashgraph/proto";
-import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded";
+import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/Channel.js").default} Channel
  */
 
 /**
@@ -26,8 +26,8 @@ import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded";
  */
 
 /**
- * @typedef {import("../account/AccountId").default} AccountId
- * @typedef {import("../client/Client").ClientOperator} ClientOperator
+ * @typedef {import("../account/AccountId.js").default} AccountId
+ * @typedef {import("../client/Client.js").ClientOperator} ClientOperator
  */
 
 /**
@@ -150,7 +150,7 @@ export default class Query extends Executable {
 
     /**
      * @template MirrorChannelT
-     * @param {import("../client/Client").default<Channel, MirrorChannelT>} client
+     * @param {import("../client/Client.js").default<Channel, MirrorChannelT>} client
      * @returns {Promise<Hbar>}
      */
     getCost(client) {
@@ -177,7 +177,7 @@ export default class Query extends Executable {
      * @override
      * @template ChannelT
      * @template MirrorChannelT
-     * @param {import("../client/Client").default<ChannelT, MirrorChannelT>} client
+     * @param {import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @returns {void}
      */
     _setPaymentNodeIds(client) {
@@ -216,7 +216,7 @@ export default class Query extends Executable {
 
     /**
      * @template MirrorChannelT
-     * @param {import("../client/Client").default<Channel, MirrorChannelT>} client
+     * @param {import("../client/Client.js").default<Channel, MirrorChannelT>} client
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
@@ -257,7 +257,7 @@ export default class Query extends Executable {
         for (const node of this._paymentTransactionNodeIds) {
             this._paymentTransactions.push(
                 await _makePaymentTransaction(
-                    /** @type {import("../transaction/TransactionId").default} */ (this
+                    /** @type {import("../transaction/TransactionId.js").default} */ (this
                         ._paymentTransactionId),
                     node,
                     operator,
@@ -351,7 +351,7 @@ export default class Query extends Executable {
     /**
      * @template ChannelT
      * @template MirrorChannelT
-     * @param {import("../client/Client").default<ChannelT, MirrorChannelT>} client
+     * @param {import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @returns {AccountId}
      */
     _getNodeAccountId(client) {
@@ -451,6 +451,6 @@ export async function _makePaymentTransaction(
 }
 
 /**
- * @type {((query: Query<*>) => import("./CostQuery").default<*>)[]}
+ * @type {((query: Query<*>) => import("./CostQuery.js").default<*>)[]}
  */
 export const COST_QUERY = [];

@@ -65,4 +65,4 @@ export { default as TransactionRecordQuery } from "./transaction/TransactionReco
 export { default as TransactionResponse } from "./transaction/TransactionResponse";
 export { default as Transfer } from "./Transfer";
 
-import "./query/CostQuery";
+import "./query/CostQuery.js";

@@ -1,12 +1,12 @@
-import PrecheckStatusError from "./PrecheckStatusError";
-import GrpcServiceError from "./grpc/GrpcServiceError";
-import GrpcStatus from "./grpc/GrpcStatus";
-import Status from "./Status";
+import PrecheckStatusError from "./PrecheckStatusError.js";
+import GrpcServiceError from "./grpc/GrpcServiceError.js";
+import GrpcStatus from "./grpc/GrpcStatus.js";
+import Status from "./Status.js";
 
 /**
- * @typedef {import("./account/AccountId").default} AccountId
- * @typedef {import("./channel/Channel").default} Channel
- * @typedef {import("./transaction/TransactionId").default} TransactionId
+ * @typedef {import("./account/AccountId.js").default} AccountId
+ * @typedef {import("./channel/Channel.js").default} Channel
+ * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  */
 
 // maximum number of attempts for executing the transaction
@@ -24,7 +24,7 @@ export default class Executable {
     /**
      * @abstract
      * @protected
-     * @param {import("./client/Client").default<Channel, *>} client
+     * @param {import("./client/Client.js").default<Channel, *>} client
      * @returns {Promise<void>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -82,7 +82,7 @@ export default class Executable {
      * @protected
      * @template ChannelT
      * @template MirrorChannelT
-     * @param {?import("./client/Client").default<ChannelT, MirrorChannelT>} client
+     * @param {?import("./client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @returns {AccountId}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -139,7 +139,7 @@ export default class Executable {
     /**
      * @template {Channel} ChannelT
      * @template MirrorChannelT
-     * @param {import("./client/Client").default<ChannelT, MirrorChannelT>} client
+     * @param {import("./client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @returns {Promise<OutputT>}
      */
     async execute(client) {
