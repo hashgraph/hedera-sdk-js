@@ -608,7 +608,7 @@ export default class Transaction extends Executable {
                     : null,
             nodeAccountID: nodeId != null ? nodeId._toProtobuf() : null,
             transactionValidDuration: {
-                seconds: this._transactionValidDuration,
+                seconds: Long.fromNumber(this._transactionValidDuration),
             },
         };
     }

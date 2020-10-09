@@ -1,4 +1,4 @@
-import Client from "../../src/client/NodeClient";
+import Client from "../../src/client/NodeClient.js";
 import dotenv from "dotenv";
 
 // load .env (if available)

@@ -6,8 +6,8 @@ module.exports = {
         // redirect src/ to src/browser
         // note that this is NOT needed when consuming this package as the browser field in package.json
         // will take care of this
-        "../src": "../src/browser",
-        "./client": "./client/browser",
+        "../src/index.js": "../src/browser.js",
+        "./client/index.js": "./client/browser.js",
     },
     optimizeDeps: {
         // excludes the package from web bundling optimizations

@@ -1,8 +1,8 @@
-import FileCreateTransaction from "../src/file/FileCreateTransaction";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
-import FileInfoQuery from "../src/file/FileInfoQuery";
-import Hbar from "../src/Hbar";
-import newClient from "./client";
+import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
+import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
+import FileInfoQuery from "../src/file/FileInfoQuery.js";
+import Hbar from "../src/Hbar.js";
+import newClient from "./client/index.js";
 
 describe("FileCreate", function () {
     it("should be executable", async function () {

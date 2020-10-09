@@ -1,15 +1,15 @@
-import Hbar from "../src/Hbar";
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
-import TransactionId from "../src/transaction/TransactionId";
-import LiveHashAddTransaction from "../src/account/LiveHashAddTransaction";
-import LiveHashDeleteTransaction from "../src/account/LiveHashDeleteTransaction";
-import LiveHashQuery from "../src/account/LiveHashQuery";
-import TransactionReceiptQuery from "../../src/transaction/TransactionReceiptQuery";
-import newClient from "./client";
-import { PrivateKey } from "../src/index";
+import Hbar from "../src/Hbar.js";
+import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
+import TransactionId from "../src/transaction/TransactionId.js";
+import LiveHashAddTransaction from "../src/account/LiveHashAddTransaction.js";
+import LiveHashDeleteTransaction from "../src/account/LiveHashDeleteTransaction.js";
+import LiveHashQuery from "../src/account/LiveHashQuery.js";
+import TransactionReceiptQuery from "../../src/transaction/TransactionReceiptQuery.js";
+import newClient from "./client/index.js";
+import { PrivateKey } from "../src/index.js";
 import Long from "long";
-import * as hex from "../src/encoding/hex";
-import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
+import * as hex from "../src/encoding/hex.js";
+import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
 
 describe("LiveHash", function () {
     it("should be executable", async function () {

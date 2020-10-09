@@ -286,7 +286,7 @@ export default class AccountUpdateTransaction extends Transaction {
             accountIDToUpdate:
                 this._accountId != null ? this._accountId._toProtobuf() : null,
             key: this._key != null ? keyToProtobuf(this._key) : null,
-            expirationTime: this._expirationTime,
+            expirationTime: this._expirationTime != null ? this._expirationTime._toProtobuf() : null,
             proxyAccountID:
                 this._proxyAccountId != null
                     ? this._proxyAccountId._toProtobuf()

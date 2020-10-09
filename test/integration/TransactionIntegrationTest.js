@@ -1,10 +1,10 @@
-import Hbar from "../src/Hbar";
-import newClient from "./client";
-import { PrivateKey } from "../src/index";
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
-import AccountId from "../src/account/AccountId";
-import AccountDeleteTransaction from "../../src/account/AccountDeleteTransaction";
-import * as hex from "../../src/encoding/hex";
+import Hbar from "../src/Hbar.js";
+import newClient from "./client/index.js";
+import { PrivateKey } from "../src/index.js";
+import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
+import AccountId from "../src/account/AccountId.js";
+import AccountDeleteTransaction from "../../src/account/AccountDeleteTransaction.js";
+import * as hex from "../../src/encoding/hex.js";
 
 describe("TransactionIntegration", function () {
     it("should be executable", async function () {

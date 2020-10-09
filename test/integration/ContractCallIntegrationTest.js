@@ -1,14 +1,14 @@
-import "../src/query/CostQuery";
+import "../src/query/CostQuery.js";
 
-import Hbar from "../src/Hbar";
-import newClient from "./client";
-import ContractCreateTransaction from "../src/contract/ContractCreateTransaction";
-import ContractFunctionParameters from "../src/contract/ContractFunctionParameters";
-import ContractCallQuery from "../src/contract/ContractCallQuery";
-import ContractExecuteTransaction from "../src/contract/ContractExecuteTransaction";
-import ContractDeleteTransaction from "../src/contract/ContractDeleteTransaction";
-import FileCreateTransaction from "../src/file/FileCreateTransaction";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
+import Hbar from "../src/Hbar.js";
+import newClient from "./client/index.js";
+import ContractCreateTransaction from "../src/contract/ContractCreateTransaction.js";
+import ContractFunctionParameters from "../src/contract/ContractFunctionParameters.js";
+import ContractCallQuery from "../src/contract/ContractCallQuery.js";
+import ContractExecuteTransaction from "../src/contract/ContractExecuteTransaction.js";
+import ContractDeleteTransaction from "../src/contract/ContractDeleteTransaction.js";
+import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
+import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
 
 describe("ContractCallIntegration", function () {
     it("should be executable", async function () {

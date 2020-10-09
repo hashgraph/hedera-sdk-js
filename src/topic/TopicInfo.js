@@ -158,7 +158,7 @@ export default class TopicInfo {
                         ? keyToProtobuf(this.submitKey)
                         : null,
                 autoRenewPeriod: {
-                    seconds: this.autoRenewPeriod,
+                    seconds: Long.fromNumber(this.autoRenewPeriod),
                 },
                 autoRenewAccount:
                     this.autoRenewAccountId != null

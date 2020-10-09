@@ -1,6 +1,6 @@
-import Hbar from "../src/Hbar";
-import AccountBalanceQuery from "../src/account/AccountBalanceQuery";
-import { newIntegrationClient } from "./client";
+import Hbar from "../src/Hbar.js";
+import AccountBalanceQuery from "../src/account/AccountBalanceQuery.js";
+import { newIntegrationClient } from "./client/index.js";
 
 describe("AccountBalanceQuery", function () {
     this.timeout(10000);

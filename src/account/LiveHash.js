@@ -63,7 +63,6 @@ export default class LiveHash {
                 liveHash_.keys != null
                     ? keyListFromProtobuf(liveHash_.keys)
                     : new KeyList(),
-            // TODO: util.fromLong could be nice
             duration:
                 durationSeconds instanceof Long
                     ? durationSeconds.toInt()
@@ -81,7 +80,7 @@ export default class LiveHash {
             hash: this.hash,
             keys: keyListToProtobuf(this.keys),
             duration: {
-                seconds: this.duration,
+                seconds: Long.fromNumber(this.duration),
             },
         };
     }

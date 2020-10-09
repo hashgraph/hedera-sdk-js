@@ -68,7 +68,7 @@ export default class Timestamp {
      */
     _toProtobuf() {
         return {
-            seconds: this.seconds,
+            seconds: Long.fromNumber(this.seconds),
             nanos: this.nanos,
         };
     }

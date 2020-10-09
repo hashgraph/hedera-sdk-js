@@ -1,4 +1,4 @@
-import Client from "../../src/client/WebClient";
+import Client from "../../src/client/WebClient.js";
 
 export function newIntegrationClient() {
     const client = Client.forTestnet();

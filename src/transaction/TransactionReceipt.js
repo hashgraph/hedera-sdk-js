@@ -27,7 +27,7 @@ export default class TransactionReceipt {
      * @param {?ContractId} props.contractId
      * @param {?TopicId} props.topicId
      * @param {?ExchangeRate} props.exchangeRate
-     * @param {?number} props.topicSequenceNumber
+     * @param {?Long} props.topicSequenceNumber
      * @param {?Uint8Array} props.topicRunningHash
      */
     constructor(props) {
@@ -161,12 +161,8 @@ export default class TransactionReceipt {
                       )
                     : null,
 
-            topicSequenceNumber:
-                receipt.topicSequenceNumber instanceof Long
-                    ? receipt.topicSequenceNumber.toInt()
-                    : receipt.topicSequenceNumber != null
-                    ? receipt.topicSequenceNumber
-                    : 0,
+            topicSequenceNumber: receipt.topicSequenceNumber == null ? null : Long.fromValue(receipt.topicSequenceNumber),
+
             topicRunningHash:
                 receipt.topicRunningHash != null
                     ? receipt.topicRunningHash

@@ -1,10 +1,10 @@
-import * as hex from "../src/encoding/hex";
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
-import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
-import AccountId from "../src/account/AccountId";
-import Hbar from "../src/Hbar";
-import newClient from "./client";
-import { PrivateKey } from "../src/index";
+import * as hex from "../src/encoding/hex.js";
+import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
+import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
+import AccountId from "../src/account/AccountId.js";
+import Hbar from "../src/Hbar.js";
+import newClient from "./client/index.js";
+import { PrivateKey } from "../src/index.js";
 
 describe("TransactionResponse", function () {
     it("should be executable", async function () {

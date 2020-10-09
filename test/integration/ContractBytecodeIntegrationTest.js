@@ -1,12 +1,12 @@
-import ContractByteCodeQuery from "../../src/contract/ContractByteCodeQuery";
-import ContractCreateTransaction from "../src/contract/ContractCreateTransaction";
-import ContractDeleteTransaction from "../src/contract/ContractDeleteTransaction";
-import ContractFunctionParameters from "../src/contract/ContractFunctionParameters";
-import FileCreateTransaction from "../src/file/FileCreateTransaction";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
-import Hbar from "../src/Hbar";
-import TransactionReceiptQuery from "../../src/transaction/TransactionReceiptQuery";
-import newClient from "./client";
+import ContractByteCodeQuery from "../../src/contract/ContractByteCodeQuery.js";
+import ContractCreateTransaction from "../src/contract/ContractCreateTransaction.js";
+import ContractDeleteTransaction from "../src/contract/ContractDeleteTransaction.js";
+import ContractFunctionParameters from "../src/contract/ContractFunctionParameters.js";
+import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
+import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
+import Hbar from "../src/Hbar.js";
+import TransactionReceiptQuery from "../../src/transaction/TransactionReceiptQuery.js";
+import newClient from "./client/index.js";
 
 describe("ContractBytecode", function () {
     it("should be executable", async function () {

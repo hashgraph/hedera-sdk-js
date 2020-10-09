@@ -9,6 +9,7 @@ import {
     ResponseCodeEnum,
 } from "@hashgraph/proto";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
+import Long from "long";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -416,7 +417,7 @@ export async function _makePaymentTransaction(
         nodeAccountID: nodeId._toProtobuf(),
         transactionFee: new Hbar(1).toTinybars(),
         transactionValidDuration: {
-            seconds: 120,
+            seconds: Long.fromNumber(120),
         },
         cryptoTransfer: {
             transfers: {

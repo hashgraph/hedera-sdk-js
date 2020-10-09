@@ -1,9 +1,9 @@
-import Hbar from "../src/Hbar";
-import newClient from "./client";
-import FileCreateTransaction from "../src/file/FileCreateTransaction";
-import FileInfoQuery from "../src/file/FileInfoQuery";
-import FileAppendTransaction from "../src/file/FileAppendTransaction";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
+import Hbar from "../src/Hbar.js";
+import newClient from "./client/index.js";
+import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
+import FileInfoQuery from "../src/file/FileInfoQuery.js";
+import FileAppendTransaction from "../src/file/FileAppendTransaction.js";
+import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
 
 describe("FileAppend", function () {
     it("should be executable", async function () {

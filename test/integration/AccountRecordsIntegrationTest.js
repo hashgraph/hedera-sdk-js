@@ -1,11 +1,11 @@
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
-import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
-import AccountRecordsQuery from "../src/account/AccountRecordsQuery";
-import CryptoTransferTransaction from "../src/account/CryptoTransferTransaction";
-import Hbar from "../src/Hbar";
-import TransactionId from "../../src/transaction/TransactionId";
-import newClient from "./client";
-import { PrivateKey } from "../src/index";
+import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
+import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
+import AccountRecordsQuery from "../src/account/AccountRecordsQuery.js";
+import CryptoTransferTransaction from "../src/account/CryptoTransferTransaction.js";
+import Hbar from "../src/Hbar.js";
+import TransactionId from "../../src/transaction/TransactionId.js";
+import newClient from "./client/index.js";
+import { PrivateKey } from "../src/index.js";
 
 describe("AccountRecords", function () {
     it("should be executable", async function () {

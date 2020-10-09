@@ -1,11 +1,10 @@
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction";
-import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction";
-import AccountInfoQuery from "../src/account/AccountInfoQuery";
-import Hbar from "../src/Hbar";
-import TransactionId from "../../src/transaction/TransactionId";
-import newClient from "./client";
-import Long from "long";
-import { PrivateKey } from "../src/index";
+import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
+import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
+import AccountInfoQuery from "../src/account/AccountInfoQuery.js";
+import Hbar from "../src/Hbar.js";
+import TransactionId from "../../src/transaction/TransactionId.js";
+import newClient from "./client/index.js";
+import { PrivateKey } from "../src/index.js";
 
 describe("AccountCreate", function () {
     it("should be executable", async function () {
@@ -34,18 +33,18 @@ describe("AccountCreate", function () {
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.publicKey.toString());
-        expect(info.balance.toTinybars().toInt()).to.be.equal(
-            new Hbar(1).toTinybars().toInt()
+        expect(info.balance.toTinybars().toNumber()).to.be.equal(
+            new Hbar(1).toTinybars().toNumber()
         );
-        expect(info.autoRenewPeriod.toInt()).to.be.equal(7776000);
-        expect(info.receiveRecordThreshold.toTinybars().toInt()).to.be.equal(
-            Long.MAX_VALUE.toInt()
+        expect(info.autoRenewPeriod.toNumber()).to.be.equal(7776000);
+        expect(info.receiveRecordThreshold.toTinybars().toString()).to.be.equal(
+            "9223372036854775807"
         );
-        expect(info.sendRecordThreshold.toTinybars().toInt()).to.be.equal(
-            Long.MAX_VALUE.toInt()
+        expect(info.sendRecordThreshold.toTinybars().toString()).to.be.equal(
+            "9223372036854775807"
         );
         expect(info.proxyAccountId).to.be.null;
-        expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(0);
+        expect(info.proxyReceived.toTinybars().toNumber()).to.be.equal(0);
 
         await (
             await (

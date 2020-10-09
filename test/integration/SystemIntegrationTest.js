@@ -1,8 +1,8 @@
-import newClient from "./client";
-import SystemDeleteTransaction from "../../src/system/SystemDeleteTransaction";
-import ContractId from "../src/contract/ContractId";
-import FileId from "../src/file/FileId";
-import Timestamp from "../src/Timestamp";
+import newClient from "./client/index.js";
+import SystemDeleteTransaction from "../../src/system/SystemDeleteTransaction.js";
+import ContractId from "../src/contract/ContractId.js";
+import FileId from "../src/file/FileId.js";
+import Timestamp from "../src/Timestamp.js";
 
 describe("SystemIntegration", function () {
     it("should be executable", async function () {

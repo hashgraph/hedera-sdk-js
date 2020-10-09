@@ -1,11 +1,11 @@
-import ContractCreateTransaction from "../src/contract/ContractCreateTransaction";
-import ContractDeleteTransaction from "../src/contract/ContractDeleteTransaction";
-import ContractFunctionParameters from "../src/contract/ContractFunctionParameters";
-import ContractInfoQuery from "../src/contract/ContractInfoQuery";
-import FileCreateTransaction from "../src/file/FileCreateTransaction";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction";
-import Hbar from "../src/Hbar";
-import newClient from "./client";
+import ContractCreateTransaction from "../src/contract/ContractCreateTransaction.js";
+import ContractDeleteTransaction from "../src/contract/ContractDeleteTransaction.js";
+import ContractFunctionParameters from "../src/contract/ContractFunctionParameters.js";
+import ContractInfoQuery from "../src/contract/ContractInfoQuery.js";
+import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
+import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
+import Hbar from "../src/Hbar.js";
+import newClient from "./client/index.js";
 
 describe("ContractCreate", function () {
     it("should be executable", async function () {

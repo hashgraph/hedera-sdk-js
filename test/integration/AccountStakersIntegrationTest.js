@@ -1,6 +1,6 @@
-import Hbar from "../src/Hbar";
-import newClient from "./client";
-import AccountStakersQuery from "../../src/account/AccountStakersQuery";
+import Hbar from "../src/Hbar.js";
+import newClient from "./client/index.js";
+import AccountStakersQuery from "../../src/account/AccountStakersQuery.js";
 
 describe("AccountStakers", function () {
     it("should be executable", async function () {
