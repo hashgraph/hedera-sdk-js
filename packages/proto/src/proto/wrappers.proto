@@ -29,7 +29,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // Wrappers for primitive (non-message) types. These types are useful
-// for embedding primitives in the `google.protobuf.Any` type and for places
+// for embedding primitives in the `Any` type and for places
 // where we need to distinguish between the absence of a primitive
 // typed field and its default value.
 //

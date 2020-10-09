@@ -2,6 +2,26 @@ syntax = "proto3";
 
 package proto;
 
+/*-
+ * ‌
+ * Hedera Network Services Protobuf
+ * ​
+ * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * ​
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ‍
+ */
+
 option java_package = "com.hedera.hashgraph.sdk.proto";
 option java_multiple_files = true;
 
@@ -34,6 +54,22 @@ import "ConsensusUpdateTopic.proto";
 import "ConsensusDeleteTopic.proto";
 import "ConsensusSubmitMessage.proto";
 
+import "UncheckedSubmit.proto";
+
+import "TokenCreate.proto";
+import "TokenTransfer.proto";
+import "TokenFreezeAccount.proto";
+import "TokenUnfreezeAccount.proto";
+import "TokenGrantKyc.proto";
+import "TokenRevokeKyc.proto";
+import "TokenDelete.proto";
+import "TokenUpdate.proto";
+import "TokenMint.proto";
+import "TokenBurn.proto";
+import "TokenWipeAccount.proto";
+import "TokenAssociate.proto";
+import "TokenDissociate.proto";
+
 /* A single transaction. All transaction types are possible here. */
 message TransactionBody {
   TransactionID transactionID = 1; // The ID for this transaction, which includes the payer's account (the account paying the transaction fee). If two transactions have the same transactionID, they won't both have an effect
@@ -63,9 +99,25 @@ message TransactionBody {
     SystemUndeleteTransactionBody systemUndelete = 21; //To undelete an entity deleted by SystemDelete
     FreezeTransactionBody freeze = 23; // Freeze the nodes
 
-    ConsensusCreateTopicTransactionBody consensusCreateTopic = 24;
-    ConsensusUpdateTopicTransactionBody consensusUpdateTopic = 25;
-    ConsensusDeleteTopicTransactionBody consensusDeleteTopic = 26;
-    ConsensusSubmitMessageTransactionBody consensusSubmitMessage = 27;
+    ConsensusCreateTopicTransactionBody consensusCreateTopic = 24; // Creates a topic
+    ConsensusUpdateTopicTransactionBody consensusUpdateTopic = 25; // Updates a topic
+    ConsensusDeleteTopicTransactionBody consensusDeleteTopic = 26; // Deletes a topic
+    ConsensusSubmitMessageTransactionBody consensusSubmitMessage = 27; // Submits message to a topic
+
+    UncheckedSubmitBody uncheckedSubmit = 28;
+
+    TokenCreateTransactionBody tokenCreation = 29; // Creates a token instance
+    TokenTransfersTransactionBody tokenTransfers = 30; // Transfers tokens between accounts
+    TokenFreezeAccountTransactionBody tokenFreeze = 31; // Freezes account not to be able to transact with a token
+    TokenUnfreezeAccountTransactionBody tokenUnfreeze = 32; // Unfreezes account for a token
+    TokenGrantKycTransactionBody tokenGrantKyc = 33; // Grants KYC to an account for a token
+    TokenRevokeKycTransactionBody tokenRevokeKyc = 34; // Revokes KYC of an account for a token
+    TokenDeleteTransactionBody tokenDeletion = 35; // Deletes a token instance
+    TokenUpdateTransactionBody tokenUpdate = 36; // Updates a token instance
+    TokenMintTransactionBody tokenMint = 37; // Mints new tokens to a token's treasury account
+    TokenBurnTransactionBody tokenBurn = 38; // Burns tokens from a token's treasury account
+    TokenWipeAccountTransactionBody tokenWipe = 39; // Wipes amount of tokens from an account
+    TokenAssociateTransactionBody tokenAssociate = 40; // Associate tokens to an account
+    TokenDissociateTransactionBody tokenDissociate = 41; // Dissociate tokens from an account
   }
 }
