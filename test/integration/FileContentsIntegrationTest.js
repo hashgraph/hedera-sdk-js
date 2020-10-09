@@ -32,7 +32,9 @@ describe("FileContents", function () {
             .setQueryPayment(new Hbar(1))
             .execute(client);
 
-        expect(utf8.decode(contents)).to.be.equal("[e2e::FileCreateTransaction]");
+        expect(utf8.decode(contents)).to.be.equal(
+            "[e2e::FileCreateTransaction]"
+        );
 
         await (
             await new FileDeleteTransaction()

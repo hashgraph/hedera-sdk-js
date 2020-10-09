@@ -19,7 +19,9 @@ export default class Hbar {
             } else if (BigNumber.isBigNumber(bigAmount)) {
                 bigAmount = new BigNumber(bigAmount);
             } else {
-                bigAmount = new BigNumber(Long.fromValue(bigAmount).toString(10));
+                bigAmount = new BigNumber(
+                    Long.fromValue(bigAmount).toString(10)
+                );
             }
 
             /**

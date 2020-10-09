@@ -161,7 +161,10 @@ export default class TransactionReceipt {
                       )
                     : null,
 
-            topicSequenceNumber: receipt.topicSequenceNumber == null ? null : Long.fromValue(receipt.topicSequenceNumber),
+            topicSequenceNumber:
+                receipt.topicSequenceNumber == null
+                    ? null
+                    : Long.fromValue(receipt.topicSequenceNumber),
 
             topicRunningHash:
                 receipt.topicRunningHash != null

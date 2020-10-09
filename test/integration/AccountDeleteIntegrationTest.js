@@ -5,7 +5,6 @@ import Hbar from "../src/Hbar.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
 import newClient from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
-import Long from "long";
 
 describe("AccountDelete", function () {
     it("should be executable", async function () {

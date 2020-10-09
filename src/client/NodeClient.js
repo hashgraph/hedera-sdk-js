@@ -1,7 +1,10 @@
-import { promises as fs } from "fs";
+import fs from "fs";
+import util from "util";
 import Client from "./Client.js";
 import NodeChannel from "../channel/NodeChannel.js";
 import AccountId from "../account/AccountId.js";
+
+const readFileAsync = util.promisify(fs.readFile);
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
@@ -119,7 +122,7 @@ export default class NodeClient extends Client {
      * @returns {Promise<NodeClient>}
      */
     static async fromConfigFile(filename) {
-        return NodeClient.fromConfig(await fs.readFile(filename, "utf8"));
+        return NodeClient.fromConfig(await readFileAsync(filename, "utf8"));
     }
 
     /**

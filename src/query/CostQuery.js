@@ -99,9 +99,11 @@ export default class CostQuery extends Executable {
      * @returns {Promise<Hbar>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async _mapResponse(response, nodeAccountId, request) {
+    _mapResponse(response, nodeAccountId, request) {
         const cost = this._query._mapResponseHeader(response).cost;
-        return Hbar.fromTinybars(/** @type {Long | number} */ (cost));
+        return Promise.resolve(
+            Hbar.fromTinybars(/** @type {Long | number} */ (cost))
+        );
     }
 
     /**

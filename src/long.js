@@ -7,6 +7,7 @@ import Long from "long";
 
 /**
  * @param {Long | number | string | LongObject | BigNumber} value
+ * @returns {Long}
  */
 export function valueToLong(value) {
     if (BigNumber.isBigNumber(value)) {
