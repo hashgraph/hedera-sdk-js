@@ -1,4 +1,6 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import Transaction, {
+    TRANSACTION_REGISTRY,
+} from "../transaction/Transaction.js";
 import ContractId from "./ContractId.js";
 import AccountId from "../account/AccountId.js";
 

@@ -7,6 +7,10 @@
             {
                 "noInterop": true
             }
+        ],
+        [
+            "module-rewrite",
+            { "replaceFunc": "./build/replace-module-paths.cjs" }
         ]
     ]
 }

@@ -2,7 +2,9 @@ import AccountId from "../account/AccountId.js";
 import ContractId from "./ContractId.js";
 import FileId from "../file/FileId.js";
 import Timestamp from "../Timestamp.js";
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import Transaction, {
+    TRANSACTION_REGISTRY,
+} from "../transaction/Transaction.js";
 import { keyToProtobuf, keyFromProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 

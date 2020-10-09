@@ -1,6 +1,7 @@
 {
     "name": "@hashgraph/examples",
     "private": true,
+    "type": "commonjs",
     "dependencies": {
         "@hashgraph/sdk": "file:..",
         "dotenv": "^8.2.0"

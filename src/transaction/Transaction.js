@@ -174,7 +174,9 @@ export default class Transaction extends Executable {
      */
     _getTransactionId() {
         if (this._transactionId == null) {
-            throw new Error("Attemping to get `TransactionId` before it field was set");
+            throw new Error(
+                "Attemping to get `TransactionId` before it field was set"
+            );
         }
 
         return this._transactionId;

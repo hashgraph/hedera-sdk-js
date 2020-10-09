@@ -1,7 +1,9 @@
 import Hbar from "../Hbar.js";
 import AccountId from "../account/AccountId.js";
 import Transfer from "../Transfer.js";
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import Transaction, {
+    TRANSACTION_REGISTRY,
+} from "../transaction/Transaction.js";
 
 /**
  * @namespace proto

@@ -4,7 +4,7 @@ import Long from "long";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
-} from "../transaction/Transaction";
+} from "../transaction/Transaction.js";
 
 /**
  * @namespace proto

@@ -336,10 +336,8 @@
     protobufjs "^6.9.0"
     yargs "^15.3.1"
 
-"@hashgraph/cryptography@^1.0.5":
+"@hashgraph/cryptography@file:packages/cryptography":
   version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.5.tgz#282ee3937ee772a9c1c50ee8aa30f6dda71bbb74"
-  integrity sha512-/HZQ+8EeGim9SQUFrD4iiLZbV0bKrzmShZqRLQicepd6Y2MRCZ3DMpZrADHZyLSaJOkMsUNDHk5CCc/ZaXglvQ==
   dependencies:
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"
@@ -2097,6 +2095,11 @@ babel-plugin-dynamic-import-node@^2.3.3:
   integrity sha512-jZVI+s9Zg3IqA/kdi0i6UDCybUI3aSBLnglhYbSSjKlV7yF1F/5LWv8MakQmvYpnbJDS6fcBL2KzHSxNCMtWSQ==
   dependencies:
     object.assign "^4.1.0"
+
+babel-plugin-module-rewrite@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-module-rewrite/-/babel-plugin-module-rewrite-0.2.0.tgz#5d7e6c31e3bad6ce3a0ef723983af245b96fdc84"
+  integrity sha1-XX5sMeO61s46DvcjmDryRblv3IQ=
 
 balanced-match@^1.0.0:
   version "1.0.0"

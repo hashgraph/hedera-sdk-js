@@ -1,4 +1,6 @@
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import Transaction, {
+    TRANSACTION_REGISTRY,
+} from "../transaction/Transaction.js";
 import TopicId from "./TopicId.js";
 import * as utf8 from "../encoding/utf8.js";
 

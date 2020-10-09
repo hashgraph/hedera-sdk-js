@@ -1,5 +1,7 @@
 import AccountId from "./AccountId.js";
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import Transaction, {
+    TRANSACTION_REGISTRY,
+} from "../transaction/Transaction.js";
 
 /**
  * @namespace proto

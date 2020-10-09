@@ -4,7 +4,7 @@ import Long from "long";
 import {
     keyListFromProtobuf,
     keyListToProtobuf,
-} from "../cryptography/protobuf";
+} from "../cryptography/protobuf.js";
 
 /**
  * @namespace proto

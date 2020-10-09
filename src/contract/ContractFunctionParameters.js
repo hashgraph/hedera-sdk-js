@@ -1,6 +1,6 @@
 import ContractFunctionSelector, {
     ArgumentType,
-} from "./ContractFunctionSelector";
+} from "./ContractFunctionSelector.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as hex from "../encoding/hex.js";
 import BigNumber from "bignumber.js";

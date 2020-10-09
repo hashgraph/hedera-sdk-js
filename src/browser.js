@@ -1,3 +1,3 @@
-export * from "./exports";
+export * from "./exports.js";
 
-export { default as Client } from "./client/WebClient";
+export { default as Client } from "./client/WebClient.js";

@@ -3,9 +3,7 @@ import Hbar from "../Hbar.js";
 import Executable from "../Executable.js";
 import AccountId from "../account/AccountId.js";
 import { _makePaymentTransaction, COST_QUERY } from "./Query.js";
-import {
-    ResponseType as ProtoResponseType
-} from "@hashgraph/proto";
+import { ResponseType as ProtoResponseType } from "@hashgraph/proto";
 
 /**
  * @namespace proto

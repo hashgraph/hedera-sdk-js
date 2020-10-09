@@ -5,7 +5,7 @@ import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
-} from "../transaction/Transaction";
+} from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 

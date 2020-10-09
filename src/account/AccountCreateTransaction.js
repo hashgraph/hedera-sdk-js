@@ -4,7 +4,7 @@ import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     DEFAULT_RECORD_THRESHOLD,
     TRANSACTION_REGISTRY,
-} from "../transaction/Transaction";
+} from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 
