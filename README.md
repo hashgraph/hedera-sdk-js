@@ -5,29 +5,21 @@
 > fair and secure transactions. Hedera enables and empowers developers to
 > build an entirely new class of decentralized applications.
 
-## ⚠️ Disclaimer
+## Install
 
-This project is currently under a re-development effort. Not much is done at the moment.
+```
+# with NPM
+$ npm install --save @hashgraph/sdk
 
-The goals are as follows:
+# with Yarn
+$ yarn add @hashgraph/sdk
+```
 
- * Parity with the new SDK format defined by the v2 of the Java SDK
+## Usage
 
- * Support for React Native
+_to be written_
 
- * Support for Electron
-
- * Support for Edge, Firefox, Chrome, and Safari
-
- * Support for Node 10+ and Deno
-
- * Produce a **single** bundle for web targets but provide a `lib/` directory for Node.js targets
-
- * Unit test coverage proving compatibility on modern browsers and Node.js
-
- * End-to-end test coverage
-
-Join the [Hedera discord](https://hedera.com/discord) for the latest updates and announcements.
+See [examples](./examples).
 
 ## Contributing to this Project
 
