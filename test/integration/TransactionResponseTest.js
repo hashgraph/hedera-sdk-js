@@ -1,7 +1,6 @@
 import * as hex from "../src/encoding/hex.js";
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
-import AccountId from "../src/account/AccountId.js";
 import Hbar from "../src/Hbar.js";
 import newClient from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
@@ -18,7 +17,6 @@ describe("TransactionResponse", function () {
 
         const transaction = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeAccountId(new AccountId(5))
             .setMaxTransactionFee(new Hbar(2))
             .execute(client);
 

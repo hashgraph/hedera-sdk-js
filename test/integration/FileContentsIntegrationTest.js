@@ -3,6 +3,7 @@ import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
 import FileContentsQuery from "../src/file/FileContentsQuery.js";
 import Hbar from "../src/Hbar.js";
 import newClient from "./client/index.js";
+import * as utf8 from "../src/encoding/utf8";
 
 describe("FileContents", function () {
     it("should be executable", async function () {
@@ -31,7 +32,7 @@ describe("FileContents", function () {
             .setQueryPayment(new Hbar(1))
             .execute(client);
 
-        expect(contents.toString()).to.be.equal("[e2e::FileCreateTransaction]");
+        expect(utf8.decode(contents)).to.be.equal("[e2e::FileCreateTransaction]");
 
         await (
             await new FileDeleteTransaction()
