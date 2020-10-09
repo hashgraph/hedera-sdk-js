@@ -448,11 +448,13 @@ export class Status implements Indexed {
     public static readonly InvalidInitialBalance = new Status(85);
 
     /**
+     * @deprecated
      * Attempt to set negative receive record threshold.
      */
     public static readonly InvalidReceiveRecordThreshold = new Status(86);
 
     /**
+     * @deprecated
      * Attempt to set negative send record threshold.
      */
     public static readonly InvalidSendRecordThreshold = new Status(87);
@@ -574,21 +576,6 @@ export class Status implements Indexed {
      */
     public static readonly InvalidTopicId = new Status(150);
 
-    /**
-     * Deprecated and to be removed before HCS release.
-     */
-    public static readonly TopicDeleted = new Status(151);
-
-    /**
-     * Deprecated and to be removed before HCS release.
-     */
-    public static readonly TopicNotEnabled = new Status(152);
-
-    /**
-     * Deprecated and to be removed before HCS release.
-     */
-    public static readonly InvalidTopicValidStartTime = new Status(153);
-
     public static readonly InvalidTopicExpirationTime = new Status(154);
     public static readonly InvalidAdminKey = new Status(155);
     public static readonly InvalidSubmitKey = new Status(156);
@@ -626,9 +613,173 @@ export class Status implements Indexed {
     public static readonly TopicExpired = new Status(162);
 
     /**
-     * Deprecated and to be removed before HCS release.
+     * chunk number must be from 1 to total (chunks) inclusive.
      */
-    public static readonly TOPIC_DELETED = new Status(151);
+    public static readonly InvalidChunkNumber = new Status(163);
+
+    /**
+     * For every chunk, the payer account that is part of initialTransactionID must match the Payer Account of this transaction. The entire initialTransactionID should match the transactionID of the first chunk, but this is not checked or enforced by Hedera except when the chunk number is 1.
+     */
+    public static readonly InvalidChunkTransactionId = new Status(164);
+
+    /**
+     * Account is frozen and cannot transact with the token
+     */
+    public static readonly AccountFrozenForToken = new Status(165);
+
+    /**
+     * Maximum number of token relations for agiven account is exceeded
+     */
+    public static readonly TokensPerAccountLimitExceeded = new Status(166);
+
+    /**
+     * The token is invalid or does not exist
+     */
+    public static readonly InvalidTokenId = new Status(167);
+
+    /**
+     * Invalid token decimals
+     */
+    public static readonly InvalidTokenDecimals = new Status(168);
+
+    /**
+     * Invalid token initial supply
+     */
+    public static readonly InvalidTokenInitialSupply = new Status(169);
+
+    /**
+     * Treasury Account does not exist or is deleted
+     */
+    public static readonly InvalidTreasuryAccountForToken = new Status(170);
+
+    /**
+     * Token Symbol is not UTF-8 capitalized alphabetical string
+     */
+    public static readonly InvalidTokenSymbol = new Status(171);
+
+    /**
+     * Freeze key is not set on token
+     */
+    public static readonly TokenHasNoFreezeKey = new Status(172);
+
+    /**
+     * Amounts in transfer list are not net zero
+     */
+    public static readonly TransfersNotZeroSumForToken = new Status(173);
+
+    /**
+     * Token Symbol is not provided
+     */
+    public static readonly MissingTokenSymbol = new Status(174);
+
+    /**
+     * Token Symbol is too long
+     */
+    public static readonly TokenSymbolTooLong = new Status(175);
+
+    /**
+     * KYC must be granted and account does not have KYC granted
+     */
+    public static readonly AccountKycNotGrantedForToken = new Status(176);
+
+    /**
+     * KYC key is not set on token
+     */
+    public static readonly TokenHasNoKycKey = new Status(177);
+
+    /**
+     * Token balance is not sufficient for the transaction
+     */
+    public static readonly InsufficientTokenBalance = new Status(178);
+
+    /**
+     * Token transactions cannot be executed on deleted token
+     */
+    public static readonly TokenWasDeleted = new Status(179);
+
+    /**
+     * Supply key is not set on token
+     */
+    public static readonly TokenHasNoSupplyKey = new Status(180);
+
+    /**
+     * Wipe key is not set on token
+     */
+    public static readonly TokenHasNoWipeKey = new Status(181);
+
+    public static readonly InvalidTokenMintAmount = new Status(182);
+
+    public static readonly InvalidTokenBurnAmount = new Status(183);
+
+    public static readonly TokenNotAssociatedToAccount = new Status(184);
+
+    /**
+     * Cannot execute wipe operation on treasury account
+     */
+    public static readonly CannotWipeTokenTreasuryAccount = new Status(185);
+
+    public static readonly InvalidKycKey = new Status(186);
+
+    public static readonly InvalidWipeKey = new Status(187);
+
+    public static readonly InvalidFreezeKey = new Status(188);
+
+    public static readonly InvalidSupplyKey = new Status(189);
+
+    /**
+     * Token Name is not provided
+     */
+    public static readonly MissingTokenName = new Status(190);
+    /**
+     * Token Name is too long
+     */
+    public static readonly TokenNameTooLong = new Status(191);
+
+    /**
+     * The provided wipe amount must not be negative, zero or bigger than the token holder balance
+     */
+    public static readonly InvalidWipingAmount = new Status(192);
+
+    /**
+     * Token does not have Admin key set, thus update/delete transactions cannot be performed
+     */
+    public static readonly TOKEN_IS_IMMUTABLE = new Status(193);
+
+    /**
+     * An <tt>associateToken</tt> operation specified a token already associated to the account
+     */
+    public static readonly TokenAlreadyAssociatedToAccount = new Status(194);
+
+    /**
+     * An attempted operation is invalid until all token balances for the target account are zero
+     */
+    public static readonly TransactionRequiresZeroTokenBalances = new Status(195);
+
+    /**
+     * An attempted operation is invalid because the account is a treasury
+     */
+    public static readonly AccountIsTreasury = new Status(196);
+
+    /**
+     * Same TokenIDs present in the token list
+     */
+    public static readonly TokenIdRepeatedInTokenList = new Status(197);
+
+    /**
+     * Exceeded the number of token transfers (both from and to) allowed for token transfer list
+     */
+    public static readonly TokenTransferListSizeLimitExceeded = new Status(198);
+
+    /**
+     * TokenTransfersTransactionBody has no TokenTransferList
+     */
+    public static readonly EmptyTokenTransferBody = new Status(199);
+
+    /**
+     * TokenTransfersTransactionBody has a TokenTransferList with no AccountAmounts
+     */
+    public static readonly EmptyTokenTransferAccountAmounts = new Status(200);
+
     private static [ 0 ] = Status.Ok;
     private static [ 1 ] = Status.InvalidTransaction;
     private static [ 2 ] = Status.PayerAccountNotFound;
@@ -742,9 +893,6 @@ export class Status implements Indexed {
 
     // New functionality in the HCS release below here
     private static [ 150 ] = Status.InvalidTopicId;
-    private static [ 151 ] = Status.TopicDeleted;
-    private static [ 152 ] = Status.TopicNotEnabled;
-    private static [ 153 ] = Status.InvalidTopicValidStartTime;
     private static [ 154 ] = Status.InvalidTopicExpirationTime;
     private static [ 155 ] = Status.InvalidAdminKey;
     private static [ 156 ] = Status.InvalidSubmitKey;
@@ -755,6 +903,47 @@ export class Status implements Indexed {
     private static [ 161 ] = Status.AutoRenewAccountSignatureMissing;
     private static [ 162 ] = Status.TopicExpired;
     // New functionality in the HCS release above here
+
+    // New functionality added by HTS
+    public static [ 163 ] = Status.InvalidChunkNumber;
+    public static [ 164 ] = Status.InvalidChunkTransactionId;
+    public static [ 165 ] = Status.AccountFrozenForToken;
+    public static [ 166 ] = Status.TokensPerAccountLimitExceeded;
+    public static [ 167 ] = Status.InvalidTokenId;
+    public static [ 168 ] = Status.InvalidTokenDecimals;
+    public static [ 169 ] = Status.InvalidTokenInitialSupply;
+    public static [ 170 ] = Status.InvalidTreasuryAccountForToken;
+    public static [ 171 ] = Status.InvalidTokenSymbol;
+    public static [ 172 ] = Status.TokenHasNoFreezeKey;
+    public static [ 173 ] = Status.TransfersNotZeroSumForToken;
+    public static [ 174 ] = Status.MissingTokenSymbol;
+    public static [ 175 ] = Status.TokenSymbolTooLong;
+    public static [ 176 ] = Status.AccountKycNotGrantedForToken;
+    public static [ 177 ] = Status.TokenHasNoKycKey;
+    public static [ 178 ] = Status.InsufficientTokenBalance;
+    public static [ 179 ] = Status.TokenWasDeleted;
+    public static [ 180 ] = Status.TokenHasNoSupplyKey;
+    public static [ 181 ] = Status.TokenHasNoWipeKey;
+    public static [ 182 ] = Status.InvalidTokenMintAmount;
+    public static [ 183 ] = Status.InvalidTokenBurnAmount;
+    public static [ 184 ] = Status.TokenNotAssociatedToAccount;
+    public static [ 185 ] = Status.CannotWipeTokenTreasuryAccount;
+    public static [ 186 ] = Status.InvalidKycKey;
+    public static [ 187 ] = Status.InvalidWipeKey;
+    public static [ 188 ] = Status.InvalidFreezeKey;
+    public static [ 189 ] = Status.InvalidSupplyKey;
+    public static [ 190 ] = Status.MissingTokenName;
+    public static [ 191 ] = Status.TokenNameTooLong;
+    public static [ 192 ] = Status.InvalidWipingAmount;
+    public static [ 193 ] = Status.TOKEN_IS_IMMUTABLE;
+    public static [ 194 ] = Status.TokenAlreadyAssociatedToAccount;
+    public static [ 195 ] = Status.TransactionRequiresZeroTokenBalances;
+    public static [ 196 ] = Status.AccountIsTreasury;
+    public static [ 197 ] = Status.TokenIdRepeatedInTokenList;
+    public static [ 198 ] = Status.TokenTransferListSizeLimitExceeded;
+    public static [ 199 ] = Status.EmptyTokenTransferBody;
+    public static [ 200 ] = Status.EmptyTokenTransferAccountAmounts;
+    // New functionality added by HTS above
 
     public readonly code: number;
 
@@ -876,9 +1065,6 @@ export class Status implements Indexed {
             case Status.TotalLedgerBalanceInvalid: return "TOTAL_LEDGER_BALANCE_INVALID";
             case Status.ExpirationReductionNotAllowed: return "EXPIRATION_REDUCTION_NOT_ALLOWED";
             case Status.InvalidTopicId: return "INVALID_TOPIC_ID";
-            case Status.TopicDeleted: return "TOPIC_DELETED";
-            case Status.TopicNotEnabled: return "TOPIC_NOT_ENABLED";
-            case Status.InvalidTopicValidStartTime: return "INVALID_TOPIC_VALID_START_TIME";
             case Status.InvalidTopicExpirationTime: return "INVALID_TOPIC_EXPIRATION_TIME";
             case Status.InvalidAdminKey: return "INVALID_ADMIN_KEY";
             case Status.InvalidSubmitKey: return "INVALID_SUBMIT_KEY";
@@ -888,6 +1074,44 @@ export class Status implements Indexed {
             case Status.AutoRenewAccountNotAllowed: return "AUTORENEW_ACCOUNT_NOT_ALLOWED";
             case Status.AutoRenewAccountSignatureMissing: return "AUTORENEW_ACCOUNT_SIGNATURE_MISSING";
             case Status.TopicExpired: return "TOPIC_EXPIRED";
+            case Status.InvalidChunkNumber: return "INVALID_CHUNK_NUMBER";
+            case Status.InvalidChunkTransactionId: return "INVALID_CHUNK_TRANSACTION_ID";
+            case Status.AccountFrozenForToken: return "ACCOUNT_FROZEN_FOR_TOKEN";
+            case Status.TokensPerAccountLimitExceeded: return "TOKENS_PER_ACCOUNT_LIMIT_EXCEEDED";
+            case Status.InvalidTokenId: return "INVALID_TOKEN_ID";
+            case Status.InvalidTokenDecimals: return "INVALID_TOKEN_DECIMALS";
+            case Status.InvalidTokenInitialSupply: return "INVALID_TOKEN_INITIAL_SUPPLY";
+            case Status.InvalidTreasuryAccountForToken: return "INVALID_TREASURY_ACCOUNT_FOR_TOKEN";
+            case Status.InvalidTokenSymbol: return "INVALID_TOKEN_SYMBOL";
+            case Status.TokenHasNoFreezeKey: return "TOKEN_HAS_NO_FREEZE_KEY";
+            case Status.TransfersNotZeroSumForToken: return "TRANSFERS_NOT_ZERO_SUM_FOR_TOKEN";
+            case Status.MissingTokenSymbol: return "MISSING_TOKEN_SYMBOL";
+            case Status.TokenSymbolTooLong: return "TOKEN_SYMBOL_TOO_LONG";
+            case Status.AccountKycNotGrantedForToken: return "ACCOUNT_KYC_NOT_GRANTED_FOR_TOKEN";
+            case Status.TokenHasNoKycKey: return "TOKEN_HAS_NO_KYC_KEY";
+            case Status.InsufficientTokenBalance: return "INSUFFICIENT_TOKEN_BALANCE";
+            case Status.TokenWasDeleted: return "TOKEN_WAS_DELETED";
+            case Status.TokenHasNoSupplyKey: return "TOKEN_HAS_NO_SUPPLY_KEY";
+            case Status.TokenHasNoWipeKey: return "TOKEN_HAS_NO_WIPE_KEY";
+            case Status.InvalidTokenMintAmount: return "INVALID_TOKEN_MINT_AMOUNT";
+            case Status.InvalidTokenBurnAmount: return "INVALID_TOKEN_BURN_AMOUNT";
+            case Status.TokenNotAssociatedToAccount: return "TOKEN_NOT_ASSOCIATED_TO_ACCOUNT";
+            case Status.CannotWipeTokenTreasuryAccount: return "CANNOT_WIPE_TOKEN_TREASURY_ACCOUNT";
+            case Status.InvalidKycKey: return "INVALID_KYC_KEY";
+            case Status.InvalidWipeKey: return "INVALID_WIPE_KEY";
+            case Status.InvalidFreezeKey: return "INVALID_FREEZE_KEY";
+            case Status.InvalidSupplyKey: return "INVALID_SUPPLY_KEY";
+            case Status.MissingTokenName: return "MISSING_TOKEN_NAME";
+            case Status.TokenNameTooLong: return "TOKEN_NAME_TOO_LONG";
+            case Status.InvalidWipingAmount: return "INVALID_WIPING_AMOUNT";
+            case Status.TOKEN_IS_IMMUTABLE: return "TOKEN_IS_IMMUTABLE";
+            case Status.TokenAlreadyAssociatedToAccount: return "TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT";
+            case Status.TransactionRequiresZeroTokenBalances: return "TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES";
+            case Status.AccountIsTreasury: return "ACCOUNT_IS_TREASURY";
+            case Status.TokenIdRepeatedInTokenList: return "TOKEN_ID_REPEATED_IN_TOKEN_LIST";
+            case Status.TokenTransferListSizeLimitExceeded: return "TOKEN_TRANSFER_LIST_SIZE_LIMIT_EXCEEDED";
+            case Status.EmptyTokenTransferBody: return "EMPTY_TOKEN_TRANSFER_BODY";
+            case Status.EmptyTokenTransferAccountAmounts: return "EMPTY_TOKEN_TRANSFER_ACCOUNT_AMOUNTS";
             default: return `UNKNOWN STATUS CODE (${this.code})`;
         }
     }
