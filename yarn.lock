@@ -344,12 +344,31 @@
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.6.tgz#37aef179682c6cb0ac70165c3dbde930aa090b1d"
-  integrity sha512-uaLfmO/HS+xnRu/ZQfDLOF1w573zl0ZqTzj199IxKAdPYdt35jP+4Pcg9tWJh6mcMOZvO3CcptVjbrk1jaDYyQ==
+"@hashgraph/proto@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.7.tgz#57105e9d6a884bbc5ad35335bea96ce73f7e0df1"
+  integrity sha512-USitzzexDnrawZi7MUo2bx1Ktule6oP2i41YJSIeyEO+hOzIKwN+T4lPlothfSdx+aCptg8Eke4i3LtjMKYQDg==
   dependencies:
-    protobufjs "^6.10.1"
+    "@hashgraph/protobufjs" "^6.10.1-hashgraph.2"
+
+"@hashgraph/protobufjs@^6.10.1-hashgraph.2":
+  version "6.10.1-hashgraph.2"
+  resolved "https://registry.yarnpkg.com/@hashgraph/protobufjs/-/protobufjs-6.10.1-hashgraph.2.tgz#1aa0de3f4773b08a25e8d2d4b89a609aeed96f4c"
+  integrity sha512-WqxBUgAn2to2R8s95pUhrCH2tezkEVguDqJWPj+riH/J0BhqA5pd6VJ07jXj8woC9jKsOWoSxY5Rxezbr2swsw==
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.2"
+    "@protobufjs/base64" "^1.1.2"
+    "@protobufjs/codegen" "^2.0.4"
+    "@protobufjs/eventemitter" "^1.1.0"
+    "@protobufjs/fetch" "^1.1.0"
+    "@protobufjs/float" "^1.0.2"
+    "@protobufjs/inquire" "^1.1.0"
+    "@protobufjs/path" "^1.1.2"
+    "@protobufjs/pool" "^1.1.0"
+    "@protobufjs/utf8" "^1.1.0"
+    "@types/long" "^4.0.1"
+    "@types/node" "^13.7.0"
+    long "^4.0.0"
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
@@ -7259,7 +7278,7 @@ proto-list@~1.2.1:
   resolved "https://registry.yarnpkg.com/proto-list/-/proto-list-1.2.4.tgz#212d5bfe1318306a420f6402b8e26ff39647a849"
   integrity sha1-IS1b/hMYMGpCD2QCuOJv85ZHqEk=
 
-protobufjs@^6.10.1, protobufjs@^6.9.0:
+protobufjs@^6.9.0:
   version "6.10.1"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.10.1.tgz#e6a484dd8f04b29629e9053344e3970cccf13cd2"
   integrity sha512-pb8kTchL+1Ceg4lFd5XUpK8PdWacbvV5SK2ULH2ebrYtl4GjJmS24m6CKME67jzV53tbJxHlnNOSqQHbTsR9JQ==
