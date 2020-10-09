@@ -1,4 +1,5 @@
 import Hbar from "../src/Hbar.js";
+import AccountId from "../src/account/AccountId.js";
 import newClient from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
@@ -17,6 +18,7 @@ describe("TransactionIntegration", function () {
 
         const transaction = await new AccountCreateTransaction()
             .setKey(key.publicKey)
+            .setNodeAccountId(new AccountId(3))
             .setMaxTransactionFee(new Hbar(2))
             .freezeWith(client)
             .signWithOperator(client);
