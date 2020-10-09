@@ -31,7 +31,7 @@
         "cp:ts": "copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/",
         "compile": "run-s compile:proto compile:proto_ts fork:protobufjs compile:js",
         "compile:js": "babel src -d lib",
-        "compile:proto": "pbjs -t static-module -w es6 --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*.proto",
+        "compile:proto": "pbjs -t static-module -w es6 --force-long --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*.proto",
         "compile:proto_ts": "pbts -o src/proto.d.ts src/proto.js",
         "fork:protobufjs": "replace-in-file 'from \"protobufjs' 'from \"@hashgraph/protobufjs' src/proto.*",
         "lint": "run-s lint:*",
