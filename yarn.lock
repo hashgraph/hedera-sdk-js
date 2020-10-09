@@ -336,16 +336,18 @@
     protobufjs "^6.9.0"
     yargs "^15.3.1"
 
-"@hashgraph/cryptography@file:packages/cryptography":
-  version "1.0.5"
+"@hashgraph/cryptography@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.6.tgz#a19072b5829cd89c413686018785bf644f7ca7cf"
+  integrity sha512-r2DX2WM/B8hkHIiP/b91yxKCfO5QrczExZzqiltj+Ex8W4u83fvGM4m/TRg5IpzQQcOCo//OCRzcGHdQxAnpkQ==
   dependencies:
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.5.tgz#daa579b44613013aef8dc84b1843dd6e8e570518"
-  integrity sha512-BEYqTQ7HD3qGF4osTznFix/bw1yG3K6BAIIbnqTdZnRNtJffhWCVLguPp8GkPY6NqbJu8xSajoWPm6qN1PmRLQ==
+"@hashgraph/proto@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.6.tgz#37aef179682c6cb0ac70165c3dbde930aa090b1d"
+  integrity sha512-uaLfmO/HS+xnRu/ZQfDLOF1w573zl0ZqTzj199IxKAdPYdt35jP+4Pcg9tWJh6mcMOZvO3CcptVjbrk1jaDYyQ==
   dependencies:
     protobufjs "^6.10.1"
 
