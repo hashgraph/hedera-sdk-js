@@ -50,111 +50,111 @@ import { AccountId, AccountIdLike } from "./AccountId";
  * realms and multiple shards.
  */
 export class AccountCreateTransaction extends SingleTransactionBuilder {
-  private _body: CryptoCreateTransactionBody;
+    private _body: CryptoCreateTransactionBody;
 
-  public constructor() {
-      super();
-      const body = new CryptoCreateTransactionBody();
-      this._body = body;
-      this._inner.setCryptocreateaccount(body);
+    public constructor() {
+        super();
+        const body = new CryptoCreateTransactionBody();
+        this._body = body;
+        this._inner.setCryptocreateaccount(body);
 
-      // 90 days, required
-      this.setAutoRenewPeriod(7890000);
-      // Default to maximum values for record thresholds. Without this records would be
-      // auto-created whenever a send or receive transaction takes place for this new account.
-      // This should be an explicit ask.
-      this.setReceiveRecordThreshold(Hbar.MAX);
-      this.setSendRecordThreshold(Hbar.MAX);
-  }
+        // 90 days, required
+        this.setAutoRenewPeriod(7890000);
+        // Default to maximum values for record thresholds. Without this records would be
+        // auto-created whenever a send or receive transaction takes place for this new account.
+        // This should be an explicit ask.
+        this.setReceiveRecordThreshold(Hbar.MAX);
+        this.setSendRecordThreshold(Hbar.MAX);
+    }
 
-  /**
-   * The key that must sign each transfer out of the account. If receiverSigRequired is true, then it must also sign any transfer into the account.
-   */
-  public setKey(publicKey: PublicKey): this {
-      this._body.setKey(publicKey._toProtoKey());
-      return this;
-  }
+    /**
+     * The key that must sign each transfer out of the account. If receiverSigRequired is true, then it must also sign any transfer into the account.
+     */
+    public setKey(publicKey: PublicKey): this {
+        this._body.setKey(publicKey._toProtoKey());
+        return this;
+    }
 
-  /**
-   * The account is charged to extend its expiration date every this many seconds. If it doesn't have enough balance,
-   * it extends as long as possible. If it is empty when it expires, then it is deleted.
-   */
-  public setAutoRenewPeriod(seconds: number): this {
-      this._body.setAutorenewperiod(newDuration(seconds));
-      return this;
-  }
+    /**
+     * The account is charged to extend its expiration date every this many seconds. If it doesn't have enough balance,
+     * it extends as long as possible. If it is empty when it expires, then it is deleted.
+     */
+    public setAutoRenewPeriod(seconds: number): this {
+        this._body.setAutorenewperiod(newDuration(seconds));
+        return this;
+    }
 
-  /**
-   * The initial number of tinybars to put into the account.
-   */
-  public setInitialBalance(balance: Tinybar | Hbar): this {
-      const hbar = hbarFromTinybarOrHbar(balance);
-      hbar[ hbarCheck ]({ allowNegative: false });
+    /**
+     * The initial number of tinybars to put into the account.
+     */
+    public setInitialBalance(balance: Tinybar | Hbar): this {
+        const hbar = hbarFromTinybarOrHbar(balance);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-      this._body.setInitialbalance(hbar[ hbarToProto ]());
-      return this;
-  }
+        this._body.setInitialbalance(hbar[ hbarToProto ]());
+        return this;
+    }
 
-  /**
-   * @deprecated
-   *
-   * The threshold amount (in tinybars) for which an account record is created for any receive/deposit transaction.
-   */
-  public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
-      const hbar = hbarFromTinybarOrHbar(threshold);
-      hbar[ hbarCheck ]({ allowNegative: false });
+    /**
+     * @deprecated
+     *
+     * The threshold amount (in tinybars) for which an account record is created for any receive/deposit transaction.
+     */
+    public setReceiveRecordThreshold(threshold: Tinybar | Hbar): this {
+        const hbar = hbarFromTinybarOrHbar(threshold);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-      this._body.setReceiverecordthreshold(hbar[ hbarToProto ]());
-      return this;
-  }
+        this._body.setReceiverecordthreshold(hbar[ hbarToProto ]());
+        return this;
+    }
 
-  /**
-   * @deprecated
-   *
-   * The threshold amount (in tinybars) for which an account record is created for any send/withdraw transaction.
-   */
-  public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
-      const hbar = hbarFromTinybarOrHbar(threshold);
-      hbar[ hbarCheck ]({ allowNegative: false });
+    /**
+     * @deprecated
+     *
+     * The threshold amount (in tinybars) for which an account record is created for any send/withdraw transaction.
+     */
+    public setSendRecordThreshold(threshold: Tinybar | Hbar): this {
+        const hbar = hbarFromTinybarOrHbar(threshold);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-      this._body.setSendrecordthreshold(hbar[ hbarToProto ]());
-      return this;
-  }
+        this._body.setSendrecordthreshold(hbar[ hbarToProto ]());
+        return this;
+    }
 
-  /**
-   * If true, this account's key must sign any transaction depositing into this account (in addition to all withdrawals).
-   */
-  public setReceiverSignatureRequired(required: boolean): this {
-      this._body.setReceiversigrequired(required);
-      return this;
-  }
+    /**
+     * If true, this account's key must sign any transaction depositing into this account (in addition to all withdrawals).
+     */
+    public setReceiverSignatureRequired(required: boolean): this {
+        this._body.setReceiversigrequired(required);
+        return this;
+    }
 
-  /**
-   * ID of the account to which this account is proxy staked. If proxyAccountID is null,
-   * or is an invalid account, or is an account that isn't a node, then this account is
-   * automatically proxy staked to a node chosen by the network, but without earning payments.
-   * If the proxyAccountID account refuses to accept proxy staking , or if it is not currently
-   * running a node, then it will behave as if proxyAccountID was null.
-   */
-  public setProxyAccountId(accountId: AccountIdLike): this {
-      this._body.setProxyaccountid(new AccountId(accountId)._toProto());
-      return this;
-  }
+    /**
+     * ID of the account to which this account is proxy staked. If proxyAccountID is null,
+     * or is an invalid account, or is an account that isn't a node, then this account is
+     * automatically proxy staked to a node chosen by the network, but without earning payments.
+     * If the proxyAccountID account refuses to accept proxy staking , or if it is not currently
+     * running a node, then it will behave as if proxyAccountID was null.
+     */
+    public setProxyAccountId(accountId: AccountIdLike): this {
+        this._body.setProxyaccountid(new AccountId(accountId)._toProto());
+        return this;
+    }
 
-  protected get _method(): UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return CryptoService.createAccount;
-  }
+    protected get _method(): UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return CryptoService.createAccount;
+    }
 
-  protected _doValidate(errors: string[]): void {
-      if (!this._body.hasKey()) {
-          errors.push("AccountCreateTransaction requires .setKey()");
-      }
+    protected _doValidate(errors: string[]): void {
+        if (!this._body.hasKey()) {
+            errors.push("AccountCreateTransaction requires .setKey()");
+        }
 
-      if (new BigNumber(this._body.getInitialbalance()).isNegative()) {
-          errors.push("AccountCreateTransaction must have a positive setInitialBalance");
-      }
-  }
+        if (new BigNumber(this._body.getInitialbalance()).isNegative()) {
+            errors.push("AccountCreateTransaction must have a positive setInitialBalance");
+        }
+    }
 }

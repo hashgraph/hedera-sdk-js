@@ -11,30 +11,30 @@ const AES_128_CTR = "aes-128-ctr";
 const HMAC_SHA256 = "hmac-sha256";
 
 export interface Keystore {
-  version: 1;
-  crypto: {
-    /** hex-encoded ciphertext */
-    ciphertext: string;
-    /** hex-encoded initialization vector */
-    cipherparams: { iv: string };
-    /** cipher being used */
-    cipher: typeof AES_128_CTR;
-    /** key derivation function being used */
-    kdf: "pbkdf2";
-    /** params for key derivation function */
-    kdfparams: {
-      /** derived key length */
-      dkLen: number;
-      /** hex-encoded salt */
-      salt: string;
-      /** iteration count */
-      c: number;
-      /** hash function */
-      prf: typeof HMAC_SHA256;
+    version: 1;
+    crypto: {
+        /** hex-encoded ciphertext */
+        ciphertext: string;
+        /** hex-encoded initialization vector */
+        cipherparams: { iv: string };
+        /** cipher being used */
+        cipher: typeof AES_128_CTR;
+        /** key derivation function being used */
+        kdf: "pbkdf2";
+        /** params for key derivation function */
+        kdfparams: {
+            /** derived key length */
+            dkLen: number;
+            /** hex-encoded salt */
+            salt: string;
+            /** iteration count */
+            c: number;
+            /** hash function */
+            prf: typeof HMAC_SHA256;
+        };
+        /** hex-encoded HMAC-SHA384 */
+        mac: string;
     };
-    /** hex-encoded HMAC-SHA384 */
-    mac: string;
-  };
 }
 
 export async function createKeystore(
@@ -65,7 +65,11 @@ export async function createKeystore(
         cipher[ "final" ]()
     ]);
 
-    const mac = await Hmac.hash(HashAlgorithm.Sha384, key.slice(16), cipherText);
+    const mac = await Hmac.hash(
+        HashAlgorithm.Sha384,
+        key.slice(16),
+        cipherText
+    );
 
     const keystore: Keystore = {
         version: 1,
@@ -145,8 +149,10 @@ export async function loadKeystore(
     ]);
 
     // `Buffer instanceof Uint8Array` doesn't work in Jest because the prototype chain is different
-    const { secretKey: privateKey, publicKey } =
-        nacl.sign.keyPair.fromSecretKey(Uint8Array.from(privateKeyBytes));
+    const {
+        secretKey: privateKey,
+        publicKey
+    } = nacl.sign.keyPair.fromSecretKey(Uint8Array.from(privateKeyBytes));
 
     return { privateKey, publicKey };
 }

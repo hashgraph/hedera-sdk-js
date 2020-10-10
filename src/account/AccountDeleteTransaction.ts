@@ -13,45 +13,45 @@ import { AccountId, AccountIdLike } from "./AccountId";
  * a deleted account can still have its expiration extended in the normal way.
  */
 export class AccountDeleteTransaction extends SingleTransactionBuilder {
-  private _body: CryptoDeleteTransactionBody;
+    private _body: CryptoDeleteTransactionBody;
 
-  public constructor() {
-      super();
-      const body = new CryptoDeleteTransactionBody();
-      this._body = body;
-      this._inner.setCryptodelete(body);
-  }
+    public constructor() {
+        super();
+        const body = new CryptoDeleteTransactionBody();
+        this._body = body;
+        this._inner.setCryptodelete(body);
+    }
 
-  /**
-   * Sets the account to delete. Note: To successfully delete an account
-   * one must also manually set the `TransactionId` to a `TransactionId`
-   * constructed from the same `AccountId`
-   *
-   * The account ID which should be deleted.
-   */
-  public setDeleteAccountId(accountId: AccountIdLike): this {
-      this._body.setDeleteaccountid(new AccountId(accountId)._toProto());
-      return this;
-  }
+    /**
+     * Sets the account to delete. Note: To successfully delete an account
+     * one must also manually set the `TransactionId` to a `TransactionId`
+     * constructed from the same `AccountId`
+     *
+     * The account ID which should be deleted.
+     */
+    public setDeleteAccountId(accountId: AccountIdLike): this {
+        this._body.setDeleteaccountid(new AccountId(accountId)._toProto());
+        return this;
+    }
 
-  /**
-   * The account ID which will receive all remaining hbars.
-   */
-  public setTransferAccountId(accountId: AccountIdLike): this {
-      this._body.setTransferaccountid(new AccountId(accountId)._toProto());
-      return this;
-  }
+    /**
+     * The account ID which will receive all remaining hbars.
+     */
+    public setTransferAccountId(accountId: AccountIdLike): this {
+        this._body.setTransferaccountid(new AccountId(accountId)._toProto());
+        return this;
+    }
 
-  protected get _method(): UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return CryptoService.cryptoDelete;
-  }
+    protected get _method(): UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return CryptoService.cryptoDelete;
+    }
 
-  public _doValidate(errors: string[]): void {
-      if (!this._body.hasDeleteaccountid()) {
-          errors.push("AccountDeleteTransaction requires .setAccountid()");
-      }
-  }
+    public _doValidate(errors: string[]): void {
+        if (!this._body.hasDeleteaccountid()) {
+            errors.push("AccountDeleteTransaction requires .setAccountid()");
+        }
+    }
 }

@@ -20,38 +20,38 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
  * Once executed the Account is marked as KYC Revokeed.
  */
 export class TokenRevokeKycTransaction extends SingleTransactionBuilder {
-  private _body: TokenRevokeKycTransactionBody;
+    private _body: TokenRevokeKycTransactionBody;
 
-  public constructor() {
-      super();
+    public constructor() {
+        super();
 
-      this._body = new TokenRevokeKycTransactionBody();
-      this._inner.setTokenrevokekyc(this._body);
-  }
+        this._body = new TokenRevokeKycTransactionBody();
+        this._inner.setTokenrevokekyc(this._body);
+    }
 
-  /**
-   * The token for which this account will get his KYC revoked. If token does not exist, transaction results in
-   * INVALID_TOKEN_ID
-   */
-  public setTokenId(id: TokenIdLike): this {
-      this._body.setToken(new TokenId(id)._toProto());
-      return this;
-  }
+    /**
+     * The token for which this account will get his KYC revoked. If token does not exist, transaction results in
+     * INVALID_TOKEN_ID
+     */
+    public setTokenId(id: TokenIdLike): this {
+        this._body.setToken(new TokenId(id)._toProto());
+        return this;
+    }
 
-  /**
-   * The account to be KYC Revoked
-   */
-  public setAccountId(id: AccountIdLike): this {
-      this._body.setAccount(new AccountId(id)._toProto());
-      return this;
-  }
+    /**
+     * The account to be KYC Revoked
+     */
+    public setAccountId(id: AccountIdLike): this {
+        this._body.setAccount(new AccountId(id)._toProto());
+        return this;
+    }
 
-  protected get method(): UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return TokenService.revokeKycFromTokenAccount;
-  }
+    protected get method(): UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return TokenService.revokeKycFromTokenAccount;
+    }
 
-  protected _doValidate(_: string[]): void {}
+    protected _doValidate(_: string[]): void {}
 }

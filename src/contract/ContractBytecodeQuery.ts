@@ -12,43 +12,43 @@ import { ResponseHeader } from "../generated/ResponseHeader_pb";
  * Get the bytecode for a smart contract instance.
  */
 export class ContractBytecodeQuery extends QueryBuilder<Uint8Array> {
-  private readonly _builder: ContractGetBytecodeQuery;
-  public constructor() {
-      super();
+    private readonly _builder: ContractGetBytecodeQuery;
+    public constructor() {
+        super();
 
-      this._builder = new ContractGetBytecodeQuery();
-      this._builder.setHeader(new QueryHeader());
+        this._builder = new ContractGetBytecodeQuery();
+        this._builder.setHeader(new QueryHeader());
 
-      this._inner.setContractgetbytecode(this._builder);
-  }
+        this._inner.setContractgetbytecode(this._builder);
+    }
 
-  /**
-   * The contract for which information is requested.
-   */
-  public setContractId(contractIdLike: ContractIdLike): this {
-      this._builder.setContractid(new ContractId(contractIdLike)._toProto());
-      return this;
-  }
+    /**
+     * The contract for which information is requested.
+     */
+    public setContractId(contractIdLike: ContractIdLike): this {
+        this._builder.setContractid(new ContractId(contractIdLike)._toProto());
+        return this;
+    }
 
-  protected _doLocalValidate(errors: string[]): void {
-      if (!this._builder.hasContractid()) {
-          errors.push(".setContractId() required");
-      }
-  }
+    protected _doLocalValidate(errors: string[]): void {
+        if (!this._builder.hasContractid()) {
+            errors.push(".setContractId() required");
+        }
+    }
 
-  protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
-      return SmartContractService.ContractGetBytecode;
-  }
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+        return SmartContractService.ContractGetBytecode;
+    }
 
-  protected _getHeader(): QueryHeader {
-      return this._builder.getHeader()!;
-  }
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
 
-  protected _mapResponseHeader(response: Response): ResponseHeader {
-      return response.getContractgetbytecoderesponse()!.getHeader()!;
-  }
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getContractgetbytecoderesponse()!.getHeader()!;
+    }
 
-  protected _mapResponse(response: Response): Uint8Array {
-      return response.getContractgetbytecoderesponse()!.getBytecode_asU8()!;
-  }
+    protected _mapResponse(response: Response): Uint8Array {
+        return response.getContractgetbytecoderesponse()!.getBytecode_asU8()!;
+    }
 }

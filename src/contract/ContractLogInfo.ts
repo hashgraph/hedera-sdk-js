@@ -6,25 +6,25 @@ import { ContractId } from "./ContractId";
  * may return several such events.
  */
 export interface ContractLogInfo {
-  /**
-   * Address of a contract that emitted the event.
-   */
-  contractId: ContractId;
+    /**
+     * Address of a contract that emitted the event.
+     */
+    contractId: ContractId;
 
-  /**
-   * Bloom filter for a particular log.
-   */
-  bloom: Uint8Array;
+    /**
+     * Bloom filter for a particular log.
+     */
+    bloom: Uint8Array;
 
-  /**
-   * Topics of a particular event.
-   */
-  topics: Uint8Array[];
+    /**
+     * Topics of a particular event.
+     */
+    topics: Uint8Array[];
 
-  /**
-   * Event data.
-   */
-  data: Uint8Array;
+    /**
+     * Event data.
+     */
+    data: Uint8Array;
 }
 
 export function contractLogInfoListToSdk(logInfoList: ProtoContractLoginfo[]): ContractLogInfo[] {

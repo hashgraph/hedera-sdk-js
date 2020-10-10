@@ -17,102 +17,102 @@ import BigNumber from "bignumber.js";
  * Response when the client sends the node CryptoGetInfoQuery.
  */
 export interface TokenInfo {
-  /**
-   * ID of the token instance
-   */
-  tokenId: TokenId;
+    /**
+     * ID of the token instance
+     */
+    tokenId: TokenId;
 
-  /**
-   * The name of the token. It is a string of ASCII only characters
-   */
-  name: string;
+    /**
+     * The name of the token. It is a string of ASCII only characters
+     */
+    name: string;
 
-  /**
-   * The symbol of the token. It is a UTF-8 capitalized alphabetical string
-   */
-  symbol: string;
+    /**
+     * The symbol of the token. It is a UTF-8 capitalized alphabetical string
+     */
+    symbol: string;
 
-  /**
-   * The number of decimal places a token is divisible by
-   */
-  decimals: number;
+    /**
+     * The number of decimal places a token is divisible by
+     */
+    decimals: number;
 
-  /**
-   * The total supply of tokens that are currently in circulation
-   */
-  totalSupply: BigNumber;
+    /**
+     * The total supply of tokens that are currently in circulation
+     */
+    totalSupply: BigNumber;
 
-  /**
-   * The ID of the account which is set as Treasury
-   */
-  treasury: AccountId;
+    /**
+     * The ID of the account which is set as Treasury
+     */
+    treasury: AccountId;
 
-  /**
-   * The key which can perform update/delete operations on the token. If empty, the token can be perceived as
-   * immutable (not being able to be updated/deleted)
-   */
-  adminKey: PublicKey;
+    /**
+     * The key which can perform update/delete operations on the token. If empty, the token can be perceived as
+     * immutable (not being able to be updated/deleted)
+     */
+    adminKey: PublicKey;
 
-  /**
-   * The key which can grant or revoke KYC of an account for the token's transactions. If empty, KYC is not required,
-   * and KYC grant or revoke operations are not possible.
-   */
-  kycKey: PublicKey;
+    /**
+     * The key which can grant or revoke KYC of an account for the token's transactions. If empty, KYC is not required,
+     * and KYC grant or revoke operations are not possible.
+     */
+    kycKey: PublicKey;
 
-  /**
-   * The key which can freeze or unfreeze an account for token transactions. If empty, freezing is not possible
-   */
-  freezeKey: PublicKey;
+    /**
+     * The key which can freeze or unfreeze an account for token transactions. If empty, freezing is not possible
+     */
+    freezeKey: PublicKey;
 
-  /**
-   * The key which can wipe token balance of an account. If empty, wipe is not possible
-   */
-  wipeKey: PublicKey;
+    /**
+     * The key which can wipe token balance of an account. If empty, wipe is not possible
+     */
+    wipeKey: PublicKey;
 
-  /**
-   * The key which can change the supply of a token. The key is used to sign Token Mint/Burn operations
-   */
-  supplyKey: PublicKey;
+    /**
+     * The key which can change the supply of a token. The key is used to sign Token Mint/Burn operations
+     */
+    supplyKey: PublicKey;
 
-  /**
-   * The default Freeze status (not applicable = null, frozen = false, or unfrozen = true) of Hedera accounts relative to this token.
-   * FreezeNotApplicable is returned if Token Freeze Key is empty. Frozen is returned if Token Freeze Key is set and
-   * defaultFreeze is set to true. Unfrozen is returned if Token Freeze Key is set and defaultFreeze is set to false
-   *      FreezeNotApplicable = null;
-   *      Frozen = false;
-   *      Unfrozen = true;
-   */
-  defaultFreezeStatus: boolean | null;
+    /**
+     * The default Freeze status (not applicable = null, frozen = false, or unfrozen = true) of Hedera accounts relative to this token.
+     * FreezeNotApplicable is returned if Token Freeze Key is empty. Frozen is returned if Token Freeze Key is set and
+     * defaultFreeze is set to true. Unfrozen is returned if Token Freeze Key is set and defaultFreeze is set to false
+     *      FreezeNotApplicable = null;
+     *      Frozen = false;
+     *      Unfrozen = true;
+     */
+    defaultFreezeStatus: boolean | null;
 
-  /**
-   * The default KYC status (KycNotApplicable or Revoked) of Hedera accounts relative to this token. KycNotApplicable
-   * is returned if KYC key is not set, otherwise Revoked
-   *      KycNotApplicable = null;
-   *      Granted = false;
-   *      Revoked = true;
-   */
-  defaultKycStatus: boolean | null;
+    /**
+     * The default KYC status (KycNotApplicable or Revoked) of Hedera accounts relative to this token. KycNotApplicable
+     * is returned if KYC key is not set, otherwise Revoked
+     *      KycNotApplicable = null;
+     *      Granted = false;
+     *      Revoked = true;
+     */
+    defaultKycStatus: boolean | null;
 
-  /**
-   * Specifies whether the token was deleted or not
-   */
-  isDeleted: boolean;
+    /**
+     * Specifies whether the token was deleted or not
+     */
+    isDeleted: boolean;
 
-  /**
-   * An account which will be automatically charged to renew the token's expiration, at autoRenewPeriod interval
-   */
-  autoRenewAccount: AccountId | null;
+    /**
+     * An account which will be automatically charged to renew the token's expiration, at autoRenewPeriod interval
+     */
+    autoRenewAccount: AccountId | null;
 
-  /**
-   * The interval at which the auto-renew account will be charged to extend the token's expiry
-   */
-  autoRenewPeriod: number;
+    /**
+     * The interval at which the auto-renew account will be charged to extend the token's expiry
+     */
+    autoRenewPeriod: number;
 
-  /**
-   * The epoch second at which the token expire: will; if an auto-renew account and period are specified,
-   * this is coerced to the current epoch second plus the autoRenewPeriod
-   */
-  expirationTime: Date;
+    /**
+     * The epoch second at which the token expire: will; if an auto-renew account and period are specified,
+     * this is coerced to the current epoch second plus the autoRenewPeriod
+     */
+    expirationTime: Date;
 }
 
 /**
@@ -120,83 +120,83 @@ export interface TokenInfo {
  * This does not get the list of token records.
  */
 export class TokenInfoQuery extends QueryBuilder<TokenInfo> {
-  private readonly _builder: TokenGetInfoQuery;
+    private readonly _builder: TokenGetInfoQuery;
 
-  public constructor() {
-      super();
+    public constructor() {
+        super();
 
-      this._builder = new TokenGetInfoQuery();
-      this._builder.setHeader(new QueryHeader());
+        this._builder = new TokenGetInfoQuery();
+        this._builder.setHeader(new QueryHeader());
 
-      this._inner.setTokengetinfo(this._builder);
-  }
+        this._inner.setTokengetinfo(this._builder);
+    }
 
-  /**
-   * The token ID for which information is requested.
-   */
-  public setTokenId(tokenId: TokenIdLike): this {
-      this._builder.setToken(new TokenId(tokenId)._toProto());
-      return this;
-  }
+    /**
+     * The token ID for which information is requested.
+     */
+    public setTokenId(tokenId: TokenIdLike): this {
+        this._builder.setToken(new TokenId(tokenId)._toProto());
+        return this;
+    }
 
-  /**
-   * Wrapper around `QueryBuilder.getCost()`. This must exist because the cost returned
-   * `QueryBuilder.getCost()` and therein the Hedera Network doesn't work for any
-   * acocuntns that have been deleted. In that case we want the minimum
-   * cost to be ~25 Tinybar as this seems to succeed most of the time.
-   */
-  public async getCost(client: BaseClient): Promise<Hbar> {
-      // deleted tokens return a COST_ANSWER of zero which triggers `INSUFFICIENT_TX_FEE`
-      // if you set that as the query payment; 25 tinybar seems to be enough to get
-      // `TOKEN_DELETED` back instead.
-      const min = Hbar.fromTinybar(25);
-      const cost = await super.getCost(client);
-      return cost.isGreaterThan(min) ? cost : min;
-  }
+    /**
+     * Wrapper around `QueryBuilder.getCost()`. This must exist because the cost returned
+     * `QueryBuilder.getCost()` and therein the Hedera Network doesn't work for any
+     * acocuntns that have been deleted. In that case we want the minimum
+     * cost to be ~25 Tinybar as this seems to succeed most of the time.
+     */
+    public async getCost(client: BaseClient): Promise<Hbar> {
+        // deleted tokens return a COST_ANSWER of zero which triggers `INSUFFICIENT_TX_FEE`
+        // if you set that as the query payment; 25 tinybar seems to be enough to get
+        // `TOKEN_DELETED` back instead.
+        const min = Hbar.fromTinybar(25);
+        const cost = await super.getCost(client);
+        return cost.isGreaterThan(min) ? cost : min;
+    }
 
-  protected _doLocalValidate(_: string[]): void {}
+    protected _doLocalValidate(_: string[]): void {}
 
-  protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
-      return TokenService.getTokenInfo;
-  }
+    protected _getMethod(): grpc.UnaryMethodDefinition<Query, Response> {
+        return TokenService.getTokenInfo;
+    }
 
-  protected _getHeader(): QueryHeader {
-      return this._builder.getHeader()!;
-  }
+    protected _getHeader(): QueryHeader {
+        return this._builder.getHeader()!;
+    }
 
-  protected _mapResponseHeader(response: Response): ResponseHeader {
-      return response.getCryptogetinfo()!.getHeader()!;
-  }
+    protected _mapResponseHeader(response: Response): ResponseHeader {
+        return response.getCryptogetinfo()!.getHeader()!;
+    }
 
-  protected _mapResponse(response: Response): TokenInfo {
-      const info = response.getTokengetinfo()!.getTokeninfo()!;
+    protected _mapResponse(response: Response): TokenInfo {
+        const info = response.getTokengetinfo()!.getTokeninfo()!;
 
-      return {
-          tokenId: TokenId._fromProto(info.getTokenid()!),
-          name: info.getName()!,
-          symbol: info.getSymbol()!,
-          decimals: info.getDecimals()!,
-          totalSupply: new BigNumber(info.getTotalsupply()!),
-          treasury: AccountId._fromProto(info.getTreasury()!),
-          adminKey: _fromProtoKey(info.getAdminkey()!),
-          kycKey: _fromProtoKey(info.getKyckey()!),
-          freezeKey: _fromProtoKey(info.getFreezekey()!),
-          wipeKey: _fromProtoKey(info.getWipekey()!),
-          supplyKey: _fromProtoKey(info.getSupplykey()!),
-          defaultFreezeStatus:
-        info.getDefaultfreezestatus() === 0 ?
-            null :
-            info.getDefaultfreezestatus() === 2,
-          defaultKycStatus:
-        info.getDefaultkycstatus() === 0 ?
-            null :
-            info.getDefaultkycstatus() === 2,
-          isDeleted: info.getIsdeleted()!,
-          autoRenewAccount: info.hasAutorenewaccount() ?
-              AccountId._fromProto(info.getAutorenewaccount()!) :
-              null,
-          autoRenewPeriod: info.getAutorenewperiod()!,
-          expirationTime: new Date(info.getExpiry()! * 1000)
-      };
-  }
+        return {
+            tokenId: TokenId._fromProto(info.getTokenid()!),
+            name: info.getName()!,
+            symbol: info.getSymbol()!,
+            decimals: info.getDecimals()!,
+            totalSupply: new BigNumber(info.getTotalsupply()!),
+            treasury: AccountId._fromProto(info.getTreasury()!),
+            adminKey: _fromProtoKey(info.getAdminkey()!),
+            kycKey: _fromProtoKey(info.getKyckey()!),
+            freezeKey: _fromProtoKey(info.getFreezekey()!),
+            wipeKey: _fromProtoKey(info.getWipekey()!),
+            supplyKey: _fromProtoKey(info.getSupplykey()!),
+            defaultFreezeStatus:
+                info.getDefaultfreezestatus() === 0 ?
+                    null :
+                    info.getDefaultfreezestatus() === 2,
+            defaultKycStatus:
+                info.getDefaultkycstatus() === 0 ?
+                    null :
+                    info.getDefaultkycstatus() === 2,
+            isDeleted: info.getIsdeleted()!,
+            autoRenewAccount: info.hasAutorenewaccount() ?
+                AccountId._fromProto(info.getAutorenewaccount()!) :
+                null,
+            autoRenewPeriod: info.getAutorenewperiod()!,
+            expirationTime: new Date(info.getExpiry()! * 1000)
+        };
+    }
 }

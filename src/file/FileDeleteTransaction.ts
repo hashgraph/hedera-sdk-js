@@ -15,34 +15,34 @@ import { FileId, FileIdLike } from "../file/FileId";
  * may itself be a threshold key containing other keys (including other threshold keys).
  */
 export class FileDeleteTransaction extends SingleTransactionBuilder {
-  private readonly _body: FileDeleteTransactionBody;
+    private readonly _body: FileDeleteTransactionBody;
 
-  public constructor() {
-      super();
-      this._body = new FileDeleteTransactionBody();
-      this._inner.setFiledelete(this._body);
-  }
+    public constructor() {
+        super();
+        this._body = new FileDeleteTransactionBody();
+        this._inner.setFiledelete(this._body);
+    }
 
-  /**
-   * The file to delete. It will be marked as deleted until it expires. Then it will disappear.
-   */
-  public setFileId(fileIdLike: FileIdLike): this {
-      this._body.setFileid(new FileId(fileIdLike)._toProto());
-      return this;
-  }
+    /**
+     * The file to delete. It will be marked as deleted until it expires. Then it will disappear.
+     */
+    public setFileId(fileIdLike: FileIdLike): this {
+        this._body.setFileid(new FileId(fileIdLike)._toProto());
+        return this;
+    }
 
-  protected _doValidate(errors: string[]): void {
-      const fileId = this._body.getFileid();
+    protected _doValidate(errors: string[]): void {
+        const fileId = this._body.getFileid();
 
-      if (fileId == null) {
-          errors.push("FileDeleteTransaction must have a file id set");
-      }
-  }
+        if (fileId == null) {
+            errors.push("FileDeleteTransaction must have a file id set");
+        }
+    }
 
-  protected get _method(): grpc.UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return FileService.deleteFile;
-  }
+    protected get _method(): grpc.UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return FileService.deleteFile;
+    }
 }

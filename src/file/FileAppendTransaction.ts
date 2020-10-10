@@ -14,48 +14,48 @@ import * as utf8 from "@stablelib/utf8";
  * appended multiple times to create the entire file.
  */
 export class FileAppendTransaction extends SingleTransactionBuilder {
-  private readonly _body: FileAppendTransactionBody;
+    private readonly _body: FileAppendTransactionBody;
 
-  public constructor() {
-      super();
-      this._body = new FileAppendTransactionBody();
-      this._inner.setFileappend(this._body);
-  }
+    public constructor() {
+        super();
+        this._body = new FileAppendTransactionBody();
+        this._inner.setFileappend(this._body);
+    }
 
-  /**
-   * The file ID of the file to which the bytes are appended to.
-   */
-  public setFileId(fileId: FileIdLike): this {
-      this._body.setFileid(new FileId(fileId)._toProto());
-      return this;
-  }
+    /**
+     * The file ID of the file to which the bytes are appended to.
+     */
+    public setFileId(fileId: FileIdLike): this {
+        this._body.setFileid(new FileId(fileId)._toProto());
+        return this;
+    }
 
-  /**
-   * The bytes to append to the contents of the file.
-   */
-  public setContents(contents: Uint8Array | string): this {
-      const bytes =
-      contents instanceof Uint8Array ?
-          (contents as Uint8Array) :
-          utf8.encode(contents as string);
+    /**
+     * The bytes to append to the contents of the file.
+     */
+    public setContents(contents: Uint8Array | string): this {
+        const bytes =
+            contents instanceof Uint8Array ?
+                (contents as Uint8Array) :
+                utf8.encode(contents as string);
 
-      this._body.setContents(bytes);
-      return this;
-  }
+        this._body.setContents(bytes);
+        return this;
+    }
 
-  protected _doValidate(errors: string[]): void {
-      const file = this._body.getFileid();
-      const contents = this._body.getContents();
+    protected _doValidate(errors: string[]): void {
+        const file = this._body.getFileid();
+        const contents = this._body.getContents();
 
-      if (file == null || contents == null) {
-          errors.push("FileAppendTransaction must have a file id and contents set");
-      }
-  }
+        if (file == null || contents == null) {
+            errors.push("FileAppendTransaction must have a file id and contents set");
+        }
+    }
 
-  protected get _method(): grpc.UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return FileService.appendContent;
-  }
+    protected get _method(): grpc.UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return FileService.appendContent;
+    }
 }

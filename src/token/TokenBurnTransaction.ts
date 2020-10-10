@@ -16,38 +16,38 @@ import BigNumber from "bignumber.js";
  * tokens, one must provide amount of 10055.
  */
 export class TokenBurnTransaction extends SingleTransactionBuilder {
-  private _body: TokenBurnTransactionBody;
+    private _body: TokenBurnTransactionBody;
 
-  public constructor() {
-      super();
+    public constructor() {
+        super();
 
-      this._body = new TokenBurnTransactionBody();
-      this._inner.setTokenburn(this._body);
-  }
+        this._body = new TokenBurnTransactionBody();
+        this._inner.setTokenburn(this._body);
+    }
 
-  /**
-   * The token for which to burn tokens. If token does not exist, transaction results in INVALID_TOKEN_ID
-   */
-  public setTokenId(id: TokenIdLike): this {
-      this._body.setToken(new TokenId(id)._toProto());
-      return this;
-  }
+    /**
+     * The token for which to burn tokens. If token does not exist, transaction results in INVALID_TOKEN_ID
+     */
+    public setTokenId(id: TokenIdLike): this {
+        this._body.setToken(new TokenId(id)._toProto());
+        return this;
+    }
 
-  /**
-   * The amount to burn from the Treasury Account. Amount must be a positive non-zero number, not bigger than the
-   * token balance of the treasury account (0; balance], represented in the lowest denomination.
-   */
-  public setAmount(amount: BigNumber): this {
-      this._body.setAmount(amount.toString());
-      return this;
-  }
+    /**
+     * The amount to burn from the Treasury Account. Amount must be a positive non-zero number, not bigger than the
+     * token balance of the treasury account (0; balance], represented in the lowest denomination.
+     */
+    public setAmount(amount: BigNumber): this {
+        this._body.setAmount(amount.toString());
+        return this;
+    }
 
-  protected get method(): UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return TokenService.burnToken;
-  }
+    protected get method(): UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return TokenService.burnToken;
+    }
 
-  protected _doValidate(_: string[]): void {}
+    protected _doValidate(_: string[]): void {}
 }

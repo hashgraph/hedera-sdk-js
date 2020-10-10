@@ -21,7 +21,13 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
 
         const handle = new MirrorSubscriptionHandle();
 
-        this._makeServerStreamRequest(handle, 0, client, listener, errorHandler);
+        this._makeServerStreamRequest(
+            handle,
+            0,
+            client,
+            listener,
+            errorHandler
+        );
 
         return handle;
     }
@@ -58,13 +64,16 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                         list[ txId ] = [];
                     }
 
-          list[ txId ]!.push(message);
+                    list[ txId ]!.push(message);
 
-          if (list[ txId ]!.length === message.getChunkinfo()!.getTotal()) {
-              const m = list[ txId ]!;
-              list[ txId ] = null;
-              listener(new MirrorConsensusTopicResponse(m));
-          }
+                    if (
+                        list[ txId ]!.length ===
+                        message.getChunkinfo()!.getTotal()
+                    ) {
+                        const m = list[ txId ]!;
+                        list[ txId ] = null;
+                        listener(new MirrorConsensusTopicResponse(m));
+                    }
                 }
             })
             .on("status", (status: grpc.StatusObject): void => {
@@ -74,9 +83,9 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                     }
                 } else if (
                     attempt < 10 &&
-          shouldRetry &&
-          (status.code === grpc.status.NOT_FOUND ||
-            status.code === grpc.status.UNAVAILABLE)
+                    shouldRetry &&
+                    (status.code === grpc.status.NOT_FOUND ||
+                        status.code === grpc.status.UNAVAILABLE)
                 ) {
                     setTimeout(() => {
                         this._makeServerStreamRequest(

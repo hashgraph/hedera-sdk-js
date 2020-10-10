@@ -53,7 +53,7 @@ function decodeSeq(seqBytes: Uint8Array): AsnType[] {
 
 function decodeObjectIdent(idBytes: Uint8Array): string {
     const id = [
-    // first octet is 40 * value1 + value2
+        // first octet is 40 * value1 + value2
         Math.floor(idBytes[ 0 ] / 40),
         idBytes[ 0 ] % 40
     ];
@@ -63,7 +63,7 @@ function decodeObjectIdent(idBytes: Uint8Array): string {
     let val = 0;
 
     for (const byte of idBytes.subarray(1)) {
-    // shift the entire value left by 7 bits
+        // shift the entire value left by 7 bits
         val *= 128;
 
         if (byte < 128) {
@@ -82,7 +82,7 @@ function decodeObjectIdent(idBytes: Uint8Array): string {
 
 function decodeLength(lenBytes: Uint8Array): [number, Uint8Array] {
     if (lenBytes[ 0 ] < 128) {
-    // definite, short form
+        // definite, short form
         return [ lenBytes[ 0 ], lenBytes.subarray(1) ];
     }
 
@@ -109,13 +109,13 @@ function decodeInt(intBytes: Uint8Array): number {
     if (len === 2) return view.getUint16(0, false);
 
     if (len === 3) {
-    // prefix a zero byte and we'll treat it as a 32-bit int
+        // prefix a zero byte and we'll treat it as a 32-bit int
         const data = Uint8Array.of(0, ...intBytes);
         view = new DataView(data.buffer);
     }
 
     if (len > 4) {
-    // this probably means a bug in the decoding as this would mean a >4GB structure
+        // this probably means a bug in the decoding as this would mean a >4GB structure
         throw new Error(`unsupported DER integer length of ${len} bytes`);
     }
 

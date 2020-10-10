@@ -14,29 +14,29 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
  * token transfer transactions will resolve to TOKEN_WAS_DELETED.
  */
 export class TokenDeleteTransaction extends SingleTransactionBuilder {
-  private _body: TokenDeleteTransactionBody;
+    private _body: TokenDeleteTransactionBody;
 
-  public constructor() {
-      super();
+    public constructor() {
+        super();
 
-      this._body = new TokenDeleteTransactionBody();
-      this._inner.setTokendeletion(this._body);
-  }
+        this._body = new TokenDeleteTransactionBody();
+        this._inner.setTokendeletion(this._body);
+    }
 
-  /**
-   * The token to be deleted. If invalid token is specified, transaction will result in INVALID_TOKEN_ID
-   */
-  public setTokenId(id: TokenIdLike): this {
-      this._body.setToken(new TokenId(id)._toProto());
-      return this;
-  }
+    /**
+     * The token to be deleted. If invalid token is specified, transaction will result in INVALID_TOKEN_ID
+     */
+    public setTokenId(id: TokenIdLike): this {
+        this._body.setToken(new TokenId(id)._toProto());
+        return this;
+    }
 
-  protected get method(): UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return TokenService.deleteToken;
-  }
+    protected get method(): UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return TokenService.deleteToken;
+    }
 
-  protected _doValidate(_: string[]): void {}
+    protected _doValidate(_: string[]): void {}
 }

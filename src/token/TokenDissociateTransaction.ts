@@ -21,37 +21,37 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
  * On success, associations between the provided account and tokens are removed.
  */
 export class TokenAssociateTransaction extends SingleTransactionBuilder {
-  private _body: TokenAssociateTransactionBody;
+    private _body: TokenAssociateTransactionBody;
 
-  public constructor() {
-      super();
+    public constructor() {
+        super();
 
-      this._body = new TokenAssociateTransactionBody();
-      this._inner.setTokendissociate(this._body);
-  }
+        this._body = new TokenAssociateTransactionBody();
+        this._inner.setTokendissociate(this._body);
+    }
 
-  /**
-   * The account to be dissociated with the provided tokens
-   */
-  public setAccountId(id: AccountIdLike): this {
-      this._body.setAccount(new AccountId(id)._toProto());
-      return this;
-  }
+    /**
+     * The account to be dissociated with the provided tokens
+     */
+    public setAccountId(id: AccountIdLike): this {
+        this._body.setAccount(new AccountId(id)._toProto());
+        return this;
+    }
 
-  /**
-   * The tokens to be dissociated with the provided account
-   */
-  public addTokenId(id: TokenIdLike): this {
-      this._body.addTokens(new TokenId(id)._toProto());
-      return this;
-  }
+    /**
+     * The tokens to be dissociated with the provided account
+     */
+    public addTokenId(id: TokenIdLike): this {
+        this._body.addTokens(new TokenId(id)._toProto());
+        return this;
+    }
 
-  protected get method(): UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return TokenService.dissociateTokens;
-  }
+    protected get method(): UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return TokenService.dissociateTokens;
+    }
 
-  protected _doValidate(_: string[]): void {}
+    protected _doValidate(_: string[]): void {}
 }

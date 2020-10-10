@@ -47,59 +47,61 @@ import * as utf8 from "@stablelib/utf8";
  * realms and multiple shards.
  */
 export class FileCreateTransaction extends SingleTransactionBuilder {
-  private readonly _body: FileCreateTransactionBody;
+    private readonly _body: FileCreateTransactionBody;
 
-  public constructor() {
-      super();
-      this._body = new FileCreateTransactionBody();
-      this.setExpirationTime(Date.now() + 7890000000);
-      this._inner.setFilecreate(this._body);
-  }
+    public constructor() {
+        super();
+        this._body = new FileCreateTransactionBody();
+        this.setExpirationTime(Date.now() + 7890000000);
+        this._inner.setFilecreate(this._body);
+    }
 
-  /**
-   * The time at which this file should expire (unless FileUpdateTransaction is used before
-   * then to extend its life).
-   */
-  public setExpirationTime(date: number | Date): this {
-      this._body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
-      return this;
-  }
+    /**
+     * The time at which this file should expire (unless FileUpdateTransaction is used before
+     * then to extend its life).
+     */
+    public setExpirationTime(date: number | Date): this {
+        this._body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
+        return this;
+    }
 
-  /**
-   * Add a key.
-   *
-   * All these keys must sign to create or modify the file. Any one of them can sign to delete the file.
-   */
-  public addKey(key: Ed25519PublicKey): this {
-      const keylist: KeyList =
-      this._body.getKeys() == null ? new KeyList() : this._body.getKeys()!;
+    /**
+     * Add a key.
+     *
+     * All these keys must sign to create or modify the file. Any one of them can sign to delete the file.
+     */
+    public addKey(key: Ed25519PublicKey): this {
+        const keylist: KeyList =
+            this._body.getKeys() == null ?
+                new KeyList() :
+                this._body.getKeys()!;
 
-      keylist.addKeys(key._toProtoKey());
-      this._body.setKeys(keylist);
-      return this;
-  }
+        keylist.addKeys(key._toProtoKey());
+        this._body.setKeys(keylist);
+        return this;
+    }
 
-  /**
-   * The bytes that are the contents of the file.
-   */
-  public setContents(contents: Uint8Array | string): this {
-      const bytes =
-      contents instanceof Uint8Array ?
-          (contents as Uint8Array) :
-          utf8.encode(contents as string);
+    /**
+     * The bytes that are the contents of the file.
+     */
+    public setContents(contents: Uint8Array | string): this {
+        const bytes =
+            contents instanceof Uint8Array ?
+                (contents as Uint8Array) :
+                utf8.encode(contents as string);
 
-      this._body.setContents(bytes);
-      return this;
-  }
+        this._body.setContents(bytes);
+        return this;
+    }
 
-  protected _doValidate(): void {
-      // No local validation
-  }
+    protected _doValidate(): void {
+        // No local validation
+    }
 
-  protected get _method(): grpc.UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return FileService.createFile;
-  }
+    protected get _method(): grpc.UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return FileService.createFile;
+    }
 }

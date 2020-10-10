@@ -16,38 +16,38 @@ import BigNumber from "bignumber.js";
  * tokens, one must provide amount of 10055.
  */
 export class TokenMintTransaction extends SingleTransactionBuilder {
-  private _body: TokenMintTransactionBody;
+    private _body: TokenMintTransactionBody;
 
-  public constructor() {
-      super();
+    public constructor() {
+        super();
 
-      this._body = new TokenMintTransactionBody();
-      this._inner.setTokenmint(this._body);
-  }
+        this._body = new TokenMintTransactionBody();
+        this._inner.setTokenmint(this._body);
+    }
 
-  /**
-   * The token for which to mint tokens. If token does not exist, transaction results in INVALID_TOKEN_ID
-   */
-  public setTokenId(id: TokenIdLike): this {
-      this._body.setToken(new TokenId(id)._toProto());
-      return this;
-  }
+    /**
+     * The token for which to mint tokens. If token does not exist, transaction results in INVALID_TOKEN_ID
+     */
+    public setTokenId(id: TokenIdLike): this {
+        this._body.setToken(new TokenId(id)._toProto());
+        return this;
+    }
 
-  /**
-   * The amount to mint to the Treasury Account. Amount must be a positive non-zero number represented in the lowest
-   * denomination of the token. The new supply must be lower than 2^63.
-   */
-  public setAmount(amount: BigNumber): this {
-      this._body.setAmount(amount.toString());
-      return this;
-  }
+    /**
+     * The amount to mint to the Treasury Account. Amount must be a positive non-zero number represented in the lowest
+     * denomination of the token. The new supply must be lower than 2^63.
+     */
+    public setAmount(amount: BigNumber): this {
+        this._body.setAmount(amount.toString());
+        return this;
+    }
 
-  protected get method(): UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return TokenService.mintToken;
-  }
+    protected get method(): UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return TokenService.mintToken;
+    }
 
-  protected _doValidate(_: string[]): void {}
+    protected _doValidate(_: string[]): void {}
 }

@@ -21,37 +21,37 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
  * The operation is idempotent.
  */
 export class TokenFreezeTransaction extends SingleTransactionBuilder {
-  private _body: TokenFreezeAccountTransactionBody;
+    private _body: TokenFreezeAccountTransactionBody;
 
-  public constructor() {
-      super();
+    public constructor() {
+        super();
 
-      this._body = new TokenFreezeAccountTransactionBody();
-      this._inner.setTokenfreeze(this._body);
-  }
+        this._body = new TokenFreezeAccountTransactionBody();
+        this._inner.setTokenfreeze(this._body);
+    }
 
-  /**
-   * The token for which this account will be frozen. If token does not exist, transaction results in INVALID_TOKEN_ID
-   */
-  public setTokenId(id: TokenIdLike): this {
-      this._body.setToken(new TokenId(id)._toProto());
-      return this;
-  }
+    /**
+     * The token for which this account will be frozen. If token does not exist, transaction results in INVALID_TOKEN_ID
+     */
+    public setTokenId(id: TokenIdLike): this {
+        this._body.setToken(new TokenId(id)._toProto());
+        return this;
+    }
 
-  /**
-   * The account to be frozen
-   */
-  public setAccountId(id: AccountIdLike): this {
-      this._body.setAccount(new AccountId(id)._toProto());
-      return this;
-  }
+    /**
+     * The account to be frozen
+     */
+    public setAccountId(id: AccountIdLike): this {
+        this._body.setAccount(new AccountId(id)._toProto());
+        return this;
+    }
 
-  protected get method(): UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return TokenService.freezeTokenAccount;
-  }
+    protected get method(): UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return TokenService.freezeTokenAccount;
+    }
 
-  protected _doValidate(_: string[]): void {}
+    protected _doValidate(_: string[]): void {}
 }

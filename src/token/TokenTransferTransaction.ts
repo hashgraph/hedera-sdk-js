@@ -28,73 +28,73 @@ import { TokenId, TokenIdLike } from "./TokenId";
  * transfers occur, though transaction fee is still charged.
  */
 export class TokenTransferTransaction extends SingleTransactionBuilder {
-  private readonly _body: TokenTransfersTransactionBody;
-  private _tokenIdIndexes: Map<string, number>;
+    private readonly _body: TokenTransfersTransactionBody;
+    private _tokenIdIndexes: Map<string, number>;
 
-  public constructor() {
-      super();
-      this._body = new TokenTransfersTransactionBody();
-      this._tokenIdIndexes = new Map();
-      this._body.setTokentransfersList([]);
-      this._inner.setTokentransfers(this._body);
-  }
+    public constructor() {
+        super();
+        this._body = new TokenTransfersTransactionBody();
+        this._tokenIdIndexes = new Map();
+        this._body.setTokentransfersList([]);
+        this._inner.setTokentransfers(this._body);
+    }
 
-  public addSender(
-      tokenId: TokenIdLike,
-      accountId: AccountIdLike,
-      amount: Tinybar | Hbar
-  ): this {
-      const hbar = hbarFromTinybarOrHbar(amount);
-      hbar[ hbarCheck ]({ allowNegative: false });
+    public addSender(
+        tokenId: TokenIdLike,
+        accountId: AccountIdLike,
+        amount: Tinybar | Hbar
+    ): this {
+        const hbar = hbarFromTinybarOrHbar(amount);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-      return this.addTransfer(tokenId, accountId, hbar.negated());
-  }
+        return this.addTransfer(tokenId, accountId, hbar.negated());
+    }
 
-  public addRecipient(
-      tokenId: TokenIdLike,
-      accountId: AccountIdLike,
-      amount: Tinybar | Hbar
-  ): this {
-      const hbar = hbarFromTinybarOrHbar(amount);
-      hbar[ hbarCheck ]({ allowNegative: false });
+    public addRecipient(
+        tokenId: TokenIdLike,
+        accountId: AccountIdLike,
+        amount: Tinybar | Hbar
+    ): this {
+        const hbar = hbarFromTinybarOrHbar(amount);
+        hbar[ hbarCheck ]({ allowNegative: false });
 
-      return this.addTransfer(tokenId, accountId, amount);
-  }
+        return this.addTransfer(tokenId, accountId, amount);
+    }
 
-  public addTransfer(
-      tokenId: TokenIdLike,
-      accountId: AccountIdLike,
-      amount: Tinybar | Hbar
-  ): this {
-      const amountHbar = hbarFromTinybarOrHbar(amount);
-      amountHbar[ hbarCheck ]({ allowNegative: true });
+    public addTransfer(
+        tokenId: TokenIdLike,
+        accountId: AccountIdLike,
+        amount: Tinybar | Hbar
+    ): this {
+        const amountHbar = hbarFromTinybarOrHbar(amount);
+        amountHbar[ hbarCheck ]({ allowNegative: true });
 
-      const index = this._tokenIdIndexes.get(new TokenId(tokenId).toString());
+        const index = this._tokenIdIndexes.get(new TokenId(tokenId).toString());
 
-      const list =
-      index != null ?
-          this._body.getTokentransfersList()[ index ] :
-          new TokenTransferList();
-      this._body.addTokentransfers(list);
+        const list =
+            index != null ?
+                this._body.getTokentransfersList()[ index ] :
+                new TokenTransferList();
+        this._body.addTokentransfers(list);
 
-      const transfers = list.getTransfersList() || [];
-      list.setTransfersList(transfers);
+        const transfers = list.getTransfersList() || [];
+        list.setTransfersList(transfers);
 
-      const acctAmt = new AccountAmount();
-      acctAmt.setAccountid(new AccountId(accountId)._toProto());
-      acctAmt.setAmount(amountHbar[ hbarToProto ]());
+        const acctAmt = new AccountAmount();
+        acctAmt.setAccountid(new AccountId(accountId)._toProto());
+        acctAmt.setAmount(amountHbar[ hbarToProto ]());
 
-      transfers.push(acctAmt);
+        transfers.push(acctAmt);
 
-      return this;
-  }
+        return this;
+    }
 
-  protected _doValidate(_: string[]): void {}
+    protected _doValidate(_: string[]): void {}
 
-  protected get _method(): grpc.UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return TokenService.transferTokens;
-  }
+    protected get _method(): grpc.UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return TokenService.transferTokens;
+    }
 }

@@ -28,88 +28,88 @@ import { PublicKey } from "../crypto/PublicKey";
  * without an admin key, then such a key can never be added, and its bytecode will be immutable.
  */
 export class ContractUpdateTransaction extends SingleTransactionBuilder {
-  private readonly _body: ContractUpdateTransactionBody;
+    private readonly _body: ContractUpdateTransactionBody;
 
-  public constructor() {
-      super();
-      this._body = new ContractUpdateTransactionBody();
-      this._inner.setContractupdateinstance(this._body);
-  }
+    public constructor() {
+        super();
+        this._body = new ContractUpdateTransactionBody();
+        this._inner.setContractupdateinstance(this._body);
+    }
 
-  /**
-   * The Contract ID instance to update (this can't be changed).
-   */
-  public setContractId(contractIdLike: ContractIdLike): this {
-      this._body.setContractid(new ContractId(contractIdLike)._toProto());
-      return this;
-  }
+    /**
+     * The Contract ID instance to update (this can't be changed).
+     */
+    public setContractId(contractIdLike: ContractIdLike): this {
+        this._body.setContractid(new ContractId(contractIdLike)._toProto());
+        return this;
+    }
 
-  /**
-   * The state of the instance can be modified arbitrarily if this key signs a transaction to
-   * modify it. If this is null, then such modifications are not possible, and there is no
-   * administrator that can override the normal operation of this smart contract instance.
-   */
-  public setAdminKey(publicKey: PublicKey): this {
-      this._body.setAdminkey(publicKey._toProtoKey());
-      return this;
-  }
+    /**
+     * The state of the instance can be modified arbitrarily if this key signs a transaction to
+     * modify it. If this is null, then such modifications are not possible, and there is no
+     * administrator that can override the normal operation of this smart contract instance.
+     */
+    public setAdminKey(publicKey: PublicKey): this {
+        this._body.setAdminkey(publicKey._toProtoKey());
+        return this;
+    }
 
-  /**
-   * ID of the account to which this account is proxy staked. If proxyAccountID is null, or is
-   * an invalid account, or is an account that isn't a node, then this account is automatically
-   * proxy staked to a node chosen by the network, but without earning payments. If the
-   * proxyAccountID account refuses to accept proxy staking , or if it is not currently running
-   * a node, then it will behave as if proxyAccountID was null.
-   */
-  public setProxyAccountId(proxyAccountId: AccountIdLike): this {
-      this._body.setProxyaccountid(new AccountId(proxyAccountId)._toProto());
-      return this;
-  }
+    /**
+     * ID of the account to which this account is proxy staked. If proxyAccountID is null, or is
+     * an invalid account, or is an account that isn't a node, then this account is automatically
+     * proxy staked to a node chosen by the network, but without earning payments. If the
+     * proxyAccountID account refuses to accept proxy staking , or if it is not currently running
+     * a node, then it will behave as if proxyAccountID was null.
+     */
+    public setProxyAccountId(proxyAccountId: AccountIdLike): this {
+        this._body.setProxyaccountid(new AccountId(proxyAccountId)._toProto());
+        return this;
+    }
 
-  /**
-   * The file ID of file containing the smart contract byte code. A copy will be made and held
-   * by the contract instance, and have the same expiration time as the instance.
-   */
-  public setBytecodeFileId(fileIdLike: FileIdLike): this {
-      this._body.setFileid(new FileId(fileIdLike)._toProto());
-      return this;
-  }
+    /**
+     * The file ID of file containing the smart contract byte code. A copy will be made and held
+     * by the contract instance, and have the same expiration time as the instance.
+     */
+    public setBytecodeFileId(fileIdLike: FileIdLike): this {
+        this._body.setFileid(new FileId(fileIdLike)._toProto());
+        return this;
+    }
 
-  /**
-   * The instance will charge its account every this many seconds to renew for this long.
-   */
-  public setAutoRenewPeriod(seconds: number): this {
-      this._body.setAutorenewperiod(newDuration(seconds));
-      return this;
-  }
+    /**
+     * The instance will charge its account every this many seconds to renew for this long.
+     */
+    public setAutoRenewPeriod(seconds: number): this {
+        this._body.setAutorenewperiod(newDuration(seconds));
+        return this;
+    }
 
-  /**
-   * Extend the expiration of the instance and its account to this time (no effect if it
-   * already is this time or later).
-   */
-  public setExpirationTime(date: number | Date): this {
-      this._body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
-      return this;
-  }
+    /**
+     * Extend the expiration of the instance and its account to this time (no effect if it
+     * already is this time or later).
+     */
+    public setExpirationTime(date: number | Date): this {
+        this._body.setExpirationtime(timestampToProto(dateToTimestamp(date)));
+        return this;
+    }
 
-  /**
-   * The memo associated with the contract (max 100 bytes)
-   */
-  public setContractMemo(memo: string): this {
-      this._body.setMemo(memo);
-      return this;
-  }
+    /**
+     * The memo associated with the contract (max 100 bytes)
+     */
+    public setContractMemo(memo: string): this {
+        this._body.setMemo(memo);
+        return this;
+    }
 
-  protected _doValidate(errors: string[]): void {
-      if (!this._body.hasContractid()) {
-          errors.push(".setContractId() required");
-      }
-  }
+    protected _doValidate(errors: string[]): void {
+        if (!this._body.hasContractid()) {
+            errors.push(".setContractId() required");
+        }
+    }
 
-  protected get _method(): grpc.UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return SmartContractService.updateContract;
-  }
+    protected get _method(): grpc.UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return SmartContractService.updateContract;
+    }
 }

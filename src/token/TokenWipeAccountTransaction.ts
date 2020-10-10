@@ -26,46 +26,46 @@ import BigNumber from "bignumber.js";
 // Token A has 2 decimals. In order to wipe 100 tokens from account, one must provide amount of 10000. In order to wipe 100.55 tokens, one must provide amount of 10055.
 //
 export class TokenWipeTransaction extends SingleTransactionBuilder {
-  private _body: TokenWipeAccountTransactionBody;
+    private _body: TokenWipeAccountTransactionBody;
 
-  public constructor() {
-      super();
+    public constructor() {
+        super();
 
-      this._body = new TokenWipeAccountTransactionBody();
-      this._inner.setTokenwipe(this._body);
-  }
+        this._body = new TokenWipeAccountTransactionBody();
+        this._inner.setTokenwipe(this._body);
+    }
 
-  /**
-   * The token for which the account will be wiped. If token does not exist, transaction results in INVALID_TOKEN_ID
-   */
-  public setTokenId(id: TokenIdLike): this {
-      this._body.setToken(new TokenId(id)._toProto());
-      return this;
-  }
+    /**
+     * The token for which the account will be wiped. If token does not exist, transaction results in INVALID_TOKEN_ID
+     */
+    public setTokenId(id: TokenIdLike): this {
+        this._body.setToken(new TokenId(id)._toProto());
+        return this;
+    }
 
-  /**
-   * The account to be wiped
-   */
-  public setAccountId(id: AccountIdLike): this {
-      this._body.setAccount(new AccountId(id)._toProto());
-      return this;
-  }
+    /**
+     * The account to be wiped
+     */
+    public setAccountId(id: AccountIdLike): this {
+        this._body.setAccount(new AccountId(id)._toProto());
+        return this;
+    }
 
-  /**
-   * The amount of tokens to wipe from the specified account. Amount must be a positive non-zero number in the lowest
-   * denomination possible, not bigger than the token balance of the account (0; balance]
-   */
-  public setAmount(amount: BigNumber): this {
-      this._body.setAmount(amount.toString());
-      return this;
-  }
+    /**
+     * The amount of tokens to wipe from the specified account. Amount must be a positive non-zero number in the lowest
+     * denomination possible, not bigger than the token balance of the account (0; balance]
+     */
+    public setAmount(amount: BigNumber): this {
+        this._body.setAmount(amount.toString());
+        return this;
+    }
 
-  protected get method(): UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return TokenService.wipeTokenAccount;
-  }
+    protected get method(): UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return TokenService.wipeTokenAccount;
+    }
 
-  protected _doValidate(_: string[]): void {}
+    protected _doValidate(_: string[]): void {}
 }

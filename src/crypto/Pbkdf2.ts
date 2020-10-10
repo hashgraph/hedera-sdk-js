@@ -18,10 +18,11 @@ export class Pbkdf2 {
         length: number
     ): Promise<Uint8Array> {
         const pass =
-      typeof password === "string" ? // Valid ASCII is also valid UTF-8 so encoding the password as UTF-8
-          // should be fine if only valid ASCII characters are used in the password
-          utf8.encode(password) :
-          password;
+            // Valid ASCII is also valid UTF-8 so encoding the password as UTF-8
+            typeof password === "string" ?
+                // should be fine if only valid ASCII characters are used in the password
+                utf8.encode(password) :
+                password;
 
         const nacl = typeof salt === "string" ? utf8.encode(salt) : salt;
 
@@ -51,11 +52,29 @@ export class Pbkdf2 {
             } catch {
                 switch (algorithm) {
                     case HashAlgorithm.Sha256:
-                        return deriveKey(SHA256, pass, nacl, iterations, length);
+                        return deriveKey(
+                            SHA256,
+                            pass,
+                            nacl,
+                            iterations,
+                            length
+                        );
                     case HashAlgorithm.Sha384:
-                        return deriveKey(SHA384, pass, nacl, iterations, length);
+                        return deriveKey(
+                            SHA384,
+                            pass,
+                            nacl,
+                            iterations,
+                            length
+                        );
                     case HashAlgorithm.Sha512:
-                        return deriveKey(SHA512, pass, nacl, iterations, length);
+                        return deriveKey(
+                            SHA512,
+                            pass,
+                            nacl,
+                            iterations,
+                            length
+                        );
                     default:
                         throw new Error("(BUG) Non-Exhaustive switch statement for algorithms");
                 }

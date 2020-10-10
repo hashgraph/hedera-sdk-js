@@ -1,7 +1,7 @@
 import * as pb from "../generated/BasicTypes_pb";
 
 export abstract class PublicKey {
-  public abstract _toProtoKey(): pb.Key;
+    public abstract _toProtoKey(): pb.Key;
 }
 
 export function _fromProtoKey(key: pb.Key): PublicKey {

@@ -20,38 +20,38 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
  * Once executed the Account is marked as KYC Granted.
  */
 export class TokenGrantKycTransaction extends SingleTransactionBuilder {
-  private _body: TokenGrantKycTransactionBody;
+    private _body: TokenGrantKycTransactionBody;
 
-  public constructor() {
-      super();
+    public constructor() {
+        super();
 
-      this._body = new TokenGrantKycTransactionBody();
-      this._inner.setTokengrantkyc(this._body);
-  }
+        this._body = new TokenGrantKycTransactionBody();
+        this._inner.setTokengrantkyc(this._body);
+    }
 
-  /**
-   * The token for which this account will be granted KYC. If token does not exist, transaction results in
-   * INVALID_TOKEN_ID
-   */
-  public setTokenId(id: TokenIdLike): this {
-      this._body.setToken(new TokenId(id)._toProto());
-      return this;
-  }
+    /**
+     * The token for which this account will be granted KYC. If token does not exist, transaction results in
+     * INVALID_TOKEN_ID
+     */
+    public setTokenId(id: TokenIdLike): this {
+        this._body.setToken(new TokenId(id)._toProto());
+        return this;
+    }
 
-  /**
-   * The account to be KYCed
-   */
-  public setAccountId(id: AccountIdLike): this {
-      this._body.setAccount(new AccountId(id)._toProto());
-      return this;
-  }
+    /**
+     * The account to be KYCed
+     */
+    public setAccountId(id: AccountIdLike): this {
+        this._body.setAccount(new AccountId(id)._toProto());
+        return this;
+    }
 
-  protected get method(): UnaryMethodDefinition<
-    Transaction,
-    TransactionResponse
-    > {
-      return TokenService.grantKycToTokenAccount;
-  }
+    protected get method(): UnaryMethodDefinition<
+        Transaction,
+        TransactionResponse
+        > {
+        return TokenService.grantKycToTokenAccount;
+    }
 
-  protected _doValidate(_: string[]): void {}
+    protected _doValidate(_: string[]): void {}
 }
