@@ -1,0 +1,954 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>TokenCreateTransaction | @hashgraph/sdk</title>
+	<meta name="description" content="Documentation for @hashgraph/sdk">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">@hashgraph/sdk</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="../modules/_token_tokencreatetransaction_.html">&quot;token/TokenCreateTransaction&quot;</a>
+				</li>
+				<li>
+					<a href="_token_tokencreatetransaction_.tokencreatetransaction.html">TokenCreateTransaction</a>
+				</li>
+			</ul>
+			<h1>Class TokenCreateTransaction</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Create a new token. After the token is created, the Token ID for it is in the receipt.
+							The specified Treasury Account is receiving the initial supply of tokens as-well as the tokens from the Token Mint
+						operation once executed. The balance of the treasury account is decreased when the Token Burn operation is executed.</p>
+					</div>
+					<p>The supply that is going to be put in circulation is going to be the initial supply provided. The maximum supply a
+					token can have is 2^63-1.</p>
+					<p>Example:
+						Token A has initial supply set to 10_000 and decimals set to 2. The tokens that will be put into circulation are
+						going be 100. Token B has initial supply set to 10_012_345_678 and decimals set to 8. The number of tokens that
+					will be put into circulation are going to be 100.12345678</p>
+					<p>Creating immutable token: Token can be created as immutable if the adminKey is omitted. In this case, the name,
+						symbol, treasury, management keys, expiry and renew properties cannot be updated. If a token is created as immutable,
+					anyone is able to extend the expiry time by paying the fee.</p>
+					<p>After executing, you can retrieve the token ID via
+						{@link com.hedera.hashgraph.sdk.TransactionId#getReceipt(Client)}
+					and then {@link TransactionReceipt#getTokenId()}.</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="_transactionbuilder_.singletransactionbuilder.html" class="tsd-signature-type">SingleTransactionBuilder</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">TokenCreateTransaction</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#build" class="tsd-kind-icon">build</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#execute" class="tsd-kind-icon">execute</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setadminkey" class="tsd-kind-icon">set<wbr>Admin<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setautorenewaccount" class="tsd-kind-icon">set<wbr>Auto<wbr>Renew<wbr>Account</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setautorenewperiod" class="tsd-kind-icon">set<wbr>Auto<wbr>Renew<wbr>Period</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setdecimals" class="tsd-kind-icon">set<wbr>Decimals</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setexpirationtime" class="tsd-kind-icon">set<wbr>Expiration<wbr>Time</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setfreezedefault" class="tsd-kind-icon">set<wbr>Freeze<wbr>Default</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setfreezekey" class="tsd-kind-icon">set<wbr>Freeze<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setinitialsupply" class="tsd-kind-icon">set<wbr>Initial<wbr>Supply</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setkyckey" class="tsd-kind-icon">set<wbr>Kyc<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setname" class="tsd-kind-icon">set<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setsupplykey" class="tsd-kind-icon">set<wbr>Supply<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setsybmol" class="tsd-kind-icon">set<wbr>Sybmol</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#settreasury" class="tsd-kind-icon">set<wbr>Treasury</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setwipekey" class="tsd-kind-icon">set<wbr>Wipe<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokencreatetransaction_.tokencreatetransaction.html#validate" class="tsd-kind-icon">validate</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Token<wbr>Create<wbr>Transaction<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_token_tokencreatetransaction_.tokencreatetransaction.html" class="tsd-signature-type">TokenCreateTransaction</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides TransactionBuilder.__constructor</p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L34">src/token/TokenCreateTransaction.ts:34</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="_token_tokencreatetransaction_.tokencreatetransaction.html" class="tsd-signature-type">TokenCreateTransaction</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+					<a name="build" class="tsd-anchor"></a>
+					<h3>build</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">build<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">?: </span><a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_transactionbuilder_.singletransactionbuilder.html">SingleTransactionBuilder</a>.<a href="_transactionbuilder_.singletransactionbuilder.html#build">build</a></p>
+								<p>Overrides <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#build">build</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L139">src/TransactionBuilder.ts:139</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> client: <a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_transaction_.transaction.html" class="tsd-signature-type">Transaction</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="execute" class="tsd-anchor"></a>
+					<h3>execute</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">execute<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_transactionid_.transactionid.html" class="tsd-signature-type">TransactionId</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_transactionbuilder_.singletransactionbuilder.html">SingleTransactionBuilder</a>.<a href="_transactionbuilder_.singletransactionbuilder.html#execute">execute</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L177">src/TransactionBuilder.ts:177</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>client: <a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_transactionid_.transactionid.html" class="tsd-signature-type">TransactionId</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+					<a name="getcost" class="tsd-anchor"></a>
+					<h3>get<wbr>Cost</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Cost<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_transactionbuilder_.singletransactionbuilder.html">SingleTransactionBuilder</a>.<a href="_transactionbuilder_.singletransactionbuilder.html#getcost">getCost</a></p>
+								<p>Overrides <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#getcost">getCost</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L96">src/TransactionBuilder.ts:96</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>client: <a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setadminkey" class="tsd-anchor"></a>
+					<h3>set<wbr>Admin<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Admin<wbr>Key<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L109">src/token/TokenCreateTransaction.ts:109</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The key which can perform update/delete operations on the token. If empty, the token can be perceived as
+									immutable (not being able to be updated/deleted)</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>key: <a href="_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setautorenewaccount" class="tsd-anchor"></a>
+					<h3>set<wbr>Auto<wbr>Renew<wbr>Account</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Auto<wbr>Renew<wbr>Account<span class="tsd-signature-symbol">(</span>account<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L190">src/token/TokenCreateTransaction.ts:190</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>An account which will be automatically charged to renew the token&#39;s expiration, at autoRenewPeriod interval</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>account: <a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setautorenewperiod" class="tsd-anchor"></a>
+					<h3>set<wbr>Auto<wbr>Renew<wbr>Period</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Auto<wbr>Renew<wbr>Period<span class="tsd-signature-symbol">(</span>seconds<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L201">src/token/TokenCreateTransaction.ts:201</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The interval at which the auto-renew account will be charged to extend the token&#39;s expiry</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>seconds: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setdecimals" class="tsd-anchor"></a>
+					<h3>set<wbr>Decimals</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Decimals<span class="tsd-signature-symbol">(</span>decimal<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L73">src/token/TokenCreateTransaction.ts:73</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The number of decimal places a token is divisible by. This field can never be changed!</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>decimal: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setexpirationtime" class="tsd-anchor"></a>
+					<h3>set<wbr>Expiration<wbr>Time</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Expiration<wbr>Time<span class="tsd-signature-symbol">(</span>date<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L179">src/token/TokenCreateTransaction.ts:179</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The epoch second at which the token should expire; if an auto-renew account and period are specified, this is
+									coerced to the current epoch second plus the autoRenewPeriod</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>date: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Date</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setfreezedefault" class="tsd-anchor"></a>
+					<h3>set<wbr>Freeze<wbr>Default</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Freeze<wbr>Default<span class="tsd-signature-symbol">(</span>freeze<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L167">src/token/TokenCreateTransaction.ts:167</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The default Freeze status (frozen or unfrozen) of Hedera accounts relative to this token. If true, an account
+									must be unfrozen before it can receive the token</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>freeze: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setfreezekey" class="tsd-anchor"></a>
+					<h3>set<wbr>Freeze<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Freeze<wbr>Key<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L133">src/token/TokenCreateTransaction.ts:133</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The key which can sign to freeze or unfreeze an account for token transactions.
+									If empty, freezing is not possible</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>key: <a href="_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="setgeneraterecord" class="tsd-anchor"></a>
+					<h3>set<wbr>Generate<wbr>Record</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Generate<wbr>Record<span class="tsd-signature-symbol">(</span>generateRecord<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setgeneraterecord">setGenerateRecord</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L67">src/TransactionBuilder.ts:67</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>generateRecord: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setinitialsupply" class="tsd-anchor"></a>
+					<h3>set<wbr>Initial<wbr>Supply</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Initial<wbr>Supply<span class="tsd-signature-symbol">(</span>initialSupply<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L86">src/token/TokenCreateTransaction.ts:86</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Specifies the initial supply of tokens to be put in circulation.
+										The initial supply is sent to the Treasury Account.
+									The supply is in the lowest denomination possible.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>initialSupply: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setkyckey" class="tsd-anchor"></a>
+					<h3>set<wbr>Kyc<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Kyc<wbr>Key<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L121">src/token/TokenCreateTransaction.ts:121</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The key which can grant or revoke KYC of an account for the token&#39;s transactions. If empty, KYC is not required,
+									and KYC grant or revoke operations are not possible.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>key: <a href="_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="setmaxtransactionfee" class="tsd-anchor"></a>
+					<h3>set<wbr>Max<wbr>Transaction<wbr>Fee</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee<span class="tsd-signature-symbol">(</span>fee<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setmaxtransactionfee">setMaxTransactionFee</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L47">src/TransactionBuilder.ts:47</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>fee: <a href="_hbarunit_.hbarunit.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setname" class="tsd-anchor"></a>
+					<h3>set<wbr>Name</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Name<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L51">src/token/TokenCreateTransaction.ts:51</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set the publicly visible name of the token, specified as a string of only ASCII characters</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="setnodeaccountid" class="tsd-anchor"></a>
+					<h3>set<wbr>Node<wbr>Account<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id<span class="tsd-signature-symbol">(</span>nodeAccountId<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setnodeaccountid">setNodeAccountId</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L56">src/TransactionBuilder.ts:56</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>nodeAccountId: <a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setsupplykey" class="tsd-anchor"></a>
+					<h3>set<wbr>Supply<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Supply<wbr>Key<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L155">src/token/TokenCreateTransaction.ts:155</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The key which can change the supply of a token. The key is used to sign Token Mint/Burn operations</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>key: <a href="_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setsybmol" class="tsd-anchor"></a>
+					<h3>set<wbr>Sybmol</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Sybmol<span class="tsd-signature-symbol">(</span>symbol<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L62">src/token/TokenCreateTransaction.ts:62</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The publicly visible token symbol. It is UTF-8 capitalized alphabetical string identifying the token</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>symbol: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="settransactionid" class="tsd-anchor"></a>
+					<h3>set<wbr>Transaction<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Transaction<wbr>Id<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><a href="../modules/_transactionid_.html#transactionidlike" class="tsd-signature-type">TransactionIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionid">setTransactionId</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L36">src/TransactionBuilder.ts:36</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>id: <a href="../modules/_transactionid_.html#transactionidlike" class="tsd-signature-type">TransactionIdLike</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="settransactionmemo" class="tsd-anchor"></a>
+					<h3>set<wbr>Transaction<wbr>Memo</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Transaction<wbr>Memo<span class="tsd-signature-symbol">(</span>memo<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionmemo">setTransactionMemo</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>memo: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="settransactionvalidduration" class="tsd-anchor"></a>
+					<h3>set<wbr>Transaction<wbr>Valid<wbr>Duration</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration<span class="tsd-signature-symbol">(</span>seconds<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionvalidduration">setTransactionValidDuration</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L42">src/TransactionBuilder.ts:42</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>seconds: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="settreasury" class="tsd-anchor"></a>
+					<h3>set<wbr>Treasury</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Treasury<span class="tsd-signature-symbol">(</span>treasury<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L97">src/token/TokenCreateTransaction.ts:97</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The account which will act as a treasury for the token. This account will receive the specified initial supply</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>treasury: <a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setwipekey" class="tsd-anchor"></a>
+					<h3>set<wbr>Wipe<wbr>Key</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Wipe<wbr>Key<span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenCreateTransaction.ts#L144">src/token/TokenCreateTransaction.ts:144</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The key which can wipe the token balance of an account. If empty, wipe is not possible</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>key: <a href="_crypto_publickey_.publickey.html" class="tsd-signature-type">PublicKey</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+							<p>TokenCreateTransaction</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="validate" class="tsd-anchor"></a>
+					<h3>validate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">validate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#validate">validate</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L76">src/TransactionBuilder.ts:76</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../globals.html"><em>Globals</em></a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/_token_tokencreatetransaction_.html">&quot;token/<wbr>Token<wbr>Create<wbr>Transaction&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="_token_tokencreatetransaction_.tokencreatetransaction.html" class="tsd-kind-icon">Token<wbr>Create<wbr>Transaction</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#build" class="tsd-kind-icon">build</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#execute" class="tsd-kind-icon">execute</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setadminkey" class="tsd-kind-icon">set<wbr>Admin<wbr>Key</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setautorenewaccount" class="tsd-kind-icon">set<wbr>Auto<wbr>Renew<wbr>Account</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setautorenewperiod" class="tsd-kind-icon">set<wbr>Auto<wbr>Renew<wbr>Period</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setdecimals" class="tsd-kind-icon">set<wbr>Decimals</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setexpirationtime" class="tsd-kind-icon">set<wbr>Expiration<wbr>Time</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setfreezedefault" class="tsd-kind-icon">set<wbr>Freeze<wbr>Default</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setfreezekey" class="tsd-kind-icon">set<wbr>Freeze<wbr>Key</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setinitialsupply" class="tsd-kind-icon">set<wbr>Initial<wbr>Supply</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setkyckey" class="tsd-kind-icon">set<wbr>Kyc<wbr>Key</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setname" class="tsd-kind-icon">set<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setsupplykey" class="tsd-kind-icon">set<wbr>Supply<wbr>Key</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setsybmol" class="tsd-kind-icon">set<wbr>Sybmol</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#settreasury" class="tsd-kind-icon">set<wbr>Treasury</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#setwipekey" class="tsd-kind-icon">set<wbr>Wipe<wbr>Key</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_token_tokencreatetransaction_.tokencreatetransaction.html#validate" class="tsd-kind-icon">validate</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
