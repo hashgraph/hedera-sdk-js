@@ -150,8 +150,7 @@ export default class Query extends Executable {
     }
 
     /**
-     * @template MirrorChannelT
-     * @param {import("../client/Client.js").default<Channel, MirrorChannelT>} client
+     * @param {import("../client/Client.js").default<Channel, *>} client
      * @returns {Promise<Hbar>}
      */
     getCost(client) {
