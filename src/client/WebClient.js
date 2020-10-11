@@ -7,6 +7,26 @@ import AccountId from "../account/AccountId.js";
  */
 
 export const Network = {
+    /**
+     * @param {string} name
+     * @returns {{[key: string]: (string | AccountId)}}
+     */
+    fromName(name) {
+        switch (name) {
+            case "mainnet":
+                return Network.MAINNET;
+
+            case "testnet":
+                return Network.TESTNET;
+
+            case "previewnet":
+                return Network.PREVIEWNET;
+
+            default:
+                throw new Error(`unknown network name: ${name}`);
+        }
+    },
+
     MAINNET: {
         "https://grpc-web.myhbarwallet.com": new AccountId(3),
     },
@@ -21,7 +41,7 @@ export const Network = {
 };
 
 /**
- * @augments {Client<WebChannel, void>}
+ * @augments {Client<WebChannel, *>}
  */
 export default class WebClient extends Client {
     /**

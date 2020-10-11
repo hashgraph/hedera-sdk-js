@@ -11,6 +11,26 @@ const readFileAsync = util.promisify(fs.readFile);
  */
 
 export const Network = {
+    /**
+     * @param {string} name
+     * @returns {{[key: string]: (string | AccountId)}}
+     */
+    fromName(name) {
+        switch (name) {
+            case "mainnet":
+                return Network.MAINNET;
+
+            case "testnet":
+                return Network.TESTNET;
+
+            case "previewnet":
+                return Network.PREVIEWNET;
+
+            default:
+                throw new Error(`unknown network name: ${name}`);
+        }
+    },
+
     MAINNET: {
         "35.237.200.180:50211": new AccountId(3),
         "35.186.191.247:50211": new AccountId(4),
@@ -40,13 +60,33 @@ export const Network = {
 };
 
 export const MirrorNetwork = {
+    /**
+     * @param {string} name
+     * @returns {string[]}
+     */
+    fromName(name) {
+        switch (name) {
+            case "mainnet":
+                return MirrorNetwork.MAINNET;
+
+            case "testnet":
+                return MirrorNetwork.TESTNET;
+
+            case "previewnet":
+                return MirrorNetwork.PREVIEWNET;
+
+            default:
+                throw new Error(`unknown network name: ${name}`);
+        }
+    },
+
     MAINNET: ["hcs.mainnet.mirrornode.hedera.com:5600"],
     TESTNET: ["hcs.testnet.mirrornode.hedera.com:5600"],
     PREVIEWNET: ["hcs.previewnet.mirrornode.hedera.com:5600"],
 };
 
 /**
- * @augments {Client<NodeChannel, void>}
+ * @augments {Client<NodeChannel, *>}
  */
 export default class NodeClient extends Client {
     /**
