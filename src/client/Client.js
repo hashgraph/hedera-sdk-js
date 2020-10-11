@@ -3,6 +3,11 @@ import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Hbar from "../Hbar.js";
 
 /**
+ * @typedef {import("../channel/Channel").default} Channel
+ * @typedef {import("../channel/MirrorChannel").default} MirrorChannel
+ */
+
+/**
  * @typedef {"mainnet" | "testnet" | "previewnet"} NetworkName
  */
 
@@ -28,8 +33,8 @@ import Hbar from "../Hbar.js";
 
 /**
  * @abstract
- * @template ChannelT
- * @template MirrorChannelT
+ * @template {Channel} ChannelT
+ * @template {MirrorChannel} MirrorChannelT
  */
 export default class Client {
     /**
@@ -122,14 +127,13 @@ export default class Client {
     }
 
     /**
-     * @protected
      * @param {{[key: string]: (string | AccountId)}} network
+     * @returns {void}
      */
     setNetwork(network) {
-        // TODO: close existing channels
-        this._networkChannels.clear();
+        this._closeNetworkChannels();
+        this._networkNodes = [];
         this._network.clear();
-        this._nextNetworkNodeIndex = 0;
 
         for (const [url, accountId] of Object.entries(network)) {
             const key =
@@ -147,9 +151,7 @@ export default class Client {
      * @returns {void}
      */
     setMirrorNetwork(mirrorNetwork) {
-        // TODO: close existing channels
-        this._mirrorChannels.clear();
-        this._nextMirrorIndex = 0;
+        this._closeMirrorNetworkChannels();
         this._mirrorNetwork = mirrorNetwork;
     }
 
@@ -247,6 +249,38 @@ export default class Client {
     setMaxQueryPayment(maxQueryPayment) {
         this._maxQueryPayment = maxQueryPayment;
         return this;
+    }
+
+    /**
+     * @returns {void}
+     */
+    close() {
+        this._closeNetworkChannels();
+        this._closeMirrorNetworkChannels();
+    }
+
+    /**
+     * @private
+     */
+    _closeNetworkChannels() {
+        for (const channel of this._networkChannels.values()) {
+            channel.close();
+        }
+
+        this._networkChannels.clear();
+        this._nextNetworkNodeIndex = 0;
+    }
+
+    /**
+     * @private
+     */
+    _closeMirrorNetworkChannels() {
+        for (const mirrorChannel of this._mirrorChannels.values()) {
+            mirrorChannel.close();
+        }
+
+        this._mirrorChannels.clear();
+        this._nextMirrorIndex = 0;
     }
 
     /**

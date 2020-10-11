@@ -17,6 +17,14 @@ export default class WebChannel extends Channel {
 
     /**
      * @override
+     * @returns {void}
+     */
+    close() {
+        // do nothing
+    }
+
+    /**
+     * @override
      * @protected
      * @param {string} serviceName
      * @returns {import("protobufjs").RPCImpl}

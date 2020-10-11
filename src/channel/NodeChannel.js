@@ -26,6 +26,14 @@ export default class NodeChannel extends Channel {
 
     /**
      * @override
+     * @returns {void}
+     */
+    close() {
+        this._client.close();
+    }
+
+    /**
+     * @override
      * @protected
      * @param {string} serviceName
      * @returns {import("protobufjs").RPCImpl}

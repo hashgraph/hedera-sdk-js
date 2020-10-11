@@ -54,6 +54,14 @@ export default class Channel {
     }
 
     /**
+     * @abstract
+     * @returns {void}
+     */
+    close() {
+        throw new Error("not implemented");
+    }
+
+    /**
      * @returns {CryptoService}
      */
     get crypto() {
