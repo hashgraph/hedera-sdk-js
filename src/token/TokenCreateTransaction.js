@@ -13,7 +13,7 @@ import AccountId from "../account/AccountId";
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").} proto.ICryptoCreateTransactionBody
+ * @typedef {import("@hashgraph/proto").ITokenCreateTransaction} proto.ITokenCreateTransaction
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  */
 
@@ -31,7 +31,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @param {object} [props]
      * @param {string} [props.name]
      * @param {string} [props.symbol]
-     * @param {Long | number} [props.decimal]
+     * @param {Long | number} [props.decimals]
      * @param {Long | number} [props.initialSupply]
      * @param {AccountId | string} [props.treasury]
      * @param {Key} [props.adminKey]
