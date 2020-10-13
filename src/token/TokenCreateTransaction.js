@@ -1,4 +1,3 @@
-import TokenId from "./TokenId.js";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
@@ -13,7 +12,7 @@ import AccountId from "../account/AccountId";
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ITokenCreateTransaction} proto.ITokenCreateTransaction
+ * @typedef {import("@hashgraph/proto").ITokenCreateTransactionBody} proto.ITokenCreateTransactionBody
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  */
 
@@ -63,7 +62,7 @@ export default class TokenCreateTransaction extends Transaction {
          * @private
          * @type {?Long}
          */
-        this._decimal = null;
+        this._decimals = null;
 
         /**
          * @private
@@ -81,7 +80,7 @@ export default class TokenCreateTransaction extends Transaction {
          * @private
          * @type {?Key}
          */
-        this._adminkey = null;
+        this._adminKey = null;
 
         /**
          * @private
@@ -105,7 +104,7 @@ export default class TokenCreateTransaction extends Transaction {
          * @private
          * @type {?Key}
          */
-        this._supplykey = null;
+        this._supplyKey = null;
 
         /**
          * @private
@@ -168,7 +167,7 @@ export default class TokenCreateTransaction extends Transaction {
         }
 
         if (props.supplyKey != null) {
-            this.setSupplyKey(props.supplyKey);
+            this.setsupplyKey(props.supplyKey);
         }
 
         if (props.freezeDefault != null) {
@@ -194,15 +193,48 @@ export default class TokenCreateTransaction extends Transaction {
      * @returns {TokenCreateTransaction}
      */
     static _fromProtobuf(body) {
-        const create = /** @type {proto.ITokenID} */ (body.cryptoCreateToken);
+        const create = /** @type {proto.ITokenCreateTransactionBody} */ (body.tokenCreation);
 
         return new TokenCreateTransaction({
-            adminKey: create.adminKey != null ? keyFromProtobuf(create.adminKey) : undefined,
+            name: create.name != null ? create.name : undefined,
+            symbol: create.symbol != null ? create.symbol : undefined,
+            decimals: create.decimals != null ? create.decimals : undefined,
+            initialSupply:
+                create.initialSupply != null ? create.initialSupply : undefined,
+            treasury:
+                create.treasury != null
+                    ? AccountId._fromProtobuf(create.treasury)
+                    : undefined,
+            adminKey:
+                create.adminKey != null
+                    ? keyFromProtobuf(create.adminKey)
+                    : undefined,
+            kycKey:
+                create.kycKey != null
+                    ? keyFromProtobuf(create.kycKey)
+                    : undefined,
+            freezeKey:
+                create.freezeKey != null
+                    ? keyFromProtobuf(create.freezeKey)
+                    : undefined,
+            wipeKey:
+                create.wipeKey != null
+                    ? keyFromProtobuf(create.wipeKey)
+                    : undefined,
+            supplyKey:
+                create.supplyKey != null
+                    ? keyFromProtobuf(create.supplyKey)
+                    : undefined,
+            freezeDefault:
+                create.freezeDefault != null ? create.freezeDefault : undefined,
+            autoRenewAccount:
+                create.autoRenewAccount != null
+                    ? AccountId._fromProtobuf(create.autoRenewAccount)
+                    : undefined,
+            expirationTime: create.expiry != null ? create.expiry : undefined,
             autoRenewPeriod:
                 create.autoRenewPeriod != null
-                    ? create.autoRenewPeriod.seconds != null
-                        ? create.autoRenewPeriod.seconds
-                        : undefined
+                    ? create.autoRenewPeriod
                     : undefined,
         });
     }
@@ -256,7 +288,8 @@ export default class TokenCreateTransaction extends Transaction {
      */
     setDecimals(decimals) {
         this._requireNotFrozen();
-        this._decimals = decimals;
+        this._decimals =
+            decimals instanceof Long ? decimals : Long.fromValue(decimals);
 
         return this;
     }
@@ -274,7 +307,10 @@ export default class TokenCreateTransaction extends Transaction {
      */
     setInitialSupply(initialSupply) {
         this._requireNotFrozen();
-        this._initialSupply = initialSupply;
+        this._initialSupply =
+            initialSupply instanceof Long
+                ? initialSupply
+                : Long.fromValue(initialSupply);
 
         return this;
     }
@@ -292,9 +328,8 @@ export default class TokenCreateTransaction extends Transaction {
      */
     setTreasury(id) {
         this._requireNotFrozen();
-        this._treasury = id instanceof AccountId ?
-            id :
-            AccountId.fromString(id);
+        this._treasury =
+            id instanceof AccountId ? id : AccountId.fromString(id);
 
         return this;
     }
@@ -375,16 +410,16 @@ export default class TokenCreateTransaction extends Transaction {
      * @returns {?Key}
      */
     get supplyKey() {
-        return this._supplykey;
+        return this._supplyKey;
     }
 
     /**
      * @param {Key} key
      * @returns {this}
      */
-    setSupplyKey(key) {
+    setsupplyKey(key) {
         this._requireNotFrozen();
-        this._supplykey = key;
+        this._supplyKey = key;
 
         return this;
     }
@@ -408,7 +443,7 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?boolean}
+     * @returns {?Long}
      */
     get expirationTime() {
         return this._expirationTime;
@@ -420,7 +455,8 @@ export default class TokenCreateTransaction extends Transaction {
      */
     setExpirationTime(time) {
         this._requireNotFrozen();
-        this._expirationTime = time;
+        this._expirationTime =
+            time instanceof Long ? time : Long.fromValue(time);
 
         return this;
     }
@@ -438,9 +474,8 @@ export default class TokenCreateTransaction extends Transaction {
      */
     setAutoRenewAccount(id) {
         this._requireNotFrozen();
-        this._autoRenewAccount = id instanceof AccountId ?
-            id :
-            AccountId.fromString(id);
+        this._autoRenewAccount =
+            id instanceof AccountId ? id : AccountId.fromString(id);
 
         return this;
     }
@@ -476,7 +511,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @returns {Promise<proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.crypto.createToken(request);
+        return channel.token.createToken(request);
     }
 
     /**
@@ -485,37 +520,44 @@ export default class TokenCreateTransaction extends Transaction {
      * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "cryptoCreateToken";
+        return "tokenCreation";
     }
 
     /**
      * @override
      * @protected
-     * @returns {proto.ICryptoCreateTransactionBody}
+     * @returns {proto.ITokenCreateTransactionBody}
      */
     _makeTransactionData() {
         return {
-            key: this._key != null ? keyToProtobuf(this._key) : null,
-            initialBalance:
-                this._initialBalance != null
-                    ? this._initialBalance.toTinybars()
+            name: this.name,
+            symbol: this.symbol,
+            decimals: this.decimals != null ? this.decimals.toInt() : null,
+            initialSupply: this.initialSupply,
+            treasury:
+                this._treasury != null ? this._treasury._toProtobuf() : null,
+            adminKey:
+                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
+            kycKey: this._kycKey != null ? keyToProtobuf(this._kycKey) : null,
+            freezeKey:
+                this._freezeKey != null ? keyToProtobuf(this._freezeKey) : null,
+            wipeKey:
+                this._wipeKey != null ? keyToProtobuf(this._wipeKey) : null,
+            supplyKey:
+                this._supplyKey != null ? keyToProtobuf(this._supplyKey) : null,
+            freezeDefault: this._freezeDefault,
+            autoRenewAccount:
+                this._autoRenewAccount != null
+                    ? this._autoRenewAccount._toProtobuf()
                     : null,
-            autoRenewPeriod: {
-                seconds: this._autoRenewPeriod,
-            },
-            proxyTokenID:
-                this._proxyTokenId != null
-                    ? this._proxyTokenId._toProtobuf()
-                    : null,
-            receiveRecordThreshold: this._receiveRecordThreshold.toTinybars(),
-            sendRecordThreshold: this._sendRecordThreshold.toTinybars(),
-            receiverSigRequired: this._receiverSignatureRequired,
+            expiry: this._expirationTime,
+            autoRenewPeriod: this._autoRenewPeriod,
         };
     }
 }
 
 TRANSACTION_REGISTRY.set(
-    "cryptoCreateToken",
+    "tokenCreation",
     // eslint-disable-next-line @typescript-eslint/unbound-method
     TokenCreateTransaction._fromProtobuf
 );

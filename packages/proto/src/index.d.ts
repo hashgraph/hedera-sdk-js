@@ -7,6 +7,7 @@ import FreezeService = proto.FreezeService;
 import MirrorConsensusService = proto.MirrorConsensusService;
 import NetworkService = proto.NetworkService;
 import SmartContractService = proto.SmartContractService;
+import TokenService = proto.TokenService;
 
 export {
     ConsensusService,
@@ -16,6 +17,7 @@ export {
     MirrorConsensusService,
     NetworkService,
     SmartContractService,
+    TokenService,
 };
 
 import AccountID = proto.AccountID;
@@ -115,6 +117,26 @@ import INetworkGetVersionInfoResponse = proto.INetworkGetVersionInfoResponse;
 import INetworkGetVersionInfoQuery = proto.INetworkGetVersionInfoQuery;
 import IFreezeTransactionBody = proto.IFreezeTransactionBody;
 
+// HTS Support
+import ITokenAssociateTransactionBody = proto.ITokenAssociateTransactionBody;
+import ITokenBurnTransactionBody = proto.ITokenBurnTransactionBody;
+import ITokenCreateTransactionBody = proto.ITokenCreateTransactionBody;
+import ITokenDeleteTransactionBody = proto.ITokenDeleteTransactionBody;
+import ITokenDissociateTransactionBody = proto.ITokenDissociateTransactionBody;
+import ITokenFreezeAccountTransactionBody = proto.ITokenFreezeAccountTransactionBody;
+import ITokenGetInfoResponse = proto.ITokenGetInfoResponse;
+import ITokenGrantKycTransactionBody = proto.ITokenGrantKycTransactionBody;
+import ITokenID = proto.ITokenID;
+import TokenID = proto.TokenID;
+import ITokenInfo = proto.ITokenInfo;
+import ITokenInfoQuery = proto.ITokenGetInfoQuery;
+import ITokenMintTransactionBody = proto.ITokenMintTransactionBody;
+import ITokenRevokeKycTransactionBody = proto.ITokenRevokeKycTransactionBody;
+import ITokenTransfersTransactionBody = proto.ITokenTransfersTransactionBody;
+import ITokenUnfreezeAccountTransactionBody = proto.ITokenUnfreezeAccountTransactionBody;
+import ITokenUpdateTransactionBody = proto.ITokenUpdateTransactionBody;
+import ITokenWipeAccountTransactionBody = proto.ITokenWipeAccountTransactionBody;
+
 export {
     IAccountID,
     IConsensusCreateTopicTransactionBody,
@@ -200,4 +222,24 @@ export {
     INetworkGetVersionInfoResponse,
     INetworkGetVersionInfoQuery,
     IFreezeTransactionBody,
+
+    // HTS Support
+    ITokenAssociateTransactionBody,
+    ITokenBurnTransactionBody,
+    ITokenCreateTransactionBody,
+    ITokenDeleteTransactionBody,
+    ITokenDissociateTransactionBody,
+    ITokenFreezeAccountTransactionBody,
+    ITokenGetInfoResponse,
+    ITokenGrantKycTransactionBody,
+    ITokenID,
+    TokenID,
+    ITokenInfo,
+    ITokenInfoQuery,
+    ITokenMintTransactionBody,
+    ITokenRevokeKycTransactionBody,
+    ITokenTransfersTransactionBody,
+    ITokenUnfreezeAccountTransactionBody,
+    ITokenUpdateTransactionBody,
+    ITokenWipeAccountTransactionBody,
 };

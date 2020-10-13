@@ -5,6 +5,7 @@ import {
     ConsensusService,
     NetworkService,
     FreezeService,
+    TokenService,
 } from "@hashgraph/proto";
 
 /**
@@ -51,6 +52,12 @@ export default class Channel {
          * @type {?NetworkService}
          */
         this._network = null;
+
+        /**
+         * @protected
+         * @type {?TokenService}
+         */
+        this._token = null;
     }
 
     /**
@@ -147,6 +154,21 @@ export default class Channel {
         );
 
         return this._network;
+    }
+
+    /**
+     * @returns {TokenService}
+     */
+    get token() {
+        if (this._token != null) {
+            return this._token;
+        }
+
+        this._token = TokenService.create(
+            this._createUnaryClient("TokenService")
+        );
+
+        return this._token;
     }
 
     /**
