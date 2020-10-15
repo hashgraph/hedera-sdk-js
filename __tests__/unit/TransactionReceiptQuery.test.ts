@@ -32,6 +32,7 @@ describe("TransactionGetReceiptQuery", () => {
             getbykey: undefined,
             getbysolidityid: undefined,
             networkgetversioninfo: undefined,
+            tokengetinfo: undefined,
             transactiongetfastrecord: undefined,
             transactiongetreceipt: {
                 transactionid: {
@@ -47,7 +48,6 @@ describe("TransactionGetReceiptQuery", () => {
                 },
                 header: {
                     payment: {
-                        body: undefined,
                         bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeHIUChIKBwoCGAIQxwEKBwoCGAMQyAE=",
                         sigmap: {
                             sigpairList: [
@@ -60,10 +60,11 @@ describe("TransactionGetReceiptQuery", () => {
                                 }
                             ]
                         },
-                        sigs: undefined
+                        signedtransactionbytes: "",
                     },
                     responsetype: 0
-                }
+                },
+                includeduplicates: false,
             },
             transactiongetrecord: undefined
         });

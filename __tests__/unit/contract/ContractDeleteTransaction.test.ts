@@ -16,8 +16,7 @@ describe("ContractDeleteTransaction", () => {
 
         const tx = transaction._toProto().toObject();
         expect(tx).toStrictEqual({
-            body: undefined,
-            bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeLIBBAoCGAU=",
+                        bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeLIBBAoCGAU=",
             sigmap: {
                 sigpairList: [
                     {
@@ -29,7 +28,7 @@ describe("ContractDeleteTransaction", () => {
                     }
                 ]
             },
-            sigs: undefined
+            signedtransactionbytes: ""
         });
     });
 });

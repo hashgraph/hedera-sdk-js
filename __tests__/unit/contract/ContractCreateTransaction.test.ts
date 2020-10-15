@@ -21,8 +21,7 @@ describe("ContractCreateTransaction", () => {
 
         const tx = transaction._toProto().toObject();
         expect(tx).toStrictEqual({
-            body: undefined,
-            bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeEI3CgIYBBoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktyBkKOgHMgIYA0IECIDqSQ==",
+                        bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeEI3CgIYBBoiEiDgyOwnWKWHn/rCJqE8DFFreZ5y41FBoN2Cj5TTeYiktyBkKOgHMgIYA0IECIDqSQ==",
             sigmap: {
                 sigpairList: [
                     {
@@ -34,7 +33,7 @@ describe("ContractCreateTransaction", () => {
                     }
                 ]
             },
-            sigs: undefined
+            signedtransactionbytes: ""
         });
     });
 });

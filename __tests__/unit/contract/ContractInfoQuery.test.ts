@@ -20,7 +20,6 @@ describe("ContractInfoQuery", () => {
                 },
                 header: {
                     payment: {
-                        body: undefined,
                         bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeHIUChIKBwoCGAIQxwEKBwoCGAMQyAE=",
                         sigmap: {
                             sigpairList: [
@@ -33,10 +32,10 @@ describe("ContractInfoQuery", () => {
                                 }
                             ]
                         },
-                        sigs: undefined
+                        signedtransactionbytes: "",
                     },
                     responsetype: 0
-                }
+                },
             },
             contractgetrecords: undefined,
             cryptogetaccountbalance: undefined,
@@ -49,6 +48,7 @@ describe("ContractInfoQuery", () => {
             getbykey: undefined,
             getbysolidityid: undefined,
             networkgetversioninfo: undefined,
+            tokengetinfo: undefined,
             transactiongetfastrecord: undefined,
             transactiongetreceipt: undefined,
             transactiongetrecord: undefined

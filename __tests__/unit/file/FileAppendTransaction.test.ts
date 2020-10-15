@@ -17,8 +17,7 @@ describe("FileAppendTransaction", () => {
 
         const tx = transaction._toProto().toObject();
         expect(tx).toStrictEqual({
-            body: undefined,
-            bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeIIBHhICGAUiGFRoaXMgaXMgc29tZSByYW5kb20gZGF0YQ==",
+                        bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeIIBHhICGAUiGFRoaXMgaXMgc29tZSByYW5kb20gZGF0YQ==",
             sigmap: {
                 sigpairList: [
                     {
@@ -30,7 +29,7 @@ describe("FileAppendTransaction", () => {
                     }
                 ]
             },
-            sigs: undefined
+            signedtransactionbytes: ""
         });
     });
 });

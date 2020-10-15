@@ -17,8 +17,7 @@ describe("AccountDeleteTransaction", () => {
 
         const tx = transaction._toProto().toObject();
         expect(tx).toStrictEqual({
-            body: undefined,
-            bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeGIICgIYAxICGAM=",
+                        bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeGIICgIYAxICGAM=",
             sigmap: {
                 sigpairList: [
                     {
@@ -30,7 +29,7 @@ describe("AccountDeleteTransaction", () => {
                     }
                 ]
             },
-            sigs: undefined
+            signedtransactionbytes: ""
         });
     });
 });

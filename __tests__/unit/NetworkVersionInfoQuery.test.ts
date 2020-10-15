@@ -23,7 +23,6 @@ describe("NetworkVersionInfoQuery", () => {
             networkgetversioninfo: {
                 header: {
                     payment: {
-                        body: undefined,
                         bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeHIUChIKBwoCGAIQxwEKBwoCGAMQyAE=",
                         sigmap: {
                             sigpairList: [
@@ -36,11 +35,12 @@ describe("NetworkVersionInfoQuery", () => {
                                 }
                             ]
                         },
-                        sigs: undefined
+                        signedtransactionbytes: "",
                     },
                     responsetype: 0
-                }
+                },
             },
+            tokengetinfo: undefined,
             getbykey: undefined,
             getbysolidityid: undefined,
             transactiongetfastrecord: undefined,

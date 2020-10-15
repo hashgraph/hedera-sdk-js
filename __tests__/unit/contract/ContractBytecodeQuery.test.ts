@@ -19,7 +19,6 @@ describe("ContractBytecodeQuery", () => {
                 },
                 header: {
                     payment: {
-                        body: undefined,
                         bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeHIUChIKBwoCGAIQxwEKBwoCGAMQyAE=",
                         sigmap: {
                             sigpairList: [
@@ -32,7 +31,7 @@ describe("ContractBytecodeQuery", () => {
                                 }
                             ]
                         },
-                        sigs: undefined
+                        signedtransactionbytes: "",
                     },
                     responsetype: 0
                 }
@@ -49,6 +48,7 @@ describe("ContractBytecodeQuery", () => {
             getbykey: undefined,
             getbysolidityid: undefined,
             networkgetversioninfo: undefined,
+            tokengetinfo: undefined,
             transactiongetfastrecord: undefined,
             transactiongetreceipt: undefined,
             transactiongetrecord: undefined

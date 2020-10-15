@@ -21,8 +21,7 @@ describe("AccountUpdateTransaction", () => {
 
         const tx = transaction._toProto().toObject();
         expect(tx).toStrictEqual({
-            body: undefined,
-            bodybytes,
+                        bodybytes,
             sigmap: {
                 sigpairList: [
                     {
@@ -34,7 +33,7 @@ describe("AccountUpdateTransaction", () => {
                     }
                 ]
             },
-            sigs: undefined
+            signedtransactionbytes: ""
         });
 
         const txnBody = TransactionBody.deserializeBinary(Buffer.from(bodybytes, "base64")).toObject();
@@ -93,6 +92,19 @@ describe("AccountUpdateTransaction", () => {
             },
             systemdelete: undefined,
             systemundelete: undefined,
+            tokenassociate: undefined,
+            tokenburn: undefined,
+            tokencreation: undefined,
+            tokendeletion: undefined,
+            tokendissociate: undefined,
+            tokenfreeze: undefined,
+            tokengrantkyc: undefined,
+            tokenmint: undefined,
+            tokenrevokekyc: undefined,
+            tokentransfers: undefined,
+            tokenunfreeze: undefined,
+            tokenupdate: undefined,
+            tokenwipe: undefined,
             transactionfee: "100000000",
             transactionid: {
                 accountid: {
@@ -105,7 +117,8 @@ describe("AccountUpdateTransaction", () => {
                     seconds: 124124
                 }
             },
-            transactionvalidduration: { seconds: 120 }
+            transactionvalidduration: { seconds: 120 },
+            uncheckedsubmit: undefined,
         });
     });
 });

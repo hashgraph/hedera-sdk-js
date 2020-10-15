@@ -20,6 +20,8 @@ describe("AccountCreateTransaction", () => {
 
         const tx = transaction._toProto().toObject();
         const expectedTx = {
+            signedtransactionbytes: "",
+            bodybytes,
             sigmap: {
                 sigpairList: [
                     {
@@ -31,9 +33,6 @@ describe("AccountCreateTransaction", () => {
                     }
                 ]
             },
-            sigs: undefined,
-            body: undefined as undefined | Record<string, any>,
-            bodybytes
         };
 
         expect(tx).toStrictEqual(expectedTx);
@@ -69,6 +68,7 @@ describe("AccountCreateTransaction", () => {
             },
             transactionfee: "100000000",
             transactionvalidduration: { seconds: 120 },
+            uncheckedsubmit: undefined,
             generaterecord: false,
             memo: "",
             cryptocreateaccount: {
@@ -100,11 +100,22 @@ describe("AccountCreateTransaction", () => {
             fileupdate: undefined,
             freeze: undefined,
             systemdelete: undefined,
-            systemundelete: undefined
+            systemundelete: undefined,
+            tokenassociate: undefined,
+            tokenburn: undefined,
+            tokencreation: undefined,
+            tokendeletion: undefined,
+            tokendissociate: undefined,
+            tokenfreeze: undefined,
+            tokengrantkyc: undefined,
+            tokenmint: undefined,
+            tokenrevokekyc: undefined,
+            tokentransfers: undefined,
+            tokenunfreeze: undefined,
+            tokenupdate: undefined,
+            tokenwipe: undefined,
         };
         expect(txnBody).toStrictEqual(expectedTxBody);
-
-        expectedTx.body = expectedTxBody;
 
         expect(JSON.stringify(expectedTx, undefined, 4)).toStrictEqual(transaction.toString());
     });

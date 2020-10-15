@@ -17,7 +17,6 @@ describe("SystemDeleteTransaction", () => {
 
         const tx = transaction._toProto().toObject();
         expect(tx).toStrictEqual({
-            body: undefined,
             bodybytes: "Cg4KCAjcyQcQ258JEgIYAxICGAMYwIQ9IgIIeKIBCwoCGAMaBQjv7qwH",
             sigmap: {
                 sigpairList: [
@@ -30,7 +29,7 @@ describe("SystemDeleteTransaction", () => {
                     }
                 ]
             },
-            sigs: undefined
+            signedtransactionbytes: "",
         });
     });
 });
