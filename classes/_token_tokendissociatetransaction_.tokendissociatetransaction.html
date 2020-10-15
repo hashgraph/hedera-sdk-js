@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TokenAssociateTransaction | @hashgraph/sdk</title>
+	<title>TokenDissociateTransaction | @hashgraph/sdk</title>
 	<meta name="description" content="Documentation for @hashgraph/sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules/_token_tokendissociatetransaction_.html">&quot;token/TokenDissociateTransaction&quot;</a>
 				</li>
 				<li>
-					<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html">TokenAssociateTransaction</a>
+					<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html">TokenDissociateTransaction</a>
 				</li>
 			</ul>
-			<h1>Class TokenAssociateTransaction</h1>
+			<h1>Class TokenDissociateTransaction</h1>
 		</div>
 	</div>
 </header>
@@ -74,7 +74,7 @@
 							If any of the provided tokens is not found, the transaction will resolve to INVALID_TOKEN_REF.
 							If any of the provided tokens has been deleted, the transaction will resolve to TOKEN_WAS_DELETED.
 							If an association between the provided account and any of the tokens does not exist, the transaction will resolve to
-							TOKEN_NOT_ASSOCIATED_TO_ACCOUNT.
+							TOKEN_NOT_DISSOCIATED_TO_ACCOUNT.
 							If the provided account has a nonzero balance with any of the provided tokens, the transaction will resolve to
 							TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES.
 						On success, associations between the provided account and tokens are removed.</p>
@@ -88,7 +88,7 @@
 						<a href="_transactionbuilder_.singletransactionbuilder.html" class="tsd-signature-type">SingleTransactionBuilder</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">TokenAssociateTransaction</span>
+								<span class="target">TokenDissociateTransaction</span>
 							</li>
 						</ul>
 					</li>
@@ -101,24 +101,24 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#addtokenid" class="tsd-kind-icon">add<wbr>Token<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#build" class="tsd-kind-icon">build</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#execute" class="tsd-kind-icon">execute</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#setaccountid" class="tsd-kind-icon">set<wbr>Account<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#validate" class="tsd-kind-icon">validate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#addtokenid" class="tsd-kind-icon">add<wbr>Token<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#build" class="tsd-kind-icon">build</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#execute" class="tsd-kind-icon">execute</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#setaccountid" class="tsd-kind-icon">set<wbr>Account<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#validate" class="tsd-kind-icon">validate</a></li>
 							</ul>
 						</section>
 					</div>
@@ -130,17 +130,17 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Token<wbr>Associate<wbr>Transaction<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html" class="tsd-signature-type">TokenAssociateTransaction</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Token<wbr>Dissociate<wbr>Transaction<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html" class="tsd-signature-type">TokenDissociateTransaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides TransactionBuilder.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenDissociateTransaction.ts#L24">src/token/TokenDissociateTransaction.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/token/TokenDissociateTransaction.ts#L24">src/token/TokenDissociateTransaction.ts:24</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html" class="tsd-signature-type">TokenAssociateTransaction</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html" class="tsd-signature-type">TokenDissociateTransaction</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -157,7 +157,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenDissociateTransaction.ts#L44">src/token/TokenDissociateTransaction.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/token/TokenDissociateTransaction.ts#L44">src/token/TokenDissociateTransaction.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -187,7 +187,7 @@
 								<p>Inherited from <a href="_transactionbuilder_.singletransactionbuilder.html">SingleTransactionBuilder</a>.<a href="_transactionbuilder_.singletransactionbuilder.html#build">build</a></p>
 								<p>Overrides <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#build">build</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L139">src/TransactionBuilder.ts:139</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/TransactionBuilder.ts#L139">src/TransactionBuilder.ts:139</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -211,7 +211,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.singletransactionbuilder.html">SingleTransactionBuilder</a>.<a href="_transactionbuilder_.singletransactionbuilder.html#execute">execute</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L177">src/TransactionBuilder.ts:177</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/TransactionBuilder.ts#L177">src/TransactionBuilder.ts:177</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -236,7 +236,7 @@
 								<p>Inherited from <a href="_transactionbuilder_.singletransactionbuilder.html">SingleTransactionBuilder</a>.<a href="_transactionbuilder_.singletransactionbuilder.html#getcost">getCost</a></p>
 								<p>Overrides <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#getcost">getCost</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L96">src/TransactionBuilder.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/TransactionBuilder.ts#L96">src/TransactionBuilder.ts:96</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -259,7 +259,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/token/TokenDissociateTransaction.ts#L36">src/token/TokenDissociateTransaction.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/token/TokenDissociateTransaction.ts#L36">src/token/TokenDissociateTransaction.ts:36</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -288,7 +288,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setgeneraterecord">setGenerateRecord</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L67">src/TransactionBuilder.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/TransactionBuilder.ts#L67">src/TransactionBuilder.ts:67</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -312,7 +312,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setmaxtransactionfee">setMaxTransactionFee</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L47">src/TransactionBuilder.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/TransactionBuilder.ts#L47">src/TransactionBuilder.ts:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -336,7 +336,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#setnodeaccountid">setNodeAccountId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L56">src/TransactionBuilder.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/TransactionBuilder.ts#L56">src/TransactionBuilder.ts:56</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -360,7 +360,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionid">setTransactionId</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L36">src/TransactionBuilder.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/TransactionBuilder.ts#L36">src/TransactionBuilder.ts:36</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -384,7 +384,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionmemo">setTransactionMemo</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/TransactionBuilder.ts#L62">src/TransactionBuilder.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -408,7 +408,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#settransactionvalidduration">setTransactionValidDuration</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L42">src/TransactionBuilder.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/TransactionBuilder.ts#L42">src/TransactionBuilder.ts:42</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -432,7 +432,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_transactionbuilder_.transactionbuilder.html">TransactionBuilder</a>.<a href="_transactionbuilder_.transactionbuilder.html#validate">validate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/6187eeac/src/TransactionBuilder.ts#L76">src/TransactionBuilder.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/5f96704d/src/TransactionBuilder.ts#L76">src/TransactionBuilder.ts:76</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -457,46 +457,46 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html" class="tsd-kind-icon">Token<wbr>Associate<wbr>Transaction</a>
+						<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html" class="tsd-kind-icon">Token<wbr>Dissociate<wbr>Transaction</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#addtokenid" class="tsd-kind-icon">add<wbr>Token<wbr>Id</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#addtokenid" class="tsd-kind-icon">add<wbr>Token<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#build" class="tsd-kind-icon">build</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#build" class="tsd-kind-icon">build</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#execute" class="tsd-kind-icon">execute</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#execute" class="tsd-kind-icon">execute</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#setaccountid" class="tsd-kind-icon">set<wbr>Account<wbr>Id</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#setaccountid" class="tsd-kind-icon">set<wbr>Account<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_token_tokendissociatetransaction_.tokenassociatetransaction.html#validate" class="tsd-kind-icon">validate</a>
+								<a href="_token_tokendissociatetransaction_.tokendissociatetransaction.html#validate" class="tsd-kind-icon">validate</a>
 							</li>
 						</ul>
 					</li>
