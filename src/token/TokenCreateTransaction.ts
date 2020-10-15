@@ -59,7 +59,7 @@ export class TokenCreateTransaction extends SingleTransactionBuilder {
      * @param symbol
      * @return TokenCreateTransaction
      */
-    public setSybmol(symbol: string): this {
+    public setSymbol(symbol: string): this {
         this._body.setSymbol(symbol);
         return this;
     }
@@ -203,7 +203,7 @@ export class TokenCreateTransaction extends SingleTransactionBuilder {
         return this;
     }
 
-    protected get method(): UnaryMethodDefinition<
+    protected get _method(): UnaryMethodDefinition<
         Transaction,
         TransactionResponse
         > {

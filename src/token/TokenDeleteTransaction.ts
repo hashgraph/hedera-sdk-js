@@ -31,7 +31,7 @@ export class TokenDeleteTransaction extends SingleTransactionBuilder {
         return this;
     }
 
-    protected get method(): UnaryMethodDefinition<
+    protected get _method(): UnaryMethodDefinition<
         Transaction,
         TransactionResponse
         > {

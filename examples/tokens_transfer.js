@@ -1,0 +1,107 @@
+const {
+    Client,
+    AccountId,
+    Ed25519PrivateKey,
+    AccountCreateTransaction,
+    TokenCreateTransaction,
+    TokenAssociateTransaction,
+    TokenTransferTransaction,
+    TokenGrantKycTransaction,
+    TokenDeleteTransaction,
+    Hbar
+} = require("@hashgraph/sdk");
+
+async function main() {
+    if (
+        process.env.OPERATOR_KEY == null ||
+        process.env.OPERATOR_ID == null ||
+        process.env.CONFIG_FILE == null
+    ) {
+        throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, CONFIG_FILE must be present");
+    }
+
+    const operatorKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
+    const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
+    const configFile = process.env.CONFIG_FILE;
+
+    const client = await Client.fromFile(configFile);
+    client.setOperator(operatorId, operatorKey);
+
+    const newKey = await Ed25519PrivateKey.generate();
+
+    console.log("private =", newKey);
+    console.log("public =", newKey.publicKey);
+
+    let transactionId = await new AccountCreateTransaction()
+        .setKey(newKey.publicKey)
+        .setMaxTransactionFee(new Hbar(1))
+        .setInitialBalance(0)
+        .execute(client);
+
+    const transactionReceipt = await transactionId.getReceipt(client);
+    const newAccountId = transactionReceipt.getAccountId();
+
+    console.log("accountId =", newAccountId);
+
+    transactionId = await new TokenCreateTransaction()
+        .setName("ffff")
+        .setSymbol("F")
+        .setDecimals(3)
+        .setInitialSupply(1000000)
+        .setTreasury(operatorId)
+        .setAdminKey(operatorKey.publicKey)
+        .setFreezeKey(operatorKey.publicKey)
+        .setWipeKey(operatorKey.publicKey)
+        .setKycKey(operatorKey.publicKey)
+        .setSupplyKey(operatorKey.publicKey)
+        .setFreezeDefault(false)
+        .setExpirationTime(Date.now() + 7890000)
+        .execute(client);
+
+    const tokenId = (await transactionId.getReceipt(client)).getTokenId();
+    console.log("tokenId =", tokenId.toString());
+
+    await (await new TokenAssociateTransaction()
+        .setAccountId(newAccountId)
+        .addTokenId(tokenId)
+        .build(client)
+        .sign(operatorKey)
+        .sign(newKey)
+        .execute(client))
+        .getReceipt(client);
+
+    console.log("Associated account", newAccountId.toString(), "with token", tokenId.toString());
+
+    await (await new TokenGrantKycTransaction()
+        .setAccountId(newAccountId)
+        .setTokenId(tokenId)
+        .execute(client))
+        .getReceipt(client);
+
+    console.log("Granted Kyc for account", newAccountId.toString(), "on token", tokenId.toString());
+
+    await (await new TokenTransferTransaction()
+        .addSender(tokenId, operatorId, 10)
+        .addRecipient(tokenId, newAccountId, 10)
+        .execute(client))
+        .getReceipt(client);
+
+    console.log(
+        "Sent 10 tokens from account",
+        operatorId.toString(),
+        "to account",
+        newAccountId.toString(),
+        "on token",
+        tokenId.toString()
+    );
+
+    await (await new TokenDeleteTransaction()
+        .setTokenId(tokenId)
+        .execute(client))
+        .getReceipt(client);
+
+    console.log("Deleted token", tokenId.toString());
+}
+
+main();
+

@@ -3,6 +3,7 @@ import { AccountId } from "./account/AccountId";
 import { ConsensusTopicId } from "./consensus/ConsensusTopicId";
 import { ContractId } from "./contract/ContractId";
 import { FileId } from "./file/FileId";
+import { TokenId } from "./token/TokenId";
 import { ExchangeRateSet, exchangeRateSetToSdk } from "./ExchangeRate";
 import { Status } from "./Status";
 
@@ -20,6 +21,7 @@ export class TransactionReceipt {
     private readonly [ "_fileId" ]: FileId | null;
     private readonly [ "_contractId" ]: ContractId | null;
     private readonly [ "_topicId" ]: ConsensusTopicId | null;
+    private readonly [ "_tokenId" ]: TokenId | null;
     private readonly [ "_exchangeRateSet" ]: ExchangeRateSet | null;
     private readonly [ "_topicSequenceNumber" ]: number;
     private readonly [ "_topicRunningHash" ]: Uint8Array;
@@ -30,6 +32,7 @@ export class TransactionReceipt {
         fileId: FileId | null,
         contractId: ContractId | null,
         topicId: ConsensusTopicId | null,
+        tokenId: TokenId | null,
         exchangeRateSet: ExchangeRateSet | null,
         topicSequenceNubmer: number,
         topicRunningHash: Uint8Array
@@ -39,6 +42,7 @@ export class TransactionReceipt {
         this._fileId = fileId;
         this._contractId = contractId;
         this._topicId = topicId;
+        this._tokenId = tokenId;
         this._exchangeRateSet = exchangeRateSet;
         this._topicSequenceNumber = topicSequenceNubmer;
         this._topicRunningHash = topicRunningHash;
@@ -113,6 +117,17 @@ export class TransactionReceipt {
     }
 
     /**
+     * The token ID, if a new token was created.
+     */
+    public getTokenId(): TokenId {
+        if (this._tokenId == null) {
+            throw new Error("receipt does not contain a token ID");
+        }
+
+        return this._tokenId!;
+    }
+
+    /**
      * Updated running hash for a consensus service topic. The result of a ConsensusSubmitMessage.
      */
     public getConsensusTopicRunningHash(): Uint8Array {
@@ -168,6 +183,7 @@ export class TransactionReceipt {
             receipt.hasTopicid() ?
                 ConsensusTopicId._fromProto(receipt.getTopicid()!) :
                 null,
+            receipt.hasTokenid() ? TokenId._fromProto(receipt.getTokenid()!) : null,
             receipt.hasExchangerate() ?
                 exchangeRateSetToSdk(receipt.getExchangerate()!) :
                 null,

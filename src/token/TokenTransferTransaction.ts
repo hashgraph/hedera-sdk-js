@@ -5,14 +5,8 @@ import { grpc } from "@improbable-eng/grpc-web";
 import { TokenTransfersTransactionBody } from "../generated/TokenTransfer_pb";
 import { TokenService } from "../generated/TokenService_pb_service";
 import { AccountAmount, TokenTransferList } from "../generated/BasicTypes_pb";
+import BigNumber from "bignumber.js";
 
-import {
-    Hbar,
-    Tinybar,
-    hbarCheck,
-    hbarFromTinybarOrHbar,
-    hbarToProto
-} from "../Hbar";
 import { AccountId, AccountIdLike } from "../account/AccountId";
 import { TokenId, TokenIdLike } from "./TokenId";
 
@@ -42,47 +36,60 @@ export class TokenTransferTransaction extends SingleTransactionBuilder {
     public addSender(
         tokenId: TokenIdLike,
         accountId: AccountIdLike,
-        amount: Tinybar | Hbar
+        amount: number | BigNumber
     ): this {
-        const hbar = hbarFromTinybarOrHbar(amount);
-        hbar[ hbarCheck ]({ allowNegative: false });
-
-        return this.addTransfer(tokenId, accountId, hbar.negated());
+        return this.addTransfer(
+            tokenId,
+            accountId,
+            amount instanceof BigNumber ?
+                amount.negated() :
+                new BigNumber(amount).negated()
+        );
     }
 
     public addRecipient(
         tokenId: TokenIdLike,
         accountId: AccountIdLike,
-        amount: Tinybar | Hbar
+        amount: number | BigNumber
     ): this {
-        const hbar = hbarFromTinybarOrHbar(amount);
-        hbar[ hbarCheck ]({ allowNegative: false });
-
-        return this.addTransfer(tokenId, accountId, amount);
+        return this.addTransfer(
+            tokenId,
+            accountId,
+            amount instanceof BigNumber ?
+                amount :
+                new BigNumber(amount)
+        );
     }
 
     public addTransfer(
         tokenId: TokenIdLike,
         accountId: AccountIdLike,
-        amount: Tinybar | Hbar
+        amount: number | BigNumber
     ): this {
-        const amountHbar = hbarFromTinybarOrHbar(amount);
-        amountHbar[ hbarCheck ]({ allowNegative: true });
-
         const index = this._tokenIdIndexes.get(new TokenId(tokenId).toString());
+        const token = new TokenId(tokenId);
 
-        const list =
-            index != null ?
-                this._body.getTokentransfersList()[ index ] :
-                new TokenTransferList();
-        this._body.addTokentransfers(list);
+        if (index == null) {
+            this._tokenIdIndexes.set(token.toString(), this._body.getTokentransfersList().length);
+        }
 
-        const transfers = list.getTransfersList() || [];
-        list.setTransfersList(transfers);
+        let list;
+
+        if (index != null) {
+            list = this._body.getTokentransfersList()[ index ];
+        } else {
+            list = new TokenTransferList();
+            this._body.addTokentransfers(list);
+        }
+
+        list.setToken(token._toProto());
+        const transfers = list.getTransfersList();
 
         const acctAmt = new AccountAmount();
         acctAmt.setAccountid(new AccountId(accountId)._toProto());
-        acctAmt.setAmount(amountHbar[ hbarToProto ]());
+        acctAmt.setAmount(amount instanceof BigNumber ?
+            amount.toString(10) :
+            new BigNumber(amount).toString(10));
 
         transfers.push(acctAmt);
 

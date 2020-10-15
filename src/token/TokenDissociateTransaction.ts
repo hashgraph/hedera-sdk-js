@@ -2,7 +2,7 @@ import { SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { TokenAssociateTransactionBody } from "../generated/TokenAssociate_pb";
+import { TokenDissociateTransactionBody } from "../generated/TokenDissociate_pb";
 import { TokenService } from "../generated/TokenService_pb_service";
 import { TokenId, TokenIdLike } from "./TokenId";
 import { AccountId, AccountIdLike } from "../account/AccountId";
@@ -15,18 +15,18 @@ import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
  * If any of the provided tokens is not found, the transaction will resolve to INVALID_TOKEN_REF.
  * If any of the provided tokens has been deleted, the transaction will resolve to TOKEN_WAS_DELETED.
  * If an association between the provided account and any of the tokens does not exist, the transaction will resolve to
- * TOKEN_NOT_ASSOCIATED_TO_ACCOUNT.
+ * TOKEN_NOT_DISSOCIATED_TO_ACCOUNT.
  * If the provided account has a nonzero balance with any of the provided tokens, the transaction will resolve to
  * TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES.
  * On success, associations between the provided account and tokens are removed.
  */
-export class TokenAssociateTransaction extends SingleTransactionBuilder {
-    private _body: TokenAssociateTransactionBody;
+export class TokenDissociateTransaction extends SingleTransactionBuilder {
+    private _body: TokenDissociateTransactionBody;
 
     public constructor() {
         super();
 
-        this._body = new TokenAssociateTransactionBody();
+        this._body = new TokenDissociateTransactionBody();
         this._inner.setTokendissociate(this._body);
     }
 
@@ -46,7 +46,7 @@ export class TokenAssociateTransaction extends SingleTransactionBuilder {
         return this;
     }
 
-    protected get method(): UnaryMethodDefinition<
+    protected get _method(): UnaryMethodDefinition<
         Transaction,
         TransactionResponse
         > {

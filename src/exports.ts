@@ -34,6 +34,22 @@ export { SystemUndeleteTransaction } from "./SystemUndeleteTransaction";
 export { FreezeTransaction } from "./FreezeTransaction";
 export { GetBySolidityIdQuery } from "./GetBySolidityIdQuery";
 
+export { TokenAssociateTransaction } from "./token/TokenAssociateTransaction";
+export { TokenBurnTransaction } from "./token/TokenBurnTransaction";
+export { TokenCreateTransaction } from "./token/TokenCreateTransaction";
+export { TokenDeleteTransaction } from "./token/TokenDeleteTransaction";
+export { TokenDissociateTransaction } from "./token/TokenDissociateTransaction";
+export { TokenFreezeTransaction } from "./token/TokenFreezeTransaction";
+export { TokenGrantKycTransaction } from "./token/TokenGrantKycTransaction";
+export { TokenId } from "./token/TokenId";
+export { TokenInfoQuery, TokenInfo } from "./token/TokenInfoQuery";
+export { TokenMintTransaction } from "./token/TokenMintTransaction";
+export { TokenRevokeKycTransaction } from "./token/TokenRevokeKycTransaction";
+export { TokenTransferTransaction } from "./token/TokenTransferTransaction";
+export { TokenUnfreezeTransaction } from "./token/TokenUnfreezeTransaction";
+export { TokenUpdateTransaction } from "./token/TokenUpdateTransaction";
+export { TokenWipeTransaction } from "./token/TokenWipeTransaction";
+
 export { NetworkVersionInfoQuery, NetworkVersionInfo, SemanticVersion } from "./NetworkVersionInfoQuery";
 
 export { Transaction } from "./Transaction";
