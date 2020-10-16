@@ -137,9 +137,17 @@ export class TokenRelationshipMap {
     public keys(): IterableIterator<TokenId> {
         const keys = [];
         for (const key of this._relationships.keys()) {
-            keys.push(new TokenId(key));
+            keys.push(TokenId.fromString(key));
         }
         return keys[ Symbol.iterator ]();
+    }
+
+    public [ Symbol.iterator ](): IterableIterator<[TokenId, TokenRelationship]> {
+        const map = new Map();
+        for (const [ key, value ] of this._relationships) {
+            map.set(TokenId.fromString(key), value);
+        }
+        return map[ Symbol.iterator ]();
     }
 }
 
