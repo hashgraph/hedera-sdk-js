@@ -3,8 +3,8 @@ import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Hbar from "../Hbar.js";
 
 /**
- * @typedef {import("../channel/Channel").default} Channel
- * @typedef {import("../channel/MirrorChannel").default} MirrorChannel
+ * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../channel/MirrorChannel.js").default} MirrorChannel
  */
 
 /**

@@ -1,5 +1,5 @@
-import TokenId from "./TokenId";
-import AccountId from "../account/AccountId";
+import TokenId from "./TokenId.js";
+import AccountId from "../account/AccountId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";

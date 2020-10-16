@@ -1,4 +1,4 @@
-import TokenId from "./TokenId";
+import TokenId from "./TokenId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";

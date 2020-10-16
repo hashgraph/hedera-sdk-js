@@ -1,10 +1,10 @@
-import TokenId from "./TokenId";
+import TokenId from "./TokenId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
-import AccountId from "../account/AccountId";
+import AccountId from "../account/AccountId.js";
 
 /**
  * @namespace proto

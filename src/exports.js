@@ -63,6 +63,8 @@ export { default as TransactionReceiptQuery } from "./transaction/TransactionRec
 export { default as TransactionRecord } from "./transaction/TransactionRecord.js";
 export { default as TransactionRecordQuery } from "./transaction/TransactionRecordQuery.js";
 export { default as TransactionResponse } from "./transaction/TransactionResponse.js";
+export { default as TokenRelationship } from "./account/TokenRelationship.js";
+export { default as TokenRelationshipMap } from "./account/TokenRelationshipMap.js";
 export { default as Transfer } from "./Transfer.js";
 
 import "./query/CostQuery.js";
