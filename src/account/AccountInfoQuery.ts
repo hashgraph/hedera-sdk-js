@@ -1,5 +1,8 @@
 import { QueryBuilder } from "../QueryBuilder";
-import { CryptoGetInfoQuery } from "../generated/CryptoGetInfo_pb";
+import {
+    CryptoGetInfoQuery,
+    TokenRelationship as ProtoTokenRelationship
+} from "../generated/CryptoGetInfo_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Query } from "../generated/Query_pb";
 import { Response } from "../generated/Response_pb";
@@ -11,6 +14,8 @@ import { timestampToMs } from "../Timestamp";
 import { ResponseHeader } from "../generated/ResponseHeader_pb";
 import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
 import { BaseClient } from "../BaseClient";
+import { TokenId, TokenIdLike } from "../token/TokenId";
+import BigNumber from "bignumber.js";
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -86,6 +91,56 @@ export interface AccountInfo {
      * expires, then it is deleted.
      */
     autoRenewPeriod: number;
+
+    tokenRelationships: TokenRelationshipMap;
+}
+
+export interface TokenRelationship {
+    tokenId: TokenId;
+    symbol: string;
+    balance: BigNumber;
+    kycStatus: boolean | null;
+    freezeStatus: boolean | null;
+}
+
+export class TokenRelationshipMap {
+    private _relationships: Map<string, TokenRelationship> = new Map();
+
+    public constructor(relationships: ProtoTokenRelationship[]) {
+        for (const relationship of relationships) {
+            const tokenId = TokenId._fromProto(relationship.getTokenid()!);
+            const kycStatus = relationship.getKycstatus();
+            const freezeStatus = relationship.getFreezestatus();
+
+            this._relationships.set(
+                tokenId.toString(),
+                {
+                    tokenId,
+                    symbol: relationship.getSymbol(),
+                    balance: new BigNumber(relationship.getBalance()),
+                    kycStatus: kycStatus === 0 ? null : kycStatus === 2,
+                    freezeStatus: freezeStatus === 0 ? null : freezeStatus === 2
+                }
+            );
+        }
+    }
+
+    public get(tokenId: TokenIdLike): TokenRelationship | undefined {
+        const token = new TokenId(tokenId).toString();
+        return this._relationships.get(token);
+    }
+
+    public values(): IterableIterator<TokenRelationship> {
+        return this._relationships.values();
+    }
+
+    public keys(): IterableIterator<TokenId> {
+        const keys = [];
+        for (const key of this._relationships.keys()) {
+            keys.push(new TokenId(key));
+        }
+        return keys[ Symbol.iterator ]();
+    }
 }
 
 /**
@@ -166,7 +221,8 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
                 AccountId._fromProto(accountInfo.getProxyaccountid()!) :
                 null,
 
-            proxyReceived: Hbar.fromTinybar(accountInfo.getProxyreceived())
+            proxyReceived: Hbar.fromTinybar(accountInfo.getProxyreceived()),
+            tokenRelationships: new TokenRelationshipMap(accountInfo.getTokenrelationshipsList())
         };
     }
 }
