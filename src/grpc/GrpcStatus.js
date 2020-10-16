@@ -79,20 +79,20 @@ export default class GrpcStatus {
     }
 }
 
-GrpcStatus.Ok = GrpcStatus[0] = new GrpcStatus(0);
-GrpcStatus.Cancelled = GrpcStatus[1] = new GrpcStatus(1);
-GrpcStatus.Unknown = GrpcStatus[2] = new GrpcStatus(2);
-GrpcStatus.InvalidArgument = GrpcStatus[3] = new GrpcStatus(3);
-GrpcStatus.DeadlineExceeded = GrpcStatus[4] = new GrpcStatus(4);
-GrpcStatus.NotFound = GrpcStatus[5] = new GrpcStatus(5);
-GrpcStatus.AlreadyExists = GrpcStatus[6] = new GrpcStatus(6);
-GrpcStatus.PermissionDenied = GrpcStatus[7] = new GrpcStatus(7);
-GrpcStatus.Unauthenticated = GrpcStatus[16] = new GrpcStatus(16);
-GrpcStatus.ResourceExhausted = GrpcStatus[8] = new GrpcStatus(8);
-GrpcStatus.FailedPrecondition = GrpcStatus[9] = new GrpcStatus(9);
-GrpcStatus.Aborted = GrpcStatus[10] = new GrpcStatus(10);
-GrpcStatus.OutOfRange = GrpcStatus[11] = new GrpcStatus(11);
-GrpcStatus.Unimplemented = GrpcStatus[12] = new GrpcStatus(12);
-GrpcStatus.Internal = GrpcStatus[13] = new GrpcStatus(13);
-GrpcStatus.Unavailable = GrpcStatus[14] = new GrpcStatus(14);
-GrpcStatus.DataLoss = GrpcStatus[15] = new GrpcStatus(15);
+GrpcStatus.Ok = new GrpcStatus(0);
+GrpcStatus.Cancelled = new GrpcStatus(1);
+GrpcStatus.Unknown = new GrpcStatus(2);
+GrpcStatus.InvalidArgument = new GrpcStatus(3);
+GrpcStatus.DeadlineExceeded = new GrpcStatus(4);
+GrpcStatus.NotFound = new GrpcStatus(5);
+GrpcStatus.AlreadyExists = new GrpcStatus(6);
+GrpcStatus.PermissionDenied = new GrpcStatus(7);
+GrpcStatus.Unauthenticated = new GrpcStatus(16);
+GrpcStatus.ResourceExhausted = new GrpcStatus(8);
+GrpcStatus.FailedPrecondition = new GrpcStatus(9);
+GrpcStatus.Aborted = new GrpcStatus(10);
+GrpcStatus.OutOfRange = new GrpcStatus(11);
+GrpcStatus.Unimplemented = new GrpcStatus(12);
+GrpcStatus.Internal = new GrpcStatus(13);
+GrpcStatus.Unavailable = new GrpcStatus(14);
+GrpcStatus.DataLoss = new GrpcStatus(15);
