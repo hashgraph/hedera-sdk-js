@@ -136,6 +136,9 @@ import ITokenTransfersTransactionBody = proto.ITokenTransfersTransactionBody;
 import ITokenUnfreezeAccountTransactionBody = proto.ITokenUnfreezeAccountTransactionBody;
 import ITokenUpdateTransactionBody = proto.ITokenUpdateTransactionBody;
 import ITokenWipeAccountTransactionBody = proto.ITokenWipeAccountTransactionBody;
+import ITokenRelationship = proto.ITokenRelationship;
+import TokenKycStatus = proto.TokenKycStatus;
+import TokenFreezeStatus = proto.TokenFreezeStatus;
 
 export {
     IAccountID,
@@ -242,4 +245,7 @@ export {
     ITokenUnfreezeAccountTransactionBody,
     ITokenUpdateTransactionBody,
     ITokenWipeAccountTransactionBody,
+    ITokenRelationship,
+    TokenKycStatus,
+    TokenFreezeStatus,
 };

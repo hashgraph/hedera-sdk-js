@@ -4,6 +4,7 @@ import Hbar from "../Hbar.js";
 import Time from "../Timestamp.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
+import TokenRelationshipMap from "./TokenRelationshipMap.js";
 
 /**
  * @namespace proto
@@ -37,6 +38,7 @@ export default class AccountInfo {
      * @param {Time} props.expirationTime
      * @param {Long} props.autoRenewPeriod
      * @param {LiveHash[]} props.liveHashes
+     * @param {TokenRelationshipMap} props.tokenRelationships
      */
     constructor(props) {
         /**
@@ -137,6 +139,9 @@ export default class AccountInfo {
         /** @readonly */
         this.liveHashes = props.liveHashes;
 
+        /** @readonly */
+        this.tokenRelationships = props.tokenRelationships;
+
         Object.freeze(this);
     }
 
@@ -203,6 +208,9 @@ export default class AccountInfo {
                 ? info.liveHashes
                 : []
             ).map((hash) => LiveHash._fromProtobuf(hash)),
+            tokenRelationships: TokenRelationshipMap._fromProtobuf(
+                info.tokenRelationships != null ? info.tokenRelationships : []
+            ),
         });
     }
 
