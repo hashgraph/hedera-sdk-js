@@ -44,7 +44,7 @@ export class TokenUpdateTransaction extends SingleTransactionBuilder {
     /**
      * The new Symbol of the Token. Must be UTF-8 capitalized alphabetical string identifying the token.
      */
-    public setSybmol(symbol: string): this {
+    public setSymbol(symbol: string): this {
         this._body.setSymbol(symbol);
         return this;
     }

@@ -37,8 +37,10 @@ export class TokenMintTransaction extends SingleTransactionBuilder {
      * The amount to mint to the Treasury Account. Amount must be a positive non-zero number represented in the lowest
      * denomination of the token. The new supply must be lower than 2^63.
      */
-    public setAmount(amount: BigNumber): this {
-        this._body.setAmount(amount.toString());
+    public setAmount(amount: BigNumber | number): this {
+        this._body.setAmount((amount instanceof BigNumber ?
+            amount :
+            new BigNumber(amount)).toString());
         return this;
     }
 

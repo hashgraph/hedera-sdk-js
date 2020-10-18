@@ -37,8 +37,10 @@ export class TokenBurnTransaction extends SingleTransactionBuilder {
      * The amount to burn from the Treasury Account. Amount must be a positive non-zero number, not bigger than the
      * token balance of the treasury account (0; balance], represented in the lowest denomination.
      */
-    public setAmount(amount: BigNumber): this {
-        this._body.setAmount(amount.toString());
+    public setAmount(amount: BigNumber | number): this {
+        this._body.setAmount((amount instanceof BigNumber ?
+            amount :
+            new BigNumber(amount)).toString());
         return this;
     }
 

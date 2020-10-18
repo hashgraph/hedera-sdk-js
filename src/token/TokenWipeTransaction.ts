@@ -55,8 +55,10 @@ export class TokenWipeTransaction extends SingleTransactionBuilder {
      * The amount of tokens to wipe from the specified account. Amount must be a positive non-zero number in the lowest
      * denomination possible, not bigger than the token balance of the account (0; balance]
      */
-    public setAmount(amount: BigNumber): this {
-        this._body.setAmount(amount.toString());
+    public setAmount(amount: BigNumber | number): this {
+        this._body.setAmount((amount instanceof BigNumber ?
+            amount :
+            new BigNumber(amount)).toString());
         return this;
     }
 

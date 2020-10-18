@@ -41,8 +41,8 @@ export class TokenDissociateTransaction extends SingleTransactionBuilder {
     /**
      * The tokens to be dissociated with the provided account
      */
-    public addTokenId(id: TokenIdLike): this {
-        this._body.addTokens(new TokenId(id)._toProto());
+    public setTokenIds(...ids: TokenIdLike[]): this {
+        this._body.setTokensList(ids.map((id) => new TokenId(id)._toProto()));
         return this;
     }
 
