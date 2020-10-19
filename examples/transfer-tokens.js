@@ -9,7 +9,8 @@ const {
     TokenCreateTransaction,
     TokenDeleteTransaction,
     TokenGrantKycTransaction,
-    TokenTransferTransaction
+    TokenTransferTransaction,
+    TokenWipeTransaction
 } = require("@hashgraph/sdk");
 
 async function main() {
@@ -64,7 +65,7 @@ async function main() {
 
     await (await new TokenAssociateTransaction()
         .setAccountId(newAccountId)
-        .addTokenId(tokenId)
+        .setTokenIds(tokenId)
         .build(client)
         .sign(operatorKey)
         .sign(newKey)
@@ -96,6 +97,15 @@ async function main() {
         tokenId.toString()
     );
 
+    await (await new TokenWipeTransaction()
+        .setAccountId(newAccountId)
+        .setTokenId(tokenId)
+        .setAmount(10)
+        .execute(client))
+        .getReceipt(client);
+
+    console.log("Wiped balance of account", newAccountId.toString());
+
     await (await new TokenDeleteTransaction()
         .setTokenId(tokenId)
         .execute(client))
@@ -104,7 +114,11 @@ async function main() {
     console.log("Deleted token", tokenId.toString());
 
     await (await new AccountDeleteTransaction()
-        .setAccountId(newAccountId)
+        .setDeleteAccountId(newAccountId)
+        .setTransferAccountId(operatorId)
+        .build(client)
+        .sign(operatorKey)
+        .sign(newKey)
         .execute(client))
         .getReceipt(client);
 

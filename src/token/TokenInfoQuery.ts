@@ -14,7 +14,7 @@ import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
 import BigNumber from "bignumber.js";
 
 /**
- * Response when the client sends the node CryptoGetInfoQuery.
+ * Response when the client sends the node TokenGetInfoQuery.
  */
 export interface TokenInfo {
     /**
@@ -165,7 +165,7 @@ export class TokenInfoQuery extends QueryBuilder<TokenInfo> {
     }
 
     protected _mapResponseHeader(response: Response): ResponseHeader {
-        return response.getCryptogetinfo()!.getHeader()!;
+        return response.getTokengetinfo()!.getHeader()!;
     }
 
     protected _mapResponse(response: Response): TokenInfo {
