@@ -66,5 +66,20 @@ export { default as TransactionResponse } from "./transaction/TransactionRespons
 export { default as TokenRelationship } from "./account/TokenRelationship.js";
 export { default as TokenRelationshipMap } from "./account/TokenRelationshipMap.js";
 export { default as Transfer } from "./Transfer.js";
+export { default as TokenAssociateTransaction } from "./token/TokenAssociateTransaction.js";
+export { default as TokenBurnTransaction } from "./token/TokenBurnTransaction.js";
+export { default as TokenCreateTransaction } from "./token/TokenCreateTransaction.js";
+export { default as TokenDeleteTransaction } from "./token/TokenDeleteTransaction.js";
+export { default as TokenDissociateTransaction } from "./token/TokenDissociateTransaction.js";
+export { default as TokenFreezeTransaction } from "./token/TokenFreezeTransaction.js";
+export { default as TokenGrantKycTransaction } from "./token/TokenGrantKycTransaction.js";
+export { default as TokenId } from "./token/TokenId.js";
+// export { default as TokenInfoQuery, TokenInfo } from "./token/TokenInfoQuery.js";
+export { default as TokenMintTransaction } from "./token/TokenMintTransaction.js";
+export { default as TokenRevokeKycTransaction } from "./token/TokenRevokeKycTransaction.js";
+export { default as TokenTransferTransaction } from "./token/TokenTransferTransaction.js";
+export { default as TokenUnfreezeTransaction } from "./token/TokenUnfreezeTransaction.js";
+export { default as TokenUpdateTransaction } from "./token/TokenUpdateTransaction.js";
+export { default as TokenWipeTransaction } from "./token/TokenWipeTransaction.js";
 
 import "./query/CostQuery.js";

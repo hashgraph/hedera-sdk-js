@@ -167,7 +167,7 @@ export default class TokenCreateTransaction extends Transaction {
         }
 
         if (props.supplyKey != null) {
-            this.setsupplyKey(props.supplyKey);
+            this.setSupplyKey(props.supplyKey);
         }
 
         if (props.freezeDefault != null) {
@@ -417,7 +417,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @param {Key} key
      * @returns {this}
      */
-    setsupplyKey(key) {
+    setSupplyKey(key) {
         this._requireNotFrozen();
         this._supplyKey = key;
 

@@ -127,24 +127,24 @@ export default class Status {
                 return "INVALID_SIGNATURE_TYPE_MISMATCHING_KEY";
             case Status.InvalidSignatureCountMismatchingKey:
                 return "INVALID_SIGNATURE_COUNT_MISMATCHING_KEY";
-            case Status.EmptyClaimBody:
-                return "EMPTY_CLAIM_BODY";
-            case Status.EmptyClaimHash:
-                return "EMPTY_CLAIM_HASH";
-            case Status.EmptyClaimKeys:
-                return "EMPTY_CLAIM_KEYS";
-            case Status.InvalidClaimHashSize:
-                return "INVALID_CLAIM_HASH_SIZE";
+            case Status.EmptyLiveHashBody:
+                return "EMPTY_LIVE_HASH_BODY";
+            case Status.EmptyLiveHash:
+                return "EMPTY_LIVE_HASH";
+            case Status.EmptyLiveHashKeys:
+                return "EMPTY_LIVE_HASH_KEYS";
+            case Status.InvalidLiveHashSize:
+                return "INVALID_LIVE_HASH_SIZE";
             case Status.EmptyQueryBody:
                 return "EMPTY_QUERY_BODY";
-            case Status.EmptyClaimQuery:
-                return "EMPTY_CLAIM_QUERY";
-            case Status.ClaimNotFound:
-                return "CLAIM_NOT_FOUND";
+            case Status.EmptyLiveHashQuery:
+                return "EMPTY_LIVE_HASH_QUERY";
+            case Status.LiveHashNotFound:
+                return "LIVE_HASH_NOT_FOUND";
             case Status.AccountIdDoesNotExist:
                 return "ACCOUNT_ID_DOES_NOT_EXIST";
-            case Status.ClaimAlreadyExists:
-                return "CLAIM_ALREADY_EXISTS";
+            case Status.LiveHashAlreadyExists:
+                return "LIVE_HASH_ALREADY_EXISTS";
             case Status.InvalidFileWacl:
                 return "INVALID_FILE_WACL";
             case Status.SerializationFailed:
@@ -236,17 +236,17 @@ export default class Status {
             case Status.MaxContractStorageExceeded:
                 return "MAX_CONTRACT_STORAGE_EXCEEDED";
             case Status.TransferAccountSameAsDeleteAccount:
-                return "TRANSAFER_ACCOUNT_SAME_AS_DELETE_ACCOUNT";
+                return "TRANSFER_ACCOUNT_SAME_AS_DELETE_ACCOUNT";
             case Status.TotalLedgerBalanceInvalid:
                 return "TOTAL_LEDGER_BALANCE_INVALID";
             case Status.ExpirationReductionNotAllowed:
                 return "EXPIRATION_REDUCTION_NOT_ALLOWED";
             case Status.MaxGasLimitExceeded:
                 return "MAX_GAS_LIMIT_EXCEEDED";
+            case Status.MaxFileSizeExceeded:
+                return "MAX_FILE_SIZE_EXCEEDED";
             case Status.InvalidTopicId:
                 return "INVALID_TOPIC_ID";
-            case Status.InvalidTopicExpirationTime:
-                return "INVALID_TOPIC_EXPIRATION_TIME";
             case Status.InvalidAdminKey:
                 return "INVALID_ADMIN_KEY";
             case Status.InvalidSubmitKey:
@@ -258,11 +258,85 @@ export default class Status {
             case Status.InvalidAutorenewAccount:
                 return "INVALID_AUTORENEW_ACCOUNT";
             case Status.AutoRenewAccountNotAllowed:
-                return "AUTORENEW_ACCOUNT_NOT_ALLOWED";
-            case Status.AutoRenewAccountSignatureMissing:
-                return "AUTORENEW_ACCOUNT_SIGNATURE_MISSING";
+                return "AUTO_RENEW_ACCOUNT_NOT_ALLOWED";
             case Status.TopicExpired:
                 return "TOPIC_EXPIRED";
+            case Status.InvalidChunkNumber:
+                return "INVALID_CHUNK_NUMBER";
+            case Status.InvalidChunkTransactionId:
+                return "INVALID_CHUNK_TRANSACTION_ID";
+            case Status.AccountFrozenForToken:
+                return "ACCOUNT_FROZEN_FOR_TOKEN";
+            case Status.TokensPerAccountLimitExceeded:
+                return "TOKENS_PER_ACCOUNT_LIMIT_EXCEEDED";
+            case Status.InvalidTokenId:
+                return "INVALID_TOKEN_ID";
+            case Status.InvalidTokenDecimals:
+                return "INVALID_TOKEN_DECIMALS";
+            case Status.InvalidTokenInitialSupply:
+                return "INVALID_TOKEN_INITIAL_SUPPLY";
+            case Status.InvalidTreasuryAccountForToken:
+                return "INVALID_TREASURY_ACCOUNT_FOR_TOKEN";
+            case Status.InvalidTokenSymbol:
+                return "INVALID_TOKEN_SYMBOL";
+            case Status.TokenHasNoFreezeKey:
+                return "TOKEN_HAS_NO_FREEZE_KEY";
+            case Status.TransfersNotZeroSumForToken:
+                return "TRANSFERS_NOT_ZERO_SUM_FOR_TOKEN";
+            case Status.MissingTokenSymbol:
+                return "MISSING_TOKEN_SYMBOL";
+            case Status.TokenSymbolTooLong:
+                return "TOKEN_SYMBOL_TOO_LONG";
+            case Status.AccountKycNotGrantedForToken:
+                return "ACCOUNT_KYC_NOT_GRANTED_FOR_TOKEN";
+            case Status.TokenHasNoKycKey:
+                return "TOKEN_HAS_NO_KYC_KEY";
+            case Status.InsufficientTokenBalance:
+                return "INSUFFICIENT_TOKEN_BALANCE";
+            case Status.TokenWasDeleted:
+                return "TOKEN_WAS_DELETED";
+            case Status.TokenHasNoSupplyKey:
+                return "TOKEN_HAS_NO_SUPPLY_KEY";
+            case Status.TokenHasNoWipeKey:
+                return "TOKEN_HAS_NO_WIPE_KEY";
+            case Status.InvalidTokenMintAmount:
+                return "INVALID_TOKEN_MINT_AMOUNT";
+            case Status.InvalidTokenBurnAmount:
+                return "INVALID_TOKEN_BURN_AMOUNT";
+            case Status.TokenNotAssociatedToAccount:
+                return "TOKEN_NOT_ASSOCIATED_TO_ACCOUNT";
+            case Status.CannotWipeTokenTreasuryAccount:
+                return "CANNOT_WIPE_TOKEN_TREASURY_ACCOUNT";
+            case Status.InvalidKycKey:
+                return "INVALID_KYC_KEY";
+            case Status.InvalidWipeKey:
+                return "INVALID_WIPE_KEY";
+            case Status.InvalidFreezeKey:
+                return "INVALID_FREEZE_KEY";
+            case Status.InvalidSupplyKey:
+                return "INVALID_SUPPLY_KEY";
+            case Status.MissingTokenName:
+                return "MISSING_TOKEN_NAME";
+            case Status.TokenNameTooLong:
+                return "TOKEN_NAME_TOO_LONG";
+            case Status.InvalidWipingAmount:
+                return "INVALID_WIPING_AMOUNT";
+            case Status.TokenIsImmutable:
+                return "TOKEN_IS_IMMUTABLE";
+            case Status.TokenAlreadyAssociatedToAccount:
+                return "TokenAlreadyAssociatedToAccount";
+            case Status.TransactionRequiresZeroTokenBalances:
+                return "TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES";
+            case Status.AccountIsTreasury:
+                return "ACCOUNT_IS_TREASURY";
+            case Status.TokenIdRepeatedInTokenList:
+                return "TOKEN_ID_REPEATED_IN_TOKEN_LIST";
+            case Status.TokenTransferListSizeLimitExceeded:
+                return "TOKEN_TRANSFER_LIST_SIZE_LIMIT_EXCEEDED";
+            case Status.EmptyTokenTransferBody:
+                return "EMPTY_TOKEN_TRANSFER_BODY";
+            case Status.EmptyTokenTransferAccountAmounts:
+                return "EMPTY_TOKEN_TRANSFER_ACCOUNT_AMOUNTS";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -274,9 +348,328 @@ export default class Status {
      * @returns {Status}
      */
     static _fromCode(code) {
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return Status[code] != null ? Status[code] : new Status(code);
+        switch (code) {
+            case 0:
+                return Status.Ok;
+            case 1:
+                return Status.InvalidTransaction;
+            case 2:
+                return Status.PayerAccountNotFound;
+            case 3:
+                return Status.InvalidNodeAccount;
+            case 4:
+                return Status.TransactionExpired;
+            case 5:
+                return Status.InvalidTransactionStart;
+            case 6:
+                return Status.InvalidTransactionDuration;
+            case 7:
+                return Status.InvalidSignature;
+            case 8:
+                return Status.MemoTooLong;
+            case 9:
+                return Status.InsufficientTxFee;
+            case 10:
+                return Status.InsufficientPayerBalance;
+            case 11:
+                return Status.DuplicateTransaction;
+            case 12:
+                return Status.Busy;
+            case 13:
+                return Status.NotSupported;
+            case 14:
+                return Status.InvalidFileId;
+            case 15:
+                return Status.InvalidAccountId;
+            case 16:
+                return Status.InvalidContractId;
+            case 17:
+                return Status.InvalidTransactionId;
+            case 18:
+                return Status.ReceiptNotFound;
+            case 19:
+                return Status.RecordNotFound;
+            case 20:
+                return Status.InvalidSolidityId;
+            case 21:
+                return Status.Unknown;
+            case 22:
+                return Status.Success;
+            case 23:
+                return Status.FailInvalid;
+            case 24:
+                return Status.FailFee;
+            case 25:
+                return Status.FailBalance;
+            case 26:
+                return Status.KeyRequired;
+            case 27:
+                return Status.BadEncoding;
+            case 28:
+                return Status.InsufficientAccountBalance;
+            case 29:
+                return Status.InvalidSolidityAddress;
+            case 30:
+                return Status.InsufficientGas;
+            case 31:
+                return Status.ContractSizeLimitExceeded;
+            case 32:
+                return Status.LocalCallModificationException;
+            case 33:
+                return Status.ContractRevertExecuted;
+            case 34:
+                return Status.ContractExecutionException;
+            case 35:
+                return Status.InvalidReceivingNodeAccount;
+            case 36:
+                return Status.MissingQueryHeader;
+            case 37:
+                return Status.AccountUpdateFailed;
+            case 38:
+                return Status.InvalidKeyEncoding;
+            case 39:
+                return Status.NullSolidityAddress;
+            case 40:
+                return Status.ContractUpdateFailed;
+            case 41:
+                return Status.InvalidQueryHeader;
+            case 42:
+                return Status.InvalidFeeSubmitted;
+            case 43:
+                return Status.InvalidPayerSignature;
+            case 44:
+                return Status.KeyNotProvided;
+            case 45:
+                return Status.InvalidExpirationTime;
+            case 46:
+                return Status.NoWaclKey;
+            case 47:
+                return Status.FileContentEmpty;
+            case 48:
+                return Status.InvalidAccountAmounts;
+            case 49:
+                return Status.EmptyTransactionBody;
+            case 50:
+                return Status.InvalidTransactionBody;
+            case 51:
+                return Status.InvalidSignatureTypeMismatchingKey;
+            case 52:
+                return Status.InvalidSignatureCountMismatchingKey;
+            case 53:
+                return Status.EmptyLiveHashBody;
+            case 54:
+                return Status.EmptyLiveHash;
+            case 55:
+                return Status.EmptyLiveHashKeys;
+            case 56:
+                return Status.InvalidLiveHashSize;
+            case 57:
+                return Status.EmptyQueryBody;
+            case 58:
+                return Status.EmptyLiveHashQuery;
+            case 59:
+                return Status.LiveHashNotFound;
+            case 60:
+                return Status.AccountIdDoesNotExist;
+            case 61:
+                return Status.LiveHashAlreadyExists;
+            case 62:
+                return Status.InvalidFileWacl;
+            case 63:
+                return Status.SerializationFailed;
+            case 64:
+                return Status.TransactionOversize;
+            case 65:
+                return Status.TransactionTooManyLayers;
+            case 66:
+                return Status.ContractDeleted;
+            case 67:
+                return Status.PlatformNotActive;
+            case 68:
+                return Status.KeyPrefixMismatch;
+            case 69:
+                return Status.PlatformTransactionNotCreated;
+            case 70:
+                return Status.InvalidRenewalPeriod;
+            case 71:
+                return Status.InvalidPayerAccountId;
+            case 72:
+                return Status.AccountDeleted;
+            case 73:
+                return Status.FileDeleted;
+            case 74:
+                return Status.AccountRepeatedInAccountAmounts;
+            case 75:
+                return Status.SettingNegativeAccountBalance;
+            case 76:
+                return Status.ObtainerRequired;
+            case 77:
+                return Status.ObtainerSameContractId;
+            case 78:
+                return Status.ObtainerDoesNotExist;
+            case 79:
+                return Status.ModifyingImmutableContract;
+            case 80:
+                return Status.FileSystemException;
+            case 81:
+                return Status.AutorenewDurationNotInRange;
+            case 82:
+                return Status.ErrorDecodingBytestring;
+            case 83:
+                return Status.ContractFileEmpty;
+            case 84:
+                return Status.ContractBytecodeEmpty;
+            case 85:
+                return Status.InvalidInitialBalance;
+            case 86:
+                return Status.InvalidReceiveRecordThreshold;
+            case 87:
+                return Status.InvalidSendRecordThreshold;
+            case 88:
+                return Status.AccountIsNotGenesisAccount;
+            case 89:
+                return Status.PayerAccountUnauthorized;
+            case 90:
+                return Status.InvalidFreezeTransactionBody;
+            case 91:
+                return Status.FreezeTransactionBodyNotFound;
+            case 92:
+                return Status.TransferListSizeLimitExceeded;
+            case 93:
+                return Status.ResultSizeLimitExceeded;
+            case 94:
+                return Status.NotSpecialAccount;
+            case 95:
+                return Status.ContractNegativeGas;
+            case 96:
+                return Status.ContractNegativeValue;
+            case 97:
+                return Status.InvalidFeeFile;
+            case 98:
+                return Status.InvalidExchangeRateFile;
+            case 99:
+                return Status.InsufficientLocalCallGas;
+            case 100:
+                return Status.EntityNotAllowedToDelete;
+            case 101:
+                return Status.AuthorizationFailed;
+            case 102:
+                return Status.FileUploadedProtoInvalid;
+            case 103:
+                return Status.FileUploadedProtoNotSavedToDisk;
+            case 104:
+                return Status.FeeScheduleFilePartUploaded;
+            case 105:
+                return Status.ExchangeRateChangeLimitExceeded;
+            case 106:
+                return Status.MaxContractStorageExceeded;
+            case 107:
+                return Status.TransferAccountSameAsDeleteAccount;
+            case 108:
+                return Status.TotalLedgerBalanceInvalid;
+            case 110:
+                return Status.ExpirationReductionNotAllowed;
+            case 111:
+                return Status.MaxGasLimitExceeded;
+            case 112:
+                return Status.MaxFileSizeExceeded;
+            case 150:
+                return Status.InvalidTopicId;
+            case 155:
+                return Status.InvalidAdminKey;
+            case 156:
+                return Status.InvalidSubmitKey;
+            case 157:
+                return Status.Unauthorized;
+            case 158:
+                return Status.InvalidTopicMessage;
+            case 159:
+                return Status.InvalidAutorenewAccount;
+            case 160:
+                return Status.AutoRenewAccountNotAllowed;
+            case 162:
+                return Status.TopicExpired;
+            case 163:
+                return Status.InvalidChunkNumber;
+            case 164:
+                return Status.InvalidChunkTransactionId;
+            case 165:
+                return Status.AccountFrozenForToken;
+            case 166:
+                return Status.TokensPerAccountLimitExceeded;
+            case 167:
+                return Status.InvalidTokenId;
+            case 168:
+                return Status.InvalidTokenDecimals;
+            case 169:
+                return Status.InvalidTokenInitialSupply;
+            case 170:
+                return Status.InvalidTreasuryAccountForToken;
+            case 171:
+                return Status.InvalidTokenSymbol;
+            case 172:
+                return Status.TokenHasNoFreezeKey;
+            case 173:
+                return Status.TransfersNotZeroSumForToken;
+            case 174:
+                return Status.MissingTokenSymbol;
+            case 175:
+                return Status.TokenSymbolTooLong;
+            case 176:
+                return Status.AccountKycNotGrantedForToken;
+            case 177:
+                return Status.TokenHasNoKycKey;
+            case 178:
+                return Status.InsufficientTokenBalance;
+            case 179:
+                return Status.TokenWasDeleted;
+            case 180:
+                return Status.TokenHasNoSupplyKey;
+            case 181:
+                return Status.TokenHasNoWipeKey;
+            case 182:
+                return Status.InvalidTokenMintAmount;
+            case 183:
+                return Status.InvalidTokenBurnAmount;
+            case 184:
+                return Status.TokenNotAssociatedToAccount;
+            case 185:
+                return Status.CannotWipeTokenTreasuryAccount;
+            case 186:
+                return Status.InvalidKycKey;
+            case 187:
+                return Status.InvalidWipeKey;
+            case 188:
+                return Status.InvalidFreezeKey;
+            case 189:
+                return Status.InvalidSupplyKey;
+            case 190:
+                return Status.MissingTokenName;
+            case 191:
+                return Status.TokenNameTooLong;
+            case 192:
+                return Status.InvalidWipingAmount;
+            case 193:
+                return Status.TokenIsImmutable;
+            case 194:
+                return Status.TokenAlreadyAssociatedToAccount;
+            case 195:
+                return Status.TransactionRequiresZeroTokenBalances;
+            case 196:
+                return Status.AccountIsTreasury;
+            case 197:
+                return Status.TokenIdRepeatedInTokenList;
+            case 198:
+                return Status.TokenTransferListSizeLimitExceeded;
+            case 199:
+                return Status.EmptyTokenTransferBody;
+            case 200:
+                return Status.EmptyTokenTransferAccountAmounts;
+        }
+
+        throw new Error(
+            `(BUG) Status.fromCode() does not handle code: ${code}`
+        );
     }
 
     /**
@@ -557,6 +950,26 @@ Status.InvalidSignatureTypeMismatchingKey = new Status(51);
 Status.InvalidSignatureCountMismatchingKey = new Status(52);
 
 /**
+ * The livehash body is empty
+ */
+Status.EmptyLiveHashBody = new Status(53);
+
+/**
+ * The livehash data is missing
+ */
+Status.EmptyLiveHash = new Status(54);
+
+/**
+ * The keys for a livehash are missing
+ */
+Status.EmptyLiveHashKeys = new Status(55);
+
+/**
+ * The livehash data is not the output of a Sha-384 digest
+ */
+Status.InvalidLiveHashSize = new Status(56);
+
+/**
  * The claim body is empty.
  */
 Status.EmptyClaimBody = new Status(53);
@@ -582,6 +995,16 @@ Status.InvalidClaimHashSize = new Status(56);
 Status.EmptyQueryBody = new Status(57);
 
 /**
+ * The crypto livehash query is empty
+ */
+Status.EmptyLiveHashQuery = new Status(58);
+
+/**
+ * The livehash is not present
+ */
+Status.LiveHashNotFound = new Status(59);
+
+/**
  * The crypto claim query is empty
  */
 Status.EmptyClaimQuery = new Status(58);
@@ -595,6 +1018,11 @@ Status.ClaimNotFound = new Status(59);
  * The account id passed has not yet been created.
  */
 Status.AccountIdDoesNotExist = new Status(60);
+
+/**
+ * The livehash already exists for a given account
+ */
+Status.LiveHashAlreadyExists = new Status(61);
 
 /**
  * The claim hash already exists
@@ -854,6 +1282,11 @@ Status.ExpirationReductionNotAllowed = new Status(110);
 Status.MaxGasLimitExceeded = new Status(111);
 
 /**
+ * File size exceeded the currently allowable limit
+ */
+Status.MaxFileSizeExceeded = new Status(112);
+
+/**
  * The Topic ID specified is not in the system.
  */
 Status.InvalidTopicId = new Status(150);
@@ -893,3 +1326,174 @@ Status.AutoRenewAccountSignatureMissing = new Status(161);
  * until autoRenew functionality is supported by HAPI.
  */
 Status.TopicExpired = new Status(162);
+
+/**
+ * Chunk number must be from 1 to total (chunks) inclusive.
+ */
+Status.InvalidChunkNumber = new Status(163);
+
+/**
+ * For every chunk, the payer account that is part of initialTransactionId must match the Payer
+ * Account of this transaction. The entire initialTransactionId should match the transactionId of
+ * the first chunk, but this is not checked or enforced by Hedera except when the chunk number is 1.
+ */
+Status.InvalidChunkTransactionId = new Status(164);
+
+/**
+ * Account is frozen and cannot transact with the token
+ */
+Status.AccountFrozenForToken = new Status(165);
+
+/**
+ * Maximum number of token relations for agiven account is exceeded
+ */
+Status.TokensPerAccountLimitExceeded = new Status(166);
+
+/**
+ * The token is invalid or does not exist
+ */
+Status.InvalidTokenId = new Status(167);
+
+/**
+ * Invalid token decimals
+ */
+Status.InvalidTokenDecimals = new Status(168);
+
+/**
+ * Invalid token initial supply
+ */
+Status.InvalidTokenInitialSupply = new Status(169);
+
+/**
+ * Treasury Account does not exist or is deleted
+ */
+Status.InvalidTreasuryAccountForToken = new Status(170);
+
+/**
+ * Token Symbol is not Utf-8 capitalized alphabetical string
+ */
+Status.InvalidTokenSymbol = new Status(171);
+
+/**
+ * Freeze key is not set on token
+ */
+Status.TokenHasNoFreezeKey = new Status(172);
+
+/**
+ * Amounts in transfer list are not net zero
+ */
+Status.TransfersNotZeroSumForToken = new Status(173);
+
+/**
+ * Token Symbol is not provided
+ */
+Status.MissingTokenSymbol = new Status(174);
+
+/**
+ * Token Symbol is too long
+ */
+Status.TokenSymbolTooLong = new Status(175);
+
+/**
+ * Kyc must be granted and account does not have Kyc granted
+ */
+Status.AccountKycNotGrantedForToken = new Status(176);
+
+/**
+ * Kyc key is not set on token
+ */
+Status.TokenHasNoKycKey = new Status(177);
+
+/**
+ * Token balance is not sufficient for the transaction
+ */
+Status.InsufficientTokenBalance = new Status(178);
+
+/**
+ * Token transactions cannot be executed on deleted token
+ */
+Status.TokenWasDeleted = new Status(179);
+
+/**
+ * Supply key is not set on token
+ */
+Status.TokenHasNoSupplyKey = new Status(180);
+
+/**
+ * Wipe key is not set on token
+ */
+Status.TokenHasNoWipeKey = new Status(181);
+
+Status.InvalidTokenMintAmount = new Status(182);
+
+Status.InvalidTokenBurnAmount = new Status(183);
+
+Status.TokenNotAssociatedToAccount = new Status(184);
+
+/**
+ * Cannot execute wipe operation on treasury account
+ */
+Status.CannotWipeTokenTreasuryAccount = new Status(185);
+
+Status.InvalidKycKey = new Status(186);
+
+Status.InvalidWipeKey = new Status(187);
+
+Status.InvalidFreezeKey = new Status(188);
+
+Status.InvalidSupplyKey = new Status(189);
+
+/**
+ * Token Name is not provided
+ */
+Status.MissingTokenName = new Status(190);
+
+/**
+ * Token Name is too long
+ */
+Status.TokenNameTooLong = new Status(191);
+
+/**
+ * The provided wipe amount must not be negative, zero or bigger than the token holder balance
+ */
+Status.InvalidWipingAmount = new Status(192);
+
+/**
+ * Token does not have Admin key set, thus update/delete transactions cannot be performed
+ */
+Status.TokenIsImmutable = new Status(193);
+
+/**
+ * An <tt>associateToken</tt> operation specified a token already associated to the account
+ */
+Status.TokenAlreadyAssociatedToAccount = new Status(194);
+
+/**
+ * An attempted operation is invalid until all token balances for the target account are zero
+ */
+Status.TransactionRequiresZeroTokenBalances = new Status(195);
+
+/**
+ * An attempted operation is invalid because the account is a treasury
+ */
+Status.AccountIsTreasury = new Status(196);
+
+/**
+ * Same TokenIds present in the token list
+ */
+Status.TokenIdRepeatedInTokenList = new Status(197);
+
+/**
+ * Exceeded the number of token transfers (both from and to) allowed for token transfer list
+ */
+Status.TokenTransferListSizeLimitExceeded = new Status(198);
+
+/**
+ * TokenTransfersTransactionBody has no TokenTransferList
+ */
+Status.EmptyTokenTransferBody = new Status(199);
+
+/**
+ * TokenTransfersTransactionBody has a TokenTransferList with no AccountAmounts
+ */
+Status.EmptyTokenTransferAccountAmounts = new Status(200);

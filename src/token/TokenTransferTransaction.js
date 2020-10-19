@@ -37,7 +37,7 @@ import Long from "long";
 /**
  * Transfers a new Hedera™ crypto-currency token.
  */
-export default class TokenTransfersTransaction extends Transaction {
+export default class TokenTransferTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {(TransferObjectInput)[]} [props.transfers]
@@ -64,12 +64,12 @@ export default class TokenTransfersTransaction extends Transaction {
     /**
      * @internal
      * @param {proto.ITransactionBody} body
-     * @returns {TokenTransfersTransaction}
+     * @returns {TokenTransferTransaction}
      */
     static _fromProtobuf(body) {
         const transfersToken = /** @type {proto.ITokenTransfersTransactionBody} */ (body.tokenTransfers);
 
-        const transfers = new TokenTransfersTransaction();
+        const transfers = new TokenTransferTransaction();
         for (const list of transfersToken.tokenTransfers != null
             ? transfersToken.tokenTransfers
             : []) {
@@ -188,7 +188,7 @@ export default class TokenTransfersTransaction extends Transaction {
             const transfers = [];
             for (const transfer of value) {
                 transfers.push({
-                    account: transfer.accountId._toProtobuf(),
+                    accountID: transfer.accountId._toProtobuf(),
                     amount: transfer.amount,
                 });
             }
@@ -208,5 +208,5 @@ export default class TokenTransfersTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "tokenTransfers",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenTransfersTransaction._fromProtobuf
+    TokenTransferTransaction._fromProtobuf
 );
