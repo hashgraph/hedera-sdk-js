@@ -74,7 +74,8 @@ export { default as TokenDissociateTransaction } from "./token/TokenDissociateTr
 export { default as TokenFreezeTransaction } from "./token/TokenFreezeTransaction.js";
 export { default as TokenGrantKycTransaction } from "./token/TokenGrantKycTransaction.js";
 export { default as TokenId } from "./token/TokenId.js";
-// export { default as TokenInfoQuery, TokenInfo } from "./token/TokenInfoQuery.js";
+export { default as TokenInfo } from "./token/TokenInfo.js";
+export { default as TokenInfoQuery } from "./token/TokenInfoQuery.js";
 export { default as TokenMintTransaction } from "./token/TokenMintTransaction.js";
 export { default as TokenRevokeKycTransaction } from "./token/TokenRevokeKycTransaction.js";
 export { default as TokenTransferTransaction } from "./token/TokenTransferTransaction.js";

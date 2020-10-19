@@ -129,7 +129,7 @@ import ITokenGrantKycTransactionBody = proto.ITokenGrantKycTransactionBody;
 import ITokenID = proto.ITokenID;
 import TokenID = proto.TokenID;
 import ITokenInfo = proto.ITokenInfo;
-import ITokenInfoQuery = proto.ITokenGetInfoQuery;
+import ITokenGetInfoQuery = proto.ITokenGetInfoQuery;
 import ITokenMintTransactionBody = proto.ITokenMintTransactionBody;
 import ITokenRevokeKycTransactionBody = proto.ITokenRevokeKycTransactionBody;
 import ITokenTransfersTransactionBody = proto.ITokenTransfersTransactionBody;
@@ -238,7 +238,7 @@ export {
     ITokenID,
     TokenID,
     ITokenInfo,
-    ITokenInfoQuery,
+    ITokenGetInfoQuery,
     ITokenMintTransactionBody,
     ITokenRevokeKycTransactionBody,
     ITokenTransfersTransactionBody,

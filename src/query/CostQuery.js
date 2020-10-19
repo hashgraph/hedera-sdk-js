@@ -39,6 +39,13 @@ export default class CostQuery extends Executable {
     }
 
     /**
+     * @return {TransactionId}
+     */
+    _getTransactionId() {
+        return this._query._getTransactionId();
+    }
+
+    /**
      * @abstract
      * @protected
      * @param {import("../client/Client.js").default<*, *>} client

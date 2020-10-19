@@ -166,6 +166,17 @@ export default class Query extends Executable {
     }
 
     /**
+     * @return {TransactionId}
+     */
+    _getTransactionId() {
+        if (this._paymentTransactionId == null) {
+            throw new Error("Query.PaymentTransactionId was not set duration executation");
+        }
+
+        return this._paymentTransactionId;
+    }
+
+    /**
      * @protected
      * @returns {boolean}
      */
@@ -235,6 +246,7 @@ export default class Query extends Executable {
             );
         }
 
+        // let cost = new Hbar(2);
         let cost =
             this._queryPayment != null
                 ? this._queryPayment
