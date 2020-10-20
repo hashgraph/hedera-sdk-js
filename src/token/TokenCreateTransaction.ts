@@ -40,6 +40,7 @@ export class TokenCreateTransaction extends SingleTransactionBuilder {
         this._inner.setTokencreation(this._body);
 
         this.setAutoRenewPeriod(7890000);
+        this.setExpirationTime(Date.now() + 7890000)
     }
 
     /**
