@@ -35,6 +35,7 @@ export { FreezeTransaction } from "./FreezeTransaction";
 export { GetBySolidityIdQuery } from "./GetBySolidityIdQuery";
 
 export { TokenAssociateTransaction } from "./token/TokenAssociateTransaction";
+export { TokenBalanceQuery } from "./token/TokenBalanceQuery";
 export { TokenBurnTransaction } from "./token/TokenBurnTransaction";
 export { TokenCreateTransaction } from "./token/TokenCreateTransaction";
 export { TokenDeleteTransaction } from "./token/TokenDeleteTransaction";

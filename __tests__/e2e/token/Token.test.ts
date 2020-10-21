@@ -60,7 +60,6 @@ describe("TokenIntegrationTest", () => {
         .setKycKey(operatorKey.publicKey)
         .setSupplyKey(operatorKey.publicKey)
         .setFreezeDefault(false)
-        .setExpirationTime(Date.now() + 7890000)
         .execute(client);
 
     const tokenId = (await transactionId.getReceipt(client)).getTokenId();
