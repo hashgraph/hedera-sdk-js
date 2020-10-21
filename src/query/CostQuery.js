@@ -39,7 +39,7 @@ export default class CostQuery extends Executable {
     }
 
     /**
-     * @return {TransactionId}
+     * @returns {TransactionId}
      */
     _getTransactionId() {
         return this._query._getTransactionId();

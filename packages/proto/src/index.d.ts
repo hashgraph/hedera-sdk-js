@@ -119,26 +119,28 @@ import IFreezeTransactionBody = proto.IFreezeTransactionBody;
 
 // HTS Support
 import ITokenAssociateTransactionBody = proto.ITokenAssociateTransactionBody;
+import ITokenBalance = proto.ITokenBalance;
+import ITokenBalances = proto.ITokenBalances;
 import ITokenBurnTransactionBody = proto.ITokenBurnTransactionBody;
 import ITokenCreateTransactionBody = proto.ITokenCreateTransactionBody;
 import ITokenDeleteTransactionBody = proto.ITokenDeleteTransactionBody;
 import ITokenDissociateTransactionBody = proto.ITokenDissociateTransactionBody;
 import ITokenFreezeAccountTransactionBody = proto.ITokenFreezeAccountTransactionBody;
+import ITokenGetInfoQuery = proto.ITokenGetInfoQuery;
 import ITokenGetInfoResponse = proto.ITokenGetInfoResponse;
 import ITokenGrantKycTransactionBody = proto.ITokenGrantKycTransactionBody;
 import ITokenID = proto.ITokenID;
-import TokenID = proto.TokenID;
 import ITokenInfo = proto.ITokenInfo;
-import ITokenGetInfoQuery = proto.ITokenGetInfoQuery;
 import ITokenMintTransactionBody = proto.ITokenMintTransactionBody;
+import ITokenRelationship = proto.ITokenRelationship;
 import ITokenRevokeKycTransactionBody = proto.ITokenRevokeKycTransactionBody;
 import ITokenTransfersTransactionBody = proto.ITokenTransfersTransactionBody;
 import ITokenUnfreezeAccountTransactionBody = proto.ITokenUnfreezeAccountTransactionBody;
 import ITokenUpdateTransactionBody = proto.ITokenUpdateTransactionBody;
 import ITokenWipeAccountTransactionBody = proto.ITokenWipeAccountTransactionBody;
-import ITokenRelationship = proto.ITokenRelationship;
-import TokenKycStatus = proto.TokenKycStatus;
 import TokenFreezeStatus = proto.TokenFreezeStatus;
+import TokenID = proto.TokenID;
+import TokenKycStatus = proto.TokenKycStatus;
 
 export {
     IAccountID,
@@ -228,6 +230,8 @@ export {
 
     // HTS Support
     ITokenAssociateTransactionBody,
+    ITokenBalance,
+    ITokenBalances,
     ITokenBurnTransactionBody,
     ITokenCreateTransactionBody,
     ITokenDeleteTransactionBody,

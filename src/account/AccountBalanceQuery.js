@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import AccountId from "./AccountId.js";
 import ContractId from "../contract/ContractId.js";
-import Hbar from "../Hbar.js";
+import AccountBalance from "./AccountBalance.js";
 
 /**
  * @namespace proto
@@ -25,7 +25,7 @@ import Hbar from "../Hbar.js";
  *
  * This query is free.
  *
- * @augments {Query<Hbar>}
+ * @augments {Query<AccountBalance>}
  */
 export default class AccountBalanceQuery extends Query {
     /**
@@ -162,16 +162,12 @@ export default class AccountBalanceQuery extends Query {
      * @override
      * @internal
      * @param {proto.IResponse} response
-     * @returns {Promise<Hbar>}
+     * @returns {Promise<AccountBalance>}
      */
     _mapResponse(response) {
         const cryptogetAccountBalance = /** @type {proto.ICryptoGetAccountBalanceResponse} */ (response.cryptogetAccountBalance);
         return Promise.resolve(
-            Hbar.fromTinybars(
-                cryptogetAccountBalance.balance != null
-                    ? cryptogetAccountBalance.balance
-                    : 0
-            )
+            AccountBalance._fromProtobuf(cryptogetAccountBalance)
         );
     }
 

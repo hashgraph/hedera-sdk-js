@@ -107,6 +107,13 @@ export default class Query extends Executable {
     }
 
     /**
+     * @returns {?AccountId}
+     */
+    getNodeAccountId() {
+        return this._nodeId;
+    }
+
+    /**
      * Set the account ID of the node that will be used to submit this
      * query to the network.
      *
@@ -166,11 +173,13 @@ export default class Query extends Executable {
     }
 
     /**
-     * @return {TransactionId}
+     * @returns {TransactionId}
      */
     _getTransactionId() {
         if (this._paymentTransactionId == null) {
-            throw new Error("Query.PaymentTransactionId was not set duration executation");
+            throw new Error(
+                "Query.PaymentTransactionId was not set duration executation"
+            );
         }
 
         return this._paymentTransactionId;

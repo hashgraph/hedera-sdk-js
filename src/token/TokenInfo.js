@@ -212,13 +212,16 @@ export default class TokenInfo {
             defaultKycStatus:
                 defaultKycStatus === 0 ? null : defaultKycStatus == 1,
             isDeleted: /** @type {boolean} */ (info.isDeleted),
-            autoRenewAccount: info.autoRenewAccount != null &&
+            autoRenewAccount:
+                info.autoRenewAccount != null &&
                 info.autoRenewAccount != null &&
                 Long.fromValue(
-                    /** @type {Long | number} */ (info.autoRenewAccount.shardNum)
+                    /** @type {Long | number} */ (info.autoRenewAccount
+                        .shardNum)
                 ).toInt() !== 0 &&
                 Long.fromValue(
-                    /** @type {Long | number} */ (info.autoRenewAccount.realmNum)
+                    /** @type {Long | number} */ (info.autoRenewAccount
+                        .realmNum)
                 ).toInt() !== 0 &&
                 Long.fromValue(
                     /** @type {Long | number} */ (info.autoRenewAccount
@@ -260,9 +263,10 @@ export default class TokenInfo {
                     ? 1
                     : 2,
             isDeleted: this.isDeleted,
-            autoRenewAccount: this.autoRenewAccount != null
-                ? this.autoRenewAccount._toProtobuf()
-                : undefined,
+            autoRenewAccount:
+                this.autoRenewAccount != null
+                    ? this.autoRenewAccount._toProtobuf()
+                    : undefined,
             autoRenewPeriod: this.autoRenewPeriod,
             expiry: this.expirationTime,
         };
