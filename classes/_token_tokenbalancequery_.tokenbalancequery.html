@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AccountRecordsQuery | @hashgraph/sdk</title>
+	<title>TokenBalanceQuery | @hashgraph/sdk</title>
 	<meta name="description" content="Documentation for @hashgraph/sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_account_accountrecordsquery_.html">&quot;account/AccountRecordsQuery&quot;</a>
+					<a href="../modules/_token_tokenbalancequery_.html">&quot;token/TokenBalanceQuery&quot;</a>
 				</li>
 				<li>
-					<a href="_account_accountrecordsquery_.accountrecordsquery.html">AccountRecordsQuery</a>
+					<a href="_token_tokenbalancequery_.tokenbalancequery.html">TokenBalanceQuery</a>
 				</li>
 			</ul>
-			<h1>Class AccountRecordsQuery</h1>
+			<h1>Class TokenBalanceQuery</h1>
 		</div>
 	</div>
 </header>
@@ -68,8 +68,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Get all the records for an account for any transfers into it and out of it, that were above the
-						threshold, during the last 25 hours.</p>
+						<p>Get the balance of a cryptocurrency token. This returns only the balance, so it is a smaller
+						and faster reply than CryptoGetInfo, which returns the balance plus additional information.</p>
 					</div>
 				</div>
 			</section>
@@ -77,10 +77,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_querybuilder_.querybuilder.html" class="tsd-signature-type">QueryBuilder</a><span class="tsd-signature-symbol">&lt;</span><a href="_transactionrecord_.transactionrecord.html" class="tsd-signature-type">TransactionRecord</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span>
+						<a href="_querybuilder_.querybuilder.html" class="tsd-signature-type">QueryBuilder</a><span class="tsd-signature-symbol">&lt;</span><a href="_token_tokenbalancequery_.tokenbalancemap.html" class="tsd-signature-type">TokenBalanceMap</a><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">AccountRecordsQuery</span>
+								<span class="target">TokenBalanceQuery</span>
 							</li>
 						</ul>
 					</li>
@@ -93,20 +93,20 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_account_accountrecordsquery_.accountrecordsquery.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_token_tokenbalancequery_.tokenbalancequery.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_accountrecordsquery_.accountrecordsquery.html#_generatepaymenttransaction" class="tsd-kind-icon">_generate<wbr>Payment<wbr>Transaction</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_accountrecordsquery_.accountrecordsquery.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_accountrecordsquery_.accountrecordsquery.html#execute" class="tsd-kind-icon">execute</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_accountrecordsquery_.accountrecordsquery.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_accountrecordsquery_.accountrecordsquery.html#setaccountid" class="tsd-kind-icon">set<wbr>Account<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_accountrecordsquery_.accountrecordsquery.html#setmaxquerypayment" class="tsd-kind-icon">set<wbr>Max<wbr>Query<wbr>Payment</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_accountrecordsquery_.accountrecordsquery.html#setquerypayment" class="tsd-kind-icon">set<wbr>Query<wbr>Payment</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_accountrecordsquery_.accountrecordsquery.html#setquerypaymenttransaction" class="tsd-kind-icon">set<wbr>Query<wbr>Payment<wbr>Transaction</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokenbalancequery_.tokenbalancequery.html#_generatepaymenttransaction" class="tsd-kind-icon">_generate<wbr>Payment<wbr>Transaction</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokenbalancequery_.tokenbalancequery.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokenbalancequery_.tokenbalancequery.html#execute" class="tsd-kind-icon">execute</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokenbalancequery_.tokenbalancequery.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_token_tokenbalancequery_.tokenbalancequery.html#setaccountid" class="tsd-kind-icon">set<wbr>Account<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokenbalancequery_.tokenbalancequery.html#setmaxquerypayment" class="tsd-kind-icon">set<wbr>Max<wbr>Query<wbr>Payment</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokenbalancequery_.tokenbalancequery.html#setquerypayment" class="tsd-kind-icon">set<wbr>Query<wbr>Payment</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_token_tokenbalancequery_.tokenbalancequery.html#setquerypaymenttransaction" class="tsd-kind-icon">set<wbr>Query<wbr>Payment<wbr>Transaction</a></li>
 							</ul>
 						</section>
 					</div>
@@ -118,17 +118,17 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Account<wbr>Records<wbr>Query<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_account_accountrecordsquery_.accountrecordsquery.html" class="tsd-signature-type">AccountRecordsQuery</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Token<wbr>Balance<wbr>Query<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_token_tokenbalancequery_.tokenbalancequery.html" class="tsd-signature-type">TokenBalanceQuery</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides QueryBuilder.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/272b58a8/src/account/AccountRecordsQuery.ts#L17">src/account/AccountRecordsQuery.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/272b58a8/src/token/TokenBalanceQuery.ts#L58">src/token/TokenBalanceQuery.ts:58</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_account_accountrecordsquery_.accountrecordsquery.html" class="tsd-signature-type">AccountRecordsQuery</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_token_tokenbalancequery_.tokenbalancequery.html" class="tsd-signature-type">TokenBalanceQuery</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -187,7 +187,7 @@
 					<a name="execute" class="tsd-anchor"></a>
 					<h3>execute</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">execute<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_transactionrecord_.transactionrecord.html" class="tsd-signature-type">TransactionRecord</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">execute<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_token_tokenbalancequery_.tokenbalancemap.html" class="tsd-signature-type">TokenBalanceMap</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -203,7 +203,7 @@
 									<h5>client: <a href="_baseclient_.baseclient.html" class="tsd-signature-type">BaseClient</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_transactionrecord_.transactionrecord.html" class="tsd-signature-type">TransactionRecord</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_token_tokenbalancequery_.tokenbalancemap.html" class="tsd-signature-type">TokenBalanceMap</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -235,24 +235,24 @@
 					<a name="setaccountid" class="tsd-anchor"></a>
 					<h3>set<wbr>Account<wbr>Id</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Account<wbr>Id<span class="tsd-signature-symbol">(</span>accountId<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Account<wbr>Id<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/272b58a8/src/account/AccountRecordsQuery.ts#L31">src/account/AccountRecordsQuery.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/272b58a8/src/token/TokenBalanceQuery.ts#L72">src/token/TokenBalanceQuery.ts:72</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>The account that this record is for.</p>
+									<p>The account ID for which information is requested.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>accountId: <a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a></h5>
+									<h5>id: <a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -346,43 +346,46 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_account_accountrecordsquery_.html">&quot;account/<wbr>Account<wbr>Records<wbr>Query&quot;</a>
+						<a href="../modules/_token_tokenbalancequery_.html">&quot;token/<wbr>Token<wbr>Balance<wbr>Query&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="_token_tokenbalancequery_.tokenbalancemap.html" class="tsd-kind-icon">Token<wbr>Balance<wbr>Map</a>
+					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_account_accountrecordsquery_.accountrecordsquery.html" class="tsd-kind-icon">Account<wbr>Records<wbr>Query</a>
+						<a href="_token_tokenbalancequery_.tokenbalancequery.html" class="tsd-kind-icon">Token<wbr>Balance<wbr>Query</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_account_accountrecordsquery_.accountrecordsquery.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_token_tokenbalancequery_.tokenbalancequery.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_accountrecordsquery_.accountrecordsquery.html#_generatepaymenttransaction" class="tsd-kind-icon">_generate<wbr>Payment<wbr>Transaction</a>
+								<a href="_token_tokenbalancequery_.tokenbalancequery.html#_generatepaymenttransaction" class="tsd-kind-icon">_generate<wbr>Payment<wbr>Transaction</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_accountrecordsquery_.accountrecordsquery.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a>
+								<a href="_token_tokenbalancequery_.tokenbalancequery.html#_toproto" class="tsd-kind-icon">_to<wbr>Proto</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_accountrecordsquery_.accountrecordsquery.html#execute" class="tsd-kind-icon">execute</a>
+								<a href="_token_tokenbalancequery_.tokenbalancequery.html#execute" class="tsd-kind-icon">execute</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_accountrecordsquery_.accountrecordsquery.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
+								<a href="_token_tokenbalancequery_.tokenbalancequery.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_account_accountrecordsquery_.accountrecordsquery.html#setaccountid" class="tsd-kind-icon">set<wbr>Account<wbr>Id</a>
+								<a href="_token_tokenbalancequery_.tokenbalancequery.html#setaccountid" class="tsd-kind-icon">set<wbr>Account<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_accountrecordsquery_.accountrecordsquery.html#setmaxquerypayment" class="tsd-kind-icon">set<wbr>Max<wbr>Query<wbr>Payment</a>
+								<a href="_token_tokenbalancequery_.tokenbalancequery.html#setmaxquerypayment" class="tsd-kind-icon">set<wbr>Max<wbr>Query<wbr>Payment</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_accountrecordsquery_.accountrecordsquery.html#setquerypayment" class="tsd-kind-icon">set<wbr>Query<wbr>Payment</a>
+								<a href="_token_tokenbalancequery_.tokenbalancequery.html#setquerypayment" class="tsd-kind-icon">set<wbr>Query<wbr>Payment</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_accountrecordsquery_.accountrecordsquery.html#setquerypaymenttransaction" class="tsd-kind-icon">set<wbr>Query<wbr>Payment<wbr>Transaction</a>
+								<a href="_token_tokenbalancequery_.tokenbalancequery.html#setquerypaymenttransaction" class="tsd-kind-icon">set<wbr>Query<wbr>Payment<wbr>Transaction</a>
 							</li>
 						</ul>
 					</li>
