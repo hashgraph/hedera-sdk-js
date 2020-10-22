@@ -42,8 +42,8 @@ export class TokenAssociateTransaction extends SingleTransactionBuilder {
     /**
      * The tokens to be associated with the provided account
      */
-    public setTokenIds(...ids: TokenIdLike[]): this {
-        this._body.setTokensList(ids.map((id) => new TokenId(id)._toProto()));
+    public addTokenId(id: TokenIdLike): this {
+        this._body.addTokens(new TokenId(id)._toProto());
         return this;
     }
 

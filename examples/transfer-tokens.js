@@ -64,7 +64,7 @@ async function main() {
 
     await (await new TokenAssociateTransaction()
         .setAccountId(newAccountId)
-        .setTokenIds(tokenId)
+        .addTokenId(tokenId)
         .build(client)
         .sign(operatorKey)
         .sign(newKey)

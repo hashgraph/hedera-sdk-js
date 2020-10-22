@@ -118,8 +118,8 @@ export class TokenRelationshipMap {
                     tokenId,
                     symbol: relationship.getSymbol(),
                     balance: new BigNumber(relationship.getBalance()),
-                    kycStatus: kycStatus === 0 ? null : kycStatus === 2,
-                    freezeStatus: freezeStatus === 0 ? null : freezeStatus === 2
+                    kycStatus: kycStatus === 0 ? null : kycStatus === 1,
+                    freezeStatus: freezeStatus === 0 ? null : freezeStatus === 1
                 }
             );
         }

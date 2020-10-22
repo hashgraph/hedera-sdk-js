@@ -51,28 +51,28 @@ export interface TokenInfo {
      * The key which can perform update/delete operations on the token. If empty, the token can be perceived as
      * immutable (not being able to be updated/deleted)
      */
-    adminKey: PublicKey;
+    adminKey: PublicKey | null;
 
     /**
      * The key which can grant or revoke KYC of an account for the token's transactions. If empty, KYC is not required,
      * and KYC grant or revoke operations are not possible.
      */
-    kycKey: PublicKey;
+    kycKey: PublicKey | null;
 
     /**
      * The key which can freeze or unfreeze an account for token transactions. If empty, freezing is not possible
      */
-    freezeKey: PublicKey;
+    freezeKey: PublicKey | null;
 
     /**
      * The key which can wipe token balance of an account. If empty, wipe is not possible
      */
-    wipeKey: PublicKey;
+    wipeKey: PublicKey | null;
 
     /**
      * The key which can change the supply of a token. The key is used to sign Token Mint/Burn operations
      */
-    supplyKey: PublicKey;
+    supplyKey: PublicKey | null;
 
     /**
      * The default Freeze status (not applicable = null, frozen = false, or unfrozen = true) of Hedera accounts relative to this token.
@@ -178,19 +178,19 @@ export class TokenInfoQuery extends QueryBuilder<TokenInfo> {
             decimals: info.getDecimals()!,
             totalSupply: new BigNumber(info.getTotalsupply()!),
             treasury: AccountId._fromProto(info.getTreasury()!),
-            adminKey: _fromProtoKey(info.getAdminkey()!),
-            kycKey: _fromProtoKey(info.getKyckey()!),
-            freezeKey: _fromProtoKey(info.getFreezekey()!),
-            wipeKey: _fromProtoKey(info.getWipekey()!),
-            supplyKey: _fromProtoKey(info.getSupplykey()!),
+            adminKey: info.hasAdminkey() ? _fromProtoKey(info.getAdminkey()!) : null,
+            kycKey: info.hasAdminkey() ? _fromProtoKey(info.getKyckey()!) : null,
+            freezeKey: info.hasAdminkey() ? _fromProtoKey(info.getFreezekey()!) : null,
+            wipeKey: info.hasAdminkey() ? _fromProtoKey(info.getWipekey()!) : null,
+            supplyKey: info.hasSupplykey() ? _fromProtoKey(info.getSupplykey()!) : null,
             defaultFreezeStatus:
                 info.getDefaultfreezestatus() === 0 ?
                     null :
-                    info.getDefaultfreezestatus() === 2,
+                    info.getDefaultfreezestatus() === 1,
             defaultKycStatus:
                 info.getDefaultkycstatus() === 0 ?
                     null :
-                    info.getDefaultkycstatus() === 2,
+                    info.getDefaultkycstatus() === 1,
             isDeleted: info.getIsdeleted()!,
             autoRenewAccount: info.hasAutorenewaccount() ?
                 AccountId._fromProto(info.getAutorenewaccount()!) :
