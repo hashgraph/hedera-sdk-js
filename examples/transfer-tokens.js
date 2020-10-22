@@ -10,6 +10,7 @@ const {
     TokenDeleteTransaction,
     TokenGrantKycTransaction,
     TokenTransferTransaction,
+    TokenBalanceQuery,
     TokenWipeTransaction
 } = require("@hashgraph/sdk");
 
@@ -61,6 +62,12 @@ async function main() {
 
     const tokenId = (await transactionId.getReceipt(client)).getTokenId();
     console.log("tokenId =", tokenId.toString());
+
+    const balances = await new TokenBalanceQuery()
+        .setAccountId(operatorId)
+        .execute(client);
+
+    console.log(balances.toString());
 
     await (await new TokenAssociateTransaction()
         .setAccountId(newAccountId)

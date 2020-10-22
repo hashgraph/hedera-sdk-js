@@ -48,6 +48,15 @@ export class TokenBalanceMap {
         }
         return map[ Symbol.iterator ]();
     }
+
+    public toString(): string {
+        let s = "{\n";
+        for (const [ key, value ] of this._balances) {
+            s += `\t{\n\t\tokenId: ${key.toString()},\n\t\balance: ${value.toString()}\n\t},\n`;
+        }
+        s += "}\n";
+        return s;
+    }
 }
 
 /**
