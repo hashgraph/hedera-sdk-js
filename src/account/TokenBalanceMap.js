@@ -16,6 +16,27 @@ export default class TokenBalanceMap {
     }
 
     /**
+     * @param {proto.ITokenBalance[]} balances
+     * @returns {TokenBalanceMap}
+     */
+    static _fromProtobuf(balances) {
+        const tokenBalances = new Map();
+
+        for (const balance of balances) {
+            const tokenId = TokenId._fromProtobuf(
+                /** @type {proto.ITokenID} */ (balance.tokenId)
+            );
+
+            tokenBalances.set(
+                tokenId.toString(),
+                Long.fromValue(/** @type {Long} */ (balance.balance))
+            );
+        }
+
+        return new TokenBalanceMap(tokenBalances);
+    }
+
+    /**
      * @param {TokenId} tokenId
      * @returns {?Long}
      */
@@ -61,23 +82,14 @@ export default class TokenBalanceMap {
     }
 
     /**
-     * @param {proto.ITokenBalance[]} balances
-     * @returns {TokenBalanceMap}
+     * @returns {string}
      */
-    static _fromProtobuf(balances) {
-        const tokenBalances = new Map();
-
-        for (const balance of balances) {
-            const tokenId = TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (balance.tokenId)
-            );
-
-            tokenBalances.set(
-                tokenId.toString(),
-                Long.fromValue(/** @type {Long} */ (balance.balance))
-            );
+    toString() {
+        let s = "{\n";
+        for (const [key, value] of this._balances) {
+            s += `\t{\n\t\ttokenId: ${key.toString()},\n\t\tbalance: ${value.toString()}\n\t},\n`;
         }
-
-        return new TokenBalanceMap(tokenBalances);
+        s += "}\n";
+        return s;
     }
 }
