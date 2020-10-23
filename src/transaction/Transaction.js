@@ -183,23 +183,19 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * @returns {?AccountId}
+     * @returns {AccountId[]}
      */
-    get nodeAccountId() {
-        if (this._nodeIds.length > 0) {
-            return this._nodeIds[this._nextTransactionIndex];
-        }
-
-        return null;
+    get nodeAccountIds() {
+        return this._nodeIds;
     }
 
     /**
-     * @param {AccountId} nodeAccountId
+     * @param {AccountId[]} nodeIds
      * @returns {this}
      */
-    setNodeAccountId(nodeAccountId) {
+    setNodeAccountIds(nodeIds) {
         this._requireNotFrozen();
-        this._nodeIds = [nodeAccountId];
+        this._nodeIds = nodeIds;
 
         return this;
     }
@@ -549,15 +545,13 @@ export default class Transaction extends Executable {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _getNodeAccountId(client) {
-        const nodeAccountId = this.nodeAccountId;
-
-        if (nodeAccountId != null) {
-            return nodeAccountId;
+        if (this.nodeAccountIds.length == 0) {
+            throw new Error(
+                "(BUG) Transaction::_getNodeAccountId called before transaction has been frozen"
+            );
         }
 
-        throw new Error(
-            "(BUG) Transaction::_getNodeAccountId called before transaction has been frozen"
-        );
+        return this.nodeAccountIds[this._nextTransactionIndex];
     }
 
     /**
@@ -662,7 +656,7 @@ export default class Transaction extends Executable {
 
         if (this._transactions.length !== 1) {
             throw new Error(
-                "transaction must have an explicit node ID set, try calling `setNodeAccountId`"
+                "transaction must have an explicit node ID set, try calling `setNodeAccountIds`"
             );
         }
     }

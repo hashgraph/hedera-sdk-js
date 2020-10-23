@@ -131,7 +131,7 @@ export default class CostQuery extends Executable {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _getNodeAccountId(client) {
-        return this._query._paymentTransactionNodeIds[this._nextIndex];
+        return this._query._nodeIds[this._nextIndex];
     }
 
     /**
@@ -140,9 +140,7 @@ export default class CostQuery extends Executable {
      * @returns {void}
      */
     _advanceRequest() {
-        this._nextIndex =
-            (this._nextIndex + 1) %
-            this._query._paymentTransactionNodeIds.length;
+        this._nextIndex = (this._nextIndex + 1) % this._query._nodeIds.length;
     }
 }
 

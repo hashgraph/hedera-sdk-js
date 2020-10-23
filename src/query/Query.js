@@ -53,11 +53,8 @@ export default class Query extends Executable {
         /** @type {proto.ITransaction[]} */
         this._paymentTransactions = [];
 
-        /** @type {AccountId[]} */
-        this._paymentTransactionNodeIds = [];
-
         /** @type {number} */
-        this._nextPaymentTransactionIndex = 0;
+        this._nextIndex = 0;
 
         /** @type {?Hbar} */
         this._queryPayment = null;
@@ -65,13 +62,8 @@ export default class Query extends Executable {
         /** @type {?Hbar} */
         this._maxQueryPayment = null;
 
-        /**
-         * Explicit node account ID. If set, this query will be executed on this node and not chose a node
-         * from the client's network.
-         *
-         * @type {?AccountId}
-         */
-        this._nodeId = null;
+        /** @type {AccountId[]} */
+        this._nodeIds = [];
     }
 
     /**
@@ -107,10 +99,10 @@ export default class Query extends Executable {
     }
 
     /**
-     * @returns {?AccountId}
+     * @returns {AccountId[]}
      */
-    getNodeAccountId() {
-        return this._nodeId;
+    get nodeAccountIds() {
+        return this._nodeIds;
     }
 
     /**
@@ -120,11 +112,11 @@ export default class Query extends Executable {
      * This node must exist in the network on the client that is used to later
      * execute this query.
      *
-     * @param {AccountId} nodeId
+     * @param {AccountId[]} nodeIds
      * @returns {this}
      */
-    setNodeAccountId(nodeId) {
-        this._nodeId = nodeId;
+    setNodeAccountIds(nodeIds) {
+        this._nodeIds = nodeIds;
 
         return this;
     }
@@ -161,7 +153,7 @@ export default class Query extends Executable {
      * @returns {Promise<Hbar>}
      */
     getCost(client) {
-        if (this._paymentTransactionNodeIds.length == 0) {
+        if (this._nodeIds.length == 0) {
             this._setPaymentNodeIds(client);
         }
 
@@ -194,7 +186,7 @@ export default class Query extends Executable {
     }
 
     /**
-     * @override
+     * @private
      * @template ChannelT
      * @template MirrorChannelT
      * @param {import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
@@ -220,17 +212,15 @@ export default class Query extends Executable {
         }
 
         this._paymentTransactions = [];
-        this._paymentTransactionNodeIds = [];
-
         this._paymentTransactionId = TransactionId.generate(operator.accountId);
 
-        if (this._nodeId == null) {
+        // If nodeIds has not been set via `setNodeAccountIds()` method, then
+        // populate that list with nodes provided by the client
+        if (this._nodeIds.length == 0) {
             const size = client._getNumberOfNodesForTransaction();
             for (let i = 0; i < size; i += 1) {
-                this._paymentTransactionNodeIds.push(client._getNextNodeId());
+                this._nodeIds.push(client._getNextNodeId());
             }
-        } else {
-            this._paymentTransactionNodeIds.push(this._nodeId);
         }
     }
 
@@ -271,11 +261,11 @@ export default class Query extends Executable {
             cost = actualCost;
         }
 
-        if (this._paymentTransactionNodeIds.length == 0) {
+        if (this._nodeIds.length == 0) {
             this._setPaymentNodeIds(client);
         }
 
-        for (const node of this._paymentTransactionNodeIds) {
+        for (const node of this._nodeIds) {
             this._paymentTransactions.push(
                 await _makePaymentTransaction(
                     /** @type {import("../transaction/TransactionId.js").default} */ (this
@@ -310,9 +300,7 @@ export default class Query extends Executable {
         if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             header = {
                 responseType: ProtoResponseType.ANSWER_ONLY,
-                payment: this._paymentTransactions[
-                    this._nextPaymentTransactionIndex
-                ],
+                payment: this._paymentTransactions[this._nextIndex],
             };
         }
 
@@ -341,9 +329,7 @@ export default class Query extends Executable {
 
         if (this._isPaymentRequired() && this._paymentTransactions != null) {
             header = {
-                payment: this._paymentTransactions[
-                    this._nextPaymentTransactionIndex
-                ],
+                payment: this._paymentTransactions[this._nextIndex],
                 responseType: ProtoResponseType.ANSWER_ONLY,
             };
         }
@@ -376,17 +362,10 @@ export default class Query extends Executable {
      * @returns {AccountId}
      */
     _getNodeAccountId(client) {
-        if (this._paymentTransactionNodeIds.length > 0) {
+        if (this._nodeIds.length > 0) {
             // if there are payment transactions,
             // we need to use the node of the current payment transaction
-            return this._paymentTransactionNodeIds[
-                this._nextPaymentTransactionIndex
-            ];
-        }
-
-        if (this._nodeId != null) {
-            // free queries with an explicit node
-            return this._nodeId;
+            return this._nodeIds[this._nextIndex];
         }
 
         if (client == null) {
@@ -409,9 +388,8 @@ export default class Query extends Executable {
         if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             // each time we move our cursor to the next transaction
             // wrapping around to ensure we are cycling
-            this._nextPaymentTransactionIndex =
-                (this._nextPaymentTransactionIndex + 1) %
-                this._paymentTransactions.length;
+            this._nextIndex =
+                (this._nextIndex + 1) % this._paymentTransactions.length;
         }
     }
 }

@@ -39,7 +39,7 @@ export default class TransactionResponse {
     async getReceipt(client) {
         const receipt = await new TransactionReceiptQuery()
             .setTransactionId(this.transactionId)
-            .setNodeAccountId(this.nodeId)
+            .setNodeAccountIds([this.nodeId])
             .execute(client);
 
         if (receipt.status !== Status.Success) {
@@ -62,7 +62,7 @@ export default class TransactionResponse {
 
         return new TransactionRecordQuery()
             .setTransactionId(this.transactionId)
-            .setNodeAccountId(this.nodeId)
+            .setNodeAccountIds([this.nodeId])
             .execute(client);
     }
 }
