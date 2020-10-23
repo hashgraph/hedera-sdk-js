@@ -28,7 +28,7 @@ export default class Hbar {
              * @type {Long}
              */
             this._valueInTinybar = Long.fromString(
-                bigAmount.multipliedBy(unit._tinybar).toFixed(0)
+                bigAmount.multipliedBy(unit._tinybar).toFixed()
             );
         }
     }

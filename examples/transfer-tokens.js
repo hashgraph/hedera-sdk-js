@@ -19,17 +19,15 @@ const {
 async function main() {
     if (
         process.env.OPERATOR_KEY == null ||
-        process.env.OPERATOR_ID == null ||
-        process.env.CONFIG_FILE == null
+        process.env.OPERATOR_ID == null
     ) {
-        throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, CONFIG_FILE must be present");
+        throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
     }
 
     const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
     const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-    const configFile = process.env.CONFIG_FILE;
 
-    const client = await Client.fromConfigFile(configFile);
+    const client = Client.forPreviewnet();
     client.setOperator(operatorId, operatorKey);
 
     const newKey = PrivateKey.generate();
