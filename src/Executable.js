@@ -155,10 +155,13 @@ export default class Executable {
                 );
             }
 
+<<<<<<< Updated upstream
             if (!nodeId.isHealthy()) {
                 continue;
             }
 
+=======
+>>>>>>> Stashed changes
             const channel = client._getNetworkChannel(nodeAccountId);
             const request = this._makeRequest();
 
@@ -168,6 +171,10 @@ export default class Executable {
             this._advanceRequest();
 
             let response;
+
+            if (!nodeId.isHealthy()) {
+                await nodeId.wait();
+            }
 
             try {
                 response = await this._execute(channel, request);

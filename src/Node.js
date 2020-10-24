@@ -2,7 +2,11 @@
  * @typedef {import("./account/AccountId.js").default} AccountId
  */
 
+<<<<<<< Updated upstream
 export default class NodeId {
+=======
+export default class Node {
+>>>>>>> Stashed changes
     /**
      * @param {AccountId} accountId
      * @param {string} address

@@ -311,7 +311,11 @@ export default class Client {
         if (this._lastSortedNodeAccountIds + 1000 < Date.now()) {
             this._networkNodeAccountIds.sort((a, b) => {
                 if (a.isHealthy() && b.isHealthy()) {
+<<<<<<< Updated upstream
                     return Math.round(Math.random());
+=======
+                    return 1;
+>>>>>>> Stashed changes
                 } else if (a.isHealthy() && !b.isHealthy()) {
                     return -1;
                 } else if (!a.isHealthy() && b.isHealthy()) {
