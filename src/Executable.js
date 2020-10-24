@@ -146,8 +146,20 @@ export default class Executable {
         await this._beforeExecute(client);
 
         for (let attempt = 1 /* loop forever */; ; attempt += 1) {
-            const nodeId = this._getNodeAccountId(client);
-            const channel = client._getNetworkChannel(nodeId);
+            const nodeAccountId = this._getNodeAccountId(client);
+            const nodeId = client._getNodeId(nodeAccountId);
+
+            if (nodeId == null) {
+                throw new Error(
+                    `NodeAccountId not recognized: ${nodeAccountId.toString()}`
+                );
+            }
+
+            if (!nodeId.isHealthy()) {
+                continue;
+            }
+
+            const channel = client._getNetworkChannel(nodeAccountId);
             const request = this._makeRequest();
 
             // advance the internal index
@@ -165,12 +177,14 @@ export default class Executable {
                     this._shouldRetryExceptionally(err) &&
                     attempt <= maxAttempts
                 ) {
-                    await delayForAttempt(attempt);
+                    nodeId.increaseDelay();
                     continue;
                 }
 
                 throw err;
             }
+
+            nodeId.decreaseDelay();
 
             const responseStatus = this._mapResponseStatus(response);
 
@@ -189,7 +203,7 @@ export default class Executable {
                 });
             }
 
-            return this._mapResponse(response, nodeId, request);
+            return this._mapResponse(response, nodeAccountId, request);
         }
     }
 }

@@ -1,6 +1,7 @@
 import AccountId from "../account/AccountId.js";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Hbar from "../Hbar.js";
+import Node from "../Node.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -72,7 +73,7 @@ export default class Client {
          * to the node URL.
          *
          * @private
-         * @type {Map<string, string>}
+         * @type {Map<string, Node>}
          */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this._network = new Map();
@@ -81,9 +82,18 @@ export default class Client {
          * List of node account IDs.
          *
          * @private
-         * @type {AccountId[]}
+         * @type {Node[]}
          */
-        this._networkNodes = [];
+        this._networkNodeAccountIds = [];
+
+        /**
+         * Keeps track of when the last time we sorted `this._networkNodeAccountIds`
+         * If this timestamp is more than 1s then we should sort the list again.
+         *
+         * @private
+         * @type {number}
+         */
+        this._lastSortedNodeAccountIds = Date.now();
 
         /**
          * @private
@@ -132,7 +142,7 @@ export default class Client {
      */
     setNetwork(network) {
         this._closeNetworkChannels();
-        this._networkNodes = [];
+        this._networkNodeAccountIds = [];
         this._network.clear();
 
         for (const [url, accountId] of Object.entries(network)) {
@@ -141,8 +151,9 @@ export default class Client {
                     ? accountId
                     : AccountId.fromString(accountId);
 
-            this._network.set(key.toString(), url);
-            this._networkNodes.push(key);
+            const nodeId = new Node(key, url);
+            this._network.set(key.toString(), nodeId);
+            this._networkNodeAccountIds.push(nodeId);
         }
     }
 
@@ -293,36 +304,81 @@ export default class Client {
 
     /**
      * @internal
-     * @returns {AccountId}
+     * @returns {AccountId[]}
      */
-    _getNextNodeId() {
-        const nodeId = this._networkNodes[this._nextNetworkNodeIndex++];
-        this._nextNetworkNodeIndex %= this._networkNodes.length;
+    _getNodeAccountIdsForTransaction() {
+        // Sort the network nodes array by healtiness and delay
+        if (this._lastSortedNodeAccountIds + 1000 < Date.now()) {
+            this._networkNodeAccountIds.sort((a, b) => {
+                if (a.isHealthy() && b.isHealthy()) {
+                    return Math.round(Math.random());
+                } else if (a.isHealthy() && !b.isHealthy()) {
+                    return -1;
+                } else if (!a.isHealthy() && b.isHealthy()) {
+                    return 1;
+                } else {
+                    const aLastUsed = a.lastUsed != null ? a.lastUsed : 0;
+                    const bLastUsed = b.lastUsed != null ? b.lastUsed : 0;
 
-        return nodeId;
+                    if (aLastUsed + a.delay < bLastUsed + b.delay) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                }
+            });
+
+            this._lastSortedNodeAccountIds = Date.now();
+        }
+
+        return this._networkNodeAccountIds
+            .slice(0, this._getNumberOfNodesForTransaction())
+            .map((node) => node.accountId);
     }
 
     /**
      * @internal
-     * @param {AccountId} nodeId
+     * @returns {AccountId}
+     */
+    _getNextNodeId() {
+        const nodeId = this._networkNodeAccountIds[
+            this._nextNetworkNodeIndex++
+        ];
+        this._nextNetworkNodeIndex %= this._networkNodeAccountIds.length;
+
+        return nodeId.accountId;
+    }
+
+    /**
+     * @internal
+     * @param {AccountId} nodeAccountId
+     * @returns {Node | undefined}
+     */
+    _getNodeId(nodeAccountId) {
+        return this._network.get(nodeAccountId.toString());
+    }
+
+    /**
+     * @internal
+     * @param {AccountId} nodeAccountId
      * @returns {ChannelT}
      */
-    _getNetworkChannel(nodeId) {
-        let networkChannel = this._networkChannels.get(nodeId);
+    _getNetworkChannel(nodeAccountId) {
+        let networkChannel = this._networkChannels.get(nodeAccountId);
 
         if (networkChannel != null) {
             return networkChannel;
         }
 
-        const address = this._network.get(nodeId.toString());
+        const nodeId = this._network.get(nodeAccountId.toString());
 
-        if (address == null) {
-            throw new Error(`unknown node: ${nodeId.toString()}`);
+        if (nodeId == null) {
+            throw new Error(`unknown node: ${nodeAccountId.toString()}`);
         }
 
-        networkChannel = this._createNetworkChannel(address);
+        networkChannel = this._createNetworkChannel(nodeId.address);
 
-        this._networkChannels.set(nodeId, networkChannel);
+        this._networkChannels.set(nodeId.accountId, networkChannel);
 
         return networkChannel;
     }

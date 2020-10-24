@@ -214,13 +214,10 @@ export default class Query extends Executable {
         this._paymentTransactions = [];
         this._paymentTransactionId = TransactionId.generate(operator.accountId);
 
-        // If nodeIds has not been set via `setNodeAccountIds()` method, then
-        // populate that list with nodes provided by the client
+        // If nodeAccountIds have not been set via `setNodeAccountIds()` method, then
+        // ask the client for the recommend list of nodeAccountIds
         if (this._nodeIds.length == 0) {
-            const size = client._getNumberOfNodesForTransaction();
-            for (let i = 0; i < size; i += 1) {
-                this._nodeIds.push(client._getNextNodeId());
-            }
+            this._nodeIds = client._getNodeAccountIdsForTransaction();
         }
     }
 

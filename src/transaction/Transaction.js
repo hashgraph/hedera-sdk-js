@@ -93,7 +93,7 @@ export default class Transaction extends Executable {
          * @private
          * @type {number}
          */
-        this._nextTransactionIndex = 0;
+        this._nextIndex = 0;
 
         /**
          * @private
@@ -413,26 +413,18 @@ export default class Transaction extends Executable {
         }
 
         if (this._nodeIds.length > 0) {
-            // the node IDs have been pre-selected
-            this._transactions = this._nodeIds.map((nodeId) =>
-                this._makeTransaction(nodeId)
-            );
+            // Do nothing
         } else if (client != null) {
-            // pick N / 3 nodes from the client and build that many transactions
-            // this is for fail-over so we can cycle through nodes
-            const numNodes = client._getNumberOfNodesForTransaction();
-
-            for (let index = 0; index < numNodes; index += 1) {
-                const nodeId = client._getNextNodeId();
-
-                this._nodeIds.push(nodeId);
-                this._transactions.push(this._makeTransaction(nodeId));
-            }
+            this._nodeIds = client._getNodeAccountIdsForTransaction();
         } else {
             throw new Error(
                 "`nodeAccountId` must be set or `client` must be provided with `freezeWith`"
             );
         }
+
+        this._transactions = this._nodeIds.map((nodeId) =>
+            this._makeTransaction(nodeId)
+        );
 
         return this;
     }
@@ -499,7 +491,7 @@ export default class Transaction extends Executable {
      * @returns {proto.ITransaction}
      */
     _makeRequest() {
-        return this._transactions[this._nextTransactionIndex];
+        return this._transactions[this._nextIndex];
     }
 
     /**
@@ -551,7 +543,7 @@ export default class Transaction extends Executable {
             );
         }
 
-        return this.nodeAccountIds[this._nextTransactionIndex];
+        return this.nodeAccountIds[this._nextIndex];
     }
 
     /**
@@ -562,8 +554,7 @@ export default class Transaction extends Executable {
     _advanceRequest() {
         // each time we move our cursor to the next transaction
         // wrapping around to ensure we are cycling
-        this._nextTransactionIndex =
-            (this._nextTransactionIndex + 1) % this._transactions.length;
+        this._nextIndex = (this._nextIndex + 1) % this._transactions.length;
     }
 
     /**
