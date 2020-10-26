@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TokenRelationshipMap | @hashgraph/sdk</title>
+	<title>TokenTransfersMap | @hashgraph/sdk</title>
 	<meta name="description" content="Documentation for @hashgraph/sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_account_accountinfoquery_.html">&quot;account/AccountInfoQuery&quot;</a>
+					<a href="../modules/_transactionrecord_.html">&quot;TransactionRecord&quot;</a>
 				</li>
 				<li>
-					<a href="_account_accountinfoquery_.tokenrelationshipmap.html">TokenRelationshipMap</a>
+					<a href="_transactionrecord_.tokentransfersmap.html">TokenTransfersMap</a>
 				</li>
 			</ul>
-			<h1>Class TokenRelationshipMap</h1>
+			<h1>Class TokenTransfersMap</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">TokenRelationshipMap</span>
+						<span class="target">TokenTransfersMap</span>
 					</li>
 				</ul>
 			</section>
@@ -80,16 +80,16 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_account_accountinfoquery_.tokenrelationshipmap.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_transactionrecord_.tokentransfersmap.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_accountinfoquery_.tokenrelationshipmap.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_accountinfoquery_.tokenrelationshipmap.html#get" class="tsd-kind-icon">get</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_accountinfoquery_.tokenrelationshipmap.html#keys" class="tsd-kind-icon">keys</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_accountinfoquery_.tokenrelationshipmap.html#values" class="tsd-kind-icon">values</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_transactionrecord_.tokentransfersmap.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_transactionrecord_.tokentransfersmap.html#get" class="tsd-kind-icon">get</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_transactionrecord_.tokentransfersmap.html#keys" class="tsd-kind-icon">keys</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_transactionrecord_.tokentransfersmap.html#values" class="tsd-kind-icon">values</a></li>
 							</ul>
 						</section>
 					</div>
@@ -101,22 +101,22 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Token<wbr>Relationship<wbr>Map<span class="tsd-signature-symbol">(</span>relationships<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ProtoTokenRelationship</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_account_accountinfoquery_.tokenrelationshipmap.html" class="tsd-signature-type">TokenRelationshipMap</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Token<wbr>Transfers<wbr>Map<span class="tsd-signature-symbol">(</span>transfers<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ProtoTokenTransferList</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_transactionrecord_.tokentransfersmap.html" class="tsd-signature-type">TokenTransfersMap</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f424aa16/src/account/AccountInfoQuery.ts#L107">src/account/AccountInfoQuery.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f424aa16/src/TransactionRecord.ts#L62">src/TransactionRecord.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>relationships: <span class="tsd-signature-type">ProtoTokenRelationship</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>transfers: <span class="tsd-signature-type">ProtoTokenTransferList</span><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_account_accountinfoquery_.tokenrelationshipmap.html" class="tsd-signature-type">TokenRelationshipMap</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_transactionrecord_.tokentransfersmap.html" class="tsd-signature-type">TokenTransfersMap</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -127,16 +127,16 @@
 					<a name="_symbol_iterator_" class="tsd-anchor"></a>
 					<h3>[<wbr>Symbol.iterator]</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">[<wbr>Symbol.iterator]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="_token_tokenid_.tokenid.html" class="tsd-signature-type">TokenId</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/_account_accountinfoquery_.tokenrelationship.html" class="tsd-signature-type">TokenRelationship</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">[<wbr>Symbol.iterator]<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="_token_tokenid_.tokenid.html" class="tsd-signature-type">TokenId</a><span class="tsd-signature-symbol">, </span><a href="_transactionrecord_.accounttokentransfersmap.html" class="tsd-signature-type">AccountTokenTransfersMap</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f424aa16/src/account/AccountInfoQuery.ts#L145">src/account/AccountInfoQuery.ts:145</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f424aa16/src/TransactionRecord.ts#L92">src/TransactionRecord.ts:92</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="_token_tokenid_.tokenid.html" class="tsd-signature-type">TokenId</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/_account_accountinfoquery_.tokenrelationship.html" class="tsd-signature-type">TokenRelationship</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">[</span><a href="_token_tokenid_.tokenid.html" class="tsd-signature-type">TokenId</a><span class="tsd-signature-symbol">, </span><a href="_transactionrecord_.accounttokentransfersmap.html" class="tsd-signature-type">AccountTokenTransfersMap</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -144,13 +144,13 @@
 					<a name="get" class="tsd-anchor"></a>
 					<h3>get</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span>tokenId<span class="tsd-signature-symbol">: </span><a href="../modules/_token_tokenid_.html#tokenidlike" class="tsd-signature-type">TokenIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_account_accountinfoquery_.tokenrelationship.html" class="tsd-signature-type">TokenRelationship</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
+						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span>tokenId<span class="tsd-signature-symbol">: </span><a href="../modules/_token_tokenid_.html#tokenidlike" class="tsd-signature-type">TokenIdLike</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_transactionrecord_.accounttokentransfersmap.html" class="tsd-signature-type">AccountTokenTransfersMap</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f424aa16/src/account/AccountInfoQuery.ts#L128">src/account/AccountInfoQuery.ts:128</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f424aa16/src/TransactionRecord.ts#L75">src/TransactionRecord.ts:75</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -159,7 +159,7 @@
 									<h5>tokenId: <a href="../modules/_token_tokenid_.html#tokenidlike" class="tsd-signature-type">TokenIdLike</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_account_accountinfoquery_.tokenrelationship.html" class="tsd-signature-type">TokenRelationship</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_transactionrecord_.accounttokentransfersmap.html" class="tsd-signature-type">AccountTokenTransfersMap</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -173,7 +173,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f424aa16/src/account/AccountInfoQuery.ts#L137">src/account/AccountInfoQuery.ts:137</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f424aa16/src/TransactionRecord.ts#L84">src/TransactionRecord.ts:84</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><a href="_token_tokenid_.tokenid.html" class="tsd-signature-type">TokenId</a><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -184,16 +184,16 @@
 					<a name="values" class="tsd-anchor"></a>
 					<h3>values</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">values<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_account_accountinfoquery_.tokenrelationship.html" class="tsd-signature-type">TokenRelationship</a><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">values<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><a href="_transactionrecord_.accounttokentransfersmap.html" class="tsd-signature-type">AccountTokenTransfersMap</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f424aa16/src/account/AccountInfoQuery.ts#L133">src/account/AccountInfoQuery.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/f424aa16/src/TransactionRecord.ts#L80">src/TransactionRecord.ts:80</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_account_accountinfoquery_.tokenrelationship.html" class="tsd-signature-type">TokenRelationship</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><a href="_transactionrecord_.accounttokentransfersmap.html" class="tsd-signature-type">AccountTokenTransfersMap</a><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -206,44 +206,44 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_account_accountinfoquery_.html">&quot;account/<wbr>Account<wbr>Info<wbr>Query&quot;</a>
+						<a href="../modules/_transactionrecord_.html">&quot;<wbr>Transaction<wbr>Record&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="_account_accountinfoquery_.accountinfoquery.html" class="tsd-kind-icon">Account<wbr>Info<wbr>Query</a>
+						<a href="_transactionrecord_.accounttokentransfersmap.html" class="tsd-kind-icon">Account<wbr>Token<wbr>Transfers<wbr>Map</a>
 					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_account_accountinfoquery_.tokenrelationshipmap.html" class="tsd-kind-icon">Token<wbr>Relationship<wbr>Map</a>
+						<a href="_transactionrecord_.tokentransfersmap.html" class="tsd-kind-icon">Token<wbr>Transfers<wbr>Map</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_account_accountinfoquery_.tokenrelationshipmap.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_transactionrecord_.tokentransfersmap.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_account_accountinfoquery_.tokenrelationshipmap.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a>
+								<a href="_transactionrecord_.tokentransfersmap.html#_symbol_iterator_" class="tsd-kind-icon">[<wbr>Symbol.iterator]</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_account_accountinfoquery_.tokenrelationshipmap.html#get" class="tsd-kind-icon">get</a>
+								<a href="_transactionrecord_.tokentransfersmap.html#get" class="tsd-kind-icon">get</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_account_accountinfoquery_.tokenrelationshipmap.html#keys" class="tsd-kind-icon">keys</a>
+								<a href="_transactionrecord_.tokentransfersmap.html#keys" class="tsd-kind-icon">keys</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_account_accountinfoquery_.tokenrelationshipmap.html#values" class="tsd-kind-icon">values</a>
+								<a href="_transactionrecord_.tokentransfersmap.html#values" class="tsd-kind-icon">values</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/_account_accountinfoquery_.accountinfo.html" class="tsd-kind-icon">Account<wbr>Info</a>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="_transactionrecord_.transactionrecord.html" class="tsd-kind-icon">Transaction<wbr>Record</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/_account_accountinfoquery_.tokenrelationship.html" class="tsd-kind-icon">Token<wbr>Relationship</a>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/_transactionrecord_.html#transferlisttosdk" class="tsd-kind-icon">transfer<wbr>List<wbr>ToSdk</a>
 					</li>
 				</ul>
 			</nav>
