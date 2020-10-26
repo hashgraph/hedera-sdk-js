@@ -179,9 +179,9 @@ export class TokenInfoQuery extends QueryBuilder<TokenInfo> {
             totalSupply: new BigNumber(info.getTotalsupply()!),
             treasury: AccountId._fromProto(info.getTreasury()!),
             adminKey: info.hasAdminkey() ? _fromProtoKey(info.getAdminkey()!) : null,
-            kycKey: info.hasAdminkey() ? _fromProtoKey(info.getKyckey()!) : null,
-            freezeKey: info.hasAdminkey() ? _fromProtoKey(info.getFreezekey()!) : null,
-            wipeKey: info.hasAdminkey() ? _fromProtoKey(info.getWipekey()!) : null,
+            kycKey: info.hasKyckey() ? _fromProtoKey(info.getKyckey()!) : null,
+            freezeKey: info.hasFreezekey() ? _fromProtoKey(info.getFreezekey()!) : null,
+            wipeKey: info.hasWipekey() ? _fromProtoKey(info.getWipekey()!) : null,
             supplyKey: info.hasSupplykey() ? _fromProtoKey(info.getSupplykey()!) : null,
             defaultFreezeStatus:
                 info.getDefaultfreezestatus() === 0 ?
