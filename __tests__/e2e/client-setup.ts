@@ -6,19 +6,17 @@ import { assert } from "console";
 export async function getClientForIntegrationTest(): Promise<Client> {
     let client: Client;
 
-    if (process.env.CONFIG_FILE != null) {
+    if (process.env.HEDERA_NETWORK != null && process.env.HEDERA_NETWORK == "previewnet") {
+        client = Client.forPreviewnet();
+    } else {
         const configPath = process.env.CONFIG_FILE;
 
         try {
-            const file = await util.promisify(fs.readFile)(configPath);
+            const file = await util.promisify(fs.readFile)(configPath != null ? configPath : "");
             client = Client.fromJson(file.toString());
         } catch {
-            // fallback to testnet
-            console.log("Failed to use client network. Using testnet instead.");
             client = Client.forTestnet();
         }
-    } else {
-        client = Client.forTestnet();
     }
 
     if (process.env.OPERATOR_ID != null && process.env.OPERATOR_KEY != null) {

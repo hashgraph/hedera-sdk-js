@@ -66,7 +66,7 @@ describe("TokenIntegrationTest", () => {
 
     await (await new TokenAssociateTransaction()
         .setAccountId(newAccountId)
-        .setTokenIds(tokenId)
+        .addTokenId(tokenId)
         .build(client)
         .sign(operatorKey)
         .sign(newKey)
@@ -124,7 +124,7 @@ describe("TokenIntegrationTest", () => {
 
     await (await new TokenDissociateTransaction()
         .setAccountId(newAccountId)
-        .setTokenIds(tokenId)
+        .addTokenId(tokenId)
         .build(client)
         .sign(operatorKey)
         .sign(newKey)
