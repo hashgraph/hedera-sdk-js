@@ -8,6 +8,16 @@ export function newIntegrationClient() {
     // TODO: support reading from a configuration file
     const client = Client.forTestnet();
 
+    if (process.env.HEDERA_NETWORK != null && process.env.HEDERA_NETWORK == "previewnet") {
+        client = Client.forPreviewnet();
+    } else {
+        try {
+            client = await Client.fromConfigFile(process.env.CONFIG_FILE);
+        } catch (err) {
+            client = Client.forTestnet();
+        }
+    }
+
     try {
         const operatorId =
             process.env.OPERATOR_ID || process.env.VITE_OPERATOR_ID;
