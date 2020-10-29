@@ -1,13 +1,13 @@
+import newIntegrationClient from "./client/index.js";
 import Hbar from "../src/Hbar.js";
 import AccountBalanceQuery from "../src/account/AccountBalanceQuery.js";
-import { newIntegrationClient } from "./client/index.js";
 
 describe("AccountBalanceQuery", function () {
     this.timeout(15000);
     let client;
 
-    before(function () {
-        client = newIntegrationClient();
+    before(async function () {
+        client = await newIntegrationClient();
     });
 
     describe("#execute", function () {
@@ -16,7 +16,7 @@ describe("AccountBalanceQuery", function () {
                 .setAccountId("3") // balance of node 3
                 .execute(client);
 
-            expect(balance.toTinybars().toNumber()).to.be.greaterThan(
+            expect(balance.hbars.toTinybars().toNumber()).to.be.greaterThan(
                 new Hbar(1).toTinybars().toNumber()
             );
         });
