@@ -5,14 +5,7 @@ import Time from "../Timestamp.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 import TokenRelationshipMap from "./TokenRelationshipMap.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").IAccountInfo} proto.IAccountInfo
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
- */
+import proto from "@hashgraph/proto";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key

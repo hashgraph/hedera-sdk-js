@@ -1,12 +1,6 @@
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransactionID} proto.ITransactionID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
- */
+import proto from "@hashgraph/proto";
 
 /**
  * The client-generated ID for a transaction.

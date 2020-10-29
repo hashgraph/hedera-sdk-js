@@ -1,10 +1,5 @@
 import SemanticVersion from "./SemanticVersion.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").INetworkGetVersionInfoResponse} proto.INetworkGetVersionInfoResponse
- * @typedef {import("@hashgraph/proto").ISemanticVersion} proto.ISemanticVersion
- */
+import proto from "@hashgraph/proto";
 
 /**
  * Response when the client sends the node CryptoGetVersionInfoQuery.
@@ -79,7 +74,7 @@ export default class NetworkVersionInfo {
      */
     toBytes() {
         return proto.NetworkGetVersionInfoResponse.encode(
-            this.toProtobuf()
+            this._toProtobuf()
         ).finish();
     }
 }

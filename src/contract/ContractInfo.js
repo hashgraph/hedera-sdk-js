@@ -4,15 +4,7 @@ import Timestamp from "../Timestamp.js";
 import Hbar from "../Hbar.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").IDuration} proto.IDuration
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
- * @typedef {import("@hashgraph/proto").IContractInfo} proto.IContractInfo
- */
+import proto from "@hashgraph/proto";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key

@@ -142,6 +142,15 @@ import TokenFreezeStatus = proto.TokenFreezeStatus;
 import TokenID = proto.TokenID;
 import TokenKycStatus = proto.TokenKycStatus;
 
+import ContractGetInfoResponse = proto.ContractGetInfoResponse;
+import CryptoGetInfoResponse = proto.CryptoGetInfoResponse;
+import FileGetInfoResponse = proto.FileGetInfoResponse;
+import NetworkGetVersionInfoResponse = proto.NetworkGetVersionInfoResponse;
+import SemanticVersion = proto.SemanticVersion;
+import TransactionID = proto.TransactionID;
+import TransactionReceipt = proto.TransactionReceipt;
+import TransactionRecord = proto.TransactionRecord;
+
 export {
     IAccountID,
     IConsensusCreateTopicTransactionBody,
@@ -252,4 +261,12 @@ export {
     ITokenRelationship,
     TokenKycStatus,
     TokenFreezeStatus,
+    ContractGetInfoResponse,
+    CryptoGetInfoResponse,
+    FileGetInfoResponse,
+    NetworkGetVersionInfoResponse,
+    SemanticVersion,
+    TransactionID,
+    TransactionReceipt,
+    TransactionRecord,
 };

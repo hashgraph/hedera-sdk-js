@@ -6,13 +6,7 @@ import TokenId from "../token/TokenId.js";
 import ExchangeRate from "../ExchangeRate.js";
 import Status from "../Status.js";
 import Long from "long";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransactionReceipt} proto.ITransactionReceipt
- * @typedef {import("@hashgraph/proto").IExchangeRateSet} proto.IExchangeRateSet
- * @typedef {import("@hashgraph/proto").IExchangeRate} proto.IExchangeRate
- */
+import proto from "@hashgraph/proto";
 
 /**
  * The consensus result for a transaction, which might not be currently known,

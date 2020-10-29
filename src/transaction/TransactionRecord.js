@@ -4,14 +4,7 @@ import Timestamp from "../Timestamp.js";
 import Hbar from "../Hbar.js";
 import Transfer from "../Transfer.js";
 import ContractFunctionResult from "../contract/ContractFunctionResult.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransactionRecord} proto.ITransactionRecord
- * @typedef {import("@hashgraph/proto").ITransactionReceipt} proto.ITransactionReceipt
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
- * @typedef {import("@hashgraph/proto").ITransactionID} proto.ITransactionID
- */
+import proto from "@hashgraph/proto";
 
 /**
  * Response when the client sends the node TransactionGetRecordResponse.
@@ -109,7 +102,7 @@ export default class TransactionRecord {
                 this.transactionHash != null ? this.transactionHash : null,
             consensusTimestamp:
                 this.consensusTimestampstamp != null
-                    ? this.consensusTimestampstamp
+                    ? this.consensusTimestampstamp._toProtobuf()
                     : null,
             transactionID:
                 this.transactionId != null

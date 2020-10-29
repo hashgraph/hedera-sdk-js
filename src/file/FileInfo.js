@@ -6,13 +6,7 @@ import {
     keyListFromProtobuf,
     keyListToProtobuf,
 } from "../cryptography/protobuf.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").IFileInfo} proto.IFileInfo
- * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
- */
+import proto from "@hashgraph/proto";
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.

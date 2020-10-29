@@ -1,6 +1,11 @@
 import Timestamp from "../Timestamp";
-import proto from "@hashgraph/proto";
 import Long from "long";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").IConsensusTopicResponse} proto.IConsensusTopicResponse
+ * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
+ */
 
 export default class TopicMessageChunk {
     /**
