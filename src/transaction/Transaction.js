@@ -1,6 +1,7 @@
 import Hbar from "../Hbar.js";
 import TransactionResponse from "./TransactionResponse.js";
 import TransactionId from "./TransactionId.js";
+import TransactionHashMap from "./TransactionHashMap.js";
 import Executable from "../Executable.js";
 import Status from "../Status.js";
 import Long from "long";
@@ -68,7 +69,7 @@ export default class Transaction extends Executable {
          * List of proto transactions that have been built from this SDK
          * transaction. Each one should share the same transaction ID.
          *
-         * @private
+         * @internal
          * @type {proto.ITransaction[]}
          */
         this._transactions = [];
@@ -86,7 +87,7 @@ export default class Transaction extends Executable {
          * List of node account IDs for each transaction that has been
          * built.
          *
-         * @private
+         * @internal
          * @type {AccountId[]}
          */
         this._nodeIds = [];
@@ -457,14 +458,12 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * @returns {Promise<Uint8Array>}
+     * @returns {Promise<TransactionHashMap>}
      */
     get transactionHash() {
         this._requireExactlyOneFrozen();
 
-        return sha384.digest(
-            ProtoTransaction.encode(this._makeRequest()).finish()
-        );
+        return TransactionHashMap._fromTransaction(this);
     }
 
     /**
