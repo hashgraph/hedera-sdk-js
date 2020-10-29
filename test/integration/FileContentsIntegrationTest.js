@@ -9,7 +9,7 @@ describe("FileContents", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = newClient();
+        const client = await newClient();
         const operatorKey = client.operatorPublicKey;
 
         let response = await new FileCreateTransaction()

@@ -10,7 +10,7 @@ describe("AccountInfo", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = newClient();
+        const client = await newClient();
         const operatorId = client.operatorAccountId;
         const key = PrivateKey.generate();
 

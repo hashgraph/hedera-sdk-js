@@ -9,7 +9,7 @@ describe("TransactionResponse", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = newClient();
+        const client = await newClient();
         const operatorId = client.operatorAccountId;
         expect(operatorId).to.not.be.null;
 

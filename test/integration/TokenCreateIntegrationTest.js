@@ -6,7 +6,7 @@ describe("TokenCreate", function () {
     it("should be executable", async function () {
         this.timeout(10000);
 
-        const client = newClient();
+        const client = await newClient();
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
 

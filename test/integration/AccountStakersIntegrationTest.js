@@ -6,7 +6,7 @@ describe("AccountStakers", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = newClient();
+        const client = await newClient();
         const operatorId = client.operatorAccountId;
 
         let errorThrown = false;

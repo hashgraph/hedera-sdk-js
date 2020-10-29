@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 // load .env (if available)
 dotenv.config();
 
-export async function newIntegrationClient() {
+export default async function newIntegrationClient() {
     let client;
 
     if (
@@ -37,6 +37,3 @@ export async function newIntegrationClient() {
 
     return client;
 }
-
-// TODO: Remove this
-export default newIntegrationClient;

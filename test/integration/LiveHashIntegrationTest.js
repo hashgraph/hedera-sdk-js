@@ -19,7 +19,7 @@ describe("LiveHash", function () {
             "100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002"
         );
 
-        const client = newClient();
+        const client = await newClient();
         const operatorId = client.operatorAccountId;
         let errorThrown = false;
 
