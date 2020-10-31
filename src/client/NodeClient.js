@@ -211,10 +211,9 @@ export default class NodeClient extends Client {
 
     /**
      * @override
-     * @param {string} address
-     * @returns {NodeChannel}
+     * @returns {(address: string) => NodeChannel}
      */
-    _createNetworkChannel(address) {
-        return new NodeChannel(address);
+    _createNetworkChannel() {
+        return (address) => new NodeChannel(address);
     }
 }

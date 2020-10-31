@@ -193,13 +193,6 @@ export default class Query extends Executable {
      * @returns {void}
      */
     _setPaymentNodeIds(client) {
-        if (
-            this._paymentTransactions.length !== 0 ||
-            !this._isPaymentRequired()
-        ) {
-            return;
-        }
-
         // generate payment transactions if one was
         // not set and payment is required
 
@@ -217,7 +210,7 @@ export default class Query extends Executable {
         // If nodeAccountIds have not been set via `setNodeAccountIds()` method, then
         // ask the client for the recommend list of nodeAccountIds
         if (this._nodeIds.length == 0) {
-            this._nodeIds = client._getNodeAccountIdsForTransaction();
+            this._nodeIds = client._getNodeAccountIdsForExecute();
         }
     }
 
@@ -227,6 +220,10 @@ export default class Query extends Executable {
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
+        if (this._nodeIds.length == 0) {
+            this._setPaymentNodeIds(client);
+        }
+
         if (
             this._paymentTransactions.length != 0 ||
             !this._isPaymentRequired()
@@ -256,10 +253,6 @@ export default class Query extends Executable {
             }
 
             cost = actualCost;
-        }
-
-        if (this._nodeIds.length == 0) {
-            this._setPaymentNodeIds(client);
         }
 
         for (const node of this._nodeIds) {
@@ -353,27 +346,18 @@ export default class Query extends Executable {
     }
 
     /**
-     * @template ChannelT
-     * @template MirrorChannelT
-     * @param {import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @returns {AccountId}
      */
-    _getNodeAccountId(client) {
+    _getNodeAccountId() {
         if (this._nodeIds.length > 0) {
             // if there are payment transactions,
             // we need to use the node of the current payment transaction
             return this._nodeIds[this._nextIndex];
-        }
-
-        if (client == null) {
+        } else {
             throw new Error(
-                "requires a client to pick the next node ID for a query"
+                "(BUG) nodeAccountIds were not set for query before executing"
             );
         }
-
-        // otherwise just pick the next node in the round robin
-        // this is hit for free queries without an explicit node
-        return client._getNextNodeId();
     }
 
     /**

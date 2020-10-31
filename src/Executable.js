@@ -147,19 +147,19 @@ export default class Executable {
 
         for (let attempt = 1 /* loop forever */; ; attempt += 1) {
             const nodeAccountId = this._getNodeAccountId(client);
-            const nodeId = client._getNodeId(nodeAccountId);
+            const node = client._getNodeByAccountId(nodeAccountId);
 
-            if (nodeId == null) {
+            if (node == null) {
                 throw new Error(
                     `NodeAccountId not recognized: ${nodeAccountId.toString()}`
                 );
             }
 
-            if (!nodeId.isHealthy()) {
+            if (!node.isHealthy()) {
                 continue;
             }
 
-            const channel = client._getNetworkChannel(nodeAccountId);
+            const channel = node.channel;
             const request = this._makeRequest();
 
             // advance the internal index
@@ -169,8 +169,8 @@ export default class Executable {
 
             let response;
 
-            if (!nodeId.isHealthy()) {
-                await nodeId.wait();
+            if (!node.isHealthy()) {
+                await node.wait();
             }
 
             try {
@@ -181,14 +181,14 @@ export default class Executable {
                     this._shouldRetryExceptionally(err) &&
                     attempt <= maxAttempts
                 ) {
-                    nodeId.increaseDelay();
+                    node.increaseDelay();
                     continue;
                 }
 
                 throw err;
             }
 
-            nodeId.decreaseDelay();
+            node.decreaseDelay();
 
             const responseStatus = this._mapResponseStatus(response);
 

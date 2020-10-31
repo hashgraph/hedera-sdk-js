@@ -73,7 +73,7 @@ export default class Client {
          * to the node URL.
          *
          * @private
-         * @type {Map<string, Node>}
+         * @type {Map<string, Node<ChannelT>>}
          */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this._network = new Map();
@@ -82,7 +82,7 @@ export default class Client {
          * List of node account IDs.
          *
          * @private
-         * @type {Node[]}
+         * @type {Node<ChannelT>[]}
          */
         this._networkNodeAccountIds = [];
 
@@ -94,19 +94,6 @@ export default class Client {
          * @type {number}
          */
         this._lastSortedNodeAccountIds = Date.now();
-
-        /**
-         * @private
-         * @type {number}
-         */
-        this._nextNetworkNodeIndex = 0;
-
-        /**
-         * @private
-         * @type {Map<AccountId, ChannelT>}
-         */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this._networkChannels = new Map();
 
         /**
          * @internal
@@ -151,7 +138,7 @@ export default class Client {
                     ? accountId
                     : AccountId.fromString(accountId);
 
-            const nodeId = new Node(key, url);
+            const nodeId = new Node(key, url, this._createNetworkChannel());
             this._network.set(key.toString(), nodeId);
             this._networkNodeAccountIds.push(nodeId);
         }
@@ -274,12 +261,9 @@ export default class Client {
      * @private
      */
     _closeNetworkChannels() {
-        for (const channel of this._networkChannels.values()) {
-            channel.close();
+        for (const node of this._network.values()) {
+            node.close();
         }
-
-        this._networkChannels.clear();
-        this._nextNetworkNodeIndex = 0;
     }
 
     /**
@@ -306,7 +290,7 @@ export default class Client {
      * @internal
      * @returns {AccountId[]}
      */
-    _getNodeAccountIdsForTransaction() {
+    _getNodeAccountIdsForExecute() {
         // Sort the network nodes array by healtiness and delay
         if (this._lastSortedNodeAccountIds + 1000 < Date.now()) {
             this._networkNodeAccountIds.sort((a, b) => {
@@ -338,49 +322,11 @@ export default class Client {
 
     /**
      * @internal
-     * @returns {AccountId}
-     */
-    _getNextNodeId() {
-        const nodeId = this._networkNodeAccountIds[
-            this._nextNetworkNodeIndex++
-        ];
-        this._nextNetworkNodeIndex %= this._networkNodeAccountIds.length;
-
-        return nodeId.accountId;
-    }
-
-    /**
-     * @internal
      * @param {AccountId} nodeAccountId
-     * @returns {Node | undefined}
+     * @returns {Node<ChannelT> | undefined}
      */
-    _getNodeId(nodeAccountId) {
+    _getNodeByAccountId(nodeAccountId) {
         return this._network.get(nodeAccountId.toString());
-    }
-
-    /**
-     * @internal
-     * @param {AccountId} nodeAccountId
-     * @returns {ChannelT}
-     */
-    _getNetworkChannel(nodeAccountId) {
-        let networkChannel = this._networkChannels.get(nodeAccountId);
-
-        if (networkChannel != null) {
-            return networkChannel;
-        }
-
-        const nodeId = this._network.get(nodeAccountId.toString());
-
-        if (nodeId == null) {
-            throw new Error(`unknown node: ${nodeAccountId.toString()}`);
-        }
-
-        networkChannel = this._createNetworkChannel(nodeId.address);
-
-        this._networkChannels.set(nodeId.accountId, networkChannel);
-
-        return networkChannel;
     }
 
     /**
@@ -415,11 +361,9 @@ export default class Client {
 
     /**
      * @abstract
-     * @param {string} address
-     * @returns {ChannelT}
+     * @returns {(address: string) => ChannelT}
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _createNetworkChannel(address) {
+    _createNetworkChannel() {
         throw new Error("not implemented");
     }
 

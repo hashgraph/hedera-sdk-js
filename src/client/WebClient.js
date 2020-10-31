@@ -133,10 +133,9 @@ export default class WebClient extends Client {
 
     /**
      * @override
-     * @param {string} address
-     * @returns {WebChannel}
+     * @returns {(address: string) => WebChannel}
      */
-    _createNetworkChannel(address) {
-        return new WebChannel(address);
+    _createNetworkChannel() {
+        return (address) => new WebChannel(address);
     }
 }

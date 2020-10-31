@@ -1,13 +1,19 @@
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
+ * @typedef {import("./channel/Channel.js").default} Channel
  */
 
+/**
+ * @abstract
+ * @template {Channel} ChannelT
+ */
 export default class Node {
     /**
      * @param {AccountId} accountId
      * @param {string} address
+     * @param {(address: string) => ChannelT} channelInitFunction
      */
-    constructor(accountId, address) {
+    constructor(accountId, address, channelInitFunction) {
         this.accountId = accountId;
         this.address = address;
 
@@ -16,6 +22,12 @@ export default class Node {
 
         /** @type {number | null} */
         this.lastUsed = null;
+
+        /** @type {ChannelT | null} */
+        this._channel = null;
+
+        /** @type {(address: string) => ChannelT} */
+        this._channelInitFunction = channelInitFunction;
     }
 
     /**
@@ -56,5 +68,23 @@ export default class Node {
             this.delay -
             Date.now();
         return new Promise((resolve) => setTimeout(resolve, delay));
+    }
+
+    get channel() {
+        if (this._channel != null) {
+            return this._channel;
+        }
+
+        this._channel = this._channelInitFunction(this.address);
+
+        return this._channel;
+    }
+
+    close() {
+        if (this._channel != null) {
+            this._channel.close();
+        }
+
+        this._channel = null;
     }
 }

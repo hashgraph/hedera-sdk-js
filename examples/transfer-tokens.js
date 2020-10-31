@@ -17,18 +17,30 @@ const {
 } = require("@hashgraph/sdk");
 
 async function main() {
-    if (
-        process.env.OPERATOR_KEY == null ||
-        process.env.OPERATOR_ID == null
-    ) {
-        throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
+    let client;
+
+    if (process.env.HEDERA_NETWORK != null) {
+        switch (process.env.HEDERA_NETWORK) {
+            case "previewnet":
+                client = Client.forPreviewnet();
+                break;
+            default:
+                client = Client.forTestnet();
+        }
+    } else {
+        try {
+            client = Client.fromConfigFile(process.env.CONFIG_FILE);
+        } catch (err) {
+            client = Client.forTestnet();
+        }
     }
 
-    const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
-    const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
+    if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
+        const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
+        const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 
-    const client = Client.forPreviewnet();
-    client.setOperator(operatorId, operatorKey);
+        client.setOperator(operatorId, operatorKey);
+    }
 
     const newKey = PrivateKey.generate();
 
@@ -47,17 +59,17 @@ async function main() {
     console.log(`account id = ${newAccountId}`);
 
     resp = await new TokenCreateTransaction()
-        .setNodeAccountId(resp.nodeId)
+        .setNodeAccountIds([resp.nodeId])
         .setName("ffff")
         .setSymbol("F")
         .setDecimals(3)
         .setInitialSupply(1000000)
-        .setTreasury(operatorId)
-        .setAdminKey(operatorKey.publicKey)
-        .setFreezeKey(operatorKey.publicKey)
-        .setWipeKey(operatorKey.publicKey)
-        .setKycKey(operatorKey.publicKey)
-        .setSupplyKey(operatorKey.publicKey)
+        .setTreasury(client.operatorAccountId)
+        .setAdminKey(client.operatorPublicKey)
+        .setFreezeKey(client.operatorPublicKey)
+        .setWipeKey(client.operatorPublicKey)
+        .setKycKey(client.operatorPublicKey)
+        .setSupplyKey(client.operatorPublicKey)
         .setFreezeDefault(false)
         .setExpirationTime(Date.now() + 7890000)
         .execute(client);
@@ -65,12 +77,11 @@ async function main() {
     const tokenId = (await resp.getReceipt(client)).tokenId;
     console.log(`token id = ${tokenId}`);
 
-    await ( await (await (await new TokenAssociateTransaction()
-        .setNodeAccountId(resp.nodeId)
+    await (await (await new TokenAssociateTransaction()
+        .setNodeAccountIds([resp.nodeId])
         .setAccountId(newAccountId)
         .setTokenIds(tokenId)
         .freezeWith(client)
-        .sign(operatorKey))
         .sign(newKey))
         .execute(client))
         .getReceipt(client);
@@ -78,7 +89,7 @@ async function main() {
     console.log(`Associated account ${newAccountId} with token ${tokenId}`);
 
     await (await new TokenGrantKycTransaction()
-        .setNodeAccountId(resp.nodeId)
+        .setNodeAccountIds([resp.nodeId])
         .setAccountId(newAccountId)
         .setTokenId(tokenId)
         .execute(client))
@@ -87,16 +98,16 @@ async function main() {
     console.log(`Granted KYC for account ${newAccountId} on token ${tokenId}`);
 
     await (await new TokenTransferTransaction()
-        .setNodeAccountId(resp.nodeId)
-        .addSender(tokenId, operatorId, 10)
+        .setNodeAccountIds([resp.nodeId])
+        .addSender(tokenId, client.operatorAccountId, 10)
         .addRecipient(tokenId, newAccountId, 10)
         .execute(client))
         .getReceipt(client);
 
-    console.log(`Sent 10 tokens from account ${operatorId} to account ${newAccountId} on token ${tokenId}`);
+    console.log(`Sent 10 tokens from account ${client.operatorAccountId} to account ${newAccountId} on token ${tokenId}`);
 
     await (await new TokenWipeTransaction()
-        .setNodeAccountId(resp.nodeId)
+        .setNodeAccountIds([resp.nodeId])
         .setTokenId(tokenId)
         .setAccountId(newAccountId)
         .setAmount(10)
@@ -106,7 +117,7 @@ async function main() {
     console.log(`Wiped balance of account ${newAccountId}`);
 
     await (await new TokenDeleteTransaction()
-        .setNodeAccountId(resp.nodeId)
+        .setNodeAccountIds([resp.nodeId])
         .setTokenId(tokenId)
         .execute(client))
         .getReceipt(client);
@@ -116,10 +127,10 @@ async function main() {
     await (
         await (
             await new AccountDeleteTransaction()
-                .setNodeAccountId(resp.nodeId)
+                .setNodeAccountIds([resp.nodeId])
                 .setAccountId(newAccountId)
                 .setMaxTransactionFee(new Hbar(1))
-                .setTransferAccountId(operatorId)
+                .setTransferAccountId(client.operatorAccountId)
                 .setTransactionId(TransactionId.generate(newAccountId))
                 .freezeWith(client)
                 .sign(newKey)
