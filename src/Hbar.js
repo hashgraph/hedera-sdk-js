@@ -3,25 +3,34 @@ import Long from "long";
 import { valueToLong } from "./long.js";
 import HbarUnit from "./HbarUnit.js";
 
+/**
+ * @typedef {import("./long.js").LongObject} LongObject
+ */
+
 export default class Hbar {
     /**
-     * @param {number | string | Long | import("./long.js").LongObject | BigNumber} amount
+     * @param {number | string | Long | LongObject | BigNumber} amount
      * @param {HbarUnit=} unit
      */
     constructor(amount, unit = HbarUnit.Hbar) {
         if (unit === HbarUnit.Tinybar) {
             this._valueInTinybar = valueToLong(amount);
         } else {
-            let bigAmount = amount;
+            /** @type {BigNumber} */
+            let bigAmount;
 
-            if (bigAmount instanceof Long) {
-                bigAmount = new BigNumber(bigAmount.toString(10));
-            } else if (BigNumber.isBigNumber(bigAmount)) {
-                bigAmount = new BigNumber(bigAmount);
+            if (amount instanceof Long) {
+                bigAmount = new BigNumber(amount.toString(10));
+            } else if (Long.isLong(amount)) {
+                bigAmount = new BigNumber(Long.fromValue(amount).toString(10));
+            } else if (
+                BigNumber.isBigNumber(amount) ||
+                typeof amount === "string" ||
+                typeof amount === "number"
+            ) {
+                bigAmount = new BigNumber(amount);
             } else {
-                bigAmount = new BigNumber(
-                    Long.fromValue(bigAmount).toString(10)
-                );
+                bigAmount = new BigNumber(0);
             }
 
             /**
