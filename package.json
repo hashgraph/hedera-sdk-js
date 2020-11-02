@@ -49,7 +49,7 @@
         "test": "run-s test:node test:browser",
         "test:node": "run-s test:unit:node test:integration:node",
         "test:unit:node": "nyc mocha -r @babel/register -r chai/register-expect 'test/unit/*.js'",
-        "test:integration:node": "nyc mocha -r @babel/register -r chai/register-expect 'test/integration/AccountBalance*.js'",
+        "test:integration:node": "nyc mocha -r @babel/register -r chai/register-expect 'test/integration/*.js'",
         "test:browser": "run-s test:unit:browser test:integration:browser",
         "test:browser:chrome": "run-s test:unit:browser:chrome test:integration:browser:chrome",
         "test:browser:firefox": "run-s test:unit:browser:firefox test:integration:browser:firefox",
