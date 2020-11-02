@@ -49,7 +49,6 @@ async function main() {
 
     let resp = await new AccountCreateTransaction()
         .setKey(newKey.publicKey)
-        .setMaxTransactionFee(new Hbar(1))
         .setInitialBalance(new Hbar(1))
         .execute(client);
 
@@ -71,7 +70,6 @@ async function main() {
         .setKycKey(client.operatorPublicKey)
         .setSupplyKey(client.operatorPublicKey)
         .setFreezeDefault(false)
-        .setExpirationTime(Date.now() + 7890000)
         .execute(client);
 
     const tokenId = (await resp.getReceipt(client)).tokenId;
@@ -129,7 +127,6 @@ async function main() {
             await new AccountDeleteTransaction()
                 .setNodeAccountIds([resp.nodeId])
                 .setAccountId(newAccountId)
-                .setMaxTransactionFee(new Hbar(1))
                 .setTransferAccountId(client.operatorAccountId)
                 .setTransactionId(TransactionId.generate(newAccountId))
                 .freezeWith(client)
