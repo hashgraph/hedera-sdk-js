@@ -126,11 +126,9 @@ export default class CostQuery extends Executable {
 
     /**
      * @override
-     * @param {import("../client/Client.js").default<*, *>} client
      * @returns {AccountId}
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _getNodeAccountId(client) {
+    _getNodeAccountId() {
         return this._query._nodeIds[this._nextIndex];
     }
 

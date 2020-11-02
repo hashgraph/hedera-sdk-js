@@ -536,13 +536,9 @@ export default class Transaction extends Executable {
 
     /**
      * @override
-     * @template ChannelT
-     * @template MirrorChannelT
-     * @param {?import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @returns {AccountId}
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _getNodeAccountId(client) {
+    _getNodeAccountId() {
         if (this.nodeAccountIds.length == 0) {
             throw new Error(
                 "(BUG) Transaction::_getNodeAccountId called before transaction has been frozen"

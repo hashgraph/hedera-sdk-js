@@ -80,13 +80,9 @@ export default class Executable {
     /**
      * @abstract
      * @protected
-     * @template ChannelT
-     * @template MirrorChannelT
-     * @param {?import("./client/Client.js").default<ChannelT, MirrorChannelT>} client
      * @returns {AccountId}
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _getNodeAccountId(client) {
+    _getNodeAccountId() {
         throw new Error("not implemented");
     }
 
@@ -146,7 +142,7 @@ export default class Executable {
         await this._beforeExecute(client);
 
         for (let attempt = 1 /* loop forever */; ; attempt += 1) {
-            const nodeAccountId = this._getNodeAccountId(client);
+            const nodeAccountId = this._getNodeAccountId();
             const node = client._getNodeByAccountId(nodeAccountId);
 
             if (node == null) {
