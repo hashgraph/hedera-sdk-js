@@ -2,8 +2,8 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
-import Timestamp from "../Timestamp.js";
 import * as utf8 from "../encoding/utf8.js";
+import Timestamp from "../Timestamp.js";
 
 /**
  * @namespace proto
@@ -26,7 +26,7 @@ export default class FileCreateTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {Key[]} [props.keys]
-     * @param {Timestamp} [props.expirationTime]
+     * @param {Timestamp | Date} [props.expirationTime]
      * @param {Uint8Array | string} [props.contents]
      */
     constructor(props = {}) {
@@ -135,12 +135,15 @@ export default class FileCreateTransaction extends Transaction {
      *
      * May be extended using FileUpdateTransaction#setExpirationTime(Timestamp).
      *
-     * @param {Timestamp} expirationTime
+     * @param {Timestamp | Date} expirationTime
      * @returns {this}
      */
     setExpirationTime(expirationTime) {
         this._requireNotFrozen();
-        this._expirationTime = expirationTime;
+        this._expirationTime =
+            expirationTime instanceof Timestamp
+                ? expirationTime
+                : Timestamp.fromDate(expirationTime);
 
         return this;
     }

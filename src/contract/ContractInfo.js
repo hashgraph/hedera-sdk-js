@@ -1,6 +1,7 @@
 import ContractId from "./ContractId.js";
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
+import Duration from "../Duration.js";
 import Hbar from "../Hbar.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
@@ -22,7 +23,7 @@ export default class ContractInfo {
      * @param {string} props.contractAccountId
      * @param {?Key} props.adminKey
      * @param {Timestamp} props.expirationTime
-     * @param {Long} props.autoRenewPeriod
+     * @param {Duration} props.autoRenewPeriod
      * @param {Long} props.storage
      * @param {string} props.contractMemo
      * @param {Hbar} props.balance
@@ -128,10 +129,7 @@ export default class ContractInfo {
             expirationTime: Timestamp._fromProtobuf(
                 /** @type {proto.ITimestamp} */ (info.expirationTime)
             ),
-            autoRenewPeriod:
-                autoRenewPeriod instanceof Long
-                    ? autoRenewPeriod
-                    : Long.fromValue(autoRenewPeriod),
+            autoRenewPeriod: new Duration(autoRenewPeriod),
             storage:
                 info.storage != null
                     ? info.storage instanceof Long
@@ -155,9 +153,10 @@ export default class ContractInfo {
             adminKey:
                 this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
             expirationTime: this.expirationTime._toProtobuf(),
-            autoRenewPeriod: {
-                seconds: this.autoRenewPeriod,
-            },
+            autoRenewPeriod:
+                this.autoRenewPeriod != null
+                    ? this.autoRenewPeriod._toProtobuf()
+                    : null,
             storage: this.storage,
             memo: this.contractMemo,
             balance: this.balance.toTinybars(),

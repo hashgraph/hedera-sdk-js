@@ -1,12 +1,12 @@
 import AccountId from "../account/AccountId.js";
 import ContractId from "./ContractId.js";
 import FileId from "../file/FileId.js";
-import Timestamp from "../Timestamp.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import { keyToProtobuf, keyFromProtobuf } from "../cryptography/protobuf.js";
-import Long from "long";
+import Duration from "../Duration.js";
+import Timestamp from "../Timestamp.js";
 
 /**
  * @namespace proto
@@ -30,10 +30,10 @@ export default class ContractUpdateTransaction extends Transaction {
      * @param {object} props
      * @param {ContractId | string} [props.contractId]
      * @param {FileId | string} [props.bytecodeFileId]
-     * @param {Timestamp} [props.expirationTime]
+     * @param {Timestamp | Date} [props.expirationTime]
      * @param {Key} [props.adminKey]
      * @param {AccountId | string} [props.proxyAccountId]
-     * @param {number | Long} [props.autoRenewPeriod]
+     * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {string} [props.contractMemo]
      */
     constructor(props = {}) {
@@ -65,7 +65,7 @@ export default class ContractUpdateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Long}
+         * @type {?Duration}
          */
         this._autoRenewPeriod = null;
 
@@ -188,12 +188,15 @@ export default class ContractUpdateTransaction extends Transaction {
     /**
      * Sets the contract ID which is being deleted in this transaction.
      *
-     * @param {Timestamp} expirationTime
+     * @param {Timestamp | Date} expirationTime
      * @returns {ContractUpdateTransaction}
      */
     setExpirationTime(expirationTime) {
         this._requireNotFrozen();
-        this._expirationTime = expirationTime;
+        this._expirationTime =
+            expirationTime instanceof Timestamp
+                ? expirationTime
+                : Timestamp.fromDate(expirationTime);
 
         return this;
     }
@@ -238,22 +241,22 @@ export default class ContractUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?Long}
+     * @returns {?Duration}
      */
     get autoRenewPeriod() {
         return this._autoRenewPeriod;
     }
 
     /**
-     * @param {number | Long} autoRenewPeriod
+     * @param {Duration | Long | number} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
         this._autoRenewPeriod =
-            autoRenewPeriod instanceof Long
+            autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod
-                : Long.fromValue(autoRenewPeriod);
+                : new Duration(autoRenewPeriod);
 
         return this;
     }
@@ -340,9 +343,7 @@ export default class ContractUpdateTransaction extends Transaction {
                     : null,
             autoRenewPeriod:
                 this._autoRenewPeriod != null
-                    ? {
-                          seconds: this._autoRenewPeriod,
-                      }
+                    ? this._autoRenewPeriod._toProtobuf()
                     : null,
             fileID: this._bytecodeFileId
                 ? this._bytecodeFileId._toProtobuf()

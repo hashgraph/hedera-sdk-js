@@ -1,10 +1,10 @@
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import AccountId from "../account/AccountId.js";
-import Long from "long";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import Duration from "../Duration.js";
 
 /**
  * @namespace proto
@@ -29,7 +29,7 @@ export default class TopicCreateTransaction extends Transaction {
      * @param {string} [props.topicMemo]
      * @param {Key} [props.adminKey]
      * @param {Key} [props.submitKey]
-     * @param {number | Long} [props.autoRenewPeriod]
+     * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {AccountId | string} [props.autoRenewAccountId]
      */
     constructor(props = {}) {
@@ -77,9 +77,9 @@ export default class TopicCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {Long}
+         * @type {Duration}
          */
-        this._autoRenewPeriod = DEFAULT_AUTO_RENEW_PERIOD;
+        this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
 
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
@@ -193,7 +193,7 @@ export default class TopicCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {Long}
+     * @returns {Duration}
      */
     get autoRenewPeriod() {
         return this._autoRenewPeriod;
@@ -202,15 +202,15 @@ export default class TopicCreateTransaction extends Transaction {
     /**
      * Set the auto renew period for this account.
      *
-     * @param {number | Long} autoRenewPeriod
+     * @param {Duration | Long | number} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
         this._autoRenewPeriod =
-            autoRenewPeriod instanceof Long
+            autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod
-                : Long.fromValue(autoRenewPeriod);
+                : new Duration(autoRenewPeriod);
 
         return this;
     }
@@ -251,9 +251,7 @@ export default class TopicCreateTransaction extends Transaction {
                 this._autoRenewAccountId != null
                     ? this._autoRenewAccountId._toProtobuf()
                     : null,
-            autoRenewPeriod: {
-                seconds: this._autoRenewPeriod,
-            },
+            autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
         };
     }
 }

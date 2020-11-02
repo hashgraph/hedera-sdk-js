@@ -6,7 +6,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
-import Long from "long";
+import Duration from "../Duration.js";
 
 /**
  * @namespace proto
@@ -22,6 +22,7 @@ import Long from "long";
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../Timestamp.js").default} Timestamp
  */
 
 /**
@@ -34,7 +35,7 @@ export default class AccountCreateTransaction extends Transaction {
      * @param {number | string | Long | BigNumber | Hbar} [props.initialBalance]
      * @param {boolean} [props.receiverSignatureRequired]
      * @param {AccountId} [props.proxyAccountId]
-     * @param {number | Long} [props.autoRenewPeriod]
+     * @param {Duration | Long | number} [props.autoRenewPeriod]
      */
     constructor(props = {}) {
         super();
@@ -77,9 +78,9 @@ export default class AccountCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {Long}
+         * @type {Duration}
          */
-        this._autoRenewPeriod = DEFAULT_AUTO_RENEW_PERIOD;
+        this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
 
         if (props.key != null) {
             this.setKey(props.key);
@@ -225,7 +226,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {Long}
+     * @returns {Duration}
      */
     get autoRenewPeriod() {
         return this._autoRenewPeriod;
@@ -234,15 +235,15 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * Set the auto renew period for this account.
      *
-     * @param {number | Long} autoRenewPeriod
+     * @param {Duration | Long | number} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
         this._autoRenewPeriod =
-            autoRenewPeriod instanceof Long
+            autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod
-                : Long.fromValue(autoRenewPeriod);
+                : new Duration(autoRenewPeriod);
 
         return this;
     }
@@ -279,9 +280,7 @@ export default class AccountCreateTransaction extends Transaction {
                 this._initialBalance != null
                     ? this._initialBalance.toTinybars()
                     : null,
-            autoRenewPeriod: {
-                seconds: this._autoRenewPeriod,
-            },
+            autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
             proxyAccountID:
                 this._proxyAccountId != null
                     ? this._proxyAccountId._toProtobuf()

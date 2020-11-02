@@ -4,7 +4,7 @@ import Transaction, {
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import AccountId from "../account/AccountId.js";
 import TopicId from "./TopicId.js";
-import Long from "long";
+import Duration from "../Duration.js";
 
 /**
  * @namespace proto
@@ -37,7 +37,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @param {string} [props.topicMemo]
      * @param {Key} [props.adminKey]
      * @param {Key} [props.submitKey]
-     * @param {number | Long} [props.autoRenewPeriod]
+     * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {AccountId | string} [props.autoRenewAccountId]
      */
     constructor(props = {}) {
@@ -95,7 +95,7 @@ export default class TopicUpdateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Long}
+         * @type {?Duration}
          */
         this._autoRenewPeriod = null;
 
@@ -269,7 +269,7 @@ export default class TopicUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?Long}
+     * @returns {?Duration}
      */
     get autoRenewPeriod() {
         return this._autoRenewPeriod;
@@ -278,15 +278,15 @@ export default class TopicUpdateTransaction extends Transaction {
     /**
      * Set the auto renew period for this account.
      *
-     * @param {number | Long} autoRenewPeriod
+     * @param {Duration | Long | number} autoRenewPeriod
      * @returns {TopicUpdateTransaction}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
         this._autoRenewPeriod =
-            autoRenewPeriod instanceof Long
+            autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod
-                : Long.fromValue(autoRenewPeriod);
+                : new Duration(autoRenewPeriod);
 
         return this;
     }
@@ -333,9 +333,10 @@ export default class TopicUpdateTransaction extends Transaction {
                 this._autoRenewAccountId != null
                     ? this._autoRenewAccountId._toProtobuf()
                     : null,
-            autoRenewPeriod: {
-                seconds: this._autoRenewPeriod,
-            },
+            autoRenewPeriod:
+                this._autoRenewPeriod != null
+                    ? this._autoRenewPeriod._toProtobuf()
+                    : null,
         };
     }
 }

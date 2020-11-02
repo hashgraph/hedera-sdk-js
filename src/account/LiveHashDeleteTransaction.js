@@ -21,8 +21,6 @@ export default class LiveHashDeleteTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {Uint8Array} [props.hash]
-     * @param {Key[]} [props.keys]
-     * @param {number | Long} [props.duration]
      * @param {AccountId | string} [props.accountId]
      */
     constructor(props = {}) {

@@ -2,6 +2,8 @@ import TokenId from "./TokenId.js";
 import AccountId from "../account/AccountId.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
+import Duration from "../Duration.js";
+import Timestamp from "../Timestamp.js";
 
 /**
  * @namespace proto
@@ -40,8 +42,8 @@ export default class TokenInfo {
      * @param {boolean | null} props.defaultKycStatus;
      * @param {boolean} props.isDeleted;
      * @param {AccountId | null} props.autoRenewAccount;
-     * @param {Long} props.autoRenewPeriod;
-     * @param {Long} props.expirationTime;
+     * @param {Duration} props.autoRenewPeriod;
+     * @param {Timestamp} props.expirationTime;
      */
     constructor(props) {
         /**
@@ -229,8 +231,10 @@ export default class TokenInfo {
                 ).toInt() !== 0
                     ? AccountId._fromProtobuf(info.autoRenewAccount)
                     : null,
-            autoRenewPeriod: /** @type {Long} */ (info.autoRenewPeriod),
-            expirationTime: /** @type {Long} */ (info.expiry),
+            autoRenewPeriod: new Duration(
+                /** @type {Long} */ (info.autoRenewPeriod)
+            ),
+            expirationTime: new Timestamp(/** @type {Long} */ (info.expiry), 0),
         });
     }
 
@@ -267,8 +271,8 @@ export default class TokenInfo {
                 this.autoRenewAccount != null
                     ? this.autoRenewAccount._toProtobuf()
                     : undefined,
-            autoRenewPeriod: this.autoRenewPeriod,
-            expiry: this.expirationTime,
+            autoRenewPeriod: this.autoRenewPeriod.seconds,
+            expiry: this.expirationTime.seconds,
         };
     }
 }

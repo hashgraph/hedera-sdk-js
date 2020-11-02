@@ -26,7 +26,6 @@ export default class TokenGrantKycTransaction extends Transaction {
      * @param {object} [props]
      * @param {TokenId | string} [props.tokenId]
      * @param {AccountId | string} [props.accountId]
-     * @param {Long | number} [props.amount]
      */
     constructor(props = {}) {
         super();

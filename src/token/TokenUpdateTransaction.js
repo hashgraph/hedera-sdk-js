@@ -3,8 +3,9 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
-import Long from "long";
 import AccountId from "../account/AccountId.js";
+import Timestamp from "../Timestamp.js";
+import Duration from "../Duration.js";
 
 /**
  * @namespace proto
@@ -38,8 +39,8 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {Key} [props.wipeKey]
      * @param {Key} [props.supplyKey]
      * @param {AccountId | string} [props.autoRenewAccount]
-     * @param {Long | number} [props.expirationTime]
-     * @param {Long | number} [props.autoRenewPeriod]
+     * @param {Timestamp | Date} [props.expirationTime]
+     * @param {Duration | Long | number} [props.autoRenewPeriod]
      */
     constructor(props = {}) {
         super();
@@ -106,13 +107,13 @@ export default class TokenUpdateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Long}
+         * @type {?Timestamp}
          */
         this._expirationTime = null;
 
         /**
          * @private
-         * @type {?Long}
+         * @type {?Duration}
          */
         this._autoRenewPeriod = null;
 
@@ -208,7 +209,10 @@ export default class TokenUpdateTransaction extends Transaction {
                 update.autoRenewAccount != null
                     ? AccountId._fromProtobuf(update.autoRenewAccount)
                     : undefined,
-            expirationTime: update.expiry != null ? update.expiry : undefined,
+            expirationTime:
+                update.expiry != null
+                    ? new Timestamp(update.expiry, 0)
+                    : undefined,
             autoRenewPeriod:
                 update.autoRenewPeriod != null
                     ? update.autoRenewPeriod
@@ -381,20 +385,20 @@ export default class TokenUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?Long}
+     * @returns {?Timestamp}
      */
     get expirationTime() {
         return this._expirationTime;
     }
 
     /**
-     * @param {Long | number} time
+     * @param {Timestamp | Date} time
      * @returns {this}
      */
     setExpirationTime(time) {
         this._requireNotFrozen();
         this._expirationTime =
-            time instanceof Long ? time : Long.fromValue(time);
+            time instanceof Timestamp ? time : Timestamp.fromDate(time);
 
         return this;
     }
@@ -419,7 +423,7 @@ export default class TokenUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?Long}
+     * @returns {?Duration}
      */
     get autoRenewPeriod() {
         return this._autoRenewPeriod;
@@ -428,15 +432,15 @@ export default class TokenUpdateTransaction extends Transaction {
     /**
      * Set the auto renew period for this token.
      *
-     * @param {number | Long} autoRenewPeriod
+     * @param {Duration | Long | number} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
         this._autoRenewPeriod =
-            autoRenewPeriod instanceof Long
+            autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod
-                : Long.fromValue(autoRenewPeriod);
+                : new Duration(autoRenewPeriod);
 
         return this;
     }
@@ -486,8 +490,14 @@ export default class TokenUpdateTransaction extends Transaction {
                 this._autoRenewAccount != null
                     ? this._autoRenewAccount._toProtobuf()
                     : null,
-            expiry: this._expirationTime,
-            autoRenewPeriod: this._autoRenewPeriod,
+            expiry:
+                this._expirationTime != null
+                    ? this._expirationTime.seconds
+                    : null,
+            autoRenewPeriod:
+                this._autoRenewPeriod != null
+                    ? this._autoRenewPeriod.seconds
+                    : null,
         };
     }
 }

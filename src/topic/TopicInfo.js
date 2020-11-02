@@ -3,6 +3,7 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
+import Duration from "../Duration.js";
 
 /**
  * @namespace proto
@@ -29,7 +30,7 @@ export default class TopicInfo {
      * @param {Timestamp} props.expirationTime
      * @param {?Key} props.adminKey
      * @param {?Key} props.submitKey
-     * @param {number} props.autoRenewPeriod
+     * @param {Duration} props.autoRenewPeriod
      * @param {?AccountId} props.autoRenewAccountId
      */
     constructor(props) {
@@ -126,12 +127,10 @@ export default class TopicInfo {
                 info.submitKey != null ? keyFromProtobuf(info.submitKey) : null,
             autoRenewPeriod:
                 info.autoRenewPeriod != null
-                    ? info.autoRenewPeriod.seconds != null
-                        ? info.autoRenewPeriod.seconds instanceof Long
-                            ? info.autoRenewPeriod.seconds.toNumber()
-                            : info.autoRenewPeriod.seconds
-                        : 0
-                    : 0,
+                    ? new Duration(
+                          /** @type {Long} */ (info.autoRenewPeriod.seconds)
+                      )
+                    : new Duration(0),
             autoRenewAccountId:
                 info.autoRenewAccount != null
                     ? AccountId._fromProtobuf(info.autoRenewAccount)
@@ -157,9 +156,7 @@ export default class TopicInfo {
                     this.submitKey != null
                         ? keyToProtobuf(this.submitKey)
                         : null,
-                autoRenewPeriod: {
-                    seconds: Long.fromNumber(this.autoRenewPeriod),
-                },
+                autoRenewPeriod: this.autoRenewPeriod._toProtobuf(),
                 autoRenewAccount:
                     this.autoRenewAccountId != null
                         ? this.autoRenewAccountId._toProtobuf()

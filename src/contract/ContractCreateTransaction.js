@@ -8,6 +8,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
+import Duration from "../Duration.js";
 
 /**
  * @namespace proto
@@ -34,7 +35,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @param {number | Long} [props.gas]
      * @param {number | string | Long | BigNumber | Hbar} [props.initialBalance]
      * @param {AccountId | string} [props.proxyAccountId]
-     * @param {number | Long} [props.autoRenewPeriod]
+     * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {Uint8Array} [props.constructorParameters]
      * @param {string} [props.contractMemo]
      */
@@ -73,9 +74,9 @@ export default class ContractCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {Long}
+         * @type {Duration}
          */
-        this._autoRenewPeriod = DEFAULT_AUTO_RENEW_PERIOD;
+        this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
 
         /**
          * @private
@@ -268,22 +269,22 @@ export default class ContractCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {Long}
+     * @returns {Duration}
      */
     get autoRenewPeriod() {
         return this._autoRenewPeriod;
     }
 
     /**
-     * @param {number | Long} autoRenewPeriod
+     * @param {Duration | Long | number} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
         this._autoRenewPeriod =
-            autoRenewPeriod instanceof Long
+            autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod
-                : Long.fromValue(autoRenewPeriod);
+                : new Duration(autoRenewPeriod);
 
         return this;
     }
@@ -369,9 +370,7 @@ export default class ContractCreateTransaction extends Transaction {
                 this._proxyAccountId != null
                     ? this._proxyAccountId._toProtobuf()
                     : null,
-            autoRenewPeriod: {
-                seconds: this._autoRenewPeriod,
-            },
+            autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
             constructorParameters: this._constructorParameters,
             memo: this._contractMemo,
         };

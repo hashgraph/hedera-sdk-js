@@ -24,7 +24,7 @@ import Long from "long";
  * @typedef {object} TransferObjectInput
  * @property {TokenId | string} tokenId
  * @property {AccountId | string} accountId
- * @property {number | string | Long} amount
+ * @property {Long | number} amount
  */
 
 /**

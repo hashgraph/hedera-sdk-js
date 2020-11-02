@@ -7,15 +7,22 @@ import Long from "long";
 
 export default class Timestamp {
     /**
-     * @param {number} seconds
-     * @param {number} nanos
+     * @param {Long | number} seconds
+     * @param {Long | number} nanos
      */
     constructor(seconds, nanos) {
-        /** @readonly */
-        this.seconds = seconds;
+        /**
+         * @readonly
+         * @type {Long}
+         */
+        this.seconds =
+            seconds instanceof Long ? seconds : Long.fromNumber(seconds);
 
-        /** @readonly */
-        this.nanos = nanos;
+        /**
+         * @readonly
+         * @type {Long}
+         */
+        this.nanos = nanos instanceof Long ? nanos : Long.fromNumber(nanos);
 
         Object.freeze(this);
     }
@@ -59,7 +66,10 @@ export default class Timestamp {
      * @returns {Date}
      */
     toDate() {
-        return new Date(this.seconds * 1000 + Math.floor(this.nanos / 1000000));
+        return new Date(
+            this.seconds.toInt() * 1000 +
+                Math.floor(this.nanos.toInt() / 1000000)
+        );
     }
 
     /**
@@ -68,8 +78,8 @@ export default class Timestamp {
      */
     _toProtobuf() {
         return {
-            seconds: Long.fromNumber(this.seconds),
-            nanos: this.nanos,
+            seconds: this.seconds,
+            nanos: this.nanos.toInt(),
         };
     }
 

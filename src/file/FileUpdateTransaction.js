@@ -28,7 +28,7 @@ export default class FileUpdateTransaction extends Transaction {
      * @param {object} props
      * @param {FileId | string} [props.fileId]
      * @param {Key[]} [props.keys]
-     * @param {Timestamp} [props.expirationTime]
+     * @param {Timestamp | Date} [props.expirationTime]
      * @param {Uint8Array | string} [props.contents]
      */
     constructor(props = {}) {
@@ -179,12 +179,15 @@ export default class FileUpdateTransaction extends Transaction {
      *
      * May be extended using FileUpdateTransaction#setExpirationTime(Timestamp).
      *
-     * @param {Timestamp} expirationTime
+     * @param {Timestamp | Date} expirationTime
      * @returns {this}
      */
     setExpirationTime(expirationTime) {
         this._requireNotFrozen();
-        this._expirationTime = expirationTime;
+        this._expirationTime =
+            expirationTime instanceof Timestamp
+                ? expirationTime
+                : Timestamp.fromDate(expirationTime);
 
         return this;
     }

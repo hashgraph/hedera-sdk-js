@@ -1,11 +1,12 @@
 import AccountId from "./AccountId.js";
 import LiveHash from "./LiveHash.js";
 import Hbar from "../Hbar.js";
-import Time from "../Timestamp.js";
+import Timestamp from "../Timestamp.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 import TokenRelationshipMap from "./TokenRelationshipMap.js";
 import proto from "@hashgraph/proto";
+import Duration from "../Duration.js";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
@@ -28,8 +29,8 @@ export default class AccountInfo {
      * @param {Hbar} props.sendRecordThreshold
      * @param {Hbar} props.receiveRecordThreshold
      * @param {boolean} props.isReceiverSignatureRequired
-     * @param {Time} props.expirationTime
-     * @param {Long} props.autoRenewPeriod
+     * @param {Timestamp} props.expirationTime
+     * @param {Duration} props.autoRenewPeriod
      * @param {LiveHash[]} props.liveHashes
      * @param {TokenRelationshipMap} props.tokenRelationships
      */
@@ -167,19 +168,15 @@ export default class AccountInfo {
                 info.receiverSigRequired != null
                     ? info.receiverSigRequired
                     : false,
-            expirationTime: Time._fromProtobuf(
+            expirationTime: Timestamp._fromProtobuf(
                 /** @type {proto.ITimestamp} */ (info.expirationTime)
             ),
             autoRenewPeriod:
                 info.autoRenewPeriod != null
-                    ? info.autoRenewPeriod.seconds instanceof Long
-                        ? info.autoRenewPeriod.seconds
-                        : Long.fromValue(
-                              info.autoRenewPeriod.seconds != null
-                                  ? info.autoRenewPeriod.seconds
-                                  : Long.ZERO
-                          )
-                    : Long.fromValue(0),
+                    ? new Duration(
+                          /** @type {Long} */ (info.autoRenewPeriod.seconds)
+                      )
+                    : new Duration(0),
             proxyAccountId:
                 info.proxyAccountID != null &&
                 Long.fromValue(
@@ -226,9 +223,7 @@ export default class AccountInfo {
             generateReceiveRecordThreshold: this.receiveRecordThreshold.toTinybars(),
             receiverSigRequired: this.isReceiverSignatureRequired,
             expirationTime: this.expirationTime._toProtobuf(),
-            autoRenewPeriod: {
-                seconds: this.autoRenewPeriod,
-            },
+            autoRenewPeriod: this.autoRenewPeriod._toProtobuf(),
             liveHashes: this.liveHashes.map((hash) => hash._toProtobuf()),
         };
     }

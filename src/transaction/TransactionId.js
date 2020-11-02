@@ -69,9 +69,7 @@ export default class TransactionId {
      * @returns {string}
      */
     toString() {
-        return `${this.accountId.toString()}@${this.validStart.seconds}.${
-            this.validStart.nanos
-        }`;
+        return `${this.accountId.toString()}@${this.validStart.seconds.toInt()}.${this.validStart.nanos.toInt()}`;
     }
 
     /**

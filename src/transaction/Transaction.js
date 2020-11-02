@@ -12,6 +12,10 @@ import {
 } from "@hashgraph/proto";
 
 /**
+ * @typedef {import("bignumber.js").default} BigNumber
+ */
+
+/**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
@@ -233,12 +237,15 @@ export default class Transaction extends Executable {
      * Set the maximum transaction fee the operator (paying account)
      * is willing to pay.
      *
-     * @param {Hbar} maxTransactionFee
+     * @param {number | string | Long | BigNumber | Hbar} maxTransactionFee
      * @returns {this}
      */
     setMaxTransactionFee(maxTransactionFee) {
         this._requireNotFrozen();
-        this._maxTransactionFee = maxTransactionFee;
+        this._maxTransactionFee =
+            maxTransactionFee instanceof Hbar
+                ? maxTransactionFee
+                : new Hbar(maxTransactionFee);
 
         return this;
     }

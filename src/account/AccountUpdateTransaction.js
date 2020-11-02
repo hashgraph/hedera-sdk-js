@@ -4,7 +4,7 @@ import Transaction, {
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import AccountId from "./AccountId.js";
 import Timestamp from "../Timestamp.js";
-import Long from "long";
+import Duration from "../Duration.js";
 
 /**
  * @namespace proto
@@ -31,7 +31,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @param {Key} [props.key]
      * @param {boolean} [props.receiverSignatureRequired]
      * @param {AccountId} [props.proxyAccountId]
-     * @param {number | Long} [props.autoRenewPeriod]
+     * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {Timestamp | Date} [props.expirationTime]
      */
     constructor(props = {}) {
@@ -79,7 +79,7 @@ export default class AccountUpdateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Long}
+         * @type {?Duration}
          */
         this._autoRenewPeriod = null;
 
@@ -215,22 +215,22 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?Long}
+     * @returns {?Duration}
      */
     get autoRenewPeriod() {
         return this._autoRenewPeriod;
     }
 
     /**
-     * @param {number | Long} autoRenewPeriod
+     * @param {Duration | Long | number} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
         this._autoRenewPeriod =
-            autoRenewPeriod instanceof Long
+            autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod
-                : Long.fromValue(autoRenewPeriod);
+                : new Duration(autoRenewPeriod);
 
         return this;
     }
@@ -295,11 +295,9 @@ export default class AccountUpdateTransaction extends Transaction {
                     ? this._proxyAccountId._toProtobuf()
                     : null,
             autoRenewPeriod:
-                this._autoRenewPeriod == null
-                    ? null
-                    : {
-                          seconds: this._autoRenewPeriod,
-                      },
+                this._autoRenewPeriod != null
+                    ? this._autoRenewPeriod._toProtobuf()
+                    : null,
             receiverSigRequiredWrapper:
                 this._receiverSignatureRequired == null
                     ? null

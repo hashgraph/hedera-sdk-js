@@ -3,7 +3,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import AccountId from "./AccountId.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
-import Long from "long";
+import Duration from "../Duration.js";
 
 /**
  * @namespace proto
@@ -25,7 +25,7 @@ export default class LiveHashAddTransaction extends Transaction {
      * @param {object} [props]
      * @param {Uint8Array} [props.hash]
      * @param {Key[]} [props.keys]
-     * @param {number | Long} [props.duration]
+     * @param {Duration | Long | number} [props.duration]
      * @param {AccountId | string} [props.accountId]
      */
     constructor(props = {}) {
@@ -45,7 +45,7 @@ export default class LiveHashAddTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Long}
+         * @type {?Duration}
          */
         this._duration = null;
 
@@ -139,20 +139,20 @@ export default class LiveHashAddTransaction extends Transaction {
     }
 
     /**
-     * @returns {?Long}
+     * @returns {?Duration}
      */
     get duration() {
         return this._duration;
     }
 
     /**
-     * @param {number | Long} duration
+     * @param {Duration | Long | number} duration
      * @returns {LiveHashAddTransaction}
      */
     setDuration(duration) {
         this._requireNotFrozen();
         this._duration =
-            duration instanceof Long ? duration : Long.fromValue(duration);
+            duration instanceof Duration ? duration : new Duration(duration);
 
         return this;
     }
@@ -213,9 +213,10 @@ export default class LiveHashAddTransaction extends Transaction {
                               keys: this._keys.map((key) => keyToProtobuf(key)),
                           }
                         : undefined,
-                duration: {
-                    seconds: this._duration,
-                },
+                duration:
+                    this._duration != null
+                        ? this._duration._toProtobuf()
+                        : null,
                 accountId:
                     this._accountId != null
                         ? this._accountId._toProtobuf()

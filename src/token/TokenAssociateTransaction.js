@@ -26,7 +26,6 @@ export default class TokenAssociateTransaction extends Transaction {
      * @param {object} [props]
      * @param {(TokenId | string)[]} [props.tokenIds]
      * @param {AccountId | string} [props.accountId]
-     * @param {Long | number} [props.amount]
      */
     constructor(props = {}) {
         super();

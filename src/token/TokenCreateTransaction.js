@@ -5,6 +5,8 @@ import Transaction, {
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 import AccountId from "../account/AccountId.js";
+import Timestamp from "../Timestamp.js";
+import Duration from "../Duration.js";
 
 /**
  * @namespace proto
@@ -40,8 +42,8 @@ export default class TokenCreateTransaction extends Transaction {
      * @param {Key} [props.supplyKey]
      * @param {boolean} [props.freezeDefault]
      * @param {AccountId | string} [props.autoRenewAccount]
-     * @param {Long | number} [props.expirationTime]
-     * @param {Long | number} [props.autoRenewPeriod]
+     * @param {Timestamp | Date} [props.expirationTime]
+     * @param {Duration | Long | number} [props.autoRenewPeriod]
      */
     constructor(props = {}) {
         super();
@@ -120,15 +122,15 @@ export default class TokenCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Long}
+         * @type {?Timestamp}
          */
         this._expirationTime = null;
 
         /**
          * @private
-         * @type {Long}
+         * @type {Duration}
          */
-        this._autoRenewPeriod = DEFAULT_AUTO_RENEW_PERIOD;
+        this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
 
         if (props.name != null) {
             this.setName(props.name);
@@ -231,7 +233,10 @@ export default class TokenCreateTransaction extends Transaction {
                 create.autoRenewAccount != null
                     ? AccountId._fromProtobuf(create.autoRenewAccount)
                     : undefined,
-            expirationTime: create.expiry != null ? create.expiry : undefined,
+            expirationTime:
+                create.expiry != null
+                    ? new Timestamp(create.expiry, 0)
+                    : undefined,
             autoRenewPeriod:
                 create.autoRenewPeriod != null
                     ? create.autoRenewPeriod
@@ -443,20 +448,20 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?Long}
+     * @returns {?Timestamp}
      */
     get expirationTime() {
         return this._expirationTime;
     }
 
     /**
-     * @param {Long | number} time
+     * @param {Timestamp | Date} time
      * @returns {this}
      */
     setExpirationTime(time) {
         this._requireNotFrozen();
         this._expirationTime =
-            time instanceof Long ? time : Long.fromValue(time);
+            time instanceof Timestamp ? time : Timestamp.fromDate(time);
 
         return this;
     }
@@ -481,7 +486,7 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {Long}
+     * @returns {Duration}
      */
     get autoRenewPeriod() {
         return this._autoRenewPeriod;
@@ -490,15 +495,15 @@ export default class TokenCreateTransaction extends Transaction {
     /**
      * Set the auto renew period for this token.
      *
-     * @param {number | Long} autoRenewPeriod
+     * @param {Duration | Long | number} autoRenewPeriod
      * @returns {this}
      */
     setAutoRenewPeriod(autoRenewPeriod) {
         this._requireNotFrozen();
         this._autoRenewPeriod =
-            autoRenewPeriod instanceof Long
+            autoRenewPeriod instanceof Duration
                 ? autoRenewPeriod
-                : Long.fromValue(autoRenewPeriod);
+                : new Duration(autoRenewPeriod);
 
         return this;
     }
@@ -550,8 +555,14 @@ export default class TokenCreateTransaction extends Transaction {
                 this._autoRenewAccount != null
                     ? this._autoRenewAccount._toProtobuf()
                     : null,
-            expiry: this._expirationTime,
-            autoRenewPeriod: this._autoRenewPeriod,
+            expiry:
+                this._expirationTime != null
+                    ? this._expirationTime.seconds
+                    : null,
+            autoRenewPeriod:
+                this._autoRenewPeriod != null
+                    ? this.autoRenewPeriod.seconds
+                    : null,
         };
     }
 }
