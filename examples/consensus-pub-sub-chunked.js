@@ -1,5 +1,7 @@
 const {
     Client,
+    Ed25519PrivateKey,
+    AccountId,
     MirrorClient,
     MirrorConsensusTopicQuery,
     ConsensusTopicCreateTransaction,
@@ -7,20 +9,43 @@ const {
 } = require("@hashgraph/sdk");
 
 async function main() {
-    const operatorPrivateKey = process.env.OPERATOR_KEY;
-    const operatorAccount = process.env.OPERATOR_ID;
-    const mirrorNodeAddress = process.env.MIRROR_NODE_ADDRESS;
-
-    if (operatorPrivateKey == null ||
-        operatorAccount == null ||
-        mirrorNodeAddress == null) {
-        throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, MIRROR_NODE_ADDRESS must be present");
+    if (
+        process.env.OPERATOR_KEY == null ||
+        process.env.OPERATOR_ID == null ||
+        process.env.MIRROR_NODE_ADDRESS == null
+    ) {
+        throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, and MIRROR_NODE_ADDRESS must be present");
     }
 
-    const consensusClient = new MirrorClient(mirrorNodeAddress);
+    let client;
 
-    const client = Client.forTestnet();
-    client.setOperator(operatorAccount, operatorPrivateKey);
+    if (process.env.HEDERA_NETWORK != null) {
+        switch (process.env.HEDERA_NETWORK) {
+            case "previewnet":
+                client = Client.forPreviewnet();
+                break;
+            default:
+                client = Client.forTestnet();
+        }
+    } else {
+        try {
+            client = Client.fromConfigFile(process.env.CONFIG_FILE);
+        } catch (err) {
+            client = Client.forTestnet();
+        }
+    }
+
+    let operatorPrivateKey;
+    let operatorAccount;
+
+    if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
+        operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
+        operatorAccount = AccountId.fromString(process.env.OPERATOR_ID);
+
+        client.setOperator(operatorAccount, operatorPrivateKey);
+    }
+
+    const consensusClient = new MirrorClient(process.env.MIRROR_NODE_ADDRESS);
 
     const transactionId = await new ConsensusTopicCreateTransaction()
         .setTopicMemo("sdk example create_pub_sub.js")
@@ -51,20 +76,6 @@ async function main() {
         .setMaxChunks(4) // default: 10
         .setMessage(bigContents)
         .execute(client);
-
-    // for (let i = 0; ; i += 1) {
-    //     // eslint-disable-next-line no-await-in-loop
-    //     await (await new ConsensusSubmitMessageTransaction()
-    //         .setTopicId(topicId)
-    //         .setMessage(`Hello, HCS! Message ${i}`)
-    //         .execute(client))
-    //         .getReceipt(client);
-
-    //     console.log(`Sent message ${i}`);
-
-    //     // eslint-disable-next-line no-await-in-loop
-    //     await sleep(2500);
-    // }
 }
 
 function sleep(ms) {

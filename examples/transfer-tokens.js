@@ -21,11 +21,33 @@ async function main() {
         throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
     }
 
-    const operatorKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
-    const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
+    let client;
 
-    const client = Client.forPreviewnet();
-    client.setOperator(operatorId, operatorKey);
+    if (process.env.HEDERA_NETWORK != null) {
+        switch (process.env.HEDERA_NETWORK) {
+            case "previewnet":
+                client = Client.forPreviewnet();
+                break;
+            default:
+                client = Client.forTestnet();
+        }
+    } else {
+        try {
+            client = Client.fromConfigFile(process.env.CONFIG_FILE);
+        } catch (err) {
+            client = Client.forTestnet();
+        }
+    }
+
+    let operatorPrivateKey;
+    let operatorAccount;
+
+    if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
+        operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
+        operatorAccount = AccountId.fromString(process.env.OPERATOR_ID);
+
+        client.setOperator(operatorAccount, operatorPrivateKey);
+    }
 
     const newKey = await Ed25519PrivateKey.generate();
 
@@ -48,12 +70,12 @@ async function main() {
         .setSymbol("F")
         .setDecimals(3)
         .setInitialSupply(1000000)
-        .setTreasury(operatorId)
-        .setAdminKey(operatorKey.publicKey)
-        .setFreezeKey(operatorKey.publicKey)
-        .setWipeKey(operatorKey.publicKey)
-        .setKycKey(operatorKey.publicKey)
-        .setSupplyKey(operatorKey.publicKey)
+        .setTreasury(operatorAccount)
+        .setAdminKey(operatorPrivateKey.publicKey)
+        .setFreezeKey(operatorPrivateKey.publicKey)
+        .setWipeKey(operatorPrivateKey.publicKey)
+        .setKycKey(operatorPrivateKey.publicKey)
+        .setSupplyKey(operatorPrivateKey.publicKey)
         .setFreezeDefault(false)
         .execute(client);
 
@@ -64,7 +86,7 @@ async function main() {
         .setAccountId(newAccountId)
         .addTokenId(tokenId)
         .build(client)
-        .sign(operatorKey)
+        .sign(operatorPrivateKey)
         .sign(newKey)
         .execute(client))
         .getReceipt(client);
@@ -80,14 +102,14 @@ async function main() {
     console.log("Granted Kyc for account", newAccountId.toString(), "on token", tokenId.toString());
 
     await (await new TokenTransferTransaction()
-        .addSender(tokenId, operatorId, 10)
+        .addSender(tokenId, operatorAccount, 10)
         .addRecipient(tokenId, newAccountId, 10)
         .execute(client))
         .getReceipt(client);
 
     console.log(
         "Sent 10 tokens from account",
-        operatorId.toString(),
+        operatorAccount.toString(),
         "to account",
         newAccountId.toString(),
         "on token",
@@ -112,9 +134,9 @@ async function main() {
 
     await (await new AccountDeleteTransaction()
         .setDeleteAccountId(newAccountId)
-        .setTransferAccountId(operatorId)
+        .setTransferAccountId(operatorAccount)
         .build(client)
-        .sign(operatorKey)
+        .sign(operatorPrivateKey)
         .sign(newKey)
         .execute(client))
         .getReceipt(client);

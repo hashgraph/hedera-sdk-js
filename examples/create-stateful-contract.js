@@ -1,30 +1,43 @@
 const {
     Client, FileCreateTransaction, ContractCreateTransaction, Hbar, Ed25519PrivateKey,
-    ContractFunctionParams, ContractCallQuery, ContractExecuteTransaction
+    ContractFunctionParams, ContractCallQuery, ContractExecuteTransaction, AccountId
 } = require("@hashgraph/sdk");
 
-function createHederaClient() {
-    if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
+async function main() {
+    if (
+        process.env.OPERATOR_KEY == null ||
+        process.env.OPERATOR_ID == null
+    ) {
         throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
     }
 
-    const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
-    const operatorAccount = process.env.OPERATOR_ID;
+    let client;
 
-    return [
-        operatorPrivateKey,
-        new Client({
-            network: { "0.testnet.hedera.com:50211": "0.0.3" },
-            operator: {
-                account: operatorAccount,
-                privateKey: operatorPrivateKey
-            }
-        })
-    ];
-}
+    if (process.env.HEDERA_NETWORK != null) {
+        switch (process.env.HEDERA_NETWORK) {
+            case "previewnet":
+                client = Client.forPreviewnet();
+                break;
+            default:
+                client = Client.forTestnet();
+        }
+    } else {
+        try {
+            client = Client.fromConfigFile(process.env.CONFIG_FILE);
+        } catch (err) {
+            client = Client.forTestnet();
+        }
+    }
 
-async function main() {
-    const [ operatorPrivateKey, hederaClient ] = createHederaClient();
+    let operatorPrivateKey;
+    let operatorAccount;
+
+    if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
+        operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
+        operatorAccount = AccountId.fromString(process.env.OPERATOR_ID);
+
+        client.setOperator(operatorAccount, operatorPrivateKey);
+    }
 
     const smartContract = require("./stateful.json");
     const smartContractByteCode = smartContract.contracts[ "stateful.sol:StatefulContract" ].bin;
@@ -36,8 +49,8 @@ async function main() {
         .setMaxTransactionFee(new Hbar(3))
         .addKey(operatorPrivateKey.publicKey)
         .setContents(smartContractByteCode)
-        .execute(hederaClient))
-        .getReceipt(hederaClient))
+        .execute(client))
+        .getReceipt(client))
         .getFileId();
 
     console.log("contract bytecode file:", byteCodeFileId.toString());
@@ -53,13 +66,13 @@ async function main() {
         .setConstructorParams(new ContractFunctionParams()
             .addString("hello from hedera"))
         .setBytecodeFileId(byteCodeFileId)
-        .execute(hederaClient))
-        .getRecord(hederaClient);
+        .execute(client))
+        .getRecord(client);
 
     const newContractId = record.receipt.getContractId();
 
     console.log("contract create gas used:", record.getContractCreateResult().gasUsed);
-    console.log("contract create transaction fee:", record.transactionFee.asTinybar());
+    console.log("contract create transaction fee:", record.transactionFee.asTinybar().toString(10));
     console.log("contract:", newContractId.toString());
 
     // Next let's ask for the current message (we set on creation)
@@ -67,7 +80,7 @@ async function main() {
         .setContractId(newContractId)
         .setGas(1000) // ~897
         .setFunction("getMessage", null)
-        .execute(hederaClient);
+        .execute(client);
 
     console.log("call gas used:", callResult.gasUsed);
     console.log("message:", callResult.getString(0));
@@ -78,11 +91,11 @@ async function main() {
         .setGas(7000) // ~6016
         .setFunction("setMessage", new ContractFunctionParams()
             .addString("hello from hedera again!"))
-        .execute(hederaClient))
+        .execute(client))
         // [getReceipt] or [getRecord] waits for consensus before continuing
         //      and will throw an exception
         //      on an error received during that process like INSUFFICENT_GAS
-        .getRecord(hederaClient);
+        .getRecord(client);
 
     console.log("execute gas used:", getRecord.getContractExecuteResult().gasUsed);
 
@@ -91,12 +104,12 @@ async function main() {
         .setContractId(newContractId)
         .setGas(1000) // ~897
         .setFunction("getMessage", null)
-        .execute(hederaClient);
+        .execute(client);
 
     console.log("call gas used:", callResult.gasUsed);
     console.log("message:", callResult.getString(0));
 
-    hederaClient.close();
+    client.close();
 }
 
 main();

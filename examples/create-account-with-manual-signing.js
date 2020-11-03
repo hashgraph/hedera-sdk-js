@@ -1,14 +1,40 @@
-const { Client, Ed25519PrivateKey, AccountCreateTransaction } = require("@hashgraph/sdk");
+const { Client, AccountId, Ed25519PrivateKey, AccountCreateTransaction } = require("@hashgraph/sdk");
 
 async function main() {
-    if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
+    if (
+        process.env.OPERATOR_KEY == null ||
+        process.env.OPERATOR_ID == null
+    ) {
         throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
     }
 
-    const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
-    const operatorAccount = process.env.OPERATOR_ID;
+    let client;
 
-    const client = new Client({ network: { "0.testnet.hedera.com:50211": "0.0.3" }});
+    if (process.env.HEDERA_NETWORK != null) {
+        switch (process.env.HEDERA_NETWORK) {
+            case "previewnet":
+                client = Client.forPreviewnet();
+                break;
+            default:
+                client = Client.forTestnet();
+        }
+    } else {
+        try {
+            client = Client.fromConfigFile(process.env.CONFIG_FILE);
+        } catch (err) {
+            client = Client.forTestnet();
+        }
+    }
+
+    let operatorPrivateKey;
+    let operatorAccount;
+
+    if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
+        operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
+        operatorAccount = AccountId.fromString(process.env.OPERATOR_ID);
+
+        client.setOperator(operatorAccount, operatorPrivateKey);
+    }
 
     const privateKey = await Ed25519PrivateKey.generate();
 
@@ -25,7 +51,7 @@ async function main() {
         .execute(client);
 
     const transactionReceipt = await transactionId.getReceipt(client);
-    const newAccountId = transactionReceipt.accountId;
+    const newAccountId = transactionReceipt.getAccountId();
 
     console.log(`account = ${newAccountId}`);
 }

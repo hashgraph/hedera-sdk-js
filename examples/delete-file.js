@@ -2,32 +2,57 @@ const {
     Client,
     FileCreateTransaction,
     FileDeleteTransaction,
-    Ed25519PublicKey,
+    Ed25519PrivateKey,
+    AccountId,
     Hbar
 } = require("@hashgraph/sdk");
 
 async function main() {
-    const operatorAccount = process.env.OPERATOR_ID;
-    const operatorPrivateKey = process.env.OPERATOR_KEY;
-    const operatorPublicKey = Ed25519PublicKey.fromString(process.env.OPERATOR_PUB_KEY);
-
-    if (operatorPrivateKey == null || operatorAccount == null) {
+    if (
+        process.env.OPERATOR_KEY == null ||
+        process.env.OPERATOR_ID == null
+    ) {
         throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
     }
 
-    const client = Client.forTestnet();
-    client.setOperator(operatorAccount, operatorPrivateKey);
+    let client;
+
+    if (process.env.HEDERA_NETWORK != null) {
+        switch (process.env.HEDERA_NETWORK) {
+            case "previewnet":
+                client = Client.forPreviewnet();
+                break;
+            default:
+                client = Client.forTestnet();
+        }
+    } else {
+        try {
+            client = Client.fromConfigFile(process.env.CONFIG_FILE);
+        } catch (err) {
+            client = Client.forTestnet();
+        }
+    }
+
+    let operatorPrivateKey;
+    let operatorAccount;
+
+    if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
+        operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
+        operatorAccount = AccountId.fromString(process.env.OPERATOR_ID);
+
+        client.setOperator(operatorAccount, operatorPrivateKey);
+    }
 
     // First, we'll create a file with our operator as an admin
     const transactionId = await new FileCreateTransaction()
         .setContents("creating a file to test deletion")
         .setMaxTransactionFee(new Hbar(15))
-        .addKey(operatorPublicKey)
+        .addKey(operatorPrivateKey.publicKey)
         .execute(client);
 
     // The receipt will contain the FileId, or where it exists on the network
     const createFileReceipt = await transactionId.getReceipt(client);
-    console.log("create file receipt", `${JSON.stringify(createFileReceipt)}\n`);
+    console.log("create file receipt", `${JSON.stringify(createFileReceipt)}`);
 
     // Then we'll delete this newly created file
     const deleteFileTransactionId = await new FileDeleteTransaction()
@@ -37,7 +62,7 @@ async function main() {
 
     // After deletion, the receipt should NOT contain a file ID
     const deleteFileReceipt = await deleteFileTransactionId.getReceipt(client);
-    console.log("deleted file receipt, won't contain a file ID", `${deleteFileReceipt.getFileId()}\n`);
+    console.log("Status:", `${deleteFileReceipt.status}`);
 }
 
 main();
