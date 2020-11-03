@@ -1,13 +1,13 @@
-import Hbar from "../src/Hbar";
-import newClient from "./IntegrationClient";
-import AccountBalanceQuery from "../src/account/AccountBalanceQuery";
-import AccountId from "../src/account/AccountId";
+import Hbar from "../src/Hbar.js";
+import newIntegrationClient from "./client/index.js";
+import AccountBalanceQuery from "../src/account/AccountBalanceQuery.js";
+import AccountId from "../src/account/AccountId.js";
 
 describe("ClientIntegration", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = newClient().setMaxQueryPayment(new Hbar(2));
+        const client = newIntegrationClient().setMaxQueryPayment(new Hbar(2));
 
         client.setNetwork({
             "0.testnet.hedera.com:50211": new AccountId(3),
