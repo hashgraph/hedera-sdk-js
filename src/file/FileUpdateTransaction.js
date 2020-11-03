@@ -5,6 +5,7 @@ import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Timestamp from "../Timestamp.js";
 import * as utf8 from "../encoding/utf8.js";
 import FileId from "./FileId.js";
+import { KeyList } from "@hashgraph/cryptography";
 
 /**
  * @namespace proto
@@ -153,12 +154,12 @@ export default class FileUpdateTransaction extends Transaction {
      * The network currently requires a file to have at least one key (or key list or threshold key)
      * but this requirement may be lifted in the future.
      *
-     * @param {Key[]} keys
+     * @param {Key[] | KeyList} keys
      * @returns {this}
      */
     setKeys(keys) {
         this._requireNotFrozen();
-        this._keys = keys;
+        this._keys = keys instanceof KeyList ? keys.toArray() : keys;
 
         return this;
     }

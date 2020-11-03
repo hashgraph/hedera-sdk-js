@@ -4,6 +4,7 @@ import Transaction, {
 import AccountId from "./AccountId.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
+import { KeyList } from "@hashgraph/cryptography";
 
 /**
  * @namespace proto
@@ -128,12 +129,12 @@ export default class LiveHashAddTransaction extends Transaction {
     }
 
     /**
-     * @param {Key[]} keys
+     * @param {Key[] | KeyList} keys
      * @returns {LiveHashAddTransaction}
      */
     setKeys(keys) {
         this._requireNotFrozen();
-        this._keys = keys;
+        this._keys = keys instanceof KeyList ? keys.toArray() : keys;
 
         return this;
     }
