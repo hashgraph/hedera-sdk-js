@@ -85,13 +85,24 @@ export default class FreezeTransaction extends Transaction {
     }
 
     /**
-     * @param {number} startHour
-     * @param {number} startMinute
+     * @param {number | string} startHourOrString
+     * @param {?number} startMinute
      * @returns {FreezeTransaction}
      */
-    setStartTime(startHour, startMinute) {
+    setStartTime(startHourOrString, startMinute) {
         this._requireNotFrozen();
-        this._startTime = { hour: startHour, minute: startMinute };
+        if (typeof startHourOrString === "string") {
+            const split = startHourOrString.split(":");
+            this._startTime = {
+                hour: Number(split[0]),
+                minute: Number(split[1]),
+            };
+        } else {
+            this._startTime = {
+                hour: startHourOrString,
+                minute: /** @type {number} */ (startMinute),
+            };
+        }
 
         return this;
     }
@@ -104,13 +115,24 @@ export default class FreezeTransaction extends Transaction {
     }
 
     /**
-     * @param {number} endHour
-     * @param {number} endMinute
+     * @param {number | string} endHourOrString
+     * @param {?number} endMinute
      * @returns {FreezeTransaction}
      */
-    setEndTime(endHour, endMinute) {
+    setEndTime(endHourOrString, endMinute) {
         this._requireNotFrozen();
-        this._endTime = { hour: endHour, minute: endMinute };
+        if (typeof endHourOrString === "string") {
+            const split = endHourOrString.split(":");
+            this._endTime = {
+                hour: Number(split[0]),
+                minute: Number(split[1]),
+            };
+        } else {
+            this._endTime = {
+                hour: endHourOrString,
+                minute: /** @type {number} */ (endMinute),
+            };
+        }
 
         return this;
     }
