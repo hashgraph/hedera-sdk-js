@@ -1,7 +1,5 @@
-import EntityId, { fromString } from "../EntityId.js";
+import EntityId, { fromString, fromSolidityAddress } from "../EntityId.js";
 import * as proto from "@hashgraph/proto";
-import Long from "long";
-import * as hex from "../encoding/hex.js";
 
 /**
  * The ID for a crypto-currency account on Hedera.
@@ -52,19 +50,7 @@ export default class AccountId extends EntityId {
      * @returns {AccountId}
      */
     static fromSolidityAddress(address) {
-        const addr = address.startsWith("0x")
-            ? hex.decode(address.slice(2))
-            : hex.decode(address);
-
-        if (addr.length !== 20) {
-            throw new Error(`Invalid hex encoded solidity address length:
-                    expected length 40, got length ${address.length}`);
-        }
-
-        const shard = Long.fromBytesBE(Array.from(addr.slice(0, 4)));
-        const realm = Long.fromBytesBE(Array.from(addr.slice(4, 12)));
-        const account = Long.fromBytesBE(Array.from(addr.slice(12, 20)));
-
+        const [shard, realm, account] = fromSolidityAddress(address);
         return new AccountId(shard, realm, account);
     }
 
