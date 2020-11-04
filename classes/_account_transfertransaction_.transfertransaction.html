@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>CryptoTransferTransaction | @hashgraph/sdk</title>
+	<title>TransferTransaction | @hashgraph/sdk</title>
 	<meta name="description" content="Documentation for @hashgraph/sdk">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,13 +52,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_account_cryptotransfertransaction_.html">&quot;account/CryptoTransferTransaction&quot;</a>
+					<a href="../modules/_account_transfertransaction_.html">&quot;account/TransferTransaction&quot;</a>
 				</li>
 				<li>
-					<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html">CryptoTransferTransaction</a>
+					<a href="_account_transfertransaction_.transfertransaction.html">TransferTransaction</a>
 				</li>
 			</ul>
-			<h1>Class CryptoTransferTransaction</h1>
+			<h1>Class TransferTransaction</h1>
 		</div>
 	</div>
 </header>
@@ -68,22 +68,15 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Transfer cryptocurrency from some accounts to other accounts. The accounts list can contain up
-							to 10 accounts. The amounts list must be the same length as the accounts list. Each negative
-							amount is withdrawn from the corresponding account (a sender), and each positive one is added
-							to the corresponding account (a receiver). The amounts list must sum to zero. Each amount is a
-							number of tinyBars (there are 100,000,000 tinyBars in one Hbar). If any sender account fails to
-							have sufficient hbars to do the withdrawal, then the entire transaction fails, and none of those
-							transfers occur, though the transaction fee is still charged. This transaction must be signed by
-							the keys for all the sending accounts, and for any receiving accounts that have
-							receiverSigRequired == true. The signatures are in the same order as the accounts, skipping those
-						accounts that don&#39;t need a signature.</p>
+						<p>Transfer tokens from some accounts to other accounts. Each negative amount is withdrawn from the corresponding
+							account (a sender), and each positive one is added to the corresponding account (a receiver). All amounts must
+							have sum of zero.
+							Each amount is a number with the lowest denomination possible for a token. Example:
+							Token X has 2 decimals. Account A transfers amount of 100 tokens by providing 10000 as amount in the TransferList.
+						If Account A wants to send 100.55 tokens, he must provide 10055 as amount.</p>
 					</div>
-					<dl class="tsd-comment-tags">
-						<dt>deprecated</dt>
-						<dd><p>Use <code>TransferTransaction</code> instead</p>
-						</dd>
-					</dl>
+					<p>If any sender account fails to have sufficient token balance, then the entire transaction fails and none of the
+					transfers occur, though transaction fee is still charged.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
@@ -93,7 +86,7 @@
 						<a href="_transactionbuilder_.singletransactionbuilder.html" class="tsd-signature-type">SingleTransactionBuilder</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">CryptoTransferTransaction</span>
+								<span class="target">TransferTransaction</span>
 							</li>
 						</ul>
 					</li>
@@ -106,25 +99,28 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="_account_transfertransaction_.transfertransaction.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#addrecipient" class="tsd-kind-icon">add<wbr>Recipient</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#addsender" class="tsd-kind-icon">add<wbr>Sender</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#addtransfer" class="tsd-kind-icon">add<wbr>Transfer</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#build" class="tsd-kind-icon">build</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#execute" class="tsd-kind-icon">execute</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#validate" class="tsd-kind-icon">validate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_transfertransaction_.transfertransaction.html#addhbarrecipient" class="tsd-kind-icon">add<wbr>Hbar<wbr>Recipient</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_transfertransaction_.transfertransaction.html#addhbarsender" class="tsd-kind-icon">add<wbr>Hbar<wbr>Sender</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_transfertransaction_.transfertransaction.html#addhbartransfer" class="tsd-kind-icon">add<wbr>Hbar<wbr>Transfer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_transfertransaction_.transfertransaction.html#addtokenrecipient" class="tsd-kind-icon">add<wbr>Token<wbr>Recipient</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_transfertransaction_.transfertransaction.html#addtokensender" class="tsd-kind-icon">add<wbr>Token<wbr>Sender</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_account_transfertransaction_.transfertransaction.html#addtokentransfer" class="tsd-kind-icon">add<wbr>Token<wbr>Transfer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_account_transfertransaction_.transfertransaction.html#build" class="tsd-kind-icon">build</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_transfertransaction_.transfertransaction.html#execute" class="tsd-kind-icon">execute</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_account_transfertransaction_.transfertransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_transfertransaction_.transfertransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_transfertransaction_.transfertransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_transfertransaction_.transfertransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_transfertransaction_.transfertransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_transfertransaction_.transfertransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_transfertransaction_.transfertransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_account_transfertransaction_.transfertransaction.html#validate" class="tsd-kind-icon">validate</a></li>
 							</ul>
 						</section>
 					</div>
@@ -136,17 +132,17 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Crypto<wbr>Transfer<wbr>Transaction<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html" class="tsd-signature-type">CryptoTransferTransaction</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Transfer<wbr>Transaction<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_account_transfertransaction_.transfertransaction.html" class="tsd-signature-type">TransferTransaction</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides TransactionBuilder.__constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/48ba620d/src/account/CryptoTransferTransaction.ts#L34">src/account/CryptoTransferTransaction.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/48ba620d/src/account/TransferTransaction.ts#L32">src/account/TransferTransaction.ts:32</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html" class="tsd-signature-type">CryptoTransferTransaction</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_account_transfertransaction_.transfertransaction.html" class="tsd-signature-type">TransferTransaction</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -154,16 +150,16 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="addrecipient" class="tsd-anchor"></a>
-					<h3>add<wbr>Recipient</h3>
+					<a name="addhbarrecipient" class="tsd-anchor"></a>
+					<h3>add<wbr>Hbar<wbr>Recipient</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Recipient<span class="tsd-signature-symbol">(</span>accountId<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a>, amount<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Hbar<wbr>Recipient<span class="tsd-signature-symbol">(</span>accountId<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a>, amount<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/48ba620d/src/account/CryptoTransferTransaction.ts#L58">src/account/CryptoTransferTransaction.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/48ba620d/src/account/TransferTransaction.ts#L56">src/account/TransferTransaction.ts:56</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -185,16 +181,16 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="addsender" class="tsd-anchor"></a>
-					<h3>add<wbr>Sender</h3>
+					<a name="addhbarsender" class="tsd-anchor"></a>
+					<h3>add<wbr>Hbar<wbr>Sender</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Sender<span class="tsd-signature-symbol">(</span>accountId<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a>, amount<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Hbar<wbr>Sender<span class="tsd-signature-symbol">(</span>accountId<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a>, amount<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/48ba620d/src/account/CryptoTransferTransaction.ts#L48">src/account/CryptoTransferTransaction.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/48ba620d/src/account/TransferTransaction.ts#L46">src/account/TransferTransaction.ts:46</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -216,23 +212,23 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="addtransfer" class="tsd-anchor"></a>
-					<h3>add<wbr>Transfer</h3>
+					<a name="addhbartransfer" class="tsd-anchor"></a>
+					<h3>add<wbr>Hbar<wbr>Transfer</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Transfer<span class="tsd-signature-symbol">(</span>accountId<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a>, amount<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Hbar<wbr>Transfer<span class="tsd-signature-symbol">(</span>accountId<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a>, amount<span class="tsd-signature-symbol">: </span><a href="_hbarunit_.hbarunit.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/48ba620d/src/account/CryptoTransferTransaction.ts#L74">src/account/CryptoTransferTransaction.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/48ba620d/src/account/TransferTransaction.ts#L72">src/account/TransferTransaction.ts:72</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Add a transfer to the list of transfers. Negative values are <code>senders</code> and
-										postitive values are <code>receivers</code>. Perfer using <code>CryptoTransferTransaction.addSender()</code>
-										and <code>CryptoTransferTransaction.addRecipient()</code> instead as those methods automatically
+									<p>addHbar a transfer to the list of transfers. Negative values are <code>senders</code> and
+										postitive values are <code>receivers</code>. Perfer using <code>CryptoTransferTransaction.addHbarSender()</code>
+										and <code>CryptoTransferTransaction.addHbarRecipient()</code> instead as those methods automatically
 									negate the values appropriately.</p>
 								</div>
 							</div>
@@ -243,6 +239,93 @@
 								</li>
 								<li>
 									<h5>amount: <a href="_hbarunit_.hbarunit.html#tinybar" class="tsd-signature-type">Tinybar</a><span class="tsd-signature-symbol"> | </span><a href="_hbar_.hbar.html" class="tsd-signature-type">Hbar</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="addtokenrecipient" class="tsd-anchor"></a>
+					<h3>add<wbr>Token<wbr>Recipient</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Token<wbr>Recipient<span class="tsd-signature-symbol">(</span>tokenId<span class="tsd-signature-symbol">: </span><a href="../modules/_token_tokenid_.html#tokenidlike" class="tsd-signature-type">TokenIdLike</a>, accountId<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a>, amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/48ba620d/src/account/TransferTransaction.ts#L102">src/account/TransferTransaction.ts:102</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tokenId: <a href="../modules/_token_tokenid_.html#tokenidlike" class="tsd-signature-type">TokenIdLike</a></h5>
+								</li>
+								<li>
+									<h5>accountId: <a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a></h5>
+								</li>
+								<li>
+									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="addtokensender" class="tsd-anchor"></a>
+					<h3>add<wbr>Token<wbr>Sender</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Token<wbr>Sender<span class="tsd-signature-symbol">(</span>tokenId<span class="tsd-signature-symbol">: </span><a href="../modules/_token_tokenid_.html#tokenidlike" class="tsd-signature-type">TokenIdLike</a>, accountId<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a>, amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/48ba620d/src/account/TransferTransaction.ts#L88">src/account/TransferTransaction.ts:88</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tokenId: <a href="../modules/_token_tokenid_.html#tokenidlike" class="tsd-signature-type">TokenIdLike</a></h5>
+								</li>
+								<li>
+									<h5>accountId: <a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a></h5>
+								</li>
+								<li>
+									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="addtokentransfer" class="tsd-anchor"></a>
+					<h3>add<wbr>Token<wbr>Transfer</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Token<wbr>Transfer<span class="tsd-signature-symbol">(</span>tokenId<span class="tsd-signature-symbol">: </span><a href="../modules/_token_tokenid_.html#tokenidlike" class="tsd-signature-type">TokenIdLike</a>, accountId<span class="tsd-signature-symbol">: </span><a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a>, amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">this</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/hashgraph/hedera-sdk-js/blob/48ba620d/src/account/TransferTransaction.ts#L116">src/account/TransferTransaction.ts:116</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tokenId: <a href="../modules/_token_tokenid_.html#tokenidlike" class="tsd-signature-type">TokenIdLike</a></h5>
+								</li>
+								<li>
+									<h5>accountId: <a href="../modules/_account_accountid_.html#accountidlike" class="tsd-signature-type">AccountIdLike</a></h5>
+								</li>
+								<li>
+									<h5>amount: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">BigNumber</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">this</span></h4>
@@ -494,7 +577,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_account_cryptotransfertransaction_.html">&quot;account/<wbr>Crypto<wbr>Transfer<wbr>Transaction&quot;</a>
+						<a href="../modules/_account_transfertransaction_.html">&quot;account/<wbr>Transfer<wbr>Transaction&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -503,49 +586,58 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html" class="tsd-kind-icon">Crypto<wbr>Transfer<wbr>Transaction</a>
+						<a href="_account_transfertransaction_.transfertransaction.html" class="tsd-kind-icon">Transfer<wbr>Transaction</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#addrecipient" class="tsd-kind-icon">add<wbr>Recipient</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#addhbarrecipient" class="tsd-kind-icon">add<wbr>Hbar<wbr>Recipient</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#addsender" class="tsd-kind-icon">add<wbr>Sender</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#addhbarsender" class="tsd-kind-icon">add<wbr>Hbar<wbr>Sender</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#addtransfer" class="tsd-kind-icon">add<wbr>Transfer</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#addhbartransfer" class="tsd-kind-icon">add<wbr>Hbar<wbr>Transfer</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_account_transfertransaction_.transfertransaction.html#addtokenrecipient" class="tsd-kind-icon">add<wbr>Token<wbr>Recipient</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_account_transfertransaction_.transfertransaction.html#addtokensender" class="tsd-kind-icon">add<wbr>Token<wbr>Sender</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_account_transfertransaction_.transfertransaction.html#addtokentransfer" class="tsd-kind-icon">add<wbr>Token<wbr>Transfer</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#build" class="tsd-kind-icon">build</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#build" class="tsd-kind-icon">build</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#execute" class="tsd-kind-icon">execute</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#execute" class="tsd-kind-icon">execute</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#getcost" class="tsd-kind-icon">get<wbr>Cost</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#setgeneraterecord" class="tsd-kind-icon">set<wbr>Generate<wbr>Record</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#setmaxtransactionfee" class="tsd-kind-icon">set<wbr>Max<wbr>Transaction<wbr>Fee</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#setnodeaccountid" class="tsd-kind-icon">set<wbr>Node<wbr>Account<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#settransactionid" class="tsd-kind-icon">set<wbr>Transaction<wbr>Id</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#settransactionmemo" class="tsd-kind-icon">set<wbr>Transaction<wbr>Memo</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#settransactionvalidduration" class="tsd-kind-icon">set<wbr>Transaction<wbr>Valid<wbr>Duration</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_account_cryptotransfertransaction_.cryptotransfertransaction.html#validate" class="tsd-kind-icon">validate</a>
+								<a href="_account_transfertransaction_.transfertransaction.html#validate" class="tsd-kind-icon">validate</a>
 							</li>
 						</ul>
 					</li>
