@@ -1,4 +1,5 @@
 import AccountId from "../account/AccountId.js";
+import AccountBalanceQuery from "../account/AccountBalanceQuery.js";
 import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Hbar from "../Hbar.js";
 import Node from "../Node.js";
@@ -247,6 +248,13 @@ export default class Client {
     setMaxQueryPayment(maxQueryPayment) {
         this._maxQueryPayment = maxQueryPayment;
         return this;
+    }
+
+    /**
+     * @param {AccountId | string} accountId
+     */
+    async ping(accountId) {
+        await new AccountBalanceQuery({ accountId }).execute(this);
     }
 
     /**
