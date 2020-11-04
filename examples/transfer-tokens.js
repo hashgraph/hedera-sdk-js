@@ -102,8 +102,8 @@ async function main() {
     console.log("Granted Kyc for account", newAccountId.toString(), "on token", tokenId.toString());
 
     await (await new TransferTransaction()
-        .addTokenSender(tokenId, operatorAccount, 10)
-        .addTokenRecipient(tokenId, newAccountId, 10)
+        .addTokenTransfer(tokenId, operatorAccount, -10)
+        .addTokenTransfer(tokenId, newAccountId, 10)
         .execute(client))
         .getReceipt(client);
 

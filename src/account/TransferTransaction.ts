@@ -41,29 +41,6 @@ export class TransferTransaction extends SingleTransactionBuilder {
     }
 
     /**
-     * A list of senders with a given amount.
-     */
-    public addHbarSender(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
-        const hbar = hbarFromTinybarOrHbar(amount);
-        hbar[ hbarCheck ]({ allowNegative: false });
-
-        return this.addHbarTransfer(accountId, hbar.negated());
-    }
-
-    /**
-     * A list of receivers with a given amount.
-     */
-    public addHbarRecipient(
-        accountId: AccountIdLike,
-        amount: Tinybar | Hbar
-    ): this {
-        const hbar = hbarFromTinybarOrHbar(amount);
-        hbar[ hbarCheck ]({ allowNegative: false });
-
-        return this.addHbarTransfer(accountId, amount);
-    }
-
-    /**
      * addHbar a transfer to the list of transfers. Negative values are `senders` and
      * postitive values are `receivers`. Perfer using `CryptoTransferTransaction.addHbarSender()`
      * and `CryptoTransferTransaction.addHbarRecipient()` instead as those methods automatically
@@ -83,34 +60,6 @@ export class TransferTransaction extends SingleTransactionBuilder {
         transfers.addAccountamounts(acctAmt);
 
         return this;
-    }
-
-    public addTokenSender(
-        tokenId: TokenIdLike,
-        accountId: AccountIdLike,
-        amount: number | BigNumber
-    ): this {
-        return this.addTokenTransfer(
-            tokenId,
-            accountId,
-            amount instanceof BigNumber ?
-                amount.negated() :
-                new BigNumber(amount).negated()
-        );
-    }
-
-    public addTokenRecipient(
-        tokenId: TokenIdLike,
-        accountId: AccountIdLike,
-        amount: number | BigNumber
-    ): this {
-        return this.addTokenTransfer(
-            tokenId,
-            accountId,
-            amount instanceof BigNumber ?
-                amount :
-                new BigNumber(amount)
-        );
     }
 
     public addTokenTransfer(
