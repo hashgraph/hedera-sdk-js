@@ -24,7 +24,7 @@ package proto;
 
 import "Timestamp.proto";
 
-option java_package = "com.hedera.hashgraph.sdk.proto";
+option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
 /* Each shard has a nonnegative shard number. Each realm within a given shard has a nonnegative realm number (that number might be reused in other shards). And each account, file, and smart contract instance within a given realm has a nonnegative number (which might be reused in other realms). Every account, file, and smart contract instance is within exactly one realm. So a FileID is a triplet of numbers, like 0.1.2 for entity number 2 within realm 1  within shard 0.  Each realm maintains a single counter for assigning numbers,  so if there is a file with ID 0.1.2, then there won't be an account or smart  contract instance with ID 0.1.2.
@@ -71,6 +71,11 @@ message TransactionID {
 message AccountAmount {
     AccountID accountID = 1; // The Account ID that sends/receives cryptocurrency or tokens
     sint64 amount = 2; // The amount of tinybars (for Crypto transfers) or in the lowest denomination (for Token transfers) that the account sends(negative) or receives(positive)
+}
+
+/* A list of accounts and amounts to transfer out of each account (negative) or into it (positive). */
+message TransferList {
+    repeated AccountAmount accountAmounts = 1; // Multiple list of AccountAmount pairs, each of which has an account and an amount to transfer into it (positive) or out of it (negative)
 }
 
 /* A list of token IDs and amounts representing the transferred out (negative) or into (positive) amounts, represented in the lowest denomination of the token */
@@ -247,7 +252,6 @@ enum HederaFunctionality {
     ConsensusSubmitMessage = 54; // Submit message to topic
     UncheckedSubmit = 55;
     TokenCreate = 56; // Create Token
-    TokenTransact = 57; // Transfer Tokens
     TokenGetInfo = 58; // Get token information
     TokenFreezeAccount = 59; // Freeze Account
     TokenUnfreezeAccount = 60; // Unfreeze Account
@@ -352,3 +356,12 @@ message ServicesConfigurationList {
     repeated Setting nameValue = 1; // list of name value pairs of the application properties
 }
 
+
+/* Token's information related to the given Account */
+message TokenRelationship {
+    TokenID tokenId = 1; // The ID of the token
+    string symbol = 2; // The Symbol of the token
+    uint64 balance = 3; // The balance that the Account holds in the smallest denomination
+    TokenKycStatus kycStatus = 4; // The KYC status of the account (KycNotApplicable, Granted or Revoked). If the token does not have KYC key, KycNotApplicable is returned
+    TokenFreezeStatus freezeStatus = 5; // The Freeze status of the account (FreezeNotApplicable, Frozen or Unfrozen). If the token does not have Freeze key, FreezeNotApplicable is returned
+}

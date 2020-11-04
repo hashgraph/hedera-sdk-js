@@ -22,10 +22,10 @@ package proto;
  * ‍
  */
 
-option java_package = "com.hedera.hashgraph.sdk.proto";
+option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
-/* An exact date and time. This is the same data structure as the protobuf Timestamp.proto (see the comments in https://github.com/blob/master/src/timestamp.proto) */
+/* An exact date and time. This is the same data structure as the protobuf Timestamp.proto (see the comments in https://github.com/google/protobuf/blob/master/src/google/protobuf/timestamp.proto) */
 message Timestamp {
     int64 seconds = 1; // Number of complete seconds since the start of the epoch
     int32 nanos = 2; // Number of nanoseconds since the start of the last second

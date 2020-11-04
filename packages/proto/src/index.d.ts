@@ -134,7 +134,6 @@ import ITokenInfo = proto.ITokenInfo;
 import ITokenMintTransactionBody = proto.ITokenMintTransactionBody;
 import ITokenRelationship = proto.ITokenRelationship;
 import ITokenRevokeKycTransactionBody = proto.ITokenRevokeKycTransactionBody;
-import ITokenTransfersTransactionBody = proto.ITokenTransfersTransactionBody;
 import ITokenUnfreezeAccountTransactionBody = proto.ITokenUnfreezeAccountTransactionBody;
 import ITokenUpdateTransactionBody = proto.ITokenUpdateTransactionBody;
 import ITokenWipeAccountTransactionBody = proto.ITokenWipeAccountTransactionBody;
@@ -254,7 +253,6 @@ export {
     ITokenGetInfoQuery,
     ITokenMintTransactionBody,
     ITokenRevokeKycTransactionBody,
-    ITokenTransfersTransactionBody,
     ITokenUnfreezeAccountTransactionBody,
     ITokenUpdateTransactionBody,
     ITokenWipeAccountTransactionBody,

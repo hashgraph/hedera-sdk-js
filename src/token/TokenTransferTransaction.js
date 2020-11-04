@@ -4,6 +4,9 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Long from "long";
+import BigNumber from "bignumber.js";
+import Transfer from "../Transfer.js";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
@@ -11,7 +14,7 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ITokenTransfersTransactionBody} proto.ITokenTransfersTransactionBody
+ * @typedef {import("@hashgraph/proto").ICryptoTransferTransactionBody} proto.ICryptoTransferTransactionBody
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  */
@@ -21,57 +24,88 @@ import Long from "long";
  */
 
 /**
- * @typedef {object} TransferObjectInput
+ * @typedef {object} TransferTokensInput
  * @property {TokenId | string} tokenId
  * @property {AccountId | string} accountId
  * @property {Long | number} amount
  */
 
 /**
- * @typedef {object} TransferObject
+ * @typedef {object} TransferTokenObject
  * @property {TokenId} tokenId
  * @property {AccountId} accountId
  * @property {Long} amount
  */
 
 /**
+ * @typedef {object} TransferHbarInput
+ * @property {AccountId | string} accountId
+ * @property {number | string | Long | BigNumber | Hbar} amount
+ */
+
+/**
  * Transfers a new Hedera™ crypto-currency token.
  */
-export default class TokenTransferTransaction extends Transaction {
+export default class TransferTransaction extends Transaction {
     /**
      * @param {object} [props]
-     * @param {(TransferObjectInput)[]} [props.transfers]
+     * @param {(TransferTokensInput)[]} [props.tokenTransfers]
+     * @param {(TransferHbarInput)[]} [props.hbarTransfers]
      */
     constructor(props = {}) {
         super();
 
         /**
          * @private
-         * @type {Map<string, TransferObject[]>}
+         * @type {Map<string, TransferTokenObject[]>}
          */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this._transfers = new Map();
+        this._tokenTransfers = new Map();
 
-        for (const transfer of props.transfers != null ? props.transfers : []) {
-            this.addTransfer(
+        for (const transfer of props.tokenTransfers != null ? props.tokenTransfers : []) {
+            this.addTokenTransfer(
                 transfer.tokenId,
                 transfer.accountId,
                 transfer.amount
             );
+        }
+
+        /**
+         * @private
+         * @type {Transfer[]}
+         */
+        this._hbarTransfers = [];
+
+        if (props.hbarTransfers != null) {
+            this._hbarTransfers = props.hbarTransfers.map((transfer) => {
+                if (transfer instanceof Transfer) {
+                    return transfer;
+                } else {
+                    const amount =
+                        transfer.amount instanceof Hbar
+                            ? transfer.amount
+                            : new Hbar(transfer.amount);
+
+                    return new Transfer({
+                        accountId: transfer.accountId,
+                        amount,
+                    });
+                }
+            });
         }
     }
 
     /**
      * @internal
      * @param {proto.ITransactionBody} body
-     * @returns {TokenTransferTransaction}
+     * @returns {TransferTransaction}
      */
     static _fromProtobuf(body) {
-        const transfersToken = /** @type {proto.ITokenTransfersTransactionBody} */ (body.tokenTransfers);
+        const cryptoTransfer = /** @type {proto.ICryptoTransferTransactionBody} */ (body.cryptoTransfer);
 
-        const transfers = new TokenTransferTransaction();
-        for (const list of transfersToken.tokenTransfers != null
-            ? transfersToken.tokenTransfers
+        const transfers = new TransferTransaction();
+        for (const list of cryptoTransfer.tokenTransfers != null
+            ? cryptoTransfer.tokenTransfers
             : []) {
             const tokenId = TokenId._fromProtobuf(
                 /** @type {proto.ITokenID} */ (list.token)
@@ -79,7 +113,7 @@ export default class TokenTransferTransaction extends Transaction {
             for (const transfer of list.transfers != null
                 ? list.transfers
                 : []) {
-                transfers.addTransfer(
+                transfers.addTokenTransfer(
                     tokenId,
                     AccountId._fromProtobuf(
                         /** @type {proto.IAccountID} */ (transfer.accountID)
@@ -89,14 +123,29 @@ export default class TokenTransferTransaction extends Transaction {
             }
         }
 
+        const accountAmounts = cryptoTransfer.transfers != null ?
+            cryptoTransfer.transfers.accountAmounts != null ?
+                cryptoTransfer.transfers.accountAmounts :
+                [] :
+            [];
+
+
+
+        for (const aa of accountAmounts) {
+            transfers.addHbarTransfer(
+                AccountId._fromProtobuf(/** @type {proto.IAccountID} */ (aa.accountID)),
+                Hbar.fromTinybars(/** @type{Long} */ (aa.amount))
+            );
+        }
+
         return transfers;
     }
 
     /**
-     * @returns {Map<string, TransferObject[]>}
+     * @returns {Map<string, TransferTokenObject[]>}
      */
-    get transfers() {
-        return this._transfers;
+    get tokenTransfers() {
+        return this._tokenTransfers;
     }
 
     /**
@@ -105,10 +154,10 @@ export default class TokenTransferTransaction extends Transaction {
      * @param {number | string | Long} amount
      * @returns {this}
      */
-    addTransfer(tokenId, accountId, amount) {
+    addTokenTransfer(tokenId, accountId, amount) {
         this._requireNotFrozen();
         const id = tokenId.toString();
-        const transfers = this._transfers.get(id);
+        const transfers = this._tokenTransfers.get(id);
 
         const transfer = {
             tokenId:
@@ -123,7 +172,7 @@ export default class TokenTransferTransaction extends Transaction {
         };
 
         if (transfers == null) {
-            this._transfers.set(id, [transfer]);
+            this._tokenTransfers.set(id, [transfer]);
         } else {
             transfers.push(transfer);
         }
@@ -132,28 +181,23 @@ export default class TokenTransferTransaction extends Transaction {
     }
 
     /**
-     * @param {TokenId | string} tokenId
      * @param {AccountId | string} accountId
-     * @param {number | Long} amount
-     * @returns {this}
+     * @param {number | string | Long | BigNumber | Hbar} amount
+     * @returns {TransferTransaction}
      */
-    addSender(tokenId, accountId, amount) {
-        const amount_ =
-            amount instanceof Long
-                ? amount.neg()
-                : Long.fromValue(amount).neg();
+    addHbarTransfer(accountId, amount) {
+        this._requireNotFrozen();
+        this._tokenTransfers.push(
+            new Transfer({
+                accountId:
+                    accountId instanceof AccountId
+                        ? accountId
+                        : AccountId.fromString(accountId),
+                amount,
+            })
+        );
 
-        return this.addTransfer(tokenId, accountId, amount_);
-    }
-
-    /**
-     * @param {TokenId | string} tokenId
-     * @param {AccountId | string} accountId
-     * @param {number | Long} amount
-     * @returns {this}
-     */
-    addRecipient(tokenId, accountId, amount) {
-        return this.addTransfer(tokenId, accountId, amount);
+        return this;
     }
 
     /**
@@ -164,7 +208,7 @@ export default class TokenTransferTransaction extends Transaction {
      * @returns {Promise<proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.token.transferTokens(request);
+        return channel.crypto.cryptoTransfer(request);
     }
 
     /**
@@ -173,18 +217,18 @@ export default class TokenTransferTransaction extends Transaction {
      * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "tokenTransfers";
+        return "cryptoTransfer";
     }
 
     /**
      * @override
      * @protected
-     * @returns {proto.ITokenTransfersTransactionBody}
+     * @returns {proto.ICryptoTransferTransactionBody}
      */
     _makeTransactionData() {
         const tokenTransfers = [];
 
-        for (const [tokenId, value] of this._transfers) {
+        for (const [tokenId, value] of this._tokenTransfers) {
             const transfers = [];
             for (const transfer of value) {
                 transfers.push({
@@ -206,7 +250,7 @@ export default class TokenTransferTransaction extends Transaction {
 }
 
 TRANSACTION_REGISTRY.set(
-    "tokenTransfers",
+    "cryptoTransfer",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenTransferTransaction._fromProtobuf
+    TransferTransaction._fromProtobuf
 );

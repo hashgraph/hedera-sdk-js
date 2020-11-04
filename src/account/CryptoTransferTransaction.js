@@ -95,26 +95,6 @@ export default class CryptoTransferTransaction extends Transaction {
      * @param {number | string | Long | BigNumber | Hbar} amount
      * @returns {CryptoTransferTransaction}
      */
-    addTransfer(accountId, amount) {
-        this._requireNotFrozen();
-        this._transfers.push(
-            new Transfer({
-                accountId:
-                    accountId instanceof AccountId
-                        ? accountId
-                        : AccountId.fromString(accountId),
-                amount,
-            })
-        );
-
-        return this;
-    }
-
-    /**
-     * @param {AccountId | string} accountId
-     * @param {number | string | Long | BigNumber | Hbar} amount
-     * @returns {CryptoTransferTransaction}
-     */
     addSender(accountId, amount) {
         const value = amount instanceof Hbar ? amount : new Hbar(amount);
         return this.addTransfer(accountId, value.negated());
