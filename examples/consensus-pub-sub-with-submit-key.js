@@ -5,7 +5,7 @@ const {
     ConsensusTopicCreateTransaction,
     ConsensusMessageSubmitTransaction,
     Ed25519PrivateKey,
-    AccountId,
+    AccountId
 } = require("@hashgraph/sdk");
 
 async function main() {
@@ -30,7 +30,7 @@ async function main() {
     } else {
         try {
             client = Client.fromConfigFile(process.env.CONFIG_FILE);
-        } catch (err) {
+        } catch (error) {
             client = Client.forTestnet();
         }
     }
@@ -72,7 +72,7 @@ async function main() {
         await (await new ConsensusMessageSubmitTransaction()
             .setTopicId(topicId)
             .setMessage(`Hello, HCS! Message ${i}`)
-            .build(client)[0]
+            .build(client)[ 0 ]
             .sign(operatorPrivateKey) // Must sign by the topic's submitKey
             .execute(client))
             .getReceipt(client);

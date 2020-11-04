@@ -1,8 +1,6 @@
 import { QueryBuilder } from "../QueryBuilder";
-import {
-    CryptoGetInfoQuery,
-    TokenRelationship as ProtoTokenRelationship
-} from "../generated/CryptoGetInfo_pb";
+import { CryptoGetInfoQuery } from "../generated/CryptoGetInfo_pb";
+import { TokenRelationship as ProtoTokenRelationship } from "../generated/BasicTypes_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Query } from "../generated/Query_pb";
 import { Response } from "../generated/Response_pb";

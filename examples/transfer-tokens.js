@@ -9,7 +9,7 @@ const {
     TokenCreateTransaction,
     TokenDeleteTransaction,
     TokenGrantKycTransaction,
-    TokenTransferTransaction,
+    TransferTransaction,
     TokenWipeTransaction
 } = require("@hashgraph/sdk");
 
@@ -34,7 +34,7 @@ async function main() {
     } else {
         try {
             client = Client.fromConfigFile(process.env.CONFIG_FILE);
-        } catch (err) {
+        } catch (error) {
             client = Client.forTestnet();
         }
     }
@@ -101,9 +101,9 @@ async function main() {
 
     console.log("Granted Kyc for account", newAccountId.toString(), "on token", tokenId.toString());
 
-    await (await new TokenTransferTransaction()
-        .addSender(tokenId, operatorAccount, 10)
-        .addRecipient(tokenId, newAccountId, 10)
+    await (await new TransferTransaction()
+        .addTokenSender(tokenId, operatorAccount, 10)
+        .addTokenRecipient(tokenId, newAccountId, 10)
         .execute(client))
         .getReceipt(client);
 

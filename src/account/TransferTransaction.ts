@@ -4,11 +4,17 @@ import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoTransferTransactionBody } from "../generated/CryptoTransfer_pb";
 import { CryptoService } from "../generated/CryptoService_pb_service";
-import { AccountAmount, TokenTransferList } from "../generated/BasicTypes_pb";
+import { AccountAmount, TransferList, TokenTransferList } from "../generated/BasicTypes_pb";
+import { TokenId, TokenIdLike } from "../token/TokenId";
+import {
+    Hbar,
+    Tinybar,
+    hbarCheck,
+    hbarFromTinybarOrHbar,
+    hbarToProto
+} from "../Hbar";
+import { AccountId, AccountIdLike } from "./AccountId";
 import BigNumber from "bignumber.js";
-
-import { AccountId, AccountIdLike } from "../account/AccountId";
-import { TokenId, TokenIdLike } from "./TokenId";
 
 /**
  * Transfer tokens from some accounts to other accounts. Each negative amount is withdrawn from the corresponding
@@ -20,10 +26,8 @@ import { TokenId, TokenIdLike } from "./TokenId";
  *
  * If any sender account fails to have sufficient token balance, then the entire transaction fails and none of the
  * transfers occur, though transaction fee is still charged.
- *
- * @deprecated Use `TransferTransaction` instead
  */
-export class TokenTransferTransaction extends SingleTransactionBuilder {
+export class TransferTransaction extends SingleTransactionBuilder {
     private readonly _body: CryptoTransferTransactionBody;
     private _tokenIdIndexes: Map<string, number>;
 
@@ -32,17 +36,61 @@ export class TokenTransferTransaction extends SingleTransactionBuilder {
         this._body = new CryptoTransferTransactionBody();
         this._tokenIdIndexes = new Map();
         this._body.setTokentransfersList([]);
+        this._body.setTransfers(new TransferList());
         this._inner.setCryptotransfer(this._body);
-
-        console.warn("Use `TransferTransaction` instead");
     }
 
-    public addSender(
+    /**
+     * A list of senders with a given amount.
+     */
+    public addHbarSender(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
+        const hbar = hbarFromTinybarOrHbar(amount);
+        hbar[ hbarCheck ]({ allowNegative: false });
+
+        return this.addHbarTransfer(accountId, hbar.negated());
+    }
+
+    /**
+     * A list of receivers with a given amount.
+     */
+    public addHbarRecipient(
+        accountId: AccountIdLike,
+        amount: Tinybar | Hbar
+    ): this {
+        const hbar = hbarFromTinybarOrHbar(amount);
+        hbar[ hbarCheck ]({ allowNegative: false });
+
+        return this.addHbarTransfer(accountId, amount);
+    }
+
+    /**
+     * addHbar a transfer to the list of transfers. Negative values are `senders` and
+     * postitive values are `receivers`. Perfer using `CryptoTransferTransaction.addHbarSender()`
+     * and `CryptoTransferTransaction.addHbarRecipient()` instead as those methods automatically
+     * negate the values appropriately.
+     */
+    public addHbarTransfer(accountId: AccountIdLike, amount: Tinybar | Hbar): this {
+        const amountHbar = hbarFromTinybarOrHbar(amount);
+        amountHbar[ hbarCheck ]({ allowNegative: true });
+
+        const transfers = this._body.getTransfers() || new TransferList();
+        this._body.setTransfers(transfers);
+
+        const acctAmt = new AccountAmount();
+        acctAmt.setAccountid(new AccountId(accountId)._toProto());
+        acctAmt.setAmount(amountHbar[ hbarToProto ]());
+
+        transfers.addAccountamounts(acctAmt);
+
+        return this;
+    }
+
+    public addTokenSender(
         tokenId: TokenIdLike,
         accountId: AccountIdLike,
         amount: number | BigNumber
     ): this {
-        return this.addTransfer(
+        return this.addTokenTransfer(
             tokenId,
             accountId,
             amount instanceof BigNumber ?
@@ -51,12 +99,12 @@ export class TokenTransferTransaction extends SingleTransactionBuilder {
         );
     }
 
-    public addRecipient(
+    public addTokenRecipient(
         tokenId: TokenIdLike,
         accountId: AccountIdLike,
         amount: number | BigNumber
     ): this {
-        return this.addTransfer(
+        return this.addTokenTransfer(
             tokenId,
             accountId,
             amount instanceof BigNumber ?
@@ -65,7 +113,7 @@ export class TokenTransferTransaction extends SingleTransactionBuilder {
         );
     }
 
-    public addTransfer(
+    public addTokenTransfer(
         tokenId: TokenIdLike,
         accountId: AccountIdLike,
         amount: number | BigNumber
@@ -77,7 +125,7 @@ export class TokenTransferTransaction extends SingleTransactionBuilder {
             this._tokenIdIndexes.set(token.toString(), this._body.getTokentransfersList().length);
         }
 
-        let list;
+        let list: TokenTransferList;
 
         if (index != null) {
             list = this._body.getTokentransfersList()[ index ];

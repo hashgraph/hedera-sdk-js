@@ -2,8 +2,11 @@ import { TransactionReceipt } from "./TransactionReceipt";
 import { ContractFunctionResult } from "./contract/ContractFunctionResult";
 import { TransactionRecord as ProtoTransactionRecord } from "./generated/TransactionRecord_pb";
 import { TransactionId } from "./TransactionId";
-import { TransferList as ProtoTransferList } from "./generated/CryptoTransfer_pb";
-import { TokenTransferList as ProtoTokenTransferList, AccountAmount as ProtoAccountAmount } from "./generated/BasicTypes_pb";
+import {
+    TransferList as ProtoTransferList,
+    TokenTransferList as ProtoTokenTransferList,
+    AccountAmount as ProtoAccountAmount
+} from "./generated/BasicTypes_pb";
 import { Time } from "./Time";
 import { Hbar } from "./Hbar";
 import { TokenId, TokenIdLike } from "./token/TokenId";

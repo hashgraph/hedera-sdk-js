@@ -2,13 +2,10 @@ import { SingleTransactionBuilder } from "../TransactionBuilder";
 import { Transaction } from "../generated/Transaction_pb";
 import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import {
-    CryptoTransferTransactionBody,
-    TransferList
-} from "../generated/CryptoTransfer_pb";
+import { CryptoTransferTransactionBody } from "../generated/CryptoTransfer_pb";
 import BigNumber from "bignumber.js";
 import { CryptoService } from "../generated/CryptoService_pb_service";
-import { AccountAmount } from "../generated/BasicTypes_pb";
+import { AccountAmount, TransferList } from "../generated/BasicTypes_pb";
 
 import {
     Hbar,
@@ -30,6 +27,8 @@ import { AccountId, AccountIdLike } from "./AccountId";
  * the keys for all the sending accounts, and for any receiving accounts that have
  * receiverSigRequired == true. The signatures are in the same order as the accounts, skipping those
  * accounts that don't need a signature.
+ *
+ * @deprecated Use `TransferTransaction` instead
  */
 export class CryptoTransferTransaction extends SingleTransactionBuilder {
     private readonly _body: CryptoTransferTransactionBody;
@@ -39,6 +38,8 @@ export class CryptoTransferTransaction extends SingleTransactionBuilder {
         this._body = new CryptoTransferTransactionBody();
         this._body.setTransfers(new TransferList());
         this._inner.setCryptotransfer(this._body);
+
+        console.warn("Use `TransferTransaction` instead");
     }
 
     /**

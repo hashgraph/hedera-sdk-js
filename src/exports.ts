@@ -9,6 +9,7 @@ export { AccountRecordsQuery } from "./account/AccountRecordsQuery";
 export { AccountStakersQuery } from "./account/AccountStakersQuery";
 
 export { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
+export { TransferTransaction } from "./account/TransferTransaction";
 
 export { ContractCreateTransaction } from "./contract/ContractCreateTransaction";
 export { ContractDeleteTransaction } from "./contract/ContractDeleteTransaction";

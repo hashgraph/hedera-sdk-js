@@ -3,7 +3,7 @@ const {
     Ed25519PrivateKey,
     AccountCreateTransaction,
     ThresholdKey,
-    AccountId,
+    AccountId
 } = require("@hashgraph/sdk");
 
 async function main() {
@@ -27,7 +27,7 @@ async function main() {
     } else {
         try {
             client = Client.fromConfigFile(process.env.CONFIG_FILE);
-        } catch (err) {
+        } catch (error) {
             client = Client.forTestnet();
         }
     }
