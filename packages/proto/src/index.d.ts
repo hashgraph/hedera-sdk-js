@@ -116,6 +116,7 @@ import ISemanticVersion = proto.ISemanticVersion;
 import INetworkGetVersionInfoResponse = proto.INetworkGetVersionInfoResponse;
 import INetworkGetVersionInfoQuery = proto.INetworkGetVersionInfoQuery;
 import IFreezeTransactionBody = proto.IFreezeTransactionBody;
+import ITransferList = proto.ITransferList;
 
 // HTS Support
 import ITokenAssociateTransactionBody = proto.ITokenAssociateTransactionBody;
@@ -140,6 +141,7 @@ import ITokenWipeAccountTransactionBody = proto.ITokenWipeAccountTransactionBody
 import TokenFreezeStatus = proto.TokenFreezeStatus;
 import TokenID = proto.TokenID;
 import TokenKycStatus = proto.TokenKycStatus;
+import ITokenTransferList = proto.ITokenTransferList;
 
 import ContractGetInfoResponse = proto.ContractGetInfoResponse;
 import CryptoGetInfoResponse = proto.CryptoGetInfoResponse;
@@ -235,6 +237,7 @@ export {
     INetworkGetVersionInfoResponse,
     INetworkGetVersionInfoQuery,
     IFreezeTransactionBody,
+    ITransferList,
 
     // HTS Support
     ITokenAssociateTransactionBody,
@@ -267,4 +270,5 @@ export {
     TransactionID,
     TransactionReceipt,
     TransactionRecord,
+    ITokenTransferList,
 };

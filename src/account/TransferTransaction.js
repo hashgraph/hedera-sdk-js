@@ -1,12 +1,17 @@
-import TokenId from "./TokenId.js";
-import AccountId from "../account/AccountId.js";
+import TokenId from "../token/TokenId.js";
+import AccountId from "./AccountId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Long from "long";
-import BigNumber from "bignumber.js";
-import Transfer from "../Transfer.js";
 import Hbar from "../Hbar.js";
+import TokenTransferMap from "./TokenTransferMap.js";
+import HbarTransferMap from "./HbarTransferMap.js";
+
+/**
+ * @typedef {import("../long.js").LongObject} LongObject
+ * @typedef {import("bignumber.js").default} BigNumber
+ */
 
 /**
  * @namespace proto
@@ -17,6 +22,7 @@ import Hbar from "../Hbar.js";
  * @typedef {import("@hashgraph/proto").ICryptoTransferTransactionBody} proto.ICryptoTransferTransactionBody
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
  */
 
 /**
@@ -57,12 +63,13 @@ export default class TransferTransaction extends Transaction {
 
         /**
          * @private
-         * @type {Map<string, TransferTokenObject[]>}
+         * @type {TokenTransferMap}
          */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this._tokenTransfers = new Map();
+        this._tokenTransfers = new TokenTransferMap();
 
-        for (const transfer of props.tokenTransfers != null ? props.tokenTransfers : []) {
+        for (const transfer of props.tokenTransfers != null
+            ? props.tokenTransfers
+            : []) {
             this.addTokenTransfer(
                 transfer.tokenId,
                 transfer.accountId,
@@ -72,26 +79,14 @@ export default class TransferTransaction extends Transaction {
 
         /**
          * @private
-         * @type {Transfer[]}
+         * @type {HbarTransferMap}
          */
-        this._hbarTransfers = [];
+        this._hbarTransfers = new HbarTransferMap();
 
-        if (props.hbarTransfers != null) {
-            this._hbarTransfers = props.hbarTransfers.map((transfer) => {
-                if (transfer instanceof Transfer) {
-                    return transfer;
-                } else {
-                    const amount =
-                        transfer.amount instanceof Hbar
-                            ? transfer.amount
-                            : new Hbar(transfer.amount);
-
-                    return new Transfer({
-                        accountId: transfer.accountId,
-                        amount,
-                    });
-                }
-            });
+        for (const transfer of props.hbarTransfers != null
+            ? props.hbarTransfers
+            : []) {
+            this.addHbarTransfer(transfer.accountId, transfer.amount);
         }
     }
 
@@ -110,6 +105,7 @@ export default class TransferTransaction extends Transaction {
             const tokenId = TokenId._fromProtobuf(
                 /** @type {proto.ITokenID} */ (list.token)
             );
+
             for (const transfer of list.transfers != null
                 ? list.transfers
                 : []) {
@@ -123,18 +119,19 @@ export default class TransferTransaction extends Transaction {
             }
         }
 
-        const accountAmounts = cryptoTransfer.transfers != null ?
-            cryptoTransfer.transfers.accountAmounts != null ?
-                cryptoTransfer.transfers.accountAmounts :
-                [] :
-            [];
-
-
+        const accountAmounts =
+            cryptoTransfer.transfers != null
+                ? cryptoTransfer.transfers.accountAmounts != null
+                    ? cryptoTransfer.transfers.accountAmounts
+                    : []
+                : [];
 
         for (const aa of accountAmounts) {
             transfers.addHbarTransfer(
-                AccountId._fromProtobuf(/** @type {proto.IAccountID} */ (aa.accountID)),
-                Hbar.fromTinybars(/** @type{Long} */ (aa.amount))
+                AccountId._fromProtobuf(
+                    /** @type {proto.IAccountID} */ (aa.accountID)
+                ),
+                Hbar.fromTinybars(/** @type {Long} */ (aa.amount))
             );
         }
 
@@ -142,7 +139,7 @@ export default class TransferTransaction extends Transaction {
     }
 
     /**
-     * @returns {Map<string, TransferTokenObject[]>}
+     * @returns {TokenTransferMap}
      */
     get tokenTransfers() {
         return this._tokenTransfers;
@@ -151,50 +148,41 @@ export default class TransferTransaction extends Transaction {
     /**
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} accountId
-     * @param {number | string | Long} amount
+     * @param {number | Long} amount
      * @returns {this}
      */
     addTokenTransfer(tokenId, accountId, amount) {
         this._requireNotFrozen();
-        const id = tokenId.toString();
-        const transfers = this._tokenTransfers.get(id);
 
-        const transfer = {
-            tokenId:
-                tokenId instanceof TokenId
-                    ? tokenId
-                    : TokenId.fromString(tokenId),
-            accountId:
-                accountId instanceof AccountId
-                    ? accountId
-                    : AccountId.fromString(accountId),
-            amount: amount instanceof Long ? amount : Long.fromValue(amount),
-        };
-
-        if (transfers == null) {
-            this._tokenTransfers.set(id, [transfer]);
-        } else {
-            transfers.push(transfer);
-        }
+        this._tokenTransfers._set(
+            tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId),
+            accountId instanceof AccountId
+                ? accountId
+                : AccountId.fromString(accountId),
+            amount instanceof Long ? amount : Long.fromNumber(amount)
+        );
 
         return this;
     }
 
     /**
+     * @returns {HbarTransferMap}
+     */
+    get hbarTranfers() {
+        return this._hbarTransfers;
+    }
+
+    /**
+     * @internal
      * @param {AccountId | string} accountId
-     * @param {number | string | Long | BigNumber | Hbar} amount
+     * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
      * @returns {TransferTransaction}
      */
     addHbarTransfer(accountId, amount) {
         this._requireNotFrozen();
-        this._tokenTransfers.push(
-            new Transfer({
-                accountId:
-                    accountId instanceof AccountId
-                        ? accountId
-                        : AccountId.fromString(accountId),
-                amount,
-            })
+        this._hbarTransfers._set(
+            accountId instanceof AccountId ? accountId.toString() : accountId,
+            amount
         );
 
         return this;
@@ -227,23 +215,34 @@ export default class TransferTransaction extends Transaction {
      */
     _makeTransactionData() {
         const tokenTransfers = [];
+        const hbarTransfers = [];
 
         for (const [tokenId, value] of this._tokenTransfers) {
             const transfers = [];
-            for (const transfer of value) {
+            for (const [accountId, amount] of value) {
                 transfers.push({
-                    accountID: transfer.accountId._toProtobuf(),
-                    amount: transfer.amount,
+                    accountID: accountId._toProtobuf(),
+                    amount: amount,
                 });
             }
 
             tokenTransfers.push({
-                token: TokenId.fromString(tokenId)._toProtobuf(),
+                token: tokenId._toProtobuf(),
                 transfers,
             });
         }
 
+        for (const [accountId, value] of this._hbarTransfers) {
+            hbarTransfers.push({
+                accountID: accountId._toProtobuf(),
+                amount: value.toTinybars(),
+            });
+        }
+
         return {
+            transfers: {
+                accountAmounts: hbarTransfers,
+            },
             tokenTransfers,
         };
     }
