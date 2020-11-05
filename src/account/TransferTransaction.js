@@ -154,7 +154,7 @@ export default class TransferTransaction extends Transaction {
     addTokenTransfer(tokenId, accountId, amount) {
         this._requireNotFrozen();
 
-        this._tokenTransfers._set(
+        this._tokenTransfers.__set(
             tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId),
             accountId instanceof AccountId
                 ? accountId
@@ -181,8 +181,10 @@ export default class TransferTransaction extends Transaction {
     addHbarTransfer(accountId, amount) {
         this._requireNotFrozen();
         this._hbarTransfers._set(
-            accountId instanceof AccountId ? accountId.toString() : accountId,
-            amount
+            accountId instanceof AccountId
+                ? accountId
+                : AccountId.fromString(accountId),
+            amount instanceof Hbar ? amount : new Hbar(amount)
         );
 
         return this;

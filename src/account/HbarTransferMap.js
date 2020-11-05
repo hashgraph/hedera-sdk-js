@@ -1,5 +1,6 @@
 import AccountId from "./AccountId.js";
 import Hbar from "../Hbar.js";
+import ObjectMap from "./ObjectMap.js";
 
 /**
  * @namespace proto
@@ -12,66 +13,12 @@ import Hbar from "../Hbar.js";
  * @typedef {import("bignumber.js").default} BigNumber
  */
 
-export default class HbarTransferMap {
+/**
+ * @augments {ObjectMap<AccountId, Hbar>}
+ */
+export default class HbarTransferMap extends ObjectMap {
     constructor() {
-        /** @type {Map<string, Hbar>} */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this._transfers = new Map();
-
-        /** @type {Map<AccountId, Hbar>} */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this.__transfers = new Map();
-    }
-
-    /**
-     * @param {AccountId | string} accountId
-     * @returns {?Hbar}
-     */
-    get(accountId) {
-        const account =
-            accountId instanceof AccountId ? accountId.toString() : accountId;
-        return this._transfers.get(account) || null;
-    }
-
-    /**
-     * @internal
-     * @param {AccountId | string} accountId
-     * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
-     */
-    _set(accountId, amount) {
-        const account =
-            accountId instanceof AccountId ? accountId.toString() : accountId;
-
-        const value = amount instanceof Hbar ? amount : new Hbar(amount);
-
-        this._transfers.set(account, value);
-        this.__transfers.set(
-            accountId instanceof AccountId
-                ? accountId
-                : AccountId.fromString(accountId),
-            value
-        );
-    }
-
-    /**
-     * @returns {IterableIterator<Hbar>}
-     */
-    values() {
-        return this._transfers.values();
-    }
-
-    /**
-     * @returns {IterableIterator<AccountId>}
-     */
-    keys() {
-        return this.__transfers.keys();
-    }
-
-    /**
-     * @returns {IterableIterator<[AccountId, Hbar]>}
-     */
-    [Symbol.iterator]() {
-        return this.__transfers[Symbol.iterator]();
+        super((s) => AccountId.fromString(s));
     }
 
     /**

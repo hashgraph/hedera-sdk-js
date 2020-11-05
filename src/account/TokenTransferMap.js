@@ -1,6 +1,7 @@
 import TokenId from "../token/TokenId.js";
 import AccountId from "../account/AccountId.js";
 import TokenTransferAccountMap from "./TokenTransferAccountMap.js";
+import ObjectMap from "./ObjectMap.js";
 
 /**
  * @namespace proto
@@ -9,28 +10,12 @@ import TokenTransferAccountMap from "./TokenTransferAccountMap.js";
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  */
 
-export default class TokenTransferMap {
+/**
+ * @augments {ObjectMap<TokenId, TokenTransferAccountMap>}
+ */
+export default class TokenTransferMap extends ObjectMap {
     constructor() {
-        /** @type {Map<string, TokenTransferAccountMap>} */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this._transfers = new Map();
-
-        /** @type {Map<TokenId, TokenTransferAccountMap>} */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this.__transfers = new Map();
-    }
-
-    /**
-     * @param {TokenId | string} tokenId
-     * @returns {?TokenTransferAccountMap}
-     */
-    get(tokenId) {
-        const token = tokenId instanceof TokenId ? tokenId.toString() : tokenId;
-
-        const value = /** @type {TokenTransferAccountMap | undefined} */ (this._transfers.get(
-            token
-        ));
-        return value != null ? value : null;
+        super((s) => TokenId.fromString(s));
     }
 
     /**
@@ -39,38 +24,17 @@ export default class TokenTransferMap {
      * @param {AccountId} accountId
      * @param {Long} amount
      */
-    _set(tokenId, accountId, amount) {
+    __set(tokenId, accountId, amount) {
         const token = tokenId.toString();
 
-        let stringMap = this._transfers.get(token);
-        if (stringMap == null) {
-            stringMap = new TokenTransferAccountMap();
-            this._transfers.set(token, stringMap);
-            this.__transfers.set(tokenId, stringMap);
+        let _map = this._map.get(token);
+        if (_map == null) {
+            _map = new TokenTransferAccountMap();
+            this._map.set(token, _map);
+            this.__map.set(tokenId, _map);
         }
 
-        stringMap._set(accountId, amount);
-    }
-
-    /**
-     * @returns {IterableIterator<TokenTransferAccountMap>}
-     */
-    values() {
-        return this._transfers.values();
-    }
-
-    /**
-     * @returns {IterableIterator<TokenId>}
-     */
-    keys() {
-        return this.__transfers.keys();
-    }
-
-    /**
-     * @returns {IterableIterator<[TokenId, TokenTransferAccountMap]>}
-     */
-    [Symbol.iterator]() {
-        return this.__transfers[Symbol.iterator]();
+        _map._set(accountId, amount);
     }
 
     /**
@@ -92,7 +56,7 @@ export default class TokenTransferMap {
                     /** @type {proto.IAccountID} */ (aa.accountID)
                 );
 
-                tokenTransfersMap._set(
+                tokenTransfersMap.__set(
                     token,
                     account,
                     /** @type {Long} */ (aa.amount)
