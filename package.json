@@ -65,7 +65,7 @@
     "dependencies": {
         "@grpc/grpc-js": "^1.1.7",
         "@hashgraph/cryptography": "^1.0.6",
-        "@hashgraph/proto": "file:packages/proto",
+        "@hashgraph/proto": "^1.0.12",
         "bignumber.js": "^9.0.1",
         "long": "^4.0.0"
     },

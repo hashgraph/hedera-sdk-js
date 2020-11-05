@@ -344,8 +344,10 @@
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@file:packages/proto":
-  version "1.0.11"
+"@hashgraph/proto@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.12.tgz#89d0b66659eef22ad73ae5fd4db9a310c3520923"
+  integrity sha512-nuaLHaAIoXczJ6X5fC+QOakbK7BChHXnVEODNDN1h33pwjYS1SGKIEDACrWKSwhrjMLoXzP6oJZwq4j4bcyL5w==
   dependencies:
     "@hashgraph/protobufjs" "^6.10.1-hashgraph.2"
 
