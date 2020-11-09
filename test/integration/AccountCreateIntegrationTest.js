@@ -26,7 +26,7 @@ describe("AccountCreate", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
@@ -36,13 +36,7 @@ describe("AccountCreate", function () {
         expect(info.balance.toTinybars().toNumber()).to.be.equal(
             new Hbar(1).toTinybars().toNumber()
         );
-        expect(info.autoRenewPeriod.toNumber()).to.be.equal(7776000);
-        expect(info.receiveRecordThreshold.toTinybars().toString()).to.be.equal(
-            "9223372036854775807"
-        );
-        expect(info.sendRecordThreshold.toTinybars().toString()).to.be.equal(
-            "9223372036854775807"
-        );
+        expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
         expect(info.proxyAccountId).to.be.null;
         expect(info.proxyReceived.toTinybars().toNumber()).to.be.equal(0);
 
@@ -51,7 +45,7 @@ describe("AccountCreate", function () {
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
                     .setMaxTransactionFee(new Hbar(1))
-                    .setNodeAccountId(response.nodeId)
+                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)

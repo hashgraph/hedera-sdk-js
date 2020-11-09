@@ -1,6 +1,6 @@
 import TokenId from "../token/TokenId.js";
 import Long from "long";
-import ObjectMap from "./ObjectMap.js";
+import ObjectMap from "../ObjectMap.js";
 
 /**
  * @namespace proto

@@ -84,4 +84,23 @@ export default class TokenRelationship {
             freezeStatus: freezeStatus === 0 ? null : freezeStatus === 2,
         });
     }
+
+    /**
+     * @returns {proto.ITokenRelationship}
+     */
+    _toProtobuf() {
+        return {
+            tokenId: this.tokenId._toProtobuf(),
+            symbol: this.symbol,
+            balance: this.balance,
+            kycStatus:
+                this.kycStatus == null ? 0 : this.kycStatus === true ? 2 : 1,
+            freezeStatus:
+                this.freezeStatus == null
+                    ? 0
+                    : this.freezeStatus === true
+                    ? 2
+                    : 1,
+        };
+    }
 }

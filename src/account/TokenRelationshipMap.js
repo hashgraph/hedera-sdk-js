@@ -1,6 +1,6 @@
 import TokenId from "../token/TokenId.js";
 import TokenRelationship from "./TokenRelationship.js";
-import ObjectMap from "./ObjectMap.js";
+import ObjectMap from "../ObjectMap.js";
 
 /**
  * @namespace proto
@@ -39,5 +39,19 @@ export default class TokenRelationshipMap extends ObjectMap {
         }
 
         return tokenRelationships;
+    }
+
+    /**
+     * @returns {proto.ITokenRelationship[]}
+     */
+    _toProtobuf() {
+        const list = [];
+
+        // eslint-ignore-next-line @typescript-eslint/no-unused-vars
+        for (const [_, relationship] of this) {
+            list.push(relationship._toProtobuf());
+        }
+
+        return list;
     }
 }

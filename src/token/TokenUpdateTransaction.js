@@ -30,15 +30,15 @@ export default class TokenUpdateTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {TokenId | string} [props.tokenId]
-     * @param {string} [props.name]
-     * @param {string} [props.symbol]
-     * @param {AccountId | string} [props.treasury]
+     * @param {string} [props.tokenName]
+     * @param {string} [props.tokenSymbol]
+     * @param {AccountId | string} [props.treasuryAccountId]
      * @param {Key} [props.adminKey]
      * @param {Key} [props.kycKey]
      * @param {Key} [props.freezeKey]
      * @param {Key} [props.wipeKey]
      * @param {Key} [props.supplyKey]
-     * @param {AccountId | string} [props.autoRenewAccount]
+     * @param {AccountId | string} [props.autoRenewAccountId]
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      */
@@ -55,19 +55,19 @@ export default class TokenUpdateTransaction extends Transaction {
          * @private
          * @type {?string}
          */
-        this._name = null;
+        this._tokenName = null;
 
         /**
          * @private
          * @type {?string}
          */
-        this._symbol = null;
+        this._tokenSymbol = null;
 
         /**
          * @private
          * @type {?AccountId}
          */
-        this._treasury = null;
+        this._treasuryAccountId = null;
 
         /**
          * @private
@@ -103,7 +103,7 @@ export default class TokenUpdateTransaction extends Transaction {
          * @private
          * @type {?AccountId}
          */
-        this._autoRenewAccount = null;
+        this._autoRenewAccountId = null;
 
         /**
          * @private
@@ -121,16 +121,16 @@ export default class TokenUpdateTransaction extends Transaction {
             this.setTokenId(props.tokenId);
         }
 
-        if (props.name != null) {
-            this.setName(props.name);
+        if (props.tokenName != null) {
+            this.setTokenName(props.tokenName);
         }
 
-        if (props.symbol != null) {
-            this.setSymbol(props.symbol);
+        if (props.tokenSymbol != null) {
+            this.setTokenSymbol(props.tokenSymbol);
         }
 
-        if (props.treasury != null) {
-            this.setTreasury(props.treasury);
+        if (props.treasuryAccountId != null) {
+            this.setTreasuryAccountId(props.treasuryAccountId);
         }
 
         if (props.adminKey != null) {
@@ -153,8 +153,8 @@ export default class TokenUpdateTransaction extends Transaction {
             this.setsupplyKey(props.supplyKey);
         }
 
-        if (props.autoRenewAccount != null) {
-            this.setAutoRenewAccount(props.autoRenewAccount);
+        if (props.autoRenewAccountId != null) {
+            this.setAutoRenewAccount(props.autoRenewAccountId);
         }
 
         if (props.expirationTime != null) {
@@ -179,9 +179,9 @@ export default class TokenUpdateTransaction extends Transaction {
                 update.token != null
                     ? TokenId._fromProtobuf(update.token)
                     : undefined,
-            name: update.name != null ? update.name : undefined,
-            symbol: update.symbol != null ? update.symbol : undefined,
-            treasury:
+            tokenName: update.name != null ? update.name : undefined,
+            tokenSymbol: update.symbol != null ? update.symbol : undefined,
+            treasuryAccountId:
                 update.treasury != null
                     ? AccountId._fromProtobuf(update.treasury)
                     : undefined,
@@ -205,7 +205,7 @@ export default class TokenUpdateTransaction extends Transaction {
                 update.supplyKey != null
                     ? keyFromProtobuf(update.supplyKey)
                     : undefined,
-            autoRenewAccount:
+            autoRenewAccountId:
                 update.autoRenewAccount != null
                     ? AccountId._fromProtobuf(update.autoRenewAccount)
                     : undefined,
@@ -243,16 +243,16 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {?string}
      */
     get name() {
-        return this._name;
+        return this._tokenName;
     }
 
     /**
      * @param {string} name
      * @returns {this}
      */
-    setName(name) {
+    setTokenName(name) {
         this._requireNotFrozen();
-        this._name = name;
+        this._tokenName = name;
 
         return this;
     }
@@ -261,16 +261,16 @@ export default class TokenUpdateTransaction extends Transaction {
      * @returns {?string}
      */
     get symbol() {
-        return this._symbol;
+        return this._tokenSymbol;
     }
 
     /**
      * @param {string} symbol
      * @returns {this}
      */
-    setSymbol(symbol) {
+    setTokenSymbol(symbol) {
         this._requireNotFrozen();
-        this._symbol = symbol;
+        this._tokenSymbol = symbol;
 
         return this;
     }
@@ -278,17 +278,17 @@ export default class TokenUpdateTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    get treasury() {
-        return this._treasury;
+    get treasuryAccountId() {
+        return this._treasuryAccountId;
     }
 
     /**
      * @param {AccountId | string} id
      * @returns {this}
      */
-    setTreasury(id) {
+    setTreasuryAccountId(id) {
         this._requireNotFrozen();
-        this._treasury =
+        this._treasuryAccountId =
             id instanceof AccountId ? id : AccountId.fromString(id);
 
         return this;
@@ -406,8 +406,8 @@ export default class TokenUpdateTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    get autoRenewAccount() {
-        return this._autoRenewAccount;
+    get autoRenewAccountId() {
+        return this._autoRenewAccountId;
     }
 
     /**
@@ -416,7 +416,7 @@ export default class TokenUpdateTransaction extends Transaction {
      */
     setAutoRenewAccount(id) {
         this._requireNotFrozen();
-        this._autoRenewAccount =
+        this._autoRenewAccountId =
             id instanceof AccountId ? id : AccountId.fromString(id);
 
         return this;
@@ -476,7 +476,9 @@ export default class TokenUpdateTransaction extends Transaction {
             name: this.name,
             symbol: this.symbol,
             treasury:
-                this._treasury != null ? this._treasury._toProtobuf() : null,
+                this._treasuryAccountId != null
+                    ? this._treasuryAccountId._toProtobuf()
+                    : null,
             adminKey:
                 this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
             kycKey: this._kycKey != null ? keyToProtobuf(this._kycKey) : null,
@@ -487,8 +489,8 @@ export default class TokenUpdateTransaction extends Transaction {
             supplyKey:
                 this._supplyKey != null ? keyToProtobuf(this._supplyKey) : null,
             autoRenewAccount:
-                this._autoRenewAccount != null
-                    ? this._autoRenewAccount._toProtobuf()
+                this._autoRenewAccountId != null
+                    ? this._autoRenewAccountId._toProtobuf()
                     : null,
             expiry:
                 this._expirationTime != null

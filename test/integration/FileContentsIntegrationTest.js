@@ -28,7 +28,7 @@ describe("FileContents", function () {
 
         const contents = await new FileContentsQuery()
             .setFileId(file)
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(1))
             .execute(client);
 
@@ -39,7 +39,7 @@ describe("FileContents", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
     });

@@ -33,7 +33,7 @@ describe("ContractUpdate", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -52,7 +52,7 @@ describe("ContractUpdate", function () {
         let contract = receipt.contractId;
 
         let info = await new ContractInfoQuery()
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .execute(client);
@@ -74,7 +74,7 @@ describe("ContractUpdate", function () {
         await (
             await new ContractUpdateTransaction()
                 .setContractId(contract)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .setContractMemo("[e2e::ContractUpdateTransaction]")
                 .setMaxTransactionFee(new Hbar(5))
                 .execute(client)
@@ -82,7 +82,7 @@ describe("ContractUpdate", function () {
 
         info = await new ContractInfoQuery()
             .setContractId(contract)
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(5))
             .execute(client);
 
@@ -103,14 +103,14 @@ describe("ContractUpdate", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
     });

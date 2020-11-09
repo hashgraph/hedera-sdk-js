@@ -21,7 +21,6 @@ export { default as ContractId } from "./contract/ContractId.js";
 export { default as ContractInfo } from "./contract/ContractInfo.js";
 export { default as ContractInfoQuery } from "./contract/ContractInfoQuery.js";
 export { default as ContractLogInfo } from "./contract/ContractLogInfo.js";
-export { default as ContractRecordsQuery } from "./contract/ContractRecordsQuery.js";
 export { default as ContractUpdateTranscation } from "./contract/ContractUpdateTranscation.js";
 export { default as ExchangeRate } from "./ExchangeRate.js";
 export { default as FileAppendTransaction } from "./file/FileAppendTransaction.js";

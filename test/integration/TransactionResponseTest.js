@@ -33,7 +33,7 @@ describe("TransactionResponse", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountId(transaction.nodeId)
+                    .setNodeAccountIds([transaction.nodeId])
                     .setTransferAccountId(operatorId)
                     .freezeWith(client)
                     .sign(key)

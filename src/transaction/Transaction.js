@@ -11,6 +11,7 @@ import {
     Transaction as ProtoTransaction,
     TransactionBody as ProtoTransactionBody,
 } from "@hashgraph/proto";
+import BytesMap from "../BytesMap.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -441,28 +442,49 @@ export default class Transaction extends Executable {
      * @returns {Uint8Array}
      */
     toBytes() {
-        let tx;
+        this._requireFrozen();
+        let writer;
 
-        // return a partial transaction _or_ return exactly one
-        // frozen transaction
-
-        if (!this._isFrozen()) {
-            tx = this._makeTransaction(null);
-        } else {
-            this._requireExactlyOneFrozen();
-
-            tx = this._transactions[0];
+        for (const nodeAccountId of this._nodeIds) {
+            const tx = this._makeTransaction(nodeAccountId);
+            writer = ProtoTransaction.encode(tx, writer).ldelim();
         }
 
-        return ProtoTransaction.encode(tx).finish();
+        return writer == null ? new Uint8Array() : writer.finish();
+    }
+
+    /**
+     * @returns {BytesMap}
+     */
+    toBytesPerNode() {
+        this._requireFrozen();
+
+        const map = new BytesMap();
+
+        for (const nodeAccountId of this._nodeIds) {
+            const tx = this._makeTransaction(nodeAccountId);
+            map._set(nodeAccountId, ProtoTransaction.encode(tx).finish());
+        }
+
+        return map;
+    }
+
+    /**
+     * @returns {Promise<Uint8Array>}
+     */
+    get transactionHash() {
+        this._requireFrozen();
+
+        const nodeAccountId = this._nodeIds[0];
+        const tx = this._makeTransaction(nodeAccountId);
+        return sha384.digest(ProtoTransaction.encode(tx).finish());
     }
 
     /**
      * @returns {Promise<TransactionHashMap>}
      */
-    get transactionHash() {
-        this._requireExactlyOneFrozen();
-
+    get transactionHashPerNode() {
+        this._requireFrozen();
         return TransactionHashMap._fromTransaction(this);
     }
 
@@ -640,16 +662,10 @@ export default class Transaction extends Executable {
     /**
      * @private
      */
-    _requireExactlyOneFrozen() {
+    _requireFrozen() {
         if (!this._isFrozen()) {
             throw new Error(
                 "transaction must have been frozen before calculating the hash will be stable, try calling `freeze`"
-            );
-        }
-
-        if (this._transactions.length !== 1) {
-            throw new Error(
-                "transaction must have an explicit node ID set, try calling `setNodeAccountIds`"
             );
         }
     }

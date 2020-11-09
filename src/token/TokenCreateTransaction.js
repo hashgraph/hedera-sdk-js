@@ -30,18 +30,18 @@ import Duration from "../Duration.js";
 export default class TokenCreateTransaction extends Transaction {
     /**
      * @param {object} [props]
-     * @param {string} [props.name]
-     * @param {string} [props.symbol]
+     * @param {string} [props.tokenName]
+     * @param {string} [props.tokenSymbol]
      * @param {Long | number} [props.decimals]
      * @param {Long | number} [props.initialSupply]
-     * @param {AccountId | string} [props.treasury]
+     * @param {AccountId | string} [props.treasuryAccountId]
      * @param {Key} [props.adminKey]
      * @param {Key} [props.kycKey]
      * @param {Key} [props.freezeKey]
      * @param {Key} [props.wipeKey]
      * @param {Key} [props.supplyKey]
      * @param {boolean} [props.freezeDefault]
-     * @param {AccountId | string} [props.autoRenewAccount]
+     * @param {AccountId | string} [props.autoRenewAccountId]
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      */
@@ -52,13 +52,13 @@ export default class TokenCreateTransaction extends Transaction {
          * @private
          * @type {?string}
          */
-        this._name = null;
+        this._tokenName = null;
 
         /**
          * @private
          * @type {?string}
          */
-        this._symbol = null;
+        this._tokenSymbol = null;
 
         /**
          * @private
@@ -76,7 +76,7 @@ export default class TokenCreateTransaction extends Transaction {
          * @private
          * @type {?AccountId}
          */
-        this._treasury = null;
+        this._treasuryAccountId = null;
 
         /**
          * @private
@@ -118,7 +118,7 @@ export default class TokenCreateTransaction extends Transaction {
          * @private
          * @type {?AccountId}
          */
-        this._autoRenewAccount = null;
+        this._autoRenewAccountId = null;
 
         /**
          * @private
@@ -132,12 +132,12 @@ export default class TokenCreateTransaction extends Transaction {
          */
         this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
 
-        if (props.name != null) {
-            this.setName(props.name);
+        if (props.tokenName != null) {
+            this.setTokenName(props.tokenName);
         }
 
-        if (props.symbol != null) {
-            this.setSymbol(props.symbol);
+        if (props.tokenSymbol != null) {
+            this.setTokenSymbol(props.tokenSymbol);
         }
 
         if (props.decimals != null) {
@@ -148,8 +148,8 @@ export default class TokenCreateTransaction extends Transaction {
             this.setInitialSupply(props.initialSupply);
         }
 
-        if (props.treasury != null) {
-            this.setTreasury(props.treasury);
+        if (props.treasuryAccountId != null) {
+            this.setTreasuryAccountId(props.treasuryAccountId);
         }
 
         if (props.adminKey != null) {
@@ -176,8 +176,8 @@ export default class TokenCreateTransaction extends Transaction {
             this.setFreezeDefault(props.freezeDefault);
         }
 
-        if (props.autoRenewAccount != null) {
-            this.setAutoRenewAccount(props.autoRenewAccount);
+        if (props.autoRenewAccountId != null) {
+            this.setAutoRenewAccount(props.autoRenewAccountId);
         }
 
         if (props.expirationTime != null) {
@@ -198,12 +198,12 @@ export default class TokenCreateTransaction extends Transaction {
         const create = /** @type {proto.ITokenCreateTransactionBody} */ (body.tokenCreation);
 
         return new TokenCreateTransaction({
-            name: create.name != null ? create.name : undefined,
-            symbol: create.symbol != null ? create.symbol : undefined,
+            tokenName: create.name != null ? create.name : undefined,
+            tokenSymbol: create.symbol != null ? create.symbol : undefined,
             decimals: create.decimals != null ? create.decimals : undefined,
             initialSupply:
                 create.initialSupply != null ? create.initialSupply : undefined,
-            treasury:
+            treasuryAccountId:
                 create.treasury != null
                     ? AccountId._fromProtobuf(create.treasury)
                     : undefined,
@@ -229,7 +229,7 @@ export default class TokenCreateTransaction extends Transaction {
                     : undefined,
             freezeDefault:
                 create.freezeDefault != null ? create.freezeDefault : undefined,
-            autoRenewAccount:
+            autoRenewAccountId:
                 create.autoRenewAccount != null
                     ? AccountId._fromProtobuf(create.autoRenewAccount)
                     : undefined,
@@ -247,17 +247,17 @@ export default class TokenCreateTransaction extends Transaction {
     /**
      * @returns {?string}
      */
-    get name() {
-        return this._name;
+    get tokenName() {
+        return this._tokenName;
     }
 
     /**
      * @param {string} name
      * @returns {this}
      */
-    setName(name) {
+    setTokenName(name) {
         this._requireNotFrozen();
-        this._name = name;
+        this._tokenName = name;
 
         return this;
     }
@@ -265,17 +265,17 @@ export default class TokenCreateTransaction extends Transaction {
     /**
      * @returns {?string}
      */
-    get symbol() {
-        return this._symbol;
+    get tokenSymbol() {
+        return this._tokenSymbol;
     }
 
     /**
      * @param {string} symbol
      * @returns {this}
      */
-    setSymbol(symbol) {
+    setTokenSymbol(symbol) {
         this._requireNotFrozen();
-        this._symbol = symbol;
+        this._tokenSymbol = symbol;
 
         return this;
     }
@@ -323,17 +323,17 @@ export default class TokenCreateTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    get treasury() {
-        return this._treasury;
+    get treasuryAccountId() {
+        return this._treasuryAccountId;
     }
 
     /**
      * @param {AccountId | string} id
      * @returns {this}
      */
-    setTreasury(id) {
+    setTreasuryAccountId(id) {
         this._requireNotFrozen();
-        this._treasury =
+        this._treasuryAccountId =
             id instanceof AccountId ? id : AccountId.fromString(id);
 
         return this;
@@ -469,8 +469,8 @@ export default class TokenCreateTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    get autoRenewAccount() {
-        return this._autoRenewAccount;
+    get autoRenewAccountId() {
+        return this._autoRenewAccountId;
     }
 
     /**
@@ -479,7 +479,7 @@ export default class TokenCreateTransaction extends Transaction {
      */
     setAutoRenewAccount(id) {
         this._requireNotFrozen();
-        this._autoRenewAccount =
+        this._autoRenewAccountId =
             id instanceof AccountId ? id : AccountId.fromString(id);
 
         return this;
@@ -535,12 +535,14 @@ export default class TokenCreateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            name: this.name,
-            symbol: this.symbol,
+            name: this.tokenName,
+            symbol: this.tokenSymbol,
             decimals: this.decimals != null ? this.decimals.toInt() : null,
             initialSupply: this.initialSupply,
             treasury:
-                this._treasury != null ? this._treasury._toProtobuf() : null,
+                this._treasuryAccountId != null
+                    ? this._treasuryAccountId._toProtobuf()
+                    : null,
             adminKey:
                 this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
             kycKey: this._kycKey != null ? keyToProtobuf(this._kycKey) : null,
@@ -552,8 +554,8 @@ export default class TokenCreateTransaction extends Transaction {
                 this._supplyKey != null ? keyToProtobuf(this._supplyKey) : null,
             freezeDefault: this._freezeDefault,
             autoRenewAccount:
-                this._autoRenewAccount != null
-                    ? this._autoRenewAccount._toProtobuf()
+                this._autoRenewAccountId != null
+                    ? this._autoRenewAccountId._toProtobuf()
                     : null,
             expiry:
                 this._expirationTime != null

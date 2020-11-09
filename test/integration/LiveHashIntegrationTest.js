@@ -32,7 +32,7 @@ describe("LiveHash", function () {
             .execute(client);
 
         let receipt = await new TransactionReceiptQuery()
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setTransactionId(response.transactionId)
             .execute(client);
 
@@ -45,7 +45,7 @@ describe("LiveHash", function () {
         try {
             await new LiveHashAddTransaction()
                 .setAccountId(account)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .setDuration(Long.fromInt(30))
                 .setHash(_hash)
                 .setKeys(key)
@@ -60,7 +60,7 @@ describe("LiveHash", function () {
         try {
             await new LiveHashDeleteTransaction()
                 .setAccountId(account)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .setHash(_hash)
                 .execute(client);
         } catch (_) {
@@ -73,7 +73,7 @@ describe("LiveHash", function () {
         try {
             await new LiveHashQuery()
                 .setAccountId(account)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .setHash(_hash)
                 .execute(client);
         } catch (_) {
@@ -87,7 +87,7 @@ describe("LiveHash", function () {
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
                     .setMaxTransactionFee(new Hbar(1))
-                    .setNodeAccountId(response.nodeId)
+                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)

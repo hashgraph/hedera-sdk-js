@@ -25,7 +25,7 @@ describe("ContractBytecode", function () {
             .execute(client);
 
         let receipt = await new TransactionReceiptQuery()
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setTransactionId(response.transactionId)
             .execute(client);
 
@@ -38,7 +38,7 @@ describe("ContractBytecode", function () {
         receipt = await (
             await new ContractCreateTransaction()
                 .setAdminKey(operatorKey)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .setGas(2000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
@@ -58,7 +58,7 @@ describe("ContractBytecode", function () {
         const contract = receipt.contractId;
 
         const bytecode = await new ContractByteCodeQuery()
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(2))
             .execute(client);
@@ -68,14 +68,14 @@ describe("ContractBytecode", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
     });

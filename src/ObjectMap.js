@@ -1,6 +1,6 @@
 /**
  * @template T
- * @typedef {import("../EntityId.js").default<T>} EntityId<T>
+ * @typedef {import("./EntityId.js").default<T>} EntityId<T>
  */
 
 /**

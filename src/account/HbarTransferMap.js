@@ -1,6 +1,6 @@
 import AccountId from "./AccountId.js";
 import Hbar from "../Hbar.js";
-import ObjectMap from "./ObjectMap.js";
+import ObjectMap from "../ObjectMap.js";
 
 /**
  * @namespace proto

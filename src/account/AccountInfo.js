@@ -225,6 +225,10 @@ export default class AccountInfo {
             expirationTime: this.expirationTime._toProtobuf(),
             autoRenewPeriod: this.autoRenewPeriod._toProtobuf(),
             liveHashes: this.liveHashes.map((hash) => hash._toProtobuf()),
+            tokenRelationships:
+                this.tokenRelationships != null
+                    ? this.tokenRelationships._toProtobuf()
+                    : null,
         };
     }
 

@@ -27,7 +27,7 @@ describe("FileCreate", function () {
 
         let info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(client);
 
@@ -43,7 +43,7 @@ describe("FileCreate", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
     });

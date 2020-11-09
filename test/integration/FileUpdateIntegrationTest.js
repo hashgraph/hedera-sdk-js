@@ -28,7 +28,7 @@ describe("FileUpdate", function () {
 
         let info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(client);
 
@@ -43,7 +43,7 @@ describe("FileUpdate", function () {
 
         await (
             await new FileUpdateTransaction()
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .setFileId(file)
                 .setContents("[e2e::FileUpdateTransaction]")
                 .setMaxTransactionFee(new Hbar(5))
@@ -52,7 +52,7 @@ describe("FileUpdate", function () {
 
         info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(client);
 
@@ -68,7 +68,7 @@ describe("FileUpdate", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
     });

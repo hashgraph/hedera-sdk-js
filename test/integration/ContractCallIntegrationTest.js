@@ -35,7 +35,7 @@ describe("ContractCallIntegration", function () {
 
         receipt = await (
             await new ContractCreateTransaction()
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .setAdminKey(operatorKey)
                 .setGas(2000)
                 .setConstructorParameters(
@@ -56,7 +56,7 @@ describe("ContractCallIntegration", function () {
         const contract = receipt.contractId;
 
         const callQuery = new ContractCallQuery()
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .setGas(2000)
@@ -71,7 +71,7 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractExecuteTransaction()
                 .setContractId(contract)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .setGas(10000)
                 .setFunction(
                     "setMessage",
@@ -83,7 +83,7 @@ describe("ContractCallIntegration", function () {
 
         result = await new ContractCallQuery()
             .setContractId(contract)
-            .setNodeAccountId(response.nodeId)
+            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(5))
             .setGas(2000)
             .setFunction("getMessage")
@@ -94,14 +94,14 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountId(response.nodeId)
+                .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
     });

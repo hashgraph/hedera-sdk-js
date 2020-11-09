@@ -1,5 +1,5 @@
 import AccountId from "../account/AccountId.js";
-import ObjectMap from "./ObjectMap.js";
+import ObjectMap from "../ObjectMap.js";
 
 /**
  * @augments {ObjectMap<AccountId, Long>}

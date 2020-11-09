@@ -153,10 +153,6 @@ export default class Query extends Executable {
      * @returns {Promise<Hbar>}
      */
     getCost(client) {
-        if (this._nodeIds.length == 0) {
-            this._setPaymentNodeIds(client);
-        }
-
         if (COST_QUERY.length != 1) {
             throw new Error("CostQuery has not been loaded yet");
         }
@@ -186,51 +182,11 @@ export default class Query extends Executable {
     }
 
     /**
-     * @private
-     * @template ChannelT
-     * @template MirrorChannelT
-     * @param {import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
-     * @returns {void}
-     */
-    _setPaymentNodeIds(client) {
-        // generate payment transactions if one was
-        // not set and payment is required
-
-        const operator = client._operator;
-
-        if (operator == null) {
-            throw new Error(
-                "`client` must have an `operator` or an explicit payment transaction must be provided"
-            );
-        }
-
-        this._paymentTransactions = [];
-        this._paymentTransactionId = TransactionId.generate(operator.accountId);
-
-        // If nodeAccountIds have not been set via `setNodeAccountIds()` method, then
-        // ask the client for the recommend list of nodeAccountIds
-        if (this._nodeIds.length == 0) {
-            this._nodeIds = client._getNodeAccountIdsForExecute();
-        }
-    }
-
-    /**
      * @template MirrorChannelT
      * @param {import("../client/Client.js").default<Channel, MirrorChannelT>} client
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
-        if (this._nodeIds.length == 0) {
-            this._setPaymentNodeIds(client);
-        }
-
-        if (
-            this._paymentTransactions.length != 0 ||
-            !this._isPaymentRequired()
-        ) {
-            return;
-        }
-
         const operator = client._operator;
 
         if (operator == null) {
@@ -239,20 +195,32 @@ export default class Query extends Executable {
             );
         }
 
-        // let cost = new Hbar(2);
+        if (this._nodeIds.length == 0) {
+            this._nodeIds = client._getNodeAccountIdsForExecute();
+        }
+
+        this._paymentTransactionId = TransactionId.generate(operator.accountId);
+
         let cost =
             this._queryPayment != null
                 ? this._queryPayment
                 : client.maxQueryPayment;
 
-        if (this._queryPayment == null) {
-            const actualCost = await this.getCost(client);
+        if (
+            this._paymentTransactions.length != 0 ||
+            !this._isPaymentRequired()
+        ) {
+            cost = new Hbar(0);
+        } else {
+            if (this._queryPayment == null) {
+                const actualCost = await this.getCost(client);
 
-            if (cost.toTinybars() > actualCost.toTinybars()) {
-                throw new MaxQueryPaymentExceeded(cost, actualCost);
+                if (cost.toTinybars() > actualCost.toTinybars()) {
+                    throw new MaxQueryPaymentExceeded(cost, actualCost);
+                }
+
+                cost = actualCost;
             }
-
-            cost = actualCost;
         }
 
         for (const node of this._nodeIds) {

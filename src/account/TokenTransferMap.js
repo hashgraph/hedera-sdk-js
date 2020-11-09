@@ -1,7 +1,7 @@
 import TokenId from "../token/TokenId.js";
 import AccountId from "../account/AccountId.js";
 import TokenTransferAccountMap from "./TokenTransferAccountMap.js";
-import ObjectMap from "./ObjectMap.js";
+import ObjectMap from "../ObjectMap.js";
 
 /**
  * @namespace proto

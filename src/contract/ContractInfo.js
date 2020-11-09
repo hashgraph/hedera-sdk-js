@@ -6,6 +6,7 @@ import Hbar from "../Hbar.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 import proto from "@hashgraph/proto";
+import TokenRelationshipMap from "../account/TokenRelationshipMap";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
@@ -27,6 +28,8 @@ export default class ContractInfo {
      * @param {Long} props.storage
      * @param {string} props.contractMemo
      * @param {Hbar} props.balance
+     * @param {boolean} props.isDeleted
+     * @param {TokenRelationshipMap} props.tokenRelationships
      */
     constructor(props) {
         /**
@@ -102,6 +105,20 @@ export default class ContractInfo {
          */
         this.balance = props.balance;
 
+        /**
+         * Whether the contract has been deleted
+         *
+         * @readonly
+         */
+        this.isDeleted = props.isDeleted;
+
+        /**
+         * The tokens associated to the contract
+         *
+         * @readonly
+         */
+        this.tokenRelationships = props.tokenRelationships;
+
         Object.freeze(this);
     }
 
@@ -138,6 +155,10 @@ export default class ContractInfo {
                     : Long.ZERO,
             contractMemo: info.memo != null ? info.memo : "",
             balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),
+            isDeleted: /** @type {boolean} */ (info.deleted),
+            tokenRelationships: TokenRelationshipMap._fromProtobuf(
+                info.tokenRelationships != null ? info.tokenRelationships : []
+            ),
         });
     }
 
@@ -160,6 +181,11 @@ export default class ContractInfo {
             storage: this.storage,
             memo: this.contractMemo,
             balance: this.balance.toTinybars(),
+            deleted: this.isDeleted,
+            tokenRelationships:
+                this.tokenRelationships != null
+                    ? this.tokenRelationships._toProtobuf()
+                    : null,
         };
     }
 
