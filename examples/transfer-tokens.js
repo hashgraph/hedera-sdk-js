@@ -11,7 +11,7 @@ const {
     TokenCreateTransaction,
     TokenDeleteTransaction,
     TokenGrantKycTransaction,
-    TokenTransferTransaction,
+    TransferTransaction,
     TokenWipeTransaction,
     TransactionId
 } = require("@hashgraph/sdk");
@@ -49,7 +49,7 @@ async function main() {
 
     let resp = await new AccountCreateTransaction()
         .setKey(newKey.publicKey)
-        .setInitialBalance(new Hbar(1))
+        .setInitialBalance(new Hbar(2))
         .execute(client);
 
     const transactionReceipt = await resp.getReceipt(client);
@@ -59,17 +59,18 @@ async function main() {
 
     resp = await new TokenCreateTransaction()
         .setNodeAccountIds([resp.nodeId])
-        .setName("ffff")
-        .setSymbol("F")
+        .setTokenName("ffff")
+        .setTokenSymbol("F")
         .setDecimals(3)
         .setInitialSupply(1000000)
-        .setTreasury(client.operatorAccountId)
+        .setTreasuryAccountId(client.operatorAccountId)
         .setAdminKey(client.operatorPublicKey)
         .setFreezeKey(client.operatorPublicKey)
         .setWipeKey(client.operatorPublicKey)
         .setKycKey(client.operatorPublicKey)
         .setSupplyKey(client.operatorPublicKey)
         .setFreezeDefault(false)
+        .setMaxTransactionFee(new Hbar(1000))
         .execute(client);
 
     const tokenId = (await resp.getReceipt(client)).tokenId;
@@ -95,10 +96,10 @@ async function main() {
 
     console.log(`Granted KYC for account ${newAccountId} on token ${tokenId}`);
 
-    await (await new TokenTransferTransaction()
+    await (await new TransferTransaction()
         .setNodeAccountIds([resp.nodeId])
-        .addSender(tokenId, client.operatorAccountId, 10)
-        .addRecipient(tokenId, newAccountId, 10)
+        .addTokenTransfer(tokenId, client.operatorAccountId, -10)
+        .addTokenTransfer(tokenId, newAccountId, 10)
         .execute(client))
         .getReceipt(client);
 
@@ -129,6 +130,7 @@ async function main() {
                 .setAccountId(newAccountId)
                 .setTransferAccountId(client.operatorAccountId)
                 .setTransactionId(TransactionId.generate(newAccountId))
+                .setMaxTransactionFee(new Hbar(1))
                 .freezeWith(client)
                 .sign(newKey)
         ).execute(client)

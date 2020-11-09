@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const { Client, AccountInfoQuery, Hbar } = require("@hashgraph/sdk");
+const { Client, AccountInfoQuery, Hbar, AccountId, PrivateKey } = require("@hashgraph/sdk");
 
 async function main() {
     let client;
@@ -29,19 +29,19 @@ async function main() {
     }
 
     const info = await new AccountInfoQuery()
-        .setAccountId("0.0.1001")
+        .setAccountId(client.operatorAccountId)
         .setQueryPayment(new Hbar(1))
         .execute(client);
 
-    console.log(`0.0.1001 info.key                          = ${info.key}`);
+    console.log(`info.key                          = ${info.key}`);
 
     console.log(
-        `0.0.1001 info.isReceiverSignatureRequired  =`,
+        `info.isReceiverSignatureRequired  =`,
         info.isReceiverSignatureRequired
     );
 
     console.log(
-        `0.0.1001 info.expirationTime               = ${info.expirationTime.toDate()}`
+        `info.expirationTime               = ${info.expirationTime.toDate()}`
     );
 }
 

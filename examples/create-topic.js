@@ -4,6 +4,8 @@ const {
     Client,
     TopicCreateTransaction,
     TopicMessageSubmitTransaction,
+    PrivateKey,
+    AccountId,
 } = require("@hashgraph/sdk");
 
 async function main() {
