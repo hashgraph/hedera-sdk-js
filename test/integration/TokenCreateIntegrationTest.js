@@ -1,5 +1,8 @@
-import TokenCreateTransaction from "../src/token/TokenCreateTransaction.js";
-import TokenDeleteTransaction from "../src/token/TokenDeleteTransaction.js";
+import {
+    TokenCreateTransaction,
+    TokenDeleteTransaction,
+    Hbar,
+} from "../src/exports.js";
 import newClient from "./client/index.js";
 
 describe("TokenCreate", function () {
@@ -11,18 +14,18 @@ describe("TokenCreate", function () {
         const operatorKey = client.operatorPublicKey;
 
         const transactionId = await new TokenCreateTransaction()
-            .setName("ffff")
-            .setSymbol("F")
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
             .setDecimals(3)
             .setInitialSupply(1000000)
-            .setTreasury(operatorId)
-            .setAdminKey(operatorKey.publicKey)
-            .setFreezeKey(operatorKey.publicKey)
-            .setWipeKey(operatorKey.publicKey)
-            .setKycKey(operatorKey.publicKey)
-            .setSupplyKey(operatorKey.publicKey)
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(operatorKey)
+            .setFreezeKey(operatorKey)
+            .setWipeKey(operatorKey)
+            .setKycKey(operatorKey)
+            .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setExpirationTime(Date.now() + 7890000)
+            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const tokenId = (await transactionId.getReceipt(client)).tokenId;

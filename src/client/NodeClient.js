@@ -2,12 +2,14 @@ import fs from "fs";
 import util from "util";
 import Client from "./Client.js";
 import NodeChannel from "../channel/NodeChannel.js";
+import MirrorChannel from "../channel/MirrorChannel.js";
 import AccountId from "../account/AccountId.js";
 
 const readFileAsync = util.promisify(fs.readFile);
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
+ * @typedef {import("./Client.js").NetworkName} NetworkName
  */
 
 export const Network = {
@@ -210,10 +212,63 @@ export default class NodeClient extends Client {
     }
 
     /**
+     * @param {{[key: string]: (string | AccountId)} | NetworkName} network
+     * @returns {void}
+     */
+    setNetwork(network) {
+        if (typeof network === "string") {
+            switch (network) {
+                case "previewnet":
+                    this._network.setNetwork(Network.PREVIEWNET);
+                    break;
+                case "testnet":
+                    this._network.setNetwork(Network.TESTNET);
+                    break;
+                case "mainnet":
+                    this._network.setNetwork(Network.MAINNET);
+            }
+        } else {
+            this._network.setNetwork(network);
+        }
+    }
+
+    /**
+     * @param {string[] | string | NetworkName} mirrorNetwork
+     * @returns {void}
+     */
+    setMirrorNetwork(mirrorNetwork) {
+        if (typeof mirrorNetwork === "string") {
+            switch (mirrorNetwork) {
+                case "previewnet":
+                    this._mirrorNetwork.setMirrorNetwork(
+                        MirrorNetwork.PREVIEWNET
+                    );
+                    break;
+                case "testnet":
+                    this._mirrorNetwork.setMirrorNetwork(MirrorNetwork.TESTNET);
+                    break;
+                case "mainnet":
+                    this._mirrorNetwork.setMirrorNetwork(MirrorNetwork.MAINNET);
+            }
+        } else {
+            this._mirrorNetwork.setMirrorNetwork(mirrorNetwork);
+        }
+    }
+
+    /**
      * @override
      * @returns {(address: string) => NodeChannel}
      */
     _createNetworkChannel() {
         return (address) => new NodeChannel(address);
+    }
+
+    /**
+     * @override
+     * @returns {(address: string) => MirrorChannel}
+     */
+    _createMirrorNetworkChannel() {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        return (address) => new MirrorChannel();
     }
 }

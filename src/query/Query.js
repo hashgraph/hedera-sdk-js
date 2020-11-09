@@ -196,7 +196,7 @@ export default class Query extends Executable {
         }
 
         if (this._nodeIds.length == 0) {
-            this._nodeIds = client._getNodeAccountIdsForExecute();
+            this._nodeIds = client._network.getNodeAccountIdsForExecute();
         }
 
         this._paymentTransactionId = TransactionId.generate(operator.accountId);

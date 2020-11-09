@@ -22,7 +22,7 @@ export default class TransactionHashMap extends ObjectMap {
             const nodeAccountId = transaction._nodeIds[i];
             const tx = transaction._transactions[i];
             const hash = await sha384.digest(
-                proto.Transaction.encode(tx).finish()
+                proto.Transaction.encode(tx).ldelim().finish()
             );
 
             hashes._set(nodeAccountId, hash);

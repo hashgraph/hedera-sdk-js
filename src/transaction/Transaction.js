@@ -424,7 +424,7 @@ export default class Transaction extends Executable {
         if (this._nodeIds.length > 0) {
             // Do nothing
         } else if (client != null) {
-            this._nodeIds = client._getNodeAccountIdsForExecute();
+            this._nodeIds = client._network.getNodeAccountIdsForExecute();
         } else {
             throw new Error(
                 "`nodeAccountId` must be set or `client` must be provided with `freezeWith`"

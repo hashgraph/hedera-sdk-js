@@ -4,7 +4,7 @@
  */
 export default class MirrorChannel {
     /**
-     * @protected
+     * @internal
      */
     constructor() {
         // do nothing (for now)

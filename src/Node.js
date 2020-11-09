@@ -1,33 +1,30 @@
+import ManagedNode from "./ManagedNode.js";
+
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
  * @typedef {import("./channel/Channel.js").default} Channel
  */
 
 /**
- * @abstract
  * @template {Channel} ChannelT
+ * @augments {ManagedNode<ChannelT>}
  */
-export default class Node {
+export default class Node extends ManagedNode {
     /**
      * @param {AccountId} accountId
      * @param {string} address
      * @param {(address: string) => ChannelT} channelInitFunction
      */
     constructor(accountId, address, channelInitFunction) {
+        super(address, channelInitFunction);
+
         this.accountId = accountId;
-        this.address = address;
 
         /** @type {number} */
         this.delay = 250;
 
         /** @type {number | null} */
         this.lastUsed = null;
-
-        /** @type {ChannelT | null} */
-        this._channel = null;
-
-        /** @type {(address: string) => ChannelT} */
-        this._channelInitFunction = channelInitFunction;
     }
 
     /**
@@ -68,23 +65,5 @@ export default class Node {
             this.delay -
             Date.now();
         return new Promise((resolve) => setTimeout(resolve, delay));
-    }
-
-    get channel() {
-        if (this._channel != null) {
-            return this._channel;
-        }
-
-        this._channel = this._channelInitFunction(this.address);
-
-        return this._channel;
-    }
-
-    close() {
-        if (this._channel != null) {
-            this._channel.close();
-        }
-
-        this._channel = null;
     }
 }

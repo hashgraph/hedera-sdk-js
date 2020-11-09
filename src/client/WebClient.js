@@ -4,6 +4,7 @@ import AccountId from "../account/AccountId.js";
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
+ * @typedef {import("./Client.js").NetworkName} NetworkName
  */
 
 export const Network = {
@@ -129,6 +130,27 @@ export default class WebClient extends Client {
      */
     static forPreviewnet() {
         return new WebClient({ network: "previewnet" });
+    }
+
+    /**
+     * @param {{[key: string]: (string | AccountId)} | NetworkName} network
+     * @returns {void}
+     */
+    setNetwork(network) {
+        if (typeof network === "string") {
+            switch (network) {
+                case "previewnet":
+                    this._network.setNetwork(Network.PREVIEWNET);
+                    break;
+                case "testnet":
+                    this._network.setNetwork(Network.TESTNET);
+                    break;
+                case "mainnet":
+                    this._network.setNetwork(Network.MAINNET);
+            }
+        } else {
+            this._network.setNetwork(network);
+        }
     }
 
     /**

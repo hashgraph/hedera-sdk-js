@@ -47,7 +47,7 @@ export default class TokenRelationshipMap extends ObjectMap {
     _toProtobuf() {
         const list = [];
 
-        // eslint-ignore-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_, relationship] of this) {
             list.push(relationship._toProtobuf());
         }

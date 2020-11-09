@@ -12,7 +12,7 @@ describe("FileCreate", function () {
         const operatorKey = client.operatorPublicKey;
 
         let response = await new FileCreateTransaction()
-            .setKeys(operatorKey)
+            .setKeys([operatorKey])
             .setContents("[e2e::FileCreateTransaction]")
             .setMaxTransactionFee(new Hbar(5))
             .execute(client);

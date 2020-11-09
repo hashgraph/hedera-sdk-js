@@ -33,11 +33,11 @@ export default class TokenInfo {
      * @param {number} props.decimals;
      * @param {Long} props.totalSupply;
      * @param {AccountId} props.treasury;
-     * @param {Key} props.adminKey;
-     * @param {Key} props.kycKey;
-     * @param {Key} props.freezeKey;
-     * @param {Key} props.wipeKey;
-     * @param {Key} props.supplyKey;
+     * @param {Key | null} props.adminKey;
+     * @param {Key | null} props.kycKey;
+     * @param {Key | null} props.freezeKey;
+     * @param {Key | null} props.wipeKey;
+     * @param {Key | null} props.supplyKey;
      * @param {boolean | null} props.defaultFreezeStatus;
      * @param {boolean | null} props.defaultKycStatus;
      * @param {boolean} props.isDeleted;
@@ -198,17 +198,21 @@ export default class TokenInfo {
             treasury: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (info.treasury)
             ),
-            adminKey: keyFromProtobuf(
-                /** @type {proto.IKey} */ (info.adminKey)
-            ),
-            kycKey: keyFromProtobuf(/** @type {proto.IKey} */ (info.kycKey)),
-            freezeKey: keyFromProtobuf(
-                /** @type {proto.IKey} */ (info.freezeKey)
-            ),
-            wipeKey: keyFromProtobuf(/** @type {proto.IKey} */ (info.wipeKey)),
-            supplyKey: keyFromProtobuf(
-                /** @type {proto.IKey} */ (info.supplyKey)
-            ),
+            adminKey: info.adminKey != null ?
+                keyFromProtobuf(info.adminKey) :
+                null,
+            kycKey: info.kycKey != null ?
+                keyFromProtobuf(info.kycKey) :
+                null,
+            freezeKey: info.freezeKey != null ?
+                keyFromProtobuf(info.freezeKey) :
+                null,
+            wipeKey: info.wipeKey != null ?
+                keyFromProtobuf(info.wipeKey) :
+                null,
+            supplyKey: info.supplyKey != null ?
+                keyFromProtobuf(info.supplyKey) :
+                null,
             defaultFreezeStatus:
                 defaultFreezeStatus === 0 ? null : defaultFreezeStatus == 1,
             defaultKycStatus:
@@ -249,11 +253,11 @@ export default class TokenInfo {
             decimals: this.decimals,
             totalSupply: this.totalSupply,
             treasury: this.treasury._toProtobuf(),
-            adminKey: keyToProtobuf(this.adminKey),
-            kycKey: keyToProtobuf(this.kycKey),
-            freezeKey: keyToProtobuf(this.freezeKey),
-            wipeKey: keyToProtobuf(this.wipeKey),
-            supplyKey: keyToProtobuf(this.supplyKey),
+            adminKey: this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
+            kycKey: this.kycKey != null ? keyToProtobuf(this.kycKey) : null,
+            freezeKey: this.freezeKey != null ? keyToProtobuf(this.freezeKey) : null,
+            wipeKey: this.wipeKey != null ? keyToProtobuf(this.wipeKey) : null,
+            supplyKey: this.supplyKey != null ? keyToProtobuf(this.supplyKey) : null,
             defaultFreezeStatus:
                 this.defaultFreezeStatus == null
                     ? 0

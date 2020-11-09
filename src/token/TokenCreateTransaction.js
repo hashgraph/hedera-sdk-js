@@ -122,9 +122,9 @@ export default class TokenCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Timestamp}
+         * @type {Timestamp}
          */
-        this._expirationTime = null;
+        this._expirationTime = new Timestamp(Date.now() + 7890000, 0);
 
         /**
          * @private
@@ -448,7 +448,7 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?Timestamp}
+     * @returns {Timestamp}
      */
     get expirationTime() {
         return this._expirationTime;
