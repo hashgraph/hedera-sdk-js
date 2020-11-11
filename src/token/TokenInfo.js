@@ -198,21 +198,15 @@ export default class TokenInfo {
             treasury: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (info.treasury)
             ),
-            adminKey: info.adminKey != null ?
-                keyFromProtobuf(info.adminKey) :
-                null,
-            kycKey: info.kycKey != null ?
-                keyFromProtobuf(info.kycKey) :
-                null,
-            freezeKey: info.freezeKey != null ?
-                keyFromProtobuf(info.freezeKey) :
-                null,
-            wipeKey: info.wipeKey != null ?
-                keyFromProtobuf(info.wipeKey) :
-                null,
-            supplyKey: info.supplyKey != null ?
-                keyFromProtobuf(info.supplyKey) :
-                null,
+            adminKey:
+                info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
+            kycKey: info.kycKey != null ? keyFromProtobuf(info.kycKey) : null,
+            freezeKey:
+                info.freezeKey != null ? keyFromProtobuf(info.freezeKey) : null,
+            wipeKey:
+                info.wipeKey != null ? keyFromProtobuf(info.wipeKey) : null,
+            supplyKey:
+                info.supplyKey != null ? keyFromProtobuf(info.supplyKey) : null,
             defaultFreezeStatus:
                 defaultFreezeStatus === 0 ? null : defaultFreezeStatus == 1,
             defaultKycStatus:
@@ -253,11 +247,14 @@ export default class TokenInfo {
             decimals: this.decimals,
             totalSupply: this.totalSupply,
             treasury: this.treasury._toProtobuf(),
-            adminKey: this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
+            adminKey:
+                this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
             kycKey: this.kycKey != null ? keyToProtobuf(this.kycKey) : null,
-            freezeKey: this.freezeKey != null ? keyToProtobuf(this.freezeKey) : null,
+            freezeKey:
+                this.freezeKey != null ? keyToProtobuf(this.freezeKey) : null,
             wipeKey: this.wipeKey != null ? keyToProtobuf(this.wipeKey) : null,
-            supplyKey: this.supplyKey != null ? keyToProtobuf(this.supplyKey) : null,
+            supplyKey:
+                this.supplyKey != null ? keyToProtobuf(this.supplyKey) : null,
             defaultFreezeStatus:
                 this.defaultFreezeStatus == null
                     ? 0

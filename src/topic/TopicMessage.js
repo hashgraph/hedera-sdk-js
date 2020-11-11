@@ -1,5 +1,5 @@
-import Timestamp from "../Timestamp";
-import TopicMessageChunk from "./TopicMessageChunk";
+import Timestamp from "../Timestamp.js";
+import TopicMessageChunk from "./TopicMessageChunk.js";
 import Long from "long";
 
 /**

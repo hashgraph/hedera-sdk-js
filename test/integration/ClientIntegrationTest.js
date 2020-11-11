@@ -1,5 +1,5 @@
 import Hbar from "../src/Hbar.js";
-import newIntegrationClient from "./client/index.js";
+import newClient from "./client/index.js";
 import AccountBalanceQuery from "../src/account/AccountBalanceQuery.js";
 import AccountId from "../src/account/AccountId.js";
 
@@ -7,14 +7,14 @@ describe("ClientIntegration", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = newIntegrationClient().setMaxQueryPayment(new Hbar(2));
+        const client = await newClient();
 
         client.setNetwork({
             "0.testnet.hedera.com:50211": new AccountId(3),
             "1.testnet.hedera.com:50211": new AccountId(4),
         });
 
-        const operatorId = client.getOperatorId();
+        const operatorId = client.operatorAccountId;
         expect(operatorId).to.not.be.null;
 
         await new AccountBalanceQuery()

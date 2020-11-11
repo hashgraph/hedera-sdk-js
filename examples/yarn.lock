@@ -31,10 +31,10 @@
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@^1.0.12":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.12.tgz#89d0b66659eef22ad73ae5fd4db9a310c3520923"
-  integrity sha512-nuaLHaAIoXczJ6X5fC+QOakbK7BChHXnVEODNDN1h33pwjYS1SGKIEDACrWKSwhrjMLoXzP6oJZwq4j4bcyL5w==
+"@hashgraph/proto@^1.0.13":
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.13.tgz#98b6bb49eeeed552db3b577617ec88febb17199a"
+  integrity sha512-G0tap+hhigxJ1ni8E/JMirGB+RrnzAudm3QFFGUPoiKKFx+T+lBX0nO11BG+IjzSoDql6zdfR/sJQoch7Y+AvA==
   dependencies:
     "@hashgraph/protobufjs" "^6.10.1-hashgraph.2"
 
@@ -62,7 +62,7 @@
   dependencies:
     "@grpc/grpc-js" "^1.1.7"
     "@hashgraph/cryptography" "^1.0.6"
-    "@hashgraph/proto" "^1.0.12"
+    "@hashgraph/proto" "^1.0.13"
     bignumber.js "^9.0.1"
     long "^4.0.0"
 

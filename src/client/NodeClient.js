@@ -249,6 +249,9 @@ export default class NodeClient extends Client {
                     break;
                 case "mainnet":
                     this._mirrorNetwork.setMirrorNetwork(MirrorNetwork.MAINNET);
+                    break;
+                default:
+                    this._mirrorNetwork.setMirrorNetwork([mirrorNetwork]);
             }
         } else {
             this._mirrorNetwork.setMirrorNetwork(mirrorNetwork);
@@ -268,7 +271,6 @@ export default class NodeClient extends Client {
      * @returns {(address: string) => MirrorChannel}
      */
     _createMirrorNetworkChannel() {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        return (address) => new MirrorChannel();
+        return (address) => new MirrorChannel(address);
     }
 }

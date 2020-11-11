@@ -1,4 +1,4 @@
-import Timestamp from "../Timestamp";
+import Timestamp from "../Timestamp.js";
 import Long from "long";
 
 /**

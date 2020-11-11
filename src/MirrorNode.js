@@ -1,19 +1,32 @@
-import ManagedNode from "./ManagedNode.js";
-
 /**
  * @typedef {import("./channel/MirrorChannel.js").default} MirrorChannel
  */
 
-/**
- * @template {MirrorChannel} MirrorChannelT
- * @augments {ManagedNode<MirrorChannelT>}
- */
-export default class Node extends ManagedNode {
+export default class MirrorNode {
     /**
      * @param {string} address
-     * @param {(address: string) => MirrorChannelT} channelInitFunction
+     * @param {(address: string) => MirrorChannel} channelInitFunction
      */
     constructor(address, channelInitFunction) {
-        super(address, channelInitFunction);
+        this.address = address;
+        this._channelInitFunction = channelInitFunction;
+    }
+
+    get channel() {
+        if (this._channel != null) {
+            return this._channel;
+        }
+
+        this._channel = this._channelInitFunction(this.address);
+
+        return this._channel;
+    }
+
+    close() {
+        if (this._channel != null) {
+            this._channel.close();
+        }
+
+        this._channel = null;
     }
 }

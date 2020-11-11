@@ -50,7 +50,7 @@ export default class Client {
          * List of mirror network URLs.
          *
          * @internal
-         * @type {MirrorNetwork<MirrorChannelT>}
+         * @type {MirrorNetwork}
          */
         this._mirrorNetwork = new MirrorNetwork(
             this._createMirrorNetworkChannel()
