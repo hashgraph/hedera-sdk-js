@@ -27,3 +27,5 @@ export const TransactionBody = proto.TransactionBody;
 export const TransactionID = proto.TransactionID;
 export const TransactionReceipt = proto.TransactionReceipt;
 export const TransactionRecord = proto.TransactionRecord;
+export const ConsensusTopicResponse = proto.ConsensusTopicResponse;
+export const ConsensusTopicQuery = proto.ConsensusTopicQuery;

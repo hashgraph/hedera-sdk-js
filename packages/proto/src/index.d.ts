@@ -67,7 +67,10 @@ import IConsensusGetTopicInfoResponse = proto.IConsensusGetTopicInfoResponse;
 import IConsensusSubmitMessageTransactionBody = proto.IConsensusSubmitMessageTransactionBody;
 import IConsensusTopicInfo = proto.IConsensusTopicInfo;
 import IConsensusTopicQuery = proto.IConsensusTopicQuery;
+import ConsensusTopicQuery = proto.ConsensusTopicQuery;
+import IConsensusMessageChunkInfo = proto.IConsensusMessageChunkInfo;
 import IConsensusTopicResponse = proto.IConsensusTopicResponse;
+import ConsensusTopicResponse = proto.ConsensusTopicResponse;
 import IConsensusUpdateTopicTransactionBody = proto.IConsensusUpdateTopicTransactionBody;
 import IContractCreateTransactionBody = proto.IContractCreateTransactionBody;
 import IContractDeleteTransactionBody = proto.IContractDeleteTransactionBody;
@@ -160,7 +163,10 @@ export {
     IConsensusSubmitMessageTransactionBody,
     IConsensusTopicInfo,
     IConsensusTopicQuery,
+    ConsensusTopicQuery,
     IConsensusTopicResponse,
+    IConsensusMessageChunkInfo,
+    ConsensusTopicResponse,
     IConsensusUpdateTopicTransactionBody,
     IContractCreateTransactionBody,
     IContractDeleteTransactionBody,
