@@ -12,7 +12,7 @@ import {
     TransactionBody as ProtoTransactionBody,
 } from "@hashgraph/proto";
 import AccountId from "../account/AccountId.js";
-import $protobuf from "protobufjs/minimal.js";
+import $protobuf from "@hashgraph/protobufjs/minimal.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
