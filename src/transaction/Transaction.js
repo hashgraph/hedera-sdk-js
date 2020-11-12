@@ -12,9 +12,7 @@ import {
     TransactionBody as ProtoTransactionBody,
 } from "@hashgraph/proto";
 import AccountId from "../account/AccountId.js";
-
-// eslint-disable-next-line node/no-extraneous-import
-import { Reader } from "protobufjs";
+import $protobuf from "protobufjs/minimal.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -146,7 +144,7 @@ export default class Transaction extends Executable {
         /** @type {Map<string, Map<AccountId, proto.ITransaction>>} */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const transactions = new Map();
-        const reader = new Reader(bytes);
+        const reader = new $protobuf.Reader(bytes);
         let first;
 
         // eslint-disable-next-line no-constant-condition
