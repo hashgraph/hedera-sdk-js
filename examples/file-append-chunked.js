@@ -5,7 +5,6 @@ const {
     FileContentsQuery,
     PrivateKey,
     AccountId,
-    FileId,
     Hbar
 } = require("@hashgraph/sdk");
 

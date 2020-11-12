@@ -316,18 +316,18 @@ export default class FileAppendTransaction extends Transaction {
      * @returns {proto.IFileAppendTransactionBody}
      */
     _makeTransactionData() {
-        // const length = this._contents != null ? this._contents.length : 0;
-        // let endIndex = this._startIndex + CHUNK_SIZE;
-        // if (endIndex > length) {
-        //     endIndex = length;
-        // }
+        const length = this._contents != null ? this._contents.length : 0;
+        let endIndex = this._startIndex + CHUNK_SIZE;
+        if (endIndex > length) {
+            endIndex = length;
+        }
 
         return {
             fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
-            contents: this._contents,
-                // this._contents != null
-                //     ? this._contents.subarray(this._startIndex, endIndex)
-                //     : null,
+            contents:
+                this._contents != null
+                    ? this._contents.subarray(this._startIndex, endIndex)
+                    : null,
         };
     }
 }
