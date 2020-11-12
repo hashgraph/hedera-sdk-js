@@ -43,7 +43,7 @@ export default class TokenAssociateTransaction extends Transaction {
         this._accountId = null;
 
         if (props.tokenIds != null) {
-            this.setTokenIds(...props.tokenIds);
+            this.setTokenIds(props.tokenIds);
         }
 
         if (props.accountId != null) {
@@ -89,7 +89,7 @@ export default class TokenAssociateTransaction extends Transaction {
      * @param {(TokenId | string)[]} tokenIds
      * @returns {this}
      */
-    setTokenIds(...tokenIds) {
+    setTokenIds(tokenIds) {
         this._requireNotFrozen();
         this._tokenIds = tokenIds.map((tokenId) =>
             tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId)
