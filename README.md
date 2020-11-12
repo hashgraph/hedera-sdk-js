@@ -17,8 +17,6 @@ $ yarn add @hashgraph/sdk
 
 ## Usage
 
-_to be written_
-
 See [examples](./examples).
 
 ## Contributing to this Project
