@@ -541,18 +541,18 @@ export default class Transaction extends Executable {
     /**
      * @returns {Promise<Uint8Array>}
      */
-    get transactionHash() {
+    getTransactionHash() {
         this._requireFrozen();
 
         return sha384.digest(
-            ProtoTransaction.encode(this._transactions[0]).ldelim().finish()
+            ProtoTransaction.encode(this._transactions[0]).finish()
         );
     }
 
     /**
      * @returns {Promise<TransactionHashMap>}
      */
-    get transactionHashPerNode() {
+    getTransactionHashPerNode() {
         this._requireFrozen();
         return TransactionHashMap._fromTransaction(this);
     }
