@@ -1,5 +1,5 @@
 import AccountId from "../account/AccountId.js";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import * as sha384 from "../cryptography/sha384.js";
 import ObjectMap from "../ObjectMap.js";
 

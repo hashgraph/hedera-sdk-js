@@ -1,6 +1,6 @@
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 
 /**
  * The client-generated ID for a transaction.

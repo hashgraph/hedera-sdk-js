@@ -1,4 +1,3 @@
-import * as grpc from "@grpc/grpc-js";
 import TransactionId from "../transaction/TransactionId.js";
 import SubscriptionHandle from "./SubscriptionHandle.js";
 import TopicMessage from "./TopicMessage.js";
@@ -10,7 +9,6 @@ import Timestamp from "../Timestamp.js";
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../channel/MirrorChannel.js").default} MirrorChannel
- *
  */
 
 /**
@@ -157,36 +155,44 @@ export default class TopicMessageQuery {
     /**
      * @param {SubscriptionHandle} handle
      * @param {number} attempt
-     * @param {import("../client/Client.js").default<*, MirrorChannel>} client
+     * @param {import("../client/Client.js").default<Channel, MirrorChannel>} client
      * @param {(message: TopicMessage) => void} listener
      * @returns {void}
      */
     _makeServerStreamRequest(handle, attempt, client, listener) {
         /** @type {Map<string, proto.ConsensusTopicResponse[]>} */
+
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const list = new Map();
 
-        const response = client._mirrorNetwork
+        const request = proto.ConsensusTopicQuery.encode({
+            topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
+            consensusStartTime:
+                this._startTime != null ? this._startTime._toProtobuf() : null,
+            consensusEndTime:
+                this._endTime != null ? this._endTime._toProtobuf() : null,
+            limit: this._limit != null ? this._limit : null,
+        }).finish();
+
+        const cancel = client._mirrorNetwork
             .getNextMirrorNode()
-            .channel.makeServerStreamRequest(
-                proto.ConsensusTopicQuery.encode({
-                    topicID:
-                        this._topicId != null
-                            ? this._topicId._toProtobuf()
-                            : null,
-                    consensusStartTime:
-                        this._startTime != null
-                            ? this._startTime._toProtobuf()
-                            : null,
-                    consensusEndTime:
-                        this._endTime != null
-                            ? this._endTime._toProtobuf()
-                            : null,
-                    limit: this._limit != null ? this._limit : null,
-                }).finish()
-            )
-            .on("data", (/** @type {Uint8Array} */ bytes) => {
-                const message = proto.ConsensusTopicResponse.decode(bytes);
+            .channel.makeServerStreamRequest(request, (err, data) => {
+                if (data == null || err != null) {
+                    // NOT_FOUND or UNAVAILABLE
+                    if (attempt < 10 && (err === 5 || err === 14)) {
+                        setTimeout(() => {
+                            this._makeServerStreamRequest(
+                                handle,
+                                attempt + 1,
+                                client,
+                                listener
+                            );
+                        }, 250 * 2 ** attempt);
+                    }
+                    return;
+                }
+
+                const message = proto.ConsensusTopicResponse.decode(data);
 
                 if (message.chunkInfo == null) {
                     listener(TopicMessage._ofSingle(message));
@@ -215,32 +221,8 @@ export default class TopicMessageQuery {
                         listener(TopicMessage._ofMany(responses));
                     }
                 }
-            })
-            .on("status", (/** @type {grpc.StatusObject} */ status) => {
-                if (
-                    attempt < 10 &&
-                    (status.code === grpc.status.NOT_FOUND ||
-                        status.code === grpc.status.UNAVAILABLE)
-                ) {
-                    setTimeout(() => {
-                        this._makeServerStreamRequest(
-                            handle,
-                            attempt + 1,
-                            client,
-                            listener
-                        );
-                    }, 250 * 2 ** attempt);
-                }
-            })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .on("end", (/** @type {grpc.StatusObject} */ status) => {
-                // Do nothing
-            })
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            .on("error", (/** @type {grpc.StatusObject} */ status) => {
-                // Do nothing
             });
 
-        handle._setCall(() => response.cancel());
+        handle._setCall(() => cancel());
     }
 }

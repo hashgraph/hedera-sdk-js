@@ -1,42 +1,25 @@
-import { Client, credentials } from "@grpc/grpc-js";
-
 /**
  * @internal
+ * @abstract
  */
 export default class MirrorChannel {
-    /**
-     * @internal
-     * @param {string} address
-     */
-    constructor(address) {
-        /**
-         * @type {Client}
-         * @private
-         */
-        this._client = new Client(address, credentials.createInsecure());
-    }
-
     /**
      * @abstract
      * @returns {void}
      */
     close() {
-        this._client.close();
+        throw new Error("not implemented");
     }
 
     /**
-     * @override
+     * @abstract
      * @internal
      * @param {Uint8Array} requestData
-     * @returns {import("@grpc/grpc-js").ClientReadableStream<Buffer>}
+     * @param {(error: number?, data: Uint8Array?) => void} callback
+     * @returns {() => void}
      */
-    makeServerStreamRequest(requestData) {
-        return this._client.makeServerStreamRequest(
-            // `/proto.ConsensusService/SubscribeTopic`,
-            "/com.hedera.mirror.api.proto.ConsensusService/subscribeTopic",
-            (value) => value,
-            (value) => value,
-            Buffer.from(requestData)
-        );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    makeServerStreamRequest(requestData, callback) {
+        throw new Error("not implemented");
     }
 }

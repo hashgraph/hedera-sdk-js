@@ -2,7 +2,7 @@ import fs from "fs";
 import util from "util";
 import Client from "./Client.js";
 import NodeChannel from "../channel/NodeChannel.js";
-import MirrorChannel from "../channel/MirrorChannel.js";
+import NodeMirrorChannel from "../channel/NodeMirrorChannel.js";
 import AccountId from "../account/AccountId.js";
 
 const readFileAsync = util.promisify(fs.readFile);
@@ -88,7 +88,7 @@ export const MirrorNetwork = {
 };
 
 /**
- * @augments {Client<NodeChannel, *>}
+ * @augments {Client<NodeChannel, NodeMirrorChannel>}
  */
 export default class NodeClient extends Client {
     /**
@@ -268,9 +268,9 @@ export default class NodeClient extends Client {
 
     /**
      * @override
-     * @returns {(address: string) => MirrorChannel}
+     * @returns {(address: string) => NodeMirrorChannel}
      */
     _createMirrorNetworkChannel() {
-        return (address) => new MirrorChannel(address);
+        return (address) => new NodeMirrorChannel(address);
     }
 }

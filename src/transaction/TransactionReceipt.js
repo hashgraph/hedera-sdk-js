@@ -6,7 +6,7 @@ import TokenId from "../token/TokenId.js";
 import ExchangeRate from "../ExchangeRate.js";
 import Status from "../Status.js";
 import Long from "long";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 
 /**
  * The consensus result for a transaction, which might not be currently known,

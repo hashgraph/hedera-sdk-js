@@ -8,11 +8,11 @@ import Long from "long";
 import * as sha384 from "../cryptography/sha384.js";
 import * as hex from "../encoding/hex.js";
 import {
+    Reader,
     Transaction as ProtoTransaction,
     TransactionBody as ProtoTransactionBody,
 } from "@hashgraph/proto";
 import AccountId from "../account/AccountId.js";
-import $protobuf from "@hashgraph/protobufjs/minimal.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -144,7 +144,7 @@ export default class Transaction extends Executable {
         /** @type {Map<string, Map<AccountId, proto.ITransaction>>} */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const transactions = new Map();
-        const reader = new $protobuf.Reader(bytes);
+        const reader = new Reader(bytes);
         let first;
 
         // eslint-disable-next-line no-constant-condition

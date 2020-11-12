@@ -4,7 +4,7 @@ import Timestamp from "../Timestamp.js";
 import Hbar from "../Hbar.js";
 import Transfer from "../Transfer.js";
 import ContractFunctionResult from "../contract/ContractFunctionResult.js";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 
 /**
  * Response when the client sends the node TransactionGetRecordResponse.

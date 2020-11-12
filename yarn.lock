@@ -344,10 +344,10 @@
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@^1.0.13":
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.13.tgz#98b6bb49eeeed552db3b577617ec88febb17199a"
-  integrity sha512-G0tap+hhigxJ1ni8E/JMirGB+RrnzAudm3QFFGUPoiKKFx+T+lBX0nO11BG+IjzSoDql6zdfR/sJQoch7Y+AvA==
+"@hashgraph/proto@^1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.14.tgz#d47aabc60fdc0bda4c457d94e1d7f3ab054f8e5d"
+  integrity sha512-kBUQv5/0tBD6Wg9b4gqE88gv3s4SEOAeOayF3KthEwlXapA3QenwF2gpNXd0zslEuBKtqHVcybEKMBx6EBQJkA==
   dependencies:
     "@hashgraph/protobufjs" "^6.10.1-hashgraph.2"
 

@@ -63,10 +63,9 @@
         "test:integration:browser:safari": "vite -c vite.config.cjs serve --port 9013 test/ & sleep 2; mocha-webdriver-runner --safari http://localhost:9013/integration.html; kill %1"
     },
     "dependencies": {
-        "@hashgraph/protobufjs": "^6.10.1-hashgraph.2",
         "@grpc/grpc-js": "^1.1.7",
         "@hashgraph/cryptography": "^1.0.6",
-        "@hashgraph/proto": "^1.0.13",
+        "@hashgraph/proto": "^1.0.14",
         "bignumber.js": "^9.0.1",
         "long": "^4.0.0"
     },

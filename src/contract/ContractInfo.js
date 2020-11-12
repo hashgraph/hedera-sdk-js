@@ -5,7 +5,7 @@ import Duration from "../Duration.js";
 import Hbar from "../Hbar.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import TokenRelationshipMap from "../account/TokenRelationshipMap.js";
 
 /**

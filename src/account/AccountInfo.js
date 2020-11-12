@@ -5,7 +5,7 @@ import Timestamp from "../Timestamp.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 import TokenRelationshipMap from "./TokenRelationshipMap.js";
-import proto from "@hashgraph/proto";
+import * as proto from "@hashgraph/proto";
 import Duration from "../Duration.js";
 
 /**
