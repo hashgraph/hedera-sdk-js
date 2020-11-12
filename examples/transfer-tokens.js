@@ -62,15 +62,16 @@ async function main() {
         .setTokenName("ffff")
         .setTokenSymbol("F")
         .setDecimals(3)
-        .setInitialSupply(1000000)
+        .setInitialSupply(100)
         .setTreasuryAccountId(client.operatorAccountId)
+        .setAutoRenewAccount(client.operatorAccountId)
         .setAdminKey(client.operatorPublicKey)
         .setFreezeKey(client.operatorPublicKey)
         .setWipeKey(client.operatorPublicKey)
         .setKycKey(client.operatorPublicKey)
         .setSupplyKey(client.operatorPublicKey)
         .setFreezeDefault(false)
-        .setMaxTransactionFee(new Hbar(1000))
+        .setMaxTransactionFee(new Hbar(1))
         .execute(client);
 
     const tokenId = (await resp.getReceipt(client)).tokenId;
@@ -79,7 +80,7 @@ async function main() {
     await (await (await new TokenAssociateTransaction()
         .setNodeAccountIds([resp.nodeId])
         .setAccountId(newAccountId)
-        .setTokenIds(tokenId)
+        .setTokenIds([tokenId])
         .freezeWith(client)
         .sign(newKey))
         .execute(client))
