@@ -15,6 +15,7 @@ import Transaction, {
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -41,18 +42,23 @@ export default class TokenDeleteTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TokenDeleteTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const deleteToken = /** @type {proto.ITokenDeleteTransactionBody} */ (body.tokenCreation);
 
-        return new TokenDeleteTransaction({
-            tokenId:
-                deleteToken.token != null
-                    ? TokenId._fromProtobuf(deleteToken.token)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TokenDeleteTransaction({
+                tokenId:
+                    deleteToken.token != null
+                        ? TokenId._fromProtobuf(deleteToken.token)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

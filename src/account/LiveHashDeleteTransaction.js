@@ -49,22 +49,27 @@ export default class LiveHashDeleteTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {LiveHashDeleteTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const hashes = /** @type {proto.ICryptoDeleteLiveHashTransactionBody} */ (body.cryptoDeleteLiveHash);
 
-        return new LiveHashDeleteTransaction({
-            hash:
-                hashes.liveHashToDelete != null
-                    ? hashes.liveHashToDelete
-                    : undefined,
-            accountId:
-                hashes.accountOfLiveHash != null
-                    ? AccountId._fromProtobuf(hashes.accountOfLiveHash)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new LiveHashDeleteTransaction({
+                hash:
+                    hashes.liveHashToDelete != null
+                        ? hashes.liveHashToDelete
+                        : undefined,
+                accountId:
+                    hashes.accountOfLiveHash != null
+                        ? AccountId._fromProtobuf(hashes.accountOfLiveHash)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

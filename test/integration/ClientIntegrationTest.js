@@ -1,4 +1,3 @@
-import Hbar from "../src/Hbar.js";
 import newClient from "./client/index.js";
 import AccountBalanceQuery from "../src/account/AccountBalanceQuery.js";
 import AccountId from "../src/account/AccountId.js";

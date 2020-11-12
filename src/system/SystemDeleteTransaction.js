@@ -18,6 +18,7 @@ import Timestamp from "../Timestamp.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 export default class SystemDeleteTransaction extends Transaction {
@@ -63,30 +64,35 @@ export default class SystemDeleteTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {SystemDeleteTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const systemDelete = /** @type {proto.ISystemDeleteTransactionBody} */ (body.systemDelete);
 
-        return new SystemDeleteTransaction({
-            fileId:
-                systemDelete.fileID != null
-                    ? FileId._fromProtobuf(
-                          /** @type {proto.IFileID} */ (systemDelete.fileID)
-                      )
-                    : undefined,
-            contractId:
-                systemDelete.contractID != null
-                    ? ContractId._fromProtobuf(
-                          /** @type {proto.IContractID} */ (systemDelete.contractID)
-                      )
-                    : undefined,
-            expirationTime:
-                systemDelete.expirationTime != null
-                    ? Timestamp._fromProtobuf(systemDelete.expirationTime)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new SystemDeleteTransaction({
+                fileId:
+                    systemDelete.fileID != null
+                        ? FileId._fromProtobuf(
+                              /** @type {proto.IFileID} */ (systemDelete.fileID)
+                          )
+                        : undefined,
+                contractId:
+                    systemDelete.contractID != null
+                        ? ContractId._fromProtobuf(
+                              /** @type {proto.IContractID} */ (systemDelete.contractID)
+                          )
+                        : undefined,
+                expirationTime:
+                    systemDelete.expirationTime != null
+                        ? Timestamp._fromProtobuf(systemDelete.expirationTime)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

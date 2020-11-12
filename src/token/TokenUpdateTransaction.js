@@ -168,56 +168,61 @@ export default class TokenUpdateTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TokenUpdateTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const update = /** @type {proto.ITokenUpdateTransactionBody} */ (body.tokenCreation);
 
-        return new TokenUpdateTransaction({
-            tokenId:
-                update.token != null
-                    ? TokenId._fromProtobuf(update.token)
-                    : undefined,
-            tokenName: update.name != null ? update.name : undefined,
-            tokenSymbol: update.symbol != null ? update.symbol : undefined,
-            treasuryAccountId:
-                update.treasury != null
-                    ? AccountId._fromProtobuf(update.treasury)
-                    : undefined,
-            adminKey:
-                update.adminKey != null
-                    ? keyFromProtobuf(update.adminKey)
-                    : undefined,
-            kycKey:
-                update.kycKey != null
-                    ? keyFromProtobuf(update.kycKey)
-                    : undefined,
-            freezeKey:
-                update.freezeKey != null
-                    ? keyFromProtobuf(update.freezeKey)
-                    : undefined,
-            wipeKey:
-                update.wipeKey != null
-                    ? keyFromProtobuf(update.wipeKey)
-                    : undefined,
-            supplyKey:
-                update.supplyKey != null
-                    ? keyFromProtobuf(update.supplyKey)
-                    : undefined,
-            autoRenewAccountId:
-                update.autoRenewAccount != null
-                    ? AccountId._fromProtobuf(update.autoRenewAccount)
-                    : undefined,
-            expirationTime:
-                update.expiry != null
-                    ? new Timestamp(update.expiry, 0)
-                    : undefined,
-            autoRenewPeriod:
-                update.autoRenewPeriod != null
-                    ? update.autoRenewPeriod
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TokenUpdateTransaction({
+                tokenId:
+                    update.token != null
+                        ? TokenId._fromProtobuf(update.token)
+                        : undefined,
+                tokenName: update.name != null ? update.name : undefined,
+                tokenSymbol: update.symbol != null ? update.symbol : undefined,
+                treasuryAccountId:
+                    update.treasury != null
+                        ? AccountId._fromProtobuf(update.treasury)
+                        : undefined,
+                adminKey:
+                    update.adminKey != null
+                        ? keyFromProtobuf(update.adminKey)
+                        : undefined,
+                kycKey:
+                    update.kycKey != null
+                        ? keyFromProtobuf(update.kycKey)
+                        : undefined,
+                freezeKey:
+                    update.freezeKey != null
+                        ? keyFromProtobuf(update.freezeKey)
+                        : undefined,
+                wipeKey:
+                    update.wipeKey != null
+                        ? keyFromProtobuf(update.wipeKey)
+                        : undefined,
+                supplyKey:
+                    update.supplyKey != null
+                        ? keyFromProtobuf(update.supplyKey)
+                        : undefined,
+                autoRenewAccountId:
+                    update.autoRenewAccount != null
+                        ? AccountId._fromProtobuf(update.autoRenewAccount)
+                        : undefined,
+                expirationTime:
+                    update.expiry != null
+                        ? new Timestamp(update.expiry, 0)
+                        : undefined,
+                autoRenewPeriod:
+                    update.autoRenewPeriod != null
+                        ? update.autoRenewPeriod
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

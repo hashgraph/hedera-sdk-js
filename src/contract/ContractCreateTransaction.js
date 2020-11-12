@@ -125,46 +125,51 @@ export default class ContractCreateTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {ContractCreateTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const create = /** @type {proto.IContractCreateTransactionBody} */ (body.contractCreateInstance);
 
-        return new ContractCreateTransaction({
-            bytecodeFileId:
-                create.fileID != null
-                    ? FileId._fromProtobuf(
-                          /** @type {proto.IFileID} */ (create.fileID)
-                      )
-                    : undefined,
-            adminKey:
-                create.adminKey != null
-                    ? keyFromProtobuf(create.adminKey)
-                    : undefined,
-            gas: create.gas != null ? create.gas : undefined,
-            initialBalance:
-                create.initialBalance != null
-                    ? create.initialBalance
-                    : undefined,
-            proxyAccountId:
-                create.proxyAccountID != null
-                    ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (create.proxyAccountID)
-                      )
-                    : undefined,
-            autoRenewPeriod:
-                create.autoRenewPeriod != null
-                    ? create.autoRenewPeriod.seconds != null
-                        ? create.autoRenewPeriod.seconds
-                        : undefined
-                    : undefined,
-            constructorParameters:
-                create.constructorParameters != null
-                    ? create.constructorParameters
-                    : undefined,
-            contractMemo: create.memo != null ? create.memo : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new ContractCreateTransaction({
+                bytecodeFileId:
+                    create.fileID != null
+                        ? FileId._fromProtobuf(
+                              /** @type {proto.IFileID} */ (create.fileID)
+                          )
+                        : undefined,
+                adminKey:
+                    create.adminKey != null
+                        ? keyFromProtobuf(create.adminKey)
+                        : undefined,
+                gas: create.gas != null ? create.gas : undefined,
+                initialBalance:
+                    create.initialBalance != null
+                        ? create.initialBalance
+                        : undefined,
+                proxyAccountId:
+                    create.proxyAccountID != null
+                        ? AccountId._fromProtobuf(
+                              /** @type {proto.IAccountID} */ (create.proxyAccountID)
+                          )
+                        : undefined,
+                autoRenewPeriod:
+                    create.autoRenewPeriod != null
+                        ? create.autoRenewPeriod.seconds != null
+                            ? create.autoRenewPeriod.seconds
+                            : undefined
+                        : undefined,
+                constructorParameters:
+                    create.constructorParameters != null
+                        ? create.constructorParameters
+                        : undefined,
+                contractMemo: create.memo != null ? create.memo : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

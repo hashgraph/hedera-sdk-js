@@ -16,6 +16,7 @@ import Long from "long";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -53,19 +54,24 @@ export default class TokenMintTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TokenMintTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const mintToken = /** @type {proto.ITokenMintTransactionBody} */ (body.tokenCreation);
 
-        return new TokenMintTransaction({
-            tokenId:
-                mintToken.token != null
-                    ? TokenId._fromProtobuf(mintToken.token)
-                    : undefined,
-            amount: mintToken.amount != null ? mintToken.amount : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TokenMintTransaction({
+                tokenId:
+                    mintToken.token != null
+                        ? TokenId._fromProtobuf(mintToken.token)
+                        : undefined,
+                amount: mintToken.amount != null ? mintToken.amount : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

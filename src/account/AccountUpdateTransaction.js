@@ -100,41 +100,49 @@ export default class AccountUpdateTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {AccountUpdateTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const update = /** @type {proto.ICryptoUpdateTransactionBody} */ (body.cryptoUpdateAccount);
 
-        return new AccountUpdateTransaction({
-            accountId:
-                update.accountIDToUpdate != null
-                    ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (update.accountIDToUpdate)
-                      )
-                    : undefined,
-            key: update.key != null ? keyFromProtobuf(update.key) : undefined,
-            receiverSignatureRequired:
-                update.receiverSigRequired != null
-                    ? update.receiverSigRequired
-                    : undefined,
-            proxyAccountId:
-                update.proxyAccountID != null
-                    ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (update.proxyAccountID)
-                      )
-                    : undefined,
-            autoRenewPeriod:
-                update.autoRenewPeriod != null
-                    ? update.autoRenewPeriod.seconds != null
-                        ? update.autoRenewPeriod.seconds
-                        : undefined
-                    : undefined,
-            expirationTime:
-                update.expirationTime != null
-                    ? Timestamp._fromProtobuf(update.expirationTime)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new AccountUpdateTransaction({
+                accountId:
+                    update.accountIDToUpdate != null
+                        ? AccountId._fromProtobuf(
+                              /** @type {proto.IAccountID} */ (update.accountIDToUpdate)
+                          )
+                        : undefined,
+                key:
+                    update.key != null
+                        ? keyFromProtobuf(update.key)
+                        : undefined,
+                receiverSignatureRequired:
+                    update.receiverSigRequired != null
+                        ? update.receiverSigRequired
+                        : undefined,
+                proxyAccountId:
+                    update.proxyAccountID != null
+                        ? AccountId._fromProtobuf(
+                              /** @type {proto.IAccountID} */ (update.proxyAccountID)
+                          )
+                        : undefined,
+                autoRenewPeriod:
+                    update.autoRenewPeriod != null
+                        ? update.autoRenewPeriod.seconds != null
+                            ? update.autoRenewPeriod.seconds
+                            : undefined
+                        : undefined,
+                expirationTime:
+                    update.expirationTime != null
+                        ? Timestamp._fromProtobuf(update.expirationTime)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

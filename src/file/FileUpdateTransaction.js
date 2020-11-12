@@ -19,6 +19,7 @@ import { KeyList } from "@hashgraph/cryptography";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -78,29 +79,36 @@ export default class FileUpdateTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {FileUpdateTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const update = /** @type {proto.IFileUpdateTransactionBody} */ (body.fileUpdate);
 
-        return new FileUpdateTransaction({
-            fileId:
-                update.fileID != null
-                    ? FileId._fromProtobuf(update.fileID)
-                    : undefined,
-            keys:
-                update.keys != null
-                    ? update.keys.keys != null
-                        ? update.keys.keys.map((key) => keyFromProtobuf(key))
-                        : undefined
-                    : undefined,
-            expirationTime:
-                update.expirationTime != null
-                    ? Timestamp._fromProtobuf(update.expirationTime)
-                    : undefined,
-            contents: update.contents != null ? update.contents : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new FileUpdateTransaction({
+                fileId:
+                    update.fileID != null
+                        ? FileId._fromProtobuf(update.fileID)
+                        : undefined,
+                keys:
+                    update.keys != null
+                        ? update.keys.keys != null
+                            ? update.keys.keys.map((key) =>
+                                  keyFromProtobuf(key)
+                              )
+                            : undefined
+                        : undefined,
+                expirationTime:
+                    update.expirationTime != null
+                        ? Timestamp._fromProtobuf(update.expirationTime)
+                        : undefined,
+                contents: update.contents != null ? update.contents : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

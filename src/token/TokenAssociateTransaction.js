@@ -53,24 +53,29 @@ export default class TokenAssociateTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TokenAssociateTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const associateToken = /** @type {proto.ITokenAssociateTransactionBody} */ (body.tokenCreation);
 
-        return new TokenAssociateTransaction({
-            tokenIds:
-                associateToken.tokens != null
-                    ? associateToken.tokens.map((token) =>
-                          TokenId._fromProtobuf(token)
-                      )
-                    : undefined,
-            accountId:
-                associateToken.account != null
-                    ? AccountId._fromProtobuf(associateToken.account)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TokenAssociateTransaction({
+                tokenIds:
+                    associateToken.tokens != null
+                        ? associateToken.tokens.map((token) =>
+                              TokenId._fromProtobuf(token)
+                          )
+                        : undefined,
+                accountId:
+                    associateToken.account != null
+                        ? AccountId._fromProtobuf(associateToken.account)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

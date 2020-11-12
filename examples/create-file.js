@@ -1,75 +1,13 @@
 const {
     Client,
+    FileCreateTransaction,
+    FileAppendTransaction,
+    FileContentsQuery,
     PrivateKey,
     AccountId,
-    TopicMessageQuery,
-    TopicCreateTransaction,
-    TopicMessageSubmitTransaction,
+    FileId,
+    Hbar
 } = require("@hashgraph/sdk");
-
-async function main() {
-    let client;
-
-    if (process.env.HEDERA_NETWORK != null) {
-        switch (process.env.HEDERA_NETWORK) {
-            case "previewnet":
-                client = Client.forPreviewnet();
-                break;
-            default:
-                client = Client.forTestnet();
-        }
-    } else {
-        try {
-            client = await Client.fromConfigFile(process.env.CONFIG_FILE);
-        } catch (err) {
-            client = Client.forTestnet();
-        }
-    }
-
-    if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
-        const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
-        const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-
-        client.setOperator(operatorId, operatorKey);
-    }
-
-    const response = await new TopicCreateTransaction()
-        .setTopicMemo("sdk example create_pub_sub.js")
-        .execute(client);
-
-    const receipt = await response.getReceipt(client);
-    const topicId = receipt.topicId;
-
-    console.log(`topicId = ${topicId}`);
-
-    new TopicMessageQuery()
-        .setTopicId(topicId)
-        .setStartTime(0)
-        .subscribe(
-            client,
-            (message) => console.log(Buffer.from(message.contents, "utf8").toString())
-        );
-
-    for (let i = 0; ; i += 1) {
-        // eslint-disable-next-line no-await-in-loop
-        await (await new TopicMessageSubmitTransaction()
-            .setTopicId(topicId)
-            .setMessage(bigContents)
-            .execute(client))
-            .getReceipt(client);
-
-        console.log(`Sent message ${i}`);
-
-        // eslint-disable-next-line no-await-in-loop
-        await sleep(2500);
-    }
-}
-
-function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-main();
 
 const bigContents = `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquam augue sem, ut mattis dui laoreet a. Curabitur consequat est euismod, scelerisque metus et, tristique dui. Nulla commodo mauris ut faucibus ultricies. Quisque venenatis nisl nec augue tempus, at efficitur elit eleifend. Duis pharetra felis metus, sed dapibus urna vehicula id. Duis non venenatis turpis, sit amet ornare orci. Donec non interdum quam. Sed finibus nunc et risus finibus, non sagittis lorem cursus. Proin pellentesque tempor aliquam. Sed congue nisl in enim bibendum, condimentum vehicula nisi feugiat.
@@ -118,3 +56,55 @@ In consequat, nisi iaculis laoreet elementum, massa mauris varius nisi, et porta
 
 Etiam ut sodales ex. Nulla luctus, magna eu scelerisque sagittis, nibh quam consectetur neque, non rutrum dolor metus nec ex. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed egestas augue elit, sollicitudin accumsan massa lobortis ac. Curabitur placerat, dolor a aliquam maximus, velit ipsum laoreet ligula, id ullamcorper lacus nibh eget nisl. Donec eget lacus venenatis enim consequat auctor vel in.
 `;
+
+async function main() {
+    let client;
+
+    if (process.env.HEDERA_NETWORK != null) {
+        switch (process.env.HEDERA_NETWORK) {
+            case "previewnet":
+                client = Client.forPreviewnet();
+                break;
+            default:
+                client = Client.forTestnet();
+        }
+    } else {
+        try {
+            client = Client.fromConfigFile(process.env.CONFIG_FILE);
+        } catch (err) {
+            client = Client.forTestnet();
+        }
+    }
+
+    if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
+        const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
+        const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
+
+        client.setOperator(operatorId, operatorKey);
+    }
+
+    const resp = await new FileCreateTransaction()
+        .setKeys([client.operatorPublicKey])
+        .setContents("[e2e::FileCreateTransaction]")
+        .setMaxTransactionFee(new Hbar(5))
+        .execute(client);
+
+    const receipt = await resp.getReceipt(client);
+    const fileId = receipt.fileId;
+
+    await (await new FileAppendTransaction()
+        .setNodeAccountIds([resp.nodeId])
+        .setFileId(fileId)
+        .setContents(bigContents)
+        .setMaxTransactionFee(new Hbar(5))
+        .execute(client))
+        .getReceipt(client);
+
+    const contents = await new FileContentsQuery()
+        .setFileId(fileId)
+        .execute(client);
+
+    console.log(contents);
+}
+
+main();

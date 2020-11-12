@@ -88,33 +88,38 @@ export default class TopicCreateTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {TopicCreateTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const create = /** @type {proto.IConsensusCreateTopicTransactionBody} */ (body.consensusCreateTopic);
 
-        return new TopicCreateTransaction({
-            topicMemo: create.memo != null ? create.memo : undefined,
-            adminKey:
-                create.adminKey != null
-                    ? keyFromProtobuf(create.adminKey)
-                    : undefined,
-            submitKey:
-                create.submitKey != null
-                    ? keyFromProtobuf(create.submitKey)
-                    : undefined,
-            autoRenewAccountId:
-                create.autoRenewAccount != null
-                    ? AccountId._fromProtobuf(create.autoRenewAccount)
-                    : undefined,
-            autoRenewPeriod:
-                create.autoRenewPeriod != null
-                    ? create.autoRenewPeriod.seconds != null
-                        ? create.autoRenewPeriod.seconds
-                        : undefined
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TopicCreateTransaction({
+                topicMemo: create.memo != null ? create.memo : undefined,
+                adminKey:
+                    create.adminKey != null
+                        ? keyFromProtobuf(create.adminKey)
+                        : undefined,
+                submitKey:
+                    create.submitKey != null
+                        ? keyFromProtobuf(create.submitKey)
+                        : undefined,
+                autoRenewAccountId:
+                    create.autoRenewAccount != null
+                        ? AccountId._fromProtobuf(create.autoRenewAccount)
+                        : undefined,
+                autoRenewPeriod:
+                    create.autoRenewPeriod != null
+                        ? create.autoRenewPeriod.seconds != null
+                            ? create.autoRenewPeriod.seconds
+                            : undefined
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

@@ -11,7 +11,10 @@ import {
     Transaction as ProtoTransaction,
     TransactionBody as ProtoTransactionBody,
 } from "@hashgraph/proto";
-import BytesMap from "../BytesMap.js";
+import AccountId from "../account/AccountId.js";
+
+// eslint-disable-next-line node/no-extraneous-import
+import { Reader } from "protobufjs";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -20,6 +23,8 @@ import BytesMap from "../BytesMap.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ITransactionID} proto.ITransactionID
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
@@ -29,7 +34,6 @@ import BytesMap from "../BytesMap.js";
 /**
  * @typedef {import("@hashgraph/cryptography").PrivateKey} PrivateKey
  * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
- * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../channel/Channel.js").default} Channel
  */
 
@@ -44,8 +48,10 @@ export const DEFAULT_RECORD_THRESHOLD = Hbar.fromTinybars(
 // 120 seconds
 const DEFAULT_TRANSACTION_VALID_DURATION = 120;
 
+export const CHUNK_SIZE = 4096;
+
 /**
- * @type {Map<proto.TransactionBody["data"], (body: proto.TransactionBody) => Transaction>}
+ * @type {Map<NonNullable<proto.TransactionBody["data"]>, (transactions: Map<string, Map<AccountId, proto.ITransaction>>, body: proto.TransactionBody) => Transaction>}
  */
 export const TRANSACTION_REGISTRY = new Map();
 
@@ -99,7 +105,13 @@ export default class Transaction extends Executable {
          * @private
          * @type {number}
          */
-        this._nextIndex = 0;
+        this._nextTransactionIndex = 0;
+
+        /**
+         * @protected
+         * @type {number}
+         */
+        this._nextGroupIndex = 0;
 
         /**
          * @private
@@ -120,7 +132,7 @@ export default class Transaction extends Executable {
         this._transactionMemo = "";
 
         /**
-         * @private
+         * @protected
          * @type {?TransactionId}
          */
         this._transactionId = null;
@@ -131,47 +143,122 @@ export default class Transaction extends Executable {
      * @returns {Transaction}
      */
     static fromBytes(bytes) {
-        const transaction = ProtoTransaction.decode(bytes);
+        /** @type {Map<string, Map<AccountId, proto.ITransaction>>} */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const transactions = new Map();
+        const reader = new Reader(bytes);
+        let first;
 
-        const signaturePairs =
-            transaction.sigMap != null ? transaction.sigMap.sigPair : null;
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+            try {
+                const transaction = ProtoTransaction.decode(reader);
+                const body = ProtoTransactionBody.decode(transaction.bodyBytes);
 
-        // if a transaction is frozen we need to propagate that state
-        const isFrozen = signaturePairs != null && signaturePairs.length > 0;
-
-        const body = ProtoTransactionBody.decode(transaction.bodyBytes);
-
-        if (body.data == null) {
-            throw new Error("(BUG) body.data was not set in the protobuf");
-        }
-
-        const fromProtobuf = TRANSACTION_REGISTRY.get(body.data);
-
-        if (fromProtobuf == null) {
-            throw new Error(
-                `(BUG) Transaction.fromBytes() not implemented for type ${body.data}`
-            );
-        }
-
-        const instance = fromProtobuf(body);
-
-        if (isFrozen) {
-            instance._transactions = [transaction];
-
-            // collate those that have signed the transaction
-            // this is so that we don't allow someone to sign more than once
-            if (signaturePairs != null) {
-                for (const signaturePair of signaturePairs) {
-                    if (signaturePair.pubKeyPrefix == null) continue;
-
-                    instance._signerPublicKeys.add(
-                        hex.encode(signaturePair.pubKeyPrefix)
+                if (body.data == null) {
+                    throw new Error(
+                        "(BUG) body.data was not set in the protobuf"
                     );
                 }
+
+                if (first == null) {
+                    first = body;
+                }
+
+                const transactionId = TransactionId._fromProtobuf(
+                    /** @type {proto.ITransactionID} */ (body.transactionID)
+                ).toString();
+                const nodeAccountId = AccountId._fromProtobuf(
+                    /** @type {proto.IAccountID} */ (body.nodeAccountID)
+                );
+
+                /** @type {Map<AccountId, proto.ITransaction>} */
+                let list = new Map();
+
+                if (transactions.get(transactionId) == null) {
+                    transactions.set(transactionId, list);
+                } else {
+                    list = /** @type {Map<AccountId, proto.ITransaction>} */ (transactions.get(
+                        transactionId
+                    ));
+                }
+
+                list.set(nodeAccountId, transaction);
+            } catch (err) {
+                console.error("error while decoding:", err);
+                break;
             }
         }
 
-        return instance;
+        if (first == null || first.data == null) {
+            throw new Error("Not transaction found in bytes");
+        }
+
+        const fromProtobuf = TRANSACTION_REGISTRY.get(first.data);
+
+        if (fromProtobuf == null) {
+            throw new Error(
+                `(BUG) Transaction.fromBytes() not implemented for type ${first.data}`
+            );
+        }
+
+        return fromProtobuf(transactions, first);
+    }
+
+    /**
+     * @template {Transaction} TransactionT
+     * @param {TransactionT} transaction
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
+     * @param {proto.ITransactionBody} body
+     * @returns {TransactionT}
+     */
+    static _fromProtobufTransactions(transaction, transactions, body) {
+        let pushNodeAccountIDs = true;
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const [_, map] of transactions) {
+            for (const [nodeAccountId, protoTransaction] of map) {
+                if (pushNodeAccountIDs) {
+                    transaction._nodeIds.push(nodeAccountId);
+                }
+
+                transaction._transactions.push(protoTransaction);
+
+                if (
+                    pushNodeAccountIDs &&
+                    protoTransaction.sigMap != null &&
+                    protoTransaction.sigMap.sigPair != null
+                ) {
+                    for (const sigPair of protoTransaction.sigMap.sigPair) {
+                        transaction._signerPublicKeys.add(
+                            hex.encode(
+                                /** @type {Uint8Array} */ (sigPair.pubKeyPrefix)
+                            )
+                        );
+                    }
+                }
+            }
+
+            pushNodeAccountIDs = false;
+        }
+
+        transaction._nextTransactionIndex = 0;
+        transaction._nextGroupIndex = 0;
+        transaction._transactionValidDuration =
+            body.transactionValidDuration != null
+                ? /** @type {Long} */ (body.transactionValidDuration
+                      .seconds).toInt()
+                : DEFAULT_TRANSACTION_VALID_DURATION;
+        transaction._maxTransactionFee =
+            body.transactionFee != null
+                ? Hbar.fromTinybars(body.transactionFee)
+                : null;
+        transaction._transactionMemo = body.memo != null ? body.memo : "";
+        transaction._transactionId = TransactionId._fromProtobuf(
+            /** @type {proto.ITransactionID} */ (body.transactionID)
+        );
+
+        return transaction;
     }
 
     /**
@@ -336,8 +423,8 @@ export default class Transaction extends Executable {
         }
 
         for (const transaction of this._transactions) {
-            const message = /** @type {Uint8Array} */ (transaction.bodyBytes);
-            const signature = await transactionSigner(message);
+            const bodyBytes = /** @type {Uint8Array} */ (transaction.bodyBytes);
+            const signature = await transactionSigner(bodyBytes);
 
             if (transaction.sigMap == null) {
                 transaction.sigMap = {};
@@ -454,30 +541,14 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * @returns {BytesMap}
-     */
-    toBytesPerNode() {
-        this._requireFrozen();
-
-        const map = new BytesMap();
-
-        for (const nodeAccountId of this._nodeIds) {
-            const tx = this._makeTransaction(nodeAccountId);
-            map._set(nodeAccountId, ProtoTransaction.encode(tx).finish());
-        }
-
-        return map;
-    }
-
-    /**
      * @returns {Promise<Uint8Array>}
      */
     get transactionHash() {
         this._requireFrozen();
 
-        const nodeAccountId = this._nodeIds[0];
-        const tx = this._makeTransaction(nodeAccountId);
-        return sha384.digest(ProtoTransaction.encode(tx).finish());
+        return sha384.digest(
+            ProtoTransaction.encode(this._transactions[0]).ldelim().finish()
+        );
     }
 
     /**
@@ -519,7 +590,7 @@ export default class Transaction extends Executable {
      * @returns {proto.ITransaction}
      */
     _makeRequest() {
-        return this._transactions[this._nextIndex];
+        return this._transactions[this._nextTransactionIndex];
     }
 
     /**
@@ -567,7 +638,9 @@ export default class Transaction extends Executable {
             );
         }
 
-        return this.nodeAccountIds[this._nextIndex];
+        return this.nodeAccountIds[
+            this._nextTransactionIndex % this._nodeIds.length
+        ];
     }
 
     /**
@@ -576,9 +649,12 @@ export default class Transaction extends Executable {
      * @returns {void}
      */
     _advanceRequest() {
+        const offset = this._nextGroupIndex * this._nodeIds.length;
+
         // each time we move our cursor to the next transaction
         // wrapping around to ensure we are cycling
-        this._nextIndex = (this._nextIndex + 1) % this._transactions.length;
+        this._nextTransactionIndex =
+            offset + ((this._nextTransactionIndex + 1) % this._nodeIds.length);
     }
 
     /**

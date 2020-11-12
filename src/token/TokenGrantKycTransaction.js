@@ -53,22 +53,27 @@ export default class TokenGrantKycTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TokenGrantKycTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const grantKycToken = /** @type {proto.ITokenGrantKycTransactionBody} */ (body.tokenCreation);
 
-        return new TokenGrantKycTransaction({
-            tokenId:
-                grantKycToken.token != null
-                    ? TokenId._fromProtobuf(grantKycToken.token)
-                    : undefined,
-            accountId:
-                grantKycToken.account != null
-                    ? AccountId._fromProtobuf(grantKycToken.account)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TokenGrantKycTransaction({
+                tokenId:
+                    grantKycToken.token != null
+                        ? TokenId._fromProtobuf(grantKycToken.token)
+                        : undefined,
+                accountId:
+                    grantKycToken.account != null
+                        ? AccountId._fromProtobuf(grantKycToken.account)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

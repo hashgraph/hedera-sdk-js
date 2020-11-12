@@ -13,6 +13,7 @@ import Transaction, {
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -53,28 +54,33 @@ export default class FreezeTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {FreezeTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const freeze = /** @type {proto.IFreezeTransactionBody} */ (body.freeze);
 
-        return new FreezeTransaction({
-            startTime:
-                freeze.startHour != null && freeze.startMin != null
-                    ? {
-                          hour: freeze.startHour,
-                          minute: freeze.startMin,
-                      }
-                    : undefined,
-            endTime:
-                freeze.endHour != null && freeze.endMin != null
-                    ? {
-                          hour: freeze.endHour,
-                          minute: freeze.endMin,
-                      }
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new FreezeTransaction({
+                startTime:
+                    freeze.startHour != null && freeze.startMin != null
+                        ? {
+                              hour: freeze.startHour,
+                              minute: freeze.startMin,
+                          }
+                        : undefined,
+                endTime:
+                    freeze.endHour != null && freeze.endMin != null
+                        ? {
+                              hour: freeze.endHour,
+                              minute: freeze.endMin,
+                          }
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

@@ -112,47 +112,52 @@ export default class ContractUpdateTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {ContractUpdateTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const update = /** @type {proto.IContractUpdateTransactionBody} */ (body.contractUpdateInstance);
 
-        return new ContractUpdateTransaction({
-            contractId:
-                update.contractID != null
-                    ? ContractId._fromProtobuf(
-                          /** @type {proto.IContractID} */ (update.contractID)
-                      )
-                    : undefined,
-            bytecodeFileId:
-                update.fileID != null
-                    ? FileId._fromProtobuf(
-                          /** @type {proto.IFileID} */ (update.fileID)
-                      )
-                    : undefined,
-            expirationTime:
-                update.expirationTime != null
-                    ? Timestamp._fromProtobuf(update.expirationTime)
-                    : undefined,
-            adminKey:
-                update.adminKey != null
-                    ? keyFromProtobuf(update.adminKey)
-                    : undefined,
-            proxyAccountId:
-                update.proxyAccountID != null
-                    ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (update.proxyAccountID)
-                      )
-                    : undefined,
-            autoRenewPeriod:
-                update.autoRenewPeriod != null
-                    ? update.autoRenewPeriod.seconds != null
-                        ? update.autoRenewPeriod.seconds
-                        : undefined
-                    : undefined,
-            contractMemo: update.memo != null ? update.memo : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new ContractUpdateTransaction({
+                contractId:
+                    update.contractID != null
+                        ? ContractId._fromProtobuf(
+                              /** @type {proto.IContractID} */ (update.contractID)
+                          )
+                        : undefined,
+                bytecodeFileId:
+                    update.fileID != null
+                        ? FileId._fromProtobuf(
+                              /** @type {proto.IFileID} */ (update.fileID)
+                          )
+                        : undefined,
+                expirationTime:
+                    update.expirationTime != null
+                        ? Timestamp._fromProtobuf(update.expirationTime)
+                        : undefined,
+                adminKey:
+                    update.adminKey != null
+                        ? keyFromProtobuf(update.adminKey)
+                        : undefined,
+                proxyAccountId:
+                    update.proxyAccountID != null
+                        ? AccountId._fromProtobuf(
+                              /** @type {proto.IAccountID} */ (update.proxyAccountID)
+                          )
+                        : undefined,
+                autoRenewPeriod:
+                    update.autoRenewPeriod != null
+                        ? update.autoRenewPeriod.seconds != null
+                            ? update.autoRenewPeriod.seconds
+                            : undefined
+                        : undefined,
+                contractMemo: update.memo != null ? update.memo : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

@@ -106,42 +106,47 @@ export default class TopicUpdateTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TopicUpdateTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const update = /** @type {proto.IConsensusUpdateTopicTransactionBody} */ (body.consensusUpdateTopic);
 
-        return new TopicUpdateTransaction({
-            topicId:
-                update.topicID != null
-                    ? TopicId._fromProtobuf(update.topicID)
-                    : undefined,
-            topicMemo:
-                update.memo != null
-                    ? update.memo.value != null
-                        ? update.memo.value
-                        : undefined
-                    : undefined,
-            adminKey:
-                update.adminKey != null
-                    ? keyFromProtobuf(update.adminKey)
-                    : undefined,
-            submitKey:
-                update.submitKey != null
-                    ? keyFromProtobuf(update.submitKey)
-                    : undefined,
-            autoRenewAccountId:
-                update.autoRenewAccount != null
-                    ? AccountId._fromProtobuf(update.autoRenewAccount)
-                    : undefined,
-            autoRenewPeriod:
-                update.autoRenewPeriod != null
-                    ? update.autoRenewPeriod.seconds != null
-                        ? update.autoRenewPeriod.seconds
-                        : undefined
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TopicUpdateTransaction({
+                topicId:
+                    update.topicID != null
+                        ? TopicId._fromProtobuf(update.topicID)
+                        : undefined,
+                topicMemo:
+                    update.memo != null
+                        ? update.memo.value != null
+                            ? update.memo.value
+                            : undefined
+                        : undefined,
+                adminKey:
+                    update.adminKey != null
+                        ? keyFromProtobuf(update.adminKey)
+                        : undefined,
+                submitKey:
+                    update.submitKey != null
+                        ? keyFromProtobuf(update.submitKey)
+                        : undefined,
+                autoRenewAccountId:
+                    update.autoRenewAccount != null
+                        ? AccountId._fromProtobuf(update.autoRenewAccount)
+                        : undefined,
+                autoRenewPeriod:
+                    update.autoRenewPeriod != null
+                        ? update.autoRenewPeriod.seconds != null
+                            ? update.autoRenewPeriod.seconds
+                            : undefined
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

@@ -18,6 +18,7 @@ import ContractId from "../contract/ContractId.js";
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../Timestamp.js").default} Timestamp
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 export default class SystemUndeleteTransaction extends Transaction {
@@ -53,26 +54,31 @@ export default class SystemUndeleteTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {SystemUndeleteTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const systemUndelete = /** @type {proto.ISystemUndeleteTransactionBody} */ (body.systemUndelete);
 
-        return new SystemUndeleteTransaction({
-            fileId:
-                systemUndelete.fileID != null
-                    ? FileId._fromProtobuf(
-                          /** @type {proto.IFileID} */ (systemUndelete.fileID)
-                      )
-                    : undefined,
-            contractId:
-                systemUndelete.contractID != null
-                    ? ContractId._fromProtobuf(
-                          /** @type {proto.IContractID} */ (systemUndelete.contractID)
-                      )
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new SystemUndeleteTransaction({
+                fileId:
+                    systemUndelete.fileID != null
+                        ? FileId._fromProtobuf(
+                              /** @type {proto.IFileID} */ (systemUndelete.fileID)
+                          )
+                        : undefined,
+                contractId:
+                    systemUndelete.contractID != null
+                        ? ContractId._fromProtobuf(
+                              /** @type {proto.IContractID} */ (systemUndelete.contractID)
+                          )
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

@@ -53,24 +53,29 @@ export default class TokenDissociateTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TokenDissociateTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const dissociateToken = /** @type {proto.ITokenDissociateTransactionBody} */ (body.tokenDissociate);
 
-        return new TokenDissociateTransaction({
-            tokenIds:
-                dissociateToken.tokens != null
-                    ? dissociateToken.tokens.map((token) =>
-                          TokenId._fromProtobuf(token)
-                      )
-                    : undefined,
-            accountId:
-                dissociateToken.account != null
-                    ? AccountId._fromProtobuf(dissociateToken.account)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TokenDissociateTransaction({
+                tokenIds:
+                    dissociateToken.tokens != null
+                        ? dissociateToken.tokens.map((token) =>
+                              TokenId._fromProtobuf(token)
+                          )
+                        : undefined,
+                accountId:
+                    dissociateToken.account != null
+                        ? AccountId._fromProtobuf(dissociateToken.account)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

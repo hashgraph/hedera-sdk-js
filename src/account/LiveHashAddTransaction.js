@@ -75,32 +75,39 @@ export default class LiveHashAddTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {LiveHashAddTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const hashes = /** @type {proto.ICryptoAddLiveHashTransactionBody} */ (body.cryptoAddLiveHash);
         const liveHash_ = /** @type {proto.ILiveHash} */ (hashes.liveHash);
 
-        return new LiveHashAddTransaction({
-            hash: liveHash_.hash != null ? liveHash_.hash : undefined,
-            keys:
-                liveHash_.keys != null
-                    ? liveHash_.keys.keys != null
-                        ? liveHash_.keys.keys.map((key) => keyFromProtobuf(key))
-                        : undefined
-                    : undefined,
-            duration:
-                liveHash_.duration != null
-                    ? liveHash_.duration.seconds != null
-                        ? liveHash_.duration.seconds
-                        : undefined
-                    : undefined,
-            accountId:
-                liveHash_.accountId != null
-                    ? AccountId._fromProtobuf(liveHash_.accountId)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new LiveHashAddTransaction({
+                hash: liveHash_.hash != null ? liveHash_.hash : undefined,
+                keys:
+                    liveHash_.keys != null
+                        ? liveHash_.keys.keys != null
+                            ? liveHash_.keys.keys.map((key) =>
+                                  keyFromProtobuf(key)
+                              )
+                            : undefined
+                        : undefined,
+                duration:
+                    liveHash_.duration != null
+                        ? liveHash_.duration.seconds != null
+                            ? liveHash_.duration.seconds
+                            : undefined
+                        : undefined,
+                accountId:
+                    liveHash_.accountId != null
+                        ? AccountId._fromProtobuf(liveHash_.accountId)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

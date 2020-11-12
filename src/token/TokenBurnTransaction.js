@@ -16,6 +16,7 @@ import Long from "long";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -53,19 +54,24 @@ export default class TokenBurnTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TokenBurnTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const burnToken = /** @type {proto.ITokenBurnTransactionBody} */ (body.tokenCreation);
 
-        return new TokenBurnTransaction({
-            tokenId:
-                burnToken.token != null
-                    ? TokenId._fromProtobuf(burnToken.token)
-                    : undefined,
-            amount: burnToken.amount != null ? burnToken.amount : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TokenBurnTransaction({
+                tokenId:
+                    burnToken.token != null
+                        ? TokenId._fromProtobuf(burnToken.token)
+                        : undefined,
+                amount: burnToken.amount != null ? burnToken.amount : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

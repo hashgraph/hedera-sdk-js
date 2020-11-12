@@ -18,6 +18,7 @@ import { KeyList } from "@hashgraph/cryptography";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -69,25 +70,32 @@ export default class FileCreateTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {FileCreateTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const create = /** @type {proto.IFileCreateTransactionBody} */ (body.fileCreate);
 
-        return new FileCreateTransaction({
-            keys:
-                create.keys != null
-                    ? create.keys.keys != null
-                        ? create.keys.keys.map((key) => keyFromProtobuf(key))
-                        : undefined
-                    : undefined,
-            expirationTime:
-                create.expirationTime != null
-                    ? Timestamp._fromProtobuf(create.expirationTime)
-                    : undefined,
-            contents: create.contents != null ? create.contents : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new FileCreateTransaction({
+                keys:
+                    create.keys != null
+                        ? create.keys.keys != null
+                            ? create.keys.keys.map((key) =>
+                                  keyFromProtobuf(key)
+                              )
+                            : undefined
+                        : undefined,
+                expirationTime:
+                    create.expirationTime != null
+                        ? Timestamp._fromProtobuf(create.expirationTime)
+                        : undefined,
+                contents: create.contents != null ? create.contents : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

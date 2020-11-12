@@ -53,22 +53,27 @@ export default class TokenFreezeTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TokenFreezeTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const freezeToken = /** @type {proto.ITokenFreezeAccountTransactionBody} */ (body.tokenCreation);
 
-        return new TokenFreezeTransaction({
-            tokenId:
-                freezeToken.token != null
-                    ? TokenId._fromProtobuf(freezeToken.token)
-                    : undefined,
-            accountId:
-                freezeToken.account != null
-                    ? AccountId._fromProtobuf(freezeToken.account)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TokenFreezeTransaction({
+                tokenId:
+                    freezeToken.token != null
+                        ? TokenId._fromProtobuf(freezeToken.token)
+                        : undefined,
+                accountId:
+                    freezeToken.account != null
+                        ? AccountId._fromProtobuf(freezeToken.account)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

@@ -62,32 +62,37 @@ export default class ContractDeleteTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {ContractDeleteTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const contractDelete = /** @type {proto.IContractDeleteTransactionBody} */ (body.contractDeleteInstance);
 
-        return new ContractDeleteTransaction({
-            contractId:
-                contractDelete.contractID != null
-                    ? ContractId._fromProtobuf(
-                          /** @type {proto.IContractID} */ (contractDelete.contractID)
-                      )
-                    : undefined,
-            transferAccountId:
-                contractDelete.transferAccountID != null
-                    ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (contractDelete.transferAccountID)
-                      )
-                    : undefined,
-            transferContractId:
-                contractDelete.transferContractID != null
-                    ? ContractId._fromProtobuf(
-                          /** @type {proto.IContractID} */ (contractDelete.transferContractID)
-                      )
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new ContractDeleteTransaction({
+                contractId:
+                    contractDelete.contractID != null
+                        ? ContractId._fromProtobuf(
+                              /** @type {proto.IContractID} */ (contractDelete.contractID)
+                          )
+                        : undefined,
+                transferAccountId:
+                    contractDelete.transferAccountID != null
+                        ? AccountId._fromProtobuf(
+                              /** @type {proto.IAccountID} */ (contractDelete.transferAccountID)
+                          )
+                        : undefined,
+                transferContractId:
+                    contractDelete.transferContractID != null
+                        ? ContractId._fromProtobuf(
+                              /** @type {proto.IContractID} */ (contractDelete.transferContractID)
+                          )
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

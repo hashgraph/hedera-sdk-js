@@ -191,57 +191,66 @@ export default class TokenCreateTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TokenCreateTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const create = /** @type {proto.ITokenCreateTransactionBody} */ (body.tokenCreation);
 
-        return new TokenCreateTransaction({
-            tokenName: create.name != null ? create.name : undefined,
-            tokenSymbol: create.symbol != null ? create.symbol : undefined,
-            decimals: create.decimals != null ? create.decimals : undefined,
-            initialSupply:
-                create.initialSupply != null ? create.initialSupply : undefined,
-            treasuryAccountId:
-                create.treasury != null
-                    ? AccountId._fromProtobuf(create.treasury)
-                    : undefined,
-            adminKey:
-                create.adminKey != null
-                    ? keyFromProtobuf(create.adminKey)
-                    : undefined,
-            kycKey:
-                create.kycKey != null
-                    ? keyFromProtobuf(create.kycKey)
-                    : undefined,
-            freezeKey:
-                create.freezeKey != null
-                    ? keyFromProtobuf(create.freezeKey)
-                    : undefined,
-            wipeKey:
-                create.wipeKey != null
-                    ? keyFromProtobuf(create.wipeKey)
-                    : undefined,
-            supplyKey:
-                create.supplyKey != null
-                    ? keyFromProtobuf(create.supplyKey)
-                    : undefined,
-            freezeDefault:
-                create.freezeDefault != null ? create.freezeDefault : undefined,
-            autoRenewAccountId:
-                create.autoRenewAccount != null
-                    ? AccountId._fromProtobuf(create.autoRenewAccount)
-                    : undefined,
-            expirationTime:
-                create.expiry != null
-                    ? new Timestamp(create.expiry, 0)
-                    : undefined,
-            autoRenewPeriod:
-                create.autoRenewPeriod != null
-                    ? create.autoRenewPeriod
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TokenCreateTransaction({
+                tokenName: create.name != null ? create.name : undefined,
+                tokenSymbol: create.symbol != null ? create.symbol : undefined,
+                decimals: create.decimals != null ? create.decimals : undefined,
+                initialSupply:
+                    create.initialSupply != null
+                        ? create.initialSupply
+                        : undefined,
+                treasuryAccountId:
+                    create.treasury != null
+                        ? AccountId._fromProtobuf(create.treasury)
+                        : undefined,
+                adminKey:
+                    create.adminKey != null
+                        ? keyFromProtobuf(create.adminKey)
+                        : undefined,
+                kycKey:
+                    create.kycKey != null
+                        ? keyFromProtobuf(create.kycKey)
+                        : undefined,
+                freezeKey:
+                    create.freezeKey != null
+                        ? keyFromProtobuf(create.freezeKey)
+                        : undefined,
+                wipeKey:
+                    create.wipeKey != null
+                        ? keyFromProtobuf(create.wipeKey)
+                        : undefined,
+                supplyKey:
+                    create.supplyKey != null
+                        ? keyFromProtobuf(create.supplyKey)
+                        : undefined,
+                freezeDefault:
+                    create.freezeDefault != null
+                        ? create.freezeDefault
+                        : undefined,
+                autoRenewAccountId:
+                    create.autoRenewAccount != null
+                        ? AccountId._fromProtobuf(create.autoRenewAccount)
+                        : undefined,
+                expirationTime:
+                    create.expiry != null
+                        ? new Timestamp(create.expiry, 0)
+                        : undefined,
+                autoRenewPeriod:
+                    create.autoRenewPeriod != null
+                        ? create.autoRenewPeriod
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

@@ -92,10 +92,11 @@ export default class TransferTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TransferTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const cryptoTransfer = /** @type {proto.ICryptoTransferTransactionBody} */ (body.cryptoTransfer);
 
         const transfers = new TransferTransaction();
@@ -135,7 +136,11 @@ export default class TransferTransaction extends Transaction {
             );
         }
 
-        return transfers;
+        return Transaction._fromProtobufTransactions(
+            transfers,
+            transactions,
+            body
+        );
     }
 
     /**

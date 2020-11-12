@@ -22,6 +22,7 @@ import Long from "long";
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -87,26 +88,31 @@ export default class ContractExecuteTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {ContractExecuteTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const call = /** @type {proto.IContractCallTransactionBody} */ (body.contractCall);
 
-        return new ContractExecuteTransaction({
-            contractId:
-                call.contractID != null
-                    ? ContractId._fromProtobuf(
-                          /** @type {proto.IContractID} */ (call.contractID)
-                      )
-                    : undefined,
-            gas: call.gas != null ? call.gas : undefined,
-            amount: call.amount ? call.amount : undefined,
-            functionParameters:
-                call.functionParameters != null
-                    ? call.functionParameters
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new ContractExecuteTransaction({
+                contractId:
+                    call.contractID != null
+                        ? ContractId._fromProtobuf(
+                              /** @type {proto.IContractID} */ (call.contractID)
+                          )
+                        : undefined,
+                gas: call.gas != null ? call.gas : undefined,
+                amount: call.amount ? call.amount : undefined,
+                functionParameters:
+                    call.functionParameters != null
+                        ? call.functionParameters
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

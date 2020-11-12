@@ -15,6 +15,7 @@ import FileId from "./FileId.js";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -48,18 +49,23 @@ export default class FileDeleteTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {FileDeleteTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const fileDelete = /** @type {proto.IFileDeleteTransactionBody} */ (body.fileDelete);
 
-        return new FileDeleteTransaction({
-            fileId:
-                fileDelete.fileID != null
-                    ? FileId._fromProtobuf(fileDelete.fileID)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new FileDeleteTransaction({
+                fileId:
+                    fileDelete.fileID != null
+                        ? FileId._fromProtobuf(fileDelete.fileID)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

@@ -14,6 +14,7 @@ import TopicId from "./TopicId.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -45,18 +46,23 @@ export default class TopicDeleteTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {TopicDeleteTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const topicDelete = /** @type {proto.IConsensusDeleteTopicTransactionBody} */ (body.consensusDeleteTopic);
 
-        return new TopicDeleteTransaction({
-            topicId:
-                topicDelete.topicID != null
-                    ? TopicId._fromProtobuf(topicDelete.topicID)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TopicDeleteTransaction({
+                topicId:
+                    topicDelete.topicID != null
+                        ? TopicId._fromProtobuf(topicDelete.topicID)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

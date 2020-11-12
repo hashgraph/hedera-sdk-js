@@ -53,22 +53,27 @@ export default class TokenRevokeKycTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TokenRevokeKycTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const revokeKycToken = /** @type {proto.ITokenRevokeKycTransactionBody} */ (body.tokenCreation);
 
-        return new TokenRevokeKycTransaction({
-            tokenId:
-                revokeKycToken.token != null
-                    ? TokenId._fromProtobuf(revokeKycToken.token)
-                    : undefined,
-            accountId:
-                revokeKycToken.account != null
-                    ? AccountId._fromProtobuf(revokeKycToken.account)
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TokenRevokeKycTransaction({
+                tokenId:
+                    revokeKycToken.token != null
+                        ? TokenId._fromProtobuf(revokeKycToken.token)
+                        : undefined,
+                accountId:
+                    revokeKycToken.account != null
+                        ? AccountId._fromProtobuf(revokeKycToken.account)
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

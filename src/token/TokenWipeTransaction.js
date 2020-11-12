@@ -65,23 +65,28 @@ export default class TokenWipeTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.ITransactionBody} body
      * @returns {TokenWipeTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const wipeToken = /** @type {proto.ITokenWipeAccountTransactionBody} */ (body.tokenCreation);
 
-        return new TokenWipeTransaction({
-            tokenId:
-                wipeToken.token != null
-                    ? TokenId._fromProtobuf(wipeToken.token)
-                    : undefined,
-            accountId:
-                wipeToken.account != null
-                    ? AccountId._fromProtobuf(wipeToken.account)
-                    : undefined,
-            amount: wipeToken.amount != null ? wipeToken.amount : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new TokenWipeTransaction({
+                tokenId:
+                    wipeToken.token != null
+                        ? TokenId._fromProtobuf(wipeToken.token)
+                        : undefined,
+                accountId:
+                    wipeToken.account != null
+                        ? AccountId._fromProtobuf(wipeToken.account)
+                        : undefined,
+                amount: wipeToken.amount != null ? wipeToken.amount : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**

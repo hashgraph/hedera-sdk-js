@@ -56,26 +56,31 @@ export default class AccountDeleteTransaction extends Transaction {
 
     /**
      * @internal
+     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
      * @param {proto.TransactionBody} body
      * @returns {AccountDeleteTransaction}
      */
-    static _fromProtobuf(body) {
+    static _fromProtobuf(transactions, body) {
         const accountDelete = /** @type {proto.ICryptoDeleteTransactionBody} */ (body.cryptoDelete);
 
-        return new AccountDeleteTransaction({
-            accountId:
-                accountDelete.deleteAccountID != null
-                    ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (accountDelete.deleteAccountID)
-                      )
-                    : undefined,
-            transferAccountId:
-                accountDelete.transferAccountID != null
-                    ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (accountDelete.transferAccountID)
-                      )
-                    : undefined,
-        });
+        return Transaction._fromProtobufTransactions(
+            new AccountDeleteTransaction({
+                accountId:
+                    accountDelete.deleteAccountID != null
+                        ? AccountId._fromProtobuf(
+                              /** @type {proto.IAccountID} */ (accountDelete.deleteAccountID)
+                          )
+                        : undefined,
+                transferAccountId:
+                    accountDelete.transferAccountID != null
+                        ? AccountId._fromProtobuf(
+                              /** @type {proto.IAccountID} */ (accountDelete.transferAccountID)
+                          )
+                        : undefined,
+            }),
+            transactions,
+            body
+        );
     }
 
     /**
