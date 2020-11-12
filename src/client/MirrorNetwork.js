@@ -9,7 +9,7 @@ import MirrorNode from "../MirrorNode.js";
  */
 export default class MirrorNetwork {
     /**
-     * @param {(address: string) => MirrorChannel} channelInitFunction
+     * @param {((address: string) => MirrorChannel)?} channelInitFunction
      */
     constructor(channelInitFunction) {
         /**
@@ -33,7 +33,7 @@ export default class MirrorNetwork {
 
         this.index = 0;
 
-        /** @type {(address: string) => MirrorChannel} */
+        /** @type {((address: string) => MirrorChannel)?} */
         this._channelInitFunction = channelInitFunction;
     }
 
@@ -41,6 +41,12 @@ export default class MirrorNetwork {
      * @param {string[]} network
      */
     setMirrorNetwork(network) {
+        if (this._channelInitFunction == null) {
+            // silently fail on client boot if mirror network is not
+            // supported
+            return;
+        }
+
         this.close();
         this.network = network;
 
@@ -58,6 +64,10 @@ export default class MirrorNetwork {
      * @returns {MirrorNode}
      */
     getNextMirrorNode() {
+        if (this._channelInitFunction == null) {
+            throw new Error("mirror network not supported on browser");
+        }
+
         const node = this.network[this.index];
         this.index = (this.index + 1) % this.network.length;
         return /** @type {MirrorNode} */ (this.networkNodes.get(node));

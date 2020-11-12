@@ -246,9 +246,10 @@ export default class Client {
 
     /**
      * @abstract
-     * @returns {(address: string) => MirrorChannelT}
+     * @returns {((address: string) => MirrorChannelT)?}
      */
     _createMirrorNetworkChannel() {
-        throw new Error("not implemented");
+        // throw new Error("not implemented");
+        return null;
     }
 }
