@@ -1,4 +1,8 @@
+import * as $protobuf from "@hashgraph/protobufjs/minimal.js";
 import { proto } from "./proto.js";
+
+// re-export protobuf reader for usage by @hashgraph/sdk
+export const Reader = $protobuf.Reader;
 
 export const ConsensusService = proto.ConsensusService;
 export const CryptoService = proto.CryptoService;

@@ -1,4 +1,8 @@
+import * as $protobuf from "@hashgraph/protobufjs/minimal.js";
 import { proto } from "./proto.js";
+
+// re-export protobuf reader for usage by @hashgraph/sdk
+import Reader = $protobuf.Reader;
 
 import ConsensusService = proto.ConsensusService;
 import CryptoService = proto.CryptoService;
@@ -10,6 +14,7 @@ import SmartContractService = proto.SmartContractService;
 import TokenService = proto.TokenService;
 
 export {
+    Reader,
     ConsensusService,
     CryptoService,
     FileService,
