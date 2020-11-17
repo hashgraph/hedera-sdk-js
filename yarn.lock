@@ -440,10 +440,10 @@
     google-auth-library "^6.1.1"
     semver "^6.2.0"
 
-"@hashgraph/cryptography@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.6.tgz#a19072b5829cd89c413686018785bf644f7ca7cf"
-  integrity sha512-r2DX2WM/B8hkHIiP/b91yxKCfO5QrczExZzqiltj+Ex8W4u83fvGM4m/TRg5IpzQQcOCo//OCRzcGHdQxAnpkQ==
+"@hashgraph/cryptography@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.7.tgz#4e93f29067fc15ace2be0e5f3c8c33a0cf7fa475"
+  integrity sha512-oEyy+YUHLaDPDhIemZUxDkcuy/lZv9WBEzVxGOCqiSBEqGCkJgCG9H1hpoKIovcwFeAsVsOMn3Ujz5N20eXRAw==
   dependencies:
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"

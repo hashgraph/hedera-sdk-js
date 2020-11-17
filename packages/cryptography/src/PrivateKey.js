@@ -13,6 +13,32 @@ const derPrefix = "302e020100300506032b657004220420";
 const derPrefixBytes = hex.decode(derPrefix);
 
 /**
+ * @typedef {object} ProtoSignaturePair
+ * @property {(Uint8Array | null)=} pubKeyPrefix
+ * @property {(Uint8Array | null)=} ed25519
+ */
+
+/**
+ * @typedef {object} ProtoSigMap
+ * @property {(ProtoSignaturePair[] | null)=} sigPair
+ */
+
+/**
+ * @typedef {object} ProtoTransaction
+ * @property {(Uint8Array | null)=} bodyBytes
+ * @property {(ProtoSigMap | null)=} sigMap
+ */
+
+/**
+ * @typedef {object} Transaction
+ * @property {() => boolean} _isFrozen
+ * @property {ProtoTransaction[]} _transactions
+ * @property {(publicKey: PublicKey, signature: Uint8Array) => Transaction} addSignature
+ * @property {() => void} _requireFrozen
+ * @property {() => Transaction} freeze
+ */
+
+/**
  * A private key on the Hedera™ network.
  */
 export default class PrivateKey extends Key {
@@ -196,6 +222,46 @@ export default class PrivateKey extends Key {
      */
     sign(bytes) {
         return nacl.sign.detached(bytes, this._keyPair.secretKey);
+    }
+
+    /**
+     * @param {Transaction} transaction
+     * @returns {Uint8Array}
+     */
+    signTransaction(transaction) {
+        transaction._requireFrozen();
+
+        if (!transaction._isFrozen()) {
+            transaction.freeze();
+        }
+
+        if (transaction._transactions.length != 1) {
+            throw new Error(
+                "`PrivateKey.signTransaction()` requires `Transaction` to have a single node `AccountId` set"
+            );
+        }
+
+        const tx = /** @type {ProtoTransaction} */ (transaction
+            ._transactions[0]);
+
+        const siganture = this.sign(
+            tx.bodyBytes != null ? tx.bodyBytes : new Uint8Array()
+        );
+
+        if (tx.sigMap == null) {
+            tx.sigMap = {};
+        }
+
+        if (tx.sigMap.sigPair == null) {
+            tx.sigMap.sigPair = [];
+        }
+
+        tx.sigMap.sigPair.push({
+            pubKeyPrefix: this.publicKey.toBytes(),
+            ed25519: siganture,
+        });
+
+        return siganture;
     }
 
     /**
