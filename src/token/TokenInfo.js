@@ -1,7 +1,6 @@
 import TokenId from "./TokenId.js";
 import AccountId from "../account/AccountId.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
-import Long from "long";
 import Duration from "../Duration.js";
 import Timestamp from "../Timestamp.js";
 
@@ -41,7 +40,7 @@ export default class TokenInfo {
      * @param {boolean | null} props.defaultFreezeStatus;
      * @param {boolean | null} props.defaultKycStatus;
      * @param {boolean} props.isDeleted;
-     * @param {AccountId | null} props.autoRenewAccount;
+     * @param {AccountId | null} props.autoRenewAccountId;
      * @param {Duration} props.autoRenewPeriod;
      * @param {Timestamp} props.expirationTime;
      */
@@ -159,8 +158,16 @@ export default class TokenInfo {
          * An account which will be automatically charged to renew the token's expiration, at autoRenewPeriod interval
          *
          * @readonly
+         * @deprecated Use `TokenInfo.autoRenewAccountId` instead.
          */
-        this.autoRenewAccount = props.autoRenewAccount;
+        this.autoRenewAccount = null;
+
+        /**
+         * An account which will be automatically charged to renew the token's expiration, at autoRenewPeriod interval
+         *
+         * @readonly
+         */
+        this.autoRenewAccountId = props.autoRenewAccountId;
 
         /**
          * The interval at which the auto-renew account will be charged to extend the token's expiry
@@ -212,21 +219,14 @@ export default class TokenInfo {
             defaultKycStatus:
                 defaultKycStatus === 0 ? null : defaultKycStatus == 1,
             isDeleted: /** @type {boolean} */ (info.isDeleted),
-            autoRenewAccount:
+            autoRenewAccountId:
                 info.autoRenewAccount != null &&
-                info.autoRenewAccount != null &&
-                Long.fromValue(
-                    /** @type {Long | number} */ (info.autoRenewAccount
-                        .shardNum)
-                ).toInt() !== 0 &&
-                Long.fromValue(
-                    /** @type {Long | number} */ (info.autoRenewAccount
-                        .realmNum)
-                ).toInt() !== 0 &&
-                Long.fromValue(
-                    /** @type {Long | number} */ (info.autoRenewAccount
-                        .accountNum)
-                ).toInt() !== 0
+                /** @type {Long} */ (info.autoRenewAccount.shardNum).toInt() !==
+                    0 &&
+                /** @type {Long} */ (info.autoRenewAccount.realmNum).toInt() !==
+                    0 &&
+                /** @type {Long} */ (info.autoRenewAccount
+                    .accountNum).toInt() !== 0
                     ? AccountId._fromProtobuf(info.autoRenewAccount)
                     : null,
             autoRenewPeriod: new Duration(
@@ -269,8 +269,8 @@ export default class TokenInfo {
                     : 2,
             isDeleted: this.isDeleted,
             autoRenewAccount:
-                this.autoRenewAccount != null
-                    ? this.autoRenewAccount._toProtobuf()
+                this.autoRenewAccountId != null
+                    ? this.autoRenewAccountId._toProtobuf()
                     : undefined,
             autoRenewPeriod: this.autoRenewPeriod.seconds,
             expiry: this.expirationTime.seconds,
