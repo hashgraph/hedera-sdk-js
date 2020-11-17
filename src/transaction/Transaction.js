@@ -2,6 +2,7 @@ import Hbar from "../Hbar.js";
 import TransactionResponse from "./TransactionResponse.js";
 import TransactionId from "./TransactionId.js";
 import TransactionHashMap from "./TransactionHashMap.js";
+import SignatureMap from "./SignatureMap.js";
 import Executable from "../Executable.js";
 import Status from "../Status.js";
 import Long from "long";
@@ -461,6 +462,47 @@ export default class Transaction extends Executable {
         }
 
         return this.signWith(operator.publicKey, operator.transactionSigner);
+    }
+
+    /**
+     * @param {PublicKey} publicKey
+     * @param {Uint8Array} signature
+     * @returns {this}
+     */
+    addSignature(publicKey, signature) {
+        const publicKeyData = publicKey.toBytes();
+        const publicKeyHex = hex.encode(publicKeyData);
+
+        if (this._signerPublicKeys.has(publicKeyHex)) {
+            // this public key has already signed this transaction
+            return this;
+        }
+
+        for (const transaction of this._transactions) {
+            if (transaction.sigMap == null) {
+                transaction.sigMap = {};
+            }
+
+            if (transaction.sigMap.sigPair == null) {
+                transaction.sigMap.sigPair = [];
+            }
+
+            transaction.sigMap.sigPair.push({
+                pubKeyPrefix: publicKeyData,
+                ed25519: signature,
+            });
+        }
+
+        this._signerPublicKeys.add(publicKeyHex);
+
+        return this;
+    }
+
+    /**
+     * @returns {SignatureMap}
+     */
+    getSignatures() {
+        return SignatureMap._fromTransaction(this);
     }
 
     /**

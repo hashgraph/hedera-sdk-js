@@ -1,11 +1,6 @@
 /**
- * @template T
- * @typedef {import("./EntityId.js").default<T>} EntityId<T>
- */
-
-/**
  * @abstract
- * @template {EntityId<*>} KeyT
+ * @template {{ toString(): string }} KeyT
  * @template ValueT
  */
 export default class ObjectMap {

@@ -205,7 +205,9 @@ export default class FileAppendTransaction extends Transaction {
             return this;
         }
 
-        const chunks = Math.floor((this._contents.length + (CHUNK_SIZE - 1)) / CHUNK_SIZE);
+        const chunks = Math.floor(
+            (this._contents.length + (CHUNK_SIZE - 1)) / CHUNK_SIZE
+        );
 
         if (chunks > this._maxChunks) {
             throw new Error(
@@ -273,8 +275,9 @@ export default class FileAppendTransaction extends Transaction {
             await super.signWithOperator(client);
         }
 
-        const transactionCount =
-            Math.floor(this._transactions.length / this._nodeIds.length);
+        const transactionCount = Math.floor(
+            this._transactions.length / this._nodeIds.length
+        );
         const responses = [];
         for (
             this._nextGroupIndex = 0;
