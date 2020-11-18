@@ -160,6 +160,8 @@ import TransactionID = proto.TransactionID;
 import TransactionReceipt = proto.TransactionReceipt;
 import TransactionRecord = proto.TransactionRecord;
 
+import ISignatureMap = proto.ISignatureMap;
+
 export {
     IAccountID,
     IConsensusCreateTopicTransactionBody,
@@ -249,6 +251,7 @@ export {
     INetworkGetVersionInfoQuery,
     IFreezeTransactionBody,
     ITransferList,
+    ISignatureMap,
 
     // HTS Support
     ITokenAssociateTransactionBody,
