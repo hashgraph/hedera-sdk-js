@@ -107,7 +107,7 @@ export default class TransactionReceipt {
             contractID:
                 this.contractId != null ? this.contractId._toProtobuf() : null,
             topicID: this.topicId != null ? this.topicId._toProtobuf() : null,
-            tokenId: this.topicId != null ? this.topicId._toProtobuf() : null,
+            tokenID: this.topicId != null ? this.topicId._toProtobuf() : null,
 
             topicRunningHash:
                 this.topicRunningHash == null ? null : this.topicRunningHash,
@@ -158,8 +158,8 @@ export default class TransactionReceipt {
                     : null,
 
             tokenId:
-                receipt.tokenId != null
-                    ? TokenId._fromProtobuf(receipt.tokenId)
+                receipt.tokenID != null
+                    ? TokenId._fromProtobuf(receipt.tokenID)
                     : null,
 
             exchangeRate:

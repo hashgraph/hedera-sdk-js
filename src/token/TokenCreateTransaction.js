@@ -241,11 +241,11 @@ export default class TokenCreateTransaction extends Transaction {
                         : undefined,
                 expirationTime:
                     create.expiry != null
-                        ? new Timestamp(create.expiry, 0)
+                        ? Timestamp._fromProtobuf(create.expiry)
                         : undefined,
                 autoRenewPeriod:
                     create.autoRenewPeriod != null
-                        ? create.autoRenewPeriod
+                        ? Duration._fromProtobuf(create.autoRenewPeriod)
                         : undefined,
             }),
             transactions,
@@ -568,11 +568,11 @@ export default class TokenCreateTransaction extends Transaction {
                     : null,
             expiry:
                 this._expirationTime != null
-                    ? this._expirationTime.seconds
+                    ? this._expirationTime._toProtobuf()
                     : null,
             autoRenewPeriod:
                 this._autoRenewPeriod != null
-                    ? this.autoRenewPeriod.seconds
+                    ? this.autoRenewPeriod._toProtobuf()
                     : null,
         };
     }

@@ -13,6 +13,7 @@ import Timestamp from "../Timestamp.js";
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").IKey} proto.IKey
+ * @typedef {import("@hashgraph/proto").IDuration} proto.IDuration
  */
 
 /**
@@ -186,6 +187,11 @@ export default class TokenInfo {
         const defaultFreezeStatus = /** @type {proto.TokenFreezeStatus} */ (info.defaultFreezeStatus);
         const defaultKycStatus = /** @type {proto.TokenKycStatus} */ (info.defaultKycStatus);
 
+        const autoRenewAccountId =
+            info.autoRenewAccount != null
+                ? AccountId._fromProtobuf(info.autoRenewAccount)
+                : new AccountId(0);
+
         return new TokenInfo({
             tokenId: TokenId._fromProtobuf(
                 /** @type {proto.ITokenID} */ (info.tokenId)
@@ -210,21 +216,21 @@ export default class TokenInfo {
                 defaultFreezeStatus === 0 ? null : defaultFreezeStatus == 1,
             defaultKycStatus:
                 defaultKycStatus === 0 ? null : defaultKycStatus == 1,
-            isDeleted: /** @type {boolean} */ (info.isDeleted),
-            autoRenewAccountId:
-                info.autoRenewAccount != null &&
-                /** @type {Long} */ (info.autoRenewAccount.shardNum).toInt() !==
-                    0 &&
-                /** @type {Long} */ (info.autoRenewAccount.realmNum).toInt() !==
-                    0 &&
-                /** @type {Long} */ (info.autoRenewAccount
-                    .accountNum).toInt() !== 0
-                    ? AccountId._fromProtobuf(info.autoRenewAccount)
+            isDeleted: /** @type {boolean} */ (info.deleted),
+            autoRenewAccountId: 
+                !(
+                    autoRenewAccountId.shard.toInt() == 0 &&
+                    autoRenewAccountId.realm.toInt() == 0 &&
+                    autoRenewAccountId.num.toInt() == 0
+                )
+                    ? autoRenewAccountId
                     : null,
-            autoRenewPeriod: new Duration(
-                /** @type {Long} */ (info.autoRenewPeriod)
+            autoRenewPeriod: Duration._fromProtobuf(
+                /** @type {proto.IDuration} */ (info.autoRenewPeriod)
             ),
-            expirationTime: new Timestamp(/** @type {Long} */ (info.expiry), 0),
+            expirationTime: Timestamp._fromProtobuf(
+                /** @type {proto.ITimestamp} */ (info.expiry)
+            ),
         });
     }
 
@@ -259,13 +265,13 @@ export default class TokenInfo {
                     : this.defaultKycStatus
                     ? 1
                     : 2,
-            isDeleted: this.isDeleted,
+            deleted: this.isDeleted,
             autoRenewAccount:
                 this.autoRenewAccountId != null
                     ? this.autoRenewAccountId._toProtobuf()
                     : undefined,
-            autoRenewPeriod: this.autoRenewPeriod.seconds,
-            expiry: this.expirationTime.seconds,
+            autoRenewPeriod: this.autoRenewPeriod._toProtobuf(),
+            expiry: this.expirationTime._toProtobuf(),
         };
     }
 }

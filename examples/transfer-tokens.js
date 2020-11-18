@@ -64,7 +64,7 @@ async function main() {
         .setDecimals(3)
         .setInitialSupply(100)
         .setTreasuryAccountId(client.operatorAccountId)
-        .setAutoRenewAccount(client.operatorAccountId)
+        .setAutoRenewAccountId(client.operatorAccountId)
         .setAdminKey(client.operatorPublicKey)
         .setFreezeKey(client.operatorPublicKey)
         .setWipeKey(client.operatorPublicKey)
