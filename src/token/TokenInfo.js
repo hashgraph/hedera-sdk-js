@@ -158,14 +158,6 @@ export default class TokenInfo {
          * An account which will be automatically charged to renew the token's expiration, at autoRenewPeriod interval
          *
          * @readonly
-         * @deprecated Use `TokenInfo.autoRenewAccountId` instead.
-         */
-        this.autoRenewAccount = null;
-
-        /**
-         * An account which will be automatically charged to renew the token's expiration, at autoRenewPeriod interval
-         *
-         * @readonly
          */
         this.autoRenewAccountId = props.autoRenewAccountId;
 

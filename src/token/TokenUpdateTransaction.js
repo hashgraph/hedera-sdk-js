@@ -154,7 +154,7 @@ export default class TokenUpdateTransaction extends Transaction {
         }
 
         if (props.autoRenewAccountId != null) {
-            this.setAutoRenewAccount(props.autoRenewAccountId);
+            this.setAutoRenewAccountId(props.autoRenewAccountId);
         }
 
         if (props.expirationTime != null) {
@@ -419,7 +419,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {AccountId | string} id
      * @returns {this}
      */
-    setAutoRenewAccount(id) {
+    setAutoRenewAccountId(id) {
         this._requireNotFrozen();
         this._autoRenewAccountId =
             id instanceof AccountId ? id : AccountId.fromString(id);

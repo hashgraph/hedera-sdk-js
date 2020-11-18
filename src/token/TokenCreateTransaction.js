@@ -485,23 +485,6 @@ export default class TokenCreateTransaction extends Transaction {
     /**
      * @param {AccountId | string} id
      * @returns {this}
-     *
-     * @deprecated Use `TokenCreateTransaction.setAutoRenewAccountId()` instead
-     */
-    setAutoRenewAccount(id) {
-        console.warn(
-            "Deprecated: Use `TokenCreateTransaction.setAutoRenewAccountId()` instead"
-        );
-        this._requireNotFrozen();
-        this._autoRenewAccountId =
-            id instanceof AccountId ? id : AccountId.fromString(id);
-
-        return this;
-    }
-
-    /**
-     * @param {AccountId | string} id
-     * @returns {this}
      */
     setAutoRenewAccountId(id) {
         this._requireNotFrozen();
