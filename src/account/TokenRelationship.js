@@ -9,20 +9,6 @@ import TokenId from "../token/TokenId.js";
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  */
 
-/** @enum {number} */
-const KycStatus = {
-    NotApplicable: 0,
-    Granted: 1,
-    Revoked: 2,
-};
-
-/** @enum {number} */
-const FreezeStatus = {
-    NotApplicable: 0,
-    Frozen: 1,
-    NotFrozen: 2,
-};
-
 /**
  * Token's information related to the given Account
  */
@@ -32,10 +18,8 @@ export default class TokenRelationship {
      * @param {TokenId} props.tokenId
      * @param {string} props.symbol
      * @param {Long} props.balance
-     * @param {KycStatus} props.kycStatus
-     * @param {boolean} props.isKycGranted
-     * @param {FreezeStatus} props.freezeStatus
-     * @param {boolean} props.isFrozen
+     * @param {boolean | null} props.isKycGranted
+     * @param {boolean | null} props.isFrozen
      */
     constructor(props) {
         /**
@@ -63,23 +47,7 @@ export default class TokenRelationship {
          *
          * @readonly
          */
-        this.kycStatus = props.kycStatus;
-
-        /**
-         * The KYC status of the account (KycNotApplicable, Granted or Revoked). If the token does
-         * not have KYC key, KycNotApplicable is returned
-         *
-         * @readonly
-         */
         this.isKycGranted = props.isKycGranted;
-
-        /**
-         * The Freeze status of the account (FreezeNotApplicable, Frozen or Unfrozen). If the token
-         * does not have Freeze key, FreezeNotApplicable is returned
-         *
-         * @readonly
-         */
-        this.freezeStatus = props.freezeStatus;
 
         /**
          * The Freeze status of the account (FreezeNotApplicable, Frozen or Unfrozen). If the token
@@ -100,8 +68,14 @@ export default class TokenRelationship {
         const tokenId = TokenId._fromProtobuf(
             /** @type {proto.ITokenID} */ (relationship.tokenId)
         );
-        const kycStatus = /** @type {proto.TokenKycStatus} */ (relationship.kycStatus);
-        const freezeStatus = /** @type {proto.TokenFreezeStatus} */ (relationship.freezeStatus);
+        const isKycGranted =
+            relationship.kycStatus == null || relationship.kycStatus === 0
+                ? null
+                : relationship.kycStatus === 1;
+        const isFrozen =
+            relationship.freezeStatus == null || relationship.freezeStatus === 0
+                ? null
+                : relationship.freezeStatus === 1;
 
         return new TokenRelationship({
             tokenId,
@@ -112,10 +86,8 @@ export default class TokenRelationship {
                         ? relationship.balance
                         : Long.fromValue(relationship.balance)
                     : Long.ZERO,
-            kycStatus,
-            isKycGranted: kycStatus === 1,
-            freezeStatus,
-            isFrozen: freezeStatus === 1,
+            isKycGranted,
+            isFrozen,
         });
     }
 
@@ -127,8 +99,9 @@ export default class TokenRelationship {
             tokenId: this.tokenId._toProtobuf(),
             symbol: this.symbol,
             balance: this.balance,
-            kycStatus: this.kycStatus,
-            freezeStatus: this.freezeStatus,
+            kycStatus:
+                this.isKycGranted == null ? 0 : this.isKycGranted ? 1 : 2,
+            freezeStatus: this.isFrozen == null ? 0 : this.isFrozen ? 1 : 2,
         };
     }
 }

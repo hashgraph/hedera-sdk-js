@@ -151,7 +151,10 @@ export default class Transaction extends Executable {
         // eslint-disable-next-line no-constant-condition
         while (true) {
             try {
-                const transaction = ProtoTransaction.decode(reader, reader.uint32());
+                const transaction = ProtoTransaction.decode(
+                    reader,
+                    reader.uint32()
+                );
                 const body = ProtoTransactionBody.decode(transaction.bodyBytes);
 
                 if (body.data == null) {
