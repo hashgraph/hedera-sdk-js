@@ -151,7 +151,7 @@ export default class Transaction extends Executable {
         // eslint-disable-next-line no-constant-condition
         while (true) {
             try {
-                const transaction = ProtoTransaction.decode(reader);
+                const transaction = ProtoTransaction.decode(reader, reader.uint32());
                 const body = ProtoTransactionBody.decode(transaction.bodyBytes);
 
                 if (body.data == null) {
@@ -183,14 +183,13 @@ export default class Transaction extends Executable {
                 }
 
                 list.set(nodeAccountId, transaction);
-            } catch (err) {
-                console.error("error while decoding:", err);
+            } catch {
                 break;
             }
         }
 
         if (first == null || first.data == null) {
-            throw new Error("Not transaction found in bytes");
+            throw new Error("No transaction found in bytes");
         }
 
         const fromProtobuf = TRANSACTION_REGISTRY.get(first.data);
@@ -572,9 +571,8 @@ export default class Transaction extends Executable {
         this._requireFrozen();
         let writer;
 
-        for (const nodeAccountId of this._nodeIds) {
-            const tx = this._makeTransaction(nodeAccountId);
-            writer = ProtoTransaction.encode(tx, writer).ldelim();
+        for (const transaction of this._transactions) {
+            writer = ProtoTransaction.encode(transaction, writer).ldelim();
         }
 
         return writer == null ? new Uint8Array() : writer.finish();
