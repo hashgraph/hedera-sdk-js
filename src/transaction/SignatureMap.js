@@ -1,12 +1,13 @@
-import { PublicKey } from "@hashgraph/cryptography";
+import NodeAccountIdSignatureMap from "./NodeAccountIdSignatureMap.js";
 import ObjectMap from "../ObjectMap.js";
+import AccountId from "../account/AccountId.js";
 
 /**
- * @augments {ObjectMap<PublicKey, Uint8Array>}
+ * @augments {ObjectMap<AccountId, NodeAccountIdSignatureMap>}
  */
 export default class SignatureMap extends ObjectMap {
     constructor() {
-        super((s) => PublicKey.fromString(s));
+        super((s) => AccountId.fromString(s));
     }
 
     /**
@@ -20,18 +21,12 @@ export default class SignatureMap extends ObjectMap {
             return signatures;
         }
 
-        const sigPairs =
-            transaction._transactions[0].sigMap != null
-                ? transaction._transactions[0].sigMap.sigPair != null
-                    ? transaction._transactions[0].sigMap.sigPair
-                    : []
-                : [];
-
-        for (const sigPair of sigPairs) {
-            if (sigPair.pubKeyPrefix != null && sigPair.ed25519 != null) {
+        for (let i = 0; i < transaction._nodeIds.length; i++) {
+            const sigMap = transaction._transactions[i].sigMap;
+            if (sigMap != null) {
                 signatures._set(
-                    PublicKey.fromBytes(sigPair.pubKeyPrefix),
-                    sigPair.ed25519
+                    transaction._nodeIds[i],
+                    NodeAccountIdSignatureMap._fromTransactionSigMap(sigMap)
                 );
             }
         }
