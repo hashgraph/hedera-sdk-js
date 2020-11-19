@@ -17,12 +17,46 @@ export default class GrpcStatus {
      * @returns {GrpcStatus}
      */
     static _fromValue(code) {
-        // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return GrpcStatus[code] != null
-            ? // @ts-ignore
-              GrpcStatus[code]
-            : new GrpcStatus(code);
+        switch (code) {
+            case 0:
+                return GrpcStatus.Ok;
+            case 1:
+                return GrpcStatus.Cancelled;
+            case 2:
+                return GrpcStatus.Unknown;
+            case 3:
+                return GrpcStatus.InvalidArgument;
+            case 4:
+                return GrpcStatus.DeadlineExceeded;
+            case 5:
+                return GrpcStatus.NotFound;
+            case 6:
+                return GrpcStatus.AlreadyExists;
+            case 7:
+                return GrpcStatus.PermissionDenied;
+            case 16:
+                return GrpcStatus.Unauthenticated;
+            case 8:
+                return GrpcStatus.ResourceExhausted;
+            case 9:
+                return GrpcStatus.FailedPrecondition;
+            case 10:
+                return GrpcStatus.Aborted;
+            case 11:
+                return GrpcStatus.OutOfRange;
+            case 12:
+                return GrpcStatus.Unimplemented;
+            case 13:
+                return GrpcStatus.Internal;
+            case 14:
+                return GrpcStatus.Unavailable;
+            case 15:
+                return GrpcStatus.DataLoss;
+            default:
+                throw new Error(
+                    "(BUG) non-exhaustive GrpcStatus switch statement"
+                );
+        }
     }
 
     /**

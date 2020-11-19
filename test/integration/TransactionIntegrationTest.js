@@ -49,25 +49,27 @@ describe("TransactionIntegration", function () {
         ).getReceipt(client);
     });
 
-    it("signs correctly", async function() {
+    it("signs correctly", async function () {
         const client = await newClient();
         const key = PrivateKey.generate();
 
-        let transaction = await (await new TokenCreateTransaction()
-            .setAdminKey(key.publicKey)
-            .setNodeAccountIds([new AccountId(3)])
-            .freezeWith(client)
-            .sign(key))
-            .signWithOperator(client);
+        let transaction = await (
+            await new TokenCreateTransaction()
+                .setAdminKey(key.publicKey)
+                .setNodeAccountIds([new AccountId(3)])
+                .freezeWith(client)
+                .sign(key)
+        ).signWithOperator(client);
 
         expect(transaction._transactions[0].sigMap.sigPair.length).to.eql(2);
 
-        transaction = await (await new TokenCreateTransaction()
-            .setAdminKey(key.publicKey)
-            .setNodeAccountIds([new AccountId(3)])
-            .freezeWith(client)
-            .signWithOperator(client))
-            .sign(key);
+        transaction = await (
+            await new TokenCreateTransaction()
+                .setAdminKey(key.publicKey)
+                .setNodeAccountIds([new AccountId(3)])
+                .freezeWith(client)
+                .signWithOperator(client)
+        ).sign(key);
 
         expect(transaction._transactions[0].sigMap.sigPair.length).to.eql(2);
     });

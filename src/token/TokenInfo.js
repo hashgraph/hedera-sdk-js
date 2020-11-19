@@ -217,14 +217,13 @@ export default class TokenInfo {
             defaultKycStatus:
                 defaultKycStatus === 0 ? null : defaultKycStatus == 1,
             isDeleted: /** @type {boolean} */ (info.deleted),
-            autoRenewAccountId: 
-                !(
-                    autoRenewAccountId.shard.toInt() == 0 &&
-                    autoRenewAccountId.realm.toInt() == 0 &&
-                    autoRenewAccountId.num.toInt() == 0
-                )
-                    ? autoRenewAccountId
-                    : null,
+            autoRenewAccountId: !(
+                autoRenewAccountId.shard.toInt() == 0 &&
+                autoRenewAccountId.realm.toInt() == 0 &&
+                autoRenewAccountId.num.toInt() == 0
+            )
+                ? autoRenewAccountId
+                : null,
             autoRenewPeriod: Duration._fromProtobuf(
                 /** @type {proto.IDuration} */ (info.autoRenewPeriod)
             ),
