@@ -4,6 +4,7 @@ import newClient from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
 import AccountDeleteTransaction from "../../src/account/AccountDeleteTransaction.js";
+import TokenCreateTransaction from "../../src/token/TokenCreateTransaction.js";
 import * as hex from "../../src/encoding/hex.js";
 
 describe("TransactionIntegration", function () {
@@ -46,5 +47,28 @@ describe("TransactionIntegration", function () {
                     .sign(key)
             ).execute(client)
         ).getReceipt(client);
+    });
+
+    it("signs correctly", async function() {
+        const client = await newClient();
+        const key = PrivateKey.generate();
+
+        let transaction = await (await new TokenCreateTransaction()
+            .setAdminKey(key.publicKey)
+            .setNodeAccountIds([new AccountId(3)])
+            .freezeWith(client)
+            .sign(key))
+            .signWithOperator(client);
+
+        expect(transaction._transactions[0].sigMap.sigPair.length).to.eql(2);
+
+        transaction = await (await new TokenCreateTransaction()
+            .setAdminKey(key.publicKey)
+            .setNodeAccountIds([new AccountId(3)])
+            .freezeWith(client)
+            .signWithOperator(client))
+            .sign(key);
+
+        expect(transaction._transactions[0].sigMap.sigPair.length).to.eql(2);
     });
 });
