@@ -6,7 +6,7 @@ import Timestamp from "../src/Timestamp.js";
 import * as hex from "../src/encoding/hex.js";
 import { PrivateKey } from "../src/exports.js";
 
-describe("Transcation", function () {
+describe("Transaction", function () {
     it("toBytes", async function () {
         const key = PrivateKey.fromString(
             "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511c"
