@@ -227,9 +227,9 @@ export default class Client {
     async ping(accountId) {
         await new AccountBalanceQuery({ accountId })
             .setNodeAccountIds([
-                accountId instanceof AccountId ?
-                    accountId :
-                    AccountId.fromString(accountId)
+                accountId instanceof AccountId
+                    ? accountId
+                    : AccountId.fromString(accountId),
             ])
             .execute(this);
     }

@@ -9,8 +9,8 @@ import Long from "long";
 import * as sha384 from "../cryptography/sha384.js";
 import * as hex from "../encoding/hex.js";
 import {
-    Reader,
     Transaction as ProtoTransaction,
+    TransactionList as ProtoTransactionList,
     TransactionBody as ProtoTransactionBody,
 } from "@hashgraph/proto";
 import AccountId from "../account/AccountId.js";
@@ -22,6 +22,7 @@ import AccountId from "../account/AccountId.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ITransactionList} proto.ITransactionList
  * @typedef {import("@hashgraph/proto").ITransactionID} proto.ITransactionID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
@@ -145,65 +146,57 @@ export default class Transaction extends Executable {
         /** @type {Map<string, Map<AccountId, proto.ITransaction>>} */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const transactions = new Map();
-        const reader = new Reader(bytes);
-        let first;
+        let body;
 
-        // eslint-disable-next-line no-constant-condition
-        while (true) {
-            try {
-                const transaction = ProtoTransaction.decode(
-                    reader,
-                    reader.uint32()
-                );
-                const body = ProtoTransactionBody.decode(transaction.bodyBytes);
+        const list = ProtoTransactionList.decode(bytes).transactionList;
 
-                if (body.data == null) {
-                    throw new Error(
-                        "(BUG) body.data was not set in the protobuf"
-                    );
-                }
-
-                if (first == null) {
-                    first = body;
-                }
-
-                const transactionId = TransactionId._fromProtobuf(
-                    /** @type {proto.ITransactionID} */ (body.transactionID)
-                ).toString();
-                const nodeAccountId = AccountId._fromProtobuf(
-                    /** @type {proto.IAccountID} */ (body.nodeAccountID)
-                );
-
-                /** @type {Map<AccountId, proto.ITransaction>} */
-                let list = new Map();
-
-                if (transactions.get(transactionId) == null) {
-                    transactions.set(transactionId, list);
-                } else {
-                    list = /** @type {Map<AccountId, proto.ITransaction>} */ (transactions.get(
-                        transactionId
-                    ));
-                }
-
-                list.set(nodeAccountId, transaction);
-            } catch {
-                break;
+        for (const transaction of list) {
+            if (transaction.bodyBytes == null) {
+                throw new Error("Transaction.bodyBytes are null");
             }
+
+            body = ProtoTransactionBody.decode(transaction.bodyBytes);
+
+            if (body.data == null) {
+                throw new Error("(BUG) body.data was not set in the protobuf");
+            }
+
+            const transactionId = TransactionId._fromProtobuf(
+                /** @type {proto.ITransactionID} */ (body.transactionID)
+            ).toString();
+            const nodeAccountId = AccountId._fromProtobuf(
+                /** @type {proto.IAccountID} */ (body.nodeAccountID)
+            );
+
+            /** @type {Map<AccountId, proto.ITransaction>} */
+            let list = new Map();
+
+            if (transactions.get(transactionId) == null) {
+                transactions.set(transactionId, list);
+            } else {
+                list = /** @type {Map<AccountId, proto.ITransaction>} */ (transactions.get(
+                    transactionId
+                ));
+            }
+
+            list.set(nodeAccountId, transaction);
         }
 
-        if (first == null || first.data == null) {
-            throw new Error("No transaction found in bytes");
-        }
-
-        const fromProtobuf = TRANSACTION_REGISTRY.get(first.data);
-
-        if (fromProtobuf == null) {
+        if (body == null || body.data == null) {
             throw new Error(
-                `(BUG) Transaction.fromBytes() not implemented for type ${first.data}`
+                "No transaction found in bytes or failed to decode TransactionBody"
             );
         }
 
-        return fromProtobuf(transactions, first);
+        const fromProtobuf = TRANSACTION_REGISTRY.get(body.data);
+
+        if (fromProtobuf == null) {
+            throw new Error(
+                `(BUG) Transaction.fromBytes() not implemented for type ${body.data}`
+            );
+        }
+
+        return fromProtobuf(transactions, body);
     }
 
     /**
@@ -572,13 +565,10 @@ export default class Transaction extends Executable {
      */
     toBytes() {
         this._requireFrozen();
-        let writer;
 
-        for (const transaction of this._transactions) {
-            writer = ProtoTransaction.encode(transaction, writer).ldelim();
-        }
-
-        return writer == null ? new Uint8Array() : writer.finish();
+        return ProtoTransactionList.encode({
+            transactionList: this._transactions,
+        }).finish();
     }
 
     /**
