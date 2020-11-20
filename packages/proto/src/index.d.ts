@@ -1,8 +1,9 @@
 import * as $protobuf from "@hashgraph/protobufjs/minimal.js";
 import { proto } from "./proto.js";
 
-// re-export protobuf reader for usage by @hashgraph/sdk
+// re-export protobuf reader and writer for usage by @hashgraph/sdk
 import Reader = $protobuf.Reader;
+import Writer = $protobuf.Writer;
 
 import ConsensusService = proto.ConsensusService;
 import CryptoService = proto.CryptoService;
@@ -15,6 +16,7 @@ import TokenService = proto.TokenService;
 
 export {
     Reader,
+    Writer,
     ConsensusService,
     CryptoService,
     FileService,
@@ -32,10 +34,22 @@ import Query = proto.Query;
 import ResponseCodeEnum = proto.ResponseCodeEnum;
 import TopicID = proto.TopicID;
 import Transaction = proto.Transaction;
+import TransactionList = proto.TransactionList;
 import TransactionBody = proto.TransactionBody;
 import ResponseType = proto.ResponseType;
 
-export { ResponseCodeEnum, Transaction, ResponseType, TransactionBody, Query, TopicID, FileID, AccountID, ContractID };
+export {
+    ResponseCodeEnum,
+    Transaction,
+    TransactionList,
+    ResponseType,
+    TransactionBody,
+    Query,
+    TopicID,
+    FileID,
+    AccountID,
+    ContractID
+};
 
 import IProxyStaker = proto.IProxyStaker;
 import ILiveHash = proto.ILiveHash;
@@ -109,6 +123,7 @@ import IResponseHeader = proto.IResponseHeader;
 import ITimestamp = proto.ITimestamp;
 import ITopicID = proto.ITopicID;
 import ITransaction = proto.ITransaction;
+import ITransactionList = proto.ITransactionList;
 import ITransactionBody = proto.ITransactionBody;
 import ITransactionGetReceiptQuery = proto.ITransactionGetReceiptQuery;
 import ITransactionGetReceiptResponse = proto.ITransactionGetReceiptResponse;
@@ -208,6 +223,7 @@ export {
     ITimestamp,
     ITopicID,
     ITransaction,
+    ITransactionList,
     ITransactionBody,
     ITransactionGetReceiptQuery,
     ITransactionGetReceiptResponse,

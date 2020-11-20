@@ -3,6 +3,7 @@ import { proto } from "./proto.js";
 
 // re-export protobuf reader for usage by @hashgraph/sdk
 export const Reader = $protobuf.Reader;
+export const Writer = $protobuf.Writer;
 
 export const ConsensusService = proto.ConsensusService;
 export const CryptoService = proto.CryptoService;
@@ -27,6 +28,7 @@ export const SemanticVersion = proto.SemanticVersion;
 export const TokenID = proto.TokenID;
 export const TopicID = proto.TopicID;
 export const Transaction = proto.Transaction;
+export const TransactionList = proto.TransactionList;
 export const TransactionBody = proto.TransactionBody;
 export const TransactionID = proto.TransactionID;
 export const TransactionReceipt = proto.TransactionReceipt;
