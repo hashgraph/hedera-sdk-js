@@ -124,7 +124,7 @@ export default class TokenCreateTransaction extends Transaction {
          * @private
          * @type {Timestamp}
          */
-        this._expirationTime = new Timestamp(Date.now() + 7890000, 0);
+        this._expirationTime = Timestamp.fromDate(Date.now());
 
         /**
          * @private

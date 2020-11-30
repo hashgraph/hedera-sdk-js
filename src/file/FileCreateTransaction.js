@@ -44,10 +44,7 @@ export default class FileCreateTransaction extends Transaction {
          * @private
          * @type {Timestamp}
          */
-        this._expirationTime = new Timestamp(
-            Math.floor(Date.now() / 1000) + 7890000,
-            0
-        );
+        this._expirationTime = Timestamp.fromDate(Date.now() + 7890000);
 
         /**
          * @private

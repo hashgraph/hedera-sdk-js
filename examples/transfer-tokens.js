@@ -64,14 +64,12 @@ async function main() {
         .setDecimals(3)
         .setInitialSupply(100)
         .setTreasuryAccountId(client.operatorAccountId)
-        .setAutoRenewAccountId(client.operatorAccountId)
         .setAdminKey(client.operatorPublicKey)
         .setFreezeKey(client.operatorPublicKey)
         .setWipeKey(client.operatorPublicKey)
         .setKycKey(client.operatorPublicKey)
         .setSupplyKey(client.operatorPublicKey)
         .setFreezeDefault(false)
-        .setMaxTransactionFee(new Hbar(1))
         .execute(client);
 
     const tokenId = (await resp.getReceipt(client)).tokenId;
