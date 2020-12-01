@@ -193,14 +193,19 @@ export default class TokenInfo {
                 : new AccountId(0);
 
         return new TokenInfo({
-            tokenId: TokenId._fromProtobuf(/** @type {proto.ITokenID} */ (info.tokenId)),
+            tokenId: TokenId._fromProtobuf(
+                /** @type {proto.ITokenID} */ (info.tokenId)
+            ),
             name: /** @type {string} */ (info.name),
             symbol: /** @type {string} */ (info.symbol),
             decimals: /** @type {number} */ (info.decimals),
             totalSupply: /** @type {Long} */ (info.totalSupply),
-            treasuryAccountId: info.treasury != null ?
-                AccountId._fromProtobuf(/** @type {proto.IAccountID} */ (info.treasury)) :
-                null,
+            treasuryAccountId:
+                info.treasury != null
+                    ? AccountId._fromProtobuf(
+                          /** @type {proto.IAccountID} */ (info.treasury)
+                      )
+                    : null,
             adminKey:
                 info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
             kycKey: info.kycKey != null ? keyFromProtobuf(info.kycKey) : null,
@@ -222,12 +227,18 @@ export default class TokenInfo {
             )
                 ? autoRenewAccountId
                 : null,
-            autoRenewPeriod: info.autoRenewPeriod != null ?
-            Duration._fromProtobuf(/** @type {proto.IDuration} */ (info.autoRenewPeriod)) :
-            null,
-            expirationTime: info.expiry != null ?
-                Timestamp._fromProtobuf(/** @type {proto.ITimestamp} */ (info.expiry)) :
-                null,
+            autoRenewPeriod:
+                info.autoRenewPeriod != null
+                    ? Duration._fromProtobuf(
+                          /** @type {proto.IDuration} */ (info.autoRenewPeriod)
+                      )
+                    : null,
+            expirationTime:
+                info.expiry != null
+                    ? Timestamp._fromProtobuf(
+                          /** @type {proto.ITimestamp} */ (info.expiry)
+                      )
+                    : null,
         });
     }
 
@@ -241,9 +252,10 @@ export default class TokenInfo {
             symbol: this.symbol,
             decimals: this.decimals,
             totalSupply: this.totalSupply,
-            treasury: this.treasuryAccountId != null ?
-                this.treasuryAccountId._toProtobuf() :
-                null,
+            treasury:
+                this.treasuryAccountId != null
+                    ? this.treasuryAccountId._toProtobuf()
+                    : null,
             adminKey:
                 this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
             kycKey: this.kycKey != null ? keyToProtobuf(this.kycKey) : null,
@@ -269,12 +281,14 @@ export default class TokenInfo {
                 this.autoRenewAccountId != null
                     ? this.autoRenewAccountId._toProtobuf()
                     : undefined,
-            autoRenewPeriod: this.autoRenewPeriod != null ?
-                this.autoRenewPeriod._toProtobuf() :
-                null,
-            expiry: this.expirationTime != null ?
-                this.expirationTime._toProtobuf() :
-                null,
+            autoRenewPeriod:
+                this.autoRenewPeriod != null
+                    ? this.autoRenewPeriod._toProtobuf()
+                    : null,
+            expiry:
+                this.expirationTime != null
+                    ? this.expirationTime._toProtobuf()
+                    : null,
         };
     }
 }

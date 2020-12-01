@@ -40,7 +40,9 @@ describe("TokenCreate", function () {
         expect(info.symbol).to.eql("F");
         expect(info.decimals).to.eql(3);
         expect(info.totalSupply.toInt()).to.eql(1000000);
-        expect(info.treasuryAccountId.toString()).to.be.equal(operatorId.toString());
+        expect(info.treasuryAccountId.toString()).to.be.equal(
+            operatorId.toString()
+        );
         expect(info.adminKey.toString()).to.eql(operatorKey.toString());
         expect(info.kycKey.toString()).to.eql(operatorKey.toString());
         expect(info.freezeKey.toString()).to.eql(operatorKey.toString());
