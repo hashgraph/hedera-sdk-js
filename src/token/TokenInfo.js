@@ -32,7 +32,7 @@ export default class TokenInfo {
      * @param {string} props.symbol;
      * @param {number} props.decimals;
      * @param {Long} props.totalSupply;
-     * @param {AccountId} props.treasury;
+     * @param {AccountId | null} props.treasuryAccountId;
      * @param {Key | null} props.adminKey;
      * @param {Key | null} props.kycKey;
      * @param {Key | null} props.freezeKey;
@@ -42,8 +42,8 @@ export default class TokenInfo {
      * @param {boolean | null} props.defaultKycStatus;
      * @param {boolean} props.isDeleted;
      * @param {AccountId | null} props.autoRenewAccountId;
-     * @param {Duration} props.autoRenewPeriod;
-     * @param {Timestamp} props.expirationTime;
+     * @param {Duration | null} props.autoRenewPeriod;
+     * @param {Timestamp | null} props.expirationTime;
      */
     constructor(props) {
         /**
@@ -82,11 +82,11 @@ export default class TokenInfo {
         this.totalSupply = props.totalSupply;
 
         /**
-         * The ID of the account which is set as Treasury
+         * The ID of the account which is set as treasuryAccountId
          *
          * @readonly
          */
-        this.treasury = props.treasury;
+        this.treasuryAccountId = props.treasuryAccountId;
 
         /**
          * The key which can perform update/delete operations on the token. If empty, the token can be perceived as
@@ -193,16 +193,14 @@ export default class TokenInfo {
                 : new AccountId(0);
 
         return new TokenInfo({
-            tokenId: TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (info.tokenId)
-            ),
+            tokenId: TokenId._fromProtobuf(/** @type {proto.ITokenID} */ (info.tokenId)),
             name: /** @type {string} */ (info.name),
             symbol: /** @type {string} */ (info.symbol),
             decimals: /** @type {number} */ (info.decimals),
             totalSupply: /** @type {Long} */ (info.totalSupply),
-            treasury: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (info.treasury)
-            ),
+            treasuryAccountId: info.treasury != null ?
+                AccountId._fromProtobuf(/** @type {proto.IAccountID} */ (info.treasury)) :
+                null,
             adminKey:
                 info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
             kycKey: info.kycKey != null ? keyFromProtobuf(info.kycKey) : null,
@@ -224,12 +222,12 @@ export default class TokenInfo {
             )
                 ? autoRenewAccountId
                 : null,
-            autoRenewPeriod: Duration._fromProtobuf(
-                /** @type {proto.IDuration} */ (info.autoRenewPeriod)
-            ),
-            expirationTime: Timestamp._fromProtobuf(
-                /** @type {proto.ITimestamp} */ (info.expiry)
-            ),
+            autoRenewPeriod: info.autoRenewPeriod != null ?
+            Duration._fromProtobuf(/** @type {proto.IDuration} */ (info.autoRenewPeriod)) :
+            null,
+            expirationTime: info.expiry != null ?
+                Timestamp._fromProtobuf(/** @type {proto.ITimestamp} */ (info.expiry)) :
+                null,
         });
     }
 
@@ -243,7 +241,9 @@ export default class TokenInfo {
             symbol: this.symbol,
             decimals: this.decimals,
             totalSupply: this.totalSupply,
-            treasury: this.treasury._toProtobuf(),
+            treasury: this.treasuryAccountId != null ?
+                this.treasuryAccountId._toProtobuf() :
+                null,
             adminKey:
                 this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
             kycKey: this.kycKey != null ? keyToProtobuf(this.kycKey) : null,
@@ -269,8 +269,12 @@ export default class TokenInfo {
                 this.autoRenewAccountId != null
                     ? this.autoRenewAccountId._toProtobuf()
                     : undefined,
-            autoRenewPeriod: this.autoRenewPeriod._toProtobuf(),
-            expiry: this.expirationTime._toProtobuf(),
+            autoRenewPeriod: this.autoRenewPeriod != null ?
+                this.autoRenewPeriod._toProtobuf() :
+                null,
+            expiry: this.expirationTime != null ?
+                this.expirationTime._toProtobuf() :
+                null,
         };
     }
 }
