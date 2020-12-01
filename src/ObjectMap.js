@@ -1,7 +1,7 @@
 /**
  * @abstract
  * @template {{ toString(): string }} KeyT
- * @template ValueT
+ * @template {{ toString(): string }} ValueT
  */
 export default class ObjectMap {
     /**
@@ -61,5 +61,19 @@ export default class ObjectMap {
      */
     [Symbol.iterator]() {
         return this.__map[Symbol.iterator]();
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        /** @type {Object.<string, string>} */
+        const map = {};
+
+        for (const [key, value] of this._map) {
+            map[key] = value.toString();
+        }
+
+        return JSON.stringify(map);
     }
 }

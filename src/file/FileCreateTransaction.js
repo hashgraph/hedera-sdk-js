@@ -1,5 +1,6 @@
 import Transaction, {
     TRANSACTION_REGISTRY,
+    DEFAULT_AUTO_RENEW_PERIOD,
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import * as utf8 from "../encoding/utf8.js";
@@ -44,7 +45,9 @@ export default class FileCreateTransaction extends Transaction {
          * @private
          * @type {Timestamp}
          */
-        this._expirationTime = Timestamp.fromDate(Date.now() + 7890000);
+        this._expirationTime = Timestamp.fromDate(
+            Date.now() + DEFAULT_AUTO_RENEW_PERIOD.toInt() * 1000
+        );
 
         /**
          * @private

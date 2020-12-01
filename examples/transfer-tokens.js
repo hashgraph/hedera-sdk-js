@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const {
+    AccountBalanceQuery,
     AccountCreateTransaction,
     AccountDeleteTransaction,
     AccountId,
@@ -103,6 +104,12 @@ async function main() {
         .getReceipt(client);
 
     console.log(`Sent 10 tokens from account ${client.operatorAccountId} to account ${newAccountId} on token ${tokenId}`);
+
+    const balances = await new AccountBalanceQuery()
+        .setAccountId(client.operatorAccountId)
+        .execute(client);
+
+    console.log(`Token balances for ${client.operatorAccountId} are ${balances.tokens.toString()}`);
 
     await (await new TokenWipeTransaction()
         .setNodeAccountIds([resp.nodeId])

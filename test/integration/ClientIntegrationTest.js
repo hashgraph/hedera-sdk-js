@@ -1,6 +1,5 @@
 import newClient from "./client/index.js";
-import AccountBalanceQuery from "../src/account/AccountBalanceQuery.js";
-import AccountId from "../src/account/AccountId.js";
+import { AccountBalanceQuery, AccountId } from "../src/exports.js";
 
 describe("ClientIntegration", function () {
     it("should be executable", async function () {
@@ -13,16 +12,9 @@ describe("ClientIntegration", function () {
             "1.testnet.hedera.com:50211": new AccountId(4),
         });
 
-        const operatorId = client.operatorAccountId;
-        expect(operatorId).to.not.be.null;
+        await new AccountBalanceQuery().setAccountId("3").execute(client);
 
-        await new AccountBalanceQuery()
-            .setAccountId(operatorId)
-            .execute(client);
-
-        await new AccountBalanceQuery()
-            .setAccountId(operatorId)
-            .execute(client);
+        await new AccountBalanceQuery().setAccountId("3").execute(client);
 
         client.setNetwork({
             "1.testnet.hedera.com:50211": new AccountId(4),
