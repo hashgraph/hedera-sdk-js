@@ -160,10 +160,6 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             return this;
         }
 
-        if (this._message.length < CHUNK_SIZE) {
-            return this;
-        }
-
         const chunks = (this._message.length + (CHUNK_SIZE - 1)) / CHUNK_SIZE;
 
         if (chunks > this._maxChunks) {
