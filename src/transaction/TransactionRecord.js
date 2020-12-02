@@ -4,6 +4,7 @@ import Timestamp from "../Timestamp.js";
 import Hbar from "../Hbar.js";
 import Transfer from "../Transfer.js";
 import ContractFunctionResult from "../contract/ContractFunctionResult.js";
+import TokenTransferMap from "../account/TokenTransferMap.js";
 import * as proto from "@hashgraph/proto";
 
 /**
@@ -21,6 +22,7 @@ export default class TransactionRecord {
      * @param {string} props.transactionMemo
      * @param {Hbar} props.transactionFee
      * @param {Transfer[]} props.transfers
+     * @param {TokenTransferMap} props.tokenTransfers
      */
     constructor(props) {
         /**
@@ -87,6 +89,13 @@ export default class TransactionRecord {
                 ? props.contractFunctionResult
                 : null;
 
+        /**
+         * All the token transfers from this account
+         *
+         * @readonly
+         */
+        this.tokenTransfers = props.tokenTransfers;
+
         Object.freeze(this);
     }
 
@@ -133,6 +142,7 @@ export default class TransactionRecord {
                           ),
                       }
                     : null,
+            tokenTransferLists: this.tokenTransfers._toProtobuf(),
         };
     }
 
@@ -179,6 +189,11 @@ export default class TransactionRecord {
                 : []
             ).map((aa) => Transfer._fromProtobuf(aa)),
             contractFunctionResult,
+            tokenTransfers: TokenTransferMap._fromProtobuf(
+                record.tokenTransferLists != null
+                    ? record.tokenTransferLists
+                    : []
+            ),
         });
     }
 

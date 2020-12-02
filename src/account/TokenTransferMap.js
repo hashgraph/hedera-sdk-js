@@ -6,6 +6,7 @@ import ObjectMap from "../ObjectMap.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITokenTransferList} proto.ITokenTransferList
+ * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  */
@@ -65,5 +66,32 @@ export default class TokenTransferMap extends ObjectMap {
         }
 
         return tokenTransfersMap;
+    }
+
+    /**
+     * @returns {proto.ITokenTransferList[]}
+     */
+    _toProtobuf() {
+        /** @type {proto.ITokenTransferList[]} */
+        const tokenTransferList = [];
+
+        for (const [tokenId, value] of this) {
+            /** @type {proto.IAccountAmount[]} */
+            const transfers = [];
+
+            for (const [accountId, amount] of value) {
+                transfers.push({
+                    accountID: accountId._toProtobuf(),
+                    amount: amount,
+                });
+            }
+
+            tokenTransferList.push({
+                token: tokenId._toProtobuf(),
+                transfers: transfers,
+            });
+        }
+
+        return tokenTransferList;
     }
 }

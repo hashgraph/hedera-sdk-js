@@ -102,7 +102,7 @@ async function main() {
         .addTokenTransfer(tokenId, newAccountId, 10)
         .execute(client))
         .getReceipt(client);
-
+        
     console.log(`Sent 10 tokens from account ${client.operatorAccountId} to account ${newAccountId} on token ${tokenId}`);
 
     const balances = await new AccountBalanceQuery()
