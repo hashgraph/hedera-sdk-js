@@ -7,6 +7,7 @@ import ContractId from "../contract/ContractId.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
@@ -19,6 +20,7 @@ import ContractId from "../contract/ContractId.js";
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../account/AccountId.js").default} AccountId
+ * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
 export default class SystemUndeleteTransaction extends Transaction {
@@ -54,11 +56,21 @@ export default class SystemUndeleteTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
-     * @param {proto.TransactionBody} body
+     * @param {proto.ITransaction[]} transactions
+     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {TransactionId[]} transactionIds
+     * @param {AccountId[]} nodeIds
+     * @param {proto.ITransactionBody[]} bodies
      * @returns {SystemUndeleteTransaction}
      */
-    static _fromProtobuf(transactions, body) {
+    static _fromProtobuf(
+        transactions,
+        signedTransactions,
+        transactionIds,
+        nodeIds,
+        bodies
+    ) {
+        const body = bodies[0];
         const systemUndelete = /** @type {proto.ISystemUndeleteTransactionBody} */ (body.systemUndelete);
 
         return Transaction._fromProtobufTransactions(
@@ -77,7 +89,10 @@ export default class SystemUndeleteTransaction extends Transaction {
                         : undefined,
             }),
             transactions,
-            body
+            signedTransactions,
+            transactionIds,
+            nodeIds,
+            bodies
         );
     }
 

@@ -28,6 +28,7 @@ export const SemanticVersion = proto.SemanticVersion;
 export const TokenID = proto.TokenID;
 export const TopicID = proto.TopicID;
 export const Transaction = proto.Transaction;
+export const SignedTransaction = proto.SignedTransaction;
 export const TransactionList = proto.TransactionList;
 export const TransactionBody = proto.TransactionBody;
 export const TransactionID = proto.TransactionID;

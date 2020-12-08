@@ -6,6 +6,7 @@ import AccountId from "./AccountId.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
@@ -15,6 +16,7 @@ import AccountId from "./AccountId.js";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
 export default class LiveHashDeleteTransaction extends Transaction {
@@ -49,11 +51,21 @@ export default class LiveHashDeleteTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
-     * @param {proto.TransactionBody} body
+     * @param {proto.ITransaction[]} transactions
+     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {TransactionId[]} transactionIds
+     * @param {AccountId[]} nodeIds
+     * @param {proto.ITransactionBody[]} bodies
      * @returns {LiveHashDeleteTransaction}
      */
-    static _fromProtobuf(transactions, body) {
+    static _fromProtobuf(
+        transactions,
+        signedTransactions,
+        transactionIds,
+        nodeIds,
+        bodies
+    ) {
+        const body = bodies[0];
         const hashes = /** @type {proto.ICryptoDeleteLiveHashTransactionBody} */ (body.cryptoDeleteLiveHash);
 
         return Transaction._fromProtobufTransactions(
@@ -68,7 +80,10 @@ export default class LiveHashDeleteTransaction extends Transaction {
                         : undefined,
             }),
             transactions,
-            body
+            signedTransactions,
+            transactionIds,
+            nodeIds,
+            bodies
         );
     }
 

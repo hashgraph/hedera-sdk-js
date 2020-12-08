@@ -9,10 +9,6 @@ import Status from "./Status.js";
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  */
 
-// maximum number of attempts for executing the transaction
-// with the backoff, attempt #10 will wait nearly a minute
-const maxAttempts = 10;
-
 /**
  * @abstract
  * @internal
@@ -21,6 +17,67 @@ const maxAttempts = 10;
  * @template OutputT
  */
 export default class Executable {
+    constructor() {
+        /**
+         * The number of times we can retry the grpc call
+         *
+         * @private
+         * @type {number}
+         */
+        this._maxRetries = 10;
+
+        /**
+         * The index of the next transaction to be executed.
+         *
+         * @protected
+         * @type {number}
+         */
+        this._nextNodeIndex = 0;
+
+        /**
+         * List of node account IDs for each transaction that has been
+         * built.
+         *
+         * @internal
+         * @type {AccountId[]}
+         */
+        this._nodeIds = [];
+    }
+
+    /**
+     * @returns {AccountId[]}
+     */
+    get nodeAccountIds() {
+        return this._nodeIds;
+    }
+
+    /**
+     * @param {AccountId[]} nodeIds
+     * @returns {this}
+     */
+    setNodeAccountIds(nodeIds) {
+        this._nodeIds = nodeIds;
+
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get maxRetries() {
+        return this._maxRetries;
+    }
+
+    /**
+     * @param {number} maxRetries
+     * @returns {this}
+     */
+    setMaxRetries(maxRetries) {
+        this._maxRetries = maxRetries;
+
+        return this;
+    }
+
     /**
      * @abstract
      * @protected
@@ -96,16 +153,16 @@ export default class Executable {
     }
 
     /**
-     * @abstract
      * @protected
      * @returns {void}
      */
     _advanceRequest() {
-        throw new Error("not implemented");
+        // each time we move our cursor to the next transaction
+        // wrapping around to ensure we are cycling
+        this._nextNodeIndex = (this._nextNodeIndex + 1) % this._nodeIds.length;
     }
 
     /**
-     * @abstract
      * @protected
      * @param {Status} responseStatus
      * @param {ResponseT} response
@@ -120,7 +177,6 @@ export default class Executable {
     }
 
     /**
-     * @abstract
      * @protected
      * @param {GrpcServiceError} error
      * @returns {boolean}
@@ -177,7 +233,7 @@ export default class Executable {
                 if (
                     err instanceof GrpcServiceError &&
                     this._shouldRetryExceptionally(err) &&
-                    attempt <= maxAttempts
+                    attempt <= this._maxRetries
                 ) {
                     node.increaseDelay();
                     continue;
@@ -192,7 +248,7 @@ export default class Executable {
 
             if (
                 this._shouldRetry(responseStatus, response) &&
-                attempt <= maxAttempts
+                attempt <= this._maxRetries
             ) {
                 await delayForAttempt(attempt);
                 continue;

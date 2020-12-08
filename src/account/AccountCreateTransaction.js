@@ -11,6 +11,7 @@ import Duration from "../Duration.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
@@ -23,6 +24,7 @@ import Duration from "../Duration.js";
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../Timestamp.js").default} Timestamp
+ * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
 /**
@@ -105,11 +107,21 @@ export default class AccountCreateTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
-     * @param {proto.ITransactionBody} body
+     * @param {proto.ITransaction[]} transactions
+     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {TransactionId[]} transactionIds
+     * @param {AccountId[]} nodeIds
+     * @param {proto.ITransactionBody[]} bodies
      * @returns {AccountCreateTransaction}
      */
-    static _fromProtobuf(transactions, body) {
+    static _fromProtobuf(
+        transactions,
+        signedTransactions,
+        transactionIds,
+        nodeIds,
+        bodies
+    ) {
+        const body = bodies[0];
         const create = /** @type {proto.ICryptoCreateTransactionBody} */ (body.cryptoCreateAccount);
 
         return Transaction._fromProtobufTransactions(
@@ -140,7 +152,10 @@ export default class AccountCreateTransaction extends Transaction {
                         : undefined,
             }),
             transactions,
-            body
+            signedTransactions,
+            transactionIds,
+            nodeIds,
+            bodies
         );
     }
 

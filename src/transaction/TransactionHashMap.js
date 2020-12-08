@@ -1,5 +1,4 @@
 import AccountId from "../account/AccountId.js";
-import * as proto from "@hashgraph/proto";
 import * as sha384 from "../cryptography/sha384.js";
 import ObjectMap from "../ObjectMap.js";
 
@@ -22,7 +21,7 @@ export default class TransactionHashMap extends ObjectMap {
             const nodeAccountId = transaction._nodeIds[i];
             const tx = transaction._transactions[i];
             const hash = await sha384.digest(
-                proto.Transaction.encode(tx).ldelim().finish()
+                /** @type {Uint8Array} */ (tx.signedTransactionBytes)
             );
 
             hashes._set(nodeAccountId, hash);

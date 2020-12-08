@@ -53,17 +53,11 @@ export default class Query extends Executable {
         /** @type {proto.ITransaction[]} */
         this._paymentTransactions = [];
 
-        /** @type {number} */
-        this._nextIndex = 0;
-
         /** @type {?Hbar} */
         this._queryPayment = null;
 
         /** @type {?Hbar} */
         this._maxQueryPayment = null;
-
-        /** @type {AccountId[]} */
-        this._nodeIds = [];
     }
 
     /**
@@ -96,29 +90,6 @@ export default class Query extends Executable {
      */
     toBytes() {
         return ProtoQuery.encode(this._makeRequest()).finish();
-    }
-
-    /**
-     * @returns {AccountId[]}
-     */
-    get nodeAccountIds() {
-        return this._nodeIds;
-    }
-
-    /**
-     * Set the account ID of the node that will be used to submit this
-     * query to the network.
-     *
-     * This node must exist in the network on the client that is used to later
-     * execute this query.
-     *
-     * @param {AccountId[]} nodeIds
-     * @returns {this}
-     */
-    setNodeAccountIds(nodeIds) {
-        this._nodeIds = nodeIds;
-
-        return this;
     }
 
     /**
@@ -166,7 +137,7 @@ export default class Query extends Executable {
     _getTransactionId() {
         if (this._paymentTransactionId == null) {
             throw new Error(
-                "Query.PaymentTransactionId was not set duration executation"
+                "Query.PaymentTransactionId was not set duration execution"
             );
         }
 
@@ -207,7 +178,7 @@ export default class Query extends Executable {
                 : client.maxQueryPayment;
 
         if (
-            this._paymentTransactions.length != 0 ||
+            this._paymentTransactions.length !== 0 ||
             !this._isPaymentRequired()
         ) {
             cost = new Hbar(0);
@@ -258,7 +229,7 @@ export default class Query extends Executable {
         if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             header = {
                 responseType: ProtoResponseType.ANSWER_ONLY,
-                payment: this._paymentTransactions[this._nextIndex],
+                payment: this._paymentTransactions[this._nextNodeIndex],
             };
         }
 
@@ -287,7 +258,7 @@ export default class Query extends Executable {
 
         if (this._isPaymentRequired() && this._paymentTransactions != null) {
             header = {
-                payment: this._paymentTransactions[this._nextIndex],
+                payment: this._paymentTransactions[this._nextNodeIndex],
                 responseType: ProtoResponseType.ANSWER_ONLY,
             };
         }
@@ -320,7 +291,7 @@ export default class Query extends Executable {
         if (this._nodeIds.length > 0) {
             // if there are payment transactions,
             // we need to use the node of the current payment transaction
-            return this._nodeIds[this._nextIndex];
+            return this._nodeIds[this._nextNodeIndex];
         } else {
             throw new Error(
                 "(BUG) nodeAccountIds were not set for query before executing"
@@ -337,8 +308,8 @@ export default class Query extends Executable {
         if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             // each time we move our cursor to the next transaction
             // wrapping around to ensure we are cycling
-            this._nextIndex =
-                (this._nextIndex + 1) % this._paymentTransactions.length;
+            super._nextNodeIndex =
+                (this._nextNodeIndex + 1) % this._paymentTransactions.length;
         }
     }
 }

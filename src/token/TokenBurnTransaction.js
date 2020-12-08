@@ -7,6 +7,7 @@ import Long from "long";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
@@ -17,6 +18,7 @@ import Long from "long";
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../account/AccountId.js").default} AccountId
+ * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
 /**
@@ -54,11 +56,21 @@ export default class TokenBurnTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
-     * @param {proto.ITransactionBody} body
+     * @param {proto.ITransaction[]} transactions
+     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {TransactionId[]} transactionIds
+     * @param {AccountId[]} nodeIds
+     * @param {proto.ITransactionBody[]} bodies
      * @returns {TokenBurnTransaction}
      */
-    static _fromProtobuf(transactions, body) {
+    static _fromProtobuf(
+        transactions,
+        signedTransactions,
+        transactionIds,
+        nodeIds,
+        bodies
+    ) {
+        const body = bodies[0];
         const burnToken = /** @type {proto.ITokenBurnTransactionBody} */ (body.tokenCreation);
 
         return Transaction._fromProtobufTransactions(
@@ -70,7 +82,10 @@ export default class TokenBurnTransaction extends Transaction {
                 amount: burnToken.amount != null ? burnToken.amount : undefined,
             }),
             transactions,
-            body
+            signedTransactions,
+            transactionIds,
+            nodeIds,
+            bodies
         );
     }
 

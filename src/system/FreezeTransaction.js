@@ -5,6 +5,7 @@ import Transaction, {
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
@@ -14,6 +15,7 @@ import Transaction, {
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../account/AccountId.js").default} AccountId
+ * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
 /**
@@ -54,11 +56,21 @@ export default class FreezeTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
-     * @param {proto.TransactionBody} body
+     * @param {proto.ITransaction[]} transactions
+     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {TransactionId[]} transactionIds
+     * @param {AccountId[]} nodeIds
+     * @param {proto.ITransactionBody[]} bodies
      * @returns {FreezeTransaction}
      */
-    static _fromProtobuf(transactions, body) {
+    static _fromProtobuf(
+        transactions,
+        signedTransactions,
+        transactionIds,
+        nodeIds,
+        bodies
+    ) {
+        const body = bodies[0];
         const freeze = /** @type {proto.IFreezeTransactionBody} */ (body.freeze);
 
         return Transaction._fromProtobufTransactions(
@@ -79,7 +91,10 @@ export default class FreezeTransaction extends Transaction {
                         : undefined,
             }),
             transactions,
-            body
+            signedTransactions,
+            transactionIds,
+            nodeIds,
+            bodies
         );
     }
 

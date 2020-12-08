@@ -34,6 +34,7 @@ import Query = proto.Query;
 import ResponseCodeEnum = proto.ResponseCodeEnum;
 import TopicID = proto.TopicID;
 import Transaction = proto.Transaction;
+import SignedTransaction = proto.SignedTransaction;
 import TransactionList = proto.TransactionList;
 import TransactionBody = proto.TransactionBody;
 import ResponseType = proto.ResponseType;
@@ -41,6 +42,7 @@ import ResponseType = proto.ResponseType;
 export {
     ResponseCodeEnum,
     Transaction,
+    SignedTransaction,
     TransactionList,
     ResponseType,
     TransactionBody,
@@ -123,6 +125,7 @@ import IResponseHeader = proto.IResponseHeader;
 import ITimestamp = proto.ITimestamp;
 import ITopicID = proto.ITopicID;
 import ITransaction = proto.ITransaction;
+import ISignedTransaction = proto.ISignedTransaction;
 import ITransactionList = proto.ITransactionList;
 import ITransactionBody = proto.ITransactionBody;
 import ITransactionGetReceiptQuery = proto.ITransactionGetReceiptQuery;
@@ -223,6 +226,7 @@ export {
     ITimestamp,
     ITopicID,
     ITransaction,
+    ISignedTransaction,
     ITransactionList,
     ITransactionBody,
     ITransactionGetReceiptQuery,

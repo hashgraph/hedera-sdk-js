@@ -10,6 +10,7 @@ import Timestamp from "../Timestamp.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
@@ -77,11 +78,21 @@ export default class FileAppendTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
-     * @param {proto.TransactionBody} body
+     * @param {proto.ITransaction[]} transactions
+     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {TransactionId[]} transactionIds
+     * @param {AccountId[]} nodeIds
+     * @param {proto.ITransactionBody[]} bodies
      * @returns {FileAppendTransaction}
      */
-    static _fromProtobuf(transactions, body) {
+    static _fromProtobuf(
+        transactions,
+        signedTransactions,
+        transactionIds,
+        nodeIds,
+        bodies
+    ) {
+        const body = bodies[0];
         const append = /** @type {proto.IFileAppendTransactionBody} */ (body.fileAppend);
 
         return Transaction._fromProtobufTransactions(
@@ -95,7 +106,10 @@ export default class FileAppendTransaction extends Transaction {
                 contents: append.contents != null ? append.contents : undefined,
             }),
             transactions,
-            body
+            signedTransactions,
+            transactionIds,
+            nodeIds,
+            bodies
         );
     }
 
@@ -191,12 +205,6 @@ export default class FileAppendTransaction extends Transaction {
     freezeWith(client) {
         super.freezeWith(client);
 
-        if (this._transactionId == null) {
-            throw new Error("TransactionId not set when freezing");
-        }
-
-        this._transactionIds = [this._transactionId];
-
         if (this._contents == null) {
             return this;
         }
@@ -215,19 +223,20 @@ export default class FileAppendTransaction extends Transaction {
             );
         }
 
-        super._transactions = [];
+        let nextTransactionId = this.transactionId;
 
-        const initialTransactionId = this._transactionId;
-        let nextTransactionId = this._transactionId;
+        super._transactions = [];
+        super._transactionIds = [];
 
         for (let chunk = 0; chunk < chunks; chunk++) {
             this._startIndex = chunk * CHUNK_SIZE;
 
-            super._transactionId = nextTransactionId;
             this._transactionIds.push(nextTransactionId);
 
             for (const nodeAccountId of this._nodeIds) {
-                this._transactions.push(this._makeTransaction(nodeAccountId));
+                this._transactions.push(
+                    this._makeSignedTransaction(nodeAccountId)
+                );
             }
 
             nextTransactionId = new TransactionId(
@@ -239,7 +248,6 @@ export default class FileAppendTransaction extends Transaction {
             );
         }
 
-        super._transactionId = initialTransactionId;
         this._startIndex = 0;
 
         return this;
@@ -275,16 +283,8 @@ export default class FileAppendTransaction extends Transaction {
             await super.signWithOperator(client);
         }
 
-        const transactionCount = Math.floor(
-            this._transactions.length / this._nodeIds.length
-        );
         const responses = [];
-        for (
-            this._nextGroupIndex = 0;
-            this._nextGroupIndex < transactionCount;
-            this._nextGroupIndex++
-        ) {
-            super._transactionId = this._transactionIds[this._nextGroupIndex];
+        for (let i = 0; i < this._transactionIds.length; i++) {
             const response = await super.execute(client);
             await response.getReceipt(client);
             responses.push(response);

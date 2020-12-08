@@ -49,7 +49,7 @@
         "test": "run-s test:node test:browser",
         "test:node": "env HEDERA_SDK_TEST='' run-s test:unit:node test:integration:node",
         "test:unit:node": "env HEDERA_SDK_TEST='' nyc mocha -r @babel/register -r chai/register-expect 'test/unit/*.js'",
-        "test:integration:node": "env HEDERA_SDK_TEST='' nyc mocha -r @babel/register -r chai/register-expect 'test/integration/*.js'",
+        "test:integration:node": "env HEDERA_SDK_TEST='' nyc mocha -r @babel/register -r chai/register-expect 'test/integration/AccountCreate*.js'",
         "test:browser": "run-s test:unit:browser test:integration:browser",
         "test:browser:chrome": "run-s test:unit:browser:chrome test:integration:browser:chrome",
         "test:browser:firefox": "run-s test:unit:browser:firefox test:integration:browser:firefox",
@@ -65,7 +65,7 @@
     "dependencies": {
         "@grpc/grpc-js": "^1.2.0",
         "@hashgraph/cryptography": "^1.0.7",
-        "@hashgraph/proto": "^1.0.17",
+        "@hashgraph/proto": "file:packages/proto/",
         "bignumber.js": "^9.0.1",
         "long": "^4.0.0"
     },

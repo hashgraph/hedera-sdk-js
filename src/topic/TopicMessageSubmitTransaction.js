@@ -11,6 +11,7 @@ import Timestamp from "../Timestamp.js";
  * @namespace proto
  * @typedef {import("@hashgraph/proto").IConsensusSubmitMessageTransactionBody} proto.IConsensusSubmitMessageTransactionBody
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
@@ -69,11 +70,21 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {Map<string, Map<AccountId, proto.ITransaction>>} transactions
-     * @param {proto.TransactionBody} body
+     * @param {proto.ITransaction[]} transactions
+     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {TransactionId[]} transactionIds
+     * @param {AccountId[]} nodeIds
+     * @param {proto.ITransactionBody[]} bodies
      * @returns {TopicMessageSubmitTransaction}
      */
-    static _fromProtobuf(transactions, body) {
+    static _fromProtobuf(
+        transactions,
+        signedTransactions,
+        transactionIds,
+        nodeIds,
+        bodies
+    ) {
+        const body = bodies[0];
         const message = /** @type {proto.IConsensusSubmitMessageTransactionBody} */ (body.consensusSubmitMessage);
 
         return Transaction._fromProtobufTransactions(
@@ -85,7 +96,10 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                 message: message.message != null ? message.message : undefined,
             }),
             transactions,
-            body
+            signedTransactions,
+            transactionIds,
+            nodeIds,
+            bodies
         );
     }
 
@@ -168,16 +182,11 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             );
         }
 
-        if (this._transactionId == null) {
-            throw new Error("TransactionId not set when freezing");
-        }
+        const initialTransactionId = this.transactionId._toProtobuf();
+        let nextTransactionId = this.transactionId;
 
         super._transactions = [];
-
-        const initialTransactionId = this._transactionId._toProtobuf();
-        let nextTransactionId = TransactionId._fromProtobuf(
-            initialTransactionId
-        );
+        super._transactionIds = [];
 
         for (let chunk = 0; chunk < chunks; chunk++) {
             this._chunkInfo = {
@@ -186,10 +195,12 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                 number: chunk + 1,
             };
 
-            super._transactionId = nextTransactionId;
+            this._transactionIds.push(nextTransactionId);
 
             for (const nodeAccountId of this._nodeIds) {
-                this._transactions.push(this._makeTransaction(nodeAccountId));
+                this._transactions.push(
+                    this._makeSignedTransaction(nodeAccountId)
+                );
             }
 
             nextTransactionId = new TransactionId(
@@ -201,9 +212,6 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             );
         }
 
-        super._transactionId = TransactionId._fromProtobuf(
-            initialTransactionId
-        );
         this._chunkInfo = null;
 
         return this;
