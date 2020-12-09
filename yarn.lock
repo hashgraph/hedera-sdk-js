@@ -440,6 +440,14 @@
     google-auth-library "^6.1.1"
     semver "^6.2.0"
 
+"@hashgraph/cryptography@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.7.tgz#4e93f29067fc15ace2be0e5f3c8c33a0cf7fa475"
+  integrity sha512-oEyy+YUHLaDPDhIemZUxDkcuy/lZv9WBEzVxGOCqiSBEqGCkJgCG9H1hpoKIovcwFeAsVsOMn3Ujz5N20eXRAw==
+  dependencies:
+    bignumber.js "^9.0.1"
+    tweetnacl "^1.0.3"
+
 "@hashgraph/cryptography@file:packages/cryptography":
   version "1.0.7"
   dependencies:

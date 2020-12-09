@@ -10,7 +10,7 @@
         ],
         [
             "module-rewrite",
-            { "replaceFunc": "../../build/replace-module-paths.cjs" }
+            { "replaceFunc": "./build/replace-module-paths.cjs" }
         ]
     ]
 }
