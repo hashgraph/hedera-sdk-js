@@ -3,6 +3,8 @@ import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js
 import AccountUpdateTransaction from "../src/account/AccountUpdateTransaction.js";
 import AccountInfoQuery from "../src/account/AccountInfoQuery.js";
 import Hbar from "../src/Hbar.js";
+import Timestamp from "../src/Timestamp.js";
+import Status from "../src/Status.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
 import newClient from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
@@ -46,10 +48,11 @@ describe("AccountUpdate", function () {
         response = await (
             await (
                 await new AccountUpdateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setKey(key2.publicKey)
+                    // .setAutoRenewPeriod(777600000)
+                    // .setExpirationTime(new Date(Date.now() + 7776000000))
+                    .setNodeAccountIds([response.nodeId])
                     .setMaxTransactionFee(new Hbar(1))
                     .freezeWith(client)
                     .sign(key1)
@@ -85,5 +88,250 @@ describe("AccountUpdate", function () {
                     .sign(key2)
             ).execute(client)
         ).getReceipt(client);
+    });
+
+    it("should be error with invalid auto renew period", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+
+        const key1 = PrivateKey.generate();
+        const key2 = PrivateKey.generate();
+
+        let response = await new AccountCreateTransaction()
+            .setKey(key1.publicKey)
+            .setMaxTransactionFee(new Hbar(2))
+            .setInitialBalance(new Hbar(1))
+            .execute(client);
+
+        const receipt = await response.getReceipt(client);
+
+        expect(receipt.accountId).to.not.be.null;
+        const account = receipt.accountId;
+
+        let err = false;
+
+        try {
+            await (
+                await (
+                    await (
+                        await new AccountUpdateTransaction()
+                            .setAccountId(account)
+                            .setKey(key2.publicKey)
+                            .setAutoRenewPeriod(777600000)
+                            .setNodeAccountIds([response.nodeId])
+                            .setMaxTransactionFee(new Hbar(1))
+                            .freezeWith(client)
+                            .sign(key1)
+                    ).sign(key2)
+                ).execute(client)
+            ).getReceipt(client);
+        } catch (error) {
+            err = error
+                .toString()
+                .includes(Status.AutorenewDurationNotInRange.toString());
+        }
+
+        await (
+            await (
+                await new AccountDeleteTransaction()
+                    .setAccountId(account)
+                    .setMaxTransactionFee(new Hbar(1))
+                    .setNodeAccountIds([response.nodeId])
+                    .setTransferAccountId(client.operatorAccountId)
+                    .setTransactionId(TransactionId.generate(account))
+                    .freezeWith(client)
+                    .sign(key1)
+            ).execute(client)
+        ).getReceipt(client);
+
+        if (!err) {
+            throw new Error("account update did not error");
+        }
+    });
+
+    it("should be error with insufficent tx fee when a large expiration time is set", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+
+        const key1 = PrivateKey.generate();
+        const key2 = PrivateKey.generate();
+
+        let response = await new AccountCreateTransaction()
+            .setKey(key1.publicKey)
+            .setMaxTransactionFee(new Hbar(2))
+            .setInitialBalance(new Hbar(1))
+            .execute(client);
+
+        const receipt = await response.getReceipt(client);
+
+        expect(receipt.accountId).to.not.be.null;
+        const account = receipt.accountId;
+
+        let err = false;
+
+        try {
+            await (
+                await (
+                    await (
+                        await new AccountUpdateTransaction()
+                            .setAccountId(account)
+                            .setKey(key2.publicKey)
+                            .setExpirationTime(new Timestamp(Date.now() + 77760000000, 0))
+                            .setNodeAccountIds([response.nodeId])
+                            .setMaxTransactionFee(new Hbar(1))
+                            .freezeWith(client)
+                            .sign(key1)
+                    ).sign(key2)
+                ).execute(client)
+            ).getReceipt(client);
+        } catch (error) {
+            err = error
+                .toString()
+                .includes(Status.InsufficientTxFee.toString());
+        }
+
+        await (
+            await (
+                await new AccountDeleteTransaction()
+                    .setAccountId(account)
+                    .setMaxTransactionFee(new Hbar(1))
+                    .setNodeAccountIds([response.nodeId])
+                    .setTransferAccountId(client.operatorAccountId)
+                    .setTransactionId(TransactionId.generate(account))
+                    .freezeWith(client)
+                    .sign(key1)
+            ).execute(client)
+        ).getReceipt(client);
+
+        if (!err) {
+            throw new Error("account update did not error");
+        }
+    });
+
+    it("should be error with no account ID", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+
+        let err = false;
+
+        try {
+            await (
+                await new AccountUpdateTransaction()
+                    .setKey(client.operatorPublicKey)
+                    .setMaxTransactionFee(new Hbar(1))
+                    .execute(client)
+                ).getReceipt(client);
+        } catch (error) {
+            err = error
+                .toString()
+                .includes(Status.InvalidAccountId.toString());
+        }
+
+        if (!err) {
+            throw new Error("account update did not error");
+        }
+    });
+
+    it("should execute with only account ID", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+
+        const key1 = PrivateKey.generate();
+
+        let response = await new AccountCreateTransaction()
+            .setKey(key1.publicKey)
+            .setMaxTransactionFee(new Hbar(2))
+            .setInitialBalance(new Hbar(1))
+            .execute(client);
+
+        const receipt = await response.getReceipt(client);
+
+        expect(receipt.accountId).to.not.be.null;
+        const account = receipt.accountId;
+
+        await (
+            await (
+                await new AccountUpdateTransaction()
+                    .setAccountId(account)
+                    .setNodeAccountIds([response.nodeId])
+                    .setMaxTransactionFee(new Hbar(1))
+                    .freezeWith(client)
+                    .sign(key1)
+            ).execute(client)
+        ).getReceipt(client);
+
+        await (
+            await (
+                await new AccountDeleteTransaction()
+                    .setAccountId(account)
+                    .setMaxTransactionFee(new Hbar(1))
+                    .setNodeAccountIds([response.nodeId])
+                    .setTransferAccountId(client.operatorAccountId)
+                    .setTransactionId(TransactionId.generate(account))
+                    .freezeWith(client)
+                    .sign(key1)
+            ).execute(client)
+        ).getReceipt(client);
+    });
+
+    it("should be error with invalid signature", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+
+        const key1 = PrivateKey.generate();
+        const key2 = PrivateKey.generate();
+
+        let response = await new AccountCreateTransaction()
+            .setKey(key1.publicKey)
+            .setMaxTransactionFee(new Hbar(2))
+            .setInitialBalance(new Hbar(1))
+            .execute(client);
+
+        const receipt = await response.getReceipt(client);
+
+        expect(receipt.accountId).to.not.be.null;
+        const account = receipt.accountId;
+
+        let err = false;
+
+        try {
+            await (
+                await (
+                    await new AccountUpdateTransaction()
+                        .setAccountId(account)
+                        .setKey(key2.publicKey)
+                        .setNodeAccountIds([response.nodeId])
+                        .setMaxTransactionFee(new Hbar(1))
+                        .freezeWith(client)
+                        .sign(key1)
+                ).execute(client)
+            ).getReceipt(client);
+        } catch (error) {
+            err = error
+                .toString()
+                .includes(Status.InvalidSignature.toString());
+        }
+
+        await (
+            await (
+                await new AccountDeleteTransaction()
+                    .setAccountId(account)
+                    .setMaxTransactionFee(new Hbar(1))
+                    .setNodeAccountIds([response.nodeId])
+                    .setTransferAccountId(client.operatorAccountId)
+                    .setTransactionId(TransactionId.generate(account))
+                    .freezeWith(client)
+                    .sign(key1)
+            ).execute(client)
+        ).getReceipt(client);
+
+        if (!err) {
+            throw new Error("account update did not error");
+        }
     });
 });

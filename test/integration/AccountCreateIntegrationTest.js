@@ -2,6 +2,7 @@ import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
 import AccountInfoQuery from "../src/account/AccountInfoQuery.js";
 import Hbar from "../src/Hbar.js";
+import Status from "../src/Status.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
 import newClient from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
@@ -52,5 +53,28 @@ describe("AccountCreate", function () {
                     .sign(key)
             ).execute(client)
         ).getReceipt(client);
+    });
+
+    it("should be error out with no key", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+        let err = false;
+
+        try {
+            const response = await new AccountCreateTransaction()
+                .setMaxTransactionFee(new Hbar(2))
+                .setInitialBalance(new Hbar(1))
+                .execute(client);
+
+            await response.getReceipt(client);
+        } catch (error) {
+            console.log(error);
+            err = error.toString().includes(Status.KeyRequired.toString());
+        }
+
+        if (!err) {
+            throw new Error("account creation did not error");
+        }
     });
 });

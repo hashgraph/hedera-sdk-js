@@ -2,6 +2,7 @@ import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
 import AccountInfoQuery from "../src/account/AccountInfoQuery.js";
 import Hbar from "../src/Hbar.js";
+import Status from "../src/Status.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
 import newClient from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
@@ -52,5 +53,22 @@ describe("AccountInfo", function () {
                     .sign(key)
             ).execute(client)
         ).getReceipt(client);
+    });
+
+    it("should be error with no account ID", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+        let err = false;
+
+        try {
+            await new AccountInfoQuery().execute(client);
+        } catch (error) {
+            err = error.toString().includes(Status.InvalidAccountId.toString());
+        }
+
+        if (!err) {
+            throw new Error("query did not error");
+        }
     });
 });

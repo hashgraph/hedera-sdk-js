@@ -1,5 +1,6 @@
 import newIntegrationClient from "./client/index.js";
 import Hbar from "../src/Hbar.js";
+import Status from "../src/Status.js";
 import AccountBalanceQuery from "../src/account/AccountBalanceQuery.js";
 
 describe("AccountBalanceQuery", function () {
@@ -21,11 +22,22 @@ describe("AccountBalanceQuery", function () {
             );
         });
 
-        // TODO: After we have PreCheckError
-        // it("an account that does not exist should return an error", async function () {
-        //     await new AccountBalanceQuery()
-        //         .setAccountId("0.0.21849819482")
-        //         .execute(client);
-        // });
+        it("an account that does not exist should return an error", async function () {
+            let err = false;
+
+            try {
+                await new AccountBalanceQuery()
+                    .setAccountId("1.0.3")
+                    .execute(client);
+            } catch (error) {
+                err = error
+                    .toString()
+                    .includes(Status.InvalidAccountId.toString());
+            }
+
+            if (!err) {
+                throw new Error("query did not error");
+            }
+        });
     });
 });

@@ -1,10 +1,11 @@
-import ContractByteCodeQuery from "../../src/contract/ContractByteCodeQuery.js";
+import { ContractByteCodeQuery } from "../../src/exports.js";
 import ContractCreateTransaction from "../src/contract/ContractCreateTransaction.js";
 import ContractDeleteTransaction from "../src/contract/ContractDeleteTransaction.js";
 import ContractFunctionParameters from "../src/contract/ContractFunctionParameters.js";
 import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
 import Hbar from "../src/Hbar.js";
+import Status from "../src/Status.js";
 import TransactionReceiptQuery from "../../src/transaction/TransactionReceiptQuery.js";
 import newClient from "./client/index.js";
 
@@ -78,5 +79,23 @@ describe("ContractBytecode", function () {
                 .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
+    });
+
+    it("should be executable", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+
+        let err = false;
+        
+        try {
+            await new ContractByteCodeQuery().execute(client);
+        } catch (error) {
+            err = error.toString().includes(Status.InvalidContractId.toString());
+        }
+
+        if (!err) {
+            throw new Error("query did not error");
+        }
     });
 });

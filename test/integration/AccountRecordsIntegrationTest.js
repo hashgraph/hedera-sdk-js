@@ -26,11 +26,13 @@ describe("AccountRecords", function () {
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
 
-        await new TransferTransaction()
-            .setNodeAccountIds([response.nodeId])
-            .addHbarTransfer(account, new Hbar(1))
-            .addHbarTransfer(operatorId, new Hbar(1).negated())
-            .execute(client);
+        (
+            await new TransferTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .addHbarTransfer(account, new Hbar(1))
+                .addHbarTransfer(operatorId, new Hbar(1).negated())
+                .execute(client)
+        ).getReceipt(client);
 
         const records = await new AccountRecordsQuery()
             .setNodeAccountIds([response.nodeId])
