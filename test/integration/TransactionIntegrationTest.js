@@ -61,7 +61,7 @@ describe("TransactionIntegration", function () {
                 .sign(key)
         ).signWithOperator(client);
 
-        expect(transaction._transactions[0].sigMap.sigPair.length).to.eql(2);
+        expect(transaction._signedTransactions[0].sigMap.sigPair.length).to.eql(2);
 
         transaction = await (
             await new TokenCreateTransaction()
@@ -71,6 +71,6 @@ describe("TransactionIntegration", function () {
                 .signWithOperator(client)
         ).sign(key);
 
-        expect(transaction._transactions[0].sigMap.sigPair.length).to.eql(2);
+        expect(transaction._signedTransactions[0].sigMap.sigPair.length).to.eql(2);
     });
 });
