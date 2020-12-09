@@ -51,6 +51,9 @@ export default class NodeMirrorChannel extends MirrorChannel {
             })
             .on("status", (/** @type {grpc.StatusObject} */ status) => {
                 callback(status.code, null);
+            })
+            .on("error", (/** @type {grpc.StatusObject} */ status) => {
+                callback(status.code, null);
             });
 
         return () => {

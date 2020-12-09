@@ -176,10 +176,10 @@ export default class TopicMessageQuery {
 
         const cancel = client._mirrorNetwork
             .getNextMirrorNode()
-            .channel.makeServerStreamRequest(request, (err, data) => {
-                if (data == null || err != null) {
+            .channel.makeServerStreamRequest(request, (error, data) => {
+                if (data == null || error != null) {
                     // NOT_FOUND or UNAVAILABLE
-                    if (attempt < 10 && (err === 5 || err === 14)) {
+                    if (attempt < 10 && (error === 5 || error === 14)) {
                         setTimeout(() => {
                             this._makeServerStreamRequest(
                                 handle,
