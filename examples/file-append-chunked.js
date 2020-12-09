@@ -91,6 +91,8 @@ async function main() {
     const receipt = await resp.getReceipt(client);
     const fileId = receipt.fileId;
 
+    console.log("file ID = " + fileId);
+
     await (await new FileAppendTransaction()
         .setNodeAccountIds([resp.nodeId])
         .setFileId(fileId)
@@ -103,7 +105,7 @@ async function main() {
         .setFileId(fileId)
         .execute(client);
 
-    console.log(contents);
+    console.log("File content length according to `FileInfoQuery`:", contents.length);
 }
 
 main();

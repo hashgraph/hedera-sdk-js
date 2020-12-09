@@ -174,7 +174,9 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             return this;
         }
 
-        const chunks = Math.floor((this._message.length + (CHUNK_SIZE - 1)) / CHUNK_SIZE);
+        const chunks = Math.floor(
+            (this._message.length + (CHUNK_SIZE - 1)) / CHUNK_SIZE
+        );
 
         if (chunks > this._maxChunks) {
             throw new Error(
@@ -254,8 +256,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 
         const responses = [];
         for (let i = 0; i < this._transactionIds.length; i++) {
-            const response = await super.execute(client);
-            responses.push(response);
+            responses.push(await super.execute(client));
         }
 
         return responses;
@@ -288,7 +289,8 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      */
     _makeTransactionData() {
         if (this._chunkInfo != null && this._message != null) {
-            const startIndex = (/** @type {number} */ (this._chunkInfo.number) -1) * CHUNK_SIZE;
+            const num = /** @type {number} */ (this._chunkInfo.number);
+            const startIndex = (num - 1) * CHUNK_SIZE;
             let endIndex = startIndex + CHUNK_SIZE;
 
             if (endIndex > this._message.length) {

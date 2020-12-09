@@ -95,6 +95,28 @@ export default class FileAppendTransaction extends Transaction {
         const body = bodies[0];
         const append = /** @type {proto.IFileAppendTransactionBody} */ (body.fileAppend);
 
+        let contents;
+        for (let i = 0; i < bodies.length; i += nodeIds.length) {
+            const fileAppend = /** @type {proto.IFileAppendTransactionBody} */ (bodies[i].fileAppend);
+            if (fileAppend.contents == null) {
+                break;
+            }
+
+            if (contents == null) {
+                contents = new Uint8Array(/** @type {Uint8Array} */ (fileAppend.contents));
+                continue;
+            }
+
+            /** @type {Uint8Array} */
+            const concat = new Uint8Array(
+                contents.length +
+                /** @type {Uint8Array} */ (fileAppend.contents).length
+            );
+            concat.set(contents, 0);
+            concat.set(/** @type {Uint8Array} */ (fileAppend.contents), contents.length);
+            contents = concat;
+        }
+
         return Transaction._fromProtobufTransactions(
             new FileAppendTransaction({
                 fileId:
@@ -103,7 +125,7 @@ export default class FileAppendTransaction extends Transaction {
                               /** @type {proto.IFileID} */ (append.fileID)
                           )
                         : undefined,
-                contents: append.contents != null ? append.contents : undefined,
+                contents: contents,
             }),
             transactions,
             signedTransactions,
@@ -209,10 +231,6 @@ export default class FileAppendTransaction extends Transaction {
             return this;
         }
 
-        if (this._contents.length < CHUNK_SIZE) {
-            return this;
-        }
-
         const chunks = Math.floor(
             (this._contents.length + (CHUNK_SIZE - 1)) / CHUNK_SIZE
         );
@@ -227,6 +245,8 @@ export default class FileAppendTransaction extends Transaction {
 
         super._transactions = [];
         super._transactionIds = [];
+        super._signedTransactions = [];
+        super._nextTransactionIndex = 0;
 
         for (let chunk = 0; chunk < chunks; chunk++) {
             this._startIndex = chunk * CHUNK_SIZE;
@@ -234,7 +254,7 @@ export default class FileAppendTransaction extends Transaction {
             this._transactionIds.push(nextTransactionId);
 
             for (const nodeAccountId of this._nodeIds) {
-                this._transactions.push(
+                this._signedTransactions.push(
                     this._makeSignedTransaction(nodeAccountId)
                 );
             }
@@ -242,13 +262,16 @@ export default class FileAppendTransaction extends Transaction {
             nextTransactionId = new TransactionId(
                 nextTransactionId.accountId,
                 new Timestamp(
-                    nextTransactionId.validStart.seconds.add(10),
-                    nextTransactionId.validStart.nanos
+                    nextTransactionId.validStart.seconds,
+                    nextTransactionId.validStart.nanos.add(1)
                 )
             );
+
+            super._nextTransactionIndex = this._nextTransactionIndex + 1;
         }
 
         this._startIndex = 0;
+        super._nextTransactionIndex = 0;
 
         return this;
     }
@@ -329,7 +352,7 @@ export default class FileAppendTransaction extends Transaction {
             fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
             contents:
                 this._contents != null
-                    ? this._contents.subarray(this._startIndex, endIndex)
+                    ? this._contents.slice(this._startIndex, endIndex)
                     : null,
         };
     }
