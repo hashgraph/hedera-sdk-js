@@ -448,6 +448,12 @@
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"
 
+"@hashgraph/cryptography@file:packages/cryptography":
+  version "1.0.7"
+  dependencies:
+    bignumber.js "^9.0.1"
+    tweetnacl "^1.0.3"
+
 "@hashgraph/proto@file:packages/proto":
   version "1.0.17"
   dependencies:

@@ -20,18 +20,22 @@ export async function hash(algorithm, secretKey, data) {
         typeof secretKey === "string" ? utf8.encode(secretKey) : secretKey;
     const value = typeof data === "string" ? utf8.encode(data) : data;
 
-    const crypto = await import("crypto");
+    try {
+        const key_ = await window.crypto.subtle.importKey(
+            "raw",
+            key,
+            {
+                name: "HMAC",
+                hash: algorithm,
+            },
+            false,
+            ["sign"]
+        );
 
-    switch (algorithm) {
-        case HashAlgorithm.Sha256:
-            return crypto.createHmac("SHA256", key).update(value).digest();
-        case HashAlgorithm.Sha384:
-            return crypto.createHmac("SHA384", key).update(value).digest();
-        case HashAlgorithm.Sha512:
-            return crypto.createHmac("SHA512", key).update(value).digest();
-        default:
-            throw new Error(
-                "(BUG) Non-Exhaustive switch statement for algorithms"
-            );
+        return new Uint8Array(
+            await window.crypto.subtle.sign("HMAC", key_, value)
+        );
+    } catch {
+        throw new Error("Fallback if SubtleCrypto fails is not implemented");
     }
 }

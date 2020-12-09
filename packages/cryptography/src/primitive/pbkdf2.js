@@ -19,49 +19,17 @@ export async function deriveKey(algorithm, password, salt, iterations, length) {
 
     const nacl = typeof salt === "string" ? utf8.encode(salt) : salt;
 
-    if (typeof Buffer === "undefined") {
-        try {
-            const key = await window.crypto.subtle.importKey(
-                "raw",
-                pass,
-                {
-                    name: "PBKDF2",
-                    hash: algorithm,
-                },
-                false,
-                ["deriveBits"]
-            );
-
-            return new Uint8Array(
-                await window.crypto.subtle.deriveBits(
-                    {
-                        name: "PBKDF2",
-                        hash: algorithm,
-                        salt: nacl,
-                        iterations,
-                    },
-                    key,
-                    length << 3
-                )
-            );
-        } catch {
-            throw new Error(
-                "(BUG) Non-Exhaustive switch statement for algorithms"
-            );
-        }
-    }
-
     const util = await import("util");
     const crypto = await import("crypto");
     const pbkdf2 = util.promisify(crypto.pbkdf2);
 
     switch (algorithm) {
         case HashAlgorithm.Sha256:
-            return pbkdf2(password, nacl, iterations, length, "sha256");
+            return pbkdf2(pass, nacl, iterations, length, "sha256");
         case HashAlgorithm.Sha384:
-            return pbkdf2(password, nacl, iterations, length, "sha384");
+            return pbkdf2(pass, nacl, iterations, length, "sha384");
         case HashAlgorithm.Sha512:
-            return pbkdf2(password, nacl, iterations, length, "sha512");
+            return pbkdf2(pass, nacl, iterations, length, "sha512");
         default:
             throw new Error(
                 "(BUG) Non-Exhaustive switch statement for algorithms"
