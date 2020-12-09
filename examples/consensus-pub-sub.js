@@ -53,6 +53,7 @@ async function main() {
     for (let i = 0; ; i += 1) {
         // eslint-disable-next-line no-await-in-loop
         await (await new TopicMessageSubmitTransaction()
+            .setNodeAccountIds([response.nodeId])
             .setTopicId(topicId)
             .setMessage(bigContents)
             .execute(client))

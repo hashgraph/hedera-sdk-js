@@ -174,7 +174,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             return this;
         }
 
-        const chunks = (this._message.length + (CHUNK_SIZE - 1)) / CHUNK_SIZE;
+        const chunks = Math.floor((this._message.length + (CHUNK_SIZE - 1)) / CHUNK_SIZE);
 
         if (chunks > this._maxChunks) {
             throw new Error(
@@ -187,6 +187,8 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 
         super._transactions = [];
         super._transactionIds = [];
+        super._signedTransactions = [];
+        super._nextTransactionIndex = 0;
 
         for (let chunk = 0; chunk < chunks; chunk++) {
             this._chunkInfo = {
@@ -198,7 +200,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             this._transactionIds.push(nextTransactionId);
 
             for (const nodeAccountId of this._nodeIds) {
-                this._transactions.push(
+                this._signedTransactions.push(
                     this._makeSignedTransaction(nodeAccountId)
                 );
             }
@@ -210,9 +212,12 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                     nextTransactionId.validStart.nanos.add(1)
                 )
             );
+
+            super._nextTransactionIndex = this._nextTransactionIndex + 1;
         }
 
         this._chunkInfo = null;
+        super._nextTransactionIndex = 0;
 
         return this;
     }
@@ -247,15 +252,10 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             await super.signWithOperator(client);
         }
 
-        const transactionCount =
-            this._transactions.length / this._nodeIds.length;
         const responses = [];
-        for (
-            this._nextGroupIndex = 0;
-            this._nextGroupIndex < transactionCount;
-            this._nextGroupIndex++
-        ) {
-            responses.push(await super.execute(client));
+        for (let i = 0; i < this._transactionIds.length; i++) {
+            const response = await super.execute(client);
+            responses.push(response);
         }
 
         return responses;
@@ -288,12 +288,9 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      */
     _makeTransactionData() {
         if (this._chunkInfo != null && this._message != null) {
-            const startIndex =
-                ((this._chunkInfo.number != null ? this._chunkInfo.number : 0) -
-                    1) *
-                CHUNK_SIZE;
-
+            const startIndex = (/** @type {number} */ (this._chunkInfo.number) -1) * CHUNK_SIZE;
             let endIndex = startIndex + CHUNK_SIZE;
+
             if (endIndex > this._message.length) {
                 endIndex = this._message.length;
             }
