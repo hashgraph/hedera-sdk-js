@@ -97,23 +97,30 @@ export default class FileAppendTransaction extends Transaction {
 
         let contents;
         for (let i = 0; i < bodies.length; i += nodeIds.length) {
-            const fileAppend = /** @type {proto.IFileAppendTransactionBody} */ (bodies[i].fileAppend);
+            const fileAppend = /** @type {proto.IFileAppendTransactionBody} */ (bodies[
+                i
+            ].fileAppend);
             if (fileAppend.contents == null) {
                 break;
             }
 
             if (contents == null) {
-                contents = new Uint8Array(/** @type {Uint8Array} */ (fileAppend.contents));
+                contents = new Uint8Array(
+                    /** @type {Uint8Array} */ (fileAppend.contents)
+                );
                 continue;
             }
 
             /** @type {Uint8Array} */
             const concat = new Uint8Array(
                 contents.length +
-                /** @type {Uint8Array} */ (fileAppend.contents).length
+                    /** @type {Uint8Array} */ (fileAppend.contents).length
             );
             concat.set(contents, 0);
-            concat.set(/** @type {Uint8Array} */ (fileAppend.contents), contents.length);
+            concat.set(
+                /** @type {Uint8Array} */ (fileAppend.contents),
+                contents.length
+            );
             contents = concat;
         }
 
