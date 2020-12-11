@@ -40,15 +40,6 @@ export default class Network {
          */
         this.nodes = [];
 
-        /**
-         * Keeps track of when the last time we sorted `this.networkNodeAccountIds`
-         * If this timestamp is more than 1s then we should sort the list again.
-         *
-         * @private
-         * @type {number}
-         */
-        this.lastSortedNodeAccountIds = Date.now();
-
         /** @type {(address: string) => ChannelT} */
         this.createNetworkChannel = createNetworkChannel;
     }
@@ -104,6 +95,8 @@ export default class Network {
             }
         }
 
+        shuffle(this.nodes);
+
         this.network = network;
     }
 
@@ -112,7 +105,11 @@ export default class Network {
      * @returns {number}
      */
     getNumberOfNodesForTransaction() {
-        return (this.nodes.length + 3 - 1) / 3;
+        const count = this.nodes
+            .map((node) => /** @type {number} */ (node.isHealthy() ? 1 : 0))
+            .reduce((sum, value) => (sum += value));
+
+        return (count + 3 - 1) / 3;
     }
 
     /**
@@ -120,29 +117,7 @@ export default class Network {
      * @returns {AccountId[]}
      */
     getNodeAccountIdsForExecute() {
-        // Sort the network nodes array by healtiness and delay
-        if (this.lastSortedNodeAccountIds + 1000 < Date.now()) {
-            this.nodes.sort((a, b) => {
-                if (a.isHealthy() && b.isHealthy()) {
-                    return 1;
-                } else if (a.isHealthy() && !b.isHealthy()) {
-                    return -1;
-                } else if (!a.isHealthy() && b.isHealthy()) {
-                    return 1;
-                } else {
-                    const aLastUsed = a.lastUsed != null ? a.lastUsed : 0;
-                    const bLastUsed = b.lastUsed != null ? b.lastUsed : 0;
-
-                    if (aLastUsed + a.delay < bLastUsed + b.delay) {
-                        return -1;
-                    } else {
-                        return 1;
-                    }
-                }
-            });
-
-            this.lastSortedNodeAccountIds = Date.now();
-        }
+        this.nodes.sort((a, b) => a.compare(b));
 
         return this.nodes
             .slice(0, this.getNumberOfNodesForTransaction())
@@ -157,5 +132,29 @@ export default class Network {
         this.networkNodes.clear();
         this.nodes = [];
         this.network = {};
+    }
+}
+
+/**
+ * https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+ *
+ * @template T
+ * @param {Array<T>} array
+ */
+function shuffle(array) {
+    var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
     }
 }

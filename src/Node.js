@@ -23,8 +23,19 @@ export default class Node extends ManagedNode {
         /** @type {number} */
         this.delay = 250;
 
-        /** @type {number | null} */
-        this.lastUsed = null;
+        /** @type {number} */
+        this.lastUsed = Date.now();
+
+        /** @type {number} */
+        this.delayUntil = Date.now();
+
+        /** @type {number} */
+        this.useCount = 0;
+    }
+
+    inUse() {
+        this.useCount++;
+        this.lastUsed = Date.now();
     }
 
     /**
@@ -36,16 +47,12 @@ export default class Node extends ManagedNode {
      * @returns {boolean}
      */
     isHealthy() {
-        if (this.lastUsed != null) {
-            return this.lastUsed + this.delay < Date.now();
-        }
-
-        return true;
+        return this.delayUntil <= Date.now();
     }
 
     increaseDelay() {
-        this.lastUsed = Date.now();
         this.delay = Math.min(this.delay * 2, 8000);
+        this.delayUntil = Date.now() + this.delay;
     }
 
     decreaseDelay() {
@@ -60,10 +67,47 @@ export default class Node extends ManagedNode {
      * @returns {Promise<void>}
      */
     wait() {
-        const delay =
-            (this.lastUsed != null ? this.lastUsed : 0) +
-            this.delay -
-            Date.now();
+        const delay = this.delayUntil - this.lastUsed;
         return new Promise((resolve) => setTimeout(resolve, delay));
+    }
+
+    /**
+     * @param {Node<*>} node
+     * @returns {number}
+     */
+    compare(node) {
+        if (this.isHealthy() && node.isHealthy()) {
+            if (this.useCount < node.useCount) {
+                return -1;
+            } else if (this.useCount > node.useCount) {
+                return 1;
+            } else {
+                if (this.lastUsed < node.lastUsed) {
+                    return -1;
+                } else if (this.lastUsed > node.lastUsed) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        } else if (this.isHealthy() && !node.isHealthy()) {
+            return -1;
+        } else if (!this.isHealthy() && node.isHealthy()) {
+            return 1;
+        } else {
+            if (this.useCount < node.useCount) {
+                return -1;
+            } else if (this.useCount > node.useCount) {
+                return 1;
+            } else {
+                if (this.lastUsed < node.lastUsed) {
+                    return -1;
+                } else if (this.lastUsed > node.lastUsed) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        }
     }
 }

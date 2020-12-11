@@ -209,9 +209,7 @@ export default class Executable {
                 );
             }
 
-            if (!node.isHealthy()) {
-                continue;
-            }
+            node.inUse();
 
             const channel = node.channel;
             const request = this._makeRequest();
