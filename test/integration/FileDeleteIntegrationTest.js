@@ -2,6 +2,7 @@ import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
 import FileInfoQuery from "../src/file/FileInfoQuery.js";
 import Hbar from "../src/Hbar.js";
+import Status from "../src/Status.js";
 import newClient from "./client/index.js";
 
 describe("FileDelete", function () {
@@ -46,5 +47,25 @@ describe("FileDelete", function () {
                 .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
+    });
+
+    it("should be executable", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+
+        let err = false;
+
+        try {
+            await (
+                await new FileDeleteTransaction().execute(client)
+            ).getReceipt(client);
+        } catch (error) {
+            err = error.toString().includes(Status.InvalidFileId);
+        }
+
+        if (!err) {
+            throw new Error("file deletion did not error");
+        }
     });
 });

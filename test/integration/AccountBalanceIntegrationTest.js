@@ -40,4 +40,54 @@ describe("AccountBalanceQuery", function () {
             }
         });
     });
+
+    it("should reflect token with no keys", async function () {
+        this.timeout(10000);
+
+        const operatorId = client.operatorAccountId;
+        const key = PrivateKey.generate();
+
+        const response = await new AccountCreateTransaction()
+            .setKey(key)
+            .setInitialBalance(new Hbar(1))
+            .execute(client);
+
+        const account = (await response.getReceipt(client)).accountId;
+
+        const transactionId = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setTreasuryAccountId(operatorId)
+            .setMaxTransactionFee(new Hbar(1000))
+            .execute(client);
+
+        const token = (await transactionId.getReceipt(client)).tokenId;
+
+        await (await (await new TokenAssociateTransaction()
+            .setTokenIds([token])
+            .setAccountId(account)
+            .freezeWith(client)
+            .sign(key))
+            .execute(client))
+        .getReceipt(client);
+
+        const balances = await new AccountBalanceQuery()
+            .setAccountId(account)
+            .execute(client);
+
+        expect(balances.tokens.get(token).toInt()).to.be.equal(0);
+
+        await (
+            await (
+                await new AccountDeleteTransaction()
+                    .setAccountId(account)
+                    .setMaxTransactionFee(new Hbar(1))
+                    .setNodeAccountIds([response.nodeId])
+                    .setTransferAccountId(operatorId)
+                    .setTransactionId(TransactionId.generate(account))
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)
+        ).getReceipt(client);
+    });
 });

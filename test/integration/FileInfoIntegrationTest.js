@@ -25,7 +25,7 @@ describe("FileInfo", function () {
 
         const file = receipt.fileId;
 
-        let info = await new FileInfoQuery()
+        const info = await new FileInfoQuery()
             .setFileId(file)
             .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
@@ -46,5 +46,80 @@ describe("FileInfo", function () {
                 .setNodeAccountIds([response.nodeId])
                 .execute(client)
         ).getReceipt(client);
+    });
+
+    it("should be executable with empty contents", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+        const operatorKey = client.operatorPublicKey;
+
+        const response = await new FileCreateTransaction()
+            .setKeys([operatorKey])
+            .setMaxTransactionFee(new Hbar(5))
+            .execute(client);
+
+        const receipt = await response.getReceipt(client);
+
+        expect(receipt.fileId).to.not.be.null;
+        expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
+            .true;
+
+        const file = receipt.fileId;
+
+        const info = await new FileInfoQuery()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .setQueryPayment(new Hbar(22))
+            .execute(client);
+
+        expect(info.fileId.toString()).to.be.equal(file.toString());
+        expect(info.size.toInt()).to.be.equal(0);
+        expect(info.deleted).to.be.false;
+
+        // There should only be one key
+        for (const key of info.keys) {
+            expect(key.toString()).to.be.equal(operatorKey.toString());
+        }
+
+        await (
+            await new FileDeleteTransaction()
+                .setFileId(file)
+                .setNodeAccountIds([response.nodeId])
+                .execute(client)
+        ).getReceipt(client);
+    });
+
+    it("should be executable with no keys", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+
+        const response = await new FileCreateTransaction()
+            .setMaxTransactionFee(new Hbar(5))
+            .execute(client);
+
+        const receipt = await response.getReceipt(client);
+
+        expect(receipt.fileId).to.not.be.null;
+        expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
+            .true;
+
+        const file = receipt.fileId;
+
+        const info = await new FileInfoQuery()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .setQueryPayment(new Hbar(22))
+            .execute(client);
+
+        expect(info.fileId.toString()).to.be.equal(file.toString());
+        expect(info.size.toInt()).to.be.equal(0);
+        expect(info.deleted).to.be.false;
+
+        // There should only be one key
+        for (const key of info.keys) {
+            expect(key.toString()).to.be.equal(operatorKey.toString());
+        }
     });
 });

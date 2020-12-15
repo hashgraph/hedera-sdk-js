@@ -20,7 +20,7 @@ describe("TokenCreate", function () {
         const key3 = PrivateKey.generate();
         const key4 = PrivateKey.generate();
 
-        const transactionId = await new TokenCreateTransaction()
+        const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
@@ -35,7 +35,7 @@ describe("TokenCreate", function () {
             .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
-        const tokenId = (await transactionId.getReceipt(client)).tokenId;
+        const tokenId = (await response.getReceipt(client)).tokenId;
 
         const info = await new TokenInfoQuery()
             .setTokenId(tokenId)
@@ -74,20 +74,20 @@ describe("TokenCreate", function () {
         const client = await newClient();
         const operatorId = client.operatorAccountId;
 
-        const transactionId = await new TokenCreateTransaction()
+        const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
             .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
-        const tokenId = (await transactionId.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(client)).tokenId;
 
-        const info = await new TokenInfoQuery()
-            .setTokenId(tokenId)
+        let info = await new TokenInfoQuery()
+            .setTokenId(token)
             .execute(client);
 
-        expect(info.tokenId.toString()).to.eql(tokenId.toString());
+        expect(info.tokenId.toString()).to.eql(token.toString());
         expect(info.name).to.eql("ffff");
         expect(info.symbol).to.eql("F");
         expect(info.decimals).to.eql(0);
@@ -106,73 +106,9 @@ describe("TokenCreate", function () {
         expect(info.autoRenewAccountId).to.be.null;
         expect(info.autoRenewPeriod).to.be.null;
         expect(info.expirationTime).to.be.not.null;
-
-        let err = false;
-
-        try {
-            await (
-                await new TokenDeleteTransaction()
-                    .setTokenId(tokenId)
-                    .execute(client)
-            ).getReceipt(client);
-        } catch (error) {
-            err = error.toString().includes(Status.TokenIsImmutable);
-        }
-
-        if (!err) {
-            throw new Error("token deletion did not error");
-        }
     });
 
-    it("should error with no token name", async function () {
-        this.timeout(10000);
-
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
-
-        let err = false;
-
-        try {
-            await (await new TokenCreateTransaction()
-                .setTokenSymbol("F")
-                .setTreasuryAccountId(operatorId)
-                .setMaxTransactionFee(new Hbar(1000))
-                .execute(client))
-            .getReceipt(client);
-        } catch (error) {
-            err = error.toString().includes(Status.MissingTokenName);
-        }
-
-        if (!err) {
-            throw new Error("token creation did not error");
-        }
-    });
-
-    it("should error with no token symbol", async function () {
-        this.timeout(10000);
-
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
-
-        let err = false;
-
-        try {
-            await (await new TokenCreateTransaction()
-                .setTokenName("ffff")
-                .setTreasuryAccountId(operatorId)
-                .setMaxTransactionFee(new Hbar(1000))
-                .execute(client))
-            .getReceipt(client);
-        } catch (error) {
-            err = error.toString().includes(Status.MissingTokenSymbol);
-        }
-
-        if (!err) {
-            throw new Error("token creation did not error");
-        }
-    });
-
-    it("should error with no treasury account ID", async function () {
+    it("should error with no token ID set", async function () {
         this.timeout(10000);
 
         const client = await newClient();
@@ -180,18 +116,13 @@ describe("TokenCreate", function () {
         let err = false;
 
         try {
-            await (await new TokenCreateTransaction()
-                .setTokenName("ffff")
-                .setTokenSymbol("F")
-                .setMaxTransactionFee(new Hbar(1000))
-                .execute(client))
-            .getReceipt(client);
+            await new TokenInfoQuery().execute(client);
         } catch (error) {
-            err = error.toString().includes(Status.InvalidTreasuryAccountForToken);
+            err = error.toString().includes(Status.InvalidTokenId);
         }
 
         if (!err) {
-            throw new Error("token creation did not error");
+            throw new Error("token info query did not error");
         }
     });
 });

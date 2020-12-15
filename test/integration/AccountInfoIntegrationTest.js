@@ -55,6 +55,63 @@ describe("AccountInfo", function () {
         ).getReceipt(client);
     });
 
+    it("should reflect token with no keys", async function () {
+        this.timeout(10000);
+
+        const client = await newClient();
+        const operatorId = client.operatorAccountId;
+        const key = PrivateKey.generate();
+
+        const response = await new AccountCreateTransaction()
+            .setKey(key)
+            .setInitialBalance(new Hbar(1))
+            .execute(client);
+
+        const account = (await response.getReceipt(client)).accountId;
+
+        const transactionId = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setTreasuryAccountId(operatorId)
+            .setMaxTransactionFee(new Hbar(1000))
+            .execute(client);
+
+        const token = (await transactionId.getReceipt(client)).tokenId;
+
+        await (await (await new TokenAssociateTransaction()
+            .setTokenIds([token])
+            .setAccountId(account)
+            .freezeWith(client)
+            .sign(key))
+            .execute(client))
+        .getReceipt(client);
+
+        const info = await new AccountInfoQuery()
+            .setAccountId(account)
+            .execute(client);
+
+        const relationship = info.tokenRelationships.get(token);
+
+        expect(relationship).to.be.not.null;
+        expect(relationship.tokenId.toString()).to.be.equal(token.toString());
+        expect(relationship.balance.toInt()).to.be.equal(0);
+        expect(relationship.isKycGranted).to.be.null;
+        expect(relationship.isFrozen).to.be.null;
+
+        await (
+            await (
+                await new AccountDeleteTransaction()
+                    .setAccountId(account)
+                    .setMaxTransactionFee(new Hbar(1))
+                    .setNodeAccountIds([response.nodeId])
+                    .setTransferAccountId(operatorId)
+                    .setTransactionId(TransactionId.generate(account))
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)
+        ).getReceipt(client);
+    });
+
     it("should be error with no account ID", async function () {
         this.timeout(15000);
 
