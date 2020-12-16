@@ -20,7 +20,7 @@ describe("TokenCreate", function () {
         const key3 = PrivateKey.generate();
         const key4 = PrivateKey.generate();
 
-        const transactionId = await new TokenCreateTransaction()
+        const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
@@ -35,7 +35,7 @@ describe("TokenCreate", function () {
             .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
-        const tokenId = (await transactionId.getReceipt(client)).tokenId;
+        const tokenId = (await response.getReceipt(client)).tokenId;
 
         const info = await new TokenInfoQuery()
             .setTokenId(tokenId)
@@ -74,14 +74,14 @@ describe("TokenCreate", function () {
         const client = await newClient();
         const operatorId = client.operatorAccountId;
 
-        const transactionId = await new TokenCreateTransaction()
+        const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
             .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
-        const tokenId = (await transactionId.getReceipt(client)).tokenId;
+        const tokenId = (await response.getReceipt(client)).tokenId;
 
         const info = await new TokenInfoQuery()
             .setTokenId(tokenId)
@@ -124,7 +124,7 @@ describe("TokenCreate", function () {
         }
     });
 
-    it("should error with no token name", async function () {
+    it("should error when token name is not set", async function () {
         this.timeout(10000);
 
         const client = await newClient();
@@ -148,7 +148,7 @@ describe("TokenCreate", function () {
         }
     });
 
-    it("should error with no token symbol", async function () {
+    it("should error when token symbol is not set", async function () {
         this.timeout(10000);
 
         const client = await newClient();
@@ -172,7 +172,7 @@ describe("TokenCreate", function () {
         }
     });
 
-    it("should error with no treasury account ID", async function () {
+    it("should error when treasury account ID is not set", async function () {
         this.timeout(10000);
 
         const client = await newClient();
@@ -194,4 +194,31 @@ describe("TokenCreate", function () {
             throw new Error("token creation did not error");
         }
     });
+
+    it("should error when admin key does not sign transaction", async function () {
+        this.timeout(10000);
+
+        const client = await newClient();
+        const operatorId = client.operatorAccountId;
+
+        let err = false;
+
+        try {
+            await (await new TokenCreateTransaction()
+                .setTokenName("ffff")
+                .setTokenSymbol("F")
+                .setTreasuryAccountId(operatorId)
+                .setAdminKey(PrivateKey.generate())
+                .setMaxTransactionFee(new Hbar(1000))
+                .execute(client))
+            .getReceipt(client);
+        } catch (error) {
+            err = error.toString().includes(Status.InvalidSignature);
+        }
+
+        if (!err) {
+            throw new Error("token creation did not error");
+        }
+    });
+
 });

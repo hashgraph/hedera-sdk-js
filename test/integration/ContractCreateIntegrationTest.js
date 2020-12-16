@@ -161,7 +161,7 @@ describe("ContractCreate", function () {
         }
     });
 
-    it("should error creating contract without gas", async function () {
+    it("should error when gas is not set", async function () {
         this.timeout(20000);
 
         const client = await newClient();
@@ -204,7 +204,7 @@ describe("ContractCreate", function () {
         }
     });
 
-    it("should error creating contract without contructor parameters", async function () {
+    it("should error when contructor parameters are not set", async function () {
         this.timeout(20000);
 
         const client = await newClient();
@@ -245,7 +245,7 @@ describe("ContractCreate", function () {
         }
     });
 
-    it("should error creating contract without bytecode file", async function () {
+    it("should error when bytecode file ID is not set", async function () {
         this.timeout(20000);
 
         const client = await newClient();

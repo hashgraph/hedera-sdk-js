@@ -308,7 +308,7 @@ describe("ContractExecute", function () {
         }
     });
 
-    it("should error when function's parameter is not set", async function () {
+    it("should error when function's parameter are not set", async function () {
         this.timeout(20000);
 
         const client = await newClient();

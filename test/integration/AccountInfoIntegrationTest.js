@@ -5,6 +5,8 @@ import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
 import newClient from "./client/index.js";
+import TokenCreateTransaction from "../src/token/TokenCreateTransaction.js";
+import TokenAssociateTransaction from "../src/token/TokenAssociateTransaction.js";
 import { PrivateKey } from "../src/index.js";
 
 describe("AccountInfo", function () {
@@ -62,21 +64,21 @@ describe("AccountInfo", function () {
         const operatorId = client.operatorAccountId;
         const key = PrivateKey.generate();
 
-        const response = await new AccountCreateTransaction()
+        let response = await new AccountCreateTransaction()
             .setKey(key)
             .setInitialBalance(new Hbar(1))
             .execute(client);
 
         const account = (await response.getReceipt(client)).accountId;
 
-        const transactionId = await new TokenCreateTransaction()
+        response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
             .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
-        const token = (await transactionId.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(client)).tokenId;
 
         await (await (await new TokenAssociateTransaction()
             .setTokenIds([token])

@@ -38,7 +38,7 @@ export default class NodeMirrorChannel extends MirrorChannel {
      * @returns {() => void}
      */
     makeServerStreamRequest(requestData, callback) {
-        let stream = this._client
+        const stream = this._client
             .makeServerStreamRequest(
                 // `/proto.ConsensusService/SubscribeTopic`,
                 "/com.hedera.mirror.api.proto.ConsensusService/subscribeTopic",
@@ -52,8 +52,8 @@ export default class NodeMirrorChannel extends MirrorChannel {
             .on("status", (/** @type {grpc.StatusObject} */ status) => {
                 callback(status.code, null);
             })
-            .on("error", (/** @type {grpc.StatusObject} */ status) => {
-                callback(status.code, null);
+            .on("error", (/** @type {grpc.StatusObject} */ _) => {
+                // Do nothing
             });
 
         return () => {

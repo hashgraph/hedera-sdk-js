@@ -43,19 +43,11 @@ export default class TopicCreateTransaction extends Transaction {
          */
         this._topicMemo = null;
 
-        if (props.topicMemo != null) {
-            this.setTopicMemo(props.topicMemo);
-        }
-
         /**
          * @private
          * @type {?Key}
          */
         this._adminKey = null;
-
-        if (props.adminKey != null) {
-            this.setAdminKey(props.adminKey);
-        }
 
         /**
          * @private
@@ -63,25 +55,33 @@ export default class TopicCreateTransaction extends Transaction {
          */
         this._submitKey = null;
 
-        if (props.submitKey != null) {
-            this.setSubmitKey(props.submitKey);
-        }
-
         /**
          * @private
          * @type {?AccountId}
          */
         this._autoRenewAccountId = null;
 
-        if (props.autoRenewAccountId != null) {
-            this.setAutoRenewAccountId(props.autoRenewAccountId);
-        }
-
         /**
          * @private
          * @type {Duration}
          */
         this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
+
+        if (props.topicMemo != null) {
+            this.setTopicMemo(props.topicMemo);
+        }
+
+        if (props.adminKey != null) {
+            this.setAdminKey(props.adminKey);
+        }
+
+        if (props.submitKey != null) {
+            this.setSubmitKey(props.submitKey);
+        }
+
+        if (props.autoRenewAccountId != null) {
+            this.setAutoRenewAccountId(props.autoRenewAccountId);
+        }
 
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);

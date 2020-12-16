@@ -6,7 +6,7 @@ import {
 } from "../src/exports.js";
 import newClient from "./client/index.js";
 
-describe("TokenCreate", function () {
+describe("TokenDelete", function () {
     it("should be executable", async function () {
         this.timeout(10000);
 
@@ -14,22 +14,22 @@ describe("TokenCreate", function () {
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
 
-        const transactionId = await new TokenCreateTransaction()
+        const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
             .setInitialSupply(1000000)
             .setTreasuryAccountId(operatorId)
             .setAdminKey(operatorKey)
-            .setKycKey(opeatorKey)
-            .setFreezeKey(opeatorKey)
-            .setWipeKey(opeatorKey)
-            .setSupplyKey(opeatorKey)
+            .setKycKey(operatorKey)
+            .setFreezeKey(operatorKey)
+            .setWipeKey(operatorKey)
+            .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
             .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
-        const tokenId = (await transactionId.getReceipt(client)).tokenId;
+        const tokenId = (await response.getReceipt(client)).tokenId;
 
         await (
             await new TokenDeleteTransaction()

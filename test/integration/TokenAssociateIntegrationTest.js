@@ -91,7 +91,7 @@ describe("TokenAssociate", function () {
         ).getReceipt(client);
     });
 
-    it("should be executable with no tokens set", async function () {
+    it("should be executable even when no token IDs are set", async function () {
         this.timeout(10000);
 
         const client = await newClient();
@@ -126,7 +126,7 @@ describe("TokenAssociate", function () {
         ).getReceipt(client);
     });
 
-    it("should error with no account set", async function () {
+    it("should error when account ID is not set", async function () {
         this.timeout(10000);
 
         const client = await newClient();

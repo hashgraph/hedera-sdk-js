@@ -179,6 +179,7 @@ export default class TopicMessageQuery {
             .channel.makeServerStreamRequest(request, (error, data) => {
                 if (data == null || error != null) {
                     // NOT_FOUND or UNAVAILABLE
+                    cancel();
                     if (attempt < 10 && (error === 5 || error === 14)) {
                         setTimeout(() => {
                             this._makeServerStreamRequest(

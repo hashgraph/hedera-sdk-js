@@ -65,7 +65,7 @@ export { default as TokenUnfreezeTransaction } from "./token/TokenUnfreezeTransa
 export { default as TokenUpdateTransaction } from "./token/TokenUpdateTransaction.js";
 export { default as TokenWipeTransaction } from "./token/TokenWipeTransaction.js";
 export { default as TopicCreateTransaction } from "./topic/TopicCreateTransaction.js";
-export { default as TopicDeleteTransacton } from "./topic/TopicDeleteTransacton.js";
+export { default as TopicDeleteTransaction } from "./topic/TopicDeleteTransaction.js";
 export { default as TopicId } from "./topic/TopicId.js";
 export { default as TopicInfo } from "./topic/TopicInfo.js";
 export { default as TopicInfoQuery } from "./topic/TopicInfoQuery.js";

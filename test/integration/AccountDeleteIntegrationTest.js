@@ -94,7 +94,7 @@ describe("AccountDelete", function () {
         }
     });
 
-    it("should be error with no account ID set", async function () {
+    it("should error with no account ID set", async function () {
         this.timeout(15000);
 
         const client = await newClient();

@@ -55,7 +55,7 @@ describe("AccountCreate", function () {
         ).getReceipt(client);
     });
 
-    it("should be error out with no key", async function () {
+    it("should error when key is not set", async function () {
         this.timeout(15000);
 
         const client = await newClient();
@@ -69,7 +69,6 @@ describe("AccountCreate", function () {
 
             await response.getReceipt(client);
         } catch (error) {
-            console.log(error);
             err = error.toString().includes(Status.KeyRequired.toString());
         }
 

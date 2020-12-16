@@ -90,7 +90,7 @@ describe("AccountUpdate", function () {
         ).getReceipt(client);
     });
 
-    it("should be error with invalid auto renew period", async function () {
+    it("should error with invalid auto renew period", async function () {
         this.timeout(15000);
 
         const client = await newClient();
@@ -150,7 +150,7 @@ describe("AccountUpdate", function () {
         }
     });
 
-    it("should be error with insufficent tx fee when a large expiration time is set", async function () {
+    it("should error with insufficent tx fee when a large expiration time is set", async function () {
         this.timeout(15000);
 
         const client = await newClient();
@@ -210,7 +210,7 @@ describe("AccountUpdate", function () {
         }
     });
 
-    it("should be error with no account ID", async function () {
+    it("should error when account ID is not set", async function () {
         this.timeout(15000);
 
         const client = await newClient();
@@ -278,7 +278,7 @@ describe("AccountUpdate", function () {
         ).getReceipt(client);
     });
 
-    it("should be error with invalid signature", async function () {
+    it("should error with invalid signature", async function () {
         this.timeout(15000);
 
         const client = await newClient();

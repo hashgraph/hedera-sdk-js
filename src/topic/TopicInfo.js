@@ -27,10 +27,10 @@ export default class TopicInfo {
      * @param {string} props.topicMemo
      * @param {Uint8Array} props.runningHash
      * @param {Long} props.sequenceNumber
-     * @param {Timestamp} props.expirationTime
+     * @param {?Timestamp} props.expirationTime
      * @param {?Key} props.adminKey
      * @param {?Key} props.submitKey
-     * @param {Duration} props.autoRenewPeriod
+     * @param {?Duration} props.autoRenewPeriod
      * @param {?AccountId} props.autoRenewAccountId
      */
     constructor(props) {
@@ -120,7 +120,7 @@ export default class TopicInfo {
             expirationTime:
                 info.expirationTime != null
                     ? Timestamp._fromProtobuf(info.expirationTime)
-                    : new Timestamp(0, 0),
+                    : null,
             adminKey:
                 info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
             submitKey:
@@ -130,7 +130,7 @@ export default class TopicInfo {
                     ? new Duration(
                           /** @type {Long} */ (info.autoRenewPeriod.seconds)
                       )
-                    : new Duration(0),
+                    : null,
             autoRenewAccountId:
                 info.autoRenewAccount != null
                     ? AccountId._fromProtobuf(info.autoRenewAccount)
@@ -149,14 +149,18 @@ export default class TopicInfo {
                 memo: this.topicMemo,
                 runningHash: this.runningHash,
                 sequenceNumber: this.sequenceNumber,
-                expirationTime: this.expirationTime._toProtobuf(),
+                expirationTime: this.expirationTime != null ?
+                    this.expirationTime._toProtobuf() :
+                    null,
                 adminKey:
                     this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
                 submitKey:
                     this.submitKey != null
                         ? keyToProtobuf(this.submitKey)
                         : null,
-                autoRenewPeriod: this.autoRenewPeriod._toProtobuf(),
+                autoRenewPeriod: this.autoRenewPeriod != null ?
+                    this.autoRenewPeriod._toProtobuf() :
+                    null,
                 autoRenewAccount:
                     this.autoRenewAccountId != null
                         ? this.autoRenewAccountId._toProtobuf()
