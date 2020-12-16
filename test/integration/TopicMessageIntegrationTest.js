@@ -145,7 +145,7 @@ describe("TopicMessage", function () {
         }
     });
 
-    it("should error when topic ID is not set", async function () {
+    it("should error when message is not set", async function () {
         this.timeout(40000);
 
         let client = await newClient();

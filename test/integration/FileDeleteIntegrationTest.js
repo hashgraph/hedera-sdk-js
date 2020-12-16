@@ -49,7 +49,7 @@ describe("FileDelete", function () {
         ).getReceipt(client);
     });
 
-    it("should be executable", async function () {
+    it("should error when file ID is not set", async function () {
         this.timeout(15000);
 
         const client = await newClient();

@@ -52,6 +52,7 @@ export default class NodeMirrorChannel extends MirrorChannel {
             .on("status", (/** @type {grpc.StatusObject} */ status) => {
                 callback(status.code, null);
             })
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .on("error", (/** @type {grpc.StatusObject} */ _) => {
                 // Do nothing
             });
