@@ -32,14 +32,14 @@ describe("TopicCreate", function () {
         expect(info.sequenceNumber.toInt()).to.eql(0);
         expect(info.adminKey.toString()).to.eql(operatorKey.toString());
         expect(info.submitKey.toString()).to.eql(operatorKey.toString());
-        expect(info.autoRenewAccountId.toString()).to.be.eql(operatorId.toString());
+        expect(info.autoRenewAccountId.toString()).to.be.eql(
+            operatorId.toString()
+        );
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
 
         await (
-            await new TopicDeleteTransaction()
-                .setTopicId(topic)
-                .execute(client)
+            await new TopicDeleteTransaction().setTopicId(topic).execute(client)
         ).getReceipt(client);
     });
 

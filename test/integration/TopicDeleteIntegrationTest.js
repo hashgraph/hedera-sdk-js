@@ -22,9 +22,7 @@ describe("TopicDelete", function () {
         const topic = (await response.getReceipt(client)).topicId;
 
         await (
-            await new TopicDeleteTransaction()
-                .setTopicId(topic)
-                .execute(client)
+            await new TopicDeleteTransaction().setTopicId(topic).execute(client)
         ).getReceipt(client);
     });
 

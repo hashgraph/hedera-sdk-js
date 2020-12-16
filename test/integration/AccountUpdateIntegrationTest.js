@@ -178,7 +178,9 @@ describe("AccountUpdate", function () {
                         await new AccountUpdateTransaction()
                             .setAccountId(account)
                             .setKey(key2.publicKey)
-                            .setExpirationTime(new Timestamp(Date.now() + 77760000000, 0))
+                            .setExpirationTime(
+                                new Timestamp(Date.now() + 77760000000, 0)
+                            )
                             .setNodeAccountIds([response.nodeId])
                             .setMaxTransactionFee(new Hbar(1))
                             .freezeWith(client)
@@ -223,11 +225,9 @@ describe("AccountUpdate", function () {
                     .setKey(client.operatorPublicKey)
                     .setMaxTransactionFee(new Hbar(1))
                     .execute(client)
-                ).getReceipt(client);
+            ).getReceipt(client);
         } catch (error) {
-            err = error
-                .toString()
-                .includes(Status.InvalidAccountId.toString());
+            err = error.toString().includes(Status.InvalidAccountId.toString());
         }
 
         if (!err) {
@@ -312,9 +312,7 @@ describe("AccountUpdate", function () {
                 ).execute(client)
             ).getReceipt(client);
         } catch (error) {
-            err = error
-                .toString()
-                .includes(Status.InvalidSignature.toString());
+            err = error.toString().includes(Status.InvalidSignature.toString());
         }
 
         await (

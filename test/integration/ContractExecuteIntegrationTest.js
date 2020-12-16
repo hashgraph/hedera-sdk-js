@@ -129,7 +129,9 @@ describe("ContractExecute", function () {
                     .setGas(10000)
                     .setFunction(
                         "setMessage",
-                        new ContractFunctionParameters().addString("new message")
+                        new ContractFunctionParameters().addString(
+                            "new message"
+                        )
                     )
                     .setMaxTransactionFee(new Hbar(5))
                     .execute(client)
@@ -280,7 +282,9 @@ describe("ContractExecute", function () {
                     .setContractId(contract)
                     .setFunction(
                         "setMessage",
-                        new ContractFunctionParameters().addString("new message")
+                        new ContractFunctionParameters().addString(
+                            "new message"
+                        )
                     )
                     .setMaxTransactionFee(new Hbar(5))
                     .execute(client)

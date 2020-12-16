@@ -87,7 +87,7 @@ describe("ContractBytecode", function () {
         const client = await newClient();
 
         let err = false;
-        
+
         try {
             await new ContractByteCodeQuery().execute(client);
         } catch (error) {

@@ -38,9 +38,7 @@ describe("TokenUpdate", function () {
 
         const token = (await response.getReceipt(client)).tokenId;
 
-        let info = await new TokenInfoQuery()
-            .setTokenId(token)
-            .execute(client);
+        let info = await new TokenInfoQuery().setTokenId(token).execute(client);
 
         expect(info.tokenId.toString()).to.eql(token.toString());
         expect(info.name).to.eql("ffff");
@@ -62,16 +60,15 @@ describe("TokenUpdate", function () {
         expect(info.autoRenewPeriod).to.be.null;
         expect(info.expirationTime).to.be.not.null;
 
-        await (await new TokenUpdateTransaction()
-            .setTokenId(token)
-            .setTokenName("aaaa")
-            .setTokenSymbol("A")
-            .execute(client))
-        .getReceipt(client);
+        await (
+            await new TokenUpdateTransaction()
+                .setTokenId(token)
+                .setTokenName("aaaa")
+                .setTokenSymbol("A")
+                .execute(client)
+        ).getReceipt(client);
 
-        info = await new TokenInfoQuery()
-            .setTokenId(token)
-            .execute(client);
+        info = await new TokenInfoQuery().setTokenId(token).execute(client);
 
         expect(info.tokenId.toString()).to.eql(token.toString());
         expect(info.name).to.eql("aaaa");
@@ -93,11 +90,8 @@ describe("TokenUpdate", function () {
         expect(info.autoRenewPeriod).to.be.null;
         expect(info.expirationTime).to.be.not.null;
 
-
         await (
-            await new TokenDeleteTransaction()
-                .setTokenId(token)
-                .execute(client)
+            await new TokenDeleteTransaction().setTokenId(token).execute(client)
         ).getReceipt(client);
     });
 
@@ -129,15 +123,12 @@ describe("TokenUpdate", function () {
 
         const token = (await response.getReceipt(client)).tokenId;
 
-        await (await new TokenUpdateTransaction()
-            .setTokenId(token)
-            .execute(client))
-        .getReceipt(client);
+        await (
+            await new TokenUpdateTransaction().setTokenId(token).execute(client)
+        ).getReceipt(client);
 
         await (
-            await new TokenDeleteTransaction()
-                .setTokenId(token)
-                .execute(client)
+            await new TokenDeleteTransaction().setTokenId(token).execute(client)
         ).getReceipt(client);
     });
 
@@ -159,7 +150,8 @@ describe("TokenUpdate", function () {
         let err = false;
 
         try {
-            await (await new TokenUpdateTransaction()
+            await (
+                await new TokenUpdateTransaction()
                     .setTokenId(token)
                     .setTokenName("aaaa")
                     .setTokenSymbol("A")
@@ -182,8 +174,8 @@ describe("TokenUpdate", function () {
         let err = false;
 
         try {
-            await (await new TokenUpdateTransaction()
-                    .execute(client)
+            await (
+                await new TokenUpdateTransaction().execute(client)
             ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);
@@ -209,9 +201,8 @@ describe("TokenUpdate", function () {
 
         const token = (await response.getReceipt(client)).tokenId;
 
-        await (await new TokenUpdateTransaction()
-                .setTokenId(token)
-                .execute(client)
+        await (
+            await new TokenUpdateTransaction().setTokenId(token).execute(client)
         ).getReceipt(client);
     });
 
@@ -222,22 +213,24 @@ describe("TokenUpdate", function () {
         const operatorId = client.operatorAccountId;
         const key = PrivateKey.generate();
 
-        const response = await (await new TokenCreateTransaction()
-            .setTokenName("ffff")
-            .setTokenSymbol("F")
-            .setTreasuryAccountId(operatorId)
-            .setAdminKey(key)
-            .setMaxTransactionFee(new Hbar(1000))
-            .freezeWith(client)
-            .sign(key))
-        .execute(client);
+        const response = await (
+            await new TokenCreateTransaction()
+                .setTokenName("ffff")
+                .setTokenSymbol("F")
+                .setTreasuryAccountId(operatorId)
+                .setAdminKey(key)
+                .setMaxTransactionFee(new Hbar(1000))
+                .freezeWith(client)
+                .sign(key)
+        ).execute(client);
 
         const token = (await response.getReceipt(client)).tokenId;
 
         let err = false;
 
         try {
-            await (await new TokenUpdateTransaction()
+            await (
+                await new TokenUpdateTransaction()
                     .setTokenId(token)
                     .setTokenName("aaaa")
                     .setTokenSymbol("A")

@@ -26,31 +26,30 @@ describe("TopicMessage", function () {
         const topic = (await response.getReceipt(client)).topicId;
 
         let received = false;
-        const contents = "Hello from Hedera SDK JS"
+        const contents = "Hello from Hedera SDK JS";
 
         const handle = new TopicMessageQuery()
             .setTopicId(topic)
             .setStartTime(0)
             .subscribe(client, (message) => {
                 received = utf8.decode(message.contents) === contents;
-            })
+            });
 
         const startTime = Date.now();
 
-        await (await new TopicMessageSubmitTransaction()
-            .setTopicId(topic)
-            .setMessage(contents)
-            .execute(client))
-        .getReceipt(client);
+        await (
+            await new TopicMessageSubmitTransaction()
+                .setTopicId(topic)
+                .setMessage(contents)
+                .execute(client)
+        ).getReceipt(client);
 
         while (!received && Date.now() < startTime + 30000) {
             // Do nothing
         }
 
         await (
-            await new TopicDeleteTransaction()
-                .setTopicId(topic)
-                .execute(client)
+            await new TopicDeleteTransaction().setTopicId(topic).execute(client)
         ).getReceipt(client);
 
         handle.unsubscribe();
@@ -82,24 +81,23 @@ describe("TopicMessage", function () {
             .setStartTime(0)
             .subscribe(client, (message) => {
                 received = utf8.decode(message.contents) === bigContents;
-            })
+            });
 
         const startTime = Date.now();
 
-        await (await new TopicMessageSubmitTransaction()
-            .setTopicId(topic)
-            .setMessage(bigContents)
-            .execute(client))
-        .getReceipt(client);
+        await (
+            await new TopicMessageSubmitTransaction()
+                .setTopicId(topic)
+                .setMessage(bigContents)
+                .execute(client)
+        ).getReceipt(client);
 
         while (!received && Date.now() < startTime + 45000) {
             // Do nothing
         }
 
         await (
-            await new TopicDeleteTransaction()
-                .setTopicId(topic)
-                .execute(client)
+            await new TopicDeleteTransaction().setTopicId(topic).execute(client)
         ).getReceipt(client);
 
         handle.unsubscribe();
@@ -124,23 +122,22 @@ describe("TopicMessage", function () {
 
         const topic = (await response.getReceipt(client)).topicId;
 
-        const contents = "Hello from Hedera SDK JS"
+        const contents = "Hello from Hedera SDK JS";
 
         let err = false;
 
         try {
-            await (await new TopicMessageSubmitTransaction()
-                .setMessage(contents)
-                .execute(client))
-            .getReceipt(client);
+            await (
+                await new TopicMessageSubmitTransaction()
+                    .setMessage(contents)
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTopicId);
         }
 
         await (
-            await new TopicDeleteTransaction()
-                .setTopicId(topic)
-                .execute(client)
+            await new TopicDeleteTransaction().setTopicId(topic).execute(client)
         ).getReceipt(client);
 
         if (!err) {
@@ -166,18 +163,17 @@ describe("TopicMessage", function () {
         let err = false;
 
         try {
-            await (await new TopicMessageSubmitTransaction()
-                .setTopicId(topic)
-                .execute(client))
-            .getReceipt(client);
+            await (
+                await new TopicMessageSubmitTransaction()
+                    .setTopicId(topic)
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTopicMessage);
         }
 
         await (
-            await new TopicDeleteTransaction()
-                .setTopicId(topic)
-                .execute(client)
+            await new TopicDeleteTransaction().setTopicId(topic).execute(client)
         ).getReceipt(client);
 
         if (!err) {

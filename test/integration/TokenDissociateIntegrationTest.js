@@ -29,30 +29,35 @@ describe("TokenDissociate", function () {
             .execute(client);
 
         const account = (await response.getReceipt(client)).accountId;
-        
-        const token = (await (await new TokenCreateTransaction()
-            .setTokenName("ffff")
-            .setTokenSymbol("F")
-            .setDecimals(3)
-            .setInitialSupply(1000000)
-            .setTreasuryAccountId(operatorId)
-            .setAdminKey(operatorKey)
-            .setKycKey(operatorKey)
-            .setFreezeKey(operatorKey)
-            .setWipeKey(operatorKey)
-            .setSupplyKey(operatorKey)
-            .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
-            .execute(client))
-        .getReceipt(client)).tokenId;
 
-        await (await (await new TokenAssociateTransaction()
-            .setTokenIds([token])
-            .setAccountId(account)
-            .freezeWith(client)
-            .sign(key))
-            .execute(client))
-        .getReceipt(client);
+        const token = (
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setDecimals(3)
+                    .setInitialSupply(1000000)
+                    .setTreasuryAccountId(operatorId)
+                    .setAdminKey(operatorKey)
+                    .setKycKey(operatorKey)
+                    .setFreezeKey(operatorKey)
+                    .setWipeKey(operatorKey)
+                    .setSupplyKey(operatorKey)
+                    .setFreezeDefault(false)
+                    .setMaxTransactionFee(new Hbar(1000))
+                    .execute(client)
+            ).getReceipt(client)
+        ).tokenId;
+
+        await (
+            await (
+                await new TokenAssociateTransaction()
+                    .setTokenIds([token])
+                    .setAccountId(account)
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)
+        ).getReceipt(client);
 
         let balances = await new AccountBalanceQuery()
             .setAccountId(account)
@@ -72,13 +77,15 @@ describe("TokenDissociate", function () {
         expect(relationship.isKycGranted).to.be.false;
         expect(relationship.isFrozen).to.be.false;
 
-        await (await (await new TokenDissociateTransaction()
-            .setTokenIds([token])
-            .setAccountId(account)
-            .freezeWith(client)
-            .sign(key))
-            .execute(client))
-        .getReceipt(client);
+        await (
+            await (
+                await new TokenDissociateTransaction()
+                    .setTokenIds([token])
+                    .setAccountId(account)
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)
+        ).getReceipt(client);
 
         balances = await new AccountBalanceQuery()
             .setAccountId(account)
@@ -93,9 +100,7 @@ describe("TokenDissociate", function () {
         expect(info.tokenRelationships.get(token)).to.be.null;
 
         await (
-            await new TokenDeleteTransaction()
-                .setTokenId(token)
-                .execute(client)
+            await new TokenDeleteTransaction().setTokenId(token).execute(client)
         ).getReceipt(client);
 
         await (
@@ -126,12 +131,14 @@ describe("TokenDissociate", function () {
 
         const account = (await response.getReceipt(client)).accountId;
 
-        await (await (await new TokenDissociateTransaction()
-            .setAccountId(account)
-            .freezeWith(client)
-            .sign(key))
-            .execute(client))
-        .getReceipt(client);
+        await (
+            await (
+                await new TokenDissociateTransaction()
+                    .setAccountId(account)
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)
+        ).getReceipt(client);
 
         await (
             await (
@@ -174,18 +181,17 @@ describe("TokenDissociate", function () {
         let err = false;
 
         try {
-            await (await new TokenDissociateTransaction()
-                .setTokenIds([token])
-                .execute(client))
-            .getReceipt(client);
+            await (
+                await new TokenDissociateTransaction()
+                    .setTokenIds([token])
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountId);
         }
 
         await (
-            await new TokenDeleteTransaction()
-                .setTokenId(token)
-                .execute(client)
+            await new TokenDeleteTransaction().setTokenId(token).execute(client)
         ).getReceipt(client);
 
         if (!err) {

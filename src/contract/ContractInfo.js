@@ -142,7 +142,9 @@ export default class ContractInfo {
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : "",
             adminKey:
-                info.adminKey != null && info.adminKey.contractID == null ? keyFromProtobuf(info.adminKey) : null,
+                info.adminKey != null && info.adminKey.contractID == null
+                    ? keyFromProtobuf(info.adminKey)
+                    : null,
             expirationTime: Timestamp._fromProtobuf(
                 /** @type {proto.ITimestamp} */ (info.expirationTime)
             ),

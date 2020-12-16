@@ -83,9 +83,7 @@ describe("TokenInfo", function () {
 
         const token = (await response.getReceipt(client)).tokenId;
 
-        let info = await new TokenInfoQuery()
-            .setTokenId(token)
-            .execute(client);
+        let info = await new TokenInfoQuery().setTokenId(token).execute(client);
 
         expect(info.tokenId.toString()).to.eql(token.toString());
         expect(info.name).to.eql("ffff");

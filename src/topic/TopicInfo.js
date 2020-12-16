@@ -149,18 +149,20 @@ export default class TopicInfo {
                 memo: this.topicMemo,
                 runningHash: this.runningHash,
                 sequenceNumber: this.sequenceNumber,
-                expirationTime: this.expirationTime != null ?
-                    this.expirationTime._toProtobuf() :
-                    null,
+                expirationTime:
+                    this.expirationTime != null
+                        ? this.expirationTime._toProtobuf()
+                        : null,
                 adminKey:
                     this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
                 submitKey:
                     this.submitKey != null
                         ? keyToProtobuf(this.submitKey)
                         : null,
-                autoRenewPeriod: this.autoRenewPeriod != null ?
-                    this.autoRenewPeriod._toProtobuf() :
-                    null,
+                autoRenewPeriod:
+                    this.autoRenewPeriod != null
+                        ? this.autoRenewPeriod._toProtobuf()
+                        : null,
                 autoRenewAccount:
                     this.autoRenewAccountId != null
                         ? this.autoRenewAccountId._toProtobuf()

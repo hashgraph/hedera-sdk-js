@@ -29,38 +29,45 @@ describe("TokenRevokeKyc", function () {
             .execute(client);
 
         const account = (await response.getReceipt(client)).accountId;
-        
-        const token = (await (await new TokenCreateTransaction()
-            .setTokenName("ffff")
-            .setTokenSymbol("F")
-            .setDecimals(3)
-            .setInitialSupply(1000000)
-            .setTreasuryAccountId(operatorId)
-            .setAdminKey(operatorKey)
-            .setKycKey(operatorKey)
-            .setFreezeKey(operatorKey)
-            .setWipeKey(operatorKey)
-            .setSupplyKey(operatorKey)
-            .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
-            .execute(client))
-        .getReceipt(client)).tokenId;
 
-        await (await (await new TokenAssociateTransaction()
-            .setTokenIds([token])
-            .setAccountId(account)
-            .freezeWith(client)
-            .sign(key))
-            .execute(client))
-        .getReceipt(client);
+        const token = (
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setDecimals(3)
+                    .setInitialSupply(1000000)
+                    .setTreasuryAccountId(operatorId)
+                    .setAdminKey(operatorKey)
+                    .setKycKey(operatorKey)
+                    .setFreezeKey(operatorKey)
+                    .setWipeKey(operatorKey)
+                    .setSupplyKey(operatorKey)
+                    .setFreezeDefault(false)
+                    .setMaxTransactionFee(new Hbar(1000))
+                    .execute(client)
+            ).getReceipt(client)
+        ).tokenId;
 
-        await (await (await new TokenGrantKycTransaction()
-            .setTokenId(token)
-            .setAccountId(account)
-            .freezeWith(client)
-            .sign(key))
-            .execute(client))
-        .getReceipt(client);
+        await (
+            await (
+                await new TokenAssociateTransaction()
+                    .setTokenIds([token])
+                    .setAccountId(account)
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)
+        ).getReceipt(client);
+
+        await (
+            await (
+                await new TokenGrantKycTransaction()
+                    .setTokenId(token)
+                    .setAccountId(account)
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)
+        ).getReceipt(client);
 
         let info = await new AccountInfoQuery()
             .setAccountId(account)
@@ -74,13 +81,15 @@ describe("TokenRevokeKyc", function () {
         expect(relationship.isKycGranted).to.be.true;
         expect(relationship.isFrozen).to.be.false;
 
-        await (await (await new TokenRevokeKycTransaction()
-            .setTokenId(token)
-            .setAccountId(account)
-            .freezeWith(client)
-            .sign(key))
-            .execute(client))
-        .getReceipt(client);
+        await (
+            await (
+                await new TokenRevokeKycTransaction()
+                    .setTokenId(token)
+                    .setAccountId(account)
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)
+        ).getReceipt(client);
 
         info = await new AccountInfoQuery()
             .setAccountId(account)
@@ -95,9 +104,7 @@ describe("TokenRevokeKyc", function () {
         expect(relationship.isFrozen).to.be.false;
 
         await (
-            await new TokenDeleteTransaction()
-                .setTokenId(token)
-                .execute(client)
+            await new TokenDeleteTransaction().setTokenId(token).execute(client)
         ).getReceipt(client);
 
         await (
@@ -131,12 +138,14 @@ describe("TokenRevokeKyc", function () {
         let err = false;
 
         try {
-            await (await (await new TokenRevokeKycTransaction()
-                .setAccountId(account)
-                .freezeWith(client)
-                .sign(key))
-                .execute(client))
-            .getReceipt(client);
+            await (
+                await (
+                    await new TokenRevokeKycTransaction()
+                        .setAccountId(account)
+                        .freezeWith(client)
+                        .sign(key)
+                ).execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);
         }
@@ -186,18 +195,17 @@ describe("TokenRevokeKyc", function () {
         let err = false;
 
         try {
-            await (await new TokenRevokeKycTransaction()
-                .setTokenId(token)
-                .execute(client))
-            .getReceipt(client);
+            await (
+                await new TokenRevokeKycTransaction()
+                    .setTokenId(token)
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountId);
         }
 
         await (
-            await new TokenDeleteTransaction()
-                .setTokenId(token)
-                .execute(client)
+            await new TokenDeleteTransaction().setTokenId(token).execute(client)
         ).getReceipt(client);
 
         if (!err) {

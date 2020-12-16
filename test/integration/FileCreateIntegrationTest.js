@@ -102,13 +102,14 @@ describe("FileCreate", function () {
         let err = false;
 
         try {
-            await (await new FileCreateTransaction()
-                .setKeys([operatorKey])
-                .setContents("[e2e::FileCreateTransaction]")
-                .setExpirationTime(new Timestamp(Date.now() + 99999999, 0))
-                .setMaxTransactionFee(new Hbar(5))
-                .execute(client))
-            .getReceipt(client);
+            await (
+                await new FileCreateTransaction()
+                    .setKeys([operatorKey])
+                    .setContents("[e2e::FileCreateTransaction]")
+                    .setExpirationTime(new Timestamp(Date.now() + 99999999, 0))
+                    .setMaxTransactionFee(new Hbar(5))
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.InsufficientTxFee);
         }

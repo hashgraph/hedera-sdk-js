@@ -133,12 +133,13 @@ describe("TokenCreate", function () {
         let err = false;
 
         try {
-            await (await new TokenCreateTransaction()
-                .setTokenSymbol("F")
-                .setTreasuryAccountId(operatorId)
-                .setMaxTransactionFee(new Hbar(1000))
-                .execute(client))
-            .getReceipt(client);
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenSymbol("F")
+                    .setTreasuryAccountId(operatorId)
+                    .setMaxTransactionFee(new Hbar(1000))
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.MissingTokenName);
         }
@@ -157,12 +158,13 @@ describe("TokenCreate", function () {
         let err = false;
 
         try {
-            await (await new TokenCreateTransaction()
-                .setTokenName("ffff")
-                .setTreasuryAccountId(operatorId)
-                .setMaxTransactionFee(new Hbar(1000))
-                .execute(client))
-            .getReceipt(client);
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTreasuryAccountId(operatorId)
+                    .setMaxTransactionFee(new Hbar(1000))
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.MissingTokenSymbol);
         }
@@ -180,14 +182,17 @@ describe("TokenCreate", function () {
         let err = false;
 
         try {
-            await (await new TokenCreateTransaction()
-                .setTokenName("ffff")
-                .setTokenSymbol("F")
-                .setMaxTransactionFee(new Hbar(1000))
-                .execute(client))
-            .getReceipt(client);
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setMaxTransactionFee(new Hbar(1000))
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
-            err = error.toString().includes(Status.InvalidTreasuryAccountForToken);
+            err = error
+                .toString()
+                .includes(Status.InvalidTreasuryAccountForToken);
         }
 
         if (!err) {
@@ -204,14 +209,15 @@ describe("TokenCreate", function () {
         let err = false;
 
         try {
-            await (await new TokenCreateTransaction()
-                .setTokenName("ffff")
-                .setTokenSymbol("F")
-                .setTreasuryAccountId(operatorId)
-                .setAdminKey(PrivateKey.generate())
-                .setMaxTransactionFee(new Hbar(1000))
-                .execute(client))
-            .getReceipt(client);
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setTreasuryAccountId(operatorId)
+                    .setAdminKey(PrivateKey.generate())
+                    .setMaxTransactionFee(new Hbar(1000))
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidSignature);
         }
@@ -220,5 +226,4 @@ describe("TokenCreate", function () {
             throw new Error("token creation did not error");
         }
     });
-
 });

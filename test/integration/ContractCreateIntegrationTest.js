@@ -184,17 +184,20 @@ describe("ContractCreate", function () {
         let err = false;
 
         try {
-            await (await new ContractCreateTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setAdminKey(operatorKey)
-                .setConstructorParameters(
-                    new ContractFunctionParameters().addString("Hello from Hedera.")
-                )
-                .setBytecodeFileId(file)
-                .setContractMemo("[e2e::ContractCreateTransaction]")
-                .setMaxTransactionFee(new Hbar(20))
-                .execute(client))
-                .getReceipt(client);
+            await (
+                await new ContractCreateTransaction()
+                    .setNodeAccountIds([response.nodeId])
+                    .setAdminKey(operatorKey)
+                    .setConstructorParameters(
+                        new ContractFunctionParameters().addString(
+                            "Hello from Hedera."
+                        )
+                    )
+                    .setBytecodeFileId(file)
+                    .setContractMemo("[e2e::ContractCreateTransaction]")
+                    .setMaxTransactionFee(new Hbar(20))
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.InsufficientGas);
         }
@@ -227,15 +230,16 @@ describe("ContractCreate", function () {
         let err = false;
 
         try {
-            await (await new ContractCreateTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setAdminKey(operatorKey)
-                .setGas(2000)
-                .setBytecodeFileId(file)
-                .setContractMemo("[e2e::ContractCreateTransaction]")
-                .setMaxTransactionFee(new Hbar(20))
-                .execute(client))
-                .getReceipt(client);
+            await (
+                await new ContractCreateTransaction()
+                    .setNodeAccountIds([response.nodeId])
+                    .setAdminKey(operatorKey)
+                    .setGas(2000)
+                    .setBytecodeFileId(file)
+                    .setContractMemo("[e2e::ContractCreateTransaction]")
+                    .setMaxTransactionFee(new Hbar(20))
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.ContractRevertExecuted);
         }
@@ -254,16 +258,19 @@ describe("ContractCreate", function () {
         let err = false;
 
         try {
-            await (await new ContractCreateTransaction()
-                .setAdminKey(operatorKey)
-                .setGas(2000)
-                .setConstructorParameters(
-                    new ContractFunctionParameters().addString("Hello from Hedera.")
-                )
-                .setContractMemo("[e2e::ContractCreateTransaction]")
-                .setMaxTransactionFee(new Hbar(20))
-                .execute(client))
-                .getReceipt(client);
+            await (
+                await new ContractCreateTransaction()
+                    .setAdminKey(operatorKey)
+                    .setGas(2000)
+                    .setConstructorParameters(
+                        new ContractFunctionParameters().addString(
+                            "Hello from Hedera."
+                        )
+                    )
+                    .setContractMemo("[e2e::ContractCreateTransaction]")
+                    .setMaxTransactionFee(new Hbar(20))
+                    .execute(client)
+            ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidFileId);
         }

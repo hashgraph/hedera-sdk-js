@@ -47,8 +47,7 @@ describe("TokenDelete", function () {
 
         try {
             await (
-                await new TokenDeleteTransaction()
-                    .execute(client)
+                await new TokenDeleteTransaction().execute(client)
             ).getReceipt(client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);

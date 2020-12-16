@@ -80,13 +80,15 @@ describe("AccountInfo", function () {
 
         const token = (await response.getReceipt(client)).tokenId;
 
-        await (await (await new TokenAssociateTransaction()
-            .setTokenIds([token])
-            .setAccountId(account)
-            .freezeWith(client)
-            .sign(key))
-            .execute(client))
-        .getReceipt(client);
+        await (
+            await (
+                await new TokenAssociateTransaction()
+                    .setTokenIds([token])
+                    .setAccountId(account)
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)
+        ).getReceipt(client);
 
         const info = await new AccountInfoQuery()
             .setAccountId(account)
