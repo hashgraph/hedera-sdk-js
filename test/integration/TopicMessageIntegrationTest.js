@@ -45,7 +45,7 @@ describe("TopicMessage", function () {
         ).getReceipt(client);
 
         while (!received && Date.now() < startTime + 30000) {
-            // Do nothing
+            await new Promise((resolved) => setTimeout(resolved, 2000));
         }
 
         await (
@@ -93,7 +93,7 @@ describe("TopicMessage", function () {
         ).getReceipt(client);
 
         while (!received && Date.now() < startTime + 45000) {
-            // Do nothing
+            await new Promise((resolved) => setTimeout(resolved, 2000));
         }
 
         await (

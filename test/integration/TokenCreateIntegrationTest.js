@@ -32,7 +32,6 @@ describe("TokenCreate", function () {
             .setWipeKey(key3)
             .setSupplyKey(key4)
             .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const tokenId = (await response.getReceipt(client)).tokenId;
@@ -78,7 +77,6 @@ describe("TokenCreate", function () {
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const tokenId = (await response.getReceipt(client)).tokenId;
@@ -137,7 +135,6 @@ describe("TokenCreate", function () {
                 await new TokenCreateTransaction()
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(operatorId)
-                    .setMaxTransactionFee(new Hbar(1000))
                     .execute(client)
             ).getReceipt(client);
         } catch (error) {
@@ -162,7 +159,6 @@ describe("TokenCreate", function () {
                 await new TokenCreateTransaction()
                     .setTokenName("ffff")
                     .setTreasuryAccountId(operatorId)
-                    .setMaxTransactionFee(new Hbar(1000))
                     .execute(client)
             ).getReceipt(client);
         } catch (error) {
@@ -186,7 +182,6 @@ describe("TokenCreate", function () {
                 await new TokenCreateTransaction()
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
-                    .setMaxTransactionFee(new Hbar(1000))
                     .execute(client)
             ).getReceipt(client);
         } catch (error) {
@@ -215,7 +210,6 @@ describe("TokenCreate", function () {
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(operatorId)
                     .setAdminKey(PrivateKey.generate())
-                    .setMaxTransactionFee(new Hbar(1000))
                     .execute(client)
             ).getReceipt(client);
         } catch (error) {

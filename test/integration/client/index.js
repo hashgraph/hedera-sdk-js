@@ -1,5 +1,6 @@
 import Client from "../../src/client/NodeClient.js";
 import dotenv from "dotenv";
+import Hbar from "../../src/Hbar.js";
 
 // load .env (if available)
 dotenv.config();
@@ -34,6 +35,8 @@ export default async function newIntegrationClient() {
 
     expect(client.operatorAccountId).to.not.be.null;
     expect(client.operatorPublicKey).to.not.be.null;
+
+    client.setMaxTransactionFee(new Hbar(15));
 
     return client;
 }
