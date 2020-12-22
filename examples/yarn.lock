@@ -11,16 +11,18 @@
     google-auth-library "^6.1.1"
     semver "^6.2.0"
 
-"@hashgraph/cryptography@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.7.tgz#4e93f29067fc15ace2be0e5f3c8c33a0cf7fa475"
-  integrity sha512-oEyy+YUHLaDPDhIemZUxDkcuy/lZv9WBEzVxGOCqiSBEqGCkJgCG9H1hpoKIovcwFeAsVsOMn3Ujz5N20eXRAw==
+"@hashgraph/cryptography@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.8.tgz#2aa4326f6d6c47033725a12e977bd4724993af59"
+  integrity sha512-zJZ/p2lv+ne95rKCcc2qqG5G7Mx5I7pO/sAiQYgBbiLCvBvtkNGqYSC1trORYl9SSyWB0BDdbo/vDNP6V24JCQ==
   dependencies:
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@file:../packages/proto":
-  version "1.0.17"
+"@hashgraph/proto@^1.0.19":
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.19.tgz#3eb08c17a582bb508a04c8bdefbf5a9e0bc5c95f"
+  integrity sha512-cdoZB9QT1ed4sEfO8tGdkGzDurM4BU0aZWoa0IWhFGrj6O9oTz2RDyh9YArqeGkwm5g3u/luWRaKlObe97tM/A==
   dependencies:
     "@hashgraph/protobufjs" "^6.10.1-hashgraph.2"
 
@@ -44,11 +46,11 @@
     long "^4.0.0"
 
 "@hashgraph/sdk@file:..":
-  version "2.0.7"
+  version "2.0.9"
   dependencies:
     "@grpc/grpc-js" "^1.2.0"
-    "@hashgraph/cryptography" "^1.0.7"
-    "@hashgraph/proto" "file:../../../../../../../../.cache/yarn/v6/npm-@hashgraph-sdk-2.0.7-181814d0-3de1-4f98-a840-976b5ce640d6-1607478610541/node_modules/@hashgraph/sdk/packages/proto"
+    "@hashgraph/cryptography" "^1.0.8"
+    "@hashgraph/proto" "^1.0.19"
     bignumber.js "^9.0.1"
     long "^4.0.0"
 
