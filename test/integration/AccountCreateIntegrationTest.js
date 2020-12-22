@@ -55,6 +55,48 @@ describe("AccountCreate", function () {
         ).getReceipt(client);
     });
 
+    it("should be executable with only key set", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+        const operatorId = client.operatorAccountId;
+        const key = PrivateKey.generate();
+
+        const response = await new AccountCreateTransaction()
+            .setKey(key.publicKey)
+            .execute(client);
+
+        const receipt = await response.getReceipt(client);
+
+        expect(receipt.accountId).to.not.be.null;
+        const account = receipt.accountId;
+
+        const info = await new AccountInfoQuery()
+            .setNodeAccountIds([response.nodeId])
+            .setAccountId(account)
+            .execute(client);
+
+        expect(info.accountId.toString()).to.be.equal(account.toString());
+        expect(info.isDeleted).to.be.false;
+        expect(info.key.toString()).to.be.equal(key.publicKey.toString());
+        expect(info.balance.toTinybars().toNumber()).to.be.equal(0);
+        expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
+        expect(info.proxyAccountId).to.be.null;
+        expect(info.proxyReceived.toTinybars().toNumber()).to.be.equal(0);
+
+        await (
+            await (
+                await new AccountDeleteTransaction()
+                    .setAccountId(account)
+                    .setMaxTransactionFee(new Hbar(1))
+                    .setNodeAccountIds([response.nodeId])
+                    .setTransferAccountId(operatorId)
+                    .freezeWith(client)
+                    .sign(key)
+            ).execute(client)
+        ).getReceipt(client);
+    });
+
     it("should error when key is not set", async function () {
         this.timeout(15000);
 
