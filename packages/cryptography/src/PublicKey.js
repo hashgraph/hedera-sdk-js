@@ -1,4 +1,4 @@
-import nacl from "tweetnacl";
+import * as nacl from "tweetnacl";
 import Key from "./Key.js";
 import { arrayEqual, arrayStartsWith } from "./util/array.js";
 import BadKeyError from "./BadKeyError.js";

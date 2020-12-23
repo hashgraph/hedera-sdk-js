@@ -1,4 +1,4 @@
-import nacl from "tweetnacl";
+import * as nacl from "tweetnacl";
 import PublicKey from "./PublicKey.js";
 import Mnemonic from "./Mnemonic.js";
 import { arrayStartsWith } from "./util/array.js";

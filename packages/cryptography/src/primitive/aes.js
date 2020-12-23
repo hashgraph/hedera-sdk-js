@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 export const CipherAlgorithm = {
     Aes128Ctr: "AES-128-CTR",
     Aes128Cbc: "AES-128-CBC",
@@ -10,14 +12,14 @@ export const CipherAlgorithm = {
  * @param {Uint8Array} data
  * @returns {Promise<Uint8Array>}
  */
-export async function createCipheriv(algorithm, key, iv, data) {
-    const cipher = (await import("crypto")).createCipheriv(
+export function createCipheriv(algorithm, key, iv, data) {
+    const cipher = crypto.createCipheriv(
         algorithm,
         key.slice(0, 16),
         iv
     );
 
-    return Buffer.concat([cipher.update(data), cipher["final"]()]);
+    return Promise.resolve(Buffer.concat([cipher.update(data), cipher["final"]()]));
 }
 
 /**
@@ -27,12 +29,12 @@ export async function createCipheriv(algorithm, key, iv, data) {
  * @param {Uint8Array} data
  * @returns {Promise<Uint8Array>}
  */
-export async function createDecipheriv(algorithm, key, iv, data) {
-    const decipher = (await import("crypto")).createDecipheriv(
+export function createDecipheriv(algorithm, key, iv, data) {
+    const decipher = crypto.createDecipheriv(
         algorithm,
         key.slice(0, 16),
         iv
     );
 
-    return Buffer.concat([decipher.update(data), decipher["final"]()]);
+    return Promise.resolve(Buffer.concat([decipher.update(data), decipher["final"]()]));
 }

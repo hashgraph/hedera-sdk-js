@@ -1,5 +1,7 @@
 import { HashAlgorithm } from "./hmac.js";
 import * as utf8 from "../encoding/utf8.js";
+import util from "util";
+import crypto from "crypto";
 
 /**
  * @param {HashAlgorithm} algorithm
@@ -19,8 +21,6 @@ export async function deriveKey(algorithm, password, salt, iterations, length) {
 
     const nacl = typeof salt === "string" ? utf8.encode(salt) : salt;
 
-    const util = await import("util");
-    const crypto = await import("crypto");
     const pbkdf2 = util.promisify(crypto.pbkdf2);
 
     switch (algorithm) {
