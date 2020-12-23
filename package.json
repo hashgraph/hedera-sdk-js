@@ -2,15 +2,16 @@
     "name": "@hashgraph/sdk",
     "version": "2.0.10",
     "description": "Hedera™ Hashgraph SDK",
-    "main": "lib/index.cjs",
-    "types": "lib/index.d.ts",
+    "main": "./lib/index.cjs",
+    "types": "./lib/index.d.ts",
+    "module": "./src/index.js",
     "browser": {
-        "src/index.js": "src/browser.js",
-        "src/encoding/hex.js": "src/encoding/hex.browser.js",
-        "src/encoding/utf8.js": "src/encoding/utf8.browser.js",
-        "src/cryptography/sha384.js": "src/cryptography/sha384.browser.js"
+        "./src/index.js": "./src/browser.js",
+        "./src/encoding/hex.js": "./src/encoding/hex.browser.js",
+        "./src/encoding/utf8.js": "./src/encoding/utf8.browser.js",
+        "./src/cryptography/sha384.js": "./src/cryptography/sha384.browser.js",
+        "crypto": false
     },
-    "module": "src/index.js",
     "exports": {
         "import": "./src/index.js",
         "require": "./lib/index.cjs"
@@ -69,7 +70,7 @@
     },
     "dependencies": {
         "@grpc/grpc-js": "^1.2.0",
-        "@hashgraph/cryptography": "^1.0.8",
+        "@hashgraph/cryptography": "^1.0.9",
         "@hashgraph/proto": "^1.0.19",
         "bignumber.js": "^9.0.1",
         "long": "^4.0.0"
