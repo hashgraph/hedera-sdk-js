@@ -2,7 +2,6 @@ import {
     TokenCreateTransaction,
     TokenDeleteTransaction,
     TokenInfoQuery,
-    Hbar,
     Status,
     PrivateKey,
 } from "../src/exports.js";
