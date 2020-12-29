@@ -24,7 +24,7 @@ const derPrefixBytes = hex.decode(derPrefix);
  */
 
 /**
- * @typedef {object} ProtoTransaction
+ * @typedef {object} ProtoSignedTransaction
  * @property {(Uint8Array | null)=} bodyBytes
  * @property {(ProtoSigMap | null)=} sigMap
  */
@@ -32,7 +32,8 @@ const derPrefixBytes = hex.decode(derPrefix);
 /**
  * @typedef {object} Transaction
  * @property {() => boolean} _isFrozen
- * @property {ProtoTransaction[]} _transactions
+ * @property {ProtoSignedTransaction[]} _signedTransactions
+ * @property {Set<string>} _signerPublicKeys
  * @property {(publicKey: PublicKey, signature: Uint8Array) => Transaction} addSignature
  * @property {() => void} _requireFrozen
  * @property {() => Transaction} freeze
@@ -235,18 +236,16 @@ export default class PrivateKey extends Key {
             transaction.freeze();
         }
 
-        if (transaction._transactions.length != 1) {
+        if (transaction._signedTransactions.length != 1) {
             throw new Error(
                 "`PrivateKey.signTransaction()` requires `Transaction` to have a single node `AccountId` set"
             );
         }
 
-        const tx = /** @type {ProtoTransaction} */ (transaction
-            ._transactions[0]);
+        const tx = /** @type {ProtoSignedTransaction} */ (transaction
+            ._signedTransactions[0]);
 
-        const siganture = this.sign(
-            tx.bodyBytes != null ? tx.bodyBytes : new Uint8Array()
-        );
+        const publicKeyHex = hex.encode(this.publicKey.toBytes());
 
         if (tx.sigMap == null) {
             tx.sigMap = {};
@@ -256,10 +255,25 @@ export default class PrivateKey extends Key {
             tx.sigMap.sigPair = [];
         }
 
+        for (const sigPair of tx.sigMap.sigPair) {
+            if (
+                sigPair.pubKeyPrefix != null &&
+                hex.encode(sigPair.pubKeyPrefix) === publicKeyHex
+            ) {
+                return /** @type {Uint8Array} */ (sigPair.ed25519);
+            }
+        }
+
+        const siganture = this.sign(
+            tx.bodyBytes != null ? tx.bodyBytes : new Uint8Array()
+        );
+
         tx.sigMap.sigPair.push({
             pubKeyPrefix: this.publicKey.toBytes(),
             ed25519: siganture,
         });
+
+        transaction._signerPublicKeys.add(publicKeyHex);
 
         return siganture;
     }

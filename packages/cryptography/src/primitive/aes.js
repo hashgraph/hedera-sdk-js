@@ -13,13 +13,11 @@ export const CipherAlgorithm = {
  * @returns {Promise<Uint8Array>}
  */
 export function createCipheriv(algorithm, key, iv, data) {
-    const cipher = crypto.createCipheriv(
-        algorithm,
-        key.slice(0, 16),
-        iv
-    );
+    const cipher = crypto.createCipheriv(algorithm, key.slice(0, 16), iv);
 
-    return Promise.resolve(Buffer.concat([cipher.update(data), cipher["final"]()]));
+    return Promise.resolve(
+        Buffer.concat([cipher.update(data), cipher["final"]()])
+    );
 }
 
 /**
@@ -30,11 +28,9 @@ export function createCipheriv(algorithm, key, iv, data) {
  * @returns {Promise<Uint8Array>}
  */
 export function createDecipheriv(algorithm, key, iv, data) {
-    const decipher = crypto.createDecipheriv(
-        algorithm,
-        key.slice(0, 16),
-        iv
-    );
+    const decipher = crypto.createDecipheriv(algorithm, key.slice(0, 16), iv);
 
-    return Promise.resolve(Buffer.concat([decipher.update(data), decipher["final"]()]));
+    return Promise.resolve(
+        Buffer.concat([decipher.update(data), decipher["final"]()])
+    );
 }

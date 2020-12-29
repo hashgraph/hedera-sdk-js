@@ -23,11 +23,17 @@ export function hash(algorithm, secretKey, data) {
 
     switch (algorithm) {
         case HashAlgorithm.Sha256:
-            return Promise.resolve(crypto.createHmac("SHA256", key).update(value).digest());
+            return Promise.resolve(
+                crypto.createHmac("SHA256", key).update(value).digest()
+            );
         case HashAlgorithm.Sha384:
-            return Promise.resolve(crypto.createHmac("SHA384", key).update(value).digest());
+            return Promise.resolve(
+                crypto.createHmac("SHA384", key).update(value).digest()
+            );
         case HashAlgorithm.Sha512:
-            return Promise.resolve(crypto.createHmac("SHA512", key).update(value).digest());
+            return Promise.resolve(
+                crypto.createHmac("SHA512", key).update(value).digest()
+            );
         default:
             throw new Error(
                 "(BUG) Non-Exhaustive switch statement for algorithms"
