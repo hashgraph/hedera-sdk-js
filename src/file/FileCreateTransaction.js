@@ -30,7 +30,7 @@ import { KeyList } from "@hashgraph/cryptography";
 export default class FileCreateTransaction extends Transaction {
     /**
      * @param {object} [props]
-     * @param {Key[]} [props.keys]
+     * @param {Key[] | KeyList} [props.keys]
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {Uint8Array | string} [props.contents]
      */
@@ -138,6 +138,10 @@ export default class FileCreateTransaction extends Transaction {
      */
     setKeys(keys) {
         this._requireNotFrozen();
+        if (keys instanceof KeyList && keys.threshold != null) {
+            throw new Error("Cannot set threshold key as file key");
+        }
+
         this._keys = keys instanceof KeyList ? keys.toArray() : keys;
 
         return this;
