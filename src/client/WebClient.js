@@ -106,6 +106,14 @@ export default class WebClient extends Client {
     }
 
     /**
+     * @param {NetworkName} network
+     * @returns {WebClient}
+     */
+    static forName(network) {
+        return new WebClient({ network });
+    }
+
+    /**
      * Construct a Hedera client pre-configured for Mainnet access.
      *
      * @returns {WebClient}

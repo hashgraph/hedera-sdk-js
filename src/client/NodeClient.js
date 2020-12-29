@@ -185,6 +185,14 @@ export default class NodeClient extends Client {
     }
 
     /**
+     * @param {NetworkName} network
+     * @returns {NodeClient}
+     */
+    static forName(network) {
+        return new NodeClient({ network });
+    }
+
+    /**
      * Construct a Hedera client pre-configured for Mainnet access.
      *
      * @returns {NodeClient}
