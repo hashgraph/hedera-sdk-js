@@ -57,8 +57,10 @@ describe("TokenInfo", function () {
         expect(info.defaultFreezeStatus).to.be.false;
         expect(info.defaultKycStatus).to.be.false;
         expect(info.isDeleted).to.be.false;
-        expect(info.autoRenewAccountId).to.be.null;
-        expect(info.autoRenewPeriod).to.be.null;
+        expect(info.autoRenewAccountId).to.be.not.null;
+        expect(info.autoRenewAccountId.toString()).to.be.eql(operatorId.toString());
+        expect(info.autoRenewPeriod).to.be.not.null;
+        expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
 
         await (
@@ -101,8 +103,10 @@ describe("TokenInfo", function () {
         expect(info.defaultFreezeStatus).to.be.null;
         expect(info.defaultKycStatus).to.be.null;
         expect(info.isDeleted).to.be.false;
-        expect(info.autoRenewAccountId).to.be.null;
-        expect(info.autoRenewPeriod).to.be.null;
+        expect(info.autoRenewAccountId).to.be.not.null;
+        expect(info.autoRenewAccountId.toString()).to.be.eql(operatorId.toString());
+        expect(info.autoRenewPeriod).to.be.not.null;
+        expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
     });
 

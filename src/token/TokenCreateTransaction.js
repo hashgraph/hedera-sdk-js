@@ -124,15 +124,13 @@ export default class TokenCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {Timestamp}
+         * @type {?Timestamp}
          */
-        this._expirationTime = Timestamp.fromDate(
-            Date.now() + DEFAULT_AUTO_RENEW_PERIOD.toInt() * 1000
-        );
+        this._expirationTime = null;
 
         /**
          * @private
-         * @type {Duration}
+         * @type {?Duration}
          */
         this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
 
@@ -474,7 +472,7 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {Timestamp}
+     * @returns {?Timestamp}
      */
     get expirationTime() {
         return this._expirationTime;
@@ -486,6 +484,7 @@ export default class TokenCreateTransaction extends Transaction {
      */
     setExpirationTime(time) {
         this._requireNotFrozen();
+        this._autoRenewPeriod = null;
         this._expirationTime =
             time instanceof Timestamp ? time : Timestamp.fromDate(time);
 
@@ -512,7 +511,7 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {Duration}
+     * @returns {?Duration}
      */
     get autoRenewPeriod() {
         return this._autoRenewPeriod;
@@ -532,6 +531,22 @@ export default class TokenCreateTransaction extends Transaction {
                 : new Duration(autoRenewPeriod);
 
         return this;
+    }
+
+    /**
+     * @param {?import("../client/Client.js").default<Channel, *>} client
+     * @returns {this}
+     */
+    freezeWith(client) {
+        if (
+            this._autoRenewPeriod != null &&
+            client != null &&
+            client.operatorAccountId
+        ) {
+            this._autoRenewAccountId = client.operatorAccountId;
+        }
+
+        return super.freezeWith(client);
     }
 
     /**
@@ -589,7 +604,7 @@ export default class TokenCreateTransaction extends Transaction {
                     : null,
             autoRenewPeriod:
                 this._autoRenewPeriod != null
-                    ? this.autoRenewPeriod._toProtobuf()
+                    ? this._autoRenewPeriod._toProtobuf()
                     : null,
         };
     }
