@@ -11,10 +11,10 @@
     google-auth-library "^6.1.1"
     semver "^6.2.0"
 
-"@hashgraph/cryptography@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.8.tgz#2aa4326f6d6c47033725a12e977bd4724993af59"
-  integrity sha512-zJZ/p2lv+ne95rKCcc2qqG5G7Mx5I7pO/sAiQYgBbiLCvBvtkNGqYSC1trORYl9SSyWB0BDdbo/vDNP6V24JCQ==
+"@hashgraph/cryptography@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.10.tgz#8545c22117d520aef8dce53a72b403cbd0adc91b"
+  integrity sha512-AMDdS8qRs1gh0xgjI8rpubcI0kWB+G+MmVYqxUXESrPAZDnW+UG23lpOxl/nnzNeBpi77M0TQVA2Q3hrrnu8AA==
   dependencies:
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"
@@ -46,10 +46,10 @@
     long "^4.0.0"
 
 "@hashgraph/sdk@file:..":
-  version "2.0.9"
+  version "2.0.11"
   dependencies:
     "@grpc/grpc-js" "^1.2.0"
-    "@hashgraph/cryptography" "^1.0.8"
+    "@hashgraph/cryptography" "^1.0.10"
     "@hashgraph/proto" "^1.0.19"
     bignumber.js "^9.0.1"
     long "^4.0.0"
