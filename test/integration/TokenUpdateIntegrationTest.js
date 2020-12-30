@@ -104,9 +104,9 @@ describe("TokenUpdate", function () {
 
         await (
             await new TokenDeleteTransaction()
-            .setNodeAccountIds([response.nodeId])
-            .setTokenId(token)
-            .execute(client)
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .execute(client)
         ).getReceipt(client);
     });
 

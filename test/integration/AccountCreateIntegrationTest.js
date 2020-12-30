@@ -150,11 +150,11 @@ describe("AccountCreate", function () {
         expect(info.proxyReceived.toTinybars().toNumber()).to.be.equal(0);
 
         const transaction = new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .freezeWith(client);
+            .setAccountId(account)
+            .setMaxTransactionFee(new Hbar(1))
+            .setNodeAccountIds([response.nodeId])
+            .setTransferAccountId(operatorId)
+            .freezeWith(client);
 
         key.signTransaction(transaction);
 

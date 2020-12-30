@@ -31,10 +31,14 @@ export default class Timestamp {
      * @returns {Timestamp}
      */
     static generate() {
-        let now = Date.now();
-        let jitter = Math.random() * 5000 + 8000;
+        const jitter = Math.floor(Math.random() * 5000) + 8000;
+        const now = Date.now() - jitter;
+        const seconds = Math.floor(now / 1000);
+        const nanos =
+            Math.floor(now % 1000) * 1000000 +
+            Math.floor(Math.random() * 1000000);
 
-        return Timestamp.fromDate(now - jitter);
+        return new Timestamp(seconds, nanos);
     }
 
     /**
