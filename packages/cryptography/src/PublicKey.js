@@ -103,7 +103,13 @@ export default class PublicKey extends Key {
                         found = true;
                         const bodyBytes = /** @type {Uint8Array} */ (signedTransaction.bodyBytes);
                         const signature = /** @type {Uint8Array} */ (sigPair.ed25519);
-                        if (!nacl.sign.detached.verify(bodyBytes, signature, this._keyData)) {
+                        if (
+                            !nacl.sign.detached.verify(
+                                bodyBytes,
+                                signature,
+                                this._keyData
+                            )
+                        ) {
                             return false;
                         }
                     }
