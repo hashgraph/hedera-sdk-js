@@ -4,6 +4,10 @@ import { arrayEqual, arrayStartsWith } from "./util/array.js";
 import BadKeyError from "./BadKeyError.js";
 import * as hex from "./encoding/hex.js";
 
+/**
+ * @typedef {import("./PrivateKey.js").Transaction} Transaction
+ */
+
 const derPrefix = "302a300506032b6570032100";
 const derPrefixBytes = hex.decode(derPrefix);
 
@@ -74,6 +78,44 @@ export default class PublicKey extends Key {
      */
     verify(message, signature) {
         return nacl.sign.detached.verify(message, signature, this._keyData);
+    }
+
+    /**
+     * @param {Transaction} transaction
+     * @returns {boolean}
+     */
+    verifyTransaction(transaction) {
+        transaction._requireFrozen();
+
+        if (!transaction._isFrozen()) {
+            transaction.freeze();
+        }
+
+        for (const signedTransaction of transaction._signedTransactions) {
+            if (
+                signedTransaction.sigMap != null &&
+                signedTransaction.sigMap.sigPair != null
+            ) {
+                let found = false;
+                for (const sigPair of signedTransaction.sigMap.sigPair) {
+                    const pubKeyPrefix = /** @type {Uint8Array} */ (sigPair.pubKeyPrefix);
+                    if (arrayEqual(pubKeyPrefix, this._keyData)) {
+                        found = true;
+                        const bodyBytes = /** @type {Uint8Array} */ (signedTransaction.bodyBytes);
+                        const signature = /** @type {Uint8Array} */ (sigPair.ed25519);
+                        if (!nacl.sign.detached.verify(bodyBytes, signature, this._keyData)) {
+                            return false;
+                        }
+                    }
+                }
+
+                if (!found) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
