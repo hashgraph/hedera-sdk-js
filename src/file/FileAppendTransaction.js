@@ -1,3 +1,4 @@
+import Hbar from "../Hbar.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
     CHUNK_SIZE,
@@ -51,6 +52,14 @@ export default class FileAppendTransaction extends Transaction {
          */
         this._contents = null;
 
+        /**
+         * @private
+         * @type {number}
+         */
+        this._maxChunks = 10;
+
+        this.setMaxTransactionFee(new Hbar(5));
+
         if (props.fileId != null) {
             this.setFileId(props.fileId);
         }
@@ -58,12 +67,6 @@ export default class FileAppendTransaction extends Transaction {
         if (props.contents != null) {
             this.setContents(props.contents);
         }
-
-        /**
-         * @private
-         * @type {number}
-         */
-        this._maxChunks = 10;
 
         if (props.maxChunks != null) {
             this.setMaxChunks(props.maxChunks);

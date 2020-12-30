@@ -1,10 +1,10 @@
+import Hbar from "../Hbar.js";
 import TokenId from "../token/TokenId.js";
 import AccountId from "./AccountId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Long from "long";
-import Hbar from "../Hbar.js";
 import TokenTransferMap from "./TokenTransferMap.js";
 import HbarTransferMap from "./HbarTransferMap.js";
 
@@ -69,6 +69,14 @@ export default class TransferTransaction extends Transaction {
          */
         this._tokenTransfers = new TokenTransferMap();
 
+        /**
+         * @private
+         * @type {HbarTransferMap}
+         */
+        this._hbarTransfers = new HbarTransferMap();
+
+        this.setMaxTransactionFee(new Hbar(1));
+
         for (const transfer of props.tokenTransfers != null
             ? props.tokenTransfers
             : []) {
@@ -78,12 +86,6 @@ export default class TransferTransaction extends Transaction {
                 transfer.amount
             );
         }
-
-        /**
-         * @private
-         * @type {HbarTransferMap}
-         */
-        this._hbarTransfers = new HbarTransferMap();
 
         for (const transfer of props.hbarTransfers != null
             ? props.hbarTransfers

@@ -1,3 +1,4 @@
+import Hbar from "../Hbar.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
     DEFAULT_AUTO_RENEW_PERIOD,
@@ -56,6 +57,8 @@ export default class FileCreateTransaction extends Transaction {
          * @type {?Uint8Array}
          */
         this._contents = null;
+
+        this.setMaxTransactionFee(new Hbar(5));
 
         if (props.keys != null) {
             this.setKeys(props.keys);

@@ -1,3 +1,4 @@
+import Hbar from "../Hbar.js";
 import TokenId from "./TokenId.js";
 import AccountId from "../account/AccountId.js";
 import Transaction, {
@@ -43,6 +44,8 @@ export default class TokenAssociateTransaction extends Transaction {
          * @type {?AccountId}
          */
         this._accountId = null;
+
+        this.setMaxTransactionFee(new Hbar(5));
 
         if (props.tokenIds != null) {
             this.setTokenIds(props.tokenIds);

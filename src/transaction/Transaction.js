@@ -114,9 +114,9 @@ export default class Transaction extends Executable {
 
         /**
          * @private
-         * @type {?Hbar}
+         * @type {Hbar}
          */
-        this._maxTransactionFee = null;
+        this._maxTransactionFee = new Hbar(2);
 
         /**
          * @private
@@ -248,7 +248,7 @@ export default class Transaction extends Executable {
         transaction._maxTransactionFee =
             body.transactionFee != null
                 ? Hbar.fromTinybars(body.transactionFee)
-                : null;
+                : new Hbar(0);
         transaction._transactionMemo = body.memo != null ? body.memo : "";
 
         for (let i = 0; i < nodeIds.length; i++) {

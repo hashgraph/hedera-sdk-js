@@ -1,3 +1,4 @@
+import Hbar from "../Hbar.js";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
@@ -133,6 +134,8 @@ export default class TokenCreateTransaction extends Transaction {
          * @type {?Duration}
          */
         this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
+
+        this.setMaxTransactionFee(new Hbar(30));
 
         if (props.tokenName != null) {
             this.setTokenName(props.tokenName);

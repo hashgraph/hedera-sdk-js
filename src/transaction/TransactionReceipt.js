@@ -25,6 +25,7 @@ export default class TransactionReceipt {
      * @param {?ExchangeRate} props.exchangeRate
      * @param {?Long} props.topicSequenceNumber
      * @param {?Uint8Array} props.topicRunningHash
+     * @param {?Long} props.totalSupply
      */
     constructor(props) {
         /**
@@ -89,6 +90,13 @@ export default class TransactionReceipt {
          * @readonly
          */
         this.topicRunningHash = props.topicRunningHash;
+
+        /**
+         * Updated total supply for a token
+         *
+         * @readonly
+         */
+        this.totalSupply = props.totalSupply;
 
         Object.freeze(this);
     }
@@ -179,6 +187,9 @@ export default class TransactionReceipt {
                 receipt.topicRunningHash != null
                     ? receipt.topicRunningHash
                     : null,
+
+            totalSupply:
+                receipt.newTotalSupply != null ? receipt.newTotalSupply : null,
         });
     }
 

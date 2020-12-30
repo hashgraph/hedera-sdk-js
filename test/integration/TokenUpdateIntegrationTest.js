@@ -60,7 +60,9 @@ describe("TokenUpdate", function () {
         expect(info.defaultKycStatus).to.be.false;
         expect(info.isDeleted).to.be.false;
         expect(info.autoRenewAccountId).to.be.not.null;
-        expect(info.autoRenewAccountId.toString()).to.be.eql(operatorId.toString());
+        expect(info.autoRenewAccountId.toString()).to.be.eql(
+            operatorId.toString()
+        );
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
@@ -93,7 +95,9 @@ describe("TokenUpdate", function () {
         expect(info.defaultKycStatus).to.be.false;
         expect(info.isDeleted).to.be.false;
         expect(info.autoRenewAccountId).to.be.not.null;
-        expect(info.autoRenewAccountId.toString()).to.be.eql(operatorId.toString());
+        expect(info.autoRenewAccountId.toString()).to.be.eql(
+            operatorId.toString()
+        );
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
