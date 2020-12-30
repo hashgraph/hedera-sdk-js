@@ -40,7 +40,7 @@ export default class PublicKey extends Key {
             case 32:
                 return new PublicKey(data);
 
-            case 48:
+            case 44:
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 if (arrayStartsWith(data, derPrefixBytes)) {
                     return new PublicKey(data.subarray(12));
