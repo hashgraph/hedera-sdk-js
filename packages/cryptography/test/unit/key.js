@@ -1,4 +1,5 @@
 import PrivateKey from "../../src/PrivateKey.js";
+import PublicKey from "../../src/PublicKey.js";
 import * as utf8 from "../../src/encoding/utf8.js";
 import * as hex from "../../src/encoding/hex.js";
 import Mnemonic from "../../src/Mnemonic.js";
@@ -284,5 +285,17 @@ describe("PrivateKey", function () {
     it("fromPem() with passphrase produces a correct value", async function () {
         const key = await PrivateKey.fromPem(encryptedPem, pemPassphrase);
         expect(key.toString()).to.deep.equal(privKeyStr);
+    });
+
+    it("PublicKey.fromString() should work", async function () {
+        let err = false;
+
+        try {
+            PublicKey.fromString(PrivateKey.generate().publicKey.toString());
+        } catch (error) {
+            err = true;
+        }
+
+        expect(err).to.be.false;
     });
 });
