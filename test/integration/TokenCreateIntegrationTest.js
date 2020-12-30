@@ -36,6 +36,7 @@ describe("TokenCreate", function () {
         const tokenId = (await response.getReceipt(client)).tokenId;
 
         const info = await new TokenInfoQuery()
+            .setNodeAccountIds([response.nodeId])
             .setTokenId(tokenId)
             .execute(client);
 
@@ -63,6 +64,7 @@ describe("TokenCreate", function () {
 
         await (
             await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
                 .setTokenId(tokenId)
                 .execute(client)
         ).getReceipt(client);
@@ -83,6 +85,7 @@ describe("TokenCreate", function () {
         const tokenId = (await response.getReceipt(client)).tokenId;
 
         const info = await new TokenInfoQuery()
+            .setNodeAccountIds([response.nodeId])
             .setTokenId(tokenId)
             .execute(client);
 
@@ -113,6 +116,7 @@ describe("TokenCreate", function () {
         try {
             await (
                 await new TokenDeleteTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(tokenId)
                     .execute(client)
             ).getReceipt(client);

@@ -38,7 +38,10 @@ describe("TokenUpdate", function () {
 
         const token = (await response.getReceipt(client)).tokenId;
 
-        let info = await new TokenInfoQuery().setTokenId(token).execute(client);
+        let info = await new TokenInfoQuery()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenId(token)
+            .execute(client);
 
         expect(info.tokenId.toString()).to.eql(token.toString());
         expect(info.name).to.eql("ffff");
@@ -64,6 +67,7 @@ describe("TokenUpdate", function () {
 
         await (
             await new TokenUpdateTransaction()
+                .setNodeAccountIds([response.nodeId])
                 .setTokenId(token)
                 .setTokenName("aaaa")
                 .setTokenSymbol("A")
@@ -95,7 +99,10 @@ describe("TokenUpdate", function () {
         expect(info.expirationTime).to.be.not.null;
 
         await (
-            await new TokenDeleteTransaction().setTokenId(token).execute(client)
+            await new TokenDeleteTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenId(token)
+            .execute(client)
         ).getReceipt(client);
     });
 
