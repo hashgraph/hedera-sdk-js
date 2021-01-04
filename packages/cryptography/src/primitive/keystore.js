@@ -1,4 +1,4 @@
-import * as nacl from "tweetnacl";
+import nacl from "tweetnacl";
 import BadKeyError from "../BadKeyError.js";
 import * as crypto from "./aes.js";
 import * as hex from "../encoding/hex.js";

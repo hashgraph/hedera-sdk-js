@@ -6,7 +6,7 @@ import bip39Words from "./words/bip39.js";
 import BigNumber from "bignumber.js";
 import * as sha256 from "./primitive/sha256.js";
 import * as pbkdf2 from "./primitive/pbkdf2.js";
-import * as nacl from "tweetnacl";
+import nacl from "tweetnacl";
 import * as hmac from "./primitive/hmac.js";
 import * as slip10 from "./primitive/slip10.js";
 
