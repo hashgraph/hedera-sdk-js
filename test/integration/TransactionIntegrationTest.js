@@ -20,7 +20,6 @@ describe("TransactionIntegration", function () {
         const transaction = await new AccountCreateTransaction()
             .setNodeAccountIds([new AccountId(3)])
             .setKey(key.publicKey)
-            .setMaxTransactionFee(new Hbar(2))
             .freezeWith(client)
             .signWithOperator(client);
 

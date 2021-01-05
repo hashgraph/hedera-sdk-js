@@ -33,7 +33,6 @@ describe("TokenUpdate", function () {
             .setWipeKey(key3)
             .setSupplyKey(key4)
             .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const token = (await response.getReceipt(client)).tokenId;
@@ -133,7 +132,6 @@ describe("TokenUpdate", function () {
             .setWipeKey(key3)
             .setSupplyKey(key4)
             .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const token = (await response.getReceipt(client)).tokenId;
@@ -157,7 +155,6 @@ describe("TokenUpdate", function () {
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const token = (await response.getReceipt(client)).tokenId;
@@ -211,7 +208,6 @@ describe("TokenUpdate", function () {
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const token = (await response.getReceipt(client)).tokenId;
@@ -234,7 +230,6 @@ describe("TokenUpdate", function () {
                 .setTokenSymbol("F")
                 .setTreasuryAccountId(operatorId)
                 .setAdminKey(key)
-                .setMaxTransactionFee(new Hbar(1000))
                 .freezeWith(client)
                 .sign(key)
         ).execute(client);

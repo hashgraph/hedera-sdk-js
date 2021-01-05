@@ -21,8 +21,7 @@ describe("AccountUpdate", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
-            .setMaxTransactionFee(new Hbar(2))
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(2))
             .execute(client);
 
         const receipt = await response.getReceipt(client);
@@ -39,7 +38,7 @@ describe("AccountUpdate", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key1.publicKey.toString());
         expect(info.balance.toTinybars().toInt()).to.be.equal(
-            new Hbar(1).toTinybars().toInt()
+            new Hbar(2).toTinybars().toInt()
         );
         expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
         expect(info.proxyAccountId).to.be.null;
@@ -53,7 +52,6 @@ describe("AccountUpdate", function () {
                     // .setAutoRenewPeriod(777600000)
                     // .setExpirationTime(new Date(Date.now() + 7776000000))
                     .setNodeAccountIds([response.nodeId])
-                    .setMaxTransactionFee(new Hbar(1))
                     .freezeWith(client)
                     .sign(key1)
             ).sign(key2)
@@ -70,7 +68,7 @@ describe("AccountUpdate", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key2.publicKey.toString());
         expect(info.balance.toTinybars().toInt()).to.be.equal(
-            new Hbar(1).toTinybars().toInt()
+            new Hbar(2).toTinybars().toInt()
         );
         expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
         expect(info.proxyAccountId).to.be.null;
@@ -80,7 +78,6 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
@@ -100,8 +97,7 @@ describe("AccountUpdate", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
-            .setMaxTransactionFee(new Hbar(2))
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(2))
             .execute(client);
 
         const receipt = await response.getReceipt(client);
@@ -120,7 +116,6 @@ describe("AccountUpdate", function () {
                             .setKey(key2.publicKey)
                             .setAutoRenewPeriod(777600000)
                             .setNodeAccountIds([response.nodeId])
-                            .setMaxTransactionFee(new Hbar(1))
                             .freezeWith(client)
                             .sign(key1)
                     ).sign(key2)
@@ -136,7 +131,6 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(client.operatorAccountId)
                     .setTransactionId(TransactionId.generate(account))
@@ -160,8 +154,7 @@ describe("AccountUpdate", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
-            .setMaxTransactionFee(new Hbar(2))
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(2))
             .execute(client);
 
         const receipt = await response.getReceipt(client);
@@ -182,7 +175,6 @@ describe("AccountUpdate", function () {
                                 new Timestamp(Date.now() + 77760000000, 0)
                             )
                             .setNodeAccountIds([response.nodeId])
-                            .setMaxTransactionFee(new Hbar(1))
                             .freezeWith(client)
                             .sign(key1)
                     ).sign(key2)
@@ -198,7 +190,6 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(client.operatorAccountId)
                     .setTransactionId(TransactionId.generate(account))
@@ -223,7 +214,6 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountUpdateTransaction()
                     .setKey(client.operatorPublicKey)
-                    .setMaxTransactionFee(new Hbar(1))
                     .execute(client)
             ).getReceipt(client);
         } catch (error) {
@@ -244,8 +234,7 @@ describe("AccountUpdate", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
-            .setMaxTransactionFee(new Hbar(2))
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(2))
             .execute(client);
 
         const receipt = await response.getReceipt(client);
@@ -258,7 +247,6 @@ describe("AccountUpdate", function () {
                 await new AccountUpdateTransaction()
                     .setAccountId(account)
                     .setNodeAccountIds([response.nodeId])
-                    .setMaxTransactionFee(new Hbar(1))
                     .freezeWith(client)
                     .sign(key1)
             ).execute(client)
@@ -268,7 +256,6 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(client.operatorAccountId)
                     .setTransactionId(TransactionId.generate(account))
@@ -288,8 +275,7 @@ describe("AccountUpdate", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
-            .setMaxTransactionFee(new Hbar(2))
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(2))
             .execute(client);
 
         const receipt = await response.getReceipt(client);
@@ -306,7 +292,6 @@ describe("AccountUpdate", function () {
                         .setAccountId(account)
                         .setKey(key2.publicKey)
                         .setNodeAccountIds([response.nodeId])
-                        .setMaxTransactionFee(new Hbar(1))
                         .freezeWith(client)
                         .sign(key1)
                 ).execute(client)
@@ -319,7 +304,6 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(client.operatorAccountId)
                     .setTransactionId(TransactionId.generate(account))

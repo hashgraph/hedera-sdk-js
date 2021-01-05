@@ -17,7 +17,6 @@ describe("FileAppend", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents("[e2e::FileCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -49,7 +48,6 @@ describe("FileAppend", function () {
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
                 .setContents("[e2e::FileAppendTransaction]")
-                .setMaxTransactionFee(new Hbar(5))
                 .execute(client)
         ).getReceipt(client);
 
@@ -86,7 +84,6 @@ describe("FileAppend", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents("[e2e::FileCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -118,7 +115,6 @@ describe("FileAppend", function () {
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
                 .setContents(bigContents)
-                .setMaxTransactionFee(new Hbar(5))
                 .execute(client)
         ).getReceipt(client);
 
@@ -155,7 +151,6 @@ describe("FileAppend", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents("[e2e::FileCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -173,7 +168,6 @@ describe("FileAppend", function () {
                 await new FileAppendTransaction()
                     .setNodeAccountIds([response.nodeId])
                     .setContents("[e2e::FileAppendTransaction]")
-                    .setMaxTransactionFee(new Hbar(5))
                     .execute(client)
             ).getReceipt(client);
         } catch (error) {
@@ -201,7 +195,6 @@ describe("FileAppend", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents("[e2e::FileCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -216,7 +209,6 @@ describe("FileAppend", function () {
             await new FileAppendTransaction()
                 .setNodeAccountIds([response.nodeId])
                 .setFileId(file)
-                .setMaxTransactionFee(new Hbar(5))
                 .execute(client)
         ).getReceipt(client);
 

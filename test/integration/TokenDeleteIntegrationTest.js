@@ -26,7 +26,6 @@ describe("TokenDelete", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const tokenId = (await response.getReceipt(client)).tokenId;

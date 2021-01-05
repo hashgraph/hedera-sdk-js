@@ -20,7 +20,6 @@ describe("ContractInfo", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(smartContractBytecode)
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -40,7 +39,6 @@ describe("ContractInfo", function () {
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(20))
             .execute(client);
 
         receipt = await response.getReceipt(client);
@@ -94,7 +92,6 @@ describe("ContractInfo", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(smartContractBytecode)
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -113,7 +110,6 @@ describe("ContractInfo", function () {
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(20))
             .execute(client);
 
         receipt = await response.getReceipt(client);
@@ -150,7 +146,6 @@ describe("ContractInfo", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(smartContractBytecode)
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -170,7 +165,6 @@ describe("ContractInfo", function () {
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(20))
             .execute(client);
 
         receipt = await response.getReceipt(client);

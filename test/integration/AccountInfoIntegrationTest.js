@@ -19,8 +19,7 @@ describe("AccountInfo", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setMaxTransactionFee(new Hbar(2))
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(2))
             .execute(client);
 
         const receipt = await response.getReceipt(client);
@@ -37,7 +36,7 @@ describe("AccountInfo", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.publicKey.toString());
         expect(info.balance.toTinybars().toInt()).to.be.equal(
-            new Hbar(1).toTinybars().toInt()
+            new Hbar(2).toTinybars().toInt()
         );
         expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
         expect(info.proxyAccountId).to.be.null;
@@ -47,7 +46,6 @@ describe("AccountInfo", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
@@ -66,7 +64,7 @@ describe("AccountInfo", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key)
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(2))
             .execute(client);
 
         const account = (await response.getReceipt(client)).accountId;
@@ -75,7 +73,6 @@ describe("AccountInfo", function () {
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const token = (await response.getReceipt(client)).tokenId;
@@ -106,7 +103,6 @@ describe("AccountInfo", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))

@@ -17,7 +17,6 @@ describe("TransactionResponse", function () {
 
         const transaction = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setMaxTransactionFee(new Hbar(2))
             .execute(client);
 
         const record = await transaction.getRecord(client);

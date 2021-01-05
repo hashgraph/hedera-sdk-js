@@ -22,7 +22,6 @@ describe("ContractCallIntegration", function () {
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(smartContractBytecode)
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -45,7 +44,6 @@ describe("ContractCallIntegration", function () {
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
-                .setMaxTransactionFee(new Hbar(20))
                 .execute(client)
         ).getReceipt(client);
 
@@ -77,7 +75,6 @@ describe("ContractCallIntegration", function () {
                     "setMessage",
                     new ContractFunctionParameters().addString("new message")
                 )
-                .setMaxTransactionFee(new Hbar(5))
                 .execute(client)
         ).getReceipt(client);
 
@@ -115,7 +112,6 @@ describe("ContractCallIntegration", function () {
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(smartContractBytecode)
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -138,7 +134,6 @@ describe("ContractCallIntegration", function () {
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
-                .setMaxTransactionFee(new Hbar(20))
                 .execute(client)
         ).getReceipt(client);
 
@@ -190,7 +185,6 @@ describe("ContractCallIntegration", function () {
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(smartContractBytecode)
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -213,7 +207,6 @@ describe("ContractCallIntegration", function () {
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
-                .setMaxTransactionFee(new Hbar(20))
                 .execute(client)
         ).getReceipt(client);
 
@@ -264,7 +257,6 @@ describe("ContractCallIntegration", function () {
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(smartContractBytecode)
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -287,7 +279,6 @@ describe("ContractCallIntegration", function () {
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
-                .setMaxTransactionFee(new Hbar(20))
                 .execute(client)
         ).getReceipt(client);
 

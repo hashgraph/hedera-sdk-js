@@ -16,7 +16,6 @@ describe("FileCreate", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents("[e2e::FileCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -58,7 +57,6 @@ describe("FileCreate", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -83,7 +81,6 @@ describe("FileCreate", function () {
         const client = await newClient();
 
         let response = await new FileCreateTransaction()
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -107,7 +104,6 @@ describe("FileCreate", function () {
                     .setKeys([operatorKey])
                     .setContents("[e2e::FileCreateTransaction]")
                     .setExpirationTime(new Timestamp(Date.now() + 99999999, 0))
-                    .setMaxTransactionFee(new Hbar(5))
                     .execute(client)
             ).getReceipt(client);
         } catch (error) {

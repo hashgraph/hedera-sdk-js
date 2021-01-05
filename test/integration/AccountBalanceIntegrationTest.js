@@ -55,7 +55,7 @@ describe("AccountBalanceQuery", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key)
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(2))
             .execute(client);
 
         const account = (await response.getReceipt(client)).accountId;
@@ -64,7 +64,6 @@ describe("AccountBalanceQuery", function () {
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const token = (await response.getReceipt(client)).tokenId;
@@ -89,7 +88,6 @@ describe("AccountBalanceQuery", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))

@@ -32,7 +32,6 @@ describe("TokenInfo", function () {
             .setWipeKey(key3)
             .setSupplyKey(key4)
             .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const tokenId = (await response.getReceipt(client)).tokenId;
@@ -84,7 +83,6 @@ describe("TokenInfo", function () {
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(client);
 
         const token = (await response.getReceipt(client)).tokenId;

@@ -27,8 +27,7 @@ describe("LiveHash", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setMaxTransactionFee(new Hbar(2))
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(2))
             .execute(client);
 
         let receipt = await new TransactionReceiptQuery()
@@ -86,7 +85,6 @@ describe("LiveHash", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))

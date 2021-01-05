@@ -17,8 +17,7 @@ describe("AccountRecords", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setMaxTransactionFee(new Hbar(2))
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(2))
             .execute(client);
 
         const receipt = await response.getReceipt(client);
@@ -26,7 +25,7 @@ describe("AccountRecords", function () {
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
 
-        (
+        await (
             await new TransferTransaction()
                 .setNodeAccountIds([response.nodeId])
                 .addHbarTransfer(account, new Hbar(1))
@@ -46,7 +45,6 @@ describe("AccountRecords", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))

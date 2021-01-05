@@ -14,7 +14,6 @@ describe("FileInfo", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents("[e2e::FileCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -56,7 +55,6 @@ describe("FileInfo", function () {
 
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         const receipt = await response.getReceipt(client);
@@ -96,7 +94,6 @@ describe("FileInfo", function () {
         const client = await newClient();
 
         const response = await new FileCreateTransaction()
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         const receipt = await response.getReceipt(client);

@@ -50,7 +50,7 @@ export {
     TopicID,
     FileID,
     AccountID,
-    ContractID
+    ContractID,
 };
 
 import IProxyStaker = proto.IProxyStaker;
@@ -272,7 +272,6 @@ export {
     IFreezeTransactionBody,
     ITransferList,
     ISignatureMap,
-
     // HTS Support
     ITokenAssociateTransactionBody,
     ITokenBalance,

@@ -15,7 +15,6 @@ describe("FileDelete", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents("[e2e::FileCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);

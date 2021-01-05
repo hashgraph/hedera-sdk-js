@@ -17,8 +17,7 @@ describe("AccountCreate", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setMaxTransactionFee(new Hbar(2))
-            .setInitialBalance(new Hbar(1))
+            .setInitialBalance(new Hbar(2))
             .execute(client);
 
         const receipt = await response.getReceipt(client);
@@ -35,7 +34,7 @@ describe("AccountCreate", function () {
         expect(info.isDeleted).to.be.false;
         expect(info.key.toString()).to.be.equal(key.publicKey.toString());
         expect(info.balance.toTinybars().toNumber()).to.be.equal(
-            new Hbar(1).toTinybars().toNumber()
+            new Hbar(2).toTinybars().toNumber()
         );
         expect(info.autoRenewPeriod.seconds.toNumber()).to.be.equal(7776000);
         expect(info.proxyAccountId).to.be.null;
@@ -45,7 +44,6 @@ describe("AccountCreate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
@@ -88,7 +86,6 @@ describe("AccountCreate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .freezeWith(client)
@@ -105,8 +102,7 @@ describe("AccountCreate", function () {
 
         try {
             const response = await new AccountCreateTransaction()
-                .setMaxTransactionFee(new Hbar(2))
-                .setInitialBalance(new Hbar(1))
+                .setInitialBalance(new Hbar(2))
                 .execute(client);
 
             await response.getReceipt(client);
@@ -151,7 +147,6 @@ describe("AccountCreate", function () {
 
         const transaction = new AccountDeleteTransaction()
             .setAccountId(account)
-            .setMaxTransactionFee(new Hbar(1))
             .setNodeAccountIds([response.nodeId])
             .setTransferAccountId(operatorId)
             .freezeWith(client);

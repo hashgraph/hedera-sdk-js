@@ -22,7 +22,6 @@ describe("ContractUpdate", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(smartContractBytecode)
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -42,7 +41,6 @@ describe("ContractUpdate", function () {
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(20))
             .execute(client);
 
         receipt = await response.getReceipt(client);
@@ -78,7 +76,6 @@ describe("ContractUpdate", function () {
                 .setContractId(contract)
                 .setNodeAccountIds([response.nodeId])
                 .setContractMemo("[e2e::ContractUpdateTransaction]")
-                .setMaxTransactionFee(new Hbar(5))
                 .execute(client)
         ).getReceipt(client);
 
@@ -126,7 +123,6 @@ describe("ContractUpdate", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(smartContractBytecode)
-            .setMaxTransactionFee(new Hbar(5))
             .execute(client);
 
         let receipt = await response.getReceipt(client);
@@ -146,7 +142,6 @@ describe("ContractUpdate", function () {
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
-            .setMaxTransactionFee(new Hbar(20))
             .execute(client);
 
         receipt = await response.getReceipt(client);
@@ -164,7 +159,6 @@ describe("ContractUpdate", function () {
                 await new ContractUpdateTransaction()
                     .setNodeAccountIds([response.nodeId])
                     .setContractMemo("[e2e::ContractUpdateTransaction]")
-                    .setMaxTransactionFee(new Hbar(5))
                     .execute(client)
             ).getReceipt(client);
         } catch (error) {

@@ -22,7 +22,6 @@ describe("ContractBytecode", function () {
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
             .setContents(smartContractBytecode)
-            .setMaxTransactionFee(new Hbar(5000))
             .execute(client);
 
         let receipt = await new TransactionReceiptQuery()
@@ -48,7 +47,6 @@ describe("ContractBytecode", function () {
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
-                .setMaxTransactionFee(new Hbar(20))
                 .execute(client)
         ).getReceipt(client);
 
