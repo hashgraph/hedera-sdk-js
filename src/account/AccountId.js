@@ -1,4 +1,7 @@
-import EntityId, { fromString, fromSolidityAddress } from "../EntityId.js";
+import EntityIdHelper, {
+    fromString,
+    fromSolidityAddress,
+} from "../EntityIdHelper.js";
 import * as proto from "@hashgraph/proto";
 
 /**
@@ -6,14 +9,18 @@ import * as proto from "@hashgraph/proto";
  *
  * @augments {EntityId<proto.IAccountID>}
  */
-export default class AccountId extends EntityId {
+export default class AccountId {
     /**
-     * @param {number | Long | import("../EntityId").IEntityId} props
+     * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
      */
     constructor(props, realm, num) {
-        super(props, realm, num);
+        const {shard, realm, num} = EntityIdHelper(props,realm, num);
+
+        this.shard = shard;
+        this.realm = realm;
+        this.num = num;
     }
 
     /**

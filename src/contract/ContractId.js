@@ -1,19 +1,24 @@
-import EntityId, { fromString, fromSolidityAddress } from "../EntityId.js";
+
+import EntityIdHelper, {
+    fromString,
+    fromSolidityAddress,
+} from "../EntityIdHelper.js";
+import * as Key from "@hashgraph/cryptography";
 import * as proto from "@hashgraph/proto";
 
 /**
  * The ID for a crypto-currency contract on Hedera.
  *
- * @augments {EntityId<proto.IContractID>}
+ * @augments {Key<proto.IContractID>}
  */
-export default class ContractId extends EntityId {
+export default class ContractId extends Key {
     /**
-     * @param {number | Long | import("../EntityId").IEntityId} props
+     * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
      */
     constructor(props, realm, num) {
-        super(props, realm, num);
+        super(props,realm, num)
     }
 
     /**

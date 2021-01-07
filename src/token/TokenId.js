@@ -1,4 +1,4 @@
-import EntityId, { fromString } from "../EntityId.js";
+import EntityIdHelper, { fromString } from "../EntityIdHelper.js";
 import * as proto from "@hashgraph/proto";
 import Long from "long";
 import * as hex from "../encoding/hex.js";
@@ -8,14 +8,18 @@ import * as hex from "../encoding/hex.js";
  *
  * @augments {EntityId<proto.ITokenID>}
  */
-export default class TokenId extends EntityId {
+export default class TokenId {
     /**
-     * @param {number | Long | import("../EntityId.js").IEntityId} properties
+     * @param {number | Long | import("../EntityIdHelper.js").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
      */
-    constructor(properties, realm, num) {
-        super(properties, realm, num);
+    constructor(props, realm, num) {
+        const {shard, realm, num} = EntityIdHelper(props,realm, num);
+
+        this.shard = shard;
+        this.realm = realm;
+        this.num = num;
     }
 
     /**

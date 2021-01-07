@@ -1,5 +1,6 @@
-import EntityId, { fromString } from "../EntityId.js";
+import EntityIdHelper, { fromString } from "../EntityIdHelper.js";
 import { TopicID as ProtoTopicID } from "@hashgraph/proto";
+import Long from "long";
 
 /**
  * @namespace proto
@@ -7,22 +8,22 @@ import { TopicID as ProtoTopicID } from "@hashgraph/proto";
  */
 
 /**
- * @typedef {import("long")} Long
- */
-
-/**
  * Unique identifier for a topic (used by the consensus service).
  *
  * @augments {EntityId<proto.ITopicID>}
  */
-export default class TopicId extends EntityId {
+export default class TopicId {
     /**
-     * @param {number | Long | import("../EntityId.js").IEntityId} props
+     * @param {number | Long | import("../EntityIdHelper.js").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
      */
     constructor(props, realm, num) {
-        super(props, realm, num);
+        const {shard,realm, num} = EntityIdHelper(props, realm, num);
+
+        this.shard = shard;
+        this.realm = realm;
+        this.num = num;
     }
 
     /**
