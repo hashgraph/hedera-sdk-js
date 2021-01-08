@@ -4,7 +4,6 @@ import ContractExecuteTransaction from "../src/contract/ContractExecuteTransacti
 import ContractFunctionParameters from "../src/contract/ContractFunctionParameters.js";
 import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
-import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
 import newClient from "./client/index.js";
 

@@ -1,4 +1,3 @@
-import Hbar from "../src/Hbar.js";
 import AccountId from "../src/account/AccountId.js";
 import newClient from "./client/index.js";
 import { PrivateKey } from "../src/index.js";

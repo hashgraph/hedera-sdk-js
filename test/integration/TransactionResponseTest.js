@@ -1,7 +1,6 @@
 import * as hex from "../src/encoding/hex.js";
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
-import Hbar from "../src/Hbar.js";
 import newClient from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 

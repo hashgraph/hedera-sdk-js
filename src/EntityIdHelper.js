@@ -9,70 +9,72 @@ import * as hex from "./encoding/hex.js";
  */
 
 /**
- * @abstract
- * @template T
+ * @param {number | Long | IEntityId} props
+ * @param {(number | null | Long)=} realm
+ * @param {(number | null | Long)=} num
+ * @returns {[Long, Long, Long]}
  */
-export function EntityIdHelper(props, realm, num) {
-    /**
-     * @param {number | Long | IEntityId} props
-     * @param {(number | null | Long)=} realm
-     * @param {(number | null | Long)=} num
-     */
+export function constructor(props, realm, num) {
     if (typeof props === "number" || props instanceof Long) {
         if (realm == null) {
-            /**
-             * @readonly
-             * @type {Long}
-             */
-            this.realm = Long.ZERO;
+            return [
+                /**
+                 * @readonly
+                 * @type {Long}
+                 */
+                Long.ZERO,
 
-            /**
-             * @readonly
-             * @type {Long}
-             */
-            this.shard = Long.ZERO;
+                /**
+                 * @readonly
+                 * @type {Long}
+                 */
+                Long.ZERO,
 
-            /**
-             * @readonly
-             * @type {Long}
-             */
-            num = Long.fromValue(props);
+                /**
+                 * @readonly
+                 * @type {Long}
+                 */
+                (num = Long.fromValue(props)),
+            ];
         } else {
-            this.shard = Long.fromValue(props);
-            this.realm = Long.fromValue(realm);
-            this.num = num != null ? Long.fromValue(num) : Long.ZERO;
+            return [
+                Long.fromValue(props),
+                Long.fromValue(realm),
+                num != null ? Long.fromValue(num) : Long.ZERO,
+            ];
         }
     } else {
-        this.shard = Long.fromValue(props.shard != null ? props.shard : 0);
-        this.realm = Long.fromValue(props.realm != null ? props.realm : 0);
-        this.num = Long.fromValue(props.num != null ? props.num : 0);
+        return [
+            Long.fromValue(props.shard != null ? props.shard : 0),
+            Long.fromValue(props.realm != null ? props.realm : 0),
+            Long.fromValue(props.num != null ? props.num : 0),
+        ];
     }
 }
 
 /**
  * @param {string} text
- * @returns {[number, number, number]}
+ * @returns {[Long, Long, Long]}
  */
 export function fromString(text) {
     const components = text.split(".").map(Number);
 
-    let shard = 0;
-    let realm = 0;
+    let shard = Long.ZERO;
+    let realm = Long.ZERO;
     let num;
 
     if (components.length === 1) {
-        num = components[0];
+        num = Long.fromValue(components[0]);
     } else if (components.length === 3) {
-        shard = components[0];
-        realm = components[1];
-        num = components[2];
+        shard = Long.fromValue(components[0]);
+        realm = Long.fromValue(components[1]);
+        num = Long.fromValue(components[2]);
     } else {
         throw new Error("invalid format for entity ID");
     }
 
     return [shard, realm, num];
 }
-
 
 /**
  * @param {string} address

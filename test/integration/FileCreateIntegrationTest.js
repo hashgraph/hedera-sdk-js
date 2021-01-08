@@ -80,8 +80,7 @@ describe("FileCreate", function () {
 
         const client = await newClient();
 
-        let response = await new FileCreateTransaction()
-            .execute(client);
+        let response = await new FileCreateTransaction().execute(client);
 
         let receipt = await response.getReceipt(client);
 

@@ -1,4 +1,4 @@
-import EntityIdHelper, { fromString } from "../EntityIdHelper.js";
+import * as entity_id from "../EntityIdHelper.js";
 import * as proto from "@hashgraph/proto";
 
 /**
@@ -7,8 +7,6 @@ import * as proto from "@hashgraph/proto";
 
 /**
  * The ID for a crypto-currency file on Hedera.
- *
- * @augments {EntityId<proto.IFileID>}
  */
 export default class FileId {
     /**
@@ -17,11 +15,15 @@ export default class FileId {
      * @param {(number | Long)=} num
      */
     constructor(props, realm, num) {
-        const {shard, realm, num} = EntityIdHelper(props,realm, num);
+        const [shard_num, realm_num, file_num] = entity_id.constructor(
+            props,
+            realm,
+            num
+        );
 
-        this.shard = shard;
-        this.realm = realm;
-        this.num = num;
+        this.shard = shard_num;
+        this.realm = realm_num;
+        this.num = file_num;
     }
 
     /**
@@ -29,7 +31,7 @@ export default class FileId {
      * @returns {FileId}
      */
     static fromString(text) {
-        return new FileId(...fromString(text));
+        return new FileId(...entity_id.fromString(text));
     }
 
     /**
@@ -64,6 +66,14 @@ export default class FileId {
             shardNum: this.shard,
             realmNum: this.realm,
         };
+    }
+
+    /**
+     * @override
+     * @returns {string}
+     */
+    toString() {
+        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
     }
 
     /**

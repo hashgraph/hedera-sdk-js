@@ -3,7 +3,6 @@ import {
     TokenDeleteTransaction,
     TokenUpdateTransaction,
     TokenInfoQuery,
-    Hbar,
     Status,
     PrivateKey,
 } from "../src/exports.js";

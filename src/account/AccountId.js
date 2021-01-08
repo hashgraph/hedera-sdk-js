@@ -1,13 +1,8 @@
-import EntityIdHelper, {
-    fromString,
-    fromSolidityAddress,
-} from "../EntityIdHelper.js";
+import * as entity_id from "../EntityIdHelper.js";
 import * as proto from "@hashgraph/proto";
 
 /**
  * The ID for a crypto-currency account on Hedera.
- *
- * @augments {EntityId<proto.IAccountID>}
  */
 export default class AccountId {
     /**
@@ -16,11 +11,15 @@ export default class AccountId {
      * @param {(number | Long)=} num
      */
     constructor(props, realm, num) {
-        const {shard, realm, num} = EntityIdHelper(props,realm, num);
+        const [shard_num, realm_num, account_num] = entity_id.constructor(
+            props,
+            realm,
+            num
+        );
 
-        this.shard = shard;
-        this.realm = realm;
-        this.num = num;
+        this.shard = shard_num;
+        this.realm = realm_num;
+        this.num = account_num;
     }
 
     /**
@@ -28,7 +27,7 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromString(text) {
-        return new AccountId(...fromString(text));
+        return new AccountId(...entity_id.fromString(text));
     }
 
     /**
@@ -57,8 +56,7 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromSolidityAddress(address) {
-        const [shard, realm, account] = fromSolidityAddress(address);
-        return new AccountId(shard, realm, account);
+        return new AccountId(...entity_id.fromSolidityAddress(address));
     }
 
     /**
@@ -79,5 +77,25 @@ export default class AccountId {
      */
     toBytes() {
         return proto.AccountID.encode(this._toProtobuf()).finish();
+    }
+
+    /**
+     * @override
+     * @returns {string}
+     */
+    toString() {
+        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
+    }
+
+    /**
+     * @param {this} other
+     * @returns {boolean}
+     */
+    equals(other) {
+        return (
+            this.shard.eq(other.shard) &&
+            this.realm.eq(other.realm) &&
+            this.num.eq(other.num)
+        );
     }
 }

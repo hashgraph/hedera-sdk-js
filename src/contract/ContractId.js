@@ -1,15 +1,9 @@
-
-import EntityIdHelper, {
-    fromString,
-    fromSolidityAddress,
-} from "../EntityIdHelper.js";
-import * as Key from "@hashgraph/cryptography";
+import * as entity_id from "../EntityIdHelper.js";
+import { Key } from "@hashgraph/cryptography";
 import * as proto from "@hashgraph/proto";
 
 /**
  * The ID for a crypto-currency contract on Hedera.
- *
- * @augments {Key<proto.IContractID>}
  */
 export default class ContractId extends Key {
     /**
@@ -18,7 +12,17 @@ export default class ContractId extends Key {
      * @param {(number | Long)=} num
      */
     constructor(props, realm, num) {
-        super(props,realm, num)
+        super();
+
+        const [shard_num, realm_num, contract_num] = entity_id.constructor(
+            props,
+            realm,
+            num
+        );
+
+        this.shard = shard_num;
+        this.realm = realm_num;
+        this.num = contract_num;
     }
 
     /**
@@ -26,7 +30,7 @@ export default class ContractId extends Key {
      * @returns {ContractId}
      */
     static fromString(text) {
-        return new ContractId(...fromString(text));
+        return new ContractId(...entity_id.fromString(text));
     }
 
     /**
@@ -55,7 +59,7 @@ export default class ContractId extends Key {
      * @returns {ContractId}
      */
     static fromSolidityAddress(address) {
-        const [shard, realm, contract] = fromSolidityAddress(address);
+        const [shard, realm, contract] = entity_id.fromSolidityAddress(address);
         return new ContractId(shard, realm, contract);
     }
 
@@ -70,6 +74,14 @@ export default class ContractId extends Key {
             shardNum: this.shard,
             realmNum: this.realm,
         };
+    }
+
+    /**
+     * @override
+     * @returns {string}
+     */
+    toString() {
+        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
     }
 
     /**

@@ -1,7 +1,6 @@
 import {
     TokenCreateTransaction,
     TokenDeleteTransaction,
-    Hbar,
     Status,
 } from "../src/exports.js";
 import newClient from "./client/index.js";

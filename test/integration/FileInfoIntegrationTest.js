@@ -93,8 +93,7 @@ describe("FileInfo", function () {
 
         const client = await newClient();
 
-        const response = await new FileCreateTransaction()
-            .execute(client);
+        const response = await new FileCreateTransaction().execute(client);
 
         const receipt = await response.getReceipt(client);
 

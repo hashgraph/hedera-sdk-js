@@ -1,7 +1,9 @@
-import EntityIdHelper, { fromString } from "../EntityIdHelper.js";
+import * as entity_id from "../EntityIdHelper.js";
 import * as proto from "@hashgraph/proto";
-import Long from "long";
-import * as hex from "../encoding/hex.js";
+
+/**
+ * @typedef {import("long").Long} Long
+ */
 
 /**
  * The ID for a crypto-currency token on Hedera.
@@ -15,11 +17,15 @@ export default class TokenId {
      * @param {(number | Long)=} num
      */
     constructor(props, realm, num) {
-        const {shard, realm, num} = EntityIdHelper(props,realm, num);
+        const [shard_num, realm_num, token_num] = entity_id.constructor(
+            props,
+            realm,
+            num
+        );
 
-        this.shard = shard;
-        this.realm = realm;
-        this.num = num;
+        this.shard = shard_num;
+        this.realm = realm_num;
+        this.num = token_num;
     }
 
     /**
@@ -27,7 +33,7 @@ export default class TokenId {
      * @returns {TokenId}
      */
     static fromString(text) {
-        return new TokenId(...fromString(text));
+        return new TokenId(...entity_id.fromString(text));
     }
 
     /**
@@ -56,20 +62,7 @@ export default class TokenId {
      * @returns {TokenId}
      */
     static fromSolidityAddress(address) {
-        const addr = address.startsWith("0x")
-            ? hex.decode(address.slice(2))
-            : hex.decode(address);
-
-        if (addr.length !== 20) {
-            throw new Error(`Invalid hex encoded solidity address length:
-                    expected length 40, got length ${address.length}`);
-        }
-
-        const shard = Long.fromBytesBE(Array.from(addr.slice(0, 4)));
-        const realm = Long.fromBytesBE(Array.from(addr.slice(4, 12)));
-        const token = Long.fromBytesBE(Array.from(addr.slice(12, 20)));
-
-        return new TokenId(shard, realm, token);
+        return new TokenId(...entity_id.fromSolidityAddress(address));
     }
 
     /**
@@ -83,6 +76,14 @@ export default class TokenId {
             shardNum: this.shard,
             realmNum: this.realm,
         };
+    }
+
+    /**
+     * @override
+     * @returns {string}
+     */
+    toString() {
+        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
     }
 
     /**

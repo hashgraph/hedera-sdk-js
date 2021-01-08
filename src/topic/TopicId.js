@@ -1,6 +1,9 @@
-import EntityIdHelper, { fromString } from "../EntityIdHelper.js";
+import * as entity_id from "../EntityIdHelper.js";
 import { TopicID as ProtoTopicID } from "@hashgraph/proto";
-import Long from "long";
+
+/**
+ * @typedef {import("long").Long} Long
+ */
 
 /**
  * @namespace proto
@@ -9,8 +12,6 @@ import Long from "long";
 
 /**
  * Unique identifier for a topic (used by the consensus service).
- *
- * @augments {EntityId<proto.ITopicID>}
  */
 export default class TopicId {
     /**
@@ -19,11 +20,15 @@ export default class TopicId {
      * @param {(number | Long)=} num
      */
     constructor(props, realm, num) {
-        const {shard,realm, num} = EntityIdHelper(props, realm, num);
+        const [shard_num, realm_num, topic_num] = entity_id.constructor(
+            props,
+            realm,
+            num
+        );
 
-        this.shard = shard;
-        this.realm = realm;
-        this.num = num;
+        this.shard = shard_num;
+        this.realm = realm_num;
+        this.num = topic_num;
     }
 
     /**
@@ -31,7 +36,7 @@ export default class TopicId {
      * @returns {TopicId}
      */
     static fromString(text) {
-        return new TopicId(...fromString(text));
+        return new TopicId(...entity_id.fromString(text));
     }
 
     /**
@@ -64,6 +69,14 @@ export default class TopicId {
             shardNum: this.shard,
             realmNum: this.realm,
         };
+    }
+
+    /**
+     * @override
+     * @returns {string}
+     */
+    toString() {
+        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
     }
 
     /**
