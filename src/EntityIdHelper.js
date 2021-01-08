@@ -15,41 +15,29 @@ import * as hex from "./encoding/hex.js";
  * @returns {[Long, Long, Long]}
  */
 export function constructor(props, realm, num) {
+    let shard_ = Long.ZERO;
+    let realm_ = Long.ZERO;
+    let num_ = Long.ZERO;
+
     if (typeof props === "number" || props instanceof Long) {
         if (realm == null) {
-            return [
-                /**
-                 * @readonly
-                 * @type {Long}
-                 */
-                Long.ZERO,
-
-                /**
-                 * @readonly
-                 * @type {Long}
-                 */
-                Long.ZERO,
-
-                /**
-                 * @readonly
-                 * @type {Long}
-                 */
-                (num = Long.fromValue(props)),
-            ];
+            num_ = Long.fromValue(props);
         } else {
-            return [
-                Long.fromValue(props),
-                Long.fromValue(realm),
-                num != null ? Long.fromValue(num) : Long.ZERO,
-            ];
+            shard_ = Long.fromValue(props);
+            realm_ = Long.fromValue(realm);
+            num_ = num != null ? Long.fromValue(num) : Long.ZERO;
         }
     } else {
-        return [
-            Long.fromValue(props.shard != null ? props.shard : 0),
-            Long.fromValue(props.realm != null ? props.realm : 0),
-            Long.fromValue(props.num != null ? props.num : 0),
-        ];
+        shard_ = Long.fromValue(props.shard != null ? props.shard : 0);
+        realm_ = Long.fromValue(props.realm != null ? props.realm : 0);
+        num_ = Long.fromValue(props.num != null ? props.num : 0);
     }
+
+    if (shard_.isNegative() || realm_.isNegative() || num_.isNegative()) {
+        throw new Error("negative numbers are not allowed in IDs");
+    }
+
+    return [shard_, realm_, num_];
 }
 
 /**
@@ -57,7 +45,15 @@ export function constructor(props, realm, num) {
  * @returns {[Long, Long, Long]}
  */
 export function fromString(text) {
-    const components = text.split(".").map(Number);
+    const strings = text.split(".");
+
+    for (const string of strings) {
+        if (string === "") {
+            throw new Error("invalid format for entity ID");
+        }
+    }
+
+    const components = strings.map(Number);
 
     for (const component of components) {
         if (Number.isNaN(component)) {

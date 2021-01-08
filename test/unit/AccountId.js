@@ -1,4 +1,5 @@
 import AccountId from "../src/account/AccountId.js";
+import Long from "long";
 
 describe("AccountId", function () {
     it("should construct from (shard, realm, num)", function () {
@@ -37,7 +38,7 @@ describe("AccountId", function () {
         expect(new AccountId(50, 150, 520).toString()).to.eql("50.150.520");
     });
 
-    it("should error if string cannot be parsed", function () {
+    it("should error with invalid string", function () {
         let err = false;
 
         try {
@@ -48,6 +49,134 @@ describe("AccountId", function () {
 
         if (!err) {
             throw new Error("`AccountId.fromString()` did not error");
+        }
+
+        try {
+            AccountId.fromString(" .0.1");
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error("`AccountId.fromString()` did not error");
+        }
+
+        try {
+            AccountId.fromString("");
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error("`AccountId.fromString()` did not error");
+        }
+
+        try {
+            AccountId.fromString("0.0");
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error("`AccountId.fromString()` did not error");
+        }
+
+        try {
+            AccountId.fromString("0.0.");
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error("`AccountId.fromString()` did not error");
+        }
+
+        try {
+            AccountId.fromString("0.0.a");
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error("`AccountId.fromString()` did not error");
+        }
+
+        try {
+            AccountId.fromString("0.0.-a");
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error("`AccountId.fromString()` did not error");
+        }
+    });
+
+    it("should error when string negative numbers are directly passed to constructor", function () {
+        let err = false;
+
+        try {
+            AccountId.fromString("0.0.-1");
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error(
+                "`AccountId.constructor` with negative numbers did not error"
+            );
+        }
+
+        try {
+            new AccountId(0, 0, -1);
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error(
+                "`AccountId.constructor` with negative numbers did not error"
+            );
+        }
+
+        try {
+            new AccountId(-1);
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error(
+                "`AccountId.constructor` with negative numbers did not error"
+            );
+        }
+
+        try {
+            new AccountId(Long.fromValue(-1));
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error(
+                "`AccountId.constructor` with negative numbers did not error"
+            );
+        }
+
+        try {
+            new AccountId(
+                Long.fromValue(-1),
+                Long.fromValue(-1),
+                Long.fromValue(-1)
+            );
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error(
+                "`AccountId.constructor` with negative numbers did not error"
+            );
         }
     });
 });
