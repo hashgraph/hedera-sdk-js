@@ -1,4 +1,5 @@
 import { KeyList, PrivateKey, PublicKey } from "@hashgraph/cryptography";
+import ContractId from "../contract/ContractId.js";
 
 /**
  * @namespace proto
@@ -31,6 +32,12 @@ export function keyToProtobuf(key) {
         };
     }
 
+    if (key instanceof ContractId) {
+        return {
+            contractID: key._toProtobuf(),
+        };
+    }
+
     throw new Error(
         `(BUG) keyToProtobuf: unsupported key type: ${key.constructor.name}`
     );
@@ -54,9 +61,13 @@ export function keyListToProtobuf(list) {
 
 /**
  * @param {proto.IKey} key
- * @returns {KeyList | PublicKey}
+ * @returns {KeyList | PublicKey | ContractId}
  */
 export function keyFromProtobuf(key) {
+    if (key.contractID != null) {
+        return ContractId._fromProtobuf(key.contractID);
+    }
+
     if (key.ed25519 != null && key.ed25519.byteLength > 0) {
         return PublicKey.fromBytes(key.ed25519);
     }
