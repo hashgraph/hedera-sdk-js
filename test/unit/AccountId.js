@@ -10,6 +10,14 @@ describe("AccountId", function () {
         expect(accountId.shard.toNumber()).to.eql(10);
     });
 
+    it("should construct from (0, 0, 0)", function () {
+        const accountId = new AccountId(0, 0, 0);
+
+        expect(accountId.num.toNumber()).to.eql(0);
+        expect(accountId.realm.toNumber()).to.eql(0);
+        expect(accountId.shard.toNumber()).to.eql(0);
+    });
+
     it("should construct from (num)", function () {
         const accountId = new AccountId(25050);
 
@@ -24,6 +32,14 @@ describe("AccountId", function () {
         expect(accountId.num.toNumber()).to.eql(25050);
         expect(accountId.realm.toNumber()).to.eql(50);
         expect(accountId.shard.toNumber()).to.eql(10);
+    });
+
+    it("should parse 0.0.0", function () {
+        const accountId = AccountId.fromString("0.0.0");
+
+        expect(accountId.num.toNumber()).to.eql(0);
+        expect(accountId.realm.toNumber()).to.eql(0);
+        expect(accountId.shard.toNumber()).to.eql(0);
     });
 
     it("should parse {num}", function () {
@@ -128,7 +144,31 @@ describe("AccountId", function () {
         }
 
         try {
+            AccountId.fromString("-1.-1.-1");
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error(
+                "`AccountId.constructor` with negative numbers did not error"
+            );
+        }
+
+        try {
             new AccountId(0, 0, -1);
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error(
+                "`AccountId.constructor` with negative numbers did not error"
+            );
+        }
+
+        try {
+            new AccountId(-1, -1, -1);
         } catch {
             err = true;
         }
