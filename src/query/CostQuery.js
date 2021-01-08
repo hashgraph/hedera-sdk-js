@@ -34,8 +34,6 @@ export default class CostQuery extends Executable {
          * @type {proto.IQueryHeader | null}
          */
         this._header = null;
-
-        this._nextIndex = 0;
     }
 
     /**
@@ -62,6 +60,10 @@ export default class CostQuery extends Executable {
             throw new Error(
                 "`client` must have an `operator` or an explicit payment transaction must be provided"
             );
+        }
+
+        if (this._query._nodeIds.length == 0) {
+            this._query._nodeIds = client._network.getNodeAccountIdsForExecute();
         }
 
         this._header = {
@@ -129,16 +131,7 @@ export default class CostQuery extends Executable {
      * @returns {AccountId}
      */
     _getNodeAccountId() {
-        return this._query._nodeIds[this._nextIndex];
-    }
-
-    /**
-     * @abstract
-     * @protected
-     * @returns {void}
-     */
-    _advanceRequest() {
-        this._nextIndex = (this._nextIndex + 1) % this._query._nodeIds.length;
+        return this._query._getNodeAccountId();
     }
 }
 

@@ -1,15 +1,30 @@
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
-import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
-import AccountInfoQuery from "../src/account/AccountInfoQuery.js";
-import Hbar from "../src/Hbar.js";
-import Status from "../src/Status.js";
-import TransactionId from "../../src/transaction/TransactionId.js";
+import {
+    AccountCreateTransaction,
+    AccountDeleteTransaction,
+    AccountInfoQuery,
+    Hbar,
+    Status,
+    TransactionId,
+    TokenCreateTransaction,
+    TokenAssociateTransaction,
+    PrivateKey,
+} from "../src/exports.js";
 import newClient from "./client/index.js";
-import TokenCreateTransaction from "../src/token/TokenCreateTransaction.js";
-import TokenAssociateTransaction from "../src/token/TokenAssociateTransaction.js";
-import { PrivateKey } from "../src/index.js";
 
 describe("AccountInfo", function () {
+    it("should be able to query cost", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+        const operatorId = client.operatorAccountId;
+
+        const cost = await new AccountInfoQuery()
+            .setAccountId(operatorId)
+            .getCost(client);
+
+        expect(cost.toTinybars()).to.be.at.least(25);
+    });
+
     it("should be executable", async function () {
         this.timeout(15000);
 
