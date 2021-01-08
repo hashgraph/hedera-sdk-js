@@ -36,4 +36,18 @@ describe("AccountId", function () {
     it("should stringify to {shard}.{realm}.{num}", function () {
         expect(new AccountId(50, 150, 520).toString()).to.eql("50.150.520");
     });
+
+    it("should error if string cannot be parsed", function () {
+        let err = false;
+
+        try {
+            AccountId.fromString("asdfasf");
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error("`AccountId.fromString()` did not error");
+        }
+    });
 });

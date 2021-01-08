@@ -59,16 +59,22 @@ export function constructor(props, realm, num) {
 export function fromString(text) {
     const components = text.split(".").map(Number);
 
+    for (const component of components) {
+        if (Number.isNaN(component)) {
+            throw new Error("invalid format for entity ID");
+        }
+    }
+
     let shard = Long.ZERO;
     let realm = Long.ZERO;
     let num;
 
     if (components.length === 1) {
-        num = Long.fromValue(components[0]);
+        num = Long.fromNumber(components[0]);
     } else if (components.length === 3) {
-        shard = Long.fromValue(components[0]);
-        realm = Long.fromValue(components[1]);
-        num = Long.fromValue(components[2]);
+        shard = Long.fromNumber(components[0]);
+        realm = Long.fromNumber(components[1]);
+        num = Long.fromNumber(components[2]);
     } else {
         throw new Error("invalid format for entity ID");
     }

@@ -22,7 +22,7 @@ describe("AccountInfo", function () {
             .setAccountId(operatorId)
             .getCost(client);
 
-        expect(cost.toTinybars()).to.be.at.least(25);
+        expect(cost.toTinybars().toInt()).to.be.at.least(25);
     });
 
     it("should be executable", async function () {
