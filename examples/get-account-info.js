@@ -15,7 +15,7 @@ async function main() {
         }
     } else {
         try {
-            client = Client.fromConfigFile(process.env.CONFIG_FILE);
+            client = await Client.fromConfigFile(process.env.CONFIG_FILE);
         } catch (err) {
             client = Client.forTestnet();
         }
