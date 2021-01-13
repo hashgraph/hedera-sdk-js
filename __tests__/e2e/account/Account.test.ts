@@ -1,6 +1,6 @@
 import {
     Ed25519PrivateKey,
-    CryptoTransferTransaction,
+    TransferTransaction,
     AccountBalanceQuery,
     AccountInfoQuery,
     AccountCreateTransaction,
@@ -79,9 +79,9 @@ describe("AccountUpdateTransaction", () => {
         expect(info.key.toString()).toBe(key2.publicKey.toString());
         expect(info.balance.asTinybar().toString(10)).toBe(new Hbar(1).asTinybar().toString(10));
 
-        transactionId = await new CryptoTransferTransaction()
-            .addSender(account, new Hbar(1).asTinybar().dividedBy(10))
-            .addRecipient(client._getOperatorAccountId()!, new Hbar(1).asTinybar().dividedBy(10))
+        transactionId = await new TransferTransaction()
+            .addHbarTransfer(account, new Hbar(1).asTinybar().dividedBy(10).negated())
+            .addHbarTransfer(client._getOperatorAccountId()!, new Hbar(1).asTinybar().dividedBy(10))
             .setMaxTransactionFee(new Hbar(1).asTinybar().dividedBy(2))
             .build(client)
             .sign(key2)

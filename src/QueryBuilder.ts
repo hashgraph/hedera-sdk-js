@@ -14,7 +14,7 @@ import { TransactionBody } from "./generated/TransactionBody_pb";
 import { AccountId } from "./account/AccountId";
 import { Status } from "./Status";
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
-import { CryptoTransferTransaction } from "./account/CryptoTransferTransaction";
+import { TransferTransaction } from "./account/TransferTransaction";
 
 export abstract class QueryBuilder<T> {
     protected readonly _inner: Query = new Query();
@@ -47,7 +47,7 @@ export abstract class QueryBuilder<T> {
 
     /**
      * Set a manually created and signed
-     * `CryptoTransferTransaction` as the query payment.
+     * `TransferTransaction` as the query payment.
      */
     public setQueryPaymentTransaction(transaction: import("./Transaction").Transaction): this {
         this._transactionId = transaction.id;
@@ -76,9 +76,9 @@ export abstract class QueryBuilder<T> {
 
             // COST_ANSWER requires a "null" payment but does not actually
             // process it
-            const transaction = new CryptoTransferTransaction()
-                .addRecipient(node.id, 0)
-                .addSender(client._getOperatorAccountId()!, 0)
+            const transaction = new TransferTransaction()
+                .addHbarTransfer(node.id, 0)
+                .addHbarTransfer(client._getOperatorAccountId()!, 0)
                 .build(client);
 
             this._transactionId = transaction.id;
@@ -225,10 +225,10 @@ export abstract class QueryBuilder<T> {
         const hbar = hbarFromTinybarOrHbar(amount);
         hbar[ hbarCheck ]({ allowNegative: false });
 
-        const paymentTx = await new CryptoTransferTransaction()
+        const paymentTx = await new TransferTransaction()
             .setNodeAccountId(node.id)
-            .addRecipient(node.id, hbar)
-            .addSender(client._getOperatorAccountId()!, hbar)
+            .addHbarTransfer(node.id, hbar)
+            .addHbarTransfer(client._getOperatorAccountId()!, hbar.negated())
             .setMaxTransactionFee(new Hbar(1))
             .build(client)
             .signWith(client._getOperatorKey()!, client._getOperatorSigner()!);

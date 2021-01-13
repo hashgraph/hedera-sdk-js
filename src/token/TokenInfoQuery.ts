@@ -11,6 +11,7 @@ import { TokenGetInfoQuery } from "../generated/TokenGetInfo_pb";
 import { TokenService } from "../generated/TokenService_pb_service";
 import { AccountId } from "../account/AccountId";
 import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
+import { timestampToDate } from "../Timestamp";
 import BigNumber from "bignumber.js";
 
 /**
@@ -112,7 +113,7 @@ export interface TokenInfo {
      * The epoch second at which the token expire: will; if an auto-renew account and period are specified,
      * this is coerced to the current epoch second plus the autoRenewPeriod
      */
-    expirationTime: Date;
+    expirationTime: Date | null;
 }
 
 /**
@@ -191,12 +192,14 @@ export class TokenInfoQuery extends QueryBuilder<TokenInfo> {
                 info.getDefaultkycstatus() === 0 ?
                     null :
                     info.getDefaultkycstatus() === 1,
-            isDeleted: info.getIsdeleted()!,
+            isDeleted: info.getDeleted()!,
             autoRenewAccount: info.hasAutorenewaccount() ?
                 AccountId._fromProto(info.getAutorenewaccount()!) :
                 null,
-            autoRenewPeriod: info.getAutorenewperiod()!,
-            expirationTime: new Date(info.getExpiry()! * 1000)
+            autoRenewPeriod: info.getAutorenewperiod()!.getSeconds(),
+            expirationTime: info.hasExpiry() ?
+                timestampToDate(info.getExpiry()!) :
+                null
         };
     }
 }

@@ -28,7 +28,6 @@ option java_multiple_files = true;
 import "Timestamp.proto";
 import "BasicTypes.proto";
 import "TransactionReceipt.proto";
-import "CryptoTransfer.proto";
 import "ContractCallLocal.proto";
 
 /* Response when the client sends the node TransactionGetRecordResponse */

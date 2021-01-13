@@ -6,8 +6,9 @@ import { PublicKey } from "../crypto/PublicKey";
 import { AccountId, AccountIdLike } from "../account/AccountId";
 import { TokenUpdateTransactionBody } from "../generated/TokenUpdate_pb";
 import { TokenService } from "../generated/TokenService_pb_service";
-import { dateToTimestamp } from "../Timestamp";
+import { timestampToProto, dateToTimestamp } from "../Timestamp";
 import { TokenId, TokenIdLike } from "./TokenId";
+import { newDuration } from "../util";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
@@ -108,7 +109,7 @@ export class TokenUpdateTransaction extends SingleTransactionBuilder {
      * earlier than the current token expiry, transaction wil resolve to INVALID_EXPIRATION_TIME
      */
     public setExpirationTime(date: number | Date): this {
-        this._body.setExpiry(dateToTimestamp(date).seconds);
+        this._body.setExpiry(timestampToProto(dateToTimestamp(date)));
         return this;
     }
 
@@ -124,7 +125,7 @@ export class TokenUpdateTransaction extends SingleTransactionBuilder {
      * The new interval at which the auto-renew account will be charged to extend the token's expiry.
      */
     public setAutoRenewPeriod(seconds: number): this {
-        this._body.setAutorenewperiod(seconds);
+        this._body.setAutorenewperiod(newDuration(seconds));
         return this;
     }
 

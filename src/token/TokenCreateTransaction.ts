@@ -6,7 +6,8 @@ import { PublicKey } from "../crypto/PublicKey";
 import { AccountId, AccountIdLike } from "../account/AccountId";
 import { TokenCreateTransactionBody } from "../generated/TokenCreate_pb";
 import { TokenService } from "../generated/TokenService_pb_service";
-import { dateToTimestamp } from "../Timestamp";
+import { timestampToProto, dateToTimestamp } from "../Timestamp";
+import { newDuration } from "../util";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
@@ -178,7 +179,7 @@ export class TokenCreateTransaction extends SingleTransactionBuilder {
      * @return TokenCreateTransaction
      */
     public setExpirationTime(date: number | Date): this {
-        this._body.setExpiry(dateToTimestamp(date).seconds);
+        this._body.setExpiry(timestampToProto(dateToTimestamp(date)));
         return this;
     }
 
@@ -200,7 +201,7 @@ export class TokenCreateTransaction extends SingleTransactionBuilder {
      * @return TokenCreateTransaction
      */
     public setAutoRenewPeriod(seconds: number): this {
-        this._body.setAutorenewperiod(seconds);
+        this._body.setAutorenewperiod(newDuration(seconds));
         return this;
     }
 
