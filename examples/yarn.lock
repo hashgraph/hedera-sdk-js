@@ -2,16 +2,16 @@
 # yarn lockfile v1
 
 
-"@grpc/grpc-js@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.2.0.tgz#4ff1ac4cdf7eb2af80d3c67316be9c2308d8d9bf"
-  integrity sha512-09H50V7rmz0gFrGz6IbP49z9A8+2p4yZYcNDEb7bytr90vWn52VBQE1a+LMBlrucmNN0wSsiCr3TJx+dStHTng==
+"@grpc/grpc-js@^1.2.2":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.2.3.tgz#35dcbca3cb7415ef5ac6e73d44080ebcb44a4be5"
+  integrity sha512-hMjS4/TiGFtvMxjmM3mgXCw6VIGeI0EWTNzdcV6R+qqCh33dLDcK1wVceAABXKZ+Fia1nETU49RBesOiukQjGA==
   dependencies:
     "@types/node" "^12.12.47"
     google-auth-library "^6.1.1"
     semver "^6.2.0"
 
-"@hashgraph/cryptography@^1.0.11":
+"@hashgraph/cryptography@^1.0.12":
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.12.tgz#8c4b3900d10d0c6c5ff807f90aad0c45b3d2beb4"
   integrity sha512-uX0IzuOoE1LxAuc6+SVrc9WCEJWnRJNurAgEfycGKqfwUbCEWXHqTzUc/hDlB2NEv0M6g/cRVwtzatCHPGaJwQ==
@@ -46,10 +46,10 @@
     long "^4.0.0"
 
 "@hashgraph/sdk@file:..":
-  version "2.0.12"
+  version "2.0.14"
   dependencies:
-    "@grpc/grpc-js" "^1.2.0"
-    "@hashgraph/cryptography" "^1.0.11"
+    "@grpc/grpc-js" "^1.2.2"
+    "@hashgraph/cryptography" "^1.0.12"
     "@hashgraph/proto" "^1.0.19"
     bignumber.js "^9.0.1"
     long "^4.0.0"

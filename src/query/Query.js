@@ -186,7 +186,9 @@ export default class Query extends Executable {
             this._nodeIds = client._network.getNodeAccountIdsForExecute();
         }
 
-        this._paymentTransactionId = TransactionId.generate(operator.accountId);
+        if (this._paymentTransactionId == null) {
+            this._paymentTransactionId = TransactionId.generate(operator.accountId);
+        }
 
         let cost =
             this._queryPayment != null
