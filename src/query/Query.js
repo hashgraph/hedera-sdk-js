@@ -132,6 +132,22 @@ export default class Query extends Executable {
     }
 
     /**
+     * @param {TransactionId} paymentTransactionId
+     * @returns {this}
+     */
+    setPaymentTransactionId(paymentTransactionId) {
+        this._paymentTransactionId = paymentTransactionId;
+        return this;
+    }
+
+    /**
+     * @returns {?TransactionId}
+     */
+    get paymentTransactionId() {
+        return this._paymentTransactionId;
+    }
+
+    /**
      * @returns {TransactionId}
      */
     _getTransactionId() {
