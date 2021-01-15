@@ -33,6 +33,7 @@ describe("TokenDissociate", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -51,6 +52,7 @@ describe("TokenDissociate", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(client)
@@ -59,12 +61,14 @@ describe("TokenDissociate", function () {
         ).getReceipt(client);
 
         let balances = await new AccountBalanceQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
         expect(balances.tokens.get(token).toInt()).to.be.equal(0);
 
         let info = await new AccountInfoQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
@@ -79,6 +83,7 @@ describe("TokenDissociate", function () {
         await (
             await (
                 await new TokenDissociateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(client)
@@ -87,19 +92,24 @@ describe("TokenDissociate", function () {
         ).getReceipt(client);
 
         balances = await new AccountBalanceQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
         expect(balances.tokens.get(token)).to.be.null;
 
         info = await new AccountInfoQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
         expect(info.tokenRelationships.get(token)).to.be.null;
 
         await (
-            await new TokenDeleteTransaction().setTokenId(token).execute(client)
+            await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .execute(client)
         ).getReceipt(client);
 
         await (
@@ -132,6 +142,7 @@ describe("TokenDissociate", function () {
         await (
             await (
                 await new TokenDissociateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setAccountId(account)
                     .freezeWith(client)
                     .sign(key)
@@ -141,6 +152,7 @@ describe("TokenDissociate", function () {
         await (
             await (
                 await new AccountDeleteTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setAccountId(account)
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
@@ -179,6 +191,7 @@ describe("TokenDissociate", function () {
         try {
             await (
                 await new TokenDissociateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .execute(client)
             ).getReceipt(client);
@@ -187,7 +200,10 @@ describe("TokenDissociate", function () {
         }
 
         await (
-            await new TokenDeleteTransaction().setTokenId(token).execute(client)
+            await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .execute(client)
         ).getReceipt(client);
 
         if (!err) {

@@ -31,6 +31,7 @@ describe("TokenDelete", function () {
 
         await (
             await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
                 .setTokenId(tokenId)
                 .execute(client)
         ).getReceipt(client);

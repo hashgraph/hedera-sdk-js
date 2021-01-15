@@ -50,6 +50,7 @@ describe("TokenGrantKyc", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(client)
@@ -60,6 +61,7 @@ describe("TokenGrantKyc", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(client)
@@ -68,6 +70,7 @@ describe("TokenGrantKyc", function () {
         ).getReceipt(client);
 
         const info = await new AccountInfoQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
@@ -80,14 +83,17 @@ describe("TokenGrantKyc", function () {
         expect(relationship.isFrozen).to.be.false;
 
         await (
-            await new TokenDeleteTransaction().setTokenId(token).execute(client)
+            await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .execute(client)
         ).getReceipt(client);
 
         await (
             await (
                 await new AccountDeleteTransaction()
-                    .setAccountId(account)
                     .setNodeAccountIds([response.nodeId])
+                    .setAccountId(account)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)

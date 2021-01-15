@@ -32,6 +32,7 @@ describe("TokenAssociate", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -50,6 +51,7 @@ describe("TokenAssociate", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(client)
@@ -58,12 +60,14 @@ describe("TokenAssociate", function () {
         ).getReceipt(client);
 
         const balances = await new AccountBalanceQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
         expect(balances.tokens.get(token).toInt()).to.be.equal(0);
 
         const info = await new AccountInfoQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
@@ -76,14 +80,17 @@ describe("TokenAssociate", function () {
         expect(relationship.isFrozen).to.be.false;
 
         await (
-            await new TokenDeleteTransaction().setTokenId(token).execute(client)
+            await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .execute(client)
         ).getReceipt(client);
 
         await (
             await (
                 await new AccountDeleteTransaction()
-                    .setAccountId(account)
                     .setNodeAccountIds([response.nodeId])
+                    .setAccountId(account)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)

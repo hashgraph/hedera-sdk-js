@@ -33,6 +33,7 @@ describe("TokenUnfreeze", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -51,6 +52,7 @@ describe("TokenUnfreeze", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(client)
@@ -61,6 +63,7 @@ describe("TokenUnfreeze", function () {
         await (
             await (
                 await new TokenFreezeTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(client)
@@ -69,6 +72,7 @@ describe("TokenUnfreeze", function () {
         ).getReceipt(client);
 
         let info = await new AccountInfoQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
@@ -83,6 +87,7 @@ describe("TokenUnfreeze", function () {
         await (
             await (
                 await new TokenUnfreezeTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(client)
@@ -91,6 +96,7 @@ describe("TokenUnfreeze", function () {
         ).getReceipt(client);
 
         info = await new AccountInfoQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
@@ -103,14 +109,17 @@ describe("TokenUnfreeze", function () {
         expect(relationship.isFrozen).to.be.false;
 
         await (
-            await new TokenDeleteTransaction().setTokenId(token).execute(client)
+            await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .execute(client)
         ).getReceipt(client);
 
         await (
             await (
                 await new AccountDeleteTransaction()
-                    .setAccountId(account)
                     .setNodeAccountIds([response.nodeId])
+                    .setAccountId(account)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)
@@ -139,6 +148,7 @@ describe("TokenUnfreeze", function () {
             await (
                 await (
                     await new TokenUnfreezeTransaction()
+                        .setNodeAccountIds([response.nodeId])
                         .setAccountId(account)
                         .freezeWith(client)
                         .sign(key)
@@ -151,8 +161,8 @@ describe("TokenUnfreeze", function () {
         await (
             await (
                 await new AccountDeleteTransaction()
-                    .setAccountId(account)
                     .setNodeAccountIds([response.nodeId])
+                    .setAccountId(account)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)
@@ -193,6 +203,7 @@ describe("TokenUnfreeze", function () {
         try {
             await (
                 await new TokenUnfreezeTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .execute(client)
             ).getReceipt(client);
@@ -201,7 +212,10 @@ describe("TokenUnfreeze", function () {
         }
 
         await (
-            await new TokenDeleteTransaction().setTokenId(token).execute(client)
+            await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .execute(client)
         ).getReceipt(client);
 
         if (!err) {

@@ -1,10 +1,12 @@
 import Status from "../Status.js";
+import AccountId from "../account/AccountId.js";
 import Hbar from "../Hbar.js";
 import Executable from "../Executable.js";
 import TransactionId from "../transaction/TransactionId.js";
 import {
     Query as ProtoQuery,
     TransactionBody as ProtoTransactionBody,
+    SignedTransaction as ProtoSignedTransaction,
     ResponseType as ProtoResponseType,
     ResponseCodeEnum,
 } from "@hashgraph/proto";
@@ -20,6 +22,7 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
  * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
  * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
@@ -27,7 +30,6 @@ import Long from "long";
  */
 
 /**
- * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../client/Client.js").ClientOperator} ClientOperator
  */
 
@@ -174,20 +176,32 @@ export default class Query extends Executable {
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
-        const operator = client._operator;
-
-        if (operator == null) {
-            throw new Error(
-                "`client` must have an `operator` or an explicit payment transaction must be provided"
-            );
+        if (this._paymentTransactions.length > 0) {
+            return;
         }
 
         if (this._nodeIds.length == 0) {
             this._nodeIds = client._network.getNodeAccountIdsForExecute();
         }
 
+        const operator = client._operator;
+
         if (this._paymentTransactionId == null) {
-            this._paymentTransactionId = TransactionId.generate(operator.accountId);
+            if (this._isPaymentRequired()) {
+                if (operator != null) {
+                    this._paymentTransactionId = TransactionId.generate(
+                        operator.accountId
+                    );
+                } else {
+                    throw new Error(
+                        "`client` must have an `operator` or an explicit payment transaction must be provided"
+                    );
+                }
+            } else {
+                this._paymentTransactionId = TransactionId.generate(
+                    new AccountId(0)
+                );
+            }
         }
 
         let cost =
@@ -335,7 +349,7 @@ export default class Query extends Executable {
 /**
  * @param {TransactionId} paymentTransactionId
  * @param {AccountId} nodeId
- * @param {ClientOperator} operator
+ * @param {?ClientOperator} operator
  * @param {Hbar} paymentAmount
  * @returns {Promise<proto.ITransaction>}
  */
@@ -345,6 +359,27 @@ export async function _makePaymentTransaction(
     operator,
     paymentAmount
 ) {
+    const accountAmounts = [];
+
+    if (operator != null) {
+        accountAmounts.push({
+            accountID: operator.accountId._toProtobuf(),
+            amount: paymentAmount.negated().toTinybars(),
+        });
+        accountAmounts.push({
+            accountID: nodeId._toProtobuf(),
+            amount: paymentAmount.toTinybars(),
+        });
+    } else {
+        accountAmounts.push({
+            accountID: new AccountId(0)._toProtobuf(),
+            amount: paymentAmount.negated().toTinybars(),
+        });
+        accountAmounts.push({
+            accountID: nodeId._toProtobuf(),
+            amount: paymentAmount.toTinybars(),
+        });
+    }
     /**
      * @type {proto.ITransactionBody}
      */
@@ -357,33 +392,35 @@ export async function _makePaymentTransaction(
         },
         cryptoTransfer: {
             transfers: {
-                accountAmounts: [
-                    {
-                        accountID: operator.accountId._toProtobuf(),
-                        amount: paymentAmount.negated().toTinybars(),
-                    },
-                    {
-                        accountID: nodeId._toProtobuf(),
-                        amount: paymentAmount.toTinybars(),
-                    },
-                ],
+                accountAmounts,
             },
         },
     };
 
-    const bodyBytes = ProtoTransactionBody.encode(body).finish();
-    const signature = await operator.transactionSigner(bodyBytes);
+    /** @type {proto.ISignedTransaction} */
+    const signedTransaction = {
+        bodyBytes: ProtoTransactionBody.encode(body).finish(),
+    };
 
-    return {
-        bodyBytes,
-        sigMap: {
+    if (operator != null) {
+        const signature = await operator.transactionSigner(
+            /** @type {Uint8Array} */ (signedTransaction.bodyBytes)
+        );
+
+        signedTransaction.sigMap = {
             sigPair: [
                 {
                     pubKeyPrefix: operator.publicKey.toBytes(),
                     ed25519: signature,
                 },
             ],
-        },
+        };
+    }
+
+    return {
+        signedTransactionBytes: ProtoSignedTransaction.encode(
+            signedTransaction
+        ).finish(),
     };
 }
 

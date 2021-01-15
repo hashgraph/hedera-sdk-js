@@ -34,6 +34,7 @@ describe("TokenWipe", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -52,6 +53,7 @@ describe("TokenWipe", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(client)
@@ -62,6 +64,7 @@ describe("TokenWipe", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(client)
@@ -71,12 +74,14 @@ describe("TokenWipe", function () {
 
         await (
             await new TransferTransaction()
+                .setNodeAccountIds([response.nodeId])
                 .addTokenTransfer(token, account, 10)
                 .addTokenTransfer(token, client.operatorAccountId, -10)
                 .execute(client)
         ).getReceipt(client);
 
         let info = await new AccountInfoQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
@@ -90,6 +95,7 @@ describe("TokenWipe", function () {
 
         await (
             await new TokenWipeTransaction()
+                .setNodeAccountIds([response.nodeId])
                 .setTokenId(token)
                 .setAccountId(account)
                 .setAmount(10)
@@ -97,6 +103,7 @@ describe("TokenWipe", function () {
         ).getReceipt(client);
 
         info = await new AccountInfoQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(client);
 
@@ -109,14 +116,17 @@ describe("TokenWipe", function () {
         expect(relationship.isFrozen).to.be.false;
 
         await (
-            await new TokenDeleteTransaction().setTokenId(token).execute(client)
+            await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .execute(client)
         ).getReceipt(client);
 
         await (
             await (
                 await new AccountDeleteTransaction()
-                    .setAccountId(account)
                     .setNodeAccountIds([response.nodeId])
+                    .setAccountId(account)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)
@@ -145,6 +155,7 @@ describe("TokenWipe", function () {
             await (
                 await (
                     await new TokenWipeTransaction()
+                        .setNodeAccountIds([response.nodeId])
                         .setAccountId(account)
                         .setAmount(10)
                         .freezeWith(client)
@@ -158,8 +169,8 @@ describe("TokenWipe", function () {
         await (
             await (
                 await new AccountDeleteTransaction()
-                    .setAccountId(account)
                     .setNodeAccountIds([response.nodeId])
+                    .setAccountId(account)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)
@@ -200,6 +211,7 @@ describe("TokenWipe", function () {
         try {
             await (
                 await new TokenWipeTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAmount(10)
                     .execute(client)
@@ -209,7 +221,10 @@ describe("TokenWipe", function () {
         }
 
         await (
-            await new TokenDeleteTransaction().setTokenId(token).execute(client)
+            await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .execute(client)
         ).getReceipt(client);
 
         if (!err) {
@@ -235,6 +250,7 @@ describe("TokenWipe", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -253,6 +269,7 @@ describe("TokenWipe", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(client)
@@ -263,6 +280,7 @@ describe("TokenWipe", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(client)
@@ -275,6 +293,7 @@ describe("TokenWipe", function () {
         try {
             await (
                 await new TokenWipeTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .execute(client)
@@ -286,8 +305,8 @@ describe("TokenWipe", function () {
         await (
             await (
                 await new AccountDeleteTransaction()
-                    .setAccountId(account)
                     .setNodeAccountIds([response.nodeId])
+                    .setAccountId(account)
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(client)
@@ -296,7 +315,10 @@ describe("TokenWipe", function () {
         ).getReceipt(client);
 
         await (
-            await new TokenDeleteTransaction().setTokenId(token).execute(client)
+            await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .execute(client)
         ).getReceipt(client);
 
         if (!err) {

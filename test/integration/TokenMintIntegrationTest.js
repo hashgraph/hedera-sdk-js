@@ -32,6 +32,7 @@ describe("TokenMint", function () {
         const account = receipt.accountId;
 
         const token = await new TokenCreateTransaction()
+            .setNodeAccountIds([response.nodeId])
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
@@ -50,6 +51,7 @@ describe("TokenMint", function () {
 
         await (
             await new TokenMintTransaction()
+                .setNodeAccountIds([response.nodeId])
                 .setAmount(10)
                 .setTokenId(tokenId)
                 .execute(client)
@@ -57,6 +59,7 @@ describe("TokenMint", function () {
 
         await (
             await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
                 .setTokenId(tokenId)
                 .execute(client)
         ).getReceipt(client);
@@ -64,6 +67,7 @@ describe("TokenMint", function () {
         await (
             await (
                 await new AccountDeleteTransaction()
+                    .setNodeAccountIds([response.nodeId])
                     .setAccountId(account)
                     .setMaxTransactionFee(new Hbar(1))
                     .setNodeAccountIds([response.nodeId])
