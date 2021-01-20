@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.0.2
+## v2.0.14
 
 ### General Changes
     * All queries and transactions support setting fields in the constructor using
@@ -95,7 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Removed `Promise<Hbar> getCost(Client)`
     * Removed `setGenerateRecord(boolean)`
 
-### `AccountBalanceQuery` extends (Query)
+### `AccountBalanceQuery` extends [Query](#renamed-querybuilder-query)
     * Added `accountId: AccountId`
     * Added `contractId: ContractId`
     * Added `setContractId(ContractId)`
@@ -105,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Added `balance: Hbar`
     * Added `Map<TokenId, number> tokenBalances`
 
-### `AccountCreateTransaction` extends (Transaction)
+### `AccountCreateTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `key: Key`
     * Added `initialBalance: Hbar`
     * Added `receiverSignatureRequired: boolean`
@@ -114,7 +114,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Removed `setSendRecordThreshold(number)` and `setSendRecordThreshold(Hbar)`
     * Removed `setReceiveRecordThreshold(number)` and `setReceiveRecordThreshold(Hbar)`
 
-### `AccountDeleteTransaction` extends (Transaction)
+### `AccountDeleteTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `accountId: AccountId`
     * Added `transferAccountId: AccountId`
     * Renamed `setDeleteAccountId()` -> `setAccountId()`
@@ -131,16 +131,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Renamed `generateSendRecordThreshold` -> `sendRecordThreshold`
     * Renamed `generateReceiveRecordThreshold` -> `receiveRecordThreshold`
 
-### `AccountInfoQuery` extends (Query)
+### `AccountInfoQuery` extends [Query](#renamed-querybuilder-query)
     * Added `accountId: AccountId`
 
-### `AccountRecordsQuery` extends (Query)
+### `AccountRecordsQuery` extends [Query](#renamed-querybuilder-query)
     * Added `accountId: AccountId`
 
-### `AccountStakersQuery` extends (Query)
+### `AccountStakersQuery` extends [Query](#renamed-querybuilder-query)
     * Added `accountId: AccountId`
 
-### `AccountUpdateTransaction` extends (Transaction)
+### `AccountUpdateTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `accountId: AccountId`
     * Added `key: Key`
     * Added `initialBalance: Hbar`
@@ -154,21 +154,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed `CryptoTransferTranscation`
     * Use `TransferTransaction` instead.
 
-### `TransferTransaction` extends (Transaction)
+### `TransferTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `addTokenTransfer(TokenId, AccountId, number): TransferTransaction`
     * Added `Map<TokenId, Map<AccountId, number>> getTokenTransfers()`
     * Added `addHbarTransfer(AccountId, Hbar): TransferTransaction`
     * Added `Map<AccountId, Hbar> getHbarTransfers()`
 
-### Renamed `ContractBytecodeQuery` -> `ContractByteCodeQuery` extends (Query)
+### Renamed `ContractBytecodeQuery` -> `ContractByteCodeQuery` extends [Query](#renamed-querybuilder-query)
     * Added `contractId: ContractId`
 
-### `ContractCallQuery` extends (Query)
+### `ContractCallQuery` extends [Query](#renamed-querybuilder-query)
     * Added `contractId: ContractId`
     * Added `gas: number`
     * Added `getFunctionParameters(): Uint8Array`
 
-### `ContractCreateTransaction` extends (Transaction)
+### `ContractCreateTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `bytecodeFileId: FileId`
     * Added `adminKey: Key`
     * Added `gas: number`
@@ -178,12 +178,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Added `contractMemo: string`
     * Added `getConstructorParameters(): Uint8Array`
 
-### `ContractDeleteTransaction` extends (Transaction)
+### `ContractDeleteTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `contractId: ContractId`
     * Added `transferAccountId: AccountId`
     * Added `transferContractId: ContractId`
 
-### `ContractExecuteTransaction` extends (Transaction)
+### `ContractExecuteTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `contractId: ContractId`
     * Added `gas: number`
     * Added `payableAmount: Hbar`
@@ -200,12 +200,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Added `fromBytes(Uint8Array): ContractInfo`
     * Changed `autoRenewPeriod: number` -> `autoRenewPeriod: Duration`
 
-### `ContractInfoQuery` extends (Query)
+### `ContractInfoQuery` extends [Query](#renamed-querybuilder-query)
     * Added `contractId: ContractId`
 
 ### Removed `ContractRecordsQuery`
 
-### `ContractUpdateTransaction` extends (Transaction)
+### `ContractUpdateTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `contractId: ContractId`
     * Added `bytecodeFileId: FileId`
     * Added `adminKey: Key`
@@ -300,16 +300,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Added `autoRenewDuration: Duration`
     * Added `autoRenewAccountId: AccountId`
 
-### `TokenAssociateTransaction` extends (Transaction)
+### `TokenAssociateTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `accountId: AccountId`
     * Added `tokenIds: TokenId[]`
     * Renamed `addTokenId(TokenId)` -> `setTokenIds(TokenId[])`
 
-### `TokenBurnTransaction` extends (Transaction)
+### `TokenBurnTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `tokenId: TokenId`
     * Added `amount: number`
 
-### `TokenCreateTransaction` extends (Transaction)
+### `TokenCreateTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `treasuryAccountId: AccountID`
     * Added `adminKey: Key`
     * Added `kycKey: Key`
@@ -326,19 +326,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Renamed `setTreasury(AccountId)` ->`setTreasuryAccountId(AccountId)`
     * Renamed `setAutoRenewAccount(AccountId)` ->`setAutoRenewAccountId(AccountId)`
 
-### `TokenDeleteTransaction` extends (Transaction)
+### `TokenDeleteTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `tokenId: TokenId`
 
-### `TokenDisassociateTransaction` extends (Transaction)
+### `TokenDisassociateTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `accountId: AccountId`
     * Added `tokenIds: TokenId[]`
     * Renamed `addTokenId(TokenId)` -> `setTokenIds(TokenId[])`
 
-### `TokenFreezeTransaction` extends (Transaction)
+### `TokenFreezeTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `tokenId: TokenId`
     * Added `accountId: AccountId`
 
-### `TokenGrantKycTransaction` extends (Transaction)
+### `TokenGrantKycTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `tokenId: TokenId`
     * Added `accountId: AccountId`
 
@@ -352,25 +352,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Renamed `treasury: AccountId` -> `treasuryAccountId: AccountId`
     * Renamed `expiry: Timestamp` -> `expirationTime: Timestamp`
 
-### `TokenInfoQuery` extends (Query)
+### `TokenInfoQuery` extends [Query](#renamed-querybuilder-query)
     * Added `tokenId: TokenId`
 
-### `TokenMintTransaction` extends (Transaction)
+### `TokenMintTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `tokenId: TokenId`
     * Added `amount: number`
 
-### `TokenRevokeKycTransaction` extends (Transaction)
+### `TokenRevokeKycTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `tokenId: TokenId`
     * Added `accountId: AccountId`
 
 ### Removed `TokenTransferTransaction`
     * Use `TransferTransaction` instead.
 
-### `TokenUnfreezeTransaction` extends (Transaction)
+### `TokenUnfreezeTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `tokenId: TokenId`
     * Added `accountId: AccountId`
 
-### `TokenUpdateTransaction` extends (Transaction)
+### `TokenUpdateTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `tokenName: string`
     * Added `tokenSymbol: string`
     * Added `treasuryAccountId: AccountID`
@@ -388,7 +388,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Renamed `setTreasury(AccountId)` ->`setTreasuryAccountId(AccountId)`
     * Renamed `setAutoRenewAccount(AccountId)` ->`setAutoRenewAccountId(AccountId)`
 
-### `TokenWipeTransaction` extends (Transaction)
+### `TokenWipeTransaction` extends [Transaction](#combined-transactionbuilder-and-transaction)
     * Added `tokenId: TokenId`
     * Added `accountId: AccountId`
     * Added `amount: Long`
@@ -473,7 +473,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Removed `getConsnsusTopicRunningHash(): Uint8Array`
         * Use `topicRunningHash: Uint8Array` directly instead.
 
-### `TransactionReceiptQuery` extends (Query)
+### `TransactionReceiptQuery` extends [Query](#renamed-querybuilder-query)
     * Added `transactionId: TransactionId`
 
 ### `TransactionRecord`
@@ -484,7 +484,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * Removed `getContratcCreateResult(): ContractFunctionResult`
         * Use `contractFunctionResult: ContractFunctionResult` directly instead.
 
-### `TransactionRecordQuery` extends (Query)
+### `TransactionRecordQuery` extends [Query](#renamed-querybuilder-query)
     * Added `transactionId: TransactionId`
 
 ### `Hbar`
