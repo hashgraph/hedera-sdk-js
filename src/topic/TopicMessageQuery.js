@@ -22,6 +22,7 @@ export default class TopicMessageQuery {
      * @param {TopicId | string} [props.topicId]
      * @param {Timestamp} [props.startTime]
      * @param {Timestamp} [props.endTime]
+     * @param {TopicMessage} [props.errorHandler]
      * @param {Long | number} [props.limit]
      */
     constructor(props = {}) {
@@ -50,6 +51,15 @@ export default class TopicMessageQuery {
         this._endTime = null;
         if (props.endTime != null) {
             this.setEndTime(props.endTime);
+        }
+
+        /**
+         * @private
+         * @type {?TopicMessage}
+         */
+        this._errorHandler = null;
+        if (props.errorHandler != null) {
+            this.setErrorHandler(props.errorHandler);
         }
 
         /**
@@ -135,6 +145,16 @@ export default class TopicMessageQuery {
      */
     setLimit(limit) {
         this._limit = limit instanceof Long ? limit : Long.fromValue(limit);
+
+        return this;
+    }
+
+    /**
+     * @param {Long|TopicMessage} errorHandler
+     * @returns {TopicMessageQuery}
+     */
+    setErrorHandler(errorHandler) {
+        this._errorHandler = errorHandler instanceof Long? errorHandler: Long.fromValue(errorHandler);
 
         return this;
     }
