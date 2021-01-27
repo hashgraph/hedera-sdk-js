@@ -18,7 +18,7 @@ export default class FileInfo {
      * @param {FileId} props.fileId
      * @param {Long} props.size
      * @param {Timestamp} props.expirationTime
-     * @param {boolean} props.deleted
+     * @param {boolean} props.isDeleted
      * @param {KeyList} props.keys
      */
     constructor(props) {
@@ -48,7 +48,7 @@ export default class FileInfo {
          *
          * @readonly
          */
-        this.deleted = props.deleted;
+        this.isDeleted = props.isDeleted;
 
         /**
          * One of these keys must sign in order to delete the file.
@@ -77,7 +77,7 @@ export default class FileInfo {
             expirationTime: Timestamp._fromProtobuf(
                 /** @type {proto.ITimestamp} */ (info.expirationTime)
             ),
-            deleted: /** @type {boolean} */ (info.deleted),
+            isDeleted: /** @type {boolean} */ (info.deleted),
             keys:
                 info.keys != null
                     ? keyListFromProtobuf(info.keys)
@@ -94,7 +94,7 @@ export default class FileInfo {
             fileID: this.fileId._toProtobuf(),
             size: this.size,
             expirationTime: this.expirationTime._toProtobuf(),
-            deleted: this.deleted,
+            deleted: this.isDeleted,
             keys: keyListToProtobuf(this.keys),
         };
     }

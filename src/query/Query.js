@@ -218,7 +218,7 @@ export default class Query extends Executable {
             if (this._queryPayment == null) {
                 const actualCost = await this.getCost(client);
 
-                if (cost.toTinybars() > actualCost.toTinybars()) {
+                if (cost.toTinybars() < actualCost.toTinybars()) {
                     throw new MaxQueryPaymentExceeded(cost, actualCost);
                 }
 
