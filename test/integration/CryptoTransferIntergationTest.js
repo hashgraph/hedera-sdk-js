@@ -15,7 +15,6 @@ describe("CryptoTransfer", function () {
 
         const client = await newClient();
         const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
@@ -55,7 +54,6 @@ describe("CryptoTransfer", function () {
 
         const client = await newClient();
         const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
@@ -91,8 +89,6 @@ describe("CryptoTransfer", function () {
         this.timeout(10000);
 
         const client = await newClient();
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
