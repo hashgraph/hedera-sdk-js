@@ -184,6 +184,16 @@ export default class TopicUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {TopicUpdateTransaction}
+     */
+    clearTopicId() {
+        this._requireNotFrozen();
+        this._topicId = null;
+
+        return this;
+    }
+
+    /**
      * @returns {?string}
      */
     get topicMemo() {
@@ -197,6 +207,16 @@ export default class TopicUpdateTransaction extends Transaction {
     setTopicMemo(topicMemo) {
         this._requireNotFrozen();
         this._topicMemo = topicMemo;
+
+        return this;
+    }
+
+    /**
+     * @returns {TopicUpdateTransaction}
+     */
+    clearTopicMemo() {
+        this._requireNotFrozen();
+        this._topicMemo = null;
 
         return this;
     }

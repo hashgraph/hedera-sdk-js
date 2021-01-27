@@ -22,7 +22,7 @@ export default class TopicMessageQuery {
      * @param {TopicId | string} [props.topicId]
      * @param {Timestamp} [props.startTime]
      * @param {Timestamp} [props.endTime]
-     * @param {TopicMessage} [props.errorHandler]
+     * @param {(message: TopicMessage, error: Error)=> void} [props.errorHandler]
      * @param {Long | number} [props.limit]
      */
     constructor(props = {}) {
@@ -51,15 +51,6 @@ export default class TopicMessageQuery {
         this._endTime = null;
         if (props.endTime != null) {
             this.setEndTime(props.endTime);
-        }
-
-        /**
-         * @private
-         * @type {?TopicMessage}
-         */
-        this._errorHandler = null;
-        if (props.errorHandler != null) {
-            this.setErrorHandler(props.errorHandler);
         }
 
         /**
@@ -150,24 +141,32 @@ export default class TopicMessageQuery {
     }
 
     /**
-     * @param {Long|TopicMessage} errorHandler
+     * @param {(message: TopicMessage, error: Error)=> void} errorHandler
      * @returns {TopicMessageQuery}
      */
     setErrorHandler(errorHandler) {
-        this._errorHandler = errorHandler instanceof Long? errorHandler: Long.fromValue(errorHandler);
+        this._errorHandler =
+            errorHandler instanceof TopicMessage ? errorHandler : errorHandler;
 
         return this;
     }
 
     /**
      * @param {Client<*>} client
+     * @param {(message: TopicMessage, error: Error)=> void} errorHandler
      * @param {(message: TopicMessage) => void} listener
      * @returns {SubscriptionHandle}
      */
-    subscribe(client, listener) {
+    subscribe(client, errorHandler, listener) {
         const handle = new SubscriptionHandle();
 
-        this._makeServerStreamRequest(handle, 0, client, listener);
+        this._makeServerStreamRequest(
+            handle,
+            0,
+            client,
+            errorHandler,
+            listener
+        );
 
         return handle;
     }
@@ -176,10 +175,11 @@ export default class TopicMessageQuery {
      * @param {SubscriptionHandle} handle
      * @param {number} attempt
      * @param {import("../client/Client.js").default<Channel, MirrorChannel>} client
+     * @param {(message: TopicMessage, error: Error)=> void} errorHandler
      * @param {(message: TopicMessage) => void} listener
      * @returns {void}
      */
-    _makeServerStreamRequest(handle, attempt, client, listener) {
+    _makeServerStreamRequest(handle, attempt, client, errorHandler, listener) {
         /** @type {Map<string, proto.ConsensusTopicResponse[]>} */
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -206,17 +206,26 @@ export default class TopicMessageQuery {
                                 handle,
                                 attempt + 1,
                                 client,
+                                errorHandler,
                                 listener
                             );
                         }, 250 * 2 ** attempt);
                     }
+                    //  else {
+                    //     errorHandler(null, error);
+                    // }
                     return;
                 }
 
                 const message = proto.ConsensusTopicResponse.decode(data);
+                const topicMessage = TopicMessage._ofSingle(message);
 
                 if (message.chunkInfo == null) {
-                    listener(TopicMessage._ofSingle(message));
+                    try {
+                        listener(topicMessage);
+                    } catch (error) {
+                        errorHandler(topicMessage, error);
+                    }
                 } else {
                     const chunkInfo = /** @type {proto.IConsensusMessageChunkInfo} */ (message.chunkInfo);
                     const initialTransactionID = /** @type {proto.ITransactionID} */ (chunkInfo.initialTransactionID);
@@ -238,8 +247,12 @@ export default class TopicMessageQuery {
                     responses.push(message);
 
                     if (responses.length === total) {
-                        list.delete(transactionId);
-                        listener(TopicMessage._ofMany(responses));
+                        try {
+                            list.delete(transactionId);
+                            listener(TopicMessage._ofMany(responses));
+                        } catch (error) {
+                            errorHandler(topicMessage, error);
+                        }
                     }
                 }
             });
