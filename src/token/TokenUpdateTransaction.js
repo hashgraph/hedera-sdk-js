@@ -262,7 +262,7 @@ export default class TokenUpdateTransaction extends Transaction {
     /**
      * @returns {?string}
      */
-    get name() {
+    get tokenName() {
         return this._tokenName;
     }
 
@@ -280,7 +280,7 @@ export default class TokenUpdateTransaction extends Transaction {
     /**
      * @returns {?string}
      */
-    get symbol() {
+    get tokenSymbol() {
         return this._tokenSymbol;
     }
 
@@ -493,8 +493,8 @@ export default class TokenUpdateTransaction extends Transaction {
     _makeTransactionData() {
         return {
             token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
-            name: this.name,
-            symbol: this.symbol,
+            name: this.tokenName,
+            symbol: this.tokenSymbol,
             treasury:
                 this._treasuryAccountId != null
                     ? this._treasuryAccountId._toProtobuf()
