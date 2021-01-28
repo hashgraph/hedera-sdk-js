@@ -218,9 +218,10 @@ export default class TopicMessageQuery {
                 }
 
                 const message = proto.ConsensusTopicResponse.decode(data);
-                const topicMessage = TopicMessage._ofSingle(message);
 
                 if (message.chunkInfo == null) {
+                    const topicMessage = TopicMessage._ofSingle(message);
+
                     try {
                         listener(topicMessage);
                     } catch (error) {
@@ -247,9 +248,12 @@ export default class TopicMessageQuery {
                     responses.push(message);
 
                     if (responses.length === total) {
+                        const topicMessage = TopicMessage._ofMany(responses);
+
+                        list.delete(transactionId);
+
                         try {
-                            list.delete(transactionId);
-                            listener(TopicMessage._ofMany(responses));
+                            listener(topicMessage);
                         } catch (error) {
                             errorHandler(topicMessage, error);
                         }
