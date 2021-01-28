@@ -35,7 +35,7 @@ describe("FileAppend", function () {
 
         expect(info.fileId.toString()).to.be.equal(file.toString());
         expect(info.size.toInt()).to.be.equal(28);
-        expect(info.isdeleted).to.be.false;
+        expect(info.isDeleted).to.be.false;
         expect(info.keys.toArray().length).to.be.equal(1);
 
         // There should only be one key
@@ -59,7 +59,7 @@ describe("FileAppend", function () {
 
         expect(info.fileId.toString()).to.be.equal(file.toString());
         expect(info.size.toInt()).to.be.equal(56);
-        expect(info.isdeleted).to.be.false;
+        expect(info.isDeleted).to.be.false;
         expect(info.keys.toArray().length).to.be.equal(1);
 
         // There should only be one key
