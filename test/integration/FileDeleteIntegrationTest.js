@@ -33,7 +33,7 @@ describe("FileDelete", function () {
 
         expect(info.fileId.toString()).to.be.equal(file.toString());
         expect(info.size.toInt()).to.be.equal(28);
-        expect(info.deleted).to.be.false;
+        expect(info.isDeleted).to.be.false;
 
         // There should only be one key
         for (const key of info.keys) {
