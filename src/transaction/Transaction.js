@@ -641,7 +641,7 @@ export default class Transaction extends Executable {
 
     /**
      * @param {number} untilIndex
-     * @private
+     * @internal
      */
     _buildTransactions(untilIndex) {
         for (let i = this._transactions.length; i < untilIndex; i++) {

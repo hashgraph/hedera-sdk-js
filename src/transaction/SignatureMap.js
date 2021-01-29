@@ -17,12 +17,11 @@ export default class SignatureMap extends ObjectMap {
     static _fromTransaction(transaction) {
         const signatures = new SignatureMap();
 
-        if (transaction._nodeIds.length == 0) {
-            return signatures;
-        }
+        transaction._buildTransactions(transaction._nodeIds.length);
 
         for (let i = 0; i < transaction._nodeIds.length; i++) {
-            const sigMap = transaction._transactions[i].sigMap;
+            const sigMap = transaction._signedTransactions[i].sigMap;
+
             if (sigMap != null) {
                 signatures._set(
                     transaction._nodeIds[i],
