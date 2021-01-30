@@ -94,6 +94,10 @@ export default class TransactionRecordQuery extends Query {
             // continue to checking receipt status
         }
 
+        if (responseStatus != Status.Ok) {
+            return false;
+        }
+
         const transactionGetRecord = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
         const record = /** @type {proto.ITransactionRecord} */ (transactionGetRecord.transactionRecord);
         const receipt = /** @type {proto.ITransactionReceipt} */ (record.receipt);
