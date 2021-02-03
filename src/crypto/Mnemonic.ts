@@ -29,8 +29,11 @@ export class Mnemonic {
         return Ed25519PrivateKey.fromMnemonic(this, passphrase);
     }
 
-    public async _legacyToPrivateKey(): Promise<Ed25519PrivateKey> {
-        const index = -1;
+    /**
+     * Legacy 22 word mnemonic
+     */
+    public async toLegacyPrivateKey(): Promise<Ed25519PrivateKey> {
+        const index = this._isLegacy ? -1 : 0;
 
         const entropy = this._toLegacyEntropy()!;
         const password = new Uint8Array(entropy.length + 8);
@@ -52,6 +55,7 @@ export class Mnemonic {
             2048,
             32
         );
+
         return Ed25519PrivateKey.fromBytes(keyBytes);
     }
 
@@ -186,18 +190,15 @@ export class Mnemonic {
     }
 
     private _toLegacyEntropy(): Uint8Array {
-        if (!this._isLegacy) {
-            throw new Error("this mnemonic is not a legacy mnemonic");
-        }
-
-        const len256Bits = Math.ceil((256 + 8) / Math.log2(legacyWordList.length));
+        const list = this._isLegacy ? legacyWordList : bip39.wordlists.english;
         const numWords = this.words.length;
+        const len256Bits = Math.ceil((256 + 8) / Math.log2(list.length));
 
-        if (numWords !== len256Bits) {
-            throw new Error(`there should be ${len256Bits} words, not ${numWords}`);
-        }
+        // if (numWords !== len256Bits) {
+        //     throw new Error(`there should be ${len256Bits} words, not ${numWords}`);
+        // }
 
-        const indicies = this.words.map((word) => legacyWordList.indexOf(word.toLowerCase()));
+        const indicies = this.words.map((word) => list.indexOf(word.toLowerCase()));
         const data = _convertRadix(indicies, legacyWordList.length, 256, 33);
         const crc = data[ data.length - 1 ];
         const result = new Uint8Array(data.length - 1);
@@ -205,10 +206,10 @@ export class Mnemonic {
             result[ i ] = data[ i ] ^ crc;
         }
 
-        const crc2 = _crc8(result);
-        if (crc !== crc2) {
-            throw new Error("Invalid legacy mnemonic: fails the cyclic redundency check");
-        }
+        // const crc2 = _crc8(result);
+        // if (crc !== crc2) {
+        //     throw new Error("Invalid legacy mnemonic: fails the cyclic redundency check");
+        // }
 
         return result;
     }

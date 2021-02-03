@@ -2,7 +2,7 @@ import { BaseClient } from "../../src/BaseClient";
 import { Hbar } from "../../src/Hbar";
 import { grpc } from "@improbable-eng/grpc-web";
 import ProtobufMessage = grpc.ProtobufMessage;
-import { CryptoTransferTransaction, Ed25519PrivateKey } from "../../src/exports";
+import { TransferTransaction, Ed25519PrivateKey } from "../../src/exports";
 
 export const privateKey = Ed25519PrivateKey.fromString("302e020100300506032b657004220420db484b828e64b2d8f12ce3c0a0e93a0b8cce7af1bb8f39c97732394482538e10");
 
@@ -24,9 +24,9 @@ class MockClient extends BaseClient {
 
 export const mockClient = new MockClient();
 
-export const mockTransaction = new CryptoTransferTransaction()
-    .addSender({ shard: 0, realm: 0, account: 2 }, 100)
-    .addRecipient({ shard: 0, realm: 0, account: 3 }, 100)
+export const mockTransaction = new TransferTransaction()
+    .addHbarTransfer({ shard: 0, realm: 0, account: 2 }, -100)
+    .addHbarTransfer({ shard: 0, realm: 0, account: 3 }, 100)
     .setMaxTransactionFee(1e6)
     .setTransactionId({
         account: { shard: 0, realm: 0, account: 3 },

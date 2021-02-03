@@ -1,5 +1,7 @@
 import * as crypto from "crypto";
+import * as hex from "@stablelib/hex";
 import { Hmac, HashAlgorithm } from "./Hmac";
+import { Pbkdf2 } from "./Pbkdf2";
 
 // we could go through the whole BS of producing a DER-encoded structure but it's quite simple
 // for Ed25519 keys and we don't have to shell out to a potentially broken lib
@@ -8,6 +10,32 @@ export const ed25519PrivKeyPrefix = "302e020100300506032b657004220420";
 export const ed25519PubKeyPrefix = "302a300506032b6570032100";
 
 export const hmacAlgo = "sha384";
+
+/**
+ * SLIP-10/BIP-32 child key derivation
+ * without using chaincode
+ */
+export async function legacyDeriveChildKey(
+    seed: Uint8Array,
+    index: number,
+    length: number,
+): Promise<Uint8Array> {
+    const password = new Uint8Array(seed.length + 8);
+    password.set(seed, 0);
+    new DataView(password.buffer).setUint32(seed.length, index, false);
+
+    const salt = new Uint8Array([-1]);
+
+    const passwordStr = hex.encode(password);
+
+    return await Pbkdf2.deriveKey(
+        HashAlgorithm.Sha512,
+        password,
+        salt,
+        2048,
+        length * 8,
+    );
+}
 
 /** SLIP-10/BIP-32 child key derivation */
 export async function deriveChildKey2(

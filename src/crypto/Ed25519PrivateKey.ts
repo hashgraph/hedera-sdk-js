@@ -3,6 +3,7 @@ import { Ed25519PublicKey } from "./Ed25519PublicKey";
 import { Mnemonic } from "./Mnemonic";
 import {
     arraysEqual,
+    legacyDeriveChildKey,
     deriveChildKey,
     deriveChildKey2,
     ed25519PrivKeyPrefix
@@ -132,7 +133,7 @@ export class Ed25519PrivateKey {
         passphrase: string
     ): Promise<Ed25519PrivateKey> {
         if (mnemonic._isLegacy) {
-            return mnemonic._legacyToPrivateKey();
+            return mnemonic.toLegacyPrivateKey();
         }
 
         const input = mnemonic.toString();
@@ -248,6 +249,18 @@ export class Ed25519PrivateKey {
 
         return key;
     }
+
+    // public async legacyDerive(index: number): Promise<Ed25519PrivateKey> {
+    //     const keyBytes = await legacyDeriveChildKey(
+    //         this._keyData.subarray(0, 32),
+    //         index,
+    //         32
+    //     );
+
+    //     const key = Ed25519PrivateKey.fromBytes(keyBytes);
+
+    //     return key;
+    // }
 
     /** Check if this private key supports deriving child keys */
     public get supportsDerivation(): boolean {
