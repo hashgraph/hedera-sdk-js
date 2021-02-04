@@ -250,17 +250,14 @@ export class Ed25519PrivateKey {
         return key;
     }
 
-    // public async legacyDerive(index: number): Promise<Ed25519PrivateKey> {
-    //     const keyBytes = await legacyDeriveChildKey(
-    //         this._keyData.subarray(0, 32),
-    //         index,
-    //         32
-    //     );
+    public async legacyDerive(index: number): Promise<Ed25519PrivateKey> {
+        const keyBytes = await legacyDeriveChildKey(
+            this._keyData.subarray(0, 32),
+            index
+        );
 
-    //     const key = Ed25519PrivateKey.fromBytes(keyBytes);
-
-    //     return key;
-    // }
+        return Ed25519PrivateKey.fromBytes(keyBytes);
+    }
 
     /** Check if this private key supports deriving child keys */
     public get supportsDerivation(): boolean {

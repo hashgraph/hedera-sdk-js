@@ -6,6 +6,8 @@ import legacyWordList from "./legacyWordList";
 import BigNumber from "bignumber.js";
 import { HashAlgorithm } from "./Hmac";
 import { Pbkdf2 } from "./Pbkdf2";
+import { Sha256 } from "./Sha256";
+import { legacyDeriveChildKey } from "./util";
 
 /** result of `generateMnemonic()` */
 export class Mnemonic {
@@ -34,27 +36,8 @@ export class Mnemonic {
      */
     public async toLegacyPrivateKey(): Promise<Ed25519PrivateKey> {
         const index = this._isLegacy ? -1 : 0;
-
-        const entropy = this._toLegacyEntropy()!;
-        const password = new Uint8Array(entropy.length + 8);
-        password.set(entropy, 0);
-
-        const view = new DataView(
-            password.buffer,
-            password.byteOffset + entropy.length,
-            8
-        );
-        view.setInt32(0, index);
-        view.setInt32(4, index);
-
-        const salt = Uint8Array.from([ 0xFF ]);
-        const keyBytes = await Pbkdf2.deriveKey(
-            HashAlgorithm.Sha512,
-            password,
-            salt,
-            2048,
-            32
-        );
+        const entropy = this._isLegacy ? this._toLegacyEntropy()! : await this._toLegacyEntropy2()!;
+        const keyBytes = await legacyDeriveChildKey(entropy, index);
 
         return Ed25519PrivateKey.fromBytes(keyBytes);
     }
@@ -190,15 +173,14 @@ export class Mnemonic {
     }
 
     private _toLegacyEntropy(): Uint8Array {
-        const list = this._isLegacy ? legacyWordList : bip39.wordlists.english;
         const numWords = this.words.length;
-        const len256Bits = Math.ceil((256 + 8) / Math.log2(list.length));
+        const len256Bits = Math.ceil((256 + 8) / Math.log2(legacyWordList.length));
 
-        // if (numWords !== len256Bits) {
-        //     throw new Error(`there should be ${len256Bits} words, not ${numWords}`);
-        // }
+        if (numWords !== len256Bits) {
+            throw new Error(`there should be ${len256Bits} words, not ${numWords}`);
+        }
 
-        const indicies = this.words.map((word) => list.indexOf(word.toLowerCase()));
+        const indicies = this.words.map((word) => legacyWordList.indexOf(word.toLowerCase()));
         const data = _convertRadix(indicies, legacyWordList.length, 256, 33);
         const crc = data[ data.length - 1 ];
         const result = new Uint8Array(data.length - 1);
@@ -206,12 +188,55 @@ export class Mnemonic {
             result[ i ] = data[ i ] ^ crc;
         }
 
-        // const crc2 = _crc8(result);
-        // if (crc !== crc2) {
-        //     throw new Error("Invalid legacy mnemonic: fails the cyclic redundency check");
-        // }
+        const crc2 = _crc8(result);
+        if (crc !== crc2) {
+            throw new Error("Invalid legacy mnemonic: fails the cyclic redundency check");
+        }
 
         return result;
+    }
+
+    private async _toLegacyEntropy2(): Promise<Uint8Array> {
+        const concatBitsLen = this.words.length * 11;
+        const concatBits: boolean[] = [];
+        concatBits.fill(false, 0, concatBitsLen);
+
+        for (const [ wordIndex, word ] of this.words.entries()) {
+            const index = bip39.wordlists.english.indexOf(word.toLowerCase());
+
+            if (index < 0) {
+                throw new Error(`Word not found in wordlist: ${word}`);
+            }
+
+            for (let i = 0; i < 11; i += 1) {
+                concatBits[ (wordIndex * 11) + i ] = (index & (1 << (10 - i))) !== 0;
+            }
+        }
+
+        const checksumBitsLen = concatBitsLen / 33;
+        const entropyBitsLen = concatBitsLen - checksumBitsLen;
+
+        const entropy = new Uint8Array(entropyBitsLen / 8);
+
+        for (let i = 0; i < entropyBitsLen; i += 1) {
+            for (let j = 0; j < 8; j += 1) {
+                if (concatBits[ (i * 8) + j ]) {
+                    entropy[ i ] |= 1 << (7 - j);
+                }
+            }
+        }
+
+        // Checksum validation
+        const hash = await Sha256.hash(entropy);
+        const hashBits = bytesToBits(hash);
+
+        for (let i = 0; i < checksumBitsLen; i += 1) {
+            if (concatBits[ entropyBitsLen + i ] !== hashBits[ i ]) {
+                throw new Error("Checksum mismatch");
+            }
+        }
+
+        return entropy;
     }
 
     public toString(): string {
@@ -251,4 +276,18 @@ function _convertRadix(
         result[ i ] = rem.toNumber();
     }
     return result;
+}
+
+function bytesToBits(data: Uint8Array): boolean[] {
+    const bits: boolean[] = [];
+    bits.fill(false, 0, data.length * 8);
+
+    // eslint-disable-next-line unicorn/no-for-loop
+    for (let i = 0; i < data.length; i += 1) {
+        for (let j = 0; j < 8; j += 1) {
+            bits[ (i * 8) + j ] = (data[ i ] & (1 << (7 - j))) !== 0;
+        }
+    }
+
+    return bits;
 }

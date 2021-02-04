@@ -15,25 +15,28 @@ export const hmacAlgo = "sha384";
  * SLIP-10/BIP-32 child key derivation
  * without using chaincode
  */
-export async function legacyDeriveChildKey(
+export function legacyDeriveChildKey(
     seed: Uint8Array,
-    index: number,
-    length: number,
+    index: number
 ): Promise<Uint8Array> {
     const password = new Uint8Array(seed.length + 8);
     password.set(seed, 0);
-    new DataView(password.buffer).setUint32(seed.length, index, false);
 
-    const salt = new Uint8Array([-1]);
+    const view = new DataView(
+        password.buffer,
+        password.byteOffset + seed.length,
+        8
+    );
+    view.setInt32(0, index >= 0 ? 0 : 0xFF);
+    view.setInt32(4, index);
 
-    const passwordStr = hex.encode(password);
-
-    return await Pbkdf2.deriveKey(
+    const salt = Uint8Array.from([ 0xFF ]);
+    return Pbkdf2.deriveKey(
         HashAlgorithm.Sha512,
         password,
         salt,
         2048,
-        length * 8,
+        32
     );
 }
 
