@@ -3,12 +3,13 @@ import BadMnemonicError from "./BadMnemonicError.js";
 import BadMnemonicReason from "./BadMnemonicReason.js";
 import legacyWords from "./words/legacy.js";
 import bip39Words from "./words/bip39.js";
-import BigNumber from "bignumber.js";
 import * as sha256 from "./primitive/sha256.js";
 import * as pbkdf2 from "./primitive/pbkdf2.js";
 import nacl from "tweetnacl";
 import * as hmac from "./primitive/hmac.js";
 import * as slip10 from "./primitive/slip10.js";
+import * as entropy from "./util/entropy.js";
+import * as derive from "./util/derive.js";
 
 /**
  * Multi-word mnemonic phrase (BIP-39).
@@ -68,9 +69,9 @@ export default class Mnemonic {
 
         // inlined from (ISC) with heavy alternations for modern crypto
         // https://github.com/bitcoinjs/bip39/blob/8461e83677a1d2c685d0d5a9ba2a76bd228f74c6/ts_src/index.ts#L125
-        const entropy = nacl.randomBytes(neededEntropy);
-        const entropyBits = bytesToBinary(Array.from(entropy));
-        const checksumBits = await deriveChecksumBits(entropy);
+        const seed = nacl.randomBytes(neededEntropy);
+        const entropyBits = bytesToBinary(Array.from(seed));
+        const checksumBits = await deriveChecksumBits(seed);
         const bits = entropyBits + checksumBits;
         const chunks = bits.match(/(.{1,11})/g);
 
@@ -116,7 +117,7 @@ export default class Mnemonic {
                 );
             }
 
-            return this._toLegacyPrivateKey();
+            return this.toLegacyPrivateKey();
         }
 
         return await this._toPrivateKey(passphrase);
@@ -179,8 +180,8 @@ export default class Mnemonic {
                 );
             }
 
-            const [entropy, checksum] = this._toLegacyEntropy();
-            const newChecksum = _crc8(entropy);
+            const [seed, checksum] = entropy.legacy1(this.words, legacyWords);
+            const newChecksum = entropy.crc8(seed);
 
             if (checksum !== newChecksum) {
                 throw new BadMnemonicError(
@@ -288,53 +289,21 @@ export default class Mnemonic {
     }
 
     /**
-     * @private
      * @returns {Promise<PrivateKey>}
      */
-    async _toLegacyPrivateKey() {
-        const index = -1;
-        const [entropy] = this._toLegacyEntropy();
+    async toLegacyPrivateKey() {
+        const index = this._isLegacy ? -1 : 0;
 
-        const password = new Uint8Array(entropy.length + 8);
-        password.set(entropy, 0);
-
-        const view = new DataView(
-            password.buffer,
-            password.byteOffset + entropy.length,
-            8
-        );
-        view.setInt32(0, index);
-        view.setInt32(4, index);
-
-        const salt = Uint8Array.from([0xff]);
-        const keyData = await pbkdf2.deriveKey(
-            hmac.HashAlgorithm.Sha512,
-            password,
-            salt,
-            2048,
-            32
-        );
-
-        return PrivateKey.fromBytes(keyData);
-    }
-
-    /**
-     * @private
-     * @returns {[Uint8Array, number]}
-     */
-    _toLegacyEntropy() {
-        const indicies = this.words.map((word) =>
-            legacyWords.indexOf(word.toLowerCase())
-        );
-        const data = _convertRadix(indicies, legacyWords.length, 256, 33);
-        const checksum = data[data.length - 1];
-        const result = new Uint8Array(data.length - 1);
-
-        for (let i = 0; i < data.length - 1; i += 1) {
-            result[i] = data[i] ^ checksum;
+        let seed;
+        if (this._isLegacy) {
+            [seed] = entropy.legacy1(this.words, legacyWords);
+        } else {
+            seed = await entropy.legacy2(this.words, bip39Words);
         }
 
-        return [result, checksum];
+        const keyData = await derive.legacy(seed, index);
+
+        return PrivateKey.fromBytes(keyData);
     }
 
     /**
@@ -343,50 +312,6 @@ export default class Mnemonic {
     toString() {
         return this.words.join(" ");
     }
-}
-
-/**
- * @param {Uint8Array} data
- * @returns {number}
- */
-function _crc8(data) {
-    let crc = 0xff;
-
-    for (let i = 0; i < data.length - 1; i += 1) {
-        crc ^= data[i];
-        for (let j = 0; j < 8; j += 1) {
-            crc = (crc >>> 1) ^ ((crc & 1) === 0 ? 0 : 0xb2);
-        }
-    }
-
-    return crc ^ 0xff;
-}
-
-/**
- * @param {number[]} nums
- * @param {number} fromRadix
- * @param {number} toRadix
- * @param {number} toLength
- * @returns {Uint8Array}
- */
-function _convertRadix(nums, fromRadix, toRadix, toLength) {
-    let num = new BigNumber(0);
-
-    for (const element of nums) {
-        num = num.times(fromRadix);
-        num = num.plus(element);
-    }
-
-    const result = new Uint8Array(toLength);
-
-    for (let i = toLength - 1; i >= 0; i -= 1) {
-        const tem = num.dividedToIntegerBy(toRadix);
-        const rem = num.modulo(toRadix);
-        num = tem;
-        result[i] = rem.toNumber();
-    }
-
-    return result;
 }
 
 /**
