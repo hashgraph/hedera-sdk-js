@@ -73,7 +73,7 @@ export default class TokenAssociateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const associateToken = /** @type {proto.ITokenAssociateTransactionBody} */ (body.tokenCreation);
+        const associateToken = /** @type {proto.ITokenAssociateTransactionBody} */ (body.tokenAssociate);
 
         return Transaction._fromProtobufTransactions(
             new TokenAssociateTransaction({

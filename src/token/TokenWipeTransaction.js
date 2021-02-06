@@ -82,7 +82,7 @@ export default class TokenWipeTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const wipeToken = /** @type {proto.ITokenWipeAccountTransactionBody} */ (body.tokenCreation);
+        const wipeToken = /** @type {proto.ITokenWipeAccountTransactionBody} */ (body.tokenWipe);
 
         return Transaction._fromProtobufTransactions(
             new TokenWipeTransaction({

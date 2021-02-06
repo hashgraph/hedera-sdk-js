@@ -59,7 +59,7 @@ export default class TokenDeleteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const deleteToken = /** @type {proto.ITokenDeleteTransactionBody} */ (body.tokenCreation);
+        const deleteToken = /** @type {proto.ITokenDeleteTransactionBody} */ (body.tokenDeletion);
 
         return Transaction._fromProtobufTransactions(
             new TokenDeleteTransaction({

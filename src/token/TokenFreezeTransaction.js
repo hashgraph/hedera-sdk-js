@@ -70,7 +70,7 @@ export default class TokenFreezeTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const freezeToken = /** @type {proto.ITokenFreezeAccountTransactionBody} */ (body.tokenCreation);
+        const freezeToken = /** @type {proto.ITokenFreezeAccountTransactionBody} */ (body.tokenFreeze);
 
         return Transaction._fromProtobufTransactions(
             new TokenFreezeTransaction({
