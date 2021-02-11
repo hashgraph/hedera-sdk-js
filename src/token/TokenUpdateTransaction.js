@@ -185,7 +185,7 @@ export default class TokenUpdateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const update = /** @type {proto.ITokenUpdateTransactionBody} */ (body.tokenCreation);
+        const update = /** @type {proto.ITokenUpdateTransactionBody} */ (body.tokenUpdate);
 
         return Transaction._fromProtobufTransactions(
             new TokenUpdateTransaction({
