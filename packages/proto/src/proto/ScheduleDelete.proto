@@ -25,9 +25,14 @@ package proto;
 option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
+import "BasicTypes.proto";
+
+
 /*
-Submit an arbitrary (serialized) Transaction to the network without prechecks. Requires superuser privileges.
+Deletes a Scheduled Transaction from the ledger.
+The operation must be signed by the specified Admin Key of the Scheduled Transaction. If admin key is not set, Transaction will result in SCHEDULE_IS_IMMUTABLE.
+Once deleted, sign and delete transactions will resolve to INVALID_SCHEDULE_ID.
 */
-message UncheckedSubmitBody {
-    bytes transactionBytes = 1; // The serialized bytes of the Transaction to be submitted without prechecks
+message ScheduleDeleteTransactionBody {
+  ScheduleID scheduleID = 1; // The ID of the Scheduled Entity
 }

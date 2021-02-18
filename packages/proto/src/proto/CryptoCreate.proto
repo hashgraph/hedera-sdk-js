@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,4 +46,5 @@ message CryptoCreateTransactionBody {
     ShardID shardID = 10; // The shard in which this account is created
     RealmID realmID = 11; // The realm in which this account is created (leave this null to create a new realm)
     Key newRealmAdminKey = 12; // If realmID is null, then this the admin key for the new realm that will be created
+    string memo = 13; // The memo associated with the account (UTF-8 encoding max 100 bytes)
 }

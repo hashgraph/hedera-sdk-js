@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,6 +59,7 @@ message CryptoGetInfoResponse {
         Duration autoRenewPeriod = 13; // The duration for expiration time will extend every this many seconds. If there are insufficient funds, then it extends as long as possible. If it is empty when it expires, then it is deleted.
         repeated LiveHash liveHashes = 14; // All of the livehashes attached to the account (each of which is a hash along with the keys that authorized it and can delete it)
         repeated TokenRelationship tokenRelationships = 15; // All tokens related to this account
+        string memo = 16; // The memo associated with the account
     }
     AccountInfo accountInfo = 2; // Info about the account (a state proof can be generated for this)
 }

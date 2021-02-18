@@ -13,6 +13,7 @@ import MirrorConsensusService = proto.MirrorConsensusService;
 import NetworkService = proto.NetworkService;
 import SmartContractService = proto.SmartContractService;
 import TokenService = proto.TokenService;
+import ScheduleService = proto.ScheduleService
 
 export {
     Reader,
@@ -25,6 +26,7 @@ export {
     NetworkService,
     SmartContractService,
     TokenService,
+    ScheduleService,
 };
 
 import AccountID = proto.AccountID;
@@ -38,6 +40,7 @@ import SignedTransaction = proto.SignedTransaction;
 import TransactionList = proto.TransactionList;
 import TransactionBody = proto.TransactionBody;
 import ResponseType = proto.ResponseType;
+import ScheduleID = proto.ScheduleID
 
 export {
     ResponseCodeEnum,
@@ -51,6 +54,7 @@ export {
     FileID,
     AccountID,
     ContractID,
+    ScheduleID,
 };
 
 import IProxyStaker = proto.IProxyStaker;
@@ -63,6 +67,8 @@ import ICryptoTransferTransactionBody = proto.ICryptoTransferTransactionBody;
 import ICryptoUpdateTransactionBody = proto.ICryptoUpdateTransactionBody;
 import ICryptoDeleteTransactionBody = proto.ICryptoDeleteTransactionBody;
 import ICryptoCreateTransactionBody = proto.ICryptoCreateTransactionBody;
+import IScheduleCreateTransactionBody = proto.IScheduleCreateTransactionBody;
+import IScheduleDeleteTransactionBody = proto.IScheduleDeleteTransactionBody;
 import IAllProxyStakers = proto.IAllProxyStakers;
 import ICryptoGetStakersResponse = proto.ICryptoGetStakersResponse;
 import ICryptoGetStakersQuery = proto.ICryptoGetStakersQuery;
@@ -179,6 +185,16 @@ import TransactionReceipt = proto.TransactionReceipt;
 import TransactionRecord = proto.TransactionRecord;
 
 import ISignatureMap = proto.ISignatureMap;
+
+//scheduled transactions
+
+import IScheduleCreateTransaction = proto.ScheduleCreateTransactionBody;
+import IScheduleGetInfoQuery = proto.ScheduleGetInfoQuery;
+import IScheduleDeleteTransaction = proto.ScheduleDeleteTransactionBody;
+import IScheduleSignTransaction = proto.ScheduleSignTransactionBody;
+import IScheduleInfo = proto.ScheduleInfo
+import ScheduleGetInfoResponse = proto.ScheduleGetInfoResponse
+
 
 export {
     IAccountID,
@@ -304,4 +320,13 @@ export {
     TransactionReceipt,
     TransactionRecord,
     ITokenTransferList,
+    //scheduled support
+    IScheduleCreateTransaction,
+    IScheduleGetInfoQuery,
+    IScheduleDeleteTransaction,
+    IScheduleSignTransaction,
+    ScheduleGetInfoResponse,
+    IScheduleInfo,
+    IScheduleCreateTransactionBody,
+    IScheduleDeleteTransactionBody,
 };

@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,4 +52,5 @@ message CryptoUpdateTransactionBody {
         bool receiverSigRequired = 10 [deprecated = true];  // [Deprecated] Do NOT use this field to set a false value because the server cannot distinguish from the default value. Use receiverSigRequiredWrapper field for this purpose.
         google.protobuf.BoolValue receiverSigRequiredWrapper = 13; // If true, this account's key must sign any transaction depositing into this account (in addition to all withdrawals)
     }
+    google.protobuf.StringValue memo = 14; // If set, the new memo to be associated with the account (UTF-8 encoding max 100 bytes)
 }

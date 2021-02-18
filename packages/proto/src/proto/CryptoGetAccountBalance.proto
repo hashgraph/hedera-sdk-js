@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ option java_multiple_files = true;
 import "BasicTypes.proto";
 import "QueryHeader.proto";
 import "ResponseHeader.proto";
+import "Timestamp.proto";
 
 /* Get the balance of a cryptocurrency account. This returns only the balance, so it is a smaller
 reply than CryptoGetInfo, which returns the balance plus additional information. */
@@ -39,21 +40,6 @@ message CryptoGetAccountBalanceQuery {
     }
 }
 
-/* A number of <i>transferable units</i> of a certain token.
-
-The transferable unit of a token is its smallest denomination, as given by the token's <tt>decimals</tt> property---each minted token contains <tt>10<sup>decimals</sup></tt> transferable units. For example, we could think of the cent as the transferable unit of the US dollar (<tt>decimals=2</tt>); and the tinybar as the transferable unit of hbar (<tt>decimals=8</tt>).
-
-Transferable units are not directly comparable across different tokens. */
-message TokenBalance {
-    TokenID tokenId = 1; // A unique token id
-    uint64 balance = 2; // A number of transferable units of the identified token
-}
-
-/* A sequence of token balances, for use in a v2 account balances CSV export. */
-message TokenBalances {
-    repeated TokenBalance tokenBalances = 1;
-}
-
 /* Response when the client sends the node CryptoGetAccountBalanceQuery */
 message CryptoGetAccountBalanceResponse {
     ResponseHeader header = 1; // Standard response from node to client, including the requested fields: cost, or state proof, or both, or neither.
@@ -61,5 +47,3 @@ message CryptoGetAccountBalanceResponse {
     uint64 balance = 3; // The current balance, in tinybars.
     repeated TokenBalance tokenBalances = 4; // The token balances possessed by the target account.
 }
-
-

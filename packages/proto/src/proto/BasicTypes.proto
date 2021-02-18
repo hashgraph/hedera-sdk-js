@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,10 +61,19 @@ message ContractID {
     int64 contractNum = 3; //A nonnegative number unique within its realm
 }
 
-/* The ID for a transaction. This is used for retrieving receipts and records for a transaction, for appending to a file right after creating it, for instantiating a smart contract with bytecode in a file just created, and internally by the network for detecting when duplicate transactions are submitted. A user might get a transaction processed faster by submitting it to N nodes, each with a different node account, but all with the same TransactionID. Then, the transaction will take effect when the first of all those nodes submits the transaction and it reaches consensus. The other transactions will not take effect. So this could make the transaction take effect faster, if any given node might be slow. However, the full transaction fee is charged for each transaction, so the total fee is N times as much if the transaction is sent to N nodes. */
+/*
+The ID for a transaction. This is used for retrieving receipts and records for a transaction, for appending to a file right after creating it, for instantiating a smart contract with bytecode in a file just created, and internally by the network for detecting when duplicate transactions are submitted. A user might get a transaction processed faster by submitting it to N nodes, each with a different node account, but all with the same TransactionID. Then, the transaction will take effect when the first of all those nodes submits the transaction and it reaches consensus. The other transactions will not take effect. So this could make the transaction take effect faster, if any given node might be slow. However, the full transaction fee is charged for each transaction, so the total fee is N times as much if the transaction is sent to N nodes.
+Applicable to Scheduled Transactions:
+- The ID of a Scheduled Transaction has transactionValidStart and accountIDs inherited from the ScheduleCreate transaction that created it. That is to say that they are equal
+- The scheduled property is true for Scheduled Transactions
+- transactionValidStart, accountID and scheduled properties should be omitted
+- Scheduled Transactions should be submitted with only nonce populated (if desired). Nonce is an additional option presented to users so that they can create multiple sequential Scheduled Transactions that have the same transaction body.
+*/
 message TransactionID {
     Timestamp transactionValidStart = 1; // The transaction is invalid if consensusTimestamp < transactionID.transactionStartValid
-    AccountID accountID = 2; //The Account ID that paid for this transaction
+    AccountID accountID = 2; // The Account ID that paid for this transaction
+    bool scheduled = 3; // Whether the Transaction is of type Scheduled or no
+    bytes nonce = 4; // Used to manipulate the uniqueness check for idempotent schedule transaction creation
 }
 
 /* An account, and the amount that it sends or receives during a cryptocurrency or token transfer. */
@@ -98,6 +107,13 @@ message TokenID {
     int64 tokenNum = 3; // A nonnegative token number
 }
 
+/* Unique identifier for a Schedule */
+message ScheduleID {
+    int64 shardNum = 1; // A nonnegative shard number
+    int64 realmNum = 2; // A nonnegative realm number
+    int64 scheduleNum = 3; // A nonnegative schedule number
+}
+
 /* Possible Freeze statuses returned on TokenGetInfoQuery or CryptoGetInfoResponse in TokenRelationship */
 enum TokenFreezeStatus {
     FreezeNotApplicable = 0;
@@ -128,8 +144,8 @@ message Key {
     oneof key {
         ContractID contractID = 1; // smart contract instance that is authorized as if it had signed with a key
         bytes ed25519 = 2; // ed25519 public key bytes
-        bytes RSA_3072 = 3; //RSA-3072 public key bytes
-        bytes ECDSA_384 = 4; //ECDSA with the p-384 curve public key bytes
+        bytes RSA_3072 = 3; // RSA-3072 public key bytes
+        bytes ECDSA_384 = 4; // ECDSA with the p-384 curve public key bytes
         ThresholdKey thresholdKey = 5; // a threshold N followed by a list of M keys, any N of which are required to form a valid signature
         KeyList keyList = 6; // A list of Keys of the Key type.
     }
@@ -252,7 +268,7 @@ enum HederaFunctionality {
     ConsensusSubmitMessage = 54; // Submit message to topic
     UncheckedSubmit = 55;
     TokenCreate = 56; // Create Token
-    TokenGetInfo = 58; // Get token information
+    TokenGetInfo = 58; // Get Token information
     TokenFreezeAccount = 59; // Freeze Account
     TokenUnfreezeAccount = 60; // Unfreeze Account
     TokenGrantKycToAccount = 61; // Grant KYC to Account
@@ -264,6 +280,10 @@ enum HederaFunctionality {
     TokenAccountWipe = 67; // Wipe token amount from Account holder
     TokenAssociateToAccount = 68; // Associate tokens to an account
     TokenDissociateFromAccount = 69; // Dissociate tokens from an account
+    ScheduleCreate = 70; // Create Scheduled Transaction
+    ScheduleDelete = 71; // Delete Scheduled Transaction
+    ScheduleSign = 72; // Sign Scheduled Transaction
+    ScheduleGetInfo = 73; // Get Scheduled Transaction Information
 }
 
 /*
@@ -356,7 +376,6 @@ message ServicesConfigurationList {
     repeated Setting nameValue = 1; // list of name value pairs of the application properties
 }
 
-
 /* Token's information related to the given Account */
 message TokenRelationship {
     TokenID tokenId = 1; // The ID of the token
@@ -364,4 +383,21 @@ message TokenRelationship {
     uint64 balance = 3; // The balance that the Account holds in the smallest denomination
     TokenKycStatus kycStatus = 4; // The KYC status of the account (KycNotApplicable, Granted or Revoked). If the token does not have KYC key, KycNotApplicable is returned
     TokenFreezeStatus freezeStatus = 5; // The Freeze status of the account (FreezeNotApplicable, Frozen or Unfrozen). If the token does not have Freeze key, FreezeNotApplicable is returned
+    uint32 decimals = 6; // Tokens divide into <tt>10<sup>decimals</sup></tt> pieces
+}
+
+/* A number of <i>transferable units</i> of a certain token.
+
+The transferable unit of a token is its smallest denomination, as given by the token's <tt>decimals</tt> property---each minted token contains <tt>10<sup>decimals</sup></tt> transferable units. For example, we could think of the cent as the transferable unit of the US dollar (<tt>decimals=2</tt>); and the tinybar as the transferable unit of hbar (<tt>decimals=8</tt>).
+
+Transferable units are not directly comparable across different tokens. */
+message TokenBalance {
+    TokenID tokenId = 1; // A unique token id
+    uint64 balance = 2; // A number of transferable units of the identified token
+    uint32 decimals = 3; // Tokens divide into <tt>10<sup>decimals</sup></tt> pieces
+}
+
+/* A sequence of token balances */
+message TokenBalances {
+    repeated TokenBalance tokenBalances = 1;
 }

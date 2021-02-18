@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,7 @@ import "Timestamp.proto";
 message ConsensusUpdateTopicTransactionBody {
     TopicID topicID = 1;
 
-    // Short publicly visible memo about the topic. No guarantee of uniqueness. Null for "do not update".
-    google.protobuf.StringValue memo = 2;
+    google.protobuf.StringValue memo = 2; // If set, the new memo to be associated with the topic (UTF-8 encoding max 100 bytes)
 
     // Effective consensus timestamp at (and after) which all consensus transactions and queries will fail.
     // The expirationTime may be no longer than MAX_AUTORENEW_PERIOD (8000001 seconds) from the consensus timestamp of
