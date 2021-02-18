@@ -32,7 +32,7 @@ export class Mnemonic {
     }
 
     /**
-     * Legacy 22 word mnemonic
+     * Legacy word mnemonic
      */
     public async toLegacyPrivateKey(): Promise<Ed25519PrivateKey> {
         const index = this._isLegacy ? -1 : 0;
@@ -98,7 +98,7 @@ export class Mnemonic {
         const unknownIndices = this.words.reduce(
             (unknowns: number[], word, index) =>
                 // eslint-disable-next-line implicit-arrow-linebreak
-                bip39.wordlists.english.includes(word) ?
+                bip39.wordlists.english.includes(word.toLowerCase()) ?
                     unknowns :
                     [ ...unknowns, index ],
             []
@@ -218,7 +218,7 @@ export class Mnemonic {
 
         const entropy = new Uint8Array(entropyBitsLen / 8);
 
-        for (let i = 0; i < entropyBitsLen; i += 1) {
+        for (let i = 0; i < entropy.length; i += 1) {
             for (let j = 0; j < 8; j += 1) {
                 if (concatBits[ (i * 8) + j ]) {
                     entropy[ i ] |= 1 << (7 - j);

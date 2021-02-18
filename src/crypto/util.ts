@@ -27,8 +27,8 @@ export function legacyDeriveChildKey(
         password.byteOffset + seed.length,
         8
     );
-    view.setInt32(0, index >= 0 ? 0 : 0xFF);
-    view.setInt32(4, index);
+    view.setInt32(0, index);
+    view.setInt32(4, index >= 0 ? 0 : 0xFF);
 
     const salt = Uint8Array.from([ 0xFF ]);
     return Pbkdf2.deriveKey(
