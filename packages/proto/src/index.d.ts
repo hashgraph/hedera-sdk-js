@@ -67,8 +67,6 @@ import ICryptoTransferTransactionBody = proto.ICryptoTransferTransactionBody;
 import ICryptoUpdateTransactionBody = proto.ICryptoUpdateTransactionBody;
 import ICryptoDeleteTransactionBody = proto.ICryptoDeleteTransactionBody;
 import ICryptoCreateTransactionBody = proto.ICryptoCreateTransactionBody;
-import IScheduleCreateTransactionBody = proto.IScheduleCreateTransactionBody;
-import IScheduleDeleteTransactionBody = proto.IScheduleDeleteTransactionBody;
 import IAllProxyStakers = proto.IAllProxyStakers;
 import ICryptoGetStakersResponse = proto.ICryptoGetStakersResponse;
 import ICryptoGetStakersQuery = proto.ICryptoGetStakersQuery;
@@ -188,12 +186,15 @@ import ISignatureMap = proto.ISignatureMap;
 
 //scheduled transactions
 
-import IScheduleCreateTransaction = proto.ScheduleCreateTransactionBody;
-import IScheduleGetInfoQuery = proto.ScheduleGetInfoQuery;
-import IScheduleDeleteTransaction = proto.ScheduleDeleteTransactionBody;
-import IScheduleSignTransaction = proto.ScheduleSignTransactionBody;
-import IScheduleInfo = proto.ScheduleInfo
-import ScheduleGetInfoResponse = proto.ScheduleGetInfoResponse
+import IScheduleCreateTransaction = proto.IScheduleCreateTransactionBody;
+import IScheduleGetInfoQuery = proto.IScheduleGetInfoQuery;
+import IScheduleCreateTransactionBody = proto.IScheduleCreateTransactionBody;
+import IScheduleDeleteTransactionBody = proto.IScheduleDeleteTransactionBody;
+import IScheduleSignTransactionBody = proto.IScheduleSignTransactionBody;
+import IScheduleInfo = proto.IScheduleInfo;
+import ScheduleGetInfoResponse = proto.ScheduleGetInfoResponse;
+import IScheduleGetInfoResponse = proto.IScheduleGetInfoResponse;
+import IScheduleID = proto.IScheduleID
 
 
 export {
@@ -323,10 +324,11 @@ export {
     //scheduled support
     IScheduleCreateTransaction,
     IScheduleGetInfoQuery,
-    IScheduleDeleteTransaction,
-    IScheduleSignTransaction,
     ScheduleGetInfoResponse,
+    IScheduleGetInfoResponse,
     IScheduleInfo,
+    IScheduleID,
     IScheduleCreateTransactionBody,
     IScheduleDeleteTransactionBody,
+    IScheduleSignTransactionBody,
 };

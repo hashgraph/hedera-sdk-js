@@ -1,0 +1,182 @@
+import ScheduleId from "./ScheduleId.js";
+import AccountId from "../account/AccountId.js";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+
+/**
+ * @typedef {object} ProtoSignaturePair
+ * @property {(Uint8Array | null)=} pubKeyPrefix
+ * @property {(Uint8Array | null)=} ed25519
+ */
+
+/**
+ * @typedef {object} ProtoSigMap
+ * @property {(ProtoSignaturePair[] | null)=} sigPair
+ */
+
+/**
+ * @typedef {object} ProtoSignedTransaction
+ * @property {(Uint8Array | null)=} bodyBytes
+ * @property {(ProtoSigMap | null)=} sigMap
+ */
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").IScheduleSignTransactionBody} proto.IScheduleSignTransactionBody
+ * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").ISignatureMap} proto.ISignatureMap
+ */
+
+/**
+ * @typedef {import("bignumber.js").default} BigNumber
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
+ * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../Timestamp.js").default} Timestamp
+ * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ */
+
+/**
+ * Create a new Hedera™ crypto-currency account.
+ */
+export default class ScheduleSignTransaction extends Transaction {
+    /**
+     * @param {object} [props]
+     * @param {ScheduleId} [props.scheduleId]
+     */
+    constructor(props = {}) {
+        super();
+
+        /**
+         * @private
+         * @type {?ScheduleId}
+         */
+        this._scheduleId = null;
+
+        /**
+         * @private
+         * @type {?proto.ISignatureMap}
+         */
+        this._sigMap = null;
+
+        if (props.scheduleId != null) {
+            this.setScheduleId(props.scheduleId);
+        }
+    }
+
+    /**
+     * @internal
+     * @param {proto.ITransaction[]} transactions
+     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {TransactionId[]} transactionIds
+     * @param {AccountId[]} nodeIds
+     * @param {proto.ITransactionBody[]} bodies
+     * @returns {ScheduleSignTransaction}
+     */
+    static _fromProtobuf(
+        transactions,
+        signedTransactions,
+        transactionIds,
+        nodeIds,
+        bodies
+    ) {
+        const body = bodies[0];
+        const sign = /** @type {proto.IScheduleSignTransactionBody} */ (body.scheduleSign);
+
+        return Transaction._fromProtobufTransactions(
+            new ScheduleSignTransaction({
+                scheduleId:
+                    sign.scheduleID != null
+                        ? ScheduleId._fromProtobuf(sign.scheduleID)
+                        : undefined,
+            }),
+            transactions,
+            signedTransactions,
+            transactionIds,
+            nodeIds,
+            bodies
+        );
+    }
+
+    /**
+     * @returns {?ScheduleId}
+     */
+    get scheduleId() {
+        return this._scheduleId;
+    }
+
+    /**
+     * @param {ScheduleId} scheduleId
+     * @returns {this}
+     */
+    setScheduleId(scheduleId) {
+        this._requireNotFrozen();
+        this._scheduleId = scheduleId;
+
+        return this;
+    }
+
+    /**
+     * @param {PublicKey} publicKey
+     * @param {Uint8Array} signature
+     * @returns {this}
+     */
+    addScheduleSignature(publicKey, signature) {
+        if (this._sigMap == null) {
+            this._sigMap = {};
+        }
+
+        if (this._sigMap.sigPair == null) {
+            this._sigMap.sigPair = [];
+        }
+
+        this._sigMap.sigPair.push({
+            pubKeyPrefix: publicKey.toBytes(),
+            ed25519: signature,
+        });
+
+        return this;
+    }
+
+    /**
+     * @override
+     * @internal
+     * @param {Channel} channel
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
+     */
+    _execute(channel, request) {
+        return channel.schedule.signSchedule(request);
+    }
+
+    /**
+     * @override
+     * @protected
+     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     */
+    _getTransactionDataCase() {
+        return "scheduleCreate";
+    }
+
+    /**
+     * @override
+     * @protected
+     * @returns {proto.IScheduleSignTransactionBody}
+     */
+    _makeTransactionData() {
+        return {
+            scheduleID: this._scheduleId != null ? this._scheduleId._toProtobuf() : null,
+            sigMap: this._sigMap,
+        };
+    }
+}
+
+TRANSACTION_REGISTRY.set(
+    "scheduleSign",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    ScheduleSignTransaction._fromProtobuf
+);

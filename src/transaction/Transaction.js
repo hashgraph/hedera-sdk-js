@@ -14,6 +14,7 @@ import {
     TransactionBody as ProtoTransactionBody,
 } from "@hashgraph/proto";
 import AccountId from "../account/AccountId.js";
+import ScheduleCreateTransaction from "../schedule/ScheduleCreateTransaction.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -212,6 +213,27 @@ export default class Transaction extends Executable {
             nodeIds,
             bodies
         );
+    }
+
+    /**
+     * @returns {ScheduleCreateTransaction}
+     */
+    schedule() {
+        this._requireFrozen();
+
+        if (!this._isFrozen()) {
+            this.freeze();
+        }
+
+        if (this._signedTransactions.length != 1) {
+            throw new Error(
+                "`PrivateKey.signTransaction()` requires `Transaction` to have a single node `AccountId` set"
+            );
+        }
+
+        let tx = new ScheduleCreateTransaction().setTransaction(this)
+        tx.setNodeAccountIds(this._nodeIds)
+        return tx
     }
 
     /**

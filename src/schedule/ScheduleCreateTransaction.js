@@ -1,19 +1,6 @@
-import Hbar from "../Hbar.js";
 import AccountId from "../account/AccountId.js";
-import Transaction from "../transaction/Transaction.js";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
-import Duration from "../Duration.js";
-
-/**
- * @typedef {object} ProtoSignaturePair
- * @property {(Uint8Array | null)=} pubKeyPrefix
- * @property {(Uint8Array | null)=} ed25519
- */
-
-/**
- * @typedef {object | null} ProtoSigMap
- * @property {(ProtoSignaturePair[] | null)=} sigPair
- */
 
 /**
  * @namespace proto
@@ -22,8 +9,7 @@ import Duration from "../Duration.js";
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ICryptoCreateTransactionBody} proto.ICryptoCreateTransactionBody
- * @typedef {import("@hashgraph/proto").ISchedule} proto.ICryptoCreateTransactionBody
+ * @typedef {import("@hashgraph/proto").IScheduleCreateTransactionBody} proto.IScheduleCreateTransactionBody
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").ISignatureMap} proto.ISignatureMap
  */
@@ -44,6 +30,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @param {object} [props]
      * @param {Key} [props.adminKey]
      * @param {AccountId} [props.payerAccountID]
+     * @param {string} [props.memo]
      */
     constructor(props = {}) {
         super();
@@ -68,9 +55,15 @@ export default class ScheduleCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?ProtoSigMap}
+         * @type {?proto.ISignatureMap}
          */
         this._sigMap = null;
+
+        /**
+         * @private
+         * @type {?string}
+         */
+        this._memo = null;
 
         if (props.adminKey != null) {
             this.setAdminKey(props.adminKey);
@@ -78,6 +71,10 @@ export default class ScheduleCreateTransaction extends Transaction {
 
         if (props.payerAccountID != null) {
             this.setPayerAccountId(props.payerAccountID);
+        }
+
+        if (props.memo != null) {
+            this.setMemo(props.memo);
         }
     }
 
@@ -98,25 +95,23 @@ export default class ScheduleCreateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const create = /** @type {proto.IScheduleCreateTransactionBody} */ (body.);
+        const create = /** @type {proto.IScheduleCreateTransactionBody} */ (body.scheduleCreate);
 
         return Transaction._fromProtobufTransactions(
             new ScheduleCreateTransaction({
                 adminKey:
-                    create.key != null
-                        ? keyFromProtobuf(create.key)
+                    create.adminKey != null
+                        ? keyFromProtobuf(create.adminKey)
                         : undefined,
                 payerAccountID:
                     create.payerAccountID != null
                         ? AccountId._fromProtobuf(
-                        /** @type {proto.IAccountID} */ (create.proxyAccountID)
+                        /** @type {proto.IAccountID} */ (create.payerAccountID)
                         )
                         : undefined,
-                autoRenewPeriod:
-                    create.autoRenewPeriod != null
-                        ? create.autoRenewPeriod.seconds != null
-                        ? create.autoRenewPeriod.seconds
-                        : undefined
+                memo:
+                    create.memo != null
+                        ? create.memo
                         : undefined,
             }),
             transactions,
@@ -160,14 +155,68 @@ export default class ScheduleCreateTransaction extends Transaction {
     }
 
     /**
-     * Set the initial amount to transfer into this account.
-     *
      * @param {AccountId} account
      * @returns {this}
      */
     setPayerAccountId(account) {
         this._requireNotFrozen();
         this._payerAccountId = account;
+
+        return this;
+    }
+
+    /**
+     * @param {string} memo
+     * @returns {this}
+     */
+    setMemo(memo) {
+        this._requireNotFrozen();
+        this._memo = memo;
+
+        return this;
+    }
+
+    /**
+     * @returns {?string}
+     */
+    get Memo() {
+        return this._memo;
+    }
+
+    /**
+     * @param {Transaction} transaction
+     * @returns {this}
+     */
+    setTransaction(transaction) {
+        if (transaction._signedTransactions.length != 1) {
+            throw new Error(
+                "`PrivateKey.signTransaction()` requires `Transaction` to have a single node `AccountId` set"
+            );
+        }
+
+        this._transactionBody = transaction.toBytes();
+
+        if (this._sigMap == null) {
+            this._sigMap = {};
+        }
+
+        if (this._sigMap.sigPair == null) {
+            this._sigMap.sigPair = [];
+        }
+
+        // for (const sigPair of transaction._signedTransactions[0]?.sigMap?.sigPair?) {
+        //     this._sigMap.sigPair.push(sigPair)
+        // }
+
+        if (transaction._signedTransactions[0] != null){
+            if(transaction._signedTransactions[0].sigMap != null) {
+                if (transaction._signedTransactions[0].sigMap.sigPair != null) {
+                    for (const sigPair of transaction._signedTransactions[0].sigMap.sigPair) {
+                        this._sigMap.sigPair.push(sigPair)
+                    }
+                }
+            }
+        }
 
         return this;
     }
@@ -189,35 +238,27 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "cryptoCreateAccount";
+        return "scheduleCreate";
     }
 
     /**
      * @override
      * @protected
-     * @returns {proto.ICryptoCreateTransactionBody}
+     * @returns {proto.IScheduleCreateTransactionBody}
      */
     _makeTransactionData() {
         return {
-            key: this._key != null ? keyToProtobuf(this._key) : null,
-            initialBalance:
-                this._initialBalance != null
-                    ? this._initialBalance.toTinybars()
-                    : null,
-            autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
-            proxyAccountID:
-                this._proxyAccountId != null
-                    ? this._proxyAccountId._toProtobuf()
-                    : null,
-            receiveRecordThreshold: this._receiveRecordThreshold.toTinybars(),
-            sendRecordThreshold: this._sendRecordThreshold.toTinybars(),
-            receiverSigRequired: this._receiverSignatureRequired,
+            adminKey: this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
+            payerAccountID: this._payerAccountId != null ? this._payerAccountId._toProtobuf() : null,
+            sigMap: this._sigMap,
+            transactionBody: this._transactionBody,
+            memo: this._memo,
         };
     }
 }
 
 TRANSACTION_REGISTRY.set(
-    "cryptoCreateAccount",
+    "scheduleCreate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountCreateTransaction._fromProtobuf
+    ScheduleCreateTransaction._fromProtobuf
 );

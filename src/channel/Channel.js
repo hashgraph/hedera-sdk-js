@@ -6,6 +6,7 @@ import {
     NetworkService,
     FreezeService,
     TokenService,
+    ScheduleService,
 } from "@hashgraph/proto";
 
 /**
@@ -58,6 +59,12 @@ export default class Channel {
          * @type {?TokenService}
          */
         this._token = null;
+
+        /**
+         * @protected
+         * @type {?ScheduleService}
+         */
+        this._schedule = null;
     }
 
     /**
@@ -169,6 +176,21 @@ export default class Channel {
         );
 
         return this._token;
+    }
+
+    /**
+     * @returns {ScheduleService}
+     */
+    get schedule() {
+        if (this._schedule != null) {
+            return this._schedule;
+        }
+
+        this._schedule = ScheduleService.create(
+            this._createUnaryClient("ScheduleService")
+        );
+
+        return this._schedule;
     }
 
     /**

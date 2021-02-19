@@ -1,0 +1,136 @@
+import AccountId from "../account/AccountId.js";
+import ScheduleId from "./ScheduleId.js";
+import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").IScheduleDeleteTransactionBody} proto.IScheduleDeleteTransactionBody
+ * @typedef {import("@hashgraph/proto").IScheduleID} proto.IScheduleID
+ */
+
+/**
+ * @typedef {import("bignumber.js").default} BigNumber
+ * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../Timestamp.js").default} Timestamp
+ * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ */
+
+/**
+ * Create a new Hedera™ crypto-currency account.
+ */
+export default class ScheduleDeleteTransaction extends Transaction {
+    /**
+     * @param {object} [props]
+     * @param {ScheduleId} [props.scheduleId]
+     */
+    constructor(props = {}) {
+        super();
+
+        /**
+         * @private
+         * @type {?ScheduleId}
+         */
+        this._scheduleId = null;
+
+        if (props.scheduleId != null) {
+            this.setScheduleId(props.scheduleId);
+        }
+
+    }
+
+    /**
+     * @internal
+     * @param {proto.ITransaction[]} transactions
+     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {TransactionId[]} transactionIds
+     * @param {AccountId[]} nodeIds
+     * @param {proto.ITransactionBody[]} bodies
+     * @returns {ScheduleDeleteTransaction}
+     */
+    static _fromProtobuf(
+        transactions,
+        signedTransactions,
+        transactionIds,
+        nodeIds,
+        bodies
+    ) {
+        const body = bodies[0];
+        const create = /** @type {proto.IScheduleDeleteTransactionBody} */ (body.scheduleDelete);
+
+        return Transaction._fromProtobufTransactions(
+            new ScheduleDeleteTransaction({
+                scheduleId:
+                    create.scheduleID != null
+                        ? ScheduleId._fromProtobuf(
+                            /** @type {proto.IScheduleID} */ (create.scheduleID))
+                        : undefined,
+            }),
+            transactions,
+            signedTransactions,
+            transactionIds,
+            nodeIds,
+            bodies
+        );
+    }
+
+    /**
+     * @returns {?ScheduleId}
+     */
+    get payerScheduleId() {
+        return this._scheduleId;
+    }
+
+    /**
+     * @param {ScheduleId} scheduleId
+     * @returns {this}
+     */
+    setScheduleId(scheduleId) {
+        this._requireNotFrozen();
+        this._scheduleId = scheduleId;
+
+        return this;
+    }
+
+    /**
+     * @override
+     * @internal
+     * @param {Channel} channel
+     * @param {proto.ITransaction} request
+     * @returns {Promise<proto.ITransactionResponse>}
+     */
+    _execute(channel, request) {
+        return channel.crypto.createAccount(request);
+    }
+
+    /**
+     * @override
+     * @protected
+     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     */
+    _getTransactionDataCase() {
+        return "cryptoCreateAccount";
+    }
+
+    /**
+     * @override
+     * @protected
+     * @returns {proto.IScheduleDeleteTransactionBody}
+     */
+    _makeTransactionData() {
+        return {
+            scheduleID: this._scheduleId != null ? this._scheduleId._toProtobuf() : null,
+        };
+    }
+}
+
+TRANSACTION_REGISTRY.set(
+    "scheduleDelete",
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    ScheduleDeleteTransaction._fromProtobuf
+);
