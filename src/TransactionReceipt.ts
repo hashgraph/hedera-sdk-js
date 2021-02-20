@@ -4,6 +4,7 @@ import { ConsensusTopicId } from "./consensus/ConsensusTopicId";
 import { ContractId } from "./contract/ContractId";
 import { FileId } from "./file/FileId";
 import { TokenId } from "./token/TokenId";
+import { ScheduleId } from "./schedule/ScheduleId";
 import { ExchangeRateSet, exchangeRateSetToSdk } from "./ExchangeRate";
 import { Status } from "./Status";
 
@@ -22,6 +23,7 @@ export class TransactionReceipt {
     private readonly [ "_contractId" ]: ContractId | null;
     private readonly [ "_topicId" ]: ConsensusTopicId | null;
     private readonly [ "_tokenId" ]: TokenId | null;
+    private readonly [ "_scheduleId" ]: ScheduleId | null;
     private readonly [ "_exchangeRateSet" ]: ExchangeRateSet | null;
     private readonly [ "_topicSequenceNumber" ]: number;
     private readonly [ "_topicRunningHash" ]: Uint8Array;
@@ -33,6 +35,7 @@ export class TransactionReceipt {
         contractId: ContractId | null,
         topicId: ConsensusTopicId | null,
         tokenId: TokenId | null,
+        scheduleId: ScheduleId | null,
         exchangeRateSet: ExchangeRateSet | null,
         topicSequenceNubmer: number,
         topicRunningHash: Uint8Array
@@ -43,6 +46,7 @@ export class TransactionReceipt {
         this._contractId = contractId;
         this._topicId = topicId;
         this._tokenId = tokenId;
+        this._scheduleId = scheduleId;
         this._exchangeRateSet = exchangeRateSet;
         this._topicSequenceNumber = topicSequenceNubmer;
         this._topicRunningHash = topicRunningHash;
@@ -128,6 +132,17 @@ export class TransactionReceipt {
     }
 
     /**
+     * The schedule ID, if a new schedule was created.
+     */
+    public getScheduleId(): ScheduleId {
+        if (this._scheduleId == null) {
+            throw new Error("receipt does not contain a schedule ID");
+        }
+
+        return this._scheduleId!;
+    }
+
+    /**
      * Updated running hash for a consensus service topic. The result of a ConsensusSubmitMessage.
      */
     public getConsensusTopicRunningHash(): Uint8Array {
@@ -184,6 +199,7 @@ export class TransactionReceipt {
                 ConsensusTopicId._fromProto(receipt.getTopicid()!) :
                 null,
             receipt.hasTokenid() ? TokenId._fromProto(receipt.getTokenid()!) : null,
+            receipt.hasScheduleid() ? ScheduleId._fromProto(receipt.getScheduleid()!) : null,
             receipt.hasExchangerate() ?
                 exchangeRateSetToSdk(receipt.getExchangerate()!) :
                 null,

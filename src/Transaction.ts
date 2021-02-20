@@ -8,6 +8,7 @@ import { TransactionResponse } from "./generated/TransactionResponse_pb";
 import { orThrow, setTimeoutAwaitable } from "./util";
 import { Message } from "google-protobuf";
 import { CryptoService } from "./generated/CryptoService_pb_service";
+import { ScheduleService } from "./generated/ScheduleService_pb_service";
 import { SmartContractService } from "./generated/SmartContractService_pb_service";
 import { FileService } from "./generated/FileService_pb_service";
 import { FreezeService } from "./generated/FreezeService_pb_service";
@@ -23,6 +24,7 @@ import * as base64 from "@stablelib/base64";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { hash as sha384Hash } from "@stablelib/sha384";
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";
+import type { ScheduleCreateTransaction } from "./schedule/ScheduleCreateTransaction";
 
 /** signature/public key pairs are passed around as objects */
 export interface SignatureAndKey {
@@ -37,6 +39,8 @@ export const transactionCreate = Symbol("transactionCreate");
 
 /** execute the transaction directly and return the protobuf response */
 export const transactionCall = Symbol("transactionCall");
+
+export const SCHEDULE_CREATE_TRANSACTION: (() => ScheduleCreateTransaction)[] = [];
 
 export class Transaction {
     private readonly _node: AccountId;
@@ -79,6 +83,20 @@ export class Transaction {
 
     public get id(): TransactionId {
         return TransactionId._fromProto(this._txnId);
+    }
+
+    public schedule(): ScheduleCreateTransaction {
+        if (SCHEDULE_CREATE_TRANSACTION.length !== 1) {
+            throw new Error("ScheduleCreateTransaction has not been loaded yet");
+        }
+
+        const scheduled = SCHEDULE_CREATE_TRANSACTION[ 0 ]()
+            .setNodeAccountId(this._node);
+
+        scheduled._body.setTransactionbody(this._inner.getBodybytes()!);
+        scheduled._body.setSigmap(this._inner.getSigmap()!);
+
+        return scheduled;
     }
 
     private _checkPubKey(publicKey: Ed25519PublicKey): void {
@@ -271,6 +289,12 @@ function methodFromTxn(inner: TransactionBody): UnaryMethodDefinition<Transactio
             return ConsensusService.deleteTopic;
         case TransactionBody.DataCase.CONSENSUSSUBMITMESSAGE:
             return ConsensusService.submitMessage;
+        case TransactionBody.DataCase.SCHEDULECREATE:
+            return ScheduleService.createSchedule;
+        case TransactionBody.DataCase.SCHEDULEDELETE:
+            return ScheduleService.deleteSchedule;
+        case TransactionBody.DataCase.SCHEDULESIGN:
+            return ScheduleService.signSchedule;
         case TransactionBody.DataCase.DATA_NOT_SET:
             throw new Error("transaction body missing");
         default:

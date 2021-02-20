@@ -35,6 +35,12 @@ export { SystemUndeleteTransaction } from "./SystemUndeleteTransaction";
 export { FreezeTransaction } from "./FreezeTransaction";
 export { GetBySolidityIdQuery } from "./GetBySolidityIdQuery";
 
+export { ScheduleId } from "./schedule/ScheduleId";
+export { ScheduleCreateTransaction } from "./schedule/ScheduleCreateTransaction";
+export { ScheduleDeleteTransaction } from "./schedule/ScheduleDeleteTransaction";
+export { ScheduleSignTransaction } from "./schedule/ScheduleSignTransaction";
+export { ScheduleInfoQuery, ScheduleInfo } from "./schedule/ScheduleInfoQuery";
+
 export { TokenAssociateTransaction } from "./token/TokenAssociateTransaction";
 export { TokenBalanceQuery } from "./token/TokenBalanceQuery";
 export { TokenBurnTransaction } from "./token/TokenBurnTransaction";
