@@ -1,6 +1,7 @@
-import AccountId from "../account/AccountId.js";
 import ScheduleId from "./ScheduleId.js";
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import Transaction, {
+    TRANSACTION_REGISTRY,
+} from "../transaction/Transaction.js";
 
 /**
  * @namespace proto
@@ -19,6 +20,7 @@ import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -41,7 +43,6 @@ export default class ScheduleDeleteTransaction extends Transaction {
         if (props.scheduleId != null) {
             this.setScheduleId(props.scheduleId);
         }
-
     }
 
     /**
@@ -68,7 +69,8 @@ export default class ScheduleDeleteTransaction extends Transaction {
                 scheduleId:
                     create.scheduleID != null
                         ? ScheduleId._fromProtobuf(
-                            /** @type {proto.IScheduleID} */ (create.scheduleID))
+                              /** @type {proto.IScheduleID} */ (create.scheduleID)
+                          )
                         : undefined,
             }),
             transactions,
@@ -82,7 +84,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
     /**
      * @returns {?ScheduleId}
      */
-    get payerScheduleId() {
+    get scheduleId() {
         return this._scheduleId;
     }
 
@@ -105,7 +107,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
      * @returns {Promise<proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.crypto.createAccount(request);
+        return channel.schedule.deleteSchedule(request);
     }
 
     /**
@@ -114,7 +116,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
      * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "cryptoCreateAccount";
+        return "scheduleDelete";
     }
 
     /**
@@ -124,7 +126,10 @@ export default class ScheduleDeleteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            scheduleID: this._scheduleId != null ? this._scheduleId._toProtobuf() : null,
+            scheduleID:
+                this._scheduleId != null
+                    ? this._scheduleId._toProtobuf()
+                    : null,
         };
     }
 }

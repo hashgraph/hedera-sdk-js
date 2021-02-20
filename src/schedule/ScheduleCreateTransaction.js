@@ -1,5 +1,8 @@
 import AccountId from "../account/AccountId.js";
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import Transaction, {
+    TRANSACTION_REGISTRY,
+    SCHEDULE_CREATE_TRANSACTION,
+} from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 
 /**
@@ -106,13 +109,10 @@ export default class ScheduleCreateTransaction extends Transaction {
                 payerAccountID:
                     create.payerAccountID != null
                         ? AccountId._fromProtobuf(
-                        /** @type {proto.IAccountID} */ (create.payerAccountID)
-                        )
+                              /** @type {proto.IAccountID} */ (create.payerAccountID)
+                          )
                         : undefined,
-                memo:
-                    create.memo != null
-                        ? create.memo
-                        : undefined,
+                memo: create.memo != null ? create.memo : undefined,
             }),
             transactions,
             signedTransactions,
@@ -190,11 +190,13 @@ export default class ScheduleCreateTransaction extends Transaction {
     setTransaction(transaction) {
         if (transaction._signedTransactions.length != 1) {
             throw new Error(
-                "`PrivateKey.signTransaction()` requires `Transaction` to have a single node `AccountId` set"
+                "`ScheduleCreateTransaction.setTransaction()` requires `Transaction` parameter to have a single node `AccountId` set"
             );
         }
 
-        this._transactionBody = transaction.toBytes();
+        const signed = transaction._signedTransactions[0];
+
+        this._transactionBody = /** @type {Uint8Array | null } */ (signed.bodyBytes);
 
         if (this._sigMap == null) {
             this._sigMap = {};
@@ -204,17 +206,13 @@ export default class ScheduleCreateTransaction extends Transaction {
             this._sigMap.sigPair = [];
         }
 
-        // for (const sigPair of transaction._signedTransactions[0]?.sigMap?.sigPair?) {
-        //     this._sigMap.sigPair.push(sigPair)
-        // }
-
-        if (transaction._signedTransactions[0] != null){
-            if(transaction._signedTransactions[0].sigMap != null) {
-                if (transaction._signedTransactions[0].sigMap.sigPair != null) {
-                    for (const sigPair of transaction._signedTransactions[0].sigMap.sigPair) {
-                        this._sigMap.sigPair.push(sigPair)
-                    }
-                }
+        if (
+            signed != null &&
+            signed.sigMap != null &&
+            signed.sigMap.sigPair != null
+        ) {
+            for (const sigPair of signed.sigMap.sigPair) {
+                this._sigMap.sigPair.push(sigPair);
             }
         }
 
@@ -229,7 +227,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @returns {Promise<proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.crypto.createAccount(request);
+        return channel.schedule.createSchedule(request);
     }
 
     /**
@@ -248,8 +246,12 @@ export default class ScheduleCreateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            adminKey: this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
-            payerAccountID: this._payerAccountId != null ? this._payerAccountId._toProtobuf() : null,
+            adminKey:
+                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
+            payerAccountID:
+                this._payerAccountId != null
+                    ? this._payerAccountId._toProtobuf()
+                    : null,
             sigMap: this._sigMap,
             transactionBody: this._transactionBody,
             memo: this._memo,
@@ -262,3 +264,5 @@ TRANSACTION_REGISTRY.set(
     // eslint-disable-next-line @typescript-eslint/unbound-method
     ScheduleCreateTransaction._fromProtobuf
 );
+
+SCHEDULE_CREATE_TRANSACTION.push(() => new ScheduleCreateTransaction());

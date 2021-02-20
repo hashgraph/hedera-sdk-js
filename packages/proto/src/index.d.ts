@@ -13,7 +13,7 @@ import MirrorConsensusService = proto.MirrorConsensusService;
 import NetworkService = proto.NetworkService;
 import SmartContractService = proto.SmartContractService;
 import TokenService = proto.TokenService;
-import ScheduleService = proto.ScheduleService
+import ScheduleService = proto.ScheduleService;
 
 export {
     Reader,
@@ -40,7 +40,7 @@ import SignedTransaction = proto.SignedTransaction;
 import TransactionList = proto.TransactionList;
 import TransactionBody = proto.TransactionBody;
 import ResponseType = proto.ResponseType;
-import ScheduleID = proto.ScheduleID
+import ScheduleID = proto.ScheduleID;
 
 export {
     ResponseCodeEnum,
@@ -194,8 +194,7 @@ import IScheduleSignTransactionBody = proto.IScheduleSignTransactionBody;
 import IScheduleInfo = proto.IScheduleInfo;
 import ScheduleGetInfoResponse = proto.ScheduleGetInfoResponse;
 import IScheduleGetInfoResponse = proto.IScheduleGetInfoResponse;
-import IScheduleID = proto.IScheduleID
-
+import IScheduleID = proto.IScheduleID;
 
 export {
     IAccountID,

@@ -1,6 +1,11 @@
 import ScheduleId from "./ScheduleId.js";
 import AccountId from "../account/AccountId.js";
-import { keyFromProtobuf, keyToProtobuf, keyListFromProtobuf, keyListToProtobuf } from "../cryptography/protobuf.js";
+import {
+    keyFromProtobuf,
+    keyToProtobuf,
+    keyListFromProtobuf,
+    keyListToProtobuf,
+} from "../cryptography/protobuf.js";
 import Timestamp from "../Timestamp.js";
 
 /**
@@ -97,27 +102,29 @@ export default class ScheduleInfo {
             creatorAccountID:
                 info.creatorAccountID != null
                     ? AccountId._fromProtobuf(
-                    /** @type {proto.IAccountID} */ (info.creatorAccountID)
-                    )
+                          /** @type {proto.IAccountID} */ (info.creatorAccountID)
+                      )
                     : null,
             payerAccountID:
                 info.payerAccountID != null
                     ? AccountId._fromProtobuf(
-                    /** @type {proto.IAccountID} */ (info.payerAccountID)
-                    )
+                          /** @type {proto.IAccountID} */ (info.payerAccountID)
+                      )
                     : null,
-            transactionBody: info.transactionBody != null ? info.transactionBody : null,
+            transactionBody:
+                info.transactionBody != null ? info.transactionBody : null,
             adminKey:
                 info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
             signatories:
                 info.signatories != null
-                    ? keyListFromProtobuf(info.signatories) : null,
+                    ? keyListFromProtobuf(info.signatories)
+                    : null,
             memo: info.memo != null ? info.memo : null,
             expirationTime:
                 info.expirationTime != null
                     ? Timestamp._fromProtobuf(
-                    /** @type {proto.ITimestamp} */ (info.expirationTime)
-                    )
+                          /** @type {proto.ITimestamp} */ (info.expirationTime)
+                      )
                     : null,
         });
     }
@@ -127,15 +134,31 @@ export default class ScheduleInfo {
      */
     _toProtobuf() {
         return {
-            scheduleID: this.scheduleID != null ? this.scheduleID._toProtobuf() : null,
-            creatorAccountID: this.creatorAccountID != null ? this.creatorAccountID._toProtobuf() : null,
-            payerAccountID: this.payerAccountID != null ? this.payerAccountID._toProtobuf() : null,
-            transactionBody: this.transactionBody != null ? this.transactionBody : new Uint8Array(0) ,
+            scheduleID:
+                this.scheduleID != null ? this.scheduleID._toProtobuf() : null,
+            creatorAccountID:
+                this.creatorAccountID != null
+                    ? this.creatorAccountID._toProtobuf()
+                    : null,
+            payerAccountID:
+                this.payerAccountID != null
+                    ? this.payerAccountID._toProtobuf()
+                    : null,
+            transactionBody:
+                this.transactionBody != null
+                    ? this.transactionBody
+                    : new Uint8Array(0),
             adminKey:
                 this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
-            signatories: this.signatories != null ? keyListToProtobuf(this.signatories) : null,
+            signatories:
+                this.signatories != null
+                    ? keyListToProtobuf(this.signatories)
+                    : null,
             memo: this.memo != null ? this.memo : "",
-            expirationTime: this.expirationTime != null ? this.expirationTime._toProtobuf() : null,
+            expirationTime:
+                this.expirationTime != null
+                    ? this.expirationTime._toProtobuf()
+                    : null,
         };
     }
 }

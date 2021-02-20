@@ -1,6 +1,7 @@
 import ScheduleId from "./ScheduleId.js";
-import AccountId from "../account/AccountId.js";
-import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js";
+import Transaction, {
+    TRANSACTION_REGISTRY,
+} from "../transaction/Transaction.js";
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -38,6 +39,7 @@ import Transaction, { TRANSACTION_REGISTRY } from "../transaction/Transaction.js
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -159,7 +161,7 @@ export default class ScheduleSignTransaction extends Transaction {
      * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "scheduleCreate";
+        return "scheduleSign";
     }
 
     /**
@@ -169,7 +171,10 @@ export default class ScheduleSignTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            scheduleID: this._scheduleId != null ? this._scheduleId._toProtobuf() : null,
+            scheduleID:
+                this._scheduleId != null
+                    ? this._scheduleId._toProtobuf()
+                    : null,
             sigMap: this._sigMap,
         };
     }

@@ -101,9 +101,12 @@ export default class TransactionReceiptQuery extends Query {
             case Status.Unknown:
             case Status.ReceiptNotFound:
                 return true;
+            case Status.Ok:
+                // Do nothing
+                break;
 
             default:
-            // continue to checking receipt status
+                return false;
         }
 
         const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);

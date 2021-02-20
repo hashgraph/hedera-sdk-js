@@ -69,7 +69,9 @@ export default class ScheduleInfoQuery extends Query {
      */
     setScheduleId(scheduleId) {
         this._scheduleId =
-            scheduleId instanceof ScheduleId ? scheduleId : ScheduleId.fromString(scheduleId);
+            scheduleId instanceof ScheduleId
+                ? scheduleId
+                : ScheduleId.fromString(scheduleId);
 
         return this;
     }
@@ -124,7 +126,9 @@ export default class ScheduleInfoQuery extends Query {
             scheduleGetInfo: {
                 header,
                 scheduleID:
-                    this._scheduleId != null ? this._scheduleId._toProtobuf() : null,
+                    this._scheduleId != null
+                        ? this._scheduleId._toProtobuf()
+                        : null,
             },
         };
     }

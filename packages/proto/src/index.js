@@ -13,6 +13,7 @@ export const MirrorConsensusService = proto.MirrorConsensusService;
 export const NetworkService = proto.NetworkService;
 export const SmartContractService = proto.SmartContractService;
 export const TokenService = proto.TokenService;
+export const ScheduleService = proto.ScheduleService;
 
 export const AccountID = proto.AccountID;
 export const ContractGetInfoResponse = proto.ContractGetInfoResponse;

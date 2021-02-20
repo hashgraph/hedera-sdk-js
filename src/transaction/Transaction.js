@@ -14,7 +14,6 @@ import {
     TransactionBody as ProtoTransactionBody,
 } from "@hashgraph/proto";
 import AccountId from "../account/AccountId.js";
-import ScheduleCreateTransaction from "../schedule/ScheduleCreateTransaction.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -34,6 +33,7 @@ import ScheduleCreateTransaction from "../schedule/ScheduleCreateTransaction.js"
  */
 
 /**
+ * @typedef {import("../schedule/ScheduleCreateTransaction.js").default} ScheduleCreateTransaction
  * @typedef {import("@hashgraph/cryptography").PrivateKey} PrivateKey
  * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -227,13 +227,19 @@ export default class Transaction extends Executable {
 
         if (this._signedTransactions.length != 1) {
             throw new Error(
-                "`PrivateKey.signTransaction()` requires `Transaction` to have a single node `AccountId` set"
+                "`Transaction.schedule()` requires `Transaction` to have a single node `AccountId` set"
             );
         }
 
-        let tx = new ScheduleCreateTransaction().setTransaction(this)
-        tx.setNodeAccountIds(this._nodeIds)
-        return tx
+        if (SCHEDULE_CREATE_TRANSACTION.length != 1) {
+            throw new Error(
+                "ScheduleCreateTransaction has not been loaded yet"
+            );
+        }
+
+        return SCHEDULE_CREATE_TRANSACTION[0]()
+            .setTransaction(this)
+            .setNodeAccountIds(this._nodeIds);
     }
 
     /**
@@ -818,3 +824,8 @@ export default class Transaction extends Executable {
         }
     }
 }
+
+/**
+ * @type {(() => ScheduleCreateTransaction)[]}
+ */
+export const SCHEDULE_CREATE_TRANSACTION = [];

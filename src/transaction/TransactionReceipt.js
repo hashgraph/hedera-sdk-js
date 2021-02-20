@@ -3,6 +3,7 @@ import ContractId from "../contract/ContractId.js";
 import FileId from "../file/FileId.js";
 import TopicId from "../topic/TopicId.js";
 import TokenId from "../token/TokenId.js";
+import ScheduleId from "../schedule/ScheduleId.js";
 import ExchangeRate from "../ExchangeRate.js";
 import Status from "../Status.js";
 import Long from "long";
@@ -22,6 +23,7 @@ export default class TransactionReceipt {
      * @param {?ContractId} props.contractId
      * @param {?TopicId} props.topicId
      * @param {?TokenId} props.tokenId
+     * @param {?ScheduleId} props.scheduleId
      * @param {?ExchangeRate} props.exchangeRate
      * @param {?Long} props.topicSequenceNumber
      * @param {?Uint8Array} props.topicRunningHash
@@ -71,6 +73,13 @@ export default class TransactionReceipt {
         this.tokenId = props.tokenId;
 
         /**
+         * The schedule ID, if a new schedule was created.
+         *
+         * @readonly
+         */
+        this.scheduleId = props.scheduleId;
+
+        /**
          * The exchange rate of Hbars to cents (USD).
          *
          * @readonly
@@ -116,6 +125,8 @@ export default class TransactionReceipt {
                 this.contractId != null ? this.contractId._toProtobuf() : null,
             topicID: this.topicId != null ? this.topicId._toProtobuf() : null,
             tokenID: this.topicId != null ? this.topicId._toProtobuf() : null,
+            scheduleID:
+                this.topicId != null ? this.topicId._toProtobuf() : null,
 
             topicRunningHash:
                 this.topicRunningHash == null ? null : this.topicRunningHash,
@@ -168,6 +179,11 @@ export default class TransactionReceipt {
             tokenId:
                 receipt.tokenID != null
                     ? TokenId._fromProtobuf(receipt.tokenID)
+                    : null,
+
+            scheduleId:
+                receipt.scheduleID != null
+                    ? ScheduleId._fromProtobuf(receipt.scheduleID)
                     : null,
 
             exchangeRate:
