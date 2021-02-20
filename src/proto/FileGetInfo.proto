@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ message FileGetInfoResponse {
         Timestamp expirationTime = 3; // The current time at which this account is set to expire
         bool deleted = 4; // True if deleted but not yet expired
         KeyList keys = 5; // One of these keys must sign in order to modify or delete the file
+        string memo = 6; // The memo associated with the file
     }
     FileInfo fileInfo = 2; // The information about the file
 }

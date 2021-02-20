@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import "Timestamp.proto";
 
 // Current state of a topic.
 message ConsensusTopicInfo {
-    string memo = 1; // Short publicly visible memo about the topic. No guarantee of uniqueness.
+    string memo = 1; // The memo associated with the topic (UTF-8 encoding max 100 bytes)
 
     // When a topic is created, its running hash is initialized to 48 bytes of binary zeros.
     // For each submitted message, the topic's running hash is then updated to the output

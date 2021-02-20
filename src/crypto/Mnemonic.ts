@@ -115,7 +115,7 @@ export class Mnemonic {
         // we validate those first and then let `bip39` do the non-trivial checksum verification
         if (
             !bip39.validateMnemonic(
-                this.words.map((word) word.toLowerCase()).join(" "),
+                this.words.map((word) => word.toLowerCase()).join(" "),
                 bip39.wordlists.english
             )
         ) {

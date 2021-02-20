@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package proto;
+
+/*-
+ * ‌
+ * Hedera Network Services Protobuf
+ * ​
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
+ * ​
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ‍
+ */
+
+option java_package = "com.hederahashgraph.api.proto.java";
+option java_multiple_files = true;
+
+import "BasicTypes.proto";
+
+/*
+Provides signatures for a given Scheduled Transaction. The Scheduled Transaction executes if all of the required signatures are witnessed.
+INVALID_SCHEDULE_ID is returned if the specified ScheduleID does not exist; or has now expired, been deleted, or been executed
+UNRESOLVABLE_REQUIRED_SIGNERS is returned if any of the required keys were updated/deleted and cannot be resolved
+INVALID_ACCOUNT_ID is returned if the payerAccountID has been deleted or cannot be resolved
+NO_NEW_VALID_SIGNATURES is returned if there are no new signatures provided in the sigMap to be witnessed
+SOME_SIGNATURES_WERE_INVALID is returned if one of the signatures provided does not represent a valid signature for any required signer
+ */
+message ScheduleSignTransactionBody {
+  ScheduleID scheduleID = 1; // The ID of the Scheduled entity
+  SignatureMap sigMap = 2; // The signature map containing the signature(s) to authorise the transaction
+}

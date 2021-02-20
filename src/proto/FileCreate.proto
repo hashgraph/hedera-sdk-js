@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,4 +49,5 @@ message FileCreateTransactionBody {
     ShardID shardID = 5; // Shard in which this file is created
     RealmID realmID = 6; // The Realm in which to the file is created (leave this null to create a new realm)
     Key newRealmAdminKey = 7; // If realmID is null, then this the admin key for the new realm that will be created
+    string memo = 8; // The memo associated with the file (UTF-8 encoding max 100 bytes)
 }

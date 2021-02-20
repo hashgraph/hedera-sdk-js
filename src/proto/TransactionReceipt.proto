@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,4 +103,7 @@ message TransactionReceipt {
 
     // In the receipt of TokenMint, TokenWipe, TokenBurn, the current total supply of this token
     uint64 newTotalSupply = 11;
+
+    // In the receipt of a CreateSchedule, the id of the newly created Scheduled Entity
+    ScheduleID scheduleID = 12;
 }

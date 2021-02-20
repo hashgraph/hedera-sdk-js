@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ option java_multiple_files = true;
 
 import "BasicTypes.proto";
 import "Timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 /*
 Modify the metadata and/or contents of a file. If a field is not set in the transaction body, the corresponding file attribute will be unchanged. This transaction must be signed by all the keys in the key list of the file being updated. If the keys themselves are being update, then the transaction must also be signed by all the new keys.
@@ -36,4 +37,5 @@ message FileUpdateTransactionBody {
     Timestamp expirationTime = 2; // The new expiry time (ignored if not later than the current expiry)
     KeyList keys = 3; // The new list of keys that can modify or delete the file
     bytes contents = 4; // The new contents that should overwrite the file's current contents
+    google.protobuf.StringValue memo = 5; // If set, the new memo to be associated with the file (UTF-8 encoding max 100 bytes)
 }

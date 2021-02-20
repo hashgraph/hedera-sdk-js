@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ message TokenInfo {
     AccountID autoRenewAccount = 15; // An account which will be automatically charged to renew the token's expiration, at autoRenewPeriod interval
     Duration autoRenewPeriod = 16; // The interval at which the auto-renew account will be charged to extend the token's expiry
     Timestamp expiry = 17; // The epoch second at which the token will expire
+    string memo = 18; // The memo associated with the token
 }
 
 /* Response when the client sends the node TokenGetInfoQuery */

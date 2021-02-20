@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2020 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ option java_multiple_files = true;
 import "BasicTypes.proto";
 import "Duration.proto";
 import "Timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 /*
 At consensus, updates the fields of a smart contract to the given values.
@@ -52,6 +53,9 @@ message ContractUpdateTransactionBody {
     // The new id of the file asserted to contain the bytecode of the Solidity transaction that created this contract
     FileID fileID = 8;
     // The new contract memo, assumed to be Unicode encoded with UTF-8 (at most 100 bytes)
-    string memo = 9;
+    oneof memoField {
+      string memo = 9 [deprecated = true]; // [Deprecated] If set with a non-zero length, the new memo to be associated with the account (UTF-8 encoding max 100 bytes)
+      google.protobuf.StringValue memoWrapper = 10; // If set, the new memo to be associated with the account (UTF-8 encoding max 100 bytes)
+    }
 }
 
