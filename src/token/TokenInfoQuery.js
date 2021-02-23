@@ -1,6 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TokenId from "./TokenId.js";
 import TokenInfo from "./TokenInfo.js";
+import Hbar from "../Hbar";
 
 /**
  * @namespace proto
@@ -72,6 +73,21 @@ export default class TokenInfoQuery extends Query {
             tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId);
 
         return this;
+    }
+
+    /**
+     * @override
+     * @param {import("../client/Client.js").default<Channel, *>} client
+     * @returns {Promise<Hbar>}
+     */
+    async getCost(client) {
+        let cost = await super.getCost(client)
+
+        if(cost.toTinybars().greaterThan(25)){
+            return cost
+        } else {
+            return Hbar.fromTinybars(25)
+        }
     }
 
     /**

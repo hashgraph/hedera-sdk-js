@@ -1,6 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import FileId from "./FileId.js";
 import FileInfo from "./FileInfo.js";
+import Hbar from "../Hbar";
 
 /**
  * @namespace proto
@@ -72,6 +73,21 @@ export default class FileInfoQuery extends Query {
             fileId instanceof FileId ? fileId : FileId.fromString(fileId);
 
         return this;
+    }
+
+    /**
+     * @override
+     * @param {import("../client/Client.js").default<Channel, *>} client
+     * @returns {Promise<Hbar>}
+     */
+    async getCost(client) {
+        let cost = await super.getCost(client)
+
+        if(cost.toTinybars().greaterThan(25)){
+            return cost
+        } else {
+            return Hbar.fromTinybars(25)
+        }
     }
 
     /**

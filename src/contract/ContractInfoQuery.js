@@ -1,6 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import ContractId from "./ContractId.js";
 import ContractInfo from "./ContractInfo.js";
+import Hbar from "../Hbar";
 
 /**
  * @namespace proto
@@ -85,6 +86,21 @@ export default class ContractInfoQuery extends Query {
      */
     _execute(channel, request) {
         return channel.smartContract.getContractInfo(request);
+    }
+
+    /**
+     * @override
+     * @param {import("../client/Client.js").default<Channel, *>} client
+     * @returns {Promise<Hbar>}
+     */
+    async getCost(client) {
+        let cost = await super.getCost(client)
+
+        if(cost.toTinybars().greaterThan(25)){
+            return cost
+        } else {
+            return Hbar.fromTinybars(25)
+        }
     }
 
     /**

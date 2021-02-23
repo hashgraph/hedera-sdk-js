@@ -1,6 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import ScheduleId from "./ScheduleId.js";
 import ScheduleInfo from "./ScheduleInfo.js";
+import Hbar from "../Hbar";
 
 /**
  * @namespace proto
@@ -74,6 +75,21 @@ export default class ScheduleInfoQuery extends Query {
                 : ScheduleId.fromString(scheduleId);
 
         return this;
+    }
+
+    /**
+     * @override
+     * @param {import("../client/Client.js").default<Channel, *>} client
+     * @returns {Promise<Hbar>}
+     */
+    async getCost(client) {
+        let cost = await super.getCost(client)
+
+        if(cost.toTinybars().greaterThan(25)){
+            return cost
+        } else {
+            return Hbar.fromTinybars(25)
+        }
     }
 
     /**

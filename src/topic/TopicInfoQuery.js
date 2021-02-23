@@ -1,6 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TopicId from "./TopicId.js";
 import TopicInfo from "./TopicInfo.js";
+import Hbar from "../Hbar";
 
 /**
  * @namespace proto
@@ -74,6 +75,21 @@ export default class TopicInfoQuery extends Query {
             topicId instanceof TopicId ? topicId : TopicId.fromString(topicId);
 
         return this;
+    }
+
+    /**
+     * @override
+     * @param {import("../client/Client.js").default<Channel, *>} client
+     * @returns {Promise<Hbar>}
+     */
+    async getCost(client) {
+        let cost = await super.getCost(client)
+
+        if(cost.toTinybars().greaterThan(25)){
+            return cost
+        } else {
+            return Hbar.fromTinybars(25)
+        }
     }
 
     /**
