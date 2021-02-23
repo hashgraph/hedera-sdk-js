@@ -66,4 +66,18 @@ export default class AccountBalance {
             tokenBalances: list,
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        let finalToken = "";
+        if(this.tokens != null){
+            for (const [key, value] of this.tokens._map) {
+                finalToken = finalToken + JSON.stringify({tokenId: key.toString(), balance: value.toString()});
+            }
+        }
+
+        return JSON.stringify({hbars: this.hbars.toString(), tokens: finalToken});
+    }
 }
