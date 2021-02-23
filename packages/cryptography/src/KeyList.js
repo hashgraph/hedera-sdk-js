@@ -105,4 +105,11 @@ export default class KeyList extends Key {
     toArray() {
         return this._keys.slice();
     }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify({ threshold: this._threshold, keys: this._keys.toString() });
+    }
 }
