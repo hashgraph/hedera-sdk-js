@@ -7,6 +7,11 @@ import {
     keyListToProtobuf,
 } from "../cryptography/protobuf.js";
 import Timestamp from "../Timestamp.js";
+import Transaction from "../transaction/Transaction";
+import {
+    SignedTransaction as ProtoSignedTransaction,
+    TransactionList as ProtoTransactionList
+} from "@hashgraph/proto";
 
 /**
  * @namespace proto
@@ -160,5 +165,23 @@ export default class ScheduleInfo {
                     ? this.expirationTime._toProtobuf()
                     : null,
         };
+    }
+
+    /**
+     * @internal
+     * @returns {Transaction}
+     */
+    getTransaction() {
+        let signedTransaction = ProtoSignedTransaction.create()
+        if (this.transactionBody != null){
+            signedTransaction.bodyBytes = this.transactionBody
+        } else {
+            signedTransaction.bodyBytes = new Uint8Array()
+        }
+
+        let list = ProtoTransactionList.create()
+        list.transactionList = [{signedTransactionBytes: ProtoSignedTransaction.encode(signedTransaction).finish()}]
+
+        return Transaction.fromBytes(ProtoTransactionList.encode(list).finish())
     }
 }

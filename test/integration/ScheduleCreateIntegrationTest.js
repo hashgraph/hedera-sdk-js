@@ -39,10 +39,12 @@ describe("ScheduleCreate", function () {
 
         const schedule = receipt.scheduleId;
 
-        await new ScheduleInfoQuery()
+        const info = await new ScheduleInfoQuery()
             .setScheduleId(schedule)
             .setNodeAccountIds([response.nodeId])
             .execute(client);
+
+        const infoTx = info.getTransaction()
 
         await (
             await new ScheduleDeleteTransaction()
