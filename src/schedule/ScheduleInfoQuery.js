@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import ScheduleId from "./ScheduleId.js";
 import ScheduleInfo from "./ScheduleInfo.js";
-import Hbar from "../Hbar";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto

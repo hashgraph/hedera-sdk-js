@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TopicId from "./TopicId.js";
 import TopicInfo from "./TopicInfo.js";
-import Hbar from "../Hbar";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto

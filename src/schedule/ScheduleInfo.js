@@ -7,7 +7,7 @@ import {
     keyListToProtobuf,
 } from "../cryptography/protobuf.js";
 import Timestamp from "../Timestamp.js";
-import Transaction from "../transaction/Transaction";
+import Transaction from "../transaction/Transaction.js";
 import {
     SignedTransaction as ProtoSignedTransaction,
     TransactionList as ProtoTransactionList

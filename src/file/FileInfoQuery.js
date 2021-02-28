@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import FileId from "./FileId.js";
 import FileInfo from "./FileInfo.js";
-import Hbar from "../Hbar";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto

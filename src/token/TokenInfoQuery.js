@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TokenId from "./TokenId.js";
 import TokenInfo from "./TokenInfo.js";
-import Hbar from "../Hbar";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto

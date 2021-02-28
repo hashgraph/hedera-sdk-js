@@ -1,7 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import ContractId from "./ContractId.js";
 import ContractInfo from "./ContractInfo.js";
-import Hbar from "../Hbar";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
