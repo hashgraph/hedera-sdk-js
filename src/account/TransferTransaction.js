@@ -190,7 +190,7 @@ export default class TransferTransaction extends Transaction {
     /**
      * @returns {HbarTransferMap}
      */
-    get hbarTranfers() {
+    get hbarTransfers() {
         return this._hbarTransfers;
     }
 
