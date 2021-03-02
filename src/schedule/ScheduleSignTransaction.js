@@ -2,6 +2,7 @@ import ScheduleId from "./ScheduleId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import { PublicKey } from "@hashgraph/cryptography";
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -35,7 +36,6 @@ import Transaction, {
 /**
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
@@ -49,6 +49,7 @@ export default class ScheduleSignTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {ScheduleId} [props.scheduleId]
+     * @param {?proto.ISignatureMap} [props.sigMap]
      */
     constructor(props = {}) {
         super();
@@ -67,6 +68,10 @@ export default class ScheduleSignTransaction extends Transaction {
 
         if (props.scheduleId != null) {
             this.setScheduleId(props.scheduleId);
+        }
+
+        if(props.sigMap != null){
+            this._sigMap = props.sigMap
         }
     }
 
@@ -95,6 +100,7 @@ export default class ScheduleSignTransaction extends Transaction {
                     sign.scheduleID != null
                         ? ScheduleId._fromProtobuf(sign.scheduleID)
                         : undefined,
+                sigMap: sign.sigMap,
             }),
             transactions,
             signedTransactions,
@@ -142,6 +148,25 @@ export default class ScheduleSignTransaction extends Transaction {
         });
 
         return this;
+    }
+
+    /**
+     * @returns {Map<PublicKey, Uint8Array>}
+     */
+    get scheduleSignatures() {
+        let map = new Map()
+
+        if(this._sigMap != null) {
+            if (this._sigMap.sigPair != null) {
+                for (const sigPair of this._sigMap.sigPair) {
+                    if (sigPair.pubKeyPrefix != null) {
+                        map.set(PublicKey.fromBytes(sigPair.pubKeyPrefix), sigPair.ed25519)
+                    }
+                }
+            }
+        }
+
+        return map
     }
 
     /**

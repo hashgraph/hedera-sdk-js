@@ -168,10 +168,9 @@ export default class ScheduleInfo {
     }
 
     /**
-     * @internal
      * @returns {Transaction}
      */
-    getTransaction() {
+    get transaction() {
         let signedTransaction = ProtoSignedTransaction.create()
         if (this.transactionBody != null){
             signedTransaction.bodyBytes = this.transactionBody

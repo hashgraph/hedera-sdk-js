@@ -50,6 +50,13 @@ export default class ObjectMap {
     }
 
     /**
+     * @returns {number}
+     */
+    get length() {
+        return this._map.size;
+    }
+
+    /**
      * @returns {IterableIterator<KeyT>}
      */
     keys() {
