@@ -1,10 +1,10 @@
 import AccountId from "../account/AccountId.js";
-import { PublicKey } from "@hashgraph/cryptography";
 import Transaction, {
     TRANSACTION_REGISTRY,
     SCHEDULE_CREATE_TRANSACTION,
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
+import NodeAccountIdSignatureMap from "../transaction/NodeAccountIdSignatureMap.js";
 
 /**
  * @namespace proto
@@ -35,8 +35,6 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @param {Key} [props.adminKey]
      * @param {AccountId} [props.payerAccountID]
      * @param {string} [props.memo]
-     * @param {?Uint8Array} [props.transactionBody]
-     * @param {?proto.ISignatureMap} [props.sigMap]
      */
     constructor(props = {}) {
         super();
@@ -82,14 +80,6 @@ export default class ScheduleCreateTransaction extends Transaction {
         if (props.memo != null) {
             this.setMemo(props.memo);
         }
-
-        props.transactionBody !== undefined
-            ? this._transactionBody = props.transactionBody
-            : this._transactionBody = null;
-
-        props.sigMap !== undefined
-            ? this._sigMap = props.sigMap
-            : this._sigMap = null;
     }
 
     /**
@@ -124,8 +114,6 @@ export default class ScheduleCreateTransaction extends Transaction {
                           )
                         : undefined,
                 memo: create.memo != null ? create.memo : undefined,
-                transactionBody: create.transactionBody,
-                sigMap: create.sigMap,
             }),
             transactions,
             signedTransactions,
@@ -232,22 +220,14 @@ export default class ScheduleCreateTransaction extends Transaction {
     }
 
     /**
-     * @returns {Map<PublicKey, Uint8Array>}
+     * @returns {NodeAccountIdSignatureMap}
      */
     get scheduleSignatures() {
-        let map = new Map()
-
-        if(this._sigMap != null) {
-            if (this._sigMap.sigPair != null) {
-                for (const sigPair of this._sigMap.sigPair) {
-                    if (sigPair.pubKeyPrefix != null) {
-                        map.set(PublicKey.fromBytes(sigPair.pubKeyPrefix), sigPair.ed25519)
-                    }
-                }
-            }
+        if(this._sigMap != null){
+            return NodeAccountIdSignatureMap._fromTransactionSigMap(this._sigMap)
+        } else {
+            return new NodeAccountIdSignatureMap()
         }
-
-        return map
     }
 
     /**

@@ -52,7 +52,7 @@ export default class ObjectMap {
     /**
      * @returns {number}
      */
-    get length() {
+    get size() {
         return this._map.size;
     }
 

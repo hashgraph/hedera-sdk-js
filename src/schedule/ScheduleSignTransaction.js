@@ -3,6 +3,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import { PublicKey } from "@hashgraph/cryptography";
+import NodeAccountIdSignatureMap from "../transaction/NodeAccountIdSignatureMap.js"
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -49,7 +50,6 @@ export default class ScheduleSignTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {ScheduleId} [props.scheduleId]
-     * @param {?proto.ISignatureMap} [props.sigMap]
      */
     constructor(props = {}) {
         super();
@@ -68,10 +68,6 @@ export default class ScheduleSignTransaction extends Transaction {
 
         if (props.scheduleId != null) {
             this.setScheduleId(props.scheduleId);
-        }
-
-        if(props.sigMap != null){
-            this._sigMap = props.sigMap
         }
     }
 
@@ -100,7 +96,6 @@ export default class ScheduleSignTransaction extends Transaction {
                     sign.scheduleID != null
                         ? ScheduleId._fromProtobuf(sign.scheduleID)
                         : undefined,
-                sigMap: sign.sigMap,
             }),
             transactions,
             signedTransactions,
@@ -151,22 +146,14 @@ export default class ScheduleSignTransaction extends Transaction {
     }
 
     /**
-     * @returns {Map<PublicKey, Uint8Array>}
+     * @returns {NodeAccountIdSignatureMap}
      */
     get scheduleSignatures() {
-        let map = new Map()
-
-        if(this._sigMap != null) {
-            if (this._sigMap.sigPair != null) {
-                for (const sigPair of this._sigMap.sigPair) {
-                    if (sigPair.pubKeyPrefix != null) {
-                        map.set(PublicKey.fromBytes(sigPair.pubKeyPrefix), sigPair.ed25519)
-                    }
-                }
-            }
+        if(this._sigMap != null){
+            return NodeAccountIdSignatureMap._fromTransactionSigMap(this._sigMap)
+        } else {
+            return new NodeAccountIdSignatureMap()
         }
-
-        return map
     }
 
     /**

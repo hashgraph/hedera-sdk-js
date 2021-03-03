@@ -108,8 +108,8 @@ async function main() {
 
     let transfers = transfer.hbarTranfers
 
-    if (transfers.length !== 2) {
-        throw new Error("more transfers than expected " + transfers.length);
+    if (transfers.size !== 2) {
+        throw new Error("more transfers than expected " + transfers.size);
     }
 
     if (!transfers.get(accountId).toTinybars().equals(new Hbar(1).negated().toTinybars())) {
