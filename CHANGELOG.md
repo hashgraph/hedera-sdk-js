@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `ScheduleSignTransaction` - Sign an existing scheduled transaction on the network
  * `ScheduleDeleteTransaction` - Delete a scheduled transaction
  * `ScheduleInfoQuery` - Query the info including `bodyBytes` of a scheduled transaction
+ * `ScheduleId`
 
 ### Fixed
  * `KeyList.toString()`
