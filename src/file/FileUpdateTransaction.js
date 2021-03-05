@@ -34,6 +34,7 @@ export default class FileUpdateTransaction extends Transaction {
      * @param {Key[] | KeyList} [props.keys]
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {Uint8Array | string} [props.contents]
+     * @param {string} [props.fileMemo]
      */
     constructor(props = {}) {
         super();
@@ -62,6 +63,12 @@ export default class FileUpdateTransaction extends Transaction {
          */
         this._contents = null;
 
+        /**
+         * @private
+         * @type {?string}
+         */
+        this._fileMemo = null;
+
         if (props.fileId != null) {
             this.setFileId(props.fileId);
         }
@@ -76,6 +83,10 @@ export default class FileUpdateTransaction extends Transaction {
 
         if (props.contents != null) {
             this.setContents(props.contents);
+        }
+
+        if (props.fileMemo != null) {
+            this.setFileMemo(props.fileMemo);
         }
     }
 
@@ -117,6 +128,12 @@ export default class FileUpdateTransaction extends Transaction {
                         ? Timestamp._fromProtobuf(update.expirationTime)
                         : undefined,
                 contents: update.contents != null ? update.contents : undefined,
+                fileMemo:
+                    update.memo != null
+                        ? update.memo.value != null
+                            ? update.memo.value
+                            : undefined
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -252,6 +269,34 @@ export default class FileUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?string}
+     */
+    get fileMemo() {
+        return this._fileMemo;
+    }
+
+    /**
+     * @param {string} memo
+     * @returns {this}
+     */
+    setFileMemo(memo) {
+        this._requireNotFrozen();
+        this._fileMemo = memo;
+
+        return this;
+    }
+
+    /**
+     * @returns {this}
+     */
+    clearFileMemo() {
+        this._requireNotFrozen();
+        this._fileMemo = null;
+
+        return this;
+    }
+
+    /**
      * @override
      * @internal
      * @param {Channel} channel
@@ -290,6 +335,12 @@ export default class FileUpdateTransaction extends Transaction {
                     ? this._expirationTime._toProtobuf()
                     : null,
             contents: this._contents,
+            memo:
+                this._fileMemo != null
+                    ? {
+                          value: this._fileMemo,
+                      }
+                    : null,
         };
     }
 }

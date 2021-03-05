@@ -35,6 +35,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @param {AccountId} [props.proxyAccountId]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {Timestamp | Date} [props.expirationTime]
+     * @param {string} [props.accountMemo]
      */
     constructor(props = {}) {
         super();
@@ -45,19 +46,11 @@ export default class AccountUpdateTransaction extends Transaction {
          */
         this._accountId = null;
 
-        if (props.accountId != null) {
-            this.setAccountId(props.accountId);
-        }
-
         /**
          * @private
          * @type {?Key}
          */
         this._key = null;
-
-        if (props.key != null) {
-            this.setKey(props.key);
-        }
 
         /**
          * @private
@@ -65,19 +58,11 @@ export default class AccountUpdateTransaction extends Transaction {
          */
         this._receiverSignatureRequired = false;
 
-        if (props.receiverSignatureRequired != null) {
-            this.setReceiverSignatureRequired(props.receiverSignatureRequired);
-        }
-
         /**
          * @private
          * @type {?AccountId}
          */
         this._proxyAccountId = null;
-
-        if (props.proxyAccountId != null) {
-            this.setProxyAccountId(props.proxyAccountId);
-        }
 
         /**
          * @private
@@ -85,18 +70,44 @@ export default class AccountUpdateTransaction extends Transaction {
          */
         this._autoRenewPeriod = null;
 
-        if (props.autoRenewPeriod != null) {
-            this.setAutoRenewPeriod(props.autoRenewPeriod);
-        }
-
         /**
          * @private
          * @type {?Timestamp}
          */
         this._expirationTime = null;
 
+        /**
+         * @private
+         * @type {?string}
+         */
+        this._accountMemo = null;
+
+        if (props.accountId != null) {
+            this.setAccountId(props.accountId);
+        }
+
+        if (props.key != null) {
+            this.setKey(props.key);
+        }
+
+        if (props.receiverSignatureRequired != null) {
+            this.setReceiverSignatureRequired(props.receiverSignatureRequired);
+        }
+
+        if (props.proxyAccountId != null) {
+            this.setProxyAccountId(props.proxyAccountId);
+        }
+
+        if (props.autoRenewPeriod != null) {
+            this.setAutoRenewPeriod(props.autoRenewPeriod);
+        }
+
         if (props.expirationTime != null) {
             this.setExpirationTime(props.expirationTime);
+        }
+
+        if (props.accountMemo != null) {
+            this.setAccountMemo(props.accountMemo);
         }
     }
 
@@ -150,6 +161,12 @@ export default class AccountUpdateTransaction extends Transaction {
                 expirationTime:
                     update.expirationTime != null
                         ? Timestamp._fromProtobuf(update.expirationTime)
+                        : undefined,
+                accountMemo:
+                    update.memo != null
+                        ? update.memo.value != null
+                            ? update.memo.value
+                            : undefined
                         : undefined,
             }),
             transactions,
@@ -280,6 +297,34 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?string}
+     */
+    get accountMemo() {
+        return this._accountMemo;
+    }
+
+    /**
+     * @param {string} memo
+     * @returns {this}
+     */
+    setAccountMemo(memo) {
+        this._requireNotFrozen();
+        this._accountMemo = memo;
+
+        return this;
+    }
+
+    /**
+     * @returns {this}
+     */
+    clearAccountMemo() {
+        this._requireNotFrozen();
+        this._accountMemo = null;
+
+        return this;
+    }
+
+    /**
      * @override
      * @internal
      * @param {Channel} channel
@@ -327,6 +372,12 @@ export default class AccountUpdateTransaction extends Transaction {
                     : {
                           value: this._receiverSignatureRequired,
                       },
+            memo:
+                this._accountMemo != null
+                    ? {
+                          value: this._accountMemo,
+                      }
+                    : null,
         };
     }
 }

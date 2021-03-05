@@ -28,20 +28,14 @@ import Duration from "../Duration.js";
 export default class TopicCreateTransaction extends Transaction {
     /**
      * @param {object} props
-     * @param {string} [props.topicMemo]
      * @param {Key} [props.adminKey]
      * @param {Key} [props.submitKey]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {AccountId | string} [props.autoRenewAccountId]
+     * @param {string} [props.topicMemo]
      */
     constructor(props = {}) {
         super();
-
-        /**
-         * @private
-         * @type {?string}
-         */
-        this._topicMemo = null;
 
         /**
          * @private
@@ -67,9 +61,11 @@ export default class TopicCreateTransaction extends Transaction {
          */
         this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
 
-        if (props.topicMemo != null) {
-            this.setTopicMemo(props.topicMemo);
-        }
+        /**
+         * @private
+         * @type {?string}
+         */
+        this._topicMemo = null;
 
         if (props.adminKey != null) {
             this.setAdminKey(props.adminKey);
@@ -85,6 +81,10 @@ export default class TopicCreateTransaction extends Transaction {
 
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
+        }
+
+        if (props.topicMemo != null) {
+            this.setTopicMemo(props.topicMemo);
         }
     }
 
@@ -109,7 +109,6 @@ export default class TopicCreateTransaction extends Transaction {
 
         return Transaction._fromProtobufTransactions(
             new TopicCreateTransaction({
-                topicMemo: create.memo != null ? create.memo : undefined,
                 adminKey:
                     create.adminKey != null
                         ? keyFromProtobuf(create.adminKey)
@@ -128,6 +127,7 @@ export default class TopicCreateTransaction extends Transaction {
                             ? create.autoRenewPeriod.seconds
                             : undefined
                         : undefined,
+                topicMemo: create.memo != null ? create.memo : undefined,
             }),
             transactions,
             signedTransactions,
@@ -266,12 +266,12 @@ export default class TopicCreateTransaction extends Transaction {
                 this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
             submitKey:
                 this._submitKey != null ? keyToProtobuf(this._submitKey) : null,
-            memo: this._topicMemo,
             autoRenewAccount:
                 this._autoRenewAccountId != null
                     ? this._autoRenewAccountId._toProtobuf()
                     : null,
             autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
+            memo: this._topicMemo,
         };
     }
 }

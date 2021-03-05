@@ -47,6 +47,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @param {AccountId | string} [props.autoRenewAccountId]
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
+     * @param {string} [props.tokenMemo]
      */
     constructor(props = {}) {
         super();
@@ -135,6 +136,12 @@ export default class TokenCreateTransaction extends Transaction {
          */
         this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
 
+        /**
+         * @private
+         * @type {?string}
+         */
+        this._tokenMemo = null;
+
         this.setMaxTransactionFee(new Hbar(30));
 
         if (props.tokenName != null) {
@@ -191,6 +198,10 @@ export default class TokenCreateTransaction extends Transaction {
 
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
+        }
+
+        if (props.tokenMemo != null) {
+            this.setTokenMemo(props.tokenMemo);
         }
     }
 
@@ -262,6 +273,7 @@ export default class TokenCreateTransaction extends Transaction {
                     create.autoRenewPeriod != null
                         ? Duration._fromProtobuf(create.autoRenewPeriod)
                         : undefined,
+                tokenMemo: create.memo != null ? create.memo : undefined,
             }),
             transactions,
             signedTransactions,
@@ -537,6 +549,24 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?string}
+     */
+    get tokenMemo() {
+        return this._tokenMemo;
+    }
+
+    /**
+     * @param {string} memo
+     * @returns {this}
+     */
+    setTokenMemo(memo) {
+        this._requireNotFrozen();
+        this._tokenMemo = memo;
+
+        return this;
+    }
+
+    /**
      * @param {?import("../client/Client.js").default<Channel, *>} client
      * @returns {this}
      */
@@ -579,10 +609,10 @@ export default class TokenCreateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            name: this.tokenName,
-            symbol: this.tokenSymbol,
-            decimals: this.decimals != null ? this.decimals.toInt() : null,
-            initialSupply: this.initialSupply,
+            name: this._tokenName,
+            symbol: this._tokenSymbol,
+            decimals: this._decimals != null ? this._decimals.toInt() : null,
+            initialSupply: this._initialSupply,
             treasury:
                 this._treasuryAccountId != null
                     ? this._treasuryAccountId._toProtobuf()
@@ -609,6 +639,7 @@ export default class TokenCreateTransaction extends Transaction {
                 this._autoRenewPeriod != null
                     ? this._autoRenewPeriod._toProtobuf()
                     : null,
+            memo: this._tokenMemo,
         };
     }
 }

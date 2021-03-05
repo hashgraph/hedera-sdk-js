@@ -38,6 +38,7 @@ export default class AccountCreateTransaction extends Transaction {
      * @param {boolean} [props.receiverSignatureRequired]
      * @param {AccountId} [props.proxyAccountId]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
+     * @param {string} [props.accountMemo]
      */
     constructor(props = {}) {
         super();
@@ -84,6 +85,12 @@ export default class AccountCreateTransaction extends Transaction {
          */
         this._autoRenewPeriod = new Duration(DEFAULT_AUTO_RENEW_PERIOD);
 
+        /**
+         * @private
+         * @type {?string}
+         */
+        this._accountMemo = null;
+
         if (props.key != null) {
             this.setKey(props.key);
         }
@@ -102,6 +109,10 @@ export default class AccountCreateTransaction extends Transaction {
 
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
+        }
+
+        if (props.accountMemo != null) {
+            this.setAccountMemo(props.accountMemo);
         }
     }
 
@@ -150,6 +161,7 @@ export default class AccountCreateTransaction extends Transaction {
                             ? create.autoRenewPeriod.seconds
                             : undefined
                         : undefined,
+                accountMemo: create.memo != null ? create.memo : undefined,
             }),
             transactions,
             signedTransactions,
@@ -272,6 +284,24 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?string}
+     */
+    get accountMemo() {
+        return this._accountMemo;
+    }
+
+    /**
+     * @param {string} memo
+     * @returns {this}
+     */
+    setAccountMemo(memo) {
+        this._requireNotFrozen();
+        this._accountMemo = memo;
+
+        return this;
+    }
+
+    /**
      * @override
      * @internal
      * @param {Channel} channel
@@ -311,6 +341,7 @@ export default class AccountCreateTransaction extends Transaction {
             receiveRecordThreshold: this._receiveRecordThreshold.toTinybars(),
             sendRecordThreshold: this._sendRecordThreshold.toTinybars(),
             receiverSigRequired: this._receiverSignatureRequired,
+            memo: this._accountMemo,
         };
     }
 }

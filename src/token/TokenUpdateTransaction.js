@@ -43,6 +43,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {AccountId | string} [props.autoRenewAccountId]
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
+     * @param {string} [props.tokenMemo]
      */
     constructor(props = {}) {
         super();
@@ -119,6 +120,12 @@ export default class TokenUpdateTransaction extends Transaction {
          */
         this._autoRenewPeriod = null;
 
+        /**
+         * @private
+         * @type {?string}
+         */
+        this._tokenMemo = null;
+
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);
         }
@@ -165,6 +172,10 @@ export default class TokenUpdateTransaction extends Transaction {
 
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
+        }
+
+        if (props.tokenMemo != null) {
+            this.setTokenMemo(props.tokenMemo);
         }
     }
 
@@ -230,6 +241,12 @@ export default class TokenUpdateTransaction extends Transaction {
                 autoRenewPeriod:
                     update.autoRenewPeriod != null
                         ? Duration._fromProtobuf(update.autoRenewPeriod)
+                        : undefined,
+                tokenMemo:
+                    update.memo != null
+                        ? update.memo.value != null
+                            ? update.memo.value
+                            : undefined
                         : undefined,
             }),
             transactions,
@@ -466,6 +483,34 @@ export default class TokenUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?string}
+     */
+    get tokenMemo() {
+        return this._tokenMemo;
+    }
+
+    /**
+     * @param {string} tokenMemo
+     * @returns {this}
+     */
+    setTokenMemo(tokenMemo) {
+        this._requireNotFrozen();
+        this._tokenMemo = tokenMemo;
+
+        return this;
+    }
+
+    /**
+     * @returns {this}
+     */
+    clearTokenMemo() {
+        this._requireNotFrozen();
+        this._tokenMemo = null;
+
+        return this;
+    }
+
+    /**
      * @override
      * @internal
      * @param {Channel} channel
@@ -519,6 +564,12 @@ export default class TokenUpdateTransaction extends Transaction {
             autoRenewPeriod:
                 this._autoRenewPeriod != null
                     ? this._autoRenewPeriod._toProtobuf()
+                    : null,
+            memo:
+                this._tokenMemo != null
+                    ? {
+                          value: this._tokenMemo,
+                      }
                     : null,
         };
     }

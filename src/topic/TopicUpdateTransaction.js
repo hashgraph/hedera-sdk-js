@@ -36,11 +36,11 @@ export default class TopicUpdateTransaction extends Transaction {
     /**
      * @param {object} props
      * @param {TopicId | string} [props.topicId]
-     * @param {string} [props.topicMemo]
      * @param {Key} [props.adminKey]
      * @param {Key} [props.submitKey]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {AccountId | string} [props.autoRenewAccountId]
+     * @param {string} [props.topicMemo]
      */
     constructor(props = {}) {
         super();
@@ -131,12 +131,6 @@ export default class TopicUpdateTransaction extends Transaction {
                     update.topicID != null
                         ? TopicId._fromProtobuf(update.topicID)
                         : undefined,
-                topicMemo:
-                    update.memo != null
-                        ? update.memo.value != null
-                            ? update.memo.value
-                            : undefined
-                        : undefined,
                 adminKey:
                     update.adminKey != null
                         ? keyFromProtobuf(update.adminKey)
@@ -153,6 +147,12 @@ export default class TopicUpdateTransaction extends Transaction {
                     update.autoRenewPeriod != null
                         ? update.autoRenewPeriod.seconds != null
                             ? update.autoRenewPeriod.seconds
+                            : undefined
+                        : undefined,
+                topicMemo:
+                    update.memo != null
+                        ? update.memo.value != null
+                            ? update.memo.value
                             : undefined
                         : undefined,
             }),
@@ -364,7 +364,7 @@ export default class TopicUpdateTransaction extends Transaction {
             submitKey:
                 this._submitKey != null ? keyToProtobuf(this._submitKey) : null,
             memo:
-                this._topicId != null
+                this._topicMemo != null
                     ? {
                           value: this._topicMemo,
                       }

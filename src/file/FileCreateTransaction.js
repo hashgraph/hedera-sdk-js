@@ -34,6 +34,7 @@ export default class FileCreateTransaction extends Transaction {
      * @param {Key[] | KeyList} [props.keys]
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {Uint8Array | string} [props.contents]
+     * @param {string} [props.fileMemo]
      */
     constructor(props = {}) {
         super();
@@ -58,6 +59,12 @@ export default class FileCreateTransaction extends Transaction {
          */
         this._contents = null;
 
+        /**
+         * @private
+         * @type {?string}
+         */
+        this._fileMemo = null;
+
         this.setMaxTransactionFee(new Hbar(5));
 
         if (props.keys != null) {
@@ -70,6 +77,10 @@ export default class FileCreateTransaction extends Transaction {
 
         if (props.contents != null) {
             this.setContents(props.contents);
+        }
+
+        if (props.fileMemo != null) {
+            this.setFileMemo(props.fileMemo);
         }
     }
 
@@ -107,6 +118,7 @@ export default class FileCreateTransaction extends Transaction {
                         ? Timestamp._fromProtobuf(create.expirationTime)
                         : undefined,
                 contents: create.contents != null ? create.contents : undefined,
+                fileMemo: create.memo != null ? create.memo : undefined,
             }),
             transactions,
             signedTransactions,
@@ -211,6 +223,24 @@ export default class FileCreateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?string}
+     */
+    get fileMemo() {
+        return this._fileMemo;
+    }
+
+    /**
+     * @param {string} memo
+     * @returns {this}
+     */
+    setFileMemo(memo) {
+        this._requireNotFrozen();
+        this._fileMemo = memo;
+
+        return this;
+    }
+
+    /**
      * @override
      * @internal
      * @param {Channel} channel
@@ -245,6 +275,7 @@ export default class FileCreateTransaction extends Transaction {
                     : null,
             expirationTime: this._expirationTime._toProtobuf(),
             contents: this._contents,
+            memo: this._fileMemo,
         };
     }
 }

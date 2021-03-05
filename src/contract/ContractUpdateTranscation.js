@@ -165,7 +165,12 @@ export default class ContractUpdateTransaction extends Transaction {
                             ? update.autoRenewPeriod.seconds
                             : undefined
                         : undefined,
-                contractMemo: update.memo != null ? update.memo : undefined,
+                contractMemo:
+                    update.memoWrapper != null
+                        ? update.memoWrapper.value != null
+                            ? update.memoWrapper.value
+                            : undefined
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -321,6 +326,16 @@ export default class ContractUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {this}
+     */
+    clearContractMemo() {
+        this._requireNotFrozen();
+        this._contractMemo = null;
+
+        return this;
+    }
+
+    /**
      * @override
      * @internal
      * @param {Channel} channel
@@ -368,7 +383,12 @@ export default class ContractUpdateTransaction extends Transaction {
             fileID: this._bytecodeFileId
                 ? this._bytecodeFileId._toProtobuf()
                 : null,
-            memo: this._contractMemo,
+            memoWrapper:
+                this._contractMemo != null
+                    ? {
+                          value: this._contractMemo,
+                      }
+                    : null,
         };
     }
 }

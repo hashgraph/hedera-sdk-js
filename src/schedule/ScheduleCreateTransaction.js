@@ -34,7 +34,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @param {object} [props]
      * @param {Key} [props.adminKey]
      * @param {AccountId} [props.payerAccountID]
-     * @param {string} [props.memo]
+     * @param {string} [props.scheduleMemo]
      */
     constructor(props = {}) {
         super();
@@ -67,7 +67,7 @@ export default class ScheduleCreateTransaction extends Transaction {
          * @private
          * @type {?string}
          */
-        this._memo = null;
+        this._scheduleMemo = null;
 
         if (props.adminKey != null) {
             this.setAdminKey(props.adminKey);
@@ -77,8 +77,8 @@ export default class ScheduleCreateTransaction extends Transaction {
             this.setPayerAccountId(props.payerAccountID);
         }
 
-        if (props.memo != null) {
-            this.setMemo(props.memo);
+        if (props.scheduleMemo != null) {
+            this.setScheduleMemo(props.scheduleMemo);
         }
     }
 
@@ -113,7 +113,7 @@ export default class ScheduleCreateTransaction extends Transaction {
                               /** @type {proto.IAccountID} */ (create.payerAccountID)
                           )
                         : undefined,
-                memo: create.memo != null ? create.memo : undefined,
+                scheduleMemo: create.memo != null ? create.memo : undefined,
             }),
             transactions,
             signedTransactions,
@@ -170,9 +170,9 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @param {string} memo
      * @returns {this}
      */
-    setMemo(memo) {
+    setScheduleMemo(memo) {
         this._requireNotFrozen();
-        this._memo = memo;
+        this._scheduleMemo = memo;
 
         return this;
     }
@@ -180,8 +180,9 @@ export default class ScheduleCreateTransaction extends Transaction {
     /**
      * @returns {?string}
      */
-    get Memo() {
-        return this._memo;
+    get getScheduleMemo() {
+        this._requireNotFrozen();
+        return this._scheduleMemo;
     }
 
     /**
@@ -264,7 +265,7 @@ export default class ScheduleCreateTransaction extends Transaction {
                     : null,
             sigMap: this._sigMap,
             transactionBody: this._transactionBody,
-            memo: this._memo,
+            memo: this._scheduleMemo,
         };
     }
 }
