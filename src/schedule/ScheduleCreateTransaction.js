@@ -207,10 +207,7 @@ export default class ScheduleCreateTransaction extends Transaction {
             this._sigMap.sigPair = [];
         }
 
-        if (
-            signed.sigMap != null &&
-            signed.sigMap.sigPair != null
-        ) {
+        if (signed.sigMap != null && signed.sigMap.sigPair != null) {
             for (const sigPair of signed.sigMap.sigPair) {
                 this._sigMap.sigPair.push(sigPair);
             }
@@ -223,10 +220,12 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @returns {NodeAccountIdSignatureMap}
      */
     get scheduleSignatures() {
-        if(this._sigMap != null){
-            return NodeAccountIdSignatureMap._fromTransactionSigMap(this._sigMap)
+        if (this._sigMap != null) {
+            return NodeAccountIdSignatureMap._fromTransactionSigMap(
+                this._sigMap
+            );
         } else {
-            return new NodeAccountIdSignatureMap()
+            return new NodeAccountIdSignatureMap();
         }
     }
 

@@ -1,6 +1,5 @@
 import {
     AccountCreateTransaction,
-    AccountDeleteTransaction,
     TokenAssociateTransaction,
     TokenGrantKycTransaction,
     TokenCreateTransaction,
@@ -9,7 +8,6 @@ import {
     Hbar,
     Status,
     PrivateKey,
-    TransactionId,
 } from "../src/exports.js";
 import newClient from "./client/index.js";
 
@@ -17,7 +15,7 @@ describe("TokenTransfer", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
         const key = PrivateKey.generate();
@@ -89,25 +87,12 @@ describe("TokenTransfer", function () {
                 .setAmount(10)
                 .execute(client)
         ).getReceipt(client);
-
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
-                    .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
     });
 
     it("should error when no amount is transferred", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
         const key = PrivateKey.generate();
@@ -185,7 +170,7 @@ describe("TokenTransfer", function () {
     it("should error when no  is transferred", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
         const key = PrivateKey.generate();

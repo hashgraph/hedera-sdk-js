@@ -1,56 +1,57 @@
-import newIntegrationClient from "./client/index.js";
-import Hbar from "../src/Hbar.js";
-import Status from "../src/Status.js";
-import AccountBalanceQuery from "../src/account/AccountBalanceQuery.js";
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
-import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
-import TokenCreateTransaction from "../src/token/TokenCreateTransaction.js";
-import TokenAssociateTransaction from "../src/token/TokenAssociateTransaction.js";
-import TransactionId from "../src/transaction/TransactionId.js";
-import { PrivateKey } from "../src/exports.js";
+import {
+    PrivateKey,
+    Hbar,
+    Status,
+    AccountBalanceQuery,
+    AccountCreateTransaction,
+    AccountDeleteTransaction,
+    TokenCreateTransaction,
+    TokenAssociateTransaction,
+    TransactionId,
+} from "../src/exports.js";
+import newClient from "./client/index.js";
 
 describe("AccountBalanceQuery", function () {
-    this.timeout(15000);
-    let client;
+    it("account 0.0.3 should have a balance higher than 1 tinybar", async function () {
+        this.timeout(15000);
 
-    before(async function () {
-        client = await newIntegrationClient();
+        const client = await newClient();
+
+        const balance = await new AccountBalanceQuery()
+            .setAccountId("3") // balance of node 3
+            .execute(client);
+
+        expect(balance.hbars.toTinybars().toNumber()).to.be.greaterThan(
+            Hbar.fromTinybars(1).toTinybars().toNumber()
+        );
     });
 
-    describe("#execute", function () {
-        it("account 0.0.3 should have a balance higher than 1 hbar", async function () {
-            const balance = await new AccountBalanceQuery()
-                .setAccountId("3") // balance of node 3
+    it("an account that does not exist should return an error", async function () {
+        this.timeout(15000);
+
+        const client = await newClient();
+
+        let err = false;
+
+        try {
+            await new AccountBalanceQuery()
+                .setAccountId("1.0.3")
                 .execute(client);
+        } catch (error) {
+            err = error.toString().includes(Status.InvalidAccountId.toString());
+        }
 
-            expect(balance.hbars.toTinybars().toNumber()).to.be.greaterThan(
-                new Hbar(1).toTinybars().toNumber()
-            );
-        });
-
-        it("an account that does not exist should return an error", async function () {
-            let err = false;
-
-            try {
-                await new AccountBalanceQuery()
-                    .setAccountId("1.0.3")
-                    .execute(client);
-            } catch (error) {
-                err = error
-                    .toString()
-                    .includes(Status.InvalidAccountId.toString());
-            }
-
-            if (!err) {
-                throw new Error("query did not error");
-            }
-        });
+        if (!err) {
+            throw new Error("query did not error");
+        }
     });
 
     it("should reflect token with no keys", async function () {
         this.timeout(10000);
 
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
+
         const key = PrivateKey.generate();
 
         let response = await new AccountCreateTransaction()

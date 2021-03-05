@@ -1,17 +1,14 @@
 import {
     AccountCreateTransaction,
-    AccountDeleteTransaction,
     AccountInfoQuery,
     TokenAssociateTransaction,
     TokenGrantKycTransaction,
     TransferTransaction,
     TokenWipeTransaction,
     TokenCreateTransaction,
-    TokenDeleteTransaction,
     Hbar,
     Status,
     PrivateKey,
-    TransactionId,
 } from "../src/exports.js";
 import newClient from "./client/index.js";
 
@@ -19,7 +16,7 @@ describe("TokenWipe", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
         const key = PrivateKey.generate();
@@ -114,32 +111,12 @@ describe("TokenWipe", function () {
         expect(relationship.balance.toInt()).to.be.equal(0);
         expect(relationship.isKycGranted).to.be.true;
         expect(relationship.isFrozen).to.be.false;
-
-        await (
-            await new TokenDeleteTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTokenId(token)
-                .execute(client)
-        ).getReceipt(client);
-
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setAccountId(account)
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
-                    .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
     });
 
     it("should error when token ID is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const client = await newClient(true);
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
@@ -166,18 +143,6 @@ describe("TokenWipe", function () {
             err = error.toString().includes(Status.InvalidTokenId);
         }
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setAccountId(account)
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
-                    .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
-
         if (!err) {
             throw new Error("token wipe did not error");
         }
@@ -186,7 +151,7 @@ describe("TokenWipe", function () {
     it("should error when account ID is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
 
@@ -220,13 +185,6 @@ describe("TokenWipe", function () {
             err = error.toString().includes(Status.InvalidAccountId);
         }
 
-        await (
-            await new TokenDeleteTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTokenId(token)
-                .execute(client)
-        ).getReceipt(client);
-
         if (!err) {
             throw new Error("token wipe did not error");
         }
@@ -235,7 +193,7 @@ describe("TokenWipe", function () {
     it("should error when amount is not set", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
         const key = PrivateKey.generate();
@@ -301,25 +259,6 @@ describe("TokenWipe", function () {
         } catch (error) {
             err = error.toString().includes(Status.InvalidWipingAmount);
         }
-
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setAccountId(account)
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
-                    .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
-
-        await (
-            await new TokenDeleteTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTokenId(token)
-                .execute(client)
-        ).getReceipt(client);
 
         if (!err) {
             throw new Error("token wipe did not error");

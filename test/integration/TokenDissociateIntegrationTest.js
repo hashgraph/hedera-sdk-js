@@ -1,16 +1,13 @@
 import {
     AccountCreateTransaction,
-    AccountDeleteTransaction,
     AccountBalanceQuery,
     AccountInfoQuery,
     TokenAssociateTransaction,
     TokenDissociateTransaction,
     TokenCreateTransaction,
-    TokenDeleteTransaction,
     Hbar,
     Status,
     PrivateKey,
-    TransactionId,
 } from "../src/exports.js";
 import newClient from "./client/index.js";
 
@@ -18,7 +15,7 @@ describe("TokenDissociate", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
         const key = PrivateKey.generate();
@@ -104,69 +101,25 @@ describe("TokenDissociate", function () {
             .execute(client);
 
         expect(info.tokenRelationships.get(token)).to.be.null;
-
-        await (
-            await new TokenDeleteTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTokenId(token)
-                .execute(client)
-        ).getReceipt(client);
-
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
-                    .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
     });
 
     it("should be executable even when no token IDs are set", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
-        const key = PrivateKey.generate();
-
-        const response = await new AccountCreateTransaction()
-            .setKey(key)
-            .setInitialBalance(new Hbar(2))
-            .execute(client);
-
-        const account = (await response.getReceipt(client)).accountId;
 
         await (
-            await (
-                await new TokenDissociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setAccountId(account)
-                    .freezeWith(client)
-                    .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
-
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
-                    .sign(key)
-            ).execute(client)
+            await new TokenDissociateTransaction()
+                .setAccountId(operatorId)
+                .execute(client)
         ).getReceipt(client);
     });
 
     it("should error when account ID is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
 
@@ -198,13 +151,6 @@ describe("TokenDissociate", function () {
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountId);
         }
-
-        await (
-            await new TokenDeleteTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTokenId(token)
-                .execute(client)
-        ).getReceipt(client);
 
         if (!err) {
             throw new Error("token association did not error");

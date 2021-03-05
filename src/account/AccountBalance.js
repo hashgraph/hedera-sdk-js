@@ -72,12 +72,20 @@ export default class AccountBalance {
      */
     toString() {
         let finalToken = "";
-        if(this.tokens != null){
+        if (this.tokens != null) {
             for (const [key, value] of this.tokens._map) {
-                finalToken = finalToken + JSON.stringify({tokenId: key.toString(), balance: value.toString()});
+                finalToken =
+                    finalToken +
+                    JSON.stringify({
+                        tokenId: key.toString(),
+                        balance: value.toString(),
+                    });
             }
         }
 
-        return JSON.stringify({hbars: this.hbars.toString(), tokens: finalToken});
+        return JSON.stringify({
+            hbars: this.hbars.toString(),
+            tokens: finalToken,
+        });
     }
 }

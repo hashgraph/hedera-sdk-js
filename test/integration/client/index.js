@@ -1,10 +1,18 @@
+import {
+    PrivateKey,
+    AccountCreateTransaction,
+    Hbar,
+} from "../../src/exports.js";
 import Client from "../../src/client/NodeClient.js";
 import dotenv from "dotenv";
 
 // load .env (if available)
 dotenv.config();
 
-export default async function newIntegrationClient() {
+/**
+ * @param {boolean} createNewAccount
+ */
+export default async function newIntegrationClient(createNewAccount = false) {
     let client;
 
     if (
@@ -34,6 +42,21 @@ export default async function newIntegrationClient() {
 
     expect(client.operatorAccountId).to.not.be.null;
     expect(client.operatorPublicKey).to.not.be.null;
+
+    if (createNewAccount) {
+        var key = PrivateKey.generate();
+
+        var accountId = (
+            await (
+                await new AccountCreateTransaction()
+                    .setKey(key)
+                    .setInitialBalance(new Hbar(100))
+                    .execute(client)
+            ).getReceipt(client)
+        ).accountId;
+
+        client.setOperator(accountId, key);
+    }
 
     return client;
 }

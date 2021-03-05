@@ -10,7 +10,7 @@ import Timestamp from "../Timestamp.js";
 import Transaction from "../transaction/Transaction.js";
 import {
     SignedTransaction as ProtoSignedTransaction,
-    TransactionList as ProtoTransactionList
+    TransactionList as ProtoTransactionList,
 } from "@hashgraph/proto";
 
 /**
@@ -171,16 +171,24 @@ export default class ScheduleInfo {
      * @returns {Transaction}
      */
     get transaction() {
-        let signedTransaction = ProtoSignedTransaction.create()
-        if (this.transactionBody != null){
-            signedTransaction.bodyBytes = this.transactionBody
+        let signedTransaction = ProtoSignedTransaction.create();
+        if (this.transactionBody != null) {
+            signedTransaction.bodyBytes = this.transactionBody;
         } else {
-            signedTransaction.bodyBytes = new Uint8Array()
+            signedTransaction.bodyBytes = new Uint8Array();
         }
 
-        let list = ProtoTransactionList.create()
-        list.transactionList = [{signedTransactionBytes: ProtoSignedTransaction.encode(signedTransaction).finish()}]
+        let list = ProtoTransactionList.create();
+        list.transactionList = [
+            {
+                signedTransactionBytes: ProtoSignedTransaction.encode(
+                    signedTransaction
+                ).finish(),
+            },
+        ];
 
-        return Transaction.fromBytes(ProtoTransactionList.encode(list).finish())
+        return Transaction.fromBytes(
+            ProtoTransactionList.encode(list).finish()
+        );
     }
 }

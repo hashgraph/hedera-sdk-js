@@ -1,6 +1,5 @@
 import {
     TokenCreateTransaction,
-    TokenDeleteTransaction,
     TokenUpdateTransaction,
     TokenInfoQuery,
     Status,
@@ -12,7 +11,7 @@ describe("TokenUpdate", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
         const key1 = PrivateKey.generate();
@@ -103,19 +102,12 @@ describe("TokenUpdate", function () {
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
-
-        await (
-            await new TokenDeleteTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTokenId(token)
-                .execute(client)
-        ).getReceipt(client);
     });
 
     it("should be executable when no properties except token ID are set", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
         const key1 = PrivateKey.generate();
@@ -145,19 +137,12 @@ describe("TokenUpdate", function () {
                 .setTokenId(token)
                 .execute(client)
         ).getReceipt(client);
-
-        await (
-            await new TokenDeleteTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTokenId(token)
-                .execute(client)
-        ).getReceipt(client);
     });
 
     it("should error updating immutable token", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
 
         const response = await new TokenCreateTransaction()
@@ -191,7 +176,7 @@ describe("TokenUpdate", function () {
     it("should error when token ID is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const client = await newClient(true);
 
         let err = false;
 
@@ -211,7 +196,7 @@ describe("TokenUpdate", function () {
     it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
 
         const response = await new TokenCreateTransaction()
@@ -230,7 +215,7 @@ describe("TokenUpdate", function () {
     it("should error when admin key does not sign transaction", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const key = PrivateKey.generate();
 

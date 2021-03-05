@@ -1,6 +1,5 @@
 import {
     TokenCreateTransaction,
-    TokenDeleteTransaction,
     TokenInfoQuery,
     Status,
     PrivateKey,
@@ -11,7 +10,7 @@ describe("TokenInfo", function () {
     it("should be executable", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const operatorKey = client.operatorPublicKey;
         const key1 = PrivateKey.generate();
@@ -63,19 +62,12 @@ describe("TokenInfo", function () {
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
-
-        await (
-            await new TokenDeleteTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTokenId(tokenId)
-                .execute(client)
-        ).getReceipt(client);
     });
 
     it("should be executable with minimal properties set", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
 
         const response = await new TokenCreateTransaction()
@@ -119,7 +111,7 @@ describe("TokenInfo", function () {
     it("should error when token ID is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const client = await newClient(true);
 
         let err = false;
 

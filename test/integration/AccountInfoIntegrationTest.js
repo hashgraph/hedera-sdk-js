@@ -73,7 +73,7 @@ describe("AccountInfo", function () {
     it("should reflect token with no keys", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const client = await newClient(true);
         const operatorId = client.operatorAccountId;
         const key = PrivateKey.generate();
 
@@ -113,18 +113,6 @@ describe("AccountInfo", function () {
         expect(relationship.balance.toInt()).to.be.equal(0);
         expect(relationship.isKycGranted).to.be.null;
         expect(relationship.isFrozen).to.be.null;
-
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
-                    .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
     });
 
     it("should be error with no account ID", async function () {

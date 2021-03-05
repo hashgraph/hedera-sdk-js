@@ -2,8 +2,7 @@ import ScheduleId from "./ScheduleId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import { PublicKey } from "@hashgraph/cryptography";
-import NodeAccountIdSignatureMap from "../transaction/NodeAccountIdSignatureMap.js"
+import NodeAccountIdSignatureMap from "../transaction/NodeAccountIdSignatureMap.js";
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -41,6 +40,7 @@ import NodeAccountIdSignatureMap from "../transaction/NodeAccountIdSignatureMap.
  * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  * @typedef {import("../account/AccountId.js").default} AccountId
+ * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
  */
 
 /**
@@ -149,10 +149,12 @@ export default class ScheduleSignTransaction extends Transaction {
      * @returns {NodeAccountIdSignatureMap}
      */
     get scheduleSignatures() {
-        if(this._sigMap != null){
-            return NodeAccountIdSignatureMap._fromTransactionSigMap(this._sigMap)
+        if (this._sigMap != null) {
+            return NodeAccountIdSignatureMap._fromTransactionSigMap(
+                this._sigMap
+            );
         } else {
-            return new NodeAccountIdSignatureMap()
+            return new NodeAccountIdSignatureMap();
         }
     }
 

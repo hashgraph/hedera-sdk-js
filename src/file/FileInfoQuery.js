@@ -81,12 +81,12 @@ export default class FileInfoQuery extends Query {
      * @returns {Promise<Hbar>}
      */
     async getCost(client) {
-        let cost = await super.getCost(client)
+        let cost = await super.getCost(client);
 
-        if(cost.toTinybars().greaterThan(25)){
-            return cost
+        if (cost.toTinybars().greaterThan(25)) {
+            return cost;
         } else {
-            return Hbar.fromTinybars(25)
+            return Hbar.fromTinybars(25);
         }
     }
 
