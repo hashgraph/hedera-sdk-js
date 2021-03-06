@@ -128,7 +128,7 @@ export default class ScheduleSignTransaction extends Transaction {
      * @param {Uint8Array} signature
      * @returns {this}
      */
-    addScheduleSignature(publicKey, signature) {
+    addScheduledSignature(publicKey, signature) {
         if (this._sigMap == null) {
             this._sigMap = {};
         }

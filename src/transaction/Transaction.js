@@ -219,17 +219,7 @@ export default class Transaction extends Executable {
      * @returns {ScheduleCreateTransaction}
      */
     schedule() {
-        this._requireFrozen();
-
-        if (!this._isFrozen()) {
-            this.freeze();
-        }
-
-        if (this._signedTransactions.length != 1) {
-            throw new Error(
-                "`Transaction.schedule()` requires `Transaction` to have a single node `AccountId` set"
-            );
-        }
+        this._requireNotFrozen();
 
         if (SCHEDULE_CREATE_TRANSACTION.length != 1) {
             throw new Error(
@@ -237,9 +227,11 @@ export default class Transaction extends Executable {
             );
         }
 
-        return SCHEDULE_CREATE_TRANSACTION[0]()
-            .setTransaction(this)
-            .setNodeAccountIds(this._nodeIds);
+        const bodyBytes = /** @type {Uint8Array} */ (this._makeSignedTransaction(
+            null
+        ).bodyBytes);
+
+        return SCHEDULE_CREATE_TRANSACTION[0]()._setTransactionBody(bodyBytes);
     }
 
     /**
@@ -261,6 +253,13 @@ export default class Transaction extends Executable {
         bodies
     ) {
         const body = bodies[0];
+
+        const zero = new AccountId(0);
+        for (let i = 0; i < nodeIds.length; i++) {
+            if (nodeIds[i].equals(zero)) {
+                nodeIds.splice(i--, 1);
+            }
+        }
 
         transaction._transactions = transactions;
         transaction._signedTransactions = signedTransactions;
@@ -622,6 +621,10 @@ export default class Transaction extends Executable {
         return TransactionHashMap._fromTransaction(this);
     }
 
+    isFrozen() {
+        return this._signedTransactions.length > 0;
+    }
+
     /**
      * @returns {TransactionId}
      */
@@ -803,7 +806,7 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * @protected
+     * @internal
      */
     _requireNotFrozen() {
         if (this._isFrozen()) {
