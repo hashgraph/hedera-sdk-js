@@ -4,9 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v2.0.17-beta.2
 
 ### Added
+
+ * Support for setting signatures on the underlying scheduled transaction
+
+### Fixed
+
+ * `ScheduleInfo.*ID` field names should use `Id`
+ * `TopicMessageSubmitTransaction` and `FileAppendTransaction` should overwrite `Transaction.schedule`
+   to prevent scheduling a transaction with too large data.
+
+## v2.0.17-beta.1
+
+### Added
+
  * Support for scheduled and nonce in `TransactionId`
    * `TransactionId.withNonce()` - Supports creating transaction ID with random bytes.
    * `TransactionId.[set|get]Scheduled()` - Supports scheduled transaction IDs.
@@ -18,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    * `ScheduleId`
 
 ### Fixed
+
  * `KeyList.toString()`
  * `AccountBalance.toString()`
 
