@@ -49,19 +49,19 @@ export default class ScheduleInfo {
          *
          * @readonly
          */
-        this.scheduleID = props.scheduleId;
+        this.scheduleId = props.scheduleId;
 
         /**
          *
          * @readonly
          */
-        this.creatorAccountID = props.creatorAccountID;
+        this.creatorAccountId = props.creatorAccountID;
 
         /**
          *
          * @readonly
          */
-        this.payerAccountID = props.payerAccountID;
+        this.payerAccountId = props.payerAccountID;
 
         /**
          *
@@ -140,14 +140,14 @@ export default class ScheduleInfo {
     _toProtobuf() {
         return {
             scheduleID:
-                this.scheduleID != null ? this.scheduleID._toProtobuf() : null,
+                this.scheduleId != null ? this.scheduleId._toProtobuf() : null,
             creatorAccountID:
-                this.creatorAccountID != null
-                    ? this.creatorAccountID._toProtobuf()
+                this.creatorAccountId != null
+                    ? this.creatorAccountId._toProtobuf()
                     : null,
             payerAccountID:
-                this.payerAccountID != null
-                    ? this.payerAccountID._toProtobuf()
+                this.payerAccountId != null
+                    ? this.payerAccountId._toProtobuf()
                     : null,
             transactionBody:
                 this.transactionBody != null
@@ -171,24 +171,19 @@ export default class ScheduleInfo {
      * @returns {Transaction}
      */
     get transaction() {
-        let signedTransaction = ProtoSignedTransaction.create();
-        if (this.transactionBody != null) {
-            signedTransaction.bodyBytes = this.transactionBody;
-        } else {
-            signedTransaction.bodyBytes = new Uint8Array();
-        }
-
-        let list = ProtoTransactionList.create();
-        list.transactionList = [
-            {
-                signedTransactionBytes: ProtoSignedTransaction.encode(
-                    signedTransaction
-                ).finish(),
-            },
-        ];
-
         return Transaction.fromBytes(
-            ProtoTransactionList.encode(list).finish()
+            ProtoTransactionList.encode({
+                transactionList: [
+                    {
+                        signedTransactionBytes: ProtoSignedTransaction.encode({
+                            bodyBytes:
+                                this.transactionBody != null
+                                    ? this.transactionBody
+                                    : new Uint8Array(),
+                        }).finish(),
+                    },
+                ],
+            }).finish()
         );
     }
 }

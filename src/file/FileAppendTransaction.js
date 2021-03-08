@@ -23,6 +23,7 @@ import Timestamp from "../Timestamp.js";
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
+ * @typedef {import("../schedule/ScheduleCreateTransaction.js").default} ScheduleCreateTransaction
  */
 
 /**
@@ -284,6 +285,21 @@ export default class FileAppendTransaction extends Transaction {
         super._nextTransactionIndex = 0;
 
         return this;
+    }
+
+    /**
+     * @returns {ScheduleCreateTransaction}
+     */
+    schedule() {
+        this._requireNotFrozen();
+
+        if (this._contents != null && this._contents.length > CHUNK_SIZE) {
+            throw new Error(
+                `cannot scheduled \`FileAppendTransaction\` with message over ${CHUNK_SIZE} bytes`
+            );
+        }
+
+        return super.schedule();
     }
 
     /**

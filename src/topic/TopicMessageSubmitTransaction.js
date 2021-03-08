@@ -22,6 +22,7 @@ import Timestamp from "../Timestamp.js";
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
+ * @typedef {import("../schedule/ScheduleCreateTransaction.js").default} ScheduleCreateTransaction
  */
 
 export default class TopicMessageSubmitTransaction extends Transaction {
@@ -222,6 +223,21 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         super._nextTransactionIndex = 0;
 
         return this;
+    }
+
+    /**
+     * @returns {ScheduleCreateTransaction}
+     */
+    schedule() {
+        this._requireNotFrozen();
+
+        if (this._message != null && this._message.length > CHUNK_SIZE) {
+            throw new Error(
+                `cannot scheduled \`TopicMessageSubmitTransaction\` with message over ${CHUNK_SIZE} bytes`
+            );
+        }
+
+        return super.schedule();
     }
 
     /**

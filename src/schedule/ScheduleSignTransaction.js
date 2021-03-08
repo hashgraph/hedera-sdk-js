@@ -129,6 +129,8 @@ export default class ScheduleSignTransaction extends Transaction {
      * @returns {this}
      */
     addScheduledSignature(publicKey, signature) {
+        this._requireNotFrozen();
+
         if (this._sigMap == null) {
             this._sigMap = {};
         }

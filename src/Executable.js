@@ -45,10 +45,10 @@ export default class Executable {
     }
 
     /**
-     * @returns {AccountId[]}
+     * @returns {?AccountId[]}
      */
     get nodeAccountIds() {
-        return this._nodeIds;
+        return this._nodeIds.length != 0 ? this._nodeIds : null;
     }
 
     /**

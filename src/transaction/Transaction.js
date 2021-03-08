@@ -171,22 +171,26 @@ export default class Transaction extends Executable {
 
             bodies.push(body);
 
-            const transactionId = TransactionId._fromProtobuf(
-                /** @type {proto.ITransactionID} */ (body.transactionID)
-            );
+            if (body.transactionID != null) {
+                const transactionId = TransactionId._fromProtobuf(
+                    /** @type {proto.ITransactionID} */ (body.transactionID)
+                );
 
-            if (!transactionIdStrings.includes(transactionId.toString())) {
-                transactionIds.push(transactionId);
-                transactionIdStrings.push(transactionId.toString());
+                if (!transactionIdStrings.includes(transactionId.toString())) {
+                    transactionIds.push(transactionId);
+                    transactionIdStrings.push(transactionId.toString());
+                }
             }
 
-            const nodeAccountId = AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (body.nodeAccountID)
-            );
+            if (body.nodeAccountID != null) {
+                const nodeAccountId = AccountId._fromProtobuf(
+                    /** @type {proto.IAccountID} */ (body.nodeAccountID)
+                );
 
-            if (!nodeIdStrings.includes(nodeAccountId.toString())) {
-                nodeIds.push(nodeAccountId);
-                nodeIdStrings.push(nodeAccountId.toString());
+                if (!nodeIdStrings.includes(nodeAccountId.toString())) {
+                    nodeIds.push(nodeAccountId);
+                    nodeIdStrings.push(nodeAccountId.toString());
+                }
             }
         }
 
