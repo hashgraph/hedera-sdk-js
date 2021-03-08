@@ -13,8 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
  * `ScheduleInfo.*ID` field names should use `Id`
- * `TopicMessageSubmitTransaction` and `FileAppendTransaction` should overwrite `Transaction.schedule`
-   to prevent scheduling a transaction with too large data.
+   Ex. `ScheduleInfo.creatorAccountID` -> `ScheduleInfo.creatorAccountId`
+ * Chunked transactions should not support scheduling if the data provided is too large
+   * `TopicMessageSubmitTransaction` 
+   * `FileAppendTransaction`
 
 ## v2.0.17-beta.1
 
