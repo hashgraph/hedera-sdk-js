@@ -4,11 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.0.17-beta.2
+## Unreleased
 
 ### Added
 
  * Support for setting signatures on the underlying scheduled transaction
+ * `TransactionReceipt.scheduledTransactionId`
+ * `ScheduleInfo.scheduledTransactionId`
+ * `TransactionRecord.scheduleRef`
+ * Support for scheduled and nonce in `TransactionId`
+   * `TransactionId.withNonce()` - Supports creating transaction ID with random bytes.
+   * `TransactionId.[set|get]Scheduled()` - Supports scheduled transaction IDs.
 
 ### Fixed
 
@@ -22,9 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
- * Support for scheduled and nonce in `TransactionId`
-   * `TransactionId.withNonce()` - Supports creating transaction ID with random bytes.
-   * `TransactionId.[set|get]Scheduled()` - Supports scheduled transaction IDs.
  * Support for scheduled transactions.
    * `ScheduleCreateTransaction` - Create a new scheduled transaction
    * `ScheduleSignTransaction` - Sign an existing scheduled transaction on the network

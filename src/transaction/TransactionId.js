@@ -108,6 +108,15 @@ export default class TransactionId {
     }
 
     /**
+     * @param {boolean} scheduled
+     * @returns {this}
+     */
+    setScheduled(scheduled) {
+        this.scheduled = scheduled;
+        return this;
+    }
+
+    /**
      * @returns {string}
      */
     toString() {
