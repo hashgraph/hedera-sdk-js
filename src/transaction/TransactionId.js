@@ -1,6 +1,7 @@
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import * as proto from "@hashgraph/proto";
+import * as hex from "../encoding/hex.js";
 
 /**
  * The client-generated ID for a transaction.
@@ -11,10 +12,12 @@ import * as proto from "@hashgraph/proto";
  */
 export default class TransactionId {
     /**
-     * @param {AccountId} accountId
-     * @param {Timestamp} validStart
+     * @param {?AccountId} accountId
+     * @param {?Timestamp} validStart
+     * @param {?Uint8Array} nonce
+     * @param {?boolean} scheduled
      */
-    constructor(accountId, validStart) {
+    constructor(accountId, validStart, nonce = null, scheduled = false) {
         /**
          * The Account ID that paid for this transaction.
          *
@@ -31,6 +34,10 @@ export default class TransactionId {
          * @readonly
          */
         this.validStart = validStart;
+
+        this.nonce = nonce;
+
+        this.scheduled = scheduled;
 
         Object.freeze(this);
     }
@@ -56,20 +63,47 @@ export default class TransactionId {
      * @returns {TransactionId}
      */
     static fromString(id) {
-        const [account, time] = id.split("@");
-        const [seconds, nanos] = time.split(".").map(Number);
+        let [idOrNonce, scheduled] = id.split("?");
 
-        return new TransactionId(
-            AccountId.fromString(account),
-            new Timestamp(seconds, nanos)
-        );
+        try {
+            const nonce = hex.decode(idOrNonce);
+
+            return new TransactionId(
+                null,
+                null,
+                nonce,
+                scheduled === "scheduled"
+            );
+        } catch {
+            const [account, time] = id.split("@");
+            const [seconds, nanos] = time.split(".").map(Number);
+
+            return new TransactionId(
+                AccountId.fromString(account),
+                new Timestamp(seconds, nanos),
+                null,
+                scheduled === "scheduled"
+            );
+        }
     }
 
     /**
      * @returns {string}
      */
     toString() {
-        return `${this.accountId.toString()}@${this.validStart.seconds.toInt()}.${this.validStart.nanos.toInt()}`;
+        if (this.accountId != null && this.validStart != null) {
+            return `${this.accountId.toString()}@${this.validStart.seconds.toInt()}.${this.validStart.nanos.toInt()}${
+                this.scheduled ? "?scheduled" : ""
+            }`;
+        } else if (this.nonce != null) {
+            return `${hex.encode(this.nonce)}${
+                this.scheduled ? "?scheduled" : ""
+            }`;
+        } else {
+            throw new Error(
+                "Neither `nonce` or `accountId` and `validStart` are set"
+            );
+        }
     }
 
     /**
@@ -78,14 +112,20 @@ export default class TransactionId {
      * @returns {TransactionId}
      */
     static _fromProtobuf(id) {
-        return new TransactionId(
-            AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (id.accountID)
-            ),
-            Timestamp._fromProtobuf(
-                /** @type {proto.ITimestamp} */ (id.transactionValidStart)
-            )
-        );
+        if (id.accountID != null && id.transactionValidStart != null) {
+            return new TransactionId(
+                AccountId._fromProtobuf(id.accountID),
+                Timestamp._fromProtobuf(id.transactionValidStart),
+                null,
+                id.scheduled
+            );
+        } else if (id.nonce != null) {
+            return new TransactionId(null, null, id.nonce, id.scheduled);
+        } else {
+            throw new Error(
+                "Neither `nonce` or `accountID` and `transactionValidStart` are set"
+            );
+        }
     }
 
     /**
@@ -94,8 +134,12 @@ export default class TransactionId {
      */
     _toProtobuf() {
         return {
-            accountID: this.accountId._toProtobuf(),
-            transactionValidStart: this.validStart._toProtobuf(),
+            accountID:
+                this.accountId != null ? this.accountId._toProtobuf() : null,
+            transactionValidStart:
+                this.validStart != null ? this.validStart._toProtobuf() : null,
+            nonce: this.nonce != null ? this.nonce : null,
+            scheduled: this.scheduled,
         };
     }
 

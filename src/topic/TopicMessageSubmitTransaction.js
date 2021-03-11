@@ -105,6 +105,28 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     }
 
     /**
+     * @param {TransactionId} transactionId
+     * @returns {this}
+     */
+    setTransactionId(transactionId) {
+        this._requireNotFrozen();
+
+        if (
+            (transactionId.accountId == null ||
+                transactionId.validStart == null) &&
+            transactionId.nonce != null
+        ) {
+            throw new Error(
+                "`TopicMessageSubmitTransaction` does not support `TransactionId` built from `nonce`"
+            );
+        }
+
+        this._transactionIds = [transactionId];
+
+        return this;
+    }
+
+    /**
      * @returns {?TopicId}
      */
     get topicId() {
@@ -209,10 +231,12 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             }
 
             nextTransactionId = new TransactionId(
-                nextTransactionId.accountId,
+                /** @type {AccountId} */ (nextTransactionId.accountId),
                 new Timestamp(
-                    nextTransactionId.validStart.seconds,
-                    nextTransactionId.validStart.nanos.add(1)
+                    /** @type {Timestamp} */ (nextTransactionId.validStart).seconds,
+                    /** @type {Timestamp} */ (nextTransactionId.validStart).nanos.add(
+                        1
+                    )
                 )
             );
 
@@ -265,7 +289,9 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 
         if (
             operatorAccountId != null &&
-            operatorAccountId.equals(transactionId.accountId)
+            operatorAccountId.equals(
+                /** @type {AccountId} */ (transactionId.accountId)
+            )
         ) {
             await super.signWithOperator(client);
         }

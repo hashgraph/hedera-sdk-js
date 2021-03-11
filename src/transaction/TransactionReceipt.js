@@ -8,6 +8,7 @@ import ExchangeRate from "../ExchangeRate.js";
 import Status from "../Status.js";
 import Long from "long";
 import * as proto from "@hashgraph/proto";
+import TransactionId from "../transaction/TransactionId.js";
 
 /**
  * The consensus result for a transaction, which might not be currently known,
@@ -28,6 +29,7 @@ export default class TransactionReceipt {
      * @param {?Long} props.topicSequenceNumber
      * @param {?Uint8Array} props.topicRunningHash
      * @param {?Long} props.totalSupply
+     * @param {?TransactionId} props.scheduledTransactionId
      */
     constructor(props) {
         /**
@@ -107,6 +109,8 @@ export default class TransactionReceipt {
          */
         this.totalSupply = props.totalSupply;
 
+        this.scheduledTransactionId = props.scheduledTransactionId;
+
         Object.freeze(this);
     }
 
@@ -140,6 +144,11 @@ export default class TransactionReceipt {
                         ? this.exchangeRate._toProtobuf()
                         : null,
             },
+
+            scheduledTransactionID:
+                this.scheduledTransactionId != null
+                    ? this.scheduledTransactionId._toProtobuf()
+                    : null,
         };
     }
 
@@ -206,6 +215,13 @@ export default class TransactionReceipt {
 
             totalSupply:
                 receipt.newTotalSupply != null ? receipt.newTotalSupply : null,
+
+            scheduledTransactionId:
+                receipt.scheduledTransactionID != null
+                    ? TransactionId._fromProtobuf(
+                          receipt.scheduledTransactionID
+                      )
+                    : null,
         });
     }
 

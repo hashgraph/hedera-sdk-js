@@ -6,6 +6,7 @@ import Transfer from "../Transfer.js";
 import ContractFunctionResult from "../contract/ContractFunctionResult.js";
 import TokenTransferMap from "../account/TokenTransferMap.js";
 import * as proto from "@hashgraph/proto";
+import ScheduleId from "../schedule/ScheduleId.js";
 
 /**
  * Response when the client sends the node TransactionGetRecordResponse.
@@ -23,6 +24,7 @@ export default class TransactionRecord {
      * @param {Hbar} props.transactionFee
      * @param {Transfer[]} props.transfers
      * @param {TokenTransferMap} props.tokenTransfers
+     * @param {?ScheduleId} props.scheduleRef
      */
     constructor(props) {
         /**
@@ -96,6 +98,8 @@ export default class TransactionRecord {
          */
         this.tokenTransfers = props.tokenTransfers;
 
+        this.scheduleRef = props.scheduleRef;
+
         Object.freeze(this);
     }
 
@@ -143,6 +147,10 @@ export default class TransactionRecord {
                       }
                     : null,
             tokenTransferLists: this.tokenTransfers._toProtobuf(),
+            scheduleRef:
+                this.scheduleRef != null
+                    ? this.scheduleRef._toProtobuf()
+                    : null,
         };
     }
 
@@ -194,6 +202,10 @@ export default class TransactionRecord {
                     ? record.tokenTransferLists
                     : []
             ),
+            scheduleRef:
+                record.scheduleRef != null
+                    ? ScheduleId._fromProtobuf(record.scheduleRef)
+                    : null,
         });
     }
 

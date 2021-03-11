@@ -12,6 +12,7 @@ import {
     SignedTransaction as ProtoSignedTransaction,
     TransactionList as ProtoTransactionList,
 } from "@hashgraph/proto";
+import TransactionId from "../transaction/TransactionId.js";
 
 /**
  * @namespace proto
@@ -43,6 +44,7 @@ export default class ScheduleInfo {
      * @param {?KeyList} props.signatories;
      * @param {?string} props.memo;
      * @param {?Timestamp} props.expirationTime;
+     * @param {?TransactionId} props.scheduledTransactionId;
      */
     constructor(props) {
         /**
@@ -92,6 +94,8 @@ export default class ScheduleInfo {
          * @readonly
          */
         this.expirationTime = props.expirationTime;
+
+        this.scheduledTransactionId = props.scheduledTransactionId;
     }
 
     /**
@@ -131,6 +135,10 @@ export default class ScheduleInfo {
                           /** @type {proto.ITimestamp} */ (info.expirationTime)
                       )
                     : null,
+            scheduledTransactionId:
+                info.scheduledTransactionID != null
+                    ? TransactionId._fromProtobuf(info.scheduledTransactionID)
+                    : null,
         });
     }
 
@@ -163,6 +171,10 @@ export default class ScheduleInfo {
             expirationTime:
                 this.expirationTime != null
                     ? this.expirationTime._toProtobuf()
+                    : null,
+            scheduledTransactionID:
+                this.scheduledTransactionId != null
+                    ? this.scheduledTransactionId._toProtobuf()
                     : null,
         };
     }

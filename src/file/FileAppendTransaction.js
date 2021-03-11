@@ -147,6 +147,28 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
+     * @param {TransactionId} transactionId
+     * @returns {this}
+     */
+    setTransactionId(transactionId) {
+        this._requireNotFrozen();
+
+        if (
+            (transactionId.accountId == null ||
+                transactionId.validStart == null) &&
+            transactionId.nonce != null
+        ) {
+            throw new Error(
+                "`FileAppendTransaction` does not support `TransactionId` built from `nonce`"
+            );
+        }
+
+        this._transactionIds = [transactionId];
+
+        return this;
+    }
+
+    /**
      * @returns {?FileId}
      */
     get fileId() {
@@ -271,10 +293,12 @@ export default class FileAppendTransaction extends Transaction {
             }
 
             nextTransactionId = new TransactionId(
-                nextTransactionId.accountId,
+                /** @type {AccountId} */ (nextTransactionId.accountId),
                 new Timestamp(
-                    nextTransactionId.validStart.seconds,
-                    nextTransactionId.validStart.nanos.add(1)
+                    /** @type {Timestamp} */ (nextTransactionId.validStart).seconds,
+                    /** @type {Timestamp} */ (nextTransactionId.validStart).nanos.add(
+                        1
+                    )
                 )
             );
 
@@ -327,7 +351,9 @@ export default class FileAppendTransaction extends Transaction {
 
         if (
             operatorAccountId != null &&
-            operatorAccountId.equals(transactionId.accountId)
+            operatorAccountId.equals(
+                /** @type {AccountId} */ (transactionId.accountId)
+            )
         ) {
             await super.signWithOperator(client);
         }

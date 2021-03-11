@@ -655,6 +655,7 @@ export default class Transaction extends Executable {
 
         if (
             operatorAccountId != null &&
+            transactionId.accountId != null &&
             operatorAccountId.equals(transactionId.accountId)
         ) {
             await this.signWithOperator(client);
