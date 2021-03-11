@@ -530,9 +530,9 @@
     tweetnacl "^1.0.3"
 
 "@hashgraph/proto@^1.0.20":
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.20.tgz#cc4bd6071d6456d1139a11d55994546495d292cb"
-  integrity sha512-D0PkFcxZBzA72fmD8p4Q8yctVkNqNBV0ciL7PQKB9KhIECtd3WP3D+YHUL0VEms9SrnHwuQTTmpBXaiBi50+8g==
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.21.tgz#e5e2dbc34c8cb86f5cafa478bf4c55b6edd8f3fd"
+  integrity sha512-ZAjmsxRHSYQUVZC9AKiUB5dfTLfnre+sOfCn/m2yZs+Veol0R2SgCrgUKbHrLQB87Y46tKMz9c0MCt9k+3jSRg==
   dependencies:
     "@hashgraph/protobufjs" "^6.10.1-hashgraph.2"
 
@@ -1719,9 +1719,9 @@
   integrity sha512-UV1/ZJMC+HcP902wWdpC43cAcGu0IQk/I5bXjP2aSuCjsk3cE74mDvFrLKga7oDC170ugOAYBwfT4DSQW3akDA==
 
 "@types/node@^13.7.0":
-  version "13.13.25"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.25.tgz#768d6712b15099a744812a92b84ffde8f4e13cf1"
-  integrity sha512-6ZMK4xRcF2XrPdKmPYQxZkdHKV18xKgUFVvhIgw2iwaaO6weleLPHLBGPZmLhjo+m1N+MZXRAoBEBCCVqgO2zQ==
+  version "13.13.46"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.46.tgz#5471e176f3fa15e018dea7992072bf8ca208a3a6"
+  integrity sha512-dqpbzK/KDsOlEt+oyB3rv+u1IxlLFziZu/Z0adfRKoelkr+sTd6QcgiQC+HWq/vkYkHwG5ot2LxgV05aAjnhcg==
 
 "@types/node@^14.14.19":
   version "14.14.19"
