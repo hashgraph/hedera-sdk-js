@@ -12,6 +12,9 @@ import * as hex from "../encoding/hex.js";
  */
 export default class TransactionId {
     /**
+     * Don't use this method directly.
+     * Use `TransactionId.[generate|withNonce|withValidStart]()` instead.
+     *
      * @param {?AccountId} accountId
      * @param {?Timestamp} validStart
      * @param {?Uint8Array} nonce
@@ -40,6 +43,23 @@ export default class TransactionId {
         this.scheduled = scheduled;
 
         Object.freeze(this);
+    }
+
+    /**
+     * @param {Uint8Array} nonce
+     * @returns {TransactionId}
+     */
+    static withNonce(nonce) {
+        return new TransactionId(null, null, nonce, null);
+    }
+
+    /**
+     * @param {AccountId} accountId
+     * @param {Timestamp} validStart
+     * @returns {TransactionId}
+     */
+    static withValidStart(accountId, validStart) {
+        return new TransactionId(accountId, validStart, null, null);
     }
 
     /**
