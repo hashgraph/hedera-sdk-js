@@ -2,6 +2,7 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import * as proto from "@hashgraph/proto";
 import * as hex from "../encoding/hex.js";
+import Long from "long";
 
 /**
  * The client-generated ID for a transaction.
@@ -85,23 +86,25 @@ export default class TransactionId {
     static fromString(id) {
         let [idOrNonce, scheduled] = id.split("?");
 
-        try {
+        if (idOrNonce.includes("@")) {
+            const [account, time] = idOrNonce.split("@");
+            const [seconds, nanos] = time
+                .split(".")
+                .map((value) => Long.fromValue(value));
+
+            return new TransactionId(
+                AccountId.fromString(account),
+                new Timestamp(seconds, nanos),
+                null,
+                scheduled === "scheduled"
+            );
+        } else {
             const nonce = hex.decode(idOrNonce);
 
             return new TransactionId(
                 null,
                 null,
                 nonce,
-                scheduled === "scheduled"
-            );
-        } catch {
-            const [account, time] = id.split("@");
-            const [seconds, nanos] = time.split(".").map(Number);
-
-            return new TransactionId(
-                AccountId.fromString(account),
-                new Timestamp(seconds, nanos),
-                null,
                 scheduled === "scheduled"
             );
         }
@@ -121,7 +124,7 @@ export default class TransactionId {
      */
     toString() {
         if (this.accountId != null && this.validStart != null) {
-            return `${this.accountId.toString()}@${this.validStart.seconds.toInt()}.${this.validStart.nanos.toInt()}${
+            return `${this.accountId.toString()}@${this.validStart.seconds.toString()}.${this.validStart.nanos.toString()}${
                 this.scheduled ? "?scheduled" : ""
             }`;
         } else if (this.nonce != null) {
