@@ -44,6 +44,7 @@ export default class TokenInfo {
      * @param {AccountId | null} props.autoRenewAccountId;
      * @param {Duration | null} props.autoRenewPeriod;
      * @param {Timestamp | null} props.expirationTime;
+     * @param {string} props.tokenMemo;
      */
     constructor(props) {
         /**
@@ -176,6 +177,8 @@ export default class TokenInfo {
          * @readonly
          */
         this.expirationTime = props.expirationTime;
+
+        this.tokenMemo = props.tokenMemo;
     }
 
     /**
@@ -239,6 +242,7 @@ export default class TokenInfo {
                           /** @type {proto.ITimestamp} */ (info.expiry)
                       )
                     : null,
+            tokenMemo: info.memo != null ? info.memo : "",
         });
     }
 
@@ -289,6 +293,7 @@ export default class TokenInfo {
                 this.expirationTime != null
                     ? this.expirationTime._toProtobuf()
                     : null,
+            memo: this.tokenMemo,
         };
     }
 }

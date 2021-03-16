@@ -20,6 +20,7 @@ export default class FileInfo {
      * @param {Timestamp} props.expirationTime
      * @param {boolean} props.isDeleted
      * @param {KeyList} props.keys
+     * @param {string} props.fileMemo
      */
     constructor(props) {
         /**
@@ -58,6 +59,8 @@ export default class FileInfo {
          */
         this.keys = props.keys;
 
+        this.fileMemo = props.fileMemo;
+
         Object.freeze(this);
     }
 
@@ -82,6 +85,7 @@ export default class FileInfo {
                 info.keys != null
                     ? keyListFromProtobuf(info.keys)
                     : new KeyList(),
+            fileMemo: info.memo != null ? info.memo : "",
         });
     }
 
@@ -96,6 +100,7 @@ export default class FileInfo {
             expirationTime: this.expirationTime._toProtobuf(),
             deleted: this.isDeleted,
             keys: keyListToProtobuf(this.keys),
+            memo: this.fileMemo,
         };
     }
 

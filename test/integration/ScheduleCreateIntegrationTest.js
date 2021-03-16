@@ -55,7 +55,7 @@ describe.skip("ScheduleCreate", function () {
             .setTopicId(topicId)
             .setMessage("scheduled hcs message");
 
-        const scheduled = await transaction
+        const scheduled = transaction
             .schedule()
             .setPayerAccountId(operatorId)
             .setAdminKey(operatorKey)

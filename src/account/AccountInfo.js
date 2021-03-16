@@ -33,6 +33,7 @@ export default class AccountInfo {
      * @param {Duration} props.autoRenewPeriod
      * @param {LiveHash[]} props.liveHashes
      * @param {TokenRelationshipMap} props.tokenRelationships
+     * @param {string} props.accountMemo
      */
     constructor(props) {
         /**
@@ -136,6 +137,8 @@ export default class AccountInfo {
         /** @readonly */
         this.tokenRelationships = props.tokenRelationships;
 
+        this.accountMemo = props.accountMemo;
+
         Object.freeze(this);
     }
 
@@ -201,6 +204,7 @@ export default class AccountInfo {
             tokenRelationships: TokenRelationshipMap._fromProtobuf(
                 info.tokenRelationships != null ? info.tokenRelationships : []
             ),
+            accountMemo: info.memo != null ? info.memo : "",
         });
     }
 
@@ -229,6 +233,7 @@ export default class AccountInfo {
                 this.tokenRelationships != null
                     ? this.tokenRelationships._toProtobuf()
                     : null,
+            memo: this.accountMemo,
         };
     }
 
