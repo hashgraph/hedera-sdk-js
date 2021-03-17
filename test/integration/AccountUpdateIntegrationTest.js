@@ -186,18 +186,6 @@ describe("AccountUpdate", function () {
                 .includes(Status.InsufficientTxFee.toString());
         }
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(client.operatorAccountId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
-                    .sign(key1)
-            ).execute(client)
-        ).getReceipt(client);
-
         if (!err) {
             throw new Error("account update did not error");
         }
