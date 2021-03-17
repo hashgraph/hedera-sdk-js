@@ -529,10 +529,10 @@
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@^1.0.21":
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.21.tgz#e5e2dbc34c8cb86f5cafa478bf4c55b6edd8f3fd"
-  integrity sha512-ZAjmsxRHSYQUVZC9AKiUB5dfTLfnre+sOfCn/m2yZs+Veol0R2SgCrgUKbHrLQB87Y46tKMz9c0MCt9k+3jSRg==
+"@hashgraph/proto@^1.0.22":
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.22.tgz#8df99c3d2ba0bfa898aa93aa32e8fffabcb733b5"
+  integrity sha512-09Q31V1Bqc9098fu4kwDJoJXqdks75HlfkM9z2HTq46eVlOHEEWGEat5fVmJeJOR+NCh2hBw4UQ4u/XRLlMtmA==
   dependencies:
     "@hashgraph/protobufjs" "^6.10.1-hashgraph.2"
 

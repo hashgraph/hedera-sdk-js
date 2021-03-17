@@ -42,7 +42,7 @@ export default class ScheduleInfo {
      * @param {?Uint8Array} props.transactionBody;
      * @param {?Key} props.adminKey
      * @param {?KeyList} props.signatories;
-     * @param {?string} props.memo;
+     * @param {?string} props.scheduleMemo;
      * @param {?Timestamp} props.expirationTime;
      * @param {?TransactionId} props.scheduledTransactionId;
      */
@@ -81,7 +81,7 @@ export default class ScheduleInfo {
          *
          * @readonly
          */
-        this.memo = props.memo;
+        this.scheduleMemo = props.scheduleMemo;
 
         /**
          *
@@ -128,7 +128,7 @@ export default class ScheduleInfo {
                 info.signatories != null
                     ? keyListFromProtobuf(info.signatories)
                     : null,
-            memo: info.memo != null ? info.memo : null,
+            scheduleMemo: info.memo != null ? info.memo : null,
             expirationTime:
                 info.expirationTime != null
                     ? Timestamp._fromProtobuf(
@@ -167,7 +167,7 @@ export default class ScheduleInfo {
                 this.signatories != null
                     ? keyListToProtobuf(this.signatories)
                     : null,
-            memo: this.memo != null ? this.memo : "",
+            memo: this.scheduleMemo != null ? this.scheduleMemo : "",
             expirationTime:
                 this.expirationTime != null
                     ? this.expirationTime._toProtobuf()
