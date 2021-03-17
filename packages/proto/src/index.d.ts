@@ -122,6 +122,8 @@ import IFileInfo = proto.FileGetInfoResponse.IFileInfo;
 import IFileUpdateTransactionBody = proto.IFileUpdateTransactionBody;
 import IKey = proto.IKey;
 import IKeyList = proto.IKeyList;
+import Key = proto.Key;
+import KeyList = proto.KeyList;
 import IQuery = proto.IQuery;
 import IQueryHeader = proto.IQueryHeader;
 import IResponse = proto.IResponse;
@@ -235,6 +237,8 @@ export {
     IFileUpdateTransactionBody,
     IKey,
     IKeyList,
+    Key,
+    KeyList,
     IQuery,
     IQueryHeader,
     IResponse,

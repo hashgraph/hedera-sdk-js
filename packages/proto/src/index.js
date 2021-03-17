@@ -37,3 +37,5 @@ export const TransactionReceipt = proto.TransactionReceipt;
 export const TransactionRecord = proto.TransactionRecord;
 export const ConsensusTopicResponse = proto.ConsensusTopicResponse;
 export const ConsensusTopicQuery = proto.ConsensusTopicQuery;
+export const Key = proto.Key;
+export const KeyList = proto.KeyList;
