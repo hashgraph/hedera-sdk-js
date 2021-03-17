@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/sdk",
-    "version": "2.0.17-beta.1",
+    "version": "2.0.17-beta.2",
     "description": "Hedera™ Hashgraph SDK",
     "main": "./lib/index.cjs",
     "types": "./lib/index.d.ts",
