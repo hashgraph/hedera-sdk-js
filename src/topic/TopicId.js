@@ -76,7 +76,13 @@ export default class TopicId {
      * @returns {string}
      */
     toString() {
-        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
+        const checksum = entity_id._parseAddress(
+            "",
+            `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`
+        );
+        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}-${
+            checksum.correctChecksum
+        }`;
     }
 
     /**

@@ -34,6 +34,14 @@ describe("AccountId", function () {
         expect(accountId.shard.toNumber()).to.eql(10);
     });
 
+    it("should parse {0.0.123-laujm}", function () {
+        const accountId = AccountId.fromString("0.0.123-laujm");
+
+        expect(accountId.num.toNumber()).to.eql(123);
+        expect(accountId.realm.toNumber()).to.eql(0);
+        expect(accountId.shard.toNumber()).to.eql(0);
+    });
+
     it("should parse 0.0.0", function () {
         const accountId = AccountId.fromString("0.0.0");
 
@@ -50,8 +58,8 @@ describe("AccountId", function () {
         expect(accountId.shard.toNumber()).to.eql(0);
     });
 
-    it("should stringify to {shard}.{realm}.{num}", function () {
-        expect(new AccountId(50, 150, 520).toString()).to.eql("50.150.520");
+    it("should stringify to {shard}.{realm}.{num}-{checksum}", function () {
+        expect(new AccountId(50, 150, 520).toString()).to.eql("50.150.520-emueg");
     });
 
     it("should error with invalid string", function () {
@@ -59,6 +67,12 @@ describe("AccountId", function () {
 
         try {
             AccountId.fromString("asdfasf");
+        } catch {
+            err = true;
+        }
+
+        try {
+            AccountId.fromString("0.0.123-laujt");
         } catch {
             err = true;
         }
