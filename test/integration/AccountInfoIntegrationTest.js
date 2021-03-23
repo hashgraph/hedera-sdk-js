@@ -70,6 +70,53 @@ describe("AccountInfo", function () {
         ).getReceipt(client);
     });
 
+    it("should be able to get 300 accounts", async function () {
+        this.timeout(150000000);
+
+        const client = await newClient();
+        const operatorId = client.operatorAccountId;
+        const key = PrivateKey.generate();
+        let response = [];
+        let receipt = [];
+        let info = [];
+
+        for (let i = 0; i < 300; i++) {
+            response[i] = await new AccountCreateTransaction()
+                .setKey(key.publicKey)
+                .setInitialBalance(new Hbar(2))
+                .execute(client);
+        }
+
+        for (let i = 0; i < 300; i++) {
+            receipt[i] = await response[i].getReceipt(client);
+        }
+
+        for (let i = 0; i < 300; i++) {
+            info[i] = await new AccountInfoQuery()
+                .setNodeAccountIds([response[i].nodeId])
+                .setAccountId(receipt[i].accountId)
+                .execute(client);
+
+            console.log(info[i].accountId);
+        }
+
+        for (let i = 0; i < 300; i++) {
+            await (
+                await (
+                    await new AccountDeleteTransaction()
+                        .setAccountId(receipt[i].accountId)
+                        .setNodeAccountIds([response[i].nodeId])
+                        .setTransferAccountId(operatorId)
+                        .setTransactionId(
+                            TransactionId.generate(receipt[i].accountId)
+                        )
+                        .freezeWith(client)
+                        .sign(key)
+                ).execute(client)
+            ).getReceipt(client);
+        }
+    });
+
     it("should reflect token with no keys", async function () {
         this.timeout(10000);
 

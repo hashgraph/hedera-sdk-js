@@ -184,7 +184,8 @@ export default class Executable {
     _shouldRetryExceptionally(error) {
         return (
             error.status === GrpcStatus.Unavailable ||
-            error.status === GrpcStatus.ResourceExhausted
+            error.status === GrpcStatus.ResourceExhausted ||
+            error.status === GrpcStatus.Internal
         );
     }
 
