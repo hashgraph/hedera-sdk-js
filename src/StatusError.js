@@ -15,6 +15,12 @@ export default class StatusError extends Error {
 
         this.name = "StatusError";
 
+        this.status = props.status;
+
+        this.transactionId = props.transactionId;
+
+        this.message = message;
+
         if (typeof Error.captureStackTrace !== "undefined") {
             Error.captureStackTrace(this, StatusError);
         }
