@@ -1,5 +1,5 @@
 import PrivateKey from "../../src/PrivateKey.js";
-import KeyList from "../../src/KeyList";
+import KeyList from "../../src/KeyList.js";
 
 describe("KeyList", function () {
     this.timeout(15000);
