@@ -39,3 +39,4 @@ export const ConsensusTopicResponse = proto.ConsensusTopicResponse;
 export const ConsensusTopicQuery = proto.ConsensusTopicQuery;
 export const Key = proto.Key;
 export const KeyList = proto.KeyList;
+export const ScheduleID = proto.ScheduleID;
