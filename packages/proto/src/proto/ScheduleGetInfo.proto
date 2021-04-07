@@ -29,35 +29,39 @@ import "BasicTypes.proto";
 import "Timestamp.proto";
 import "QueryHeader.proto";
 import "ResponseHeader.proto";
-import "ScheduleCreate.proto";
+import "SchedulableTransactionBody.proto";
 
 /*
-Gets information about Scheduled Transaction instance
+Gets information about a schedule in the network's action queue.
 
-Answered with status INVALID_SCHEDULE_ID if the Scheduled Transaction is deleted, expires or is executed.
- */
+Responds with <tt>INVALID_SCHEDULE_ID</tt> if the requested schedule doesn't exist.
+*/
 message ScheduleGetInfoQuery {
   QueryHeader header = 1; // standard info sent from client to node including the signed payment, and what kind of response is requested (cost, state proof, both, or neither).
-  ScheduleID scheduleID = 2; // The ID of the Scheduled Entity
+  ScheduleID scheduleID = 2; // The id of the schedule to interrogate
 }
 
 /*
-Metadata about a Scheduled Transaction instance
- */
-message ScheduleInfo {
-  ScheduleID scheduleID = 1; // The ID of the Scheduled Entity
-  AccountID creatorAccountID = 2; // The Account ID which created the Scheduled TX
-  AccountID payerAccountID = 3; // The account which is going to pay for the execution of the Scheduled TX
-  bytes transactionBody = 4; // The transaction serialized into bytes that must be signed
-  KeyList signatories = 5; // The signatories that have provided signatures so far for the Scheduled TX
-  Key adminKey = 6; // The Key which is able to delete the Scheduled Transaction if set
-  string memo = 7; // Publicly visible information about the Scheduled entity, up to 100 bytes. No guarantee of uniqueness.
-  Timestamp expirationTime = 8; // The epoch second at which the schedule will expire
-  TransactionID scheduledTransactionID = 9; // TransactionID that should be used to query for the receipt or record of the scheduled transaction
-}
+  Information summarizing schedule state 
+*/
+message ScheduleInfo {  
+  ScheduleID scheduleID = 1; // The id of the schedule
+  oneof data {
+    Timestamp deletion_time = 2; // If the schedule has been deleted, the consensus time when this occurred
+    Timestamp execution_time = 3; // If the schedule has been executed, the consensus time when this occurred
+  }
+  Timestamp expirationTime = 4; // The time at which the schedule will expire
+  SchedulableTransactionBody scheduledTransactionBody = 5; // The scheduled transaction
+  string memo = 6; // The publicly visible memo of the schedule
+  Key adminKey = 7; // The key used to delete the schedule from state
+  KeyList signers = 8; // The Ed25519 keys the network deems to have signed the scheduled transaction
+  AccountID creatorAccountID = 9; // The id of the account that created the schedule
+  AccountID payerAccountID = 10; // The id of the account responsible for the service fee of the scheduled transaction
+  TransactionID scheduledTransactionID = 11; // The transaction id that will be used in the record of the scheduled transaction (if it executes)
+}  
 
 /*
-Response that gets returned, when the client sends the node a ScheduleGetInfoQuery
+Response wrapper for the <tt>ScheduleInfo</tt>
 */
 message ScheduleGetInfoResponse {
   ResponseHeader header = 1; // Standard response from node to client, including the requested fields: cost, or state proof, or both, or neither

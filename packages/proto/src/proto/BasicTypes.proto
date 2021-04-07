@@ -67,13 +67,11 @@ Applicable to Scheduled Transactions:
 - The ID of a Scheduled Transaction has transactionValidStart and accountIDs inherited from the ScheduleCreate transaction that created it. That is to say that they are equal
 - The scheduled property is true for Scheduled Transactions
 - transactionValidStart, accountID and scheduled properties should be omitted
-- Scheduled Transactions should be submitted with only nonce populated (if desired). Nonce is an additional option presented to users so that they can create multiple sequential Scheduled Transactions that have the same transaction body.
 */
 message TransactionID {
     Timestamp transactionValidStart = 1; // The transaction is invalid if consensusTimestamp < transactionID.transactionStartValid
     AccountID accountID = 2; // The Account ID that paid for this transaction
     bool scheduled = 3; // Whether the Transaction is of type Scheduled or no
-    bytes nonce = 4; // Used to manipulate the uniqueness check for idempotent schedule transaction creation
 }
 
 /* An account, and the amount that it sends or receives during a cryptocurrency or token transfer. */
@@ -340,24 +338,49 @@ message CurrentAndNextFeeSchedule {
     FeeSchedule nextFeeSchedule = 2; // Contains next Fee Schedule
 }
 
+/* This contains the IP Address and the port representing an endpoint of a Node in a network */
+message NodeEndpoint {
+    string ipAddress = 1; // The IP address of the node
+    string port = 2; // The port of the node
+}
+
 /*
 The metadata for a Node – including IP Address, and the crypto account associated with the Node.
+
+Note :  This structure is intended to be used to parse 0.0.102, use NodeAddressForClients to parse 0.0.101.
+        Usage of NodeAddress to parse 0.0.101 is deprecated.
 */
 message NodeAddress {
-    bytes ipAddress = 1; // The ip address of the Node with separator & octets
-    int32 portno = 2; // The port number of the grpc server for the node
-    bytes memo = 3; // The memo field of the node (usage to store account ID is deprecated)
+    bytes ipAddress = 1 [deprecated=true]; // The ip address of the Node with separator & octets. Usage is deprecated, NodeEndPoint is preferred to retrieve a node's list of IP addresses and ports
+    int32 portno = 2 [deprecated=true]; // The port number of the grpc server for the node.  Usage is deprecated, NodeEndPoint is preferred to retrieve a node's list of IP addresses and ports
+    bytes memo = 3 [deprecated=true]; // Usage is deprecated, nodeAccountId is preferred to retrieve a node's account ID
     string RSA_PubKey = 4; // The RSA public key of the node
     int64 nodeId = 5; // A non-sequential identifier for the node
     AccountID nodeAccountId = 6; // The account to be paid for queries and transactions sent to this node
     bytes nodeCertHash = 7; // A hash of the X509 cert used for gRPC traffic to this node
+    repeated NodeEndpoint nodeEndpoint = 8; // A node's IP address and port
+    string description = 9; // A description of the node. Max 100 bytes.
+    int64 stake = 10; // The amount of tinybars staked to this node
 }
 
 /*
-A list of nodes and their metadata.
+A list of nodes and their metadata that contains all details of the nodes for the network
 */
-message NodeAddressBook {
-    repeated NodeAddress nodeAddress = 1; // Contains multiple Node Address for the network
+message AddressBook {
+    repeated NodeAddress nodeAddress = 1; // Metadata of nodes on the network
+}
+
+/* All the information required to connect to the network.*/
+message NodeAddressForClients {
+    int64 nodeId = 5; // A non-sequential identifier for the node. This value is the key between the full and abbreviated address books
+    AccountID nodeAccountId = 6; // The account to be paid for queries and transactions sent to this node
+    bytes nodeCertHash = 7; // A hash of the X509 cert used for gRPC traffic to this node
+    repeated NodeEndpoint nodeEndpoint = 8; // A node's IP address and port
+}
+
+/* A List of all nodes and just their information needed to connect to the network.*/
+message AddressBookForClients {
+    repeated NodeAddressForClients nodeAddressForClients = 1; // Contains minimal node details for the network
 }
 
 message SemanticVersion {

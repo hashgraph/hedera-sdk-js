@@ -122,8 +122,8 @@ message TransactionBody {
     TokenAssociateTransactionBody tokenAssociate = 40; // Associate tokens to an account
     TokenDissociateTransactionBody tokenDissociate = 41; // Dissociate tokens from an account
 
-    ScheduleCreateTransactionBody scheduleCreate = 42; // Creates a scheduled transaction instance
-    ScheduleDeleteTransactionBody scheduleDelete = 43; // Deletes a scheduled transaction instance
-    ScheduleSignTransactionBody scheduleSign = 44; // Signs a scheduled transaction instance
+    ScheduleCreateTransactionBody scheduleCreate = 42; // Creates a schedule in the network's action queue
+    ScheduleDeleteTransactionBody scheduleDelete = 43; // Deletes a schedule from the network's action queue
+    ScheduleSignTransactionBody scheduleSign = 44; // Adds one or more Ed25519 keys to the affirmed signers of a scheduled transaction
   }
 }

@@ -197,6 +197,7 @@ import IScheduleInfo = proto.IScheduleInfo;
 import ScheduleGetInfoResponse = proto.ScheduleGetInfoResponse;
 import IScheduleGetInfoResponse = proto.IScheduleGetInfoResponse;
 import IScheduleID = proto.IScheduleID;
+import ISchedulableTransactionBody = proto.ISchedulableTransactionBody;
 
 export {
     IAccountID,
@@ -334,4 +335,5 @@ export {
     IScheduleCreateTransactionBody,
     IScheduleDeleteTransactionBody,
     IScheduleSignTransactionBody,
+    ISchedulableTransactionBody,
 };
