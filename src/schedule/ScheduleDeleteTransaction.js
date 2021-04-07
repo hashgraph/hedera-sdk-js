@@ -12,6 +12,7 @@ import Transaction, {
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").IScheduleDeleteTransactionBody} proto.IScheduleDeleteTransactionBody
  * @typedef {import("@hashgraph/proto").IScheduleID} proto.IScheduleID
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -62,14 +63,14 @@ export default class ScheduleDeleteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const create = /** @type {proto.IScheduleDeleteTransactionBody} */ (body.scheduleDelete);
+        const scheduleDelete = /** @type {proto.IScheduleDeleteTransactionBody} */ (body.scheduleDelete);
 
         return Transaction._fromProtobufTransactions(
             new ScheduleDeleteTransaction({
                 scheduleId:
-                    create.scheduleID != null
+                    scheduleDelete.scheduleID != null
                         ? ScheduleId._fromProtobuf(
-                              /** @type {proto.IScheduleID} */ (create.scheduleID)
+                              /** @type {proto.IScheduleID} */ (scheduleDelete.scheduleID)
                           )
                         : undefined,
             }),
@@ -130,6 +131,23 @@ export default class ScheduleDeleteTransaction extends Transaction {
                 this._scheduleId != null
                     ? this._scheduleId._toProtobuf()
                     : null,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            scheduleDelete: /** @type {proto.IScheduleDeleteTransactionBody} */ {
+                scheduleID:
+                    this._scheduleId != null
+                        ? this._scheduleId._toProtobuf()
+                        : null,
+            },
         };
     }
 }

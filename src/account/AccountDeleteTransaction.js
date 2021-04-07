@@ -12,6 +12,7 @@ import Transaction, {
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ICryptoDeleteTransactionBody} proto.ICryptoDeleteTransactionBody
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -177,6 +178,27 @@ export default class AccountDeleteTransaction extends Transaction {
                 this._transferAccountId != null
                     ? this._transferAccountId._toProtobuf()
                     : null,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            cryptoDelete: /** @type {proto.ICryptoDeleteTransactionBody} */ {
+                deleteAccountID:
+                    this._accountId != null
+                        ? this._accountId._toProtobuf()
+                        : null,
+                transferAccountID:
+                    this._transferAccountId != null
+                        ? this._transferAccountId._toProtobuf()
+                        : null,
+            },
         };
     }
 }

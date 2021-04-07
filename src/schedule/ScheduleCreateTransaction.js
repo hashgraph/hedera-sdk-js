@@ -4,8 +4,8 @@ import Transaction, {
     SCHEDULE_CREATE_TRANSACTION,
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
-import NodeAccountIdSignatureMap from "../transaction/NodeAccountIdSignatureMap.js";
-import * as hex from "../encoding/hex.js";
+// import NodeAccountIdSignatureMap from "../transaction/NodeAccountIdSignatureMap.js";
+// import * as hex from "../encoding/hex.js";
 
 /**
  * @namespace proto
@@ -17,6 +17,7 @@ import * as hex from "../encoding/hex.js";
  * @typedef {import("@hashgraph/proto").IScheduleCreateTransactionBody} proto.IScheduleCreateTransactionBody
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").ISignatureMap} proto.ISignatureMap
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -51,21 +52,15 @@ export default class ScheduleCreateTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Uint8Array}
+         * @type {?Transaction}
          */
-        this._transactionBody = null;
+        this._scheduledTransaction = null;
 
         /**
          * @private
          * @type {?AccountId}
          */
         this._payerAccountId = null;
-
-        /**
-         * @private
-         * @type {?proto.ISignatureMap}
-         */
-        this._sigMap = null;
 
         /**
          * @private
@@ -135,11 +130,11 @@ export default class ScheduleCreateTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {Uint8Array} bodyBytes
+     * @param {Transaction} tx
      * @returns {this}
      */
-    _setTransactionBody(bodyBytes) {
-        this._transactionBody = bodyBytes;
+    _setScheduledTransaction(tx) {
+        this._scheduledTransaction = tx;
 
         return this;
     }
@@ -214,112 +209,7 @@ export default class ScheduleCreateTransaction extends Transaction {
         this._requireNotFrozen();
         transaction._requireNotFrozen();
 
-        this._transactionBody = transaction.schedule()._transactionBody;
-        this._sigMap = null;
-
-        return this;
-    }
-
-    /**
-     * @returns {NodeAccountIdSignatureMap}
-     */
-    get scheduledSignatures() {
-        if (this._sigMap != null) {
-            return NodeAccountIdSignatureMap._fromTransactionSigMap(
-                this._sigMap
-            );
-        } else {
-            return new NodeAccountIdSignatureMap();
-        }
-    }
-
-    /**
-     * @param {PublicKey} key
-     * @param {Uint8Array} signature
-     * @returns {this}
-     */
-    addScheduleSignature(key, signature) {
-        if (this._sigMap == null) {
-            this._sigMap = {};
-        }
-
-        if (this._sigMap.sigPair == null) {
-            this._sigMap.sigPair = [];
-        }
-
-        this._sigMap.sigPair.push({
-            pubKeyPrefix: key.toBytes(),
-            ed25519: signature,
-        });
-
-        return this;
-    }
-
-    /**
-     * @param {PrivateKey} key
-     * @returns {Promise<this>}
-     */
-    signScheduled(key) {
-        return this.signWith(key.publicKey, (message) =>
-            Promise.resolve(key.sign(message))
-        );
-    }
-
-    /**
-     * @param {Client} client
-     * @returns {Promise<this>}
-     */
-    signScheduledWithOperator(client) {
-        const operator = client._operator;
-
-        if (operator == null) {
-            throw new Error(
-                "Client operator must be set to sign with operator"
-            );
-        }
-
-        return this.signWith(operator.publicKey, (message) =>
-            Promise.resolve(operator.transactionSigner(message))
-        );
-    }
-
-    /**
-     *
-     * @param {PublicKey} privateKey
-     * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
-     * @returns {Promise<this>}
-     */
-    async signScheduledWith(privateKey, transactionSigner) {
-        const publicKeyData = privateKey.toBytes();
-
-        // note: this omits the DER prefix on purpose because Hedera doesn't
-        // support that in the protobuf. this means that we would fail
-        // to re-inflate [this._signerPublicKeys] during [fromBytes] if we used DER
-        // prefixes here
-        const publicKeyHex = hex.encode(publicKeyData);
-
-        if (this._scheduledSignerPublicKeys.has(publicKeyHex)) {
-            // this public key has already signed this transaction
-            return this;
-        }
-
-        const bodyBytes = /** @type {Uint8Array} */ (this._transactionBody);
-        const signature = await transactionSigner(bodyBytes);
-
-        if (this._sigMap == null) {
-            this._sigMap = {};
-        }
-
-        if (this._sigMap.sigPair == null) {
-            this._sigMap.sigPair = [];
-        }
-
-        this._sigMap.sigPair.push({
-            pubKeyPrefix: publicKeyData,
-            ed25519: signature,
-        });
-
-        this._scheduledSignerPublicKeys.add(publicKeyHex);
+        this._scheduledTransaction = transaction.schedule()._scheduledTransaction;
 
         return this;
     }
@@ -357,10 +247,17 @@ export default class ScheduleCreateTransaction extends Transaction {
                 this._payerAccountId != null
                     ? this._payerAccountId._toProtobuf()
                     : null,
-            sigMap: this._sigMap,
-            transactionBody: this._transactionBody,
+            scheduledTransactionBody: this._scheduledTransaction?._getScheduledTransactionBody(),
             memo: this._scheduleMemo,
         };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        throw "Schedule create transaction can't be scheduled.";
     }
 }
 

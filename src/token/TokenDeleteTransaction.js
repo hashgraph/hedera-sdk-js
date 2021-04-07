@@ -12,6 +12,7 @@ import Transaction, {
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ITokenDeleteTransactionBody} proto.ITokenDeleteTransactionBody
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -123,6 +124,21 @@ export default class TokenDeleteTransaction extends Transaction {
     _makeTransactionData() {
         return {
             token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            tokenDeletion: /** @type {proto.ITokenDeleteTransactionBody} */ {
+                token:
+                    this._tokenId != null ? this._tokenId._toProtobuf() : null,
+            },
         };
     }
 }

@@ -10,6 +10,7 @@ import Transaction, {
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").IFreezeTransactionBody} proto.IFreezeTransactionBody
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -188,6 +189,25 @@ export default class FreezeTransaction extends Transaction {
             startMin: this._startTime != null ? this._startTime.minute : null,
             endHour: this._endTime != null ? this._endTime.hour : null,
             endMin: this._endTime != null ? this._endTime.minute : null,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            freeze: /** @type {proto.IFreezeTransactionBody} */ {
+                startHour:
+                    this._startTime != null ? this._startTime.hour : null,
+                startMin:
+                    this._startTime != null ? this._startTime.minute : null,
+                endHour: this._endTime != null ? this._endTime.hour : null,
+                endMin: this._endTime != null ? this._endTime.minute : null,
+            },
         };
     }
 }

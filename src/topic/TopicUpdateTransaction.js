@@ -14,6 +14,7 @@ import Duration from "../Duration.js";
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -377,6 +378,43 @@ export default class TopicUpdateTransaction extends Transaction {
                 this._autoRenewPeriod != null
                     ? this._autoRenewPeriod._toProtobuf()
                     : null,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            consensusUpdateTopic: /** @type {proto.IConsensusUpdateTopicTransactionBody} */ {
+                topicID:
+                    this._topicId != null ? this._topicId._toProtobuf() : null,
+                adminKey:
+                    this._adminKey != null
+                        ? keyToProtobuf(this._adminKey)
+                        : null,
+                submitKey:
+                    this._submitKey != null
+                        ? keyToProtobuf(this._submitKey)
+                        : null,
+                memo:
+                    this._topicMemo != null
+                        ? {
+                              value: this._topicMemo,
+                          }
+                        : null,
+                autoRenewAccount:
+                    this._autoRenewAccountId != null
+                        ? this._autoRenewAccountId._toProtobuf()
+                        : null,
+                autoRenewPeriod:
+                    this._autoRenewPeriod != null
+                        ? this._autoRenewPeriod._toProtobuf()
+                        : null,
+            },
         };
     }
 }

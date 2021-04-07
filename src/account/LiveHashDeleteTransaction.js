@@ -11,6 +11,7 @@ import AccountId from "./AccountId.js";
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ICryptoDeleteLiveHashTransactionBody} proto.ICryptoDeleteLiveHashTransactionBody
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -157,6 +158,14 @@ export default class LiveHashDeleteTransaction extends Transaction {
             accountOfLiveHash:
                 this._accountId != null ? this._accountId._toProtobuf() : null,
         };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        throw "Live hash delete transaction can't be scheduled.";
     }
 }
 

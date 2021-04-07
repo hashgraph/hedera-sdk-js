@@ -19,6 +19,7 @@ import Timestamp from "../Timestamp.js";
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
  * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -389,6 +390,48 @@ export default class ContractUpdateTransaction extends Transaction {
                           value: this._contractMemo,
                       }
                     : null,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            contractUpdateInstance: /** @type {proto.IContractUpdateTransactionBody} */ {
+                contractID:
+                    this._contractId != null
+                        ? this._contractId._toProtobuf()
+                        : null,
+                expirationTime:
+                    this._expirationTime != null
+                        ? this._expirationTime._toProtobuf()
+                        : null,
+                adminKey:
+                    this._adminKey != null
+                        ? keyToProtobuf(this._adminKey)
+                        : null,
+                proxyAccountID:
+                    this._proxyAccountId != null
+                        ? this._proxyAccountId._toProtobuf()
+                        : null,
+                autoRenewPeriod:
+                    this._autoRenewPeriod != null
+                        ? this._autoRenewPeriod._toProtobuf()
+                        : null,
+                fileID: this._bytecodeFileId
+                    ? this._bytecodeFileId._toProtobuf()
+                    : null,
+                memoWrapper:
+                    this._contractMemo != null
+                        ? {
+                              value: this._contractMemo,
+                          }
+                        : null,
+            },
         };
     }
 }

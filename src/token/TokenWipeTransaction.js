@@ -14,6 +14,7 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ITokenWipeAccountTransactionBody} proto.ITokenWipeAccountTransactionBody
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -193,6 +194,26 @@ export default class TokenWipeTransaction extends Transaction {
             token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
             account:
                 this._accountId != null ? this._accountId._toProtobuf() : null,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            tokenWipe: /** @type {proto.ITokenWipeAccountTransactionBody} */ {
+                amount: this._amount,
+                token:
+                    this._tokenId != null ? this._tokenId._toProtobuf() : null,
+                account:
+                    this._accountId != null
+                        ? this._accountId._toProtobuf()
+                        : null,
+            },
         };
     }
 }

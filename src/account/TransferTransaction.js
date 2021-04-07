@@ -24,6 +24,7 @@ import HbarTransferMap from "./HbarTransferMap.js";
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -268,6 +269,48 @@ export default class TransferTransaction extends Transaction {
                 accountAmounts: hbarTransfers,
             },
             tokenTransfers,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        const tokenTransfers = [];
+        const hbarTransfers = [];
+
+        for (const [tokenId, value] of this._tokenTransfers) {
+            const transfers = [];
+            for (const [accountId, amount] of value) {
+                transfers.push({
+                    accountID: accountId._toProtobuf(),
+                    amount: amount,
+                });
+            }
+
+            tokenTransfers.push({
+                token: tokenId._toProtobuf(),
+                transfers,
+            });
+        }
+
+        for (const [accountId, value] of this._hbarTransfers) {
+            hbarTransfers.push({
+                accountID: accountId._toProtobuf(),
+                amount: value.toTinybars(),
+            });
+        }
+
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            cryptoTransfer: /** @type {proto.ICryptoTransferTransactionBody} */ {
+                transfers: {
+                    accountAmounts: hbarTransfers,
+                },
+                tokenTransfers: tokenTransfers,
+            },
         };
     }
 }

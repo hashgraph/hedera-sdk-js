@@ -17,6 +17,7 @@ import Duration from "../Duration.js";
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ICryptoCreateTransactionBody} proto.ICryptoCreateTransactionBody
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -342,6 +343,33 @@ export default class AccountCreateTransaction extends Transaction {
             sendRecordThreshold: this._sendRecordThreshold.toTinybars(),
             receiverSigRequired: this._receiverSignatureRequired,
             memo: this._accountMemo,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            cryptoCreateAccount: /** @type {proto.ICryptoCreateTransactionBody} */ {
+                key: this._key != null ? keyToProtobuf(this._key) : null,
+                initialBalance:
+                    this._initialBalance != null
+                        ? this._initialBalance.toTinybars()
+                        : null,
+                autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
+                proxyAccountID:
+                    this._proxyAccountId != null
+                        ? this._proxyAccountId._toProtobuf()
+                        : null,
+                receiveRecordThreshold: this._receiveRecordThreshold.toTinybars(),
+                sendRecordThreshold: this._sendRecordThreshold.toTinybars(),
+                receiverSigRequired: this._receiverSignatureRequired,
+                memo: this._accountMemo,
+            },
         };
     }
 }

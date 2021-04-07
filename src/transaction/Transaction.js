@@ -247,11 +247,7 @@ export default class Transaction extends Executable {
             );
         }
 
-        const bodyBytes = /** @type {Uint8Array} */ (this._makeSignedTransaction(
-            null
-        ).bodyBytes);
-
-        return SCHEDULE_CREATE_TRANSACTION[0]()._setTransactionBody(bodyBytes);
+        return SCHEDULE_CREATE_TRANSACTION[0]()._setScheduledTransaction(this);
     }
 
     /**
@@ -806,6 +802,14 @@ export default class Transaction extends Executable {
      * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
+        throw new Error("not implemented");
+    }
+
+    /**
+     * @abstract
+     * @returns {object}
+     */
+    _getScheduledTransactionBody() {
         throw new Error("not implemented");
     }
 

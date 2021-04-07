@@ -16,6 +16,7 @@ import { KeyList } from "@hashgraph/cryptography";
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").IFileCreateTransactionBody} proto.IFileCreateTransactionBody
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -276,6 +277,28 @@ export default class FileCreateTransaction extends Transaction {
             expirationTime: this._expirationTime._toProtobuf(),
             contents: this._contents,
             memo: this._fileMemo,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            fileCreate: /** @type {proto.IFileCreateTransactionBody} */ {
+                keys:
+                    this._keys != null
+                        ? {
+                              keys: this._keys.map((key) => keyToProtobuf(key)),
+                          }
+                        : null,
+                expirationTime: this._expirationTime._toProtobuf(),
+                contents: this._contents,
+                memo: this._fileMemo,
+            },
         };
     }
 }

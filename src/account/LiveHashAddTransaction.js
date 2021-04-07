@@ -15,6 +15,7 @@ import { KeyList } from "@hashgraph/cryptography";
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ICryptoAddLiveHashTransactionBody} proto.ICryptoAddLiveHashTransactionBody
  * @typedef {import("@hashgraph/proto").ILiveHash} proto.ILiveHash
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -246,6 +247,14 @@ export default class LiveHashAddTransaction extends Transaction {
                         : null,
             },
         };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        throw "Live hash add transaction can't be scheduled.";
     }
 }
 

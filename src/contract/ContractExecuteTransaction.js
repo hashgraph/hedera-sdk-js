@@ -17,6 +17,7 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
  * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -257,6 +258,26 @@ export default class ContractExecuteTransaction extends Transaction {
             gas: this._gas,
             amount: this._amount != null ? this._amount.toTinybars() : null,
             functionParameters: this._functionParameters,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            contractCall: /** @type {proto.IContractCallTransactionBody} */ {
+                contractID:
+                    this._contractId != null
+                        ? this._contractId._toProtobuf()
+                        : null,
+                gas: this._gas,
+                amount: this._amount != null ? this._amount.toTinybars() : null,
+                functionParameters: this._functionParameters,
+            },
         };
     }
 }

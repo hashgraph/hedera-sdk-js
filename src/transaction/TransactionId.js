@@ -1,7 +1,6 @@
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import * as proto from "@hashgraph/proto";
-import * as hex from "../encoding/hex.js";
 import Long from "long";
 
 /**
@@ -18,10 +17,9 @@ export default class TransactionId {
      *
      * @param {?AccountId} accountId
      * @param {?Timestamp} validStart
-     * @param {?Uint8Array} nonce
      * @param {?boolean} scheduled
      */
-    constructor(accountId, validStart, nonce = null, scheduled = false) {
+    constructor(accountId, validStart, scheduled = false) {
         /**
          * The Account ID that paid for this transaction.
          *
@@ -39,19 +37,9 @@ export default class TransactionId {
          */
         this.validStart = validStart;
 
-        this.nonce = nonce;
-
         this.scheduled = scheduled;
 
         Object.freeze(this);
-    }
-
-    /**
-     * @param {Uint8Array} nonce
-     * @returns {TransactionId}
-     */
-    static withNonce(nonce) {
-        return new TransactionId(null, null, nonce, null);
     }
 
     /**
@@ -60,7 +48,7 @@ export default class TransactionId {
      * @returns {TransactionId}
      */
     static withValidStart(accountId, validStart) {
-        return new TransactionId(accountId, validStart, null, null);
+        return new TransactionId(accountId, validStart, null);
     }
 
     /**
@@ -80,34 +68,22 @@ export default class TransactionId {
     }
 
     /**
-     * @param {string} id
+     * @param {string} wholeId
      * @returns {TransactionId}
      */
-    static fromString(id) {
-        let [idOrNonce, scheduled] = id.split("?");
+    static fromString(wholeId) {
+        let [id, scheduled] = wholeId.split("?");
 
-        if (idOrNonce.includes("@")) {
-            const [account, time] = idOrNonce.split("@");
-            const [seconds, nanos] = time
-                .split(".")
-                .map((value) => Long.fromValue(value));
+        const [account, time] = id.split("@");
+        const [seconds, nanos] = time
+            .split(".")
+            .map((value) => Long.fromValue(value));
 
-            return new TransactionId(
-                AccountId.fromString(account),
-                new Timestamp(seconds, nanos),
-                null,
-                scheduled === "scheduled"
-            );
-        } else {
-            const nonce = hex.decode(idOrNonce);
-
-            return new TransactionId(
-                null,
-                null,
-                nonce,
-                scheduled === "scheduled"
-            );
-        }
+        return new TransactionId(
+            AccountId.fromString(account),
+            new Timestamp(seconds, nanos),
+            scheduled === "scheduled"
+        );
     }
 
     /**
@@ -127,10 +103,6 @@ export default class TransactionId {
             return `${this.accountId.toString()}@${this.validStart.seconds.toString()}.${this.validStart.nanos.toString()}${
                 this.scheduled ? "?scheduled" : ""
             }`;
-        } else if (this.nonce != null) {
-            return `${hex.encode(this.nonce)}${
-                this.scheduled ? "?scheduled" : ""
-            }`;
         } else {
             throw new Error(
                 "Neither `nonce` or `accountId` and `validStart` are set"
@@ -148,11 +120,8 @@ export default class TransactionId {
             return new TransactionId(
                 AccountId._fromProtobuf(id.accountID),
                 Timestamp._fromProtobuf(id.transactionValidStart),
-                null,
                 id.scheduled
             );
-        } else if (id.nonce != null) {
-            return new TransactionId(null, null, id.nonce, id.scheduled);
         } else {
             throw new Error(
                 "Neither `nonce` or `accountID` and `transactionValidStart` are set"
@@ -170,7 +139,6 @@ export default class TransactionId {
                 this.accountId != null ? this.accountId._toProtobuf() : null,
             transactionValidStart:
                 this.validStart != null ? this.validStart._toProtobuf() : null,
-            nonce: this.nonce != null ? this.nonce : null,
             scheduled: this.scheduled,
         };
     }

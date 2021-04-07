@@ -14,6 +14,7 @@ import ContractId from "../contract/ContractId.js";
  * @typedef {import("@hashgraph/proto").ISystemUndeleteTransactionBody} proto.ISystemUndeleteTransactionBody
  * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
  * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -172,6 +173,25 @@ export default class SystemUndeleteTransaction extends Transaction {
                 this._contractId != null
                     ? this._contractId._toProtobuf()
                     : null,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            systemUndelete: /** @type {proto.ISystemUndeleteTransactionBody} */ {
+                fileID:
+                    this._fileId != null ? this._fileId._toProtobuf() : null,
+                contractID:
+                    this._contractId != null
+                        ? this._contractId._toProtobuf()
+                        : null,
+            },
         };
     }
 }

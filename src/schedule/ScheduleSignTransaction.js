@@ -2,7 +2,6 @@ import ScheduleId from "./ScheduleId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import NodeAccountIdSignatureMap from "../transaction/NodeAccountIdSignatureMap.js";
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -31,6 +30,7 @@ import NodeAccountIdSignatureMap from "../transaction/NodeAccountIdSignatureMap.
  * @typedef {import("@hashgraph/proto").IScheduleSignTransactionBody} proto.IScheduleSignTransactionBody
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").ISignatureMap} proto.ISignatureMap
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -59,12 +59,6 @@ export default class ScheduleSignTransaction extends Transaction {
          * @type {?ScheduleId}
          */
         this._scheduleId = null;
-
-        /**
-         * @private
-         * @type {?proto.ISignatureMap}
-         */
-        this._sigMap = null;
 
         if (props.scheduleId != null) {
             this.setScheduleId(props.scheduleId);
@@ -124,43 +118,6 @@ export default class ScheduleSignTransaction extends Transaction {
     }
 
     /**
-     * @param {PublicKey} publicKey
-     * @param {Uint8Array} signature
-     * @returns {this}
-     */
-    addScheduledSignature(publicKey, signature) {
-        this._requireNotFrozen();
-
-        if (this._sigMap == null) {
-            this._sigMap = {};
-        }
-
-        if (this._sigMap.sigPair == null) {
-            this._sigMap.sigPair = [];
-        }
-
-        this._sigMap.sigPair.push({
-            pubKeyPrefix: publicKey.toBytes(),
-            ed25519: signature,
-        });
-
-        return this;
-    }
-
-    /**
-     * @returns {NodeAccountIdSignatureMap}
-     */
-    get scheduleSignatures() {
-        if (this._sigMap != null) {
-            return NodeAccountIdSignatureMap._fromTransactionSigMap(
-                this._sigMap
-            );
-        } else {
-            return new NodeAccountIdSignatureMap();
-        }
-    }
-
-    /**
      * @override
      * @internal
      * @param {Channel} channel
@@ -191,8 +148,15 @@ export default class ScheduleSignTransaction extends Transaction {
                 this._scheduleId != null
                     ? this._scheduleId._toProtobuf()
                     : null,
-            sigMap: this._sigMap,
         };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        throw "Schedule sign transaction can't be scheduled.";
     }
 }
 

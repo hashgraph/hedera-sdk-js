@@ -20,6 +20,7 @@ import Duration from "../Duration.js";
  * @typedef {import("@hashgraph/proto").IContractCreateTransactionBody} proto.IContractCreateTransactionBody
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -395,6 +396,39 @@ export default class ContractCreateTransaction extends Transaction {
             autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
             constructorParameters: this._constructorParameters,
             memo: this._contractMemo,
+        };
+    }
+
+    /**
+     * @override
+     * @returns {proto.ISchedulableTransactionBody}
+     */
+    _getScheduledTransactionBody() {
+        return {
+            memo: super.transactionMemo,
+            transactionFee: super.maxTransactionFee?.toTinybars(),
+            contractCreateInstance: /** @type {proto.IContractCreateTransactionBody} */ {
+                fileID:
+                    this._bytecodeFileId != null
+                        ? this._bytecodeFileId._toProtobuf()
+                        : null,
+                adminKey:
+                    this._adminKey != null
+                        ? keyToProtobuf(this._adminKey)
+                        : null,
+                gas: this._gas,
+                initialBalance:
+                    this._initialBalance != null
+                        ? this._initialBalance.toTinybars()
+                        : null,
+                proxyAccountID:
+                    this._proxyAccountId != null
+                        ? this._proxyAccountId._toProtobuf()
+                        : null,
+                autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
+                constructorParameters: this._constructorParameters,
+                memo: this._contractMemo,
+            },
         };
     }
 }
