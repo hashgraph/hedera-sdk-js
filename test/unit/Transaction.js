@@ -50,7 +50,7 @@ describe("Transaction", function () {
 
         const hash = await transaction.getTransactionHash();
 
-        expect(hexHash, hex.encode(hash));
+        expect(hexHash).to.be.equal(hex.encode(hash));
     });
 
     it("can decode raw protobuf transaction bytes", async function () {
@@ -60,12 +60,16 @@ describe("Transaction", function () {
         const transaction = Transaction.fromBytes(hex.decode(hexBytes));
 
         expect(
-            new Hbar(1).negated(),
-            transaction.hbarTransfers.get(new AccountId(476260))
-        );
+            transaction.hbarTransfers
+                .get(new AccountId(476260))
+                .toTinybars()
+                .toString()
+        ).to.be.equal(new Hbar(1).negated().toTinybars().toString());
         expect(
-            new Hbar(1),
-            transaction.hbarTransfers.get(new AccountId(476267))
-        );
+            transaction.hbarTransfers
+                .get(new AccountId(476267))
+                .toTinybars()
+                .toString()
+        ).to.be.equal(new Hbar(1).toTinybars().toString());
     });
 });

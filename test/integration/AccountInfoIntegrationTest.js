@@ -70,6 +70,7 @@ describe("AccountInfo", function () {
         ).getReceipt(client);
     });
 
+    // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("should be able to get 300 accounts", async function () {
         this.timeout(150000000);
 
