@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
      results in the v1 SDK's.
  * Export `StatusError`, `PrecheckStatusError`, `ReceiptStatusError`, and `BadKeyError`
 
+### Fixed
+
+ * A few examples that did not work with `CONFIG_FILE` environment variable
+
 ## v2.0.17-beta.2
 
 ### Added
