@@ -154,7 +154,7 @@ export default class Transaction extends Executable {
 
         if (list.length == 0) {
             const transaction = ProtoTransaction.decode(bytes);
-            
+
             if (transaction.signedTransactionBytes.length != 0) {
                 list.push(transaction);
             } else {
@@ -162,7 +162,7 @@ export default class Transaction extends Executable {
                     signedTransactionBytes: ProtoSignedTransaction.encode({
                         bodyBytes: transaction.bodyBytes,
                         sigMap: transaction.sigMap,
-                    }).finish()
+                    }).finish(),
                 });
             }
         }
