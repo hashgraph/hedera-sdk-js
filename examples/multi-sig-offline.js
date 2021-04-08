@@ -27,21 +27,21 @@ async function main() {
         }
     } else {
         try {
-            client = Client.fromConfigFile(process.env.CONFIG_FILE);
+            client = await Client.fromConfigFile(process.env.CONFIG_FILE);
         } catch (err) {
             client = Client.forTestnet();
         }
     }
-    let operatorKey;
+
     if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
-        operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
+        const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
         const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 
         client.setOperator(operatorId, operatorKey);
     }
 
-    user1Key = await PrivateKey.generate();
-    user2Key = await PrivateKey.generate();
+    user1Key = PrivateKey.generate();
+    user2Key = PrivateKey.generate();
 
     console.log(`private key for user 1= ${user1Key}`);
     console.log(`public key for user 1= ${user1Key.publicKey}`);
@@ -51,7 +51,7 @@ async function main() {
     // create a multi-sig account
     const keyList = new KeyList([user1Key, user2Key]);
 
-    const createAccountTransaction = await new AccountCreateTransaction()
+    const createAccountTransaction = new AccountCreateTransaction()
         .setInitialBalance(new Hbar(2)) // 5 h
         .setKey(keyList);
 
@@ -77,9 +77,9 @@ async function main() {
     const user2Signature = await user2Signs(transactionBytes);
 
     // recreate the transaction from bytes
-    await transactionToExecute.sign(operatorKey);
-    await transactionToExecute.addSignature(user1Key.publicKey, user1Signature);
-    await transactionToExecute.addSignature(user2Key.publicKey, user2Signature);
+    await transactionToExecute.signWithOperator(client);
+    transactionToExecute.addSignature(user1Key.publicKey, user1Signature);
+    transactionToExecute.addSignature(user2Key.publicKey, user2Signature);
 
     const result = await transactionToExecute.execute(client);
     receipt = await result.getReceipt(client);
@@ -87,13 +87,13 @@ async function main() {
 }
 
 async function user1Signs(transactionBytes) {
-    const transaction = await Transaction.fromBytes(transactionBytes);
+    const transaction = Transaction.fromBytes(transactionBytes);
     const signature = await user1Key.signTransaction(transaction);
     return signature;
 }
 
 async function user2Signs(transactionBytes) {
-    const transaction = await Transaction.fromBytes(transactionBytes);
+    const transaction = Transaction.fromBytes(transactionBytes);
     const signature = await user2Key.signTransaction(transaction);
     return signature;
 }

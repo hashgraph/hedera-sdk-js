@@ -26,14 +26,14 @@ async function main() {
         }
     } else {
         try {
-            client =await Client.fromConfigFile(process.env.CONFIG_FILE);
+            client = await Client.fromConfigFile(process.env.CONFIG_FILE);
         } catch (err) {
             client = Client.forTestnet();
         }
     }
-    let operatorKey;
+
     if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
-        operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
+        const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
         const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 
         client.setOperator(operatorId, operatorKey);
@@ -45,7 +45,7 @@ async function main() {
     // create a multi-sig account
     const keyList = new KeyList([user1Key, user2Key]);
 
-    const createAccountTransaction = await new AccountCreateTransaction()
+    const createAccountTransaction = new AccountCreateTransaction()
         .setInitialBalance(new Hbar(2)) // 5 h
         .setKey(keyList);
 
@@ -62,10 +62,9 @@ async function main() {
         .addHbarTransfer("0.0.3", 1)
         .freezeWith(client);
 
+    await transferTransaction.signWithOperator(client);
     user1Key.signTransaction(transferTransaction);
     user2Key.signTransaction(transferTransaction);
-    // comment line below out and it works
-    operatorKey.signTransaction(transferTransaction);
 
     const result = await transferTransaction.execute(client);
     receipt = await result.getReceipt(client);
