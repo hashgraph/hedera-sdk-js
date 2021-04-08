@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.0.17-beta.3
+
+### Added
+
+ * Support for raw `proto.Transaction` bytes in `Transaction.fromBytes()`
+   * This means v1 SDK's `Transaction.toBytes()` will now be supported in v2 `Transaction.fromBytes()`
+     However, `Transaction.toBytes()` and `Transaction.getTransactionHas()` in v2 will produce different
+     results in the v1 SDK's.
+
 ## v2.0.17-beta.2
 
 ### Added
