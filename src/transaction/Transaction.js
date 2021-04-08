@@ -9,6 +9,7 @@ import Long from "long";
 import * as sha384 from "../cryptography/sha384.js";
 import * as hex from "../encoding/hex.js";
 import {
+    Transaction as ProtoTransaction,
     SignedTransaction as ProtoSignedTransaction,
     TransactionList as ProtoTransactionList,
     TransactionBody as ProtoTransactionBody,
@@ -150,6 +151,21 @@ export default class Transaction extends Executable {
         const bodies = [];
 
         const list = ProtoTransactionList.decode(bytes).transactionList;
+
+        if (list.length == 0) {
+            const transaction = ProtoTransaction.decode(bytes);
+            
+            if (transaction.signedTransactionBytes.length != 0) {
+                list.push(transaction);
+            } else {
+                list.push({
+                    signedTransactionBytes: ProtoSignedTransaction.encode({
+                        bodyBytes: transaction.bodyBytes,
+                        sigMap: transaction.sigMap,
+                    }).finish()
+                });
+            }
+        }
 
         for (const transaction of list) {
             if (transaction.signedTransactionBytes == null) {
