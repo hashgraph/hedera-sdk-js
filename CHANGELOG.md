@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    * This means v1 SDK's `Transaction.toBytes()` will now be supported in v2 `Transaction.fromBytes()`
      However, `Transaction.toBytes()` and `Transaction.getTransactionHas()` in v2 will produce different
      results in the v1 SDK's.
+ * Export `StatusError`, `PrecheckStatusError`, `ReceiptStatusError`, and `BadKeyError`
 
 ## v2.0.17-beta.2
 

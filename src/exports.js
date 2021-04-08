@@ -90,4 +90,8 @@ export { default as TransactionResponse } from "./transaction/TransactionRespons
 export { default as Transfer } from "./Transfer.js";
 export { default as TransferTransaction } from "./account/TransferTransaction.js";
 
+export { default as StatusError } from "./StatusError.js";
+export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
+export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
+
 import "./query/CostQuery.js";

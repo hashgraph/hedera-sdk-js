@@ -8,6 +8,7 @@ import Status from "../src/Status.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
 import newClient from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
+import Long from "long";
 
 describe("AccountUpdate", function () {
     it("should be executable", async function () {
@@ -144,7 +145,7 @@ describe("AccountUpdate", function () {
         }
     });
 
-    it("should error with insufficent tx fee when a large expiration time is set", async function () {
+    it.skip("should error with insufficent tx fee when a large expiration time is set", async function () {
         this.timeout(15000);
 
         const client = await newClient();
@@ -171,9 +172,7 @@ describe("AccountUpdate", function () {
                         await new AccountUpdateTransaction()
                             .setAccountId(account)
                             .setKey(key2.publicKey)
-                            .setExpirationTime(
-                                new Timestamp(Date.now() + 77760000000, 0)
-                            )
+                            .setExpirationTime(new Timestamp(Long.MAX, 0))
                             .setNodeAccountIds([response.nodeId])
                             .freezeWith(client)
                             .sign(key1)
