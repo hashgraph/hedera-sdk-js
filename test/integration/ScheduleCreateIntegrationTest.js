@@ -7,12 +7,11 @@ import {
     PrivateKey,
     Hbar,
     KeyList,
-    Status,
 } from "../src/exports.js";
 import newClient from "./client/index.js";
 
 // eslint-disable-next-line mocha/no-skipped-tests
-describe.skip("ScheduleCreate", function () {
+describe("ScheduleCreate", function () {
     it("should be executable", async function () {
         this.timeout(15000);
         const client = await newClient();
@@ -71,10 +70,9 @@ describe.skip("ScheduleCreate", function () {
             .setScheduleId(scheduleId)
             .execute(client);
 
-        expect(info.scheduleId.toString()).to.be.equal(scheduleId.toString());
-
         const infoTransaction = /** @type {TopicMessageSubmitTransaction} */ (info.transaction);
 
+        expect(info.scheduleId.toString()).to.be.equal(scheduleId.toString());
         expect(infoTransaction.topicId.toString()).to.be.equal(
             transaction.topicId.toString()
         );
@@ -83,30 +81,16 @@ describe.skip("ScheduleCreate", function () {
         );
         expect(infoTransaction.nodeAccountIds).to.be.null;
 
-        const key2Signature = key2.sign(info.transactionBody);
-
         await (
-            await new ScheduleSignTransaction()
-                .setScheduleId(scheduleId)
-                .addScheduledSignature(key2.publicKey, key2Signature)
-                .execute(client)
+            await (
+                await new ScheduleSignTransaction()
+                    .setScheduleId(scheduleId)
+                    .freezeWith(client)
+                    .sign(key2)
+            ).execute(client)
         ).getReceipt(client);
 
-        var err = false;
-
-        try {
-            await new ScheduleInfoQuery()
-                .setScheduleId(scheduleId)
-                .execute(client);
-        } catch (error) {
-            err = error
-                .toString()
-                .includes(Status.InvalidScheduleId.toString());
-        }
-
-        if (!err) {
-            throw new Error("ScheduleInfoQuery did not error when expected");
-        }
+        await new ScheduleInfoQuery().setScheduleId(scheduleId).execute(client);
 
         console.log(
             "https://previewnet.mirrornode.hedera.com/api/v1/transactions/" +

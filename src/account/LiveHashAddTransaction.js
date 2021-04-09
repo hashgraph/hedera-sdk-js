@@ -249,6 +249,7 @@ export default class LiveHashAddTransaction extends Transaction {
         };
     }
 
+    // eslint-disable-next-line jsdoc/require-returns-check
     /**
      * @override
      * @returns {proto.ISchedulableTransactionBody}
