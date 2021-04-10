@@ -521,18 +521,18 @@
     google-auth-library "^6.1.1"
     semver "^6.2.0"
 
-"@hashgraph/cryptography@^1.0.12":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.12.tgz#8c4b3900d10d0c6c5ff807f90aad0c45b3d2beb4"
-  integrity sha512-uX0IzuOoE1LxAuc6+SVrc9WCEJWnRJNurAgEfycGKqfwUbCEWXHqTzUc/hDlB2NEv0M6g/cRVwtzatCHPGaJwQ==
+"@hashgraph/cryptography@^1.0.13":
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.13.tgz#15d915c088cb2e1b736d51b714b41a62d546cc6a"
+  integrity sha512-+gDToVhlV4p3Os44Qeq1H9njE1CMGEGUeKuhzVy41EqA07iWDaTlTPmsnNC++/4YiW3F4abAGOcD6948ft6o5Q==
   dependencies:
     bignumber.js "^9.0.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@^1.0.22":
-  version "1.0.22"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.22.tgz#8df99c3d2ba0bfa898aa93aa32e8fffabcb733b5"
-  integrity sha512-09Q31V1Bqc9098fu4kwDJoJXqdks75HlfkM9z2HTq46eVlOHEEWGEat5fVmJeJOR+NCh2hBw4UQ4u/XRLlMtmA==
+"@hashgraph/proto@^1.0.24":
+  version "1.0.24"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.24.tgz#2c2138bd2235ae08c625f934807b50eba75e4bff"
+  integrity sha512-ARc+wom2K/b4X0XYuQJiy4PUcJy5IbSFXVS7UD1g2T0xTRrYmhKbyDpZ/CdSGB8iep1YNCCkKIBhIyMN+s5egw==
   dependencies:
     "@hashgraph/protobufjs" "^6.10.1-hashgraph.2"
 

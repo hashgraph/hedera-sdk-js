@@ -11,7 +11,7 @@ import {
 import newClient from "./client/index.js";
 
 // eslint-disable-next-line mocha/no-skipped-tests
-describe("ScheduleCreate", function () {
+describe.skip("ScheduleCreate", function () {
     it("should be executable", async function () {
         this.timeout(15000);
         const client = await newClient();
