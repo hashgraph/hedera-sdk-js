@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.0.17-beta.4
+
+### Fixed
+
+ * Scheduled transactions should use new HAPI protobufs
+ * Removed `nonce` from `TransactionId`
+
+### Removed
+   * `ScheduleCreateTransaction.addScheduledSignature()`
+   * `ScheduleCreateTransaction.scheduledSignatures()`
+   * `ScheduleSignTransaction.addScheduledSignature()`
+   * `ScheduleSignTransaction.scheduledSignatures()`
+
 ## v2.0.17-beta.3
 
 ### Added
