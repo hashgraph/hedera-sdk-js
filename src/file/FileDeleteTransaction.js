@@ -11,7 +11,6 @@ import FileId from "./FileId.js";
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").IFileDeleteTransactionBody} proto.IFileDeleteTransactionBody
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -133,21 +132,6 @@ export default class FileDeleteTransaction extends Transaction {
     _makeTransactionData() {
         return {
             fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
-        };
-    }
-
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        return {
-            memo: super.transactionMemo,
-            transactionFee: super.maxTransactionFee?.toTinybars(),
-            fileDelete: /** @type {proto.IFileDeleteTransactionBody} */ {
-                fileID:
-                    this._fileId != null ? this._fileId._toProtobuf() : null,
-            },
         };
     }
 }

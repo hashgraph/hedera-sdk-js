@@ -13,7 +13,6 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ITokenBurnTransactionBody} proto.ITokenBurnTransactionBody
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -156,22 +155,6 @@ export default class TokenBurnTransaction extends Transaction {
         return {
             amount: this._amount,
             token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
-        };
-    }
-
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        return {
-            memo: super.transactionMemo,
-            transactionFee: super.maxTransactionFee?.toTinybars(),
-            tokenBurn: /** @type {proto.ITokenBurnTransactionBody} */ {
-                amount: this._amount,
-                token:
-                    this._tokenId != null ? this._tokenId._toProtobuf() : null,
-            },
         };
     }
 }

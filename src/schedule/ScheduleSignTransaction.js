@@ -30,7 +30,6 @@ import Transaction, {
  * @typedef {import("@hashgraph/proto").IScheduleSignTransactionBody} proto.IScheduleSignTransactionBody
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").ISignatureMap} proto.ISignatureMap
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -149,15 +148,6 @@ export default class ScheduleSignTransaction extends Transaction {
                     ? this._scheduleId._toProtobuf()
                     : null,
         };
-    }
-
-    // eslint-disable-next-line jsdoc/require-returns-check
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        throw "Schedule sign transaction can't be scheduled.";
     }
 }
 

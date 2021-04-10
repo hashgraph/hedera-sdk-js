@@ -13,7 +13,6 @@ import Transaction, {
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ITokenUnfreezeAccountTransactionBody} proto.ITokenUnfreezeAccountTransactionBody
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -162,25 +161,6 @@ export default class TokenUnfreezeTransaction extends Transaction {
             token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
             account:
                 this._accountId != null ? this._accountId._toProtobuf() : null,
-        };
-    }
-
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        return {
-            memo: super.transactionMemo,
-            transactionFee: super.maxTransactionFee?.toTinybars(),
-            tokenUnfreeze: /** @type {proto.ITokenUnfreezeAccountTransactionBody} */ {
-                token:
-                    this._tokenId != null ? this._tokenId._toProtobuf() : null,
-                account:
-                    this._accountId != null
-                        ? this._accountId._toProtobuf()
-                        : null,
-            },
         };
     }
 }

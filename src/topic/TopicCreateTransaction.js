@@ -14,7 +14,6 @@ import Duration from "../Duration.js";
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -273,33 +272,6 @@ export default class TopicCreateTransaction extends Transaction {
                     : null,
             autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
             memo: this._topicMemo,
-        };
-    }
-
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        return {
-            memo: super.transactionMemo,
-            transactionFee: super.maxTransactionFee?.toTinybars(),
-            consensusCreateTopic: /** @type {proto.IConsensusCreateTopicTransactionBody} */ {
-                adminKey:
-                    this._adminKey != null
-                        ? keyToProtobuf(this._adminKey)
-                        : null,
-                submitKey:
-                    this._submitKey != null
-                        ? keyToProtobuf(this._submitKey)
-                        : null,
-                autoRenewAccount:
-                    this._autoRenewAccountId != null
-                        ? this._autoRenewAccountId._toProtobuf()
-                        : null,
-                autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
-                memo: this._topicMemo,
-            },
         };
     }
 }

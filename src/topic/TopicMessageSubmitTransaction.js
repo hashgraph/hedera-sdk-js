@@ -16,7 +16,6 @@ import Timestamp from "../Timestamp.js";
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").IConsensusMessageChunkInfo} proto.IConsensusMessageChunkInfo
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -350,47 +349,6 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                 topicID:
                     this._topicId != null ? this._topicId._toProtobuf() : null,
                 message: this._message,
-            };
-        }
-    }
-
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        if (this._chunkInfo != null && this._message != null) {
-            const num = /** @type {number} */ (this._chunkInfo.number);
-            const startIndex = (num - 1) * CHUNK_SIZE;
-            let endIndex = startIndex + CHUNK_SIZE;
-
-            if (endIndex > this._message.length) {
-                endIndex = this._message.length;
-            }
-
-            return {
-                memo: super.transactionMemo,
-                transactionFee: super.maxTransactionFee?.toTinybars(),
-                consensusSubmitMessage: /** @type {proto.IConsensusSubmitMessageTransactionBody} */ {
-                    topicID:
-                        this._topicId != null
-                            ? this._topicId._toProtobuf()
-                            : null,
-                    message: this._message.slice(startIndex, endIndex),
-                    chunkInfo: this._chunkInfo,
-                },
-            };
-        } else {
-            return {
-                memo: super.transactionMemo,
-                transactionFee: super.maxTransactionFee?.toTinybars(),
-                consensusSubmitMessage: /** @type {proto.IConsensusSubmitMessageTransactionBody} */ {
-                    topicID:
-                        this._topicId != null
-                            ? this._topicId._toProtobuf()
-                            : null,
-                    message: this._message,
-                },
             };
         }
     }

@@ -15,7 +15,6 @@ import Timestamp from "../Timestamp.js";
  * @typedef {import("@hashgraph/proto").ISystemDeleteTransactionBody} proto.ISystemDeleteTransactionBody
  * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
  * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -208,29 +207,6 @@ export default class SystemDeleteTransaction extends Transaction {
                 this._expirationTime != null
                     ? this._expirationTime._toProtobuf()
                     : null,
-        };
-    }
-
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        return {
-            memo: super.transactionMemo,
-            transactionFee: super.maxTransactionFee?.toTinybars(),
-            systemDelete: /** @type {proto.ISystemDeleteTransactionBody} */ {
-                fileID:
-                    this._fileId != null ? this._fileId._toProtobuf() : null,
-                contractID:
-                    this._contractId != null
-                        ? this._contractId._toProtobuf()
-                        : null,
-                expirationTime:
-                    this._expirationTime != null
-                        ? this._expirationTime._toProtobuf()
-                        : null,
-            },
         };
     }
 }

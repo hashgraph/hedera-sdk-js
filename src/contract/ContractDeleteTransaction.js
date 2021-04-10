@@ -14,7 +14,6 @@ import AccountId from "../account/AccountId.js";
  * @typedef {import("@hashgraph/proto").IContractDeleteTransactionBody} proto.IContractDeleteTransactionBody
  * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -218,30 +217,6 @@ export default class ContractDeleteTransaction extends Transaction {
                 this._transferContractId != null
                     ? this._transferContractId._toProtobuf()
                     : null,
-        };
-    }
-
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        return {
-            memo: super.transactionMemo,
-            transactionFee: super.maxTransactionFee?.toTinybars(),
-            contractDeleteInstance: /** @type {proto.IContractDeleteTransactionBody} */ {
-                contractID:
-                    this._contractId != null
-                        ? this._contractId._toProtobuf()
-                        : null,
-                transferAccountID: this._transferAccountId
-                    ? this._transferAccountId._toProtobuf()
-                    : null,
-                transferContractID:
-                    this._transferContractId != null
-                        ? this._transferContractId._toProtobuf()
-                        : null,
-            },
         };
     }
 }

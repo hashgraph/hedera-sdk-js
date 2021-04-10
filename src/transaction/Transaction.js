@@ -31,6 +31,7 @@ import AccountId from "../account/AccountId.js";
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -806,11 +807,15 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * @abstract
-     * @returns {object}
+     * @internal
+     * @returns {proto.ISchedulableTransactionBody}
      */
     _getScheduledTransactionBody() {
-        throw new Error("not implemented");
+        return {
+            memo: this.transactionMemo,
+            transactionFee: this.maxTransactionFee?.toTinybars(),
+            [this._getTransactionDataCase()]: this._makeTransactionData(),
+        };
     }
 
     /**

@@ -11,7 +11,6 @@ import TopicId from "./TopicId.js";
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -130,21 +129,6 @@ export default class TopicDeleteTransaction extends Transaction {
     _makeTransactionData() {
         return {
             topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
-        };
-    }
-
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        return {
-            memo: super.transactionMemo,
-            transactionFee: super.maxTransactionFee?.toTinybars(),
-            consensusDeleteTopic: /** @type {proto.IConsensusDeleteTopicTransactionBody} */ {
-                topicID:
-                    this._topicId != null ? this._topicId._toProtobuf() : null,
-            },
         };
     }
 }

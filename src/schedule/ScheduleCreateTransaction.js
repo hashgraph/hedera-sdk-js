@@ -17,7 +17,6 @@ import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
  * @typedef {import("@hashgraph/proto").IScheduleCreateTransactionBody} proto.IScheduleCreateTransactionBody
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").ISignatureMap} proto.ISignatureMap
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -247,18 +246,12 @@ export default class ScheduleCreateTransaction extends Transaction {
                 this._payerAccountId != null
                     ? this._payerAccountId._toProtobuf()
                     : null,
-            scheduledTransactionBody: this._scheduledTransaction?._getScheduledTransactionBody(),
+            scheduledTransactionBody:
+                this._scheduledTransaction != null
+                    ? this._scheduledTransaction._getScheduledTransactionBody()
+                    : null,
             memo: this._scheduleMemo,
         };
-    }
-
-    // eslint-disable-next-line jsdoc/require-returns-check
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        throw "Schedule create transaction can't be scheduled.";
     }
 }
 

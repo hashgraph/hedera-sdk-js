@@ -18,7 +18,6 @@ import Duration from "../Duration.js";
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ITokenCreateTransactionBody} proto.ITokenCreateTransactionBody
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -641,58 +640,6 @@ export default class TokenCreateTransaction extends Transaction {
                     ? this._autoRenewPeriod._toProtobuf()
                     : null,
             memo: this._tokenMemo,
-        };
-    }
-
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        return {
-            memo: super.transactionMemo,
-            transactionFee: super.maxTransactionFee?.toTinybars(),
-            tokenCreation: /** @type {proto.ITokenCreateTransactionBody} */ {
-                name: this._tokenName,
-                symbol: this._tokenSymbol,
-                decimals:
-                    this._decimals != null ? this._decimals.toInt() : null,
-                initialSupply: this._initialSupply,
-                treasury:
-                    this._treasuryAccountId != null
-                        ? this._treasuryAccountId._toProtobuf()
-                        : null,
-                adminKey:
-                    this._adminKey != null
-                        ? keyToProtobuf(this._adminKey)
-                        : null,
-                kycKey:
-                    this._kycKey != null ? keyToProtobuf(this._kycKey) : null,
-                freezeKey:
-                    this._freezeKey != null
-                        ? keyToProtobuf(this._freezeKey)
-                        : null,
-                wipeKey:
-                    this._wipeKey != null ? keyToProtobuf(this._wipeKey) : null,
-                supplyKey:
-                    this._supplyKey != null
-                        ? keyToProtobuf(this._supplyKey)
-                        : null,
-                freezeDefault: this._freezeDefault,
-                autoRenewAccount:
-                    this._autoRenewAccountId != null
-                        ? this._autoRenewAccountId._toProtobuf()
-                        : null,
-                expiry:
-                    this._expirationTime != null
-                        ? this._expirationTime._toProtobuf()
-                        : null,
-                autoRenewPeriod:
-                    this._autoRenewPeriod != null
-                        ? this._autoRenewPeriod._toProtobuf()
-                        : null,
-                memo: this._tokenMemo,
-            },
         };
     }
 }

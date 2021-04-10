@@ -17,7 +17,6 @@ import Timestamp from "../Timestamp.js";
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").IFileAppendTransactionBody} proto.IFileAppendTransactionBody
  * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -406,31 +405,6 @@ export default class FileAppendTransaction extends Transaction {
                 this._contents != null
                     ? this._contents.slice(this._startIndex, endIndex)
                     : null,
-        };
-    }
-
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        const length = this._contents != null ? this._contents.length : 0;
-        let endIndex = this._startIndex + CHUNK_SIZE;
-        if (endIndex > length) {
-            endIndex = length;
-        }
-
-        return {
-            memo: super.transactionMemo,
-            transactionFee: super.maxTransactionFee?.toTinybars(),
-            fileAppend: /** @type {proto.IFileAppendTransactionBody} */ {
-                fileID:
-                    this._fileId != null ? this._fileId._toProtobuf() : null,
-                contents:
-                    this._contents != null
-                        ? this._contents.slice(this._startIndex, endIndex)
-                        : null,
-            },
         };
     }
 }

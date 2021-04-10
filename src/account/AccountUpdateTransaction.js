@@ -15,7 +15,6 @@ import Duration from "../Duration.js";
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
  * @typedef {import("@hashgraph/proto").ICryptoUpdateTransactionBody} proto.ICryptoUpdateTransactionBody
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -379,48 +378,6 @@ export default class AccountUpdateTransaction extends Transaction {
                           value: this._accountMemo,
                       }
                     : null,
-        };
-    }
-
-    /**
-     * @override
-     * @returns {proto.ISchedulableTransactionBody}
-     */
-    _getScheduledTransactionBody() {
-        return {
-            memo: super.transactionMemo,
-            transactionFee: super.maxTransactionFee?.toTinybars(),
-            cryptoUpdateAccount: /** @type {proto.ICryptoUpdateTransactionBody} */ {
-                accountIDToUpdate:
-                    this._accountId != null
-                        ? this._accountId._toProtobuf()
-                        : null,
-                key: this._key != null ? keyToProtobuf(this._key) : null,
-                expirationTime:
-                    this._expirationTime != null
-                        ? this._expirationTime._toProtobuf()
-                        : null,
-                proxyAccountID:
-                    this._proxyAccountId != null
-                        ? this._proxyAccountId._toProtobuf()
-                        : null,
-                autoRenewPeriod:
-                    this._autoRenewPeriod != null
-                        ? this._autoRenewPeriod._toProtobuf()
-                        : null,
-                receiverSigRequiredWrapper:
-                    this._receiverSignatureRequired == null
-                        ? null
-                        : {
-                              value: this._receiverSignatureRequired,
-                          },
-                memo:
-                    this._accountMemo != null
-                        ? {
-                              value: this._accountMemo,
-                          }
-                        : null,
-            },
         };
     }
 }
