@@ -4,8 +4,6 @@ import Transaction, {
     SCHEDULE_CREATE_TRANSACTION,
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
-// import NodeAccountIdSignatureMap from "../transaction/NodeAccountIdSignatureMap.js";
-// import * as hex from "../encoding/hex.js";
 
 /**
  * @namespace proto
