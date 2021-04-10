@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * Scheduled transactions should use new HAPI protobufs
  * Removed `nonce` from `TransactionId`
+ * `schedule-multi-sig-transaction` example to use new scheduled transaction API
 
 ### Removed
    * `ScheduleCreateTransaction.addScheduledSignature()`

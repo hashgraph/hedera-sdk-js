@@ -11,7 +11,6 @@ const {
     ScheduleSignTransaction,
     ScheduleInfoQuery,
     TransactionId,
-    Status,
 } = require("@hashgraph/sdk");
 
 let user1Key;
@@ -31,22 +30,22 @@ async function main() {
         }
     } else {
         try {
-            client = Client.fromConfigFile(process.env.CONFIG_FILE);
+            client = await Client.fromConfigFile(process.env.CONFIG_FILE);
         } catch (err) {
             client = Client.forTestnet();
         }
     }
-    let operatorKey;
+
     if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
-        operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
+        const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
         const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 
         client.setOperator(operatorId, operatorKey);
     }
 
-    user1Key = await PrivateKey.generate();
-    user2Key = await PrivateKey.generate();
-    user3Key = await PrivateKey.generate();
+    user1Key = PrivateKey.generate();
+    user2Key = PrivateKey.generate();
+    user3Key = PrivateKey.generate();
 
     console.log(`private key for user 1= ${user1Key}`);
     console.log(`public key for user 1= ${user1Key.publicKey}`);
@@ -77,19 +76,12 @@ async function main() {
 
     // create a transfer from new account to 0.0.3
     const transferTransaction = new TransferTransaction()
-        .setNodeAccountIds([new AccountId(3)])
         .addHbarTransfer(receipt.accountId, -1)
-        .addHbarTransfer(client.operatorAccountId, 1)
-        .freezeWith(client);
+        .addHbarTransfer(client.operatorAccountId, 1);
 
-    user1Key.signTransaction(transferTransaction);
-    user2Key.signTransaction(transferTransaction);
-
-    let scheduled = transferTransaction.schedule();
-
-    if (scheduled.scheduleSignatures.size !== 2) {
-        throw new Error("Scheduled transaction has incorrect number of signatures: " + scheduled.getScheduleSignatures().size());
-    }
+    let scheduled = await (await transferTransaction.schedule()
+        .sign(user1Key))
+        .sign(user2Key);
 
     let scheduleResponse = await scheduled.execute(client);
 
@@ -105,8 +97,7 @@ async function main() {
         .execute(client);
 
     let transfer = scheduleInfo.transaction
-
-    let transfers = transfer.hbarTranfers
+    let transfers = transfer.hbarTransfers;
 
     if (transfers.size !== 2) {
         throw new Error("more transfers than expected " + transfers.size);
@@ -121,31 +112,20 @@ async function main() {
         throw new Error("transfer for " + client.operatorAccountId + " is not what is expected " + transfers.get(client.operatorAccountId));
     }
 
-    let key3Signature = user3Key.signTransaction(transfer)
-
     console.log("sending schedule sign transaction");
 
-    const scheduleSign = new ScheduleSignTransaction()
+    await (await (await new ScheduleSignTransaction()
         .setNodeAccountIds([new AccountId(3)])
         .setScheduleId(scheduleId)
-        .addScheduleSignature(user3Key.publicKey, key3Signature)
+        .freezeWith(client)
+        .sign(user3Key))
+        .execute(client))
+        .getReceipt(client);
 
-    if (scheduleSign.scheduleSignatures.size !== 1) {
-        throw new Error("Scheduled sign transaction has incorrect number of signatures: " + signTransaction.getScheduleSignatures().size());
-    }
-
-    await(
-        await scheduleSign.execute(client)
-    ).getReceipt(client);
-
-    try {
-        await new ScheduleInfoQuery()
-            .setNodeAccountIds([new AccountId(3)])
-            .setScheduleId(scheduleId)
-            .execute(client);
-    } catch (error) {
-        err = error.toString().includes(Status.InvalidScheduleId);
-    }
+    await new ScheduleInfoQuery()
+        .setNodeAccountIds([new AccountId(3)])
+        .setScheduleId(scheduleId)
+        .execute(client);
 }
 
 void main();
