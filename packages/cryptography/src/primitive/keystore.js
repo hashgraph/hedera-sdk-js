@@ -5,6 +5,7 @@ import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as hmac from "./hmac.js";
 import * as pbkdf2 from "./pbkdf2.js";
+import * as random from "./random.js";
 
 const HMAC_SHA256 = "hmac-sha256";
 
@@ -47,7 +48,7 @@ export async function createKeystore(privateKey, passphrase) {
     const dkLen = 32;
     const c = 262144;
     const saltLen = 32;
-    const salt = nacl.randomBytes(saltLen);
+    const salt = await random.bytesAsync(saltLen);
 
     const key = await pbkdf2.deriveKey(
         hmac.HashAlgorithm.Sha256,
@@ -57,7 +58,7 @@ export async function createKeystore(privateKey, passphrase) {
         dkLen
     );
 
-    const iv = nacl.randomBytes(16);
+    const iv = await random.bytesAsync(16);
 
     // AES-128-CTR with the first half of the derived key and a random IV
     const cipherText = await crypto.createCipheriv(

@@ -2,9 +2,20 @@
     "name": "@hashgraph/cryptography",
     "version": "1.0.13",
     "description": "Cryptographic utilities and primitives for the Hedera™ Hashgraph SDK",
-    "main": "./lib/index.cjs",
+    "main": "./src/index.js",
     "types": "./lib/index.d.ts",
     "module": "./src/index.js",
+    "react-native": {
+        "./src/index.js": "./src/index.js",
+        "./src/encoding/base64.js": "./src/encoding/base64.native.js",
+        "./src/encoding/hex.js": "./src/encoding/hex.native.js",
+        "./src/encoding/utf8.js": "./src/encoding/utf8.native.js",
+        "./src/primitive/aes.js": "./src/primitive/aes.native.js",
+        "./src/primitive/sha256.js": "./src/primitive/sha256.native.js",
+        "./src/primitive/pbkdf2.js": "./src/primitive/pbkdf2.native.js",
+        "./src/primitive/hmac.js": "./src/primitive/hmac.native.js",
+        "./src/primitive/random.js": "./src/primitive/random.native.js"
+    },
     "browser": {
         "./src/index.js": "./src/index.js",
         "./src/encoding/base64.js": "./src/encoding/base64.browser.js",
@@ -13,6 +24,7 @@
         "./src/primitive/aes.js": "./src/primitive/aes.browser.js",
         "./src/primitive/sha256.js": "./src/primitive/sha256.browser.js",
         "./src/primitive/pbkdf2.js": "./src/primitive/pbkdf2.browser.js",
+        "./src/primitive/random.js": "./src/primitive/random.js",
         "./src/primitive/hmac.js": "./src/primitive/hmac.browser.js"
     },
     "exports": {
@@ -57,7 +69,13 @@
         "test:browser:safari": "vite serve --port 9003 test/ & sleep 2; mocha-webdriver-runner --safari http://localhost:9003/; kill %1"
     },
     "dependencies": {
+        "@stablelib/utf8": "^1.0.0",
+        "@types/crypto-js": "^4.0.1",
         "bignumber.js": "^9.0.1",
+        "crypto-js": "^4.0.0",
+        "expo-crypto": "^9.1.0",
+        "expo-random": "^11.1.2",
+        "js-base64": "^3.6.0",
         "tweetnacl": "^1.0.3"
     },
     "devDependencies": {

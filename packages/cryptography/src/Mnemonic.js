@@ -10,6 +10,7 @@ import * as hmac from "./primitive/hmac.js";
 import * as slip10 from "./primitive/slip10.js";
 import * as entropy from "./util/entropy.js";
 import * as derive from "./util/derive.js";
+import * as random from "./primitive/random.js";
 
 /**
  * Multi-word mnemonic phrase (BIP-39).
@@ -69,7 +70,7 @@ export default class Mnemonic {
 
         // inlined from (ISC) with heavy alternations for modern crypto
         // https://github.com/bitcoinjs/bip39/blob/8461e83677a1d2c685d0d5a9ba2a76bd228f74c6/ts_src/index.ts#L125
-        const seed = nacl.randomBytes(neededEntropy);
+        const seed = await random.bytesAsync(neededEntropy);
         const entropyBits = bytesToBinary(Array.from(seed));
         const checksumBits = await deriveChecksumBits(seed);
         const bits = entropyBits + checksumBits;

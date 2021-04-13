@@ -1,9 +1,11 @@
+import utf8 from "@stablelib/utf8";
+
 /**
  * @param {Uint8Array} data
  * @returns {string}
  */
 export function decode(data) {
-    return new TextDecoder().decode(data);
+    return utf8.decode(data);
 }
 
 /**
@@ -11,5 +13,5 @@ export function decode(data) {
  * @returns {Uint8Array}
  */
 export function encode(text) {
-    return new TextEncoder().encode(text);
+    return utf8.encode(text);
 }

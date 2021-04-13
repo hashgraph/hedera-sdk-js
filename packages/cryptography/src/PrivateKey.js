@@ -8,6 +8,7 @@ import * as hex from "./encoding/hex.js";
 import { read as readPem } from "./encoding/pem.js";
 import * as slip10 from "./primitive/slip10.js";
 import Key from "./Key.js";
+import * as random from "./primitive/random.js";
 
 const derPrefix = "302e020100300506032b657004220420";
 const derPrefixBytes = hex.decode(derPrefix);
@@ -75,7 +76,23 @@ export default class PrivateKey extends Key {
     static generate() {
         // 32 bytes for the secret key
         // 32 bytes for the chain code (to support derivation)
-        const entropy = nacl.randomBytes(64);
+        const entropy = random.bytes(64);
+
+        return new PrivateKey(
+            nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
+            entropy.subarray(32)
+        );
+    }
+
+    /**
+     * Generate a random Ed25519 private key.
+     *
+     * @returns {Promise<PrivateKey>}
+     */
+    static async generateAsync() {
+        // 32 bytes for the secret key
+        // 32 bytes for the chain code (to support derivation)
+        const entropy = await random.bytesAsync(64);
 
         return new PrivateKey(
             nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
