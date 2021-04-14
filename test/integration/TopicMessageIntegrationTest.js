@@ -89,6 +89,7 @@ describe("TopicMessage", function () {
             await new TopicMessageSubmitTransaction()
                 .setTopicId(topic)
                 .setMessage(bigContents)
+                .setMaxChunks(14)
                 .execute(client)
         ).getReceipt(client);
 

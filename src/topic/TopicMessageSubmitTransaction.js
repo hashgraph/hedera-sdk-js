@@ -59,7 +59,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
          * @private
          * @type {number}
          */
-        this._maxChunks = 10;
+        this._maxChunks = 20;
 
         if (props.maxChunks != null) {
             this.setMaxChunks(props.maxChunks);

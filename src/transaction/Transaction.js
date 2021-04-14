@@ -52,7 +52,7 @@ export const DEFAULT_RECORD_THRESHOLD = Hbar.fromTinybars(
 // 120 seconds
 const DEFAULT_TRANSACTION_VALID_DURATION = 120;
 
-export const CHUNK_SIZE = 4096;
+export const CHUNK_SIZE = 1024;
 
 /**
  * @type {Map<NonNullable<proto.TransactionBody["data"]>, (transactions: proto.ITransaction[], signedTransactions: proto.ISignedTransaction[], transactionIds: TransactionId[], nodeIds: AccountId[], bodies: proto.TransactionBody[]) => Transaction>}
