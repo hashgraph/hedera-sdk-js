@@ -498,6 +498,15 @@ export default class Transaction extends Executable {
 
         return this.signWith(operator.publicKey, operator.transactionSigner);
     }
+    /**
+     * @internal
+     * @protected
+     */
+    _requireOneNodeAccountId() {
+        if (this._nodeIds.length != 1) {
+            throw "transaction did not have exactly one node ID set";
+        }
+    }
 
     /**
      * @param {PublicKey} publicKey
@@ -505,6 +514,10 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     addSignature(publicKey, signature) {
+        this._requireOneNodeAccountId();
+        if (!this.isFrozen()){
+            this.freeze();
+        }
         const publicKeyData = publicKey.toBytes();
         const publicKeyHex = hex.encode(publicKeyData);
 
