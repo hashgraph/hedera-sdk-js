@@ -24,7 +24,7 @@ export async function createCipheriv(algorithm, key, iv, data) {
         case CipherAlgorithm.Aes128Cbc:
             algorithm_ = {
                 name: "AES-CBC",
-                length: 128,
+                iv: iv,
             };
             break;
         default:
