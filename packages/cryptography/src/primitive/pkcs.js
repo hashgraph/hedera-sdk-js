@@ -135,7 +135,7 @@ export class PrivateKeyInfo {
             } else {
                 throw new Error(
                     `expected octet string as 3rd element, got ${JSON.stringify(
-                        asn.seq[3]
+                        asn.seq[2]
                     )}`
                 );
             }
