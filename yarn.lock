@@ -521,8 +521,10 @@
     google-auth-library "^6.1.1"
     semver "^6.2.0"
 
-"@hashgraph/cryptography@file:packages/cryptography":
-  version "1.0.13"
+"@hashgraph/cryptography@^1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.14.tgz#227412df61bea7bd4ccd66aa221c1cefc75c3eed"
+  integrity sha512-qtlBzCCzePm9KOuy1GJ9FtEU8L7dNPrL4iAaFOlCn1UmDa0u4tPwYHDKcsuDhZetS47QJl0y+Vzgpo+b968WMg==
   dependencies:
     "@stablelib/utf8" "^1.0.0"
     "@types/crypto-js" "^4.0.1"
