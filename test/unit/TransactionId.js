@@ -24,18 +24,4 @@ describe("TransactionId", function () {
 
         expect(transactionId.toString()).to.be.equal("0.0.3@4.5?scheduled");
     });
-
-    it("should parse {nonce}", function () {
-        const transactionId = TransactionId.fromString("aabbccddeeff");
-
-        expect(transactionId.toString()).to.be.equal("aabbccddeeff");
-    });
-
-    it("should parse {nonce}?scheduled", function () {
-        const transactionId = TransactionId.fromString(
-            "aabbccddeeff?scheduled"
-        );
-
-        expect(transactionId.toString()).to.be.equal("aabbccddeeff?scheduled");
-    });
 });
