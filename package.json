@@ -2,22 +2,20 @@
     "name": "@hashgraph/sdk",
     "version": "2.0.17-beta.4",
     "description": "Hedera™ Hashgraph SDK",
-    "main": "./lib/index.cjs",
     "types": "./lib/index.d.ts",
-    "react-native": "./lib/index.cjs",
+    "main": "./lib/index.cjs",
     "module": "./src/index.js",
+    "react-native": {
+        "./lib/index.cjs": "./src/native.js",
+        "./src/encoding/hex.js": "./src/encoding/hex.native.js",
+        "./src/encoding/utf8.js": "./src/encoding/utf8.native.js",
+        "./src/cryptography/sha384.js": "./src/cryptography/sha384.native.js"
+    },
     "browser": {
         "./src/index.js": "./src/browser.js",
         "./src/encoding/hex.js": "./src/encoding/hex.browser.js",
         "./src/encoding/utf8.js": "./src/encoding/utf8.browser.js",
         "./src/cryptography/sha384.js": "./src/cryptography/sha384.browser.js",
-        "crypto": false
-    },
-    "react-native": {
-        "./src/index.js": "./src/native.js",
-        "./src/encoding/hex.js": "./src/encoding/hex.native.js",
-        "./src/encoding/utf8.js": "./src/encoding/utf8.native.js",
-        "./src/cryptography/sha384.js": "./src/cryptography/sha384.native.js",
         "crypto": false
     },
     "exports": {
@@ -78,12 +76,15 @@
     },
     "dependencies": {
         "@grpc/grpc-js": "^1.2.2",
-        "@hashgraph/cryptography": "^1.0.13",
+        "@hashgraph/cryptography": "file:packages/cryptography",
         "@hashgraph/proto": "^1.0.24",
         "@types/crypto-js": "^4.0.1",
+        "@types/utf8": "^2.1.6",
         "bignumber.js": "^9.0.1",
         "crypto-js": "^4.0.0",
-        "long": "^4.0.0"
+        "js-base64": "^3.6.0",
+        "long": "^4.0.0",
+        "utf8": "^3.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.10",

@@ -2,11 +2,11 @@
     "name": "@hashgraph/cryptography",
     "version": "1.0.13",
     "description": "Cryptographic utilities and primitives for the Hedera™ Hashgraph SDK",
-    "main": "./src/index.js",
+    "main": "./lib/index.cjs",
     "types": "./lib/index.d.ts",
     "module": "./src/index.js",
     "react-native": {
-        "./src/index.js": "./src/index.js",
+        "./lib/index.cjs": "./src/index.js",
         "./src/encoding/base64.js": "./src/encoding/base64.native.js",
         "./src/encoding/hex.js": "./src/encoding/hex.native.js",
         "./src/encoding/utf8.js": "./src/encoding/utf8.native.js",

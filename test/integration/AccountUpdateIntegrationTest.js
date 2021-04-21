@@ -145,6 +145,7 @@ describe("AccountUpdate", function () {
         }
     });
 
+    // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("should error with insufficent tx fee when a large expiration time is set", async function () {
         this.timeout(15000);
 
