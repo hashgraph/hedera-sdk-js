@@ -11,8 +11,10 @@
     google-auth-library "^6.1.1"
     semver "^6.2.0"
 
-"@hashgraph/cryptography@file:../packages/cryptography":
+"@hashgraph/cryptography@^1.0.14":
   version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.14.tgz#227412df61bea7bd4ccd66aa221c1cefc75c3eed"
+  integrity sha512-qtlBzCCzePm9KOuy1GJ9FtEU8L7dNPrL4iAaFOlCn1UmDa0u4tPwYHDKcsuDhZetS47QJl0y+Vzgpo+b968WMg==
   dependencies:
     "@stablelib/utf8" "^1.0.0"
     "@types/crypto-js" "^4.0.1"
@@ -50,10 +52,10 @@
     long "^4.0.0"
 
 "@hashgraph/sdk@file:..":
-  version "2.0.17-beta.4"
+  version "2.0.17-beta.6"
   dependencies:
     "@grpc/grpc-js" "^1.2.2"
-    "@hashgraph/cryptography" "file:../../../../../../../../.cache/yarn/v6/npm-@hashgraph-sdk-2.0.17-beta.4-5320ac33-0a6f-4b33-9271-3d7e2e3888c1-1618967749079/node_modules/@hashgraph/sdk/packages/cryptography"
+    "@hashgraph/cryptography" "^1.0.14"
     "@hashgraph/proto" "^1.0.24"
     "@types/crypto-js" "^4.0.1"
     "@types/utf8" "^2.1.6"
