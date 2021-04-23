@@ -70,7 +70,7 @@ describe.skip("ScheduleCreate", function () {
             .setScheduleId(scheduleId)
             .execute(client);
 
-        const infoTransaction = /** @type {TopicMessageSubmitTransaction} */ (info.transaction);
+        const infoTransaction = /** @type {TopicMessageSubmitTransaction} */ (info.scheduledTransaction);
 
         expect(info.scheduleId.toString()).to.be.equal(scheduleId.toString());
         expect(infoTransaction.topicId.toString()).to.be.equal(

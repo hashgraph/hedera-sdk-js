@@ -216,7 +216,7 @@ export default class ScheduleInfo {
     /**
      * @returns {Transaction}
      */
-    get transaction() {
+    get scheduledTransaction() {
         if (this.schedulableTransactionBody == null) {
             throw new Error("Scheduled transaction body is empty");
         }

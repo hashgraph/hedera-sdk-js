@@ -96,7 +96,7 @@ async function main() {
         .setScheduleId(scheduleId)
         .execute(client);
 
-    let transfer = scheduleInfo.transaction
+    let transfer = scheduleInfo.scheduledTransaction
     let transfers = transfer.hbarTransfers;
 
     if (transfers.size !== 2) {
