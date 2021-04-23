@@ -515,7 +515,7 @@ export default class Transaction extends Executable {
      */
     addSignature(publicKey, signature) {
         this._requireOneNodeAccountId();
-        if (!this.isFrozen()){
+        if (!this.isFrozen()) {
             this.freeze();
         }
         const publicKeyData = publicKey.toBytes();

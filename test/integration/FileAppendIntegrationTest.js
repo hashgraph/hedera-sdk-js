@@ -9,7 +9,7 @@ import { bigContents } from "./contents.js";
 
 describe("FileAppend", function () {
     it("should be executable", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const client = await newClient();
         const operatorKey = client.operatorPublicKey;
@@ -76,7 +76,7 @@ describe("FileAppend", function () {
     });
 
     it("should be chunk contents", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const client = await newClient();
         const operatorKey = client.operatorPublicKey;
@@ -143,7 +143,7 @@ describe("FileAppend", function () {
     });
 
     it("should error with no file ID set", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const client = await newClient();
         const operatorKey = client.operatorPublicKey;
@@ -187,7 +187,7 @@ describe("FileAppend", function () {
     });
 
     it("should not error with no contents appended", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const client = await newClient();
         const operatorKey = client.operatorPublicKey;
