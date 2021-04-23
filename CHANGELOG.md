@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.0.17-beta.7
 
+### Fixed
+
  * addSignature() Behavior Differs Between Implementations [NCC-E001154-005]
  * Decreased `CHUNK_SIZE` 4096->1024 and increased default max chunks 10->20
  * Renamed `ScheduleInfo.getTransaction()` -> `ScheduleInfo.getScheduledTransaction()`
