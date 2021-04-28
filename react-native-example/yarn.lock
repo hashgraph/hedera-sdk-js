@@ -1316,22 +1316,23 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hashgraph/cryptography@^1.0.14":
+"@hashgraph/cryptography@file:../packages/cryptography":
   version "1.0.14"
-  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.14.tgz#227412df61bea7bd4ccd66aa221c1cefc75c3eed"
-  integrity sha512-qtlBzCCzePm9KOuy1GJ9FtEU8L7dNPrL4iAaFOlCn1UmDa0u4tPwYHDKcsuDhZetS47QJl0y+Vzgpo+b968WMg==
   dependencies:
-    "@stablelib/utf8" "^1.0.0"
     "@types/crypto-js" "^4.0.1"
+    "@types/utf8" "^2.1.6"
     bignumber.js "^9.0.1"
     crypto-js "^4.0.0"
     expo-crypto "^9.1.0"
     expo-random "^11.1.2"
     js-base64 "^3.6.0"
     tweetnacl "^1.0.3"
+    utf8 "^3.0.0"
 
-"@hashgraph/proto@file:../packages/proto":
-  version "1.0.24"
+"@hashgraph/proto@^1.0.25":
+  version "1.0.25"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.25.tgz#40af4ce786b2b762dfd13ce3a41b25804e345cba"
+  integrity sha512-ZJkUMLK2MZbX3CgzTnyADOEMtelgI/GlcoVggtvGpWbtFOG0XJVZYEGe/YH+Rg1XDnYA7SjvrACR0mdkhzIF8A==
   dependencies:
     "@hashgraph/protobufjs" "^6.10.1-hashgraph.2"
 
@@ -1358,8 +1359,8 @@
   version "2.0.17-beta.7"
   dependencies:
     "@grpc/grpc-js" "^1.2.2"
-    "@hashgraph/cryptography" "^1.0.14"
-    "@hashgraph/proto" "file:../../../../../../../../.cache/yarn/v6/npm-@hashgraph-sdk-2.0.17-beta.7-db62b4a3-2491-4ce7-b596-f792d530d1aa-1619571571700/node_modules/@hashgraph/sdk/packages/proto"
+    "@hashgraph/cryptography" "file:../../../../../../../../.cache/yarn/v6/npm-@hashgraph-sdk-2.0.17-beta.7-374e946d-bdef-4e14-87ec-730630a32995-1619572395044/node_modules/@hashgraph/sdk/packages/cryptography"
+    "@hashgraph/proto" "^1.0.25"
     "@types/crypto-js" "^4.0.1"
     "@types/utf8" "^2.1.6"
     bignumber.js "^9.0.1"
@@ -2076,11 +2077,6 @@
   integrity sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ==
   dependencies:
     type-detect "4.0.8"
-
-"@stablelib/utf8@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@stablelib/utf8/-/utf8-1.0.0.tgz#7c0c039b6d154da50326003ea92777ddc8f5db2c"
-  integrity sha512-Y8QWrK4T0yW0HMFfSI3ZaMHKV37q27hX5ilsmKV358x01mzYfj5fwIf2LjzTlF+UIemHEXSlSN9XJnv1ML4znQ==
 
 "@types/babel__core@^7.1.0", "@types/babel__core@^7.1.7":
   version "7.1.14"

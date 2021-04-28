@@ -521,19 +521,18 @@
     google-auth-library "^6.1.1"
     semver "^6.2.0"
 
-"@hashgraph/cryptography@^1.0.14":
+"@hashgraph/cryptography@file:packages/cryptography":
   version "1.0.14"
-  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.14.tgz#227412df61bea7bd4ccd66aa221c1cefc75c3eed"
-  integrity sha512-qtlBzCCzePm9KOuy1GJ9FtEU8L7dNPrL4iAaFOlCn1UmDa0u4tPwYHDKcsuDhZetS47QJl0y+Vzgpo+b968WMg==
   dependencies:
-    "@stablelib/utf8" "^1.0.0"
     "@types/crypto-js" "^4.0.1"
+    "@types/utf8" "^2.1.6"
     bignumber.js "^9.0.1"
     crypto-js "^4.0.0"
     expo-crypto "^9.1.0"
     expo-random "^11.1.2"
     js-base64 "^3.6.0"
     tweetnacl "^1.0.3"
+    utf8 "^3.0.0"
 
 "@hashgraph/proto@^1.0.25":
   version "1.0.25"
@@ -1537,11 +1536,6 @@
   dependencies:
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
-
-"@stablelib/utf8@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@stablelib/utf8/-/utf8-1.0.0.tgz#7c0c039b6d154da50326003ea92777ddc8f5db2c"
-  integrity sha512-Y8QWrK4T0yW0HMFfSI3ZaMHKV37q27hX5ilsmKV358x01mzYfj5fwIf2LjzTlF+UIemHEXSlSN9XJnv1ML4znQ==
 
 "@testim/chrome-version@^1.0.7":
   version "1.0.7"
