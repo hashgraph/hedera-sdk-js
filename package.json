@@ -77,7 +77,7 @@
     "dependencies": {
         "@grpc/grpc-js": "^1.2.2",
         "@hashgraph/cryptography": "^1.0.14",
-        "@hashgraph/proto": "^1.0.24",
+        "@hashgraph/proto": "^1.0.25",
         "@types/crypto-js": "^4.0.1",
         "@types/utf8": "^2.1.6",
         "bignumber.js": "^9.0.1",
