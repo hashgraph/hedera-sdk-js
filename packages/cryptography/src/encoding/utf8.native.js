@@ -1,11 +1,12 @@
-import utf8 from "@stablelib/utf8";
+import * as utf8 from "utf8";
+import * as hex from "./hex.native.js";
 
 /**
  * @param {Uint8Array} data
  * @returns {string}
  */
 export function decode(data) {
-    return utf8.decode(data);
+    return utf8.decode(hex.encodeToByteString(data));
 }
 
 /**
@@ -13,5 +14,5 @@ export function decode(data) {
  * @returns {Uint8Array}
  */
 export function encode(text) {
-    return utf8.encode(text);
+    return hex.decode(utf8.encode(text));
 }

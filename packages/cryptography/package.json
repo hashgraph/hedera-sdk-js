@@ -69,14 +69,15 @@
         "test:browser:safari": "vite serve --port 9003 test/ & sleep 2; mocha-webdriver-runner --safari http://localhost:9003/; kill %1"
     },
     "dependencies": {
-        "@stablelib/utf8": "^1.0.0",
         "@types/crypto-js": "^4.0.1",
+        "@types/utf8": "^2.1.6",
         "bignumber.js": "^9.0.1",
         "crypto-js": "^4.0.0",
         "expo-crypto": "^9.1.0",
         "expo-random": "^11.1.2",
         "js-base64": "^3.6.0",
-        "tweetnacl": "^1.0.3"
+        "tweetnacl": "^1.0.3",
+        "utf8": "^3.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.10",
