@@ -5,6 +5,7 @@ import ContractId from "../contract/ContractId.js";
  * @namespace proto
  * @typedef {import("@hashgraph/proto").IKey} proto.IKey
  * @typedef {import("@hashgraph/proto").IKeyList} proto.IKeyList
+ * @typedef {import("@hashgraph/proto").IThresholdKey} proto.IThresholdKey
  */
 
 /**
@@ -27,9 +28,18 @@ export function keyToProtobuf(key) {
     }
 
     if (key instanceof KeyList) {
-        return {
-            keyList: keyListToProtobuf(key),
-        };
+        if (key.threshold == null) {
+            return {
+                keyList: keyListToProtobuf(key),
+            };
+        } else {
+            return {
+                thresholdKey: {
+                    threshold: key.threshold,
+                    keys: keyListToProtobuf(key),
+                },
+            };
+        }
     }
 
     if (key instanceof ContractId) {

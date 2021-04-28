@@ -122,8 +122,10 @@ import IFileInfo = proto.FileGetInfoResponse.IFileInfo;
 import IFileUpdateTransactionBody = proto.IFileUpdateTransactionBody;
 import IKey = proto.IKey;
 import IKeyList = proto.IKeyList;
+import IThresholdKey = proto.IThresholdKey;
 import Key = proto.Key;
 import KeyList = proto.KeyList;
+import ThresholdKey = proto.ThresholdKey;
 import IQuery = proto.IQuery;
 import IQueryHeader = proto.IQueryHeader;
 import IResponse = proto.IResponse;
@@ -239,8 +241,10 @@ export {
     IFileUpdateTransactionBody,
     IKey,
     IKeyList,
+    IThresholdKey,
     Key,
     KeyList,
+    ThresholdKey,
     IQuery,
     IQueryHeader,
     IResponse,

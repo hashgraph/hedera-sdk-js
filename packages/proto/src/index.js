@@ -39,5 +39,6 @@ export const ConsensusTopicResponse = proto.ConsensusTopicResponse;
 export const ConsensusTopicQuery = proto.ConsensusTopicQuery;
 export const Key = proto.Key;
 export const KeyList = proto.KeyList;
+export const ThresholdKey = proto.ThresholdKey;
 export const ScheduleID = proto.ScheduleID;
 export const SchedulableTransactionBody = proto.SchedulableTransactionBody;
