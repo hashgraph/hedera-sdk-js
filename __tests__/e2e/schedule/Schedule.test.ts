@@ -1,4 +1,4 @@
-import { 
+import {
     AccountCreateTransaction,
     ScheduleCreateTransaction,
     ScheduleInfoQuery,
@@ -21,11 +21,11 @@ describe("ScheduleCreateTransaction", () => {
             .setKey(key.publicKey)
             .build(client);
 
-        let scheduled = transaction.schedule()
+        const scheduled = transaction.schedule()
             .setPayerAccountId(client._getOperatorAccountId()!)
             .setAdminKey(client._getOperatorKey()!);
 
-        let transactionId = await scheduled
+        const transactionId = await scheduled
             .setMaxTransactionFee(new Hbar(15))
             .execute(client);
 
@@ -35,16 +35,44 @@ describe("ScheduleCreateTransaction", () => {
 
         const schedule = receipt.getScheduleId();
 
-        await new ScheduleInfoQuery()
+        const info = await new ScheduleInfoQuery()
             .setScheduleId(schedule)
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
 
-        transactionId = await new ScheduleDeleteTransaction()
-            .setScheduleId(schedule)
-            .setMaxTransactionFee(new Hbar(5))
+        console.log(info.executionTime?.toDateString());
+    }, 60000);
+
+    it("can be executed with setTransaction", async() => {
+        const client = await getClientForIntegrationTest();
+
+        const key = await Ed25519PrivateKey.generate();
+
+        const transaction = new AccountCreateTransaction()
+            .setInitialBalance(new Hbar(10))
+            .setKey(key.publicKey)
+            .build(client);
+
+        const scheduled = new ScheduleCreateTransaction()
+            .setScheduledTransaction(transaction)
+            .setPayerAccountId(client._getOperatorAccountId()!)
+            .setAdminKey(client._getOperatorKey()!);
+
+        const transactionId = await scheduled
+            .setMaxTransactionFee(new Hbar(15))
             .execute(client);
 
-        await transactionId.getReceipt(client);
+        const receipt = await transactionId.getReceipt(client);
+
+        await new Promise((r) => setTimeout(r, 2500));
+
+        const schedule = receipt.getScheduleId();
+
+        const info = await new ScheduleInfoQuery()
+            .setScheduleId(schedule)
+            .setMaxQueryPayment(new Hbar(1))
+            .execute(client);
+        console.log(info.getTransaction().toString());
+        console.log(info.executionTime?.toDateString());
     }, 60000);
 });

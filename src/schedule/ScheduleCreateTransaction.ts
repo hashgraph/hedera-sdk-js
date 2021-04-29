@@ -32,11 +32,10 @@ export class ScheduleCreateTransaction extends SingleTransactionBuilder {
         return this;
     }
 
-    public setTransaction(transaction: Transaction): this {
+    public setScheduledTransaction(transaction: Transaction): this {
         const scheduled = transaction.schedule();
 
-        this._body.setTransactionbody(scheduled._body.getTransactionbody()!);
-        this._body.setSigmap(scheduled._body.getSigmap()!);
+        this._body.setScheduledtransactionbody(scheduled._body.getScheduledtransactionbody()!);
 
         return this;
     }

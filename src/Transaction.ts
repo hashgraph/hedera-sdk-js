@@ -12,6 +12,7 @@ import { ScheduleService } from "./generated/ScheduleService_pb_service";
 import { SmartContractService } from "./generated/SmartContractService_pb_service";
 import { FileService } from "./generated/FileService_pb_service";
 import { FreezeService } from "./generated/FreezeService_pb_service";
+import { SchedulableTransactionBody } from "./generated/SchedulableTransactionBody_pb";
 import { ConsensusService } from "./generated/ConsensusService_pb_service";
 import { AccountId } from "./account/AccountId";
 import { TransactionId } from "./TransactionId";
@@ -93,10 +94,99 @@ export class Transaction {
         const scheduled = SCHEDULE_CREATE_TRANSACTION[ 0 ]()
             .setNodeAccountId(this._node);
 
-        scheduled._body.setTransactionbody(this._inner.getBodybytes()!);
-        scheduled._body.setSigmap(this._inner.getSigmap()!);
+        scheduled._body.setScheduledtransactionbody(this._getScheduledTransactionBody());
 
         return scheduled;
+    }
+
+    private _getScheduledTransactionBody(): SchedulableTransactionBody {
+        const scheduledBody = new SchedulableTransactionBody();
+        const body = TransactionBody.deserializeBinary(this._inner.getBodybytes_asU8());
+        scheduledBody.setMemo(body.getMemo());
+        scheduledBody.setTransactionfee(body.getTransactionfee());
+        switch (body.getDataCase()) {
+            case TransactionBody.DataCase.CONTRACTCREATEINSTANCE:
+                scheduledBody.setContractcreateinstance(body.getContractcreateinstance());
+                return scheduledBody;
+            case TransactionBody.DataCase.CONTRACTDELETEINSTANCE:
+                scheduledBody.setContractdeleteinstance(body.getContractdeleteinstance());
+                return scheduledBody;
+            case TransactionBody.DataCase.CONTRACTUPDATEINSTANCE:
+                scheduledBody.setContractupdateinstance(body.getContractupdateinstance());
+                return scheduledBody;
+            case TransactionBody.DataCase.CONTRACTCALL:
+                scheduledBody.setContractcall(body.getContractcall());
+                return scheduledBody;
+            case TransactionBody.DataCase.CONSENSUSCREATETOPIC:
+                scheduledBody.setConsensuscreatetopic(body.getConsensuscreatetopic());
+                return scheduledBody;
+            case TransactionBody.DataCase.CONSENSUSDELETETOPIC:
+                scheduledBody.setConsensusdeletetopic(body.getConsensusdeletetopic());
+                return scheduledBody;
+            case TransactionBody.DataCase.CONSENSUSSUBMITMESSAGE:
+                scheduledBody.setConsensussubmitmessage(body.getConsensussubmitmessage());
+                return scheduledBody;
+            case TransactionBody.DataCase.CONSENSUSUPDATETOPIC:
+                scheduledBody.setConsensusupdatetopic(body.getConsensusupdatetopic());
+                return scheduledBody;
+            case TransactionBody.DataCase.CRYPTOCREATEACCOUNT:
+                scheduledBody.setCryptocreateaccount(body.getCryptocreateaccount());
+                return scheduledBody;
+            case TransactionBody.DataCase.CRYPTODELETE:
+                scheduledBody.setCryptodelete(body.getCryptodelete());
+                return scheduledBody;
+            case TransactionBody.DataCase.CRYPTOUPDATEACCOUNT:
+                scheduledBody.setCryptoupdateaccount(body.getCryptoupdateaccount());
+                return scheduledBody;
+            case TransactionBody.DataCase.CRYPTOTRANSFER:
+                scheduledBody.setCryptotransfer(body.getCryptotransfer());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENASSOCIATE:
+                scheduledBody.setTokenassociate(body.getTokenassociate());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENBURN:
+                scheduledBody.setTokenburn(body.getTokenburn());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENCREATION:
+                scheduledBody.setTokencreation(body.getTokencreation());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENDELETION:
+                scheduledBody.setTokendeletion(body.getTokendeletion());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENDISSOCIATE:
+                scheduledBody.setTokendissociate(body.getTokendissociate());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENFREEZE:
+                scheduledBody.setTokenfreeze(body.getTokenfreeze());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENGRANTKYC:
+                scheduledBody.setTokengrantkyc(body.getTokengrantkyc());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENMINT:
+                scheduledBody.setTokenmint(body.getTokenmint());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENREVOKEKYC:
+                scheduledBody.setTokenrevokekyc(body.getTokenrevokekyc());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENUNFREEZE:
+                scheduledBody.setTokenunfreeze(body.getTokenunfreeze());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENWIPE:
+                scheduledBody.setTokenwipe(body.getTokenwipe());
+                return scheduledBody;
+            case TransactionBody.DataCase.TOKENUPDATE:
+                scheduledBody.setTokenupdate(body.getTokenupdate());
+                return scheduledBody;
+            case TransactionBody.DataCase.SCHEDULEDELETE:
+                scheduledBody.setScheduledelete(body.getScheduledelete());
+                return scheduledBody;
+            default:
+                throw new Error(`unsupported scheduled transaction:${body.getDataCase().toString()}`);
+        }
+    }
+
+    private _getTransactionDataCase(): TransactionBody.DataCase {
+        throw new Error("not implemented");
     }
 
     private _checkPubKey(publicKey: Ed25519PublicKey): void {
