@@ -28,14 +28,16 @@ option java_multiple_files = true;
 import "BasicTypes.proto";
 
 /*
-Provides signatures for a given Scheduled Transaction. The Scheduled Transaction executes if all of the required signatures are witnessed.
-INVALID_SCHEDULE_ID is returned if the specified ScheduleID does not exist; or has now expired, been deleted, or been executed
-UNRESOLVABLE_REQUIRED_SIGNERS is returned if any of the required keys were updated/deleted and cannot be resolved
-INVALID_ACCOUNT_ID is returned if the payerAccountID has been deleted or cannot be resolved
-NO_NEW_VALID_SIGNATURES is returned if there are no new signatures provided in the sigMap to be witnessed
-SOME_SIGNATURES_WERE_INVALID is returned if one of the signatures provided does not represent a valid signature for any required signer
- */
+Adds zero or more signing keys to a schedule. If the resulting set of signing keys satisfy the scheduled 
+transaction's signing requirements, it will be executed immediately after the triggering <tt>ScheduleSign</tt>.  
+
+Upon <tt>SUCCESS</tt>, the receipt includes the <tt>scheduledTransactionID</tt> to use to query for the 
+record of the scheduled transaction's execution (if it occurs). 
+
+Other notable response codes include <tt>INVALID_SCHEDULE_ID</tt>, <tt>SCHEDULE_WAS_DELETD</tt>, 
+<tt>INVALID_ACCOUNT_ID</tt>, <tt>UNRESOLVABLE_REQUIRED_SIGNERS</tt>, <tt>SOME_SIGNATURES_WERE_INVALID</tt>, 
+and <tt>NO_NEW_VALID_SIGNATURES</tt>. For more information please see the section of this 
+documentation on the <tt>ResponseCode</tt> enum. */
 message ScheduleSignTransactionBody {
-  ScheduleID scheduleID = 1; // The ID of the Scheduled entity
-  SignatureMap sigMap = 2; // The signature map containing the signature(s) to authorise the transaction
+  ScheduleID scheduleID = 1; // The id of the schedule to add signing keys to
 }

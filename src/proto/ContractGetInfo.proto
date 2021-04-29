@@ -49,7 +49,7 @@ message ContractGetInfoResponse {
         Duration autoRenewPeriod = 6; // the expiration time will extend every this many seconds. If there are insufficient funds, then it extends as long as possible. If the account is empty when it expires, then it is deleted.
         int64 storage = 7; // number of bytes of storage being used by this instance (which affects the cost to extend the expiration time)
         string memo = 8; // the memo associated with the contract (max 100 bytes)
-        uint64 balance = 9 [jstype=JS_STRING]; // The current balance, in tinybars
+        uint64 balance = 9; // The current balance, in tinybars
         bool deleted = 10; // Whether the contract has been deleted
         repeated TokenRelationship tokenRelationships = 11; // The tokens associated to the contract
     }

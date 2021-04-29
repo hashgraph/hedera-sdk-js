@@ -77,7 +77,7 @@ import "ScheduleSign.proto";
 message TransactionBody {
   TransactionID transactionID = 1; // The ID for this transaction, which includes the payer's account (the account paying the transaction fee). If two transactions have the same transactionID, they won't both have an effect
   AccountID nodeAccountID = 2; // The account of the node that submits the client's transaction to the network
-  uint64 transactionFee = 3 [jstype=JS_STRING]; // The maximum transaction fee the client is willing to pay
+  uint64 transactionFee = 3; // The maximum transaction fee the client is willing to pay
   Duration transactionValidDuration = 4; //The transaction is invalid if consensusTimestamp > transactionID.transactionValidStart + transactionValidDuration
   bool generateRecord = 5 [deprecated = true]; // Should a record of this transaction be generated? (A receipt is always generated, but the record is optional)
   string memo = 6; // Any notes or descriptions that should be put into the record (max length 100)
@@ -122,8 +122,8 @@ message TransactionBody {
     TokenAssociateTransactionBody tokenAssociate = 40; // Associate tokens to an account
     TokenDissociateTransactionBody tokenDissociate = 41; // Dissociate tokens from an account
 
-    ScheduleCreateTransactionBody scheduleCreate = 42; // Creates a scheduled transaction instance
-    ScheduleDeleteTransactionBody scheduleDelete = 43; // Deletes a scheduled transaction instance
-    ScheduleSignTransactionBody scheduleSign = 44; // Signs a scheduled transaction instance
+    ScheduleCreateTransactionBody scheduleCreate = 42; // Creates a schedule in the network's action queue
+    ScheduleDeleteTransactionBody scheduleDelete = 43; // Deletes a schedule from the network's action queue
+    ScheduleSignTransactionBody scheduleSign = 44; // Adds one or more Ed25519 keys to the affirmed signers of a scheduled transaction
   }
 }

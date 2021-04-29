@@ -27,11 +27,12 @@ option java_multiple_files = true;
 
 import "BasicTypes.proto";
 
-
 /*
-Deletes a Scheduled Transaction from the ledger.
-The operation must be signed by the specified Admin Key of the Scheduled Transaction. If admin key is not set, Transaction will result in SCHEDULE_IS_IMMUTABLE.
-Once deleted, sign and delete transactions will resolve to INVALID_SCHEDULE_ID.
+Marks a schedule in the network's action queue as deleted. Must be signed by the admin key of the target schedule. 
+A deleted schedule cannot receive any additional signing keys, nor will it be executed.
+
+Other notable response codes include, <tt>INVALID_SCHEDULE_ID</tt>, <tt>SCHEDULE_WAS_DELETED</tt>, <tt>SCHEDULE_WAS_EXECUTED</tt>, 
+<tt>SCHEDULE_IS_IMMUTABLE</tt>. For more information please see the section of this documentation on the <tt>ResponseCode</tt> enum. 
 */
 message ScheduleDeleteTransactionBody {
   ScheduleID scheduleID = 1; // The ID of the Scheduled Entity
