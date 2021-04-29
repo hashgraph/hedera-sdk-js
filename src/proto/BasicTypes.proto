@@ -67,19 +67,17 @@ Applicable to Scheduled Transactions:
 - The ID of a Scheduled Transaction has transactionValidStart and accountIDs inherited from the ScheduleCreate transaction that created it. That is to say that they are equal
 - The scheduled property is true for Scheduled Transactions
 - transactionValidStart, accountID and scheduled properties should be omitted
-- Scheduled Transactions should be submitted with only nonce populated (if desired). Nonce is an additional option presented to users so that they can create multiple sequential Scheduled Transactions that have the same transaction body.
 */
 message TransactionID {
     Timestamp transactionValidStart = 1; // The transaction is invalid if consensusTimestamp < transactionID.transactionStartValid
     AccountID accountID = 2; // The Account ID that paid for this transaction
     bool scheduled = 3; // Whether the Transaction is of type Scheduled or no
-    bytes nonce = 4; // Used to manipulate the uniqueness check for idempotent schedule transaction creation
 }
 
 /* An account, and the amount that it sends or receives during a cryptocurrency or token transfer. */
 message AccountAmount {
     AccountID accountID = 1; // The Account ID that sends/receives cryptocurrency or tokens
-    sint64 amount = 2 [jstype=JS_STRING]; // The amount of tinybars (for Crypto transfers) or in the lowest denomination (for Token transfers) that the account sends(negative) or receives(positive)
+    sint64 amount = 2; // The amount of tinybars (for Crypto transfers) or in the lowest denomination (for Token transfers) that the account sends(negative) or receives(positive)
 }
 
 /* A list of accounts and amounts to transfer out of each account (negative) or into it (positive). */
@@ -138,7 +136,7 @@ enum TokenKycStatus {
  *
  * A Key can contain a ThresholdKey or KeyList, which in turn contain a Key, so this mutual recursion would allow nesting arbitrarily deep. A ThresholdKey which contains a list of primitive keys (e.g., ed25519) has 3 levels: ThresholdKey -> KeyList -> Key. A KeyList which contains several primitive keys (e.g., ed25519) has 2 levels: KeyList -> Key. A Key with 2 levels of nested ThresholdKeys has 7 levels: Key -> ThresholdKey -> KeyList -> Key -> ThresholdKey -> KeyList -> Key.
  *
- * Each Key should not have more than 46 levels, which implies 15 levels of nested ThresholdKeys.
+ * Each Key should not have more than 46 levels, which implies 15 levels of nested ThresholdKeys. Only ed25519 primitive keys are currently supported.
  */
 message Key {
     oneof key {
@@ -198,8 +196,8 @@ message SignatureList {
 
 /*
 The client may use any number of bytes from 0 to the whole length of the public key for pubKeyPrefix.
-If 0 bytes is used, then it is assumed that only one public key is used to sign.
-*/
+If 0 bytes is used, then it is assumed that only one public key is used to sign. Only ed25519
+keys and hence signatures are currently supported.  */
 message SignaturePair {
     bytes pubKeyPrefix = 1; // First few bytes of the public key
     oneof signature {
@@ -291,17 +289,17 @@ A set of prices the nodes use in determining transaction and query fees, and con
 Nodes multiply the amount of resources consumed by a transaction or query by the corresponding price to calculate the
 appropriate fee. Units are one-thousandth of a tinyCent.*/
 message FeeComponents {
-    int64 min = 1 [jstype=JS_STRING]; // A minimum, the calculated fee must be greater than this value
-    int64 max = 2 [jstype=JS_STRING]; // A maximum, the calculated fee must be less than this value
-    int64 constant = 3 [jstype=JS_STRING]; // A constant contribution to the fee
-    int64 bpt = 4 [jstype=JS_STRING]; // The price of bandwidth consumed by a transaction, measured in bytes
-    int64 vpt = 5 [jstype=JS_STRING]; // The price per signature verification for a transaction
-    int64 rbh = 6 [jstype=JS_STRING]; // The price of RAM consumed by a transaction, measured in byte-hours
-    int64 sbh = 7 [jstype=JS_STRING]; // The price of storage consumed by a transaction, measured in byte-hours
-    int64 gas = 8 [jstype=JS_STRING]; // The price of computation for a smart contract transaction, measured in gas
-    int64 tv = 9 [jstype=JS_STRING]; // The price per hbar transferred for a transfer
-    int64 bpr = 10 [jstype=JS_STRING]; // The price of bandwidth for data retrieved from memory for a response, measured in bytes
-    int64 sbpr = 11 [jstype=JS_STRING]; // The price of bandwidth for data retrieved from disk for a response, measured in bytes
+    int64 min = 1; // A minimum, the calculated fee must be greater than this value
+    int64 max = 2; // A maximum, the calculated fee must be less than this value
+    int64 constant = 3; // A constant contribution to the fee
+    int64 bpt = 4; // The price of bandwidth consumed by a transaction, measured in bytes
+    int64 vpt = 5; // The price per signature verification for a transaction
+    int64 rbh = 6; // The price of RAM consumed by a transaction, measured in byte-hours
+    int64 sbh = 7; // The price of storage consumed by a transaction, measured in byte-hours
+    int64 gas = 8; // The price of computation for a smart contract transaction, measured in gas
+    int64 tv = 9; // The price per hbar transferred for a transfer
+    int64 bpr = 10; // The price of bandwidth for data retrieved from memory for a response, measured in bytes
+    int64 sbpr = 11; // The price of bandwidth for data retrieved from disk for a response, measured in bytes
 }
 
 /* The fees for a specific transaction or query based on the fee data. */
@@ -340,24 +338,43 @@ message CurrentAndNextFeeSchedule {
     FeeSchedule nextFeeSchedule = 2; // Contains next Fee Schedule
 }
 
-/*
-The metadata for a Node – including IP Address, and the crypto account associated with the Node.
+/* 
+Contains the IP address and the port representing a service endpoint of a Node in a network. Used to reach the Hedera API and submit transactions to the network.
+*/
+message ServiceEndpoint {
+    bytes ipAddressV4 = 1; // The 32-bit IPv4 address of the node encoded in left to right order (e.g. 127.0.0.1 has 127 as its first byte)
+    int32 port = 2; // The port of the node
+}
+
+/* 
+The data about a node, including its service endpoints and the Hedera account to be paid for services 
+provided by the node (that is, queries answered and transactions submitted.) 
+
+If the <tt>serviceEndpoint</tt> list is not set, or empty, then the endpoint given by the (deprecated)
+<tt>ipAddress</tt> and <tt>portno</tt> fields should be used. 
+
+All fields are populated in the 0.0.102 address book file while only fields that start with # are populated in the 0.0.101 address book file.
 */
 message NodeAddress {
-    bytes ipAddress = 1; // The ip address of the Node with separator & octets
-    int32 portno = 2; // The port number of the grpc server for the node
-    bytes memo = 3; // The memo field of the node (usage to store account ID is deprecated)
-    string RSA_PubKey = 4; // The RSA public key of the node
-    int64 nodeId = 5 [jstype=JS_STRING]; // A non-sequential identifier for the node
-    AccountID nodeAccountId = 6; // The account to be paid for queries and transactions sent to this node
-    bytes nodeCertHash = 7; // A hash of the X509 cert used for gRPC traffic to this node
+    bytes ipAddress = 1 [deprecated=true]; // The IP address of the Node with separator & octets encoded in UTF-8. Usage is deprecated, ServiceEndpoint is preferred to retrieve a node's list of IP addresses and ports
+    int32 portno = 2 [deprecated=true]; // The port number of the grpc server for the node.  Usage is deprecated, ServiceEndpoint is preferred to retrieve a node's list of IP addresses and ports
+    bytes memo = 3 [deprecated=true]; // Usage is deprecated, nodeAccountId is preferred to retrieve a node's account ID
+    string RSA_PubKey = 4; // The node's hex-encoded X509 RSA public key
+    int64 nodeId = 5; // # A non-sequential identifier for the node
+    AccountID nodeAccountId = 6; // # The account to be paid for queries and transactions sent to this node
+    bytes nodeCertHash = 7; // # The hex-encoded SHA-384 hash of the X509 cert used to encrypt gRPC traffic to the node
+    repeated ServiceEndpoint serviceEndpoint = 8; // # A node's service IP addresses and ports
+    string description = 9; // A description of the node, with UTF-8 encoding up to 100 bytes
+    int64 stake = 10; // The amount of tinybars staked to the node
 }
 
 /*
-A list of nodes and their metadata.
+A list of nodes and their metadata that contains all details of the nodes for the network.
+
+Used to parse the contents of system files <tt>0.0.101</tt> and <tt>0.0.102</tt>.
 */
 message NodeAddressBook {
-    repeated NodeAddress nodeAddress = 1; // Contains multiple Node Address for the network
+    repeated NodeAddress nodeAddress = 1; // Metadata of all nodes in the network
 }
 
 message SemanticVersion {
@@ -380,7 +397,7 @@ message ServicesConfigurationList {
 message TokenRelationship {
     TokenID tokenId = 1; // The ID of the token
     string symbol = 2; // The Symbol of the token
-    uint64 balance = 3 [jstype=JS_STRING]; // The balance that the Account holds in the smallest denomination
+    uint64 balance = 3; // The balance that the Account holds in the smallest denomination
     TokenKycStatus kycStatus = 4; // The KYC status of the account (KycNotApplicable, Granted or Revoked). If the token does not have KYC key, KycNotApplicable is returned
     TokenFreezeStatus freezeStatus = 5; // The Freeze status of the account (FreezeNotApplicable, Frozen or Unfrozen). If the token does not have Freeze key, FreezeNotApplicable is returned
     uint32 decimals = 6; // Tokens divide into <tt>10<sup>decimals</sup></tt> pieces
@@ -393,7 +410,7 @@ The transferable unit of a token is its smallest denomination, as given by the t
 Transferable units are not directly comparable across different tokens. */
 message TokenBalance {
     TokenID tokenId = 1; // A unique token id
-    uint64 balance = 2 [jstype=JS_STRING]; // A number of transferable units of the identified token
+    uint64 balance = 2; // A number of transferable units of the identified token
     uint32 decimals = 3; // Tokens divide into <tt>10<sup>decimals</sup></tt> pieces
 }
 

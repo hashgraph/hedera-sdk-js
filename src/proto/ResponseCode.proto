@@ -26,7 +26,6 @@ option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
 enum ResponseCodeEnum {
-
   OK = 0; // The transaction passed the precheck validations.
   INVALID_TRANSACTION = 1; // For any error not handled by specific error codes listed below.
   PAYER_ACCOUNT_NOT_FOUND = 2; //Payer account does not exist.
@@ -215,8 +214,20 @@ enum ResponseCodeEnum {
   INVALID_SCHEDULE_ACCOUNT_ID = 204; // The Schedule Create Transaction TransactionID account does not exist
   NO_NEW_VALID_SIGNATURES = 205; // The provided sig map did not contain any new valid signatures from required signers of the scheduled transaction
   UNRESOLVABLE_REQUIRED_SIGNERS = 206; // The required signers for a scheduled transaction cannot be resolved, for example because they do not exist or have been deleted
-  UNPARSEABLE_SCHEDULED_TRANSACTION = 207; // The bytes allegedly representing a transaction to be scheduled could not be parsed
-  UNSCHEDULABLE_TRANSACTION = 208; // ScheduleCreate and ScheduleSign transactions cannot be scheduled
-  SOME_SIGNATURES_WERE_INVALID = 209; // At least one of the signatures in the provided sig map did not represent a valid signature for any required signer
-  TRANSACTION_ID_FIELD_NOT_ALLOWED = 210; // The <tt>scheduled</tt> and <tt>nonce</tt> fields in the <tt>TransactionID</tt> may not be set in a top-level transaction
+  SCHEDULED_TRANSACTION_NOT_IN_WHITELIST = 207; // Only whitelisted transaction types may be scheduled
+  SOME_SIGNATURES_WERE_INVALID = 208; // At least one of the signatures in the provided sig map did not represent a valid signature for any required signer
+  TRANSACTION_ID_FIELD_NOT_ALLOWED = 209; // The scheduled field in the TransactionID may not be set to true
+  IDENTICAL_SCHEDULE_ALREADY_CREATED = 210; // A schedule already exists with the same identifying fields of an attempted ScheduleCreate (that is, all fields other than scheduledPayerAccountID)
+  INVALID_ZERO_BYTE_IN_STRING = 211; // A string field in the transaction has a UTF-8 encoding with the prohibited zero byte
+  SCHEDULE_ALREADY_DELETED = 212; // A schedule being signed or deleted has already been deleted
+  SCHEDULE_ALREADY_EXECUTED = 213; // A schedule being signed or deleted has already been executed
+  MESSAGE_SIZE_TOO_LARGE = 214; // ConsensusSubmitMessage request's message size is larger than allowed.
+  OPERATION_REPEATED_IN_BUCKET_GROUPS = 215; // An operation was assigned to more than one throttle group in a given bucket
+  BUCKET_CAPACITY_OVERFLOW = 216; // The capacity needed to satisfy all opsPerSec groups in a bucket overflowed a signed 8-byte integral type
+  NODE_CAPACITY_NOT_SUFFICIENT_FOR_OPERATION = 217; // Given the network size in the address book, the node-level capacity for an operation would never be enough to accept a single request; usually means a bucket burstPeriod should be increased
+  BUCKET_HAS_NO_THROTTLE_GROUPS = 218; // A bucket was defined without any throttle groups
+  THROTTLE_GROUP_HAS_ZERO_OPS_PER_SEC = 219; // A throttle group was granted zero opsPerSec
+  SUCCESS_BUT_MISSING_EXPECTED_OPERATION = 220; // The throttle definitions file was updated, but some supported operations were not assigned a bucket
+  UNPARSEABLE_THROTTLE_DEFINITIONS = 221; // The new contents for the throttle definitions system file were not valid protobuf
+  INVALID_THROTTLE_DEFINITIONS = 222; // The new throttle definitions system file were invalid, and no more specific error could be divined
 }

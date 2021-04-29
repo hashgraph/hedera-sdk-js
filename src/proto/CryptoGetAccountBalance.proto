@@ -28,6 +28,7 @@ option java_multiple_files = true;
 import "BasicTypes.proto";
 import "QueryHeader.proto";
 import "ResponseHeader.proto";
+import "Timestamp.proto";
 
 /* Get the balance of a cryptocurrency account. This returns only the balance, so it is a smaller
 reply than CryptoGetInfo, which returns the balance plus additional information. */
