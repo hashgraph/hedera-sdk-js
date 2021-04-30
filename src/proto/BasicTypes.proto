@@ -77,7 +77,7 @@ message TransactionID {
 /* An account, and the amount that it sends or receives during a cryptocurrency or token transfer. */
 message AccountAmount {
     AccountID accountID = 1; // The Account ID that sends/receives cryptocurrency or tokens
-    sint64 amount = 2; // The amount of tinybars (for Crypto transfers) or in the lowest denomination (for Token transfers) that the account sends(negative) or receives(positive)
+    sint64 amount = 2 [jstype=JS_STRING]; // The amount of tinybars (for Crypto transfers) or in the lowest denomination (for Token transfers) that the account sends(negative) or receives(positive)
 }
 
 /* A list of accounts and amounts to transfer out of each account (negative) or into it (positive). */
@@ -162,7 +162,7 @@ message KeyList {
 
 /* A Signature corresponding to a Key. It is a sequence of bytes holding a public key signature from one of the three supported systems (ed25519, RSA-3072,  ECDSA with p384). Or, it can be a list of signatures corresponding to a single threshold key. Or, it can be the ID of a smart contract instance, which is authorized to act as if it had a key. If an account has an ed25519 key associated with it, then the corresponding private key must sign any transaction to transfer cryptocurrency out of it. If it has a smart contract ID associated with it, then that smart contract is allowed to transfer cryptocurrency out of it. The smart contract doesn't actually have a key, and  doesn't actually sign a transaction. But it's as if a virtual transaction were created, and the smart contract signed it with a private key. A key can also be a "threshold key", which means a list of M keys, any N of which must sign in order for the threshold signature to be considered valid. The keys within a threshold signature may themselves be threshold signatures, to allow complex signature requirements (this nesting is not supported in the currently, but will be supported in a future version of API). If a Signature message is missing the "signature" field, then this is considered to be a null signature. That is useful in cases such as threshold signatures, where some of the signatures can be null.
  * The definition of Key uses mutual recursion, so it allows nesting that is arbitrarily deep. But the current API only accepts Key messages up to 3 levels deep, such as a list of threshold keys, each of which is a list of primitive keys. Therefore, the matching Signature will have the same limitation. This restriction may be relaxed in future versions of the API, to allow deeper nesting.
- * This message is deprecated and succeeded by SignaturePair and SignatureMap messages. 
+ * This message is deprecated and succeeded by SignaturePair and SignatureMap messages.
  */
 message Signature {
     option deprecated = true;
@@ -289,17 +289,17 @@ A set of prices the nodes use in determining transaction and query fees, and con
 Nodes multiply the amount of resources consumed by a transaction or query by the corresponding price to calculate the
 appropriate fee. Units are one-thousandth of a tinyCent.*/
 message FeeComponents {
-    int64 min = 1; // A minimum, the calculated fee must be greater than this value
-    int64 max = 2; // A maximum, the calculated fee must be less than this value
-    int64 constant = 3; // A constant contribution to the fee
-    int64 bpt = 4; // The price of bandwidth consumed by a transaction, measured in bytes
-    int64 vpt = 5; // The price per signature verification for a transaction
-    int64 rbh = 6; // The price of RAM consumed by a transaction, measured in byte-hours
-    int64 sbh = 7; // The price of storage consumed by a transaction, measured in byte-hours
-    int64 gas = 8; // The price of computation for a smart contract transaction, measured in gas
-    int64 tv = 9; // The price per hbar transferred for a transfer
-    int64 bpr = 10; // The price of bandwidth for data retrieved from memory for a response, measured in bytes
-    int64 sbpr = 11; // The price of bandwidth for data retrieved from disk for a response, measured in bytes
+    int64 min = 1 [jstype=JS_STRING]; // A minimum, the calculated fee must be greater than this value
+    int64 max = 2 [jstype=JS_STRING]; // A maximum, the calculated fee must be less than this value
+    int64 constant = 3 [jstype=JS_STRING]; // A constant contribution to the fee
+    int64 bpt = 4 [jstype=JS_STRING]; // The price of bandwidth consumed by a transaction, measured in bytes
+    int64 vpt = 5 [jstype=JS_STRING]; // The price per signature verification for a transaction
+    int64 rbh = 6 [jstype=JS_STRING]; // The price of RAM consumed by a transaction, measured in byte-hours
+    int64 sbh = 7 [jstype=JS_STRING]; // The price of storage consumed by a transaction, measured in byte-hours
+    int64 gas = 8 [jstype=JS_STRING]; // The price of computation for a smart contract transaction, measured in gas
+    int64 tv = 9 [jstype=JS_STRING]; // The price per hbar transferred for a transfer
+    int64 bpr = 10 [jstype=JS_STRING]; // The price of bandwidth for data retrieved from memory for a response, measured in bytes
+    int64 sbpr = 11 [jstype=JS_STRING]; // The price of bandwidth for data retrieved from disk for a response, measured in bytes
 }
 
 /* The fees for a specific transaction or query based on the fee data. */
@@ -338,7 +338,7 @@ message CurrentAndNextFeeSchedule {
     FeeSchedule nextFeeSchedule = 2; // Contains next Fee Schedule
 }
 
-/* 
+/*
 Contains the IP address and the port representing a service endpoint of a Node in a network. Used to reach the Hedera API and submit transactions to the network.
 */
 message ServiceEndpoint {
@@ -346,12 +346,12 @@ message ServiceEndpoint {
     int32 port = 2; // The port of the node
 }
 
-/* 
-The data about a node, including its service endpoints and the Hedera account to be paid for services 
-provided by the node (that is, queries answered and transactions submitted.) 
+/*
+The data about a node, including its service endpoints and the Hedera account to be paid for services
+provided by the node (that is, queries answered and transactions submitted.)
 
 If the <tt>serviceEndpoint</tt> list is not set, or empty, then the endpoint given by the (deprecated)
-<tt>ipAddress</tt> and <tt>portno</tt> fields should be used. 
+<tt>ipAddress</tt> and <tt>portno</tt> fields should be used.
 
 All fields are populated in the 0.0.102 address book file while only fields that start with # are populated in the 0.0.101 address book file.
 */
@@ -360,7 +360,7 @@ message NodeAddress {
     int32 portno = 2 [deprecated=true]; // The port number of the grpc server for the node.  Usage is deprecated, ServiceEndpoint is preferred to retrieve a node's list of IP addresses and ports
     bytes memo = 3 [deprecated=true]; // Usage is deprecated, nodeAccountId is preferred to retrieve a node's account ID
     string RSA_PubKey = 4; // The node's hex-encoded X509 RSA public key
-    int64 nodeId = 5; // # A non-sequential identifier for the node
+    int64 nodeId = 5 [jstype=JS_STRING]; // # A non-sequential identifier for the node
     AccountID nodeAccountId = 6; // # The account to be paid for queries and transactions sent to this node
     bytes nodeCertHash = 7; // # The hex-encoded SHA-384 hash of the X509 cert used to encrypt gRPC traffic to the node
     repeated ServiceEndpoint serviceEndpoint = 8; // # A node's service IP addresses and ports
@@ -397,7 +397,7 @@ message ServicesConfigurationList {
 message TokenRelationship {
     TokenID tokenId = 1; // The ID of the token
     string symbol = 2; // The Symbol of the token
-    uint64 balance = 3; // The balance that the Account holds in the smallest denomination
+    uint64 balance = 3 [jstype=JS_STRING]; // The balance that the Account holds in the smallest denomination
     TokenKycStatus kycStatus = 4; // The KYC status of the account (KycNotApplicable, Granted or Revoked). If the token does not have KYC key, KycNotApplicable is returned
     TokenFreezeStatus freezeStatus = 5; // The Freeze status of the account (FreezeNotApplicable, Frozen or Unfrozen). If the token does not have Freeze key, FreezeNotApplicable is returned
     uint32 decimals = 6; // Tokens divide into <tt>10<sup>decimals</sup></tt> pieces
