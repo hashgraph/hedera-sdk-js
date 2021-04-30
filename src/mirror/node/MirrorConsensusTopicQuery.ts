@@ -44,12 +44,11 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
 
         const response = client._client
             .makeServerStreamRequest(
-                `/${ConsensusService.serviceName}/${ConsensusService.subscribeTopic.methodName}`,
-                (req) => Buffer.from(req.serializeBinary()),
+                // `/${ConsensusService.serviceName}/${ConsensusService.subscribeTopic.methodName}`,
+                "/com.hedera.mirror.api.proto.ConsensusService/subscribeTopic",
+                (value) => Buffer.from(value),
                 ConsensusTopicResponse.deserializeBinary,
-                this._builder,
-                new grpc.Metadata(),
-                {}
+                this._builder.serializeBinary()
             )
             .on("data", (message: ConsensusTopicResponse): void => {
                 shouldRetry = false;
@@ -77,16 +76,44 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                 }
             })
             .on("status", (status: grpc.StatusObject): void => {
-                if (!shouldRetry || attempt > 10) {
-                    if (errorHandler != null) {
-                        errorHandler(new Error(`Received status code: ${status.code} and message: ${status.details}`));
-                    }
-                } else if (
-                    attempt < 10 &&
-                    shouldRetry &&
-                    (status.code === grpc.status.NOT_FOUND ||
-                        status.code === grpc.status.UNAVAILABLE)
-                ) {
+                this._onStatus(
+                    handle,
+                    attempt + 1,
+                    client,
+                    listener,
+                    shouldRetry,
+                    status,
+                    errorHandler
+                );
+            })
+            .on("error", () => {
+                // Do nothing. `on("status")` will be called after this which has the retry loop
+            });
+
+        handle._setCall(response.cancel);
+    }
+
+    private _onStatus(
+        handle: MirrorSubscriptionHandle,
+        attempt: number,
+        client: MirrorClient,
+        listener: Listener,
+        shouldRetry: boolean,
+        status: grpc.StatusObject,
+        errorHandler?: ErrorHandler
+    ): void {
+        if (!shouldRetry || attempt > 10) {
+            if (errorHandler != null) {
+                errorHandler(new Error(`Received status code: ${status.code} and message: ${status.details}`));
+            }
+        } else if (attempt < 10 && shouldRetry) {
+            console.log(status.code);
+            switch (status.code) {
+                case grpc.status.OK:
+                    break;
+                case grpc.status.NOT_FOUND:
+                case grpc.status.UNAVAILABLE:
+                case grpc.status.RESOURCE_EXHAUSTED:
                     setTimeout(() => {
                         this._makeServerStreamRequest(
                             handle,
@@ -95,18 +122,13 @@ export class MirrorConsensusTopicQuery extends BaseMirrorConsensusTopicQuery {
                             listener,
                             errorHandler
                         );
-                    }, 250 * 2 ** attempt);
-                }
-            })
-            .on("end", (status?: grpc.StatusObject): void => {
-                if (errorHandler != null && status != null) {
-                    errorHandler(new Error(`Received status code: ${status.code} and message: ${status.details}`));
-                }
-            })
-            .on("error", () => {
-                // Do nothing. `on("status")` will be called after this which has the retry loop
-            });
-
-        handle._setCall(response.cancel);
+                    }, 250 * (2 ** (attempt + 1)));
+                    break;
+                default:
+                    if (errorHandler != null) {
+                        errorHandler(new Error(`Received unprocessable status code: ${status.code} and message: ${status.details}`));
+                    }
+            }
+        }
     }
 }

@@ -9,14 +9,6 @@ const {
 } = require("@hashgraph/sdk");
 
 async function main() {
-    if (
-        process.env.OPERATOR_KEY == null ||
-        process.env.OPERATOR_ID == null ||
-        process.env.MIRROR_NODE_ADDRESS == null
-    ) {
-        throw new Error("environment variables OPERATOR_KEY, OPERATOR_ID, and MIRROR_NODE_ADDRESS must be present");
-    }
-
     let client;
 
     if (process.env.HEDERA_NETWORK != null) {
@@ -29,18 +21,15 @@ async function main() {
         }
     } else {
         try {
-            client = Client.fromConfigFile(process.env.CONFIG_FILE);
+            client = await Client.fromFile(process.env.CONFIG_FILE);
         } catch (error) {
             client = Client.forTestnet();
         }
     }
 
-    let operatorPrivateKey;
-    let operatorAccount;
-
     if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
-        operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
-        operatorAccount = AccountId.fromString(process.env.OPERATOR_ID);
+        const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
+        const operatorAccount = AccountId.fromString(process.env.OPERATOR_ID);
 
         client.setOperator(operatorAccount, operatorPrivateKey);
     }
