@@ -780,6 +780,29 @@ export class Status implements Indexed {
      */
     public static readonly EmptyTokenTransferAccountAmounts = new Status(200);
 
+    public static readonly InvalidScheduleId = new Status(201);
+    public static readonly ScheduleIsImmutable = new Status(202);
+    public static readonly InvalidSchedulePayerId = new Status(203);
+    public static readonly InvalidScheduleAccountId = new Status(204);
+    public static readonly NoNewValidSignatures = new Status(205);
+    public static readonly UnresolvableRequiredSigners = new Status(206);
+    public static readonly ScheduledTransactionNotInWhitelist = new Status(207);
+    public static readonly SomeSignaturesWereInvalid = new Status(208);
+    public static readonly TransactionIdFieldNotAllowed = new Status(209);
+    public static readonly IdenticalScheduleAlreadyCreated = new Status(210);
+    public static readonly InvalidZeroByteInString = new Status(211);
+    public static readonly ScheduleAlreadyDeleted = new Status(212);
+    public static readonly ScheduleAlreadyExecuted = new Status(213);
+    public static readonly MessageSizeTooLarge = new Status(214);
+    public static readonly OperationRepeatedInBucketGroups = new Status(215);
+    public static readonly BucketCapacityOverflow = new Status(216);
+    public static readonly NodeCapacityNotSufficientForOperation = new Status(217);
+    public static readonly BucketHasNoThrottleGroups = new Status(218);
+    public static readonly ThrottleGroupHasZeroOpsPerSec = new Status(219);
+    public static readonly SuccessButMissingExpectedOperation = new Status(220);
+    public static readonly UnparseableThrottleDefinitions = new Status(221);
+    public static readonly InvalidThrottleDefinitions = new Status(212);
+
     private static [ 0 ] = Status.Ok;
     private static [ 1 ] = Status.InvalidTransaction;
     private static [ 2 ] = Status.PayerAccountNotFound;
@@ -943,6 +966,29 @@ export class Status implements Indexed {
     public static [ 198 ] = Status.TokenTransferListSizeLimitExceeded;
     public static [ 199 ] = Status.EmptyTokenTransferBody;
     public static [ 200 ] = Status.EmptyTokenTransferAccountAmounts;
+    public static [ 201 ] = Status.InvalidScheduleId
+    public static [ 202 ] = Status.ScheduleIsImmutable;
+    public static [ 203 ] = Status.InvalidSchedulePayerId;
+    public static [ 204 ] = Status.InvalidScheduleAccountId;
+    public static [ 205 ] = Status.NoNewValidSignatures;
+    public static [ 206 ] = Status.UnresolvableRequiredSigners;
+    public static [ 207 ] = Status.ScheduledTransactionNotInWhitelist;
+    public static [ 208 ] = Status.SomeSignaturesWereInvalid;
+    public static [ 209 ] = Status.TransactionIdFieldNotAllowed;
+    public static [ 210 ] = Status.IdenticalScheduleAlreadyCreated;
+    public static [ 211 ] = Status.InvalidZeroByteInString;
+    public static [ 212 ] = Status.ScheduleAlreadyDeleted;
+    public static [ 213 ] = Status.ScheduleAlreadyExecuted;
+    public static [ 214 ] = Status.MessageSizeTooLarge;
+    public static [ 215 ] = Status.OperationRepeatedInBucketGroups;
+    public static [ 216 ] = Status.BucketCapacityOverflow;
+    public static [ 217 ] = Status.NodeCapacityNotSufficientForOperation;
+    public static [ 218 ] = Status.BucketHasNoThrottleGroups;
+    public static [ 219 ] = Status.ThrottleGroupHasZeroOpsPerSec;
+    public static [ 220 ] = Status.SuccessButMissingExpectedOperation;
+    public static [ 221 ] = Status.UnparseableThrottleDefinitions;
+    public static [ 222 ] = Status.InvalidThrottleDefinitions;
+
     // New functionality added by HTS above
 
     public readonly code: number;
@@ -1112,6 +1158,28 @@ export class Status implements Indexed {
             case Status.TokenTransferListSizeLimitExceeded: return "TOKEN_TRANSFER_LIST_SIZE_LIMIT_EXCEEDED";
             case Status.EmptyTokenTransferBody: return "EMPTY_TOKEN_TRANSFER_BODY";
             case Status.EmptyTokenTransferAccountAmounts: return "EMPTY_TOKEN_TRANSFER_ACCOUNT_AMOUNTS";
+            case Status.InvalidScheduleId: return "INVALID_SCHEDULE_ID";
+            case Status.ScheduleIsImmutable: return "SCHEDULE_IS_IMMUTABLE";
+            case Status.InvalidSchedulePayerId: return "INVALID_SCHEDULE_PAYER_ID";
+            case Status.InvalidScheduleAccountId: return "INVALID_SCHEDULE_ACCOUNT_ID";
+            case Status.NoNewValidSignatures: return "NO_NEW_VALID_SIGNATURES";
+            case Status.UnresolvableRequiredSigners: return "UNRESOLVABLE_REQUIRED_SIGNERS";
+            case Status.ScheduledTransactionNotInWhitelist: return "SCHEDULED_TRANSACTION_NOT_IN_WHITELIST";
+            case Status.SomeSignaturesWereInvalid: return "SOME_SIGNATURES_WERE_INVALID";
+            case Status.TransactionIdFieldNotAllowed: return "TRANSACTION_ID_FIELD_NOT_ALLOWED";
+            case Status.IdenticalScheduleAlreadyCreated: return "IDENTICAL_SCHEDULE_ALREADY_CREATED";
+            case Status.InvalidZeroByteInString: return "INVALID_ZERO_BYTE_IN_STRING";
+            case Status.ScheduleAlreadyDeleted: return "SCHEDULE_ALREADY_DELETED";
+            case Status.ScheduleAlreadyExecuted: return "SCHEDULE_ALREADY_EXECUTED";
+            case Status.MessageSizeTooLarge: return "MESSAGE_SIZE_TOO_LARGE";
+            case Status.OperationRepeatedInBucketGroups: return "OPERATION_REPEATED_IN_BUCKET_GROUPS";
+            case Status.BucketCapacityOverflow: return "BUCKET_CAPACITY_OVERFLOW";
+            case Status.NodeCapacityNotSufficientForOperation: return "NODE_CAPACITY_NOT_SUFFICIENT_FOR_OPERATION";
+            case Status.BucketHasNoThrottleGroups: return "BUCKET_HAS_NO_THROTTLE_GROUPS";
+            case Status.ThrottleGroupHasZeroOpsPerSec: return "THROTTLE_GROUP_HAS_ZERO_OPS_PER_SEC";
+            case Status.SuccessButMissingExpectedOperation: return "SUCCESS_BUT_MISSING_EXPECTED_OPERATION";
+            case Status.UnparseableThrottleDefinitions: return "UNPARSEABLE_THROTTLE_DEFINITIONS";
+            case Status.InvalidThrottleDefinitions: return "INVALID_THROTTLE_DEFINITIONS";
             default: return `UNKNOWN STATUS CODE (${this.code})`;
         }
     }
