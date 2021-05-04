@@ -14,7 +14,7 @@ import { getClientForIntegrationTest } from "../client-setup";
 
 describe("AccountUpdateTransaction", () => {
     it("can be executed", async() => {
-        const client = await getClientForIntegrationTest();
+        const client = await getClientForIntegrationTest(false);
 
         const key1 = await Ed25519PrivateKey.generate();
         const key2 = await Ed25519PrivateKey.generate();
