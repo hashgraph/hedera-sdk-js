@@ -26,8 +26,8 @@ export interface ChunkInfo {
 export class ConsensusMessageSubmitTransaction extends TransactionBuilder<
     Transaction[]
 > {
-    private static readonly chunkSize = 4096;
-    private _maxChunks = 10;
+    private static readonly chunkSize = 1024;
+    private _maxChunks = 20;
     private topicId: ConsensusTopicId | null = null;
     private message: Uint8Array | null = null;
     private chunkInfo: ChunkInfo | null = null;
