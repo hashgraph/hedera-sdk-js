@@ -4,7 +4,7 @@ import { getClientForIntegrationTest } from "../client-setup";
 
 describe("FileCreateTransaction", () => {
     it("can be executed", async() => {
-        const client = await getClientForIntegrationTest();
+        const client = await getClientForIntegrationTest(false);
 
         let transactionId = await new FileCreateTransaction()
             .addKey(client._getOperatorKey()!)

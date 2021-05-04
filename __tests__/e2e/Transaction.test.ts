@@ -9,7 +9,7 @@ import { getClientForIntegrationTest } from "./client-setup";
 
 describe("Transaction", () => {
     it("has the same hash as hedera returns in a record", async() => {
-        const client = await getClientForIntegrationTest();
+        const client = await getClientForIntegrationTest(false);
 
         const key1 = await Ed25519PrivateKey.generate();
 

@@ -1,9 +1,9 @@
-import { Client, AccountId, Ed25519PrivateKey } from "../../src/index-node";
+import { Client, Hbar, AccountId, Ed25519PrivateKey, AccountCreateTransaction } from "../../src/index-node";
 import * as fs from "fs";
 import * as util from "util";
 import { assert } from "console";
 
-export async function getClientForIntegrationTest(): Promise<Client> {
+export async function getClientForIntegrationTest(token: boolean): Promise<Client> {
     let client: Client;
 
     if (process.env.HEDERA_NETWORK != null && process.env.HEDERA_NETWORK == "previewnet") {
@@ -27,6 +27,19 @@ export async function getClientForIntegrationTest(): Promise<Client> {
         } catch (error) {
             console.error(error);
         }
+    }
+
+    if (token) {
+        const newKey = await Ed25519PrivateKey.generate();
+
+        const transactionId = await new AccountCreateTransaction()
+            .setKey(newKey.publicKey)
+            .setInitialBalance(new Hbar(20))
+            .execute(client);
+
+        const receipt = await transactionId.getReceipt(client);
+
+        client.setOperator(receipt.getAccountId(), newKey);
     }
 
     assert(client._getOperatorAccountId() != null, "operator account id was not provided in config file or environment");

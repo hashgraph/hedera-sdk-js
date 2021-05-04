@@ -10,7 +10,7 @@ import { getClientForIntegrationTest } from "../client-setup";
 
 describe("ConsensusMessageSubmitTransaction", () => {
     it("can be executed", async() => {
-        const client = await getClientForIntegrationTest();
+        const client = await getClientForIntegrationTest(false);
 
         let transactionId = await new ConsensusTopicCreateTransaction()
             .setAdminKey(client._getOperatorKey()!)

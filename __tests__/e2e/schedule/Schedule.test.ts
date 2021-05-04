@@ -8,7 +8,8 @@ import {
     ConsensusTopicCreateTransaction,
     Ed25519PrivateKey,
     KeyList,
-    Hbar, TransferTransaction
+    Hbar, TransferTransaction,
+    AccountId, Ed25519PublicKey
 } from "../../../src/index-node";
 import * as utf8 from "@stablelib/utf8";
 import { getClientForIntegrationTest } from "../client-setup";
@@ -16,64 +17,111 @@ import { getClientForIntegrationTest } from "../client-setup";
 
 describe("ScheduleCreateTransaction", () => {
     it("can be executed", async() => {
-        const client = await getClientForIntegrationTest();
+        const client = await getClientForIntegrationTest(false);
 
         const key = await Ed25519PrivateKey.generate();
 
-        const transaction = new AccountCreateTransaction()
+        const key2 = await Ed25519PrivateKey.generate();
+
+        const transactionId = await new AccountCreateTransaction()
             .setInitialBalance(new Hbar(10))
             .setKey(key.publicKey)
+            .execute(client);
+        const accountId = (await transactionId.getReceipt(client)).getAccountId();
+
+        const topicId = (
+            await (
+                await new ConsensusTopicCreateTransaction()
+                    .setAdminKey(client._getOperatorKey()!)
+                    .setAutoRenewAccountId(client._getOperatorAccountId()!)
+                    .setTopicMemo("HCS Topic_")
+                    .setSubmitKey(key2.publicKey)
+                    .execute(client)
+            ).getReceipt(client)
+        ).getConsensusTopicId();
+
+        const transaction = new ConsensusMessageSubmitTransaction()
+            .setTopicId(topicId)
+            .setMessage("scheduled hcs message")
             .build(client);
 
-        const scheduled = transaction.schedule()
+        const scheduled = new ScheduleCreateTransaction()
+            .setScheduledTransaction(transaction[ 0 ])
             .setPayerAccountId(client._getOperatorAccountId()!)
-            .setAdminKey(client._getOperatorKey()!);
+            .setAdminKey(client._getOperatorKey()!)
+            .build(client);
 
-        const transactionId = await scheduled
-            .setMaxTransactionFee(new Hbar(15))
-            .execute(client);
+        const scheduleId = (
+            await (await scheduled.execute(client)).getReceipt(client)
+        ).getScheduleId();
 
-        const receipt = await transactionId.getReceipt(client);
-
-        await new Promise((r) => setTimeout(r, 2500));
-
-        const schedule = receipt.getScheduleId();
+        await (
+            await (
+                await new ScheduleSignTransaction()
+                    .setScheduleId(scheduleId)
+                    .build(client)
+                    .sign(key2)
+            ).execute(client)
+        ).getReceipt(client);
 
         const info = await new ScheduleInfoQuery()
-            .setScheduleId(schedule)
+            .setScheduleId(scheduleId)
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
-
+        console.log(info.getTransaction().toString());
         console.log(info.executionTime?.toDateString());
     }, 60000);
 
     it("can be executed with setTransaction", async() => {
-        const client = await getClientForIntegrationTest();
+        const client = await getClientForIntegrationTest(false);
 
         const key = await Ed25519PrivateKey.generate();
 
-        const transaction = new AccountCreateTransaction()
+        const key2 = await Ed25519PrivateKey.generate();
+
+        const transactionId = await new AccountCreateTransaction()
             .setInitialBalance(new Hbar(10))
             .setKey(key.publicKey)
+            .execute(client);
+        const accountId = (await transactionId.getReceipt(client)).getAccountId();
+
+        const topicId = (
+            await (
+                await new ConsensusTopicCreateTransaction()
+                    .setAdminKey(client._getOperatorKey()!)
+                    .setAutoRenewAccountId(client._getOperatorAccountId()!)
+                    .setTopicMemo("HCS Topic_")
+                    .setSubmitKey(key2.publicKey)
+                    .execute(client)
+            ).getReceipt(client)
+        ).getConsensusTopicId();
+
+        const transaction = new ConsensusMessageSubmitTransaction()
+            .setTopicId(topicId)
+            .setMessage("scheduled hcs message")
             .build(client);
 
-        const scheduled = new ScheduleCreateTransaction()
-            .setScheduledTransaction(transaction)
+        const scheduled = transaction[ 0 ]
+            .schedule()
             .setPayerAccountId(client._getOperatorAccountId()!)
-            .setAdminKey(client._getOperatorKey()!);
+            .setAdminKey(client._getOperatorKey()!)
+            .build(client);
 
-        const transactionId = await scheduled
-            .setMaxTransactionFee(new Hbar(15))
-            .execute(client);
+        const scheduleId = (
+            await (await scheduled.execute(client)).getReceipt(client)
+        ).getScheduleId();
 
-        const receipt = await transactionId.getReceipt(client);
-
-        await new Promise((r) => setTimeout(r, 2500));
-
-        const schedule = receipt.getScheduleId();
+        await (
+            await (
+                await new ScheduleSignTransaction()
+                    .setScheduleId(scheduleId)
+                    .build(client)
+                    .sign(key2)
+            ).execute(client)
+        ).getReceipt(client);
 
         const info = await new ScheduleInfoQuery()
-            .setScheduleId(schedule)
+            .setScheduleId(scheduleId)
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
         console.log(info.getTransaction().toString());
@@ -81,7 +129,7 @@ describe("ScheduleCreateTransaction", () => {
     }, 60000);
 
     it("schedule transaction can be signed", async() => {
-        const client = await getClientForIntegrationTest();
+        const client = await getClientForIntegrationTest(false);
 
         const key1 = await Ed25519PrivateKey.generate();
         // Submit Key

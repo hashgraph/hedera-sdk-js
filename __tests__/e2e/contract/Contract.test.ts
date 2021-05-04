@@ -19,7 +19,7 @@ describe("ContractCreateTransaction", () => {
         const smartContract = require("../../../examples/stateful.json");
         const smartContractByteCode = smartContract.contracts[ "stateful.sol:StatefulContract" ].bin;
 
-        const client = await getClientForIntegrationTest();
+        const client = await getClientForIntegrationTest(false);
 
         let transactionId = await new FileCreateTransaction()
             .addKey(client._getOperatorKey()!)
