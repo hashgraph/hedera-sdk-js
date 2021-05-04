@@ -1,4 +1,6 @@
 import {
+    AccountCreateTransaction,
+    TokenAssociateTransaction,
     TokenCreateTransaction,
     TokenUpdateTransaction,
     TokenInfoQuery,
@@ -86,6 +88,129 @@ describe("TokenUpdate", function () {
         expect(info.totalSupply.toInt()).to.eql(1000000);
         expect(info.treasuryAccountId.toString()).to.be.equal(
             operatorId.toString()
+        );
+        expect(info.adminKey.toString()).to.eql(operatorKey.toString());
+        expect(info.kycKey.toString()).to.eql(key1.publicKey.toString());
+        expect(info.freezeKey.toString()).to.eql(key2.publicKey.toString());
+        expect(info.wipeKey.toString()).to.eql(key3.publicKey.toString());
+        expect(info.supplyKey.toString()).to.eql(key4.publicKey.toString());
+        expect(info.defaultFreezeStatus).to.be.false;
+        expect(info.defaultKycStatus).to.be.false;
+        expect(info.isDeleted).to.be.false;
+        expect(info.autoRenewAccountId).to.be.not.null;
+        expect(info.autoRenewAccountId.toString()).to.be.eql(
+            operatorId.toString()
+        );
+        expect(info.autoRenewPeriod).to.be.not.null;
+        expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
+        expect(info.expirationTime).to.be.not.null;
+    });
+
+    it("should be able to update treasury", async function () {
+        this.timeout(20000);
+
+        const client = await newClient(true);
+        const operatorId = client.operatorAccountId;
+        const operatorKey = client.operatorPublicKey;
+        const key1 = PrivateKey.generate();
+        const key2 = PrivateKey.generate();
+        const key3 = PrivateKey.generate();
+        const key4 = PrivateKey.generate();
+        const key5 = PrivateKey.generate();
+
+        const response = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(operatorKey)
+            .setKycKey(key1)
+            .setFreezeKey(key2)
+            .setWipeKey(key3)
+            .setSupplyKey(key4)
+            .setFreezeDefault(false)
+            .execute(client);
+
+        const token = (await response.getReceipt(client)).tokenId;
+
+        const treasuryAccountId = (
+            await (
+                await (
+                    await new AccountCreateTransaction()
+                        .setKey(key5)
+                        .freezeWith(client)
+                        .sign(key5)
+                ).execute(client)
+            ).getReceipt(client)
+        ).accountId;
+
+        let info = await new TokenInfoQuery()
+            .setNodeAccountIds([response.nodeId])
+            .setNodeAccountIds([response.nodeId])
+            .setTokenId(token)
+            .execute(client);
+
+        expect(info.tokenId.toString()).to.eql(token.toString());
+        expect(info.name).to.eql("ffff");
+        expect(info.symbol).to.eql("F");
+        expect(info.decimals).to.eql(3);
+        expect(info.totalSupply.toInt()).to.eql(1000000);
+        expect(info.treasuryAccountId.toString()).to.be.equal(
+            operatorId.toString()
+        );
+        expect(info.adminKey.toString()).to.eql(operatorKey.toString());
+        expect(info.kycKey.toString()).to.eql(key1.publicKey.toString());
+        expect(info.freezeKey.toString()).to.eql(key2.publicKey.toString());
+        expect(info.wipeKey.toString()).to.eql(key3.publicKey.toString());
+        expect(info.supplyKey.toString()).to.eql(key4.publicKey.toString());
+        expect(info.defaultFreezeStatus).to.be.false;
+        expect(info.defaultKycStatus).to.be.false;
+        expect(info.isDeleted).to.be.false;
+        expect(info.autoRenewAccountId).to.be.not.null;
+        expect(info.autoRenewAccountId.toString()).to.be.eql(
+            operatorId.toString()
+        );
+        expect(info.autoRenewPeriod).to.be.not.null;
+        expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
+        expect(info.expirationTime).to.be.not.null;
+
+        await (
+            await (
+                await new TokenAssociateTransaction()
+                    .setNodeAccountIds([response.nodeId])
+                    .setTokenIds([token])
+                    .setAccountId(treasuryAccountId)
+                    .freezeWith(client)
+                    .sign(key5)
+            ).execute(client)
+        ).getReceipt(client);
+
+        await (
+            await (
+                await new TokenUpdateTransaction()
+                    .setNodeAccountIds([response.nodeId])
+                    .setTokenId(token)
+                    .setTokenName("aaaa")
+                    .setTokenSymbol("A")
+                    .setTreasuryAccountId(treasuryAccountId)
+                    .freezeWith(client)
+                    .sign(key5)
+            ).execute(client)
+        ).getReceipt(client);
+
+        info = await new TokenInfoQuery()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenId(token)
+            .execute(client);
+
+        expect(info.tokenId.toString()).to.eql(token.toString());
+        expect(info.name).to.eql("aaaa");
+        expect(info.symbol).to.eql("A");
+        expect(info.decimals).to.eql(3);
+        expect(info.totalSupply.toInt()).to.eql(1000000);
+        expect(info.treasuryAccountId.toString()).to.be.equal(
+            treasuryAccountId.toString()
         );
         expect(info.adminKey.toString()).to.eql(operatorKey.toString());
         expect(info.kycKey.toString()).to.eql(key1.publicKey.toString());
