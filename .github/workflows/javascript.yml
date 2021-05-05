@@ -1,0 +1,51 @@
+name: JavaScript CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Build
+        run: yarn
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Lint
+        run: yarn && yarn lint
+
+  unit-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Run Unit Tests
+        run: yarn && yarn test:unit:node
+
+  integration-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Run Integration Tests
+        env:
+          OPERATOR_KEY: ${{ secrets.OPERATOR_KEY }}
+          OPERATOR_ID: ${{ secrets.OPERATOR_ID }}
+        run: yarn && yarn test:integration:node
