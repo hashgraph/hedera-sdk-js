@@ -8,14 +8,15 @@ describe("SystemIntegration", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
+        const env = await newClient.new();
         let errorThrown = false;
 
         try {
             await new SystemDeleteTransaction()
                 .setContractId(new ContractId(10))
+                .setNodeAccountIds(env.nodeAccountIds)
                 .setExpirationTime(Timestamp.generate())
-                .execute(client);
+                .execute(env.client);
         } catch (_) {
             errorThrown = true;
         }
@@ -27,7 +28,7 @@ describe("SystemIntegration", function () {
             await new SystemDeleteTransaction()
                 .setFileId(new FileId(10))
                 .setExpirationTime(Timestamp.generate())
-                .execute(client);
+                .execute(env.client);
         } catch (_) {
             errorThrown = true;
         }
@@ -38,7 +39,7 @@ describe("SystemIntegration", function () {
         try {
             await new SystemDeleteTransaction()
                 .setContractId(new ContractId(10))
-                .execute(client);
+                .execute(env.client);
         } catch (_) {
             errorThrown = true;
         }
@@ -49,7 +50,7 @@ describe("SystemIntegration", function () {
         try {
             await new SystemDeleteTransaction()
                 .setFileId(new FileId(10))
-                .execute(client);
+                .execute(env.client);
         } catch (_) {
             errorThrown = true;
         }

@@ -11,16 +11,17 @@ describe("AccountRecords", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
@@ -30,14 +31,14 @@ describe("AccountRecords", function () {
                 .setNodeAccountIds([response.nodeId])
                 .addHbarTransfer(account, new Hbar(1))
                 .addHbarTransfer(operatorId, new Hbar(1).negated())
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         const records = await new AccountRecordsQuery()
             .setNodeAccountIds([response.nodeId])
             .setAccountId(operatorId)
             .setMaxQueryPayment(new Hbar(1))
-            .execute(client);
+            .execute(env.client);
 
         expect(records.length).to.be.equal(0);
 
@@ -48,9 +49,9 @@ describe("AccountRecords", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
     });
 });

@@ -10,11 +10,12 @@ describe("TokenBurn", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TokenCreateTransaction()
+            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
@@ -27,30 +28,32 @@ describe("TokenBurn", function () {
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
             .setMaxTransactionFee(new Hbar(1000))
-            .execute(client);
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         await (
             await new TokenBurnTransaction()
                 .setNodeAccountIds([response.nodeId])
                 .setAmount(10)
                 .setTokenId(token)
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should error when token ID is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
+        const env = await newClient.new();
 
         let err = false;
 
         try {
             await (
-                await new TokenBurnTransaction().setAmount(10).execute(client)
-            ).getReceipt(client);
+                await new TokenBurnTransaction()
+                    .setAmount(10)
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);
         }
@@ -63,11 +66,12 @@ describe("TokenBurn", function () {
     it("should error when amount is not set", async function () {
         this.timeout(20000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TokenCreateTransaction()
+            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
@@ -80,9 +84,9 @@ describe("TokenBurn", function () {
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
             .setMaxTransactionFee(new Hbar(1000))
-            .execute(client);
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         let err = false;
 
@@ -90,8 +94,8 @@ describe("TokenBurn", function () {
             await (
                 await new TokenBurnTransaction()
                     .setTokenId(token)
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenBurnAmount);
         }

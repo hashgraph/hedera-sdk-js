@@ -7,16 +7,17 @@ describe("AccountStakers", function () {
     it("should error", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
 
         let err = false;
 
         try {
             await new AccountStakersQuery()
                 .setAccountId(operatorId)
+                .setNodeAccountIds(env.nodeAccountIds)
                 .setMaxQueryPayment(new Hbar(1))
-                .execute(client);
+                .execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.NotSupported.toString());
         }

@@ -19,21 +19,22 @@ describe("LiveHash", function () {
             "100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002"
         );
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         let errorThrown = false;
 
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
         let receipt = await new TransactionReceiptQuery()
             .setNodeAccountIds([response.nodeId])
             .setTransactionId(response.transactionId)
-            .execute(client);
+            .execute(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         expect(receipt.accountId != null ? receipt.accountId.num > 0 : false).to
@@ -48,7 +49,7 @@ describe("LiveHash", function () {
                 .setDuration(Long.fromInt(30))
                 .setHash(_hash)
                 .setKeys(key)
-                .execute(client);
+                .execute(env.client);
         } catch (_) {
             errorThrown = true;
         }
@@ -61,7 +62,7 @@ describe("LiveHash", function () {
                 .setAccountId(account)
                 .setNodeAccountIds([response.nodeId])
                 .setHash(_hash)
-                .execute(client);
+                .execute(env.client);
         } catch (_) {
             errorThrown = true;
         }
@@ -74,7 +75,7 @@ describe("LiveHash", function () {
                 .setAccountId(account)
                 .setNodeAccountIds([response.nodeId])
                 .setHash(_hash)
-                .execute(client);
+                .execute(env.client);
         } catch (_) {
             errorThrown = true;
         }
@@ -88,9 +89,9 @@ describe("LiveHash", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
     });
 });

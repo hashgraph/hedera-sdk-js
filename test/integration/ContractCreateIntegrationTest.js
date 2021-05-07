@@ -15,15 +15,16 @@ describe("ContractCreate", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
-            .execute(client);
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -40,9 +41,9 @@ describe("ContractCreate", function () {
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
-            .execute(client);
+            .execute(env.client);
 
-        receipt = await response.getReceipt(client);
+        receipt = await response.getReceipt(env.client);
 
         expect(receipt.contractId).to.not.be.null;
         expect(receipt.contractId != null ? receipt.contractId.num > 0 : false)
@@ -54,7 +55,7 @@ describe("ContractCreate", function () {
             .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
-            .execute(client);
+            .execute(env.client);
 
         expect(info.contractId.toString()).to.be.equal(contract.toString());
         expect(info.accountId).to.be.not.null;
@@ -74,29 +75,30 @@ describe("ContractCreate", function () {
             await new ContractDeleteTransaction()
                 .setContractId(contract)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should be able to create without admin key", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
-            .execute(client);
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -112,9 +114,9 @@ describe("ContractCreate", function () {
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
-            .execute(client);
+            .execute(env.client);
 
-        receipt = await response.getReceipt(client);
+        receipt = await response.getReceipt(env.client);
 
         expect(receipt.contractId).to.not.be.null;
         expect(receipt.contractId != null ? receipt.contractId.num > 0 : false)
@@ -126,7 +128,7 @@ describe("ContractCreate", function () {
             .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
-            .execute(client);
+            .execute(env.client);
 
         expect(info.contractId.toString()).to.be.equal(contract.toString());
         expect(info.accountId).to.be.not.null;
@@ -149,8 +151,8 @@ describe("ContractCreate", function () {
                 await new ContractDeleteTransaction()
                     .setContractId(contract)
                     .setNodeAccountIds([response.nodeId])
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.ModifyingImmutableContract);
         }
@@ -163,15 +165,16 @@ describe("ContractCreate", function () {
     it("should error when gas is not set", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
-            .execute(client);
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -193,8 +196,8 @@ describe("ContractCreate", function () {
                     )
                     .setBytecodeFileId(file)
                     .setContractMemo("[e2e::ContractCreateTransaction]")
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InsufficientGas);
         }
@@ -207,15 +210,16 @@ describe("ContractCreate", function () {
     it("should error when contructor parameters are not set", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
-            .execute(client);
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -233,8 +237,8 @@ describe("ContractCreate", function () {
                     .setGas(2000)
                     .setBytecodeFileId(file)
                     .setContractMemo("[e2e::ContractCreateTransaction]")
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.ContractRevertExecuted);
         }
@@ -247,8 +251,8 @@ describe("ContractCreate", function () {
     it("should error when bytecode file ID is not set", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         let err = false;
 
@@ -257,14 +261,15 @@ describe("ContractCreate", function () {
                 await new ContractCreateTransaction()
                     .setAdminKey(operatorKey)
                     .setGas(2000)
+                    .setNodeAccountIds(env.nodeAccountIds)
                     .setConstructorParameters(
                         new ContractFunctionParameters().addString(
                             "Hello from Hedera."
                         )
                     )
                     .setContractMemo("[e2e::ContractCreateTransaction]")
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidFileId);
         }

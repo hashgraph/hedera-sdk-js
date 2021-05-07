@@ -8,15 +8,16 @@ describe("FileInfo", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
-            .execute(client);
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -28,7 +29,7 @@ describe("FileInfo", function () {
             .setFileId(file)
             .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
-            .execute(client);
+            .execute(env.client);
 
         expect(info.fileId.toString()).to.be.equal(file.toString());
         expect(info.size.toInt()).to.be.equal(28);
@@ -43,21 +44,22 @@ describe("FileInfo", function () {
             await new FileDeleteTransaction()
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should be executable with empty contents", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .execute(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -69,7 +71,7 @@ describe("FileInfo", function () {
             .setFileId(file)
             .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
-            .execute(client);
+            .execute(env.client);
 
         expect(info.fileId.toString()).to.be.equal(file.toString());
         expect(info.size.toInt()).to.be.equal(0);
@@ -83,19 +85,22 @@ describe("FileInfo", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
+                .setNodeAccountIds(env.nodeAccountIds)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should be executable with no keys", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
+        const env = await newClient.new();
 
-        const response = await new FileCreateTransaction().execute(client);
+        const response = await new FileCreateTransaction().execute(
+            env.client
+        );
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -107,7 +112,7 @@ describe("FileInfo", function () {
             .setFileId(file)
             .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
-            .execute(client);
+            .execute(env.client);
 
         expect(info.fileId.toString()).to.be.equal(file.toString());
         expect(info.size.toInt()).to.be.equal(0);

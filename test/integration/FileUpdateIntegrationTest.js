@@ -10,15 +10,16 @@ describe("FileUpdate", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
-            .execute(client);
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -30,7 +31,7 @@ describe("FileUpdate", function () {
             .setFileId(file)
             .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
-            .execute(client);
+            .execute(env.client);
 
         expect(info.fileId.toString()).to.be.equal(file.toString());
         expect(info.size.toInt()).to.be.equal(28);
@@ -46,14 +47,14 @@ describe("FileUpdate", function () {
                 .setNodeAccountIds([response.nodeId])
                 .setFileId(file)
                 .setContents("[e2e::FileUpdateTransaction]")
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         info = await new FileInfoQuery()
             .setFileId(file)
             .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
-            .execute(client);
+            .execute(env.client);
 
         expect(info.fileId.toString()).to.be.equal(file.toString());
         expect(info.size.toInt()).to.be.equal(28);
@@ -68,23 +69,24 @@ describe("FileUpdate", function () {
             await new FileDeleteTransaction()
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should error when file ID is not set", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
+        const env = await newClient.new();
 
         let err = false;
 
         try {
             await (
                 await new FileUpdateTransaction()
+                    .setNodeAccountIds(env.nodeAccountIds)
                     .setContents("[e2e::FileUpdateTransaction]")
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidFileId);
         }

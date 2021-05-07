@@ -13,9 +13,9 @@ import newClient from "./client/index.js";
 describe("ScheduleCreate", function () {
     it("should be executable", async function () {
         this.timeout(15000);
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
+        const operatorId = env.operatorId;
 
         const key1 = PrivateKey.generate();
 
@@ -32,10 +32,12 @@ describe("ScheduleCreate", function () {
 
         const response = await new AccountCreateTransaction()
             .setInitialBalance(new Hbar(100))
+            .setNodeAccountIds(env.nodeAccountIds)
             .setKey(keyList)
-            .execute(client);
+            .execute(env.client);
 
-        expect((await response.getReceipt(client)).accountId).to.be.not.null;
+        expect((await response.getReceipt(env.client)).accountId).to.be.not
+            .null;
 
         const topicId = (
             await (
@@ -45,8 +47,8 @@ describe("ScheduleCreate", function () {
                     .setAutoRenewAccountId(operatorId)
                     .setTopicMemo("HCS Topic_")
                     .setSubmitKey(key2)
-                    .execute(client)
-            ).getReceipt(client)
+                    .execute(env.client)
+            ).getReceipt(env.client)
         ).topicId;
 
         const transaction = new TopicMessageSubmitTransaction()
@@ -57,17 +59,19 @@ describe("ScheduleCreate", function () {
             .schedule()
             .setPayerAccountId(operatorId)
             .setAdminKey(operatorKey)
-            .freezeWith(client);
+            .freezeWith(env.client);
 
         const transactionId = scheduled.transactionId;
 
         const scheduleId = (
-            await (await scheduled.execute(client)).getReceipt(client)
+            await (await scheduled.execute(env.client)).getReceipt(
+                env.client
+            )
         ).scheduleId;
 
         const info = await new ScheduleInfoQuery()
             .setScheduleId(scheduleId)
-            .execute(client);
+            .execute(env.client);
 
         const infoTransaction = /** @type {TopicMessageSubmitTransaction} */ (info.scheduledTransaction);
 
@@ -84,12 +88,14 @@ describe("ScheduleCreate", function () {
             await (
                 await new ScheduleSignTransaction()
                     .setScheduleId(scheduleId)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key2)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
-        await new ScheduleInfoQuery().setScheduleId(scheduleId).execute(client);
+        await new ScheduleInfoQuery()
+            .setScheduleId(scheduleId)
+            .execute(env.client);
 
         console.log(
             "https://previewnet.mirrornode.hedera.com/api/v1/transactions/" +

@@ -15,17 +15,18 @@ describe("TokenTransfer", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
@@ -45,8 +46,8 @@ describe("TokenTransfer", function () {
                     .setWipeKey(operatorKey)
                     .setSupplyKey(operatorKey)
                     .setFreezeDefault(false)
-                    .execute(client)
-            ).getReceipt(client)
+                    .execute(env.client)
+            ).getReceipt(env.client)
         ).tokenId;
 
         await (
@@ -55,10 +56,10 @@ describe("TokenTransfer", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await (
@@ -66,18 +67,18 @@ describe("TokenTransfer", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await new TransferTransaction()
                 .setNodeAccountIds([response.nodeId])
                 .addTokenTransfer(token, account, 10)
-                .addTokenTransfer(token, client.operatorAccountId, -10)
-                .execute(client)
-        ).getReceipt(client);
+                .addTokenTransfer(token, env.operatorId, -10)
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await new TokenWipeTransaction()
@@ -85,24 +86,25 @@ describe("TokenTransfer", function () {
                 .setTokenId(token)
                 .setAccountId(account)
                 .setAmount(10)
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should error when no amount is transferred", async function () {
         this.timeout(20000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
@@ -122,8 +124,8 @@ describe("TokenTransfer", function () {
                     .setWipeKey(operatorKey)
                     .setSupplyKey(operatorKey)
                     .setFreezeDefault(false)
-                    .execute(client)
-            ).getReceipt(client)
+                    .execute(env.client)
+            ).getReceipt(env.client)
         ).tokenId;
 
         await (
@@ -132,10 +134,10 @@ describe("TokenTransfer", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await (
@@ -143,10 +145,10 @@ describe("TokenTransfer", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         let err = false;
 
@@ -155,9 +157,9 @@ describe("TokenTransfer", function () {
                 await new TransferTransaction()
                     .setNodeAccountIds([response.nodeId])
                     .addTokenTransfer(token, account, 0)
-                    .addTokenTransfer(token, client.operatorAccountId, 0)
-                    .execute(client)
-            ).getReceipt(client);
+                    .addTokenTransfer(token, env.operatorId, 0)
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountAmounts);
         }
@@ -170,17 +172,18 @@ describe("TokenTransfer", function () {
     it("should error when no  is transferred", async function () {
         this.timeout(20000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
@@ -200,8 +203,8 @@ describe("TokenTransfer", function () {
                     .setWipeKey(operatorKey)
                     .setSupplyKey(operatorKey)
                     .setFreezeDefault(false)
-                    .execute(client)
-            ).getReceipt(client)
+                    .execute(env.client)
+            ).getReceipt(env.client)
         ).tokenId;
 
         await (
@@ -210,10 +213,10 @@ describe("TokenTransfer", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await (
@@ -221,10 +224,10 @@ describe("TokenTransfer", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         let err = false;
 
@@ -233,9 +236,9 @@ describe("TokenTransfer", function () {
                 await new TransferTransaction()
                     .setNodeAccountIds([response.nodeId])
                     .addTokenTransfer(token, account, 10)
-                    .addTokenTransfer(token, client.operatorAccountId, -10)
-                    .execute(client)
-            ).getReceipt(client);
+                    .addTokenTransfer(token, env.operatorId, -10)
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InsufficientTokenBalance);
         }

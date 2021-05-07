@@ -11,16 +11,17 @@ describe("AccountCreate", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
@@ -28,7 +29,7 @@ describe("AccountCreate", function () {
         const info = await new AccountInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
@@ -47,24 +48,25 @@ describe("AccountCreate", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should be executable with only key set", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .execute(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
@@ -72,7 +74,7 @@ describe("AccountCreate", function () {
         const info = await new AccountInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
@@ -88,24 +90,25 @@ describe("AccountCreate", function () {
                     .setAccountId(account)
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should error when key is not set", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
+        const env = await newClient.new();
         let err = false;
 
         try {
             const response = await new AccountCreateTransaction()
                 .setInitialBalance(new Hbar(2))
-                .execute(client);
+                .setNodeAccountIds(env.nodeAccountIds)
+                .execute(env.client);
 
-            await response.getReceipt(client);
+            await response.getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.KeyRequired.toString());
         }
@@ -118,16 +121,17 @@ describe("AccountCreate", function () {
     it("should be able to sign transaction and verify transaction signtatures", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .execute(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
@@ -135,7 +139,7 @@ describe("AccountCreate", function () {
         const info = await new AccountInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
@@ -149,13 +153,13 @@ describe("AccountCreate", function () {
             .setAccountId(account)
             .setNodeAccountIds([response.nodeId])
             .setTransferAccountId(operatorId)
-            .freezeWith(client);
+            .freezeWith(env.client);
 
         key.signTransaction(transaction);
 
         expect(key.publicKey.verifyTransaction(transaction)).to.be.true;
         expect(operatorKey.verifyTransaction(transaction)).to.be.false;
 
-        await (await transaction.execute(client)).getReceipt(client);
+        await (await transaction.execute(env.client)).getReceipt(env.client);
     });
 });

@@ -16,15 +16,16 @@ describe("ContractCallIntegration", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
-            .execute(client);
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -44,8 +45,8 @@ describe("ContractCallIntegration", function () {
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         expect(receipt.contractId).to.not.be.null;
         expect(receipt.contractId != null ? receipt.contractId.num > 0 : false)
@@ -60,9 +61,11 @@ describe("ContractCallIntegration", function () {
             .setGas(2000)
             .setFunction("getMessage");
 
-        const cost = callQuery.getCost(client);
+        const cost = callQuery.getCost(env.client);
 
-        let result = await callQuery.setMaxQueryPayment(cost).execute(client);
+        let result = await callQuery
+            .setMaxQueryPayment(cost)
+            .execute(env.client);
 
         expect(result.getString(0)).to.be.equal("Hello from Hedera.");
 
@@ -75,8 +78,8 @@ describe("ContractCallIntegration", function () {
                     "setMessage",
                     new ContractFunctionParameters().addString("new message")
                 )
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         result = await new ContractCallQuery()
             .setContractId(contract)
@@ -84,7 +87,7 @@ describe("ContractCallIntegration", function () {
             .setQueryPayment(new Hbar(5))
             .setGas(2000)
             .setFunction("getMessage")
-            .execute(client);
+            .execute(env.client);
 
         expect(result.getString(0)).to.be.equal("new message");
 
@@ -92,29 +95,30 @@ describe("ContractCallIntegration", function () {
             await new ContractDeleteTransaction()
                 .setContractId(contract)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should error when function to call is not set", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
-            .execute(client);
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -134,8 +138,8 @@ describe("ContractCallIntegration", function () {
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         expect(receipt.contractId).to.not.be.null;
         expect(receipt.contractId != null ? receipt.contractId.num > 0 : false)
@@ -152,7 +156,7 @@ describe("ContractCallIntegration", function () {
                 .setQueryPayment(new Hbar(1))
                 .setGas(2000)
                 .setMaxQueryPayment(new Hbar(5))
-                .execute(client);
+                .execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.ContractRevertExecuted);
         }
@@ -161,15 +165,15 @@ describe("ContractCallIntegration", function () {
             await new ContractDeleteTransaction()
                 .setContractId(contract)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("query did not error");
@@ -179,15 +183,16 @@ describe("ContractCallIntegration", function () {
     it("should error when gas is not set", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
-            .execute(client);
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -207,8 +212,8 @@ describe("ContractCallIntegration", function () {
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         expect(receipt.contractId).to.not.be.null;
         expect(receipt.contractId != null ? receipt.contractId.num > 0 : false)
@@ -224,7 +229,7 @@ describe("ContractCallIntegration", function () {
                 .setContractId(contract)
                 .setQueryPayment(new Hbar(1))
                 .setMaxQueryPayment(new Hbar(5))
-                .execute(client);
+                .execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InsufficientGas);
         }
@@ -233,15 +238,15 @@ describe("ContractCallIntegration", function () {
             await new ContractDeleteTransaction()
                 .setContractId(contract)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("query did not error");
@@ -251,15 +256,16 @@ describe("ContractCallIntegration", function () {
     it("should error when contract ID is not set", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
-            .execute(client);
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -279,8 +285,8 @@ describe("ContractCallIntegration", function () {
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         expect(receipt.contractId).to.not.be.null;
         expect(receipt.contractId != null ? receipt.contractId.num > 0 : false)
@@ -297,7 +303,7 @@ describe("ContractCallIntegration", function () {
                 .setFunction("getMessage")
                 .setQueryPayment(new Hbar(1))
                 .setMaxQueryPayment(new Hbar(5))
-                .execute(client);
+                .execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidContractId);
         }
@@ -306,15 +312,15 @@ describe("ContractCallIntegration", function () {
             await new ContractDeleteTransaction()
                 .setContractId(contract)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("query did not error");

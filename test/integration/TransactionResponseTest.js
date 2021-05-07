@@ -8,17 +8,18 @@ describe("TransactionResponse", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
         const key = PrivateKey.generate();
 
         const transaction = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .execute(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
-        const record = await transaction.getRecord(client);
+        const record = await transaction.getRecord(env.client);
 
         expect(hex.encode(record.transactionHash)).to.be.equal(
             hex.encode(transaction.transactionHash)
@@ -33,9 +34,9 @@ describe("TransactionResponse", function () {
                     .setAccountId(account)
                     .setNodeAccountIds([transaction.nodeId])
                     .setTransferAccountId(operatorId)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
     });
 });

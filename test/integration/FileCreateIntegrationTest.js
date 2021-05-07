@@ -10,15 +10,16 @@ describe("FileCreate", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
-            .execute(client);
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -30,7 +31,7 @@ describe("FileCreate", function () {
             .setFileId(file)
             .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
-            .execute(client);
+            .execute(env.client);
 
         expect(info.fileId.toString()).to.be.equal(file.toString());
         expect(info.size.toInt()).to.be.equal(28);
@@ -45,21 +46,22 @@ describe("FileCreate", function () {
             await new FileDeleteTransaction()
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should be executable with empty contents", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .execute(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -71,18 +73,18 @@ describe("FileCreate", function () {
             await new FileDeleteTransaction()
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should be executable with no keys", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
+        const env = await newClient.new();
 
-        let response = await new FileCreateTransaction().execute(client);
+        let response = await new FileCreateTransaction().execute(env.client);
 
-        let receipt = await response.getReceipt(client);
+        let receipt = await response.getReceipt(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -92,8 +94,8 @@ describe("FileCreate", function () {
     it("should error with too large expiration time", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         let err = false;
 
@@ -102,9 +104,10 @@ describe("FileCreate", function () {
                 await new FileCreateTransaction()
                     .setKeys([operatorKey])
                     .setContents("[e2e::FileCreateTransaction]")
+                    .setNodeAccountIds(env.nodeAccountIds)
                     .setExpirationTime(new Timestamp(Date.now() + 99999999, 0))
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InsufficientTxFee);
         }

@@ -9,22 +9,23 @@ describe("TopicInfo", function () {
     it("should be executable", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
-            .execute(client);
+            .execute(env.client);
 
-        const topic = (await response.getReceipt(client)).topicId;
+        const topic = (await response.getReceipt(env.client)).topicId;
 
         const info = await new TopicInfoQuery()
             .setTopicId(topic)
             .setNodeAccountIds([response.nodeId])
-            .execute(client);
+            .execute(env.client);
 
         expect(info.topicId.toString()).to.eql(topic.toString());
         expect(info.topicMemo).to.eql("");
@@ -39,23 +40,27 @@ describe("TopicInfo", function () {
         expect(info.expirationTime).to.be.not.null;
 
         await (
-            await new TopicDeleteTransaction().setTopicId(topic).execute(client)
-        ).getReceipt(client);
+            await new TopicDeleteTransaction()
+                .setTopicId(topic)
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should be executable when no fields are set", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const env = await newClient.new();
 
-        const response = await new TopicCreateTransaction().execute(client);
+        const response = await new TopicCreateTransaction()
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
-        const topic = (await response.getReceipt(client)).topicId;
+        const topic = (await response.getReceipt(env.client)).topicId;
 
         const info = await new TopicInfoQuery()
             .setTopicId(topic)
             .setNodeAccountIds([response.nodeId])
-            .execute(client);
+            .execute(env.client);
 
         expect(info.topicId.toString()).to.eql(topic.toString());
         expect(info.topicMemo).to.eql("");
