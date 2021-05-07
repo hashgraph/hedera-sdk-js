@@ -16,18 +16,19 @@ describe("ContractBytecode", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
+            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
-            .execute(client);
+            .execute(env.client);
 
         let receipt = await new TransactionReceiptQuery()
             .setNodeAccountIds([response.nodeId])
             .setTransactionId(response.transactionId)
-            .execute(client);
+            .execute(env.client);
 
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
@@ -47,8 +48,8 @@ describe("ContractBytecode", function () {
                 )
                 .setBytecodeFileId(file)
                 .setContractMemo("[e2e::ContractCreateTransaction]")
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         expect(receipt.contractId).to.not.be.null;
         expect(receipt.contractId != null ? receipt.contractId.num > 0 : false)
@@ -60,7 +61,7 @@ describe("ContractBytecode", function () {
             .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
         expect(bytecode.length).to.be.equal(798);
 
@@ -68,26 +69,28 @@ describe("ContractBytecode", function () {
             await new ContractDeleteTransaction()
                 .setContractId(contract)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
                 .setNodeAccountIds([response.nodeId])
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should error when contract ID is not set", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
+        const env = await newClient.new();
 
         let err = false;
 
         try {
-            await new ContractByteCodeQuery().execute(client);
+            await new ContractByteCodeQuery()
+                .setNodeAccountIds(env.nodeAccountIds)
+                .execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidContractId);
         }

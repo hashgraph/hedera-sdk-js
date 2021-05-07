@@ -5,10 +5,12 @@ describe("NetworkVersionInfo", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
+        const env = await newClient.new();
 
         try {
-            await new NetworkVersionInfoQuery().execute(client);
+            await new NetworkVersionInfoQuery()
+                .setNodeAccountIds(env.nodeAccountIds)
+                .execute(env.client);
         } catch {
             // Do nothing
         }

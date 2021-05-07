@@ -14,17 +14,18 @@ describe("TokenGrantKyc", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const account = (await response.getReceipt(client)).accountId;
+        const account = (await response.getReceipt(env.client)).accountId;
 
         const token = (
             await (
@@ -40,8 +41,8 @@ describe("TokenGrantKyc", function () {
                     .setWipeKey(operatorKey)
                     .setSupplyKey(operatorKey)
                     .setFreezeDefault(false)
-                    .execute(client)
-            ).getReceipt(client)
+                    .execute(env.client)
+            ).getReceipt(env.client)
         ).tokenId;
 
         await (
@@ -50,10 +51,10 @@ describe("TokenGrantKyc", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await (
@@ -61,15 +62,15 @@ describe("TokenGrantKyc", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         const info = await new AccountInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
-            .execute(client);
+            .execute(env.client);
 
         const relationship = info.tokenRelationships.get(token);
 
@@ -83,15 +84,16 @@ describe("TokenGrantKyc", function () {
     it("should be executable even when no token IDs are set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
+        const env = await newClient.new();
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const account = (await response.getReceipt(client)).accountId;
+        const account = (await response.getReceipt(env.client)).accountId;
 
         let err = false;
 
@@ -100,10 +102,10 @@ describe("TokenGrantKyc", function () {
                 await (
                     await new TokenGrantKycTransaction()
                         .setAccountId(account)
-                        .freezeWith(client)
+                        .freezeWith(env.client)
                         .sign(key)
-                ).execute(client)
-            ).getReceipt(client);
+                ).execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);
         }
@@ -116,12 +118,13 @@ describe("TokenGrantKyc", function () {
     it("should error when account ID is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
+            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenSymbol("F")
             .setDecimals(3)
             .setInitialSupply(1000000)
@@ -132,9 +135,9 @@ describe("TokenGrantKyc", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .execute(client);
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         let err = false;
 
@@ -142,8 +145,8 @@ describe("TokenGrantKyc", function () {
             await (
                 await new TokenGrantKycTransaction()
                     .setTokenId(token)
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountId);
         }

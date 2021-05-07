@@ -10,9 +10,9 @@ describe("TokenInfo", function () {
     it("should be executable", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generate();
         const key2 = PrivateKey.generate();
         const key3 = PrivateKey.generate();
@@ -29,15 +29,16 @@ describe("TokenInfo", function () {
             .setFreezeKey(key2)
             .setWipeKey(key3)
             .setSupplyKey(key4)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setFreezeDefault(false)
-            .execute(client);
+            .execute(env.client);
 
-        const tokenId = (await response.getReceipt(client)).tokenId;
+        const tokenId = (await response.getReceipt(env.client)).tokenId;
 
         const info = await new TokenInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setTokenId(tokenId)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.tokenId.toString()).to.eql(tokenId.toString());
         expect(info.name).to.eql("ffff");
@@ -67,21 +68,22 @@ describe("TokenInfo", function () {
     it("should be executable with minimal properties set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
+            .setNodeAccountIds(env.nodeAccountIds)
             .setTreasuryAccountId(operatorId)
-            .execute(client);
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         let info = await new TokenInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setTokenId(token)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.tokenId.toString()).to.eql(token.toString());
         expect(info.name).to.eql("ffff");
@@ -111,12 +113,14 @@ describe("TokenInfo", function () {
     it("should error when token ID is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
+        const env = await newClient.new();
 
         let err = false;
 
         try {
-            await new TokenInfoQuery().execute(client);
+            await new TokenInfoQuery()
+                .setNodeAccountIds(env.nodeAccountIds)
+                .execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);
         }

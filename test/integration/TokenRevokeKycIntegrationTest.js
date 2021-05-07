@@ -15,17 +15,18 @@ describe("TokenRevokeKyc", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const account = (await response.getReceipt(client)).accountId;
+        const account = (await response.getReceipt(env.client)).accountId;
 
         const token = (
             await (
@@ -42,8 +43,8 @@ describe("TokenRevokeKyc", function () {
                     .setWipeKey(operatorKey)
                     .setSupplyKey(operatorKey)
                     .setFreezeDefault(false)
-                    .execute(client)
-            ).getReceipt(client)
+                    .execute(env.client)
+            ).getReceipt(env.client)
         ).tokenId;
 
         await (
@@ -52,10 +53,10 @@ describe("TokenRevokeKyc", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await (
@@ -63,15 +64,15 @@ describe("TokenRevokeKyc", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         let info = await new AccountInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
-            .execute(client);
+            .execute(env.client);
 
         let relationship = info.tokenRelationships.get(token);
 
@@ -87,15 +88,15 @@ describe("TokenRevokeKyc", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         info = await new AccountInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
-            .execute(client);
+            .execute(env.client);
 
         relationship = info.tokenRelationships.get(token);
 
@@ -109,15 +110,16 @@ describe("TokenRevokeKyc", function () {
     it("should be executable even when no token IDs are set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
+        const env = await newClient.new();
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const account = (await response.getReceipt(client)).accountId;
+        const account = (await response.getReceipt(env.client)).accountId;
 
         let err = false;
 
@@ -127,10 +129,10 @@ describe("TokenRevokeKyc", function () {
                     await new TokenRevokeKycTransaction()
                         .setNodeAccountIds([response.nodeId])
                         .setAccountId(account)
-                        .freezeWith(client)
+                        .freezeWith(env.client)
                         .sign(key)
-                ).execute(client)
-            ).getReceipt(client);
+                ).execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);
         }
@@ -143,9 +145,9 @@ describe("TokenRevokeKyc", function () {
     it("should error when account ID is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
@@ -159,9 +161,10 @@ describe("TokenRevokeKyc", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .execute(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         let err = false;
 
@@ -170,8 +173,8 @@ describe("TokenRevokeKyc", function () {
                 await new TokenRevokeKycTransaction()
                     .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountId);
         }

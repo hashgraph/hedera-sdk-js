@@ -14,23 +14,23 @@ describe("TransactionIntegration", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
         const key = PrivateKey.generate();
 
         const transaction = await new AccountCreateTransaction()
-            .setNodeAccountIds([new AccountId(3)])
             .setKey(key.publicKey)
-            .freezeWith(client)
-            .signWithOperator(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .freezeWith(env.client)
+            .signWithOperator(env.client);
 
         const expectedHash = await transaction.getTransactionHash();
 
-        const response = await transaction.execute(client);
+        const response = await transaction.execute(env.client);
 
-        const record = await response.getRecord(client);
+        const record = await response.getRecord(env.client);
 
         expect(hex.encode(expectedHash)).to.be.equal(
             hex.encode(record.transactionHash)
@@ -45,23 +45,23 @@ describe("TransactionIntegration", function () {
                     .setAccountId(account)
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("signs correctly", async function () {
-        const client = await newClient();
+        const env = await newClient.new();
         const key = PrivateKey.generate();
 
         let transaction = await (
             await new TokenCreateTransaction()
                 .setAdminKey(key.publicKey)
-                .setNodeAccountIds([new AccountId(3)])
-                .freezeWith(client)
+                .setNodeAccountIds(env.nodeAccountIds)
+                .freezeWith(env.client)
                 .sign(key)
-        ).signWithOperator(client);
+        ).signWithOperator(env.client);
 
         expect(transaction._signedTransactions[0].sigMap.sigPair.length).to.eql(
             2
@@ -71,8 +71,8 @@ describe("TransactionIntegration", function () {
             await new TokenCreateTransaction()
                 .setAdminKey(key.publicKey)
                 .setNodeAccountIds([new AccountId(3)])
-                .freezeWith(client)
-                .signWithOperator(client)
+                .freezeWith(env.client)
+                .signWithOperator(env.client)
         ).sign(key);
 
         expect(transaction._signedTransactions[0].sigMap.sigPair.length).to.eql(
@@ -81,7 +81,8 @@ describe("TransactionIntegration", function () {
     });
 
     it("issue-327", async function () {
-        const client = await newClient();
+        this.timeout(30000);
+        const env = await newClient.new();
         const privateKey1 = PrivateKey.generate();
         const privateKey2 = PrivateKey.generate();
         const privateKey3 = PrivateKey.generate();
@@ -92,10 +93,13 @@ describe("TransactionIntegration", function () {
         const publicKey4 = privateKey4.publicKey;
 
         const transaction = await new TransferTransaction()
-            .setNodeAccountIds([new AccountId(3)])
-            .addHbarTransfer(client.operatorAccountId, new Hbar(1).negated())
+            .setNodeAccountIds(env.nodeAccountIds)
+            .addHbarTransfer(
+                env.client.operatorAccountId,
+                new Hbar(1).negated()
+            )
             .addHbarTransfer(new AccountId(3), new Hbar(1))
-            .freezeWith(client);
+            .freezeWith(env.client);
 
         const signature1 = privateKey1.signTransaction(transaction);
         const signature2 = privateKey2.signTransaction(transaction);
@@ -108,7 +112,7 @@ describe("TransactionIntegration", function () {
 
         const signatures = transaction.getSignatures();
 
-        const nodeSignatures = signatures.get(new AccountId(3));
+        const nodeSignatures = signatures.get(env.nodeAccountIds);
 
         const publicKey1Signature = nodeSignatures.get(publicKey1);
         const publicKey2Signature = nodeSignatures.get(publicKey2);

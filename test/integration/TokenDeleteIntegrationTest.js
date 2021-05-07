@@ -8,9 +8,10 @@
 describe("TokenDelete", function () {
     it("should be executable", async function () {
         // this.timeout(10000);
-        // const client = await newClient(true);
-        // const operatorId = client.operatorAccountId;
-        // const operatorKey = client.operatorPublicKey;
+        // const client = new newClient();
+        // await env.initialize()
+        // const operatorId = env.operatorId;
+        // const operatorKey = env.operatorKey.publicKey;
         // const response = await new TokenCreateTransaction()
         //     .setTokenName("ffff")
         //     .setTokenSymbol("F")
@@ -23,24 +24,25 @@ describe("TokenDelete", function () {
         //     .setWipeKey(operatorKey)
         //     .setSupplyKey(operatorKey)
         //     .setFreezeDefault(false)
-        //     .execute(client);
-        // const tokenId = (await response.getReceipt(client)).tokenId;
+        //     .execute(env.client);
+        // const tokenId = (await response.getReceipt(env.client)).tokenId;
         // await (
         //     await new TokenDeleteTransaction()
         //         .setNodeAccountIds([response.nodeId])
         //         .setTokenId(tokenId)
-        //         .execute(client)
-        // ).getReceipt(client);
+        //         .execute(env.client)
+        // ).getReceipt(env.client);
     });
 
     it("should error with no token ID set", async function () {
         // this.timeout(10000);
-        // const client = await newClient(true);
+        // const client = new newClient();
+        // await env.initialize()
         // let err = false;
         // try {
         //     await (
-        //         await new TokenDeleteTransaction().execute(client)
-        //     ).getReceipt(client);
+        //         await new TokenDeleteTransaction().execute(env.client)
+        //     ).getReceipt(env.client);
         // } catch (error) {
         //     err = error.toString().includes(Status.InvalidTokenId);
         // }

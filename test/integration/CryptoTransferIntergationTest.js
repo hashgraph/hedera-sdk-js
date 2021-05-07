@@ -13,16 +13,17 @@ describe("CryptoTransfer", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
@@ -30,10 +31,10 @@ describe("CryptoTransfer", function () {
         await (
             await new TransferTransaction()
                 .setNodeAccountIds([response.nodeId])
-                .addHbarTransfer(account, new Hbar(100))
-                .addHbarTransfer(operatorId, new Hbar(-100))
-                .execute(client)
-        ).getReceipt(client);
+                .addHbarTransfer(account, new Hbar(1))
+                .addHbarTransfer(operatorId, new Hbar(-1))
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await (
@@ -43,25 +44,26 @@ describe("CryptoTransfer", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should error when there is invalid account amounts", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(0))
-            .execute(client);
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
@@ -72,10 +74,10 @@ describe("CryptoTransfer", function () {
             await (
                 await new TransferTransaction()
                     .setNodeAccountIds([response.nodeId])
-                    .addHbarTransfer(account, new Hbar(100))
-                    .addHbarTransfer(operatorId, new Hbar(100))
-                    .execute(client)
-            ).getReceipt(client);
+                    .addHbarTransfer(account, new Hbar(1))
+                    .addHbarTransfer(operatorId, new Hbar(1))
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountAmounts);
         }
@@ -88,15 +90,16 @@ describe("CryptoTransfer", function () {
     it("should error when receiver and sender are the same accounts", async function () {
         this.timeout(10000);
 
-        const client = await newClient();
+        const env = await newClient.new();
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(1))
-            .execute(client);
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
@@ -107,10 +110,10 @@ describe("CryptoTransfer", function () {
             await (
                 await new TransferTransaction()
                     .setNodeAccountIds([response.nodeId])
-                    .addHbarTransfer(account, new Hbar(100))
-                    .addHbarTransfer(account, new Hbar(-100))
-                    .execute(client)
-            ).getReceipt(client);
+                    .addHbarTransfer(account, new Hbar(1))
+                    .addHbarTransfer(account, new Hbar(-1))
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error
                 .toString()

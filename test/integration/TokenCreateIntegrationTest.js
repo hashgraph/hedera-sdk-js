@@ -10,15 +10,16 @@ describe("TokenCreate", function () {
     it("should be executable", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generate();
         const key2 = PrivateKey.generate();
         const key3 = PrivateKey.generate();
         const key4 = PrivateKey.generate();
 
         const response = await new TokenCreateTransaction()
+            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
@@ -30,14 +31,14 @@ describe("TokenCreate", function () {
             .setWipeKey(key3)
             .setSupplyKey(key4)
             .setFreezeDefault(false)
-            .execute(client);
+            .execute(env.client);
 
-        const tokenId = (await response.getReceipt(client)).tokenId;
+        const tokenId = (await response.getReceipt(env.client)).tokenId;
 
         const info = await new TokenInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setTokenId(tokenId)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.tokenId.toString()).to.eql(tokenId.toString());
         expect(info.name).to.eql("ffff");
@@ -67,21 +68,22 @@ describe("TokenCreate", function () {
     it("should be executable with minimal properties set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
+            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .execute(client);
+            .execute(env.client);
 
-        const tokenId = (await response.getReceipt(client)).tokenId;
+        const tokenId = (await response.getReceipt(env.client)).tokenId;
 
         const info = await new TokenInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setTokenId(tokenId)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.tokenId.toString()).to.eql(tokenId.toString());
         expect(info.name).to.eql("ffff");
@@ -115,8 +117,8 @@ describe("TokenCreate", function () {
         //         await new TokenDeleteTransaction()
         //             .setNodeAccountIds([response.nodeId])
         //             .setTokenId(tokenId)
-        //             .execute(client)
-        //     ).getReceipt(client);
+        //             .execute(env.client)
+        //     ).getReceipt(env.client);
         // } catch (error) {
         //     err = error.toString().includes(Status.TokenIsImmutable);
         // }
@@ -129,8 +131,8 @@ describe("TokenCreate", function () {
     it("should error when token name is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
 
         let err = false;
 
@@ -138,9 +140,10 @@ describe("TokenCreate", function () {
             await (
                 await new TokenCreateTransaction()
                     .setTokenSymbol("F")
+                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTreasuryAccountId(operatorId)
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.MissingTokenName);
         }
@@ -153,8 +156,8 @@ describe("TokenCreate", function () {
     it("should error when token symbol is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
 
         let err = false;
 
@@ -162,9 +165,10 @@ describe("TokenCreate", function () {
             await (
                 await new TokenCreateTransaction()
                     .setTokenName("ffff")
+                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTreasuryAccountId(operatorId)
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.MissingTokenSymbol);
         }
@@ -177,7 +181,7 @@ describe("TokenCreate", function () {
     it("should error when treasury account ID is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
+        const env = await newClient.new();
 
         let err = false;
 
@@ -185,9 +189,10 @@ describe("TokenCreate", function () {
             await (
                 await new TokenCreateTransaction()
                     .setTokenName("ffff")
+                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenSymbol("F")
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error
                 .toString()
@@ -202,8 +207,8 @@ describe("TokenCreate", function () {
     it("should error when admin key does not sign transaction", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
 
         let err = false;
 
@@ -211,11 +216,12 @@ describe("TokenCreate", function () {
             await (
                 await new TokenCreateTransaction()
                     .setTokenName("ffff")
+                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(operatorId)
                     .setAdminKey(PrivateKey.generate())
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidSignature);
         }

@@ -13,9 +13,9 @@ describe("TokenUpdate", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generate();
         const key2 = PrivateKey.generate();
         const key3 = PrivateKey.generate();
@@ -33,15 +33,16 @@ describe("TokenUpdate", function () {
             .setWipeKey(key3)
             .setSupplyKey(key4)
             .setFreezeDefault(false)
-            .execute(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         let info = await new TokenInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setNodeAccountIds([response.nodeId])
             .setTokenId(token)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.tokenId.toString()).to.eql(token.toString());
         expect(info.name).to.eql("ffff");
@@ -73,13 +74,13 @@ describe("TokenUpdate", function () {
                 .setTokenId(token)
                 .setTokenName("aaaa")
                 .setTokenSymbol("A")
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         info = await new TokenInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setTokenId(token)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.tokenId.toString()).to.eql(token.toString());
         expect(info.name).to.eql("aaaa");
@@ -109,9 +110,9 @@ describe("TokenUpdate", function () {
     it("should be able to update treasury", async function () {
         this.timeout(20000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generate();
         const key2 = PrivateKey.generate();
         const key3 = PrivateKey.generate();
@@ -130,26 +131,27 @@ describe("TokenUpdate", function () {
             .setWipeKey(key3)
             .setSupplyKey(key4)
             .setFreezeDefault(false)
-            .execute(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         const treasuryAccountId = (
             await (
                 await (
                     await new AccountCreateTransaction()
                         .setKey(key5)
-                        .freezeWith(client)
+                        .freezeWith(env.client)
                         .sign(key5)
-                ).execute(client)
-            ).getReceipt(client)
+                ).execute(env.client)
+            ).getReceipt(env.client)
         ).accountId;
 
         let info = await new TokenInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setNodeAccountIds([response.nodeId])
             .setTokenId(token)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.tokenId.toString()).to.eql(token.toString());
         expect(info.name).to.eql("ffff");
@@ -181,10 +183,10 @@ describe("TokenUpdate", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(treasuryAccountId)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key5)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         await (
             await (
@@ -194,15 +196,15 @@ describe("TokenUpdate", function () {
                     .setTokenName("aaaa")
                     .setTokenSymbol("A")
                     .setTreasuryAccountId(treasuryAccountId)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key5)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         info = await new TokenInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setTokenId(token)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.tokenId.toString()).to.eql(token.toString());
         expect(info.name).to.eql("aaaa");
@@ -232,9 +234,9 @@ describe("TokenUpdate", function () {
     it("should be executable when no properties except token ID are set", async function () {
         this.timeout(20000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generate();
         const key2 = PrivateKey.generate();
         const key3 = PrivateKey.generate();
@@ -252,31 +254,32 @@ describe("TokenUpdate", function () {
             .setWipeKey(key3)
             .setSupplyKey(key4)
             .setFreezeDefault(false)
-            .execute(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         await (
             await new TokenUpdateTransaction()
                 .setNodeAccountIds([response.nodeId])
                 .setTokenId(token)
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should error updating immutable token", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .execute(client);
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         let err = false;
 
@@ -287,8 +290,8 @@ describe("TokenUpdate", function () {
                     .setTokenId(token)
                     .setTokenName("aaaa")
                     .setTokenSymbol("A")
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.TokenIsImmutable);
         }
@@ -301,14 +304,16 @@ describe("TokenUpdate", function () {
     it("should error when token ID is not set", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
+        const env = await newClient.new();
 
         let err = false;
 
         try {
             await (
-                await new TokenUpdateTransaction().execute(client)
-            ).getReceipt(client);
+                await new TokenUpdateTransaction()
+                    .setNodeAccountIds(env.nodeAccountIds)
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);
         }
@@ -321,27 +326,30 @@ describe("TokenUpdate", function () {
     it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .execute(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         await (
-            await new TokenUpdateTransaction().setTokenId(token).execute(client)
-        ).getReceipt(client);
+            await new TokenUpdateTransaction()
+                .setTokenId(token)
+                .execute(env.client)
+        ).getReceipt(env.client);
     });
 
     it("should error when admin key does not sign transaction", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
         const response = await (
@@ -350,11 +358,12 @@ describe("TokenUpdate", function () {
                 .setTokenSymbol("F")
                 .setTreasuryAccountId(operatorId)
                 .setAdminKey(key)
-                .freezeWith(client)
+                .setNodeAccountIds(env.nodeAccountIds)
+                .freezeWith(env.client)
                 .sign(key)
-        ).execute(client);
+        ).execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         let err = false;
 
@@ -365,8 +374,8 @@ describe("TokenUpdate", function () {
                     .setTokenId(token)
                     .setTokenName("aaaa")
                     .setTokenSymbol("A")
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidSignature);
         }

@@ -15,11 +15,12 @@ describe("AccountBalanceQuery", function () {
     it("account 0.0.3 should have a balance higher than 1 tinybar", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
+        const env = await newClient.new();
 
         const balance = await new AccountBalanceQuery()
             .setAccountId("3") // balance of node 3
-            .execute(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .execute(env.client);
 
         expect(balance.hbars.toTinybars().toNumber()).to.be.greaterThan(
             Hbar.fromTinybars(1).toTinybars().toNumber()
@@ -29,14 +30,15 @@ describe("AccountBalanceQuery", function () {
     it("an account that does not exist should return an error", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
+        const env = await newClient.new();
 
         let err = false;
 
         try {
             await new AccountBalanceQuery()
                 .setAccountId("1.0.3")
-                .execute(client);
+                .setNodeAccountIds(env.nodeAccountIds)
+                .execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountId.toString());
         }
@@ -49,39 +51,40 @@ describe("AccountBalanceQuery", function () {
     it("should reflect token with no keys", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
 
         const key = PrivateKey.generate();
 
         let response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const account = (await response.getReceipt(client)).accountId;
+        const account = (await response.getReceipt(env.client)).accountId;
 
         response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .execute(client);
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         await (
             await (
                 await new TokenAssociateTransaction()
                     .setTokenIds([token])
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         const balances = await new AccountBalanceQuery()
             .setAccountId(account)
-            .execute(client);
+            .execute(env.client);
 
         expect(balances.tokens.get(token).toInt()).to.be.equal(0);
 
@@ -92,9 +95,9 @@ describe("AccountBalanceQuery", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
     });
 });

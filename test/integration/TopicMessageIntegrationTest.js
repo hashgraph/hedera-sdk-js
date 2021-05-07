@@ -13,17 +13,18 @@ describe("TopicMessage", function () {
     it("should be executable", async function () {
         this.timeout(40000);
 
-        let client = await newClient();
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
-            .execute(client);
+            .execute(env.client);
 
-        const topic = (await response.getReceipt(client)).topicId;
+        const topic = (await response.getReceipt(env.client)).topicId;
 
         let received = false;
         const contents = "Hello from Hedera SDK JS";
@@ -31,7 +32,7 @@ describe("TopicMessage", function () {
         const handle = new TopicMessageQuery()
             .setTopicId(topic)
             .setStartTime(0)
-            .subscribe(client, (message) => {
+            .subscribe(env.client, (message) => {
                 received = utf8.decode(message.contents) === contents;
             });
 
@@ -41,16 +42,18 @@ describe("TopicMessage", function () {
             await new TopicMessageSubmitTransaction()
                 .setTopicId(topic)
                 .setMessage(contents)
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         while (!received && Date.now() < startTime + 30000) {
             await new Promise((resolved) => setTimeout(resolved, 2000));
         }
 
         await (
-            await new TopicDeleteTransaction().setTopicId(topic).execute(client)
-        ).getReceipt(client);
+            await new TopicDeleteTransaction()
+                .setTopicId(topic)
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         handle.unsubscribe();
 
@@ -62,24 +65,25 @@ describe("TopicMessage", function () {
     it("should be executable with large message", async function () {
         this.timeout(60000);
 
-        let client = await newClient();
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
-            .execute(client);
+            .execute(env.client);
 
-        const topic = (await response.getReceipt(client)).topicId;
+        const topic = (await response.getReceipt(env.client)).topicId;
 
         let received = false;
 
         const handle = new TopicMessageQuery()
             .setTopicId(topic)
             .setStartTime(0)
-            .subscribe(client, (message) => {
+            .subscribe(env.client, (message) => {
                 received = utf8.decode(message.contents) === bigContents;
             });
 
@@ -90,16 +94,18 @@ describe("TopicMessage", function () {
                 .setTopicId(topic)
                 .setMessage(bigContents)
                 .setMaxChunks(14)
-                .execute(client)
-        ).getReceipt(client);
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         while (!received && Date.now() < startTime + 45000) {
             await new Promise((resolved) => setTimeout(resolved, 2000));
         }
 
         await (
-            await new TopicDeleteTransaction().setTopicId(topic).execute(client)
-        ).getReceipt(client);
+            await new TopicDeleteTransaction()
+                .setTopicId(topic)
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         handle.unsubscribe();
 
@@ -111,17 +117,18 @@ describe("TopicMessage", function () {
     it("should error when topic ID is not set", async function () {
         this.timeout(40000);
 
-        let client = await newClient();
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
-            .execute(client);
+            .execute(env.client);
 
-        const topic = (await response.getReceipt(client)).topicId;
+        const topic = (await response.getReceipt(env.client)).topicId;
 
         const contents = "Hello from Hedera SDK JS";
 
@@ -131,15 +138,17 @@ describe("TopicMessage", function () {
             await (
                 await new TopicMessageSubmitTransaction()
                     .setMessage(contents)
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTopicId);
         }
 
         await (
-            await new TopicDeleteTransaction().setTopicId(topic).execute(client)
-        ).getReceipt(client);
+            await new TopicDeleteTransaction()
+                .setTopicId(topic)
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("topic message did not error");
@@ -149,17 +158,18 @@ describe("TopicMessage", function () {
     it("should error when message is not set", async function () {
         this.timeout(40000);
 
-        let client = await newClient();
-        const operatorId = client.operatorAccountId;
-        const operatorKey = client.operatorPublicKey;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
-            .execute(client);
+            .execute(env.client);
 
-        const topic = (await response.getReceipt(client)).topicId;
+        const topic = (await response.getReceipt(env.client)).topicId;
 
         let err = false;
 
@@ -167,15 +177,17 @@ describe("TopicMessage", function () {
             await (
                 await new TopicMessageSubmitTransaction()
                     .setTopicId(topic)
-                    .execute(client)
-            ).getReceipt(client);
+                    .execute(env.client)
+            ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTopicMessage);
         }
 
         await (
-            await new TopicDeleteTransaction().setTopicId(topic).execute(client)
-        ).getReceipt(client);
+            await new TopicDeleteTransaction()
+                .setTopicId(topic)
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("topic message did not error");

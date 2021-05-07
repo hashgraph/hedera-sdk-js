@@ -15,12 +15,13 @@ describe("AccountInfo", function () {
     it("should be able to query cost", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
 
         const cost = await new AccountInfoQuery()
             .setAccountId(operatorId)
-            .getCost(client);
+            .setNodeAccountIds(env.nodeAccountIds)
+            .getCost(env.client);
 
         expect(cost.toTinybars().toInt()).to.be.at.least(25);
     });
@@ -28,16 +29,17 @@ describe("AccountInfo", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const receipt = await response.getReceipt(client);
+        const receipt = await response.getReceipt(env.client);
 
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
@@ -45,7 +47,7 @@ describe("AccountInfo", function () {
         const info = await new AccountInfoQuery()
             .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
-            .execute(client);
+            .execute(env.client);
 
         expect(info.accountId.toString()).to.be.equal(account.toString());
         expect(info.isDeleted).to.be.false;
@@ -64,18 +66,18 @@ describe("AccountInfo", function () {
                     .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("should be able to get 300 accounts", async function () {
         this.timeout(150000000);
 
-        const client = await newClient();
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         const key = PrivateKey.generate();
         let response = [];
         let receipt = [];
@@ -84,19 +86,20 @@ describe("AccountInfo", function () {
         for (let i = 0; i < 300; i++) {
             response[i] = await new AccountCreateTransaction()
                 .setKey(key.publicKey)
+                .setNodeAccountIds(env.nodeAccountIds)
                 .setInitialBalance(new Hbar(2))
-                .execute(client);
+                .execute(env.client);
         }
 
         for (let i = 0; i < 300; i++) {
-            receipt[i] = await response[i].getReceipt(client);
+            receipt[i] = await response[i].getReceipt(env.client);
         }
 
         for (let i = 0; i < 300; i++) {
             info[i] = await new AccountInfoQuery()
                 .setNodeAccountIds([response[i].nodeId])
                 .setAccountId(receipt[i].accountId)
-                .execute(client);
+                .execute(env.client);
 
             console.log(info[i].accountId);
         }
@@ -111,48 +114,49 @@ describe("AccountInfo", function () {
                         .setTransactionId(
                             TransactionId.generate(receipt[i].accountId)
                         )
-                        .freezeWith(client)
+                        .freezeWith(env.client)
                         .sign(key)
-                ).execute(client)
-            ).getReceipt(client);
+                ).execute(env.client)
+            ).getReceipt(env.client);
         }
     });
 
     it("should reflect token with no keys", async function () {
         this.timeout(10000);
 
-        const client = await newClient(true);
-        const operatorId = client.operatorAccountId;
+        const env = await newClient.new();
+        const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
         let response = await new AccountCreateTransaction()
             .setKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
-            .execute(client);
+            .execute(env.client);
 
-        const account = (await response.getReceipt(client)).accountId;
+        const account = (await response.getReceipt(env.client)).accountId;
 
         response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
-            .execute(client);
+            .execute(env.client);
 
-        const token = (await response.getReceipt(client)).tokenId;
+        const token = (await response.getReceipt(env.client)).tokenId;
 
         await (
             await (
                 await new TokenAssociateTransaction()
                     .setTokenIds([token])
                     .setAccountId(account)
-                    .freezeWith(client)
+                    .freezeWith(env.client)
                     .sign(key)
-            ).execute(client)
-        ).getReceipt(client);
+            ).execute(env.client)
+        ).getReceipt(env.client);
 
         const info = await new AccountInfoQuery()
             .setAccountId(account)
-            .execute(client);
+            .execute(env.client);
 
         const relationship = info.tokenRelationships.get(token);
 
@@ -166,11 +170,11 @@ describe("AccountInfo", function () {
     it("should be error with no account ID", async function () {
         this.timeout(15000);
 
-        const client = await newClient();
+        const env = await newClient.new();
         let err = false;
 
         try {
-            await new AccountInfoQuery().execute(client);
+            await new AccountInfoQuery().execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountId.toString());
         }
