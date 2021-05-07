@@ -29,21 +29,21 @@
     "scripts": {
         "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
         "cp:ts": "copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/",
-        "compile": "run-s compile:proto compile:proto_ts fork:protobufjs compile:js",
+        "compile": "run-s compile:proto compile:proto_ts compile:js",
         "compile:js": "babel src -d lib",
         "compile:proto": "pbjs -t static-module -w es6 --force-long --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*.proto",
+        "test-compile:proto": "pbjs -t static-module -w es6 --force-long --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*.proto",
         "compile:proto_ts": "pbts -o src/proto.d.ts src/proto.js",
-        "fork:protobufjs": "replace-in-file 'from \"protobufjs' 'from \"@hashgraph/protobufjs' src/proto.*",
         "lint": "run-s lint:*",
         "lint:types": "tsc",
         "lint:format": "prettier src '*.json' 'src/*.js' --check",
         "lint:js": "eslint --fix 'src/**/*.js'",
         "format": "prettier src '*.json' 'src/*.js' --write",
-        "build": "run-s lint compile cp:ts",
+        "build": "run-s compile cp:ts lint",
         "prepare": "run-s compile cp:ts"
     },
     "dependencies": {
-        "@hashgraph/protobufjs": "^6.10.1-hashgraph.2"
+        "protobufjs": "^6.10.2"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.10",
@@ -60,7 +60,6 @@
         "jsdoc": "^3.6.6",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.2.1",
-        "protobufjs": "^6.10.2",
         "replace-in-file": "^6.1.0",
         "semver": "^7.3.4",
         "tmp": "^0.2.1",
