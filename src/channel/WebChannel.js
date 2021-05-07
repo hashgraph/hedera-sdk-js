@@ -26,7 +26,7 @@ export default class WebChannel extends Channel {
      * @override
      * @protected
      * @param {string} serviceName
-     * @returns {import("@hashgraph/protobufjs").RPCImpl}
+     * @returns {import("protobufjs").RPCImpl}
      */
     _createUnaryClient(serviceName) {
         return async (method, requestData, callback) => {
