@@ -58,16 +58,20 @@ describe("Mnemonic", function () {
         const expectedLegacyKey =
             "302e020100300506032b657004220420882a565ad8cb45643892b5366c1ee1c1ef4a730c5ce821a219ff49b6bf173ddf";
 
-        expect((await (await legacyMnemonic.toPrivateKey()).legacyDerive(-1)).toString()).to.eql(
-            expectedLegacyKey
-        );
+        expect(
+            (
+                await (await legacyMnemonic.toPrivateKey()).legacyDerive(-1)
+            ).toString()
+        ).to.eql(expectedLegacyKey);
     });
 
     it("legacy2 mnemonic should work", async function () {
         const legacyMnemonic = await Mnemonic.fromString(
             "obvious,favorite,remain,caution,remove,laptop,base,vacant,increase,video,erase,pass,sniff,sausage,knock,grid,argue,salt,romance,way,alone,fever,slush,dune"
         );
-        const legacyPrivateKey = await (await legacyMnemonic.toLegacyPrivateKey()).legacyDerive(0);
+        const legacyPrivateKey = await (
+            await legacyMnemonic.toLegacyPrivateKey()
+        ).legacyDerive(0);
 
         const expectedLegacyKey =
             "302e020100300506032b6570042204202b7345f302a10c2a6d55bf8b7af40f125ec41d780957826006d30776f0c441fb";
