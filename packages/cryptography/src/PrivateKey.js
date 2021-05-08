@@ -9,6 +9,7 @@ import { read as readPem } from "./encoding/pem.js";
 import * as slip10 from "./primitive/slip10.js";
 import Key from "./Key.js";
 import * as random from "./primitive/random.js";
+import * as derive from "./util/derive.js";
 
 const derPrefix = "302e020100300506032b657004220420";
 const derPrefixBytes = hex.decode(derPrefix);
@@ -218,6 +219,20 @@ export default class PrivateKey extends Key {
         const keyPair = nacl.sign.keyPair.fromSeed(keyData);
 
         return new PrivateKey(keyPair, chainCode);
+    }
+
+    /**
+     * @param {number} index
+     * @returns {Promise<PrivateKey>}
+     * @throws If this key does not support derivation.
+     */
+    async legacyDerive(index) {
+        const keyBytes = await derive.legacy(
+            this.toBytes().subarray(0, 32),
+            index
+        );
+
+        return PrivateKey.fromBytes(keyBytes);
     }
 
     /**

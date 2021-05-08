@@ -9,7 +9,6 @@ import nacl from "tweetnacl";
 import * as hmac from "./primitive/hmac.js";
 import * as slip10 from "./primitive/slip10.js";
 import * as entropy from "./util/entropy.js";
-import * as derive from "./util/derive.js";
 import * as random from "./primitive/random.js";
 
 /**
@@ -293,8 +292,6 @@ export default class Mnemonic {
      * @returns {Promise<PrivateKey>}
      */
     async toLegacyPrivateKey() {
-        const index = this._isLegacy ? -1 : 0;
-
         let seed;
         if (this._isLegacy) {
             [seed] = entropy.legacy1(this.words, legacyWords);
@@ -302,9 +299,7 @@ export default class Mnemonic {
             seed = await entropy.legacy2(this.words, bip39Words);
         }
 
-        const keyData = await derive.legacy(seed, index);
-
-        return PrivateKey.fromBytes(keyData);
+        return PrivateKey.fromBytes(seed);
     }
 
     /**

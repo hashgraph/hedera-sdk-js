@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.0.20
+
+### Added
+
+ * `PrivateKey.legacyDerive()` - Derive private key using legacy derivations
+
+### Changed
+
+ * `Mnemonic.toLegacyPrivateKey()` no longer automaticaly derives `PrivateKey`, instead produces root `PrivateKey`
+   Use `PrivateKey.legacyDerive()` to derive the proper `PrivateKey` manually
+
 ## v2.0.19
 
 ### Added
