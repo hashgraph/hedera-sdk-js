@@ -441,6 +441,8 @@ export default class Transaction extends Executable {
      * @returns {Promise<this>}
      */
     async signWith(publicKey, transactionSigner) {
+        this._requireFrozen();
+
         const publicKeyData = publicKey.toBytes();
 
         // note: this omits the DER prefix on purpose because Hedera doesn't
