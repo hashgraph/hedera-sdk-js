@@ -8,12 +8,12 @@ import {
     Hbar,
     KeyList,
 } from "../src/exports.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("ScheduleCreate", function () {
     it("should be executable", async function () {
         this.timeout(15000);
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
         const operatorId = env.operatorId;
 
@@ -31,7 +31,7 @@ describe("ScheduleCreate", function () {
         );
 
         const response = await new AccountCreateTransaction()
-            .setInitialBalance(new Hbar(100))
+            .setInitialBalance(new Hbar(50))
             .setNodeAccountIds(env.nodeAccountIds)
             .setKey(keyList)
             .execute(env.client);
@@ -64,9 +64,7 @@ describe("ScheduleCreate", function () {
         const transactionId = scheduled.transactionId;
 
         const scheduleId = (
-            await (await scheduled.execute(env.client)).getReceipt(
-                env.client
-            )
+            await (await scheduled.execute(env.client)).getReceipt(env.client)
         ).scheduleId;
 
         const info = await new ScheduleInfoQuery()

@@ -1,6 +1,6 @@
 import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import ContractCreateTransaction from "../src/contract/ContractCreateTransaction.js";
 import ContractFunctionParameters from "../src/contract/ContractFunctionParameters.js";
 import { ContractCallQuery } from "../src/exports.js";
@@ -16,7 +16,7 @@ describe("ContractCallIntegration", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -109,7 +109,7 @@ describe("ContractCallIntegration", function () {
     it("should error when function to call is not set", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -183,7 +183,7 @@ describe("ContractCallIntegration", function () {
     it("should error when gas is not set", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -256,7 +256,7 @@ describe("ContractCallIntegration", function () {
     it("should error when contract ID is not set", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()

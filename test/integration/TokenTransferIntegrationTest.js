@@ -9,13 +9,13 @@ import {
     Status,
     PrivateKey,
 } from "../src/exports.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenTransfer", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generate();
@@ -93,7 +93,7 @@ describe("TokenTransfer", function () {
     it("should error when no amount is transferred", async function () {
         this.timeout(20000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generate();
@@ -172,7 +172,7 @@ describe("TokenTransfer", function () {
     it("should error when no  is transferred", async function () {
         this.timeout(20000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generate();

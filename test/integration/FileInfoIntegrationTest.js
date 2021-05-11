@@ -2,13 +2,13 @@ import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
 import FileInfoQuery from "../src/file/FileInfoQuery.js";
 import Hbar from "../src/Hbar.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("FileInfo", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -51,7 +51,7 @@ describe("FileInfo", function () {
     it("should be executable with empty contents", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new FileCreateTransaction()
@@ -94,11 +94,9 @@ describe("FileInfo", function () {
     it("should be executable with no keys", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
-        const response = await new FileCreateTransaction().execute(
-            env.client
-        );
+        const response = await new FileCreateTransaction().execute(env.client);
 
         const receipt = await response.getReceipt(env.client);
 

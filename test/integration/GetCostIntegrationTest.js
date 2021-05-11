@@ -4,13 +4,13 @@ import {
     Hbar,
     Status,
 } from "../src/exports.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("GetCost", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         const cost = await new AccountInfoQuery()
@@ -27,7 +27,7 @@ describe("GetCost", function () {
     it("should be executable when max query payment is large", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         const operatorId = env.operatorId;
 
@@ -47,7 +47,7 @@ describe("GetCost", function () {
     it("should be executable when max query payment is small", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         const operatorId = env.operatorId;
 
@@ -67,7 +67,7 @@ describe("GetCost", function () {
     it("should be executable when free queries have set zero cost", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         const operatorId = env.operatorId;
 
@@ -87,7 +87,7 @@ describe("GetCost", function () {
     it("should be executable when paid queries have set large cost", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         const operatorId = env.operatorId;
 
@@ -107,7 +107,7 @@ describe("GetCost", function () {
     it("should error when paid query are set to zero", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         const operatorId = env.operatorId;
 

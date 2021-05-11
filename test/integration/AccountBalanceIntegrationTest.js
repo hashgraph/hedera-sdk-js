@@ -9,13 +9,13 @@ import {
     TokenAssociateTransaction,
     TransactionId,
 } from "../src/exports.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("AccountBalanceQuery", function () {
     it("account 0.0.3 should have a balance higher than 1 tinybar", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         const balance = await new AccountBalanceQuery()
             .setAccountId("3") // balance of node 3
@@ -30,7 +30,7 @@ describe("AccountBalanceQuery", function () {
     it("an account that does not exist should return an error", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -51,7 +51,7 @@ describe("AccountBalanceQuery", function () {
     it("should reflect token with no keys", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         const key = PrivateKey.generate();

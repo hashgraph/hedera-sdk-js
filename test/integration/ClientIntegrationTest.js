@@ -1,24 +1,20 @@
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import { AccountBalanceQuery, AccountId } from "../src/exports.js";
 
 describe("ClientIntegration", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         env.client.setNetwork({
             "0.testnet.hedera.com:50211": new AccountId(3),
             "1.testnet.hedera.com:50211": new AccountId(4),
         });
 
-        await new AccountBalanceQuery()
-            .setAccountId("3")
-            .execute(env.client);
+        await new AccountBalanceQuery().setAccountId("3").execute(env.client);
 
-        await new AccountBalanceQuery()
-            .setAccountId("3")
-            .execute(env.client);
+        await new AccountBalanceQuery().setAccountId("3").execute(env.client);
 
         env.client.setNetwork({
             "1.testnet.hedera.com:50211": new AccountId(4),

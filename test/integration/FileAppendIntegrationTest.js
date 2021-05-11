@@ -1,6 +1,6 @@
 import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
 import FileInfoQuery from "../src/file/FileInfoQuery.js";
 import FileAppendTransaction from "../src/file/FileAppendTransaction.js";
@@ -11,7 +11,7 @@ describe("FileAppend", function () {
     it("should be executable", async function () {
         this.timeout(60000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -79,7 +79,7 @@ describe("FileAppend", function () {
     it("should be chunk contents", async function () {
         this.timeout(60000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -147,7 +147,7 @@ describe("FileAppend", function () {
     it("should error with no file ID set", async function () {
         this.timeout(60000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -192,7 +192,7 @@ describe("FileAppend", function () {
     it("should not error with no contents appended", async function () {
         this.timeout(60000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()

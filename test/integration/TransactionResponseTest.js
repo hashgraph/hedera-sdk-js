@@ -1,14 +1,14 @@
 import * as hex from "../src/encoding/hex.js";
 import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 
 describe("TransactionResponse", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 

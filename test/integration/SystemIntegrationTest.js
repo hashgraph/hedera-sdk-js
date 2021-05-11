@@ -1,4 +1,4 @@
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import SystemDeleteTransaction from "../../src/system/SystemDeleteTransaction.js";
 import ContractId from "../src/contract/ContractId.js";
 import FileId from "../src/file/FileId.js";
@@ -8,7 +8,7 @@ describe("SystemIntegration", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         let errorThrown = false;
 
         try {

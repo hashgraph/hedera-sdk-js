@@ -6,14 +6,14 @@ import {
     Status,
 } from "../src/exports.js";
 import * as utf8 from "../src/encoding/utf8.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import { bigContents } from "./contents.js";
 
 describe("TopicMessage", function () {
     it("should be executable", async function () {
         this.timeout(40000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -65,7 +65,7 @@ describe("TopicMessage", function () {
     it("should be executable with large message", async function () {
         this.timeout(60000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -117,7 +117,7 @@ describe("TopicMessage", function () {
     it("should error when topic ID is not set", async function () {
         this.timeout(40000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -158,7 +158,7 @@ describe("TopicMessage", function () {
     it("should error when message is not set", async function () {
         this.timeout(40000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 

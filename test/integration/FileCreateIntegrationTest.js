@@ -4,13 +4,13 @@ import FileInfoQuery from "../src/file/FileInfoQuery.js";
 import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
 import Timestamp from "../src/Timestamp.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("FileCreate", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -53,7 +53,7 @@ describe("FileCreate", function () {
     it("should be executable with empty contents", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let response = await new FileCreateTransaction()
@@ -80,7 +80,7 @@ describe("FileCreate", function () {
     it("should be executable with no keys", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         let response = await new FileCreateTransaction().execute(env.client);
 
@@ -94,7 +94,7 @@ describe("FileCreate", function () {
     it("should error with too large expiration time", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
 
         let err = false;

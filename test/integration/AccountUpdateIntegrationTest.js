@@ -6,7 +6,7 @@ import Hbar from "../src/Hbar.js";
 import Timestamp from "../src/Timestamp.js";
 import Status from "../src/Status.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 import Long from "long";
 
@@ -14,7 +14,7 @@ describe("AccountUpdate", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         const key1 = PrivateKey.generate();
@@ -92,7 +92,7 @@ describe("AccountUpdate", function () {
     it("should error with invalid auto renew period", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         const key1 = PrivateKey.generate();
         const key2 = PrivateKey.generate();
@@ -151,7 +151,7 @@ describe("AccountUpdate", function () {
     it.skip("should error with insufficent tx fee when a large expiration time is set", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         const key1 = PrivateKey.generate();
         const key2 = PrivateKey.generate();
@@ -197,7 +197,7 @@ describe("AccountUpdate", function () {
     it("should error when account ID is not set", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -220,7 +220,7 @@ describe("AccountUpdate", function () {
     it("should execute with only account ID", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         const key1 = PrivateKey.generate();
 
@@ -261,7 +261,7 @@ describe("AccountUpdate", function () {
     it("should error with invalid signature", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         const key1 = PrivateKey.generate();
         const key2 = PrivateKey.generate();

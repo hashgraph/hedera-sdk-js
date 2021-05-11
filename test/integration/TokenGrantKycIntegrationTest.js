@@ -8,13 +8,13 @@ import {
     Status,
     PrivateKey,
 } from "../src/exports.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenGrantKyc", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generate();
@@ -84,7 +84,7 @@ describe("TokenGrantKyc", function () {
     it("should be executable even when no token IDs are set", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
@@ -118,7 +118,7 @@ describe("TokenGrantKyc", function () {
     it("should error when account ID is not set", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
