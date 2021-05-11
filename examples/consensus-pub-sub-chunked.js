@@ -73,7 +73,7 @@ async function main() {
 
     await new ConsensusMessageSubmitTransaction()
         .setTopicId(topicId)
-        .setMaxChunks(4) // default: 10
+        .setMaxChunks(15) // default: 10
         .setMessage(bigContents)
         .execute(client);
 }
