@@ -13,6 +13,9 @@ $ npm install --save @hashgraph/sdk
 
 # with Yarn
 $ yarn add @hashgraph/sdk
+
+# with PNPM
+$ pnpm add @hashgraph/sdk
 ```
 
 ## Usage
