@@ -137,9 +137,9 @@ export default class AccountDeleteTransaction extends Transaction {
     setTransferAccountId(transferAccountId) {
         this._requireNotFrozen();
         this._transferAccountId =
-            transferAccountId instanceof AccountId
-                ? transferAccountId
-                : AccountId.fromString(transferAccountId);
+            typeof transferAccountId === "string"
+                ? AccountId.fromString(transferAccountId)
+                : AccountId._fromProtobuf(transferAccountId._toProtobuf());
 
         return this;
     }

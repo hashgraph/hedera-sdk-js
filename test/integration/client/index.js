@@ -11,72 +11,74 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export default class IntegrationTestEnv {
-    constructor() {
+    /**
+     * @type {Client} client
+     * @type {PrivateKey} operatorKey
+     * @type {AccountId} operatorId
+     * @type {AccountId[]} nodeAccountIds
+     */
+    constructor(client, operatorKey, operatorId, nodeAccountIds) {
         /** @type {Client} */
-        this.client = new Client();
+        this.client = client;
 
         /** @type {PrivateKey} */
-        this.operatorKey = new PrivateKey(undefined, undefined);
+        this.operatorKey = operatorKey;
 
         /** @type {AccountId} */
-        this.operatorId = new AccountId(0);
+        this.operatorId = operatorId;
 
         /** @type {[]} */
-        this.nodeAccountIds = [];
+        this.nodeAccountIds = nodeAccountIds;
+
+        Object.freeze(this);
     }
 
     static async new() {
+        let client;
+
         if (
             process.env.HEDERA_NETWORK != null &&
             process.env.HEDERA_NETWORK == "previewnet"
         ) {
-            this.client = Client.forPreviewnet();
+            client = Client.forPreviewnet();
         } else {
             try {
-                this.client = await Client.fromConfigFile(
+                client = await Client.fromConfigFile(
                     process.env.CONFIG_FILE
                 );
             } catch (err) {
-                this.client = Client.forTestnet();
+                client = Client.forTestnet();
             }
         }
 
         try {
-            const operatorId =
-                process.env.OPERATOR_ID || process.env.VITE_OPERATOR_ID;
+            const operatorId = AccountId.fromString(
+                process.env.OPERATOR_ID || process.env.VITE_OPERATOR_ID
+            );
 
-            this.operatorId = AccountId.fromString(operatorId);
+            const operatorKey = PrivateKey.fromString(
+                process.env.OPERATOR_KEY || process.env.VITE_OPERATOR_KEY
+            );
 
-            const operatorKey =
-                process.env.OPERATOR_KEY || process.env.VITE_OPERATOR_KEY;
-
-            this.operatorKey = PrivateKey.fromString(operatorKey);
-
-            this.client.setOperator(this.operatorId, this.operatorKey);
+            client.setOperator(operatorId, operatorKey);
         } catch (err) {
             // ignore error and complain later
         }
 
-        expect(this.client.operatorAccountId).to.not.be.null;
-        expect(this.client.operatorPublicKey).to.not.be.null;
+        expect(client.operatorAccountId).to.not.be.null;
+        expect(client.operatorPublicKey).to.not.be.null;
 
         const key = PrivateKey.generate();
 
-        const resp = await new AccountCreateTransaction()
+        const response = await new AccountCreateTransaction()
             .setKey(key)
             .setInitialBalance(new Hbar(100))
-            .execute(this.client);
+            .execute(client);
 
-        const receipt = await resp.getReceipt(this.client);
+        const accountId = (await response.getReceipt(client)).accountId;
 
-        this.operatorId = receipt.accountId;
-        this.operatorKey = key;
-        this.nodeAccountIds = [resp.nodeId];
-        this.client.setOperator(this.operatorId, this.operatorKey);
+        client.setOperator(accountId, key);
 
-        expect(this.client.operatorAccountId).to.not.be.null;
-        expect(this.client.operatorPublicKey).to.not.be.null;
-
-        return this;
+        return new IntegrationTestEnv(client, key, accountId, [response.nodeId]);
     }
 }
