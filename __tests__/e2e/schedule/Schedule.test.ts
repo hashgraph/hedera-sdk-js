@@ -2,32 +2,19 @@ import {
     AccountCreateTransaction,
     ScheduleCreateTransaction,
     ScheduleInfoQuery,
-    ScheduleDeleteTransaction,
     ScheduleSignTransaction,
     ConsensusMessageSubmitTransaction,
     ConsensusTopicCreateTransaction,
     Ed25519PrivateKey,
-    KeyList,
     Hbar, TransferTransaction,
-    AccountId, Ed25519PublicKey
 } from "../../../src/index-node";
-import * as utf8 from "@stablelib/utf8";
 import { getClientForIntegrationTest } from "../client-setup";
-// import { ConsensusTopicCreateTransaction } from "../../../lib/consensus/ConsensusTopicCreateTransaction";
 
 describe("ScheduleCreateTransaction", () => {
     it("can be executed", async() => {
         const client = await getClientForIntegrationTest(false);
 
-        const key = await Ed25519PrivateKey.generate();
-
         const key2 = await Ed25519PrivateKey.generate();
-
-        const transactionId = await new AccountCreateTransaction()
-            .setInitialBalance(new Hbar(10))
-            .setKey(key.publicKey)
-            .execute(client);
-        const accountId = (await transactionId.getReceipt(client)).getAccountId();
 
         const topicId = (
             await (
@@ -57,33 +44,23 @@ describe("ScheduleCreateTransaction", () => {
 
         await (
             await (
-                await new ScheduleSignTransaction()
+                new ScheduleSignTransaction()
                     .setScheduleId(scheduleId)
                     .build(client)
                     .sign(key2)
             ).execute(client)
         ).getReceipt(client);
 
-        const info = await new ScheduleInfoQuery()
+        await new ScheduleInfoQuery()
             .setScheduleId(scheduleId)
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
-        console.log(info.getTransaction().toString());
-        console.log(info.executionTime?.toDateString());
     }, 60000);
 
     it("can be executed with setTransaction", async() => {
         const client = await getClientForIntegrationTest(false);
 
-        const key = await Ed25519PrivateKey.generate();
-
         const key2 = await Ed25519PrivateKey.generate();
-
-        const transactionId = await new AccountCreateTransaction()
-            .setInitialBalance(new Hbar(10))
-            .setKey(key.publicKey)
-            .execute(client);
-        const accountId = (await transactionId.getReceipt(client)).getAccountId();
 
         const topicId = (
             await (
@@ -113,19 +90,17 @@ describe("ScheduleCreateTransaction", () => {
 
         await (
             await (
-                await new ScheduleSignTransaction()
+                new ScheduleSignTransaction()
                     .setScheduleId(scheduleId)
                     .build(client)
                     .sign(key2)
             ).execute(client)
         ).getReceipt(client);
 
-        const info = await new ScheduleInfoQuery()
+        await new ScheduleInfoQuery()
             .setScheduleId(scheduleId)
             .setMaxQueryPayment(new Hbar(1))
             .execute(client);
-        console.log(info.getTransaction().toString());
-        console.log(info.executionTime?.toDateString());
     }, 60000);
 
     it("schedule transaction can be signed", async() => {
@@ -133,7 +108,6 @@ describe("ScheduleCreateTransaction", () => {
 
         const key1 = await Ed25519PrivateKey.generate();
         // Submit Key
-        const key2 = await Ed25519PrivateKey.generate();
 
         let transactionId = await new AccountCreateTransaction()
             .setInitialBalance(new Hbar(10))
@@ -143,7 +117,7 @@ describe("ScheduleCreateTransaction", () => {
         let receipt = await transactionId.getReceipt(client);
         const accountId = receipt.getAccountId();
 
-        const transaction = await new TransferTransaction()
+        const transaction = new TransferTransaction()
             .addHbarTransfer(accountId, new Hbar(1)
                 .asTinybar()
                 .dividedBy(10)
@@ -162,7 +136,7 @@ describe("ScheduleCreateTransaction", () => {
 
         await (
             await (
-                await new ScheduleSignTransaction()
+                new ScheduleSignTransaction()
                     .setScheduleId(scheduleId)
                     .build(client)
                     .sign(key1)
