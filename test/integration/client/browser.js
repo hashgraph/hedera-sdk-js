@@ -68,6 +68,8 @@ export default class IntegrationTestEnv {
 
         client.setOperator(accountId, key);
 
-        return new IntegrationTestEnv(client, key, accountId, [response.nodeId]);
+        return new IntegrationTestEnv(client, key, accountId, [
+            response.nodeId,
+        ]);
     }
 }
