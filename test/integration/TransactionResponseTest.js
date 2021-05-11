@@ -6,7 +6,7 @@ import { PrivateKey } from "../src/index.js";
 
 describe("TransactionResponse", function () {
     it("should be executable", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

@@ -126,9 +126,9 @@ export default class ContractDeleteTransaction extends Transaction {
     setContractId(contractId) {
         this._requireNotFrozen();
         this._contractId =
-            contractId instanceof ContractId
-                ? contractId
-                : ContractId.fromString(contractId);
+            typeof contractId === "string"
+                ? ContractId.fromString(contractId)
+                : ContractId._fromProtobuf(contractId._toProtobuf());
 
         return this;
     }

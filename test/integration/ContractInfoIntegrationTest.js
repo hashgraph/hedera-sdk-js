@@ -13,7 +13,7 @@ let smartContractBytecode =
 
 describe("ContractInfo", function () {
     it("should be executable", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -86,7 +86,7 @@ describe("ContractInfo", function () {
     });
 
     it("should be able to query when admin key is null", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -144,7 +144,7 @@ describe("ContractInfo", function () {
     });
 
     it("should error when contract ID is not set", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;

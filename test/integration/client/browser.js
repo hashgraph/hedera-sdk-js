@@ -1,21 +1,56 @@
 import Client from "../../src/client/WebClient.js";
+import {
+    PrivateKey,
+    AccountCreateTransaction,
+    Hbar,
+} from "../../src/exports.js";
 
-export function newIntegrationClient() {
-    const client = Client.forTestnet();
+/**
+ * @param {boolean} createNewAccount
+ */
+export async function newIntegrationClient(createNewAccount = false) {
+    let client;
 
-    const operatorId = import.meta.env.VITE_OPERATOR_ID;
-
-    if (operatorId == null) {
-        throw new Error("missing environment variable OPERATOR_ID");
+    if (
+        import.meta.env.VITE_HEDERA_NETWORK != null &&
+        import.meta.env.VITE_HEDERA_NETWORK == "previewnet"
+    ) {
+        client = Client.forPreviewnet();
+    } else {
+        client = Client.forTestnet();
     }
 
-    const operatorKey = import.meta.env.VITE_OPERATOR_KEY;
+    try {
+        const operatorId =
+            import.meta.env.VITE_OPERATOR_ID ||
+            import.meta.env.VITE_OPERATOR_ID;
 
-    if (operatorKey == null) {
-        throw new Error("missing environment variable OPERATOR_KEY");
+        const operatorKey =
+            import.meta.env.VITE_OPERATOR_KEY ||
+            import.meta.env.VITE_OPERATOR_KEY;
+
+        client.setOperator(operatorId, operatorKey);
+    } catch (err) {
+        // ignore error and complain later
     }
 
-    client.setOperator(operatorId, operatorKey);
+    expect(client.operatorAccountId).to.not.be.null;
+    expect(client.operatorPublicKey).to.not.be.null;
+
+    if (createNewAccount) {
+        var key = PrivateKey.generate();
+
+        var accountId = (
+            await (
+                await new AccountCreateTransaction()
+                    .setKey(key)
+                    .setInitialBalance(new Hbar(100))
+                    .execute(client)
+            ).getReceipt(client)
+        ).accountId;
+
+        client.setOperator(accountId, key);
+    }
 
     return client;
 }

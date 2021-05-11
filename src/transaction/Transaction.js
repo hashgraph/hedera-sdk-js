@@ -285,9 +285,9 @@ export default class Transaction extends Executable {
         transaction._nextNodeIndex = 0;
         transaction._nextTransactionIndex = 0;
         transaction._transactionValidDuration =
-            body.transactionValidDuration != null
-                ? /** @type {Long} */ (body.transactionValidDuration
-                      .seconds).toInt()
+            body.transactionValidDuration != null &&
+            body.transactionValidDuration.seconds != null
+                ? Long.fromValue(body.transactionValidDuration.seconds).toInt()
                 : DEFAULT_TRANSACTION_VALID_DURATION;
         transaction._maxTransactionFee =
             body.transactionFee != null

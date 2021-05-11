@@ -5,7 +5,7 @@ import { AccountStakersQuery } from "../../src/exports.js";
 
 describe("AccountStakers", function () {
     it("should error", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

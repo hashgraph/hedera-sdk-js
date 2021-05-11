@@ -8,7 +8,7 @@ import IntegrationTestEnv from "./client/index.js";
 
 describe("FileUpdate", function () {
     it("should be executable", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -74,7 +74,7 @@ describe("FileUpdate", function () {
     });
 
     it("should error when file ID is not set", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 

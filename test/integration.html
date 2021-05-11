@@ -19,10 +19,10 @@
 
         <script src="node_modules/chai/chai.js"></script>
         <script src="node_modules/mocha/mocha.js"></script>
-        <script src="node_modules/mocha-webdriver-runner/dist/mocha-webdriver-client.js"></script>
+        <script src="./node_modules/mocha-webdriver-runner/dist/mocha-webdriver-client.js"></script>
 
         <script class="mocha-init">
-            mocha.setup("bdd");
+            mocha.setup({ ui: "bdd", timeout: "3600s" });
             mocha.checkLeaks();
         </script>
 
@@ -31,110 +31,52 @@
         </script>
 
         <!-- NOTE: all unit tests need to be imported here -->
-        <script
-            type="module"
-            src="integration/AccountBalanceIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/AccountCreateIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/AccountDeleteIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/AccountInfoIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/AccountRecordsIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/AccountStakersIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/AccountUpdateIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/ContractBytecodeIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/ContractCallIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/ContractCreateIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/ContractDeleteIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/ContractExecuteIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/ContractInfoIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/ContractRecordsIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/ContractUpdateIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/FileAppendIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/FileContentsIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/FileCreateIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/FileDeleteIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/FileInfoIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/FileUpdateIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/LiveHashIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/NetworkVersionInfoIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/SystemIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/TransactionIntegrationTest.js"
-        ></script>
-        <script
-            type="module"
-            src="integration/TransactionResponseTest.js"
-        ></script>
+        <script type="module" src="integration/AccountBalanceIntegrationTest.js"></script>
+        <script type="module" src="integration/AccountCreateIntegrationTest.js"></script>
+        <script type="module" src="integration/AccountDeleteIntegrationTest.js"></script>
+        <script type="module" src="integration/AccountInfoIntegrationTest.js"></script>
+        <script type="module" src="integration/AccountRecordsIntegrationTest.js"></script>
+        <script type="module" src="integration/AccountStakersIntegrationTest.js"></script>
+        <script type="module" src="integration/AccountUpdateIntegrationTest.js"></script>
+        <script type="module" src="integration/ClientIntegrationTest.js"></script>
+        <script type="module" src="integration/ContractBytecodeIntegrationTest.js"></script>
+        <script type="module" src="integration/ContractCallIntegrationTest.js"></script>
+        <script type="module" src="integration/ContractCreateIntegrationTest.js"></script>
+        <script type="module" src="integration/ContractDeleteIntegrationTest.js"></script>
+        <script type="module" src="integration/ContractExecuteIntegrationTest.js"></script>
+        <script type="module" src="integration/ContractInfoIntegrationTest.js"></script>
+        <script type="module" src="integration/ContractUpdateIntegrationTest.js"></script>
+        <script type="module" src="integration/CryptoTransferIntergationTest.js"></script>
+        <script type="module" src="integration/FileAppendIntegrationTest.js"></script>
+        <script type="module" src="integration/FileContentsIntegrationTest.js"></script>
+        <script type="module" src="integration/FileCreateIntegrationTest.js"></script>
+        <script type="module" src="integration/FileDeleteIntegrationTest.js"></script>
+        <script type="module" src="integration/FileInfoIntegrationTest.js"></script>
+        <script type="module" src="integration/FileUpdateIntegrationTest.js"></script>
+        <script type="module" src="integration/GetCostIntegrationTest.js"></script>
+        <script type="module" src="integration/LiveHashIntegrationTest.js"></script>
+        <script type="module" src="integration/NetworkVersionInfoIntegrationTest.js"></script>
+        <script type="module" src="integration/ScheduleCreateIntegrationTest.js"></script>
+        <script type="module" src="integration/SystemIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenAssociateIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenBurnIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenCreateIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenDeleteIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenDissociateIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenFreezeIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenGrantKycIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenInfoIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenMintIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenRevokeKycIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenTransferIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenUnfreezeIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenUpdateIntegrationTest.js"></script>
+        <script type="module" src="integration/TokenWipeIntegrationTest.js"></script>
+        <script type="module" src="integration/TopicCreateIntegrationTest.js"></script>
+        <script type="module" src="integration/TopicDeleteIntegrationTest.js"></script>
+        <script type="module" src="integration/TopicInfoIntegrationTest.js"></script>
+        <script type="module" src="integration/TransactionIntegrationTest.js"></script>
+        <script type="module" src="integration/TransactionResponseTest.js"></script>
 
         <script type="module" class="mocha-run">
             mocha.run();

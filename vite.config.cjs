@@ -2,16 +2,90 @@
 require("dotenv").config();
 
 module.exports = {
-    alias: {
-        // redirect src/ to src/browser
-        // note that this is NOT needed when consuming this package as the browser field in package.json
-        // will take care of this
-        "../src/index.js": "../src/browser.js",
-        "./client/index.js": "./client/browser.js",
+    server: {
+        hmr: false,
+        force: true,
+    },
+    build: {
+        polyfillDynamicImport: false,
+    },
+    optimizeDeps: {
+        entries: [
+            "./test/unit/AccountId.js",
+            "./test/unit/Hbar.js",
+            "./test/unit/keccak256.js",
+            "./test/unit/Transaction.js",
+            "./test/unit/TransactionId.js",
+            "./test/integration/AccountBalanceIntegrationTest.js",
+            "./test/integration/AccountCreateIntegrationTest.js",
+            "./test/integration/AccountDeleteIntegrationTest.js",
+            "./test/integration/AccountInfoIntegrationTest.js",
+            "./test/integration/AccountRecordsIntegrationTest.js",
+            "./test/integration/AccountStakersIntegrationTest.js",
+            "./test/integration/AccountUpdateIntegrationTest.js",
+            "./test/integration/ClientIntegrationTest.js",
+            "./test/integration/ContractBytecodeIntegrationTest.js",
+            "./test/integration/ContractCallIntegrationTest.js",
+            "./test/integration/ContractCreateIntegrationTest.js",
+            "./test/integration/ContractDeleteIntegrationTest.js",
+            "./test/integration/ContractExecuteIntegrationTest.js",
+            "./test/integration/ContractInfoIntegrationTest.js",
+            "./test/integration/ContractUpdateIntegrationTest.js",
+            "./test/integration/CryptoTransferIntergationTest.js",
+            "./test/integration/FileAppendIntegrationTest.js",
+            "./test/integration/FileContentsIntegrationTest.js",
+            "./test/integration/FileCreateIntegrationTest.js",
+            "./test/integration/FileDeleteIntegrationTest.js",
+            "./test/integration/FileInfoIntegrationTest.js",
+            "./test/integration/FileUpdateIntegrationTest.js",
+            "./test/integration/GetCostIntegrationTest.js",
+            "./test/integration/LiveHashIntegrationTest.js",
+            "./test/integration/NetworkVersionInfoIntegrationTest.js",
+            "./test/integration/ScheduleCreateIntegrationTest.js",
+            "./test/integration/SystemIntegrationTest.js",
+            "./test/integration/TokenAssociateIntegrationTest.js",
+            "./test/integration/TokenBurnIntegrationTest.js",
+            "./test/integration/TokenCreateIntegrationTest.js",
+            "./test/integration/TokenDeleteIntegrationTest.js",
+            "./test/integration/TokenDissociateIntegrationTest.js",
+            "./test/integration/TokenFreezeIntegrationTest.js",
+            "./test/integration/TokenGrantKycIntegrationTest.js",
+            "./test/integration/TokenInfoIntegrationTest.js",
+            "./test/integration/TokenMintIntegrationTest.js",
+            "./test/integration/TokenRevokeKycIntegrationTest.js",
+            "./test/integration/TokenTransferIntegrationTest.js",
+            "./test/integration/TokenUnfreezeIntegrationTest.js",
+            "./test/integration/TokenUpdateIntegrationTest.js",
+            "./test/integration/TokenWipeIntegrationTest.js",
+            "./test/integration/TopicCreateIntegrationTest.js",
+            "./test/integration/TopicDeleteIntegrationTest.js",
+            "./test/integration/TopicInfoIntegrationTest.js",
+            "./test/integration/TopicMessageIntegrationTest.js",
+            "./test/integration/TransactionIntegrationTest.js",
+            "./test/integration/TransactionResponseTest.js",
+        ],
+    },
+    resolve: {
+        alias: {
+            // redirect src/ to src/browser
+            // note that this is NOT needed when consuming this package as the browser field in package.json
+            // will take care of this
+            "../src/index.js": "../src/browser.js",
+            "../../src/encoding/hex.js": "../../src/encoding/hex.browser.js",
+            "../src/encoding/hex.js": "../src/encoding/hex.browser.js",
+            "../encoding/hex.js": "../encoding/hex.browser.js",
+            "../src/encoding/utf8.js": "../src/encoding/utf8.browser.js",
+            "../encoding/utf8.js": "../encoding/utf8.browser.js",
+            "../src/cryptography/sha384.js": "../src/cryptography/sha384.browser.js",
+            "../cryptography/sha384.js": "../cryptography/sha384.browser.js",
+            "./client/index.js": "./client/browser.js",
+        },
     },
     env: {
         // forward OPERATOR_KEY and OPERATOR_ID as VITE_ prefixed
         VITE_OPERATOR_KEY: process.env.OPERATOR_KEY,
         VITE_OPERATOR_ID: process.env.OPERATOR_ID,
+        VITE_CONFIG_FILE: process.env.CONFIG_FILE,
+        VITE_HEDERA_NETWORK: process.env.HEDERA_NETWORK,
     },
 };

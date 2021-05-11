@@ -13,7 +13,7 @@ let smartContractBytecode =
 
 describe("ContractDelete", function () {
     it("should be executable", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -87,7 +87,7 @@ describe("ContractDelete", function () {
     });
 
     it("should error when contarct ID is not set", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;

@@ -351,10 +351,7 @@ export default class TokenCreateTransaction extends Transaction {
      */
     setInitialSupply(initialSupply) {
         this._requireNotFrozen();
-        this._initialSupply =
-            initialSupply instanceof Long
-                ? initialSupply
-                : Long.fromValue(initialSupply);
+        this._initialSupply = Long.fromValue(initialSupply);
 
         return this;
     }
@@ -373,7 +370,9 @@ export default class TokenCreateTransaction extends Transaction {
     setTreasuryAccountId(id) {
         this._requireNotFrozen();
         this._treasuryAccountId =
-            id instanceof AccountId ? id : AccountId.fromString(id);
+            typeof id === "string"
+                ? AccountId.fromString(id)
+                : AccountId._fromProtobuf(id._toProtobuf());
 
         return this;
     }

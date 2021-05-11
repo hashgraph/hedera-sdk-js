@@ -3,6 +3,7 @@ import AccountId from "../account/AccountId.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
 import Timestamp from "../Timestamp.js";
+import Long from "long";
 
 /**
  * @namespace proto
@@ -202,7 +203,7 @@ export default class TokenInfo {
             name: /** @type {string} */ (info.name),
             symbol: /** @type {string} */ (info.symbol),
             decimals: /** @type {number} */ (info.decimals),
-            totalSupply: /** @type {Long} */ (info.totalSupply),
+            totalSupply: Long.fromValue(/** @type {Long} */ (info.totalSupply)),
             treasuryAccountId:
                 info.treasury != null
                     ? AccountId._fromProtobuf(

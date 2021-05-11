@@ -94,9 +94,9 @@ export default class AccountBalanceQuery extends Query {
      */
     setAccountId(accountId) {
         this._accountId =
-            accountId instanceof AccountId
-                ? accountId
-                : AccountId.fromString(accountId);
+            typeof accountId === "string"
+                ? AccountId.fromString(accountId)
+                : AccountId._fromProtobuf(accountId._toProtobuf());
 
         return this;
     }

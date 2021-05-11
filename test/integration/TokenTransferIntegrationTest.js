@@ -13,7 +13,7 @@ import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenTransfer", function () {
     it("should be executable", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -91,7 +91,7 @@ describe("TokenTransfer", function () {
     });
 
     it("should error when no amount is transferred", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -170,7 +170,7 @@ describe("TokenTransfer", function () {
     });
 
     it("should error when no  is transferred", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

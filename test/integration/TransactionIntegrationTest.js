@@ -12,7 +12,7 @@ import * as hex from "../../src/encoding/hex.js";
 
 describe("TransactionIntegration", function () {
     it("should be executable", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
