@@ -77,6 +77,7 @@ async function main() {
         .setKycKey(operatorPrivateKey.publicKey)
         .setSupplyKey(operatorPrivateKey.publicKey)
         .setFreezeDefault(false)
+        .setMaxTransactionFee(new Hbar(50))
         .execute(client);
 
     const tokenId = (await transactionId.getReceipt(client)).getTokenId();

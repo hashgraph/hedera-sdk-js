@@ -1,20 +1,20 @@
 // Learn about Hedera's confirmation mechanisms -
 // https://www.hedera.com/blog/transaction-confirmation-methods-in-hedera
 
-const { Client, CryptoTransferTransaction } = require("@hashgraph/sdk");
+const { Client, CryptoTransferTransaction, AccountId, Ed25519PrivateKey } = require("@hashgraph/sdk");
 
 async function main() {
-    const operatorPrivateKey = process.env.OPERATOR_KEY;
-    const operatorAccount = process.env.OPERATOR_ID;
-
-    if (operatorPrivateKey == null || operatorAccount == null) {
+    if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
         throw new Error("environment variables OPERATOR_KEY and OPERATOR_ID must be present");
     }
+
+    const operatorPrivateKey = Ed25519PrivateKey.fromString(process.env.OPERATOR_KEY);
+    const operatorAccount = AccountId.fromString(process.env.OPERATOR_ID);
 
     const client = new Client({
         network: { "0.testnet.hedera.com:50211": "0.0.3" },
         operator: {
-            account: operatorAccount,
+            accountId: operatorAccount,
             privateKey: operatorPrivateKey
         }
     });
