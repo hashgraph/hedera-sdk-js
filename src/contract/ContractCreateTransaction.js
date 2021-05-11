@@ -203,9 +203,9 @@ export default class ContractCreateTransaction extends Transaction {
     setBytecodeFileId(bytecodeFileId) {
         this._requireNotFrozen();
         this._bytecodeFileId =
-            bytecodeFileId instanceof FileId
-                ? bytecodeFileId
-                : FileId.fromString(bytecodeFileId);
+            typeof bytecodeFileId === "string"
+                ? FileId.fromString(bytecodeFileId)
+                : FileId._fromProtobuf(bytecodeFileId._toProtobuf());
 
         return this;
     }

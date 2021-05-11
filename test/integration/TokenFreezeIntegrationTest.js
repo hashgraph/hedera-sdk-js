@@ -12,7 +12,7 @@ import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenFreeze", function () {
     it("should be executable", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -83,7 +83,7 @@ describe("TokenFreeze", function () {
     });
 
     it("should be executable with no tokens set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generate();
@@ -118,7 +118,7 @@ describe("TokenFreeze", function () {
     });
 
     it("should error when account ID is not set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

@@ -13,7 +13,7 @@ import IntegrationTestEnv from "./client/index.js";
 
 describe("AccountInfo", function () {
     it("should be able to query cost", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -27,7 +27,7 @@ describe("AccountInfo", function () {
     });
 
     it("should be executable", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -74,7 +74,7 @@ describe("AccountInfo", function () {
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("should be able to get 300 accounts", async function () {
-        this.timeout(150000000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -100,8 +100,6 @@ describe("AccountInfo", function () {
                 .setNodeAccountIds([response[i].nodeId])
                 .setAccountId(receipt[i].accountId)
                 .execute(env.client);
-
-            console.log(info[i].accountId);
         }
 
         for (let i = 0; i < 300; i++) {
@@ -122,7 +120,7 @@ describe("AccountInfo", function () {
     });
 
     it("should reflect token with no keys", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -168,7 +166,7 @@ describe("AccountInfo", function () {
     });
 
     it("should be error with no account ID", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         let err = false;

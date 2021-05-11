@@ -7,11 +7,13 @@
 
 describe("TokenDelete", function () {
     it("should be executable", async function () {
-        // this.timeout(10000);
-        // const client = new IntegrationTestEnv();
+        // this.timeout(60000);
+        //
+        // const env = new IntegrationTestEnv();
         // await env.initialize()
         // const operatorId = env.operatorId;
         // const operatorKey = env.operatorKey.publicKey;
+        //
         // const response = await new TokenCreateTransaction()
         //     .setTokenName("ffff")
         //     .setTokenSymbol("F")
@@ -35,8 +37,8 @@ describe("TokenDelete", function () {
     });
 
     it("should error with no token ID set", async function () {
-        // this.timeout(10000);
-        // const client = new IntegrationTestEnv();
+        // this.timeout(60000);
+        // const env = new IntegrationTestEnv();
         // await env.initialize()
         // let err = false;
         // try {

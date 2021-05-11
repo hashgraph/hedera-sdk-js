@@ -8,7 +8,7 @@ import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenInfo", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -66,7 +66,7 @@ describe("TokenInfo", function () {
     });
 
     it("should be executable with minimal properties set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -111,7 +111,7 @@ describe("TokenInfo", function () {
     });
 
     it("should error when token ID is not set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 

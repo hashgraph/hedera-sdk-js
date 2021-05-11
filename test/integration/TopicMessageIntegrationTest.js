@@ -11,7 +11,7 @@ import { bigContents } from "./contents.js";
 
 describe("TopicMessage", function () {
     it("should be executable", async function () {
-        this.timeout(40000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -115,7 +115,7 @@ describe("TopicMessage", function () {
     });
 
     it("should error when topic ID is not set", async function () {
-        this.timeout(40000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -156,7 +156,7 @@ describe("TopicMessage", function () {
     });
 
     it("should error when message is not set", async function () {
-        this.timeout(40000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

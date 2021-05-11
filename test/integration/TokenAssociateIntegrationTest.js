@@ -12,7 +12,7 @@ import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenAssociate", function () {
     it("should be executable", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -79,7 +79,7 @@ describe("TokenAssociate", function () {
     });
 
     it("should be executable even when no token IDs are set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -93,7 +93,7 @@ describe("TokenAssociate", function () {
     });
 
     it("should error when account ID is not set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

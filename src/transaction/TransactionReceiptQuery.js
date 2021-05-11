@@ -72,9 +72,9 @@ export default class TransactionReceiptQuery extends Query {
      */
     setTransactionId(transactionId) {
         this._transactionId =
-            transactionId instanceof TransactionId
-                ? transactionId
-                : TransactionId.fromString(transactionId);
+            typeof transactionId === "string"
+                ? TransactionId.fromString(transactionId)
+                : TransactionId._fromProtobuf(transactionId._toProtobuf());
 
         return this;
     }

@@ -9,7 +9,7 @@ import { PrivateKey } from "../src/index.js";
 
 describe("AccountDelete", function () {
     it("should be executable", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -55,7 +55,7 @@ describe("AccountDelete", function () {
     });
 
     it("should error with invalid signature", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -93,7 +93,7 @@ describe("AccountDelete", function () {
     });
 
     it("should error with no account ID set", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         let err = false;

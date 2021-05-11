@@ -62,7 +62,9 @@ export default class TransactionId {
      */
     static generate(id) {
         return new TransactionId(
-            typeof id === "string" ? AccountId.fromString(id) : id,
+            typeof id === "string"
+                ? AccountId.fromString(id)
+                : new AccountId(id),
             Timestamp.generate()
         );
     }

@@ -13,7 +13,7 @@ import IntegrationTestEnv from "./client/index.js";
 
 describe("AccountBalanceQuery", function () {
     it("account 0.0.3 should have a balance higher than 1 tinybar", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -28,7 +28,7 @@ describe("AccountBalanceQuery", function () {
     });
 
     it("an account that does not exist should return an error", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -49,7 +49,7 @@ describe("AccountBalanceQuery", function () {
     });
 
     it("should reflect token with no keys", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

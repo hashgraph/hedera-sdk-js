@@ -7,7 +7,7 @@ import IntegrationTestEnv from "./client/index.js";
 
 describe("TopicInfo", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -47,7 +47,7 @@ describe("TopicInfo", function () {
     });
 
     it("should be executable when no fields are set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 

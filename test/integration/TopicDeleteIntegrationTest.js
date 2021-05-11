@@ -7,7 +7,7 @@ import IntegrationTestEnv from "./client/index.js";
 
 describe("TopicDelete", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -30,7 +30,7 @@ describe("TopicDelete", function () {
     });
 
     it("should error when deleting immutable topic", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const response = await new TopicCreateTransaction().execute(env.client);

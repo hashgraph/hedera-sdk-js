@@ -1,5 +1,6 @@
 import {
     TokenCreateTransaction,
+    TokenDeleteTransaction,
     TokenInfoQuery,
     Status,
     PrivateKey,
@@ -8,7 +9,7 @@ import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenCreate", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -66,7 +67,7 @@ describe("TokenCreate", function () {
     });
 
     it("should be executable with minimal properties set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -109,27 +110,26 @@ describe("TokenCreate", function () {
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
 
-        // TODO: Uncomment this when token deletion because supported again
-        // let err = false;
+        let err = false;
 
-        // try {
-        //     await (
-        //         await new TokenDeleteTransaction()
-        //             .setNodeAccountIds([response.nodeId])
-        //             .setTokenId(tokenId)
-        //             .execute(env.client)
-        //     ).getReceipt(env.client);
-        // } catch (error) {
-        //     err = error.toString().includes(Status.TokenIsImmutable);
-        // }
+        try {
+            await (
+                await new TokenDeleteTransaction()
+                    .setNodeAccountIds([response.nodeId])
+                    .setTokenId(tokenId)
+                    .execute(env.client)
+            ).getReceipt(env.client);
+        } catch (error) {
+            err = error.toString().includes(Status.TokenIsImmutable);
+        }
 
-        // if (!err) {
-        //     throw new Error("token deletion did not error");
-        // }
+        if (!err) {
+            throw new Error("token deletion did not error");
+        }
     });
 
     it("should error when token name is not set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -154,7 +154,7 @@ describe("TokenCreate", function () {
     });
 
     it("should error when token symbol is not set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -179,7 +179,7 @@ describe("TokenCreate", function () {
     });
 
     it("should error when treasury account ID is not set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -205,7 +205,7 @@ describe("TokenCreate", function () {
     });
 
     it("should error when admin key does not sign transaction", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

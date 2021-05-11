@@ -12,7 +12,7 @@ let smartContractBytecode =
 
 describe("ContractExecute", function () {
     it("should be executable", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -78,7 +78,7 @@ describe("ContractExecute", function () {
     });
 
     it("should error when contract ID is not set", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -155,7 +155,7 @@ describe("ContractExecute", function () {
     });
 
     it("should error when function is not set", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -227,7 +227,7 @@ describe("ContractExecute", function () {
     });
 
     it("should error when gas is not set", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -304,7 +304,7 @@ describe("ContractExecute", function () {
     });
 
     it("should error when function's parameter are not set", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;

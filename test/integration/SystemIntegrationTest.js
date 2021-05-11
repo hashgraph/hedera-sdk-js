@@ -6,7 +6,7 @@ import Timestamp from "../src/Timestamp.js";
 
 describe("SystemIntegration", function () {
     it("should be executable", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         let errorThrown = false;

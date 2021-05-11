@@ -326,7 +326,9 @@ export default class TokenUpdateTransaction extends Transaction {
     setTreasuryAccountId(id) {
         this._requireNotFrozen();
         this._treasuryAccountId =
-            id instanceof AccountId ? id : AccountId.fromString(id);
+            typeof id === "string"
+                ? AccountId.fromString(id)
+                : AccountId._fromProtobuf(id._toProtobuf());
 
         return this;
     }

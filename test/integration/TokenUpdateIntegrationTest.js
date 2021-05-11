@@ -11,7 +11,7 @@ import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenUpdate", function () {
     it("should be executable", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -108,7 +108,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should be able to update treasury", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -232,7 +232,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should be executable when no properties except token ID are set", async function () {
-        this.timeout(20000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -268,7 +268,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should error updating immutable token", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -302,7 +302,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should error when token ID is not set", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -324,7 +324,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -346,7 +346,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should error when admin key does not sign transaction", async function () {
-        this.timeout(10000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

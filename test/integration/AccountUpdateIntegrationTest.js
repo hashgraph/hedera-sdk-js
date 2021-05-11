@@ -12,7 +12,7 @@ import Long from "long";
 
 describe("AccountUpdate", function () {
     it("should be executable", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -90,7 +90,7 @@ describe("AccountUpdate", function () {
     });
 
     it("should error with invalid auto renew period", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -149,7 +149,7 @@ describe("AccountUpdate", function () {
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("should error with insufficent tx fee when a large expiration time is set", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -195,7 +195,7 @@ describe("AccountUpdate", function () {
     });
 
     it("should error when account ID is not set", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -218,7 +218,7 @@ describe("AccountUpdate", function () {
     });
 
     it("should execute with only account ID", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -259,7 +259,7 @@ describe("AccountUpdate", function () {
     });
 
     it("should error with invalid signature", async function () {
-        this.timeout(15000);
+        this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
 
