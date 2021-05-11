@@ -76,8 +76,8 @@
     },
     "dependencies": {
         "@grpc/grpc-js": "^1.2.2",
-        "@hashgraph/cryptography": "^1.0.14",
-        "@hashgraph/proto": "link:packages/proto",
+        "@hashgraph/cryptography": "file:packages/cryptography",
+        "@hashgraph/proto": "file:packages/proto",
         "protobufjs": "^6.10.2",
         "@types/crypto-js": "^4.0.1",
         "@types/utf8": "^2.1.6",
