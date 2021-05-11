@@ -4,13 +4,13 @@ import {
     Status,
     PrivateKey,
 } from "../src/exports.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenInfo", function () {
     it("should be executable", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generate();
@@ -68,7 +68,7 @@ describe("TokenInfo", function () {
     it("should be executable with minimal properties set", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -113,7 +113,7 @@ describe("TokenInfo", function () {
     it("should error when token ID is not set", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         let err = false;
 

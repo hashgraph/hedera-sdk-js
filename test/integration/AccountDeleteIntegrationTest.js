@@ -4,14 +4,14 @@ import AccountInfoQuery from "../src/account/AccountInfoQuery.js";
 import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 
 describe("AccountDelete", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
@@ -57,7 +57,7 @@ describe("AccountDelete", function () {
     it("should error with invalid signature", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
@@ -95,7 +95,7 @@ describe("AccountDelete", function () {
     it("should error with no account ID set", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         let err = false;
 
         try {

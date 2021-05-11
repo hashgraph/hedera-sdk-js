@@ -3,13 +3,13 @@ import {
     TopicDeleteTransaction,
     TopicInfoQuery,
 } from "../src/exports.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("TopicCreate", function () {
     it("should be executable", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -49,11 +49,9 @@ describe("TopicCreate", function () {
     it("should be executable when no fields are set", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
-        const response = await new TopicCreateTransaction().execute(
-            env.client
-        );
+        const response = await new TopicCreateTransaction().execute(env.client);
 
         const topic = (await response.getReceipt(env.client)).topicId;
 

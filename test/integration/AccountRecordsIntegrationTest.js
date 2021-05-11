@@ -4,14 +4,14 @@ import AccountRecordsQuery from "../src/account/AccountRecordsQuery.js";
 import TransferTransaction from "../src/account/TransferTransaction.js";
 import Hbar from "../src/Hbar.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 
 describe("AccountRecords", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 

@@ -7,14 +7,14 @@ import {
     TransferTransaction,
     Hbar,
 } from "../src/index.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import * as hex from "../../src/encoding/hex.js";
 
 describe("TransactionIntegration", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
@@ -52,7 +52,7 @@ describe("TransactionIntegration", function () {
     });
 
     it("signs correctly", async function () {
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generate();
 
         let transaction = await (
@@ -82,7 +82,7 @@ describe("TransactionIntegration", function () {
 
     it("issue-327", async function () {
         this.timeout(30000);
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const privateKey1 = PrivateKey.generate();
         const privateKey2 = PrivateKey.generate();
         const privateKey3 = PrivateKey.generate();

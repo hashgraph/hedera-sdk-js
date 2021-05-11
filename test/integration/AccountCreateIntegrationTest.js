@@ -4,14 +4,14 @@ import AccountInfoQuery from "../src/account/AccountInfoQuery.js";
 import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 
 describe("AccountCreate", function () {
     it("should be executable", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
@@ -57,7 +57,7 @@ describe("AccountCreate", function () {
     it("should be executable with only key set", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
@@ -99,7 +99,7 @@ describe("AccountCreate", function () {
     it("should error when key is not set", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         let err = false;
 
         try {
@@ -121,7 +121,7 @@ describe("AccountCreate", function () {
     it("should be able to sign transaction and verify transaction signtatures", async function () {
         this.timeout(15000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key = PrivateKey.generate();

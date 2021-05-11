@@ -3,12 +3,12 @@
 //     TokenDeleteTransaction,
 //     Status,
 // } from "../src/exports.js";
-// import newClient from "./client/index.js";
+// import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenDelete", function () {
     it("should be executable", async function () {
         // this.timeout(10000);
-        // const client = new newClient();
+        // const client = new IntegrationTestEnv();
         // await env.initialize()
         // const operatorId = env.operatorId;
         // const operatorKey = env.operatorKey.publicKey;
@@ -36,7 +36,7 @@ describe("TokenDelete", function () {
 
     it("should error with no token ID set", async function () {
         // this.timeout(10000);
-        // const client = new newClient();
+        // const client = new IntegrationTestEnv();
         // await env.initialize()
         // let err = false;
         // try {

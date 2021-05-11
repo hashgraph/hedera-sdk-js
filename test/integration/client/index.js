@@ -2,7 +2,7 @@ import {
     PrivateKey,
     AccountCreateTransaction,
     Hbar,
-    AccountId
+    AccountId,
 } from "../../src/exports.js";
 import Client from "../../src/client/NodeClient.js";
 import dotenv from "dotenv";
@@ -11,7 +11,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export default class IntegrationTestEnv {
-
     constructor() {
         /** @type {Client} */
         this.client = new Client();
@@ -34,7 +33,9 @@ export default class IntegrationTestEnv {
             this.client = Client.forPreviewnet();
         } else {
             try {
-                this.client = await Client.fromConfigFile(process.env.CONFIG_FILE);
+                this.client = await Client.fromConfigFile(
+                    process.env.CONFIG_FILE
+                );
             } catch (err) {
                 this.client = Client.forTestnet();
             }
@@ -63,14 +64,14 @@ export default class IntegrationTestEnv {
 
         const resp = await new AccountCreateTransaction()
             .setKey(key)
-            .setInitialBalance(new Hbar(50))
-            .execute(this.client)
+            .setInitialBalance(new Hbar(100))
+            .execute(this.client);
 
-        const receipt = await resp.getReceipt(this.client)
+        const receipt = await resp.getReceipt(this.client);
 
         this.operatorId = receipt.accountId;
         this.operatorKey = key;
-        this.nodeAccountIds = [resp.nodeId]
+        this.nodeAccountIds = [resp.nodeId];
         this.client.setOperator(this.operatorId, this.operatorKey);
 
         expect(this.client.operatorAccountId).to.not.be.null;

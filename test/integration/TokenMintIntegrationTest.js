@@ -4,13 +4,13 @@ import {
     Hbar,
     Status,
 } from "../src/exports.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenMint", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -44,7 +44,7 @@ describe("TokenMint", function () {
     it("should error when token ID is not set", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -67,7 +67,7 @@ describe("TokenMint", function () {
     it("should error when amount is not set", async function () {
         this.timeout(20000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 

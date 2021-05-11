@@ -5,7 +5,7 @@ import LiveHashAddTransaction from "../src/account/LiveHashAddTransaction.js";
 import LiveHashDeleteTransaction from "../src/account/LiveHashDeleteTransaction.js";
 import LiveHashQuery from "../src/account/LiveHashQuery.js";
 import TransactionReceiptQuery from "../../src/transaction/TransactionReceiptQuery.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 import Long from "long";
 import * as hex from "../src/encoding/hex.js";
@@ -19,7 +19,7 @@ describe("LiveHash", function () {
             "100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002"
         );
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         let errorThrown = false;
 

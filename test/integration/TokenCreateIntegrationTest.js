@@ -4,13 +4,13 @@ import {
     Status,
     PrivateKey,
 } from "../src/exports.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenCreate", function () {
     it("should be executable", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generate();
@@ -68,7 +68,7 @@ describe("TokenCreate", function () {
     it("should be executable with minimal properties set", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -131,7 +131,7 @@ describe("TokenCreate", function () {
     it("should error when token name is not set", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         let err = false;
@@ -156,7 +156,7 @@ describe("TokenCreate", function () {
     it("should error when token symbol is not set", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         let err = false;
@@ -181,7 +181,7 @@ describe("TokenCreate", function () {
     it("should error when treasury account ID is not set", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -207,7 +207,7 @@ describe("TokenCreate", function () {
     it("should error when admin key does not sign transaction", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         let err = false;

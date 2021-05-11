@@ -7,13 +7,13 @@ import {
     Status,
     PrivateKey,
 } from "../src/exports.js";
-import newClient from "./client/index.js";
+import IntegrationTestEnv from "./client/index.js";
 
 describe("TokenUpdate", function () {
     it("should be executable", async function () {
         this.timeout(20000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generate();
@@ -110,7 +110,7 @@ describe("TokenUpdate", function () {
     it("should be able to update treasury", async function () {
         this.timeout(20000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generate();
@@ -234,7 +234,7 @@ describe("TokenUpdate", function () {
     it("should be executable when no properties except token ID are set", async function () {
         this.timeout(20000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
         const key1 = PrivateKey.generate();
@@ -270,7 +270,7 @@ describe("TokenUpdate", function () {
     it("should error updating immutable token", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -304,7 +304,7 @@ describe("TokenUpdate", function () {
     it("should error when token ID is not set", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
 
         let err = false;
 
@@ -326,7 +326,7 @@ describe("TokenUpdate", function () {
     it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -348,7 +348,7 @@ describe("TokenUpdate", function () {
     it("should error when admin key does not sign transaction", async function () {
         this.timeout(10000);
 
-        const env = await newClient.new();
+        const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
