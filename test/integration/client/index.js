@@ -43,9 +43,7 @@ export default class IntegrationTestEnv {
             client = Client.forPreviewnet();
         } else {
             try {
-                client = await Client.fromConfigFile(
-                    process.env.CONFIG_FILE
-                );
+                client = await Client.fromConfigFile(process.env.CONFIG_FILE);
             } catch (err) {
                 client = Client.forTestnet();
             }
@@ -79,6 +77,8 @@ export default class IntegrationTestEnv {
 
         client.setOperator(accountId, key);
 
-        return new IntegrationTestEnv(client, key, accountId, [response.nodeId]);
+        return new IntegrationTestEnv(client, key, accountId, [
+            response.nodeId,
+        ]);
     }
 }
