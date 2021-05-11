@@ -3,49 +3,41 @@ name: JavaScript CI
 on: [push]
 
 jobs:
-  build:
+  Everything:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
+
       - name: Build
-        run: yarn
+        run: pnpm install 
 
-  lint:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '12'
       - name: Lint
-        run: yarn && yarn lint
+        run: pnpm lint 
 
-  unit-test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '12'
       - name: Run Unit Tests
-        run: yarn && yarn test:unit:node
+        run: pnpm test:unit:node
 
-  integration-test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '12'
       - name: Run Integration Tests
         env:
           OPERATOR_KEY: ${{ secrets.OPERATOR_KEY }}
           OPERATOR_ID: ${{ secrets.OPERATOR_ID }}
-        run: yarn && yarn test:integration:node
+        run: pnpm test:integration:node
