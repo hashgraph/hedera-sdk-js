@@ -64,7 +64,7 @@ export class ScheduleInfo {
     public getTransaction(): Transaction {
         const protoTransaction = new ProtoTransaction();
         let scheduledB;
-        if(this.transactionBody !== null) {
+        if (this.transactionBody !== null) {
             scheduledB = this.transactionBody;
         } else {
             throw new Error("scheduled transaction body is empty");
