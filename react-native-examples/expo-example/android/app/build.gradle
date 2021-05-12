@@ -131,6 +131,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    dexOptions {
+       javaMaxHeapSize "6g"
+    }
+
     defaultConfig {
         applicationId "com.awesomeproject"
         minSdkVersion rootProject.ext.minSdkVersion
