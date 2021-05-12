@@ -85,7 +85,14 @@ export default class AccountBalance {
 
         return JSON.stringify({
             hbars: this.hbars.toString(),
-            tokens: finalToken,
+            tokens: JSON.parse(finalToken),
         });
+    }
+
+    /**
+     * @returns {JSON}
+     */
+    toJSON() {
+        return JSON.parse(this.toString());
     }
 }
