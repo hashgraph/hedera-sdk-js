@@ -7,6 +7,8 @@
 
 ## Install
 
+**NOTE**: v1 of the SDK is deprecated and support will be discontinued after October 2021. Please install the latest version 2.x or migrate from v1 to the latest 2.x version. You can reference the migration documentation [here](https://github.com/hashgraph/hedera-sdk-js/blob/master/MIGRATING_V1.md).
+
 ```
 # with NPM
 $ npm install --save @hashgraph/sdk
