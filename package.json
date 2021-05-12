@@ -19,8 +19,11 @@
         "crypto": false
     },
     "exports": {
-        "import": "./src/index.js",
-        "require": "./lib/index.cjs"
+        "./package.json": "./package.json",
+        ".": {
+            "import": "./src/index.js",
+            "require": "./lib/index.cjs"
+        }
     },
     "license": "Apache-2.0",
     "author": "Launchbadge <contact@launchbadge.com>",

@@ -8,7 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@hashgraph/sdk": "file:..",
+    "@hashgraph/sdk": "file:../..",
     "expo": "~40.0.0",
     "expo-splash-screen": "~0.8.0",
     "expo-status-bar": "~1.0.3",

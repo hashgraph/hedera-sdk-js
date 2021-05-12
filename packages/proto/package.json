@@ -15,6 +15,9 @@
         "sdk",
         "transactions"
     ],
+    "exports": {
+        "./package.json": "./package.json"
+    },
     "files": [
         "lib/",
         "src/"
