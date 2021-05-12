@@ -37,7 +37,7 @@ export default class App extends React.Component {
                 this.setState({ ...this.state, transactionId: response.transactionId.toString() });
             })
             .catch((err) => {
-                console.log(err);
+                this.setState({ ...this.state, transactionId: err.toString() });
             });
         new AccountInfoQuery()
             .setAccountId(operatorId)
@@ -46,7 +46,7 @@ export default class App extends React.Component {
                 this.setState({ ...this.state, accountId: info.accountId.toString() });
             })
             .catch((err) => {
-                console.log(err);
+                this.setState({ ...this.state, accountId: err.toString() });
             });
         new AccountBalanceQuery()
             .setAccountId(operatorId)
@@ -55,11 +55,14 @@ export default class App extends React.Component {
                 this.setState({ ...this.state, balance: balance.hbars.toString() });
             })
             .catch((err) => {
-                console.log(err);
+                this.setState({ ...this.state, balance: err.toString() });
             });
         Mnemonic.generate12()
             .then((mnemonic) => {
                 this.setState({ ...this.state, mnemonic: mnemonic.toString() });
+            })
+            .catch((err) => {
+                this.setState({ ...this.state, mnemonic: err.toString() });
             });
     }
 
