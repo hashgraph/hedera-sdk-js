@@ -10,6 +10,18 @@ import TokenBalanceMap from "./TokenBalanceMap.js";
  */
 
 /**
+ * @typedef {object} TokenBalanceJson
+ * @property {string} tokenId
+ * @property {string} balance
+ */
+
+/**
+ * @typedef {object} AccountBalanceJson
+ * @property {string} hbars
+ * @property {TokenBalanceJson[]} tokens
+ */
+
+/**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("long")} Long
  */
@@ -71,28 +83,29 @@ export default class AccountBalance {
      * @returns {string}
      */
     toString() {
-        let finalToken = "";
-        if (this.tokens != null) {
-            for (const [key, value] of this.tokens._map) {
-                finalToken =
-                    finalToken +
-                    JSON.stringify({
-                        tokenId: key.toString(),
-                        balance: value.toString(),
-                    });
-            }
-        }
+        const json = this.toJSON();
 
         return JSON.stringify({
-            hbars: this.hbars.toString(),
-            tokens: JSON.parse(finalToken),
+            hbars: json.hbars,
+            tokens: JSON.stringify(json.tokens),
         });
     }
 
     /**
-     * @returns {JSON}
+     * @returns {AccountBalanceJson}
      */
     toJSON() {
-        return JSON.parse(this.toString());
+        const tokens = [];
+        for (const [key, value] of this.tokens != null ? this.tokens : []) {
+            tokens.push({
+                tokenId: key.toString(),
+                balance: value.toString(),
+            });
+        }
+
+        return {
+            hbars: this.hbars.toString(),
+            tokens,
+        };
     }
 }
