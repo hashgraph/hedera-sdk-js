@@ -57,6 +57,8 @@ export abstract class BaseClient {
     public _maxQueryPayment: Hbar = new Hbar(1);
 
     protected constructor(network: Nodes, operator?: Operator) {
+        console.warn("Deprecated: `@hashgraph/sdk@v1` has been deprecated. Please update to version 2 of the SDK. Help with migration can be found here: https://github.com/hashgraph/hedera-sdk-js/blob/master/MIGRATING_V1.md");
+
         this.replaceNodes(network);
 
         if (operator) {
