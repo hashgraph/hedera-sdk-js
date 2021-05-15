@@ -52,10 +52,13 @@ export default class Hbar {
     }
 
     /**
-     * @param {number | Long} amount
+     * @param {number | Long | string} amount
      * @returns {Hbar}
      */
     static fromTinybars(amount) {
+        if (typeof amount === "string") {
+            return this.fromString(amount, HbarUnit.Tinybar);
+        }
         return new Hbar(amount, HbarUnit.Tinybar);
     }
 
@@ -76,6 +79,13 @@ export default class Hbar {
         return new BigNumber(this._valueInTinybar.toString()).dividedBy(
             unit._tinybar
         );
+    }
+
+    /**
+     * @returns {BigNumber}
+     */
+    toBigNumber() {
+        return this.to(HbarUnit.Hbar);
     }
 
     /**
