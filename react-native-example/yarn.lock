@@ -1329,19 +1329,19 @@
     tweetnacl "^1.0.3"
     utf8 "^3.0.0"
 
-"@hashgraph/proto@^1.0.26-beta.1":
-  version "1.0.26-beta.1"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.0.26-beta.1.tgz#1d8256244f6b7755772dee1801715a611aaaad13"
-  integrity sha512-JocftOp8YnsGrtcYx/JuHLEbgJ+/1gQDzzFtx+lpdrTfO7Gb2/v/d4vZqne1ToWM8+WB00bkKOYDO+iVHBPMkA==
+"@hashgraph/proto@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.1.2.tgz#d2d9b75154ce4d62e87d9fe99a0638f0f6bb7df6"
+  integrity sha512-tJUWbup8tM9+SH0grbezbtAoxnNzUcrCCM6pVgNs6NSQmyprFsFUzp/KxyYhA4dZwVI3+fjspSRKiMMnZbQncA==
   dependencies:
     protobufjs "^6.10.2"
 
-"@hashgraph/sdk@file:../..":
+"@hashgraph/sdk@file:..":
   version "2.0.19"
   dependencies:
     "@grpc/grpc-js" "^1.2.2"
     "@hashgraph/cryptography" "^1.0.15"
-    "@hashgraph/proto" "^1.0.26-beta.1"
+    "@hashgraph/proto" "^1.1.2"
     "@types/crypto-js" "^4.0.1"
     "@types/utf8" "^2.1.6"
     bignumber.js "^9.0.1"
