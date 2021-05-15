@@ -3,7 +3,7 @@
     "private": true,
     "type": "commonjs",
     "dependencies": {
-        "@hashgraph/sdk": "file:..",
+        "@hashgraph/sdk": "link:..",
         "dotenv": "^8.2.0"
     }
 }

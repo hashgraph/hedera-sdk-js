@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@hashgraph/sdk': file:..
+  '@hashgraph/sdk': link:..
   dotenv: ^8.2.0
 
 dependencies:
