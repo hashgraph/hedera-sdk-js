@@ -35,7 +35,8 @@ async function main() {
         .setAccountId(client.operatorAccountId)
         .execute(client);
 
-    console.log(`${client.operatorAccountId.toString()} balance = ${balance.hbars}`);
+    // console.log(`${client.operatorAccountId.toString()} balance = ${balance.hbars}`);
+    console.log(`${client.operatorAccountId.toString()} balance = ${balance}`);
 }
 
 void main();
