@@ -16,7 +16,11 @@
         "transactions"
     ],
     "exports": {
-        "./package.json": "./package.json"
+        "./package.json": "./package.json",
+        ".": {
+            "import": "./lib/index.js",
+            "require": "./lib/index.js"
+        }
     },
     "files": [
         "lib/",
