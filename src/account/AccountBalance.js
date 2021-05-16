@@ -1,5 +1,8 @@
+import Long from "long";
 import Hbar from "../Hbar.js";
+import TokenId from "../token/TokenId.js";
 import TokenBalanceMap from "./TokenBalanceMap.js";
+import TokenDecimalMap from "./TokenDecimalMap.js";
 
 /**
  * @namespace proto
@@ -7,12 +10,15 @@ import TokenBalanceMap from "./TokenBalanceMap.js";
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").ICryptoGetAccountBalanceResponse} proto.ICryptoGetAccountBalanceResponse
  * @typedef {import("@hashgraph/proto").IKey} proto.IKey
+ * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").ITokenBalance} proto.ITokenBalance
  */
 
 /**
  * @typedef {object} TokenBalanceJson
  * @property {string} tokenId
  * @property {string} balance
+ * @property {number} decimals
  */
 
 /**
@@ -23,7 +29,6 @@ import TokenBalanceMap from "./TokenBalanceMap.js";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("long")} Long
  */
 
 export default class AccountBalance {
@@ -32,6 +37,7 @@ export default class AccountBalance {
      * @param {object} props
      * @param {Hbar} props.hbars
      * @param {?TokenBalanceMap} props.tokens
+     * @param {?TokenDecimalMap} props.tokenDecimals
      */
     constructor(props) {
         /**
@@ -44,20 +50,41 @@ export default class AccountBalance {
         /** @readonly */
         this.tokens = props.tokens;
 
+        /** @readonly */
+        this.tokenDecimals = props.tokenDecimals;
+
         Object.freeze(this);
     }
 
     /**
      * @internal
-     * @param {proto.ICryptoGetAccountBalanceResponse} balance
+     * @param {proto.ICryptoGetAccountBalanceResponse} accountBalance
      * @returns {AccountBalance}
      */
-    static _fromProtobuf(balance) {
+    static _fromProtobuf(accountBalance) {
+        const tokenBalances = new TokenBalanceMap();
+        const tokenDecimals = new TokenDecimalMap();
+
+        if (accountBalance.tokenBalances != null) {
+            for (const balance of accountBalance.tokenBalances) {
+                const tokenId = TokenId._fromProtobuf(
+                    /** @type {proto.ITokenID} */ (balance.tokenId)
+                );
+
+                tokenDecimals._set(tokenId, balance.decimals ?? 0);
+                tokenBalances._set(
+                    tokenId,
+                    Long.fromValue(/** @type {Long} */ (balance.balance))
+                );
+            }
+        }
+
         return new AccountBalance({
-            hbars: Hbar.fromTinybars(/** @type {Long} */ (balance.balance)),
-            tokens: TokenBalanceMap._fromProtobuf(
-                balance.tokenBalances != null ? balance.tokenBalances : []
+            hbars: Hbar.fromTinybars(
+                /** @type {Long} */ (accountBalance.balance)
             ),
+            tokens: tokenBalances,
+            tokenDecimals,
         });
     }
 
@@ -65,11 +92,14 @@ export default class AccountBalance {
      * @returns {proto.ICryptoGetAccountBalanceResponse}
      */
     _toProtobuf() {
+        /** @type {proto.ITokenBalance[]} */
         const list = [];
+
         for (const [key, value] of this.tokens != null ? this.tokens : []) {
             list.push({
-                token: key._toProtobuf(),
+                tokenId: key._toProtobuf(),
                 balance: value,
+                decimals: this.tokenDecimals?.get(key),
             });
         }
 
@@ -83,12 +113,7 @@ export default class AccountBalance {
      * @returns {string}
      */
     toString() {
-        const json = this.toJSON();
-
-        return JSON.stringify({
-            hbars: json.hbars,
-            tokens: JSON.stringify(json.tokens),
-        });
+        return JSON.stringify(this.toJSON());
     }
 
     /**
@@ -100,6 +125,7 @@ export default class AccountBalance {
             tokens.push({
                 tokenId: key.toString(),
                 balance: value.toString(),
+                decimals: this.tokenDecimals?.get(key) ?? 0,
             });
         }
 

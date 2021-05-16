@@ -8,13 +8,9 @@ import ObjectMap from "../ObjectMap.js";
  */
 
 /**
- * @typedef {import("long")} Long
+ * @augments {ObjectMap<TokenId, number>}
  */
-
-/**
- * @augments {ObjectMap<TokenId, Long>}
- */
-export default class TokenBalanceMap extends ObjectMap {
+export default class TokenDecimalMap extends ObjectMap {
     constructor() {
         super((s) => TokenId.fromString(s));
     }
