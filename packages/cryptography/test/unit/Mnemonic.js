@@ -21,6 +21,15 @@ describe("Mnemonic", function () {
         await m._validate();
     });
 
+    it("12 words from string", async function () {
+        const m = await Mnemonic.fromString("spy,base,tired,useless,rug,riot,ticket,enroll,disorder,kiwi,client,impulse");
+
+        expect(m.words).to.have.length(12);
+
+        // noinspection JSAccessibilityCheck
+        await m._validate();
+    });
+
     it("should detect an invalid checksum", async function () {
         const m = await Mnemonic.generate();
 
