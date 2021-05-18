@@ -1,4 +1,7 @@
 // equivalent of [get-account-balance.js] but demonstrating es native module syntax
+
+import "dotenv/config";
+
 import { Client, AccountBalanceQuery } from "@hashgraph/sdk";
 
 async function main() {
