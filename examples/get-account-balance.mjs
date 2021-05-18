@@ -1,8 +1,13 @@
-// equivalent of [get-account-balance.js] but demonstrating es native module syntax
+// equivalent to [get-account-balance.js] but demonstrating native module syntax
 
 import "dotenv/config";
 
-import { Client, AccountBalanceQuery } from "@hashgraph/sdk";
+import {
+    Client,
+    AccountBalanceQuery,
+    PrivateKey,
+    AccountId
+} from "@hashgraph/sdk";
 
 async function main() {
     let client;
@@ -31,10 +36,10 @@ async function main() {
     }
 
     const balance = await new AccountBalanceQuery()
-        .setAccountId("0.0.3")
+        .setAccountId(client.operatorAccountId)
         .execute(client);
 
-    console.log(`0.0.3 balance = ${balance}`);
+    console.log(`${client.operatorAccountId.toString()} balance = ${balance.hbars}`);
 }
 
 void main();
