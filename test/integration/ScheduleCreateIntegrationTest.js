@@ -71,7 +71,9 @@ describe("ScheduleCreate", function () {
             .setScheduleId(scheduleId)
             .execute(env.client);
 
-        const infoTransaction = /** @type {TopicMessageSubmitTransaction} */ (info.scheduledTransaction);
+        const infoTransaction = /** @type {TopicMessageSubmitTransaction} */ (
+            info.scheduledTransaction
+        );
 
         expect(info.scheduleId.toString()).to.be.equal(scheduleId.toString());
         expect(infoTransaction.topicId.toString()).to.be.equal(

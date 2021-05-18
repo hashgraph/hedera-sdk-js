@@ -48,7 +48,9 @@ export default class TransactionReceiptQuery extends Query {
      * @returns {TransactionReceiptQuery}
      */
     static _fromProtobuf(query) {
-        const receipt = /** @type {proto.ITransactionGetReceiptQuery} */ (query.transactionGetReceipt);
+        const receipt = /** @type {proto.ITransactionGetReceiptQuery} */ (
+            query.transactionGetReceipt
+        );
 
         return new TransactionReceiptQuery({
             transactionId: receipt.transactionID
@@ -109,9 +111,16 @@ export default class TransactionReceiptQuery extends Query {
                 return false;
         }
 
-        const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);
-        const receipt = /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt);
-        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (receipt.status);
+        const transactionGetReceipt =
+            /** @type {proto.ITransactionGetReceiptResponse} */ (
+                response.transactionGetReceipt
+            );
+        const receipt = /** @type {proto.ITransactionReceipt} */ (
+            transactionGetReceipt.receipt
+        );
+        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (
+            receipt.status
+        );
         const receiptStatus = Status._fromCode(receiptStatusCode);
 
         switch (receiptStatus) {
@@ -146,8 +155,13 @@ export default class TransactionReceiptQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);
-        return /** @type {proto.IResponseHeader} */ (transactionGetReceipt.header);
+        const transactionGetReceipt =
+            /** @type {proto.ITransactionGetReceiptResponse} */ (
+                response.transactionGetReceipt
+            );
+        return /** @type {proto.IResponseHeader} */ (
+            transactionGetReceipt.header
+        );
     }
 
     /**
@@ -160,8 +174,13 @@ export default class TransactionReceiptQuery extends Query {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
-        const transactionGetReceipt = /** @type {proto.ITransactionGetReceiptResponse} */ (response.transactionGetReceipt);
-        const receipt = /** @type {proto.ITransactionReceipt} */ (transactionGetReceipt.receipt);
+        const transactionGetReceipt =
+            /** @type {proto.ITransactionGetReceiptResponse} */ (
+                response.transactionGetReceipt
+            );
+        const receipt = /** @type {proto.ITransactionReceipt} */ (
+            transactionGetReceipt.receipt
+        );
 
         return Promise.resolve(TransactionReceipt._fromProtobuf(receipt));
     }

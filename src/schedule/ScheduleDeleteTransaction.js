@@ -62,14 +62,19 @@ export default class ScheduleDeleteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const scheduleDelete = /** @type {proto.IScheduleDeleteTransactionBody} */ (body.scheduleDelete);
+        const scheduleDelete =
+            /** @type {proto.IScheduleDeleteTransactionBody} */ (
+                body.scheduleDelete
+            );
 
         return Transaction._fromProtobufTransactions(
             new ScheduleDeleteTransaction({
                 scheduleId:
                     scheduleDelete.scheduleID != null
                         ? ScheduleId._fromProtobuf(
-                              /** @type {proto.IScheduleID} */ (scheduleDelete.scheduleID)
+                              /** @type {proto.IScheduleID} */ (
+                                  scheduleDelete.scheduleID
+                              )
                           )
                         : undefined,
             }),

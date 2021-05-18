@@ -47,7 +47,9 @@ export default class TopicInfoQuery extends Query {
      * @returns {TopicInfoQuery}
      */
     static _fromProtobuf(query) {
-        const info = /** @type {proto.IConsensusTopicQuery} */ (query.consensusGetTopicInfo);
+        const info = /** @type {proto.IConsensusTopicQuery} */ (
+            query.consensusGetTopicInfo
+        );
 
         return new TopicInfoQuery({
             topicId:
@@ -110,8 +112,13 @@ export default class TopicInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const consensusGetTopicInfo = /** @type {proto.IConsensusGetTopicInfoResponse} */ (response.consensusGetTopicInfo);
-        return /** @type {proto.IResponseHeader} */ (consensusGetTopicInfo.header);
+        const consensusGetTopicInfo =
+            /** @type {proto.IConsensusGetTopicInfoResponse} */ (
+                response.consensusGetTopicInfo
+            );
+        return /** @type {proto.IResponseHeader} */ (
+            consensusGetTopicInfo.header
+        );
     }
 
     /**
@@ -123,7 +130,9 @@ export default class TopicInfoQuery extends Query {
     _mapResponse(response) {
         return Promise.resolve(
             TopicInfo._fromProtobuf(
-                /** @type {proto.IConsensusGetTopicInfoResponse} */ (response.consensusGetTopicInfo)
+                /** @type {proto.IConsensusGetTopicInfoResponse} */ (
+                    response.consensusGetTopicInfo
+                )
             )
         );
     }

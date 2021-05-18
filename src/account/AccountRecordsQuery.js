@@ -48,7 +48,9 @@ export default class AccountRecordsQuery extends Query {
      * @returns {AccountRecordsQuery}
      */
     static _fromProtobuf(query) {
-        const records = /** @type {proto.ICryptoGetAccountRecordsQuery} */ (query.cryptoGetAccountRecords);
+        const records = /** @type {proto.ICryptoGetAccountRecordsQuery} */ (
+            query.cryptoGetAccountRecords
+        );
 
         return new AccountRecordsQuery({
             accountId:
@@ -98,8 +100,13 @@ export default class AccountRecordsQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const cryptoGetAccountRecords = /** @type {proto.ICryptoGetAccountRecordsResponse} */ (response.cryptoGetAccountRecords);
-        return /** @type {proto.IResponseHeader} */ (cryptoGetAccountRecords.header);
+        const cryptoGetAccountRecords =
+            /** @type {proto.ICryptoGetAccountRecordsResponse} */ (
+                response.cryptoGetAccountRecords
+            );
+        return /** @type {proto.IResponseHeader} */ (
+            cryptoGetAccountRecords.header
+        );
     }
 
     /**
@@ -109,8 +116,13 @@ export default class AccountRecordsQuery extends Query {
      * @returns {Promise<TransactionRecord[]>}
      */
     _mapResponse(response) {
-        const cryptoGetAccountRecords = /** @type {proto.ICryptoGetAccountRecordsResponse} */ (response.cryptoGetAccountRecords);
-        const records = /** @type {proto.ITransactionRecord[]} */ (cryptoGetAccountRecords.records);
+        const cryptoGetAccountRecords =
+            /** @type {proto.ICryptoGetAccountRecordsResponse} */ (
+                response.cryptoGetAccountRecords
+            );
+        const records = /** @type {proto.ITransactionRecord[]} */ (
+            cryptoGetAccountRecords.records
+        );
 
         return Promise.resolve(
             records.map((record) => TransactionRecord._fromProtobuf(record))

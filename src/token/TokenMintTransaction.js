@@ -71,7 +71,9 @@ export default class TokenMintTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const mintToken = /** @type {proto.ITokenMintTransactionBody} */ (body.tokenCreation);
+        const mintToken = /** @type {proto.ITokenMintTransactionBody} */ (
+            body.tokenCreation
+        );
 
         return Transaction._fromProtobufTransactions(
             new TokenMintTransaction({

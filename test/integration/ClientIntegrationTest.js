@@ -79,14 +79,12 @@ describe("ClientIntegration", function () {
                 );
                 break;
             case "web_testnet":
-                oldNetwork[
-                    "https://grpc-web.testnet.myhbarwallet.com"
-                ] = new AccountId(3);
+                oldNetwork["https://grpc-web.testnet.myhbarwallet.com"] =
+                    new AccountId(3);
                 break;
             case "web_previewnet":
-                oldNetwork[
-                    "https://grpc-web.previewnet.myhbarwallet.com"
-                ] = new AccountId(3);
+                oldNetwork["https://grpc-web.previewnet.myhbarwallet.com"] =
+                    new AccountId(3);
                 break;
         }
 

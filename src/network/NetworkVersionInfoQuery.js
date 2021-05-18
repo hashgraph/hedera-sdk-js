@@ -50,8 +50,13 @@ export default class NetworkVersionInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const networkGetVersionInfo = /** @type {proto.INetworkGetVersionInfoResponse} */ (response.networkGetVersionInfo);
-        return /** @type {proto.IResponseHeader} */ (networkGetVersionInfo.header);
+        const networkGetVersionInfo =
+            /** @type {proto.INetworkGetVersionInfoResponse} */ (
+                response.networkGetVersionInfo
+            );
+        return /** @type {proto.IResponseHeader} */ (
+            networkGetVersionInfo.header
+        );
     }
 
     /**
@@ -61,7 +66,9 @@ export default class NetworkVersionInfoQuery extends Query {
      * @returns {Promise<NetworkVersionInfo>}
      */
     _mapResponse(response) {
-        const info = /** @type {proto.INetworkGetVersionInfoResponse} */ (response.networkGetVersionInfo);
+        const info = /** @type {proto.INetworkGetVersionInfoResponse} */ (
+            response.networkGetVersionInfo
+        );
         return Promise.resolve(NetworkVersionInfo._fromProtobuf(info));
     }
 

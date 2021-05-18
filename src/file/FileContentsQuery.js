@@ -43,7 +43,9 @@ export default class FileContentsQuery extends Query {
      * @returns {FileContentsQuery}
      */
     static _fromProtobuf(query) {
-        const contents = /** @type {proto.IFileGetContentsQuery} */ (query.fileGetContents);
+        const contents = /** @type {proto.IFileGetContentsQuery} */ (
+            query.fileGetContents
+        );
 
         return new FileContentsQuery({
             fileId:
@@ -91,7 +93,9 @@ export default class FileContentsQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const fileGetContents = /** @type {proto.IFileGetContentsResponse} */ (response.fileGetContents);
+        const fileGetContents = /** @type {proto.IFileGetContentsResponse} */ (
+            response.fileGetContents
+        );
         return /** @type {proto.IResponseHeader} */ (fileGetContents.header);
     }
 
@@ -102,8 +106,13 @@ export default class FileContentsQuery extends Query {
      * @returns {Promise<Uint8Array>}
      */
     _mapResponse(response) {
-        const fileContentsResponse = /** @type {proto.IFileGetContentsResponse} */ (response.fileGetContents);
-        const fileConents = /** @type {proto.IFileContents} */ (fileContentsResponse.fileContents);
+        const fileContentsResponse =
+            /** @type {proto.IFileGetContentsResponse} */ (
+                response.fileGetContents
+            );
+        const fileConents = /** @type {proto.IFileContents} */ (
+            fileContentsResponse.fileContents
+        );
         const contents = /** @type {Uint8Array} */ (fileConents.contents);
 
         return Promise.resolve(contents);

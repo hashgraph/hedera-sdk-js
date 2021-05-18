@@ -81,7 +81,9 @@ export default class SystemDeleteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const systemDelete = /** @type {proto.ISystemDeleteTransactionBody} */ (body.systemDelete);
+        const systemDelete = /** @type {proto.ISystemDeleteTransactionBody} */ (
+            body.systemDelete
+        );
 
         return Transaction._fromProtobufTransactions(
             new SystemDeleteTransaction({
@@ -94,7 +96,9 @@ export default class SystemDeleteTransaction extends Transaction {
                 contractId:
                     systemDelete.contractID != null
                         ? ContractId._fromProtobuf(
-                              /** @type {proto.IContractID} */ (systemDelete.contractID)
+                              /** @type {proto.IContractID} */ (
+                                  systemDelete.contractID
+                              )
                           )
                         : undefined,
                 expirationTime:

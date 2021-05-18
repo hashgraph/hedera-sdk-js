@@ -74,9 +74,9 @@ export default class Query extends Executable {
             throw new Error("(BUG) query.query was not set in the protobuf");
         }
 
-        const fromProtobuf = /** @type {(query: proto.IQuery) => Query<T>} */ (QUERY_REGISTRY.get(
-            query.query
-        ));
+        const fromProtobuf = /** @type {(query: proto.IQuery) => Query<T>} */ (
+            QUERY_REGISTRY.get(query.query)
+        );
 
         if (fromProtobuf == null) {
             throw new Error(
@@ -231,8 +231,9 @@ export default class Query extends Executable {
         for (const node of this._nodeIds) {
             this._paymentTransactions.push(
                 await _makePaymentTransaction(
-                    /** @type {import("../transaction/TransactionId.js").default} */ (this
-                        ._paymentTransactionId),
+                    /** @type {import("../transaction/TransactionId.js").default} */ (
+                        this._paymentTransactionId
+                    ),
                     node,
                     operator,
                     /** @type {Hbar} */ (cost)
@@ -307,9 +308,8 @@ export default class Query extends Executable {
      * @returns {Status}
      */
     _mapResponseStatus(response) {
-        const { nodeTransactionPrecheckCode } = this._mapResponseHeader(
-            response
-        );
+        const { nodeTransactionPrecheckCode } =
+            this._mapResponseHeader(response);
 
         return Status._fromCode(
             nodeTransactionPrecheckCode != null
@@ -420,9 +420,8 @@ export async function _makePaymentTransaction(
     }
 
     return {
-        signedTransactionBytes: ProtoSignedTransaction.encode(
-            signedTransaction
-        ).finish(),
+        signedTransactionBytes:
+            ProtoSignedTransaction.encode(signedTransaction).finish(),
     };
 }
 

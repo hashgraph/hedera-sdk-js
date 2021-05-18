@@ -42,7 +42,9 @@ export default class ContractByteCodeQuery extends Query {
      * @returns {ContractByteCodeQuery}
      */
     static _fromProtobuf(query) {
-        const bytecode = /** @type {proto.IContractGetBytecodeQuery} */ (query.contractGetBytecode);
+        const bytecode = /** @type {proto.IContractGetBytecodeQuery} */ (
+            query.contractGetBytecode
+        );
 
         return new ContractByteCodeQuery({
             contractId:
@@ -92,8 +94,13 @@ export default class ContractByteCodeQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const contractGetBytecodeResponse = /** @type {proto.IContractGetBytecodeResponse} */ (response.contractGetBytecodeResponse);
-        return /** @type {proto.IResponseHeader} */ (contractGetBytecodeResponse.header);
+        const contractGetBytecodeResponse =
+            /** @type {proto.IContractGetBytecodeResponse} */ (
+                response.contractGetBytecodeResponse
+            );
+        return /** @type {proto.IResponseHeader} */ (
+            contractGetBytecodeResponse.header
+        );
     }
 
     /**
@@ -103,7 +110,10 @@ export default class ContractByteCodeQuery extends Query {
      * @returns {Promise<Uint8Array>}
      */
     _mapResponse(response) {
-        const contractGetBytecodeResponse = /** @type {proto.IContractGetBytecodeResponse} */ (response.contractGetBytecodeResponse);
+        const contractGetBytecodeResponse =
+            /** @type {proto.IContractGetBytecodeResponse} */ (
+                response.contractGetBytecodeResponse
+            );
 
         return Promise.resolve(
             contractGetBytecodeResponse.bytecode != null

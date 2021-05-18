@@ -62,7 +62,9 @@ export default class ContractFunctionResult {
      * @returns {ContractFunctionResult}
      */
     static _fromProtobuf(result) {
-        const contractId = /** @type {proto.IContractID | null} */ (result.contractID);
+        const contractId = /** @type {proto.IContractID | null} */ (
+            result.contractID
+        );
         const gas = /** @type {Long | number} */ (result.gasUsed);
 
         return new ContractFunctionResult({

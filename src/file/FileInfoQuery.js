@@ -108,7 +108,9 @@ export default class FileInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const fileGetInfo = /** @type {proto.IFileGetInfoResponse} */ (response.fileGetInfo);
+        const fileGetInfo = /** @type {proto.IFileGetInfoResponse} */ (
+            response.fileGetInfo
+        );
         return /** @type {proto.IResponseHeader} */ (fileGetInfo.header);
     }
 
@@ -119,7 +121,9 @@ export default class FileInfoQuery extends Query {
      * @returns {Promise<FileInfo>}
      */
     _mapResponse(response) {
-        const info = /** @type {proto.IFileGetInfoResponse} */ (response.fileGetInfo);
+        const info = /** @type {proto.IFileGetInfoResponse} */ (
+            response.fileGetInfo
+        );
 
         return Promise.resolve(
             FileInfo._fromProtobuf(

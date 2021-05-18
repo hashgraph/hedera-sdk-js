@@ -63,7 +63,8 @@ export default class CostQuery extends Executable {
         }
 
         if (this._query._nodeIds.length == 0) {
-            this._query._nodeIds = client._network.getNodeAccountIdsForExecute();
+            this._query._nodeIds =
+                client._network.getNodeAccountIdsForExecute();
         }
 
         this._header = {

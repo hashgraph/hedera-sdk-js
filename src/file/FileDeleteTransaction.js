@@ -66,7 +66,9 @@ export default class FileDeleteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const fileDelete = /** @type {proto.IFileDeleteTransactionBody} */ (body.fileDelete);
+        const fileDelete = /** @type {proto.IFileDeleteTransactionBody} */ (
+            body.fileDelete
+        );
 
         return Transaction._fromProtobufTransactions(
             new FileDeleteTransaction({

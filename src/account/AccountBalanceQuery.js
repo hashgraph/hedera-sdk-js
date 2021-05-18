@@ -63,7 +63,9 @@ export default class AccountBalanceQuery extends Query {
      * @returns {AccountBalanceQuery}
      */
     static _fromProtobuf(query) {
-        const balance = /** @type {proto.ICryptoGetAccountBalanceQuery} */ (query.cryptogetAccountBalance);
+        const balance = /** @type {proto.ICryptoGetAccountBalanceQuery} */ (
+            query.cryptogetAccountBalance
+        );
 
         return new AccountBalanceQuery({
             accountId:
@@ -153,8 +155,13 @@ export default class AccountBalanceQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const cryptogetAccountBalance = /** @type {proto.ICryptoGetAccountBalanceResponse} */ (response.cryptogetAccountBalance);
-        return /** @type {proto.IResponseHeader} */ (cryptogetAccountBalance.header);
+        const cryptogetAccountBalance =
+            /** @type {proto.ICryptoGetAccountBalanceResponse} */ (
+                response.cryptogetAccountBalance
+            );
+        return /** @type {proto.IResponseHeader} */ (
+            cryptogetAccountBalance.header
+        );
     }
 
     /**
@@ -165,7 +172,10 @@ export default class AccountBalanceQuery extends Query {
      * @returns {Promise<AccountBalance>}
      */
     _mapResponse(response) {
-        const cryptogetAccountBalance = /** @type {proto.ICryptoGetAccountBalanceResponse} */ (response.cryptogetAccountBalance);
+        const cryptogetAccountBalance =
+            /** @type {proto.ICryptoGetAccountBalanceResponse} */ (
+                response.cryptogetAccountBalance
+            );
         return Promise.resolve(
             AccountBalance._fromProtobuf(cryptogetAccountBalance)
         );

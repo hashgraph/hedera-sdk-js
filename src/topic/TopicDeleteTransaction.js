@@ -63,7 +63,10 @@ export default class TopicDeleteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const topicDelete = /** @type {proto.IConsensusDeleteTopicTransactionBody} */ (body.consensusDeleteTopic);
+        const topicDelete =
+            /** @type {proto.IConsensusDeleteTopicTransactionBody} */ (
+                body.consensusDeleteTopic
+            );
 
         return Transaction._fromProtobufTransactions(
             new TopicDeleteTransaction({

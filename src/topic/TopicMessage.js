@@ -68,9 +68,9 @@ export default class TopicMessage {
     static _ofMany(responses) {
         const length = responses.length;
 
-        const last = /** @type {proto.IConsensusTopicResponse} */ (responses[
-            length - 1
-        ]);
+        const last = /** @type {proto.IConsensusTopicResponse} */ (
+            responses[length - 1]
+        );
 
         const consensusTimestamp = Timestamp._fromProtobuf(
             /** @type {proto.ITimestamp} */

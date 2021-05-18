@@ -144,7 +144,9 @@ export default class ContractCreateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const create = /** @type {proto.IContractCreateTransactionBody} */ (body.contractCreateInstance);
+        const create = /** @type {proto.IContractCreateTransactionBody} */ (
+            body.contractCreateInstance
+        );
 
         return Transaction._fromProtobufTransactions(
             new ContractCreateTransaction({
@@ -166,7 +168,9 @@ export default class ContractCreateTransaction extends Transaction {
                 proxyAccountId:
                     create.proxyAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (create.proxyAccountID)
+                              /** @type {proto.IAccountID} */ (
+                                  create.proxyAccountID
+                              )
                           )
                         : undefined,
                 autoRenewPeriod:

@@ -46,7 +46,9 @@ export default class ScheduleInfoQuery extends Query {
      * @returns {ScheduleInfoQuery}
      */
     static _fromProtobuf(query) {
-        const info = /** @type {proto.IScheduleGetInfoQuery} */ (query.scheduleGetInfo);
+        const info = /** @type {proto.IScheduleGetInfoQuery} */ (
+            query.scheduleGetInfo
+        );
 
         return new ScheduleInfoQuery({
             scheduleId:
@@ -110,7 +112,9 @@ export default class ScheduleInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const scheduleGetInfo = /** @type {proto.IScheduleGetInfoResponse} */ (response.scheduleGetInfo);
+        const scheduleGetInfo = /** @type {proto.IScheduleGetInfoResponse} */ (
+            response.scheduleGetInfo
+        );
         return /** @type {proto.IResponseHeader} */ (scheduleGetInfo.header);
     }
 
@@ -122,7 +126,9 @@ export default class ScheduleInfoQuery extends Query {
      * @returns {Promise<ScheduleInfo>}
      */
     _mapResponse(response) {
-        const info = /** @type {proto.IScheduleGetInfoResponse} */ (response.scheduleGetInfo);
+        const info = /** @type {proto.IScheduleGetInfoResponse} */ (
+            response.scheduleGetInfo
+        );
 
         return Promise.resolve(
             ScheduleInfo._fromProtobuf(

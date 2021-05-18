@@ -135,7 +135,9 @@ export default class ScheduleInfo {
             creatorAccountID:
                 info.creatorAccountID != null
                     ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (info.creatorAccountID)
+                          /** @type {proto.IAccountID} */ (
+                              info.creatorAccountID
+                          )
                       )
                     : null,
             payerAccountID:
@@ -224,7 +226,10 @@ export default class ScheduleInfo {
         const scheduled = new ProtoSchedulableTransactionBody(
             this.schedulableTransactionBody
         );
-        const data = /** @type {NonNullable<ProtoSchedulableTransactionBody["data"]>} */ (scheduled.data);
+        const data =
+            /** @type {NonNullable<ProtoSchedulableTransactionBody["data"]>} */ (
+                scheduled.data
+            );
 
         return Transaction.fromBytes(
             ProtoTransactionList.encode({
@@ -232,8 +237,9 @@ export default class ScheduleInfo {
                     {
                         signedTransactionBytes: ProtoSignedTransaction.encode({
                             bodyBytes: ProtoTransactionBody.encode({
-                                transactionFee: this.schedulableTransactionBody
-                                    .transactionFee,
+                                transactionFee:
+                                    this.schedulableTransactionBody
+                                        .transactionFee,
                                 memo: this.schedulableTransactionBody.memo,
                                 [data]: scheduled[data],
                             }).finish(),

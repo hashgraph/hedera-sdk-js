@@ -70,7 +70,10 @@ export default class TokenGrantKycTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const grantKycToken = /** @type {proto.ITokenGrantKycTransactionBody} */ (body.tokenGrantKyc);
+        const grantKycToken =
+            /** @type {proto.ITokenGrantKycTransactionBody} */ (
+                body.tokenGrantKyc
+            );
 
         return Transaction._fromProtobufTransactions(
             new TokenGrantKycTransaction({

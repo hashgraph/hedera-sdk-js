@@ -188,8 +188,12 @@ export default class TokenInfo {
      * @returns {TokenInfo}
      */
     static _fromProtobuf(info) {
-        const defaultFreezeStatus = /** @type {proto.TokenFreezeStatus} */ (info.defaultFreezeStatus);
-        const defaultKycStatus = /** @type {proto.TokenKycStatus} */ (info.defaultKycStatus);
+        const defaultFreezeStatus = /** @type {proto.TokenFreezeStatus} */ (
+            info.defaultFreezeStatus
+        );
+        const defaultKycStatus = /** @type {proto.TokenKycStatus} */ (
+            info.defaultKycStatus
+        );
 
         const autoRenewAccountId =
             info.autoRenewAccount != null

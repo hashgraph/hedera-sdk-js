@@ -133,7 +133,9 @@ export default class AccountCreateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const create = /** @type {proto.ICryptoCreateTransactionBody} */ (body.cryptoCreateAccount);
+        const create = /** @type {proto.ICryptoCreateTransactionBody} */ (
+            body.cryptoCreateAccount
+        );
 
         return Transaction._fromProtobufTransactions(
             new AccountCreateTransaction({
@@ -152,7 +154,9 @@ export default class AccountCreateTransaction extends Transaction {
                 proxyAccountId:
                     create.proxyAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (create.proxyAccountID)
+                              /** @type {proto.IAccountID} */ (
+                                  create.proxyAccountID
+                              )
                           )
                         : undefined,
                 autoRenewPeriod:

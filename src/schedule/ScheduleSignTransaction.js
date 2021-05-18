@@ -81,7 +81,9 @@ export default class ScheduleSignTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const sign = /** @type {proto.IScheduleSignTransactionBody} */ (body.scheduleSign);
+        const sign = /** @type {proto.IScheduleSignTransactionBody} */ (
+            body.scheduleSign
+        );
 
         return Transaction._fromProtobufTransactions(
             new ScheduleSignTransaction({

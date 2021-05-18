@@ -228,12 +228,19 @@ export default class TopicMessageQuery {
                         errorHandler(topicMessage, error);
                     }
                 } else {
-                    const chunkInfo = /** @type {proto.IConsensusMessageChunkInfo} */ (message.chunkInfo);
-                    const initialTransactionID = /** @type {proto.ITransactionID} */ (chunkInfo.initialTransactionID);
+                    const chunkInfo =
+                        /** @type {proto.IConsensusMessageChunkInfo} */ (
+                            message.chunkInfo
+                        );
+                    const initialTransactionID =
+                        /** @type {proto.ITransactionID} */ (
+                            chunkInfo.initialTransactionID
+                        );
                     const total = /** @type {number} */ (chunkInfo.total);
-                    const transactionId = TransactionId._fromProtobuf(
-                        initialTransactionID
-                    ).toString();
+                    const transactionId =
+                        TransactionId._fromProtobuf(
+                            initialTransactionID
+                        ).toString();
 
                     /** @type {proto.ConsensusTopicResponse[]} */
                     let responses = [];

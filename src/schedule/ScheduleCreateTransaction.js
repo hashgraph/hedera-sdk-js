@@ -101,7 +101,9 @@ export default class ScheduleCreateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const create = /** @type {proto.IScheduleCreateTransactionBody} */ (body.scheduleCreate);
+        const create = /** @type {proto.IScheduleCreateTransactionBody} */ (
+            body.scheduleCreate
+        );
 
         return Transaction._fromProtobufTransactions(
             new ScheduleCreateTransaction({
@@ -112,7 +114,9 @@ export default class ScheduleCreateTransaction extends Transaction {
                 payerAccountID:
                     create.payerAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (create.payerAccountID)
+                              /** @type {proto.IAccountID} */ (
+                                  create.payerAccountID
+                              )
                           )
                         : undefined,
                 scheduleMemo: create.memo != null ? create.memo : undefined,
@@ -206,7 +210,8 @@ export default class ScheduleCreateTransaction extends Transaction {
         this._requireNotFrozen();
         transaction._requireNotFrozen();
 
-        this._scheduledTransaction = transaction.schedule()._scheduledTransaction;
+        this._scheduledTransaction =
+            transaction.schedule()._scheduledTransaction;
 
         return this;
     }

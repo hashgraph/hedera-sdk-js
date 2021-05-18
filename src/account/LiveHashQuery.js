@@ -56,7 +56,9 @@ export default class LiveHashQuery extends Query {
      * @returns {LiveHashQuery}
      */
     static _fromProtobuf(query) {
-        const hash = /** @type {proto.ICryptoGetLiveHashQuery} */ (query.cryptoGetLiveHash);
+        const hash = /** @type {proto.ICryptoGetLiveHashQuery} */ (
+            query.cryptoGetLiveHash
+        );
 
         return new LiveHashQuery({
             accountId:
@@ -125,7 +127,10 @@ export default class LiveHashQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const cryptoGetLiveHash = /** @type {proto.ICryptoGetLiveHashResponse} */ (response.cryptoGetLiveHash);
+        const cryptoGetLiveHash =
+            /** @type {proto.ICryptoGetLiveHashResponse} */ (
+                response.cryptoGetLiveHash
+            );
         return /** @type {proto.IResponseHeader} */ (cryptoGetLiveHash.header);
     }
 
@@ -136,7 +141,9 @@ export default class LiveHashQuery extends Query {
      * @returns {Promise<LiveHash>}
      */
     _mapResponse(response) {
-        const hashes = /** @type {proto.ICryptoGetLiveHashResponse} */ (response.cryptoGetLiveHash);
+        const hashes = /** @type {proto.ICryptoGetLiveHashResponse} */ (
+            response.cryptoGetLiveHash
+        );
 
         return Promise.resolve(
             LiveHash._fromProtobuf(

@@ -73,20 +73,27 @@ export default class AccountDeleteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const accountDelete = /** @type {proto.ICryptoDeleteTransactionBody} */ (body.cryptoDelete);
+        const accountDelete =
+            /** @type {proto.ICryptoDeleteTransactionBody} */ (
+                body.cryptoDelete
+            );
 
         return Transaction._fromProtobufTransactions(
             new AccountDeleteTransaction({
                 accountId:
                     accountDelete.deleteAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (accountDelete.deleteAccountID)
+                              /** @type {proto.IAccountID} */ (
+                                  accountDelete.deleteAccountID
+                              )
                           )
                         : undefined,
                 transferAccountId:
                     accountDelete.transferAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (accountDelete.transferAccountID)
+                              /** @type {proto.IAccountID} */ (
+                                  accountDelete.transferAccountID
+                              )
                           )
                         : undefined,
             }),

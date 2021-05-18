@@ -102,7 +102,9 @@ export default class TopicInfo {
      * @returns {TopicInfo}
      */
     static _fromProtobuf(infoResponse) {
-        const info = /** @type {proto.IConsensusTopicInfo} */ (infoResponse.topicInfo);
+        const info = /** @type {proto.IConsensusTopicInfo} */ (
+            infoResponse.topicInfo
+        );
 
         return new TopicInfo({
             topicId: TopicId._fromProtobuf(

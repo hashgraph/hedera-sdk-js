@@ -107,7 +107,9 @@ export default class FileUpdateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const update = /** @type {proto.IFileUpdateTransactionBody} */ (body.fileUpdate);
+        const update = /** @type {proto.IFileUpdateTransactionBody} */ (
+            body.fileUpdate
+        );
 
         return Transaction._fromProtobufTransactions(
             new FileUpdateTransaction({

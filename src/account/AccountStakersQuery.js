@@ -50,7 +50,9 @@ export default class AccountStakersQuery extends Query {
      * @returns {AccountStakersQuery}
      */
     static _fromProtobuf(query) {
-        const stakers = /** @type {proto.ICryptoGetStakersQuery} */ (query.cryptoGetProxyStakers);
+        const stakers = /** @type {proto.ICryptoGetStakersQuery} */ (
+            query.cryptoGetProxyStakers
+        );
 
         return new AccountStakersQuery({
             accountId:
@@ -100,8 +102,13 @@ export default class AccountStakersQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const cryptoGetProxyStakers = /** @type {proto.ICryptoGetStakersResponse} */ (response.cryptoGetProxyStakers);
-        return /** @type {proto.IResponseHeader} */ (cryptoGetProxyStakers.header);
+        const cryptoGetProxyStakers =
+            /** @type {proto.ICryptoGetStakersResponse} */ (
+                response.cryptoGetProxyStakers
+            );
+        return /** @type {proto.IResponseHeader} */ (
+            cryptoGetProxyStakers.header
+        );
     }
 
     /**
@@ -111,14 +118,18 @@ export default class AccountStakersQuery extends Query {
      * @returns {Promise<ProxyStaker[]>}
      */
     _mapResponse(response) {
-        const cryptoGetProxyStakers = /** @type {proto.ICryptoGetStakersResponse} */ (response.cryptoGetProxyStakers);
-        const stakers = /** @type {proto.IAllProxyStakers} */ (cryptoGetProxyStakers.stakers);
+        const cryptoGetProxyStakers =
+            /** @type {proto.ICryptoGetStakersResponse} */ (
+                response.cryptoGetProxyStakers
+            );
+        const stakers = /** @type {proto.IAllProxyStakers} */ (
+            cryptoGetProxyStakers.stakers
+        );
 
         return Promise.resolve(
-            (stakers.proxyStaker != null
-                ? stakers.proxyStaker
-                : []
-            ).map((staker) => ProxyStaker._fromProtobuf(staker))
+            (stakers.proxyStaker != null ? stakers.proxyStaker : []).map(
+                (staker) => ProxyStaker._fromProtobuf(staker)
+            )
         );
     }
 

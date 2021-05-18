@@ -71,7 +71,9 @@ export default class FreezeTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const freeze = /** @type {proto.IFreezeTransactionBody} */ (body.freeze);
+        const freeze = /** @type {proto.IFreezeTransactionBody} */ (
+            body.freeze
+        );
 
         return Transaction._fromProtobufTransactions(
             new FreezeTransaction({

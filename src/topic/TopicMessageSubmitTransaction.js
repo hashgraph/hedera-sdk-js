@@ -86,7 +86,10 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const message = /** @type {proto.IConsensusSubmitMessageTransactionBody} */ (body.consensusSubmitMessage);
+        const message =
+            /** @type {proto.IConsensusSubmitMessageTransactionBody} */ (
+                body.consensusSubmitMessage
+            );
 
         return Transaction._fromProtobufTransactions(
             new TopicMessageSubmitTransaction({
@@ -232,10 +235,12 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             nextTransactionId = new TransactionId(
                 /** @type {AccountId} */ (nextTransactionId.accountId),
                 new Timestamp(
-                    /** @type {Timestamp} */ (nextTransactionId.validStart).seconds,
-                    /** @type {Timestamp} */ (nextTransactionId.validStart).nanos.add(
-                        1
-                    )
+                    /** @type {Timestamp} */ (
+                        nextTransactionId.validStart
+                    ).seconds,
+                    /** @type {Timestamp} */ (
+                        nextTransactionId.validStart
+                    ).nanos.add(1)
                 )
             );
 

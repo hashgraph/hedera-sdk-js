@@ -222,7 +222,9 @@ export default class TokenCreateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const create = /** @type {proto.ITokenCreateTransactionBody} */ (body.tokenCreation);
+        const create = /** @type {proto.ITokenCreateTransactionBody} */ (
+            body.tokenCreation
+        );
 
         return Transaction._fromProtobufTransactions(
             new TokenCreateTransaction({

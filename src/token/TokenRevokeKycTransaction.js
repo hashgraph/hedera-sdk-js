@@ -70,7 +70,10 @@ export default class TokenRevokeKycTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const revokeKycToken = /** @type {proto.ITokenRevokeKycTransactionBody} */ (body.tokenRevokeKyc);
+        const revokeKycToken =
+            /** @type {proto.ITokenRevokeKycTransactionBody} */ (
+                body.tokenRevokeKyc
+            );
 
         return Transaction._fromProtobufTransactions(
             new TokenRevokeKycTransaction({

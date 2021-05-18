@@ -189,18 +189,18 @@ export default class AccountInfo {
                     /** @type {Long | number} */ (info.proxyAccountID.realmNum)
                 ).toInt() !== 0 &&
                 Long.fromValue(
-                    /** @type {Long | number} */ (info.proxyAccountID
-                        .accountNum)
+                    /** @type {Long | number} */ (
+                        info.proxyAccountID.accountNum
+                    )
                 ).toInt() !== 0
                     ? AccountId._fromProtobuf(info.proxyAccountID)
                     : null,
             proxyReceived: Hbar.fromTinybars(
                 info.proxyReceived != null ? info.proxyReceived : 0
             ),
-            liveHashes: (info.liveHashes != null
-                ? info.liveHashes
-                : []
-            ).map((hash) => LiveHash._fromProtobuf(hash)),
+            liveHashes: (info.liveHashes != null ? info.liveHashes : []).map(
+                (hash) => LiveHash._fromProtobuf(hash)
+            ),
             tokenRelationships: TokenRelationshipMap._fromProtobuf(
                 info.tokenRelationships != null ? info.tokenRelationships : []
             ),
@@ -224,7 +224,8 @@ export default class AccountInfo {
             key: keyToProtobuf(this.key),
             balance: this.balance.toTinybars(),
             generateSendRecordThreshold: this.sendRecordThreshold.toTinybars(),
-            generateReceiveRecordThreshold: this.receiveRecordThreshold.toTinybars(),
+            generateReceiveRecordThreshold:
+                this.receiveRecordThreshold.toTinybars(),
             receiverSigRequired: this.isReceiverSignatureRequired,
             expirationTime: this.expirationTime._toProtobuf(),
             autoRenewPeriod: this.autoRenewPeriod._toProtobuf(),

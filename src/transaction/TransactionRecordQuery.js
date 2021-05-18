@@ -55,7 +55,9 @@ export default class TransactionRecordQuery extends Query {
      * @returns {TransactionRecordQuery}
      */
     static _fromProtobuf(query) {
-        const record = /** @type {proto.ITransactionGetRecordQuery} */ (query.transactionGetRecord);
+        const record = /** @type {proto.ITransactionGetRecordQuery} */ (
+            query.transactionGetRecord
+        );
 
         return new TransactionRecordQuery({
             transactionId: record.transactionID
@@ -98,10 +100,19 @@ export default class TransactionRecordQuery extends Query {
             return false;
         }
 
-        const transactionGetRecord = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
-        const record = /** @type {proto.ITransactionRecord} */ (transactionGetRecord.transactionRecord);
-        const receipt = /** @type {proto.ITransactionReceipt} */ (record.receipt);
-        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (receipt.status);
+        const transactionGetRecord =
+            /** @type {proto.ITransactionGetRecordResponse} */ (
+                response.transactionGetRecord
+            );
+        const record = /** @type {proto.ITransactionRecord} */ (
+            transactionGetRecord.transactionRecord
+        );
+        const receipt = /** @type {proto.ITransactionReceipt} */ (
+            record.receipt
+        );
+        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (
+            receipt.status
+        );
         const receiptStatus = Status._fromCode(receiptStatusCode);
 
         switch (receiptStatus) {
@@ -138,8 +149,13 @@ export default class TransactionRecordQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const transactionGetRecord = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
-        return /** @type {proto.IResponseHeader} */ (transactionGetRecord.header);
+        const transactionGetRecord =
+            /** @type {proto.ITransactionGetRecordResponse} */ (
+                response.transactionGetRecord
+            );
+        return /** @type {proto.IResponseHeader} */ (
+            transactionGetRecord.header
+        );
     }
 
     /**
@@ -150,11 +166,15 @@ export default class TransactionRecordQuery extends Query {
      * @returns {Promise<TransactionRecord>}
      */
     _mapResponse(response) {
-        const record = /** @type {proto.ITransactionGetRecordResponse} */ (response.transactionGetRecord);
+        const record = /** @type {proto.ITransactionGetRecordResponse} */ (
+            response.transactionGetRecord
+        );
 
         return Promise.resolve(
             TransactionRecord._fromProtobuf(
-                /** @type {proto.ITransactionRecord} */ (record.transactionRecord)
+                /** @type {proto.ITransactionRecord} */ (
+                    record.transactionRecord
+                )
             )
         );
     }

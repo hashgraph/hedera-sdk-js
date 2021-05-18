@@ -128,14 +128,18 @@ export default class AccountUpdateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const update = /** @type {proto.ICryptoUpdateTransactionBody} */ (body.cryptoUpdateAccount);
+        const update = /** @type {proto.ICryptoUpdateTransactionBody} */ (
+            body.cryptoUpdateAccount
+        );
 
         return Transaction._fromProtobufTransactions(
             new AccountUpdateTransaction({
                 accountId:
                     update.accountIDToUpdate != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (update.accountIDToUpdate)
+                              /** @type {proto.IAccountID} */ (
+                                  update.accountIDToUpdate
+                              )
                           )
                         : undefined,
                 key:
@@ -149,7 +153,9 @@ export default class AccountUpdateTransaction extends Transaction {
                 proxyAccountId:
                     update.proxyAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (update.proxyAccountID)
+                              /** @type {proto.IAccountID} */ (
+                                  update.proxyAccountID
+                              )
                           )
                         : undefined,
                 autoRenewPeriod:

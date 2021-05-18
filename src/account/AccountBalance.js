@@ -71,7 +71,10 @@ export default class AccountBalance {
                     /** @type {proto.ITokenID} */ (balance.tokenId)
                 );
 
-                tokenDecimals._set(tokenId, balance.decimals ?? 0);
+                tokenDecimals._set(
+                    tokenId,
+                    balance.decimals != null ? balance.decimals : 0
+                );
                 tokenBalances._set(
                     tokenId,
                     Long.fromValue(/** @type {Long} */ (balance.balance))
@@ -99,7 +102,10 @@ export default class AccountBalance {
             list.push({
                 tokenId: key._toProtobuf(),
                 balance: value,
-                decimals: this.tokenDecimals?.get(key),
+                decimals:
+                    this.tokenDecimals != null
+                        ? this.tokenDecimals.get(key)
+                        : null,
             });
         }
 
@@ -122,10 +128,13 @@ export default class AccountBalance {
     toJSON() {
         const tokens = [];
         for (const [key, value] of this.tokens != null ? this.tokens : []) {
+            const decimals =
+                this.tokenDecimals != null ? this.tokenDecimals.get(key) : null;
+
             tokens.push({
                 tokenId: key.toString(),
                 balance: value.toString(),
-                decimals: this.tokenDecimals?.get(key) ?? 0,
+                decimals: decimals != null ? decimals : 0,
             });
         }
 

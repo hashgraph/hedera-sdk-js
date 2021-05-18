@@ -45,7 +45,9 @@ export default class TokenInfoQuery extends Query {
      * @returns {TokenInfoQuery}
      */
     static _fromProtobuf(query) {
-        const info = /** @type {proto.ITokenGetInfoQuery} */ (query.tokenGetInfo);
+        const info = /** @type {proto.ITokenGetInfoQuery} */ (
+            query.tokenGetInfo
+        );
 
         return new TokenInfoQuery({
             tokenId:
@@ -108,7 +110,9 @@ export default class TokenInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const tokenGetInfo = /** @type {proto.ITokenGetInfoResponse} */ (response.tokenGetInfo);
+        const tokenGetInfo = /** @type {proto.ITokenGetInfoResponse} */ (
+            response.tokenGetInfo
+        );
         return /** @type {proto.IResponseHeader} */ (tokenGetInfo.header);
     }
 
@@ -120,7 +124,9 @@ export default class TokenInfoQuery extends Query {
      * @returns {Promise<TokenInfo>}
      */
     _mapResponse(response) {
-        const info = /** @type {proto.ITokenGetInfoResponse} */ (response.tokenGetInfo);
+        const info = /** @type {proto.ITokenGetInfoResponse} */ (
+            response.tokenGetInfo
+        );
 
         return Promise.resolve(
             TokenInfo._fromProtobuf(

@@ -79,26 +79,35 @@ export default class ContractDeleteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const contractDelete = /** @type {proto.IContractDeleteTransactionBody} */ (body.contractDeleteInstance);
+        const contractDelete =
+            /** @type {proto.IContractDeleteTransactionBody} */ (
+                body.contractDeleteInstance
+            );
 
         return Transaction._fromProtobufTransactions(
             new ContractDeleteTransaction({
                 contractId:
                     contractDelete.contractID != null
                         ? ContractId._fromProtobuf(
-                              /** @type {proto.IContractID} */ (contractDelete.contractID)
+                              /** @type {proto.IContractID} */ (
+                                  contractDelete.contractID
+                              )
                           )
                         : undefined,
                 transferAccountId:
                     contractDelete.transferAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (contractDelete.transferAccountID)
+                              /** @type {proto.IAccountID} */ (
+                                  contractDelete.transferAccountID
+                              )
                           )
                         : undefined,
                 transferContractId:
                     contractDelete.transferContractID != null
                         ? ContractId._fromProtobuf(
-                              /** @type {proto.IContractID} */ (contractDelete.transferContractID)
+                              /** @type {proto.IContractID} */ (
+                                  contractDelete.transferContractID
+                              )
                           )
                         : undefined,
             }),

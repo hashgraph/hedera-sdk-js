@@ -71,7 +71,9 @@ export default class TokenBurnTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const burnToken = /** @type {proto.ITokenBurnTransactionBody} */ (body.tokenBurn);
+        const burnToken = /** @type {proto.ITokenBurnTransactionBody} */ (
+            body.tokenBurn
+        );
 
         return Transaction._fromProtobufTransactions(
             new TokenBurnTransaction({

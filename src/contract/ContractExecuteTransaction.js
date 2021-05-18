@@ -105,7 +105,9 @@ export default class ContractExecuteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const call = /** @type {proto.IContractCallTransactionBody} */ (body.contractCall);
+        const call = /** @type {proto.IContractCallTransactionBody} */ (
+            body.contractCall
+        );
 
         return Transaction._fromProtobufTransactions(
             new ContractExecuteTransaction({

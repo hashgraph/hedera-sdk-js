@@ -73,7 +73,10 @@ export default class TokenDissociateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const dissociateToken = /** @type {proto.ITokenDissociateTransactionBody} */ (body.tokenDissociate);
+        const dissociateToken =
+            /** @type {proto.ITokenDissociateTransactionBody} */ (
+                body.tokenDissociate
+            );
 
         return Transaction._fromProtobufTransactions(
             new TokenDissociateTransaction({

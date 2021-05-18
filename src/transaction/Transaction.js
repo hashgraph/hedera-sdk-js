@@ -459,7 +459,9 @@ export default class Transaction extends Executable {
         this._transactions = [];
 
         for (const signedTransaction of this._signedTransactions) {
-            const bodyBytes = /** @type {Uint8Array} */ (signedTransaction.bodyBytes);
+            const bodyBytes = /** @type {Uint8Array} */ (
+                signedTransaction.bodyBytes
+            );
             const signature = await transactionSigner(bodyBytes);
 
             if (signedTransaction.sigMap == null) {
@@ -639,8 +641,9 @@ export default class Transaction extends Executable {
         this._buildTransactions(1);
 
         return sha384.digest(
-            /** @type {Uint8Array} */ (this._transactions[0]
-                .signedTransactionBytes)
+            /** @type {Uint8Array} */ (
+                this._transactions[0].signedTransactionBytes
+            )
         );
     }
 

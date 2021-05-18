@@ -45,7 +45,9 @@ export default class AccountInfoQuery extends Query {
      * @returns {AccountInfoQuery}
      */
     static _fromProtobuf(query) {
-        const info = /** @type {proto.ICryptoGetInfoQuery} */ (query.cryptoGetInfo);
+        const info = /** @type {proto.ICryptoGetInfoQuery} */ (
+            query.cryptoGetInfo
+        );
 
         return new AccountInfoQuery({
             accountId:
@@ -110,7 +112,9 @@ export default class AccountInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const cryptoGetInfo = /** @type {proto.ICryptoGetInfoResponse} */ (response.cryptoGetInfo);
+        const cryptoGetInfo = /** @type {proto.ICryptoGetInfoResponse} */ (
+            response.cryptoGetInfo
+        );
         return /** @type {proto.IResponseHeader} */ (cryptoGetInfo.header);
     }
 
@@ -122,7 +126,9 @@ export default class AccountInfoQuery extends Query {
      * @returns {Promise<AccountInfo>}
      */
     _mapResponse(response) {
-        const info = /** @type {proto.ICryptoGetInfoResponse} */ (response.cryptoGetInfo);
+        const info = /** @type {proto.ICryptoGetInfoResponse} */ (
+            response.cryptoGetInfo
+        );
 
         return Promise.resolve(
             AccountInfo._fromProtobuf(

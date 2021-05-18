@@ -111,7 +111,10 @@ export default class TransferTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const cryptoTransfer = /** @type {proto.ICryptoTransferTransactionBody} */ (body.cryptoTransfer);
+        const cryptoTransfer =
+            /** @type {proto.ICryptoTransferTransactionBody} */ (
+                body.cryptoTransfer
+            );
 
         const transfers = new TransferTransaction();
         for (const list of cryptoTransfer.tokenTransfers != null

@@ -105,7 +105,10 @@ export default class TopicCreateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const create = /** @type {proto.IConsensusCreateTopicTransactionBody} */ (body.consensusCreateTopic);
+        const create =
+            /** @type {proto.IConsensusCreateTopicTransactionBody} */ (
+                body.consensusCreateTopic
+            );
 
         return Transaction._fromProtobufTransactions(
             new TopicCreateTransaction({

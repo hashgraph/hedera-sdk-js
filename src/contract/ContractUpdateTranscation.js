@@ -129,14 +129,18 @@ export default class ContractUpdateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const update = /** @type {proto.IContractUpdateTransactionBody} */ (body.contractUpdateInstance);
+        const update = /** @type {proto.IContractUpdateTransactionBody} */ (
+            body.contractUpdateInstance
+        );
 
         return Transaction._fromProtobufTransactions(
             new ContractUpdateTransaction({
                 contractId:
                     update.contractID != null
                         ? ContractId._fromProtobuf(
-                              /** @type {proto.IContractID} */ (update.contractID)
+                              /** @type {proto.IContractID} */ (
+                                  update.contractID
+                              )
                           )
                         : undefined,
                 bytecodeFileId:
@@ -156,7 +160,9 @@ export default class ContractUpdateTransaction extends Transaction {
                 proxyAccountId:
                     update.proxyAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (update.proxyAccountID)
+                              /** @type {proto.IAccountID} */ (
+                                  update.proxyAccountID
+                              )
                           )
                         : undefined,
                 autoRenewPeriod:

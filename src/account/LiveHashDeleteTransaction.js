@@ -66,7 +66,10 @@ export default class LiveHashDeleteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const hashes = /** @type {proto.ICryptoDeleteLiveHashTransactionBody} */ (body.cryptoDeleteLiveHash);
+        const hashes =
+            /** @type {proto.ICryptoDeleteLiveHashTransactionBody} */ (
+                body.cryptoDeleteLiveHash
+            );
 
         return Transaction._fromProtobufTransactions(
             new LiveHashDeleteTransaction({

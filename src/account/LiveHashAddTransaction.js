@@ -92,7 +92,9 @@ export default class LiveHashAddTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const hashes = /** @type {proto.ICryptoAddLiveHashTransactionBody} */ (body.cryptoAddLiveHash);
+        const hashes = /** @type {proto.ICryptoAddLiveHashTransactionBody} */ (
+            body.cryptoAddLiveHash
+        );
         const liveHash_ = /** @type {proto.ILiveHash} */ (hashes.liveHash);
 
         return Transaction._fromProtobufTransactions(

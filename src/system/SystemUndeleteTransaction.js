@@ -71,20 +71,27 @@ export default class SystemUndeleteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const systemUndelete = /** @type {proto.ISystemUndeleteTransactionBody} */ (body.systemUndelete);
+        const systemUndelete =
+            /** @type {proto.ISystemUndeleteTransactionBody} */ (
+                body.systemUndelete
+            );
 
         return Transaction._fromProtobufTransactions(
             new SystemUndeleteTransaction({
                 fileId:
                     systemUndelete.fileID != null
                         ? FileId._fromProtobuf(
-                              /** @type {proto.IFileID} */ (systemUndelete.fileID)
+                              /** @type {proto.IFileID} */ (
+                                  systemUndelete.fileID
+                              )
                           )
                         : undefined,
                 contractId:
                     systemUndelete.contractID != null
                         ? ContractId._fromProtobuf(
-                              /** @type {proto.IContractID} */ (systemUndelete.contractID)
+                              /** @type {proto.IContractID} */ (
+                                  systemUndelete.contractID
+                              )
                           )
                         : undefined,
             }),

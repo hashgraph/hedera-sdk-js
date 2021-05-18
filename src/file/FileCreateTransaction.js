@@ -101,7 +101,9 @@ export default class FileCreateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const create = /** @type {proto.IFileCreateTransactionBody} */ (body.fileCreate);
+        const create = /** @type {proto.IFileCreateTransactionBody} */ (
+            body.fileCreate
+        );
 
         return Transaction._fromProtobufTransactions(
             new FileCreateTransaction({

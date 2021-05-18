@@ -89,7 +89,9 @@ export default class ContractCallQuery extends Query {
      * @returns {ContractCallQuery}
      */
     static _fromProtobuf(query) {
-        const call = /** @type {proto.IContractCallLocalQuery} */ (query.contractCallLocal);
+        const call = /** @type {proto.IContractCallLocalQuery} */ (
+            query.contractCallLocal
+        );
 
         return new ContractCallQuery({
             contractId:
@@ -166,9 +168,8 @@ export default class ContractCallQuery extends Query {
      * @returns {ContractCallQuery}
      */
     setFunction(name, params) {
-        this._functionParameters = (params != null
-            ? params
-            : new ContractFunctionParameters()
+        this._functionParameters = (
+            params != null ? params : new ContractFunctionParameters()
         )._build(name);
 
         return this;
@@ -202,7 +203,10 @@ export default class ContractCallQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const contractCallLocal = /** @type {proto.IContractCallLocalResponse} */ (response.contractCallLocal);
+        const contractCallLocal =
+            /** @type {proto.IContractCallLocalResponse} */ (
+                response.contractCallLocal
+            );
         return /** @type {proto.IResponseHeader} */ (contractCallLocal.header);
     }
 

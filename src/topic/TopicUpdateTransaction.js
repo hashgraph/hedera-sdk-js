@@ -123,7 +123,10 @@ export default class TopicUpdateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const update = /** @type {proto.IConsensusUpdateTopicTransactionBody} */ (body.consensusUpdateTopic);
+        const update =
+            /** @type {proto.IConsensusUpdateTopicTransactionBody} */ (
+                body.consensusUpdateTopic
+            );
 
         return Transaction._fromProtobufTransactions(
             new TopicUpdateTransaction({

@@ -45,7 +45,9 @@ export default class ContractInfoQuery extends Query {
      * @returns {ContractInfoQuery}
      */
     static _fromProtobuf(query) {
-        const info = /** @type {proto.IContractGetInfoQuery} */ (query.contractGetInfo);
+        const info = /** @type {proto.IContractGetInfoQuery} */ (
+            query.contractGetInfo
+        );
 
         return new ContractInfoQuery({
             contractId:
@@ -110,7 +112,9 @@ export default class ContractInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const contractGetInfo = /** @type {proto.IContractGetInfoResponse} */ (response.contractGetInfo);
+        const contractGetInfo = /** @type {proto.IContractGetInfoResponse} */ (
+            response.contractGetInfo
+        );
         return /** @type {proto.IResponseHeader} */ (contractGetInfo.header);
     }
 
@@ -121,7 +125,9 @@ export default class ContractInfoQuery extends Query {
      * @returns {Promise<ContractInfo>}
      */
     _mapResponse(response) {
-        const info = /** @type {proto.IContractGetInfoResponse} */ (response.contractGetInfo);
+        const info = /** @type {proto.IContractGetInfoResponse} */ (
+            response.contractGetInfo
+        );
 
         return Promise.resolve(
             ContractInfo._fromProtobuf(

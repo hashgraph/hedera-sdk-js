@@ -97,13 +97,15 @@ export default class FileAppendTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const append = /** @type {proto.IFileAppendTransactionBody} */ (body.fileAppend);
+        const append = /** @type {proto.IFileAppendTransactionBody} */ (
+            body.fileAppend
+        );
 
         let contents;
         for (let i = 0; i < bodies.length; i += nodeIds.length) {
-            const fileAppend = /** @type {proto.IFileAppendTransactionBody} */ (bodies[
-                i
-            ].fileAppend);
+            const fileAppend = /** @type {proto.IFileAppendTransactionBody} */ (
+                bodies[i].fileAppend
+            );
             if (fileAppend.contents == null) {
                 break;
             }
@@ -294,10 +296,12 @@ export default class FileAppendTransaction extends Transaction {
             nextTransactionId = new TransactionId(
                 /** @type {AccountId} */ (nextTransactionId.accountId),
                 new Timestamp(
-                    /** @type {Timestamp} */ (nextTransactionId.validStart).seconds,
-                    /** @type {Timestamp} */ (nextTransactionId.validStart).nanos.add(
-                        1
-                    )
+                    /** @type {Timestamp} */ (
+                        nextTransactionId.validStart
+                    ).seconds,
+                    /** @type {Timestamp} */ (
+                        nextTransactionId.validStart
+                    ).nanos.add(1)
                 )
             );
 
