@@ -38,7 +38,6 @@ jobs:
 
       - name: Build
         run: pnpm install 
-
       - name: Lint
         run: pnpm lint 
 
@@ -50,3 +49,9 @@ jobs:
           OPERATOR_KEY: ${{ secrets.OPERATOR_KEY }}
           OPERATOR_ID: ${{ secrets.OPERATOR_ID }}
         run: pnpm test:integration:node
+
+      - name: Run Integration Tests Browser Chrome
+        env:
+          VITE_OPERATOR_KEY: ${{ secrets.OPERATOR_KEY }}
+          VITE_OPERATOR_ID: ${{ secrets.OPERATOR_ID }}
+        run: pnpm test:integration:browser:chrome
