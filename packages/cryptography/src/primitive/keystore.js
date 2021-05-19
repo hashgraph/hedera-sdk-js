@@ -165,5 +165,12 @@ export async function loadKeystore(keystoreBytes, passphrase) {
         cipherBytes
     );
 
-    return nacl.sign.keyPair.fromSeed(Uint8Array.from(bytes));
+    switch (bytes.length) {
+        case 32:
+            return nacl.sign.keyPair.fromSeed(Uint8Array.from(bytes));
+        case 64:
+            return nacl.sign.keyPair.fromSecretKey(Uint8Array.from(bytes));
+        default:
+            throw new Error("(BUG) deciphered keystore bytes length is neither 32 nor 64");
+    }
 }
