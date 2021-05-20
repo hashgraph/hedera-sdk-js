@@ -7,8 +7,7 @@ import BadKeyError from "../../src/BadKeyError.js";
 import { keystoreV1 } from "./keystore.js";
 
 const keystorePassword = "Harriet Porber And The Bad Boy Parasaurolophus";
-const privateKeystore =
-    "302e020100300506032b6570042204207f7ac6c8025a15ff1e07ef57c7295601379a4e9a526560790ae85252393868f0";
+const privateKeystore = "302e020100300506032b6570042204204072d365d02199b5103336cf6a187578ffb6eba4ad6f8b2383c5cc54d00c4409"
 
 // key from hedera-sdk-java tests, not used anywhere
 const privKeyBytes = Uint8Array.of(
@@ -261,10 +260,12 @@ describe("PrivateKey", function () {
     it("keystore works correctly", async function () {
         const keystoreBytesFromFile = utf8.encode(keystoreV1);
 
-        await PrivateKey.fromKeystore(
+        const key = await PrivateKey.fromKeystore(
             keystoreBytesFromFile,
             keystorePassword
         );
+
+        expect(privateKeystore).to.deep.equal(key.toString());
     });
 
     it("derive() produces correct value", async function () {
