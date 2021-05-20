@@ -173,7 +173,7 @@ export default class PrivateKey extends Key {
      * @throws {BadKeyError} If the passphrase is incorrect or the hash fails to validate.
      */
     static async fromKeystore(data, passphrase = "") {
-        return new PrivateKey(await loadKeystore(data, passphrase), null);
+        return PrivateKey.fromBytes(await loadKeystore(data, passphrase));
     }
 
     /**
