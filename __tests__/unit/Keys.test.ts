@@ -7,6 +7,11 @@ import {
 } from "../../src/exports";
 import { KeyList } from "../../src/crypto/KeyList";
 import * as utf8 from "@stablelib/utf8";
+import { keystoreV1 } from "./keystore";
+import { loadKeystore } from "../../lib/crypto/Keystore";
+
+const keystorePassword = "Harriet Porber And The Bad Boy Parasaurolophus";
+const privateKeystore = "302e020100300506032b6570042204204072d365d02199b5103336cf6a187578ffb6eba4ad6f8b2383c5cc54d00c4409";
 
 // key from hedera-sdk-java tests, not used anywhere
 const privKeyBytes = Uint8Array.of(-37, 72, 75, -126, -114, 100, -78, -40, -15, 44, -29, -64, -96, -23, 58, 11, -116, -50, 122, -15, -69, -113, 57, -55, 119, 50, 57, 68, -126, 83, -114, 16);
@@ -116,6 +121,11 @@ describe("Ed25519PrivateKey", () => {
         await expect(Ed25519PrivateKey.fromKeystore(keystoreBytes, "some random password"))
             .rejects
             .toBeInstanceOf(KeyMismatchError);
+    });
+
+    it("fromkeystore() loads from file", async() => {
+        const key = await Ed25519PrivateKey.fromKeystore(utf8.encode(keystoreV1), keystorePassword);
+        expect(key.toString()).toStrictEqual(privateKeystore);
     });
 
     it("derive() produces correct value", async() => {
