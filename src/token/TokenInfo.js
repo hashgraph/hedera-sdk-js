@@ -179,6 +179,11 @@ export default class TokenInfo {
          */
         this.expirationTime = props.expirationTime;
 
+        /**
+         * The memo associated with the token.
+         *
+         * @readonly
+         */
         this.tokenMemo = props.tokenMemo;
     }
 
