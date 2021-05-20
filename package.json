@@ -69,13 +69,13 @@
         "test:browser:chrome": "run-s test:unit:browser:chrome test:integration:browser:chrome",
         "test:browser:firefox": "run-s test:unit:browser:firefox test:integration:browser:firefox",
         "test:unit:browser": "run-s test:unit:browser:*",
-        "test:unit:browser:chrome": "vite -c vite.config.cjs serve --port 9001 test/ & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/unit.html; kill %1",
-        "test:unit:browser:firefox": "vite -c vite.config.cjs serve --port 9002 test/ & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/unit.html; kill %1",
-        "test:unit:browser:safari": "vite -c vite.config.cjs serve --port 9003 test/ & sleep 2; mocha-webdriver-runner --safari http://localhost:9003/unit.html; kill %1",
+        "test:unit:browser:chrome": "vite -c vite.config.cjs serve --port 9001 test/ & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/unit.html",
+        "test:unit:browser:firefox": "vite -c vite.config.cjs serve --port 9002 test/ & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/unit.html",
+        "test:unit:browser:safari": "vite -c vite.config.cjs serve --port 9003 test/ & sleep 2; mocha-webdriver-runner --safari http://localhost:9003/unit.html",
         "test:integration:browser": "run-s test:integration:browser:*",
-        "test:integration:browser:chrome": "vite -c vite.config.cjs serve --port 9011 test/ & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9011/integration.html; kill %1",
-        "test:integration:browser:firefox": "vite -c vite.config.cjs serve --port 9012 test/ & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9012/integration.html; kill %1",
-        "test:integration:browser:safari": "vite -c vite.config.cjs serve --port 9013 test/ & sleep 2; mocha-webdriver-runner --safari http://localhost:9013/integration.html; kill %1"
+        "test:integration:browser:chrome": "vite -c vite.config.cjs serve --port 9011 test/ & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9011/integration.html",
+        "test:integration:browser:firefox": "vite -c vite.config.cjs serve --port 9012 test/ & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9012/integration.html",
+        "test:integration:browser:safari": "vite -c vite.config.cjs serve --port 9013 test/ & sleep 2; mocha-webdriver-runner --safari http://localhost:9013/integration.html"
     },
     "dependencies": {
         "@grpc/grpc-js": "^1.3.2",

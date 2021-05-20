@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  Everything:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,20 +35,125 @@ jobs:
 
       - name: Build
         run: pnpm install 
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
+
       - name: Lint
-        run: pnpm lint 
+        run: |
+          pnpm install
+          pnpm lint 
+             
+  test-unit-node:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
 
       - name: Run Unit Tests
-        run: pnpm test:unit:node
+        run: |
+          pnpm install
+          pnpm test:unit:node
+
+  test-integration-node:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
 
       - name: Run Integration Tests
         env:
           OPERATOR_KEY: ${{ secrets.TESTNET_OPERATOR_KEY }}
           OPERATOR_ID: ${{ secrets.TESTNET_OPERATOR_ID }}
-        run: pnpm test:integration:node
+        run: |
+          pnpm install
+          pnpm test:integration:node
+
+  test-integration-browser-chrome:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
 
       - name: Run Integration Tests Browser Chrome
         env:
           VITE_OPERATOR_KEY: ${{ secrets.TESTNET_OPERATOR_KEY }}
           VITE_OPERATOR_ID: ${{ secrets.TESTNET_OPERATOR_ID }}
-        run: pnpm test:integration:browser:chrome
+        run: |
+          pnpm install
+          pnpm test:integration:browser:chrome
