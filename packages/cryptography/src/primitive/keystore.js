@@ -1,4 +1,3 @@
-import nacl from "tweetnacl";
 import BadKeyError from "../BadKeyError.js";
 import * as crypto from "./aes.js";
 import * as hex from "../encoding/hex.js";
@@ -100,7 +99,7 @@ export async function createKeystore(privateKey, passphrase) {
 /**
  * @param {Uint8Array} keystoreBytes
  * @param {string} passphrase
- * @returns {Promise<nacl.SignKeyPair>}
+ * @returns {Promise<Uint8Array>}
  */
 export async function loadKeystore(keystoreBytes, passphrase) {
     /**
@@ -158,19 +157,10 @@ export async function loadKeystore(keystoreBytes, passphrase) {
         throw new BadKeyError("HMAC mismatch; passphrase is incorrect");
     }
 
-    const bytes = await crypto.createDecipheriv(
+    return crypto.createDecipheriv(
         cipher,
         key.slice(0, 16),
         ivBytes,
         cipherBytes
     );
-
-    switch (bytes.length) {
-        case 32:
-            return nacl.sign.keyPair.fromSeed(Uint8Array.from(bytes));
-        case 64:
-            return nacl.sign.keyPair.fromSecretKey(Uint8Array.from(bytes));
-        default:
-            throw new Error("(BUG) deciphered keystore bytes length is neither 32 nor 64");
-    }
 }

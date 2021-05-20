@@ -13,7 +13,7 @@ export const CipherAlgorithm = {
 export async function createCipheriv(algorithm, key, iv, data) {
     let algorithm_;
 
-    switch (algorithm) {
+    switch (algorithm.toUpperCase()) {
         case CipherAlgorithm.Aes128Ctr:
             algorithm_ = {
                 name: "AES-CTR",
@@ -22,19 +22,6 @@ export async function createCipheriv(algorithm, key, iv, data) {
             };
             break;
         case CipherAlgorithm.Aes128Cbc:
-            algorithm_ = {
-                name: "AES-CBC",
-                iv: iv,
-            };
-            break;
-        case CipherAlgorithm.Aes128Ctr.toLowerCase():
-            algorithm_ = {
-                name: "AES-CTR",
-                counter: iv,
-                length: 128,
-            };
-            break;
-        case CipherAlgorithm.Aes128Cbc.toLowerCase():
             algorithm_ = {
                 name: "AES-CBC",
                 iv: iv,

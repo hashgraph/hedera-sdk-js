@@ -16,7 +16,7 @@ export const CipherAlgorithm = {
 export function createCipheriv(algorithm, key, iv, data) {
     let mode;
 
-    switch (algorithm) {
+    switch (algorithm.toUpperCase()) {
         case CipherAlgorithm.Aes128Cbc:
             mode = CryptoJS.mode.CBC;
             break;
