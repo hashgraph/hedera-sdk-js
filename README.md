@@ -19,6 +19,17 @@ $ yarn add @hashgraph/sdk
 # with PNPM
 $ pnpm add @hashgraph/sdk
 ```
+## React Native Support
+
+The Hedera JavaScript SDK supports the following:
+
+* React Native with Expo on Android devices and Android emulators
+
+The Hedera JavaScript SDK does not currently support the following:
+
+* React Native bare
+
+
 
 ## Usage
 
