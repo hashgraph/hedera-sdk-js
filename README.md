@@ -27,7 +27,7 @@ The Hedera JavaScript SDK supports the following:
 
 The Hedera JavaScript SDK does not currently support the following:
 
-* React Native bare
+* React Native Bare
 
 
 
