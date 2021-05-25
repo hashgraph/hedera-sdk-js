@@ -41,6 +41,15 @@ export default class IntegrationTestEnv {
             process.env.HEDERA_NETWORK == "previewnet"
         ) {
             client = Client.forPreviewnet();
+        } else if (
+            process.env.HEDERA_NETWORK != null &&
+            process.env.HEDERA_NETWORK == "localhost"
+        ) {
+            client = Client.forNetwork({
+                "127.0.0.1:50213": "0.0.3",
+                "127.0.0.1:50214": "0.0.4",
+                "127.0.0.1:50215": "0.0.5",
+            });
         } else {
             try {
                 client = await Client.fromConfigFile(process.env.CONFIG_FILE);
