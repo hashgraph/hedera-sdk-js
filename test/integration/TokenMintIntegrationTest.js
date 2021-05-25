@@ -72,6 +72,7 @@ describe("TokenMint", function () {
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TokenCreateTransaction()
+            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
@@ -93,6 +94,7 @@ describe("TokenMint", function () {
         try {
             await (
                 await new TokenMintTransaction()
+                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .execute(env.client)
             ).getReceipt(env.client);
