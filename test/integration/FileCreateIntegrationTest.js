@@ -109,7 +109,7 @@ describe("FileCreate", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.InsufficientTxFee);
+            err = error.toString().includes(Status.AutorenewDurationNotInRange);
         }
 
         if (!err) {
