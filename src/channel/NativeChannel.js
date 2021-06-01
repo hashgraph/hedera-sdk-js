@@ -61,9 +61,31 @@ export default class NativeChannel extends Channel {
                 reader.onerror = reject;
             });
 
-            const responseBuffer = base64.decode(
-                responseData.split("data:application/octet-stream;base64,")[1]
-            );
+            let responseBuffer;
+            if (
+                responseData.startsWith("data:application/octet-stream;base64,")
+            ) {
+                responseBuffer = base64.decode(
+                    responseData.split(
+                        "data:application/octet-stream;base64,"
+                    )[1]
+                );
+            } else if (
+                responseData.startsWith(
+                    "data:application/grpc-web+proto;base64,"
+                )
+            ) {
+                responseBuffer = base64.decode(
+                    responseData.split(
+                        "data:application/grpc-web+proto;base64,"
+                    )[1]
+                );
+            } else {
+                throw new Error(
+                    `Expected response data to be base64 encode with a 'data:application/octet-stream;base64,' or 'data:application/grpc-web+proto;base64,' prefix, but found: ${responseData}`
+                );
+            }
+
             const unaryResponse = decodeUnaryResponse(responseBuffer.buffer);
 
             callback(null, unaryResponse);
