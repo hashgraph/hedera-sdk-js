@@ -2,6 +2,11 @@ import * as grpc from "@grpc/grpc-js";
 import MirrorChannel from "./MirrorChannel.js";
 
 /**
+ * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("./MirrorChannel.js").MirrorError} MirrorError
+ */
+
+/**
  * @internal
  */
 export default class NodeMirrorChannel extends MirrorChannel {
@@ -34,10 +39,11 @@ export default class NodeMirrorChannel extends MirrorChannel {
      * @override
      * @internal
      * @param {Uint8Array} requestData
-     * @param {(error: number?, data: Uint8Array?) => void} callback
+     * @param {(data: Uint8Array) => void} callback
+     * @param {(error: MirrorError | Error) => void} error
      * @returns {() => void}
      */
-    makeServerStreamRequest(requestData, callback) {
+    makeServerStreamRequest(requestData, callback, error) {
         const stream = this._client
             .makeServerStreamRequest(
                 // `/proto.ConsensusService/SubscribeTopic`,
@@ -47,10 +53,10 @@ export default class NodeMirrorChannel extends MirrorChannel {
                 Buffer.from(requestData)
             )
             .on("data", (/** @type {Uint8Array} */ data) => {
-                callback(null, data);
+                callback(data);
             })
             .on("status", (/** @type {grpc.StatusObject} */ status) => {
-                callback(status.code, null);
+                error(status);
             })
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .on("error", (/** @type {grpc.StatusObject} */ _) => {
