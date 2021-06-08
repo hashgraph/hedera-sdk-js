@@ -7,6 +7,7 @@ import MirrorNetwork from "./MirrorNetwork.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("./Network.js").TlsMode} TlsMode
  * @typedef {import("../channel/MirrorChannel.js").default} MirrorChannel
  */
 
@@ -100,6 +101,52 @@ export default class Client {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setNetwork(network) {
         throw new Error("not implemented");
+    }
+
+    /**
+     * Sets the TLS mode used to establish a connection to the Hedera network.
+     *
+     *  - **Required** - Connections will only be attempted on nodes with an associated
+     *                   TLS certificate.
+     *
+     *  - **Preferred** (default) -
+     *      Connections will use TLS if available but will still be attempted
+     *      on nodes without an associated TLS certificate.
+     *
+     *  - **Disabled** - Connections will never attempt to use TLS.
+     *
+     * @param {"preferred" | "required" | "disabled"} mode
+     * @returns {this}
+     */
+    setTlsMode(mode) {
+        this._network._tlsMode = mode;
+
+        return this;
+    }
+
+    /**
+     * Sets the TLS certificate associated with the given node address.
+     *
+     * By default, constructing a client for a pre-defined network will
+     * default associate the nodes with an embedded list of certificates.
+     *
+     * @param {string} nodeAddress
+     * @param {string} certificate
+     */
+    setNodeCertificate(nodeAddress, certificate) {
+        this._network._nodeCertificates.set(nodeAddress, certificate);
+    }
+
+    /**
+     * @internal
+     * @param {Record<string, string | null>} certificates
+     */
+    _setNodeCertificates(certificates) {
+        for (const [accountId, certificate] of Object.entries(certificates)) {
+            if (certificate != null) {
+                this.setNodeCertificate(accountId, certificate);
+            }
+        }
     }
 
     /**

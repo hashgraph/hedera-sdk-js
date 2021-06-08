@@ -1,5 +1,6 @@
 import { Client, credentials } from "@grpc/grpc-js";
 import Channel from "./Channel.js";
+import * as utf8 from "../encoding/utf8.js";
 
 /**
  * @property {?proto.CryptoService} _crypto
@@ -13,15 +14,36 @@ export default class NodeChannel extends Channel {
     /**
      * @internal
      * @param {string} address
+     * @param {string | undefined} certificate
      */
-    constructor(address) {
+    constructor(address, certificate) {
         super();
+
+        let clientCredentials;
+        let clientAddress;
+
+        if (certificate != null) {
+            clientCredentials = credentials.createSsl(
+                Buffer.from(utf8.encode(certificate))
+            );
+            clientAddress = `${address.split(":")[0]}:50212`;
+        } else if (!address.endsWith(":50212")) {
+            clientCredentials = credentials.createInsecure();
+            clientAddress = `${address.split(":")[0]}:50211`;
+        } else {
+            throw new Error(
+                `requested a TLS connection without an associated certificate for node: ${address}`
+            );
+        }
 
         /**
          * @type {Client}
          * @private
          */
-        this._client = new Client(address, credentials.createInsecure());
+        this._client = new Client(clientAddress, clientCredentials, {
+            "grpc.ssl_target_name_override": "127.0.0.1",
+            "grpc.default_authority": "127.0.0.1",
+        });
     }
 
     /**

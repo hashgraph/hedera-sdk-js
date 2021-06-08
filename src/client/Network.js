@@ -10,6 +10,16 @@ import Node from "../Node.js";
  */
 
 /**
+ * @readonly
+ * @type {{Preferred: "preferred", Required: "required", Disabled: "disabled"}}
+ */
+export const TlsMode = Object.freeze({
+    Disabled: "disabled",
+    Required: "required",
+    Preferred: "preferred",
+});
+
+/**
  * @template {Channel} ChannelT
  */
 export default class Network {
@@ -42,6 +52,19 @@ export default class Network {
 
         /** @type {(address: string) => ChannelT} */
         this.createNetworkChannel = createNetworkChannel;
+
+        /**
+         * @internal
+         * @type {Map<string, string>}
+         */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this._nodeCertificates = new Map();
+
+        /**
+         * @internal
+         * @type {TlsMode[keyof TlsMode]}
+         */
+        this._tlsMode = TlsMode.Preferred;
     }
 
     /**
@@ -119,7 +142,17 @@ export default class Network {
     getNodeAccountIdsForExecute() {
         this.nodes.sort((a, b) => a.compare(b));
 
-        return this.nodes
+        let nodes = this.nodes;
+
+        // if the TLS mode is set to require, nodes that do not have an
+        // associated TLS certificate should not be picked
+        if (this._tlsMode === TlsMode.Required) {
+            nodes = nodes.filter((node) =>
+                this._nodeCertificates.has(node.accountId.toString())
+            );
+        }
+
+        return nodes
             .slice(0, this.getNumberOfNodesForTransaction())
             .map((node) => node.accountId);
     }
