@@ -28,7 +28,7 @@ import Timestamp from "../Timestamp.js";
 export default class TopicMessageSubmitTransaction extends Transaction {
     /**
      * @param {object} props
-     * @param {TopicId} [props.topicId]
+     * @param {TopicId | string} [props.topicId]
      * @param {Uint8Array | string} [props.message]
      * @param {number} [props.maxChunks]
      */
@@ -136,12 +136,13 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     }
 
     /**
-     * @param {TopicId} topicId
+     * @param {TopicId | string} topicId
      * @returns {this}
      */
     setTopicId(topicId) {
         this._requireNotFrozen();
-        this._topicId = topicId;
+        this._topicId =
+            typeof topicId === "string" ? TopicId.fromString(topicId) : topicId;
 
         return this;
     }

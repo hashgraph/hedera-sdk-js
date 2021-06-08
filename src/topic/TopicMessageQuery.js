@@ -9,6 +9,7 @@ import Timestamp from "../Timestamp.js";
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../channel/MirrorChannel.js").default} MirrorChannel
+ * @typedef {import("../channel/MirrorChannel.js").MirrorError} MirrorError
  */
 
 /**
@@ -23,6 +24,8 @@ export default class TopicMessageQuery {
      * @param {Timestamp} [props.startTime]
      * @param {Timestamp} [props.endTime]
      * @param {(message: TopicMessage, error: Error)=> void} [props.errorHandler]
+     * @param {() => void} [props.completionHandler]
+     * @param {(error: MirrorError | Error | null) => boolean} [props.retryHandler]
      * @param {Long | number} [props.limit]
      */
     constructor(props = {}) {
@@ -61,6 +64,110 @@ export default class TopicMessageQuery {
         if (props.limit != null) {
             this.setLimit(props.limit);
         }
+
+        /**
+         * @private
+         * @type {(message: TopicMessage, error: Error) => void}
+         */
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        this._errorHandler = (message, error) => {
+            console.error(
+                `Error attempting to subscribe to topic: ${
+                    this._topicId != null ? this._topicId.toString() : ""
+                }`
+            );
+        };
+
+        if (props.errorHandler != null) {
+            this._errorHandler = props.errorHandler;
+        }
+
+        /*
+         * @private
+         * @type {((message: TopicMessage) => void) | null}
+         */
+        this._listener = null;
+
+        /**
+         * @private
+         * @type {() => void}
+         */
+        this._completionHandler = () => {
+            console.log(
+                `Subscription to topic ${
+                    this._topicId != null ? this._topicId.toString() : ""
+                } complete`
+            );
+        };
+
+        if (props.completionHandler != null) {
+            this._completionHandler = props.completionHandler;
+        }
+
+        /**
+         * @private
+         * @type {(error: MirrorError | Error | null) => boolean}
+         */
+        this._retryHandler = (error) => {
+            if (error != null) {
+                if (error instanceof Error) {
+                    return (
+                        error.toString().includes("NOT_FOUND") ||
+                        error.toString().includes("UNAVAILABLE") ||
+                        error.toString().includes("RESOURCE_EXHAUSTED") ||
+                        error.toString().includes("INTERNAL")
+                    );
+                } else {
+                    switch (error.code) {
+                        // NOT_FOUND
+                        // eslint-disable-next-line no-fallthrough
+                        case 5:
+                        // RESOURCE_EXHAUSTED
+                        // eslint-disable-next-line no-fallthrough
+                        case 8:
+                        // INTERNAL
+                        // eslint-disable-next-line no-fallthrough
+                        case 13:
+                        // UNAVAILABLE
+                        // eslint-disable-next-line no-fallthrough
+                        case 14:
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            }
+
+            return false;
+        };
+
+        if (props.retryHandler != null) {
+            this._retryHandler = props.retryHandler;
+        }
+
+        /**
+         * @private
+         * @type {number}
+         */
+        this._maxAttempts = 10;
+
+        /**
+         * @private
+         * @type {number}
+         */
+        this._attempt = 0;
+
+        /**
+         * @private
+         * @type {number}
+         */
+        this._counter = 10;
+
+        /**
+         * @private
+         * @type {SubscriptionHandle | null}
+         */
+        this._handle = null;
     }
 
     /**
@@ -75,6 +182,8 @@ export default class TopicMessageQuery {
      * @returns {TopicMessageQuery}
      */
     setTopicId(topicId) {
+        this.requireNotSubscribed();
+
         this._topicId =
             topicId instanceof TopicId ? topicId : TopicId.fromString(topicId);
 
@@ -93,6 +202,8 @@ export default class TopicMessageQuery {
      * @returns {TopicMessageQuery}
      */
     setStartTime(startTime) {
+        this.requireNotSubscribed();
+
         this._startTime =
             startTime instanceof Timestamp
                 ? startTime
@@ -114,6 +225,8 @@ export default class TopicMessageQuery {
      * @returns {TopicMessageQuery}
      */
     setEndTime(endTime) {
+        this.requireNotSubscribed();
+
         this._endTime =
             endTime instanceof Timestamp
                 ? endTime
@@ -135,6 +248,8 @@ export default class TopicMessageQuery {
      * @returns {TopicMessageQuery}
      */
     setLimit(limit) {
+        this.requireNotSubscribed();
+
         this._limit = limit instanceof Long ? limit : Long.fromValue(limit);
 
         return this;
@@ -145,41 +260,57 @@ export default class TopicMessageQuery {
      * @returns {TopicMessageQuery}
      */
     setErrorHandler(errorHandler) {
-        this._errorHandler =
-            errorHandler instanceof TopicMessage ? errorHandler : errorHandler;
+        this._errorHandler = errorHandler;
 
         return this;
     }
 
     /**
+     * @param {() => void} completionHandler
+     * @returns {TopicMessageQuery}
+     */
+    setCompletionHandler(completionHandler) {
+        this.requireNotSubscribed();
+
+        this._completionHandler = completionHandler;
+
+        return this;
+    }
+
+    /**
+     * @param {number} attempts
+     */
+    setMaxAttempts(attempts) {
+        this.requireNotSubscribed();
+
+        this._maxAttempts = attempts;
+    }
+
+    /**
      * @param {Client<*>} client
-     * @param {(message: TopicMessage, error: Error)=> void} errorHandler
+     * @param {((message: TopicMessage, error: Error) => void) | null} errorHandler
      * @param {(message: TopicMessage) => void} listener
      * @returns {SubscriptionHandle}
      */
     subscribe(client, errorHandler, listener) {
-        const handle = new SubscriptionHandle();
+        this._handle = new SubscriptionHandle();
+        this._listener = listener;
 
-        this._makeServerStreamRequest(
-            handle,
-            0,
-            client,
-            errorHandler,
-            listener
-        );
+        if (errorHandler != null) {
+            this._errorHandler = errorHandler;
+        }
 
-        return handle;
+        this._makeServerStreamRequest(client);
+
+        return this._handle;
     }
 
     /**
-     * @param {SubscriptionHandle} handle
-     * @param {number} attempt
+     * @private
      * @param {import("../client/Client.js").default<Channel, MirrorChannel>} client
-     * @param {(message: TopicMessage, error: Error)=> void} errorHandler
-     * @param {(message: TopicMessage) => void} listener
      * @returns {void}
      */
-    _makeServerStreamRequest(handle, attempt, client, errorHandler, listener) {
+    _makeServerStreamRequest(client) {
         /** @type {Map<string, proto.ConsensusTopicResponse[]>} */
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -191,83 +322,109 @@ export default class TopicMessageQuery {
                 this._startTime != null ? this._startTime._toProtobuf() : null,
             consensusEndTime:
                 this._endTime != null ? this._endTime._toProtobuf() : null,
-            limit: this._limit != null ? this._limit : null,
+            limit: this._limit != null ? this._limit.sub(this._counter) : null,
         }).finish();
 
         const cancel = client._mirrorNetwork
             .getNextMirrorNode()
-            .channel.makeServerStreamRequest(request, (error, data) => {
-                if (data == null || error != null) {
-                    // NOT_FOUND or UNAVAILABLE
-                    cancel();
-                    if (attempt < 10 && (error === 5 || error === 14)) {
-                        setTimeout(() => {
-                            this._makeServerStreamRequest(
-                                handle,
-                                attempt + 1,
-                                client,
-                                errorHandler,
-                                listener
-                            );
-                        }, 250 * 2 ** attempt);
-                    }
-                    //  else {
-                    //     errorHandler(null, error);
-                    // }
-                    return;
-                }
+            .channel.makeServerStreamRequest(
+                request,
+                (data) => {
+                    const message = proto.ConsensusTopicResponse.decode(data);
 
-                const message = proto.ConsensusTopicResponse.decode(data);
-
-                if (message.chunkInfo == null) {
-                    const topicMessage = TopicMessage._ofSingle(message);
-
-                    try {
-                        listener(topicMessage);
-                    } catch (error) {
-                        errorHandler(topicMessage, error);
-                    }
-                } else {
-                    const chunkInfo =
-                        /** @type {proto.IConsensusMessageChunkInfo} */ (
-                            message.chunkInfo
-                        );
-                    const initialTransactionID =
-                        /** @type {proto.ITransactionID} */ (
-                            chunkInfo.initialTransactionID
-                        );
-                    const total = /** @type {number} */ (chunkInfo.total);
-                    const transactionId =
-                        TransactionId._fromProtobuf(
-                            initialTransactionID
-                        ).toString();
-
-                    /** @type {proto.ConsensusTopicResponse[]} */
-                    let responses = [];
-
-                    const temp = list.get(transactionId);
-                    if (temp == null) {
-                        list.set(transactionId, responses);
+                    if (
+                        message.chunkInfo == null ||
+                        (message.chunkInfo != null &&
+                            message.chunkInfo.total === 1)
+                    ) {
+                        this._passTopicMessage(TopicMessage._ofSingle(message));
                     } else {
-                        responses = temp;
-                    }
+                        const chunkInfo =
+                            /** @type {proto.IConsensusMessageChunkInfo} */ (
+                                message.chunkInfo
+                            );
+                        const initialTransactionID =
+                            /** @type {proto.ITransactionID} */ (
+                                chunkInfo.initialTransactionID
+                            );
+                        const total = /** @type {number} */ (chunkInfo.total);
+                        const transactionId =
+                            TransactionId._fromProtobuf(
+                                initialTransactionID
+                            ).toString();
 
-                    responses.push(message);
+                        /** @type {proto.ConsensusTopicResponse[]} */
+                        let responses = [];
 
-                    if (responses.length === total) {
-                        const topicMessage = TopicMessage._ofMany(responses);
+                        const temp = list.get(transactionId);
+                        if (temp == null) {
+                            list.set(transactionId, responses);
+                        } else {
+                            responses = temp;
+                        }
 
-                        list.delete(transactionId);
+                        responses.push(message);
 
-                        try {
-                            listener(topicMessage);
-                        } catch (error) {
-                            errorHandler(topicMessage, error);
+                        if (responses.length === total) {
+                            const topicMessage =
+                                TopicMessage._ofMany(responses);
+
+                            list.delete(transactionId);
+
+                            this._passTopicMessage(topicMessage);
                         }
                     }
-                }
-            });
+                },
+                (error) => {
+                    if (this._handle != null) {
+                        this._handle.unsubscribe();
+                    }
 
-        handle._setCall(() => cancel());
+                    if (
+                        this._attempt < this._maxAttempts &&
+                        this._retryHandler(error)
+                    ) {
+                        this._attempt += 1;
+
+                        setTimeout(() => {
+                            this._makeServerStreamRequest(client);
+                        }, 250 * 2 ** this._attempt);
+                    }
+                }
+            );
+
+        if (this._handle != null) {
+            this._handle._setCall(() => cancel());
+        }
+    }
+
+    requireNotSubscribed() {
+        if (this._handle != null) {
+            throw new Error(
+                "Cannot change fields on an already subscribed query"
+            );
+        }
+    }
+
+    /**
+     * @private
+     * @param {TopicMessage} topicMessage
+     */
+    _passTopicMessage(topicMessage) {
+        try {
+            this._counter += 1;
+
+            if (this._listener != null) {
+                this._listener(topicMessage);
+            } else {
+                throw new Error("(BUG) listener is unexpectedly not set");
+            }
+
+            if (this._limit != null && this._limit.comp(this._counter)) {
+                this._completionHandler();
+            }
+        } catch (error) {
+            this._errorHandler(topicMessage, error);
+        }
     }
 }
