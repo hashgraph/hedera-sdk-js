@@ -3,12 +3,12 @@ import {
     TokenDeleteTransaction,
     TokenInfoQuery,
     Status,
-    PrivateKey,
+    PrivateKey
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("TokenCreate", function () {
-    it("should be executable", async function () {
+describe("TokenCreate", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -66,7 +66,7 @@ describe("TokenCreate", function () {
         expect(info.expirationTime).to.be.not.null;
     });
 
-    it("should be executable with minimal properties set", async function () {
+    it("should be executable with minimal properties set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -113,12 +113,10 @@ describe("TokenCreate", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenDeleteTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenId(tokenId)
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenDeleteTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(tokenId)
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.TokenIsImmutable);
         }
@@ -128,7 +126,7 @@ describe("TokenCreate", function () {
         }
     });
 
-    it("should error when token name is not set", async function () {
+    it("should error when token name is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -137,13 +135,11 @@ describe("TokenCreate", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenCreateTransaction()
-                    .setTokenSymbol("F")
-                    .setNodeAccountIds(env.nodeAccountIds)
-                    .setTreasuryAccountId(operatorId)
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenCreateTransaction()
+                .setTokenSymbol("F")
+                .setNodeAccountIds(env.nodeAccountIds)
+                .setTreasuryAccountId(operatorId)
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.MissingTokenName);
         }
@@ -153,7 +149,7 @@ describe("TokenCreate", function () {
         }
     });
 
-    it("should error when token symbol is not set", async function () {
+    it("should error when token symbol is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -162,13 +158,11 @@ describe("TokenCreate", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenCreateTransaction()
-                    .setTokenName("ffff")
-                    .setNodeAccountIds(env.nodeAccountIds)
-                    .setTreasuryAccountId(operatorId)
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenCreateTransaction()
+                .setTokenName("ffff")
+                .setNodeAccountIds(env.nodeAccountIds)
+                .setTreasuryAccountId(operatorId)
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.MissingTokenSymbol);
         }
@@ -178,7 +172,7 @@ describe("TokenCreate", function () {
         }
     });
 
-    it("should error when treasury account ID is not set", async function () {
+    it("should error when treasury account ID is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -186,13 +180,11 @@ describe("TokenCreate", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenCreateTransaction()
-                    .setTokenName("ffff")
-                    .setNodeAccountIds(env.nodeAccountIds)
-                    .setTokenSymbol("F")
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenCreateTransaction()
+                .setTokenName("ffff")
+                .setNodeAccountIds(env.nodeAccountIds)
+                .setTokenSymbol("F")
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error
                 .toString()
@@ -204,7 +196,7 @@ describe("TokenCreate", function () {
         }
     });
 
-    it("should error when admin key does not sign transaction", async function () {
+    it("should error when admin key does not sign transaction", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -213,15 +205,13 @@ describe("TokenCreate", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenCreateTransaction()
-                    .setTokenName("ffff")
-                    .setNodeAccountIds(env.nodeAccountIds)
-                    .setTokenSymbol("F")
-                    .setTreasuryAccountId(operatorId)
-                    .setAdminKey(PrivateKey.generate())
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenCreateTransaction()
+                .setTokenName("ffff")
+                .setNodeAccountIds(env.nodeAccountIds)
+                .setTokenSymbol("F")
+                .setTreasuryAccountId(operatorId)
+                .setAdminKey(PrivateKey.generate())
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidSignature);
         }

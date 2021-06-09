@@ -5,8 +5,8 @@
 // } from "../src/exports.js";
 // import IntegrationTestEnv from "./client/index.js";
 
-describe("TokenDelete", function () {
-    it("should be executable", async function () {
+describe("TokenDelete", function() {
+    it("should be executable", async function() {
         // this.timeout(60000);
         //
         // const env = new IntegrationTestEnv();
@@ -36,7 +36,7 @@ describe("TokenDelete", function () {
         // ).getReceipt(env.client);
     });
 
-    it("should error with no token ID set", async function () {
+    it("should error with no token ID set", async function() {
         // this.timeout(60000);
         // const env = new IntegrationTestEnv();
         // await env.initialize()

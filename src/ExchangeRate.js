@@ -53,7 +53,7 @@ export default class ExchangeRate {
                             : rate.expirationTime.seconds
                         : 0 * 1000
                     : 0 * 1000
-            ),
+            )
         });
     }
 
@@ -66,8 +66,8 @@ export default class ExchangeRate {
             hbarEquiv: this.hbars,
             centEquiv: this.cents,
             expirationTime: {
-                seconds: Long.fromNumber(this.expirationTime.getSeconds()),
-            },
+                seconds: Long.fromNumber(this.expirationTime.getSeconds())
+            }
         };
     }
 }

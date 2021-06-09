@@ -7,8 +7,8 @@ import TransactionId from "../../src/transaction/TransactionId.js";
 import IntegrationTestEnv from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 
-describe("AccountCreate", function () {
-    it("should be executable", async function () {
+describe("AccountCreate", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -41,20 +41,16 @@ describe("AccountCreate", function () {
         expect(info.proxyAccountId).to.be.null;
         expect(info.proxyReceived.toTinybars().toNumber()).to.be.equal(0);
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new AccountDeleteTransaction()
+            .setAccountId(account)
+            .setNodeAccountIds([response.nodeId])
+            .setTransferAccountId(operatorId)
+            .setTransactionId(TransactionId.generate(account))
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
     });
 
-    it("should be executable with only key set", async function () {
+    it("should be executable with only key set", async function() {
         this.timeout(15000);
 
         const env = await IntegrationTestEnv.new();
@@ -84,19 +80,15 @@ describe("AccountCreate", function () {
         expect(info.proxyAccountId).to.be.null;
         expect(info.proxyReceived.toTinybars().toNumber()).to.be.equal(0);
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new AccountDeleteTransaction()
+            .setAccountId(account)
+            .setNodeAccountIds([response.nodeId])
+            .setTransferAccountId(operatorId)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error when key is not set", async function () {
+    it("should error when key is not set", async function() {
         this.timeout(15000);
 
         const env = await IntegrationTestEnv.new();
@@ -118,7 +110,7 @@ describe("AccountCreate", function () {
         }
     });
 
-    it("should be able to sign transaction and verify transaction signtatures", async function () {
+    it("should be able to sign transaction and verify transaction signtatures", async function() {
         this.timeout(15000);
 
         const env = await IntegrationTestEnv.new();

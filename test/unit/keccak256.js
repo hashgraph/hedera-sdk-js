@@ -1,8 +1,8 @@
 import { keccak256 } from "../../src/cryptography/keccak.js";
 import * as hex from "../src/encoding/hex.js";
 
-describe("keccak256", function () {
-    it("should hash to the expected value", function () {
+describe("keccak256", function() {
+    it("should hash to the expected value", function() {
         const hashBytes = keccak256("method");
         const hash = hex.encode(hashBytes);
 

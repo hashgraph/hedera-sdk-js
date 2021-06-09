@@ -6,8 +6,8 @@ import Status from "../src/Status.js";
 import IntegrationTestEnv from "./client/index.js";
 import * as utf8 from "../src/encoding/utf8.js";
 
-describe("FileContents", function () {
-    it("should be executable", async function () {
+describe("FileContents", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -37,15 +37,13 @@ describe("FileContents", function () {
             "[e2e::FileCreateTransaction]"
         );
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileDeleteTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should be executable with empty contents", async function () {
+    it("should be executable with empty contents", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -72,15 +70,13 @@ describe("FileContents", function () {
 
         expect(utf8.decode(contents)).to.be.equal("");
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileDeleteTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error when file ID is not set", async function () {
+    it("should error when file ID is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();

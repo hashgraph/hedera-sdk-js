@@ -10,6 +10,7 @@ import {
     ResponseType as ProtoResponseType,
     ResponseCodeEnum,
 } from "@hashgraph/proto";
+import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
 
@@ -304,18 +305,21 @@ export default class Query extends Executable {
     /**
      * @override
      * @internal
+     * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @returns {Status}
+     * @returns {Error}
      */
-    _mapResponseStatus(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponseStatus(request, response) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
-        return Status._fromCode(
-            nodeTransactionPrecheckCode != null
-                ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+        const status = Status._fromCode(nodeTransactionPrecheckCode != null
+            ? nodeTransactionPrecheckCode
+            : ResponseCodeEnum.OK
         );
+
+        return new PrecheckStatusError({ status, transactionId: this._getTransactionId() });
     }
 
     /**

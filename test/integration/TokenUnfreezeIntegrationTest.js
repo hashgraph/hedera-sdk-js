@@ -7,12 +7,12 @@ import {
     TokenCreateTransaction,
     Hbar,
     Status,
-    PrivateKey,
+    PrivateKey
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("TokenUnfreeze", function () {
-    it("should be executable", async function () {
+describe("TokenUnfreeze", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -28,46 +28,34 @@ describe("TokenUnfreeze", function () {
 
         const account = (await response.getReceipt(env.client)).accountId;
 
-        const token = (
-            await (
-                await new TokenCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenName("ffff")
-                    .setTokenSymbol("F")
-                    .setDecimals(3)
-                    .setInitialSupply(1000000)
-                    .setTreasuryAccountId(operatorId)
-                    .setAdminKey(operatorKey)
-                    .setKycKey(operatorKey)
-                    .setFreezeKey(operatorKey)
-                    .setWipeKey(operatorKey)
-                    .setSupplyKey(operatorKey)
-                    .setFreezeDefault(false)
-                    .execute(env.client)
-            ).getReceipt(env.client)
-        ).tokenId;
+        const token = (await (await new TokenCreateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(operatorKey)
+            .setKycKey(operatorKey)
+            .setFreezeKey(operatorKey)
+            .setWipeKey(operatorKey)
+            .setSupplyKey(operatorKey)
+            .setFreezeDefault(false)
+            .execute(env.client)).getReceipt(env.client)).tokenId;
 
-        await (
-            await (
-                await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenIds([token])
-                    .setAccountId(account)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new TokenAssociateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenIds([token])
+            .setAccountId(account)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
 
-        await (
-            await (
-                await new TokenFreezeTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenId(token)
-                    .setAccountId(account)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new TokenFreezeTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenId(token)
+            .setAccountId(account)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
 
         let info = await new AccountInfoQuery()
             .setNodeAccountIds([response.nodeId])
@@ -82,16 +70,12 @@ describe("TokenUnfreeze", function () {
         expect(relationship.isKycGranted).to.be.false;
         expect(relationship.isFrozen).to.be.true;
 
-        await (
-            await (
-                await new TokenUnfreezeTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenId(token)
-                    .setAccountId(account)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new TokenUnfreezeTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenId(token)
+            .setAccountId(account)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
 
         info = await new AccountInfoQuery()
             .setNodeAccountIds([response.nodeId])
@@ -107,7 +91,7 @@ describe("TokenUnfreeze", function () {
         expect(relationship.isFrozen).to.be.false;
     });
 
-    it("should be executable even when no token IDs are set", async function () {
+    it("should be executable even when no token IDs are set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -124,15 +108,11 @@ describe("TokenUnfreeze", function () {
         let err = false;
 
         try {
-            await (
-                await (
-                    await new TokenUnfreezeTransaction()
-                        .setNodeAccountIds([response.nodeId])
-                        .setAccountId(account)
-                        .freezeWith(env.client)
-                        .sign(key)
-                ).execute(env.client)
-            ).getReceipt(env.client);
+            await (await (await new TokenUnfreezeTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setAccountId(account)
+                .freezeWith(env.client)
+                .sign(key)).execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);
         }
@@ -142,7 +122,7 @@ describe("TokenUnfreeze", function () {
         }
     });
 
-    it("should error when account ID is not set", async function () {
+    it("should error when account ID is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -169,12 +149,10 @@ describe("TokenUnfreeze", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenUnfreezeTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenId(token)
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenUnfreezeTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountId);
         }

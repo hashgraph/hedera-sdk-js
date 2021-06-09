@@ -13,7 +13,9 @@ import {
     SignedTransaction as ProtoSignedTransaction,
     TransactionList as ProtoTransactionList,
     TransactionBody as ProtoTransactionBody,
+    ResponseCodeEnum,
 } from "@hashgraph/proto";
+import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
 
 /**
@@ -723,15 +725,20 @@ export default class Transaction extends Executable {
     /**
      * @override
      * @internal
+     * @param {proto.ITransaction} request
      * @param {proto.ITransactionResponse} response
-     * @returns {Status}
+     * @returns {Error}
      */
-    _mapResponseStatus(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapStatusError(request, response) {
         const { nodeTransactionPrecheckCode } = response;
 
-        return nodeTransactionPrecheckCode == null
-            ? Status.Ok
-            : Status._fromCode(nodeTransactionPrecheckCode);
+        const status = Status._fromCode(nodeTransactionPrecheckCode != null
+            ? nodeTransactionPrecheckCode
+            : ResponseCodeEnum.OK
+        );
+
+        return new PrecheckStatusError({ status, transactionId: this._getTransactionId() });
     }
 
     /**

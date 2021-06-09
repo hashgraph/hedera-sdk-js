@@ -2,12 +2,12 @@ import {
     TokenCreateTransaction,
     TokenBurnTransaction,
     Hbar,
-    Status,
+    Status
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("TokenBurn", function () {
-    it("should be executable", async function () {
+describe("TokenBurn", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -32,16 +32,14 @@ describe("TokenBurn", function () {
 
         const token = (await response.getReceipt(env.client)).tokenId;
 
-        await (
-            await new TokenBurnTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setAmount(10)
-                .setTokenId(token)
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new TokenBurnTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setAmount(10)
+            .setTokenId(token)
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error when token ID is not set", async function () {
+    it("should error when token ID is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -49,11 +47,9 @@ describe("TokenBurn", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenBurnTransaction()
-                    .setAmount(10)
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenBurnTransaction()
+                .setAmount(10)
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);
         }
@@ -63,7 +59,7 @@ describe("TokenBurn", function () {
         }
     });
 
-    it("should error when amount is not set", async function () {
+    it("should error when amount is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -91,11 +87,9 @@ describe("TokenBurn", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenBurnTransaction()
-                    .setTokenId(token)
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenBurnTransaction()
+                .setTokenId(token)
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenBurnAmount);
         }

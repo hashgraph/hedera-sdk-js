@@ -11,8 +11,8 @@ import Long from "long";
 import * as hex from "../src/encoding/hex.js";
 import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
 
-describe("LiveHash", function () {
-    it("should be executable", async function () {
+describe("LiveHash", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const _hash = hex.decode(
@@ -82,16 +82,12 @@ describe("LiveHash", function () {
 
         expect(errorThrown).to.be.true;
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new AccountDeleteTransaction()
+            .setAccountId(account)
+            .setNodeAccountIds([response.nodeId])
+            .setTransferAccountId(operatorId)
+            .setTransactionId(TransactionId.generate(account))
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
     });
 });

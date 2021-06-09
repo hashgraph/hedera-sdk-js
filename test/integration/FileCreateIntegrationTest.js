@@ -6,8 +6,8 @@ import Status from "../src/Status.js";
 import Timestamp from "../src/Timestamp.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("FileCreate", function () {
-    it("should be executable", async function () {
+describe("FileCreate", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -42,15 +42,13 @@ describe("FileCreate", function () {
             expect(key.toString()).to.be.equal(operatorKey.toString());
         }
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileDeleteTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should be executable with empty contents", async function () {
+    it("should be executable with empty contents", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -69,15 +67,13 @@ describe("FileCreate", function () {
 
         const file = receipt.fileId;
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileDeleteTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should be executable with no keys", async function () {
+    it("should be executable with no keys", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -91,7 +87,7 @@ describe("FileCreate", function () {
             .true;
     });
 
-    it("should error with too large expiration time", async function () {
+    it("should error with too large expiration time", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -100,14 +96,12 @@ describe("FileCreate", function () {
         let err = false;
 
         try {
-            await (
-                await new FileCreateTransaction()
-                    .setKeys([operatorKey])
-                    .setContents("[e2e::FileCreateTransaction]")
-                    .setNodeAccountIds(env.nodeAccountIds)
-                    .setExpirationTime(new Timestamp(Date.now() + 99999999, 0))
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new FileCreateTransaction()
+                .setKeys([operatorKey])
+                .setContents("[e2e::FileCreateTransaction]")
+                .setNodeAccountIds(env.nodeAccountIds)
+                .setExpirationTime(new Timestamp(Date.now() + 99999999, 0))
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.AutorenewDurationNotInRange);
         }

@@ -5,12 +5,12 @@ import {
     Hbar,
     PrivateKey,
     TransactionId,
-    Status,
+    Status
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("CryptoTransfer", function () {
-    it("should be executable", async function () {
+describe("CryptoTransfer", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -28,29 +28,23 @@ describe("CryptoTransfer", function () {
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
 
-        await (
-            await new TransferTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .addHbarTransfer(account, new Hbar(1))
-                .addHbarTransfer(operatorId, new Hbar(-1))
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new TransferTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .addHbarTransfer(account, new Hbar(1))
+            .addHbarTransfer(operatorId, new Hbar(-1))
+            .execute(env.client)).getReceipt(env.client);
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new AccountDeleteTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setAccountId(account)
+            .setNodeAccountIds([response.nodeId])
+            .setTransferAccountId(operatorId)
+            .setTransactionId(TransactionId.generate(account))
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error when there is invalid account amounts", async function () {
+    it("should error when there is invalid account amounts", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -71,13 +65,11 @@ describe("CryptoTransfer", function () {
         let err = false;
 
         try {
-            await (
-                await new TransferTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .addHbarTransfer(account, new Hbar(1))
-                    .addHbarTransfer(operatorId, new Hbar(1))
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TransferTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .addHbarTransfer(account, new Hbar(1))
+                .addHbarTransfer(operatorId, new Hbar(1))
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountAmounts);
         }
@@ -87,7 +79,7 @@ describe("CryptoTransfer", function () {
         }
     });
 
-    it("should error when receiver and sender are the same accounts", async function () {
+    it("should error when receiver and sender are the same accounts", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -107,13 +99,11 @@ describe("CryptoTransfer", function () {
         let err = false;
 
         try {
-            await (
-                await new TransferTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .addHbarTransfer(account, new Hbar(1))
-                    .addHbarTransfer(account, new Hbar(-1))
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TransferTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .addHbarTransfer(account, new Hbar(1))
+                .addHbarTransfer(account, new Hbar(-1))
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error
                 .toString()

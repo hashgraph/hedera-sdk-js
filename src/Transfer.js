@@ -58,7 +58,7 @@ export default class Transfer {
             ),
             amount: Hbar.fromTinybars(
                 transfer.amount != null ? transfer.amount : 0
-            ),
+            )
         });
     }
 
@@ -69,7 +69,7 @@ export default class Transfer {
     _toProtobuf() {
         return {
             accountID: this.accountId._toProtobuf(),
-            amount: this.amount.toTinybars(),
+            amount: this.amount.toTinybars()
         };
     }
 }

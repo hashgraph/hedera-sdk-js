@@ -3,8 +3,8 @@ import Status from "../src/Status.js";
 import IntegrationTestEnv from "./client/index.js";
 import { AccountStakersQuery } from "../../src/exports.js";
 
-describe("AccountStakers", function () {
-    it("should error", async function () {
+describe("AccountStakers", function() {
+    it("should error", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();

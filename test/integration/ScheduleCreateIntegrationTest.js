@@ -6,12 +6,12 @@ import {
     TopicMessageSubmitTransaction,
     PrivateKey,
     Hbar,
-    KeyList,
+    KeyList
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("ScheduleCreate", function () {
-    it("should be executable", async function () {
+describe("ScheduleCreate", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -39,17 +39,13 @@ describe("ScheduleCreate", function () {
         expect((await response.getReceipt(env.client)).accountId).to.be.not
             .null;
 
-        const topicId = (
-            await (
-                await new TopicCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setAdminKey(operatorKey)
-                    .setAutoRenewAccountId(operatorId)
-                    .setTopicMemo("HCS Topic_")
-                    .setSubmitKey(key2)
-                    .execute(env.client)
-            ).getReceipt(env.client)
-        ).topicId;
+        const topicId = (await (await new TopicCreateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setAdminKey(operatorKey)
+            .setAutoRenewAccountId(operatorId)
+            .setTopicMemo("HCS Topic_")
+            .setSubmitKey(key2)
+            .execute(env.client)).getReceipt(env.client)).topicId;
 
         const transaction = new TopicMessageSubmitTransaction()
             .setTopicId(topicId)
@@ -63,17 +59,16 @@ describe("ScheduleCreate", function () {
 
         const transactionId = scheduled.transactionId;
 
-        const scheduleId = (
-            await (await scheduled.execute(env.client)).getReceipt(env.client)
-        ).scheduleId;
+        const scheduleId = (await (await scheduled.execute(
+            env.client
+        )).getReceipt(env.client)).scheduleId;
 
         const info = await new ScheduleInfoQuery()
             .setScheduleId(scheduleId)
             .execute(env.client);
 
-        const infoTransaction = /** @type {TopicMessageSubmitTransaction} */ (
-            info.scheduledTransaction
-        );
+        const infoTransaction =
+            /** @type {TopicMessageSubmitTransaction} */ (info.scheduledTransaction);
 
         expect(info.scheduleId.toString()).to.be.equal(scheduleId.toString());
         expect(infoTransaction.topicId.toString()).to.be.equal(
@@ -84,14 +79,10 @@ describe("ScheduleCreate", function () {
         );
         expect(infoTransaction.nodeAccountIds).to.be.null;
 
-        await (
-            await (
-                await new ScheduleSignTransaction()
-                    .setScheduleId(scheduleId)
-                    .freezeWith(env.client)
-                    .sign(key2)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new ScheduleSignTransaction()
+            .setScheduleId(scheduleId)
+            .freezeWith(env.client)
+            .sign(key2)).execute(env.client)).getReceipt(env.client);
 
         await new ScheduleInfoQuery()
             .setScheduleId(scheduleId)

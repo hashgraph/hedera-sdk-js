@@ -7,8 +7,8 @@ import TransactionId from "../../src/transaction/TransactionId.js";
 import IntegrationTestEnv from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 
-describe("AccountRecords", function () {
-    it("should be executable", async function () {
+describe("AccountRecords", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -26,13 +26,11 @@ describe("AccountRecords", function () {
         expect(receipt.accountId).to.not.be.null;
         const account = receipt.accountId;
 
-        await (
-            await new TransferTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .addHbarTransfer(account, new Hbar(1))
-                .addHbarTransfer(operatorId, new Hbar(1).negated())
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new TransferTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .addHbarTransfer(account, new Hbar(1))
+            .addHbarTransfer(operatorId, new Hbar(1).negated())
+            .execute(env.client)).getReceipt(env.client);
 
         const records = await new AccountRecordsQuery()
             .setNodeAccountIds([response.nodeId])
@@ -42,16 +40,12 @@ describe("AccountRecords", function () {
 
         expect(records.length).to.be.equal(0);
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new AccountDeleteTransaction()
+            .setAccountId(account)
+            .setNodeAccountIds([response.nodeId])
+            .setTransferAccountId(operatorId)
+            .setTransactionId(TransactionId.generate(account))
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
     });
 });

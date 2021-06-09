@@ -2,12 +2,12 @@ import {
     TokenCreateTransaction,
     TokenInfoQuery,
     Status,
-    PrivateKey,
+    PrivateKey
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("TokenInfo", function () {
-    it("should be executable", async function () {
+describe("TokenInfo", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -65,7 +65,7 @@ describe("TokenInfo", function () {
         expect(info.expirationTime).to.be.not.null;
     });
 
-    it("should be executable with minimal properties set", async function () {
+    it("should be executable with minimal properties set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -110,7 +110,7 @@ describe("TokenInfo", function () {
         expect(info.expirationTime).to.be.not.null;
     });
 
-    it("should error when token ID is not set", async function () {
+    it("should error when token ID is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();

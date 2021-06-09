@@ -5,8 +5,8 @@ import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("FileDelete", function () {
-    it("should be executable", async function () {
+describe("FileDelete", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -41,15 +41,13 @@ describe("FileDelete", function () {
             expect(key.toString()).to.be.equal(operatorKey.toString());
         }
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileDeleteTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error when file ID is not set", async function () {
+    it("should error when file ID is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -57,11 +55,9 @@ describe("FileDelete", function () {
         let err = false;
 
         try {
-            await (
-                await new FileDeleteTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new FileDeleteTransaction()
+                .setNodeAccountIds(env.nodeAccountIds)
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidFileId);
         }

@@ -1,12 +1,12 @@
 import {
     TopicCreateTransaction,
     TopicDeleteTransaction,
-    Status,
+    Status
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("TopicDelete", function () {
-    it("should be executable", async function () {
+describe("TopicDelete", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -22,14 +22,12 @@ describe("TopicDelete", function () {
 
         const topic = (await response.getReceipt(env.client)).topicId;
 
-        await (
-            await new TopicDeleteTransaction()
-                .setTopicId(topic)
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new TopicDeleteTransaction()
+            .setTopicId(topic)
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error when deleting immutable topic", async function () {
+    it("should error when deleting immutable topic", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -39,12 +37,10 @@ describe("TopicDelete", function () {
         let err = false;
 
         try {
-            await (
-                await new TopicDeleteTransaction()
-                    .setTopicId(topic)
-                    .setNodeAccountIds(env.nodeAccountIds)
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TopicDeleteTransaction()
+                .setTopicId(topic)
+                .setNodeAccountIds(env.nodeAccountIds)
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.Unauthorized);
         }

@@ -7,8 +7,8 @@ import TransactionId from "../../src/transaction/TransactionId.js";
 import IntegrationTestEnv from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 
-describe("AccountDelete", function () {
-    it("should be executable", async function () {
+describe("AccountDelete", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -41,20 +41,16 @@ describe("AccountDelete", function () {
         expect(info.proxyAccountId).to.be.null;
         expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(0);
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new AccountDeleteTransaction()
+            .setAccountId(account)
+            .setNodeAccountIds([response.nodeId])
+            .setTransferAccountId(operatorId)
+            .setTransactionId(TransactionId.generate(account))
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error with invalid signature", async function () {
+    it("should error with invalid signature", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -75,14 +71,12 @@ describe("AccountDelete", function () {
         let err = false;
 
         try {
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new AccountDeleteTransaction()
+                .setAccountId(account)
+                .setNodeAccountIds([response.nodeId])
+                .setTransferAccountId(operatorId)
+                .setTransactionId(TransactionId.generate(account))
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidSignature.toString());
         }
@@ -92,20 +86,18 @@ describe("AccountDelete", function () {
         }
     });
 
-    it("should error with no account ID set", async function () {
+    it("should error with no account ID set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         let err = false;
 
         try {
-            await (
-                await new AccountDeleteTransaction()
-                    .setTransferAccountId(env.operatorId)
-                    .setNodeAccountIds(env.nodeAccountIds)
-                    .freezeWith(env.client)
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new AccountDeleteTransaction()
+                .setTransferAccountId(env.operatorId)
+                .setNodeAccountIds(env.nodeAccountIds)
+                .freezeWith(env.client)
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error
                 .toString()

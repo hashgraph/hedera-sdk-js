@@ -26,7 +26,7 @@ export default class Duration {
      */
     _toProtobuf() {
         return {
-            seconds: this.seconds,
+            seconds: this.seconds
         };
     }
 

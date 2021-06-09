@@ -1,12 +1,12 @@
 import {
     TopicCreateTransaction,
     TopicDeleteTransaction,
-    TopicInfoQuery,
+    TopicInfoQuery
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("TopicInfo", function () {
-    it("should be executable", async function () {
+describe("TopicInfo", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -39,14 +39,12 @@ describe("TopicInfo", function () {
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
 
-        await (
-            await new TopicDeleteTransaction()
-                .setTopicId(topic)
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new TopicDeleteTransaction()
+            .setTopicId(topic)
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should be executable when no fields are set", async function () {
+    it("should be executable when no fields are set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();

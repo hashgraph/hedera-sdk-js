@@ -5,12 +5,12 @@ import {
     TokenUpdateTransaction,
     TokenInfoQuery,
     Status,
-    PrivateKey,
+    PrivateKey
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("TokenUpdate", function () {
-    it("should be executable", async function () {
+describe("TokenUpdate", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -68,14 +68,12 @@ describe("TokenUpdate", function () {
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
 
-        await (
-            await new TokenUpdateTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTokenId(token)
-                .setTokenName("aaaa")
-                .setTokenSymbol("A")
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new TokenUpdateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenId(token)
+            .setTokenName("aaaa")
+            .setTokenSymbol("A")
+            .execute(env.client)).getReceipt(env.client);
 
         info = await new TokenInfoQuery()
             .setNodeAccountIds([response.nodeId])
@@ -107,7 +105,7 @@ describe("TokenUpdate", function () {
         expect(info.expirationTime).to.be.not.null;
     });
 
-    it("should be able to update treasury", async function () {
+    it("should be able to update treasury", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -136,16 +134,10 @@ describe("TokenUpdate", function () {
 
         const token = (await response.getReceipt(env.client)).tokenId;
 
-        const treasuryAccountId = (
-            await (
-                await (
-                    await new AccountCreateTransaction()
-                        .setKey(key5)
-                        .freezeWith(env.client)
-                        .sign(key5)
-                ).execute(env.client)
-            ).getReceipt(env.client)
-        ).accountId;
+        const treasuryAccountId = (await (await (await new AccountCreateTransaction()
+            .setKey(key5)
+            .freezeWith(env.client)
+            .sign(key5)).execute(env.client)).getReceipt(env.client)).accountId;
 
         let info = await new TokenInfoQuery()
             .setNodeAccountIds([response.nodeId])
@@ -177,29 +169,21 @@ describe("TokenUpdate", function () {
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
 
-        await (
-            await (
-                await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenIds([token])
-                    .setAccountId(treasuryAccountId)
-                    .freezeWith(env.client)
-                    .sign(key5)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new TokenAssociateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenIds([token])
+            .setAccountId(treasuryAccountId)
+            .freezeWith(env.client)
+            .sign(key5)).execute(env.client)).getReceipt(env.client);
 
-        await (
-            await (
-                await new TokenUpdateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenId(token)
-                    .setTokenName("aaaa")
-                    .setTokenSymbol("A")
-                    .setTreasuryAccountId(treasuryAccountId)
-                    .freezeWith(env.client)
-                    .sign(key5)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new TokenUpdateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenId(token)
+            .setTokenName("aaaa")
+            .setTokenSymbol("A")
+            .setTreasuryAccountId(treasuryAccountId)
+            .freezeWith(env.client)
+            .sign(key5)).execute(env.client)).getReceipt(env.client);
 
         info = await new TokenInfoQuery()
             .setNodeAccountIds([response.nodeId])
@@ -231,7 +215,7 @@ describe("TokenUpdate", function () {
         expect(info.expirationTime).to.be.not.null;
     });
 
-    it("should be executable when no properties except token ID are set", async function () {
+    it("should be executable when no properties except token ID are set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -259,15 +243,13 @@ describe("TokenUpdate", function () {
 
         const token = (await response.getReceipt(env.client)).tokenId;
 
-        await (
-            await new TokenUpdateTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTokenId(token)
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new TokenUpdateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenId(token)
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error updating immutable token", async function () {
+    it("should error updating immutable token", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -284,14 +266,12 @@ describe("TokenUpdate", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenUpdateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenId(token)
-                    .setTokenName("aaaa")
-                    .setTokenSymbol("A")
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenUpdateTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .setTokenName("aaaa")
+                .setTokenSymbol("A")
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.TokenIsImmutable);
         }
@@ -301,7 +281,7 @@ describe("TokenUpdate", function () {
         }
     });
 
-    it("should error when token ID is not set", async function () {
+    it("should error when token ID is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -309,11 +289,9 @@ describe("TokenUpdate", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenUpdateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenUpdateTransaction()
+                .setNodeAccountIds(env.nodeAccountIds)
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);
         }
@@ -323,7 +301,7 @@ describe("TokenUpdate", function () {
         }
     });
 
-    it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function () {
+    it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -338,44 +316,38 @@ describe("TokenUpdate", function () {
 
         const token = (await response.getReceipt(env.client)).tokenId;
 
-        await (
-            await new TokenUpdateTransaction()
-                .setTokenId(token)
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new TokenUpdateTransaction()
+            .setTokenId(token)
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error when admin key does not sign transaction", async function () {
+    it("should error when admin key does not sign transaction", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
-        const response = await (
-            await new TokenCreateTransaction()
-                .setTokenName("ffff")
-                .setTokenSymbol("F")
-                .setTreasuryAccountId(operatorId)
-                .setAdminKey(key)
-                .setNodeAccountIds(env.nodeAccountIds)
-                .freezeWith(env.client)
-                .sign(key)
-        ).execute(env.client);
+        const response = await (await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(key)
+            .setNodeAccountIds(env.nodeAccountIds)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
 
         let err = false;
 
         try {
-            await (
-                await new TokenUpdateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenId(token)
-                    .setTokenName("aaaa")
-                    .setTokenSymbol("A")
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenUpdateTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenId(token)
+                .setTokenName("aaaa")
+                .setTokenSymbol("A")
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidSignature);
         }

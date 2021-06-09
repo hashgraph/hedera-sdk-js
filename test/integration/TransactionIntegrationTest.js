@@ -5,13 +5,13 @@ import {
     AccountDeleteTransaction,
     TokenCreateTransaction,
     TransferTransaction,
-    Hbar,
+    Hbar
 } from "../src/index.js";
 import IntegrationTestEnv from "./client/index.js";
 import * as hex from "../../src/encoding/hex.js";
 
-describe("TransactionIntegration", function () {
-    it("should be executable", async function () {
+describe("TransactionIntegration", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -39,48 +39,40 @@ describe("TransactionIntegration", function () {
         const account = record.receipt.accountId;
         expect(account).to.not.be.null;
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new AccountDeleteTransaction()
+            .setAccountId(account)
+            .setNodeAccountIds([response.nodeId])
+            .setTransferAccountId(operatorId)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
     });
 
-    it("signs correctly", async function () {
+    it("signs correctly", async function() {
         const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generate();
 
-        let transaction = await (
-            await new TokenCreateTransaction()
-                .setAdminKey(key.publicKey)
-                .setNodeAccountIds(env.nodeAccountIds)
-                .freezeWith(env.client)
-                .sign(key)
-        ).signWithOperator(env.client);
+        let transaction = await (await new TokenCreateTransaction()
+            .setAdminKey(key.publicKey)
+            .setNodeAccountIds(env.nodeAccountIds)
+            .freezeWith(env.client)
+            .sign(key)).signWithOperator(env.client);
 
         expect(transaction._signedTransactions[0].sigMap.sigPair.length).to.eql(
             2
         );
 
-        transaction = await (
-            await new TokenCreateTransaction()
-                .setAdminKey(key.publicKey)
-                .setNodeAccountIds([new AccountId(3)])
-                .freezeWith(env.client)
-                .signWithOperator(env.client)
-        ).sign(key);
+        transaction = await (await new TokenCreateTransaction()
+            .setAdminKey(key.publicKey)
+            .setNodeAccountIds([new AccountId(3)])
+            .freezeWith(env.client)
+            .signWithOperator(env.client)).sign(key);
 
         expect(transaction._signedTransactions[0].sigMap.sigPair.length).to.eql(
             2
         );
     });
 
-    it("issue-327", async function () {
+    it("issue-327", async function() {
         this.timeout(30000);
         const env = await IntegrationTestEnv.new();
         const privateKey1 = PrivateKey.generate();

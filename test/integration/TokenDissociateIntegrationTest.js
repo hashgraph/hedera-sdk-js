@@ -7,12 +7,12 @@ import {
     TokenCreateTransaction,
     Hbar,
     Status,
-    PrivateKey,
+    PrivateKey
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("TokenDissociate", function () {
-    it("should be executable", async function () {
+describe("TokenDissociate", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -28,35 +28,27 @@ describe("TokenDissociate", function () {
 
         const account = (await response.getReceipt(env.client)).accountId;
 
-        const token = (
-            await (
-                await new TokenCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenName("ffff")
-                    .setTokenSymbol("F")
-                    .setDecimals(3)
-                    .setInitialSupply(1000000)
-                    .setTreasuryAccountId(operatorId)
-                    .setAdminKey(operatorKey)
-                    .setKycKey(operatorKey)
-                    .setFreezeKey(operatorKey)
-                    .setWipeKey(operatorKey)
-                    .setSupplyKey(operatorKey)
-                    .setFreezeDefault(false)
-                    .execute(env.client)
-            ).getReceipt(env.client)
-        ).tokenId;
+        const token = (await (await new TokenCreateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(operatorKey)
+            .setKycKey(operatorKey)
+            .setFreezeKey(operatorKey)
+            .setWipeKey(operatorKey)
+            .setSupplyKey(operatorKey)
+            .setFreezeDefault(false)
+            .execute(env.client)).getReceipt(env.client)).tokenId;
 
-        await (
-            await (
-                await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenIds([token])
-                    .setAccountId(account)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new TokenAssociateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenIds([token])
+            .setAccountId(account)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
 
         let balances = await new AccountBalanceQuery()
             .setNodeAccountIds([response.nodeId])
@@ -78,16 +70,12 @@ describe("TokenDissociate", function () {
         expect(relationship.isKycGranted).to.be.false;
         expect(relationship.isFrozen).to.be.false;
 
-        await (
-            await (
-                await new TokenDissociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenIds([token])
-                    .setAccountId(account)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new TokenDissociateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenIds([token])
+            .setAccountId(account)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
 
         balances = await new AccountBalanceQuery()
             .setNodeAccountIds([response.nodeId])
@@ -104,21 +92,19 @@ describe("TokenDissociate", function () {
         expect(info.tokenRelationships.get(token)).to.be.null;
     });
 
-    it("should be executable even when no token IDs are set", async function () {
+    it("should be executable even when no token IDs are set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
-        await (
-            await new TokenDissociateTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
-                .setAccountId(operatorId)
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new TokenDissociateTransaction()
+            .setNodeAccountIds(env.nodeAccountIds)
+            .setAccountId(operatorId)
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error when account ID is not set", async function () {
+    it("should error when account ID is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -145,12 +131,10 @@ describe("TokenDissociate", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenDissociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenIds([token])
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenDissociateTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTokenIds([token])
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountId);
         }

@@ -7,12 +7,12 @@ import {
     AccountDeleteTransaction,
     TokenCreateTransaction,
     TokenAssociateTransaction,
-    TransactionId,
+    TransactionId
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("AccountBalanceQuery", function () {
-    it("account 0.0.3 should have a balance higher than 1 tinybar", async function () {
+describe("AccountBalanceQuery", function() {
+    it("account 0.0.3 should have a balance higher than 1 tinybar", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -23,11 +23,13 @@ describe("AccountBalanceQuery", function () {
             .execute(env.client);
 
         expect(balance.hbars.toTinybars().toNumber()).to.be.greaterThan(
-            Hbar.fromTinybars(1).toTinybars().toNumber()
+            Hbar.fromTinybars(1)
+                .toTinybars()
+                .toNumber()
         );
     });
 
-    it("an account that does not exist should return an error", async function () {
+    it("an account that does not exist should return an error", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -48,7 +50,7 @@ describe("AccountBalanceQuery", function () {
         }
     });
 
-    it("should reflect token with no keys", async function () {
+    it("should reflect token with no keys", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -72,15 +74,11 @@ describe("AccountBalanceQuery", function () {
 
         const token = (await response.getReceipt(env.client)).tokenId;
 
-        await (
-            await (
-                await new TokenAssociateTransaction()
-                    .setTokenIds([token])
-                    .setAccountId(account)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new TokenAssociateTransaction()
+            .setTokenIds([token])
+            .setAccountId(account)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
 
         const balances = await new AccountBalanceQuery()
             .setAccountId(account)
@@ -88,16 +86,12 @@ describe("AccountBalanceQuery", function () {
 
         expect(balances.tokens.get(token).toInt()).to.be.equal(0);
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new AccountDeleteTransaction()
+            .setAccountId(account)
+            .setNodeAccountIds([response.nodeId])
+            .setTransferAccountId(operatorId)
+            .setTransactionId(TransactionId.generate(account))
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
     });
 });

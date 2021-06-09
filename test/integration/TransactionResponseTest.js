@@ -4,8 +4,8 @@ import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js
 import IntegrationTestEnv from "./client/index.js";
 import { PrivateKey } from "../src/index.js";
 
-describe("TransactionResponse", function () {
-    it("should be executable", async function () {
+describe("TransactionResponse", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -28,15 +28,11 @@ describe("TransactionResponse", function () {
         const account = record.receipt.accountId;
         expect(account).to.not.be.null;
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([transaction.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new AccountDeleteTransaction()
+            .setAccountId(account)
+            .setNodeAccountIds([transaction.nodeId])
+            .setTransferAccountId(operatorId)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
     });
 });

@@ -7,8 +7,8 @@ import FileAppendTransaction from "../src/file/FileAppendTransaction.js";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
 import { bigContents } from "./contents.js";
 
-describe("FileAppend", function () {
-    it("should be executable", async function () {
+describe("FileAppend", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -44,13 +44,11 @@ describe("FileAppend", function () {
             expect(key.toString()).to.be.equal(operatorKey.toString());
         }
 
-        await (
-            await new FileAppendTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .setContents("[e2e::FileAppendTransaction]")
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileAppendTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .setContents("[e2e::FileAppendTransaction]")
+            .execute(env.client)).getReceipt(env.client);
 
         info = await new FileInfoQuery()
             .setFileId(file)
@@ -68,15 +66,13 @@ describe("FileAppend", function () {
             expect(key.toString()).to.be.equal(operatorKey.toString());
         }
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileDeleteTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should be chunk contents", async function () {
+    it("should be chunk contents", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -112,13 +108,11 @@ describe("FileAppend", function () {
             expect(key.toString()).to.be.equal(operatorKey.toString());
         }
 
-        await (
-            await new FileAppendTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .setContents(bigContents)
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileAppendTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .setContents(bigContents)
+            .execute(env.client)).getReceipt(env.client);
 
         info = await new FileInfoQuery()
             .setFileId(file)
@@ -136,15 +130,13 @@ describe("FileAppend", function () {
             expect(key.toString()).to.be.equal(operatorKey.toString());
         }
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileDeleteTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error with no file ID set", async function () {
+    it("should error with no file ID set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -167,29 +159,25 @@ describe("FileAppend", function () {
         let err = false;
 
         try {
-            await (
-                await new FileAppendTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setContents("[e2e::FileAppendTransaction]")
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new FileAppendTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setContents("[e2e::FileAppendTransaction]")
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidFileId);
         }
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileDeleteTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .execute(env.client)).getReceipt(env.client);
 
         if (!err) {
             throw new Error("file append transaction did not error");
         }
     });
 
-    it("should not error with no contents appended", async function () {
+    it("should not error with no contents appended", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -209,18 +197,14 @@ describe("FileAppend", function () {
 
         const file = receipt.fileId;
 
-        await (
-            await new FileAppendTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setFileId(file)
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileAppendTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setFileId(file)
+            .execute(env.client)).getReceipt(env.client);
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileDeleteTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .execute(env.client)).getReceipt(env.client);
     });
 });

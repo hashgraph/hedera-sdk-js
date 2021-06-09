@@ -10,6 +10,15 @@ import Status from "./Status.js";
  */
 
 /**
+ * @enum {string}
+ */
+export const ExecutionState = {
+    Finished: "Finished",
+    Retry: "Retry",
+    Error: "Error"
+};
+
+/**
  * @abstract
  * @internal
  * @template RequestT
@@ -101,11 +110,12 @@ export default class Executable {
     /**
      * @abstract
      * @internal
+     * @param {RequestT} request
      * @param {ResponseT} response
-     * @returns {Status}
+     * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponseStatus(response) {
+    _mapStatusError(request, response) {
         throw new Error("not implemented");
     }
 
@@ -164,16 +174,13 @@ export default class Executable {
 
     /**
      * @protected
-     * @param {Status} responseStatus
+     * @param {RequestT} request
      * @param {ResponseT} response
-     * @returns {boolean}
+     * @returns {ExecutionState}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _shouldRetry(responseStatus, response) {
-        return (
-            responseStatus === Status.Busy ||
-            responseStatus === Status.PlatformTransactionNotCreated
-        );
+    _shouldRetry(request, response) {
+        throw new Error("not implemented");
     }
 
     /**
@@ -243,24 +250,19 @@ export default class Executable {
 
             node.decreaseDelay();
 
-            const responseStatus = this._mapResponseStatus(response);
-
-            if (
-                this._shouldRetry(responseStatus, response) &&
-                attempt <= this._maxRetries
-            ) {
-                await delayForAttempt(attempt);
-                continue;
+            switch (this._shouldRetry(request, response)) {
+                case ExecutionState.Retry:
+                    await delayForAttempt(attempt);
+                    continue;
+                case ExecutionState.Finished:
+                    return this._mapResponse(response, nodeAccountId, request);
+                case ExecutionState.Error:
+                    throw this._mapStatusError(request, response);
+                default:
+                    throw new Error(
+                        "(BUG) non-exhuastive switch statement for `ExecutionState`"
+                    );
             }
-
-            if (responseStatus !== Status.Ok) {
-                throw new PrecheckStatusError({
-                    status: responseStatus,
-                    transactionId: this._getTransactionId(),
-                });
-            }
-
-            return this._mapResponse(response, nodeAccountId, request);
         }
     }
 }
@@ -272,5 +274,5 @@ export default class Executable {
 function delayForAttempt(attempt) {
     // 0.1s, 0.2s, 0.4s, 0.8s, ...
     const ms = Math.floor(50 * Math.pow(2, attempt));
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

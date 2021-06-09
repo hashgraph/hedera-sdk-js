@@ -83,7 +83,7 @@ export default class Timestamp {
     _toProtobuf() {
         return {
             seconds: this.seconds,
-            nanos: this.nanos.toInt(),
+            nanos: this.nanos.toInt()
         };
     }
 

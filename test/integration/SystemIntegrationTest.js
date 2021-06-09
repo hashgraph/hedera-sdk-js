@@ -4,8 +4,8 @@ import ContractId from "../src/contract/ContractId.js";
 import FileId from "../src/file/FileId.js";
 import Timestamp from "../src/Timestamp.js";
 
-describe("SystemIntegration", function () {
-    it("should be executable", async function () {
+describe("SystemIntegration", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();

@@ -6,12 +6,12 @@ import {
     TokenCreateTransaction,
     Hbar,
     Status,
-    PrivateKey,
+    PrivateKey
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("TokenAssociate", function () {
-    it("should be executable", async function () {
+describe("TokenAssociate", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -27,35 +27,27 @@ describe("TokenAssociate", function () {
 
         const account = (await response.getReceipt(env.client)).accountId;
 
-        const token = (
-            await (
-                await new TokenCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenName("ffff")
-                    .setTokenSymbol("F")
-                    .setDecimals(3)
-                    .setInitialSupply(1000000)
-                    .setTreasuryAccountId(operatorId)
-                    .setAdminKey(operatorKey)
-                    .setKycKey(operatorKey)
-                    .setFreezeKey(operatorKey)
-                    .setWipeKey(operatorKey)
-                    .setSupplyKey(operatorKey)
-                    .setFreezeDefault(false)
-                    .execute(env.client)
-            ).getReceipt(env.client)
-        ).tokenId;
+        const token = (await (await new TokenCreateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setDecimals(3)
+            .setInitialSupply(1000000)
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(operatorKey)
+            .setKycKey(operatorKey)
+            .setFreezeKey(operatorKey)
+            .setWipeKey(operatorKey)
+            .setSupplyKey(operatorKey)
+            .setFreezeDefault(false)
+            .execute(env.client)).getReceipt(env.client)).tokenId;
 
-        await (
-            await (
-                await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .setTokenIds([token])
-                    .setAccountId(account)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new TokenAssociateTransaction()
+            .setNodeAccountIds([response.nodeId])
+            .setTokenIds([token])
+            .setAccountId(account)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
 
         const balances = await new AccountBalanceQuery()
             .setNodeAccountIds([response.nodeId])
@@ -78,21 +70,19 @@ describe("TokenAssociate", function () {
         expect(relationship.isFrozen).to.be.false;
     });
 
-    it("should be executable even when no token IDs are set", async function () {
+    it("should be executable even when no token IDs are set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
-        await (
-            await new TokenAssociateTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
-                .setAccountId(operatorId)
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new TokenAssociateTransaction()
+            .setNodeAccountIds(env.nodeAccountIds)
+            .setAccountId(operatorId)
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should error when account ID is not set", async function () {
+    it("should error when account ID is not set", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -119,11 +109,9 @@ describe("TokenAssociate", function () {
         let err = false;
 
         try {
-            await (
-                await new TokenAssociateTransaction()
-                    .setTokenIds([token])
-                    .execute(env.client)
-            ).getReceipt(env.client);
+            await (await new TokenAssociateTransaction()
+                .setTokenIds([token])
+                .execute(env.client)).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidAccountId);
         }

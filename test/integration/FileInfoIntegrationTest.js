@@ -4,8 +4,8 @@ import FileInfoQuery from "../src/file/FileInfoQuery.js";
 import Hbar from "../src/Hbar.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("FileInfo", function () {
-    it("should be executable", async function () {
+describe("FileInfo", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -40,15 +40,13 @@ describe("FileInfo", function () {
             expect(key.toString()).to.be.equal(operatorKey.toString());
         }
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileDeleteTransaction()
+            .setFileId(file)
+            .setNodeAccountIds([response.nodeId])
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should be executable with empty contents", async function () {
+    it("should be executable with empty contents", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -82,16 +80,14 @@ describe("FileInfo", function () {
             expect(key.toString()).to.be.equal(operatorKey.toString());
         }
 
-        await (
-            await new FileDeleteTransaction()
-                .setFileId(file)
-                .setNodeAccountIds(env.nodeAccountIds)
-                .setNodeAccountIds([response.nodeId])
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await new FileDeleteTransaction()
+            .setFileId(file)
+            .setNodeAccountIds(env.nodeAccountIds)
+            .setNodeAccountIds([response.nodeId])
+            .execute(env.client)).getReceipt(env.client);
     });
 
-    it("should be executable with no keys", async function () {
+    it("should be executable with no keys", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();

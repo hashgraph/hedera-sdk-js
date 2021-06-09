@@ -1,8 +1,8 @@
 import IntegrationTestEnv from "./client/index.js";
 import { AccountBalanceQuery, AccountId } from "../src/exports.js";
 
-describe("ClientIntegration", function () {
-    it("should be executable", async function () {
+describe("ClientIntegration", function() {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -79,12 +79,14 @@ describe("ClientIntegration", function () {
                 );
                 break;
             case "web_testnet":
-                oldNetwork["https://grpc-web.testnet.myhbarwallet.com"] =
-                    new AccountId(3);
+                oldNetwork[
+                    "https://grpc-web.testnet.myhbarwallet.com"
+                ] = new AccountId(3);
                 break;
             case "web_previewnet":
-                oldNetwork["https://grpc-web.previewnet.myhbarwallet.com"] =
-                    new AccountId(3);
+                oldNetwork[
+                    "https://grpc-web.previewnet.myhbarwallet.com"
+                ] = new AccountId(3);
                 break;
         }
 

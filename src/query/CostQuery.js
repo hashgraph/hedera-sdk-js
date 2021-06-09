@@ -93,11 +93,13 @@ export default class CostQuery extends Executable {
     /**
      * @abstract
      * @internal
-     * @param {proto.IResponse} status
-     * @returns {Status}
+     * @param {proto.IQuery} request
+     * @param {proto.IResponse} response
+     * @returns {Error}
      */
-    _mapResponseStatus(status) {
-        return this._query._mapResponseStatus(status);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapStatusError(request, response) {
+        return this._query._mapStatusError(request, response);
     }
 
     /**

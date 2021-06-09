@@ -7,12 +7,12 @@ import {
     TransactionId,
     TokenCreateTransaction,
     TokenAssociateTransaction,
-    PrivateKey,
+    PrivateKey
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("AccountInfo", function () {
-    it("should be able to query cost", async function () {
+describe("AccountInfo", function() {
+    it("should be able to query cost", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -26,7 +26,7 @@ describe("AccountInfo", function () {
         expect(cost.toTinybars().toInt()).to.be.at.least(25);
     });
 
-    it("should be executable", async function () {
+    it("should be executable", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -59,21 +59,17 @@ describe("AccountInfo", function () {
         expect(info.proxyAccountId).to.be.null;
         expect(info.proxyReceived.toTinybars().toInt()).to.be.equal(0);
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new AccountDeleteTransaction()
+            .setAccountId(account)
+            .setNodeAccountIds([response.nodeId])
+            .setTransferAccountId(operatorId)
+            .setTransactionId(TransactionId.generate(account))
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests
-    it.skip("should be able to get 300 accounts", async function () {
+    it.skip("should be able to get 300 accounts", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -103,23 +99,17 @@ describe("AccountInfo", function () {
         }
 
         for (let i = 0; i < 300; i++) {
-            await (
-                await (
-                    await new AccountDeleteTransaction()
-                        .setAccountId(receipt[i].accountId)
-                        .setNodeAccountIds([response[i].nodeId])
-                        .setTransferAccountId(operatorId)
-                        .setTransactionId(
-                            TransactionId.generate(receipt[i].accountId)
-                        )
-                        .freezeWith(env.client)
-                        .sign(key)
-                ).execute(env.client)
-            ).getReceipt(env.client);
+            await (await (await new AccountDeleteTransaction()
+                .setAccountId(receipt[i].accountId)
+                .setNodeAccountIds([response[i].nodeId])
+                .setTransferAccountId(operatorId)
+                .setTransactionId(TransactionId.generate(receipt[i].accountId))
+                .freezeWith(env.client)
+                .sign(key)).execute(env.client)).getReceipt(env.client);
         }
     });
 
-    it("should reflect token with no keys", async function () {
+    it("should reflect token with no keys", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
@@ -142,15 +132,11 @@ describe("AccountInfo", function () {
 
         const token = (await response.getReceipt(env.client)).tokenId;
 
-        await (
-            await (
-                await new TokenAssociateTransaction()
-                    .setTokenIds([token])
-                    .setAccountId(account)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        await (await (await new TokenAssociateTransaction()
+            .setTokenIds([token])
+            .setAccountId(account)
+            .freezeWith(env.client)
+            .sign(key)).execute(env.client)).getReceipt(env.client);
 
         const info = await new AccountInfoQuery()
             .setAccountId(account)
@@ -165,7 +151,7 @@ describe("AccountInfo", function () {
         expect(relationship.isFrozen).to.be.null;
     });
 
-    it("should be error with no account ID", async function () {
+    it("should be error with no account ID", async function() {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
