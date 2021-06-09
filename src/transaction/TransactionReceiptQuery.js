@@ -2,6 +2,10 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import Status from "../Status.js";
 import TransactionReceipt from "./TransactionReceipt.js";
 import TransactionId from "./TransactionId.js";
+import PrecheckStatusError from "../PrecheckStatusError.js";
+import ReceiptStatusError from "../ReceiptStatusError.js";
+import { ExecutionState } from "../Executable.js";
+import { ResponseCodeEnum } from "@hashgraph/proto";
 
 /**
  * @namespace proto
@@ -92,23 +96,31 @@ export default class TransactionReceiptQuery extends Query {
 
     /**
      * @override
-     * @protected
-     * @param {Status} responseStatus
+     * @internal
+     * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @returns {boolean}
+     * @returns {ExecutionState}
      */
-    _shouldRetry(responseStatus, response) {
-        switch (responseStatus) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _shouldRetry(request, response) {
+        const { nodeTransactionPrecheckCode } =
+            this._mapResponseHeader(response);
+
+        let status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
+        );
+
+        switch (status) {
             case Status.Busy:
             case Status.Unknown:
             case Status.ReceiptNotFound:
-                return true;
+                return ExecutionState.Retry;
             case Status.Ok:
-                // Do nothing
                 break;
-
             default:
-                return false;
+                return ExecutionState.Error;
         }
 
         const transactionGetReceipt =
@@ -121,20 +133,73 @@ export default class TransactionReceiptQuery extends Query {
         const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (
             receipt.status
         );
-        const receiptStatus = Status._fromCode(receiptStatusCode);
 
-        switch (receiptStatus) {
-            case Status.Ok:
+        status = Status._fromCode(receiptStatusCode);
+
+        switch (status) {
             case Status.Busy:
             case Status.Unknown:
             case Status.ReceiptNotFound:
-                return true;
+                return ExecutionState.Retry;
+            case Status.Success:
+                return ExecutionState.Finished;
+            default:
+                return ExecutionState.Error;
+        }
+    }
+
+    /**
+     * @override
+     * @internal
+     * @param {proto.IQuery} request
+     * @param {proto.IResponse} response
+     * @returns {Error}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapStatusError(request, response) {
+        const { nodeTransactionPrecheckCode } =
+            this._mapResponseHeader(response);
+
+        let status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
+        );
+
+        switch (status) {
+            case Status.Ok:
+                // Do nothing
+                break;
 
             default:
-            // looks like its either success or some other error
+                return new PrecheckStatusError({
+                    status,
+                    transactionId: this._getTransactionId(),
+                });
         }
 
-        return false;
+        const transactionGetReceipt =
+            /** @type {proto.ITransactionGetReceiptResponse} */ (
+                response.transactionGetReceipt
+            );
+        const receipt = /** @type {proto.ITransactionReceipt} */ (
+            transactionGetReceipt.receipt
+        );
+        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (
+            receipt.status
+        );
+
+        status = Status._fromCode(receiptStatusCode);
+
+        return new ReceiptStatusError({
+            status,
+            transactionId: this._getTransactionId(),
+            transactionReceipt: TransactionReceipt._fromProtobuf(
+                /** @type {proto.ITransactionReceipt} */ (
+                    response.transactionGetReceipt
+                )
+            ),
+        });
     }
 
     /**
