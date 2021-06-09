@@ -48,7 +48,7 @@ import Transaction, {
 export default class ScheduleSignTransaction extends Transaction {
     /**
      * @param {object} [props]
-     * @param {ScheduleId} [props.scheduleId]
+     * @param {ScheduleId | string} [props.scheduleId]
      */
     constructor(props = {}) {
         super();
@@ -108,12 +108,15 @@ export default class ScheduleSignTransaction extends Transaction {
     }
 
     /**
-     * @param {ScheduleId} scheduleId
+     * @param {ScheduleId | string} scheduleId
      * @returns {this}
      */
     setScheduleId(scheduleId) {
         this._requireNotFrozen();
-        this._scheduleId = scheduleId;
+        this._scheduleId =
+            typeof scheduleId === "string"
+                ? ScheduleId.fromString(scheduleId)
+                : ScheduleId._fromProtobuf(scheduleId._toProtobuf());
 
         return this;
     }

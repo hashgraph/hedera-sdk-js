@@ -70,7 +70,9 @@ export default class FileInfoQuery extends Query {
      */
     setFileId(fileId) {
         this._fileId =
-            fileId instanceof FileId ? fileId : FileId.fromString(fileId);
+            typeof fileId === "string"
+                ? FileId.fromString(fileId)
+                : FileId._fromProtobuf(fileId._toProtobuf());
 
         return this;
     }

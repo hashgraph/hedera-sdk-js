@@ -113,7 +113,9 @@ export default class TokenAssociateTransaction extends Transaction {
     setTokenIds(tokenIds) {
         this._requireNotFrozen();
         this._tokenIds = tokenIds.map((tokenId) =>
-            tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId)
+            typeof tokenId === "string"
+                ? TokenId.fromString(tokenId)
+                : TokenId._fromProtobuf(tokenId._toProtobuf())
         );
 
         return this;
@@ -133,9 +135,9 @@ export default class TokenAssociateTransaction extends Transaction {
     setAccountId(accountId) {
         this._requireNotFrozen();
         this._accountId =
-            accountId instanceof AccountId
-                ? accountId
-                : AccountId.fromString(accountId);
+            typeof accountId === "string"
+                ? AccountId.fromString(accountId)
+                : AccountId._fromProtobuf(accountId._toProtobuf());
 
         return this;
     }

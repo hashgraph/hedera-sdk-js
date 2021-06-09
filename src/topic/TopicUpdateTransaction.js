@@ -181,7 +181,9 @@ export default class TopicUpdateTransaction extends Transaction {
     setTopicId(topicId) {
         this._requireNotFrozen();
         this._topicId =
-            topicId instanceof TopicId ? topicId : TopicId.fromString(topicId);
+            typeof topicId === "string"
+                ? TopicId.fromString(topicId)
+                : TopicId._fromProtobuf(topicId._toProtobuf());
 
         return this;
     }

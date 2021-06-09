@@ -74,7 +74,9 @@ export default class TopicInfoQuery extends Query {
      */
     setTopicId(topicId) {
         this._topicId =
-            topicId instanceof TopicId ? topicId : TopicId.fromString(topicId);
+            typeof topicId === "string"
+                ? TopicId.fromString(topicId)
+                : TopicId._fromProtobuf(topicId._toProtobuf());
 
         return this;
     }

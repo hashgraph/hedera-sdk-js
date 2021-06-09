@@ -72,9 +72,9 @@ export default class ContractInfoQuery extends Query {
      */
     setContractId(contractId) {
         this._contractId =
-            contractId instanceof ContractId
-                ? contractId
-                : ContractId.fromString(contractId);
+            typeof contractId === "string"
+                ? ContractId.fromString(contractId)
+                : ContractId._fromProtobuf(contractId._toProtobuf());
 
         return this;
     }

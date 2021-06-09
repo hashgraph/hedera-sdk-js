@@ -185,7 +185,9 @@ export default class TopicMessageQuery {
         this.requireNotSubscribed();
 
         this._topicId =
-            topicId instanceof TopicId ? topicId : TopicId.fromString(topicId);
+            typeof topicId === "string"
+                ? TopicId.fromString(topicId)
+                : TopicId._fromProtobuf(topicId._toProtobuf());
 
         return this;
     }
