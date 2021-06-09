@@ -141,8 +141,11 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      */
     setTopicId(topicId) {
         this._requireNotFrozen();
+
         this._topicId =
-            typeof topicId === "string" ? TopicId.fromString(topicId) : topicId;
+            typeof topicId === "string"
+                ? TopicId.fromString(topicId)
+                : TopicId._fromProtobuf(topicId._toProtobuf());
 
         return this;
     }

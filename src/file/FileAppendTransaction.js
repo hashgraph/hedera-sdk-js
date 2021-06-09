@@ -195,7 +195,9 @@ export default class FileAppendTransaction extends Transaction {
     setFileId(fileId) {
         this._requireNotFrozen();
         this._fileId =
-            fileId instanceof FileId ? fileId : FileId.fromString(fileId);
+            typeof fileId === "string"
+                ? FileId.fromString(fileId)
+                : FileId._fromProtobuf(fileId._toProtobuf());
 
         return this;
     }

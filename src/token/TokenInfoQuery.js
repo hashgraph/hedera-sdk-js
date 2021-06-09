@@ -72,7 +72,9 @@ export default class TokenInfoQuery extends Query {
      */
     setTokenId(tokenId) {
         this._tokenId =
-            tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId);
+            typeof tokenId === "string"
+                ? TokenId.fromString(tokenId)
+                : TokenId._fromProtobuf(tokenId._toProtobuf());
 
         return this;
     }

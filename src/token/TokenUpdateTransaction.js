@@ -273,7 +273,9 @@ export default class TokenUpdateTransaction extends Transaction {
     setTokenId(tokenId) {
         this._requireNotFrozen();
         this._tokenId =
-            tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId);
+            typeof tokenId === "string"
+                ? TokenId.fromString(tokenId)
+                : TokenId._fromProtobuf(tokenId._toProtobuf());
 
         return this;
     }

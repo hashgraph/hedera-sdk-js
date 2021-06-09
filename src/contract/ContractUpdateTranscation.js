@@ -202,9 +202,9 @@ export default class ContractUpdateTransaction extends Transaction {
     setContractId(contractId) {
         this._requireNotFrozen();
         this._contractId =
-            contractId instanceof ContractId
-                ? contractId
-                : ContractId.fromString(contractId);
+            typeof contractId === "string"
+                ? ContractId.fromString(contractId)
+                : ContractId._fromProtobuf(contractId._toProtobuf());
 
         return this;
     }
@@ -264,9 +264,9 @@ export default class ContractUpdateTransaction extends Transaction {
     setProxyAccountId(proxyAccountId) {
         this._requireNotFrozen();
         this._proxyAccountId =
-            proxyAccountId instanceof AccountId
-                ? proxyAccountId
-                : AccountId.fromString(proxyAccountId);
+            typeof proxyAccountId === "string"
+                ? AccountId.fromString(proxyAccountId)
+                : AccountId._fromProtobuf(proxyAccountId._toProtobuf());
 
         return this;
     }
@@ -306,9 +306,9 @@ export default class ContractUpdateTransaction extends Transaction {
     setBytecodeFileId(bytecodeFileId) {
         this._requireNotFrozen();
         this._bytecodeFileId =
-            bytecodeFileId instanceof FileId
-                ? bytecodeFileId
-                : FileId.fromString(bytecodeFileId);
+            typeof bytecodeFileId === "string"
+                ? FileId.fromString(bytecodeFileId)
+                : FileId._fromProtobuf(bytecodeFileId._toProtobuf());
 
         return this;
     }
