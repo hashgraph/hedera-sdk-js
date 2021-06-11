@@ -155,13 +155,13 @@ export default class TopicMessageQuery {
          * @private
          * @type {number}
          */
-        this._attempt = 0;
+        this._maxBackoff = 8000;
 
         /**
          * @private
          * @type {number}
          */
-        this._counter = 10;
+        this._attempt = 0;
 
         /**
          * @private
@@ -287,6 +287,15 @@ export default class TopicMessageQuery {
     }
 
     /**
+     * @param {number} backoff
+     */
+    setMaxBackoff(backoff) {
+        this.requireNotSubscribed();
+
+        this._maxBackoff = backoff;
+    }
+
+    /**
      * @param {Client<*>} client
      * @param {((message: TopicMessage, error: Error) => void) | null} errorHandler
      * @param {(message: TopicMessage) => void} listener
@@ -322,7 +331,7 @@ export default class TopicMessageQuery {
                 this._startTime != null ? this._startTime._toProtobuf() : null,
             consensusEndTime:
                 this._endTime != null ? this._endTime._toProtobuf() : null,
-            limit: this._limit != null ? this._limit.sub(this._counter) : null,
+            limit: this._limit,
         }).finish();
 
         const cancel = client._mirrorNetwork
@@ -331,6 +340,16 @@ export default class TopicMessageQuery {
                 request,
                 (data) => {
                     const message = proto.ConsensusTopicResponse.decode(data);
+
+                    if (this._limit != null && this._limit.gt(0)) {
+                        this._limit = this._limit.sub(1);
+                    }
+
+                    this._startTime = Timestamp._fromProtobuf(
+                        /** @type {proto.ITimestamp} */ (
+                            message.consensusTimestamp
+                        )
+                    );
 
                     if (
                         message.chunkInfo == null ||
@@ -376,10 +395,6 @@ export default class TopicMessageQuery {
                     }
                 },
                 (error) => {
-                    if (this._handle != null) {
-                        this._handle.unsubscribe();
-                    }
-
                     if (
                         this._attempt < this._maxAttempts &&
                         this._retryHandler(error)
@@ -388,9 +403,10 @@ export default class TopicMessageQuery {
 
                         setTimeout(() => {
                             this._makeServerStreamRequest(client);
-                        }, 250 * 2 ** this._attempt);
+                        }, Math.min(250 * 2 ** this._attempt, this._maxBackoff));
                     }
-                }
+                },
+                this._completionHandler
             );
 
         if (this._handle != null) {
@@ -412,16 +428,10 @@ export default class TopicMessageQuery {
      */
     _passTopicMessage(topicMessage) {
         try {
-            this._counter += 1;
-
             if (this._listener != null) {
                 this._listener(topicMessage);
             } else {
                 throw new Error("(BUG) listener is unexpectedly not set");
-            }
-
-            if (this._limit != null && this._limit.comp(this._counter)) {
-                this._completionHandler();
             }
         } catch (error) {
             this._errorHandler(topicMessage, error);

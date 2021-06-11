@@ -5,7 +5,6 @@ import {
     TopicMessageQuery,
     Status,
 } from "../src/exports.js";
-import * as utf8 from "../src/encoding/utf8.js";
 import IntegrationTestEnv from "./client/index.js";
 import { bigContents } from "./contents.js";
 
@@ -26,14 +25,19 @@ describe("TopicMessage", function () {
 
         const topic = (await response.getReceipt(env.client)).topicId;
 
-        let received = false;
+        let finished = false;
         const contents = "Hello from Hedera SDK JS";
 
         const handle = new TopicMessageQuery()
             .setTopicId(topic)
             .setStartTime(0)
-            .subscribe(env.client, (message) => {
-                received = utf8.decode(message.contents) === contents;
+            .setLimit(1)
+            .setCompletionHandler(() => {
+                finished = true;
+            })
+            // eslint-disable-next-line no-unused-vars
+            .subscribe(env.client, (_) => {
+                // Do nothing
             });
 
         const startTime = Date.now();
@@ -45,7 +49,7 @@ describe("TopicMessage", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        while (!received && Date.now() < startTime + 30000) {
+        while (!finished && Date.now() < startTime + 30000) {
             await new Promise((resolved) => setTimeout(resolved, 2000));
         }
 
@@ -57,7 +61,7 @@ describe("TopicMessage", function () {
 
         handle.unsubscribe();
 
-        if (!received) {
+        if (!finished) {
             throw new Error("Failed to receive message in 30s");
         }
     });
@@ -78,13 +82,18 @@ describe("TopicMessage", function () {
 
         const topic = (await response.getReceipt(env.client)).topicId;
 
-        let received = false;
+        let finished = false;
 
         const handle = new TopicMessageQuery()
             .setTopicId(topic)
             .setStartTime(0)
-            .subscribe(env.client, (message) => {
-                received = utf8.decode(message.contents) === bigContents;
+            .setLimit(14)
+            .setCompletionHandler(() => {
+                finished = true;
+            })
+            // eslint-disable-next-line no-unused-vars
+            .subscribe(env.client, (_) => {
+                // Do nothing
             });
 
         const startTime = Date.now();
@@ -97,7 +106,7 @@ describe("TopicMessage", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        while (!received && Date.now() < startTime + 45000) {
+        while (!finished && Date.now() < startTime + 45000) {
             await new Promise((resolved) => setTimeout(resolved, 2000));
         }
 
@@ -109,7 +118,7 @@ describe("TopicMessage", function () {
 
         handle.unsubscribe();
 
-        if (!received) {
+        if (!finished) {
             throw new Error("Failed to receive message in 45s");
         }
     });
