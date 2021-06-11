@@ -41,9 +41,10 @@ export default class NodeMirrorChannel extends MirrorChannel {
      * @param {Uint8Array} requestData
      * @param {(data: Uint8Array) => void} callback
      * @param {(error: MirrorError | Error) => void} error
+     * @param {() => void} end
      * @returns {() => void}
      */
-    makeServerStreamRequest(requestData, callback, error) {
+    makeServerStreamRequest(requestData, callback, error, end) {
         const stream = this._client
             .makeServerStreamRequest(
                 // `/proto.ConsensusService/SubscribeTopic`,
@@ -56,7 +57,11 @@ export default class NodeMirrorChannel extends MirrorChannel {
                 callback(data);
             })
             .on("status", (/** @type {grpc.StatusObject} */ status) => {
-                error(status);
+                if (status.code == 0) {
+                    end();
+                } else {
+                    error(status);
+                }
             })
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .on("error", (/** @type {grpc.StatusObject} */ _) => {
