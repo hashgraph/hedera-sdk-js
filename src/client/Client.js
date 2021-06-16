@@ -91,6 +91,8 @@ export default class Client {
                 );
             }
         }
+
+        this._signOnDemand = false;
     }
 
     /**
@@ -123,6 +125,13 @@ export default class Client {
      */
     get mirrorNetwork() {
         return this._mirrorNetwork.network;
+    }
+
+    /**
+     * @param {boolean} signOnDemand
+     */
+    setSignOnDemand(signOnDemand) {
+        this._signOnDemand = signOnDemand;
     }
 
     /**

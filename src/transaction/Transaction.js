@@ -84,7 +84,7 @@ export default class Transaction extends Executable {
          * transaction. Each one should share the same transaction ID.
          *
          * @internal
-         * @type {proto.ITransaction[]}
+         * @type {(proto.ITransaction | null)[]}
          */
         this._transactions = [];
 
@@ -135,6 +135,20 @@ export default class Transaction extends Executable {
          * @type {TransactionId[]}
          */
         this._transactionIds = [];
+
+        this._signOnDemand = false;
+
+        /**
+         * @private
+         * @type {PublicKey[]}
+         */
+        this._publicKeys = [];
+
+        /**
+         * @private
+         * @type {((message: Uint8Array) => Promise<Uint8Array>)[]}
+         */
+        this._transactionSigners = [];
     }
 
     /**
@@ -460,6 +474,14 @@ export default class Transaction extends Executable {
         }
 
         this._transactions = [];
+        this._signerPublicKeys.add(publicKeyHex);
+
+        if (this._signOnDemand) {
+            this._publicKeys.push(publicKey);
+            this._transactionSigners.push(transactionSigner);
+
+            return this;
+        }
 
         for (const signedTransaction of this._signedTransactions) {
             const bodyBytes = /** @type {Uint8Array} */ (
@@ -480,8 +502,6 @@ export default class Transaction extends Executable {
                 ed25519: signature,
             });
         }
-
-        this._signerPublicKeys.add(publicKeyHex);
 
         return this;
     }
@@ -559,6 +579,23 @@ export default class Transaction extends Executable {
      * @returns {SignatureMap}
      */
     getSignatures() {
+        if (this._signOnDemand) {
+            throw new Error(
+                "Please use `getSignaturesAsync()` if `signOnDemand` is enabled"
+            );
+        }
+
+        this._buildAllTransactions();
+
+        return SignatureMap._fromTransaction(this);
+    }
+
+    /**
+     * @returns {Promise<SignatureMap>}
+     */
+    async getSignaturesAsync() {
+        await this._buildAllTransactionsAsync();
+
         return SignatureMap._fromTransaction(this);
     }
 
@@ -583,6 +620,10 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     freezeWith(client) {
+        if (client != null) {
+            this._signOnDemand = client._signOnDemand;
+        }
+
         if (client != null && this._maxTransactionFee == null) {
             this._maxTransactionFee = client.maxTransactionFee;
         }
@@ -627,29 +668,55 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * Will error if sign-on-demand is enabled
+     *
      * @returns {Uint8Array}
      */
     toBytes() {
         this._requireFrozen();
 
-        this._buildTransactions(this._signedTransactions.length);
+        if (this._signOnDemand) {
+            throw new Error(
+                "Please use `toBytesAsync()` if `signOnDemand` is enabled"
+            );
+        }
+
+        this._buildAllTransactions();
 
         return ProtoTransactionList.encode({
-            transactionList: this._transactions,
+            transactionList: /** @type {proto.ITransaction[]} */ (
+                this._transactions
+            ),
         }).finish();
     }
 
     /**
      * @returns {Promise<Uint8Array>}
      */
-    getTransactionHash() {
+    async toBytesAsync() {
         this._requireFrozen();
 
-        this._buildTransactions(1);
+        await this._buildAllTransactionsAsync();
+
+        return ProtoTransactionList.encode({
+            transactionList: /** @type {proto.ITransaction[]} */ (
+                this._transactions
+            ),
+        }).finish();
+    }
+
+    /**
+     * @returns {Promise<Uint8Array>}
+     */
+    async getTransactionHash() {
+        this._requireFrozen();
+
+        await this._buildAllTransactionsAsync();
 
         return sha384.digest(
             /** @type {Uint8Array} */ (
-                this._transactions[0].signedTransactionBytes
+                /** @type {proto.ITransaction} */ (this._transactions[0])
+                    .signedTransactionBytes
             )
         );
     }
@@ -657,10 +724,10 @@ export default class Transaction extends Executable {
     /**
      * @returns {Promise<TransactionHashMap>}
      */
-    getTransactionHashPerNode() {
+    async getTransactionHashPerNode() {
         this._requireFrozen();
-        this._buildTransactions(this._signedTransactions.length);
-        return TransactionHashMap._fromTransaction(this);
+        await this._buildAllTransactionsAsync();
+        return await TransactionHashMap._fromTransaction(this);
     }
 
     isFrozen() {
@@ -715,28 +782,112 @@ export default class Transaction extends Executable {
     /**
      * @override
      * @internal
-     * @returns {proto.ITransaction}
+     * @returns {Promise<proto.ITransaction>}
      */
-    _makeRequest() {
+    async _makeRequestAsync() {
         const index =
             this._nextTransactionIndex * this._nodeIds.length +
             this._nextNodeIndex;
-        this._buildTransactions(index + 1);
-        return this._transactions[index];
+
+        await this._buildTransactionAsync(index);
+
+        return /** @type {proto.ITransaction} */ (this._transactions[index]);
     }
 
     /**
-     * @param {number} untilIndex
+     * @param {number} index
      * @internal
      */
-    _buildTransactions(untilIndex) {
-        for (let i = this._transactions.length; i < untilIndex; i++) {
-            this._transactions.push({
-                signedTransactionBytes: ProtoSignedTransaction.encode(
-                    this._signedTransactions[i]
-                ).finish(),
+    async _signTranscation(index) {
+        const signedTransaction = this._signedTransactions[index];
+
+        const bodyBytes = /** @type {Uint8Array} */ (
+            signedTransaction.bodyBytes
+        );
+
+        for (let j = 0; j < this._publicKeys.length; j++) {
+            const publicKey = this._publicKeys[j];
+            const transactionSigner = this._transactionSigners[j];
+
+            const signature = await transactionSigner(bodyBytes);
+
+            if (signedTransaction.sigMap == null) {
+                signedTransaction.sigMap = {};
+            }
+
+            if (signedTransaction.sigMap.sigPair == null) {
+                signedTransaction.sigMap.sigPair = [];
+            }
+
+            signedTransaction.sigMap.sigPair.push({
+                pubKeyPrefix: publicKey.toBytes(),
+                ed25519: signature,
             });
         }
+    }
+
+    _buildAllTransactions() {
+        for (let i = 0; i < this._signedTransactions.length; i++) {
+            this._buildTransaction(i);
+        }
+    }
+
+    async _buildAllTransactionsAsync() {
+        for (let i = 0; i < this._signedTransactions.length; i++) {
+            await this._buildTransactionAsync(i);
+        }
+    }
+
+    /**
+     * @param {number} index
+     * @internal
+     */
+    _buildTransaction(index) {
+        if (this._transactions.length < index) {
+            for (let i = this._transactions.length; i < index; i++) {
+                this._transactions.push(null);
+            }
+        } else if (
+            this._transactions.length > index &&
+            this._transactions[index] != null &&
+            /** @type {proto.ITransaction} */ (this._transactions[index])
+                .signedTransactionBytes != null
+        ) {
+            return;
+        }
+
+        this._transactions.push({
+            signedTransactionBytes: ProtoSignedTransaction.encode(
+                this._signedTransactions[index]
+            ).finish(),
+        });
+    }
+
+    /**
+     * @param {number} index
+     * @internal
+     */
+    async _buildTransactionAsync(index) {
+        if (this._transactions.length < index) {
+            for (let i = this._transactions.length; i < index; i++) {
+                this._transactions.push(null);
+            }
+        } else if (
+            this._transactions.length > index &&
+            this._transactions[index] != null &&
+            /** @type {proto.ITransaction} */ (this._transactions[index])
+                .signedTransactionBytes != null
+        ) {
+            return;
+        }
+
+        await this._signTranscation(index);
+
+        this._transactions.push({
+            signedTransactionBytes: ProtoSignedTransaction.encode(
+                this._signedTransactions[index]
+            ).finish(),
+        });
     }
 
     /**

@@ -295,7 +295,6 @@ export default class Query extends Executable {
     }
 
     /**
-     * @override
      * @internal
      * @returns {proto.IQuery}
      */
@@ -311,6 +310,15 @@ export default class Query extends Executable {
         }
 
         return this._onMakeRequest(header);
+    }
+
+    /**
+     * @override
+     * @internal
+     * @returns {Promise<proto.IQuery>}
+     */
+    _makeRequestAsync() {
+        return Promise.resolve(this._makeRequest());
     }
 
     /**

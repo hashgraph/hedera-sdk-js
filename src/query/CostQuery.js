@@ -83,11 +83,13 @@ export default class CostQuery extends Executable {
     /**
      * @abstract
      * @internal
-     * @returns {proto.IQuery}
+     * @returns {Promise<proto.IQuery>}
      */
-    _makeRequest() {
-        return this._query._onMakeRequest(
-            /** @type {proto.IQueryHeader} */ (this._header)
+    _makeRequestAsync() {
+        return Promise.resolve(
+            this._query._onMakeRequest(
+                /** @type {proto.IQueryHeader} */ (this._header)
+            )
         );
     }
 
