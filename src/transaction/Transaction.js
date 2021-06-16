@@ -17,6 +17,8 @@ import {
 } from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
+import { arrayEqual } from "../array.js";
+import { PublicKey } from "@hashgraph/cryptography";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -39,7 +41,6 @@ import AccountId from "../account/AccountId.js";
 /**
  * @typedef {import("../schedule/ScheduleCreateTransaction.js").default} ScheduleCreateTransaction
  * @typedef {import("@hashgraph/cryptography").PrivateKey} PrivateKey
- * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
@@ -146,7 +147,7 @@ export default class Transaction extends Executable {
 
         /**
          * @private
-         * @type {((message: Uint8Array) => Promise<Uint8Array>)[]}
+         * @type {(((message: Uint8Array) => Promise<Uint8Array>) | null)[]}
          */
         this._transactionSigners = [];
     }
@@ -324,6 +325,13 @@ export default class Transaction extends Executable {
                             /** @type {Uint8Array} */ (sigPair.pubKeyPrefix)
                         )
                     );
+
+                    transaction._publicKeys.push(
+                        PublicKey.fromBytes(
+                            /** @type {Uint8Array} */ (sigPair.pubKeyPrefix)
+                        )
+                    );
+                    transaction._transactionSigners.push(null);
                 }
             }
         }
@@ -571,6 +579,8 @@ export default class Transaction extends Executable {
         }
 
         this._signerPublicKeys.add(publicKeyHex);
+        this._publicKeys.push(publicKey);
+        this._transactionSigners.push(null);
 
         return this;
     }
@@ -805,9 +815,35 @@ export default class Transaction extends Executable {
             signedTransaction.bodyBytes
         );
 
+        if (
+            signedTransaction.sigMap != null &&
+            signedTransaction.sigMap.sigPair != null &&
+            signedTransaction.sigMap.sigPair.length > 0
+        ) {
+            for (let i = 0; i < this._publicKeys.length; i++) {
+                const publicKey = this._publicKeys[i];
+                const signer = this._transactionSigners[i];
+
+                if (
+                    signedTransaction.sigMap.sigPair[0].pubKeyPrefix != null &&
+                    signer != null &&
+                    arrayEqual(
+                        signedTransaction.sigMap.sigPair[0].pubKeyPrefix,
+                        publicKey.toBytes()
+                    )
+                ) {
+                    return;
+                }
+            }
+        }
+
         for (let j = 0; j < this._publicKeys.length; j++) {
             const publicKey = this._publicKeys[j];
             const transactionSigner = this._transactionSigners[j];
+
+            if (transactionSigner == null) {
+                continue;
+            }
 
             const signature = await transactionSigner(bodyBytes);
 
