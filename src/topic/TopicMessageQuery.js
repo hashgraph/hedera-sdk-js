@@ -347,11 +347,18 @@ export default class TopicMessageQuery {
                         this._limit = this._limit.sub(1);
                     }
 
-                    this._startTime = Timestamp._fromProtobuf(
-                        /** @type {proto.ITimestamp} */ (
-                            message.consensusTimestamp
-                        )
+                    const consensusTimestamp = /** @type {proto.ITimestamp} */ (
+                        message.consensusTimestamp
                     );
+
+                    const nanos = /** @type {number} */ (
+                        consensusTimestamp.nanos
+                    );
+
+                    this._startTime = Timestamp._fromProtobuf({
+                        seconds: consensusTimestamp.seconds,
+                        nanos: nanos + 1,
+                    });
 
                     if (
                         message.chunkInfo == null ||
@@ -401,11 +408,25 @@ export default class TopicMessageQuery {
                         this._attempt < this._maxAttempts &&
                         this._retryHandler(error)
                     ) {
+                        const delay = Math.min(
+                            250 * 2 ** this._attempt,
+                            this._maxBackoff
+                        );
+                        console.log(
+                            `Error subscribing to topic ${
+                                this._topicId != null
+                                    ? this._topicId.toString()
+                                    : "UNKNOWN"
+                            } during attempt ${
+                                this._attempt
+                            }. Waiting ${delay} ms before next attempt`
+                        );
+
                         this._attempt += 1;
 
                         setTimeout(() => {
                             this._makeServerStreamRequest(client);
-                        }, Math.min(250 * 2 ** this._attempt, this._maxBackoff));
+                        }, delay);
                     }
                 },
                 this._completionHandler
