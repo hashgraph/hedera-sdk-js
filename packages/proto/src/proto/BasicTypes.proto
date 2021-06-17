@@ -85,10 +85,18 @@ message TransferList {
     repeated AccountAmount accountAmounts = 1; // Multiple list of AccountAmount pairs, each of which has an account and an amount to transfer into it (positive) or out of it (negative)
 }
 
+/* A sender account, a receiver account, and the serial number of an NFT of a Token with NON_FUNGIBLE_UNIQUE type. */
+message NftTransfer {
+    AccountID senderAccountID = 1; // The accountID of the sender
+    AccountID receiverAccountID = 2; // The accountID of the receiver
+    int64 serialNumber = 3; // The serial number of the NFT
+}
+
 /* A list of token IDs and amounts representing the transferred out (negative) or into (positive) amounts, represented in the lowest denomination of the token */
 message TokenTransferList {
     TokenID token = 1; // The ID of the token
-    repeated AccountAmount transfers = 2; // Multiple list of AccountAmounts, each of which has an account and amount
+    repeated AccountAmount transfers = 2; // Applicable to tokens of type FUNGIBLE_COMMON. Multiple list of AccountAmounts, each of which has an account and amount
+    repeated NftTransfer nftTransfers = 3; // Applicable to tokens of type NON_FUNGIBLE_UNIQUE. Multiple list of NftTransfers, each of which has a sender and receiver account, including the serial number of the NFT
 }
 
 /* Unique identifier for a topic (used by the consensus service) */
@@ -112,6 +120,44 @@ message ScheduleID {
     int64 scheduleNum = 3; // A nonnegative schedule number
 }
 
+/**
+ * Possible Token Types (IWA Compatibility).
+ * Apart from fungible and non-fungible, Tokens can have either a common or unique representation. This distinction might seem subtle, but it is important when considering
+ * how tokens can be traced and if they can have isolated and unique properties.
+ */
+enum TokenType {
+    /**
+     * Interchangeable value with one another, where any quantity of them has the same value as another equal quantity if they are in the same class.
+     * Share a single set of properties, not distinct from one another. Simply represented as a balance or quantity to a given Hedera account.
+     */
+    FUNGIBLE_COMMON = 0;
+    /**
+     * Unique, not interchangeable with other tokens of the same type as they typically have different values.
+     * Individually traced and can carry unique properties (e.g. serial number).
+     */
+    NON_FUNGIBLE_UNIQUE = 1;
+}
+
+
+/**
+ * Possible FeeData Object SubTypes. Supplementary to the main HederaFunctionality Type.
+ * When not explicitly specified, DEFAULT is used.
+ */
+enum SubType {
+    DEFAULT = 0;
+    TOKEN_FUNGIBLE_COMMON = 1;
+    TOKEN_NON_FUNGIBLE_UNIQUE = 2;
+}
+
+/**
+ * Possible Token Supply Types (IWA Compatibility).
+ * Indicates how many tokens can have during its lifetime.
+ */
+enum TokenSupplyType {
+    INFINITE = 0; // Indicates that tokens of that type have an upper bound of Long.MAX_VALUE.
+    FINITE = 1; // Indicates that tokens of that type have an upper bound of maxSupply, provided on token creation.
+}
+
 /* Possible Freeze statuses returned on TokenGetInfoQuery or CryptoGetInfoResponse in TokenRelationship */
 enum TokenFreezeStatus {
     FreezeNotApplicable = 0;
@@ -130,13 +176,13 @@ enum TokenKycStatus {
  *
  * A Key can be a smart contract ID, which means that smart contract is to authorize operations as if it had signed with a key that it owned. The smart contract doesn't actually have a key, and  doesn't actually sign a transaction. But it's as if a virtual transaction were created, and the smart contract signed it with a private key.
  *
- * A key can be a "threshold key", which means a list of M keys, any N of which must sign in order for the threshold signature to be considered valid. The keys within a threshold signature may themselves be threshold signatures, to allow complex signature requirements.
+ * A Key can be a "threshold key", which means a list of M keys, any N of which must sign in order for the threshold signature to be considered valid. The keys within a threshold signature may themselves be threshold signatures, to allow complex signature requirements.
  *
- * A Key can be a list of keys. Their use is dependent on context. For example, a Hedera file is created with a list of keys, where all of them must sign a transaction to create or modify the file, but only one of them is needed to sign a transaction to delete the file. So it's a single list that sometimes acts as a 1-of-M threshold key, and sometimes acts as an M-of-M threshold key.
+ *A Key can be a "key list" where all keys in the list must sign unless specified otherwise in the documentation for a specific transaction type (e.g. FileDeleteTransactionBody).  Their use is dependent on context. For example, a Hedera file is created with a list of keys, where all of them must sign a transaction to create or modify the file, but only one of them is needed to sign a transaction to delete the file. So it's a single list that sometimes acts as a 1-of-M threshold key, and sometimes acts as an M-of-M threshold key. A key list is always an M-of-M, unless specified otherwise in documentation. A key list can have nested key lists or threshold keys. Nested key lists are always M-of-M. A key list can have repeated Ed25519 public keys, but all repeated keys are only required to sign once.
  *
  * A Key can contain a ThresholdKey or KeyList, which in turn contain a Key, so this mutual recursion would allow nesting arbitrarily deep. A ThresholdKey which contains a list of primitive keys (e.g., ed25519) has 3 levels: ThresholdKey -> KeyList -> Key. A KeyList which contains several primitive keys (e.g., ed25519) has 2 levels: KeyList -> Key. A Key with 2 levels of nested ThresholdKeys has 7 levels: Key -> ThresholdKey -> KeyList -> Key -> ThresholdKey -> KeyList -> Key.
  *
- * Each Key should not have more than 46 levels, which implies 15 levels of nested ThresholdKeys.
+ * Each Key should not have more than 46 levels, which implies 15 levels of nested ThresholdKeys. Only ed25519 primitive keys are currently supported.
  */
 message Key {
     oneof key {
@@ -155,14 +201,14 @@ message ThresholdKey {
     KeyList keys = 2; // List of all the keys that can sign
 }
 
-/* A list of keys */
+/* A list of keys that requires all keys (M-of-M) to sign unless otherwise specified in documentation. A KeyList may contain repeated keys, but all repeated keys are only required to sign once. */
 message KeyList {
     repeated Key keys = 1; // list of keys
 }
 
 /* A Signature corresponding to a Key. It is a sequence of bytes holding a public key signature from one of the three supported systems (ed25519, RSA-3072,  ECDSA with p384). Or, it can be a list of signatures corresponding to a single threshold key. Or, it can be the ID of a smart contract instance, which is authorized to act as if it had a key. If an account has an ed25519 key associated with it, then the corresponding private key must sign any transaction to transfer cryptocurrency out of it. If it has a smart contract ID associated with it, then that smart contract is allowed to transfer cryptocurrency out of it. The smart contract doesn't actually have a key, and  doesn't actually sign a transaction. But it's as if a virtual transaction were created, and the smart contract signed it with a private key. A key can also be a "threshold key", which means a list of M keys, any N of which must sign in order for the threshold signature to be considered valid. The keys within a threshold signature may themselves be threshold signatures, to allow complex signature requirements (this nesting is not supported in the currently, but will be supported in a future version of API). If a Signature message is missing the "signature" field, then this is considered to be a null signature. That is useful in cases such as threshold signatures, where some of the signatures can be null.
  * The definition of Key uses mutual recursion, so it allows nesting that is arbitrarily deep. But the current API only accepts Key messages up to 3 levels deep, such as a list of threshold keys, each of which is a list of primitive keys. Therefore, the matching Signature will have the same limitation. This restriction may be relaxed in future versions of the API, to allow deeper nesting.
- * This message is deprecated and succeeded by SignaturePair and SignatureMap messages. 
+ * This message is deprecated and succeeded by SignaturePair and SignatureMap messages.
  */
 message Signature {
     option deprecated = true;
@@ -196,8 +242,8 @@ message SignatureList {
 
 /*
 The client may use any number of bytes from 0 to the whole length of the public key for pubKeyPrefix.
-If 0 bytes is used, then it is assumed that only one public key is used to sign.
-*/
+If 0 bytes is used, then it is assumed that only one public key is used to sign. Only ed25519
+keys and hence signatures are currently supported.  */
 message SignaturePair {
     bytes pubKeyPrefix = 1; // First few bytes of the public key
     oneof signature {
@@ -282,6 +328,9 @@ enum HederaFunctionality {
     ScheduleDelete = 71; // Delete Scheduled Transaction
     ScheduleSign = 72; // Sign Scheduled Transaction
     ScheduleGetInfo = 73; // Get Scheduled Transaction Information
+    TokenGetAccountNftInfo = 74; // Get Token Account Nft Information
+    TokenGetNftInfo = 75; // Get Token Nft Information
+    TokenGetNftInfos = 76; // Get Token Nft List Information
 }
 
 /*
@@ -307,7 +356,9 @@ message TransactionFeeSchedule {
     // A particular transaction or query
     HederaFunctionality hederaFunctionality = 1;
     // Resource price coefficients
-    FeeData feeData = 2;
+    FeeData feeData = 2 [deprecated=true];
+    // Resource price coefficients. Supports subtype price definition.
+    repeated FeeData fees = 3;
 }
 
 /*
@@ -320,6 +371,8 @@ message FeeData {
     FeeComponents networkdata = 2;
     // Fee paid to the network for providing the service associated with the transaction; for instance, storing a file
     FeeComponents servicedata = 3;
+    // SubType distinguishing between different types of FeeData, correlating to the same HederaFunctionality
+    SubType subType = 4;
 }
 
 /*
@@ -338,55 +391,54 @@ message CurrentAndNextFeeSchedule {
     FeeSchedule nextFeeSchedule = 2; // Contains next Fee Schedule
 }
 
-/* This contains the IP Address and the port representing an endpoint of a Node in a network */
-message NodeEndpoint {
-    string ipAddress = 1; // The IP address of the node
-    string port = 2; // The port of the node
+/*
+Contains the IP address and the port representing a service endpoint of a Node in a network. Used to reach the Hedera API and submit transactions to the network.
+*/
+message ServiceEndpoint {
+    bytes ipAddressV4 = 1; // The 32-bit IPv4 address of the node encoded in left to right order (e.g. 127.0.0.1 has 127 as its first byte)
+    int32 port = 2; // The port of the node
 }
 
 /*
-The metadata for a Node – including IP Address, and the crypto account associated with the Node.
+The data about a node, including its service endpoints and the Hedera account to be paid for services
+provided by the node (that is, queries answered and transactions submitted.)
 
-Note :  This structure is intended to be used to parse 0.0.102, use NodeAddressForClients to parse 0.0.101.
-        Usage of NodeAddress to parse 0.0.101 is deprecated.
+If the <tt>serviceEndpoint</tt> list is not set, or empty, then the endpoint given by the (deprecated)
+<tt>ipAddress</tt> and <tt>portno</tt> fields should be used.
+
+All fields are populated in the 0.0.102 address book file while only fields that start with # are populated in the 0.0.101 address book file.
 */
 message NodeAddress {
-    bytes ipAddress = 1 [deprecated=true]; // The ip address of the Node with separator & octets. Usage is deprecated, NodeEndPoint is preferred to retrieve a node's list of IP addresses and ports
-    int32 portno = 2 [deprecated=true]; // The port number of the grpc server for the node.  Usage is deprecated, NodeEndPoint is preferred to retrieve a node's list of IP addresses and ports
+    bytes ipAddress = 1 [deprecated=true]; // The IP address of the Node with separator & octets encoded in UTF-8. Usage is deprecated, ServiceEndpoint is preferred to retrieve a node's list of IP addresses and ports
+    int32 portno = 2 [deprecated=true]; // The port number of the grpc server for the node.  Usage is deprecated, ServiceEndpoint is preferred to retrieve a node's list of IP addresses and ports
     bytes memo = 3 [deprecated=true]; // Usage is deprecated, nodeAccountId is preferred to retrieve a node's account ID
-    string RSA_PubKey = 4; // The RSA public key of the node
-    int64 nodeId = 5; // A non-sequential identifier for the node
-    AccountID nodeAccountId = 6; // The account to be paid for queries and transactions sent to this node
-    bytes nodeCertHash = 7; // A hash of the X509 cert used for gRPC traffic to this node
-    repeated NodeEndpoint nodeEndpoint = 8; // A node's IP address and port
-    string description = 9; // A description of the node. Max 100 bytes.
-    int64 stake = 10; // The amount of tinybars staked to this node
+    string RSA_PubKey = 4; // The node's hex-encoded X509 RSA public key
+    int64 nodeId = 5; // # A non-sequential identifier for the node
+    AccountID nodeAccountId = 6; // # The account to be paid for queries and transactions sent to this node
+    bytes nodeCertHash = 7; // # The hex-encoded SHA-384 hash of the X509 cert used to encrypt gRPC traffic to the node
+    repeated ServiceEndpoint serviceEndpoint = 8; // # A node's service IP addresses and ports
+    string description = 9; // A description of the node, with UTF-8 encoding up to 100 bytes
+    int64 stake = 10; // The amount of tinybars staked to the node
 }
 
 /*
-A list of nodes and their metadata that contains all details of the nodes for the network
+A list of nodes and their metadata that contains all details of the nodes for the network.
+
+Used to parse the contents of system files <tt>0.0.101</tt> and <tt>0.0.102</tt>.
 */
-message AddressBook {
-    repeated NodeAddress nodeAddress = 1; // Metadata of nodes on the network
+message NodeAddressBook {
+    repeated NodeAddress nodeAddress = 1; // Metadata of all nodes in the network
 }
 
-/* All the information required to connect to the network.*/
-message NodeAddressForClients {
-    int64 nodeId = 5; // A non-sequential identifier for the node. This value is the key between the full and abbreviated address books
-    AccountID nodeAccountId = 6; // The account to be paid for queries and transactions sent to this node
-    bytes nodeCertHash = 7; // A hash of the X509 cert used for gRPC traffic to this node
-    repeated NodeEndpoint nodeEndpoint = 8; // A node's IP address and port
-}
-
-/* A List of all nodes and just their information needed to connect to the network.*/
-message AddressBookForClients {
-    repeated NodeAddressForClients nodeAddressForClients = 1; // Contains minimal node details for the network
-}
-
+/* Hedera follows semantic versioning (https://semver.org/) for both the HAPI protobufs and the Services software.
+This type allows the <tt>getVersionInfo</tt> query in the <tt>NetworkService</tt> to return the deployed versions
+of both protobufs and software on the node answering the query. */
 message SemanticVersion {
-   int32 major = 1; // Increases with incompatible API changes
-   int32 minor = 2; // Increases with backwards-compatible new functionality
-   int32 patch = 3; // Increases with backwards-compatible bug fixes
+    int32 major = 1; // Increases with incompatible API changes
+    int32 minor = 2; // Increases with backwards-compatible new functionality
+    int32 patch = 3; // Increases with backwards-compatible bug fixes
+    string pre = 4; // A pre-release version MAY be denoted by appending a hyphen and a series of dot separated identifiers (https://semver.org/#spec-item-9); so given a semver 0.14.0-alpha.1+21AF26D3, this field would contain 'alpha.1'
+    string build = 5; // Build metadata MAY be denoted by appending a plus sign and a series of dot separated identifiers immediately following the patch or pre-release version (https://semver.org/#spec-item-10); so given a semver 0.14.0-alpha.1+21AF26D3, this field would contain '21AF26D3'
 }
 
 message Setting {
@@ -403,7 +455,7 @@ message ServicesConfigurationList {
 message TokenRelationship {
     TokenID tokenId = 1; // The ID of the token
     string symbol = 2; // The Symbol of the token
-    uint64 balance = 3; // The balance that the Account holds in the smallest denomination
+    uint64 balance = 3; // For token of type FUNGIBLE_COMMON - the balance that the Account holds in the smallest denomination. For token of type NON_FUNGIBLE_UNIQUE - the number of NFTs held by the account
     TokenKycStatus kycStatus = 4; // The KYC status of the account (KycNotApplicable, Granted or Revoked). If the token does not have KYC key, KycNotApplicable is returned
     TokenFreezeStatus freezeStatus = 5; // The Freeze status of the account (FreezeNotApplicable, Frozen or Unfrozen). If the token does not have Freeze key, FreezeNotApplicable is returned
     uint32 decimals = 6; // Tokens divide into <tt>10<sup>decimals</sup></tt> pieces
@@ -416,7 +468,7 @@ The transferable unit of a token is its smallest denomination, as given by the t
 Transferable units are not directly comparable across different tokens. */
 message TokenBalance {
     TokenID tokenId = 1; // A unique token id
-    uint64 balance = 2; // A number of transferable units of the identified token
+    uint64 balance = 2; // Number of transferable units of the identified token. For token of type FUNGIBLE_COMMON - balance in the smallest denomination. For token of type NON_FUNGIBLE_UNIQUE - the number of NFTs held by the account
     uint32 decimals = 3; // Tokens divide into <tt>10<sup>decimals</sup></tt> pieces
 }
 

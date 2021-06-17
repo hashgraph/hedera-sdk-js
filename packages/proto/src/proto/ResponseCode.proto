@@ -230,4 +230,11 @@ enum ResponseCodeEnum {
   SUCCESS_BUT_MISSING_EXPECTED_OPERATION = 220; // The throttle definitions file was updated, but some supported operations were not assigned a bucket
   UNPARSEABLE_THROTTLE_DEFINITIONS = 221; // The new contents for the throttle definitions system file were not valid protobuf
   INVALID_THROTTLE_DEFINITIONS = 222; // The new throttle definitions system file were invalid, and no more specific error could be divined
+  ACCOUNT_EXPIRED_AND_PENDING_REMOVAL = 223; // The transaction references an account which has passed its expiration without renewal funds available, and currently remains in the ledger only because of the grace period given to expired entities
+  INVALID_TOKEN_MAX_SUPPLY = 224; // Invalid token max supply
+  INVALID_TOKEN_NFT_SERIAL_NUMBER = 225; // Invalid token nft serial number
+  INVALID_NFT_ID = 226; // Invalid nft id
+  METADATA_TOO_LONG = 227; // Nft metadata is too long
+  BATCH_SIZE_LIMIT_EXCEEDED = 228; // Repeated operations count exceeds the limit
+  QUERY_RANGE_LIMIT_EXCEEDED = 229; // The range of data to be gathered exceeds the limit
 }
