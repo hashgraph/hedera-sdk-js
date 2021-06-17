@@ -347,18 +347,11 @@ export default class TopicMessageQuery {
                         this._limit = this._limit.sub(1);
                     }
 
-                    const consensusTimestamp = /** @type {proto.ITimestamp} */ (
-                        message.consensusTimestamp
-                    );
-
-                    const nanos = /** @type {number} */ (
-                        consensusTimestamp.nanos
-                    );
-
-                    this._startTime = Timestamp._fromProtobuf({
-                        seconds: consensusTimestamp.seconds,
-                        nanos: nanos + 1,
-                    });
+                    this._startTime = Timestamp._fromProtobuf(
+                        /** @type {proto.ITimestamp} */ (
+                            message.consensusTimestamp
+                        )
+                    ).plusNanos(1);
 
                     if (
                         message.chunkInfo == null ||
