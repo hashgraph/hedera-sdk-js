@@ -5,6 +5,8 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
  */
 
+const MAX_NS = Long.fromNumber(999999999);
+
 export default class Timestamp {
     /**
      * @param {Long | number} seconds
@@ -74,6 +76,16 @@ export default class Timestamp {
             this.seconds.toInt() * 1000 +
                 Math.floor(this.nanos.toInt() / 1000000)
         );
+    }
+
+    /**
+     * @param {Long | number} nanos
+     * @returns {Timestamp}
+     */
+    plusNanos(nanos) {
+        const ns = this.nanos.add(nanos);
+
+        return new Timestamp(this.seconds.add(ns.div(MAX_NS)), ns.mod(MAX_NS));
     }
 
     /**
