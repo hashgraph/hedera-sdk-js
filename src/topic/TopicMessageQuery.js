@@ -404,6 +404,9 @@ export default class TopicMessageQuery {
                     }
                 },
                 (error) => {
+                    const message =
+                        error instanceof Error ? error.message : error.details;
+
                     if (
                         this._attempt < this._maxAttempts &&
                         this._retryHandler(error)
@@ -412,14 +415,14 @@ export default class TopicMessageQuery {
                             250 * 2 ** this._attempt,
                             this._maxBackoff
                         );
-                        console.log(
+                        console.warn(
                             `Error subscribing to topic ${
                                 this._topicId != null
                                     ? this._topicId.toString()
                                     : "UNKNOWN"
                             } during attempt ${
                                 this._attempt
-                            }. Waiting ${delay} ms before next attempt`
+                            }. Waiting ${delay} ms before next attempt: ${message}`
                         );
 
                         this._attempt += 1;
