@@ -4,13 +4,7 @@ import Timestamp from "../Timestamp.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 import Duration from "../Duration.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").IConsensusTopicInfo} proto.IConsensusTopicInfo
- * @typedef {import("@hashgraph/proto").IConsensusGetTopicInfoResponse} proto.IConsensusGetTopicInfoResponse
- * @typedef {import("@hashgraph/proto").ITopicID} proto.ITopicID
- */
+import * as proto from "@hashgraph/proto";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
@@ -177,5 +171,21 @@ export default class TopicInfo {
                         : null,
             },
         };
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {TopicInfo}
+     */
+    static fromBytes(bytes) {
+        return TopicInfo._fromProtobuf({ topicInfo: proto.ConsensusTopicInfo.decode(bytes) });
+    }
+
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.ConsensusTopicInfo.encode(/** @type {proto.IConsensusTopicInfo} */(this._toProtobuf().topicInfo)).finish();
     }
 }
