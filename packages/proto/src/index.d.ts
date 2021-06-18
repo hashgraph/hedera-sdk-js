@@ -187,6 +187,8 @@ import TransactionReceipt = proto.TransactionReceipt;
 import TransactionRecord = proto.TransactionRecord;
 
 import ISignatureMap = proto.ISignatureMap;
+import ConsensusTopicInfo = proto.ConsensusTopicInfo;
+import TokenInfo = proto.TokenInfo;
 
 //scheduled transactions
 
@@ -342,4 +344,6 @@ export {
     IScheduleSignTransactionBody,
     ISchedulableTransactionBody,
     SchedulableTransactionBody,
+    ConsensusTopicInfo,
+    TokenInfo,
 };

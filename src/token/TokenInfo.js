@@ -4,18 +4,8 @@ import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
+import * as proto from "@hashgraph/proto";
 
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").TokenFreezeStatus} proto.TokenFreezeStatus
- * @typedef {import("@hashgraph/proto").TokenKycStatus} proto.TokenKycStatus
- * @typedef {import("@hashgraph/proto").ITokenInfo} proto.ITokenInfo
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
- * @typedef {import("@hashgraph/proto").IDuration} proto.IDuration
- */
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
@@ -320,4 +310,22 @@ export default class TokenInfo {
             memo: this.tokenMemo,
         };
     }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {TokenInfo}
+     */
+    static fromBytes(bytes) {
+        return TokenInfo._fromProtobuf(proto.TokenInfo.decode(bytes));
+    }
+
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.TokenInfo.encode(this._toProtobuf()).finish();
+    }
+
+
 }
