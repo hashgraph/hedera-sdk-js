@@ -1,5 +1,10 @@
 import Long from "long";
 import * as hex from "./encoding/hex.js";
+import {
+    _networkNameToLedgerId,
+    _networkIds,
+    _ledgerIdToNetworkName,
+} from "./NetworkName.js";
 
 /**
  * @typedef {object} IEntityId
@@ -9,23 +14,53 @@ import * as hex from "./encoding/hex.js";
  */
 
 /**
- * @param {number | Long | IEntityId} props
- * @param {(number | null | Long)=} realm
- * @param {(number | null | Long)=} num
- * @returns {[Long, Long, Long]}
+ * @typedef {object} IEntityIdResult
+ * @property {Long} shard
+ * @property {Long} realm
+ * @property {Long} num
+ * @property {string | null} networkName
+ * @property {string | null} checksum
  */
-export function constructor(props, realm, num) {
+
+/**
+ * @param {number | Long | IEntityId} props
+ * @param {(number | null | Long)=} realmOrNetworkName
+ * @param {(number | null | Long)=} numOrChecksum
+ * @param {(string | null)=} networkName
+ * @param {(string | null)=} checksum
+ * @returns {IEntityIdResult}
+ */
+export function constructor(
+    props,
+    realmOrNetworkName,
+    numOrChecksum,
+    networkName,
+    checksum
+) {
     let shard_ = Long.ZERO;
     let realm_ = Long.ZERO;
     let num_ = Long.ZERO;
 
-    if (typeof props === "number" || props instanceof Long) {
-        if (realm == null) {
+    let networkName_ =
+        typeof realmOrNetworkName === "string"
+            ? realmOrNetworkName
+            : networkName;
+    let checksum_ =
+        typeof numOrChecksum === "string" ? numOrChecksum : checksum;
+
+    if (typeof props === "number" || Long.isLong(props)) {
+        if (
+            realmOrNetworkName == null ||
+            typeof realmOrNetworkName === "string"
+        ) {
             num_ = Long.fromValue(props);
         } else {
             shard_ = Long.fromValue(props);
-            realm_ = Long.fromValue(realm);
-            num_ = num != null ? Long.fromValue(num) : Long.ZERO;
+            realm_ = Long.fromValue(realmOrNetworkName);
+            num_ =
+                numOrChecksum != null
+                    ? Long.fromValue(numOrChecksum)
+                    : Long.ZERO;
         }
     } else {
         shard_ = Long.fromValue(props.shard != null ? props.shard : 0);
@@ -37,7 +72,30 @@ export function constructor(props, realm, num) {
         throw new Error("negative numbers are not allowed in IDs");
     }
 
-    return [shard_, realm_, num_];
+    const addr = `${shard_.toInt()}.${realm_.toInt()}.${num_.toInt()}`;
+
+    if (networkName_ != null && checksum_ == null) {
+        checksum_ = _checksum(_networkNameToLedgerId(networkName_), addr);
+    } else if (networkName_ == null && checksum_ != null) {
+        for (const network of _networkIds) {
+            if (checksum_ == _checksum(network, addr)) {
+                networkName_ = _ledgerIdToNetworkName(network);
+                break;
+            }
+        }
+
+        if (networkName_ == null) {
+            throw new Error("Unrecognized network for entity ID checksum");
+        }
+    }
+
+    return {
+        shard: shard_,
+        realm: realm_,
+        num: num_,
+        networkName: networkName_ != null ? networkName_ : null,
+        checksum: checksum_ != null ? checksum_ : null,
+    };
 }
 
 /**
@@ -54,54 +112,54 @@ export function constructor(props, realm, num) {
 
 /**
  * @param {string} text
- * @returns {[Long, Long, Long]}
+ * @returns {IEntityIdResult}
  */
 export function fromString(text) {
-    const noChecksum = text.split("-");
-    const strings = noChecksum[0].split(".");
+    if (!text.includes(".")) {
+        text = `0.0.${text}`;
+    }
 
-    for (const string of strings) {
-        if (string === "") {
-            throw new Error("invalid format for entity ID");
+    let result;
+    let networkName = null;
+    for (const network of _networkIds) {
+        const address = _parseAddress(network, text);
+
+        switch (address.status) {
+            case 0: // Syntax error
+                throw new Error(
+                    "Invalid ID: format should look like 0.0.123 or 0.0.123-vfmkw"
+                );
+            case 1: // An invalid with-checksum address
+                continue;
+            case 2: // A valid no-checksum address
+                result = address;
+                result.correctChecksum = undefined;
+                break;
+            case 3: // A valid with-checksum address
+                result = address;
+                networkName = _ledgerIdToNetworkName(network);
+                break;
         }
     }
 
-    const components = strings.map(Number);
-
-    for (const component of components) {
-        if (Number.isNaN(component)) {
-            throw new Error("invalid format for entity ID");
-        }
+    if (result == null) {
+        throw new Error("Unrecognized network on entity ID");
     }
 
-    let shard = Long.ZERO;
-    let realm = Long.ZERO;
-    let num;
-
-    if (components.length === 1) {
-        num = Long.fromNumber(components[0]);
-    } else if (components.length === 3) {
-        shard = Long.fromNumber(components[0]);
-        realm = Long.fromNumber(components[1]);
-        num = Long.fromNumber(components[2]);
-    } else {
-        throw new Error("invalid format for entity ID");
+    if (result.num1 == null || result.num2 == null || result.num3 == null) {
+        throw new Error(
+            "(BUG) entity ID parseAddress incorrectly parsing address"
+        );
     }
 
-    let finalNumber =
-        shard.toString() + "." + realm.toString() + "." + num.toString();
-    if (noChecksum.length > 1) {
-        finalNumber += "-" + noChecksum[1];
-    }
-
-    const result = _parseAddress("", finalNumber);
-    _verify(result.status);
-
-    return [
-        /** @type {Long} */ (result.num1),
-        /** @type {Long} */ (result.num2),
-        /** @type {Long} */ (result.num3),
-    ];
+    return {
+        shard: result.num1,
+        realm: result.num2,
+        num: result.num3,
+        networkName,
+        checksum:
+            result.correctChecksum != null ? result.correctChecksum : null,
+    };
 }
 
 /**
@@ -125,24 +183,24 @@ export function fromSolidityAddress(address) {
     return [shard, realm, num];
 }
 
-/**
- * Check that the checksum in box withChecksum is correct
- *
- * @param {number} status
- */
-function _verify(status) {
-    switch (status) {
-        case 0: // Syntax error
-            throw new Error(
-                "Invalid ID: format should look like 0.0.123 or 0.0.123-laujm"
-            );
-        case 1: // An invalid with-checksum address
-            throw new Error("Invalid ID: checksum does not match");
-        case 2: // A valid no-checksum address
-        case 3: // A valid with-checksum address
-            break;
-    }
-}
+// /**
+//  * Check that the checksum in box withChecksum is correct
+//  *
+//  * @param {number} status
+//  */
+// function _verify(status) {
+//     switch (status) {
+//         case 0: // Syntax error
+//             throw new Error(
+//                 "Invalid ID: format should look like 0.0.123 or 0.0.123-vfmkw"
+//             );
+//         case 1: // An invalid with-checksum address
+//             throw new Error("Invalid ID: checksum does not match");
+//         case 2: // A valid no-checksum address
+//         case 3: // A valid with-checksum address
+//             break;
+//     }
+// }
 
 /**
  * Parse the address string addr and return an object with the results (8 fields).
@@ -214,6 +272,7 @@ function _checksum(ledgerId, addr) {
     const p3 = 26 * 26 * 26; // 3 digits in base 26
     const p5 = 26 * 26 * 26 * 26 * 26; // 5 digits in base 26
     const ascii_a = "a".charCodeAt(0); // 97
+    const m = 1000003; // Min prime greater than a million. Used for the final permutation.
     const w = 31; // Sum s of digit values weights them by powers of w. Should be coprime to p5.
 
     let id = ledgerId + "000000000000";
@@ -236,6 +295,7 @@ function _checksum(ledgerId, addr) {
         sh = (w * sh + h[i]) % p5;
     }
     c = ((((addr.length % 5) * 11 + s0) * 11 + s1) * p3 + s + sh) % p5;
+    c = (c * m) % p5;
 
     for (let i = 0; i < 5; i++) {
         answer = String.fromCharCode(ascii_a + (c % 26)) + answer;

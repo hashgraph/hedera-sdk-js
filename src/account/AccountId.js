@@ -9,17 +9,25 @@ export default class AccountId {
      * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
+     * @param {(string | null)=} networkName
+     * @param {(string | null)=} checksum
      */
-    constructor(props, realm, num) {
-        const [shard_num, realm_num, account_num] = entity_id.constructor(
+    constructor(props, realm, num, networkName, checksum) {
+        const result = entity_id.constructor(
             props,
             realm,
-            num
+            num,
+            networkName,
+            checksum
         );
 
-        this.shard = shard_num;
-        this.realm = realm_num;
-        this.num = account_num;
+        this.shard = result.shard;
+        this.realm = result.realm;
+        this.num = result.num;
+        this._networkName = result.networkName;
+        this._checksum = result.checksum;
+
+        Object.freeze(this);
     }
 
     /**
@@ -27,7 +35,25 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromString(text) {
-        return new AccountId(...entity_id.fromString(text));
+        const result = entity_id.fromString(text);
+        return new AccountId(
+            result.shard,
+            result.realm,
+            result.num,
+            result.networkName,
+            result.checksum
+        );
+    }
+
+    /**
+     * @param {number | Long | import("../EntityIdHelper").IEntityId} props
+     * @param {(number | Long)=} realm
+     * @param {(number | Long)=} num
+     * @param {(string | null)=} networkName
+     * @returns {AccountId}
+     */
+    static withNetwork(props, realm, num, networkName) {
+        return new AccountId(props, realm, num, networkName);
     }
 
     /**
@@ -84,13 +110,13 @@ export default class AccountId {
      * @returns {string}
      */
     toString() {
-        const checksum = entity_id._parseAddress(
-            "",
-            `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`
-        );
-        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}-${
-            checksum.correctChecksum
-        }`;
+        if (this._checksum == null) {
+            return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
+        } else {
+            return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}-${
+                this._checksum
+            }`;
+        }
     }
 
     /**
