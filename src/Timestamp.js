@@ -5,7 +5,7 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
  */
 
-const MAX_NS = Long.fromNumber(999999999);
+const MAX_NS = Long.fromNumber(1000000000);
 
 export default class Timestamp {
     /**
