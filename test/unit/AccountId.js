@@ -34,12 +34,58 @@ describe("AccountId", function () {
         expect(accountId.shard.toNumber()).to.eql(10);
     });
 
-    it("should parse {0.0.123-laujm}", function () {
-        const accountId = AccountId.fromString("0.0.123-laujm");
+    it("should parse mainnet ID with checksum {0.0.123-vfmkw}", function () {
+        const accountId = AccountId.fromString("0.0.123-vfmkw");
 
         expect(accountId.num.toNumber()).to.eql(123);
         expect(accountId.realm.toNumber()).to.eql(0);
         expect(accountId.shard.toNumber()).to.eql(0);
+
+        expect(accountId.toString()).to.be.eql("0.0.123-vfmkw");
+    });
+
+    it("should parse testnet ID with checksum {0.0.123-rmkyk}", function () {
+        const accountId = AccountId.fromString("0.0.123-rmkyk");
+
+        expect(accountId.num.toNumber()).to.eql(123);
+        expect(accountId.realm.toNumber()).to.eql(0);
+        expect(accountId.shard.toNumber()).to.eql(0);
+
+        expect(accountId.toString()).to.be.eql("0.0.123-rmkyk");
+    });
+
+    it("should parse previewnet ID with checksum {0.0.123-ntjly}", function () {
+        const accountId = AccountId.fromString("0.0.123-ntjly");
+
+        expect(accountId.num.toNumber()).to.eql(123);
+        expect(accountId.realm.toNumber()).to.eql(0);
+        expect(accountId.shard.toNumber()).to.eql(0);
+
+        expect(accountId.toString()).to.be.eql("0.0.123-ntjly");
+    });
+
+    it("should generate checksum", function () {
+        const accountId = AccountId.withNetwork(123, "mainnet");
+
+        expect(accountId.num.toNumber()).to.eql(123);
+        expect(accountId.realm.toNumber()).to.eql(0);
+        expect(accountId.shard.toNumber()).to.eql(0);
+
+        expect(accountId.toString()).to.be.eql("0.0.123-vfmkw");
+    });
+
+    it("should parse previewnet ID with checksum {0.0.123-ghaha}", function () {
+        let err = false;
+
+        try {
+            AccountId.fromString("0.0.123-ghaha");
+        } catch {
+            err = true;
+        }
+
+        if (!err) {
+            throw new Error("entity parsing did not err");
+        }
     });
 
     it("should parse 0.0.0", function () {
@@ -56,10 +102,6 @@ describe("AccountId", function () {
         expect(accountId.num.toNumber()).to.eql(25050);
         expect(accountId.realm.toNumber()).to.eql(0);
         expect(accountId.shard.toNumber()).to.eql(0);
-    });
-
-    it("should stringify to {shard}.{realm}.{num}-{checksum}", function () {
-        expect(new AccountId(50, 150, 520).toString()).to.eql("50.150.520-emueg");
     });
 
     it("should error with invalid string", function () {
