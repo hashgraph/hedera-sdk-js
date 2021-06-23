@@ -108,7 +108,7 @@ export default class TokenBurnTransaction extends Transaction {
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : TokenId._fromProtobuf(tokenId._toProtobuf());
+                : tokenId.clone();
 
         return this;
     }

@@ -74,7 +74,7 @@ export default class FileInfoQuery extends Query {
         this._fileId =
             typeof fileId === "string"
                 ? FileId.fromString(fileId)
-                : FileId._fromProtobuf(fileId._toProtobuf());
+                : fileId.clone();
 
         return this;
     }

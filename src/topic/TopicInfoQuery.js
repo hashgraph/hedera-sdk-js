@@ -78,7 +78,7 @@ export default class TopicInfoQuery extends Query {
         this._topicId =
             typeof topicId === "string"
                 ? TopicId.fromString(topicId)
-                : TopicId._fromProtobuf(topicId._toProtobuf());
+                : topicId.clone();
 
         return this;
     }

@@ -205,7 +205,7 @@ export default class ContractUpdateTransaction extends Transaction {
         this._contractId =
             typeof contractId === "string"
                 ? ContractId.fromString(contractId)
-                : ContractId._fromProtobuf(contractId._toProtobuf());
+                : contractId.clone();
 
         return this;
     }
@@ -267,7 +267,7 @@ export default class ContractUpdateTransaction extends Transaction {
         this._proxyAccountId =
             typeof proxyAccountId === "string"
                 ? AccountId.fromString(proxyAccountId)
-                : AccountId._fromProtobuf(proxyAccountId._toProtobuf());
+                : proxyAccountId.clone();
 
         return this;
     }
@@ -309,7 +309,7 @@ export default class ContractUpdateTransaction extends Transaction {
         this._bytecodeFileId =
             typeof bytecodeFileId === "string"
                 ? FileId.fromString(bytecodeFileId)
-                : FileId._fromProtobuf(bytecodeFileId._toProtobuf());
+                : bytecodeFileId.clone();
 
         return this;
     }

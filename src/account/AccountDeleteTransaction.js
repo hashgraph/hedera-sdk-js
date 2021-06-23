@@ -124,7 +124,7 @@ export default class AccountDeleteTransaction extends Transaction {
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
-                : AccountId._fromProtobuf(accountId._toProtobuf());
+                : accountId.clone();
 
         return this;
     }
@@ -147,7 +147,7 @@ export default class AccountDeleteTransaction extends Transaction {
         this._transferAccountId =
             typeof transferAccountId === "string"
                 ? AccountId.fromString(transferAccountId)
-                : AccountId._fromProtobuf(transferAccountId._toProtobuf());
+                : transferAccountId.clone();
 
         return this;
     }

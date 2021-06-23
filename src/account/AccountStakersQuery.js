@@ -80,7 +80,7 @@ export default class AccountStakersQuery extends Query {
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
-                : AccountId._fromProtobuf(accountId._toProtobuf());
+                : accountId.clone();
 
         return this;
     }

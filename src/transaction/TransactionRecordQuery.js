@@ -76,11 +76,15 @@ export default class TransactionRecordQuery extends Query {
     /**
      * Set the transaction ID for which the record is being requested.
      *
-     * @param {TransactionId} transactionId
+     * @param {TransactionId | string} transactionId
      * @returns {TransactionRecordQuery}
      */
     setTransactionId(transactionId) {
-        this._transactionId = transactionId;
+        this._transactionId =
+            typeof transactionId === "string"
+                ? TransactionId.fromString(transactionId)
+                : transactionId.clone();
+
         return this;
     }
 

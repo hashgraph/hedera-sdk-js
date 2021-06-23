@@ -276,7 +276,7 @@ export default class TokenUpdateTransaction extends Transaction {
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : TokenId._fromProtobuf(tokenId._toProtobuf());
+                : tokenId.clone();
 
         return this;
     }
@@ -331,9 +331,7 @@ export default class TokenUpdateTransaction extends Transaction {
     setTreasuryAccountId(id) {
         this._requireNotFrozen();
         this._treasuryAccountId =
-            typeof id === "string"
-                ? AccountId.fromString(id)
-                : AccountId._fromProtobuf(id._toProtobuf());
+            typeof id === "string" ? AccountId.fromString(id) : id.clone();
 
         return this;
     }

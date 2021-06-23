@@ -174,7 +174,7 @@ export default class FileUpdateTransaction extends Transaction {
         this._fileId =
             typeof fileId === "string"
                 ? FileId.fromString(fileId)
-                : FileId._fromProtobuf(fileId._toProtobuf());
+                : fileId.clone();
 
         return this;
     }

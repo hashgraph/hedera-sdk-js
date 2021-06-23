@@ -127,7 +127,7 @@ export default class ContractCallQuery extends Query {
         this._contractId =
             typeof contractId === "string"
                 ? ContractId.fromString(contractId)
-                : ContractId._fromProtobuf(contractId._toProtobuf());
+                : contractId.clone();
 
         return this;
     }

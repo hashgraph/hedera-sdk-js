@@ -124,7 +124,7 @@ export default class TokenWipeTransaction extends Transaction {
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : TokenId._fromProtobuf(tokenId._toProtobuf());
+                : tokenId.clone();
 
         return this;
     }
@@ -145,7 +145,7 @@ export default class TokenWipeTransaction extends Transaction {
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
-                : AccountId._fromProtobuf(accountId._toProtobuf());
+                : accountId.clone();
 
         return this;
     }
