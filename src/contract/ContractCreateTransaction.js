@@ -210,7 +210,7 @@ export default class ContractCreateTransaction extends Transaction {
         this._bytecodeFileId =
             typeof bytecodeFileId === "string"
                 ? FileId.fromString(bytecodeFileId)
-                : FileId._fromProtobuf(bytecodeFileId._toProtobuf());
+                : bytecodeFileId.clone();
 
         return this;
     }

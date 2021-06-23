@@ -159,4 +159,15 @@ export default class TransactionId {
     toBytes() {
         return proto.TransactionID.encode(this._toProtobuf()).finish();
     }
+
+    /**
+     * @returns {TransactionId}
+     */
+    clone() {
+        return new TransactionId(
+            this.accountId,
+            this.validStart,
+            this.scheduled
+        );
+    }
 }

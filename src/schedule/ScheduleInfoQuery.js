@@ -76,7 +76,7 @@ export default class ScheduleInfoQuery extends Query {
         this._scheduleId =
             typeof scheduleId === "string"
                 ? ScheduleId.fromString(scheduleId)
-                : ScheduleId._fromProtobuf(scheduleId._toProtobuf());
+                : scheduleId.clone();
 
         return this;
     }

@@ -373,9 +373,7 @@ export default class TokenCreateTransaction extends Transaction {
     setTreasuryAccountId(id) {
         this._requireNotFrozen();
         this._treasuryAccountId =
-            typeof id === "string"
-                ? AccountId.fromString(id)
-                : AccountId._fromProtobuf(id._toProtobuf());
+            typeof id === "string" ? AccountId.fromString(id) : id.clone();
 
         return this;
     }
