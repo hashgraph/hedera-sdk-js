@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+ * Added support for entity ID checksums. The network will be extracted from the checksum of the 
+   entity ID and validated on each request to make sure a request is not happening on one network 
+   while an entity ID references another network. Entity IDs with a network will print with a checksum
+   while entity IDs without a checksum will not print the checksum part.
+ * Support for constructing entity IDs with a network using `*Id.withNetwork()`.
+
 ## v2.0.22
 
 ### Fixed
