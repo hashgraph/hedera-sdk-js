@@ -189,7 +189,7 @@ export default class Query extends Executable {
             return;
         }
 
-        this._validateIdNetworks({ _networkName: client._networkName });
+        this._validateIdNetworks(client._network);
 
         if (this._nodeIds.length == 0) {
             this._nodeIds = client._network.getNodeAccountIdsForExecute();

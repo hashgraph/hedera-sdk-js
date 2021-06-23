@@ -42,6 +42,9 @@ export default class Network {
 
         /** @type {(address: string) => ChannelT} */
         this.createNetworkChannel = createNetworkChannel;
+
+        /** @type {string | null} */
+        this._networkName = null;
     }
 
     /**
