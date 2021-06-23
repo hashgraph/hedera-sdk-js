@@ -84,9 +84,6 @@ export default class Client {
          */
         this._maxQueryPayment = new Hbar(1);
 
-        /** @type {string | null} */
-        this._networkName = null;
-
         if (props != null) {
             if (props.operator != null) {
                 this.setOperator(
@@ -162,9 +159,7 @@ export default class Client {
                 ? accountId
                 : AccountId.fromString(accountId);
 
-        entity_id._validateIdNetworks(accountId_, {
-            _networkName: this._networkName,
-        });
+        entity_id._validateIdNetworks(accountId_, this._network);
 
         this._operator = {
             transactionSigner,

@@ -17,6 +17,7 @@ import {
 } from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -604,6 +605,13 @@ export default class Transaction extends Executable {
             );
         }
 
+        if (client != null) {
+            entity_id._validateIdNetworks(
+                this._transactionIds[0].accountId,
+                client._network
+            );
+        }
+
         if (this._nodeIds.length > 0) {
             // Do nothing
         } else if (client != null) {
@@ -670,10 +678,10 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * @param {AccountId | null} accountId
+     * @param { { _networkName: string | null } | null} networkName
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
-    _validateIdNetworks(accountId) {
+    _validateIdNetworks(networkName) {
         // Do nothing
     }
 
@@ -689,7 +697,7 @@ export default class Transaction extends Executable {
         }
 
         if (client._operator != null) {
-            this._validateIdNetworks(client._operator.accountId);
+            this._validateIdNetworks(client._network);
         }
 
         // on execute, sign each transaction with the operator, if present
