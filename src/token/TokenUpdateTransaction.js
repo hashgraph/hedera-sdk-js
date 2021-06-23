@@ -6,6 +6,7 @@ import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -514,6 +515,15 @@ export default class TokenUpdateTransaction extends Transaction {
         this._tokenMemo = null;
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._tokenId, networkName);
+        entity_id._validateIdNetworks(this._treasuryAccountId, networkName);
+        entity_id._validateIdNetworks(this._autoRenewAccountId, networkName);
     }
 
     /**

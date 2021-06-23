@@ -7,6 +7,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -303,6 +304,13 @@ export default class AccountCreateTransaction extends Transaction {
         this._accountMemo = memo;
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._proxyAccountId, networkName);
     }
 
     /**

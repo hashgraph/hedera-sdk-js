@@ -114,4 +114,17 @@ export default class FileId {
     toBytes() {
         return proto.FileID.encode(this._toProtobuf()).finish();
     }
+
+    /**
+     * @returns {FileId}
+     */
+    clone() {
+        return new FileId(
+            this.shard,
+            this.realm,
+            this.num,
+            this._networkName,
+            this._checksum
+        );
+    }
 }

@@ -1,6 +1,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import AccountId from "./AccountId.js";
 import LiveHash from "./LiveHash.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -111,13 +112,21 @@ export default class LiveHashQuery extends Query {
     }
 
     /**
-     * @protected
-     * @override
-     * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param { { _networkName: string | null } | null} networkName
      */
-    _getMethod(channel) {
-        return (query) => channel.crypto.getLiveHash(query);
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._accountId, networkName);
+    }
+
+    /**
+     * @override
+     * @internal
+     * @param {Channel} channel
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
+     */
+    _execute(channel, request) {
+        return channel.crypto.getLiveHash(request);
     }
 
     /**

@@ -5,6 +5,7 @@ import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import AccountId from "../account/AccountId.js";
 import TopicId from "./TopicId.js";
 import Duration from "../Duration.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -334,6 +335,14 @@ export default class TopicUpdateTransaction extends Transaction {
                 : new Duration(autoRenewPeriod);
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._topicId, networkName);
+        entity_id._validateIdNetworks(this._autoRenewAccountId, networkName);
     }
 
     /**

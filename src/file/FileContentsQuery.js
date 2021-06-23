@@ -1,5 +1,6 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import FileId from "./FileId.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -14,6 +15,7 @@ import FileId from "./FileId.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -53,6 +55,13 @@ export default class FileContentsQuery extends Query {
                     ? FileId._fromProtobuf(contents.fileID)
                     : undefined,
         });
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._fileId, networkName);
     }
 
     /**

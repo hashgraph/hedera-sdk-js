@@ -122,4 +122,17 @@ export default class ContractId extends Key {
     toBytes() {
         return proto.ContractID.encode(this._toProtobuf()).finish();
     }
+
+    /**
+     * @returns {ContractId}
+     */
+    clone() {
+        return new ContractId(
+            this.shard,
+            this.realm,
+            this.num,
+            this._networkName,
+            this._checksum
+        );
+    }
 }

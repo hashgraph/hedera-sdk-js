@@ -5,6 +5,7 @@ import Transaction, {
 import ContractId from "./ContractId.js";
 import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import Long from "long";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -223,6 +224,13 @@ export default class ContractExecuteTransaction extends Transaction {
                 : new ContractFunctionParameters()._build(name);
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._contractId, networkName);
     }
 
     /**

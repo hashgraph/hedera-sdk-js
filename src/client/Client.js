@@ -4,6 +4,7 @@ import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Hbar from "../Hbar.js";
 import Network from "./Network.js";
 import MirrorNetwork from "./MirrorNetwork.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -83,6 +84,9 @@ export default class Client {
          */
         this._maxQueryPayment = new Hbar(1);
 
+        /** @type {string | null} */
+        this._networkName = null;
+
         if (props != null) {
             if (props.operator != null) {
                 this.setOperator(
@@ -153,13 +157,19 @@ export default class Client {
      * @returns {this}
      */
     setOperatorWith(accountId, publicKey, transactionSigner) {
+        const accountId_ =
+            accountId instanceof AccountId
+                ? accountId
+                : AccountId.fromString(accountId);
+
+        entity_id._validateIdNetworks(accountId_, {
+            _networkName: this._networkName,
+        });
+
         this._operator = {
             transactionSigner,
 
-            accountId:
-                accountId instanceof AccountId
-                    ? accountId
-                    : AccountId.fromString(accountId),
+            accountId: accountId_,
 
             publicKey:
                 publicKey instanceof PublicKey

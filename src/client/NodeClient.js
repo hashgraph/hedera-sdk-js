@@ -113,16 +113,19 @@ export default class NodeClient extends Client {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
                         this.setMirrorNetwork(MirrorNetwork.MAINNET);
+                        this._networkName = "mainnet";
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
                         this.setMirrorNetwork(MirrorNetwork.TESTNET);
+                        this._networkName = "testnet";
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
+                        this._networkName = "previewnet";
                         break;
 
                     default:
@@ -238,12 +241,15 @@ export default class NodeClient extends Client {
             switch (network) {
                 case "previewnet":
                     this._network.setNetwork(Network.PREVIEWNET);
+                    this._networkName = "previewnet";
                     break;
                 case "testnet":
                     this._network.setNetwork(Network.TESTNET);
+                    this._networkName = "testnet";
                     break;
                 case "mainnet":
                     this._network.setNetwork(Network.MAINNET);
+                    this._networkName = "mainnet";
             }
         } else {
             this._network.setNetwork(network);
@@ -261,12 +267,15 @@ export default class NodeClient extends Client {
                     this._mirrorNetwork.setMirrorNetwork(
                         MirrorNetwork.PREVIEWNET
                     );
+                    this._networkName = "previewnet";
                     break;
                 case "testnet":
                     this._mirrorNetwork.setMirrorNetwork(MirrorNetwork.TESTNET);
+                    this._networkName = "testnet";
                     break;
                 case "mainnet":
                     this._mirrorNetwork.setMirrorNetwork(MirrorNetwork.MAINNET);
+                    this._networkName = "mainnet";
                     break;
                 default:
                     this._mirrorNetwork.setMirrorNetwork([mirrorNetwork]);

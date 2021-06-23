@@ -2,6 +2,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import TopicId from "./TopicId.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -104,6 +105,13 @@ export default class TopicDeleteTransaction extends Transaction {
                 : TopicId._fromProtobuf(topicId._toProtobuf());
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._topicId, networkName);
     }
 
     /**

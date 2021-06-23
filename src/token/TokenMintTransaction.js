@@ -3,6 +3,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Long from "long";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -128,6 +129,13 @@ export default class TokenMintTransaction extends Transaction {
         this._amount = amount instanceof Long ? amount : Long.fromValue(amount);
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._tokenId, networkName);
     }
 
     /**

@@ -40,7 +40,7 @@ describe("AccountRecords", function () {
             .setMaxQueryPayment(new Hbar(1))
             .execute(env.client);
 
-        expect(records.length).to.be.equal(0);
+        expect(records.length).to.be.gt(0);
 
         await (
             await (
