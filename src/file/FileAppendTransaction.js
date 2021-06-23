@@ -7,6 +7,7 @@ import * as utf8 from "../encoding/utf8.js";
 import FileId from "./FileId.js";
 import TransactionId from "../transaction/TransactionId.js";
 import Timestamp from "../Timestamp.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -371,6 +372,13 @@ export default class FileAppendTransaction extends Transaction {
         }
 
         return responses;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._fileId, networkName);
     }
 
     /**

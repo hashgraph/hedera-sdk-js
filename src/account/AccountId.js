@@ -130,4 +130,17 @@ export default class AccountId {
             this.num.eq(other.num)
         );
     }
+
+    /**
+     * @returns {AccountId}
+     */
+    clone() {
+        return new AccountId(
+            this.shard,
+            this.realm,
+            this.num,
+            this._networkName,
+            this._checksum
+        );
+    }
 }

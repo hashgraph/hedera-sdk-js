@@ -117,4 +117,17 @@ export default class TopicId {
     toBytes() {
         return ProtoTopicID.encode(this._toProtobuf()).finish();
     }
+
+    /**
+     * @returns {TopicId}
+     */
+    clone() {
+        return new TopicId(
+            this.shard,
+            this.realm,
+            this.num,
+            this._networkName,
+            this._checksum
+        );
+    }
 }

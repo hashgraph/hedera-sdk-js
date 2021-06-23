@@ -2,6 +2,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import FileId from "./FileId.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -106,6 +107,13 @@ export default class FileDeleteTransaction extends Transaction {
                 : FileId._fromProtobuf(fileId._toProtobuf());
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._fileId, networkName);
     }
 
     /**

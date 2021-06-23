@@ -2,6 +2,7 @@ import ScheduleId from "./ScheduleId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -105,6 +106,13 @@ export default class ScheduleDeleteTransaction extends Transaction {
                 : ScheduleId._fromProtobuf(scheduleId._toProtobuf());
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._scheduleId, networkName);
     }
 
     /**

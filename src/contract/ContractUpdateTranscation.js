@@ -7,6 +7,7 @@ import Transaction, {
 import { keyToProtobuf, keyFromProtobuf } from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
 import Timestamp from "../Timestamp.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -339,6 +340,15 @@ export default class ContractUpdateTransaction extends Transaction {
         this._contractMemo = null;
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._contractId, networkName);
+        entity_id._validateIdNetworks(this._bytecodeFileId, networkName);
+        entity_id._validateIdNetworks(this._proxyAccountId, networkName);
     }
 
     /**

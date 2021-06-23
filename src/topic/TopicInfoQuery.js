@@ -2,6 +2,7 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TopicId from "./TopicId.js";
 import TopicInfo from "./TopicInfo.js";
 import Hbar from "../Hbar.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -15,6 +16,7 @@ import Hbar from "../Hbar.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -94,6 +96,13 @@ export default class TopicInfoQuery extends Query {
         } else {
             return Hbar.fromTinybars(25);
         }
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._topicId, networkName);
     }
 
     /**

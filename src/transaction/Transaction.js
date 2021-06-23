@@ -670,6 +670,14 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * @param {AccountId | null} accountId
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
+    _validateIdNetworks(accountId) {
+        // Do nothing
+    }
+
+    /**
      * @override
      * @protected
      * @param {import("../client/Client.js").default<Channel, *>} client
@@ -678,6 +686,10 @@ export default class Transaction extends Executable {
     async _beforeExecute(client) {
         if (!this._isFrozen()) {
             this.freezeWith(client);
+        }
+
+        if (client._operator != null) {
+            this._validateIdNetworks(client._operator.accountId);
         }
 
         // on execute, sign each transaction with the operator, if present

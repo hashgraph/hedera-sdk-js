@@ -8,6 +8,7 @@ import Long from "long";
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -581,6 +582,14 @@ export default class TokenCreateTransaction extends Transaction {
         }
 
         return super.freezeWith(client);
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._treasuryAccountId, networkName);
+        entity_id._validateIdNetworks(this._autoRenewAccountId, networkName);
     }
 
     /**

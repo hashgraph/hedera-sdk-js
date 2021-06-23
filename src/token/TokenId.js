@@ -124,4 +124,17 @@ export default class TokenId {
     toBytes() {
         return proto.TokenID.encode(this._toProtobuf()).finish();
     }
+
+    /**
+     * @returns {TokenId}
+     */
+    clone() {
+        return new TokenId(
+            this.shard,
+            this.realm,
+            this.num,
+            this._networkName,
+            this._checksum
+        );
+    }
 }

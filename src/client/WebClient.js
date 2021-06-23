@@ -56,14 +56,17 @@ export default class WebClient extends Client {
                 switch (props.network) {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
+                        this._networkName = "mainnet";
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
+                        this._networkName = "testnet";
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
+                        this._networkName = "previewnet";
                         break;
 
                     default:
@@ -149,12 +152,15 @@ export default class WebClient extends Client {
             switch (network) {
                 case "previewnet":
                     this._network.setNetwork(Network.PREVIEWNET);
+                    this._networkName = "previewnet";
                     break;
                 case "testnet":
                     this._network.setNetwork(Network.TESTNET);
+                    this._networkName = "testnet";
                     break;
                 case "mainnet":
                     this._network.setNetwork(Network.MAINNET);
+                    this._networkName = "mainnet";
             }
         } else {
             this._network.setNetwork(network);

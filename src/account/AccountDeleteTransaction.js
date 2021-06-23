@@ -2,6 +2,7 @@ import AccountId from "./AccountId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -149,6 +150,14 @@ export default class AccountDeleteTransaction extends Transaction {
                 : AccountId._fromProtobuf(transferAccountId._toProtobuf());
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._accountId, networkName);
+        entity_id._validateIdNetworks(this._transferAccountId, networkName);
     }
 
     /**

@@ -7,6 +7,7 @@ import Transaction, {
 import Long from "long";
 import TokenTransferMap from "./TokenTransferMap.js";
 import HbarTransferMap from "./HbarTransferMap.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../long.js").LongObject} LongObject
@@ -213,6 +214,25 @@ export default class TransferTransaction extends Transaction {
         );
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const [a, _] of this._hbarTransfers) {
+            entity_id._validateIdNetworks(a, networkName);
+        }
+
+        for (const [tokenId, transfers] of this._tokenTransfers) {
+            entity_id._validateIdNetworks(tokenId, networkName);
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            for (const [a, _] of transfers) {
+                entity_id._validateIdNetworks(a, networkName);
+            }
+        }
     }
 
     /**

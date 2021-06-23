@@ -2,6 +2,7 @@ import TokenId from "./TokenId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -97,6 +98,13 @@ export default class TokenDeleteTransaction extends Transaction {
                 : TokenId._fromProtobuf(tokenId._toProtobuf());
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._tokenId, networkName);
     }
 
     /**

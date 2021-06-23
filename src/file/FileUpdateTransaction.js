@@ -6,6 +6,7 @@ import Timestamp from "../Timestamp.js";
 import * as utf8 from "../encoding/utf8.js";
 import FileId from "./FileId.js";
 import { KeyList } from "@hashgraph/cryptography";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -298,6 +299,13 @@ export default class FileUpdateTransaction extends Transaction {
         this._fileMemo = null;
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._fileId, networkName);
     }
 
     /**

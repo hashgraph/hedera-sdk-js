@@ -5,6 +5,7 @@ import AccountId from "./AccountId.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
 import { KeyList } from "@hashgraph/cryptography";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -201,6 +202,13 @@ export default class LiveHashAddTransaction extends Transaction {
                 : AccountId._fromProtobuf(accountId._toProtobuf());
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._accountId, networkName);
     }
 
     /**

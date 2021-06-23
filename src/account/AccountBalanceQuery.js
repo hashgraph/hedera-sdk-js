@@ -2,6 +2,7 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import AccountId from "./AccountId.js";
 import ContractId from "../contract/ContractId.js";
 import AccountBalance from "./AccountBalance.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -134,6 +135,14 @@ export default class AccountBalanceQuery extends Query {
      */
     _isPaymentRequired() {
         return false;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._accountId, networkName);
+        entity_id._validateIdNetworks(this._contractId, networkName);
     }
 
     /**

@@ -124,4 +124,17 @@ export default class ScheduleId {
     toBytes() {
         return proto.ScheduleID.encode(this._toProtobuf()).finish();
     }
+
+    /**
+     * @returns {ScheduleId}
+     */
+    clone() {
+        return new ScheduleId(
+            this.shard,
+            this.realm,
+            this.num,
+            this._networkName,
+            this._checksum
+        );
+    }
 }

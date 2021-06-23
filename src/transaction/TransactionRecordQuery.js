@@ -7,6 +7,7 @@ import PrecheckStatusError from "../PrecheckStatusError.js";
 import ReceiptStatusError from "../ReceiptStatusError.js";
 import { ExecutionState } from "../Executable.js";
 import { ResponseType, ResponseCodeEnum } from "@hashgraph/proto";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -23,6 +24,7 @@ import { ResponseType, ResponseCodeEnum } from "@hashgraph/proto";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -203,6 +205,18 @@ export default class TransactionRecordQuery extends Query {
             transactionId: this._getTransactionId(),
             transactionReceipt: TransactionReceipt._fromProtobuf(receipt),
         });
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        if (this._transactionId != null) {
+            entity_id._validateIdNetworks(
+                this._transactionId.accountId,
+                networkName
+            );
+        }
     }
 
     /**

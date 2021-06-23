@@ -183,6 +183,24 @@ export function fromSolidityAddress(address) {
     return [shard, realm, num];
 }
 
+/**
+ * @param {{ _networkName: string | null } | null} left
+ * @param {{ _networkName: string | null } | null} right
+ */
+export function _validateIdNetworks(left, right) {
+    if (
+        left != null &&
+        right != null &&
+        left._networkName != null &&
+        right._networkName != null &&
+        left._networkName !== right._networkName
+    ) {
+        throw new Error(
+            "Network mismatch; some IDs have different networks set"
+        );
+    }
+}
+
 // /**
 //  * Check that the checksum in box withChecksum is correct
 //  *

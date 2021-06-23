@@ -172,6 +172,14 @@ export default class Query extends Executable {
     }
 
     /**
+     * @param {{ _networkName: string | null } | null} networkName
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
+    _validateIdNetworks(networkName) {
+        // Do nothing
+    }
+
+    /**
      * @template MirrorChannelT
      * @param {import("../client/Client.js").default<Channel, MirrorChannelT>} client
      * @returns {Promise<void>}
@@ -180,6 +188,8 @@ export default class Query extends Executable {
         if (this._paymentTransactions.length > 0) {
             return;
         }
+
+        this._validateIdNetworks({ _networkName: client._networkName });
 
         if (this._nodeIds.length == 0) {
             this._nodeIds = client._network.getNodeAccountIdsForExecute();

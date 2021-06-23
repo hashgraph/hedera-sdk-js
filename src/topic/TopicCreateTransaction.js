@@ -5,6 +5,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Duration from "../Duration.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -236,6 +237,13 @@ export default class TopicCreateTransaction extends Transaction {
                 : new Duration(autoRenewPeriod);
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._autoRenewAccountId, networkName);
     }
 
     /**

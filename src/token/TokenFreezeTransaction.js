@@ -3,6 +3,7 @@ import AccountId from "../account/AccountId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -134,6 +135,14 @@ export default class TokenFreezeTransaction extends Transaction {
                 : AccountId._fromProtobuf(accountId._toProtobuf());
 
         return this;
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._tokenId, networkName);
+        entity_id._validateIdNetworks(this._accountId, networkName);
     }
 
     /**

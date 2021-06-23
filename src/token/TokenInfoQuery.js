@@ -2,6 +2,7 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TokenId from "./TokenId.js";
 import TokenInfo from "./TokenInfo.js";
 import Hbar from "../Hbar.js";
+import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -16,6 +17,7 @@ import Hbar from "../Hbar.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -92,6 +94,13 @@ export default class TokenInfoQuery extends Query {
         } else {
             return Hbar.fromTinybars(25);
         }
+    }
+
+    /**
+     * @param { { _networkName: string | null } | null} networkName
+     */
+    _validateIdNetworks(networkName) {
+        entity_id._validateIdNetworks(this._tokenId, networkName);
     }
 
     /**
