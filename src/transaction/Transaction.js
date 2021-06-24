@@ -3,7 +3,7 @@ import TransactionResponse from "./TransactionResponse.js";
 import TransactionId from "./TransactionId.js";
 import TransactionHashMap from "./TransactionHashMap.js";
 import SignatureMap from "./SignatureMap.js";
-import Executable from "../Executable.js";
+import Executable, { ExecutionState } from "../Executable.js";
 import Status from "../Status.js";
 import Long from "long";
 import * as sha384 from "../cryptography/sha384.js";
@@ -13,7 +13,9 @@ import {
     SignedTransaction as ProtoSignedTransaction,
     TransactionList as ProtoTransactionList,
     TransactionBody as ProtoTransactionBody,
+    ResponseCodeEnum,
 } from "@hashgraph/proto";
+import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
 
 /**
@@ -723,15 +725,53 @@ export default class Transaction extends Executable {
     /**
      * @override
      * @internal
+     * @param {proto.ITransaction} request
      * @param {proto.ITransactionResponse} response
-     * @returns {Status}
+     * @returns {ExecutionState}
      */
-    _mapResponseStatus(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _shouldRetry(request, response) {
         const { nodeTransactionPrecheckCode } = response;
 
-        return nodeTransactionPrecheckCode == null
-            ? Status.Ok
-            : Status._fromCode(nodeTransactionPrecheckCode);
+        const status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
+        );
+
+        switch (status) {
+            case Status.Busy:
+            case Status.Unknown:
+            case Status.PlatformTransactionNotCreated:
+                return ExecutionState.Retry;
+            case Status.Ok:
+                return ExecutionState.Finished;
+            default:
+                return ExecutionState.Error;
+        }
+    }
+
+    /**
+     * @override
+     * @internal
+     * @param {proto.ITransaction} request
+     * @param {proto.ITransactionResponse} response
+     * @returns {Error}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapStatusError(request, response) {
+        const { nodeTransactionPrecheckCode } = response;
+
+        const status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
+        );
+
+        return new PrecheckStatusError({
+            status,
+            transactionId: this._getTransactionId(),
+        });
     }
 
     /**

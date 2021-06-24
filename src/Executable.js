@@ -1,13 +1,20 @@
-import PrecheckStatusError from "./PrecheckStatusError.js";
 import GrpcServiceError from "./grpc/GrpcServiceError.js";
 import GrpcStatus from "./grpc/GrpcStatus.js";
-import Status from "./Status.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
  * @typedef {import("./channel/Channel.js").default} Channel
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  */
+
+/**
+ * @enum {string}
+ */
+export const ExecutionState = {
+    Finished: "Finished",
+    Retry: "Retry",
+    Error: "Error",
+};
 
 /**
  * @abstract
@@ -101,11 +108,12 @@ export default class Executable {
     /**
      * @abstract
      * @internal
+     * @param {RequestT} request
      * @param {ResponseT} response
-     * @returns {Status}
+     * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponseStatus(response) {
+    _mapStatusError(request, response) {
         throw new Error("not implemented");
     }
 
@@ -163,17 +171,15 @@ export default class Executable {
     }
 
     /**
+     * @abstract
      * @protected
-     * @param {Status} responseStatus
+     * @param {RequestT} request
      * @param {ResponseT} response
-     * @returns {boolean}
+     * @returns {ExecutionState}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _shouldRetry(responseStatus, response) {
-        return (
-            responseStatus === Status.Busy ||
-            responseStatus === Status.PlatformTransactionNotCreated
-        );
+    _shouldRetry(request, response) {
+        throw new Error("not implemented");
     }
 
     /**
@@ -243,24 +249,19 @@ export default class Executable {
 
             node.decreaseDelay();
 
-            const responseStatus = this._mapResponseStatus(response);
-
-            if (
-                this._shouldRetry(responseStatus, response) &&
-                attempt <= this._maxRetries
-            ) {
-                await delayForAttempt(attempt);
-                continue;
+            switch (this._shouldRetry(request, response)) {
+                case ExecutionState.Retry:
+                    await delayForAttempt(attempt);
+                    continue;
+                case ExecutionState.Finished:
+                    return this._mapResponse(response, nodeAccountId, request);
+                case ExecutionState.Error:
+                    throw this._mapStatusError(request, response);
+                default:
+                    throw new Error(
+                        "(BUG) non-exhuastive switch statement for `ExecutionState`"
+                    );
             }
-
-            if (responseStatus !== Status.Ok) {
-                throw new PrecheckStatusError({
-                    status: responseStatus,
-                    transactionId: this._getTransactionId(),
-                });
-            }
-
-            return this._mapResponse(response, nodeAccountId, request);
         }
     }
 }

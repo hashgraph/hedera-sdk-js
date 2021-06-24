@@ -15,6 +15,7 @@ import { ResponseType as ProtoResponseType } from "@hashgraph/proto";
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../Status.js").default} Status
+ * @typedef {import("../Executable.js").ExecutionState} ExecutionState
  */
 
 /**
@@ -93,11 +94,25 @@ export default class CostQuery extends Executable {
     /**
      * @abstract
      * @internal
-     * @param {proto.IResponse} status
-     * @returns {Status}
+     * @param {proto.IQuery} request
+     * @param {proto.IResponse} response
+     * @returns {ExecutionState}
      */
-    _mapResponseStatus(status) {
-        return this._query._mapResponseStatus(status);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _shouldRetry(request, response) {
+        return this._query._shouldRetry(request, response);
+    }
+
+    /**
+     * @abstract
+     * @internal
+     * @param {proto.IQuery} request
+     * @param {proto.IResponse} response
+     * @returns {Error}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapStatusError(request, response) {
+        return this._query._mapStatusError(request, response);
     }
 
     /**

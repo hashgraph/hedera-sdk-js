@@ -351,7 +351,7 @@ export default class TopicMessageQuery {
                         /** @type {proto.ITimestamp} */ (
                             message.consensusTimestamp
                         )
-                    );
+                    ).plusNanos(1);
 
                     if (
                         message.chunkInfo == null ||
@@ -397,15 +397,32 @@ export default class TopicMessageQuery {
                     }
                 },
                 (error) => {
+                    const message =
+                        error instanceof Error ? error.message : error.details;
+
                     if (
                         this._attempt < this._maxAttempts &&
                         this._retryHandler(error)
                     ) {
+                        const delay = Math.min(
+                            250 * 2 ** this._attempt,
+                            this._maxBackoff
+                        );
+                        console.warn(
+                            `Error subscribing to topic ${
+                                this._topicId != null
+                                    ? this._topicId.toString()
+                                    : "UNKNOWN"
+                            } during attempt ${
+                                this._attempt
+                            }. Waiting ${delay} ms before next attempt: ${message}`
+                        );
+
                         this._attempt += 1;
 
                         setTimeout(() => {
                             this._makeServerStreamRequest(client);
-                        }, Math.min(250 * 2 ** this._attempt, this._maxBackoff));
+                        }, delay);
                     }
                 },
                 this._completionHandler
