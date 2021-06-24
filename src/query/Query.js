@@ -347,10 +347,11 @@ export default class Query extends Executable {
      * @internal
      * @param {proto.IQuery} request
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, nodeAccountId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 

@@ -62,14 +62,16 @@ export default class ContractId extends Key {
     /**
      * @internal
      * @param {proto.IContractID} id
+     * @param {(string | null)=} networkName
      * @returns {ContractId}
      */
-    static _fromProtobuf(id) {
-        return new ContractId({
-            shard: id.shardNum != null ? id.shardNum : 0,
-            realm: id.realmNum != null ? id.realmNum : 0,
-            num: id.contractNum != null ? id.contractNum : 0,
-        });
+    static _fromProtobuf(id, networkName) {
+        return new ContractId(
+            id.shardNum != null ? id.shardNum : 0,
+            id.realmNum != null ? id.realmNum : 0,
+            id.contractNum != null ? id.contractNum : 0,
+            networkName
+        );
     }
 
     /**

@@ -59,14 +59,16 @@ export default class AccountId {
     /**
      * @internal
      * @param {proto.IAccountID} id
+     * @param {(string | null)=} networkName
      * @returns {AccountId}
      */
-    static _fromProtobuf(id) {
-        return new AccountId({
-            shard: id.shardNum != null ? id.shardNum : 0,
-            realm: id.realmNum != null ? id.realmNum : 0,
-            num: id.accountNum != null ? id.accountNum : 0,
-        });
+    static _fromProtobuf(id, networkName) {
+        return new AccountId(
+            id.shardNum != null ? id.shardNum : 0,
+            id.realmNum != null ? id.realmNum : 0,
+            id.accountNum != null ? id.accountNum : 0,
+            networkName
+        );
     }
 
     /**

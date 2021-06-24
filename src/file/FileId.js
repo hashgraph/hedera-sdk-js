@@ -63,14 +63,16 @@ export default class FileId {
     /**
      * @internal
      * @param {proto.IFileID} id
+     * @param {(string | null)=} networkName
      * @returns {FileId}
      */
-    static _fromProtobuf(id) {
-        return new FileId({
-            shard: id.shardNum != null ? id.shardNum : 0,
-            realm: id.realmNum != null ? id.realmNum : 0,
-            num: id.fileNum != null ? id.fileNum : 0,
-        });
+    static _fromProtobuf(id, networkName) {
+        return new FileId(
+            id.shardNum != null ? id.shardNum : 0,
+            id.realmNum != null ? id.realmNum : 0,
+            id.fileNum != null ? id.fileNum : 0,
+            networkName
+        );
     }
 
     /**

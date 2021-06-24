@@ -776,10 +776,11 @@ export default class Transaction extends Executable {
      * @internal
      * @param {proto.ITransaction} request
      * @param {proto.ITransactionResponse} response
+     * @param {AccountId} nodeAccountId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, nodeAccountId) {
         const { nodeTransactionPrecheckCode } = response;
 
         const status = Status._fromCode(
