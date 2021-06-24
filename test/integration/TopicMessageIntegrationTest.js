@@ -13,6 +13,7 @@ describe("TopicMessage", function () {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
+
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
@@ -37,6 +38,7 @@ describe("TopicMessage", function () {
             })
             // eslint-disable-next-line no-unused-vars
             .subscribe(env.client, (_) => {
+                console.log("here");
                 // Do nothing
             });
 
@@ -49,7 +51,7 @@ describe("TopicMessage", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        while (!finished && Date.now() < startTime + 30000) {
+        while (!finished && Date.now() < startTime + 45000) {
             await new Promise((resolved) => setTimeout(resolved, 2000));
         }
 

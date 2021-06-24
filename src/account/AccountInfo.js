@@ -145,17 +145,22 @@ export default class AccountInfo {
     /**
      * @internal
      * @param {proto.IAccountInfo} info
+     * @param {(string | null)=} ledgerId
      * @returns {AccountInfo}
      */
-    static _fromProtobuf(info) {
+    static _fromProtobuf(info, ledgerId) {
         return new AccountInfo({
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (info.accountID)
+                /** @type {proto.IAccountID} */ (info.accountID),
+                ledgerId
             ),
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : null,
             isDeleted: info.deleted != null ? info.deleted : false,
-            key: keyFromProtobuf(/** @type {proto.IKey} */ (info.key)),
+            key: keyFromProtobuf(
+                /** @type {proto.IKey} */ (info.key),
+                ledgerId
+            ),
             balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),
             sendRecordThreshold: Hbar.fromTinybars(
                 info.generateSendRecordThreshold != null
@@ -193,16 +198,17 @@ export default class AccountInfo {
                         info.proxyAccountID.accountNum
                     )
                 ).toInt() !== 0
-                    ? AccountId._fromProtobuf(info.proxyAccountID)
+                    ? AccountId._fromProtobuf(info.proxyAccountID, ledgerId)
                     : null,
             proxyReceived: Hbar.fromTinybars(
                 info.proxyReceived != null ? info.proxyReceived : 0
             ),
             liveHashes: (info.liveHashes != null ? info.liveHashes : []).map(
-                (hash) => LiveHash._fromProtobuf(hash)
+                (hash) => LiveHash._fromProtobuf(hash, ledgerId)
             ),
             tokenRelationships: TokenRelationshipMap._fromProtobuf(
-                info.tokenRelationships != null ? info.tokenRelationships : []
+                info.tokenRelationships != null ? info.tokenRelationships : [],
+                ledgerId
             ),
             accountMemo: info.memo != null ? info.memo : "",
         });

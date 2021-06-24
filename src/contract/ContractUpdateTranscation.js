@@ -24,6 +24,7 @@ import Timestamp from "../Timestamp.js";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -204,7 +205,7 @@ export default class ContractUpdateTransaction extends Transaction {
         this._contractId =
             typeof contractId === "string"
                 ? ContractId.fromString(contractId)
-                : ContractId._fromProtobuf(contractId._toProtobuf());
+                : contractId.clone();
 
         return this;
     }
@@ -266,7 +267,7 @@ export default class ContractUpdateTransaction extends Transaction {
         this._proxyAccountId =
             typeof proxyAccountId === "string"
                 ? AccountId.fromString(proxyAccountId)
-                : AccountId._fromProtobuf(proxyAccountId._toProtobuf());
+                : proxyAccountId.clone();
 
         return this;
     }
@@ -308,7 +309,7 @@ export default class ContractUpdateTransaction extends Transaction {
         this._bytecodeFileId =
             typeof bytecodeFileId === "string"
                 ? FileId.fromString(bytecodeFileId)
-                : FileId._fromProtobuf(bytecodeFileId._toProtobuf());
+                : bytecodeFileId.clone();
 
         return this;
     }
@@ -339,6 +340,23 @@ export default class ContractUpdateTransaction extends Transaction {
         this._contractMemo = null;
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._contractId != null) {
+            this._contractId.validate(client);
+        }
+
+        if (this._bytecodeFileId != null) {
+            this._bytecodeFileId.validate(client);
+        }
+
+        if (this._proxyAccountId != null) {
+            this._proxyAccountId.validate(client);
+        }
     }
 
     /**

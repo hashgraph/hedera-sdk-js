@@ -90,4 +90,11 @@ export default class IntegrationTestEnv {
             response.nodeId,
         ]);
     }
+
+    /**
+     * @returns {Client}
+     */
+    static forMainnet() {
+        return Client.forMainnet();
+    }
 }

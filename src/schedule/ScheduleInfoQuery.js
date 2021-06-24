@@ -16,6 +16,8 @@ import Hbar from "../Hbar.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -74,7 +76,7 @@ export default class ScheduleInfoQuery extends Query {
         this._scheduleId =
             typeof scheduleId === "string"
                 ? ScheduleId.fromString(scheduleId)
-                : ScheduleId._fromProtobuf(scheduleId._toProtobuf());
+                : scheduleId.clone();
 
         return this;
     }
@@ -91,6 +93,15 @@ export default class ScheduleInfoQuery extends Query {
             return cost;
         } else {
             return Hbar.fromTinybars(25);
+        }
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._scheduleId != null) {
+            this._scheduleId.validate(client);
         }
     }
 
@@ -120,19 +131,23 @@ export default class ScheduleInfoQuery extends Query {
 
     /**
      * @override
-     * @override
      * @internal
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<ScheduleInfo>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const info = /** @type {proto.IScheduleGetInfoResponse} */ (
             response.scheduleGetInfo
         );
 
         return Promise.resolve(
             ScheduleInfo._fromProtobuf(
-                /** @type {proto.IScheduleInfo} */ (info.scheduleInfo)
+                /** @type {proto.IScheduleInfo} */ (info.scheduleInfo),
+                ledgerId
             )
         );
     }

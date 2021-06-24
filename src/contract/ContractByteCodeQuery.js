@@ -13,6 +13,8 @@ import ContractId from "./ContractId.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -71,9 +73,18 @@ export default class ContractByteCodeQuery extends Query {
         this._contractId =
             typeof contractId === "string"
                 ? ContractId.fromString(contractId)
-                : ContractId._fromProtobuf(contractId._toProtobuf());
+                : contractId.clone();
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._contractId != null) {
+            this._contractId.validate(client);
+        }
     }
 
     /**

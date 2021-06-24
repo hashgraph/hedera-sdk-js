@@ -20,6 +20,7 @@ import { KeyList } from "@hashgraph/cryptography";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -198,9 +199,18 @@ export default class LiveHashAddTransaction extends Transaction {
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
-                : AccountId._fromProtobuf(accountId._toProtobuf());
+                : accountId.clone();
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._accountId != null) {
+            this._accountId.validate(client);
+        }
     }
 
     /**

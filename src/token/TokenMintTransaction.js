@@ -17,6 +17,7 @@ import Long from "long";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
@@ -107,7 +108,7 @@ export default class TokenMintTransaction extends Transaction {
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : TokenId._fromProtobuf(tokenId._toProtobuf());
+                : tokenId.clone();
 
         return this;
     }
@@ -128,6 +129,15 @@ export default class TokenMintTransaction extends Transaction {
         this._amount = amount instanceof Long ? amount : Long.fromValue(amount);
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._tokenId != null) {
+            this._tokenId.validate(client);
+        }
     }
 
     /**

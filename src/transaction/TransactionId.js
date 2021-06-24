@@ -115,12 +115,13 @@ export default class TransactionId {
     /**
      * @internal
      * @param {proto.ITransactionID} id
+     * @param {(string | null)=} networkName
      * @returns {TransactionId}
      */
-    static _fromProtobuf(id) {
+    static _fromProtobuf(id, networkName) {
         if (id.accountID != null && id.transactionValidStart != null) {
             return new TransactionId(
-                AccountId._fromProtobuf(id.accountID),
+                AccountId._fromProtobuf(id.accountID, networkName),
                 Timestamp._fromProtobuf(id.transactionValidStart),
                 id.scheduled
             );
@@ -158,5 +159,16 @@ export default class TransactionId {
      */
     toBytes() {
         return proto.TransactionID.encode(this._toProtobuf()).finish();
+    }
+
+    /**
+     * @returns {TransactionId}
+     */
+    clone() {
+        return new TransactionId(
+            this.accountId,
+            this.validStart,
+            this.scheduled
+        );
     }
 }

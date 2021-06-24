@@ -16,6 +16,8 @@ import Hbar from "../Hbar.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -72,7 +74,7 @@ export default class FileInfoQuery extends Query {
         this._fileId =
             typeof fileId === "string"
                 ? FileId.fromString(fileId)
-                : FileId._fromProtobuf(fileId._toProtobuf());
+                : fileId.clone();
 
         return this;
     }
@@ -89,6 +91,15 @@ export default class FileInfoQuery extends Query {
             return cost;
         } else {
             return Hbar.fromTinybars(25);
+        }
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._fileId != null) {
+            this._fileId.validate(client);
         }
     }
 
@@ -120,16 +131,21 @@ export default class FileInfoQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<FileInfo>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const info = /** @type {proto.IFileGetInfoResponse} */ (
             response.fileGetInfo
         );
 
         return Promise.resolve(
             FileInfo._fromProtobuf(
-                /** @type {proto.IFileInfo} */ (info.fileInfo)
+                /** @type {proto.IFileInfo} */ (info.fileInfo),
+                ledgerId
             )
         );
     }

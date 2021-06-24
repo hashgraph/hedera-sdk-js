@@ -23,7 +23,9 @@ export default class NodeMirrorChannel extends MirrorChannel {
          */
         this._client = new grpc.Client(
             address,
-            grpc.credentials.createInsecure()
+            address.endsWith(":50212") || address.endsWith(":443")
+                ? grpc.credentials.createSsl()
+                : grpc.credentials.createInsecure()
         );
     }
 

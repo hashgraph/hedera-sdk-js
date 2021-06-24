@@ -14,6 +14,8 @@ import FileId from "./FileId.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -56,6 +58,15 @@ export default class FileContentsQuery extends Query {
     }
 
     /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._fileId != null) {
+            this._fileId.validate(client);
+        }
+    }
+
+    /**
      * @override
      * @internal
      * @param {Channel} channel
@@ -83,7 +94,7 @@ export default class FileContentsQuery extends Query {
         this._fileId =
             typeof fileId === "string"
                 ? FileId.fromString(fileId)
-                : FileId._fromProtobuf(fileId._toProtobuf());
+                : fileId.clone();
 
         return this;
     }

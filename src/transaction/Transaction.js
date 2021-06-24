@@ -3,7 +3,7 @@ import TransactionResponse from "./TransactionResponse.js";
 import TransactionId from "./TransactionId.js";
 import TransactionHashMap from "./TransactionHashMap.js";
 import SignatureMap from "./SignatureMap.js";
-import Executable from "../Executable.js";
+import Executable, { ExecutionState } from "../Executable.js";
 import Status from "../Status.js";
 import Long from "long";
 import * as sha384 from "../cryptography/sha384.js";
@@ -13,7 +13,9 @@ import {
     SignedTransaction as ProtoSignedTransaction,
     TransactionList as ProtoTransactionList,
     TransactionBody as ProtoTransactionBody,
+    ResponseCodeEnum,
 } from "@hashgraph/proto";
+import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
 
 /**
@@ -39,6 +41,7 @@ import AccountId from "../account/AccountId.js";
  * @typedef {import("@hashgraph/cryptography").PrivateKey} PrivateKey
  * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 // 90 days (in seconds)
@@ -602,6 +605,10 @@ export default class Transaction extends Executable {
             );
         }
 
+        if (client != null && this._transactionIds[0].accountId != null) {
+            this._transactionIds[0].accountId.validate(client);
+        }
+
         if (this._nodeIds.length > 0) {
             // Do nothing
         } else if (client != null) {
@@ -668,6 +675,14 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * @param {Client} client
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
+    _validateIdNetworks(client) {
+        // Do nothing
+    }
+
+    /**
      * @override
      * @protected
      * @param {import("../client/Client.js").default<Channel, *>} client
@@ -676,6 +691,10 @@ export default class Transaction extends Executable {
     async _beforeExecute(client) {
         if (!this._isFrozen()) {
             this.freezeWith(client);
+        }
+
+        if (client._operator != null) {
+            this._validateIdNetworks(client);
         }
 
         // on execute, sign each transaction with the operator, if present
@@ -723,15 +742,54 @@ export default class Transaction extends Executable {
     /**
      * @override
      * @internal
+     * @param {proto.ITransaction} request
      * @param {proto.ITransactionResponse} response
-     * @returns {Status}
+     * @returns {ExecutionState}
      */
-    _mapResponseStatus(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _shouldRetry(request, response) {
         const { nodeTransactionPrecheckCode } = response;
 
-        return nodeTransactionPrecheckCode == null
-            ? Status.Ok
-            : Status._fromCode(nodeTransactionPrecheckCode);
+        const status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
+        );
+
+        switch (status) {
+            case Status.Busy:
+            case Status.Unknown:
+            case Status.PlatformTransactionNotCreated:
+                return ExecutionState.Retry;
+            case Status.Ok:
+                return ExecutionState.Finished;
+            default:
+                return ExecutionState.Error;
+        }
+    }
+
+    /**
+     * @override
+     * @internal
+     * @param {proto.ITransaction} request
+     * @param {proto.ITransactionResponse} response
+     * @param {string | null} ledgerId
+     * @returns {Error}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapStatusError(request, response, ledgerId) {
+        const { nodeTransactionPrecheckCode } = response;
+
+        const status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
+        );
+
+        return new PrecheckStatusError({
+            status,
+            transactionId: this._getTransactionId(),
+        });
     }
 
     /**

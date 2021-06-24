@@ -28,6 +28,7 @@ import HbarTransferMap from "./HbarTransferMap.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -213,6 +214,31 @@ export default class TransferTransaction extends Transaction {
         );
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const [a, _] of this._hbarTransfers) {
+            if (a != null) {
+                a.validate(client);
+            }
+        }
+
+        for (const [tokenId, transfers] of this._tokenTransfers) {
+            if (tokenId != null) {
+                tokenId.validate(client);
+            }
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            for (const [a, _] of transfers) {
+                if (a != null) {
+                    a.validate(client);
+                }
+            }
+        }
     }
 
     /**

@@ -16,6 +16,8 @@ import Hbar from "../Hbar.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -74,7 +76,7 @@ export default class TokenInfoQuery extends Query {
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : TokenId._fromProtobuf(tokenId._toProtobuf());
+                : tokenId.clone();
 
         return this;
     }
@@ -91,6 +93,15 @@ export default class TokenInfoQuery extends Query {
             return cost;
         } else {
             return Hbar.fromTinybars(25);
+        }
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._tokenId != null) {
+            this._tokenId.validate(client);
         }
     }
 
@@ -120,19 +131,23 @@ export default class TokenInfoQuery extends Query {
 
     /**
      * @override
-     * @override
      * @internal
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TokenInfo>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const info = /** @type {proto.ITokenGetInfoResponse} */ (
             response.tokenGetInfo
         );
 
         return Promise.resolve(
             TokenInfo._fromProtobuf(
-                /** @type {proto.ITokenInfo} */ (info.tokenInfo)
+                /** @type {proto.ITokenInfo} */ (info.tokenInfo),
+                ledgerId
             )
         );
     }

@@ -15,6 +15,17 @@ import SmartContractService = proto.SmartContractService;
 import TokenService = proto.TokenService;
 import ScheduleService = proto.ScheduleService;
 
+import CurrentAndNextFeeSchedule = proto.CurrentAndNextFeeSchedule;
+import FeeSchedules = proto.FeeSchedule;
+import FeeComponents = proto.FeeComponents;
+import FeeData = proto.FeeData;
+import TransactionFeeSchedule = proto.TransactionFeeSchedule;
+import ICurrentAndNextFeeSchedule = proto.ICurrentAndNextFeeSchedule;
+import IFeeSchedules = proto.IFeeSchedule;
+import IFeeComponents = proto.IFeeComponents;
+import IFeeData = proto.IFeeData;
+import ITransactionFeeSchedule = proto.ITransactionFeeSchedule;
+
 export {
     Reader,
     Writer,
@@ -342,4 +353,15 @@ export {
     IScheduleSignTransactionBody,
     ISchedulableTransactionBody,
     SchedulableTransactionBody,
+    //Fee Schedules
+    CurrentAndNextFeeSchedule,
+    FeeSchedules,
+    FeeComponents,
+    FeeData,
+    TransactionFeeSchedule,
+    ICurrentAndNextFeeSchedule,
+    IFeeSchedules,
+    IFeeComponents,
+    IFeeData,
+    ITransactionFeeSchedule,
 };

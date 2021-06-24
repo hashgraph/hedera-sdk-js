@@ -157,9 +157,10 @@ export default class TransactionRecord {
     /**
      * @internal
      * @param {proto.ITransactionRecord} record
+     * @param {(string | null)=} ledgerId
      * @returns {TransactionRecord}
      */
-    static _fromProtobuf(record) {
+    static _fromProtobuf(record, ledgerId) {
         const contractFunctionResult =
             record.contractCallResult != null
                 ? ContractFunctionResult._fromProtobuf(
@@ -173,7 +174,8 @@ export default class TransactionRecord {
 
         return new TransactionRecord({
             receipt: TransactionReceipt._fromProtobuf(
-                /** @type {proto.ITransactionReceipt} */ (record.receipt)
+                /** @type {proto.ITransactionReceipt} */ (record.receipt),
+                ledgerId
             ),
             transactionHash:
                 record.transactionHash != null
@@ -184,7 +186,8 @@ export default class TransactionRecord {
                 (record.consensusTimestamp)
             ),
             transactionId: TransactionId._fromProtobuf(
-                /** @type {proto.ITransactionID} */ (record.transactionID)
+                /** @type {proto.ITransactionID} */ (record.transactionID),
+                ledgerId
             ),
             transactionMemo: record.memo != null ? record.memo : "",
             transactionFee: Hbar.fromTinybars(
@@ -195,16 +198,17 @@ export default class TransactionRecord {
                     ? record.transferList.accountAmounts
                     : []
                 : []
-            ).map((aa) => Transfer._fromProtobuf(aa)),
+            ).map((aa) => Transfer._fromProtobuf(aa, ledgerId)),
             contractFunctionResult,
             tokenTransfers: TokenTransferMap._fromProtobuf(
                 record.tokenTransferLists != null
                     ? record.tokenTransferLists
-                    : []
+                    : [],
+                ledgerId
             ),
             scheduleRef:
                 record.scheduleRef != null
-                    ? ScheduleId._fromProtobuf(record.scheduleRef)
+                    ? ScheduleId._fromProtobuf(record.scheduleRef, ledgerId)
                     : null,
         });
     }

@@ -18,6 +18,7 @@ import AccountId from "../account/AccountId.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -137,7 +138,7 @@ export default class ContractDeleteTransaction extends Transaction {
         this._contractId =
             typeof contractId === "string"
                 ? ContractId.fromString(contractId)
-                : ContractId._fromProtobuf(contractId._toProtobuf());
+                : contractId.clone();
 
         return this;
     }
@@ -186,6 +187,23 @@ export default class ContractDeleteTransaction extends Transaction {
                 : AccountId.fromString(transferAccountId);
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._contractId != null) {
+            this._contractId.validate(client);
+        }
+
+        if (this._transferAccountId != null) {
+            this._transferAccountId.validate(client);
+        }
+
+        if (this._transferContractId != null) {
+            this._transferContractId.validate(client);
+        }
     }
 
     /**

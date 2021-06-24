@@ -26,6 +26,7 @@ import Duration from "../Duration.js";
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -209,7 +210,7 @@ export default class ContractCreateTransaction extends Transaction {
         this._bytecodeFileId =
             typeof bytecodeFileId === "string"
                 ? FileId.fromString(bytecodeFileId)
-                : FileId._fromProtobuf(bytecodeFileId._toProtobuf());
+                : bytecodeFileId.clone();
 
         return this;
     }
@@ -352,6 +353,19 @@ export default class ContractCreateTransaction extends Transaction {
         this._contractMemo = contractMemo;
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._bytecodeFileId != null) {
+            this._bytecodeFileId.validate(client);
+        }
+
+        if (this._proxyAccountId != null) {
+            this._proxyAccountId.validate(client);
+        }
     }
 
     /**

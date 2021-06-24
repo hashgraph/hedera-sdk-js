@@ -22,6 +22,7 @@ import Duration from "../Duration.js";
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -275,7 +276,7 @@ export default class TokenUpdateTransaction extends Transaction {
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : TokenId._fromProtobuf(tokenId._toProtobuf());
+                : tokenId.clone();
 
         return this;
     }
@@ -330,9 +331,7 @@ export default class TokenUpdateTransaction extends Transaction {
     setTreasuryAccountId(id) {
         this._requireNotFrozen();
         this._treasuryAccountId =
-            typeof id === "string"
-                ? AccountId.fromString(id)
-                : AccountId._fromProtobuf(id._toProtobuf());
+            typeof id === "string" ? AccountId.fromString(id) : id.clone();
 
         return this;
     }
@@ -514,6 +513,23 @@ export default class TokenUpdateTransaction extends Transaction {
         this._tokenMemo = null;
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._tokenId != null) {
+            this._tokenId.validate(client);
+        }
+
+        if (this._treasuryAccountId != null) {
+            this._treasuryAccountId.validate(client);
+        }
+
+        if (this._autoRenewAccountId != null) {
+            this._autoRenewAccountId.validate(client);
+        }
     }
 
     /**

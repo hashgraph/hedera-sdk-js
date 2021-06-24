@@ -1,7 +1,7 @@
 import Status from "../Status.js";
 import AccountId from "../account/AccountId.js";
 import Hbar from "../Hbar.js";
-import Executable from "../Executable.js";
+import Executable, { ExecutionState } from "../Executable.js";
 import TransactionId from "../transaction/TransactionId.js";
 import {
     Query as ProtoQuery,
@@ -10,6 +10,7 @@ import {
     ResponseType as ProtoResponseType,
     ResponseCodeEnum,
 } from "@hashgraph/proto";
+import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
 
@@ -31,6 +32,7 @@ import Long from "long";
 
 /**
  * @typedef {import("../client/Client.js").ClientOperator} ClientOperator
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -171,6 +173,14 @@ export default class Query extends Executable {
     }
 
     /**
+     * @param {Client} client
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
+    _validateIdNetworks(client) {
+        // Do nothing
+    }
+
+    /**
      * @template MirrorChannelT
      * @param {import("../client/Client.js").default<Channel, MirrorChannelT>} client
      * @returns {Promise<void>}
@@ -179,6 +189,8 @@ export default class Query extends Executable {
         if (this._paymentTransactions.length > 0) {
             return;
         }
+
+        this._validateIdNetworks(client);
 
         if (this._nodeIds.length == 0) {
             this._nodeIds = client._network.getNodeAccountIdsForExecute();
@@ -304,18 +316,56 @@ export default class Query extends Executable {
     /**
      * @override
      * @internal
+     * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @returns {Status}
+     * @returns {ExecutionState}
      */
-    _mapResponseStatus(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _shouldRetry(request, response) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
-        return Status._fromCode(
+        const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
                 : ResponseCodeEnum.OK
         );
+
+        switch (status) {
+            case Status.Busy:
+            case Status.Unknown:
+            case Status.PlatformTransactionNotCreated:
+                return ExecutionState.Retry;
+            case Status.Ok:
+                return ExecutionState.Finished;
+            default:
+                return ExecutionState.Error;
+        }
+    }
+
+    /**
+     * @override
+     * @internal
+     * @param {proto.IQuery} request
+     * @param {proto.IResponse} response
+     * @param {string | null} ledgerId
+     * @returns {Error}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapStatusError(request, response, ledgerId) {
+        const { nodeTransactionPrecheckCode } =
+            this._mapResponseHeader(response);
+
+        const status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
+        );
+
+        return new PrecheckStatusError({
+            status,
+            transactionId: this._getTransactionId(),
+        });
     }
 
     /**

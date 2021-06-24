@@ -15,6 +15,7 @@ import LiveHash from "./LiveHash.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -111,13 +112,23 @@ export default class LiveHashQuery extends Query {
     }
 
     /**
-     * @protected
-     * @override
-     * @param {Channel} channel
-     * @returns {(query: proto.IQuery) => Promise<proto.IResponse>}
+     * @param {Client} client
      */
-    _getMethod(channel) {
-        return (query) => channel.crypto.getLiveHash(query);
+    _validateIdNetworks(client) {
+        if (this._accountId != null) {
+            this._accountId.validate(client);
+        }
+    }
+
+    /**
+     * @override
+     * @internal
+     * @param {Channel} channel
+     * @param {proto.IQuery} request
+     * @returns {Promise<proto.IResponse>}
+     */
+    _execute(channel, request) {
+        return channel.crypto.getLiveHash(request);
     }
 
     /**

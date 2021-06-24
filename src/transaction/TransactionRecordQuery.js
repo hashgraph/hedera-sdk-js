@@ -1,7 +1,12 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TransactionRecord from "./TransactionRecord.js";
+import TransactionReceipt from "./TransactionReceipt.js";
 import TransactionId from "./TransactionId.js";
 import Status from "../Status.js";
+import PrecheckStatusError from "../PrecheckStatusError.js";
+import ReceiptStatusError from "../ReceiptStatusError.js";
+import { ExecutionState } from "../Executable.js";
+import { ResponseType, ResponseCodeEnum } from "@hashgraph/proto";
 
 /**
  * @namespace proto
@@ -18,6 +23,8 @@ import Status from "../Status.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -69,35 +76,117 @@ export default class TransactionRecordQuery extends Query {
     /**
      * Set the transaction ID for which the record is being requested.
      *
-     * @param {TransactionId} transactionId
+     * @param {TransactionId | string} transactionId
      * @returns {TransactionRecordQuery}
      */
     setTransactionId(transactionId) {
-        this._transactionId = transactionId;
+        this._transactionId =
+            typeof transactionId === "string"
+                ? TransactionId.fromString(transactionId)
+                : transactionId.clone();
+
         return this;
     }
 
     /**
      * @override
-     * @protected
-     * @param {Status} responseStatus
+     * @internal
+     * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @returns {boolean}
+     * @returns {ExecutionState}
      */
-    _shouldRetry(responseStatus, response) {
-        switch (responseStatus) {
+    _shouldRetry(request, response) {
+        const { nodeTransactionPrecheckCode } =
+            this._mapResponseHeader(response);
+
+        let status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
+        );
+
+        switch (status) {
             case Status.Busy:
             case Status.Unknown:
             case Status.ReceiptNotFound:
             case Status.RecordNotFound:
-                return true;
+                return ExecutionState.Retry;
+
+            case Status.Ok:
+                break;
 
             default:
-            // continue to checking receipt status
+                return ExecutionState.Error;
         }
 
-        if (responseStatus != Status.Ok) {
-            return false;
+        const transactionGetRecord =
+            /** @type {proto.ITransactionGetRecordResponse} */ (
+                response.transactionGetRecord
+            );
+        const header = /** @type {proto.IResponseHeader} */ (
+            transactionGetRecord.header
+        );
+
+        if (header.responseType === ResponseType.COST_ANSWER) {
+            return ExecutionState.Finished;
+        }
+
+        const record = /** @type {proto.ITransactionRecord} */ (
+            transactionGetRecord.transactionRecord
+        );
+        const receipt = /** @type {proto.ITransactionReceipt} */ (
+            record.receipt
+        );
+        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (
+            receipt.status
+        );
+        status = Status._fromCode(receiptStatusCode);
+
+        switch (status) {
+            case Status.Ok:
+            case Status.Busy:
+            case Status.Unknown:
+            case Status.ReceiptNotFound:
+            case Status.RecordNotFound:
+                return ExecutionState.Retry;
+
+            case Status.Success:
+                return ExecutionState.Finished;
+
+            default:
+                return ExecutionState.Error;
+        }
+    }
+
+    /**
+     * @override
+     * @internal
+     * @param {proto.IQuery} request
+     * @param {proto.IResponse} response
+     * @param {string | null} ledgerId
+     * @returns {Error}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapStatusError(request, response, ledgerId) {
+        const { nodeTransactionPrecheckCode } =
+            this._mapResponseHeader(response);
+
+        let status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
+        );
+
+        switch (status) {
+            case Status.Ok:
+                // Do nothing
+                break;
+
+            default:
+                return new PrecheckStatusError({
+                    status,
+                    transactionId: this._getTransactionId(),
+                });
         }
 
         const transactionGetRecord =
@@ -110,24 +199,32 @@ export default class TransactionRecordQuery extends Query {
         const receipt = /** @type {proto.ITransactionReceipt} */ (
             record.receipt
         );
-        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (
+        const receiptStatusError = /** @type {proto.ResponseCodeEnum} */ (
             receipt.status
         );
-        const receiptStatus = Status._fromCode(receiptStatusCode);
 
-        switch (receiptStatus) {
-            case Status.Ok:
-            case Status.Busy:
-            case Status.Unknown:
-            case Status.ReceiptNotFound:
-            case Status.RecordNotFound:
-                return true;
+        status = Status._fromCode(receiptStatusError);
 
-            default:
-            // looks like its either success or some other error
+        return new ReceiptStatusError({
+            status,
+            transactionId: this._getTransactionId(),
+            transactionReceipt: TransactionReceipt._fromProtobuf(
+                receipt,
+                ledgerId
+            ),
+        });
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (
+            this._transactionId != null &&
+            this._transactionId.accountId != null
+        ) {
+            this._transactionId.accountId.validate(client);
         }
-
-        return false;
     }
 
     /**
@@ -160,12 +257,15 @@ export default class TransactionRecordQuery extends Query {
 
     /**
      * @override
-     * @override
      * @internal
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TransactionRecord>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const record = /** @type {proto.ITransactionGetRecordResponse} */ (
             response.transactionGetRecord
         );
@@ -174,7 +274,8 @@ export default class TransactionRecordQuery extends Query {
             TransactionRecord._fromProtobuf(
                 /** @type {proto.ITransactionRecord} */ (
                     record.transactionRecord
-                )
+                ),
+                ledgerId
             )
         );
     }

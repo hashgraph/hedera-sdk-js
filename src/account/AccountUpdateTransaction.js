@@ -20,6 +20,7 @@ import Duration from "../Duration.js";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -201,7 +202,7 @@ export default class AccountUpdateTransaction extends Transaction {
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
-                : AccountId._fromProtobuf(accountId._toProtobuf());
+                : accountId.clone();
 
         return this;
     }
@@ -328,6 +329,19 @@ export default class AccountUpdateTransaction extends Transaction {
         this._accountMemo = null;
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._accountId != null) {
+            this._accountId.validate(client);
+        }
+
+        if (this._proxyAccountId != null) {
+            this._proxyAccountId.validate(client);
+        }
     }
 
     /**

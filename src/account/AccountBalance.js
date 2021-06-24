@@ -59,16 +59,18 @@ export default class AccountBalance {
     /**
      * @internal
      * @param {proto.ICryptoGetAccountBalanceResponse} accountBalance
+     * @param {(string | null)=} ledgerId
      * @returns {AccountBalance}
      */
-    static _fromProtobuf(accountBalance) {
+    static _fromProtobuf(accountBalance, ledgerId) {
         const tokenBalances = new TokenBalanceMap();
         const tokenDecimals = new TokenDecimalMap();
 
         if (accountBalance.tokenBalances != null) {
             for (const balance of accountBalance.tokenBalances) {
                 const tokenId = TokenId._fromProtobuf(
-                    /** @type {proto.ITokenID} */ (balance.tokenId)
+                    /** @type {proto.ITokenID} */ (balance.tokenId),
+                    ledgerId
                 );
 
                 tokenDecimals._set(

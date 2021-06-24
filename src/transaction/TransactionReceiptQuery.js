@@ -2,6 +2,10 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import Status from "../Status.js";
 import TransactionReceipt from "./TransactionReceipt.js";
 import TransactionId from "./TransactionId.js";
+import PrecheckStatusError from "../PrecheckStatusError.js";
+import ReceiptStatusError from "../ReceiptStatusError.js";
+import { ExecutionState } from "../Executable.js";
+import { ResponseCodeEnum } from "@hashgraph/proto";
 
 /**
  * @namespace proto
@@ -18,6 +22,7 @@ import TransactionId from "./TransactionId.js";
 /**
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -76,7 +81,7 @@ export default class TransactionReceiptQuery extends Query {
         this._transactionId =
             typeof transactionId === "string"
                 ? TransactionId.fromString(transactionId)
-                : TransactionId._fromProtobuf(transactionId._toProtobuf());
+                : transactionId.clone();
 
         return this;
     }
@@ -92,23 +97,31 @@ export default class TransactionReceiptQuery extends Query {
 
     /**
      * @override
-     * @protected
-     * @param {Status} responseStatus
+     * @internal
+     * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @returns {boolean}
+     * @returns {ExecutionState}
      */
-    _shouldRetry(responseStatus, response) {
-        switch (responseStatus) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _shouldRetry(request, response) {
+        const { nodeTransactionPrecheckCode } =
+            this._mapResponseHeader(response);
+
+        let status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
+        );
+
+        switch (status) {
             case Status.Busy:
             case Status.Unknown:
             case Status.ReceiptNotFound:
-                return true;
+                return ExecutionState.Retry;
             case Status.Ok:
-                // Do nothing
                 break;
-
             default:
-                return false;
+                return ExecutionState.Error;
         }
 
         const transactionGetReceipt =
@@ -121,20 +134,87 @@ export default class TransactionReceiptQuery extends Query {
         const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (
             receipt.status
         );
-        const receiptStatus = Status._fromCode(receiptStatusCode);
 
-        switch (receiptStatus) {
-            case Status.Ok:
+        status = Status._fromCode(receiptStatusCode);
+
+        switch (status) {
             case Status.Busy:
             case Status.Unknown:
             case Status.ReceiptNotFound:
-                return true;
+                return ExecutionState.Retry;
+            case Status.Success:
+                return ExecutionState.Finished;
+            default:
+                return ExecutionState.Error;
+        }
+    }
+
+    /**
+     * @override
+     * @internal
+     * @param {proto.IQuery} request
+     * @param {proto.IResponse} response
+     * @param {string | null} ledgerId
+     * @returns {Error}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapStatusError(request, response, ledgerId) {
+        const { nodeTransactionPrecheckCode } =
+            this._mapResponseHeader(response);
+
+        let status = Status._fromCode(
+            nodeTransactionPrecheckCode != null
+                ? nodeTransactionPrecheckCode
+                : ResponseCodeEnum.OK
+        );
+
+        switch (status) {
+            case Status.Ok:
+                // Do nothing
+                break;
 
             default:
-            // looks like its either success or some other error
+                return new PrecheckStatusError({
+                    status,
+                    transactionId: this._getTransactionId(),
+                });
         }
 
-        return false;
+        const transactionGetReceipt =
+            /** @type {proto.ITransactionGetReceiptResponse} */ (
+                response.transactionGetReceipt
+            );
+        const receipt = /** @type {proto.ITransactionReceipt} */ (
+            transactionGetReceipt.receipt
+        );
+        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (
+            receipt.status
+        );
+
+        status = Status._fromCode(receiptStatusCode);
+
+        return new ReceiptStatusError({
+            status,
+            transactionId: this._getTransactionId(),
+            transactionReceipt: TransactionReceipt._fromProtobuf(
+                /** @type {proto.ITransactionReceipt} */ (
+                    response.transactionGetReceipt
+                ),
+                ledgerId
+            ),
+        });
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (
+            this._transactionId != null &&
+            this._transactionId.accountId != null
+        ) {
+            this._transactionId.accountId.validate(client);
+        }
     }
 
     /**
@@ -170,10 +250,11 @@ export default class TransactionReceiptQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TransactionReceipt>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const transactionGetReceipt =
             /** @type {proto.ITransactionGetReceiptResponse} */ (
                 response.transactionGetReceipt
@@ -182,7 +263,9 @@ export default class TransactionReceiptQuery extends Query {
             transactionGetReceipt.receipt
         );
 
-        return Promise.resolve(TransactionReceipt._fromProtobuf(receipt));
+        return Promise.resolve(
+            TransactionReceipt._fromProtobuf(receipt, ledgerId)
+        );
     }
 
     /**

@@ -113,16 +113,19 @@ export default class NodeClient extends Client {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
                         this.setMirrorNetwork(MirrorNetwork.MAINNET);
+                        this._network._ledgerId = "0";
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
                         this.setMirrorNetwork(MirrorNetwork.TESTNET);
+                        this._network._ledgerId = "1";
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
+                        this._network._ledgerId = "2";
                         break;
 
                     default:
@@ -238,12 +241,15 @@ export default class NodeClient extends Client {
             switch (network) {
                 case "previewnet":
                     this._network.setNetwork(Network.PREVIEWNET);
+                    this._network._ledgerId = "2";
                     break;
                 case "testnet":
                     this._network.setNetwork(Network.TESTNET);
+                    this._network._ledgerId = "1";
                     break;
                 case "mainnet":
                     this._network.setNetwork(Network.MAINNET);
+                    this._network._ledgerId = "0";
             }
         } else {
             this._network.setNetwork(network);
