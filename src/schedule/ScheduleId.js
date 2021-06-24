@@ -65,14 +65,16 @@ export default class ScheduleId {
     /**
      * @internal
      * @param {proto.IScheduleID} id
+     * @param {(string | null)=} networkName
      * @returns {ScheduleId}
      */
-    static _fromProtobuf(id) {
-        return new ScheduleId({
-            shard: id.shardNum != null ? id.shardNum : 0,
-            realm: id.realmNum != null ? id.realmNum : 0,
-            num: id.scheduleNum != null ? id.scheduleNum : 0,
-        });
+    static _fromProtobuf(id, networkName) {
+        return new ScheduleId(
+            id.shardNum != null ? id.shardNum : 0,
+            id.realmNum != null ? id.realmNum : 0,
+            id.scheduleNum != null ? id.scheduleNum : 0,
+            networkName != null ? networkName : networkName
+        );
     }
 
     /**

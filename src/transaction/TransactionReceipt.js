@@ -155,9 +155,10 @@ export default class TransactionReceipt {
     /**
      * @internal
      * @param {proto.ITransactionReceipt} receipt
+     * @param {(string | null)=} networkName
      * @returns {TransactionReceipt}
      */
-    static _fromProtobuf(receipt) {
+    static _fromProtobuf(receipt, networkName) {
         const exchangeRateSet = /** @type {proto.IExchangeRateSet} */ (
             receipt.exchangeRate
         );
@@ -169,32 +170,32 @@ export default class TransactionReceipt {
 
             accountId:
                 receipt.accountID != null
-                    ? AccountId._fromProtobuf(receipt.accountID)
+                    ? AccountId._fromProtobuf(receipt.accountID, networkName)
                     : null,
 
             fileId:
                 receipt.fileID != null
-                    ? FileId._fromProtobuf(receipt.fileID)
+                    ? FileId._fromProtobuf(receipt.fileID, networkName)
                     : null,
 
             contractId:
                 receipt.contractID != null
-                    ? ContractId._fromProtobuf(receipt.contractID)
+                    ? ContractId._fromProtobuf(receipt.contractID, networkName)
                     : null,
 
             topicId:
                 receipt.topicID != null
-                    ? TopicId._fromProtobuf(receipt.topicID)
+                    ? TopicId._fromProtobuf(receipt.topicID, networkName)
                     : null,
 
             tokenId:
                 receipt.tokenID != null
-                    ? TokenId._fromProtobuf(receipt.tokenID)
+                    ? TokenId._fromProtobuf(receipt.tokenID, networkName)
                     : null,
 
             scheduleId:
                 receipt.scheduleID != null
-                    ? ScheduleId._fromProtobuf(receipt.scheduleID)
+                    ? ScheduleId._fromProtobuf(receipt.scheduleID, networkName)
                     : null,
 
             exchangeRate:
@@ -221,7 +222,8 @@ export default class TransactionReceipt {
             scheduledTransactionId:
                 receipt.scheduledTransactionID != null
                     ? TransactionId._fromProtobuf(
-                          receipt.scheduledTransactionID
+                          receipt.scheduledTransactionID,
+                          networkName
                       )
                     : null,
         });
@@ -233,7 +235,8 @@ export default class TransactionReceipt {
      */
     static fromBytes(bytes) {
         return TransactionReceipt._fromProtobuf(
-            proto.TransactionReceipt.decode(bytes)
+            proto.TransactionReceipt.decode(bytes),
+            null
         );
     }
 

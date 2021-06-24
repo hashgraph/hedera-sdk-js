@@ -65,14 +65,16 @@ export default class TokenId {
     /**
      * @internal
      * @param {proto.ITokenID} id
+     * @param {(string | null)=} networkName
      * @returns {TokenId}
      */
-    static _fromProtobuf(id) {
-        return new TokenId({
-            shard: id.shardNum != null ? id.shardNum : 0,
-            realm: id.realmNum != null ? id.realmNum : 0,
-            num: id.tokenNum != null ? id.tokenNum : 0,
-        });
+    static _fromProtobuf(id, networkName) {
+        return new TokenId(
+            id.shardNum != null ? id.shardNum : 0,
+            id.realmNum != null ? id.realmNum : 0,
+            id.tokenNum != null ? id.tokenNum : 0,
+            networkName
+        );
     }
 
     /**

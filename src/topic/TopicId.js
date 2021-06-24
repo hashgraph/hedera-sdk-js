@@ -67,14 +67,16 @@ export default class TopicId {
 
     /**
      * @param {proto.ITopicID} id
+     * @param {(string | null)=} networkName
      * @returns {TopicId}
      */
-    static _fromProtobuf(id) {
-        return new TopicId({
-            shard: id.shardNum != null ? id.shardNum : 0,
-            realm: id.realmNum != null ? id.realmNum : 0,
-            num: id.topicNum != null ? id.topicNum : 0,
-        });
+    static _fromProtobuf(id, networkName) {
+        return new TopicId(
+            id.shardNum != null ? id.shardNum : 0,
+            id.realmNum != null ? id.realmNum : 0,
+            id.topicNum != null ? id.topicNum : 0,
+            networkName
+        );
     }
 
     /**

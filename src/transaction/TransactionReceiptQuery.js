@@ -154,10 +154,11 @@ export default class TransactionReceiptQuery extends Query {
      * @internal
      * @param {proto.IQuery} request
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, nodeAccountId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -198,7 +199,8 @@ export default class TransactionReceiptQuery extends Query {
             transactionReceipt: TransactionReceipt._fromProtobuf(
                 /** @type {proto.ITransactionReceipt} */ (
                     response.transactionGetReceipt
-                )
+                ),
+                nodeAccountId._networkName
             ),
         });
     }
@@ -260,7 +262,12 @@ export default class TransactionReceiptQuery extends Query {
             transactionGetReceipt.receipt
         );
 
-        return Promise.resolve(TransactionReceipt._fromProtobuf(receipt));
+        return Promise.resolve(
+            TransactionReceipt._fromProtobuf(
+                receipt,
+                nodeAccountId._networkName
+            )
+        );
     }
 
     /**
