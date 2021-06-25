@@ -23,6 +23,7 @@ import Duration from "../Duration.js";
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
@@ -303,6 +304,15 @@ export default class AccountCreateTransaction extends Transaction {
         this._accountMemo = memo;
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._proxyAccountId != null) {
+            this._proxyAccountId.validate(client);
+        }
     }
 
     /**

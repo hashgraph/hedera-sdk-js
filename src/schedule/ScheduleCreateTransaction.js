@@ -217,6 +217,15 @@ export default class ScheduleCreateTransaction extends Transaction {
     }
 
     /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._payerAccountId != null) {
+            this._payerAccountId.validate(client);
+        }
+    }
+
+    /**
      * @override
      * @internal
      * @param {Channel} channel

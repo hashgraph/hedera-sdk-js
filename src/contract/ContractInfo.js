@@ -125,24 +125,29 @@ export default class ContractInfo {
     /**
      * @internal
      * @param {proto.IContractInfo} info
+     * @param {(string | null)=} ledgerId
      * @returns {ContractInfo}
      */
-    static _fromProtobuf(info) {
+    static _fromProtobuf(info, ledgerId) {
         const autoRenewPeriod = /** @type {Long | number} */ (
             /** @type {proto.IDuration} */ (info.autoRenewPeriod).seconds
         );
 
         return new ContractInfo({
             contractId: ContractId._fromProtobuf(
-                /** @type {proto.IContractID} */ (info.contractID)
+                /** @type {proto.IContractID} */ (info.contractID),
+                ledgerId
             ),
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (info.accountID)
+                /** @type {proto.IAccountID} */ (info.accountID),
+                ledgerId
             ),
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : "",
             adminKey:
-                info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
+                info.adminKey != null
+                    ? keyFromProtobuf(info.adminKey, ledgerId)
+                    : null,
             expirationTime: Timestamp._fromProtobuf(
                 /** @type {proto.ITimestamp} */ (info.expirationTime)
             ),
@@ -157,7 +162,8 @@ export default class ContractInfo {
             balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),
             isDeleted: /** @type {boolean} */ (info.deleted),
             tokenRelationships: TokenRelationshipMap._fromProtobuf(
-                info.tokenRelationships != null ? info.tokenRelationships : []
+                info.tokenRelationships != null ? info.tokenRelationships : [],
+                ledgerId
             ),
         });
     }

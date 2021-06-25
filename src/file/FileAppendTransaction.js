@@ -21,6 +21,7 @@ import Timestamp from "../Timestamp.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
  * @typedef {import("../schedule/ScheduleCreateTransaction.js").default} ScheduleCreateTransaction
@@ -197,7 +198,7 @@ export default class FileAppendTransaction extends Transaction {
         this._fileId =
             typeof fileId === "string"
                 ? FileId.fromString(fileId)
-                : FileId._fromProtobuf(fileId._toProtobuf());
+                : fileId.clone();
 
         return this;
     }
@@ -371,6 +372,15 @@ export default class FileAppendTransaction extends Transaction {
         }
 
         return responses;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._fileId != null) {
+            this._fileId.validate(client);
+        }
     }
 
     /**

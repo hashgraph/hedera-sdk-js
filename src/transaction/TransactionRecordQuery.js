@@ -23,6 +23,8 @@ import { ResponseType, ResponseCodeEnum } from "@hashgraph/proto";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -74,11 +76,15 @@ export default class TransactionRecordQuery extends Query {
     /**
      * Set the transaction ID for which the record is being requested.
      *
-     * @param {TransactionId} transactionId
+     * @param {TransactionId | string} transactionId
      * @returns {TransactionRecordQuery}
      */
     setTransactionId(transactionId) {
-        this._transactionId = transactionId;
+        this._transactionId =
+            typeof transactionId === "string"
+                ? TransactionId.fromString(transactionId)
+                : transactionId.clone();
+
         return this;
     }
 
@@ -157,10 +163,11 @@ export default class TransactionRecordQuery extends Query {
      * @internal
      * @param {proto.IQuery} request
      * @param {proto.IResponse} response
+     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, ledgerId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -201,8 +208,23 @@ export default class TransactionRecordQuery extends Query {
         return new ReceiptStatusError({
             status,
             transactionId: this._getTransactionId(),
-            transactionReceipt: TransactionReceipt._fromProtobuf(receipt),
+            transactionReceipt: TransactionReceipt._fromProtobuf(
+                receipt,
+                ledgerId
+            ),
         });
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (
+            this._transactionId != null &&
+            this._transactionId.accountId != null
+        ) {
+            this._transactionId.accountId.validate(client);
+        }
     }
 
     /**
@@ -235,12 +257,15 @@ export default class TransactionRecordQuery extends Query {
 
     /**
      * @override
-     * @override
      * @internal
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TransactionRecord>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const record = /** @type {proto.ITransactionGetRecordResponse} */ (
             response.transactionGetRecord
         );
@@ -249,7 +274,8 @@ export default class TransactionRecordQuery extends Query {
             TransactionRecord._fromProtobuf(
                 /** @type {proto.ITransactionRecord} */ (
                     record.transactionRecord
-                )
+                ),
+                ledgerId
             )
         );
     }

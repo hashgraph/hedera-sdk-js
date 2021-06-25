@@ -36,6 +36,7 @@ import Transaction, {
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  * @typedef {import("../account/AccountId.js").default} AccountId
@@ -116,9 +117,18 @@ export default class ScheduleSignTransaction extends Transaction {
         this._scheduleId =
             typeof scheduleId === "string"
                 ? ScheduleId.fromString(scheduleId)
-                : ScheduleId._fromProtobuf(scheduleId._toProtobuf());
+                : scheduleId.clone();
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._scheduleId != null) {
+            this._scheduleId.validate(client);
+        }
     }
 
     /**

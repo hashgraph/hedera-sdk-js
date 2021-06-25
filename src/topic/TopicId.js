@@ -3,6 +3,7 @@ import { TopicID as ProtoTopicID } from "@hashgraph/proto";
 
 /**
  * @typedef {import("long").Long} Long
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -15,20 +16,21 @@ import { TopicID as ProtoTopicID } from "@hashgraph/proto";
  */
 export default class TopicId {
     /**
-     * @param {number | Long | import("../EntityIdHelper.js").IEntityId} props
+     * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
      */
     constructor(props, realm, num) {
-        const [shard_num, realm_num, topic_num] = entity_id.constructor(
-            props,
-            realm,
-            num
-        );
+        const result = entity_id.constructor(props, realm, num);
 
-        this.shard = shard_num;
-        this.realm = realm_num;
-        this.num = topic_num;
+        this.shard = result.shard;
+        this.realm = result.realm;
+        this.num = result.num;
+
+        /**
+         * @type {string | null}
+         */
+        this._checksum = null;
     }
 
     /**
@@ -36,19 +38,68 @@ export default class TopicId {
      * @returns {TopicId}
      */
     static fromString(text) {
-        return new TopicId(...entity_id.fromString(text));
+        const result = entity_id.fromString(text);
+        const id = new TopicId(result);
+        id._checksum = result.checksum;
+        return id;
     }
 
     /**
+     * @internal
      * @param {proto.ITopicID} id
+     * @param {(string | null)=} ledgerId
      * @returns {TopicId}
      */
-    static _fromProtobuf(id) {
-        return new TopicId({
-            shard: id.shardNum != null ? id.shardNum : 0,
-            realm: id.realmNum != null ? id.realmNum : 0,
-            num: id.topicNum != null ? id.topicNum : 0,
-        });
+    static _fromProtobuf(id, ledgerId) {
+        const topicId = new TopicId(
+            id.shardNum != null ? id.shardNum : 0,
+            id.realmNum != null ? id.realmNum : 0,
+            id.topicNum != null ? id.topicNum : 0
+        );
+
+        if (ledgerId != null) {
+            topicId._setNetwork(ledgerId);
+        }
+
+        return topicId;
+    }
+
+    /**
+     * @internal
+     * @param {Client} client
+     */
+    _setNetworkWith(client) {
+        if (client._network._ledgerId != null) {
+            this._setNetwork(client._network._ledgerId);
+        }
+    }
+
+    /**
+     * @internal
+     * @param {string} ledgerId
+     */
+    _setNetwork(ledgerId) {
+        this._checksum = entity_id._checksum(
+            ledgerId,
+            `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`
+        );
+    }
+
+    /**
+     * @param {Client} client
+     */
+    validate(client) {
+        if (
+            client._network._ledgerId != null &&
+            this._checksum != null &&
+            this._checksum !=
+                entity_id._checksum(
+                    client._network._ledgerId,
+                    `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`
+                )
+        ) {
+            throw new Error("Entity ID is for a different network than client");
+        }
     }
 
     /**
@@ -76,7 +127,13 @@ export default class TopicId {
      * @returns {string}
      */
     toString() {
-        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
+        if (this._checksum == null) {
+            return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
+        } else {
+            return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}-${
+                this._checksum
+            }`;
+        }
     }
 
     /**
@@ -84,5 +141,14 @@ export default class TopicId {
      */
     toBytes() {
         return ProtoTopicID.encode(this._toProtobuf()).finish();
+    }
+
+    /**
+     * @returns {TopicId}
+     */
+    clone() {
+        const id = new TopicId(this);
+        id._checksum = this._checksum;
+        return id;
     }
 }

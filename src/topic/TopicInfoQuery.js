@@ -15,6 +15,8 @@ import Hbar from "../Hbar.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -76,7 +78,7 @@ export default class TopicInfoQuery extends Query {
         this._topicId =
             typeof topicId === "string"
                 ? TopicId.fromString(topicId)
-                : TopicId._fromProtobuf(topicId._toProtobuf());
+                : topicId.clone();
 
         return this;
     }
@@ -93,6 +95,15 @@ export default class TopicInfoQuery extends Query {
             return cost;
         } else {
             return Hbar.fromTinybars(25);
+        }
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._topicId != null) {
+            this._topicId.validate(client);
         }
     }
 
@@ -127,14 +138,19 @@ export default class TopicInfoQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TopicInfo>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         return Promise.resolve(
             TopicInfo._fromProtobuf(
                 /** @type {proto.IConsensusGetTopicInfoResponse} */ (
                     response.consensusGetTopicInfo
-                )
+                ),
+                ledgerId
             )
         );
     }

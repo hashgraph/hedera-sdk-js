@@ -17,6 +17,8 @@ import Long from "long";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -125,7 +127,7 @@ export default class ContractCallQuery extends Query {
         this._contractId =
             typeof contractId === "string"
                 ? ContractId.fromString(contractId)
-                : ContractId._fromProtobuf(contractId._toProtobuf());
+                : contractId.clone();
 
         return this;
     }
@@ -183,6 +185,15 @@ export default class ContractCallQuery extends Query {
         this._maxResultSize =
             size instanceof Long ? size : Long.fromValue(size);
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._contractId != null) {
+            this._contractId.validate(client);
+        }
     }
 
     /**

@@ -23,6 +23,7 @@ import Long from "long";
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
@@ -150,7 +151,7 @@ export default class ContractExecuteTransaction extends Transaction {
         this._contractId =
             typeof contractId === "string"
                 ? ContractId.fromString(contractId)
-                : ContractId._fromProtobuf(contractId._toProtobuf());
+                : contractId.clone();
 
         return this;
     }
@@ -223,6 +224,15 @@ export default class ContractExecuteTransaction extends Transaction {
                 : new ContractFunctionParameters()._build(name);
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._contractId != null) {
+            this._contractId.validate(client);
+        }
     }
 
     /**

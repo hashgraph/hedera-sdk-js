@@ -41,6 +41,7 @@ import AccountId from "../account/AccountId.js";
  * @typedef {import("@hashgraph/cryptography").PrivateKey} PrivateKey
  * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 // 90 days (in seconds)
@@ -604,6 +605,10 @@ export default class Transaction extends Executable {
             );
         }
 
+        if (client != null && this._transactionIds[0].accountId != null) {
+            this._transactionIds[0].accountId.validate(client);
+        }
+
         if (this._nodeIds.length > 0) {
             // Do nothing
         } else if (client != null) {
@@ -670,6 +675,14 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * @param {Client} client
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
+    _validateIdNetworks(client) {
+        // Do nothing
+    }
+
+    /**
      * @override
      * @protected
      * @param {import("../client/Client.js").default<Channel, *>} client
@@ -678,6 +691,10 @@ export default class Transaction extends Executable {
     async _beforeExecute(client) {
         if (!this._isFrozen()) {
             this.freezeWith(client);
+        }
+
+        if (client._operator != null) {
+            this._validateIdNetworks(client);
         }
 
         // on execute, sign each transaction with the operator, if present
@@ -756,10 +773,11 @@ export default class Transaction extends Executable {
      * @internal
      * @param {proto.ITransaction} request
      * @param {proto.ITransactionResponse} response
+     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, ledgerId) {
         const { nodeTransactionPrecheckCode } = response;
 
         const status = Status._fromCode(

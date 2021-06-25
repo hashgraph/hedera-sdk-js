@@ -15,6 +15,7 @@ import TransactionRecord from "../transaction/TransactionRecord.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -77,9 +78,18 @@ export default class AccountRecordsQuery extends Query {
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
-                : AccountId._fromProtobuf(accountId._toProtobuf());
+                : accountId.clone();
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._accountId != null) {
+            this._accountId.validate(client);
+        }
     }
 
     /**
@@ -113,9 +123,13 @@ export default class AccountRecordsQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TransactionRecord[]>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const cryptoGetAccountRecords =
             /** @type {proto.ICryptoGetAccountRecordsResponse} */ (
                 response.cryptoGetAccountRecords
@@ -125,7 +139,9 @@ export default class AccountRecordsQuery extends Query {
         );
 
         return Promise.resolve(
-            records.map((record) => TransactionRecord._fromProtobuf(record))
+            records.map((record) =>
+                TransactionRecord._fromProtobuf(record, ledgerId)
+            )
         );
     }
 

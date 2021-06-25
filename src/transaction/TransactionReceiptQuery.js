@@ -22,6 +22,7 @@ import { ResponseCodeEnum } from "@hashgraph/proto";
 /**
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -80,7 +81,7 @@ export default class TransactionReceiptQuery extends Query {
         this._transactionId =
             typeof transactionId === "string"
                 ? TransactionId.fromString(transactionId)
-                : TransactionId._fromProtobuf(transactionId._toProtobuf());
+                : transactionId.clone();
 
         return this;
     }
@@ -153,10 +154,11 @@ export default class TransactionReceiptQuery extends Query {
      * @internal
      * @param {proto.IQuery} request
      * @param {proto.IResponse} response
+     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response) {
+    _mapStatusError(request, response, ledgerId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -197,9 +199,22 @@ export default class TransactionReceiptQuery extends Query {
             transactionReceipt: TransactionReceipt._fromProtobuf(
                 /** @type {proto.ITransactionReceipt} */ (
                     response.transactionGetReceipt
-                )
+                ),
+                ledgerId
             ),
         });
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (
+            this._transactionId != null &&
+            this._transactionId.accountId != null
+        ) {
+            this._transactionId.accountId.validate(client);
+        }
     }
 
     /**
@@ -235,10 +250,11 @@ export default class TransactionReceiptQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TransactionReceipt>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const transactionGetReceipt =
             /** @type {proto.ITransactionGetReceiptResponse} */ (
                 response.transactionGetReceipt
@@ -247,7 +263,9 @@ export default class TransactionReceiptQuery extends Query {
             transactionGetReceipt.receipt
         );
 
-        return Promise.resolve(TransactionReceipt._fromProtobuf(receipt));
+        return Promise.resolve(
+            TransactionReceipt._fromProtobuf(receipt, ledgerId)
+        );
     }
 
     /**

@@ -19,6 +19,7 @@ import Duration from "../Duration.js";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -183,7 +184,7 @@ export default class TopicUpdateTransaction extends Transaction {
         this._topicId =
             typeof topicId === "string"
                 ? TopicId.fromString(topicId)
-                : TopicId._fromProtobuf(topicId._toProtobuf());
+                : topicId.clone();
 
         return this;
     }
@@ -334,6 +335,19 @@ export default class TopicUpdateTransaction extends Transaction {
                 : new Duration(autoRenewPeriod);
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._topicId != null) {
+            this._topicId.validate(client);
+        }
+
+        if (this._autoRenewAccountId != null) {
+            this._autoRenewAccountId.validate(client);
+        }
     }
 
     /**

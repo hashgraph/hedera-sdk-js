@@ -44,14 +44,16 @@ export default class LiveHash {
     /**
      * @internal
      * @param {proto.ILiveHash} liveHash
+     * @param {(string | null)=} ledgerId
      * @returns {LiveHash}
      */
-    static _fromProtobuf(liveHash) {
+    static _fromProtobuf(liveHash, ledgerId) {
         const liveHash_ = /** @type {proto.ILiveHash} */ (liveHash);
 
         return new LiveHash({
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (liveHash_.accountId)
+                /** @type {proto.IAccountID} */ (liveHash_.accountId),
+                ledgerId
             ),
             hash: liveHash_.hash != null ? liveHash_.hash : new Uint8Array(),
             keys:

@@ -34,6 +34,36 @@ describe("AccountId", function () {
         expect(accountId.shard.toNumber()).to.eql(10);
     });
 
+    it("should parse mainnet ID with checksum {0.0.123-vfmkw}", function () {
+        const accountId = AccountId.fromString("0.0.123-vfmkw");
+
+        expect(accountId.num.toNumber()).to.eql(123);
+        expect(accountId.realm.toNumber()).to.eql(0);
+        expect(accountId.shard.toNumber()).to.eql(0);
+
+        expect(accountId.toString()).to.be.eql("0.0.123-vfmkw");
+    });
+
+    it("should parse testnet ID with checksum {0.0.123-rmkyk}", function () {
+        const accountId = AccountId.fromString("0.0.123-rmkyk");
+
+        expect(accountId.num.toNumber()).to.eql(123);
+        expect(accountId.realm.toNumber()).to.eql(0);
+        expect(accountId.shard.toNumber()).to.eql(0);
+
+        expect(accountId.toString()).to.be.eql("0.0.123-rmkyk");
+    });
+
+    it("should parse previewnet ID with checksum {0.0.123-ntjly}", function () {
+        const accountId = AccountId.fromString("0.0.123-ntjly");
+
+        expect(accountId.num.toNumber()).to.eql(123);
+        expect(accountId.realm.toNumber()).to.eql(0);
+        expect(accountId.shard.toNumber()).to.eql(0);
+
+        expect(accountId.toString()).to.be.eql("0.0.123-ntjly");
+    });
+
     it("should parse 0.0.0", function () {
         const accountId = AccountId.fromString("0.0.0");
 
@@ -50,10 +80,6 @@ describe("AccountId", function () {
         expect(accountId.shard.toNumber()).to.eql(0);
     });
 
-    it("should stringify to {shard}.{realm}.{num}", function () {
-        expect(new AccountId(50, 150, 520).toString()).to.eql("50.150.520");
-    });
-
     it("should error with invalid string", function () {
         let err = false;
 
@@ -61,10 +87,6 @@ describe("AccountId", function () {
             AccountId.fromString("asdfasf");
         } catch {
             err = true;
-        }
-
-        if (!err) {
-            throw new Error("`AccountId.fromString()` did not error");
         }
 
         try {

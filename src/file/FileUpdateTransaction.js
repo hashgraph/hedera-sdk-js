@@ -20,6 +20,7 @@ import { KeyList } from "@hashgraph/cryptography";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
@@ -173,7 +174,7 @@ export default class FileUpdateTransaction extends Transaction {
         this._fileId =
             typeof fileId === "string"
                 ? FileId.fromString(fileId)
-                : FileId._fromProtobuf(fileId._toProtobuf());
+                : fileId.clone();
 
         return this;
     }
@@ -298,6 +299,15 @@ export default class FileUpdateTransaction extends Transaction {
         this._fileMemo = null;
 
         return this;
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateIdNetworks(client) {
+        if (this._fileId != null) {
+            this._fileId.validate(client);
+        }
     }
 
     /**

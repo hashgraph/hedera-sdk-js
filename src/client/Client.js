@@ -153,13 +153,17 @@ export default class Client {
      * @returns {this}
      */
     setOperatorWith(accountId, publicKey, transactionSigner) {
+        const accountId_ =
+            accountId instanceof AccountId
+                ? accountId
+                : AccountId.fromString(accountId);
+
+        accountId_.validate(this);
+
         this._operator = {
             transactionSigner,
 
-            accountId:
-                accountId instanceof AccountId
-                    ? accountId
-                    : AccountId.fromString(accountId),
+            accountId: accountId_,
 
             publicKey:
                 publicKey instanceof PublicKey
