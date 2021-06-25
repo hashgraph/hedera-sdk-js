@@ -4,14 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v2.0.23
 
 ### Added
 
+ * Added support for TLS on mirror node connections
+ * Implemented `*Id.clone()` (this is used internally to fix some issues that only surface in React Native)
+ * Implement `Timestamp.plusNanos()`
  * Added support for entity ID checksums. The network will be extracted from the checksum of the 
    entity ID and validated on each request to make sure a request is not happening on one network 
    while an entity ID references another network. Entity IDs with a network will print with a checksum
    while entity IDs without a checksum will not print the checksum part.
+
+### Fixed
+
+ * `TopicMessageQuery.starTime` not updating start time by one nanosecond causing a message to appear twice
+   if the connection reset
+ * `TopicMessageQuery` should log retries
+ * `TransactionReceipt` error handling; this should now throw an error contain the receipt
 
 ## v2.0.22
 
