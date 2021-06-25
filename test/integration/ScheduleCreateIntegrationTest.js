@@ -61,8 +61,6 @@ describe("ScheduleCreate", function () {
             .setAdminKey(operatorKey)
             .freezeWith(env.client);
 
-        const transactionId = scheduled.transactionId;
-
         const scheduleId = (
             await (await scheduled.execute(env.client)).getReceipt(env.client)
         ).scheduleId;
