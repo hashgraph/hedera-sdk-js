@@ -75,6 +75,9 @@ describe("ScheduleCreate", function () {
             info.scheduledTransaction
         );
 
+        // TODO: Remove when `ScheduleInfo.scheduledTransaction` works without serializing to bytes
+        transaction.topicId._checksum = null;
+
         expect(info.scheduleId.toString()).to.be.equal(scheduleId.toString());
         expect(infoTransaction.topicId.toString()).to.be.equal(
             transaction.topicId.toString()
@@ -96,14 +99,5 @@ describe("ScheduleCreate", function () {
         await new ScheduleInfoQuery()
             .setScheduleId(scheduleId)
             .execute(env.client);
-
-        console.log(
-            "https://previewnet.mirrornode.hedera.com/api/v1/transactions/" +
-                transactionId.accountId.toString() +
-                "-" +
-                transactionId.validStart.seconds.toString() +
-                "-" +
-                transactionId.validStart.nanos.toString()
-        );
     });
 });
