@@ -2,7 +2,6 @@ import AccountId from "./AccountId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -17,6 +16,7 @@ import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -153,11 +153,16 @@ export default class AccountDeleteTransaction extends Transaction {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        entity_id._validateIdNetworks(this._accountId, networkName);
-        entity_id._validateIdNetworks(this._transferAccountId, networkName);
+    _validateIdNetworks(client) {
+        if (this._accountId != null) {
+            this._accountId.validate(client);
+        }
+
+        if (this._transferAccountId != null) {
+            this._transferAccountId.validate(client);
+        }
     }
 
     /**

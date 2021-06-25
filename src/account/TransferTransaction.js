@@ -7,7 +7,6 @@ import Transaction, {
 import Long from "long";
 import TokenTransferMap from "./TokenTransferMap.js";
 import HbarTransferMap from "./HbarTransferMap.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../long.js").LongObject} LongObject
@@ -29,6 +28,7 @@ import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -217,20 +217,26 @@ export default class TransferTransaction extends Transaction {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
+    _validateIdNetworks(client) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [a, _] of this._hbarTransfers) {
-            entity_id._validateIdNetworks(a, networkName);
+            if (a != null) {
+                a.validate(client);
+            }
         }
 
         for (const [tokenId, transfers] of this._tokenTransfers) {
-            entity_id._validateIdNetworks(tokenId, networkName);
+            if (tokenId != null) {
+                tokenId.validate(client);
+            }
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             for (const [a, _] of transfers) {
-                entity_id._validateIdNetworks(a, networkName);
+                if (a != null) {
+                    a.validate(client);
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ import * as proto from "@hashgraph/proto";
 
 /**
  * @typedef {import("long").Long} Long
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -15,25 +16,18 @@ export default class ScheduleId {
      * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
-     * @param {(string | null)=} networkName
-     * @param {(string | null)=} checksum
      */
-    constructor(props, realm, num, networkName, checksum) {
-        const result = entity_id.constructor(
-            props,
-            realm,
-            num,
-            networkName,
-            checksum
-        );
+    constructor(props, realm, num) {
+        const result = entity_id.constructor(props, realm, num);
 
         this.shard = result.shard;
         this.realm = result.realm;
         this.num = result.num;
-        this._networkName = result.networkName;
-        this._checksum = result.checksum;
 
-        Object.freeze(this);
+        /**
+         * @type {string | null}
+         */
+        this._checksum = null;
     }
 
     /**
@@ -42,39 +36,67 @@ export default class ScheduleId {
      */
     static fromString(text) {
         const result = entity_id.fromString(text);
-        return new ScheduleId(
-            result.shard,
-            result.realm,
-            result.num,
-            result.networkName,
-            result.checksum
-        );
-    }
-
-    /**
-     * @param {number | Long | import("../EntityIdHelper").IEntityId} props
-     * @param {(number | Long)=} realm
-     * @param {(number | Long)=} num
-     * @param {(string | null)=} networkName
-     * @returns {ScheduleId}
-     */
-    static withNetwork(props, realm, num, networkName) {
-        return new ScheduleId(props, realm, num, networkName);
+        const id = new ScheduleId(result);
+        id._checksum = result.checksum;
+        return id;
     }
 
     /**
      * @internal
      * @param {proto.IScheduleID} id
-     * @param {(string | null)=} networkName
+     * @param {(string | null)=} ledgerId
      * @returns {ScheduleId}
      */
-    static _fromProtobuf(id, networkName) {
-        return new ScheduleId(
+    static _fromProtobuf(id, ledgerId) {
+        const scheduleId = new ScheduleId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
-            id.scheduleNum != null ? id.scheduleNum : 0,
-            networkName != null ? networkName : networkName
+            id.scheduleNum != null ? id.scheduleNum : 0
         );
+
+        if (ledgerId != null) {
+            scheduleId._setNetwork(ledgerId);
+        }
+
+        return scheduleId;
+    }
+
+    /**
+     * @internal
+     * @param {Client} client
+     */
+    _setNetworkWith(client) {
+        if (client._network._ledgerId != null) {
+            this._setNetwork(client._network._ledgerId);
+        }
+    }
+
+    /**
+     * @internal
+     * @param {string} ledgerId
+     */
+    _setNetwork(ledgerId) {
+        this._checksum = entity_id._checksum(
+            ledgerId,
+            `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`
+        );
+    }
+
+    /**
+     * @param {Client} client
+     */
+    validate(client) {
+        if (
+            client._network._ledgerId != null &&
+            this._checksum != null &&
+            this._checksum !=
+                entity_id._checksum(
+                    client._network._ledgerId,
+                    `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`
+                )
+        ) {
+            throw new Error("Entity ID is for a different network than client");
+        }
     }
 
     /**
@@ -131,12 +153,8 @@ export default class ScheduleId {
      * @returns {ScheduleId}
      */
     clone() {
-        return new ScheduleId(
-            this.shard,
-            this.realm,
-            this.num,
-            this._networkName,
-            this._checksum
-        );
+        const id = new ScheduleId(this);
+        id._checksum = this._checksum;
+        return id;
     }
 }

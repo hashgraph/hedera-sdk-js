@@ -110,11 +110,11 @@ export default class Executable {
      * @internal
      * @param {RequestT} request
      * @param {ResponseT} response
-     * @param {AccountId} nodeAccountId
+     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response, nodeAccountId) {
+    _mapStatusError(request, response, ledgerId) {
         throw new Error("not implemented");
     }
 
@@ -124,10 +124,11 @@ export default class Executable {
      * @param {ResponseT} response
      * @param {AccountId} nodeAccountId
      * @param {RequestT} request
+     * @param {string | null} ledgerId
      * @returns {Promise<OutputT>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         throw new Error("not implemented");
     }
 
@@ -255,12 +256,17 @@ export default class Executable {
                     await delayForAttempt(attempt);
                     continue;
                 case ExecutionState.Finished:
-                    return this._mapResponse(response, nodeAccountId, request);
+                    return this._mapResponse(
+                        response,
+                        nodeAccountId,
+                        request,
+                        client._network._ledgerId
+                    );
                 case ExecutionState.Error:
                     throw this._mapStatusError(
                         request,
                         response,
-                        nodeAccountId
+                        client._network._ledgerId
                     );
                 default:
                     throw new Error(

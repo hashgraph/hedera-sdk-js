@@ -49,12 +49,14 @@ export default class Transfer {
     /**
      * @internal
      * @param {proto.IAccountAmount} transfer
+     * @param {(string | null)=} ledgerId
      * @returns {Transfer}
      */
-    static _fromProtobuf(transfer) {
+    static _fromProtobuf(transfer, ledgerId) {
         return new Transfer({
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (transfer.accountID)
+                /** @type {proto.IAccountID} */ (transfer.accountID),
+                ledgerId
             ),
             amount: Hbar.fromTinybars(
                 transfer.amount != null ? transfer.amount : 0

@@ -2,7 +2,6 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TokenId from "./TokenId.js";
 import TokenInfo from "./TokenInfo.js";
 import Hbar from "../Hbar.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -17,6 +16,7 @@ import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
@@ -97,10 +97,12 @@ export default class TokenInfoQuery extends Query {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        entity_id._validateIdNetworks(this._tokenId, networkName);
+    _validateIdNetworks(client) {
+        if (this._tokenId != null) {
+            this._tokenId.validate(client);
+        }
     }
 
     /**
@@ -129,19 +131,23 @@ export default class TokenInfoQuery extends Query {
 
     /**
      * @override
-     * @override
      * @internal
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TokenInfo>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const info = /** @type {proto.ITokenGetInfoResponse} */ (
             response.tokenGetInfo
         );
 
         return Promise.resolve(
             TokenInfo._fromProtobuf(
-                /** @type {proto.ITokenInfo} */ (info.tokenInfo)
+                /** @type {proto.ITokenInfo} */ (info.tokenInfo),
+                ledgerId
             )
         );
     }

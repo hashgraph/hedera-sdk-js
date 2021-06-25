@@ -67,14 +67,16 @@ export default class FileInfo {
     /**
      * @internal
      * @param {proto.IFileInfo} info
+     * @param {(string | null)=} ledgerId
      * @returns {FileInfo}
      */
-    static _fromProtobuf(info) {
+    static _fromProtobuf(info, ledgerId) {
         const size = /** @type {Long | number} */ (info.size);
 
         return new FileInfo({
             fileId: FileId._fromProtobuf(
-                /** @type {proto.IFileID} */ (info.fileID)
+                /** @type {proto.IFileID} */ (info.fileID),
+                ledgerId
             ),
             size: size instanceof Long ? size : Long.fromValue(size),
             expirationTime: Timestamp._fromProtobuf(

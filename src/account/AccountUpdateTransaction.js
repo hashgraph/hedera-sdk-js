@@ -5,7 +5,6 @@ import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import AccountId from "./AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -21,6 +20,7 @@ import * as entity_id from "../EntityIdHelper.js";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -332,11 +332,16 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        entity_id._validateIdNetworks(this._accountId, networkName);
-        entity_id._validateIdNetworks(this._proxyAccountId, networkName);
+    _validateIdNetworks(client) {
+        if (this._accountId != null) {
+            this._accountId.validate(client);
+        }
+
+        if (this._proxyAccountId != null) {
+            this._proxyAccountId.validate(client);
+        }
     }
 
     /**

@@ -7,7 +7,6 @@ import PrecheckStatusError from "../PrecheckStatusError.js";
 import ReceiptStatusError from "../ReceiptStatusError.js";
 import { ExecutionState } from "../Executable.js";
 import { ResponseType, ResponseCodeEnum } from "@hashgraph/proto";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -24,6 +23,7 @@ import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
@@ -163,11 +163,11 @@ export default class TransactionRecordQuery extends Query {
      * @internal
      * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @param {AccountId} nodeAccountId
+     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response, nodeAccountId) {
+    _mapStatusError(request, response, ledgerId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -210,20 +210,20 @@ export default class TransactionRecordQuery extends Query {
             transactionId: this._getTransactionId(),
             transactionReceipt: TransactionReceipt._fromProtobuf(
                 receipt,
-                nodeAccountId._networkName
+                ledgerId
             ),
         });
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        if (this._transactionId != null) {
-            entity_id._validateIdNetworks(
-                this._transactionId.accountId,
-                networkName
-            );
+    _validateIdNetworks(client) {
+        if (
+            this._transactionId != null &&
+            this._transactionId.accountId != null
+        ) {
+            this._transactionId.accountId.validate(client);
         }
     }
 
@@ -257,12 +257,15 @@ export default class TransactionRecordQuery extends Query {
 
     /**
      * @override
-     * @override
      * @internal
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TransactionRecord>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const record = /** @type {proto.ITransactionGetRecordResponse} */ (
             response.transactionGetRecord
         );
@@ -271,7 +274,8 @@ export default class TransactionRecordQuery extends Query {
             TransactionRecord._fromProtobuf(
                 /** @type {proto.ITransactionRecord} */ (
                     record.transactionRecord
-                )
+                ),
+                ledgerId
             )
         );
     }

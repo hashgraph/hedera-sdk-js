@@ -155,10 +155,10 @@ export default class TransactionReceipt {
     /**
      * @internal
      * @param {proto.ITransactionReceipt} receipt
-     * @param {(string | null)=} networkName
+     * @param {(string | null)=} ledgerId
      * @returns {TransactionReceipt}
      */
-    static _fromProtobuf(receipt, networkName) {
+    static _fromProtobuf(receipt, ledgerId) {
         const exchangeRateSet = /** @type {proto.IExchangeRateSet} */ (
             receipt.exchangeRate
         );
@@ -170,32 +170,32 @@ export default class TransactionReceipt {
 
             accountId:
                 receipt.accountID != null
-                    ? AccountId._fromProtobuf(receipt.accountID, networkName)
+                    ? AccountId._fromProtobuf(receipt.accountID, ledgerId)
                     : null,
 
             fileId:
                 receipt.fileID != null
-                    ? FileId._fromProtobuf(receipt.fileID, networkName)
+                    ? FileId._fromProtobuf(receipt.fileID, ledgerId)
                     : null,
 
             contractId:
                 receipt.contractID != null
-                    ? ContractId._fromProtobuf(receipt.contractID, networkName)
+                    ? ContractId._fromProtobuf(receipt.contractID, ledgerId)
                     : null,
 
             topicId:
                 receipt.topicID != null
-                    ? TopicId._fromProtobuf(receipt.topicID, networkName)
+                    ? TopicId._fromProtobuf(receipt.topicID, ledgerId)
                     : null,
 
             tokenId:
                 receipt.tokenID != null
-                    ? TokenId._fromProtobuf(receipt.tokenID, networkName)
+                    ? TokenId._fromProtobuf(receipt.tokenID, ledgerId)
                     : null,
 
             scheduleId:
                 receipt.scheduleID != null
-                    ? ScheduleId._fromProtobuf(receipt.scheduleID, networkName)
+                    ? ScheduleId._fromProtobuf(receipt.scheduleID, ledgerId)
                     : null,
 
             exchangeRate:
@@ -223,7 +223,7 @@ export default class TransactionReceipt {
                 receipt.scheduledTransactionID != null
                     ? TransactionId._fromProtobuf(
                           receipt.scheduledTransactionID,
-                          networkName
+                          ledgerId
                       )
                     : null,
         });

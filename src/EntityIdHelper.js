@@ -1,10 +1,5 @@
 import Long from "long";
 import * as hex from "./encoding/hex.js";
-import {
-    _networkNameToLedgerId,
-    _networkIds,
-    _ledgerIdToNetworkName,
-} from "./NetworkName.js";
 
 /**
  * @typedef {object} IEntityId
@@ -18,49 +13,38 @@ import {
  * @property {Long} shard
  * @property {Long} realm
  * @property {Long} num
- * @property {string | null} networkName
- * @property {string | null} checksum
  */
 
 /**
+ * @typedef {object} IEntityIdResultWithChecksum
+ * @property {Long} shard
+ * @property {Long} realm
+ * @property {Long} num
+ * @property {string | null} checksum
+ */
+
+const regex = RegExp(
+    "^(0|(?:[1-9]\\d*))\\.(0|(?:[1-9]\\d*))\\.(0|(?:[1-9]\\d*))(?:-([a-z]{5}))?$"
+);
+
+/**
  * @param {number | Long | IEntityId} props
- * @param {(number | null | Long)=} realmOrNetworkName
- * @param {(number | null | Long)=} numOrChecksum
- * @param {(string | null)=} networkName
- * @param {(string | null)=} checksum
+ * @param {(number | null | Long)=} realm
+ * @param {(number | null | Long)=} num
  * @returns {IEntityIdResult}
  */
-export function constructor(
-    props,
-    realmOrNetworkName,
-    numOrChecksum,
-    networkName,
-    checksum
-) {
+export function constructor(props, realm, num) {
     let shard_ = Long.ZERO;
     let realm_ = Long.ZERO;
     let num_ = Long.ZERO;
 
-    let networkName_ =
-        typeof realmOrNetworkName === "string"
-            ? realmOrNetworkName
-            : networkName;
-    let checksum_ =
-        typeof numOrChecksum === "string" ? numOrChecksum : checksum;
-
     if (typeof props === "number" || Long.isLong(props)) {
-        if (
-            realmOrNetworkName == null ||
-            typeof realmOrNetworkName === "string"
-        ) {
+        if (realm == null || typeof realm === "string") {
             num_ = Long.fromValue(props);
         } else {
             shard_ = Long.fromValue(props);
-            realm_ = Long.fromValue(realmOrNetworkName);
-            num_ =
-                numOrChecksum != null
-                    ? Long.fromValue(numOrChecksum)
-                    : Long.ZERO;
+            realm_ = Long.fromValue(realm);
+            num_ = num != null ? Long.fromValue(num) : Long.ZERO;
         }
     } else {
         shard_ = Long.fromValue(props.shard != null ? props.shard : 0);
@@ -72,29 +56,10 @@ export function constructor(
         throw new Error("negative numbers are not allowed in IDs");
     }
 
-    const addr = `${shard_.toInt()}.${realm_.toInt()}.${num_.toInt()}`;
-
-    if (networkName_ != null && checksum_ == null) {
-        checksum_ = _checksum(_networkNameToLedgerId(networkName_), addr);
-    } else if (networkName_ == null && checksum_ != null) {
-        for (const network of _networkIds) {
-            if (checksum_ == _checksum(network, addr)) {
-                networkName_ = _ledgerIdToNetworkName(network);
-                break;
-            }
-        }
-
-        if (networkName_ == null) {
-            throw new Error("Unrecognized network for entity ID checksum");
-        }
-    }
-
     return {
         shard: shard_,
         realm: realm_,
         num: num_,
-        networkName: networkName_ != null ? networkName_ : null,
-        checksum: checksum_ != null ? checksum_ : null,
     };
 }
 
@@ -112,53 +77,45 @@ export function constructor(
 
 /**
  * @param {string} text
- * @returns {IEntityIdResult}
+ * @returns {IEntityIdResultWithChecksum}
  */
 export function fromString(text) {
-    if (!text.includes(".")) {
-        text = `0.0.${text}`;
-    }
+    const [id, checksum] = text.split("-");
+    const parts = id.split(".");
 
-    let result;
-    let networkName = null;
-    for (const network of _networkIds) {
-        const address = _parseAddress(network, text);
-
-        switch (address.status) {
-            case 0: // Syntax error
-                throw new Error(
-                    "Invalid ID: format should look like 0.0.123 or 0.0.123-vfmkw"
-                );
-            case 1: // An invalid with-checksum address
-                continue;
-            case 2: // A valid no-checksum address
-                result = address;
-                result.correctChecksum = undefined;
-                break;
-            case 3: // A valid with-checksum address
-                result = address;
-                networkName = _ledgerIdToNetworkName(network);
-                break;
+    for (const part of parts) {
+        if (part === "") {
+            throw new Error("invalid format for entity ID");
         }
     }
 
-    if (result == null) {
-        throw new Error("Unrecognized network on entity ID");
+    const components = parts.map(Number);
+
+    for (const component of components) {
+        if (Number.isNaN(component)) {
+            throw new Error("invalid format for entity ID");
+        }
     }
 
-    if (result.num1 == null || result.num2 == null || result.num3 == null) {
-        throw new Error(
-            "(BUG) entity ID parseAddress incorrectly parsing address"
-        );
+    let shard = Long.ZERO;
+    let realm = Long.ZERO;
+    let num;
+
+    if (components.length === 1) {
+        num = Long.fromNumber(components[0]);
+    } else if (components.length === 3) {
+        shard = Long.fromNumber(components[0]);
+        realm = Long.fromNumber(components[1]);
+        num = Long.fromNumber(components[2]);
+    } else {
+        throw new Error("invalid format for entity ID");
     }
 
     return {
-        shard: result.num1,
-        realm: result.num2,
-        num: result.num3,
-        networkName,
-        checksum:
-            result.correctChecksum != null ? result.correctChecksum : null,
+        shard,
+        realm,
+        num,
+        checksum,
     };
 }
 
@@ -181,24 +138,6 @@ export function fromSolidityAddress(address) {
     const num = Long.fromBytesBE(Array.from(addr.slice(12, 20)));
 
     return [shard, realm, num];
-}
-
-/**
- * @param {{ _networkName: string | null } | null} left
- * @param {{ _networkName: string | null } | null} right
- */
-export function _validateIdNetworks(left, right) {
-    if (
-        left != null &&
-        right != null &&
-        left._networkName != null &&
-        right._networkName != null &&
-        left._networkName !== right._networkName
-    ) {
-        throw new Error(
-            "Network mismatch; some IDs have different networks set"
-        );
-    }
 }
 
 // /**
@@ -243,10 +182,7 @@ export function _validateIdNetworks(left, right) {
  * @returns {ParseAddressResult}
  */
 export function _parseAddress(ledgerId, addr) {
-    const regex1 = RegExp(
-        "^(0|(?:[1-9]\\d*))\\.(0|(?:[1-9]\\d*))\\.(0|(?:[1-9]\\d*))(?:-([a-z]{5}))?$"
-    );
-    let match = regex1.exec(addr);
+    let match = regex.exec(addr);
     if (match === null) {
         let result = { status: 0 }; // When status == 0, the rest of the fields should be ignored
         return result;
@@ -279,7 +215,7 @@ export function _parseAddress(ledgerId, addr) {
  * @param {string} addr
  * @returns {string}
  */
-function _checksum(ledgerId, addr) {
+export function _checksum(ledgerId, addr) {
     let answer = "";
     let d = []; // Digits with 10 for ".", so if addr == "0.0.123" then d == [0, 10, 0, 10, 1, 2, 3]
     let s0 = 0; // Sum of even positions (mod 11)

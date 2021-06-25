@@ -2,7 +2,6 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import ContractId from "./ContractId.js";
 import ContractInfo from "./ContractInfo.js";
 import Hbar from "../Hbar.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -17,6 +16,7 @@ import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
@@ -82,10 +82,12 @@ export default class ContractInfoQuery extends Query {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        entity_id._validateIdNetworks(this._contractId, networkName);
+    _validateIdNetworks(client) {
+        if (this._contractId != null) {
+            this._contractId.validate(client);
+        }
     }
 
     /**
@@ -131,16 +133,21 @@ export default class ContractInfoQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<ContractInfo>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const info = /** @type {proto.IContractGetInfoResponse} */ (
             response.contractGetInfo
         );
 
         return Promise.resolve(
             ContractInfo._fromProtobuf(
-                /** @type {proto.IContractInfo} */ (info.contractInfo)
+                /** @type {proto.IContractInfo} */ (info.contractInfo),
+                ledgerId
             )
         );
     }

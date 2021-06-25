@@ -64,30 +64,6 @@ describe("AccountId", function () {
         expect(accountId.toString()).to.be.eql("0.0.123-ntjly");
     });
 
-    it("should generate checksum", function () {
-        const accountId = AccountId.withNetwork(123, "mainnet");
-
-        expect(accountId.num.toNumber()).to.eql(123);
-        expect(accountId.realm.toNumber()).to.eql(0);
-        expect(accountId.shard.toNumber()).to.eql(0);
-
-        expect(accountId.toString()).to.be.eql("0.0.123-vfmkw");
-    });
-
-    it("should parse previewnet ID with checksum {0.0.123-ghaha}", function () {
-        let err = false;
-
-        try {
-            AccountId.fromString("0.0.123-ghaha");
-        } catch {
-            err = true;
-        }
-
-        if (!err) {
-            throw new Error("entity parsing did not err");
-        }
-    });
-
     it("should parse 0.0.0", function () {
         const accountId = AccountId.fromString("0.0.0");
 
@@ -111,16 +87,6 @@ describe("AccountId", function () {
             AccountId.fromString("asdfasf");
         } catch {
             err = true;
-        }
-
-        try {
-            AccountId.fromString("0.0.123-laujt");
-        } catch {
-            err = true;
-        }
-
-        if (!err) {
-            throw new Error("`AccountId.fromString()` did not error");
         }
 
         try {

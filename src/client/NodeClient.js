@@ -34,65 +34,40 @@ export const Network = {
     },
 
     MAINNET: {
-        "35.237.200.180:50211": AccountId.withNetwork(0, 0, 3, "mainnet"),
-        "35.186.191.247:50211": AccountId.withNetwork(0, 0, 4, "mainnet"),
-        "35.192.2.25:50211": AccountId.withNetwork(0, 0, 5, "mainnet"),
-        "35.199.161.108:50211": AccountId.withNetwork(0, 0, 6, "mainnet"),
-        "35.203.82.240:50211": AccountId.withNetwork(0, 0, 7, "mainnet"),
-        "35.236.5.219:50211": AccountId.withNetwork(0, 0, 8, "mainnet"),
-        "35.197.192.225:50211": AccountId.withNetwork(0, 0, 9, "mainnet"),
-        "35.242.233.154:50211": AccountId.withNetwork(0, 0, 10, "mainnet"),
-        "35.240.118.96:50211": AccountId.withNetwork(0, 0, 11, "mainnet"),
-        "35.204.86.32:50211": AccountId.withNetwork(0, 0, 12, "mainnet"),
-        "35.234.132.107:50211": AccountId.withNetwork(0, 0, 13, "mainnet"),
-        "35.236.2.27:50211": AccountId.withNetwork(0, 0, 14, "mainnet"),
-        "35.228.11.53:50211": AccountId.withNetwork(0, 0, 15, "mainnet"),
-        "34.91.181.183:50211": AccountId.withNetwork(0, 0, 16, "mainnet"),
-        "34.86.212.247:50211": AccountId.withNetwork(0, 0, 17, "mainnet"),
-        "172.105.247.67:50211": AccountId.withNetwork(0, 0, 18, "mainnet"),
-        "34.89.87.138:50211": AccountId.withNetwork(0, 0, 19, "mainnet"),
-        "34.82.78.255:50211": AccountId.withNetwork(0, 0, 20, "mainnet"),
+        "35.237.200.180:50211": new AccountId(3),
+        "35.186.191.247:50211": new AccountId(4),
+        "35.192.2.25:50211": new AccountId(5),
+        "35.199.161.108:50211": new AccountId(6),
+        "35.203.82.240:50211": new AccountId(7),
+        "35.236.5.219:50211": new AccountId(8),
+        "35.197.192.225:50211": new AccountId(9),
+        "35.242.233.154:50211": new AccountId(10),
+        "35.240.118.96:50211": new AccountId(11),
+        "35.204.86.32:50211": new AccountId(12),
+        "35.234.132.107:50211": new AccountId(13),
+        "35.236.2.27:50211": new AccountId(14),
+        "35.228.11.53:50211": new AccountId(15),
+        "34.91.181.183:50211": new AccountId(16),
+        "34.86.212.247:50211": new AccountId(17),
+        "172.105.247.67:50211": new AccountId(18),
+        "34.89.87.138:50211": new AccountId(19),
+        "34.82.78.255:50211": new AccountId(20),
     },
 
     TESTNET: {
-        "0.testnet.hedera.com:50211": AccountId.withNetwork(0, 0, 3, "testnet"),
-        "1.testnet.hedera.com:50211": AccountId.withNetwork(0, 0, 4, "testnet"),
-        "2.testnet.hedera.com:50211": AccountId.withNetwork(0, 0, 5, "testnet"),
-        "3.testnet.hedera.com:50211": AccountId.withNetwork(0, 0, 6, "testnet"),
-        "4.testnet.hedera.com:50211": AccountId.withNetwork(0, 0, 7, "testnet"),
+        "0.testnet.hedera.com:50211": new AccountId(3),
+        "1.testnet.hedera.com:50211": new AccountId(4),
+        "2.testnet.hedera.com:50211": new AccountId(5),
+        "3.testnet.hedera.com:50211": new AccountId(6),
+        "4.testnet.hedera.com:50211": new AccountId(7),
     },
 
     PREVIEWNET: {
-        "0.previewnet.hedera.com:50211": AccountId.withNetwork(
-            0,
-            0,
-            3,
-            "previewnet"
-        ),
-        "1.previewnet.hedera.com:50211": AccountId.withNetwork(
-            0,
-            0,
-            4,
-            "previewnet"
-        ),
-        "2.previewnet.hedera.com:50211": AccountId.withNetwork(
-            0,
-            0,
-            5,
-            "previewnet"
-        ),
-        "3.previewnet.hedera.com:50211": AccountId.withNetwork(
-            0,
-            0,
-            6,
-            "previewnet"
-        ),
-        "4.previewnet.hedera.com:50211": AccountId.withNetwork(
-            0,
-            0,
-            7,
-            "previewnet"
-        ),
+        "0.previewnet.hedera.com:50211": new AccountId(3),
+        "1.previewnet.hedera.com:50211": new AccountId(4),
+        "2.previewnet.hedera.com:50211": new AccountId(5),
+        "3.previewnet.hedera.com:50211": new AccountId(6),
+        "4.previewnet.hedera.com:50211": new AccountId(7),
     },
 };
 
@@ -138,19 +113,19 @@ export default class NodeClient extends Client {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
                         this.setMirrorNetwork(MirrorNetwork.MAINNET);
-                        this._network._networkName = "mainnet";
+                        this._network._ledgerId = "0";
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
                         this.setMirrorNetwork(MirrorNetwork.TESTNET);
-                        this._network._networkName = "testnet";
+                        this._network._ledgerId = "1";
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
-                        this._network._networkName = "previewnet";
+                        this._network._ledgerId = "2";
                         break;
 
                     default:
@@ -266,12 +241,15 @@ export default class NodeClient extends Client {
             switch (network) {
                 case "previewnet":
                     this._network.setNetwork(Network.PREVIEWNET);
+                    this._network._ledgerId = "2";
                     break;
                 case "testnet":
                     this._network.setNetwork(Network.TESTNET);
+                    this._network._ledgerId = "1";
                     break;
                 case "mainnet":
                     this._network.setNetwork(Network.MAINNET);
+                    this._network._ledgerId = "0";
             }
         } else {
             this._network.setNetwork(network);

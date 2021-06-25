@@ -32,6 +32,7 @@ import Long from "long";
 
 /**
  * @typedef {import("../client/Client.js").ClientOperator} ClientOperator
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -172,10 +173,10 @@ export default class Query extends Executable {
     }
 
     /**
-     * @param {{ _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
-    _validateIdNetworks(networkName) {
+    _validateIdNetworks(client) {
         // Do nothing
     }
 
@@ -189,7 +190,7 @@ export default class Query extends Executable {
             return;
         }
 
-        this._validateIdNetworks(client._network);
+        this._validateIdNetworks(client);
 
         if (this._nodeIds.length == 0) {
             this._nodeIds = client._network.getNodeAccountIdsForExecute();
@@ -347,11 +348,11 @@ export default class Query extends Executable {
      * @internal
      * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @param {AccountId} nodeAccountId
+     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response, nodeAccountId) {
+    _mapStatusError(request, response, ledgerId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 

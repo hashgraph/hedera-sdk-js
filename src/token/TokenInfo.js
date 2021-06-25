@@ -190,9 +190,10 @@ export default class TokenInfo {
     /**
      * @internal
      * @param {proto.ITokenInfo} info
+     * @param {(string | null)=} ledgerId
      * @returns {TokenInfo}
      */
-    static _fromProtobuf(info) {
+    static _fromProtobuf(info, ledgerId) {
         const defaultFreezeStatus = /** @type {proto.TokenFreezeStatus} */ (
             info.defaultFreezeStatus
         );
@@ -202,12 +203,13 @@ export default class TokenInfo {
 
         const autoRenewAccountId =
             info.autoRenewAccount != null
-                ? AccountId._fromProtobuf(info.autoRenewAccount)
+                ? AccountId._fromProtobuf(info.autoRenewAccount, ledgerId)
                 : new AccountId(0);
 
         return new TokenInfo({
             tokenId: TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (info.tokenId)
+                /** @type {proto.ITokenID} */ (info.tokenId),
+                ledgerId
             ),
             name: /** @type {string} */ (info.name),
             symbol: /** @type {string} */ (info.symbol),
@@ -216,18 +218,30 @@ export default class TokenInfo {
             treasuryAccountId:
                 info.treasury != null
                     ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (info.treasury)
+                          /** @type {proto.IAccountID} */ (info.treasury),
+                          ledgerId
                       )
                     : null,
             adminKey:
-                info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
-            kycKey: info.kycKey != null ? keyFromProtobuf(info.kycKey) : null,
+                info.adminKey != null
+                    ? keyFromProtobuf(info.adminKey, ledgerId)
+                    : null,
+            kycKey:
+                info.kycKey != null
+                    ? keyFromProtobuf(info.kycKey, ledgerId)
+                    : null,
             freezeKey:
-                info.freezeKey != null ? keyFromProtobuf(info.freezeKey) : null,
+                info.freezeKey != null
+                    ? keyFromProtobuf(info.freezeKey, ledgerId)
+                    : null,
             wipeKey:
-                info.wipeKey != null ? keyFromProtobuf(info.wipeKey) : null,
+                info.wipeKey != null
+                    ? keyFromProtobuf(info.wipeKey, ledgerId)
+                    : null,
             supplyKey:
-                info.supplyKey != null ? keyFromProtobuf(info.supplyKey) : null,
+                info.supplyKey != null
+                    ? keyFromProtobuf(info.supplyKey, ledgerId)
+                    : null,
             defaultFreezeStatus:
                 defaultFreezeStatus === 0 ? null : defaultFreezeStatus == 1,
             defaultKycStatus:

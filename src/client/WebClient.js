@@ -29,30 +29,15 @@ export const Network = {
     },
 
     MAINNET: {
-        "https://grpc-web.myhbarwallet.com": AccountId.withNetwork(
-            0,
-            0,
-            3,
-            "mainnet"
-        ),
+        "https://grpc-web.myhbarwallet.com": new AccountId(3),
     },
 
     TESTNET: {
-        "https://grpc-web.testnet.myhbarwallet.com": AccountId.withNetwork(
-            0,
-            0,
-            3,
-            "testnet"
-        ),
+        "https://grpc-web.testnet.myhbarwallet.com": new AccountId(3),
     },
 
     PREVIEWNET: {
-        "https://grpc-web.previewnet.myhbarwallet.com": AccountId.withNetwork(
-            0,
-            0,
-            3,
-            "previewnet"
-        ),
+        "https://grpc-web.previewnet.myhbarwallet.com": new AccountId(3),
     },
 };
 
