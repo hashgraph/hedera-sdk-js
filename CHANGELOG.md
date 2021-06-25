@@ -12,7 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    entity ID and validated on each request to make sure a request is not happening on one network 
    while an entity ID references another network. Entity IDs with a network will print with a checksum
    while entity IDs without a checksum will not print the checksum part.
- * Support for constructing entity IDs with a network using `*Id.withNetwork()`.
 
 ## v2.0.22
 
