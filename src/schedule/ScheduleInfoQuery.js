@@ -131,19 +131,23 @@ export default class ScheduleInfoQuery extends Query {
 
     /**
      * @override
-     * @override
      * @internal
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<ScheduleInfo>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const info = /** @type {proto.IScheduleGetInfoResponse} */ (
             response.scheduleGetInfo
         );
 
         return Promise.resolve(
             ScheduleInfo._fromProtobuf(
-                /** @type {proto.IScheduleInfo} */ (info.scheduleInfo)
+                /** @type {proto.IScheduleInfo} */ (info.scheduleInfo),
+                ledgerId
             )
         );
     }
