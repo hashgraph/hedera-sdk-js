@@ -40,21 +40,24 @@ export default class TokenTransferMap extends ObjectMap {
 
     /**
      * @param {proto.ITokenTransferList[]} transfers
+     * @param {(string | null)=} ledgerId
      * @returns {TokenTransferMap}
      */
-    static _fromProtobuf(transfers) {
+    static _fromProtobuf(transfers, ledgerId) {
         const tokenTransfersMap = new TokenTransferMap();
 
         for (const transfer of transfers) {
             const token = TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (transfer.token)
+                /** @type {proto.ITokenID} */ (transfer.token),
+                ledgerId
             );
 
             for (const aa of transfer.transfers != null
                 ? transfer.transfers
                 : []) {
                 const account = AccountId._fromProtobuf(
-                    /** @type {proto.IAccountID} */ (aa.accountID)
+                    /** @type {proto.IAccountID} */ (aa.accountID),
+                    ledgerId
                 );
 
                 tokenTransfersMap.__set(

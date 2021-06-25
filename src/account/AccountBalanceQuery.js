@@ -2,7 +2,6 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import AccountId from "./AccountId.js";
 import ContractId from "../contract/ContractId.js";
 import AccountBalance from "./AccountBalance.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -16,6 +15,7 @@ import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -138,11 +138,16 @@ export default class AccountBalanceQuery extends Query {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        entity_id._validateIdNetworks(this._accountId, networkName);
-        entity_id._validateIdNetworks(this._contractId, networkName);
+    _validateIdNetworks(client) {
+        if (this._accountId != null) {
+            this._accountId.validate(client);
+        }
+
+        if (this._contractId != null) {
+            this._contractId.validate(client);
+        }
     }
 
     /**
@@ -178,15 +183,19 @@ export default class AccountBalanceQuery extends Query {
      * @override
      * @internal
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<AccountBalance>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const cryptogetAccountBalance =
             /** @type {proto.ICryptoGetAccountBalanceResponse} */ (
                 response.cryptogetAccountBalance
             );
         return Promise.resolve(
-            AccountBalance._fromProtobuf(cryptogetAccountBalance)
+            AccountBalance._fromProtobuf(cryptogetAccountBalance, ledgerId)
         );
     }
 

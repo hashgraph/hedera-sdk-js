@@ -52,6 +52,8 @@ describe("TransactionIntegration", function () {
     });
 
     it("signs correctly", async function () {
+        this.timeout(10000);
+
         const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generate();
 

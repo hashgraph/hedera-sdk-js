@@ -3,7 +3,6 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import ContractId from "./ContractId.js";
 import AccountId from "../account/AccountId.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -19,6 +18,7 @@ import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -190,12 +190,20 @@ export default class ContractDeleteTransaction extends Transaction {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        entity_id._validateIdNetworks(this._contractId, networkName);
-        entity_id._validateIdNetworks(this._transferAccountId, networkName);
-        entity_id._validateIdNetworks(this._transferContractId, networkName);
+    _validateIdNetworks(client) {
+        if (this._contractId != null) {
+            this._contractId.validate(client);
+        }
+
+        if (this._transferAccountId != null) {
+            this._transferAccountId.validate(client);
+        }
+
+        if (this._transferContractId != null) {
+            this._transferContractId.validate(client);
+        }
     }
 
     /**

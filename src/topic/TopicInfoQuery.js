@@ -2,7 +2,6 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import TopicId from "./TopicId.js";
 import TopicInfo from "./TopicInfo.js";
 import Hbar from "../Hbar.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -16,6 +15,7 @@ import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
@@ -99,10 +99,12 @@ export default class TopicInfoQuery extends Query {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        entity_id._validateIdNetworks(this._topicId, networkName);
+    _validateIdNetworks(client) {
+        if (this._topicId != null) {
+            this._topicId.validate(client);
+        }
     }
 
     /**
@@ -136,14 +138,19 @@ export default class TopicInfoQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TopicInfo>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         return Promise.resolve(
             TopicInfo._fromProtobuf(
                 /** @type {proto.IConsensusGetTopicInfoResponse} */ (
                     response.consensusGetTopicInfo
-                )
+                ),
+                ledgerId
             )
         );
     }

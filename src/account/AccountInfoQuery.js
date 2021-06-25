@@ -2,7 +2,6 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import AccountId from "./AccountId.js";
 import AccountInfo from "./AccountInfo.js";
 import Hbar from "../Hbar.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -17,6 +16,7 @@ import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -81,10 +81,12 @@ export default class AccountInfoQuery extends Query {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        entity_id._validateIdNetworks(this._accountId, networkName);
+    _validateIdNetworks(client) {
+        if (this._accountId != null) {
+            this._accountId.validate(client);
+        }
     }
 
     /**
@@ -128,19 +130,23 @@ export default class AccountInfoQuery extends Query {
 
     /**
      * @override
-     * @override
      * @internal
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<AccountInfo>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const info = /** @type {proto.ICryptoGetInfoResponse} */ (
             response.cryptoGetInfo
         );
 
         return Promise.resolve(
             AccountInfo._fromProtobuf(
-                /** @type {proto.IAccountInfo} */ (info.accountInfo)
+                /** @type {proto.IAccountInfo} */ (info.accountInfo),
+                ledgerId
             )
         );
     }

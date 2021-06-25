@@ -17,7 +17,6 @@ import {
 } from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -42,6 +41,7 @@ import * as entity_id from "../EntityIdHelper.js";
  * @typedef {import("@hashgraph/cryptography").PrivateKey} PrivateKey
  * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 // 90 days (in seconds)
@@ -605,11 +605,8 @@ export default class Transaction extends Executable {
             );
         }
 
-        if (client != null) {
-            entity_id._validateIdNetworks(
-                this._transactionIds[0].accountId,
-                client._network
-            );
+        if (client != null && this._transactionIds[0].accountId != null) {
+            this._transactionIds[0].accountId.validate(client);
         }
 
         if (this._nodeIds.length > 0) {
@@ -678,10 +675,10 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
-    _validateIdNetworks(networkName) {
+    _validateIdNetworks(client) {
         // Do nothing
     }
 
@@ -697,7 +694,7 @@ export default class Transaction extends Executable {
         }
 
         if (client._operator != null) {
-            this._validateIdNetworks(client._network);
+            this._validateIdNetworks(client);
         }
 
         // on execute, sign each transaction with the operator, if present
@@ -776,11 +773,11 @@ export default class Transaction extends Executable {
      * @internal
      * @param {proto.ITransaction} request
      * @param {proto.ITransactionResponse} response
-     * @param {AccountId} nodeAccountId
+     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response, nodeAccountId) {
+    _mapStatusError(request, response, ledgerId) {
         const { nodeTransactionPrecheckCode } = response;
 
         const status = Status._fromCode(

@@ -21,7 +21,7 @@ export const _networkIds = ["0", "1", "2"];
  * @param {string} networkName
  * @returns {string}
  */
-export function _networkNameToLedgerId(networkName) {
+export function _ledgerIdToLedgerId(networkName) {
     switch (networkName) {
         case NetworkName.Mainnet:
             return _networkIds[0];

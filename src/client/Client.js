@@ -4,7 +4,6 @@ import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Hbar from "../Hbar.js";
 import Network from "./Network.js";
 import MirrorNetwork from "./MirrorNetwork.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -159,7 +158,7 @@ export default class Client {
                 ? accountId
                 : AccountId.fromString(accountId);
 
-        entity_id._validateIdNetworks(accountId_, this._network);
+        accountId_.validate(this);
 
         this._operator = {
             transactionSigner,

@@ -99,16 +99,18 @@ export default class TopicInfo {
     /**
      * @internal
      * @param {proto.IConsensusGetTopicInfoResponse} infoResponse
+     * @param {(string | null)=} ledgerId
      * @returns {TopicInfo}
      */
-    static _fromProtobuf(infoResponse) {
+    static _fromProtobuf(infoResponse, ledgerId) {
         const info = /** @type {proto.IConsensusTopicInfo} */ (
             infoResponse.topicInfo
         );
 
         return new TopicInfo({
             topicId: TopicId._fromProtobuf(
-                /** @type {proto.ITopicID} */ (infoResponse.topicID)
+                /** @type {proto.ITopicID} */ (infoResponse.topicID),
+                ledgerId
             ),
             topicMemo: info.memo != null ? info.memo : "",
             runningHash:
@@ -124,9 +126,13 @@ export default class TopicInfo {
                     ? Timestamp._fromProtobuf(info.expirationTime)
                     : null,
             adminKey:
-                info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
+                info.adminKey != null
+                    ? keyFromProtobuf(info.adminKey, ledgerId)
+                    : null,
             submitKey:
-                info.submitKey != null ? keyFromProtobuf(info.submitKey) : null,
+                info.submitKey != null
+                    ? keyFromProtobuf(info.submitKey, ledgerId)
+                    : null,
             autoRenewPeriod:
                 info.autoRenewPeriod != null
                     ? new Duration(
@@ -135,7 +141,7 @@ export default class TopicInfo {
                     : null,
             autoRenewAccountId:
                 info.autoRenewAccount != null
-                    ? AccountId._fromProtobuf(info.autoRenewAccount)
+                    ? AccountId._fromProtobuf(info.autoRenewAccount, ledgerId)
                     : null,
         });
     }

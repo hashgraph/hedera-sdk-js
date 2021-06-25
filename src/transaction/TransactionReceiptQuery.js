@@ -6,7 +6,6 @@ import PrecheckStatusError from "../PrecheckStatusError.js";
 import ReceiptStatusError from "../ReceiptStatusError.js";
 import { ExecutionState } from "../Executable.js";
 import { ResponseCodeEnum } from "@hashgraph/proto";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -23,6 +22,7 @@ import * as entity_id from "../EntityIdHelper.js";
 /**
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -154,11 +154,11 @@ export default class TransactionReceiptQuery extends Query {
      * @internal
      * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @param {AccountId} nodeAccountId
+     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response, nodeAccountId) {
+    _mapStatusError(request, response, ledgerId) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -200,20 +200,20 @@ export default class TransactionReceiptQuery extends Query {
                 /** @type {proto.ITransactionReceipt} */ (
                     response.transactionGetReceipt
                 ),
-                nodeAccountId._networkName
+                ledgerId
             ),
         });
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        if (this._transactionId != null) {
-            entity_id._validateIdNetworks(
-                this._transactionId.accountId,
-                networkName
-            );
+    _validateIdNetworks(client) {
+        if (
+            this._transactionId != null &&
+            this._transactionId.accountId != null
+        ) {
+            this._transactionId.accountId.validate(client);
         }
     }
 
@@ -250,10 +250,11 @@ export default class TransactionReceiptQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TransactionReceipt>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request) {
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const transactionGetReceipt =
             /** @type {proto.ITransactionGetReceiptResponse} */ (
                 response.transactionGetReceipt
@@ -263,10 +264,7 @@ export default class TransactionReceiptQuery extends Query {
         );
 
         return Promise.resolve(
-            TransactionReceipt._fromProtobuf(
-                receipt,
-                nodeAccountId._networkName
-            )
+            TransactionReceipt._fromProtobuf(receipt, ledgerId)
         );
     }
 

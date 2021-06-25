@@ -44,7 +44,7 @@ export default class Network {
         this.createNetworkChannel = createNetworkChannel;
 
         /** @type {string | null} */
-        this._networkName = null;
+        this._ledgerId = null;
     }
 
     /**
@@ -81,26 +81,12 @@ export default class Network {
             }
         }
 
-        let networkName = null;
-
         // Add new address to the list
         for (const [url, accountId] of network_) {
             const key =
                 accountId instanceof AccountId
                     ? accountId
                     : AccountId.fromString(accountId);
-
-            if (key._networkName != null && networkName == null) {
-                networkName = key._networkName;
-            } else if (
-                key._networkName != null &&
-                networkName != null &&
-                key._networkName !== networkName
-            ) {
-                throw new Error(
-                    "Nodes account IDs within network are declared as being from different newtorks"
-                );
-            }
 
             // eslint-disable-next-line ie11/no-loop-func,@typescript-eslint/no-unused-vars
             const index = thisNetwork_.findIndex(([url_, _]) => url_ === url);

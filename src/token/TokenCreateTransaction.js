@@ -8,7 +8,6 @@ import Long from "long";
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -25,6 +24,7 @@ import * as entity_id from "../EntityIdHelper.js";
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -583,11 +583,16 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        entity_id._validateIdNetworks(this._treasuryAccountId, networkName);
-        entity_id._validateIdNetworks(this._autoRenewAccountId, networkName);
+    _validateIdNetworks(client) {
+        if (this._treasuryAccountId != null) {
+            this._treasuryAccountId.validate(client);
+        }
+
+        if (this._autoRenewAccountId != null) {
+            this._autoRenewAccountId.validate(client);
+        }
     }
 
     /**

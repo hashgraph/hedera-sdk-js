@@ -62,11 +62,13 @@ export default class TokenRelationship {
 
     /**
      * @param {proto.ITokenRelationship} relationship
+     * @param {(string | null)=} ledgerId
      * @returns {TokenRelationship}
      */
-    static _fromProtobuf(relationship) {
+    static _fromProtobuf(relationship, ledgerId) {
         const tokenId = TokenId._fromProtobuf(
-            /** @type {proto.ITokenID} */ (relationship.tokenId)
+            /** @type {proto.ITokenID} */ (relationship.tokenId),
+            ledgerId
         );
         const isKycGranted =
             relationship.kycStatus == null || relationship.kycStatus === 0

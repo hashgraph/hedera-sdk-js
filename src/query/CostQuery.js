@@ -108,12 +108,12 @@ export default class CostQuery extends Executable {
      * @internal
      * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @param {AccountId} nodeAccountId
+     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response, nodeAccountId) {
-        return this._query._mapStatusError(request, response, nodeAccountId);
+    _mapStatusError(request, response, ledgerId) {
+        return this._query._mapStatusError(request, response, ledgerId);
     }
 
     /**

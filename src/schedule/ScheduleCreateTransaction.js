@@ -4,7 +4,6 @@ import Transaction, {
     SCHEDULE_CREATE_TRANSACTION,
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -218,10 +217,12 @@ export default class ScheduleCreateTransaction extends Transaction {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        entity_id._validateIdNetworks(this._payerAccountId, networkName);
+    _validateIdNetworks(client) {
+        if (this._payerAccountId != null) {
+            this._payerAccountId.validate(client);
+        }
     }
 
     /**

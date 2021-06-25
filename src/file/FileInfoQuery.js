@@ -2,7 +2,6 @@ import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import FileId from "./FileId.js";
 import FileInfo from "./FileInfo.js";
 import Hbar from "../Hbar.js";
-import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @namespace proto
@@ -17,6 +16,7 @@ import * as entity_id from "../EntityIdHelper.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
@@ -95,10 +95,12 @@ export default class FileInfoQuery extends Query {
     }
 
     /**
-     * @param { { _networkName: string | null } | null} networkName
+     * @param {Client} client
      */
-    _validateIdNetworks(networkName) {
-        entity_id._validateIdNetworks(this._fileId, networkName);
+    _validateIdNetworks(client) {
+        if (this._fileId != null) {
+            this._fileId.validate(client);
+        }
     }
 
     /**
@@ -129,16 +131,21 @@ export default class FileInfoQuery extends Query {
      * @protected
      * @override
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<FileInfo>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         const info = /** @type {proto.IFileGetInfoResponse} */ (
             response.fileGetInfo
         );
 
         return Promise.resolve(
             FileInfo._fromProtobuf(
-                /** @type {proto.IFileInfo} */ (info.fileInfo)
+                /** @type {proto.IFileInfo} */ (info.fileInfo),
+                ledgerId
             )
         );
     }

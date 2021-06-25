@@ -2,7 +2,8 @@ import * as entity_id from "../EntityIdHelper.js";
 import * as proto from "@hashgraph/proto";
 
 /**
- * @typedef {import("long")} Long
+ * @typedef {import("long").Long} Long
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
@@ -13,25 +14,18 @@ export default class FileId {
      * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
-     * @param {(string | null)=} networkName
-     * @param {(string | null)=} checksum
      */
-    constructor(props, realm, num, networkName, checksum) {
-        const result = entity_id.constructor(
-            props,
-            realm,
-            num,
-            networkName,
-            checksum
-        );
+    constructor(props, realm, num) {
+        const result = entity_id.constructor(props, realm, num);
 
         this.shard = result.shard;
         this.realm = result.realm;
         this.num = result.num;
-        this._networkName = result.networkName;
-        this._checksum = result.checksum;
 
-        Object.freeze(this);
+        /**
+         * @type {string | null}
+         */
+        this._checksum = null;
     }
 
     /**
@@ -40,39 +34,67 @@ export default class FileId {
      */
     static fromString(text) {
         const result = entity_id.fromString(text);
-        return new FileId(
-            result.shard,
-            result.realm,
-            result.num,
-            result.networkName,
-            result.checksum
-        );
-    }
-
-    /**
-     * @param {number | Long | import("../EntityIdHelper").IEntityId} props
-     * @param {(number | Long)=} realm
-     * @param {(number | Long)=} num
-     * @param {(string | null)=} networkName
-     * @returns {FileId}
-     */
-    static withNetwork(props, realm, num, networkName) {
-        return new FileId(props, realm, num, networkName);
+        const id = new FileId(result);
+        id._checksum = result.checksum;
+        return id;
     }
 
     /**
      * @internal
      * @param {proto.IFileID} id
-     * @param {(string | null)=} networkName
+     * @param {(string | null)=} ledgerId
      * @returns {FileId}
      */
-    static _fromProtobuf(id, networkName) {
-        return new FileId(
+    static _fromProtobuf(id, ledgerId) {
+        const fileId = new FileId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
-            id.fileNum != null ? id.fileNum : 0,
-            networkName
+            id.fileNum != null ? id.fileNum : 0
         );
+
+        if (ledgerId != null) {
+            fileId._setNetwork(ledgerId);
+        }
+
+        return fileId;
+    }
+
+    /**
+     * @internal
+     * @param {Client} client
+     */
+    _setNetworkWith(client) {
+        if (client._network._ledgerId != null) {
+            this._setNetwork(client._network._ledgerId);
+        }
+    }
+
+    /**
+     * @internal
+     * @param {string} ledgerId
+     */
+    _setNetwork(ledgerId) {
+        this._checksum = entity_id._checksum(
+            ledgerId,
+            `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`
+        );
+    }
+
+    /**
+     * @param {Client} client
+     */
+    validate(client) {
+        if (
+            client._network._ledgerId != null &&
+            this._checksum != null &&
+            this._checksum !=
+                entity_id._checksum(
+                    client._network._ledgerId,
+                    `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`
+                )
+        ) {
+            throw new Error("Entity ID is for a different network than client");
+        }
     }
 
     /**
@@ -121,12 +143,8 @@ export default class FileId {
      * @returns {FileId}
      */
     clone() {
-        return new FileId(
-            this.shard,
-            this.realm,
-            this.num,
-            this._networkName,
-            this._checksum
-        );
+        const id = new FileId(this);
+        id._checksum = this._checksum;
+        return id;
     }
 }
