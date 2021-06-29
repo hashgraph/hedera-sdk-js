@@ -1,20 +1,18 @@
 import BigNumber from "bignumber.js";
-import Long from "long";
 
 /**
  * @typedef {{low: number, high: number, unsigned: boolean}} LongObject
+ * @typedef {import("long")} Long
  */
 
 /**
  * @param {Long | number | string | LongObject | BigNumber} value
- * @returns {Long}
+ * @returns {BigNumber}
  */
 export function valueToLong(value) {
     if (BigNumber.isBigNumber(value)) {
-        return Long.fromString(value.toString());
-    } else if (value instanceof Long) {
         return value;
     } else {
-        return Long.fromValue(value);
+        return new BigNumber(value.toString());
     }
 }
