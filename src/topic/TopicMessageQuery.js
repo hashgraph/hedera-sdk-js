@@ -112,25 +112,23 @@ export default class TopicMessageQuery {
         this._retryHandler = (error) => {
             if (error != null) {
                 if (error instanceof Error) {
-                    return (
-                        error.toString().includes("NOT_FOUND") ||
-                        error.toString().includes("UNAVAILABLE") ||
-                        error.toString().includes("RESOURCE_EXHAUSTED") ||
-                        (error.toString().includes("INTERNAL") &&
-                            RST_STREAM.test(error.toString()))
-                    );
+                    // Retry on all errors which are not `MirrorError` because they're
+                    // likely lower level HTTP/2 errors
+                    return true;
                 } else {
+                    // Retry on `NOT_FOUND`, `RESOURCE_EXHAUSTED`, `UNAVAILABLE`, and conditionally on `INTERNAL`
+                    // if the messasge matches the right regex.
                     switch (error.code) {
-                        // RESOURCE_EXHAUSTED
+                        // INTERNAL
                         // eslint-disable-next-line no-fallthrough
-                        case 8:
+                        case 13:
                             return RST_STREAM.test(error.details.toString());
                         // NOT_FOUND
                         // eslint-disable-next-line no-fallthrough
                         case 5:
-                        // INTERNAL
+                        // RESOURCE_EXHAUSTED
                         // eslint-disable-next-line no-fallthrough
-                        case 13:
+                        case 8:
                         // UNAVAILABLE
                         // eslint-disable-next-line no-fallthrough
                         case 14:
