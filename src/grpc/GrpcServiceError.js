@@ -1,6 +1,4 @@
-/**
- * @typedef {import("./GrpcStatus.js").default} GrpcStatus
- */
+import GrpcStatus from "./GrpcStatus.js";
 
 /**
  * Describes how the gRPC request failed.
@@ -26,6 +24,21 @@ export default class GrpcServiceError extends Error {
 
         if (typeof Error.captureStackTrace !== "undefined") {
             Error.captureStackTrace(this, GrpcServiceError);
+        }
+    }
+
+    /**
+     * @param {Error & { code?: number; details?: string }} obj
+     * @returns {Error}
+     */
+    static _fromResponse(obj) {
+        if (obj.code != null && obj.details != null) {
+            const status = GrpcStatus._fromValue(obj.code);
+            const err = new GrpcServiceError(status);
+            err.message = obj.details;
+            return err;
+        } else {
+            return /** @type {Error} */ (obj);
         }
     }
 }
