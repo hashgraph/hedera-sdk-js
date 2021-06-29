@@ -16,7 +16,7 @@ export const ExecutionState = {
     Error: "Error",
 };
 
-export const RST_STREAM = new RegExp(".*RST_STREAM.*");
+export const RST_STREAM = /\brst[^0-9a-zA-Z]stream\b/gi;
 
 /**
  * @abstract
