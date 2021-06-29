@@ -1,7 +1,8 @@
 import BigNumber from "bignumber.js";
-import Long from "long";
 import { valueToLong } from "./long.js";
 import HbarUnit from "./HbarUnit.js";
+
+import Long from "long";
 
 /**
  * @typedef {import("./long.js").LongObject} LongObject
@@ -19,10 +20,8 @@ export default class Hbar {
             /** @type {BigNumber} */
             let bigAmount;
 
-            if (amount instanceof Long) {
+            if (Long.isLong(amount)) {
                 bigAmount = new BigNumber(amount.toString(10));
-            } else if (Long.isLong(amount)) {
-                bigAmount = new BigNumber(Long.fromValue(amount).toString(10));
             } else if (
                 BigNumber.isBigNumber(amount) ||
                 typeof amount === "string" ||
@@ -34,11 +33,9 @@ export default class Hbar {
             }
 
             /**
-             * @type {Long}
+             * @type {BigNumber}
              */
-            this._valueInTinybar = Long.fromString(
-                bigAmount.multipliedBy(unit._tinybar).toFixed()
-            );
+            this._valueInTinybar = bigAmount.multipliedBy(unit._tinybar);
         }
     }
 
@@ -52,7 +49,7 @@ export default class Hbar {
     }
 
     /**
-     * @param {number | Long | string} amount
+     * @param {number | Long | string | BigNumber} amount
      * @returns {Hbar}
      */
     static fromTinybars(amount) {
@@ -76,9 +73,7 @@ export default class Hbar {
      * @returns {BigNumber}
      */
     to(unit) {
-        return new BigNumber(this._valueInTinybar.toString()).dividedBy(
-            unit._tinybar
-        );
+        return this._valueInTinybar.dividedBy(unit._tinybar);
     }
 
     /**
@@ -92,26 +87,33 @@ export default class Hbar {
      * @returns {Long}
      */
     toTinybars() {
-        return this._valueInTinybar;
+        return Long.fromValue(this._valueInTinybar.toFixed());
     }
 
     /**
      * @returns {Hbar}
      */
     negated() {
-        return Hbar.fromTinybars(this._valueInTinybar.negate());
+        return Hbar.fromTinybars(this._valueInTinybar.negated());
     }
 
     /**
      * @override
+     * @param {HbarUnit=} unit
      * @returns {string}
      */
-    toString() {
+    toString(unit) {
+        if (unit != null) {
+            return `${this._valueInTinybar
+                .dividedBy(unit._tinybar)
+                .toString()} ${unit._symbol}`;
+        }
+
         if (
-            this._valueInTinybar.lessThan(10000) &&
-            this._valueInTinybar.greaterThan(-10000)
+            this._valueInTinybar.isLessThan(10000) &&
+            this._valueInTinybar.isGreaterThan(-10000)
         ) {
-            return `${this._valueInTinybar.toString()} ${
+            return `${this._valueInTinybar.toFixed()} ${
                 HbarUnit.Tinybar._symbol
             }`;
         }
