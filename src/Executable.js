@@ -16,6 +16,8 @@ export const ExecutionState = {
     Error: "Error",
 };
 
+export const RST_STREAM = new RegExp(".*RST_STREAM.*");
+
 /**
  * @abstract
  * @internal
@@ -193,7 +195,8 @@ export default class Executable {
         return (
             error.status === GrpcStatus.Unavailable ||
             error.status === GrpcStatus.ResourceExhausted ||
-            error.status === GrpcStatus.Internal
+            (error.status === GrpcStatus.Internal &&
+                RST_STREAM.test(error.message))
         );
     }
 
@@ -237,9 +240,11 @@ export default class Executable {
             try {
                 response = await this._execute(channel, request);
             } catch (err) {
+                const error = GrpcServiceError._fromResponse(err);
+
                 if (
-                    err instanceof GrpcServiceError &&
-                    this._shouldRetryExceptionally(err) &&
+                    error instanceof GrpcServiceError &&
+                    this._shouldRetryExceptionally(error) &&
                     attempt <= this._maxRetries
                 ) {
                     node.increaseDelay();

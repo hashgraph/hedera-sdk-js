@@ -5,6 +5,7 @@ import * as proto from "@hashgraph/proto";
 import TopicId from "./TopicId.js";
 import Long from "long";
 import Timestamp from "../Timestamp.js";
+import { RST_STREAM } from "../Executable.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -115,16 +116,18 @@ export default class TopicMessageQuery {
                         error.toString().includes("NOT_FOUND") ||
                         error.toString().includes("UNAVAILABLE") ||
                         error.toString().includes("RESOURCE_EXHAUSTED") ||
-                        error.toString().includes("INTERNAL")
+                        (error.toString().includes("INTERNAL") &&
+                            RST_STREAM.test(error.toString()))
                     );
                 } else {
                     switch (error.code) {
-                        // NOT_FOUND
-                        // eslint-disable-next-line no-fallthrough
-                        case 5:
                         // RESOURCE_EXHAUSTED
                         // eslint-disable-next-line no-fallthrough
                         case 8:
+                            return RST_STREAM.test(error.details.toString());
+                        // NOT_FOUND
+                        // eslint-disable-next-line no-fallthrough
+                        case 5:
                         // INTERNAL
                         // eslint-disable-next-line no-fallthrough
                         case 13:
