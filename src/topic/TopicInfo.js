@@ -178,14 +178,19 @@ export default class TopicInfo {
      * @returns {TopicInfo}
      */
     static fromBytes(bytes) {
-        return TopicInfo._fromProtobuf({ topicInfo: proto.ConsensusTopicInfo.decode(bytes) });
+        return TopicInfo._fromProtobuf({
+            topicInfo: proto.ConsensusTopicInfo.decode(bytes),
+        });
     }
-
 
     /**
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.ConsensusTopicInfo.encode(/** @type {proto.IConsensusTopicInfo} */(this._toProtobuf().topicInfo)).finish();
+        return proto.ConsensusTopicInfo.encode(
+            /** @type {proto.IConsensusTopicInfo} */ (
+                this._toProtobuf().topicInfo
+            )
+        ).finish();
     }
 }

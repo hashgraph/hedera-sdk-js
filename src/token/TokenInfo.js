@@ -6,7 +6,6 @@ import Timestamp from "../Timestamp.js";
 import Long from "long";
 import * as proto from "@hashgraph/proto";
 
-
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  */
@@ -319,13 +318,10 @@ export default class TokenInfo {
         return TokenInfo._fromProtobuf(proto.TokenInfo.decode(bytes));
     }
 
-
     /**
      * @returns {Uint8Array}
      */
     toBytes() {
         return proto.TokenInfo.encode(this._toProtobuf()).finish();
     }
-
-
 }
