@@ -10,6 +10,7 @@ import * as hmac from "./primitive/hmac.js";
 import * as slip10 from "./primitive/slip10.js";
 import * as entropy from "./util/entropy.js";
 import * as random from "./primitive/random.js";
+import * as derive from "./util/derive.js";
 
 /**
  * Multi-word mnemonic phrase (BIP-39).
@@ -179,17 +180,6 @@ export default class Mnemonic {
                     unknownWordIndices
                 );
             }
-
-            const [seed, checksum] = entropy.legacy1(this.words, legacyWords);
-            const newChecksum = entropy.crc8(seed);
-
-            if (checksum !== newChecksum) {
-                throw new BadMnemonicError(
-                    this,
-                    BadMnemonicReason.ChecksumMismatch,
-                    []
-                );
-            }
         } else {
             if (!(this.words.length === 12 || this.words.length === 24)) {
                 throw new BadMnemonicError(
@@ -294,9 +284,9 @@ export default class Mnemonic {
     async toLegacyPrivateKey() {
         let seed;
         if (this._isLegacy) {
-            [seed] = entropy.legacy1(this.words, legacyWords);
+            seed = await derive.legacy(entropy.legacy1(this.words, legacyWords), -1);
         } else {
-            seed = await entropy.legacy2(this.words, bip39Words);
+            seed = await derive.legacy(await entropy.legacy2(this.words, bip39Words), 0);
         }
 
         return PrivateKey.fromBytes(seed);

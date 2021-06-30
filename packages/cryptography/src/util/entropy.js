@@ -1,10 +1,12 @@
 import BigNumber from "bignumber.js";
+import BadMnemonicError from "../BadMnemonicError.js";
+import BadMnemonicReason from "../BadMnemonicReason.js";
 import * as sha256 from "../primitive/sha256.js";
 
 /**
  * @param {string[]} words
  * @param {string[]} wordlist
- * @returns {[Uint8Array, number]}
+ * @returns {Uint8Array}
  */
 export function legacy1(words, wordlist) {
     const indicies = words.map((word) => wordlist.indexOf(word.toLowerCase()));
@@ -17,7 +19,12 @@ export function legacy1(words, wordlist) {
         result[i] = data[i] ^ checksum;
     }
 
-    return [result, checksum];
+    const newChecksum = crc8(result);
+    if (checksum !== newChecksum) {
+        throw new Error("Invalid legacy mnemonic: fails the cyclic redundency check");
+    }
+
+    return result;
 }
 
 /**

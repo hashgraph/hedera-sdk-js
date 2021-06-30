@@ -282,7 +282,9 @@ describe("PrivateKey", function () {
         expect(key.toString()).to.deep.equal(
             mnemonicKey
         );
-        const keyDerive = await key.derive(0)
+        const keyDerive = await key.derive(-1)
+        console.log(key.toString())
+        console.log(keyDerive.toString())
         expect(keyDerive.toString()).to.deep.equal(
             mnemonicDeriveKey
         );
