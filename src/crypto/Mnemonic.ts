@@ -4,8 +4,6 @@ import { MnemonicValidationResult } from "./MnemonicValidationResult";
 import { MnemonicValidationStatus } from "./MnemonicValidationStatus";
 import legacyWordList from "./legacyWordList";
 import BigNumber from "bignumber.js";
-import { HashAlgorithm } from "./Hmac";
-import { Pbkdf2 } from "./Pbkdf2";
 import { Sha256 } from "./Sha256";
 import { legacyDeriveChildKey } from "./util";
 
@@ -37,9 +35,12 @@ export class Mnemonic {
     public async toLegacyPrivateKey(): Promise<Ed25519PrivateKey> {
         const index = this._isLegacy ? -1 : 0;
         const entropy = this._isLegacy ? this._toLegacyEntropy()! : await this._toLegacyEntropy2()!;
-        const keyBytes = await legacyDeriveChildKey(entropy, index);
+        if (!this._isLegacy){
+            const keyBytes = await legacyDeriveChildKey(entropy, index);
+            return Ed25519PrivateKey.fromBytes(keyBytes);
+        }
 
-        return Ed25519PrivateKey.fromBytes(keyBytes);
+        return Ed25519PrivateKey.fromBytes(entropy);
     }
 
     /**
