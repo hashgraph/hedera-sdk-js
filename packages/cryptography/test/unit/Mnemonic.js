@@ -65,11 +65,11 @@ describe("Mnemonic", function () {
         expect(legacyMnemonic.words).to.have.length(22);
 
         const expectedLegacyKey =
-            "302e020100300506032b657004220420882a565ad8cb45643892b5366c1ee1c1ef4a730c5ce821a219ff49b6bf173ddf";
+            "302e020100300506032b657004220420f08539822cf6ac9be1c7912f2b0afcd44afd766a77d6b05437cefa697496ab5f";
 
         expect(
             (
-                await (await legacyMnemonic.toPrivateKey()).legacyDerive(-1)
+                await (await legacyMnemonic.toPrivateKey()).legacyDerive(1)
             ).toString()
         ).to.eql(expectedLegacyKey);
     });
