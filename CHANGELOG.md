@@ -4,13 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## v2.0.24
 
 ### Added
 
  * `Hbar.fromTinybar()` supports `BigNumber`
  * `Hbar.toString()` supports `HbarUnit`
  * Implemented to and from bytes for `TopicInfo` and `TokenInfo`
+ * Support for `sign-on-demand`
+    * This is disabled by default to you'll need to enable it using `Client.setSignOnDemand(true)`
+    * If `sign-on-demand` is enabled you'll need to use `async` versions of these methods:
+        * `*Transaction.toBytes()` -> `*Transaction.toBytesAsync()`
+        * `*Transaction.getSignatures()` -> `*Transaction.getSignaturesAsync()`
+        * `*Transaction.getTransactionHash()` -> `*Transaction.getTransactionHashAsync()`
+
+### Changes
+
+ * All requests now retry on gRPC status `INTERNAL` if error returned contains `RST_STREAM`
 
 ## v2.0.23
 
