@@ -140,6 +140,11 @@ describe("Ed25519PrivateKey", () => {
 
         expect(androidChildKey.toBytes()).toStrictEqual(androidWalletPrivKeyBytes);
         expect(androidChildKey.publicKey.toBytes()).toStrictEqual(androidWalletPubKeyBytes);
+
+        const key = await Ed25519PrivateKey.fromMnemonic(mnemonic, "");
+        const keyDerive = await key.derive2(0)
+        expect(key.toString()).toStrictEqual("302e020100300506032b657004220420853f15aecd22706b105da1d709b4ac05b4906170c2b9c7495dff9af49e1391da")
+        expect(keyDerive.toString()).toStrictEqual("302e020100300506032b657004220420f8dcc99a1ced1cc59bc2fee161c26ca6d6af657da9aa654da724441343ecd16f");
     });
 
     it("fromPem() produces a correct value", async () => {
