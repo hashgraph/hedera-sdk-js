@@ -38,5 +38,5 @@ import "BasicTypes.proto";
  */
 message TokenAssociateTransactionBody {
     AccountID account = 1; // The account to be associated with the provided tokens
-    repeated TokenID tokens = 2; // The tokens to be associated with the provided account
+    repeated TokenID tokens = 2; // The tokens to be associated with the provided account. In the case of NON_FUNGIBLE_UNIQUE Type, once an account is associated, it can hold any number of NFTs (serial numbers) of that token type
 }

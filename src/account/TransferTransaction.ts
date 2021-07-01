@@ -4,7 +4,7 @@ import { TransactionResponse } from "../generated/TransactionResponse_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { CryptoTransferTransactionBody } from "../generated/CryptoTransfer_pb";
 import { CryptoService } from "../generated/CryptoService_pb_service";
-import { AccountAmount, TransferList, TokenTransferList } from "../generated/BasicTypes_pb";
+import { AccountAmount, TransferList, TokenTransferList, NftTransfer } from "../generated/BasicTypes_pb";
 import { TokenId, TokenIdLike } from "../token/TokenId";
 import {
     Hbar,
@@ -15,6 +15,7 @@ import {
 } from "../Hbar";
 import { AccountId, AccountIdLike } from "./AccountId";
 import BigNumber from "bignumber.js";
+import { NftId } from "../token/NftId";
 
 /**
  * Transfer tokens from some accounts to other accounts. Each negative amount is withdrawn from the corresponding
@@ -93,6 +94,35 @@ export class TransferTransaction extends SingleTransactionBuilder {
             new BigNumber(amount).toString(10));
 
         transfers.push(acctAmt);
+
+        return this;
+    }
+
+    public addNftTransfer(nftId: NftId, from: AccountId, to: AccountId): this {
+        const index = this._tokenIdIndexes.get(new TokenId(nftId.tokenId).toString());
+        const token = new TokenId(nftId.tokenId);
+
+        if (index == null) {
+            this._tokenIdIndexes.set(token.toString(), this._body.getTokentransfersList().length);
+        }
+
+        let list: TokenTransferList;
+
+        if (index != null) {
+            list = this._body.getTokentransfersList()[ index ];
+        } else {
+            list = new TokenTransferList();
+            this._body.addTokentransfers(list);
+        }
+
+        list.setToken(token._toProto());
+        const transfers = list.getNfttransfersList();
+
+        const transfer = new NftTransfer();
+        transfer.setSerialnumber(nftId.serial.toString());
+        transfer.setSenderaccountid(from._toProto());
+        transfer.setReceiveraccountid(to._toProto());
+        transfers.push(transfer);
 
         return this;
     }

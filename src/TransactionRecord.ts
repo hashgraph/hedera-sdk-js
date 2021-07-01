@@ -13,6 +13,8 @@ import { TokenId, TokenIdLike } from "./token/TokenId";
 import { AccountId, AccountIdLike } from "./account/AccountId";
 import { Transfer, transferFromProto } from "./Transfer";
 import BigNumber from "bignumber.js";
+import { ScheduleId } from "./schedule/ScheduleId";
+import { AssessedCustomFee } from "./token/AssessedCustomFee";
 
 const callResult = Symbol("callResult");
 
@@ -151,6 +153,10 @@ export class TransactionRecord {
 
     public readonly tokenTransfers: TokenTransfersMap;
 
+    public readonly scheduleRef: ScheduleId | null;
+
+    public readonly assessedCustomFees: AssessedCustomFee[];
+
     private constructor(record: ProtoTransactionRecord) {
         this.receipt = TransactionReceipt._fromProto(record.getReceipt()!);
         this.transactionHash = record.getTransactionhash_asU8();
@@ -168,6 +174,12 @@ export class TransactionRecord {
         }
 
         this.tokenTransfers = new TokenTransfersMap(record.getTokentransferlistsList());
+
+        this.scheduleRef = record.hasScheduleref() ?
+            ScheduleId._fromProto(record.getScheduleref()!) :
+            null;
+        this.assessedCustomFees = record.getAssessedCustomFeesList()
+            .map((fee) => new AssessedCustomFee(fee));
     }
 
     public static _fromProto(pb: ProtoTransactionRecord): TransactionRecord {

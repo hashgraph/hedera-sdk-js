@@ -44,6 +44,16 @@ export class TokenMintTransaction extends SingleTransactionBuilder {
         return this;
     }
 
+    public addMetadata(data: Uint8Array): this {
+        this._body.addMetadata(data);
+        return this;
+    }
+
+    public setMetadata(data: Uint8Array[]): this {
+        this._body.setMetadataList(data);
+        return this;
+    }
+
     protected get _method(): UnaryMethodDefinition<
         Transaction,
         TransactionResponse

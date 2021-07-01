@@ -9,6 +9,7 @@ import { TokenService } from "../generated/TokenService_pb_service";
 import { timestampToProto, dateToTimestamp } from "../Timestamp";
 import { TokenId, TokenIdLike } from "./TokenId";
 import { newDuration } from "../util";
+import { CustomFeeList } from "./CustomFeeList";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
@@ -126,6 +127,11 @@ export class TokenUpdateTransaction extends SingleTransactionBuilder {
      */
     public setAutoRenewPeriod(seconds: number): this {
         this._body.setAutorenewperiod(newDuration(seconds));
+        return this;
+    }
+
+    public setCustomFeeList(customFeeList: CustomFeeList): this {
+        this._body.setCustomFees(customFeeList._toProto());
         return this;
     }
 

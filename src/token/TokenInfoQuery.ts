@@ -13,6 +13,9 @@ import { AccountId } from "../account/AccountId";
 import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
 import { timestampToDate } from "../Timestamp";
 import BigNumber from "bignumber.js";
+import { TokenSupplyType } from "./TokenSupplyType";
+import { TokenType } from "./TokenType";
+import { CustomFeeList } from "./CustomFeeList";
 
 /**
  * Response when the client sends the node TokenGetInfoQuery.
@@ -114,6 +117,16 @@ export interface TokenInfo {
      * this is coerced to the current epoch second plus the autoRenewPeriod
      */
     expirationTime: Date | null;
+
+    tokenMemo: string | null;
+
+    customFeeList: CustomFeeList | null;
+
+    tokenType: TokenType;
+
+    supplyType: TokenSupplyType;
+
+    maxSupply: BigNumber;
 }
 
 /**
@@ -199,7 +212,12 @@ export class TokenInfoQuery extends QueryBuilder<TokenInfo> {
             autoRenewPeriod: info.getAutorenewperiod()!.getSeconds(),
             expirationTime: info.hasExpiry() ?
                 timestampToDate(info.getExpiry()!) :
-                null
+                null,
+            tokenMemo: info.getMemo(),
+            customFeeList: info.hasCustomFees() ? new CustomFeeList(info.getCustomFees()!) : null,
+            tokenType: TokenType._fromCode(info.getTokentype()),
+            supplyType: TokenSupplyType._fromCode(info.getSupplytype()),
+            maxSupply: new BigNumber(info.getMaxsupply())
         };
     }
 }

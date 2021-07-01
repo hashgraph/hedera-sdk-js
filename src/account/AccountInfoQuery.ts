@@ -91,6 +91,8 @@ export interface AccountInfo {
     autoRenewPeriod: number;
 
     tokenRelationships: TokenRelationshipMap;
+
+    ownedNfts: BigNumber;
 }
 
 export interface TokenRelationship {
@@ -228,7 +230,8 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
                 null,
 
             proxyReceived: Hbar.fromTinybar(accountInfo.getProxyreceived()),
-            tokenRelationships: new TokenRelationshipMap(accountInfo.getTokenrelationshipsList())
+            tokenRelationships: new TokenRelationshipMap(accountInfo.getTokenrelationshipsList()),
+            ownedNfts: new BigNumber(accountInfo.getOwnednfts())
         };
     }
 }

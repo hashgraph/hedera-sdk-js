@@ -36,7 +36,6 @@ The amount of gas used, as well as other attributes of the transaction, e.g. siz
 determine the fee for the transaction – which is charged to the paying account.
 */
 
-
 message ContractCallTransactionBody {
     ContractID contractID = 1; // the contract instance to call, in the format used in transactions
     int64 gas = 2 [jstype=JS_STRING]; // the maximum amount of gas to use for the call

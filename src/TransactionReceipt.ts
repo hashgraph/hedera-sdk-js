@@ -7,6 +7,8 @@ import { TokenId } from "./token/TokenId";
 import { ScheduleId } from "./schedule/ScheduleId";
 import { ExchangeRateSet, exchangeRateSetToSdk } from "./ExchangeRate";
 import { Status } from "./Status";
+import { TransactionId } from "./TransactionId";
+import BigNumber from "bignumber.js";
 
 /**
  * The consensus result for a transaction, which might not be currently known,
@@ -27,6 +29,8 @@ export class TransactionReceipt {
     private readonly [ "_exchangeRateSet" ]: ExchangeRateSet | null;
     private readonly [ "_topicSequenceNumber" ]: number;
     private readonly [ "_topicRunningHash" ]: Uint8Array;
+    private readonly [ "_scheduledTransactionId" ]: TransactionId | null;
+    private readonly [ "_serials" ]: BigNumber[];
 
     private constructor(
         status: Status,
@@ -38,7 +42,9 @@ export class TransactionReceipt {
         scheduleId: ScheduleId | null,
         exchangeRateSet: ExchangeRateSet | null,
         topicSequenceNubmer: number,
-        topicRunningHash: Uint8Array
+        topicRunningHash: Uint8Array,
+        scheduledTransactionId: TransactionId | null,
+        serials: BigNumber[]
     ) {
         this.status = status;
         this._accountId = accountId;
@@ -50,6 +56,8 @@ export class TransactionReceipt {
         this._exchangeRateSet = exchangeRateSet;
         this._topicSequenceNumber = topicSequenceNubmer;
         this._topicRunningHash = topicRunningHash;
+        this._scheduledTransactionId = scheduledTransactionId;
+        this._serials = serials;
     }
 
     /** @deprecated */
@@ -164,6 +172,14 @@ export class TransactionReceipt {
         return this._topicSequenceNumber;
     }
 
+    public getScheduledTransactionId(): TransactionId | null {
+        return this._scheduledTransactionId;
+    }
+
+    public getSerials(): BigNumber[] {
+        return this._serials;
+    }
+
     public toJSON(): object {
         return {
             status: this.status.toString(),
@@ -178,7 +194,13 @@ export class TransactionReceipt {
             consensusTopicSequenceNumber: this._topicSequenceNumber === 0 ?
             /* eslint-disable-next-line no-undefined */
                 undefined :
-                this._topicSequenceNumber
+                this._topicSequenceNumber,
+            scheduledTransactionId: this._scheduledTransactionId != null ?
+            /* eslint-disable-next-line no-undefined */
+                this._scheduledTransactionId : undefined,
+            serials: this._serials != null && this._serials.length !== 0 ?
+            /* eslint-disable-next-line no-undefined */
+                this._serials.map((serial) => serial.toString()) : undefined
         };
     }
 
@@ -204,7 +226,11 @@ export class TransactionReceipt {
                 exchangeRateSetToSdk(receipt.getExchangerate()!) :
                 null,
             receipt.getTopicsequencenumber(),
-            receipt.getTopicrunninghash_asU8()
+            receipt.getTopicrunninghash_asU8(),
+            receipt.hasScheduledtransactionid() ?
+                TransactionId._fromProto(receipt.getScheduledtransactionid()!) :
+                null,
+            receipt.getSerialnumbersList().map((serial) => new BigNumber(serial))
         );
     }
 }

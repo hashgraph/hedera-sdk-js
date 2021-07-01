@@ -44,6 +44,16 @@ export class TokenBurnTransaction extends SingleTransactionBuilder {
         return this;
     }
 
+    public addSerial(serial: BigNumber): this {
+        this._body.addSerialnumbers(serial.toString());
+        return this;
+    }
+
+    public setSerials(serials: BigNumber[]): this {
+        this._body.setSerialnumbersList(serials.map((serial) => serial.toString()));
+        return this;
+    }
+
     protected get _method(): UnaryMethodDefinition<
         Transaction,
         TransactionResponse
