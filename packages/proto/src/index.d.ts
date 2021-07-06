@@ -86,6 +86,7 @@ import FeeComponents = proto.FeeComponents;
 import FeeData = proto.FeeData;
 import TransactionFeeSchedule = proto.TransactionFeeSchedule;
 import HederaFunctionality = proto.HederaFunctionality;
+import FeeSchedule = proto.FeeSchedule;
 
 export {
     AccountID,
@@ -126,6 +127,7 @@ export {
     FeeData,
     TransactionFeeSchedule,
     HederaFunctionality,
+    FeeSchedule,
 };
 
 // ============================================================================
@@ -259,6 +261,7 @@ import IFeeSchedules = proto.IFeeSchedule;
 import IFeeComponents = proto.IFeeComponents;
 import IFeeData = proto.IFeeData;
 import ITransactionFeeSchedule = proto.ITransactionFeeSchedule;
+import IFeeSchedule = proto.IFeeSchedule;
 
 export {
     IAccountAmount,
@@ -385,4 +388,5 @@ export {
     IFeeComponents,
     IFeeData,
     ITransactionFeeSchedule,
+    IFeeSchedule,
 };
