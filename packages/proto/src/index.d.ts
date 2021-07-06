@@ -80,6 +80,12 @@ import TransactionID = proto.TransactionID;
 import TransactionList = proto.TransactionList;
 import TransactionReceipt = proto.TransactionReceipt;
 import TransactionRecord = proto.TransactionRecord;
+import CurrentAndNextFeeSchedule = proto.CurrentAndNextFeeSchedule;
+import FeeSchedules = proto.FeeSchedule;
+import FeeComponents = proto.FeeComponents;
+import FeeData = proto.FeeData;
+import TransactionFeeSchedule = proto.TransactionFeeSchedule;
+import HederaFunctionality = proto.HederaFunctionality;
 
 export {
     AccountID,
@@ -114,6 +120,12 @@ export {
     TransactionList,
     TransactionReceipt,
     TransactionRecord,
+    CurrentAndNextFeeSchedule,
+    FeeSchedules,
+    FeeComponents,
+    FeeData,
+    TransactionFeeSchedule,
+    HederaFunctionality,
 };
 
 // ============================================================================
@@ -242,6 +254,11 @@ import ITransactionReceipt = proto.ITransactionReceipt;
 import ITransactionRecord = proto.ITransactionRecord;
 import ITransactionResponse = proto.ITransactionResponse;
 import ITransferList = proto.ITransferList;
+import ICurrentAndNextFeeSchedule = proto.ICurrentAndNextFeeSchedule;
+import IFeeSchedules = proto.IFeeSchedule;
+import IFeeComponents = proto.IFeeComponents;
+import IFeeData = proto.IFeeData;
+import ITransactionFeeSchedule = proto.ITransactionFeeSchedule;
 
 export {
     IAccountAmount,
@@ -363,4 +380,9 @@ export {
     ITransactionRecord,
     ITransactionResponse,
     ITransferList,
+    ICurrentAndNextFeeSchedule,
+    IFeeSchedules,
+    IFeeComponents,
+    IFeeData,
+    ITransactionFeeSchedule,
 };
