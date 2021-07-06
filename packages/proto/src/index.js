@@ -47,3 +47,4 @@ export const FeeSchedules = proto.FeeSchedule;
 export const FeeComponents = proto.FeeComponents;
 export const FeeData = proto.FeeData;
 export const TransactionFeeSchedule = proto.TransactionFeeSchedule;
+export const HederaFunctionality = proto.HederaFunctionality;

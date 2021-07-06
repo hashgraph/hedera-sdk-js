@@ -25,6 +25,7 @@ import IFeeSchedules = proto.IFeeSchedule;
 import IFeeComponents = proto.IFeeComponents;
 import IFeeData = proto.IFeeData;
 import ITransactionFeeSchedule = proto.ITransactionFeeSchedule;
+import HederaFunctionality = proto.HederaFunctionality;
 
 export {
     Reader,
@@ -364,4 +365,6 @@ export {
     IFeeComponents,
     IFeeData,
     ITransactionFeeSchedule,
+    //RequestType
+    HederaFunctionality,
 };
