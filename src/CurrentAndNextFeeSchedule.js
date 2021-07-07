@@ -10,7 +10,7 @@ export default class CurrentAndNextFeeSchedule {
         /*
         * Contains current Fee Schedule
         *
-        * @type {undefined}
+        * @type {object}
         */
         this.currentFeeSchedule = props.currentFeeSchedule;
 
