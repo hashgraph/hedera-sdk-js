@@ -55,7 +55,15 @@ service TokenService {
     rpc associateTokens (Transaction) returns (TransactionResponse);
     // Dissociates tokens from an account
     rpc dissociateTokens (Transaction) returns (TransactionResponse);
+    // Updates the custom fee schedule on a token
+    rpc updateTokenFeeSchedule (Transaction) returns (TransactionResponse);
 
     // Retrieves the metadata of a token
     rpc getTokenInfo (Query) returns (Response);
+    // Gets info on NFTs N through M on the list of NFTs associated with a given account
+    rpc getAccountNftInfos (Query) returns (Response);
+    // Retrieves the metadata of an NFT by TokenID and serial number
+    rpc getTokenNftInfo (Query) returns (Response);
+    // Gets info on NFTs N through M on the list of NFTs associated with a given Token of type NON_FUNGIBLE
+    rpc getTokenNftInfos (Query) returns (Response);
 }

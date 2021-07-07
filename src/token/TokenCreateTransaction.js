@@ -8,6 +8,10 @@ import Long from "long";
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
+import CustomFixedFee from "./CustomFixedFee.js";
+import CustomFractionalFee from "./CustomFractionalFee.js";
+import TokenType from "./TokenType.js";
+import TokenSupplyType from "./TokenSupplyType.js";
 
 /**
  * @namespace proto
@@ -26,6 +30,7 @@ import Duration from "../Duration.js";
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("./CustomFee.js").default} CustomFee
  */
 
 /**
@@ -49,6 +54,10 @@ export default class TokenCreateTransaction extends Transaction {
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {string} [props.tokenMemo]
+     * @param {CustomFee[]} [props.customFees]
+     * @param {TokenType} [props.tokenType]
+     * @param {TokenSupplyType} [props.supplyType]
+     * @param {Long | number} [props.maxSupply]
      */
     constructor(props = {}) {
         super();
@@ -143,6 +152,30 @@ export default class TokenCreateTransaction extends Transaction {
          */
         this._tokenMemo = null;
 
+        /**
+         * @private
+         * @type {CustomFee[]}
+         */
+        this._customFees = [];
+
+        /**
+         * @private
+         * @type {?TokenType}
+         */
+        this._tokenType = null;
+
+        /**
+         * @private
+         * @type {?TokenSupplyType}
+         */
+        this._supplyType = null;
+
+        /**
+         * @private
+         * @type {?Long}
+         */
+        this._maxSupply = null;
+
         this.setMaxTransactionFee(new Hbar(30));
 
         if (props.tokenName != null) {
@@ -203,6 +236,22 @@ export default class TokenCreateTransaction extends Transaction {
 
         if (props.tokenMemo != null) {
             this.setTokenMemo(props.tokenMemo);
+        }
+
+        if (props.customFees != null) {
+            this.setCustomFees(props.customFees);
+        }
+
+        if (props.tokenType != null) {
+            this.setTokenType(props.tokenType);
+        }
+
+        if (props.supplyType != null) {
+            this.setSupplyType(props.supplyType);
+        }
+
+        if (props.maxSupply != null) {
+            this.setMaxSupply(props.maxSupply);
         }
     }
 
@@ -277,6 +326,26 @@ export default class TokenCreateTransaction extends Transaction {
                         ? Duration._fromProtobuf(create.autoRenewPeriod)
                         : undefined,
                 tokenMemo: create.memo != null ? create.memo : undefined,
+                customFees:
+                    create.customFees != null
+                        ? create.customFees.map((fee) => {
+                              if (fee.fixedFee != null) {
+                                  return CustomFixedFee._fromProtobuf(fee);
+                              } else {
+                                  return CustomFractionalFee._fromProtobuf(fee);
+                              }
+                          })
+                        : undefined,
+                tokenType:
+                    create.tokenType != null
+                        ? TokenType._fromCode(create.tokenType)
+                        : undefined,
+                supplyType:
+                    create.supplyType != null
+                        ? TokenSupplyType._fromCode(create.supplyType)
+                        : undefined,
+                maxSupply:
+                    create.maxSupply != null ? create.maxSupply : undefined,
             }),
             transactions,
             signedTransactions,
@@ -567,6 +636,82 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
+     * @returns {CustomFee[]}
+     */
+    get customFees() {
+        return this._customFees;
+    }
+
+    /**
+     * @param {CustomFee} fee
+     * @returns {this}
+     */
+    addCustomFee(fee) {
+        this._customFees.push(fee);
+        return this;
+    }
+
+    /**
+     * @param {CustomFee[]} customFees
+     * @returns {this}
+     */
+    setCustomFees(customFees) {
+        this._customFees = customFees;
+        return this;
+    }
+
+    /**
+     * @returns {?TokenType}
+     */
+    get tokenType() {
+        return this._tokenType;
+    }
+
+    /**
+     * @param {TokenType} tokenType
+     * @returns {this}
+     */
+    setTokenType(tokenType) {
+        this._tokenType = tokenType;
+        return this;
+    }
+
+    /**
+     * @returns {?TokenSupplyType}
+     */
+    get supplyType() {
+        return this._supplyType;
+    }
+
+    /**
+     * @param {TokenSupplyType} supplyType
+     * @returns {this}
+     */
+    setSupplyType(supplyType) {
+        this._supplyType = supplyType;
+        return this;
+    }
+
+    /**
+     * @returns {?Long}
+     */
+    get maxSupply() {
+        return this._maxSupply;
+    }
+
+    /**
+     * @param {Long | number} maxSupply
+     * @returns {this}
+     */
+    setMaxSupply(maxSupply) {
+        this._maxSupply =
+            typeof maxSupply === "number"
+                ? Long.fromNumber(maxSupply)
+                : maxSupply;
+        return this;
+    }
+
+    /**
      * @param {?import("../client/Client.js").default<Channel, *>} client
      * @returns {this}
      */
@@ -653,6 +798,11 @@ export default class TokenCreateTransaction extends Transaction {
                     ? this._autoRenewPeriod._toProtobuf()
                     : null,
             memo: this._tokenMemo,
+            customFees: this.customFees.map((fee) => fee._toProtobuf()),
+            tokenType: this._tokenType != null ? this._tokenType._code : null,
+            supplyType:
+                this._supplyType != null ? this._supplyType._code : null,
+            maxSupply: this.maxSupply,
         };
     }
 }

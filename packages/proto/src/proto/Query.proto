@@ -52,6 +52,10 @@ import "NetworkGetVersionInfo.proto";
 import "TokenGetInfo.proto";
 import "ScheduleGetInfo.proto";
 
+import "TokenGetAccountNftInfos.proto";
+import "TokenGetNftInfo.proto";
+import "TokenGetNftInfos.proto";
+
 /* A single query, which is sent from the client to a node. This includes all possible queries. Each Query should not have more than 50 levels. */
 message Query {
     oneof query {
@@ -81,5 +85,9 @@ message Query {
         TokenGetInfoQuery tokenGetInfo = 52; // Get all information about a token
 
         ScheduleGetInfoQuery scheduleGetInfo = 53; // Get all information about a scheduled entity
+
+        TokenGetAccountNftInfosQuery tokenGetAccountNftInfos = 54; // Get a list of NFTs associated with the account
+        TokenGetNftInfoQuery tokenGetNftInfo = 55; // Get all information about a NFT
+        TokenGetNftInfosQuery tokenGetNftInfos = 56; // Get a list of NFTs for the token
     }
 }

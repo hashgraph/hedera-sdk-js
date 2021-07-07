@@ -7,6 +7,7 @@ import Transaction, {
 import Long from "long";
 import TokenTransferMap from "./TokenTransferMap.js";
 import HbarTransferMap from "./HbarTransferMap.js";
+import TokenNftTransferMap from "./TokenNftTransferMap.js";
 
 /**
  * @typedef {import("../long.js").LongObject} LongObject
@@ -53,6 +54,14 @@ import HbarTransferMap from "./HbarTransferMap.js";
  */
 
 /**
+ * @typedef {object} TransferNftInput
+ * @property {TokenId | string} tokenId
+ * @property {AccountId | string} sender
+ * @property {AccountId | string} recipient
+ * @property {Long | number} serial
+ */
+
+/**
  * Transfers a new Hedera™ crypto-currency token.
  */
 export default class TransferTransaction extends Transaction {
@@ -60,6 +69,7 @@ export default class TransferTransaction extends Transaction {
      * @param {object} [props]
      * @param {(TransferTokensInput)[]} [props.tokenTransfers]
      * @param {(TransferHbarInput)[]} [props.hbarTransfers]
+     * @param {(TransferNftInput)[]} [props.nftTransfers]
      */
     constructor(props = {}) {
         super();
@@ -75,6 +85,12 @@ export default class TransferTransaction extends Transaction {
          * @type {HbarTransferMap}
          */
         this._hbarTransfers = new HbarTransferMap();
+
+        /**
+         * @private
+         * @type {TokenNftTransferMap}
+         */
+        this._nftTransfers = new TokenNftTransferMap();
 
         this.setMaxTransactionFee(new Hbar(1));
 
@@ -92,6 +108,17 @@ export default class TransferTransaction extends Transaction {
             ? props.hbarTransfers
             : []) {
             this.addHbarTransfer(transfer.accountId, transfer.amount);
+        }
+
+        for (const transfer of props.nftTransfers != null
+            ? props.nftTransfers
+            : []) {
+            this.addNftTransfer(
+                transfer.tokenId,
+                transfer.serial,
+                transfer.sender,
+                transfer.recipient
+            );
         }
     }
 
@@ -242,6 +269,44 @@ export default class TransferTransaction extends Transaction {
     }
 
     /**
+     * @returns {TokenNftTransferMap}
+     */
+    get nftTransfers() {
+        return this._nftTransfers;
+    }
+
+    /**
+     * @internal
+     * @param {TokenId | string} tokenId
+     * @param {Long | number} serial
+     * @param {AccountId | string} sender
+     * @param {AccountId | string} recipient
+     * @returns {TransferTransaction}
+     */
+    addNftTransfer(tokenId, serial, sender, recipient) {
+        this._requireNotFrozen();
+        this._nftTransfers.__set(
+            typeof tokenId === "string" ? TokenId.fromString(tokenId) : tokenId,
+            {
+                serial:
+                    typeof serial === "number"
+                        ? Long.fromNumber(serial)
+                        : serial,
+                sender:
+                    typeof sender === "string"
+                        ? AccountId.fromString(sender)
+                        : sender,
+                recipient:
+                    typeof recipient === "string"
+                        ? AccountId.fromString(recipient)
+                        : recipient,
+            }
+        );
+
+        return this;
+    }
+
+    /**
      * @override
      * @internal
      * @param {Channel} channel
@@ -279,9 +344,22 @@ export default class TransferTransaction extends Transaction {
                 });
             }
 
+            const tokenNftTransfers = this._nftTransfers.get(tokenId);
+            const nftTransfers = [];
+            for (const transfer of tokenNftTransfers != null
+                ? tokenNftTransfers
+                : []) {
+                nftTransfers.push({
+                    senderAccountID: transfer.sender._toProtobuf(),
+                    recipientAccountID: transfer.recipient._toProtobuf(),
+                    serialNumber: transfer.serial,
+                });
+            }
+
             tokenTransfers.push({
                 token: tokenId._toProtobuf(),
                 transfers,
+                nftTransfers,
             });
         }
 
