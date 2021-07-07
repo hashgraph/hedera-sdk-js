@@ -5,9 +5,14 @@ import Duration from "../Duration.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
 import * as proto from "@hashgraph/proto";
+import TokenType from "./TokenType.js";
+import TokenSupplyType from "./TokenSupplyType.js";
+import CustomFixedFee from "./CustomFixedFee.js";
+import CustomFractionalFee from "./CustomFractionalFee.js";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("./CustomFee.js").default} CustomFee
  */
 
 /**
@@ -35,6 +40,10 @@ export default class TokenInfo {
      * @param {Duration | null} props.autoRenewPeriod;
      * @param {Timestamp | null} props.expirationTime;
      * @param {string} props.tokenMemo;
+     * @param {CustomFee[]} props.customFees;
+     * @param {TokenType | null} props.tokenType;
+     * @param {TokenSupplyType | null} props.supplyType;
+     * @param {Long | null} props.maxSupply;
      */
     constructor(props) {
         /**
@@ -174,6 +183,14 @@ export default class TokenInfo {
          * @readonly
          */
         this.tokenMemo = props.tokenMemo;
+
+        this.customFees = props.customFees;
+
+        this.tokenType = props.tokenType;
+
+        this.supplyType = props.supplyType;
+
+        this.maxSupply = props.maxSupply;
     }
 
     /**
@@ -256,6 +273,25 @@ export default class TokenInfo {
                       )
                     : null,
             tokenMemo: info.memo != null ? info.memo : "",
+            customFees:
+                info.customFees != null
+                    ? info.customFees.map((fee) => {
+                          if (fee.fixedFee != null) {
+                              return CustomFixedFee._fromProtobuf(fee);
+                          } else {
+                              return CustomFractionalFee._fromProtobuf(fee);
+                          }
+                      })
+                    : [],
+            tokenType:
+                info.tokenType != null
+                    ? TokenType._fromCode(info.tokenType)
+                    : null,
+            supplyType:
+                info.supplyType != null
+                    ? TokenSupplyType._fromCode(info.supplyType)
+                    : null,
+            maxSupply: info.maxSupply != null ? info.maxSupply : null,
         });
     }
 
@@ -307,6 +343,10 @@ export default class TokenInfo {
                     ? this.expirationTime._toProtobuf()
                     : null,
             memo: this.tokenMemo,
+            customFees: this.customFees.map((fee) => fee._toProtobuf()),
+            tokenType: this.tokenType != null ? this.tokenType._code : null,
+            supplyType: this.supplyType != null ? this.supplyType._code : null,
+            maxSupply: this.maxSupply,
         };
     }
 

@@ -10,15 +10,14 @@ import Long from "long";
 export default class NftId {
     /**
      * @param {TokenId} token
-     * @param {(number | Long)=} serial
+     * @param {number | Long} serial
      */
     constructor(token, serial) {
         this.tokenId = token;
-        if (serial !== undefined) {
-            this.serial = serial;
-        } else {
-            this.serial = 0;
-        }
+        this.serial =
+            typeof serial === "number" ? Long.fromNumber(serial) : serial;
+
+        Object.freeze(this);
     }
 
     /**
@@ -48,7 +47,7 @@ export default class NftId {
     static _fromProtobuf(id) {
         return new NftId(
             TokenId._fromProtobuf(/** @type {proto.ITokenID} */ (id.tokenID)),
-            id.serialNumber !== null ? id.serialNumber : 0
+            id.serialNumber != null ? id.serialNumber : Long.ZERO
         );
     }
 
