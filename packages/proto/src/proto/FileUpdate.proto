@@ -30,7 +30,7 @@ import "Timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
 /*
-Modify the metadata and/or contents of a file. If a field is not set in the transaction body, the corresponding file attribute will be unchanged. This transaction must be signed by all the keys in the key list of the file being updated. If the keys themselves are being update, then the transaction must also be signed by all the new keys.
+Modify the metadata and/or contents of a file. If a field is not set in the transaction body, the corresponding file attribute will be unchanged. This transaction must be signed by all the keys in the top level of a key list (M-of-M) of the file being updated. If the keys themselves are being updated, then the transaction must also be signed by all the new keys. If the keys contain additional KeyList or ThresholdKey then M-of-M secondary KeyList or ThresholdKey signing requirements must be meet
  */
 message FileUpdateTransactionBody {
     FileID fileID = 1; // The ID of the file to update
