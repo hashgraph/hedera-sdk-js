@@ -33,6 +33,7 @@ export default class TokenInfo {
      * @param {Key | null} props.freezeKey;
      * @param {Key | null} props.wipeKey;
      * @param {Key | null} props.supplyKey;
+     * @param {Key | null} props.feeScheduleKey;
      * @param {boolean | null} props.defaultFreezeStatus;
      * @param {boolean | null} props.defaultKycStatus;
      * @param {boolean} props.isDeleted;
@@ -125,6 +126,8 @@ export default class TokenInfo {
          */
         this.supplyKey = props.supplyKey;
 
+        this.feeScheduleKey = props.feeScheduleKey;
+
         /**
          * The default Freeze status (not applicable = null, frozen = false, or unfrozen = true) of Hedera accounts relative to this token.
          * FreezeNotApplicable is returned if Token Freeze Key is empty. Frozen is returned if Token Freeze Key is set and
@@ -133,8 +136,7 @@ export default class TokenInfo {
          *      Frozen = true;
          *      Unfrozen = false;
          *
-         * @readonly
-         */
+         * @readonly */
         this.defaultFreezeStatus = props.defaultFreezeStatus;
 
         /**
@@ -248,6 +250,10 @@ export default class TokenInfo {
                 info.supplyKey != null
                     ? keyFromProtobuf(info.supplyKey, ledgerId)
                     : null,
+            feeScheduleKey:
+                info.feeScheduleKey != null
+                    ? keyFromProtobuf(info.feeScheduleKey, ledgerId)
+                    : null,
             defaultFreezeStatus:
                 defaultFreezeStatus === 0 ? null : defaultFreezeStatus == 1,
             defaultKycStatus:
@@ -317,6 +323,10 @@ export default class TokenInfo {
             wipeKey: this.wipeKey != null ? keyToProtobuf(this.wipeKey) : null,
             supplyKey:
                 this.supplyKey != null ? keyToProtobuf(this.supplyKey) : null,
+            feeScheduleKey:
+                this.feeScheduleKey != null
+                    ? keyToProtobuf(this.feeScheduleKey)
+                    : null,
             defaultFreezeStatus:
                 this.defaultFreezeStatus == null
                     ? 0

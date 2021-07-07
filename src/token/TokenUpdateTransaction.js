@@ -45,6 +45,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {string} [props.tokenMemo]
+     * @param {Key} [props.feeScheduleKey]
      */
     constructor(props = {}) {
         super();
@@ -127,6 +128,12 @@ export default class TokenUpdateTransaction extends Transaction {
          */
         this._tokenMemo = null;
 
+        /**
+         * @private
+         * @type {?Key}
+         */
+        this._feeScheduleKey = null;
+
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);
         }
@@ -177,6 +184,10 @@ export default class TokenUpdateTransaction extends Transaction {
 
         if (props.tokenMemo != null) {
             this.setTokenMemo(props.tokenMemo);
+        }
+
+        if (props.feeScheduleKey != null) {
+            this.setFeeScheduleKey(props.feeScheduleKey);
         }
     }
 
@@ -250,6 +261,10 @@ export default class TokenUpdateTransaction extends Transaction {
                         ? update.memo.value != null
                             ? update.memo.value
                             : undefined
+                        : undefined,
+                feeScheduleKey:
+                    update.feeScheduleKey != null
+                        ? keyFromProtobuf(update.feeScheduleKey)
                         : undefined,
             }),
             transactions,
@@ -506,6 +521,24 @@ export default class TokenUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?Key}
+     */
+    get feeScheduleKey() {
+        return this._feeScheduleKey;
+    }
+
+    /**
+     * @param {Key} feeScheduleKey
+     * @returns {this}
+     */
+    setFeeScheduleKey(feeScheduleKey) {
+        this._requireNotFrozen();
+        this._feeScheduleKey = feeScheduleKey;
+
+        return this;
+    }
+
+    /**
      * @returns {this}
      */
     clearTokenMemo() {
@@ -592,6 +625,10 @@ export default class TokenUpdateTransaction extends Transaction {
                     ? {
                           value: this._tokenMemo,
                       }
+                    : null,
+            feeScheduleKey:
+                this._feeScheduleKey != null
+                    ? keyToProtobuf(this._feeScheduleKey)
                     : null,
         };
     }
