@@ -101,7 +101,7 @@ message TransactionReceipt {
     // In the receipt of a CreateToken, the id of the newly created token
     TokenID tokenID = 10;
 
-    // In the receipt of TokenMint, TokenWipe, TokenBurn, the current total supply of this token
+    // In the receipt of TokenMint, TokenWipe, TokenBurn, For fungible tokens - the current total supply of this token. For non fungible tokens - the total number of NFTs issued for a given tokenID
     uint64 newTotalSupply = 11;
 
     // In the receipt of a ScheduleCreate, the id of the newly created Scheduled Entity

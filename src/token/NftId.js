@@ -1,4 +1,4 @@
-import * as proto from "../../packages/proto";
+import * as proto from "@hashgraph/proto";
 import TokenId from "../token/TokenId.js";
 import Long from "long";
 
@@ -12,12 +12,12 @@ export default class NftId {
      * @param {TokenId} token
      * @param {(number | Long)=} serial
      */
-    constructor( token, serial) {
+    constructor(token, serial) {
         this.tokenId = token;
-        if(serial !== undefined){
+        if (serial !== undefined) {
             this.serial = serial;
         } else {
-            this.serial = 0
+            this.serial = 0;
         }
     }
 
@@ -34,8 +34,8 @@ export default class NftId {
             }
         }
 
-        const serial = Long.fromString(strings[0])
-        const token = TokenId.fromString(strings[1])
+        const serial = Long.fromString(strings[0]);
+        const token = TokenId.fromString(strings[1]);
 
         return new NftId(token, serial);
     }
@@ -48,7 +48,8 @@ export default class NftId {
     static _fromProtobuf(id) {
         return new NftId(
             TokenId._fromProtobuf(/** @type {proto.ITokenID} */ (id.tokenID)),
-            id.serialNumber !== null ? id.serialNumber : 0);
+            id.serialNumber !== null ? id.serialNumber : 0
+        );
     }
 
     /**
@@ -67,7 +68,9 @@ export default class NftId {
     _toProtobuf() {
         return {
             tokenID: this.tokenId._toProtobuf(),
-            serialNumber: Long.fromValue(this.serial !== undefined ? this.serial : 0),
+            serialNumber: Long.fromValue(
+                this.serial !== undefined ? this.serial : 0
+            ),
         };
     }
 

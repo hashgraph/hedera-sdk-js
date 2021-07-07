@@ -7,6 +7,7 @@ import ContractFunctionResult from "../contract/ContractFunctionResult.js";
 import TokenTransferMap from "../account/TokenTransferMap.js";
 import * as proto from "@hashgraph/proto";
 import ScheduleId from "../schedule/ScheduleId.js";
+import AssessedCustomFee from "../token/AssessedCustomFee.js";
 
 /**
  * Response when the client sends the node TransactionGetRecordResponse.
@@ -25,6 +26,7 @@ export default class TransactionRecord {
      * @param {Transfer[]} props.transfers
      * @param {TokenTransferMap} props.tokenTransfers
      * @param {?ScheduleId} props.scheduleRef
+     * @param {AssessedCustomFee[]} props.assessedCustomFees
      */
     constructor(props) {
         /**
@@ -100,6 +102,8 @@ export default class TransactionRecord {
 
         this.scheduleRef = props.scheduleRef;
 
+        this.assessedCustomFees = props.assessedCustomFees;
+
         Object.freeze(this);
     }
 
@@ -151,6 +155,9 @@ export default class TransactionRecord {
                 this.scheduleRef != null
                     ? this.scheduleRef._toProtobuf()
                     : null,
+            assessedCustomFees: this.assessedCustomFees.map((fee) =>
+                fee._toProtobuf()
+            ),
         };
     }
 
@@ -210,6 +217,12 @@ export default class TransactionRecord {
                 record.scheduleRef != null
                     ? ScheduleId._fromProtobuf(record.scheduleRef, ledgerId)
                     : null,
+            assessedCustomFees:
+                record.assessedCustomFees != null
+                    ? record.assessedCustomFees.map((fee) =>
+                          AssessedCustomFee._fromProtobuf(fee)
+                      )
+                    : [],
         });
     }
 

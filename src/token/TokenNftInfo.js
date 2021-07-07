@@ -50,7 +50,6 @@ export default class TokenNftInfo {
          * @readonly
          */
         this.metadata = props.metadata;
-
     }
 
     /**

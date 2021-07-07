@@ -34,6 +34,7 @@ export default class AccountInfo {
      * @param {LiveHash[]} props.liveHashes
      * @param {TokenRelationshipMap} props.tokenRelationships
      * @param {string} props.accountMemo
+     * @param {Long} props.ownedNfts
      */
     constructor(props) {
         /**
@@ -139,6 +140,8 @@ export default class AccountInfo {
 
         this.accountMemo = props.accountMemo;
 
+        this.ownedNfts = props.ownedNfts;
+
         Object.freeze(this);
     }
 
@@ -211,6 +214,7 @@ export default class AccountInfo {
                 ledgerId
             ),
             accountMemo: info.memo != null ? info.memo : "",
+            ownedNfts: info.ownedNfts ? info.ownedNfts : Long.ZERO,
         });
     }
 
@@ -241,6 +245,7 @@ export default class AccountInfo {
                     ? this.tokenRelationships._toProtobuf()
                     : null,
             memo: this.accountMemo,
+            ownedNfts: this.ownedNfts,
         };
     }
 

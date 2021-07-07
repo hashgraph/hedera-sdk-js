@@ -31,6 +31,7 @@ export default class TokenWipeTransaction extends Transaction {
      * @param {TokenId | string} [props.tokenId]
      * @param {AccountId | string} [props.accountId]
      * @param {Long | number} [props.amount]
+     * @param {(Long | number)[]} [props.serials]
      */
     constructor(props = {}) {
         super();
@@ -49,6 +50,12 @@ export default class TokenWipeTransaction extends Transaction {
 
         /**
          * @private
+         * @type {Long[]}
+         */
+        this._serials = [];
+
+        /**
+         * @private
          * @type {?Long}
          */
         this._amount = null;
@@ -63,6 +70,10 @@ export default class TokenWipeTransaction extends Transaction {
 
         if (props.amount != null) {
             this.setAmount(props.amount);
+        }
+
+        if (props.serials != null) {
+            this.setSerials(props.serials);
         }
     }
 
@@ -179,6 +190,26 @@ export default class TokenWipeTransaction extends Transaction {
         if (this._accountId != null) {
             this._accountId.validate(client);
         }
+    }
+
+    /**
+     * @returns {Long[]}
+     */
+    get serials() {
+        return this._serials;
+    }
+
+    /**
+     * @param {(Long | number)[]} serials
+     * @returns {this}
+     */
+    setSerials(serials) {
+        this._requireNotFrozen();
+        this._serials = serials.map((serial) =>
+            typeof serial === "number" ? Long.fromNumber(serial) : serial
+        );
+
+        return this;
     }
 
     /**

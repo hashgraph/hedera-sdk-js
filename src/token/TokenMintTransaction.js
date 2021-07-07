@@ -3,6 +3,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Long from "long";
+import * as hex from "../encoding/hex.js";
 
 /**
  * @namespace proto
@@ -30,6 +31,7 @@ export default class TokenMintTransaction extends Transaction {
      * @param {object} [props]
      * @param {TokenId | string} [props.tokenId]
      * @param {Long | number} [props.amount]
+     * @param {(Uint8Array | string)[]} [props.metadata]
      */
     constructor(props = {}) {
         super();
@@ -46,12 +48,22 @@ export default class TokenMintTransaction extends Transaction {
          */
         this._amount = null;
 
+        /**
+         * @private
+         * @type {Uint8Array[]}
+         */
+        this._metadata = [];
+
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);
         }
 
         if (props.amount != null) {
             this.setAmount(props.amount);
+        }
+
+        if (props.metadata != null) {
+            this.setMetadata(props.metadata);
         }
     }
 
@@ -83,6 +95,8 @@ export default class TokenMintTransaction extends Transaction {
                         ? TokenId._fromProtobuf(mintToken.token)
                         : undefined,
                 amount: mintToken.amount != null ? mintToken.amount : undefined,
+                metadata:
+                    mintToken.metadata != null ? mintToken.metadata : undefined,
             }),
             transactions,
             signedTransactions,
@@ -138,6 +152,39 @@ export default class TokenMintTransaction extends Transaction {
         if (this._tokenId != null) {
             this._tokenId.validate(client);
         }
+    }
+
+    /**
+     * @returns {Uint8Array[]}
+     */
+    get metadata() {
+        return this._metadata;
+    }
+
+    /**
+     * @param {Uint8Array | string} metadata
+     * @returns {this}
+     */
+    addMetadata(metadata) {
+        this._requireNotFrozen();
+        this._metadata.push(
+            typeof metadata === "string" ? hex.decode(metadata) : metadata
+        );
+
+        return this;
+    }
+
+    /**
+     * @param {(Uint8Array | string)[]} metadata
+     * @returns {this}
+     */
+    setMetadata(metadata) {
+        this._requireNotFrozen();
+        this._metadata = metadata.map((data) =>
+            typeof data === "string" ? hex.decode(data) : data
+        );
+
+        return this;
     }
 
     /**
