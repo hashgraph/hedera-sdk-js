@@ -8,7 +8,7 @@ import { TokenCreateTransactionBody } from "../generated/TokenCreate_pb";
 import { TokenService } from "../generated/TokenService_pb_service";
 import { timestampToProto, dateToTimestamp } from "../Timestamp";
 import { newDuration } from "../util";
-import { CustomFeeList } from "./CustomFeeList";
+import { CustomFee } from "./CustomFee";
 import { TokenType } from "./TokenType";
 import { TokenSupplyType } from "./TokenSupplyType";
 import BigNumber from "bignumber.js";
@@ -209,8 +209,10 @@ export class TokenCreateTransaction extends SingleTransactionBuilder {
         return this;
     }
 
-    public setCustomFeeList(customFeeList: CustomFeeList): this {
-        this._body.setCustomFees(customFeeList._toProto());
+    public setCustomFees(customFeeList: CustomFee[]): this {
+        for (const fee of customFeeList) {
+            this._body.addCustomFees(fee._toProto());
+        }
         return this;
     }
 

@@ -66,7 +66,7 @@ export class TokenNftInfoQuery extends QueryBuilder<TokenNftInfo[]> {
 
         this._inner.clearTokengetnftinfo();
         this._inner.clearTokengetnftinfos();
-        this._inner.clearTokengetaccountnftinfo();
+        this._inner.clearTokengetaccountnftinfos();
 
         this._inner.setTokengetnftinfo(this._byNftBuilder);
         return this;
@@ -77,7 +77,7 @@ export class TokenNftInfoQuery extends QueryBuilder<TokenNftInfo[]> {
 
         this._inner.clearTokengetnftinfo();
         this._inner.clearTokengetnftinfos();
-        this._inner.clearTokengetaccountnftinfo();
+        this._inner.clearTokengetaccountnftinfos();
 
         this._inner.setTokengetnftinfos(this._byTokenBuilder);
         return this;
@@ -88,9 +88,9 @@ export class TokenNftInfoQuery extends QueryBuilder<TokenNftInfo[]> {
 
         this._inner.clearTokengetnftinfo();
         this._inner.clearTokengetnftinfos();
-        this._inner.clearTokengetaccountnftinfo();
+        this._inner.clearTokengetaccountnftinfos();
 
-        this._inner.setTokengetaccountnftinfo(this._byAccountBuilder);
+        this._inner.setTokengetaccountnftinfos(this._byAccountBuilder);
         return this;
     }
 
@@ -126,7 +126,7 @@ export class TokenNftInfoQuery extends QueryBuilder<TokenNftInfo[]> {
 
     protected _mapResponseHeader(response: Response): ResponseHeader {
         if (this._byAccountBuilder.hasAccountid()) {
-            return response.getTokengetaccountnftinfo()!.getHeader()!;
+            return response.getTokengetaccountnftinfos()!.getHeader()!;
         } else if (this._byTokenBuilder.hasTokenid()) {
             return response.getTokengetnftinfos()!.getHeader()!;
         }
@@ -136,7 +136,7 @@ export class TokenNftInfoQuery extends QueryBuilder<TokenNftInfo[]> {
     protected _mapResponse(response: Response): TokenNftInfo[] {
         let infos: ProtoTokenNftInfo[];
         if (this._byAccountBuilder.hasAccountid()) {
-            infos = response.getTokengetaccountnftinfo()!.getNftsList()!;
+            infos = response.getTokengetaccountnftinfos()!.getNftsList()!;
         } else if (this._byTokenBuilder.hasTokenid()) {
             infos = response.getTokengetnftinfos()!.getNftsList()!;
         } else {

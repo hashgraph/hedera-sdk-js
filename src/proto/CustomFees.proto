@@ -22,6 +22,9 @@ package proto;
  * ‍
  */
 
+option java_package = "com.hederahashgraph.api.proto.java";
+option java_multiple_files = true;
+
 import "BasicTypes.proto";
 
 /* A fraction of the transferred units of a token to assess as a fee. The amount assessed
@@ -56,10 +59,4 @@ message AssessedCustomFee {
   int64 amount = 1 [jstype=JS_STRING]; // The number of units assessed for the fee
   TokenID token_id = 2; // The denomination of the fee; taken as hbar if left unset
   AccountID fee_collector_account_id = 3; // The account to receive the assessed fee
-}
-
-/* The custom fees attached to a token; may be marked as mutable or immutable. */
-message CustomFees {
-  bool can_update_with_admin_key = 1; // Whether the fees can be updated with the token's admin key; once this is false, it can never be made true again
-  repeated CustomFee custom_fees = 2; // All the custom fees attached to the token
 }

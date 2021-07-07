@@ -549,6 +549,7 @@ export class Status implements Indexed {
     public static readonly TransferAccountSameAsDeleteAccount = new Status(107);
 
     public static readonly TotalLedgerBalanceInvalid = new Status(108);
+
     /**
      * The expiration date/time on a smart contract may not be reduced
      */
@@ -940,9 +941,9 @@ export class Status implements Indexed {
     public static readonly BatchSizeLimitExceeded = new Status(228);
 
     /**
-     * The range of data to be gathered exceeds the limit
+     * The range of data to be gathered is out of the set boundaries
      */
-    public static readonly QueryRangeLimitExceeded = new Status(229);
+    public static readonly InvalidQueryRange = new Status(229);
 
     /**
      * A custom fractional fee set a denominator of zero
@@ -995,9 +996,9 @@ export class Status implements Indexed {
     public static readonly CustomFeeMustBePositive = new Status(239);
 
     /**
-     * Once custom fees are marked as immutable, they can never be changed (or made mutable again)
+     * Fee schedule key is not set on token
      */
-    public static readonly CustomFeesAreMarkedImmutable = new Status(240);
+    public static readonly TokenHasNoFeeScheduleKey = new Status(240);
 
     /**
      * A fractional custom fee exceeded the range of a 64-bit signed integer
@@ -1013,6 +1014,26 @@ export class Status implements Indexed {
      * Each fractional custom fee must have its maximum_amount, if specified, at least its minimum_amount
      */
     public static readonly FractionalFeeMaxAmountLessThanMinAmount = new Status(243);
+
+    /**
+     * A fee schedule update tried to clear the custom fees from a token whose fee schedule was already empty
+     */
+    public static readonly CustomScheduleAlreadyHasNoFees = new Status(244);
+
+    /**
+     * Only tokens of type FUNGIBLE_COMMON can be used to as fee schedule denominations
+     */
+    public static readonly CustomFeeDenominationMustBeFungibleCommon = new Status(245);
+
+    /**
+     * Only tokens of type FUNGIBLE_COMMON can have fractional fees
+     */
+    public static readonly CustomFractionalFeeOnlyAllowedForFungibleCommon = new Status(246);
+
+    /**
+     * The provided custom fee schedule key was invalid
+     */
+    public static readonly InvalidCustomFeeScheduleKey = new Status(247);
 
     private static [ 0 ] = Status.Ok;
     private static [ 1 ] = Status.InvalidTransaction;
@@ -1201,7 +1222,7 @@ export class Status implements Indexed {
     private static [ 226 ] = Status.InvalidNftId;
     private static [ 227 ] = Status.MetadataTooLong;
     private static [ 228 ] = Status.BatchSizeLimitExceeded;
-    private static [ 229 ] = Status.QueryRangeLimitExceeded;
+    private static [ 229 ] = Status.InvalidQueryRange;
     private static [ 230 ] = Status.FractionDividesByZero;
     private static [ 231 ] = Status.InsufficientPayerBalanceForCustomFee;
     private static [ 232 ] = Status.CustomFeesListTooLong;
@@ -1212,10 +1233,14 @@ export class Status implements Indexed {
     private static [ 237 ] = Status.SenderDoesNotOwnNftSerialNo;
     private static [ 238 ] = Status.CustomFeeNotFullySpecified;
     private static [ 239 ] = Status.CustomFeeMustBePositive;
-    private static [ 240 ] = Status.CustomFeesAreMarkedImmutable;
+    private static [ 240 ] = Status.TokenHasNoFeeScheduleKey;
     private static [ 241 ] = Status.CustomFeeOutsideNumericRange;
     private static [ 242 ] = Status.InvalidCustomFractionalFeesSum;
     private static [ 243 ] = Status.FractionalFeeMaxAmountLessThanMinAmount;
+    private static [ 244 ] = Status.CustomScheduleAlreadyHasNoFees;
+    private static [ 245 ] = Status.CustomFeeDenominationMustBeFungibleCommon;
+    private static [ 246 ] = Status.CustomFractionalFeeOnlyAllowedForFungibleCommon;
+    private static [ 247 ] = Status.InvalidCustomFeeScheduleKey;
 
     // New functionality added by HTS above
 
@@ -1415,7 +1440,7 @@ export class Status implements Indexed {
             case Status.InvalidNftId: return "INVALID_NFT_ID";
             case Status.MetadataTooLong: return "METADATA_TOO_LONG";
             case Status.BatchSizeLimitExceeded: return "BATCH_SIZE_LIMIT_EXCEEDED";
-            case Status.QueryRangeLimitExceeded: return "QUERY_RANGE_LIMIT_EXCEEDED";
+            case Status.InvalidQueryRange: return "INVALID_QUERY_RANGE";
             case Status.FractionDividesByZero: return "FRACTION_DIVIDES_BY_ZERO";
             case Status.InsufficientPayerBalanceForCustomFee: return "INSUFFICIENT_PAYER_BALANCE_FOR_CUSTOM_FEE";
             case Status.CustomFeesListTooLong: return "CUSTOM_FEES_LIST_TOO_LONG";
@@ -1426,10 +1451,14 @@ export class Status implements Indexed {
             case Status.SenderDoesNotOwnNftSerialNo: return "SENDER_DOES_NOT_OWN_NFT_SERIAL_NO";
             case Status.CustomFeeNotFullySpecified: return "CUSTOM_FEE_NOT_FULLY_SPECIFIED";
             case Status.CustomFeeMustBePositive: return "CUSTOM_FEE_MUST_BE_POSITIVE";
-            case Status.CustomFeesAreMarkedImmutable: return "CUSTOM_FEES_ARE_MARKED_IMMUTABLE";
+            case Status.TokenHasNoFeeScheduleKey: return "TOKEN_HAS_NO_FEE_SCHEDULE_KEY";
             case Status.CustomFeeOutsideNumericRange: return "CUSTOM_FEE_OUTSIDE_NUMERIC_RANGE";
             case Status.InvalidCustomFractionalFeesSum: return "INVALID_CUSTOM_FRACTIONAL_FEES_SUM";
             case Status.FractionalFeeMaxAmountLessThanMinAmount: return "FRACTIONAL_FEE_MAX_AMOUNT_LESS_THAN_MIN_AMOUNT";
+            case Status.CustomScheduleAlreadyHasNoFees: return "CUSTOM_SCHEDULE_ALREADY_HAS_NO_FEES";
+            case Status.CustomFeeDenominationMustBeFungibleCommon: return "CUSTOM_FEE_DENOMINATION_MUST_BE_FUNGIBLE_COMMON";
+            case Status.CustomFractionalFeeOnlyAllowedForFungibleCommon: return "CUSTOM_FRACTIONAL_FEE_ONLY_ALLOWED_FOR_FUNGIBLE_COMMON";
+            case Status.InvalidCustomFeeScheduleKey: return "INVALID_CUSTOM_FEE_SCHEDULE_KEY";
             default: return `UNKNOWN STATUS CODE (${this.code})`;
         }
     }

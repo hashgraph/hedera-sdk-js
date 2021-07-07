@@ -15,7 +15,8 @@ import { timestampToDate } from "../Timestamp";
 import BigNumber from "bignumber.js";
 import { TokenSupplyType } from "./TokenSupplyType";
 import { TokenType } from "./TokenType";
-import { CustomFeeList } from "./CustomFeeList";
+import { customFeeFromProto } from "../util";
+import { CustomFee } from "./CustomFee";
 
 /**
  * Response when the client sends the node TokenGetInfoQuery.
@@ -120,7 +121,7 @@ export interface TokenInfo {
 
     tokenMemo: string | null;
 
-    customFeeList: CustomFeeList | null;
+    customFees: CustomFee[];
 
     tokenType: TokenType;
 
@@ -214,7 +215,7 @@ export class TokenInfoQuery extends QueryBuilder<TokenInfo> {
                 timestampToDate(info.getExpiry()!) :
                 null,
             tokenMemo: info.getMemo(),
-            customFeeList: info.hasCustomFees() ? new CustomFeeList(info.getCustomFees()!) : null,
+            customFees: info.getCustomFeesList().map((fee) => customFeeFromProto(fee)),
             tokenType: TokenType._fromCode(info.getTokentype()),
             supplyType: TokenSupplyType._fromCode(info.getSupplytype()),
             maxSupply: new BigNumber(info.getMaxsupply())

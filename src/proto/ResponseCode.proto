@@ -238,7 +238,7 @@ enum ResponseCodeEnum {
   INVALID_NFT_ID = 226; // Invalid nft id
   METADATA_TOO_LONG = 227; // Nft metadata is too long
   BATCH_SIZE_LIMIT_EXCEEDED = 228; // Repeated operations count exceeds the limit
-  QUERY_RANGE_LIMIT_EXCEEDED = 229; // The range of data to be gathered exceeds the limit
+  INVALID_QUERY_RANGE = 229; // The range of data to be gathered is out of the set boundaries
   FRACTION_DIVIDES_BY_ZERO = 230; // A custom fractional fee set a denominator of zero
   INSUFFICIENT_PAYER_BALANCE_FOR_CUSTOM_FEE = 231; // The transaction payer could not afford a custom fee
   CUSTOM_FEES_LIST_TOO_LONG = 232; // The customFees list is longer than allowed limit 10
@@ -249,8 +249,12 @@ enum ResponseCodeEnum {
   SENDER_DOES_NOT_OWN_NFT_SERIAL_NO = 237; // The transaction attempted to move an NFT serial number from an account other than its owner
   CUSTOM_FEE_NOT_FULLY_SPECIFIED = 238; // A custom fee schedule entry did not specify either a fixed or fractional fee
   CUSTOM_FEE_MUST_BE_POSITIVE = 239; // Only positive fees may be assessed at this time
-  CUSTOM_FEES_ARE_MARKED_IMMUTABLE = 240; // Once custom fees are marked as immutable, they can never be changed (or made mutable again)
+  TOKEN_HAS_NO_FEE_SCHEDULE_KEY = 240; // Fee schedule key is not set on token
   CUSTOM_FEE_OUTSIDE_NUMERIC_RANGE = 241; // A fractional custom fee exceeded the range of a 64-bit signed integer
   INVALID_CUSTOM_FRACTIONAL_FEES_SUM = 242; // The sum of all custom fractional fees must be strictly less than 1
   FRACTIONAL_FEE_MAX_AMOUNT_LESS_THAN_MIN_AMOUNT = 243; // Each fractional custom fee must have its maximum_amount, if specified, at least its minimum_amount
+  CUSTOM_SCHEDULE_ALREADY_HAS_NO_FEES = 244; // A fee schedule update tried to clear the custom fees from a token whose fee schedule was already empty
+  CUSTOM_FEE_DENOMINATION_MUST_BE_FUNGIBLE_COMMON = 245; // Only tokens of type FUNGIBLE_COMMON can be used to as fee schedule denominations
+  CUSTOM_FRACTIONAL_FEE_ONLY_ALLOWED_FOR_FUNGIBLE_COMMON = 246; // Only tokens of type FUNGIBLE_COMMON can have fractional fees
+  INVALID_CUSTOM_FEE_SCHEDULE_KEY = 247; // The provided custom fee schedule key was invalid
 }

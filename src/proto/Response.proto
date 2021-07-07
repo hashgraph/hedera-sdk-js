@@ -50,7 +50,7 @@ import "ConsensusGetTopicInfo.proto";
 
 import "NetworkGetVersionInfo.proto";
 
-import "TokenGetAccountNftInfo.proto";
+import "TokenGetAccountNftInfos.proto";
 import "TokenGetInfo.proto";
 import "TokenGetNftInfo.proto";
 import "TokenGetNftInfos.proto";
@@ -90,7 +90,7 @@ message Response {
 
         ScheduleGetInfoResponse scheduleGetInfo = 153; // Get all information about a schedule entity
 
-        TokenGetAccountNftInfoResponse tokenGetAccountNftInfo = 154; // A list of the NFTs associated with the account
+        TokenGetAccountNftInfosResponse tokenGetAccountNftInfos = 154; // A list of the NFTs associated with the account
         TokenGetNftInfoResponse tokenGetNftInfo = 155; // All information about an NFT
         TokenGetNftInfosResponse tokenGetNftInfos = 156; // A list of the NFTs for the token
     }

@@ -26,7 +26,6 @@ option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
 import "BasicTypes.proto";
-import "CustomFees.proto";
 import "Duration.proto";
 import "Timestamp.proto";
 import "google/protobuf/wrappers.proto";
@@ -54,5 +53,5 @@ message TokenUpdateTransactionBody {
     Duration autoRenewPeriod = 11; // The new interval at which the auto-renew account will be charged to extend the token's expiry.
     Timestamp expiry = 12; // The new expiry time of the token. Expiry can be updated even if admin key is not set. If the provided expiry is earlier than the current token expiry, transaction wil resolve to INVALID_EXPIRATION_TIME
     google.protobuf.StringValue memo = 13; // If set, the new memo to be associated with the token (UTF-8 encoding max 100 bytes)
-    CustomFees custom_fees = 14; // If set, the new custom fees to be assessed during a CryptoTransfer that transfers units of this token. If the can_update_with_admin_key field is already set to false for the token, this TokenUpdate will resolve to CUSTOM_FEES_ARE_MARKED_IMMUTABLE. If the can_update_with_admin_key field is set to false in this TokenUpdate, the new custom fees will take effect and stay immutable afterwards.
+    Key fee_schedule_key = 14; // If set, the new key to use to update the token's custom fee schedule; if the token does not currently have this key, transaction will resolve to TOKEN_HAS_NO_FEE_SCHEDULE_KEY
 }

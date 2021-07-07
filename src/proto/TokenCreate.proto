@@ -61,5 +61,6 @@ message TokenCreateTransactionBody {
     TokenType tokenType = 17; // IWA compatibility. Specifies the token type. Defaults to FUNGIBLE_COMMON
     TokenSupplyType supplyType = 18; // IWA compatibility. Specified the token supply type. Defaults to INFINITE
     int64 maxSupply = 19 [jstype=JS_STRING]; // IWA Compatibility. Depends on TokenSupplyType. For tokens of type FUNGIBLE_COMMON - the maximum number of tokens that can be in circulation. For tokens of type NON_FUNGIBLE_UNIQUE - the maximum number of NFTs (serial numbers) that can be minted. This field can never be changed!
-    CustomFees custom_fees = 20; // Custom fees to be assessed during a CryptoTransfer that transfers units of this token
+    Key fee_schedule_key = 20; // The key which can change the token's custom fee schedule; must sign a TokenFeeScheduleUpdate transaction
+    repeated CustomFee custom_fees = 21; // The custom fees to be assessed during a CryptoTransfer that transfers units of this token
 }
