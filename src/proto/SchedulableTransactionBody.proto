@@ -65,8 +65,8 @@ import "TokenDissociate.proto";
 
 import "ScheduleDelete.proto";
 
-/* A schedulable transaction. Note that the global/dynamic system property
-<tt>scheduling.whitelist</tt> controls which transaction types may be scheduled.
+/* A schedulable transaction. Note that the global/dynamic system property 
+<tt>scheduling.whitelist</tt> controls which transaction types may be scheduled. 
 In Hedera Services 0.13.0, it will include only <tt>CryptoTransfer</tt> and
 <tt>ConsensusSubmitMessage</tt> functions. */
 message SchedulableTransactionBody {

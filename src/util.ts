@@ -4,6 +4,10 @@ import { ResponseHeader } from "./generated/ResponseHeader_pb";
 import { Response } from "./generated/Response_pb";
 import { LocalValidationError } from "./errors/LocalValidationError";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
+import { CustomFee } from "./token/CustomFee";
+import { CustomFixedFee } from "./token/CustomFixedFee";
+import { CustomFractionalFee } from "./token/CustomFractionalFee";
+import { CustomFee as ProtoCustomFee } from "./generated/CustomFees_pb";
 
 export function orThrow<T>(val?: T, msg = "value must not be null"): T {
     return reqDefined(val, msg);
@@ -154,5 +158,16 @@ export function getResponseHeader(response: Response): ResponseHeader {
             return response.getTransactiongetfastrecord()!.getHeader()!;
         default:
             throw new Error(`unsupported response case ${response.getResponseCase()}`);
+    }
+}
+
+export function customFeeFromProto(fee: ProtoCustomFee): CustomFee {
+    switch (fee.getFeeCase()) {
+        case ProtoCustomFee.FeeCase.FIXED_FEE:
+            return new CustomFixedFee(fee);
+        case ProtoCustomFee.FeeCase.FRACTIONAL_FEE:
+            return new CustomFractionalFee(fee);
+        default:
+            throw new Error("custom fee is not set");
     }
 }

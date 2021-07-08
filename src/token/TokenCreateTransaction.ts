@@ -8,6 +8,10 @@ import { TokenCreateTransactionBody } from "../generated/TokenCreate_pb";
 import { TokenService } from "../generated/TokenService_pb_service";
 import { timestampToProto, dateToTimestamp } from "../Timestamp";
 import { newDuration } from "../util";
+import { CustomFee } from "./CustomFee";
+import { TokenType } from "./TokenType";
+import { TokenSupplyType } from "./TokenSupplyType";
+import BigNumber from "bignumber.js";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 
 /**
@@ -202,6 +206,28 @@ export class TokenCreateTransaction extends SingleTransactionBuilder {
      */
     public setAutoRenewPeriod(seconds: number): this {
         this._body.setAutorenewperiod(newDuration(seconds));
+        return this;
+    }
+
+    public setCustomFees(customFeeList: CustomFee[]): this {
+        for (const fee of customFeeList) {
+            this._body.addCustomFees(fee._toProto());
+        }
+        return this;
+    }
+
+    public setTokenType(tokenType: TokenType): this {
+        this._body.setTokentype(tokenType.code);
+        return this;
+    }
+
+    public setSupplyType(supplyType: TokenSupplyType): this {
+        this._body.setSupplytype(supplyType.code);
+        return this;
+    }
+
+    public setMaxSupply(maxSupply: BigNumber): this {
+        this._body.setMaxsupply(maxSupply.toString());
         return this;
     }
 

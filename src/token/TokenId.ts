@@ -2,6 +2,7 @@ import { TokenID } from "../generated/BasicTypes_pb";
 import { normalizeEntityId } from "../util";
 import BigNumber from "bignumber.js";
 import * as hex from "@stablelib/hex";
+import { NftId } from "./NftId";
 
 /** Normalized token ID returned by various methods in the SDK. */
 export class TokenId {
@@ -48,6 +49,10 @@ export class TokenId {
             realm: tokenId.getRealmnum(),
             token: tokenId.getTokennum()
         });
+    }
+
+    public nft(serial: BigNumber): NftId {
+        return new NftId(this, serial);
     }
 
     public toString(): string {

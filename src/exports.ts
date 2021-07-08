@@ -41,19 +41,28 @@ export { ScheduleDeleteTransaction } from "./schedule/ScheduleDeleteTransaction"
 export { ScheduleSignTransaction } from "./schedule/ScheduleSignTransaction";
 export { ScheduleInfoQuery, ScheduleInfo } from "./schedule/ScheduleInfoQuery";
 
+export { AssessedCustomFee } from "./token/AssessedCustomFee";
+export { CustomFee } from "./token/CustomFee";
+export { CustomFixedFee } from "./token/CustomFixedFee";
+export { CustomFractionalFee } from "./token/CustomFractionalFee";
+export { NftId } from "./token/NftId";
 export { TokenAssociateTransaction } from "./token/TokenAssociateTransaction";
 export { TokenBalanceQuery } from "./token/TokenBalanceQuery";
 export { TokenBurnTransaction } from "./token/TokenBurnTransaction";
 export { TokenCreateTransaction } from "./token/TokenCreateTransaction";
 export { TokenDeleteTransaction } from "./token/TokenDeleteTransaction";
 export { TokenDissociateTransaction } from "./token/TokenDissociateTransaction";
+export { TokenFeeScheduleUpdateTransaction } from "./token/TokenFeeScheduleUpdateTransaction";
 export { TokenFreezeTransaction } from "./token/TokenFreezeTransaction";
 export { TokenGrantKycTransaction } from "./token/TokenGrantKycTransaction";
 export { TokenId } from "./token/TokenId";
 export { TokenInfoQuery, TokenInfo } from "./token/TokenInfoQuery";
 export { TokenMintTransaction } from "./token/TokenMintTransaction";
+export { TokenNftInfoQuery } from "./token/TokenNftInfoQuery";
 export { TokenRevokeKycTransaction } from "./token/TokenRevokeKycTransaction";
+export { TokenSupplyType } from "./token/TokenSupplyType";
 export { TokenTransferTransaction } from "./token/TokenTransferTransaction";
+export { TokenType } from "./token/TokenType";
 export { TokenUnfreezeTransaction } from "./token/TokenUnfreezeTransaction";
 export { TokenUpdateTransaction } from "./token/TokenUpdateTransaction";
 export { TokenWipeTransaction } from "./token/TokenWipeTransaction";

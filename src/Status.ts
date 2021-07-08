@@ -39,7 +39,7 @@ export class Status implements Indexed {
     public static readonly InvalidTransactionStart = new Status(5);
 
     /**
-     * Valid transaction duration is a positive non zero number that does not exceed 120 seconds
+     * valid transaction duration is a positive non zero number that does not exceed 120 seconds
      */
     public static readonly InvalidTransactionDuration = new Status(6);
 
@@ -114,7 +114,7 @@ export class Status implements Indexed {
     public static readonly InvalidSolidityId = new Status(20);
 
     /**
-     * Transaction hasn't yet reached consensus, or has already expired
+     * The responding node has submitted the transaction to the network. Its final status is still unknown.
      */
     public static readonly Unknown = new Status(21);
 
@@ -164,7 +164,7 @@ export class Status implements Indexed {
     public static readonly InsufficientGas = new Status(30);
 
     /**
-     * Contract byte code size is over the limit
+     * contract byte code size is over the limit
      */
     public static readonly ContractSizeLimitExceeded = new Status(31);
 
@@ -184,8 +184,7 @@ export class Status implements Indexed {
     public static readonly ContractExecutionException = new Status(34);
 
     /**
-     * In Query validation, account with +ve(amount) value should be Receiving node account,
-     * the receiver account should be only one account in the list
+     * In Query validation, account with +ve(amount) value should be Receiving node account, the receiver account should be only one account in the list
      */
     public static readonly InvalidReceivingNodeAccount = new Status(35);
 
@@ -205,17 +204,17 @@ export class Status implements Indexed {
     public static readonly InvalidKeyEncoding = new Status(38);
 
     /**
-     * Null solidity address
+     * null solidity address
      */
     public static readonly NullSolidityAddress = new Status(39);
 
     /**
-     * Update of the contract failed
+     * update of the contract failed
      */
     public static readonly ContractUpdateFailed = new Status(40);
 
     /**
-     * The query header is invalid
+     * the query header is invalid
      */
     public static readonly InvalidQueryHeader = new Status(41);
 
@@ -265,62 +264,59 @@ export class Status implements Indexed {
     public static readonly InvalidTransactionBody = new Status(50);
 
     /**
-     * The type of key (base ed25519 key, KeyList, or ThresholdKey) does not match the type of
-     * signature (base ed25519 signature, SignatureList, or ThresholdKeySignature).
+     * the type of key (base ed25519 key, KeyList, or ThresholdKey) does not match the type of signature (base ed25519 signature, SignatureList, or ThresholdKeySignature)
      */
     public static readonly InvalidSignatureTypeMismatchingKey = new Status(51);
 
     /**
-     * The number of key (KeyList, or ThresholdKey) does not match that of signature
-     * (SignatureList, or ThresholdKeySignature). e.g. if a keyList has 3 base keys,
-     * then the corresponding signatureList should also have 3 base signatures.
+     * the number of key (KeyList, or ThresholdKey) does not match that of signature (SignatureList, or ThresholdKeySignature). e.g. if a keyList has 3 base keys, then the corresponding signatureList should also have 3 base signatures.
      */
     public static readonly InvalidSignatureCountMismatchingKey = new Status(52);
 
     /**
-     * The claim body is empty.
+     * the livehash body is empty
      */
-    public static readonly EmptyClaimBody = new Status(53);
+    public static readonly EmptyLiveHashBody = new Status(53);
 
     /**
-     * The hash for the claim is empty
+     * the livehash data is missing
      */
-    public static readonly EmptyClaimHash = new Status(54);
+    public static readonly EmptyLiveHash = new Status(54);
 
     /**
-     * The key list is empty
+     * the keys for a livehash are missing
      */
-    public static readonly EmptyClaimKeys = new Status(55);
+    public static readonly EmptyLiveHashKeys = new Status(55);
 
     /**
-     * The size of the claim hash is not 48 bytes
+     * the livehash data is not the output of a SHA-384 digest
      */
-    public static readonly InvalidClaimHashSize = new Status(56);
+    public static readonly InvalidLiveHashSize = new Status(56);
 
     /**
-     * The query body is empty
+     * the query body is empty
      */
     public static readonly EmptyQueryBody = new Status(57);
 
     /**
-     * The crypto claim query is empty
+     * the crypto livehash query is empty
      */
-    public static readonly EmptyClaimQuery = new Status(58);
+    public static readonly EmptyLiveHashQuery = new Status(58);
 
     /**
-     * The crypto claim doesn't exists in the file system. It expired or was never persisted.
+     * the livehash is not present
      */
-    public static readonly ClaimNotFound = new Status(59);
+    public static readonly LiveHashNotFound = new Status(59);
 
     /**
-     * The account id passed has not yet been created.
+     * the account id passed has not yet been created.
      */
     public static readonly AccountIdDoesNotExist = new Status(60);
 
     /**
-     * The claim hash already exists
+     * the livehash already exists for a given account
      */
-    public static readonly ClaimAlreadyExists = new Status(61);
+    public static readonly LiveHashAlreadyExists = new Status(61);
 
     /**
      * File WACL keys are invalid
@@ -348,114 +344,107 @@ export class Status implements Indexed {
     public static readonly ContractDeleted = new Status(66);
 
     /**
-     * The platform node is either disconnected or lagging behind.
+     * the platform node is either disconnected or lagging behind.
      */
     public static readonly PlatformNotActive = new Status(67);
 
     /**
-     * One public key matches more than one prefixes on the signature map.
+     * one public key matches more than one prefixes on the signature map
      */
     public static readonly KeyPrefixMismatch = new Status(68);
 
     /**
-     * Transaction not created by platform due to either large backlog or
-     * message size exceeded transactionMaxBytes.
+     * transaction not created by platform due to large backlog
      */
     public static readonly PlatformTransactionNotCreated = new Status(69);
 
     /**
-     * Auto renewal period is not a positive number of seconds.
+     * auto renewal period is not a positive number of seconds
      */
     public static readonly InvalidRenewalPeriod = new Status(70);
 
     /**
-     * The response code when a smart contract id is passed for a crypto API request.
+     * the response code when a smart contract id is passed for a crypto API request
      */
     public static readonly InvalidPayerAccountId = new Status(71);
 
     /**
-     * The account has been marked as deleted.
+     * the account has been marked as deleted
      */
     public static readonly AccountDeleted = new Status(72);
 
     /**
-     * The file has been marked as deleted.
+     * the file has been marked as deleted
      */
     public static readonly FileDeleted = new Status(73);
 
     /**
-     * Same accounts repeated in the transfer account list.
+     * same accounts repeated in the transfer account list
      */
     public static readonly AccountRepeatedInAccountAmounts = new Status(74);
 
     /**
-     * Attempting to set negative balance value for crypto account.
+     * attempting to set negative balance value for crypto account
      */
     public static readonly SettingNegativeAccountBalance = new Status(75);
 
     /**
-     * When deleting smart contract that has crypto balance either transfer account or transfer.
-     * smart contract is required.
+     * when deleting smart contract that has crypto balance either transfer account or transfer smart contract is required
      */
     public static readonly ObtainerRequired = new Status(76);
 
     /**
-     * When deleting smart contract that has crypto balance you can not use the same contract id
-     * as transferContractId as the one being deleted.
+     * when deleting smart contract that has crypto balance you can not use the same contract id as transferContractId as the one being deleted
      */
     public static readonly ObtainerSameContractId = new Status(77);
 
     /**
-     * TransferAccountId or transferContractId specified for contract delete does not exist.
+     * transferAccountId or transferContractId specified for contract delete does not exist
      */
     public static readonly ObtainerDoesNotExist = new Status(78);
 
     /**
-     * Attempting to modify (update or delete a immutable smart contract,
-     * i.e. one created without a admin key).
+     * attempting to modify (update or delete a immutable smart contract, i.e. one created without a admin key)
      */
     public static readonly ModifyingImmutableContract = new Status(79);
 
     /**
-     * Unexpected exception thrown by file system functions.
+     * Unexpected exception thrown by file system functions
      */
     public static readonly FileSystemException = new Status(80);
 
     /**
-     * The duration is not a subset of [MINIMUM_AUTORENEW_DURATION,MAXIMUM_AUTORENEW_DURATION].
+     * the duration is not a subset of [MINIMUM_AUTORENEW_DURATION,MAXIMUM_AUTORENEW_DURATION]
      */
     public static readonly AutorenewDurationNotInRange = new Status(81);
 
     /**
-     * Decoding the smart contract binary to a byte array failed.
-     * Check that the input is a valid hex string.
+     * Decoding the smart contract binary to a byte array failed. Check that the input is a valid hex string.
      */
     public static readonly ErrorDecodingBytestring = new Status(82);
 
     /**
-     * File to create a smart contract was of length zero.
+     * File to create a smart contract was of length zero
      */
     public static readonly ContractFileEmpty = new Status(83);
 
     /**
-     * Bytecode for smart contract is of length zero.
+     * Bytecode for smart contract is of length zero
      */
     public static readonly ContractBytecodeEmpty = new Status(84);
 
     /**
-     * Attempt to set negative initial balance.
+     * Attempt to set negative initial balance
      */
     public static readonly InvalidInitialBalance = new Status(85);
 
     /**
-     * @deprecated
-     * Attempt to set negative receive record threshold.
+     * [Deprecated]. attempt to set negative receive record threshold
      */
     public static readonly InvalidReceiveRecordThreshold = new Status(86);
 
     /**
-     * @deprecated
-     * Attempt to set negative send record threshold.
+     * [Deprecated]. attempt to set negative send record threshold
      */
     public static readonly InvalidSendRecordThreshold = new Status(87);
 
@@ -480,77 +469,72 @@ export class Status implements Indexed {
     public static readonly FreezeTransactionBodyNotFound = new Status(91);
 
     /**
-     * Exceeded the number of accounts (both from and to) allowed for crypto transfer list.
+     * Exceeded the number of accounts (both from and to) allowed for crypto transfer list
      */
     public static readonly TransferListSizeLimitExceeded = new Status(92);
 
     /**
-     * Smart contract result size greater than specified maxResultSize.
+     * Smart contract result size greater than specified maxResultSize
      */
     public static readonly ResultSizeLimitExceeded = new Status(93);
 
     /**
-     * The payer account is not a special account(account 0.0.55).
+     * The payer account is not a special account(account 0.0.55)
      */
     public static readonly NotSpecialAccount = new Status(94);
 
     /**
-     * Negative gas was offered in smart contract call.
+     * Negative gas was offered in smart contract call
      */
     public static readonly ContractNegativeGas = new Status(95);
 
     /**
-     * Negative value / initial balance was specified in a smart contract call / create.
+     * Negative value / initial balance was specified in a smart contract call / create
      */
     public static readonly ContractNegativeValue = new Status(96);
 
     /**
-     * Failed to update fee file.
+     * Failed to update fee file
      */
     public static readonly InvalidFeeFile = new Status(97);
 
     /**
-     * Failed to update exchange rate file.
+     * Failed to update exchange rate file
      */
     public static readonly InvalidExchangeRateFile = new Status(98);
 
     /**
-     * Payment tendered for contract local call cannot cover both the fee and the gas.
+     * Payment tendered for contract local call cannot cover both the fee and the gas
      */
     public static readonly InsufficientLocalCallGas = new Status(99);
 
     /**
-     * Entities with Entity ID below 1000 are not allowed to be deleted.
+     * Entities with Entity ID below 1000 are not allowed to be deleted
      */
     public static readonly EntityNotAllowedToDelete = new Status(100);
 
     /**
-     * Violating one of these rules: 1) treasury account can update all entities below 0.0.1000, 2)
-     * account 0.0.50 can update all entities from 0.0.51 - 0.0.80, 3) Network Function Master
-     * Account A/c 0.0.50 - Update all Network Function accounts & perform all the Network Functions
-     * listed below, 4) Network Function Accounts: i) A/c 0.0.55 - Update Address Book files
-     * (0.0.101/102), ii) A/c 0.0.56 - Update Fee schedule (0.0.111), iii) A/c 0.0.57 -
-     * Update Exchange Rate (0.0.112).
+     * Violating one of these rules: 1) treasury account can update all entities below 0.0.1000, 2) account 0.0.50 can update all entities from 0.0.51 - 0.0.80, 3) Network Function Master Account A/c 0.0.50 - Update all Network Function accounts & perform all the Network Functions listed below, 4) Network Function Accounts: i) A/c 0.0.55 - Update Address Book files (0.0.101/102), ii) A/c 0.0.56 - Update Fee schedule (0.0.111), iii) A/c 0.0.57 - Update Exchange Rate (0.0.112).
      */
     public static readonly AuthorizationFailed = new Status(101);
 
     /**
-     * Fee Schedule Proto uploaded but not valid (append or update is required).
+     * Fee Schedule Proto uploaded but not valid (append or update is required)
      */
     public static readonly FileUploadedProtoInvalid = new Status(102);
 
     /**
-     * Fee Schedule Proto uploaded but not valid (append or update is required).
+     * Fee Schedule Proto uploaded but not valid (append or update is required)
      */
     public static readonly FileUploadedProtoNotSavedToDisk = new Status(103);
 
     /**
-     * Fee Schedule Proto File Part uploaded.
+     * Fee Schedule Proto File Part uploaded
      */
     public static readonly FeeScheduleFilePartUploaded = new Status(104);
 
     /**
-     * The change on Exchange Rate exceeds Exchange_Rate_Allowed_Percentage.
+     * The change on Exchange Rate exceeds Exchange_Rate_Allowed_Percentage
      */
     public static readonly ExchangeRateChangeLimitExceeded = new Status(105);
 
@@ -567,17 +551,38 @@ export class Status implements Indexed {
     public static readonly TotalLedgerBalanceInvalid = new Status(108);
 
     /**
-     * The expiration date/time on a smart contract may not be reduced.
+     * The expiration date/time on a smart contract may not be reduced
      */
     public static readonly ExpirationReductionNotAllowed = new Status(110);
+
+    /**
+     * Gas exceeded currently allowable gas limit per transaction
+     */
+    public static readonly MaxGasLimitExceeded = new Status(111);
+
+    /**
+     * File size exceeded the currently allowable limit
+     */
+    public static readonly MaxFileSizeExceeded = new Status(112);
+
+    /**
+     * When a valid signature is not provided for operations on account with receiverSigRequired=true
+     */
+    public static readonly ReceiverSigRequired = new Status(113);
 
     /**
      * The Topic ID specified is not in the system.
      */
     public static readonly InvalidTopicId = new Status(150);
 
-    public static readonly InvalidTopicExpirationTime = new Status(154);
+    /**
+     * A provided admin key was invalid.
+     */
     public static readonly InvalidAdminKey = new Status(155);
+
+    /**
+     * A provided submit key was invalid.
+     */
     public static readonly InvalidSubmitKey = new Status(156);
 
     /**
@@ -596,19 +601,12 @@ export class Status implements Indexed {
     public static readonly InvalidAutorenewAccount = new Status(159);
 
     /**
-     * An admin key was not specified on the topic, so there must not be an autorenew account.
+     * An adminKey was not specified on the topic, so there must not be an autoRenewAccount.
      */
-    public static readonly AutoRenewAccountNotAllowed = new Status(160);
+    public static readonly AutorenewAccountNotAllowed = new Status(160);
 
     /**
-     * The autoRenewAccount didn't sign the transaction.
-     */
-    public static readonly AutoRenewAccountSignatureMissing = new Status(161);
-
-    /**
-     * The topic has expired, was not automatically renewed, and is in a 7 day grace period before
-     * the topic will be deleted unrecoverably. This error response code will not be returned
-     * until autoRenew functionality is supported by HAPI.
+     * The topic has expired, was not automatically renewed, and is in a 7 day grace period before the topic will be deleted unrecoverably. This error response code will not be returned until autoRenew functionality is supported by HAPI.
      */
     public static readonly TopicExpired = new Status(162);
 
@@ -628,7 +626,7 @@ export class Status implements Indexed {
     public static readonly AccountFrozenForToken = new Status(165);
 
     /**
-     * Maximum number of token relations for agiven account is exceeded
+     * An involved account already has more than <tt>tokens.maxPerAccount</tt> associations with non-deleted tokens.
      */
     public static readonly TokensPerAccountLimitExceeded = new Status(166);
 
@@ -668,12 +666,12 @@ export class Status implements Indexed {
     public static readonly TransfersNotZeroSumForToken = new Status(173);
 
     /**
-     * Token Symbol is not provided
+     * A token symbol was not provided
      */
     public static readonly MissingTokenSymbol = new Status(174);
 
     /**
-     * Token Symbol is too long
+     * The provided token symbol was too long
      */
     public static readonly TokenSymbolTooLong = new Status(175);
 
@@ -707,29 +705,51 @@ export class Status implements Indexed {
      */
     public static readonly TokenHasNoWipeKey = new Status(181);
 
+    /**
+     * The requested token mint amount would cause an invalid total supply
+     */
     public static readonly InvalidTokenMintAmount = new Status(182);
 
+    /**
+     * The requested token burn amount would cause an invalid total supply
+     */
     public static readonly InvalidTokenBurnAmount = new Status(183);
 
+    /**
+     * A required token-account relationship is missing
+     */
     public static readonly TokenNotAssociatedToAccount = new Status(184);
 
     /**
-     * Cannot execute wipe operation on treasury account
+     * The target of a wipe operation was the token treasury account
      */
     public static readonly CannotWipeTokenTreasuryAccount = new Status(185);
 
+    /**
+     * The provided KYC key was invalid.
+     */
     public static readonly InvalidKycKey = new Status(186);
 
+    /**
+     * The provided wipe key was invalid.
+     */
     public static readonly InvalidWipeKey = new Status(187);
 
+    /**
+     * The provided freeze key was invalid.
+     */
     public static readonly InvalidFreezeKey = new Status(188);
 
+    /**
+     * The provided supply key was invalid.
+     */
     public static readonly InvalidSupplyKey = new Status(189);
 
     /**
      * Token Name is not provided
      */
     public static readonly MissingTokenName = new Status(190);
+
     /**
      * Token Name is too long
      */
@@ -743,7 +763,7 @@ export class Status implements Indexed {
     /**
      * Token does not have Admin key set, thus update/delete transactions cannot be performed
      */
-    public static readonly TOKEN_IS_IMMUTABLE = new Status(193);
+    public static readonly TokenIsImmutable = new Status(193);
 
     /**
      * An <tt>associateToken</tt> operation specified a token already associated to the account
@@ -780,28 +800,240 @@ export class Status implements Indexed {
      */
     public static readonly EmptyTokenTransferAccountAmounts = new Status(200);
 
+    /**
+     * The Scheduled entity does not exist; or has now expired, been deleted, or been executed
+     */
     public static readonly InvalidScheduleId = new Status(201);
+
+    /**
+     * The Scheduled entity cannot be modified. Admin key not set
+     */
     public static readonly ScheduleIsImmutable = new Status(202);
+
+    /**
+     * The provided Scheduled Payer does not exist
+     */
     public static readonly InvalidSchedulePayerId = new Status(203);
+
+    /**
+     * The Schedule Create Transaction TransactionID account does not exist
+     */
     public static readonly InvalidScheduleAccountId = new Status(204);
+
+    /**
+     * The provided sig map did not contain any new valid signatures from required signers of the scheduled transaction
+     */
     public static readonly NoNewValidSignatures = new Status(205);
+
+    /**
+     * The required signers for a scheduled transaction cannot be resolved, for example because they do not exist or have been deleted
+     */
     public static readonly UnresolvableRequiredSigners = new Status(206);
+
+    /**
+     * Only whitelisted transaction types may be scheduled
+     */
     public static readonly ScheduledTransactionNotInWhitelist = new Status(207);
+
+    /**
+     * At least one of the signatures in the provided sig map did not represent a valid signature for any required signer
+     */
     public static readonly SomeSignaturesWereInvalid = new Status(208);
+
+    /**
+     * The scheduled field in the TransactionID may not be set to true
+     */
     public static readonly TransactionIdFieldNotAllowed = new Status(209);
+
+    /**
+     * A schedule already exists with the same identifying fields of an attempted ScheduleCreate (that is, all fields other than scheduledPayerAccountID)
+     */
     public static readonly IdenticalScheduleAlreadyCreated = new Status(210);
+
+    /**
+     * A string field in the transaction has a UTF-8 encoding with the prohibited zero byte
+     */
     public static readonly InvalidZeroByteInString = new Status(211);
+
+    /**
+     * A schedule being signed or deleted has already been deleted
+     */
     public static readonly ScheduleAlreadyDeleted = new Status(212);
+
+    /**
+     * A schedule being signed or deleted has already been executed
+     */
     public static readonly ScheduleAlreadyExecuted = new Status(213);
+
+    /**
+     * ConsensusSubmitMessage request's message size is larger than allowed.
+     */
     public static readonly MessageSizeTooLarge = new Status(214);
+
+    /**
+     * An operation was assigned to more than one throttle group in a given bucket
+     */
     public static readonly OperationRepeatedInBucketGroups = new Status(215);
+
+    /**
+     * The capacity needed to satisfy all opsPerSec groups in a bucket overflowed a signed 8-byte integral type
+     */
     public static readonly BucketCapacityOverflow = new Status(216);
+
+    /**
+     * Given the network size in the address book, the node-level capacity for an operation would never be enough to accept a single request; usually means a bucket burstPeriod should be increased
+     */
     public static readonly NodeCapacityNotSufficientForOperation = new Status(217);
+
+    /**
+     * A bucket was defined without any throttle groups
+     */
     public static readonly BucketHasNoThrottleGroups = new Status(218);
+
+    /**
+     * A throttle group was granted zero opsPerSec
+     */
     public static readonly ThrottleGroupHasZeroOpsPerSec = new Status(219);
+
+    /**
+     * The throttle definitions file was updated, but some supported operations were not assigned a bucket
+     */
     public static readonly SuccessButMissingExpectedOperation = new Status(220);
+
+    /**
+     * The new contents for the throttle definitions system file were not valid protobuf
+     */
     public static readonly UnparseableThrottleDefinitions = new Status(221);
-    public static readonly InvalidThrottleDefinitions = new Status(212);
+
+    /**
+     * The new throttle definitions system file were invalid, and no more specific error could be divined
+     */
+    public static readonly InvalidThrottleDefinitions = new Status(222);
+
+    /**
+     * The transaction references an account which has passed its expiration without renewal funds available, and currently remains in the ledger only because of the grace period given to expired entities
+     */
+    public static readonly AccountExpiredAndPendingRemoval = new Status(223);
+
+    /**
+     * Invalid token max supply
+     */
+    public static readonly InvalidTokenMaxSupply = new Status(224);
+
+    /**
+     * Invalid token nft serial number
+     */
+    public static readonly InvalidTokenNftSerialNumber = new Status(225);
+
+    /**
+     * Invalid nft id
+     */
+    public static readonly InvalidNftId = new Status(226);
+
+    /**
+     * Nft metadata is too long
+     */
+    public static readonly MetadataTooLong = new Status(227);
+
+    /**
+     * Repeated operations count exceeds the limit
+     */
+    public static readonly BatchSizeLimitExceeded = new Status(228);
+
+    /**
+     * The range of data to be gathered is out of the set boundaries
+     */
+    public static readonly InvalidQueryRange = new Status(229);
+
+    /**
+     * A custom fractional fee set a denominator of zero
+     */
+    public static readonly FractionDividesByZero = new Status(230);
+
+    /**
+     * The transaction payer could not afford a custom fee
+     */
+    public static readonly InsufficientPayerBalanceForCustomFee = new Status(231);
+
+    /**
+     * The customFees list is longer than allowed limit 10
+     */
+    public static readonly CustomFeesListTooLong = new Status(232);
+
+    /**
+     * Any of the feeCollector accounts for customFees is invalid
+     */
+    public static readonly InvalidCustomFeeCollector = new Status(233);
+
+    /**
+     * Any of the token Ids in customFees is invalid
+     */
+    public static readonly InvalidTokenIdInCustomFees = new Status(234);
+
+    /**
+     * Any of the token Ids in customFees are not associated to feeCollector
+     */
+    public static readonly TokenNotAssociatedToFeeCollector = new Status(235);
+
+    /**
+     * A token cannot have more units minted due to its configured supply ceiling
+     */
+    public static readonly TokenMaxSupplyReached = new Status(236);
+
+    /**
+     * The transaction attempted to move an NFT serial number from an account other than its owner
+     */
+    public static readonly SenderDoesNotOwnNftSerialNo = new Status(237);
+
+    /**
+     * A custom fee schedule entry did not specify either a fixed or fractional fee
+     */
+    public static readonly CustomFeeNotFullySpecified = new Status(238);
+
+    /**
+     * Only positive fees may be assessed at this time
+     */
+    public static readonly CustomFeeMustBePositive = new Status(239);
+
+    /**
+     * Fee schedule key is not set on token
+     */
+    public static readonly TokenHasNoFeeScheduleKey = new Status(240);
+
+    /**
+     * A fractional custom fee exceeded the range of a 64-bit signed integer
+     */
+    public static readonly CustomFeeOutsideNumericRange = new Status(241);
+
+    /**
+     * The sum of all custom fractional fees must be strictly less than 1
+     */
+    public static readonly InvalidCustomFractionalFeesSum = new Status(242);
+
+    /**
+     * Each fractional custom fee must have its maximum_amount, if specified, at least its minimum_amount
+     */
+    public static readonly FractionalFeeMaxAmountLessThanMinAmount = new Status(243);
+
+    /**
+     * A fee schedule update tried to clear the custom fees from a token whose fee schedule was already empty
+     */
+    public static readonly CustomScheduleAlreadyHasNoFees = new Status(244);
+
+    /**
+     * Only tokens of type FUNGIBLE_COMMON can be used to as fee schedule denominations
+     */
+    public static readonly CustomFeeDenominationMustBeFungibleCommon = new Status(245);
+
+    /**
+     * Only tokens of type FUNGIBLE_COMMON can have fractional fees
+     */
+    public static readonly CustomFractionalFeeOnlyAllowedForFungibleCommon = new Status(246);
+
+    /**
+     * The provided custom fee schedule key was invalid
+     */
+    public static readonly InvalidCustomFeeScheduleKey = new Status(247);
 
     private static [ 0 ] = Status.Ok;
     private static [ 1 ] = Status.InvalidTransaction;
@@ -856,15 +1088,15 @@ export class Status implements Indexed {
     private static [ 50 ] = Status.InvalidTransactionBody;
     private static [ 51 ] = Status.InvalidSignatureTypeMismatchingKey;
     private static [ 52 ] = Status.InvalidSignatureCountMismatchingKey;
-    private static [ 53 ] = Status.EmptyClaimBody;
-    private static [ 54 ] = Status.EmptyClaimHash;
-    private static [ 55 ] = Status.EmptyClaimKeys;
-    private static [ 56 ] = Status.InvalidClaimHashSize;
+    private static [ 53 ] = Status.EmptyLiveHashBody;
+    private static [ 54 ] = Status.EmptyLiveHash;
+    private static [ 55 ] = Status.EmptyLiveHashKeys;
+    private static [ 56 ] = Status.InvalidLiveHashSize;
     private static [ 57 ] = Status.EmptyQueryBody;
-    private static [ 58 ] = Status.EmptyClaimQuery;
-    private static [ 59 ] = Status.ClaimNotFound;
+    private static [ 58 ] = Status.EmptyLiveHashQuery;
+    private static [ 59 ] = Status.LiveHashNotFound;
     private static [ 60 ] = Status.AccountIdDoesNotExist;
-    private static [ 61 ] = Status.ClaimAlreadyExists;
+    private static [ 61 ] = Status.LiveHashAlreadyExists;
     private static [ 62 ] = Status.InvalidFileWacl;
     private static [ 63 ] = Status.SerializationFailed;
     private static [ 64 ] = Status.TransactionOversize;
@@ -909,85 +1141,106 @@ export class Status implements Indexed {
     private static [ 103 ] = Status.FileUploadedProtoNotSavedToDisk;
     private static [ 104 ] = Status.FeeScheduleFilePartUploaded;
     private static [ 105 ] = Status.ExchangeRateChangeLimitExceeded;
-    private static [ 106 ] = Status.ExchangeRateChangeLimitExceeded;
-    private static [ 107 ] = Status.ExchangeRateChangeLimitExceeded;
-    private static [ 108 ] = Status.ExchangeRateChangeLimitExceeded;
-    private static [ 110 ] = Status.ExchangeRateChangeLimitExceeded;
-
-    // New functionality in the HCS release below here
+    private static [ 106 ] = Status.MaxContractStorageExceeded;
+    private static [ 107 ] = Status.TransferAccountSameAsDeleteAccount;
+    private static [ 108 ] = Status.TotalLedgerBalanceInvalid;
+    private static [ 110 ] = Status.ExpirationReductionNotAllowed;
+    private static [ 111 ] = Status.MaxGasLimitExceeded;
+    private static [ 112 ] = Status.MaxFileSizeExceeded;
+    private static [ 113 ] = Status.ReceiverSigRequired;
     private static [ 150 ] = Status.InvalidTopicId;
-    private static [ 154 ] = Status.InvalidTopicExpirationTime;
     private static [ 155 ] = Status.InvalidAdminKey;
     private static [ 156 ] = Status.InvalidSubmitKey;
     private static [ 157 ] = Status.Unauthorized;
     private static [ 158 ] = Status.InvalidTopicMessage;
     private static [ 159 ] = Status.InvalidAutorenewAccount;
-    private static [ 160 ] = Status.AutoRenewAccountNotAllowed;
-    private static [ 161 ] = Status.AutoRenewAccountSignatureMissing;
+    private static [ 160 ] = Status.AutorenewAccountNotAllowed;
     private static [ 162 ] = Status.TopicExpired;
-    // New functionality in the HCS release above here
-
-    // New functionality added by HTS
-    public static [ 163 ] = Status.InvalidChunkNumber;
-    public static [ 164 ] = Status.InvalidChunkTransactionId;
-    public static [ 165 ] = Status.AccountFrozenForToken;
-    public static [ 166 ] = Status.TokensPerAccountLimitExceeded;
-    public static [ 167 ] = Status.InvalidTokenId;
-    public static [ 168 ] = Status.InvalidTokenDecimals;
-    public static [ 169 ] = Status.InvalidTokenInitialSupply;
-    public static [ 170 ] = Status.InvalidTreasuryAccountForToken;
-    public static [ 171 ] = Status.InvalidTokenSymbol;
-    public static [ 172 ] = Status.TokenHasNoFreezeKey;
-    public static [ 173 ] = Status.TransfersNotZeroSumForToken;
-    public static [ 174 ] = Status.MissingTokenSymbol;
-    public static [ 175 ] = Status.TokenSymbolTooLong;
-    public static [ 176 ] = Status.AccountKycNotGrantedForToken;
-    public static [ 177 ] = Status.TokenHasNoKycKey;
-    public static [ 178 ] = Status.InsufficientTokenBalance;
-    public static [ 179 ] = Status.TokenWasDeleted;
-    public static [ 180 ] = Status.TokenHasNoSupplyKey;
-    public static [ 181 ] = Status.TokenHasNoWipeKey;
-    public static [ 182 ] = Status.InvalidTokenMintAmount;
-    public static [ 183 ] = Status.InvalidTokenBurnAmount;
-    public static [ 184 ] = Status.TokenNotAssociatedToAccount;
-    public static [ 185 ] = Status.CannotWipeTokenTreasuryAccount;
-    public static [ 186 ] = Status.InvalidKycKey;
-    public static [ 187 ] = Status.InvalidWipeKey;
-    public static [ 188 ] = Status.InvalidFreezeKey;
-    public static [ 189 ] = Status.InvalidSupplyKey;
-    public static [ 190 ] = Status.MissingTokenName;
-    public static [ 191 ] = Status.TokenNameTooLong;
-    public static [ 192 ] = Status.InvalidWipingAmount;
-    public static [ 193 ] = Status.TOKEN_IS_IMMUTABLE;
-    public static [ 194 ] = Status.TokenAlreadyAssociatedToAccount;
-    public static [ 195 ] = Status.TransactionRequiresZeroTokenBalances;
-    public static [ 196 ] = Status.AccountIsTreasury;
-    public static [ 197 ] = Status.TokenIdRepeatedInTokenList;
-    public static [ 198 ] = Status.TokenTransferListSizeLimitExceeded;
-    public static [ 199 ] = Status.EmptyTokenTransferBody;
-    public static [ 200 ] = Status.EmptyTokenTransferAccountAmounts;
-    public static [ 201 ] = Status.InvalidScheduleId
-    public static [ 202 ] = Status.ScheduleIsImmutable;
-    public static [ 203 ] = Status.InvalidSchedulePayerId;
-    public static [ 204 ] = Status.InvalidScheduleAccountId;
-    public static [ 205 ] = Status.NoNewValidSignatures;
-    public static [ 206 ] = Status.UnresolvableRequiredSigners;
-    public static [ 207 ] = Status.ScheduledTransactionNotInWhitelist;
-    public static [ 208 ] = Status.SomeSignaturesWereInvalid;
-    public static [ 209 ] = Status.TransactionIdFieldNotAllowed;
-    public static [ 210 ] = Status.IdenticalScheduleAlreadyCreated;
-    public static [ 211 ] = Status.InvalidZeroByteInString;
-    public static [ 212 ] = Status.ScheduleAlreadyDeleted;
-    public static [ 213 ] = Status.ScheduleAlreadyExecuted;
-    public static [ 214 ] = Status.MessageSizeTooLarge;
-    public static [ 215 ] = Status.OperationRepeatedInBucketGroups;
-    public static [ 216 ] = Status.BucketCapacityOverflow;
-    public static [ 217 ] = Status.NodeCapacityNotSufficientForOperation;
-    public static [ 218 ] = Status.BucketHasNoThrottleGroups;
-    public static [ 219 ] = Status.ThrottleGroupHasZeroOpsPerSec;
-    public static [ 220 ] = Status.SuccessButMissingExpectedOperation;
-    public static [ 221 ] = Status.UnparseableThrottleDefinitions;
-    public static [ 222 ] = Status.InvalidThrottleDefinitions;
+    private static [ 163 ] = Status.InvalidChunkNumber;
+    private static [ 164 ] = Status.InvalidChunkTransactionId;
+    private static [ 165 ] = Status.AccountFrozenForToken;
+    private static [ 166 ] = Status.TokensPerAccountLimitExceeded;
+    private static [ 167 ] = Status.InvalidTokenId;
+    private static [ 168 ] = Status.InvalidTokenDecimals;
+    private static [ 169 ] = Status.InvalidTokenInitialSupply;
+    private static [ 170 ] = Status.InvalidTreasuryAccountForToken;
+    private static [ 171 ] = Status.InvalidTokenSymbol;
+    private static [ 172 ] = Status.TokenHasNoFreezeKey;
+    private static [ 173 ] = Status.TransfersNotZeroSumForToken;
+    private static [ 174 ] = Status.MissingTokenSymbol;
+    private static [ 175 ] = Status.TokenSymbolTooLong;
+    private static [ 176 ] = Status.AccountKycNotGrantedForToken;
+    private static [ 177 ] = Status.TokenHasNoKycKey;
+    private static [ 178 ] = Status.InsufficientTokenBalance;
+    private static [ 179 ] = Status.TokenWasDeleted;
+    private static [ 180 ] = Status.TokenHasNoSupplyKey;
+    private static [ 181 ] = Status.TokenHasNoWipeKey;
+    private static [ 182 ] = Status.InvalidTokenMintAmount;
+    private static [ 183 ] = Status.InvalidTokenBurnAmount;
+    private static [ 184 ] = Status.TokenNotAssociatedToAccount;
+    private static [ 185 ] = Status.CannotWipeTokenTreasuryAccount;
+    private static [ 186 ] = Status.InvalidKycKey;
+    private static [ 187 ] = Status.InvalidWipeKey;
+    private static [ 188 ] = Status.InvalidFreezeKey;
+    private static [ 189 ] = Status.InvalidSupplyKey;
+    private static [ 190 ] = Status.MissingTokenName;
+    private static [ 191 ] = Status.TokenNameTooLong;
+    private static [ 192 ] = Status.InvalidWipingAmount;
+    private static [ 193 ] = Status.TokenIsImmutable;
+    private static [ 194 ] = Status.TokenAlreadyAssociatedToAccount;
+    private static [ 195 ] = Status.TransactionRequiresZeroTokenBalances;
+    private static [ 196 ] = Status.AccountIsTreasury;
+    private static [ 197 ] = Status.TokenIdRepeatedInTokenList;
+    private static [ 198 ] = Status.TokenTransferListSizeLimitExceeded;
+    private static [ 199 ] = Status.EmptyTokenTransferBody;
+    private static [ 200 ] = Status.EmptyTokenTransferAccountAmounts;
+    private static [ 201 ] = Status.InvalidScheduleId;
+    private static [ 202 ] = Status.ScheduleIsImmutable;
+    private static [ 203 ] = Status.InvalidSchedulePayerId;
+    private static [ 204 ] = Status.InvalidScheduleAccountId;
+    private static [ 205 ] = Status.NoNewValidSignatures;
+    private static [ 206 ] = Status.UnresolvableRequiredSigners;
+    private static [ 207 ] = Status.ScheduledTransactionNotInWhitelist;
+    private static [ 208 ] = Status.SomeSignaturesWereInvalid;
+    private static [ 209 ] = Status.TransactionIdFieldNotAllowed;
+    private static [ 210 ] = Status.IdenticalScheduleAlreadyCreated;
+    private static [ 211 ] = Status.InvalidZeroByteInString;
+    private static [ 212 ] = Status.ScheduleAlreadyDeleted;
+    private static [ 213 ] = Status.ScheduleAlreadyExecuted;
+    private static [ 214 ] = Status.MessageSizeTooLarge;
+    private static [ 215 ] = Status.OperationRepeatedInBucketGroups;
+    private static [ 216 ] = Status.BucketCapacityOverflow;
+    private static [ 217 ] = Status.NodeCapacityNotSufficientForOperation;
+    private static [ 218 ] = Status.BucketHasNoThrottleGroups;
+    private static [ 219 ] = Status.ThrottleGroupHasZeroOpsPerSec;
+    private static [ 220 ] = Status.SuccessButMissingExpectedOperation;
+    private static [ 221 ] = Status.UnparseableThrottleDefinitions;
+    private static [ 222 ] = Status.InvalidThrottleDefinitions;
+    private static [ 223 ] = Status.AccountExpiredAndPendingRemoval;
+    private static [ 224 ] = Status.InvalidTokenMaxSupply;
+    private static [ 225 ] = Status.InvalidTokenNftSerialNumber;
+    private static [ 226 ] = Status.InvalidNftId;
+    private static [ 227 ] = Status.MetadataTooLong;
+    private static [ 228 ] = Status.BatchSizeLimitExceeded;
+    private static [ 229 ] = Status.InvalidQueryRange;
+    private static [ 230 ] = Status.FractionDividesByZero;
+    private static [ 231 ] = Status.InsufficientPayerBalanceForCustomFee;
+    private static [ 232 ] = Status.CustomFeesListTooLong;
+    private static [ 233 ] = Status.InvalidCustomFeeCollector;
+    private static [ 234 ] = Status.InvalidTokenIdInCustomFees;
+    private static [ 235 ] = Status.TokenNotAssociatedToFeeCollector;
+    private static [ 236 ] = Status.TokenMaxSupplyReached;
+    private static [ 237 ] = Status.SenderDoesNotOwnNftSerialNo;
+    private static [ 238 ] = Status.CustomFeeNotFullySpecified;
+    private static [ 239 ] = Status.CustomFeeMustBePositive;
+    private static [ 240 ] = Status.TokenHasNoFeeScheduleKey;
+    private static [ 241 ] = Status.CustomFeeOutsideNumericRange;
+    private static [ 242 ] = Status.InvalidCustomFractionalFeesSum;
+    private static [ 243 ] = Status.FractionalFeeMaxAmountLessThanMinAmount;
+    private static [ 244 ] = Status.CustomScheduleAlreadyHasNoFees;
+    private static [ 245 ] = Status.CustomFeeDenominationMustBeFungibleCommon;
+    private static [ 246 ] = Status.CustomFractionalFeeOnlyAllowedForFungibleCommon;
+    private static [ 247 ] = Status.InvalidCustomFeeScheduleKey;
 
     // New functionality added by HTS above
 
@@ -1053,15 +1306,15 @@ export class Status implements Indexed {
             case Status.InvalidTransactionBody: return "INVALID_TRANSACTION_BODY";
             case Status.InvalidSignatureTypeMismatchingKey: return "INVALID_SIGNATURE_TYPE_MISMATCHING_KEY";
             case Status.InvalidSignatureCountMismatchingKey: return "INVALID_SIGNATURE_COUNT_MISMATCHING_KEY";
-            case Status.EmptyClaimBody: return "EMPTY_CLAIM_BODY";
-            case Status.EmptyClaimHash: return "EMPTY_CLAIM_HASH";
-            case Status.EmptyClaimKeys: return "EMPTY_CLAIM_KEYS";
-            case Status.InvalidClaimHashSize: return "INVALID_CLAIM_HASH_SIZE";
+            case Status.EmptyLiveHashBody: return "EMPTY_LIVE_HASH_BODY";
+            case Status.EmptyLiveHash: return "EMPTY_LIVE_HASH";
+            case Status.EmptyLiveHashKeys: return "EMPTY_LIVE_HASH_KEYS";
+            case Status.InvalidLiveHashSize: return "INVALID_LIVE_HASH_SIZE";
             case Status.EmptyQueryBody: return "EMPTY_QUERY_BODY";
-            case Status.EmptyClaimQuery: return "EMPTY_CLAIM_QUERY";
-            case Status.ClaimNotFound: return "CLAIM_NOT_FOUND";
+            case Status.EmptyLiveHashQuery: return "EMPTY_LIVE_HASH_QUERY";
+            case Status.LiveHashNotFound: return "LIVE_HASH_NOT_FOUND";
             case Status.AccountIdDoesNotExist: return "ACCOUNT_ID_DOES_NOT_EXIST";
-            case Status.ClaimAlreadyExists: return "CLAIM_ALREADY_EXISTS";
+            case Status.LiveHashAlreadyExists: return "LIVE_HASH_ALREADY_EXISTS";
             case Status.InvalidFileWacl: return "INVALID_FILE_WACL";
             case Status.SerializationFailed: return "SERIALIZATION_FAILED";
             case Status.TransactionOversize: return "TRANSACTION_OVERSIZE";
@@ -1107,18 +1360,19 @@ export class Status implements Indexed {
             case Status.FeeScheduleFilePartUploaded: return "FEE_SCHEDULE_FILE_PART_UPLOADED";
             case Status.ExchangeRateChangeLimitExceeded: return "EXCHANGE_RATE_CHANGE_LIMIT_EXCEEDED";
             case Status.MaxContractStorageExceeded: return "MAX_CONTRACT_STORAGE_EXCEEDED";
-            case Status.TransferAccountSameAsDeleteAccount: return "TRANSAFER_ACCOUNT_SAME_AS_DELETE_ACCOUNT";
+            case Status.TransferAccountSameAsDeleteAccount: return "TRANSFER_ACCOUNT_SAME_AS_DELETE_ACCOUNT";
             case Status.TotalLedgerBalanceInvalid: return "TOTAL_LEDGER_BALANCE_INVALID";
             case Status.ExpirationReductionNotAllowed: return "EXPIRATION_REDUCTION_NOT_ALLOWED";
+            case Status.MaxGasLimitExceeded: return "MAX_GAS_LIMIT_EXCEEDED";
+            case Status.MaxFileSizeExceeded: return "MAX_FILE_SIZE_EXCEEDED";
+            case Status.ReceiverSigRequired: return "RECEIVER_SIG_REQUIRED";
             case Status.InvalidTopicId: return "INVALID_TOPIC_ID";
-            case Status.InvalidTopicExpirationTime: return "INVALID_TOPIC_EXPIRATION_TIME";
             case Status.InvalidAdminKey: return "INVALID_ADMIN_KEY";
             case Status.InvalidSubmitKey: return "INVALID_SUBMIT_KEY";
             case Status.Unauthorized: return "UNAUTHORIZED";
             case Status.InvalidTopicMessage: return "INVALID_TOPIC_MESSAGE";
             case Status.InvalidAutorenewAccount: return "INVALID_AUTORENEW_ACCOUNT";
-            case Status.AutoRenewAccountNotAllowed: return "AUTORENEW_ACCOUNT_NOT_ALLOWED";
-            case Status.AutoRenewAccountSignatureMissing: return "AUTORENEW_ACCOUNT_SIGNATURE_MISSING";
+            case Status.AutorenewAccountNotAllowed: return "AUTORENEW_ACCOUNT_NOT_ALLOWED";
             case Status.TopicExpired: return "TOPIC_EXPIRED";
             case Status.InvalidChunkNumber: return "INVALID_CHUNK_NUMBER";
             case Status.InvalidChunkTransactionId: return "INVALID_CHUNK_TRANSACTION_ID";
@@ -1150,7 +1404,7 @@ export class Status implements Indexed {
             case Status.MissingTokenName: return "MISSING_TOKEN_NAME";
             case Status.TokenNameTooLong: return "TOKEN_NAME_TOO_LONG";
             case Status.InvalidWipingAmount: return "INVALID_WIPING_AMOUNT";
-            case Status.TOKEN_IS_IMMUTABLE: return "TOKEN_IS_IMMUTABLE";
+            case Status.TokenIsImmutable: return "TOKEN_IS_IMMUTABLE";
             case Status.TokenAlreadyAssociatedToAccount: return "TOKEN_ALREADY_ASSOCIATED_TO_ACCOUNT";
             case Status.TransactionRequiresZeroTokenBalances: return "TRANSACTION_REQUIRES_ZERO_TOKEN_BALANCES";
             case Status.AccountIsTreasury: return "ACCOUNT_IS_TREASURY";
@@ -1180,6 +1434,31 @@ export class Status implements Indexed {
             case Status.SuccessButMissingExpectedOperation: return "SUCCESS_BUT_MISSING_EXPECTED_OPERATION";
             case Status.UnparseableThrottleDefinitions: return "UNPARSEABLE_THROTTLE_DEFINITIONS";
             case Status.InvalidThrottleDefinitions: return "INVALID_THROTTLE_DEFINITIONS";
+            case Status.AccountExpiredAndPendingRemoval: return "ACCOUNT_EXPIRED_AND_PENDING_REMOVAL";
+            case Status.InvalidTokenMaxSupply: return "INVALID_TOKEN_MAX_SUPPLY";
+            case Status.InvalidTokenNftSerialNumber: return "INVALID_TOKEN_NFT_SERIAL_NUMBER";
+            case Status.InvalidNftId: return "INVALID_NFT_ID";
+            case Status.MetadataTooLong: return "METADATA_TOO_LONG";
+            case Status.BatchSizeLimitExceeded: return "BATCH_SIZE_LIMIT_EXCEEDED";
+            case Status.InvalidQueryRange: return "INVALID_QUERY_RANGE";
+            case Status.FractionDividesByZero: return "FRACTION_DIVIDES_BY_ZERO";
+            case Status.InsufficientPayerBalanceForCustomFee: return "INSUFFICIENT_PAYER_BALANCE_FOR_CUSTOM_FEE";
+            case Status.CustomFeesListTooLong: return "CUSTOM_FEES_LIST_TOO_LONG";
+            case Status.InvalidCustomFeeCollector: return "INVALID_CUSTOM_FEE_COLLECTOR";
+            case Status.InvalidTokenIdInCustomFees: return "INVALID_TOKEN_ID_IN_CUSTOM_FEES";
+            case Status.TokenNotAssociatedToFeeCollector: return "TOKEN_NOT_ASSOCIATED_TO_FEE_COLLECTOR";
+            case Status.TokenMaxSupplyReached: return "TOKEN_MAX_SUPPLY_REACHED";
+            case Status.SenderDoesNotOwnNftSerialNo: return "SENDER_DOES_NOT_OWN_NFT_SERIAL_NO";
+            case Status.CustomFeeNotFullySpecified: return "CUSTOM_FEE_NOT_FULLY_SPECIFIED";
+            case Status.CustomFeeMustBePositive: return "CUSTOM_FEE_MUST_BE_POSITIVE";
+            case Status.TokenHasNoFeeScheduleKey: return "TOKEN_HAS_NO_FEE_SCHEDULE_KEY";
+            case Status.CustomFeeOutsideNumericRange: return "CUSTOM_FEE_OUTSIDE_NUMERIC_RANGE";
+            case Status.InvalidCustomFractionalFeesSum: return "INVALID_CUSTOM_FRACTIONAL_FEES_SUM";
+            case Status.FractionalFeeMaxAmountLessThanMinAmount: return "FRACTIONAL_FEE_MAX_AMOUNT_LESS_THAN_MIN_AMOUNT";
+            case Status.CustomScheduleAlreadyHasNoFees: return "CUSTOM_SCHEDULE_ALREADY_HAS_NO_FEES";
+            case Status.CustomFeeDenominationMustBeFungibleCommon: return "CUSTOM_FEE_DENOMINATION_MUST_BE_FUNGIBLE_COMMON";
+            case Status.CustomFractionalFeeOnlyAllowedForFungibleCommon: return "CUSTOM_FRACTIONAL_FEE_ONLY_ALLOWED_FOR_FUNGIBLE_COMMON";
+            case Status.InvalidCustomFeeScheduleKey: return "INVALID_CUSTOM_FEE_SCHEDULE_KEY";
             default: return `UNKNOWN STATUS CODE (${this.code})`;
         }
     }

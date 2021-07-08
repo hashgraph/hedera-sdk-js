@@ -5,6 +5,7 @@ import { TransactionId } from "./TransactionId";
 import {
     TransferList as ProtoTransferList,
     TokenTransferList as ProtoTokenTransferList,
+    NftTransfer as ProtoTokenNftTransfer,
     AccountAmount as ProtoAccountAmount
 } from "./generated/BasicTypes_pb";
 import { Time } from "./Time";
@@ -13,6 +14,8 @@ import { TokenId, TokenIdLike } from "./token/TokenId";
 import { AccountId, AccountIdLike } from "./account/AccountId";
 import { Transfer, transferFromProto } from "./Transfer";
 import BigNumber from "bignumber.js";
+import { ScheduleId } from "./schedule/ScheduleId";
+import { AssessedCustomFee } from "./token/AssessedCustomFee";
 
 const callResult = Symbol("callResult");
 
@@ -101,6 +104,67 @@ export class TokenTransfersMap {
     }
 }
 
+export class TokenNftTransfer {
+    public readonly sender: AccountId | null;
+    public readonly recipient: AccountId | null;
+    public readonly serial: BigNumber;
+
+    // NOT A STABLE API
+    public constructor(transfer: ProtoTokenNftTransfer) {
+        this.sender = transfer.hasSenderaccountid() ?
+            AccountId._fromProto(transfer.getSenderaccountid()!) :
+            null;
+        this.recipient = transfer.hasReceiveraccountid() ?
+            AccountId._fromProto(transfer.getReceiveraccountid()!) :
+            null;
+        this.serial = new BigNumber(transfer.getSerialnumber());
+    }
+}
+
+export class TokenNftTransferMap {
+    private _transfers: Map<string, TokenNftTransfer[]> = new Map();
+
+    public constructor(transfers: ProtoTokenTransferList[]) {
+        for (const list of transfers) {
+            const tokenId = TokenId._fromProto(list.getToken()!);
+
+            const nftTransfers = [];
+            for (const transfer of list.getNfttransfersList()) {
+                nftTransfers.push(new TokenNftTransfer(transfer));
+            }
+            this._transfers.set(
+                tokenId.toString(),
+                nftTransfers
+            );
+        }
+    }
+
+    public get(tokenId: TokenIdLike): TokenNftTransfer[] | undefined {
+        const token = new TokenId(tokenId).toString();
+        return this._transfers.get(token);
+    }
+
+    public values(): IterableIterator<TokenNftTransfer[]> {
+        return this._transfers.values();
+    }
+
+    public keys(): IterableIterator<TokenId> {
+        const keys = [];
+        for (const key of this._transfers.keys()) {
+            keys.push(TokenId.fromString(key));
+        }
+        return keys[ Symbol.iterator ]();
+    }
+
+    public [ Symbol.iterator ](): IterableIterator<[TokenId, TokenNftTransfer[]]> {
+        const map = new Map();
+        for (const [ key, value ] of this._transfers) {
+            map.set(TokenId.fromString(key), value);
+        }
+        return map[ Symbol.iterator ]();
+    }
+}
+
 /**
  * Response when the client sends the node TransactionGetRecordResponse.
  */
@@ -151,6 +215,12 @@ export class TransactionRecord {
 
     public readonly tokenTransfers: TokenTransfersMap;
 
+    public readonly nftTransfers: TokenNftTransferMap;
+
+    public readonly scheduleRef: ScheduleId | null;
+
+    public readonly assessedCustomFees: AssessedCustomFee[];
+
     private constructor(record: ProtoTransactionRecord) {
         this.receipt = TransactionReceipt._fromProto(record.getReceipt()!);
         this.transactionHash = record.getTransactionhash_asU8();
@@ -168,6 +238,13 @@ export class TransactionRecord {
         }
 
         this.tokenTransfers = new TokenTransfersMap(record.getTokentransferlistsList());
+
+        this.scheduleRef = record.hasScheduleref() ?
+            ScheduleId._fromProto(record.getScheduleref()!) :
+            null;
+        this.assessedCustomFees = record.getAssessedCustomFeesList()
+            .map((fee) => new AssessedCustomFee(fee));
+        this.nftTransfers = new TokenNftTransferMap(record.getTokentransferlistsList());
     }
 
     public static _fromProto(pb: ProtoTransactionRecord): TransactionRecord {
