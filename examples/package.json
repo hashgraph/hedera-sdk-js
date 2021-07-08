@@ -5,5 +5,8 @@
     "dependencies": {
         "@hashgraph/sdk": "link:..",
         "dotenv": "^8.2.0"
+    },
+    "devDependencies": {
+        "babel-eslint": "^10.1.0"
     }
 }
