@@ -2,22 +2,21 @@ import * as proto from "@hashgraph/proto";
 export default class CurrentAndNextFeeSchedule {
     /**
     * @param {object} props
-    * @param {object} props.currentFeeSchedule
-    * @param {object} props.nextFeeSchedule
+    * @param {FeeSchedule} props.currentFeeSchedule
+    * @param {FeeSchedule} props.nextFeeSchedule
     */
-   
     constructor(props) {
         /*
         * Contains current Fee Schedule
         *
-        * @type {object}
+        * @type {FeeSchedule}
         */
         this.currentFeeSchedule = props.currentFeeSchedule;
 
         /*
         * Contains next Fee Schedule
         *
-        * @type {object}
+        * @type {FeeSchedule}
         */
         this.nextFeeSchedule = props.nextFeeSchedule;
     }
@@ -36,9 +35,9 @@ export default class CurrentAndNextFeeSchedule {
     */
     static fromProtobuf(currentAndNextFeeSchedule) {
         return new CurrentAndNextFeeSchedule({
-            /** @type {object} */
+            /** @type {FeeSchedule} */
             currentFeeSchedule: (currentAndNextFeeSchedule.currentFeeSchedule),
-            /** @type {object} */
+            /** @type {FeeSchedule} */
             nextFeeSchedule: (currentAndNextFeeSchedule.nextFeeSchedule),
         });
     }

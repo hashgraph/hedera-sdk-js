@@ -2,22 +2,22 @@ import * as proto from "@hashgraph/proto";
 export default class TransactionFeeSchedule {
     /**
     * @param {object} props
-    * @param {any} props.hederaFunctionality
-    * @param {object} props.feeData
+    * @param {RequestType} props.hederaFunctionality
+    * @param {FeeData} props.feeData
     */
    
     constructor(props) {
         /*
         * A particular transaction or query
         *
-        * @type {any}
+        * @type {RequestType}
         */
         this.hederaFunctionality = props.hederaFunctionality;
 
         /*
         * Resource price coefficients
         *
-        * @type {object}
+        * @type {FeeData}
         */
         this.feeData = props.feeData;
     }
@@ -36,9 +36,9 @@ export default class TransactionFeeSchedule {
     */
     static fromProtobuf(transactionFeeSchedule) {
         return new TransactionFeeSchedule({
-            /** @type {any} */
+            /** @type {RequestType} */
             hederaFunctionality: (transactionFeeSchedule.hederaFunctionality),
-            /** @type {object} */
+            /** @type {FeeData} */
             feeData: (transactionFeeSchedule.feeData),
         });
     }

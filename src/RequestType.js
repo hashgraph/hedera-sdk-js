@@ -22,7 +22,7 @@
    toString() {
        switch(this) {
             case RequestType.NONE:
-                return "RESERVED_NONE";
+                return "NONE";
             case RequestType.CryptoTransfer:
                 return "CRYPTO_TRANSFER";
             case RequestType.CryptoUpdate:
