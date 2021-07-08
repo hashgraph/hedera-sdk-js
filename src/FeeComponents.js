@@ -1,4 +1,5 @@
 import * as proto from "@hashgraph/proto";
+
 export default class FeeComponents {
     /**
      * @param {object} [props]
@@ -21,60 +22,70 @@ export default class FeeComponents {
          * @type {Long}
          */
         this.min = props.min;
+
         /*
          * A maximum, the calculated fee must be less than this value
          *
          * @type {Long}
          */
         this.max = props.max;
+
         /*
          * A constant contribution to the fee
          *
          * @type {Long}
          */
         this.constant = props.constant;
+
         /*
          * The price of bandwidth consumed by a transaction, measured in bytes
          *
          * @type {Long}
          */
         this.transactionBandwidthByte = props.transactionBandwidthByte;
+
         /*
          * The price per signature verification for a transaction
          *
          * @type {Long}
          */
         this.transactionVerification = props.transactionVerification;
+
         /*
          * The price of RAM consumed by a transaction, measured in byte-hours
          *
          * @type {Long}
          */
         this.transactionRamByteHour = props.transactionRamByteHour;
+
         /*
          * The price of storage consumed by a transaction, measured in byte-hours
          *
          * @type {Long}
          */
         this.transactionStorageByteHour = props.transactionStorageByteHour;
+
         /*
          * The price of computation for a smart contract transaction, measured in gas
          *
          * @type {Long}
          */
         this.contractTransactionGas = props.contractTransactionGas;
+
         /*
          * The price per hbar transferred for a transfer
          *
          * @type {Long}
          */
         this.transferVolumeHbar = props.transferVolumeHbar;
+
         /*
          * The price of bandwidth for data retrieved from memory for a response, measured in bytes
          *
          * @type {Long}
          */
         this.responseMemoryByte = props.responseMemoryByte;
+
         /*
          * The price of bandwidth for data retrieved from disk for a response, measured in bytes
          *
@@ -82,18 +93,21 @@ export default class FeeComponents {
          */
         this.responseDiskByte = props.responseDiskByte;
     }
+
     /**
      * @param {Uint8Array} bytes
      * @returns {FeeComponents}
      */
     static fromBytes(bytes) {
-        return FeeComponents.fromProtobuf(proto.FeeComponents.decode(bytes));
+        return FeeComponents._fromProtobuf(proto.FeeComponents.decode(bytes));
     }
+
     /**
-     * @param {proto.IFeeComponents} feeComponents
-     * @returns {FeeComponents}
-     */
-    static fromProtobuf(feeComponents) {
+    * @internal
+    * @param {proto.IFeeComponents} feeComponents
+    * @returns {FeeComponents}
+    */
+    static _fromProtobuf(feeComponents) {
         return new FeeComponents({
             min: /** @type {Long} */ (feeComponents.min),
             max: /** @type {Long} */ (feeComponents.max),
@@ -108,10 +122,12 @@ export default class FeeComponents {
             responseDiskByte: /** @type {Long} */ (feeComponents.sbpr),
         });
     }
+
     /**
-     * @returns {proto.IFeeComponents}
-     */
-    toProtobuf() {
+    * @internal
+    * @returns {proto.IFeeComponents}
+    */
+    _toProtobuf() {
         return {
             min: this.min,
             max: this.max,
@@ -126,10 +142,11 @@ export default class FeeComponents {
             sbpr: this.responseDiskByte,
         };
     }
+    
     /**
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.FeeComponents.encode(this.toProtobuf()).finish();
+        return proto.FeeComponents.encode(this._toProtobuf()).finish();
     }
 }

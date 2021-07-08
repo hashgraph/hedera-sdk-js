@@ -1,13 +1,14 @@
 import * as proto from "@hashgraph/proto";
+
 export default class FeeData {
     /**
-    * @param {object} props
-    * @param {FeeComponents} props.nodedata
-    * @param {FeeComponents} props.networkdata
-    * @param {FeeComponents} props.servicedata
+    * @param {object} [props]
+    * @param {FeeComponents} [props.nodedata]
+    * @param {FeeComponents} [props.networkdata]
+    * @param {FeeComponents} [props.servicedata]
      */
 
-    constructor(props) {
+    constructor(props = {}) {
          /*
          * Fee paid to the submitting node
          *
@@ -35,14 +36,15 @@ export default class FeeData {
      * @returns {FeeData}
     */
     static fromBytes(bytes) {
-        return FeeData.fromProtobuf(proto.FeeData.decode(bytes));
+        return FeeData._fromProtobuf(proto.FeeData.decode(bytes));
     }
 
     /**
+    * @internal
     * @param {proto.IFeeData} feeData
     * @returns {FeeData}
     */
-    static fromProtobuf(feeData) {
+    static _fromProtobuf(feeData) {
         return new FeeData({
             /** @type {FeeComponents} */
             nodedata: (feeData.nodedata),
@@ -55,9 +57,10 @@ export default class FeeData {
     }
 
     /**
+    * @internal
      * @returns {proto.IFeeData}
      */
-    toProtobuf() {
+    _toProtobuf() {
         return {
             nodedata: this.nodedata,
             networkdata: this.networkdata,
@@ -69,6 +72,6 @@ export default class FeeData {
      * @returns {Uint8Array}
      */
     toBytes(){
-       return proto.FeeData.encode(this.toProtobuf()).finish();    
+       return proto.FeeData.encode(this._toProtobuf()).finish();    
     }
 }

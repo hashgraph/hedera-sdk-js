@@ -81,80 +81,6 @@ import INodeAddressBook = proto.INodeAddressBook;
 import NodeAddressBook = proto.NodeAddressBook;
 import ISemanticVersion = proto.ISemanticVersion;
 import SemanticVersion = proto.SemanticVersion;
-import SignedTransaction = proto.SignedTransaction;
-import ThresholdKey = proto.ThresholdKey;
-import TokenFreezeStatus = proto.TokenFreezeStatus;
-import TokenID = proto.TokenID;
-import TokenInfo = proto.TokenInfo;
-import TokenKycStatus = proto.TokenKycStatus;
-import TopicID = proto.TopicID;
-import Transaction = proto.Transaction;
-import TransactionBody = proto.TransactionBody;
-import TransactionID = proto.TransactionID;
-import TransactionList = proto.TransactionList;
-import TransactionReceipt = proto.TransactionReceipt;
-import TransactionRecord = proto.TransactionRecord;
-import CurrentAndNextFeeSchedule = proto.CurrentAndNextFeeSchedule;
-import FeeSchedules = proto.FeeSchedule;
-import FeeComponents = proto.FeeComponents;
-import FeeData = proto.FeeData;
-import TransactionFeeSchedule = proto.TransactionFeeSchedule;
-import HederaFunctionality = proto.HederaFunctionality;
-import FeeSchedule = proto.FeeSchedule;
-
-export {
-    AccountID,
-    ConsensusTopicInfo,
-    ConsensusTopicQuery,
-    ConsensusTopicResponse,
-    ContractGetInfoResponse,
-    ContractID,
-    CryptoGetInfoResponse,
-    FileGetInfoResponse,
-    FileID,
-    Key,
-    KeyList,
-    NetworkGetVersionInfoResponse,
-    Query,
-    ResponseCodeEnum,
-    ResponseType,
-    SchedulableTransactionBody,
-    ScheduleGetInfoResponse,
-    ScheduleID,
-    SemanticVersion,
-    SignedTransaction,
-    ThresholdKey,
-    TokenFreezeStatus,
-    TokenID,
-    TokenInfo,
-    TokenKycStatus,
-    TopicID,
-    Transaction,
-    TransactionBody,
-    TransactionID,
-    TransactionList,
-    TransactionReceipt,
-    TransactionRecord,
-    CurrentAndNextFeeSchedule,
-    FeeSchedules,
-    FeeComponents,
-    FeeData,
-    TransactionFeeSchedule,
-    HederaFunctionality,
-    FeeSchedule,
-};
-
-// ============================================================================
-// Interfaces
-// ============================================================================
-
-// NOTE: These do NOT need to be exported from index.js. ALL other types in
-//       this file do need to be exported from index.js.
-
-import IAccountAmount = proto.IAccountAmount;
-import IAccountID = proto.IAccountID;
-import IAccountInfo = proto.CryptoGetInfoResponse.IAccountInfo;
-import IAllProxyStakers = proto.IAllProxyStakers;
 import ISetting = proto.ISetting;
 import Setting = proto.Setting;
 import IServicesConfigurationList = proto.IServicesConfigurationList;
@@ -443,16 +369,6 @@ import TokenTransfersTransactionBody = proto.TokenTransfersTransactionBody;
 import ISignedTransaction = proto.ISignedTransaction;
 import SignedTransaction = proto.SignedTransaction;
 import ITransactionList = proto.ITransactionList;
-import ITransactionReceipt = proto.ITransactionReceipt;
-import ITransactionRecord = proto.ITransactionRecord;
-import ITransactionResponse = proto.ITransactionResponse;
-import ITransferList = proto.ITransferList;
-import ICurrentAndNextFeeSchedule = proto.ICurrentAndNextFeeSchedule;
-import IFeeSchedules = proto.IFeeSchedule;
-import IFeeComponents = proto.IFeeComponents;
-import IFeeData = proto.IFeeData;
-import ITransactionFeeSchedule = proto.ITransactionFeeSchedule;
-import IFeeSchedule = proto.IFeeSchedule;
 import TransactionList = proto.TransactionList;
 import IDoubleValue = proto.IDoubleValue;
 import DoubleValue = proto.DoubleValue;
@@ -836,16 +752,6 @@ export {
     ISignedTransaction,
     SignedTransaction,
     ITransactionList,
-    ITransactionReceipt,
-    ITransactionRecord,
-    ITransactionResponse,
-    ITransferList,
-    ICurrentAndNextFeeSchedule,
-    IFeeSchedules,
-    IFeeComponents,
-    IFeeData,
-    ITransactionFeeSchedule,
-    IFeeSchedule,
     TransactionList,
     IDoubleValue,
     DoubleValue,

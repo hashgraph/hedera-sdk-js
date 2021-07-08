@@ -1,23 +1,24 @@
 import * as proto from "@hashgraph/proto";
+
 export default class FeeSchedule {
     /**
-    * @param {object} props
-    * @param {any} props.transactionFeeSchedule
-    * @param {object} props.expiryTime
+    * @param {object} [props]
+    * @param {TransactionFeeSchedule} [props.transactionFeeSchedule]
+    * @param {TimestampSeconds} [props.expiryTime]
     */
    
-    constructor(props) {
+    constructor(props = {}) {
         /*
         * List of price coefficients for network resources
         *
-        * @type {any}
+        * @type {TransactionFeeSchedule}
         */
         this.transactionFeeSchedule = props.transactionFeeSchedule;
 
         /*
         * FeeSchedule expiry time
         *
-        * @type {object}
+        * @type {TimestampSeconds}
         */
         this.expiryTime = props.expiryTime;
     }
@@ -27,26 +28,28 @@ export default class FeeSchedule {
      * @returns {FeeSchedule}
     */
     static fromBytes(bytes) {
-        return FeeSchedule.fromProtobuf(proto.FeeSchedule.decode(bytes));
+        return FeeSchedule._fromProtobuf(proto.FeeSchedule.decode(bytes));
     }
 
     /**
+    * @internal
     * @param {proto.IFeeSchedule} feeSchedule
     * @returns {FeeSchedule}
     */
-    static fromProtobuf(feeSchedule) {
+    static _fromProtobuf(feeSchedule) {
         return new FeeSchedule({
-            /** @type {any} */
+            /** @type {TransactionFeeSchedule} */
             transactionFeeSchedule: (feeSchedule.transactionFeeSchedule),
-            /** @type {object} */
+            /** @type {TimestampSeconds} */
             expiryTime: (feeSchedule.expiryTime),
         });
     }
 
    /**
-     * @returns {proto.IFeeSchedule}
-     */
-    toProtobuf() {
+    * @internal
+    * @returns {proto.IFeeSchedule}
+    */
+    _toProtobuf() {
         return {
             transactionFeeSchedule: this.transactionFeeSchedule,
             expiryTime: this.expiryTime,
@@ -57,6 +60,6 @@ export default class FeeSchedule {
      * @returns {Uint8Array}
      */
     toBytes(){
-       return proto.FeeSchedule.encode(this.toProtobuf()).finish();    
+       return proto.FeeSchedule.encode(this._toProtobuf()).finish();    
     }
 }
