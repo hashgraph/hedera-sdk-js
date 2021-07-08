@@ -25,15 +25,18 @@ package proto;
 option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
 
-
 import "BasicTypes.proto";
+import "CustomFees.proto";
 
-/*
-Append the given contents to the end of the specified file. If a file is too big to create with a single FileCreateTransaction, then it can be created with the first part of its contents, and then appended as many times as necessary to create the entire file. This transaction must be signed by all initial M-of-M KeyList keys. If keys contains additional KeyList or ThresholdKey then M-of-M secondary KeyList or ThresholdKey signing requirements must be meet. 
-*/
-message FileAppendTransactionBody {
-    // The file to which the bytes will be appended
-    FileID fileID = 2;
-    // The bytes that will be appended to the end of the specified file
-    bytes contents = 4;
+/* At consensus, updates a token type's fee schedule to the given list of custom fees. 
+
+If the target token type has no fee_schedule_key, resolves to TOKEN_HAS_NO_FEE_SCHEDULE_KEY.
+Otherwise this transaction must be signed to the fee_schedule_key, or the transaction will 
+resolve to INVALID_SIGNATURE.
+
+If the custom_fees list is empty, clears the fee schedule or resolves to 
+CUSTOM_SCHEDULE_ALREADY_HAS_NO_FEES if the fee schedule was already empty. */
+message TokenFeeScheduleUpdateTransactionBody {
+    TokenID token_id = 1; // The token whose fee schedule is to be updated
+    repeated CustomFee custom_fees = 2; // The new custom fees to be assessed during a CryptoTransfer that transfers units of this token
 }

@@ -2,7 +2,8 @@ import TokenId from "./TokenId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import Long from "long";
+import CustomFixedFee from "./CustomFixedFee.js";
+import CustomFractionalFee from "./CustomFractionalFee.js";
 
 /**
  * @namespace proto
@@ -11,26 +12,27 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ITokenBurnTransactionBody} proto.ITokenBurnTransactionBody
+ * @typedef {import("@hashgraph/proto").ITokenFeeScheduleUpdateTransactionBody} proto.ITokenFeeScheduleUpdateTransactionBody
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  */
 
 /**
+ * @typedef {import("bignumber.js").default} BigNumber
+ * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
- * @typedef {import("../client/Client.js").default<*, *>} Client
- * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("./CustomFee.js").default} CustomFee
+ * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
- * Burn a new Hedera™ crypto-currency token.
+ * FeeScheduleUpdate a new Hedera™ crypto-currency token.
  */
-export default class TokenBurnTransaction extends Transaction {
+export default class TokenFeeScheduleUpdateTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {TokenId | string} [props.tokenId]
-     * @param {Long | number} [props.amount]
-     * @param {(Long | number)[]} [props.serials]
+     * @param {CustomFee[]} [props.customFees]
      */
     constructor(props = {}) {
         super();
@@ -43,26 +45,16 @@ export default class TokenBurnTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Long}
+         * @type {CustomFee[]}
          */
-        this._amount = null;
-
-        /**
-         * @private
-         * @type {Long[]}
-         */
-        this._serials = [];
+        this._customFees = [];
 
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);
         }
 
-        if (props.amount != null) {
-            this.setAmount(props.amount);
-        }
-
-        if (props.serials != null) {
-            this.setSerials(props.serials);
+        if (props.customFees != null) {
+            this.setCustomFees(props.customFees);
         }
     }
 
@@ -73,7 +65,7 @@ export default class TokenBurnTransaction extends Transaction {
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
      * @param {proto.ITransactionBody[]} bodies
-     * @returns {TokenBurnTransaction}
+     * @returns {TokenFeeScheduleUpdateTransaction}
      */
     static _fromProtobuf(
         transactions,
@@ -83,20 +75,26 @@ export default class TokenBurnTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const burnToken = /** @type {proto.ITokenBurnTransactionBody} */ (
-            body.tokenBurn
-        );
+        const feeScheduleUpdate =
+            /** @type {proto.ITokenFeeScheduleUpdateTransactionBody} */ (
+                body.tokenFeeScheduleUpdate
+            );
 
         return Transaction._fromProtobufTransactions(
-            new TokenBurnTransaction({
+            new TokenFeeScheduleUpdateTransaction({
                 tokenId:
-                    burnToken.token != null
-                        ? TokenId._fromProtobuf(burnToken.token)
+                    feeScheduleUpdate.tokenId != null
+                        ? TokenId._fromProtobuf(feeScheduleUpdate.tokenId)
                         : undefined,
-                amount: burnToken.amount != null ? burnToken.amount : undefined,
-                serials:
-                    burnToken.serialNumbers != null
-                        ? burnToken.serialNumbers
+                customFees:
+                    feeScheduleUpdate.customFees != null
+                        ? feeScheduleUpdate.customFees.map((fee) => {
+                              if (fee.fixedFee != null) {
+                                  return CustomFixedFee._fromProtobuf(fee);
+                              } else {
+                                  return CustomFractionalFee._fromProtobuf(fee);
+                              }
+                          })
                         : undefined,
             }),
             transactions,
@@ -123,54 +121,25 @@ export default class TokenBurnTransaction extends Transaction {
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
-                : tokenId.clone();
+                : TokenId._fromProtobuf(tokenId._toProtobuf());
 
         return this;
     }
 
     /**
-     * @returns {?Long}
+     * @returns {CustomFee[]}
      */
-    get amount() {
-        return this._amount;
+    get customFees() {
+        return this._customFees;
     }
 
     /**
-     * @param {Long | number} amount
+     * @param {CustomFee[]} fees
      * @returns {this}
      */
-    setAmount(amount) {
+    setCustomFees(fees) {
         this._requireNotFrozen();
-        this._amount = amount instanceof Long ? amount : Long.fromValue(amount);
-
-        return this;
-    }
-
-    /**
-     * @param {Client} client
-     */
-    _validateIdNetworks(client) {
-        if (this._tokenId != null) {
-            this._tokenId.validate(client);
-        }
-    }
-
-    /**
-     * @returns {Long[]}
-     */
-    get serials() {
-        return this._serials;
-    }
-
-    /**
-     * @param {(Long | number)[]} serials
-     * @returns {this}
-     */
-    setSerials(serials) {
-        this._requireNotFrozen();
-        this._serials = serials.map((serial) =>
-            serial instanceof Long ? serial : Long.fromValue(serial)
-        );
+        this._customFees = fees;
 
         return this;
     }
@@ -183,7 +152,7 @@ export default class TokenBurnTransaction extends Transaction {
      * @returns {Promise<proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.token.burnToken(request);
+        return channel.token.updateTokenFeeSchedule(request);
     }
 
     /**
@@ -192,25 +161,24 @@ export default class TokenBurnTransaction extends Transaction {
      * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "tokenBurn";
+        return "tokenFeeScheduleUpdate";
     }
 
     /**
      * @override
      * @protected
-     * @returns {proto.ITokenBurnTransactionBody}
+     * @returns {proto.ITokenFeeScheduleUpdateTransactionBody}
      */
     _makeTransactionData() {
         return {
-            amount: this._amount,
-            serialNumbers: this._serials,
-            token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+            tokenId: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+            customFees: this._customFees.map((fee) => fee._toProtobuf()),
         };
     }
 }
 
 TRANSACTION_REGISTRY.set(
-    "tokenBurn",
+    "tokenFeeScheduleUpdate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    TokenBurnTransaction._fromProtobuf
+    TokenFeeScheduleUpdateTransaction._fromProtobuf
 );

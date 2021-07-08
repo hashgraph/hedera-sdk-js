@@ -53,4 +53,5 @@ message TokenUpdateTransactionBody {
     Duration autoRenewPeriod = 11; // The new interval at which the auto-renew account will be charged to extend the token's expiry.
     Timestamp expiry = 12; // The new expiry time of the token. Expiry can be updated even if admin key is not set. If the provided expiry is earlier than the current token expiry, transaction wil resolve to INVALID_EXPIRATION_TIME
     google.protobuf.StringValue memo = 13; // If set, the new memo to be associated with the token (UTF-8 encoding max 100 bytes)
+    Key fee_schedule_key = 14; // If set, the new key to use to update the token's custom fee schedule; if the token does not currently have this key, transaction will resolve to TOKEN_HAS_NO_FEE_SCHEDULE_KEY
 }

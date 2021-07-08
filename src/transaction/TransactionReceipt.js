@@ -30,6 +30,7 @@ export default class TransactionReceipt {
      * @param {?Uint8Array} props.topicRunningHash
      * @param {?Long} props.totalSupply
      * @param {?TransactionId} props.scheduledTransactionId
+     * @param {Long[]} props.serials
      */
     constructor(props) {
         /**
@@ -111,6 +112,8 @@ export default class TransactionReceipt {
 
         this.scheduledTransactionId = props.scheduledTransactionId;
 
+        this.serials = props.serials;
+
         Object.freeze(this);
     }
 
@@ -149,6 +152,8 @@ export default class TransactionReceipt {
                 this.scheduledTransactionId != null
                     ? this.scheduledTransactionId._toProtobuf()
                     : null,
+
+            serialNumbers: this.serials,
         };
     }
 
@@ -226,6 +231,7 @@ export default class TransactionReceipt {
                           ledgerId
                       )
                     : null,
+            serials: receipt.serialNumbers != null ? receipt.serialNumbers : [],
         });
     }
 
