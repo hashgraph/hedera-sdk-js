@@ -15,8 +15,14 @@ export function legacy(seed, index) {
         password.byteOffset + seed.length,
         8
     );
-    view.setInt32(0, index);
-    view.setInt32(4, index);
+
+    if (index === 0xffffffffff) {
+        view.setInt32(0, 0xff);
+        view.setInt32(4, index >>> 32);
+    } else {
+        view.setInt32(0, index < 0 ? -1 : 0);
+        view.setInt32(4, index);
+    }
 
     const salt = Uint8Array.from([0xff]);
     return pbkdf2.deriveKey(
