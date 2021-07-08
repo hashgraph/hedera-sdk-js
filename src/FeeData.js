@@ -2,30 +2,30 @@ import * as proto from "@hashgraph/proto";
 export default class FeeData {
     /**
     * @param {object} props
-    * @param {object} props.nodedata
-    * @param {object} props.networkdata
-    * @param {object} props.servicedata
+    * @param {FeeComponents} props.nodedata
+    * @param {FeeComponents} props.networkdata
+    * @param {FeeComponents} props.servicedata
      */
 
     constructor(props) {
          /*
          * Fee paid to the submitting node
          *
-         * @type {object}
+         * @type {FeeComponents}
          */
          this.nodedata = props.nodedata;
 
          /*
          * Fee paid to the network for processing a transaction into consensus
          *
-         * @type {object}
+         * @type {FeeComponents}
          */
          this.networkdata = props.networkdata;
 
          /*
          * Fee paid to the network for providing the service associated with the transaction; for instance, storing a file
          *
-         * @type {object}
+         * @type {FeeComponents}
          */
          this.servicedata = props.servicedata;
     }
@@ -44,11 +44,11 @@ export default class FeeData {
     */
     static fromProtobuf(feeData) {
         return new FeeData({
-            /** @type {object} */
+            /** @type {FeeComponents} */
             nodedata: (feeData.nodedata),
-            /** @type {object} */
+            /** @type {FeeComponents} */
             networkdata: (feeData.networkdata),
-            /** @type {object} */
+            /** @type {FeeComponents} */
             servicedata: (feeData.servicedata),
 
         });

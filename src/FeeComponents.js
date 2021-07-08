@@ -1,20 +1,20 @@
 import * as proto from "@hashgraph/proto";
 export default class FeeComponents {
     /**
-     * @param {object} props
-     * @param {Long} props.min
-     * @param {Long} props.max
-     * @param {Long} props.constant
-     * @param {Long} props.transactionBandwidthByte
-     * @param {Long} props.transactionVerification
-     * @param {Long} props.transactionRamByteHour
-     * @param {Long} props.transactionStorageByteHour
-     * @param {Long} props.contractTransactionGas
-     * @param {Long} props.transferVolumeHbar
-     * @param {Long} props.responseMemoryByte
-     * @param {Long} props.responseDiskByte
+     * @param {object} [props]
+     * @param {Long} [props.min]
+     * @param {Long} [props.max]
+     * @param {Long} [props.constant]
+     * @param {Long} [props.transactionBandwidthByte]
+     * @param {Long} [props.transactionVerification]
+     * @param {Long} [props.transactionRamByteHour]
+     * @param {Long} [props.transactionStorageByteHour]
+     * @param {Long} [props.contractTransactionGas]
+     * @param {Long} [props.transferVolumeHbar]
+     * @param {Long} [props.responseMemoryByte]
+     * @param {Long} [props.responseDiskByte]
      */
-    constructor(props) {
+    constructor(props = {}) {
         /*
          * A minimum, the calculated fee must be greater than this value
          *
