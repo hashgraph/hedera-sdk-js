@@ -5,9 +5,14 @@ import Hbar from "../Hbar.js";
 import Transfer from "../Transfer.js";
 import ContractFunctionResult from "../contract/ContractFunctionResult.js";
 import TokenTransferMap from "../account/TokenTransferMap.js";
+import TokenNftTransferMap from "../account/TokenNftTransferMap.js";
 import * as proto from "@hashgraph/proto";
 import ScheduleId from "../schedule/ScheduleId.js";
 import AssessedCustomFee from "../token/AssessedCustomFee.js";
+
+/**
+ * @typedef {import("../token/TokenId.js").default} TokenId
+ */
 
 /**
  * Response when the client sends the node TransactionGetRecordResponse.
@@ -27,6 +32,7 @@ export default class TransactionRecord {
      * @param {TokenTransferMap} props.tokenTransfers
      * @param {?ScheduleId} props.scheduleRef
      * @param {AssessedCustomFee[]} props.assessedCustomFees
+     * @param {TokenNftTransferMap} props.nftTransfers
      */
     constructor(props) {
         /**
@@ -104,6 +110,8 @@ export default class TransactionRecord {
 
         this.assessedCustomFees = props.assessedCustomFees;
 
+        this.nftTransfers = props.nftTransfers;
+
         Object.freeze(this);
     }
 
@@ -112,6 +120,34 @@ export default class TransactionRecord {
      * @returns {proto.ITransactionRecord}
      */
     _toProtobuf() {
+        const tokenTransfers = this.tokenTransfers._toProtobuf();
+        const nftTransfers = this.nftTransfers._toProtobuf();
+
+        const tokenTransferLists = [];
+
+        for (const tokenTransfer of tokenTransfers) {
+            for (const nftTransfer of nftTransfers) {
+                if (
+                    tokenTransfer.token != null &&
+                    nftTransfer.token != null &&
+                    tokenTransfer.token.shardNum ===
+                        nftTransfer.token.shardNum &&
+                    tokenTransfer.token.realmNum ===
+                        nftTransfer.token.realmNum &&
+                    tokenTransfer.token.tokenNum === nftTransfer.token.tokenNum
+                ) {
+                    tokenTransferLists.push({
+                        token: tokenTransfer.token,
+                        transfers: tokenTransfer.transfers,
+                        nftTransfers: tokenTransfer.nftTransfers,
+                    });
+                } else {
+                    tokenTransferLists.push(tokenTransfer);
+                    tokenTransferLists.push(nftTransfer);
+                }
+            }
+        }
+
         return {
             receipt: this.receipt._toProtobuf(),
 
@@ -150,7 +186,7 @@ export default class TransactionRecord {
                           ),
                       }
                     : null,
-            tokenTransferLists: this.tokenTransfers._toProtobuf(),
+            tokenTransferLists,
             scheduleRef:
                 this.scheduleRef != null
                     ? this.scheduleRef._toProtobuf()
@@ -223,6 +259,12 @@ export default class TransactionRecord {
                           AssessedCustomFee._fromProtobuf(fee)
                       )
                     : [],
+            nftTransfers: TokenNftTransferMap._fromProtobuf(
+                record.tokenTransferLists != null
+                    ? record.tokenTransferLists
+                    : [],
+                ledgerId
+            ),
         });
     }
 

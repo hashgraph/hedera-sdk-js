@@ -46,24 +46,28 @@ export default class TokenNftTransferMap extends ObjectMap {
 
     /**
      * @param {proto.ITokenTransferList[]} transfers
+     * @param {(string | null)=} ledgerId
      * @returns {TokenNftTransferMap}
      */
-    static _fromProtobuf(transfers) {
+    static _fromProtobuf(transfers, ledgerId) {
         const tokenTransfersMap = new TokenNftTransferMap();
 
         for (const transfer of transfers) {
             const token = TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (transfer.token)
+                /** @type {proto.ITokenID} */ (transfer.token),
+                ledgerId
             );
 
             for (const aa of transfer.nftTransfers != null
                 ? transfer.nftTransfers
                 : []) {
                 const sender = AccountId._fromProtobuf(
-                    /** @type {proto.IAccountID} */ (aa.senderAccountID)
+                    /** @type {proto.IAccountID} */ (aa.senderAccountID),
+                    ledgerId
                 );
                 const recipient = AccountId._fromProtobuf(
-                    /** @type {proto.IAccountID} */ (aa.receiverAccountID)
+                    /** @type {proto.IAccountID} */ (aa.receiverAccountID),
+                    ledgerId
                 );
 
                 tokenTransfersMap.__set(token, {
