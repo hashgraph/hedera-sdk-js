@@ -243,6 +243,7 @@ export default class TokenWipeTransaction extends Transaction {
             token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
             account:
                 this._accountId != null ? this._accountId._toProtobuf() : null,
+            serialNumbers: this.serials,
         };
     }
 }

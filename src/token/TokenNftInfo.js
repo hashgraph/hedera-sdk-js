@@ -57,15 +57,18 @@ export default class TokenNftInfo {
     /**
      * @internal
      * @param {proto.ITokenNftInfo} info
+     * @param {(string | null)=} ledgerId
      * @returns {TokenNftInfo}
      */
-    static _fromProtobuf(info) {
+    static _fromProtobuf(info, ledgerId) {
         return new TokenNftInfo({
             nftId: NftId._fromProtobuf(
-                /** @type {proto.INftID} */ (info.nftID)
+                /** @type {proto.INftID} */ (info.nftID),
+                ledgerId
             ),
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (info.accountID)
+                /** @type {proto.IAccountID} */ (info.accountID),
+                ledgerId
             ),
             creationTime: Timestamp._fromProtobuf(
                 /** @type {proto.ITimestamp} */ (info.creationTime)

@@ -89,9 +89,10 @@ export default class TokenNftInfoQuery extends Query {
     /**
      * @internal
      * @param {proto.IQuery} query
+     * @param {(string | null)=} ledgerId
      * @returns {TokenNftInfoQuery}
      */
-    static _fromProtobuf(query) {
+    static _fromProtobuf(query, ledgerId) {
         if (query.tokenGetNftInfo != null) {
             const info = /** @type {proto.ITokenGetNftInfoQuery} */ (
                 query.tokenGetNftInfo
@@ -100,7 +101,7 @@ export default class TokenNftInfoQuery extends Query {
             return new TokenNftInfoQuery({
                 nftId:
                     info.nftID != null
-                        ? NftId._fromProtobuf(info.nftID)
+                        ? NftId._fromProtobuf(info.nftID, ledgerId)
                         : undefined,
             });
         } else if (query.tokenGetAccountNftInfos != null) {
@@ -111,7 +112,7 @@ export default class TokenNftInfoQuery extends Query {
             return new TokenNftInfoQuery({
                 accountId:
                     info.accountID != null
-                        ? AccountId._fromProtobuf(info.accountID)
+                        ? AccountId._fromProtobuf(info.accountID, ledgerId)
                         : undefined,
                 start: info.start != null ? info.start : undefined,
                 end: info.end != null ? info.end : undefined,
@@ -124,7 +125,7 @@ export default class TokenNftInfoQuery extends Query {
             return new TokenNftInfoQuery({
                 tokenId:
                     info.tokenID != null
-                        ? TokenId._fromProtobuf(info.tokenID)
+                        ? TokenId._fromProtobuf(info.tokenID, ledgerId)
                         : undefined,
                 start: info.start != null ? info.start : undefined,
                 end: info.end != null ? info.end : undefined,
@@ -296,12 +297,15 @@ export default class TokenNftInfoQuery extends Query {
 
     /**
      * @override
-     * @override
      * @internal
      * @param {proto.IResponse} response
+     * @param {AccountId} nodeAccountId
+     * @param {proto.IQuery} request
+     * @param {string | null} ledgerId
      * @returns {Promise<TokenNftInfo[]>}
      */
-    _mapResponse(response) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _mapResponse(response, nodeAccountId, request, ledgerId) {
         let nfts = [];
         /** @type {proto.ITokenGetNftInfoResponse} */ (
             response.tokenGetNftInfo
@@ -337,7 +341,8 @@ export default class TokenNftInfoQuery extends Query {
         return Promise.resolve(
             nfts.map((nft) =>
                 TokenNftInfo._fromProtobuf(
-                    /** @type {proto.ITokenNftInfo} */ (nft)
+                    /** @type {proto.ITokenNftInfo} */ (nft),
+                    ledgerId
                 )
             )
         );

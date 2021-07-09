@@ -257,4 +257,7 @@ enum ResponseCodeEnum {
   CUSTOM_FEE_DENOMINATION_MUST_BE_FUNGIBLE_COMMON = 245; // Only tokens of type FUNGIBLE_COMMON can be used to as fee schedule denominations
   CUSTOM_FRACTIONAL_FEE_ONLY_ALLOWED_FOR_FUNGIBLE_COMMON = 246; // Only tokens of type FUNGIBLE_COMMON can have fractional fees
   INVALID_CUSTOM_FEE_SCHEDULE_KEY = 247; // The provided custom fee schedule key was invalid
+  INVALID_TOKEN_MINT_METADATA = 248; // The requested token mint metadata was invalid
+  INVALID_TOKEN_BURN_METADATA = 249; // The requested token burn metadata was invalid
+  CURRENT_TREASURY_STILL_OWNS_NFTS = 250; // The treasury for a unique token cannot be changed until it owns no NFTs
 }

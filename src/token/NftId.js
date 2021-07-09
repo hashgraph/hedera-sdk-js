@@ -42,11 +42,15 @@ export default class NftId {
     /**
      * @internal
      * @param {proto.INftID} id
+     * @param {(string | null)=} ledgerId
      * @returns {NftId}
      */
-    static _fromProtobuf(id) {
+    static _fromProtobuf(id, ledgerId) {
         return new NftId(
-            TokenId._fromProtobuf(/** @type {proto.ITokenID} */ (id.tokenID)),
+            TokenId._fromProtobuf(
+                /** @type {proto.ITokenID} */ (id.tokenID),
+                ledgerId
+            ),
             id.serialNumber != null ? id.serialNumber : Long.ZERO
         );
     }

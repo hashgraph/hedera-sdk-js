@@ -216,6 +216,7 @@ export default class TokenMintTransaction extends Transaction {
         return {
             amount: this._amount,
             token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
+            metadata: this._metadata,
         };
     }
 }

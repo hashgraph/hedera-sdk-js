@@ -25,6 +25,7 @@ import TokenNftTransferMap from "./TokenNftTransferMap.js";
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
+ * @typedef {import("@hashgraph/proto").ITokenTransferList} proto.ITokenTransferList
  */
 
 /**
@@ -332,6 +333,7 @@ export default class TransferTransaction extends Transaction {
      * @returns {proto.ICryptoTransferTransactionBody}
      */
     _makeTransactionData() {
+        /** @type {proto.ITokenTransferList[]} */
         const tokenTransfers = [];
         const hbarTransfers = [];
 
@@ -344,23 +346,41 @@ export default class TransferTransaction extends Transaction {
                 });
             }
 
-            const tokenNftTransfers = this._nftTransfers.get(tokenId);
-            const nftTransfers = [];
-            for (const transfer of tokenNftTransfers != null
-                ? tokenNftTransfers
-                : []) {
-                nftTransfers.push({
-                    senderAccountID: transfer.sender._toProtobuf(),
-                    recipientAccountID: transfer.recipient._toProtobuf(),
-                    serialNumber: transfer.serial,
-                });
-            }
-
             tokenTransfers.push({
                 token: tokenId._toProtobuf(),
                 transfers,
-                nftTransfers,
             });
+        }
+
+        for (const [tokenId, value] of this._nftTransfers) {
+            let found = false;
+
+            // eslint-disable-next-line ie11/no-loop-func
+            const nftTransfers = value.map((transfer) => {
+                return {
+                    senderAccountID: transfer.sender._toProtobuf(),
+                    receiverAccountID: transfer.recipient._toProtobuf(),
+                    serialNumber: transfer.serial,
+                };
+            });
+
+            for (const tokenTransfer of tokenTransfers) {
+                if (
+                    tokenTransfer.token != null &&
+                    tokenTransfer.token.shardNum === tokenId.shard &&
+                    tokenTransfer.token.realmNum === tokenId.realm &&
+                    tokenTransfer.token.tokenNum === tokenId.num
+                ) {
+                    tokenTransfer.nftTransfers = nftTransfers;
+                }
+            }
+
+            if (!found) {
+                tokenTransfers.push({
+                    token: tokenId._toProtobuf(),
+                    nftTransfers,
+                });
+            }
         }
 
         for (const [accountId, value] of this._hbarTransfers) {
