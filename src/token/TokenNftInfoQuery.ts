@@ -61,7 +61,7 @@ export class TokenNftInfoQuery extends QueryBuilder<TokenNftInfo[]> {
         this._byAccountBuilder.setHeader(new QueryHeader());
     }
 
-    public byNft(nftId: NftId): this {
+    public setNftId(nftId: NftId): this {
         this._byNftBuilder.setNftid(nftId._toProto());
 
         this._inner.clearTokengetnftinfo();
@@ -72,7 +72,7 @@ export class TokenNftInfoQuery extends QueryBuilder<TokenNftInfo[]> {
         return this;
     }
 
-    public byTokenId(tokenId: TokenId): this {
+    public setTokenId(tokenId: TokenId): this {
         this._byTokenBuilder.setTokenid(tokenId._toProto());
 
         this._inner.clearTokengetnftinfo();
@@ -83,7 +83,7 @@ export class TokenNftInfoQuery extends QueryBuilder<TokenNftInfo[]> {
         return this;
     }
 
-    public byAccountId(accountId: AccountId): this {
+    public setAccountId(accountId: AccountId): this {
         this._byAccountBuilder.setAccountid(accountId._toProto());
 
         this._inner.clearTokengetnftinfo();

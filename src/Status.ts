@@ -548,6 +548,9 @@ export class Status implements Indexed {
      */
     public static readonly TransferAccountSameAsDeleteAccount = new Status(107);
 
+    /**
+     *
+     */
     public static readonly TotalLedgerBalanceInvalid = new Status(108);
 
     /**
@@ -1035,6 +1038,21 @@ export class Status implements Indexed {
      */
     public static readonly InvalidCustomFeeScheduleKey = new Status(247);
 
+    /**
+     * The requested token mint metadata was invalid
+     */
+    public static readonly InvalidTokenMintMetadata = new Status(248);
+
+    /**
+     * The requested token burn metadata was invalid
+     */
+    public static readonly InvalidTokenBurnMetadata = new Status(249);
+
+    /**
+     * The treasury for a unique token cannot be changed until it owns no NFTs
+     */
+    public static readonly CurrentTreasuryStillOwnsNfts = new Status(250);
+
     private static [ 0 ] = Status.Ok;
     private static [ 1 ] = Status.InvalidTransaction;
     private static [ 2 ] = Status.PayerAccountNotFound;
@@ -1241,6 +1259,9 @@ export class Status implements Indexed {
     private static [ 245 ] = Status.CustomFeeDenominationMustBeFungibleCommon;
     private static [ 246 ] = Status.CustomFractionalFeeOnlyAllowedForFungibleCommon;
     private static [ 247 ] = Status.InvalidCustomFeeScheduleKey;
+    private static [ 248 ] = Status.InvalidTokenMintMetadata;
+    private static [ 249 ] = Status.InvalidTokenBurnMetadata;
+    private static [ 250 ] = Status.CurrentTreasuryStillOwnsNfts;
 
     // New functionality added by HTS above
 
@@ -1459,6 +1480,9 @@ export class Status implements Indexed {
             case Status.CustomFeeDenominationMustBeFungibleCommon: return "CUSTOM_FEE_DENOMINATION_MUST_BE_FUNGIBLE_COMMON";
             case Status.CustomFractionalFeeOnlyAllowedForFungibleCommon: return "CUSTOM_FRACTIONAL_FEE_ONLY_ALLOWED_FOR_FUNGIBLE_COMMON";
             case Status.InvalidCustomFeeScheduleKey: return "INVALID_CUSTOM_FEE_SCHEDULE_KEY";
+            case Status.InvalidTokenMintMetadata: return "INVALID_TOKEN_MINT_METADATA";
+            case Status.InvalidTokenBurnMetadata: return "INVALID_TOKEN_BURN_METADATA";
+            case Status.CurrentTreasuryStillOwnsNfts: return "CURRENT_TREASURY_STILL_OWNS_NFTS";
             default: return `UNKNOWN STATUS CODE (${this.code})`;
         }
     }
