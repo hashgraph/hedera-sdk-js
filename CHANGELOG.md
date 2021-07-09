@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
  * Loading keystore should no longer error when `CipherAlgorithm` doesn't match case
+ * `PrivateKey.legacyDerive()` should now be consistent with the v1.4.6 JS SDK
 
 ## v2.0.24
 
