@@ -23,9 +23,9 @@ This SDK supports both running in the browser (with Webpack) and in Node.
 #### Installation
 ```shell script
 # with NPM
-$ npm install --save @hashgraph/sdk
+$ npm install --save @hashgraph/sdk@v1
 # with Yarn
-$ yarn add @hashgraph/sdk
+$ yarn add @hashgraph/sdk@v1
 ```
 
 #### Creating a client
