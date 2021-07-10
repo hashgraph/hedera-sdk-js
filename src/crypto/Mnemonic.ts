@@ -35,11 +35,9 @@ export class Mnemonic {
      * Legacy word mnemonic
      */
     public async toLegacyPrivateKey(): Promise<Ed25519PrivateKey> {
-        const index = this._isLegacy ? -1 : 0;
-        const entropy = this._isLegacy ? this._toLegacyEntropy()! : await this._toLegacyEntropy2()!;
-        const keyBytes = await legacyDeriveChildKey(entropy, index);
+        const entropy = this._isLegacy ? this._toLegacyEntropy()! : await this._toLegacyEntropy2();
 
-        return Ed25519PrivateKey.fromBytes(keyBytes);
+        return Ed25519PrivateKey.fromBytes(entropy);
     }
 
     /**
