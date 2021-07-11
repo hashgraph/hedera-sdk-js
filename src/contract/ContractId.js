@@ -117,7 +117,6 @@ export default class ContractId extends Key {
     }
 
     /**
-     * @override
      * @internal
      * @returns {proto.IContractID}
      */

@@ -117,7 +117,6 @@ export default class ScheduleId {
 
     /**
      * @internal
-     * @override
      * @returns {proto.ScheduleID}
      */
     _toProtobuf() {
@@ -129,7 +128,6 @@ export default class ScheduleId {
     }
 
     /**
-     * @override
      * @returns {string}
      */
     toString() {

@@ -163,16 +163,6 @@ export default class FreezeTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @param {Channel} channel
-     * @returns {(transaction: proto.ITransaction) => Promise<proto.ITransactionResponse>}
-     */
-    _getMethod(channel) {
-        return (transaction) => channel.freeze.freeze(transaction);
-    }
-
-    /**
-     * @override
-     * @protected
      * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {

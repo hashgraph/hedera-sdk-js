@@ -111,7 +111,6 @@ export default class TopicId {
     }
 
     /**
-     * @override
      * @returns {proto.ITopicID}
      */
     _toProtobuf() {
@@ -123,7 +122,6 @@ export default class TopicId {
     }
 
     /**
-     * @override
      * @returns {string}
      */
     toString() {

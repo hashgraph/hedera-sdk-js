@@ -115,7 +115,6 @@ export default class TokenId {
 
     /**
      * @internal
-     * @override
      * @returns {proto.ITokenID}
      */
     _toProtobuf() {
@@ -127,7 +126,6 @@ export default class TokenId {
     }
 
     /**
-     * @override
      * @returns {string}
      */
     toString() {

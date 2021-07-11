@@ -60,7 +60,6 @@ export default class GrpcStatus {
     }
 
     /**
-     * @override
      * @returns {string}
      */
     toString() {

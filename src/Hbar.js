@@ -98,7 +98,6 @@ export default class Hbar {
     }
 
     /**
-     * @override
      * @param {HbarUnit=} unit
      * @returns {string}
      */

@@ -98,7 +98,6 @@ export default class AssessedCustomFee {
 
     /**
      * @internal
-     * @override
      * @param {proto.IAssessedCustomFee} fee
      * @returns {AssessedCustomFee}
      */

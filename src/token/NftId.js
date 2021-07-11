@@ -65,7 +65,6 @@ export default class NftId {
 
     /**
      * @internal
-     * @override
      * @returns {proto.INftID}
      */
     _toProtobuf() {
@@ -78,7 +77,6 @@ export default class NftId {
     }
 
     /**
-     * @override
      * @returns {string}
      */
     toString() {

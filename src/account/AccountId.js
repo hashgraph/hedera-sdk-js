@@ -115,7 +115,6 @@ export default class AccountId {
 
     /**
      * @internal
-     * @override
      * @returns {proto.IAccountID}
      */
     _toProtobuf() {
@@ -134,7 +133,6 @@ export default class AccountId {
     }
 
     /**
-     * @override
      * @returns {string}
      */
     toString() {

@@ -106,7 +106,6 @@ export default class FileId {
     }
 
     /**
-     * @override
      * @internal
      * @returns {proto.IFileID}
      */
@@ -119,7 +118,6 @@ export default class FileId {
     }
 
     /**
-     * @override
      * @returns {string}
      */
     toString() {
