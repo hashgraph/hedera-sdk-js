@@ -37,7 +37,6 @@ specifiers:
   serve: ^11.3.2
   tweetnacl: ^1.0.3
   typescript: ^4.2.4
-  utf8: ^3.0.0
   vite: ^1.0.0-rc.13
 
 dependencies:
@@ -50,7 +49,6 @@ dependencies:
   fastestsmallesttextencoderdecoder: 1.0.22
   js-base64: 3.6.0
   tweetnacl: 1.0.3
-  utf8: 3.0.0
 
 devDependencies:
   '@babel/cli': 7.13.16_@babel+core@7.14.2
@@ -5467,10 +5465,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
     optional: true
-
-  /utf8/3.0.0:
-    resolution: {integrity: sha512-E8VjFIQ/TyQgp+TZfS6l8yp/xWppSAHzidGiRrqe4bK4XP9pTRyKFgGJpO3SN7zdX4DeomTrwaseCHovfpFcqQ==}
-    dev: false
 
   /util-deprecate/1.0.2:
     resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=}

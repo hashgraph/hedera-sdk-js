@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/cryptography",
-    "version": "1.0.16",
+    "version": "1.0.17",
     "description": "Cryptographic utilities and primitives for the Hedera™ Hashgraph SDK",
     "main": "./lib/index.cjs",
     "types": "./lib/index.d.ts",
