@@ -1,4 +1,4 @@
-import * as hex from "../../../src/encoding/hex.js";
+import * as hex from "../../../src/encoding/hex.native.js";
 
 const bytes = new Uint8Array([
     -37, 72, 75, -126, -114, 100, -78, -40, -15, 44, -29, -64, -96, -23, 58, 11,
