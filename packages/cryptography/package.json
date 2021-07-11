@@ -78,9 +78,9 @@
         "crypto-js": "^4.0.0",
         "expo-crypto": "^9.1.0",
         "expo-random": "^11.1.2",
+        "fastestsmallesttextencoderdecoder": "^1.0.22",
         "js-base64": "^3.6.0",
-        "tweetnacl": "^1.0.3",
-        "utf8": "^3.0.0"
+        "tweetnacl": "^1.0.3"
     },
     "devDependencies": {
         "@babel/cli": "^7.13.16",

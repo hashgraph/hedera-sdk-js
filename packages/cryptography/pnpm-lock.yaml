@@ -27,6 +27,7 @@ specifiers:
   eslint-plugin-node: ^11.1.0
   expo-crypto: ^9.1.0
   expo-random: ^11.1.2
+  fastestsmallesttextencoderdecoder: ^1.0.22
   geckodriver: ^1.22.3
   js-base64: ^3.6.0
   mocha: ^8.4.0
@@ -46,6 +47,7 @@ dependencies:
   crypto-js: 4.0.0
   expo-crypto: 9.1.0
   expo-random: 11.1.2
+  fastestsmallesttextencoderdecoder: 1.0.22
   js-base64: 3.6.0
   tweetnacl: 1.0.3
   utf8: 3.0.0
@@ -2406,6 +2408,10 @@ packages:
     dependencies:
       punycode: 1.4.1
     dev: true
+
+  /fastestsmallesttextencoderdecoder/1.0.22:
+    resolution: {integrity: sha512-Pb8d48e+oIuY4MaM64Cd7OW1gt4nxCHs7/ddPPZ/Ic3sg8yVGM7O9wDvZ7us6ScaUupzM+pfBolwtYhN1IxBIw==}
+    dev: false
 
   /fastq/1.11.0:
     resolution: {integrity: sha512-7Eczs8gIPDrVzT+EksYBcupqMyxSHXXrHOLRRxU2/DicV8789MRBRR8+Hc2uWzUupOs4YS4JzBmBxjjCVBxD/g==}

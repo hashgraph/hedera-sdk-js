@@ -229,9 +229,9 @@ export default class Mnemonic {
             const entropyBits = bits.slice(0, dividerIndex);
             const checksumBits = bits.slice(dividerIndex);
             const entropyBitsRegex = entropyBits.match(/(.{1,8})/g);
-            const entropyBytes = /** @type {RegExpMatchArray} */ (entropyBitsRegex).map(
-                binaryToByte
-            );
+            const entropyBytes = /** @type {RegExpMatchArray} */ (
+                entropyBitsRegex
+            ).map(binaryToByte);
 
             const newChecksum = await deriveChecksumBits(
                 Uint8Array.from(entropyBytes)
