@@ -1,10 +1,12 @@
 import * as proto from "@hashgraph/proto";
+import TransactionFeeSchedule from "./TransactionFeeSchedule";
+import {Timestamp} from "@hashgraph/proto";
 
 export default class FeeSchedule {
     /**
     * @param {object} [props]
-    * @param {TransactionFeeSchedule} [props.transactionFeeSchedule]
-    * @param {TimestampSeconds} [props.expiryTime]
+    * @param {TransactionFeeSchedule[]} [props.transactionFeeSchedule]
+    * @param {Timestamp} [props.expirationTime]
     */
    
     constructor(props = {}) {
@@ -18,9 +20,9 @@ export default class FeeSchedule {
         /*
         * FeeSchedule expiry time
         *
-        * @type {TimestampSeconds}
+        * @type {Timestamp}
         */
-        this.expiryTime = props.expiryTime;
+        this.expirationTime = props.expirationTime;
     }
 
    /**
@@ -38,10 +40,8 @@ export default class FeeSchedule {
     */
     static _fromProtobuf(feeSchedule) {
         return new FeeSchedule({
-            /** @type {TransactionFeeSchedule} */
-            transactionFeeSchedule: (feeSchedule.transactionFeeSchedule),
-            /** @type {TimestampSeconds} */
-            expiryTime: (feeSchedule.expiryTime),
+            transactionFeeSchedule: feeSchedule.transactionFeeSchedule != null ? feeSchedule.transactionFeeSchedule : undefined,
+            expirationTime: feeSchedule.expiryTime != null ? feeSchedule.expiryTime : undefined,
         });
     }
 
@@ -51,8 +51,8 @@ export default class FeeSchedule {
     */
     _toProtobuf() {
         return {
-            transactionFeeSchedule: this.transactionFeeSchedule,
-            expiryTime: this.expiryTime,
+            transactionFeeSchedule: this.transactionFeeSchedule != null ? this.transactionFeeSchedule : undefined,
+            expiryTime: this.expirationTime != null ? this.expirationTime : undefined,
         };
     }
 

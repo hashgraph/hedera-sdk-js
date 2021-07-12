@@ -109,17 +109,17 @@ export default class FeeComponents {
     */
     static _fromProtobuf(feeComponents) {
         return new FeeComponents({
-            min: /** @type {Long} */ (feeComponents.min),
-            max: /** @type {Long} */ (feeComponents.max),
-            constant: /** @type {Long} */ (feeComponents.constant),
-            transactionBandwidthByte: /** @type {Long} */ (feeComponents.bpt),
-            transactionVerification: /** @type {Long} */ (feeComponents.vpt),
-            transactionRamByteHour: /** @type {Long} */ (feeComponents.rbh),
-            transactionStorageByteHour: /** @type {Long} */ (feeComponents.sbh),
-            contractTransactionGas: /** @type {Long} */ (feeComponents.gas),
-            transferVolumeHbar: /** @type {Long} */ (feeComponents.tv),
-            responseMemoryByte: /** @type {Long} */ (feeComponents.bpr),
-            responseDiskByte: /** @type {Long} */ (feeComponents.sbpr),
+            min:feeComponents.min != null ? feeComponents.min : undefined,
+            max: feeComponents.max != null ? feeComponents.max : undefined,
+            constant: feeComponents.constant != null ? feeComponents.constant : undefined,
+            transactionBandwidthByte: feeComponents.bpt != null ? feeComponents.bpt : undefined,
+            transactionVerification: feeComponents.vpt != null ? feeComponents.vpt : undefined,
+            transactionRamByteHour: feeComponents.rbh != null ? feeComponents.rbh : undefined,
+            transactionStorageByteHour: feeComponents.sbh != null ? feeComponents.sbh : undefined,
+            contractTransactionGas: feeComponents.gas != null ? feeComponents.gas : undefined,
+            transferVolumeHbar: feeComponents.tv != null ? feeComponents.tv : undefined,
+            responseMemoryByte: feeComponents.bpr != null ? feeComponents.bpr : undefined,
+            responseDiskByte: feeComponents.sbpr != null ? feeComponents.sbpr : undefined,
         });
     }
 
@@ -129,17 +129,17 @@ export default class FeeComponents {
     */
     _toProtobuf() {
         return {
-            min: this.min,
-            max: this.max,
-            constant: this.constant,
-            bpt: this.transactionBandwidthByte,
-            vpt: this.transactionVerification,
-            rbh: this.transactionRamByteHour,
-            sbh: this.transactionStorageByteHour,
-            gas: this.contractTransactionGas,
-            tv: this.transferVolumeHbar,
-            bpr: this.responseMemoryByte,
-            sbpr: this.responseDiskByte,
+            min: this.min != null ? this.min : undefined,
+            max: this.max != null ? this.max : undefined,
+            constant: this.constant != null ? this.constant : undefined,
+            bpt: this.transactionBandwidthByte != null ? this.transactionBandwidthByte : undefined,
+            vpt: this.transactionVerification != null ? this.transactionVerification : undefined,
+            rbh: this.transactionRamByteHour != null ? this.transactionRamByteHour : undefined,
+            sbh: this.transactionStorageByteHour != null ? this.transactionStorageByteHour : undefined,
+            gas: this.contractTransactionGas != null ? this.contractTransactionGas : undefined,
+            tv: this.transferVolumeHbar != null ? this.transferVolumeHbar : undefined,
+            bpr: this.responseMemoryByte != null ? this.responseMemoryByte : undefined,
+            sbpr: this.responseDiskByte != null ? this.responseDiskByte : undefined,
         };
     }
     

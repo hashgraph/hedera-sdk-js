@@ -1,10 +1,13 @@
 import * as proto from "@hashgraph/proto";
+import RequestType from "./RequestType";
+import FeeData from "./FeeData";
 
 export default class TransactionFeeSchedule {
     /**
     * @param {object} [props]
     * @param {RequestType} [props.hederaFunctionality]
     * @param {FeeData} [props.feeData]
+    * @param {FeeData[]} [props.fees]
     */
    
     constructor(props = {}) {
@@ -21,6 +24,13 @@ export default class TransactionFeeSchedule {
         * @type {FeeData}
         */
         this.feeData = props.feeData;
+
+        /*
+        * Resource price coefficients
+        *
+        * @type {FeeData}
+        */
+        this.fees = props.fees;
     }
 
    /**
@@ -38,10 +48,9 @@ export default class TransactionFeeSchedule {
     */
     static _fromProtobuf(transactionFeeSchedule) {
         return new TransactionFeeSchedule({
-            /** @type {RequestType} */
-            hederaFunctionality: (transactionFeeSchedule.hederaFunctionality),
-            /** @type {FeeData} */
-            feeData: (transactionFeeSchedule.feeData),
+            hederaFunctionality: transactionFeeSchedule.hederaFunctionality != null ? transactionFeeSchedule.hederaFunctionality : undefined,
+            feeData: transactionFeeSchedule.feeData != null ? transactionFeeSchedule.feeData : undefined,
+            fees: transactionFeeSchedule.fees != null ? transactionFeeSchedule.fees : undefined,
         });
     }
 
@@ -51,8 +60,9 @@ export default class TransactionFeeSchedule {
      */
     _toProtobuf() {
         return {
-            hederaFunctionality: this.hederaFunctionality,
-            feeData: this.feeData,
+            hederaFunctionality: this.hederaFunctionality != null ? this.hederaFunctionality : undefined,
+            feeData: this.feeData != null ? this.feeData : undefined,
+            fees: this.fees != null ? this.fees : undefined,
         };
     }
 
