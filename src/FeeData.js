@@ -1,4 +1,5 @@
 import * as proto from "@hashgraph/proto";
+import FeeComponents from "./FeeComponents";
 
 export default class FeeData {
     /**
@@ -46,12 +47,9 @@ export default class FeeData {
     */
     static _fromProtobuf(feeData) {
         return new FeeData({
-            /** @type {FeeComponents} */
-            nodedata: (feeData.nodedata),
-            /** @type {FeeComponents} */
-            networkdata: (feeData.networkdata),
-            /** @type {FeeComponents} */
-            servicedata: (feeData.servicedata),
+            nodedata: feeData.nodedata != null ? feeData.nodedata : undefined,
+            networkdata: feeData.networkdata != null ? feeData.networkdata : undefined,
+            servicedata: feeData.servicedata != null ? feeData.servicedata : undefined,
 
         });
     }
@@ -62,9 +60,9 @@ export default class FeeData {
      */
     _toProtobuf() {
         return {
-            nodedata: this.nodedata,
-            networkdata: this.networkdata,
-            servicedata: this.servicedata,
+            nodedata: this.nodedata != null ? this.nodedata : undefined,
+            networkdata: this.networkdata != null ? this.networkdata : undefined,
+            servicedata: this.servicedata != null ? this.servicedata : undefined,
         };
     }
 

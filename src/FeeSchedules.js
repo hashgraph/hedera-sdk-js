@@ -1,4 +1,5 @@
 import * as proto from "@hashgraph/proto";
+import FeeSchedule from "./FeeSchedule";
 
 export default class FeeSchedules {
     /**
@@ -12,14 +13,14 @@ export default class FeeSchedules {
         *
         * @type {FeeSchedule}
         */
-        this.currentFeeSchedule = props.currentFeeSchedule;
+        this.current = props.currentFeeSchedule;
 
         /*
         * Contains next Fee Schedule
         *
         * @type {FeeSchedule}
         */
-        this.nextFeeSchedule = props.nextFeeSchedule;
+        this.next = props.nextFeeSchedule;
     }
 
    /**
@@ -37,10 +38,8 @@ export default class FeeSchedules {
     */
     static _fromProtobuf(feeSchedules) {
         return new FeeSchedules({
-            /** @type {FeeSchedule} */
-            currentFeeSchedule: (feeSchedules.currentFeeSchedule),
-            /** @type {FeeSchedule} */
-            nextFeeSchedule: (feeSchedules.nextFeeSchedule),
+            currentFeeSchedule: feeSchedules.currentFeeSchedule != null ? feeSchedules.currentFeeSchedule : undefined,
+            nextFeeSchedule: feeSchedules.nextFeeSchedule != null ? feeSchedules.nextFeeSchedule : undefined,
         });
     }
 
@@ -50,8 +49,8 @@ export default class FeeSchedules {
     */
     _toProtobuf() {
         return {
-            currentFeeSchedule: this.current,
-            nextFeeSchedule: this.next,
+            currentFeeSchedule: this.current != null ? this.current : undefined,
+            nextFeeSchedule: this.next != null ? this.next : undefined,
         };
     }
 
