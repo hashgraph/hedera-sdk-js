@@ -48,9 +48,9 @@ export default class TransactionFeeSchedule {
     */
     static _fromProtobuf(transactionFeeSchedule) {
         return new TransactionFeeSchedule({
-            hederaFunctionality: transactionFeeSchedule.hederaFunctionality != null ? transactionFeeSchedule.hederaFunctionality : undefined,
-            feeData: transactionFeeSchedule.feeData != null ? transactionFeeSchedule.feeData : undefined,
-            fees: transactionFeeSchedule.fees != null ? transactionFeeSchedule.fees : undefined,
+            hederaFunctionality: transactionFeeSchedule.hederaFunctionality != null ? RequestType._fromCode(transactionFeeSchedule.hederaFunctionality) : undefined,
+            feeData: transactionFeeSchedule.feeData != null ? FeeData._fromProtobuf(transactionFeeSchedule.feeData) : undefined,
+            fees: transactionFeeSchedule.fees != null ? transactionFeeSchedule.fees.map((fee) => FeeData._fromProtobuf(fee)) : undefined
         });
     }
 
@@ -60,9 +60,9 @@ export default class TransactionFeeSchedule {
      */
     _toProtobuf() {
         return {
-            hederaFunctionality: this.hederaFunctionality != null ? this.hederaFunctionality : undefined,
-            feeData: this.feeData != null ? this.feeData : undefined,
-            fees: this.fees != null ? this.fees : undefined,
+            hederaFunctionality: this.hederaFunctionality != null ? this.hederaFunctionality._toProtobuf() : undefined,
+            feeData: this.feeData != null ? this.feeData._toProtobuf() : undefined,
+            fees: this.fees != null ? this.fees.map((fee) => fee._toProtobuf()) : undefined
         };
     }
 

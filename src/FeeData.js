@@ -1,5 +1,6 @@
 import * as proto from "@hashgraph/proto";
 import FeeComponents from "./FeeComponents";
+import SubType from "./SubType";
 
 export default class FeeData {
     /**
@@ -7,6 +8,7 @@ export default class FeeData {
     * @param {FeeComponents} [props.nodedata]
     * @param {FeeComponents} [props.networkdata]
     * @param {FeeComponents} [props.servicedata]
+    * @param {SubType} [props.subType]
      */
 
     constructor(props = {}) {
@@ -30,6 +32,13 @@ export default class FeeData {
          * @type {FeeComponents}
          */
          this.servicedata = props.servicedata;
+
+         /*
+         * SubType distinguishing between different types of FeeData, correlating to the same HederaFunctionality
+         *
+         * @type {SubType}
+         */
+         this.subType = props.subType;       
     }
 
     /**
@@ -47,10 +56,10 @@ export default class FeeData {
     */
     static _fromProtobuf(feeData) {
         return new FeeData({
-            nodedata: feeData.nodedata != null ? feeData.nodedata : undefined,
-            networkdata: feeData.networkdata != null ? feeData.networkdata : undefined,
-            servicedata: feeData.servicedata != null ? feeData.servicedata : undefined,
-
+            nodedata: feeData.nodedata != null ? FeeComponents._fromProtobuf(feeData.nodedata) : undefined,
+            networkdata: feeData.networkdata != null ? FeeComponents._fromProtobuf(feeData.networkdata) : undefined,
+            servicedata: feeData.servicedata != null ? FeeComponents._fromProtobuf(feeData.servicedata):undefined,
+            subType: feeData.subType != null ? SubType._fromCode(feeData.subType) : undefined
         });
     }
 
@@ -60,9 +69,13 @@ export default class FeeData {
      */
     _toProtobuf() {
         return {
-            nodedata: this.nodedata != null ? this.nodedata : undefined,
-            networkdata: this.networkdata != null ? this.networkdata : undefined,
-            servicedata: this.servicedata != null ? this.servicedata : undefined,
+            nodedata: this.nodedata != null ? this.nodedata._toProtobuf() : undefined,
+            
+            networkdata: this.networkdata != null ? this.networkdata._toProtobuf() : undefined,
+            
+            servicedata: this.servicedata != null ? this.servicedata._toProtobuf() : undefined,
+            
+            subType: this.subType != null ? this.subType : undefined
         };
     }
 

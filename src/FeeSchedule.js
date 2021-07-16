@@ -40,8 +40,8 @@ export default class FeeSchedule {
     */
     static _fromProtobuf(feeSchedule) {
         return new FeeSchedule({
-            transactionFeeSchedule: feeSchedule.transactionFeeSchedule != null ? feeSchedule.transactionFeeSchedule : undefined,
-            expirationTime: feeSchedule.expiryTime != null ? feeSchedule.expiryTime : undefined,
+            transactionFeeSchedule: feeSchedule.transactionFeeSchedule != null ? feeSchedule.transactionFeeSchedule.map((schedule) => TransactionFeeSchedule._fromProtobuf(schedule)) : undefined,
+            expirationTime: feeSchedule.expiryTime != null ? Timestamp._fromProtobuf(feeSchedule.expiryTime) : undefined,
         });
     }
 
@@ -51,8 +51,8 @@ export default class FeeSchedule {
     */
     _toProtobuf() {
         return {
-            transactionFeeSchedule: this.transactionFeeSchedule != null ? this.transactionFeeSchedule : undefined,
-            expiryTime: this.expirationTime != null ? this.expirationTime : undefined,
+            transactionFeeSchedule: this.transactionFeeSchedule != null ? this.transactionFeeSchedule._toProtobuf() : undefined,
+            expiryTime: this.expirationTime != null ? this.expirationTime._toProtobuf() : undefined,
         };
     }
 
