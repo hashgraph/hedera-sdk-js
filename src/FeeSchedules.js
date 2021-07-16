@@ -38,8 +38,8 @@ export default class FeeSchedules {
     */
     static _fromProtobuf(feeSchedules) {
         return new FeeSchedules({
-            currentFeeSchedule: feeSchedules.currentFeeSchedule != null ? feeSchedules.currentFeeSchedule : undefined,
-            nextFeeSchedule: feeSchedules.nextFeeSchedule != null ? feeSchedules.nextFeeSchedule : undefined,
+            currentFeeSchedule: feeSchedules.currentFeeSchedule != null ? FeeSchedule._fromProtobuf(feeSchedules.currentFeeSchedule) : undefined,
+            nextFeeSchedule: feeSchedules.nextFeeSchedule != null ? FeeSchedule._fromProtobuf(feeSchedules.nextFeeSchedule) : undefined
         });
     }
 
@@ -49,8 +49,8 @@ export default class FeeSchedules {
     */
     _toProtobuf() {
         return {
-            currentFeeSchedule: this.current != null ? this.current : undefined,
-            nextFeeSchedule: this.next != null ? this.next : undefined,
+            currentFeeSchedule: this.current != null ? this.current._toProtobuf() : undefined,
+            nextFeeSchedule: this.next != null ? this.next._toProtobuf() : undefined
         };
     }
 
