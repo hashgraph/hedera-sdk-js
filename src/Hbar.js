@@ -64,8 +64,31 @@ export default class Hbar {
      * @param {HbarUnit=} unit
      * @returns {Hbar}
      */
-    static fromString(str, unit = HbarUnit.Hbar) {
-        return new Hbar(new BigNumber(str), unit);
+    static fromString(str, unit) {
+        if (unit == null) {
+            let [hbars, hbarUnit] = str.split(" ");
+            if (hbarUnit.localeCompare(HbarUnit.Tinybar._symbol) === 0) {
+                return new Hbar(new BigNumber(hbars), HbarUnit.Tinybar);
+            } else if (
+                hbarUnit.localeCompare(HbarUnit.Microbar._symbol) === 0
+            ) {
+                return new Hbar(new BigNumber(hbars), HbarUnit.Microbar);
+            } else if (
+                hbarUnit.localeCompare(HbarUnit.Millibar._symbol) === 0
+            ) {
+                return new Hbar(new BigNumber(hbars), HbarUnit.Millibar);
+            } else if (hbarUnit.localeCompare(HbarUnit.Kilobar._symbol) === 0) {
+                return new Hbar(new BigNumber(hbars), HbarUnit.Kilobar);
+            } else if (hbarUnit.localeCompare(HbarUnit.Megabar._symbol) === 0) {
+                return new Hbar(new BigNumber(hbars), HbarUnit.Megabar);
+            } else if (hbarUnit.localeCompare(HbarUnit.Gigabar._symbol) === 0) {
+                return new Hbar(new BigNumber(hbars), HbarUnit.Gigabar);
+            } else {
+                return new Hbar(new BigNumber(hbars), HbarUnit.Hbar);
+            }
+        } else {
+            return new Hbar(new BigNumber(str), unit);
+        }
     }
 
     /**

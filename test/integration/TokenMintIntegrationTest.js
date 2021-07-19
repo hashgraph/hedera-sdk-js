@@ -71,16 +71,13 @@ describe("TokenMint", function () {
             .setNodeAccountIds([response.nodeId])
             .setAmount(10)
             .setTokenId(token)
-            .freezeWith(env.client)
+            .freezeWith(env.client);
 
-        let mintBytes = mint.toBytes()
+        let mintBytes = mint.toBytes();
 
-        let mintFromBytes = Transaction.fromBytes(mintBytes)
+        let mintFromBytes = Transaction.fromBytes(mintBytes);
 
-        await (
-            await mintFromBytes
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await mintFromBytes.execute(env.client)).getReceipt(env.client);
     });
 
     it("should error when token ID is not set", async function () {

@@ -87,7 +87,7 @@ export default class TokenId {
         if (
             client._network._ledgerId != null &&
             this._checksum != null &&
-            this._checksum !=
+            this._checksum !==
                 entity_id._checksum(
                     client._network._ledgerId,
                     `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`
