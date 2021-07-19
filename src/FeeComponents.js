@@ -103,46 +103,81 @@ export default class FeeComponents {
     }
 
     /**
-    * @internal
-    * @param {proto.IFeeComponents} feeComponents
-    * @returns {FeeComponents}
-    */
+     * @internal
+     * @param {proto.IFeeComponents} feeComponents
+     * @returns {FeeComponents}
+     */
     static _fromProtobuf(feeComponents) {
         return new FeeComponents({
-            min:feeComponents.min != null ? feeComponents.min : undefined,
+            min: feeComponents.min != null ? feeComponents.min : undefined,
             max: feeComponents.max != null ? feeComponents.max : undefined,
-            constant: feeComponents.constant != null ? feeComponents.constant : undefined,
-            transactionBandwidthByte: feeComponents.bpt != null ? feeComponents.bpt : undefined,
-            transactionVerification: feeComponents.vpt != null ? feeComponents.vpt : undefined,
-            transactionRamByteHour: feeComponents.rbh != null ? feeComponents.rbh : undefined,
-            transactionStorageByteHour: feeComponents.sbh != null ? feeComponents.sbh : undefined,
-            contractTransactionGas: feeComponents.gas != null ? feeComponents.gas : undefined,
-            transferVolumeHbar: feeComponents.tv != null ? feeComponents.tv : undefined,
-            responseMemoryByte: feeComponents.bpr != null ? feeComponents.bpr : undefined,
-            responseDiskByte: feeComponents.sbpr != null ? feeComponents.sbpr : undefined,
+            constant:
+                feeComponents.constant != null
+                    ? feeComponents.constant
+                    : undefined,
+            transactionBandwidthByte:
+                feeComponents.bpt != null ? feeComponents.bpt : undefined,
+            transactionVerification:
+                feeComponents.vpt != null ? feeComponents.vpt : undefined,
+            transactionRamByteHour:
+                feeComponents.rbh != null ? feeComponents.rbh : undefined,
+            transactionStorageByteHour:
+                feeComponents.sbh != null ? feeComponents.sbh : undefined,
+            contractTransactionGas:
+                feeComponents.gas != null ? feeComponents.gas : undefined,
+            transferVolumeHbar:
+                feeComponents.tv != null ? feeComponents.tv : undefined,
+            responseMemoryByte:
+                feeComponents.bpr != null ? feeComponents.bpr : undefined,
+            responseDiskByte:
+                feeComponents.sbpr != null ? feeComponents.sbpr : undefined,
         });
     }
 
     /**
-    * @internal
-    * @returns {proto.IFeeComponents}
-    */
+     * @internal
+     * @returns {proto.IFeeComponents}
+     */
     _toProtobuf() {
         return {
             min: this.min != null ? this.min : undefined,
             max: this.max != null ? this.max : undefined,
             constant: this.constant != null ? this.constant : undefined,
-            bpt: this.transactionBandwidthByte != null ? this.transactionBandwidthByte : undefined,
-            vpt: this.transactionVerification != null ? this.transactionVerification : undefined,
-            rbh: this.transactionRamByteHour != null ? this.transactionRamByteHour : undefined,
-            sbh: this.transactionStorageByteHour != null ? this.transactionStorageByteHour : undefined,
-            gas: this.contractTransactionGas != null ? this.contractTransactionGas : undefined,
-            tv: this.transferVolumeHbar != null ? this.transferVolumeHbar : undefined,
-            bpr: this.responseMemoryByte != null ? this.responseMemoryByte : undefined,
-            sbpr: this.responseDiskByte != null ? this.responseDiskByte : undefined,
+            bpt:
+                this.transactionBandwidthByte != null
+                    ? this.transactionBandwidthByte
+                    : undefined,
+            vpt:
+                this.transactionVerification != null
+                    ? this.transactionVerification
+                    : undefined,
+            rbh:
+                this.transactionRamByteHour != null
+                    ? this.transactionRamByteHour
+                    : undefined,
+            sbh:
+                this.transactionStorageByteHour != null
+                    ? this.transactionStorageByteHour
+                    : undefined,
+            gas:
+                this.contractTransactionGas != null
+                    ? this.contractTransactionGas
+                    : undefined,
+            tv:
+                this.transferVolumeHbar != null
+                    ? this.transferVolumeHbar
+                    : undefined,
+            bpr:
+                this.responseMemoryByte != null
+                    ? this.responseMemoryByte
+                    : undefined,
+            sbpr:
+                this.responseDiskByte != null
+                    ? this.responseDiskByte
+                    : undefined,
         };
     }
-    
+
     /**
      * @returns {Uint8Array}
      */
