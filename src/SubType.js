@@ -21,11 +21,11 @@ export default class SubType {
      */
     toString() {
         switch (this) {
-            case SubType.DEFAULT:
+            case SubType.Default:
                 return "DEFAULT";
-            case SubType.TOKEN_FUNGIBLE_COMMON:
+            case SubType.TokenFungibleCommon:
                 return "TOKEN_FUNGIBLE_COMMON";
-            case SubType.TOKEN_NON_FUNGIBLE_UNIQUE:
+            case SubType.TokenNonFungibleUnique:
                 return "TOKEN_NON_FUNGIBLE_UNIQUE";
             default:
                 return `UNKNOWN (${this._code})`;
@@ -40,11 +40,11 @@ export default class SubType {
     static _fromCode(code) {
         switch (code) {
             case 0:
-                return SubType.DEFAULT;
+                return SubType.Default;
             case 1:
-                return SubType.TOKEN_FUNGIBLE_COMMON;
+                return SubType.TokenFungibleCommon;
             case 2:
-                return SubType.TOKEN_NON_FUNGIBLE_UNIQUE;
+                return SubType.TokenNonFungibleUnique;
         }
 
         throw new Error(
@@ -60,8 +60,8 @@ export default class SubType {
     }
 }
 
-SubType.DEFAULT = new SubType(0);
+SubType.Default = new SubType(0);
 
-SubType.TOKEN_FUNGIBLE_COMMON = new SubType(1);
+SubType.TokenFungibleCommon = new SubType(1);
 
-SubType.TOKEN_NON_FUNGIBLE_UNIQUE = new SubType(2);
+SubType.TokenNonFungibleUnique = new SubType(2);

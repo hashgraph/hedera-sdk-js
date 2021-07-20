@@ -21,7 +21,7 @@ export default class RequestType {
      */
     toString() {
         switch (this) {
-            case RequestType.NONE:
+            case RequestType.None:
                 return "NONE";
             case RequestType.CryptoTransfer:
                 return "CRYPTO_TRANSFER";
@@ -154,7 +154,7 @@ export default class RequestType {
     static _fromCode(code) {
         switch (code) {
             case 0:
-                return RequestType.NONE;
+                return RequestType.None;
             case 1:
                 return RequestType.CryptoTransfer;
             case 2:
@@ -291,7 +291,7 @@ export default class RequestType {
 /**
  * UNSPECIFIED - RESERVED
  */
-RequestType.NONE = new RequestType(0);
+RequestType.None = new RequestType(0);
 
 /**
  * Crypto transfer
