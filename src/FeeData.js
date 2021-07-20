@@ -1,6 +1,6 @@
 import * as proto from "@hashgraph/proto";
 import FeeComponents from "./FeeComponents";
-import SubType from "./SubType";
+import FeeDataType from "./FeeDataType";
 
 export default class FeeData {
     /**
@@ -8,7 +8,7 @@ export default class FeeData {
      * @param {FeeComponents} [props.nodedata]
      * @param {FeeComponents} [props.networkdata]
      * @param {FeeComponents} [props.servicedata]
-     * @param {SubType} [props.subType]
+     * @param {FeeDataType} [props.feeDataType]
      */
     constructor(props = {}) {
         /*
@@ -37,7 +37,7 @@ export default class FeeData {
          *
          * @type {SubType}
          */
-        this.subType = props.subType;
+        this.feeDataType = props.feeDataType;
     }
 
     /**
@@ -67,9 +67,9 @@ export default class FeeData {
                 feeData.servicedata != null
                     ? FeeComponents._fromProtobuf(feeData.servicedata)
                     : undefined,
-            subType:
+            feeDataType:
                 feeData.subType != null
-                    ? SubType._fromCode(feeData.subType)
+                    ? FeeDataType._fromCode(feeData.subType)
                     : undefined,
         });
     }
@@ -93,7 +93,10 @@ export default class FeeData {
                     ? this.servicedata._toProtobuf()
                     : undefined,
 
-            subType: this.subType != null ? this.subType.valueOf() : undefined,
+            subType:
+                this.feeDataType != null
+                    ? this.feeDataType.valueOf()
+                    : undefined,
         };
     }
 
