@@ -15,7 +15,8 @@ import {
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-describe("TokenNft", function () {
+// eslint-disable-next-line mocha/no-skipped-tests
+describe.skip("TokenNft", function () {
     it("should be able to transfer NFT", async function () {
         this.timeout(60000);
 

@@ -809,7 +809,9 @@ export default class TokenCreateTransaction extends Transaction {
             supplyKey:
                 this._supplyKey != null ? keyToProtobuf(this._supplyKey) : null,
             feeScheduleKey:
-                this._feeScheduleKey != null ? keyToProtobuf(this._feeScheduleKey) : null,
+                this._feeScheduleKey != null
+                    ? keyToProtobuf(this._feeScheduleKey)
+                    : null,
             freezeDefault: this._freezeDefault,
             autoRenewAccount:
                 this._autoRenewAccountId != null
