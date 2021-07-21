@@ -136,7 +136,7 @@ export default class TokenInfo {
          *      Frozen = true;
          *      Unfrozen = false;
          *
-         * @readonly */
+          @readonly */
         this.defaultFreezeStatus = props.defaultFreezeStatus;
 
         /**
