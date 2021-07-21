@@ -3,7 +3,7 @@
  * @typedef {import("@hashgraph/proto").SubType} proto.SubType
  */
 
-export default class SubType {
+export default class FeeDataType {
     /**
      * @hideconstructor
      * @internal
@@ -21,11 +21,11 @@ export default class SubType {
      */
     toString() {
         switch (this) {
-            case SubType.Default:
+            case FeeDataType.Default:
                 return "DEFAULT";
-            case SubType.TokenFungibleCommon:
+            case FeeDataType.TokenFungibleCommon:
                 return "TOKEN_FUNGIBLE_COMMON";
-            case SubType.TokenNonFungibleUnique:
+            case FeeDataType.TokenNonFungibleUnique:
                 return "TOKEN_NON_FUNGIBLE_UNIQUE";
             default:
                 return `UNKNOWN (${this._code})`;
@@ -35,16 +35,16 @@ export default class SubType {
     /**
      * @internal
      * @param {number} code
-     * @returns {SubType}
+     * @returns {FeeDataType}
      */
     static _fromCode(code) {
         switch (code) {
             case 0:
-                return SubType.Default;
+                return FeeDataType.Default;
             case 1:
-                return SubType.TokenFungibleCommon;
+                return FeeDataType.TokenFungibleCommon;
             case 2:
-                return SubType.TokenNonFungibleUnique;
+                return FeeDataType.TokenNonFungibleUnique;
         }
 
         throw new Error(
@@ -60,8 +60,8 @@ export default class SubType {
     }
 }
 
-SubType.Default = new SubType(0);
+FeeDataType.Default = new FeeDataType(0);
 
-SubType.TokenFungibleCommon = new SubType(1);
+FeeDataType.TokenFungibleCommon = new FeeDataType(1);
 
-SubType.TokenNonFungibleUnique = new SubType(2);
+FeeDataType.TokenNonFungibleUnique = new FeeDataType(2);
