@@ -164,6 +164,15 @@ export class TokenCreateTransaction extends SingleTransactionBuilder {
     }
 
     /**
+     * @param key
+     * @return TokenCreateTransaction
+     */
+    public setFeeScheduleKey(key: PublicKey): this {
+        this._body.setFeeScheduleKey(key._toProtoKey());
+        return this;
+    }
+
+    /**
      * The default Freeze status (frozen or unfrozen) of Hedera accounts relative to this token. If true, an account
      * must be unfrozen before it can receive the token
      *
