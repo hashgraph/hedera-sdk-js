@@ -18,7 +18,6 @@ import Timestamp from "../Timestamp.js";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  */
-
 export default class TokenNftInfo {
     /**
      * @private
