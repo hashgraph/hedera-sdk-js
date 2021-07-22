@@ -27,6 +27,10 @@ export default class FeeDataType {
                 return "TOKEN_FUNGIBLE_COMMON";
             case FeeDataType.TokenNonFungibleUnique:
                 return "TOKEN_NON_FUNGIBLE_UNIQUE";
+            case FeeDataType.TokenFungibleCommonWithCustomFees:
+                return "TOKEN_NON_FUNGIBLE_UNIQUE_WITH_CUSTOM_FEES";
+            case FeeDataType.TokenNonFungibleUniqueWithCustomFees:
+                return "TOKEN_NON_FUNGIBLE_UNIQUE_WITH_CUSTOM_FEES";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -45,6 +49,10 @@ export default class FeeDataType {
                 return FeeDataType.TokenFungibleCommon;
             case 2:
                 return FeeDataType.TokenNonFungibleUnique;
+            case 3:
+                return FeeDataType.TokenFungibleCommonWithCustomFees;
+            case 4:
+                return FeeDataType.TokenNonFungibleUniqueWithCustomFees;
         }
 
         throw new Error(
@@ -60,8 +68,27 @@ export default class FeeDataType {
     }
 }
 
+/**
+ * The resource prices have no special scope
+ */
 FeeDataType.Default = new FeeDataType(0);
 
+/**
+ * The resource prices are scoped to an operation on a fungible common token
+ */
 FeeDataType.TokenFungibleCommon = new FeeDataType(1);
 
+/**
+ * The resource prices are scoped to an operation on a non-fungible unique token
+ */
 FeeDataType.TokenNonFungibleUnique = new FeeDataType(2);
+
+/**
+ * The resource prices are scoped to an operation on a fungible common token with a custom fee schedule
+ */
+FeeDataType.TokenFungibleCommonWithCustomFees = new FeeDataType(3);
+
+/**
+ * The resource prices are scoped to an operation on a non-fungible unique token with a custom fee schedule
+ */
+FeeDataType.TokenNonFungibleUniqueWithCustomFees = new FeeDataType(4);
