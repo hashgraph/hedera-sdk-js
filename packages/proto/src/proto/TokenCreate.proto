@@ -34,13 +34,25 @@ import "Timestamp.proto";
 Create a new token. After the token is created, the Token ID for it is in the receipt.
 The specified Treasury Account is receiving the initial supply of tokens as-well as the tokens from the Token Mint operation once executed. The balance of the treasury account is decreased when the Token Burn operation is executed.
 
-The <tt>initialSupply</tt> is the initial supply of the smallest parts of a token (like a tinybar, not an hbar). These are the smallest units of the token which may be transferred. 
+The <tt>initialSupply</tt> is the initial supply of the smallest parts of a token (like a tinybar, not an hbar). These are the smallest units of the token which may be transferred.
 
 The supply can change over time. If the total supply at some moment is <i>S</i> parts of tokens, and the token is using <i>D</i> decimals, then <i>S</i> must be less than or equal to 2<sup>63</sup>-1, which is 9,223,372,036,854,775,807. The number of whole tokens (not parts) will be <i>S / 10<sup>D</sup></i>.
 
 If decimals is 8 or 11, then the number of whole tokens can be at most a few billions or millions, respectively. For example, it could match Bitcoin (21 million whole tokens with 8 decimals) or hbars (50 billion whole tokens with 8 decimals). It could even match Bitcoin with milli-satoshis (21 million whole tokens with 11 decimals).
 
 Note that a created token is <i>immutable</i> if the <tt>adminKey</tt> is omitted. No property of an immutable token can ever change, with the sole exception of its expiry. Anyone can pay to extend the expiry time of an immutable token.
+
+A token can be either <i>FUNGIBLE_COMMON</i> or <i>NON_FUNGIBLE_UNIQUE</i>, based on its <i>TokenType</i>. If it has been omitted, <i>FUNGIBLE_COMMON</i> type is used.
+
+A token can have either <i>INFINITE</i> or <i>FINITE</i> supply type, based on its <i>TokenType</i>. If it has been omitted, <i>INFINITE</i> type is used.
+
+If a <i>FUNGIBLE</i> TokenType is used, <i>initialSupply</i> should explicitly be set to a non-negative. If not, the transaction will resolve to INVALID_TOKEN_INITIAL_SUPPLY.
+
+If a <i>NON_FUNGIBLE_UNIQUE</i> TokenType is used, <i>initialSupply</i> should explicitly be set to 0. If not, the transaction will resolve to INVALID_TOKEN_INITIAL_SUPPLY.
+
+If an <i>INFINITE</i> TokenSupplyType is used, <i>maxSupply</i> should explicitly be set to 0. If it is not 0, the transaction will resolve to INVALID_TOKEN_MAX_SUPPLY.
+
+If a <i>FINITE</i> TokenSupplyType is used, <i>maxSupply</i> should be explicitly set to a non-negative value. If it is not, the transaction will resolve to INVALID_TOKEN_MAX_SUPPLY.
  */
 message TokenCreateTransactionBody {
     string name = 1; // The publicly visible name of the token, limited to a UTF-8 encoding of length <tt>tokens.maxSymbolUtf8Bytes</tt>.

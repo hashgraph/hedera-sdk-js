@@ -145,13 +145,22 @@ enum TokenType {
 }
 
 /**
- * Possible FeeData Object SubTypes. Supplementary to the main HederaFunctionality Type.
- * When not explicitly specified, DEFAULT is used.
+ * Allows a set of resource prices to be scoped to a certain type of a HAPI operation. 
+ * 
+ * For example, the resource prices for a TokenMint operation are different between
+ * minting fungible and non-fungible tokens. This enum allows us to "mark" a set of 
+ * prices as applying to one or the other.
+ * 
+ * Similarly, the resource prices for a basic TokenCreate without a custom fee schedule 
+ * yield a total price of $1. The resource prices for a TokenCreate with a custom fee 
+ * schedule are different and yield a total base price of $2.
  */
 enum SubType {
-    DEFAULT = 0;
-    TOKEN_FUNGIBLE_COMMON = 1;
-    TOKEN_NON_FUNGIBLE_UNIQUE = 2;
+    DEFAULT = 0; // The resource prices have no special scope 
+    TOKEN_FUNGIBLE_COMMON = 1; // The resource prices are scoped to an operation on a fungible common token
+    TOKEN_NON_FUNGIBLE_UNIQUE = 2; // The resource prices are scoped to an operation on a non-fungible unique token
+    TOKEN_FUNGIBLE_COMMON_WITH_CUSTOM_FEES = 3; // The resource prices are scoped to an operation on a fungible common token with a custom fee schedule
+    TOKEN_NON_FUNGIBLE_UNIQUE_WITH_CUSTOM_FEES = 4; // The resource prices are scoped to an operation on a non-fungible unique token with a custom fee schedule
 }
 
 /**
