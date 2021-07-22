@@ -4,10 +4,10 @@ import { Fraction as ProtoFraction } from "../generated/BasicTypes_pb";
 import { CustomFee } from "./CustomFee";
 
 export class CustomFractionalFee extends CustomFee {
-    public readonly numerator: BigNumber | null = null;
-    public readonly denominator: BigNumber | null = null;
-    public readonly min: BigNumber | null = null;
-    public readonly max: BigNumber | null = null;
+    public numerator: BigNumber | null = null;
+    public denominator: BigNumber | null = null;
+    public min: BigNumber | null = null;
+    public max: BigNumber | null = null;
 
     public constructor(fee?: ProtoCustomFee) {
         super(fee);
@@ -29,6 +29,26 @@ export class CustomFractionalFee extends CustomFee {
             this.min = new BigNumber(fractionalFee.getMinimumAmount());
             this.max = new BigNumber(fractionalFee.getMaximumAmount());
         }
+    }
+
+    public setNumerator(numerator: BigNumber): this {
+        this.numerator = numerator;
+        return this;
+    }
+
+    public setDenominator(denominator: BigNumber): this {
+        this.denominator = denominator;
+        return this;
+    }
+
+    public setMin(min: BigNumber): this {
+        this.min = min;
+        return this;
+    }
+
+    public setMax(max: BigNumber): this {
+        this.max = max;
+        return this;
     }
 
     // NOT A STABLE API

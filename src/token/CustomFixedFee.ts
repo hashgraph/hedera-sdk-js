@@ -4,8 +4,8 @@ import { CustomFee as ProtoCustomFee, FixedFee as ProtoFixedFee } from "../gener
 import { CustomFee } from "./CustomFee";
 
 export class CustomFixedFee extends CustomFee {
-    public readonly amount: BigNumber | null = null;
-    public readonly denominatingTokenId: TokenId | null = null;
+    public amount: BigNumber | null = null;
+    public denominatingTokenId: TokenId | null = null;
 
     public constructor(fee?: ProtoCustomFee) {
         super(fee);
@@ -22,6 +22,16 @@ export class CustomFixedFee extends CustomFee {
                 TokenId._fromProto(fixedFee.getDenominatingTokenId()!) :
                 null;
         }
+    }
+
+    public setAmount(amount: BigNumber | null): this {
+        this.amount = amount;
+        return this;
+    }
+
+    public setDenominatingTokenId(denominatingTokenId: TokenId): this {
+        this.denominatingTokenId = denominatingTokenId;
+        return this;
     }
 
     // NOT A STABLE API
