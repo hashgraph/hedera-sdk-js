@@ -197,9 +197,7 @@ export default class TransactionReceiptQuery extends Query {
             status,
             transactionId: this._getTransactionId(),
             transactionReceipt: TransactionReceipt._fromProtobuf(
-                /** @type {proto.ITransactionReceipt} */ (
-                    response.transactionGetReceipt
-                ),
+                receipt,
                 ledgerId
             ),
         });
