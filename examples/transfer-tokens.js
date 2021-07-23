@@ -14,7 +14,7 @@ const {
     TokenGrantKycTransaction,
     TransferTransaction,
     TokenWipeTransaction,
-    TransactionId
+    TransactionId,
 } = require("@hashgraph/sdk");
 
 async function main() {
@@ -22,11 +22,13 @@ async function main() {
 
     try {
         client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID), 
+            AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
-            );            
+        );
     } catch {
-        throw new Error("Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required.");
+        throw new Error(
+            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+        );
     }
 
     const newKey = PrivateKey.generate();
@@ -62,56 +64,68 @@ async function main() {
     const tokenId = (await resp.getReceipt(client)).tokenId;
     console.log(`token id = ${tokenId}`);
 
-    await (await (await new TokenAssociateTransaction()
-        .setNodeAccountIds([resp.nodeId])
-        .setAccountId(newAccountId)
-        .setTokenIds([tokenId])
-        .freezeWith(client)
-        .sign(newKey))
-        .execute(client))
-        .getReceipt(client);
+    await (
+        await (
+            await new TokenAssociateTransaction()
+                .setNodeAccountIds([resp.nodeId])
+                .setAccountId(newAccountId)
+                .setTokenIds([tokenId])
+                .freezeWith(client)
+                .sign(newKey)
+        ).execute(client)
+    ).getReceipt(client);
 
     console.log(`Associated account ${newAccountId} with token ${tokenId}`);
 
-    await (await new TokenGrantKycTransaction()
-        .setNodeAccountIds([resp.nodeId])
-        .setAccountId(newAccountId)
-        .setTokenId(tokenId)
-        .execute(client))
-        .getReceipt(client);
+    await (
+        await new TokenGrantKycTransaction()
+            .setNodeAccountIds([resp.nodeId])
+            .setAccountId(newAccountId)
+            .setTokenId(tokenId)
+            .execute(client)
+    ).getReceipt(client);
 
     console.log(`Granted KYC for account ${newAccountId} on token ${tokenId}`);
 
-    await (await new TransferTransaction()
-        .setNodeAccountIds([resp.nodeId])
-        .addTokenTransfer(tokenId, client.operatorAccountId, -10)
-        .addTokenTransfer(tokenId, newAccountId, 10)
-        .execute(client))
-        .getReceipt(client);
-        
-    console.log(`Sent 10 tokens from account ${client.operatorAccountId} to account ${newAccountId} on token ${tokenId}`);
+    await (
+        await new TransferTransaction()
+            .setNodeAccountIds([resp.nodeId])
+            .addTokenTransfer(tokenId, client.operatorAccountId, -10)
+            .addTokenTransfer(tokenId, newAccountId, 10)
+            .execute(client)
+    ).getReceipt(client);
+
+    console.log(
+        `Sent 10 tokens from account ${client.operatorAccountId} to account ${newAccountId} on token ${tokenId}`
+    );
 
     const balances = await new AccountBalanceQuery()
         .setAccountId(client.operatorAccountId)
         .execute(client);
 
-    console.log(`Token balances for ${client.operatorAccountId} are ${balances.tokens.toString()}`);
+    console.log(
+        `Token balances for ${
+            client.operatorAccountId
+        } are ${balances.tokens.toString()}`
+    );
 
-    await (await new TokenWipeTransaction()
-        .setNodeAccountIds([resp.nodeId])
-        .setTokenId(tokenId)
-        .setAccountId(newAccountId)
-        .setAmount(10)
-        .execute(client))
-        .getReceipt(client);
+    await (
+        await new TokenWipeTransaction()
+            .setNodeAccountIds([resp.nodeId])
+            .setTokenId(tokenId)
+            .setAccountId(newAccountId)
+            .setAmount(10)
+            .execute(client)
+    ).getReceipt(client);
 
     console.log(`Wiped balance of account ${newAccountId}`);
 
-    await (await new TokenDeleteTransaction()
-        .setNodeAccountIds([resp.nodeId])
-        .setTokenId(tokenId)
-        .execute(client))
-        .getReceipt(client);
+    await (
+        await new TokenDeleteTransaction()
+            .setNodeAccountIds([resp.nodeId])
+            .setTokenId(tokenId)
+            .execute(client)
+    ).getReceipt(client);
 
     console.log(`Deleted token ${tokenId}`);
 
@@ -132,5 +146,3 @@ async function main() {
 }
 
 main();
-
-

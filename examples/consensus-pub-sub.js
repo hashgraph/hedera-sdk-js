@@ -14,11 +14,13 @@ async function main() {
 
     try {
         client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID), 
+            AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
-            );            
+        );
     } catch {
-        throw new Error("Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required.");
+        throw new Error(
+            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+        );
     }
 
     const response = await new TopicCreateTransaction()
@@ -33,19 +35,19 @@ async function main() {
     new TopicMessageQuery()
         .setTopicId(topicId)
         .setStartTime(0)
-        .subscribe(
-            client,
-            (message) => console.log(Buffer.from(message.contents, "utf8").toString())
+        .subscribe(client, (message) =>
+            console.log(Buffer.from(message.contents, "utf8").toString())
         );
 
     for (let i = 0; ; i += 1) {
         // eslint-disable-next-line no-await-in-loop
-        await (await new TopicMessageSubmitTransaction()
-            .setNodeAccountIds([response.nodeId])
-            .setTopicId(topicId)
-            .setMessage(bigContents)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new TopicMessageSubmitTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTopicId(topicId)
+                .setMessage(bigContents)
+                .execute(client)
+        ).getReceipt(client);
 
         console.log(`Sent message ${i}`);
 

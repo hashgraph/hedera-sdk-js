@@ -8,7 +8,7 @@ const {
     AccountId,
     KeyList,
     TransferTransaction,
-    Transaction
+    Transaction,
 } = require("@hashgraph/sdk");
 
 let user1Key;
@@ -19,11 +19,13 @@ async function main() {
 
     try {
         client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID), 
+            AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
-            );            
+        );
     } catch {
-        throw new Error("Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required.");
+        throw new Error(
+            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+        );
     }
 
     user1Key = PrivateKey.generate();

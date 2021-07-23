@@ -7,7 +7,7 @@ const {
     FileContentsQuery,
     PrivateKey,
     AccountId,
-    Hbar
+    Hbar,
 } = require("@hashgraph/sdk");
 
 const bigContents = `
@@ -63,11 +63,13 @@ async function main() {
 
     try {
         client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID), 
+            AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
-            );            
+        );
     } catch {
-        throw new Error("Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required.");
+        throw new Error(
+            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+        );
     }
 
     const resp = await new FileCreateTransaction()
@@ -81,19 +83,23 @@ async function main() {
 
     console.log("file ID = " + fileId);
 
-    await (await new FileAppendTransaction()
-        .setNodeAccountIds([resp.nodeId])
-        .setFileId(fileId)
-        .setContents(bigContents)
-        .setMaxTransactionFee(new Hbar(5))
-        .execute(client))
-        .getReceipt(client);
+    await (
+        await new FileAppendTransaction()
+            .setNodeAccountIds([resp.nodeId])
+            .setFileId(fileId)
+            .setContents(bigContents)
+            .setMaxTransactionFee(new Hbar(5))
+            .execute(client)
+    ).getReceipt(client);
 
     const contents = await new FileContentsQuery()
         .setFileId(fileId)
         .execute(client);
 
-    console.log("File content length according to `FileInfoQuery`:", contents.length);
+    console.log(
+        "File content length according to `FileInfoQuery`:",
+        contents.length
+    );
 }
 
 main();
