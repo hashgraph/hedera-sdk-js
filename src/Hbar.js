@@ -59,6 +59,7 @@ export default class Hbar {
         return new Hbar(amount, HbarUnit.Tinybar);
     }
 
+    //TODO: fromString()
     /**
      * @param {string} str
      * @param {HbarUnit=} unit
@@ -97,6 +98,7 @@ export default class Hbar {
         return Hbar.fromTinybars(this._valueInTinybar.negated());
     }
 
+    //TODO: fromString()
     /**
      * @param {HbarUnit=} unit
      * @returns {string}
