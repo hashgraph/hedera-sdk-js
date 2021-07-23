@@ -18,7 +18,7 @@ async function main() {
             PrivateKey.fromString(process.env.OPERATOR_KEY)
             );            
     } catch {
-        throw new Error("Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required.")
+        throw new Error("Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required.");
     }
 
     const response = await new TopicCreateTransaction()
