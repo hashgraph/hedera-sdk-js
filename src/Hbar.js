@@ -59,14 +59,36 @@ export default class Hbar {
         return new Hbar(amount, HbarUnit.Tinybar);
     }
 
-    //TODO: fromString()
     /**
      * @param {string} str
      * @param {HbarUnit=} unit
      * @returns {Hbar}
      */
     static fromString(str, unit = HbarUnit.Hbar) {
-        return new Hbar(new BigNumber(str), unit);
+        try {
+            let amount = str.split(" ")[0];
+            let symbol = str.split(" ")[1];
+            switch (symbol) {
+                case "ℏ":
+                    unit = HbarUnit.Hbar;
+                    break;
+                case "tℏ":
+                    unit = HbarUnit.Tinybar;
+                    break;
+                case "μℏ":
+                    unit = HbarUnit.Microbar;
+                    break;
+                case "mℏ":
+                    unit = HbarUnit.Millibar;
+                    break;
+                default:
+                    unit = HbarUnit.Hbar;
+                    break;
+            }
+            return new Hbar(new BigNumber(amount), unit);
+        } catch {
+            return new Hbar(new BigNumber(str), unit);
+        }
     }
 
     /**
@@ -98,7 +120,6 @@ export default class Hbar {
         return Hbar.fromTinybars(this._valueInTinybar.negated());
     }
 
-    //TODO: fromString()
     /**
      * @param {HbarUnit=} unit
      * @returns {string}
