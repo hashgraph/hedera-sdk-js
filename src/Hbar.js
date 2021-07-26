@@ -66,8 +66,7 @@ export default class Hbar {
      */
     static fromString(str, unit = HbarUnit.Hbar) {
         try {
-            let amount = str.split(" ")[0];
-            let symbol = str.split(" ")[1];
+            let [amount, symbol] = str.split(" ");
             switch (symbol) {
                 case "ℏ":
                     unit = HbarUnit.Hbar;
@@ -81,9 +80,17 @@ export default class Hbar {
                 case "mℏ":
                     unit = HbarUnit.Millibar;
                     break;
-                default:
-                    unit = HbarUnit.Hbar;
+                case "kℏ":
+                    unit = HbarUnit.Kilobar;
                     break;
+                case "Mℏ":
+                    unit = HbarUnit.Megabar;
+                    break;
+                case "Gℏ":
+                    unit = HbarUnit.Gigabar;
+                    break;
+                default:
+                    throw new Error("Hbar unit unknown.");
             }
             return new Hbar(new BigNumber(amount), unit);
         } catch {

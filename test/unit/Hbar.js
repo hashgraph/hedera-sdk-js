@@ -19,7 +19,7 @@ describe("Hbar", function () {
         expect(tinybar).to.eql(hbar.toTinybars().toString());
     });
 
-    it("hould reverse Hbar units uning [to|from]String()", function () {
+    it("should reverse Hbar units using [to|from]String()", function () {
         let hbar = new Hbar("100.00", HbarUnit.Hbar);
         let toString = String;
         let fromString = String;
@@ -29,7 +29,7 @@ describe("Hbar", function () {
         expect(toString).to.eql(fromString);
     });
 
-    it("should reverse Tinybar units uning [to|from]String()", function () {
+    it("should reverse Tinybar units using [to|from]String()", function () {
         let tinybar = new Hbar("100.00", HbarUnit.Tinybar);
         let toString = String;
         let fromString = String;
@@ -39,7 +39,7 @@ describe("Hbar", function () {
         expect(toString).to.eql(fromString);
     });
 
-    it("should reverse Microbar units uning [to|from]String()", function () {
+    it("should reverse Microbar units using [to|from]String()", function () {
         let microbar = new Hbar("100.00", HbarUnit.Microbar);
         let toString = String;
         let fromString = String;
@@ -49,12 +49,42 @@ describe("Hbar", function () {
         expect(toString).to.eql(fromString);
     });
 
-    it("should reverse Millibar units uning [to|from]String()", function () {
+    it("should reverse Millibar units using [to|from]String()", function () {
         let millibar = new Hbar("100.00", HbarUnit.Millibar);
         let toString = String;
         let fromString = String;
 
         toString = millibar.toString();
+        fromString = Hbar.fromString(toString).toString();
+        expect(toString).to.eql(fromString);
+    });
+
+    it("should reverse Kilobar units using [to|from]String()", function () {
+        let kilobar = new Hbar("100.00", HbarUnit.Kilobar);
+        let toString = String;
+        let fromString = String;
+
+        toString = kilobar.toString();
+        fromString = Hbar.fromString(toString).toString();
+        expect(toString).to.eql(fromString);
+    });
+
+    it("should reverse Megabar units using [to|from]String()", function () {
+        let megabar = new Hbar("100.00", HbarUnit.Megabar);
+        let toString = String;
+        let fromString = String;
+
+        toString = megabar.toString();
+        fromString = Hbar.fromString(toString).toString();
+        expect(toString).to.eql(fromString);
+    });
+
+    it("should reverse Gigabar units using [to|from]String()", function () {
+        let gigabar = new Hbar("100.00", HbarUnit.Gigabar);
+        let toString = String;
+        let fromString = String;
+
+        toString = gigabar.toString();
         fromString = Hbar.fromString(toString).toString();
         expect(toString).to.eql(fromString);
     });
