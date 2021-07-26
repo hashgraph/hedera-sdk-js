@@ -68,25 +68,25 @@ export default class Hbar {
         try {
             let [amount, symbol] = str.split(" ");
             switch (symbol) {
-                case "ℏ":
+                case HbarUnit.Hbar._symbol:
                     unit = HbarUnit.Hbar;
                     break;
-                case "tℏ":
+                case HbarUnit.Tinybar._symbol:
                     unit = HbarUnit.Tinybar;
                     break;
-                case "μℏ":
+                case HbarUnit.Microbar._symbol:
                     unit = HbarUnit.Microbar;
                     break;
-                case "mℏ":
+                case HbarUnit.Millibar._symbol:
                     unit = HbarUnit.Millibar;
                     break;
-                case "kℏ":
+                case HbarUnit.Kilobar._symbol:
                     unit = HbarUnit.Kilobar;
                     break;
-                case "Mℏ":
+                case HbarUnit.Megabar._symbol:
                     unit = HbarUnit.Megabar;
                     break;
-                case "Gℏ":
+                case HbarUnit.Gigabar._symbol:
                     unit = HbarUnit.Gigabar;
                     break;
                 default:
