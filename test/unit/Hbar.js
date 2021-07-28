@@ -88,4 +88,14 @@ describe("Hbar", function () {
         fromString = Hbar.fromString(toString).toString();
         expect(toString).to.eql(fromString);
     });
+
+    it("should not pass regex check", function () {
+        let check = String;
+
+        check = "";
+        let fromString = Hbar.fromString(check);
+        console.log(fromString)
+        expect(fromString).to.eql(Error);
+    });
+
 });

@@ -65,36 +65,12 @@ export default class Hbar {
      * @returns {Hbar}
      */
     static fromString(str, unit = HbarUnit.Hbar) {
-        try {
+        const pattern = /^((?:\+|-)?\d+(?:\.\d+)?)(?: (tℏ|μℏ|mℏ|ℏ|kℏ|Mℏ|Gℏ))?$/;
+        if (pattern.test(str)) {
             let [amount, symbol] = str.split(" ");
-            switch (symbol) {
-                case HbarUnit.Hbar._symbol:
-                    unit = HbarUnit.Hbar;
-                    break;
-                case HbarUnit.Tinybar._symbol:
-                    unit = HbarUnit.Tinybar;
-                    break;
-                case HbarUnit.Microbar._symbol:
-                    unit = HbarUnit.Microbar;
-                    break;
-                case HbarUnit.Millibar._symbol:
-                    unit = HbarUnit.Millibar;
-                    break;
-                case HbarUnit.Kilobar._symbol:
-                    unit = HbarUnit.Kilobar;
-                    break;
-                case HbarUnit.Megabar._symbol:
-                    unit = HbarUnit.Megabar;
-                    break;
-                case HbarUnit.Gigabar._symbol:
-                    unit = HbarUnit.Gigabar;
-                    break;
-                default:
-                    throw new Error("Hbar unit unknown.");
-            }
-            return new Hbar(new BigNumber(amount), unit);
-        } catch {
-            return new Hbar(new BigNumber(str), unit);
+            return new Hbar(new BigNumber(amount), HbarUnit.fromString(symbol));
+        } else {
+            throw new Error("Variable failed regex: "+str);
         }
     }
 
