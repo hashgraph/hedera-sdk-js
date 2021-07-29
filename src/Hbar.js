@@ -37,6 +37,9 @@ export default class Hbar {
              */
             this._valueInTinybar = bigAmount.multipliedBy(unit._tinybar);
         }
+        if (!this._valueInTinybar.isInteger()) {
+            throw new Error("Hbar in tinybars contains decimals");
+        }
     }
 
     /**
@@ -68,9 +71,12 @@ export default class Hbar {
         const pattern = /^((?:\+|-)?\d+(?:\.\d+)?)(?: (tℏ|μℏ|mℏ|ℏ|kℏ|Mℏ|Gℏ))?$/;
         if (pattern.test(str)) {
             let [amount, symbol] = str.split(" ");
-            return new Hbar(new BigNumber(amount), HbarUnit.fromString(symbol));
+            if (symbol != null) {
+                unit = HbarUnit.fromString(symbol);
+            }
+            return new Hbar(new BigNumber(amount), unit);
         } else {
-            throw new Error("Variable failed regex: "+str);
+            throw new Error("invalid argument provided");
         }
     }
 

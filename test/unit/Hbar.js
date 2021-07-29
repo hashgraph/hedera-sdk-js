@@ -19,83 +19,184 @@ describe("Hbar", function () {
         expect(tinybar).to.eql(hbar.toTinybars().toString());
     });
 
-    it("should reverse Hbar units using [to|from]String()", function () {
-        let hbar = new Hbar("100.00", HbarUnit.Hbar);
-        let toString = String;
-        let fromString = String;
+    it("should pass regex and reverse [to|from]String", function () {
+        let check = [
+            "1 tℏ",
+            "1 μℏ",
+            "1 mℏ",
+            "1 ℏ",
+            "1 kℏ",
+            "1 Mℏ",
+            "1 Gℏ",
+            "-1 tℏ",
+            "-1 μℏ",
+            "-1 mℏ",
+            "-1 ℏ",
+            "-1 kℏ",
+            "-1 Mℏ",
+            "-1 Gℏ",
+            "1.151 tℏ",
+            "1.151 μℏ",
+            "1.151 mℏ",
+            "1.151 ℏ",
+            "1.151 kℏ",
+            "1.151 Mℏ",
+            "1.151 Gℏ",
+            "-1.151 tℏ",
+            "-1.151 μℏ",
+            "-1.151 mℏ",
+            "-1.151 ℏ",
+            "-1.151 kℏ",
+            "-1.151 Mℏ",
+            "-1.151 Gℏ",
+            "+1 Gℏ",
+            "+1.151 Gℏ",
+            "-1 Gℏ",
+            "-1.151 Gℏ",
+        ];
 
-        toString = hbar.toString();
-        fromString = Hbar.fromString(toString).toString();
-        expect(toString).to.eql(fromString);
+        for (let i = 0; i < check.length; i++) {
+            expect(check[i]).to.equal(Hbar.fromString(check[i]).toString());
+        }
     });
 
-    it("should reverse Tinybar units using [to|from]String()", function () {
-        let tinybar = new Hbar("100.00", HbarUnit.Tinybar);
-        let toString = String;
-        let fromString = String;
+    it("should not pass regex", function () {
+        let k = 0;
+        let check = [
+            "1 ",
+            "-1 ",
+            "+1 ",
+            "1.151 ",
+            "-1.151 ",
+            "+1.151 ",
+            "1.",
+            "1.151.",
+            ".1",
+            "1.151 uℏ",
+            "1.151 h",
+        ];
 
-        toString = tinybar.toString();
-        fromString = Hbar.fromString(toString).toString();
-        expect(toString).to.eql(fromString);
+        let i = check.length;
+
+        for (let j = 0; j < check.length; j++) {
+            try {
+                Hbar.fromString(check[j]);
+            } catch (error) {
+                if (error.toString().includes("invalid argument provided")) {
+                    k++;
+                }
+            }
+        }
+        expect(k).to.equal(i);
     });
 
-    it("should reverse Microbar units using [to|from]String()", function () {
-        let microbar = new Hbar("100.00", HbarUnit.Microbar);
-        let toString = String;
-        let fromString = String;
+    it("should append default unit Hbar", function () {
+        /**
+         * fromString strips + and should append the default Hbar unit when none are present
+         */
+        const unit = HbarUnit.Hbar._symbol;
+        let check = [
+            // "0",
+            "1",
+            "-1",
+            "+1",
+            "1.151",
+            "-1.151",
+            "+1.151",
+        ];
 
-        toString = microbar.toString();
-        fromString = Hbar.fromString(toString).toString();
-        expect(toString).to.eql(fromString);
+        for (let i = 0; i < check.length; i++) {
+            expect(check[i].replace("+", "") + " " + unit).to.equal(
+                Hbar.fromString(check[i]).toString()
+            );
+        }
     });
 
-    it("should reverse Millibar units using [to|from]String()", function () {
-        let millibar = new Hbar("100.00", HbarUnit.Millibar);
-        let toString = String;
-        let fromString = String;
-
-        toString = millibar.toString();
-        fromString = Hbar.fromString(toString).toString();
-        expect(toString).to.eql(fromString);
+    it("should convert various units to tinybar", function () {
+        expect(Hbar.fromString("1").toTinybars().toString()).to.be.equal(
+            "100000000"
+        );
+        expect(Hbar.fromString("1.151").toTinybars().toString()).to.be.equal(
+            "115100000"
+        );
+        expect(Hbar.fromString("1 tℏ").toTinybars().toString()).to.be.equal(
+            "1"
+        );
+        expect(Hbar.fromString("1 μℏ").toTinybars().toString()).to.be.equal(
+            "100"
+        );
+        expect(Hbar.fromString("1 mℏ").toTinybars().toString()).to.be.equal(
+            "100000"
+        );
+        expect(Hbar.fromString("1 ℏ").toTinybars().toString()).to.be.equal(
+            "100000000"
+        );
+        expect(Hbar.fromString("1 kℏ").toTinybars().toString()).to.be.equal(
+            "100000000000"
+        );
+        expect(Hbar.fromString("1 Mℏ").toTinybars().toString()).to.be.equal(
+            "100000000000000"
+        );
+        expect(Hbar.fromString("1 Gℏ").toTinybars().toString()).to.be.equal(
+            "100000000000000000"
+        );
+        expect(Hbar.fromString("1.151 mℏ").toTinybars().toString()).to.be.equal(
+            "115100"
+        );
+        expect(Hbar.fromString("1.151 ℏ").toTinybars().toString()).to.be.equal(
+            "115100000"
+        );
+        expect(Hbar.fromString("1.151 kℏ").toTinybars().toString()).to.be.equal(
+            "115100000000"
+        );
+        expect(Hbar.fromString("1.151 Mℏ").toTinybars().toString()).to.be.equal(
+            "115100000000000"
+        );
+        expect(Hbar.fromString("1.151 Gℏ").toTinybars().toString()).to.be.equal(
+            "115100000000000000"
+        );
+        expect(Hbar.fromString("+1").toTinybars().toString()).to.be.equal(
+            "100000000"
+        );
+        expect(Hbar.fromString("+1.151").toTinybars().toString()).to.be.equal(
+            "115100000"
+        );
+        expect(Hbar.fromString("+1 Gℏ").toTinybars().toString()).to.be.equal(
+            "100000000000000000"
+        );
+        expect(
+            Hbar.fromString("+1.151 Gℏ").toTinybars().toString()
+        ).to.be.equal("115100000000000000");
+        expect(Hbar.fromString("-1").toTinybars().toString()).to.be.equal(
+            "-100000000"
+        );
+        expect(Hbar.fromString("-1.151").toTinybars().toString()).to.be.equal(
+            "-115100000"
+        );
+        expect(Hbar.fromString("-1 Gℏ").toTinybars().toString()).to.be.equal(
+            "-100000000000000000"
+        );
+        expect(
+            Hbar.fromString("-1.151 Gℏ").toTinybars().toString()
+        ).to.be.equal("-115100000000000000");
     });
 
-    it("should reverse Kilobar units using [to|from]String()", function () {
-        let kilobar = new Hbar("100.00", HbarUnit.Kilobar);
-        let toString = String;
-        let fromString = String;
+    it("should throw errors when converting to tinybars with decimals", function () {
+        let check = [
+        "1.151 tℏ",
+        "1.151 μℏ",
+    ];
 
-        toString = kilobar.toString();
-        fromString = Hbar.fromString(toString).toString();
-        expect(toString).to.eql(fromString);
+        for (let i = 0; i < check.length; i++) {
+            try {
+                Hbar.fromString(check[i]);
+            } catch (error) {
+                expect(
+                    error
+                        .toString()
+                        .includes("Hbar in tinybars contains decimals")
+                ).to.equal(true);
+            }
+        }
     });
-
-    it("should reverse Megabar units using [to|from]String()", function () {
-        let megabar = new Hbar("100.00", HbarUnit.Megabar);
-        let toString = String;
-        let fromString = String;
-
-        toString = megabar.toString();
-        fromString = Hbar.fromString(toString).toString();
-        expect(toString).to.eql(fromString);
-    });
-
-    it("should reverse Gigabar units using [to|from]String()", function () {
-        let gigabar = new Hbar("100.00", HbarUnit.Gigabar);
-        let toString = String;
-        let fromString = String;
-
-        toString = gigabar.toString();
-        fromString = Hbar.fromString(toString).toString();
-        expect(toString).to.eql(fromString);
-    });
-
-    it("should not pass regex check", function () {
-        let check = String;
-
-        check = "";
-        let fromString = Hbar.fromString(check);
-        console.log(fromString)
-        expect(fromString).to.eql(Error);
-    });
-
 });
