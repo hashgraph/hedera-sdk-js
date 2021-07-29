@@ -2,61 +2,38 @@ import Hbar from "../src/Hbar.js";
 import HbarUnit from "../src/HbarUnit.js";
 
 describe("Hbar", function () {
-    it("should stringify to hbars", function () {
-        expect(new Hbar(10).toString()).to.eql("10 ℏ");
-    });
-
-    it("should stringify to Microbar", function () {
-        expect(
-            Hbar.fromTinybars(1234567890).toString(HbarUnit.Microbar)
-        ).to.eql("12345678.9 μℏ");
-    });
-
-    it("should convert from hbars to tinybars", function () {
-        const tinybar = "98327923153";
-        const hbar = new Hbar("983.27923153");
-
-        expect(tinybar).to.eql(hbar.toTinybars().toString());
-    });
-
-    it("should pass regex and reverse [to|from]String", function () {
+    it("should pass regex, convert, and reverse [to|from]String", function () {
         let check = [
-            "1 tℏ",
-            "1 μℏ",
-            "1 mℏ",
-            "1 ℏ",
-            "1 kℏ",
-            "1 Mℏ",
-            "1 Gℏ",
-            "-1 tℏ",
-            "-1 μℏ",
-            "-1 mℏ",
-            "-1 ℏ",
-            "-1 kℏ",
-            "-1 Mℏ",
-            "-1 Gℏ",
-            "1.151 tℏ",
-            "1.151 μℏ",
-            "1.151 mℏ",
-            "1.151 ℏ",
-            "1.151 kℏ",
-            "1.151 Mℏ",
-            "1.151 Gℏ",
-            "-1.151 tℏ",
-            "-1.151 μℏ",
-            "-1.151 mℏ",
-            "-1.151 ℏ",
-            "-1.151 kℏ",
-            "-1.151 Mℏ",
-            "-1.151 Gℏ",
-            "+1 Gℏ",
-            "+1.151 Gℏ",
-            "-1 Gℏ",
-            "-1.151 Gℏ",
+            ["0 ℏ", "0 tℏ"],
+            ["1 tℏ", "1 tℏ"],
+            ["1 μℏ", "100 tℏ"],
+            ["1 mℏ", "0.001 ℏ"],
+            ["1 ℏ", "1 ℏ"],
+            ["1 kℏ", "1000 ℏ"],
+            ["1 Mℏ", "1000000 ℏ"],
+            ["1 Gℏ", "1000000000 ℏ"],
+            ["+0 ℏ", "0 tℏ"],
+            ["+1 tℏ", "1 tℏ"],
+            ["+1 μℏ", "100 tℏ"],
+            ["+1 mℏ", "0.001 ℏ"],
+            ["+1 ℏ", "1 ℏ"],
+            ["+1 kℏ", "1000 ℏ"],
+            ["+1 Mℏ", "1000000 ℏ"],
+            ["+1 Gℏ", "1000000000 ℏ"],
+            ["-0 ℏ", "0 tℏ"],
+            ["-1 tℏ", "-1 tℏ"],
+            ["-1 μℏ", "-100 tℏ"],
+            ["-1 mℏ", "-0.001 ℏ"],
+            ["-1 ℏ", "-1 ℏ"],
+            ["-1 kℏ", "-1000 ℏ"],
+            ["-1 Mℏ", "-1000000 ℏ"],
+            ["-1 Gℏ", "-1000000000 ℏ"],
         ];
 
         for (let i = 0; i < check.length; i++) {
-            expect(check[i]).to.equal(Hbar.fromString(check[i]).toString());
+            expect(check[i][1]).to.equal(
+                Hbar.fromString(check[i][0]).toString()
+            );
         }
     });
 
@@ -95,15 +72,7 @@ describe("Hbar", function () {
          * fromString strips + and should append the default Hbar unit when none are present
          */
         const unit = HbarUnit.Hbar._symbol;
-        let check = [
-            // "0",
-            "1",
-            "-1",
-            "+1",
-            "1.151",
-            "-1.151",
-            "+1.151",
-        ];
+        let check = ["1", "-1", "+1", "1.151", "-1.151", "+1.151"];
 
         for (let i = 0; i < check.length; i++) {
             expect(check[i].replace("+", "") + " " + unit).to.equal(
@@ -112,7 +81,7 @@ describe("Hbar", function () {
         }
     });
 
-    it("should convert various units to tinybar", function () {
+    it("should pass regex, convert to tinybar, and reverse [to|from]String", function () {
         expect(Hbar.fromString("1").toTinybars().toString()).to.be.equal(
             "100000000"
         );
@@ -181,11 +150,8 @@ describe("Hbar", function () {
         ).to.be.equal("-115100000000000000");
     });
 
-    it("should throw errors when converting to tinybars with decimals", function () {
-        let check = [
-        "1.151 tℏ",
-        "1.151 μℏ",
-        ];
+    it('should throw error "Hbar in tinybars contains decimals"', function () {
+        let check = ["1.151 tℏ", "1.151 μℏ", "1.151", "-1.151", "+1.151"];
 
         for (let i = 0; i < check.length; i++) {
             try {
