@@ -185,7 +185,7 @@ describe("Hbar", function () {
         let check = [
         "1.151 tℏ",
         "1.151 μℏ",
-    ];
+        ];
 
         for (let i = 0; i < check.length; i++) {
             try {
