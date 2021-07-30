@@ -242,9 +242,9 @@ export default class TopicCreateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._autoRenewAccountId != null) {
-            this._autoRenewAccountId.validate(client);
+            this._autoRenewAccountId.validateChecksum(client);
         }
     }
 

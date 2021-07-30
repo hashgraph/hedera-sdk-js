@@ -163,11 +163,10 @@ export default class TransactionRecordQuery extends Query {
      * @internal
      * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response, ledgerId) {
+    _mapStatusError(request, response) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -208,22 +207,19 @@ export default class TransactionRecordQuery extends Query {
         return new ReceiptStatusError({
             status,
             transactionId: this._getTransactionId(),
-            transactionReceipt: TransactionReceipt._fromProtobuf(
-                receipt,
-                ledgerId
-            ),
+            transactionReceipt: TransactionReceipt._fromProtobuf(receipt),
         });
     }
 
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (
             this._transactionId != null &&
             this._transactionId.accountId != null
         ) {
-            this._transactionId.accountId.validate(client);
+            this._transactionId.accountId.validateChecksum(client);
         }
     }
 
@@ -261,11 +257,10 @@ export default class TransactionRecordQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
-     * @param {string | null} ledgerId
      * @returns {Promise<TransactionRecord>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request, ledgerId) {
+    _mapResponse(response, nodeAccountId, request) {
         const record = /** @type {proto.ITransactionGetRecordResponse} */ (
             response.transactionGetRecord
         );
@@ -274,8 +269,7 @@ export default class TransactionRecordQuery extends Query {
             TransactionRecord._fromProtobuf(
                 /** @type {proto.ITransactionRecord} */ (
                     record.transactionRecord
-                ),
-                ledgerId
+                )
             )
         );
     }

@@ -334,13 +334,13 @@ export default class AccountUpdateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._accountId != null) {
-            this._accountId.validate(client);
+            this._accountId.validateChecksum(client);
         }
 
         if (this._proxyAccountId != null) {
-            this._proxyAccountId.validate(client);
+            this._proxyAccountId.validateChecksum(client);
         }
     }
 

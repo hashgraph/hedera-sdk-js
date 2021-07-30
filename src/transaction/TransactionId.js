@@ -115,13 +115,12 @@ export default class TransactionId {
     /**
      * @internal
      * @param {proto.ITransactionID} id
-     * @param {(string | null)=} networkName
      * @returns {TransactionId}
      */
-    static _fromProtobuf(id, networkName) {
+    static _fromProtobuf(id) {
         if (id.accountID != null && id.transactionValidStart != null) {
             return new TransactionId(
-                AccountId._fromProtobuf(id.accountID, networkName),
+                AccountId._fromProtobuf(id.accountID),
                 Timestamp._fromProtobuf(id.transactionValidStart),
                 id.scheduled
             );

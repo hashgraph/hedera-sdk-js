@@ -83,9 +83,9 @@ export default class AccountInfoQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._accountId != null) {
-            this._accountId.validate(client);
+            this._accountId.validateChecksum(client);
         }
     }
 
@@ -134,19 +134,17 @@ export default class AccountInfoQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
-     * @param {string | null} ledgerId
      * @returns {Promise<AccountInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request, ledgerId) {
+    _mapResponse(response, nodeAccountId, request) {
         const info = /** @type {proto.ICryptoGetInfoResponse} */ (
             response.cryptoGetInfo
         );
 
         return Promise.resolve(
             AccountInfo._fromProtobuf(
-                /** @type {proto.IAccountInfo} */ (info.accountInfo),
-                ledgerId
+                /** @type {proto.IAccountInfo} */ (info.accountInfo)
             )
         );
     }

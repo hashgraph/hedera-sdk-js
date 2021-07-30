@@ -101,9 +101,9 @@ export default class TopicInfoQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._topicId != null) {
-            this._topicId.validate(client);
+            this._topicId.validateChecksum(client);
         }
     }
 
@@ -140,17 +140,15 @@ export default class TopicInfoQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
-     * @param {string | null} ledgerId
      * @returns {Promise<TopicInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request, ledgerId) {
+    _mapResponse(response, nodeAccountId, request) {
         return Promise.resolve(
             TopicInfo._fromProtobuf(
                 /** @type {proto.IConsensusGetTopicInfoResponse} */ (
                     response.consensusGetTopicInfo
-                ),
-                ledgerId
+                )
             )
         );
     }

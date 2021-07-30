@@ -125,29 +125,25 @@ export default class ScheduleInfo {
     /**
      * @internal
      * @param {proto.IScheduleInfo} info
-     * @param {(string | null)=} ledgerId
      * @returns {ScheduleInfo}
      */
-    static _fromProtobuf(info, ledgerId) {
+    static _fromProtobuf(info) {
         return new ScheduleInfo({
             scheduleId: ScheduleId._fromProtobuf(
-                /** @type {proto.IScheduleID} */ (info.scheduleID),
-                ledgerId
+                /** @type {proto.IScheduleID} */ (info.scheduleID)
             ),
             creatorAccountID:
                 info.creatorAccountID != null
                     ? AccountId._fromProtobuf(
                           /** @type {proto.IAccountID} */ (
                               info.creatorAccountID
-                          ),
-                          ledgerId
+                          )
                       )
                     : null,
             payerAccountID:
                 info.payerAccountID != null
                     ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (info.payerAccountID),
-                          ledgerId
+                          /** @type {proto.IAccountID} */ (info.payerAccountID)
                       )
                     : null,
             schedulableTransactionBody:
@@ -155,9 +151,7 @@ export default class ScheduleInfo {
                     ? info.scheduledTransactionBody
                     : null,
             adminKey:
-                info.adminKey != null
-                    ? keyFromProtobuf(info.adminKey, ledgerId)
-                    : null,
+                info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
             signers:
                 info.signers != null ? keyListFromProtobuf(info.signers) : null,
             scheduleMemo: info.memo != null ? info.memo : null,
@@ -181,10 +175,7 @@ export default class ScheduleInfo {
                     : null,
             scheduledTransactionId:
                 info.scheduledTransactionID != null
-                    ? TransactionId._fromProtobuf(
-                          info.scheduledTransactionID,
-                          ledgerId
-                      )
+                    ? TransactionId._fromProtobuf(info.scheduledTransactionID)
                     : null,
         });
     }
