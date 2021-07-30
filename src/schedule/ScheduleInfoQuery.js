@@ -99,9 +99,9 @@ export default class ScheduleInfoQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._scheduleId != null) {
-            this._scheduleId.validate(client);
+            this._scheduleId.validateChecksum(client);
         }
     }
 
@@ -135,19 +135,17 @@ export default class ScheduleInfoQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
-     * @param {string | null} ledgerId
      * @returns {Promise<ScheduleInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request, ledgerId) {
+    _mapResponse(response, nodeAccountId, request) {
         const info = /** @type {proto.IScheduleGetInfoResponse} */ (
             response.scheduleGetInfo
         );
 
         return Promise.resolve(
             ScheduleInfo._fromProtobuf(
-                /** @type {proto.IScheduleInfo} */ (info.scheduleInfo),
-                ledgerId
+                /** @type {proto.IScheduleInfo} */ (info.scheduleInfo)
             )
         );
     }

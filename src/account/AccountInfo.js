@@ -148,22 +148,17 @@ export default class AccountInfo {
     /**
      * @internal
      * @param {proto.IAccountInfo} info
-     * @param {(string | null)=} ledgerId
      * @returns {AccountInfo}
      */
-    static _fromProtobuf(info, ledgerId) {
+    static _fromProtobuf(info) {
         return new AccountInfo({
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (info.accountID),
-                ledgerId
+                /** @type {proto.IAccountID} */ (info.accountID)
             ),
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : null,
             isDeleted: info.deleted != null ? info.deleted : false,
-            key: keyFromProtobuf(
-                /** @type {proto.IKey} */ (info.key),
-                ledgerId
-            ),
+            key: keyFromProtobuf(/** @type {proto.IKey} */ (info.key)),
             balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),
             sendRecordThreshold: Hbar.fromTinybars(
                 info.generateSendRecordThreshold != null
@@ -201,17 +196,16 @@ export default class AccountInfo {
                         info.proxyAccountID.accountNum
                     )
                 ).toInt() !== 0
-                    ? AccountId._fromProtobuf(info.proxyAccountID, ledgerId)
+                    ? AccountId._fromProtobuf(info.proxyAccountID)
                     : null,
             proxyReceived: Hbar.fromTinybars(
                 info.proxyReceived != null ? info.proxyReceived : 0
             ),
             liveHashes: (info.liveHashes != null ? info.liveHashes : []).map(
-                (hash) => LiveHash._fromProtobuf(hash, ledgerId)
+                (hash) => LiveHash._fromProtobuf(hash)
             ),
             tokenRelationships: TokenRelationshipMap._fromProtobuf(
-                info.tokenRelationships != null ? info.tokenRelationships : [],
-                ledgerId
+                info.tokenRelationships != null ? info.tokenRelationships : []
             ),
             accountMemo: info.memo != null ? info.memo : "",
             ownedNfts: info.ownedNfts ? info.ownedNfts : Long.ZERO,

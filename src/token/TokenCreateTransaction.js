@@ -754,13 +754,13 @@ export default class TokenCreateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._treasuryAccountId != null) {
-            this._treasuryAccountId.validate(client);
+            this._treasuryAccountId.validateChecksum(client);
         }
 
         if (this._autoRenewAccountId != null) {
-            this._autoRenewAccountId.validate(client);
+            this._autoRenewAccountId.validateChecksum(client);
         }
     }
 

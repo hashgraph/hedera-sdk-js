@@ -97,9 +97,9 @@ export default class FileInfoQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._fileId != null) {
-            this._fileId.validate(client);
+            this._fileId.validateChecksum(client);
         }
     }
 
@@ -133,19 +133,17 @@ export default class FileInfoQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
-     * @param {string | null} ledgerId
      * @returns {Promise<FileInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request, ledgerId) {
+    _mapResponse(response, nodeAccountId, request) {
         const info = /** @type {proto.IFileGetInfoResponse} */ (
             response.fileGetInfo
         );
 
         return Promise.resolve(
             FileInfo._fromProtobuf(
-                /** @type {proto.IFileInfo} */ (info.fileInfo),
-                ledgerId
+                /** @type {proto.IFileInfo} */ (info.fileInfo)
             )
         );
     }

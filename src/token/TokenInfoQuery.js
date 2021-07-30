@@ -99,9 +99,9 @@ export default class TokenInfoQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._tokenId != null) {
-            this._tokenId.validate(client);
+            this._tokenId.validateChecksum(client);
         }
     }
 
@@ -135,19 +135,17 @@ export default class TokenInfoQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
-     * @param {string | null} ledgerId
      * @returns {Promise<TokenInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request, ledgerId) {
+    _mapResponse(response, nodeAccountId, request) {
         const info = /** @type {proto.ITokenGetInfoResponse} */ (
             response.tokenGetInfo
         );
 
         return Promise.resolve(
             TokenInfo._fromProtobuf(
-                /** @type {proto.ITokenInfo} */ (info.tokenInfo),
-                ledgerId
+                /** @type {proto.ITokenInfo} */ (info.tokenInfo)
             )
         );
     }

@@ -657,7 +657,7 @@ export default class Transaction extends Executable {
         }
 
         if (client != null && this._transactionIds[0].accountId != null) {
-            this._transactionIds[0].accountId.validate(client);
+            this._transactionIds[0].accountId.validateChecksum(client);
         }
 
         if (this._nodeIds.length > 0) {
@@ -755,7 +755,7 @@ export default class Transaction extends Executable {
      * @param {Client} client
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         // Do nothing
     }
 
@@ -770,8 +770,8 @@ export default class Transaction extends Executable {
             this.freezeWith(client);
         }
 
-        if (client._operator != null) {
-            this._validateIdNetworks(client);
+        if (client.isAutoValidateChecksumsEnabled()) {
+            this._validateChecksums(client);
         }
 
         // on execute, sign each transaction with the operator, if present
@@ -960,11 +960,10 @@ export default class Transaction extends Executable {
      * @internal
      * @param {proto.ITransaction} request
      * @param {proto.ITransactionResponse} response
-     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response, ledgerId) {
+    _mapStatusError(request, response) {
         const { nodeTransactionPrecheckCode } = response;
 
         const status = Status._fromCode(
