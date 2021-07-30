@@ -50,7 +50,7 @@ export default class HbarUnit {
             case HbarUnit.Gigabar._symbol:
                 return HbarUnit.Gigabar;
             default:
-                return HbarUnit.Hbar;
+                throw new Error("Unknown unit.");
         }
     }
 }
