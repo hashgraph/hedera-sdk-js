@@ -28,6 +28,31 @@ export default class HbarUnit {
 
         Object.freeze(this);
     }
+
+    /**
+     * @param {String} unit
+     * @returns {HbarUnit}
+     */
+    static fromString(unit) {
+        switch (unit) {
+            case HbarUnit.Hbar._symbol:
+                return HbarUnit.Hbar;
+            case HbarUnit.Tinybar._symbol:
+                return HbarUnit.Tinybar;
+            case HbarUnit.Microbar._symbol:
+                return HbarUnit.Microbar;
+            case HbarUnit.Millibar._symbol:
+                return HbarUnit.Millibar;
+            case HbarUnit.Kilobar._symbol:
+                return HbarUnit.Kilobar;
+            case HbarUnit.Megabar._symbol:
+                return HbarUnit.Megabar;
+            case HbarUnit.Gigabar._symbol:
+                return HbarUnit.Gigabar;
+            default:
+                throw new Error("Unknown unit.");
+        }
+    }
 }
 
 HbarUnit.Tinybar = new HbarUnit("tinybar", "tℏ", new BigNumber(1));
