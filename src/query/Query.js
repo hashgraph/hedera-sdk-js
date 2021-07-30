@@ -247,7 +247,7 @@ export default class Query extends Executable {
                         this._paymentTransactionId
                     ),
                     node,
-                    operator,
+                    this._isPaymentRequired() ? operator : null,
                     /** @type {Hbar} */ (cost)
                 )
             );
