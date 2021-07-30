@@ -247,23 +247,23 @@ export default class TransferTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [a, _] of this._hbarTransfers) {
             if (a != null) {
-                a.validate(client);
+                a.validateChecksum(client);
             }
         }
 
         for (const [tokenId, transfers] of this._tokenTransfers) {
             if (tokenId != null) {
-                tokenId.validate(client);
+                tokenId.validateChecksum(client);
             }
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             for (const [a, _] of transfers) {
                 if (a != null) {
-                    a.validate(client);
+                    a.validateChecksum(client);
                 }
             }
         }

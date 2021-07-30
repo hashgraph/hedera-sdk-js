@@ -154,11 +154,10 @@ export default class TransactionReceiptQuery extends Query {
      * @internal
      * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response, ledgerId) {
+    _mapStatusError(request, response) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 
@@ -196,22 +195,19 @@ export default class TransactionReceiptQuery extends Query {
         return new ReceiptStatusError({
             status,
             transactionId: this._getTransactionId(),
-            transactionReceipt: TransactionReceipt._fromProtobuf(
-                receipt,
-                ledgerId
-            ),
+            transactionReceipt: TransactionReceipt._fromProtobuf(receipt),
         });
     }
 
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (
             this._transactionId != null &&
             this._transactionId.accountId != null
         ) {
-            this._transactionId.accountId.validate(client);
+            this._transactionId.accountId.validateChecksum(client);
         }
     }
 
@@ -248,11 +244,10 @@ export default class TransactionReceiptQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
-     * @param {string | null} ledgerId
      * @returns {Promise<TransactionReceipt>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request, ledgerId) {
+    _mapResponse(response, nodeAccountId, request) {
         const transactionGetReceipt =
             /** @type {proto.ITransactionGetReceiptResponse} */ (
                 response.transactionGetReceipt
@@ -261,9 +256,7 @@ export default class TransactionReceiptQuery extends Query {
             transactionGetReceipt.receipt
         );
 
-        return Promise.resolve(
-            TransactionReceipt._fromProtobuf(receipt, ledgerId)
-        );
+        return Promise.resolve(TransactionReceipt._fromProtobuf(receipt));
     }
 
     /**

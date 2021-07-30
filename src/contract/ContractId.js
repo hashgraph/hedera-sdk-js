@@ -45,58 +45,45 @@ export default class ContractId extends Key {
     /**
      * @internal
      * @param {proto.IContractID} id
-     * @param {(string | null)=} ledgerId
      * @returns {ContractId}
      */
-    static _fromProtobuf(id, ledgerId) {
+    static _fromProtobuf(id) {
         const contractId = new ContractId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
             id.contractNum != null ? id.contractNum : 0
         );
 
-        if (ledgerId != null) {
-            contractId._setNetwork(ledgerId);
-        }
-
         return contractId;
     }
 
     /**
-     * @internal
-     * @param {Client} client
+     * @returns {string | null}
      */
-    _setNetworkWith(client) {
-        if (client._network._ledgerId != null) {
-            this._setNetwork(client._network._ledgerId);
-        }
+    get checksum() {
+        return this._checksum;
     }
 
     /**
-     * @internal
-     * @param {string} ledgerId
-     */
-    _setNetwork(ledgerId) {
-        this._checksum = entity_id._checksum(
-            ledgerId,
-            `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`
-        );
-    }
-
-    /**
+     * @deprecated - Use `validateChecksum` instead
      * @param {Client} client
      */
     validate(client) {
-        if (
-            client._network._ledgerId != null &&
-            this._checksum !=
-                entity_id._checksum(
-                    client._network._ledgerId,
-                    `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`
-                )
-        ) {
-            throw new Error("Entity ID is for a different network than client");
-        }
+        console.warn("Deprecated: Use `validateChecksum` instead");
+        this.validateChecksum(client);
+    }
+
+    /**
+     * @param {Client} client
+     */
+    validateChecksum(client) {
+        entity_id.validateChecksum(
+            this.shard,
+            this.realm,
+            this.num,
+            this._checksum,
+            client
+        );
     }
 
     /**
@@ -129,17 +116,18 @@ export default class ContractId extends Key {
     }
 
     /**
-     * @override
      * @returns {string}
      */
     toString() {
-        if (this._checksum == null) {
-            return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
-        } else {
-            return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}-${
-                this._checksum
-            }`;
-        }
+        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
+    }
+
+    /**
+     * @param {Client} client
+     * @returns {string}
+     */
+    toStringWithChecksum(client) {
+        return entity_id.toStringWithChecksum(this.toString(), client);
     }
 
     /**

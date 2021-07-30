@@ -192,17 +192,17 @@ export default class ContractDeleteTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._contractId != null) {
-            this._contractId.validate(client);
+            this._contractId.validateChecksum(client);
         }
 
         if (this._transferAccountId != null) {
-            this._transferAccountId.validate(client);
+            this._transferAccountId.validateChecksum(client);
         }
 
         if (this._transferContractId != null) {
-            this._transferContractId.validate(client);
+            this._transferContractId.validateChecksum(client);
         }
     }
 

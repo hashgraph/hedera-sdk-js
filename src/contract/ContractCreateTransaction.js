@@ -358,13 +358,13 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._bytecodeFileId != null) {
-            this._bytecodeFileId.validate(client);
+            this._bytecodeFileId.validateChecksum(client);
         }
 
         if (this._proxyAccountId != null) {
-            this._proxyAccountId.validate(client);
+            this._proxyAccountId.validateChecksum(client);
         }
     }
 
