@@ -140,13 +140,13 @@ export default class AccountBalanceQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._accountId != null) {
-            this._accountId.validate(client);
+            this._accountId.validateChecksum(client);
         }
 
         if (this._contractId != null) {
-            this._contractId.validate(client);
+            this._contractId.validateChecksum(client);
         }
     }
 
@@ -185,17 +185,16 @@ export default class AccountBalanceQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
-     * @param {string | null} ledgerId
      * @returns {Promise<AccountBalance>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request, ledgerId) {
+    _mapResponse(response, nodeAccountId, request) {
         const cryptogetAccountBalance =
             /** @type {proto.ICryptoGetAccountBalanceResponse} */ (
                 response.cryptogetAccountBalance
             );
         return Promise.resolve(
-            AccountBalance._fromProtobuf(cryptogetAccountBalance, ledgerId)
+            AccountBalance._fromProtobuf(cryptogetAccountBalance)
         );
     }
 

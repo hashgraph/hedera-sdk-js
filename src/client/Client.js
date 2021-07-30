@@ -93,6 +93,8 @@ export default class Client {
         }
 
         this._signOnDemand = false;
+
+        this._autoValidateChecksums = false;
     }
 
     /**
@@ -167,7 +169,7 @@ export default class Client {
                 ? accountId
                 : AccountId.fromString(accountId);
 
-        accountId_.validate(this);
+        accountId_.validateChecksum(this);
 
         this._operator = {
             transactionSigner,
@@ -181,6 +183,22 @@ export default class Client {
         };
 
         return this;
+    }
+
+    /**
+     * @param {boolean} value
+     * @returns {this}
+     */
+    setAutoValidateChecksums(value) {
+        this._autoValidateChecksums = value;
+        return this;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isAutoValidateChecksumsEnabled() {
+        return this._autoValidateChecksums;
     }
 
     /**

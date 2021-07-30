@@ -46,14 +46,12 @@ export default class ProxyStaker {
     /**
      * @internal
      * @param {proto.IProxyStaker} transfer
-     * @param {(string | null)=} ledgerId
      * @returns {ProxyStaker}
      */
-    static _fromProtobuf(transfer, ledgerId) {
+    static _fromProtobuf(transfer) {
         return new ProxyStaker({
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (transfer.accountID),
-                ledgerId
+                /** @type {proto.IAccountID} */ (transfer.accountID)
             ),
             amount: Hbar.fromTinybars(
                 transfer.amount != null ? transfer.amount : 0

@@ -86,9 +86,9 @@ export default class AccountRecordsQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._accountId != null) {
-            this._accountId.validate(client);
+            this._accountId.validateChecksum(client);
         }
     }
 
@@ -125,11 +125,10 @@ export default class AccountRecordsQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
-     * @param {string | null} ledgerId
      * @returns {Promise<TransactionRecord[]>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request, ledgerId) {
+    _mapResponse(response, nodeAccountId, request) {
         const cryptoGetAccountRecords =
             /** @type {proto.ICryptoGetAccountRecordsResponse} */ (
                 response.cryptoGetAccountRecords
@@ -139,9 +138,7 @@ export default class AccountRecordsQuery extends Query {
         );
 
         return Promise.resolve(
-            records.map((record) =>
-                TransactionRecord._fromProtobuf(record, ledgerId)
-            )
+            records.map((record) => TransactionRecord._fromProtobuf(record))
         );
     }
 

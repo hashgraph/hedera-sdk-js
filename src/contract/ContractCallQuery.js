@@ -190,9 +190,9 @@ export default class ContractCallQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._contractId != null) {
-            this._contractId.validate(client);
+            this._contractId.validateChecksum(client);
         }
     }
 

@@ -1,5 +1,10 @@
 import Long from "long";
 import * as hex from "./encoding/hex.js";
+import BadEntityIdError from "./BadEntityIdError.js";
+
+/**
+ * @typedef {import("./client/Client.js").default<*, *>} Client
+ */
 
 /**
  * @typedef {object} IEntityId
@@ -140,25 +145,6 @@ export function fromSolidityAddress(address) {
     return [shard, realm, num];
 }
 
-// /**
-//  * Check that the checksum in box withChecksum is correct
-//  *
-//  * @param {number} status
-//  */
-// function _verify(status) {
-//     switch (status) {
-//         case 0: // Syntax error
-//             throw new Error(
-//                 "Invalid ID: format should look like 0.0.123 or 0.0.123-vfmkw"
-//             );
-//         case 1: // An invalid with-checksum address
-//             throw new Error("Invalid ID: checksum does not match");
-//         case 2: // A valid no-checksum address
-//         case 3: // A valid with-checksum address
-//             break;
-//     }
-// }
-
 /**
  * Parse the address string addr and return an object with the results (8 fields).
  * The first four fields are numbers, which could be implemented as signed 32 bit
@@ -257,4 +243,55 @@ export function _checksum(ledgerId, addr) {
     }
 
     return answer;
+}
+
+/**
+ * @param {Long} shard
+ * @param {Long} realm
+ * @param {Long} num
+ * @param {string | null} checksum
+ * @param {Client} client
+ */
+export function validateChecksum(shard, realm, num, checksum, client) {
+    if (client._network._ledgerId == null) {
+        throw new Error(
+            "Cannot validate entityt ID against a client without a known network"
+        );
+    }
+
+    if (checksum == null) {
+        return;
+    }
+
+    const expectedChecksum = _checksum(
+        client._network._ledgerId,
+        `${shard.toString()}.${realm.toString()}.${num.toString()}`
+    );
+
+    if (checksum != expectedChecksum) {
+        throw new BadEntityIdError(
+            shard,
+            realm,
+            num,
+            checksum,
+            expectedChecksum
+        );
+    }
+}
+
+/**
+ * @param {string} string
+ * @param {Client} client
+ * @returns {string}
+ */
+export function toStringWithChecksum(string, client) {
+    if (client._network._ledgerId == null) {
+        throw new Error(
+            "cannot calculate checksum with a client that does not contain a recognzied ledger ID"
+        );
+    }
+
+    const checksum = _checksum(client._network._ledgerId, string);
+
+    return `${string}-${checksum}`;
 }

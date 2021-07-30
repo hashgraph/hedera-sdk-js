@@ -149,9 +149,9 @@ export default class TokenBurnTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._tokenId != null) {
-            this._tokenId.validate(client);
+            this._tokenId.validateChecksum(client);
         }
     }
 
