@@ -299,7 +299,9 @@ describe.skip("TokenNft", function () {
                 await new TokenMintTransaction()
                     .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
-                    .addMetadata("0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000")
+                    .addMetadata(
+                        "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+                    )
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
@@ -378,9 +380,9 @@ describe.skip("TokenNft", function () {
 
         try {
             await new TokenNftInfoQuery()
-            .setNodeAccountIds(env.nodeAccountIds)
-            .setNftId(new NftId(token, 3))
-            .execute(env.client);
+                .setNodeAccountIds(env.nodeAccountIds)
+                .setNftId(new NftId(token, 3))
+                .execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidNftId);
         }
@@ -448,9 +450,9 @@ describe.skip("TokenNft", function () {
 
         try {
             await new TokenNftInfoQuery()
-            .setNodeAccountIds(env.nodeAccountIds)
-            .setNftId(new NftId(token, 0))
-            .execute(env.client);
+                .setNodeAccountIds(env.nodeAccountIds)
+                .setNftId(new NftId(token, 0))
+                .execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenNftSerialNumber);
         }
@@ -558,10 +560,10 @@ describe.skip("TokenNft", function () {
             await (
                 await (
                     await new TransferTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
-                    .addNftTransfer(token, serial, account, env.operatorId)
-                    .freezeWith(env.client)
-                    .sign(key)
+                        .setNodeAccountIds(env.nodeAccountIds)
+                        .addNftTransfer(token, serial, account, env.operatorId)
+                        .freezeWith(env.client)
+                        .sign(key)
                 ).execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
