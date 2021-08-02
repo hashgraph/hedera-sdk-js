@@ -10,7 +10,9 @@ describe("AccountId", function () {
         expect(accountId.realm.toNumber()).to.eql(0);
         expect(accountId.shard.toNumber()).to.eql(0);
 
-        expect(accountId.toStringWithChecksum(client)).to.be.eql("0.0.123-vfmkw");
+        expect(accountId.toStringWithChecksum(client)).to.be.eql(
+            "0.0.123-vfmkw"
+        );
     });
 
     it("should generate checksum for token ID", function () {

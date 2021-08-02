@@ -30,7 +30,7 @@ export default class HbarUnit {
     }
 
     /**
-     * @param {String} unit
+     * @param {string} unit
      * @returns {HbarUnit}
      */
     static fromString(unit) {
