@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * Updated `Status` with new response codes
  * Support for `Hbar.[from|to]String()` to be reversible
+ * `Client.setAutoValidateChecksums()` set whether checksums on ids will be automatically validated upon attempting to execute a transaction or query.  Disabled by default.  Check status with `Client.isAutoValidateChecksumsEnabled()`
+ * `*Id.toString()` no longer stringifies with checksums.  Use `*Id.getChecksum()` to get the checksum that was parsed, or use `*Id.toStringWithChecksum(client)` to stringify with the correct checksum for that ID on the client's network.
+ * `*Id.validateChecksum()` to validate a checksum.  Throws new `BadEntityIdException`
 
 ### Fixed
 
@@ -17,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * All enitty IDs within response should no longer contain a checskum. 
    Use `*Id.toStringWithChecksum(Client)` to stringify with a checksum
  * `ReceiptStatusError` should contain a properly filled out `TransactionReceipt`
+
+### Deprecated
+
+ * `*Id.validate()` use `*Id.validateChecksum()` instead
 
 ## v2.0.26
 
