@@ -6,9 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## Added
+
+ * Updated `Status` with new response codes
+ * Support for `Hbar.[from|to]String()` to be reversible
+
 ### Fixed
 
  * Free queries should not longer attempt to sign payment transactions
+ * All enitty IDs within response should no longer contain a checskum. 
+   Use `*Id.toStringWithChecksum(Client)` to stringify with a checksum
+ * `ReceiptStatusError` should contain a properly filled out `TransactionReceipt`
 
 ## v2.0.26
 
