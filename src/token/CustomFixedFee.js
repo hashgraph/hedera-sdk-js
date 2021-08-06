@@ -3,7 +3,6 @@ import CustomFee from "./CustomFee.js";
 import AccountId from "../account/AccountId.js";
 import Long from "long";
 import Hbar from "../Hbar.js";
-import { ThresholdSignature } from "@hashgraph/proto";
 
 /**
  * @namespace proto
