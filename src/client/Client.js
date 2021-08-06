@@ -4,6 +4,8 @@ import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Hbar from "../Hbar.js";
 import Network from "./Network.js";
 import MirrorNetwork from "./MirrorNetwork.js";
+import BigNumber from ".pnpm/bignumber.js@9.0.1/node_modules/bignumber.js";
+import Duration from "../Duration.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -55,6 +57,23 @@ export default class Client {
         this._mirrorNetwork = new MirrorNetwork(
             this._createMirrorNetworkChannel()
         );
+
+        /**
+         * Client default value for node connection attempts.
+         *
+         * @readonly
+         * @private
+         * @type {number}
+         */
+        this._DEFAULT_MAX_ATTEMPTS = 10;
+
+        /**
+         * Client value for maximum amount of connection attempts.
+         *
+         * @private
+         * @type {number}
+         */
+        this._maxAttempts = this._DEFAULT_MAX_ATTEMPTS;
 
         /**
          * Map of node account ID (as a string)
@@ -253,19 +272,6 @@ export default class Client {
     }
 
     /**
-     * @param {AccountId | string} accountId
-     */
-    async ping(accountId) {
-        await new AccountBalanceQuery({ accountId })
-            .setNodeAccountIds([
-                accountId instanceof AccountId
-                    ? accountId
-                    : AccountId.fromString(accountId),
-            ])
-            .execute(this);
-    }
-
-    /**
      * @returns {void}
      */
     close() {
@@ -289,4 +295,91 @@ export default class Client {
         // throw new Error("not implemented");
         return null;
     }
+
+    /**
+     * Set the Client value for maximum amount of connection attempts.
+     *
+     * @param {number} maxAttempts
+     * @returns {this}
+     */
+    setMaxAttempts(maxAttempts) {
+        this._maxAttempts = maxAttempts;
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get maxAttempts() {
+        return this._maxAttempts;
+    }
+
+    /**
+     * The maximum number of times to try talking to a node after an UNAVAILABLE.
+     *
+     * @param {number} maxNodeAttempts
+     * @returns {this}
+     */
+    setMaxNodeAttempts(maxNodeAttempts) {
+        this._network.setMaxNodeAttempts(maxNodeAttempts);
+        return this;
+    }
+
+    /**
+     * @returns {number | Long | BigNumber}
+     */
+    get maxNodeAttempts() {
+        return this._network.maxNodeAttempts;
+    }
+
+    /**
+     * The minimum amount of time to wait before talking to an UNAVAILABLE node.
+     *
+     * @param {Duration | number | Long | BigNumber} nodeWaitTime
+     * @returns {this}
+     */
+    setNodeWaitTime(nodeWaitTime) {
+        this._network.setNodeWaitTime(nodeWaitTime);
+        return this;
+    }
+
+    /**
+     * @returns {Duration | number | Long | BigNumber}
+     */
+    get nodeWaitTime() {
+        return this._network.nodeWaitTime;
+    }
+
+    /**
+     * @param {AccountId | string} accountId
+     */
+    async ping(accountId) {
+        await new AccountBalanceQuery({ accountId })
+            .setNodeAccountIds([
+                accountId instanceof AccountId
+                    ? accountId
+                    : AccountId.fromString(accountId),
+            ])
+            .execute(this);
+    }
+
+    /**
+     * @param {AccountId} nodeAccountId
+     */
+    async pingAsync(nodeAccountId) {}
+
+    /**
+     * @param {AccountId} nodeAccountId
+     */
+    async withPingAsync(nodeAccountId) {}
+
+    /**
+     * @param {AccountId} nodeAccountId
+     */
+    async pingAllAsync(nodeAccountId) {}
+
+    /**
+     * @param {AccountId} nodeAccountId
+     */
+    async withPingAllAsync(nodeAccountId) {}
 }
