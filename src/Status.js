@@ -455,6 +455,8 @@ export default class Status {
                 return "CUSTOM_FEE_CHARGING_EXCEEDED_MAX_RECURSION_DEPTH";
             case Status.CustomFeeChargingExceededMaxAccountAmounts:
                 return "CUSTOM_FEE_CHARGING_EXCEEDED_MAX_ACCOUNT_AMOUNTS";
+            case Status.InsufficientSenderAccountBalanceForCustomFee:
+                return "INSUFFICIENT_SENDER_ACCOUNT_BALANCE_FOR_CUSTOM_FEE";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -901,6 +903,8 @@ export default class Status {
                 return Status.CustomFeeChargingExceededMaxRecursionDepth;
             case 258:
                 return Status.CustomFeeChargingExceededMaxAccountAmounts;
+            case 259:
+                return Status.InsufficientSenderAccountBalanceForCustomFee;
         }
 
         throw new Error(
@@ -2000,3 +2004,8 @@ Status.CustomFeeChargingExceededMaxRecursionDepth = new Status(257);
  * More than 20 balance adjustments were to satisfy a CryptoTransfer and its implied custom fee payments
  */
 Status.CustomFeeChargingExceededMaxAccountAmounts = new Status(258);
+
+/**
+ * The sender account in the token transfer transaction could not afford a custom fee
+ */
+Status.InsufficientSenderAccountBalanceForCustomFee = new Status(259);
