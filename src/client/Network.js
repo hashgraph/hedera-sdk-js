@@ -1,5 +1,7 @@
 import AccountId from "../account/AccountId.js";
 import Node from "../Node.js";
+import BigNumber from ".pnpm/bignumber.js@9.0.1/node_modules/bignumber.js";
+import Duration from "../Duration.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -45,6 +47,22 @@ export default class Network {
 
         /** @type {string | null} */
         this._ledgerId = null;
+
+        /**
+         * Value for maximum amount of node connection attempts.
+         *
+         * @private
+         * @type {number | Long | BigNumber}
+         */
+        this._maxNodeAttempts = Infinity;
+
+        /**
+         * The minimum amount of time to wait before talking to an UNAVAILABLE node.
+         *
+         * @private
+         * @type {Duration | number | Long | BigNumber}
+         */
+        this._nodeWaitTime = 250;
     }
 
     /**
@@ -125,6 +143,42 @@ export default class Network {
         return this.nodes
             .slice(0, this.getNumberOfNodesForTransaction())
             .map((node) => node.accountId);
+    }
+
+    /**
+     * The maximum number of times to try talking to a node after an UNAVAILABLE.
+     *
+     * @param {number} maxNodeAttempts
+     * @returns {this}
+     */
+    setMaxNodeAttempts(maxNodeAttempts) {
+        this._maxNodeAttempts = maxNodeAttempts;
+        return this;
+    }
+
+    /**
+     * @returns {number | Long | BigNumber}
+     */
+    get maxNodeAttempts() {
+        return this._maxNodeAttempts;
+    }
+
+    /**
+     * The minimum amount of time to wait before talking to an UNAVAILABLE node.
+     *
+     * @param {Duration | number | Long | BigNumber} nodeWaitTime
+     * @returns {this}
+     */
+    setNodeWaitTime(nodeWaitTime) {
+        this._nodeWaitTime = nodeWaitTime;
+        return this;
+    }
+
+    /**
+     * @returns {Duration | number | Long | BigNumber}
+     */
+    get nodeWaitTime() {
+        return this._nodeWaitTime;
     }
 
     close() {
