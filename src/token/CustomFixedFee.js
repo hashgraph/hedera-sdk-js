@@ -2,6 +2,7 @@ import TokenId from "./TokenId.js";
 import CustomFee from "./CustomFee.js";
 import AccountId from "../account/AccountId.js";
 import Long from "long";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
@@ -36,6 +37,33 @@ export default class CustomFixedFee extends CustomFee {
         if (props.amount != null) {
             this.setAmount(props.amount);
         }
+    }
+
+    /**
+     * @param {Hbar} amount
+     * @returns {CustomFixedFee}
+     */
+    setHbarAmount(amount) {
+        this._amount = amount.toTinybars();
+        this._denominatingTokenId = null;
+        return this;
+    }
+
+    /**
+     * @returns {TokenId | Hbar | null}
+     */
+    get hbarAmount() {
+        return this._denominatingTokenId != null
+            ? null
+            : Hbar.fromTinybars(this._amount != null ? this._amount : 0);
+    }
+
+    /**
+     * @returns {CustomFixedFee}
+     */
+    setDenominatingTokenToSameToken() {
+        this._denominatingTokenId = new TokenId(0, 0, 0);
+        return this;
     }
 
     /**
