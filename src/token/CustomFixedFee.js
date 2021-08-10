@@ -50,21 +50,19 @@ export default class CustomFixedFee extends CustomFee {
     }
 
     /**
-     * @returns {Hbar} 
+     * @returns {TokenId | Hbar | null}
      */
     get hbarAmount() {
-        return new Hbar(
-            this._amount != null 
-            ? this._amount 
-            : 0
-            );
+        return this._denominatingTokenId != null
+            ? null
+            : Hbar.fromTinybars(this._amount != null ? this._amount : 0);
     }
 
     /**
      * @returns {CustomFixedFee}
      */
     setDenominatingTokenToSameToken() {
-        this._denominatingTokenId = new TokenId(0,0,0);
+        this._denominatingTokenId = new TokenId(0, 0, 0);
         return this;
     }
 
