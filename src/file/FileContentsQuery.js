@@ -60,9 +60,9 @@ export default class FileContentsQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._fileId != null) {
-            this._fileId.validate(client);
+            this._fileId.validateChecksum(client);
         }
     }
 

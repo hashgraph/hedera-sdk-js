@@ -7,7 +7,7 @@ const {
     FileContentsQuery,
     PrivateKey,
     AccountId,
-    Hbar
+    Hbar,
 } = require("@hashgraph/sdk");
 
 const bigContents = `
@@ -61,27 +61,15 @@ Etiam ut sodales ex. Nulla luctus, magna eu scelerisque sagittis, nibh quam cons
 async function main() {
     let client;
 
-    if (process.env.HEDERA_NETWORK != null) {
-        switch (process.env.HEDERA_NETWORK) {
-            case "previewnet":
-                client = Client.forPreviewnet();
-                break;
-            default:
-                client = Client.forTestnet();
-        }
-    } else {
-        try {
-            client = await Client.fromConfigFile(process.env.CONFIG_FILE);
-        } catch (err) {
-            client = Client.forTestnet();
-        }
-    }
-
-    if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
-        const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
-        const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-
-        client.setOperator(operatorId, operatorKey);
+    try {
+        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+            AccountId.fromString(process.env.OPERATOR_ID),
+            PrivateKey.fromString(process.env.OPERATOR_KEY)
+        );
+    } catch {
+        throw new Error(
+            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+        );
     }
 
     const resp = await new FileCreateTransaction()
@@ -95,19 +83,23 @@ async function main() {
 
     console.log("file ID = " + fileId);
 
-    await (await new FileAppendTransaction()
-        .setNodeAccountIds([resp.nodeId])
-        .setFileId(fileId)
-        .setContents(bigContents)
-        .setMaxTransactionFee(new Hbar(5))
-        .execute(client))
-        .getReceipt(client);
+    await (
+        await new FileAppendTransaction()
+            .setNodeAccountIds([resp.nodeId])
+            .setFileId(fileId)
+            .setContents(bigContents)
+            .setMaxTransactionFee(new Hbar(5))
+            .execute(client)
+    ).getReceipt(client);
 
     const contents = await new FileContentsQuery()
         .setFileId(fileId)
         .execute(client);
 
-    console.log("File content length according to `FileInfoQuery`:", contents.length);
+    console.log(
+        "File content length according to `FileInfoQuery`:",
+        contents.length
+    );
 }
 
 main();

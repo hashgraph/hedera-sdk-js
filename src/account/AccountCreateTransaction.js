@@ -309,9 +309,9 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._proxyAccountId != null) {
-            this._proxyAccountId.validate(client);
+            this._proxyAccountId.validateChecksum(client);
         }
     }
 

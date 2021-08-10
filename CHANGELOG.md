@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+## Added
+
+ * Updated `Status` with new response codes
+ * Support for `Hbar.[from|to]String()` to be reversible
+ * `Client.setAutoValidateChecksums()` set whether checksums on ids will be automatically validated upon attempting to execute a transaction or query.  Disabled by default.  Check status with `Client.isAutoValidateChecksumsEnabled()`
+ * `*Id.toString()` no longer stringifies with checksums.  Use `*Id.getChecksum()` to get the checksum that was parsed, or use `*Id.toStringWithChecksum(client)` to stringify with the correct checksum for that ID on the client's network.
+ * `*Id.validateChecksum()` to validate a checksum.  Throws new `BadEntityIdException`
+
+### Fixed
+
+ * Free queries should not longer attempt to sign payment transactions
+ * All enitty IDs within response should no longer contain a checskum. 
+   Use `*Id.toStringWithChecksum(Client)` to stringify with a checksum
+ * `ReceiptStatusError` should contain a properly filled out `TransactionReceipt`
+
+### Deprecated
+
+ * `*Id.validate()` use `*Id.validateChecksum()` instead
+
+## v2.0.26
+
+## Changed
+
+ * Updated `Status` and `FeeDataType` with new codes
+
+## v2.0.25
+
+### Added
+
+ * `TokenCreateTransaction.[get|set]FeeScheduleKey()`
+ * Support for parsing file 0.0.111 using `FeeSchedules`
+
+### Fixed
+
+ * `TokenMintTransaction.[to|from]Bytes()` incorrectly parsing the transaction body
+
+### Removed
+
+ * `TokenCreateTransaction.addCustomFee()` - use `TokenCreateTransaction.setCustomFees()` instead
+
 ## v2.0.25-beta.1
 
 ### Added

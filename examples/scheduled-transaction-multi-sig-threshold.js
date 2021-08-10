@@ -16,25 +16,16 @@ const {
 async function main() {
     // set up client
     let client;
-    if (process.env.HEDERA_NETWORK != null) {
-        switch (process.env.HEDERA_NETWORK) {
-            case "previewnet":
-                client = Client.forPreviewnet();
-                break;
-            default:
-                client = Client.forTestnet();
-        }
-    } else {
-        try {
-            client = await Client.fromConfigFile(process.env.CONFIG_FILE);
-        } catch (err) {
-            client = Client.forTestnet();
-        }
-    }
-    if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
-        const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
-        const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-        client.setOperator(operatorId, operatorKey);
+
+    try {
+        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+            AccountId.fromString(process.env.OPERATOR_ID),
+            PrivateKey.fromString(process.env.OPERATOR_KEY)
+        );
+    } catch {
+        throw new Error(
+            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+        );
     }
 
     // generate keys
@@ -63,12 +54,14 @@ async function main() {
     await queryBalance(multiSigAccountId, client);
 
     // schedule crypto transfer from multi-sig account to operator account
-    const txSchedule = await (await new TransferTransaction()
-        .addHbarTransfer(multiSigAccountId, Hbar.fromTinybars(-1))
-        .addHbarTransfer(client.operatorAccountId, Hbar.fromTinybars(1))
-        .schedule() // create schedule
-        .freezeWith(client)
-        .sign(privateKeyList[0])) // add 1. signature
+    const txSchedule = await (
+        await new TransferTransaction()
+            .addHbarTransfer(multiSigAccountId, Hbar.fromTinybars(-1))
+            .addHbarTransfer(client.operatorAccountId, Hbar.fromTinybars(1))
+            .schedule() // create schedule
+            .freezeWith(client)
+            .sign(privateKeyList[0])
+    ) // add 1. signature
         .execute(client);
 
     const txScheduleReceipt = await txSchedule.getReceipt(client);
@@ -79,25 +72,33 @@ async function main() {
     console.log("Scheduled tx ID: " + scheduledTxId);
 
     // add 2. signature
-    const txScheduleSign1 = await (await new ScheduleSignTransaction()
-        .setScheduleId(scheduleId)
-        .freezeWith(client)
-        .sign(privateKeyList[1]))
-        .execute(client);
+    const txScheduleSign1 = await (
+        await new ScheduleSignTransaction()
+            .setScheduleId(scheduleId)
+            .freezeWith(client)
+            .sign(privateKeyList[1])
+    ).execute(client);
 
     const txScheduleSign1Receipt = await txScheduleSign1.getReceipt(client);
-    console.log("1. ScheduleSignTransaction status: " + txScheduleSign1Receipt.status.toString());
+    console.log(
+        "1. ScheduleSignTransaction status: " +
+            txScheduleSign1Receipt.status.toString()
+    );
     await queryBalance(multiSigAccountId, client);
 
     // add 3. signature to trigger scheduled tx
-    const txScheduleSign2 = await (await new ScheduleSignTransaction()
-        .setScheduleId(scheduleId)
-        .freezeWith(client)
-        .sign(privateKeyList[2]))
-        .execute(client);
+    const txScheduleSign2 = await (
+        await new ScheduleSignTransaction()
+            .setScheduleId(scheduleId)
+            .freezeWith(client)
+            .sign(privateKeyList[2])
+    ).execute(client);
 
     const txScheduleSign2Receipt = await txScheduleSign2.getReceipt(client);
-    console.log("2. ScheduleSignTransaction status: " + txScheduleSign2Receipt.status.toString());
+    console.log(
+        "2. ScheduleSignTransaction status: " +
+            txScheduleSign2Receipt.status.toString()
+    );
     await queryBalance(multiSigAccountId, client);
 
     // query schedule
@@ -117,7 +118,13 @@ async function queryBalance(accoundId, client) {
     const accountBalance = await new AccountBalanceQuery()
         .setAccountId(accoundId)
         .execute(client);
-    console.log("Balance of account " + accoundId + ": " + accountBalance.hbars.toTinybars() + " tinybar");
+    console.log(
+        "Balance of account " +
+            accoundId +
+            ": " +
+            accountBalance.hbars.toTinybars() +
+            " tinybar"
+    );
     return accountBalance;
 }
 

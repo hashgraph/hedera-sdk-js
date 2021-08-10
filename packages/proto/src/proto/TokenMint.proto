@@ -32,6 +32,10 @@ Mints tokens to the Token's treasury Account. If no Supply Key is defined, the t
 The operation increases the Total Supply of the Token. The maximum total supply a token can have is 2^63-1.
 The amount provided must be in the lowest denomination possible. Example:
 Token A has 2 decimals. In order to mint 100 tokens, one must provide amount of 10000. In order to mint 100.55 tokens, one must provide amount of 10055.
+If both amount and metadata list get filled, a INVALID_TRANSACTION_BODY response code will be returned.
+If the metadata list contains metadata which is too large, a METADATA_TOO_LONG response code will be returned.
+If neither the amount nor the metadata list get filled, a INVALID_TOKEN_MINT_AMOUNT response code will be returned.
+If the metadata list count is greater than the batch size limit global dynamic property, a BATCH_SIZE_LIMIT_EXCEEDED response code will be returned.
  */
 message TokenMintTransactionBody {
     TokenID token = 1; // The token for which to mint tokens. If token does not exist, transaction results in INVALID_TOKEN_ID

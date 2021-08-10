@@ -22,21 +22,19 @@ export default class TokenRelationshipMap extends ObjectMap {
 
     /**
      * @param {proto.ITokenRelationship[]} relationships
-     * @param {(string | null)=} ledgerId
      * @returns {TokenRelationshipMap}
      */
-    static _fromProtobuf(relationships, ledgerId) {
+    static _fromProtobuf(relationships) {
         const tokenRelationships = new TokenRelationshipMap();
 
         for (const relationship of relationships) {
             const tokenId = TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (relationship.tokenId),
-                ledgerId
+                /** @type {proto.ITokenID} */ (relationship.tokenId)
             );
 
             tokenRelationships._set(
                 tokenId,
-                TokenRelationship._fromProtobuf(relationship, ledgerId)
+                TokenRelationship._fromProtobuf(relationship)
             );
         }
 

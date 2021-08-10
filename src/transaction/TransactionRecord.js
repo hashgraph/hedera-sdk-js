@@ -200,10 +200,9 @@ export default class TransactionRecord {
     /**
      * @internal
      * @param {proto.ITransactionRecord} record
-     * @param {(string | null)=} ledgerId
      * @returns {TransactionRecord}
      */
-    static _fromProtobuf(record, ledgerId) {
+    static _fromProtobuf(record) {
         const contractFunctionResult =
             record.contractCallResult != null
                 ? ContractFunctionResult._fromProtobuf(
@@ -217,8 +216,7 @@ export default class TransactionRecord {
 
         return new TransactionRecord({
             receipt: TransactionReceipt._fromProtobuf(
-                /** @type {proto.ITransactionReceipt} */ (record.receipt),
-                ledgerId
+                /** @type {proto.ITransactionReceipt} */ (record.receipt)
             ),
             transactionHash:
                 record.transactionHash != null
@@ -229,8 +227,7 @@ export default class TransactionRecord {
                 (record.consensusTimestamp)
             ),
             transactionId: TransactionId._fromProtobuf(
-                /** @type {proto.ITransactionID} */ (record.transactionID),
-                ledgerId
+                /** @type {proto.ITransactionID} */ (record.transactionID)
             ),
             transactionMemo: record.memo != null ? record.memo : "",
             transactionFee: Hbar.fromTinybars(
@@ -241,17 +238,16 @@ export default class TransactionRecord {
                     ? record.transferList.accountAmounts
                     : []
                 : []
-            ).map((aa) => Transfer._fromProtobuf(aa, ledgerId)),
+            ).map((aa) => Transfer._fromProtobuf(aa)),
             contractFunctionResult,
             tokenTransfers: TokenTransferMap._fromProtobuf(
                 record.tokenTransferLists != null
                     ? record.tokenTransferLists
-                    : [],
-                ledgerId
+                    : []
             ),
             scheduleRef:
                 record.scheduleRef != null
-                    ? ScheduleId._fromProtobuf(record.scheduleRef, ledgerId)
+                    ? ScheduleId._fromProtobuf(record.scheduleRef)
                     : null,
             assessedCustomFees:
                 record.assessedCustomFees != null
@@ -262,8 +258,7 @@ export default class TransactionRecord {
             nftTransfers: TokenNftTransferMap._fromProtobuf(
                 record.tokenTransferLists != null
                     ? record.tokenTransferLists
-                    : [],
-                ledgerId
+                    : []
             ),
         });
     }

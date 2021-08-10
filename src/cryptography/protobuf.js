@@ -71,12 +71,11 @@ export function keyListToProtobuf(list) {
 
 /**
  * @param {proto.IKey} key
- * @param {(string | null)=} ledgerId
  * @returns {KeyList | PublicKey | ContractId}
  */
-export function keyFromProtobuf(key, ledgerId) {
+export function keyFromProtobuf(key) {
     if (key.contractID != null) {
-        return ContractId._fromProtobuf(key.contractID, ledgerId);
+        return ContractId._fromProtobuf(key.contractID);
     }
 
     if (key.ed25519 != null && key.ed25519.byteLength > 0) {

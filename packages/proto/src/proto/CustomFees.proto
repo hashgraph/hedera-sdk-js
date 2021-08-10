@@ -36,11 +36,11 @@ message FractionalFee {
   int64 maximum_amount = 3; // The maximum amount to assess (zero implies no maximum)
 }
 
-/* A fixed number of units (hbar or token) to asssess as a fee during a CryptoTransfer 
+/* A fixed number of units (hbar or token) to assess as a fee during a CryptoTransfer 
 that transfers units of the token to which this fixed fee is attached. */
 message FixedFee {
   int64 amount = 1; // The number of units to assess as a fee
-  TokenID denominating_token_id = 2; // The denomination of the fee; taken as hbar if left unset
+  TokenID denominating_token_id = 2; // The denomination of the fee; taken as hbar if left unset and, in a TokenCreate, taken as the id of the newly created token if set to the sentinel value of 0.0.0
 }
 
 /* A transfer fee to assess during a CryptoTransfer that transfers units of the token 

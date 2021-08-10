@@ -32,6 +32,18 @@ import "ResponseHeader.proto";
 
 /* Applicable only to tokens of type NON_FUNGIBLE_UNIQUE. Gets info on NFTs N through M owned by the specified accountId.
  * Example: If Account A owns 5 NFTs (might be of different Token Entity), having start=0 and end=5 will return all of the NFTs
+  *
+ * INVALID_QUERY_RANGE response code will be returned if:
+ * 1) Start > End
+ * 2) Start and End indices are non-positive
+ * 3) Start and End indices are out of boundaries for the retrieved nft list
+ * 4) The range between Start and End is bigger than the global dynamic property for maximum query range
+ *
+ * NOT_SUPPORTED response code will be returned if the queried token is of type FUNGIBLE_COMMON
+ *
+ * INVALID_ACCOUNT_ID response code will be returned if the queried account does not exist
+ *
+ * ACCOUNT_DELETED response code will be returned if the queried account has been deleted
  */
 message TokenGetAccountNftInfosQuery {
     QueryHeader header = 1; // Standard info sent from client to node, including the signed payment, and what kind of response is requested (cost, state proof, both, or neither).

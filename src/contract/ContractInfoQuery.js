@@ -84,9 +84,9 @@ export default class ContractInfoQuery extends Query {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._contractId != null) {
-            this._contractId.validate(client);
+            this._contractId.validateChecksum(client);
         }
     }
 
@@ -135,19 +135,17 @@ export default class ContractInfoQuery extends Query {
      * @param {proto.IResponse} response
      * @param {AccountId} nodeAccountId
      * @param {proto.IQuery} request
-     * @param {string | null} ledgerId
      * @returns {Promise<ContractInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapResponse(response, nodeAccountId, request, ledgerId) {
+    _mapResponse(response, nodeAccountId, request) {
         const info = /** @type {proto.IContractGetInfoResponse} */ (
             response.contractGetInfo
         );
 
         return Promise.resolve(
             ContractInfo._fromProtobuf(
-                /** @type {proto.IContractInfo} */ (info.contractInfo),
-                ledgerId
+                /** @type {proto.IContractInfo} */ (info.contractInfo)
             )
         );
     }

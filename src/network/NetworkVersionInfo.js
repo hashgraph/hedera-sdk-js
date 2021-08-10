@@ -10,7 +10,6 @@ export default class NetworkVersionInfo {
      * @param {object} props
      * @param {SemanticVersion} props.protobufVersion
      * @param {SemanticVersion} props.servicesVesion
-     *
      */
     constructor(props) {
         /**

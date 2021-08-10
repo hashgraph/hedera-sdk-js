@@ -49,6 +49,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @param {Key} [props.freezeKey]
      * @param {Key} [props.wipeKey]
      * @param {Key} [props.supplyKey]
+     * @param {Key} [props.feeScheduleKey]
      * @param {boolean} [props.freezeDefault]
      * @param {AccountId | string} [props.autoRenewAccountId]
      * @param {Timestamp | Date} [props.expirationTime]
@@ -121,6 +122,12 @@ export default class TokenCreateTransaction extends Transaction {
          * @type {?Key}
          */
         this._supplyKey = null;
+
+        /**
+         * @private
+         * @type {?Key}
+         */
+        this._feeScheduleKey = null;
 
         /**
          * @private
@@ -218,6 +225,10 @@ export default class TokenCreateTransaction extends Transaction {
             this.setSupplyKey(props.supplyKey);
         }
 
+        if (props.feeScheduleKey != null) {
+            this.setFeeScheduleKey(props.feeScheduleKey);
+        }
+
         if (props.freezeDefault != null) {
             this.setFreezeDefault(props.freezeDefault);
         }
@@ -308,6 +319,10 @@ export default class TokenCreateTransaction extends Transaction {
                 supplyKey:
                     create.supplyKey != null
                         ? keyFromProtobuf(create.supplyKey)
+                        : undefined,
+                feeScheduleKey:
+                    create.feeScheduleKey != null
+                        ? keyFromProtobuf(create.feeScheduleKey)
                         : undefined,
                 freezeDefault:
                     create.freezeDefault != null
@@ -538,6 +553,24 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?Key}
+     */
+    get feeScheduleKey() {
+        return this._feeScheduleKey;
+    }
+
+    /**
+     * @param {Key} key
+     * @returns {this}
+     */
+    setFeeScheduleKey(key) {
+        this._requireNotFrozen();
+        this._feeScheduleKey = key;
+
+        return this;
+    }
+
+    /**
      * @returns {?boolean}
      */
     get freezeDefault() {
@@ -643,15 +676,6 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
-     * @param {CustomFee} fee
-     * @returns {this}
-     */
-    addCustomFee(fee) {
-        this._customFees.push(fee);
-        return this;
-    }
-
-    /**
      * @param {CustomFee[]} customFees
      * @returns {this}
      */
@@ -730,13 +754,13 @@ export default class TokenCreateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._treasuryAccountId != null) {
-            this._treasuryAccountId.validate(client);
+            this._treasuryAccountId.validateChecksum(client);
         }
 
         if (this._autoRenewAccountId != null) {
-            this._autoRenewAccountId.validate(client);
+            this._autoRenewAccountId.validateChecksum(client);
         }
     }
 
@@ -784,6 +808,10 @@ export default class TokenCreateTransaction extends Transaction {
                 this._wipeKey != null ? keyToProtobuf(this._wipeKey) : null,
             supplyKey:
                 this._supplyKey != null ? keyToProtobuf(this._supplyKey) : null,
+            feeScheduleKey:
+                this._feeScheduleKey != null
+                    ? keyToProtobuf(this._feeScheduleKey)
+                    : null,
             freezeDefault: this._freezeDefault,
             autoRenewAccount:
                 this._autoRenewAccountId != null

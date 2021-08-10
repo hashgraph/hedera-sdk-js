@@ -18,7 +18,6 @@ import Timestamp from "../Timestamp.js";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  */
-
 export default class TokenNftInfo {
     /**
      * @private
@@ -57,18 +56,15 @@ export default class TokenNftInfo {
     /**
      * @internal
      * @param {proto.ITokenNftInfo} info
-     * @param {(string | null)=} ledgerId
      * @returns {TokenNftInfo}
      */
-    static _fromProtobuf(info, ledgerId) {
+    static _fromProtobuf(info) {
         return new TokenNftInfo({
             nftId: NftId._fromProtobuf(
-                /** @type {proto.INftID} */ (info.nftID),
-                ledgerId
+                /** @type {proto.INftID} */ (info.nftID)
             ),
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (info.accountID),
-                ledgerId
+                /** @type {proto.IAccountID} */ (info.accountID)
             ),
             creationTime: Timestamp._fromProtobuf(
                 /** @type {proto.ITimestamp} */ (info.creationTime)

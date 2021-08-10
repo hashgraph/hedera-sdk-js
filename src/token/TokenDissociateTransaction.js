@@ -146,14 +146,14 @@ export default class TokenDissociateTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._accountId != null) {
-            this._accountId.validate(client);
+            this._accountId.validateChecksum(client);
         }
 
         for (const tokenId of this._tokenIds != null ? this._tokenIds : []) {
             if (tokenId != null) {
-                tokenId.validate(client);
+                tokenId.validateChecksum(client);
             }
         }
     }

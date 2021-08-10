@@ -32,7 +32,13 @@ Burns tokens from the Token's treasury Account. If no Supply Key is defined, the
 The operation decreases the Total Supply of the Token. Total supply cannot go below zero.
 The amount provided must be in the lowest denomination possible. Example:
 Token A has 2 decimals. In order to burn 100 tokens, one must provide amount of 10000. In order to burn 100.55 tokens, one must provide amount of 10055.
- */
+For non fungible tokens the transaction body accepts serialNumbers list of integers as a parameter.
+
+If neither the amount nor the serialNumbers get filled, a INVALID_TOKEN_BURN_AMOUNT response code will be returned.
+If both amount and serialNumbers get filled, a INVALID_TRANSACTION_BODY response code will be returned.
+If the serialNumbers' list count is greater than the batch size limit global dynamic property, a BATCH_SIZE_LIMIT_EXCEEDED response code will be returned.
+If the serialNumbers list contains a non-positive integer as a serial number, a INVALID_NFT_ID response code will be returned.
+*/
 message TokenBurnTransactionBody {
     TokenID token = 1; // The token for which to burn tokens. If token does not exist, transaction results in INVALID_TOKEN_ID
     uint64 amount = 2; // Applicable to tokens of type FUNGIBLE_COMMON. The amount to burn from the Treasury Account. Amount must be a positive non-zero number, not bigger than the token balance of the treasury account (0; balance], represented in the lowest denomination.

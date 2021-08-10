@@ -110,9 +110,9 @@ export default class TopicDeleteTransaction extends Transaction {
     /**
      * @param {Client} client
      */
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         if (this._topicId != null) {
-            this._topicId.validate(client);
+            this._topicId.validateChecksum(client);
         }
     }
 

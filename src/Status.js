@@ -439,6 +439,24 @@ export default class Status {
                 return "INVALID_TOKEN_BURN_METADATA";
             case Status.CurrentTreasuryStillOwnsNfts:
                 return "CURRENT_TREASURY_STILL_OWNS_NFTS";
+            case Status.AccountStillOwnsNfts:
+                return "ACCOUNT_STILL_OWNS_NFTS";
+            case Status.TreasuryMustOwnBurnedNft:
+                return "TREASURY_MUST_OWN_BURNED_NFT";
+            case Status.AccountDoesNotOwnWipedNft:
+                return "ACCOUNT_DOES_NOT_OWN_WIPED_NFT";
+            case Status.AccountAmountTransfersOnlyAllowedForFungibleCommon:
+                return "ACCOUNT_AMOUNT_TRANSFERS_ONLY_ALLOWED_FOR_FUNGIBLE_COMMON";
+            case Status.MaxNftsInPriceRegimeHaveBeenMinted:
+                return "MAX_NFTS_IN_PRICE_REGIME_HAVE_BEEN_MINTED";
+            case Status.PayerAccountDeleted:
+                return "PAYER_ACCOUNT_DELETED";
+            case Status.CustomFeeChargingExceededMaxRecursionDepth:
+                return "CUSTOM_FEE_CHARGING_EXCEEDED_MAX_RECURSION_DEPTH";
+            case Status.CustomFeeChargingExceededMaxAccountAmounts:
+                return "CUSTOM_FEE_CHARGING_EXCEEDED_MAX_ACCOUNT_AMOUNTS";
+            case Status.InsufficientSenderAccountBalanceForCustomFee:
+                return "INSUFFICIENT_SENDER_ACCOUNT_BALANCE_FOR_CUSTOM_FEE";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -869,6 +887,24 @@ export default class Status {
                 return Status.InvalidTokenBurnMetadata;
             case 250:
                 return Status.CurrentTreasuryStillOwnsNfts;
+            case 251:
+                return Status.AccountStillOwnsNfts;
+            case 252:
+                return Status.TreasuryMustOwnBurnedNft;
+            case 253:
+                return Status.AccountDoesNotOwnWipedNft;
+            case 254:
+                return Status.AccountAmountTransfersOnlyAllowedForFungibleCommon;
+            case 255:
+                return Status.MaxNftsInPriceRegimeHaveBeenMinted;
+            case 256:
+                return Status.PayerAccountDeleted;
+            case 257:
+                return Status.CustomFeeChargingExceededMaxRecursionDepth;
+            case 258:
+                return Status.CustomFeeChargingExceededMaxAccountAmounts;
+            case 259:
+                return Status.InsufficientSenderAccountBalanceForCustomFee;
         }
 
         throw new Error(
@@ -1835,7 +1871,7 @@ Status.FractionDividesByZero = new Status(230);
 Status.InsufficientPayerBalanceForCustomFee = new Status(231);
 
 /**
- * The customFees list is longer than allowed limit 10
+ * More than 10 custom fees were specified
  */
 Status.CustomFeesListTooLong = new Status(232);
 
@@ -1928,3 +1964,48 @@ Status.InvalidTokenBurnMetadata = new Status(249);
  * The treasury for a unique token cannot be changed until it owns no NFTs
  */
 Status.CurrentTreasuryStillOwnsNfts = new Status(250);
+
+/**
+ * An account cannot be dissociated from a unique token if it owns NFTs for the token
+ */
+Status.AccountStillOwnsNfts = new Status(251);
+
+/**
+ * A NFT can only be burned when owned by the unique token's treasury
+ */
+Status.TreasuryMustOwnBurnedNft = new Status(252);
+
+/**
+ * An account did not own the NFT to be wiped
+ */
+Status.AccountDoesNotOwnWipedNft = new Status(253);
+
+/**
+ * An AccountAmount token transfers list referenced a token type other than FUNGIBLE_COMMON
+ */
+Status.AccountAmountTransfersOnlyAllowedForFungibleCommon = new Status(254);
+
+/**
+ * All the NFTs allowed in the current price regime have already been minted
+ */
+Status.MaxNftsInPriceRegimeHaveBeenMinted = new Status(255);
+
+/**
+ * The payer account has been marked as deleted
+ */
+Status.PayerAccountDeleted = new Status(256);
+
+/**
+ * The reference chain of custom fees for a transferred token exceeded the maximum length of 2
+ */
+Status.CustomFeeChargingExceededMaxRecursionDepth = new Status(257);
+
+/**
+ * More than 20 balance adjustments were to satisfy a CryptoTransfer and its implied custom fee payments
+ */
+Status.CustomFeeChargingExceededMaxAccountAmounts = new Status(258);
+
+/**
+ * The sender account in the token transfer transaction could not afford a custom fee
+ */
+Status.InsufficientSenderAccountBalanceForCustomFee = new Status(259);

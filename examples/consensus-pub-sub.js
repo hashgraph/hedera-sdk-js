@@ -12,27 +12,15 @@ const {
 async function main() {
     let client;
 
-    if (process.env.HEDERA_NETWORK != null) {
-        switch (process.env.HEDERA_NETWORK) {
-            case "previewnet":
-                client = Client.forPreviewnet();
-                break;
-            default:
-                client = Client.forTestnet();
-        }
-    } else {
-        try {
-            client = await Client.fromConfigFile(process.env.CONFIG_FILE);
-        } catch (err) {
-            client = Client.forTestnet();
-        }
-    }
-
-    if (process.env.OPERATOR_KEY != null && process.env.OPERATOR_ID != null) {
-        const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY);
-        const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
-
-        client.setOperator(operatorId, operatorKey);
+    try {
+        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+            AccountId.fromString(process.env.OPERATOR_ID),
+            PrivateKey.fromString(process.env.OPERATOR_KEY)
+        );
+    } catch {
+        throw new Error(
+            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+        );
     }
 
     const response = await new TopicCreateTransaction()
@@ -47,19 +35,19 @@ async function main() {
     new TopicMessageQuery()
         .setTopicId(topicId)
         .setStartTime(0)
-        .subscribe(
-            client,
-            (message) => console.log(Buffer.from(message.contents, "utf8").toString())
+        .subscribe(client, (message) =>
+            console.log(Buffer.from(message.contents, "utf8").toString())
         );
 
     for (let i = 0; ; i += 1) {
         // eslint-disable-next-line no-await-in-loop
-        await (await new TopicMessageSubmitTransaction()
-            .setNodeAccountIds([response.nodeId])
-            .setTopicId(topicId)
-            .setMessage(bigContents)
-            .execute(client))
-            .getReceipt(client);
+        await (
+            await new TopicMessageSubmitTransaction()
+                .setNodeAccountIds([response.nodeId])
+                .setTopicId(topicId)
+                .setMessage(bigContents)
+                .execute(client)
+        ).getReceipt(client);
 
         console.log(`Sent message ${i}`);
 

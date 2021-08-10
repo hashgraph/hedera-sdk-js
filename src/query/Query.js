@@ -176,7 +176,7 @@ export default class Query extends Executable {
      * @param {Client} client
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
-    _validateIdNetworks(client) {
+    _validateChecksums(client) {
         // Do nothing
     }
 
@@ -190,7 +190,9 @@ export default class Query extends Executable {
             return;
         }
 
-        this._validateIdNetworks(client);
+        if (client.isAutoValidateChecksumsEnabled()) {
+            this._validateChecksums(client);
+        }
 
         if (this._nodeIds.length == 0) {
             this._nodeIds = client._network.getNodeAccountIdsForExecute();
@@ -247,7 +249,7 @@ export default class Query extends Executable {
                         this._paymentTransactionId
                     ),
                     node,
-                    operator,
+                    this._isPaymentRequired() ? operator : null,
                     /** @type {Hbar} */ (cost)
                 )
             );
@@ -356,11 +358,10 @@ export default class Query extends Executable {
      * @internal
      * @param {proto.IQuery} request
      * @param {proto.IResponse} response
-     * @param {string | null} ledgerId
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _mapStatusError(request, response, ledgerId) {
+    _mapStatusError(request, response) {
         const { nodeTransactionPrecheckCode } =
             this._mapResponseHeader(response);
 

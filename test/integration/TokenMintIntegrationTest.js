@@ -4,6 +4,7 @@ import {
     Transaction,
     Hbar,
     Status,
+    TokenSupplyType,
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
@@ -71,16 +72,13 @@ describe("TokenMint", function () {
             .setNodeAccountIds([response.nodeId])
             .setAmount(10)
             .setTokenId(token)
-            .freezeWith(env.client)
+            .freezeWith(env.client);
 
-        let mintBytes = mint.toBytes()
+        let mintBytes = mint.toBytes();
 
-        let mintFromBytes = Transaction.fromBytes(mintBytes)
+        let mintFromBytes = Transaction.fromBytes(mintBytes);
 
-        await (
-            await mintFromBytes
-                .execute(env.client)
-        ).getReceipt(env.client);
+        await (await mintFromBytes.execute(env.client)).getReceipt(env.client);
     });
 
     it("should error when token ID is not set", async function () {
@@ -142,6 +140,52 @@ describe("TokenMint", function () {
             ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenMintAmount);
+        }
+
+        if (!err) {
+            throw new Error("token mint did not error");
+        }
+    });
+
+    it("User cannot mint more than the tokens defined max supply value", async function () {
+        this.timeout(60000);
+
+        const env = await IntegrationTestEnv.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
+
+        const response = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setDecimals(3)
+            .setInitialSupply(0)
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(operatorKey)
+            .setKycKey(operatorKey)
+            .setFreezeKey(operatorKey)
+            .setWipeKey(operatorKey)
+            .setSupplyKey(operatorKey)
+            .setFreezeDefault(false)
+            .setNodeAccountIds(env.nodeAccountIds)
+            .setMaxTransactionFee(new Hbar(1000))
+            .setMaxSupply(10)
+            .setSupplyType(TokenSupplyType.Finite)
+            .execute(env.client);
+
+        const token = (await response.getReceipt(env.client)).tokenId;
+
+        let err = false;
+
+        try {
+            await (
+                await new TokenMintTransaction()
+                    .setNodeAccountIds([response.nodeId])
+                    .setAmount(11)
+                    .setTokenId(token)
+                    .execute(env.client)
+            ).getReceipt(env.client);
+        } catch (error) {
+            err = error.toString().includes(Status.TokenMaxSupplyReached);
         }
 
         if (!err) {
