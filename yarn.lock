@@ -476,7 +476,7 @@
   dependencies:
     "@types/node" ">=12.12.47"
 
-"@hashgraph/cryptography@^1.0.18":
+"@hashgraph/cryptography@^1.0.19":
   version "1.0.19"
   resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.19.tgz#47ed0d8d41e0176de3021661c9631e06e2106e02"
   integrity sha512-ji0+4IB3wPYbU4mY6J6sg1dQWx5KHsOPcbO7udAZKJVa9TBCjlRx9NeZuvQtZ4McN38XgD2UL4Hjg5C5sDwbTg==
@@ -491,10 +491,10 @@
     js-base64 "^3.6.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@1.1.7":
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.1.7.tgz#b5f1f6219660c9e0d8f57ec26b8eb905fe0e4139"
-  integrity sha512-jxq8BuBcO7v+SjPB4s5Ghsm1TlXUumQG2Dz0w4amQAd62/a4MLQPLA78oa76MJjJcSjxVaz+tKZNfsbQPRBdKw==
+"@hashgraph/proto@1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.1.8.tgz#81169222aeb59f1a19e582fc2aa2e5f0c7880761"
+  integrity sha512-SCKw45a7rX99o6szdB2orJzVSRfTMHNNiTb7FPxOGXyEnXilIjng7S33aMxS9Q34xQLU/fDBrkWiSpn1boZybg==
   dependencies:
     protobufjs "^6.11.2"
 
@@ -4918,9 +4918,9 @@ jsprim@^1.2.2:
     verror "1.10.0"
 
 jszip@^3.2.2:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/jszip/-/jszip-3.5.0.tgz#b4fd1f368245346658e781fec9675802489e15f6"
-  integrity sha512-WRtu7TPCmYePR1nazfrtuF216cIVon/3GWOvHS9QR5bIwSbnxtdpma6un3jyGGNhHsKCSzn5Ypk+EkDRvTGiFA==
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/jszip/-/jszip-3.7.1.tgz#bd63401221c15625a1228c556ca8a68da6fda3d9"
+  integrity sha512-ghL0tz1XG9ZEmRMcEN2vt7xabrDdqHHeykgARpmZ0BiIctWxM47Vt63ZO2dnp4QYt/xJVLLy5Zv1l/xRdh2byg==
   dependencies:
     lie "~3.3.0"
     pako "~1.0.2"
