@@ -33,7 +33,7 @@ const derPrefixBytes = hex.decode(derPrefix);
 
 /**
  * @typedef {object} Transaction
- * @property {() => boolean} _isFrozen
+ * @property {() => boolean} isFrozen
  * @property {ProtoSignedTransaction[]} _signedTransactions
  * @property {Set<string>} _signerPublicKeys
  * @property {(publicKey: PublicKey, signature: Uint8Array) => Transaction} addSignature
@@ -264,7 +264,7 @@ export default class PrivateKey extends Key {
     signTransaction(transaction) {
         transaction._requireFrozen();
 
-        if (!transaction._isFrozen()) {
+        if (!transaction.isFrozen()) {
             transaction.freeze();
         }
 

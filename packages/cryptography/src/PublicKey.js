@@ -86,7 +86,7 @@ export default class PublicKey extends Key {
     verifyTransaction(transaction) {
         transaction._requireFrozen();
 
-        if (!transaction._isFrozen()) {
+        if (!transaction.isFrozen()) {
             transaction.freeze();
         }
 
