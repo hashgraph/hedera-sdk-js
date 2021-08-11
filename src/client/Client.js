@@ -95,6 +95,9 @@ export default class Client {
         this._signOnDemand = false;
 
         this._autoValidateChecksums = false;
+
+        /** @type {number | null} */
+        this._maxAttempts = null;
     }
 
     /**
@@ -253,16 +256,90 @@ export default class Client {
     }
 
     /**
+     * @returns {number}
+     */
+    get maxAttempts() {
+        return this._maxAttempts != null ? this._maxAttempts : 10;
+    }
+
+    /**
+     * @param {number} maxAttempts
+     * @returns {this}
+     */
+    setMaxAttempts(maxAttempts) {
+        this._maxAttempts = maxAttempts;
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get maxNodeAttempts() {
+        return this._network.maxNodeAttempts;
+    }
+
+    /**
+     * @param {number} maxNodeAttempts
+     * @returns {this}
+     */
+    setMaxNodeAttempts(maxNodeAttempts) {
+        this._network.setMaxNodeAttempts(maxNodeAttempts);
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get nodeWaitTime() {
+        return this._network.nodeWaitTime;
+    }
+
+    /**
+     * @param {number} nodeWaitTime
+     * @returns {this}
+     */
+    setNodeWaitTime(nodeWaitTime) {
+        this._network.setNodeWaitTime(nodeWaitTime);
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get maxNodesPerTransaction() {
+        return this._network.maxNodesPerTransaction;
+    }
+
+    /**
+     * @param {number} maxNodesPerTransaction
+     * @returns {this}
+     */
+    setMaxNodesPerTransaction(maxNodesPerTransaction) {
+        this._network.setMaxNodesPerTransaction(maxNodesPerTransaction);
+        return this;
+    }
+
+    /**
      * @param {AccountId | string} accountId
      */
     async ping(accountId) {
-        await new AccountBalanceQuery({ accountId })
-            .setNodeAccountIds([
-                accountId instanceof AccountId
-                    ? accountId
-                    : AccountId.fromString(accountId),
-            ])
-            .execute(this);
+        try {
+            await new AccountBalanceQuery({ accountId })
+                .setNodeAccountIds([
+                    accountId instanceof AccountId
+                        ? accountId
+                        : AccountId.fromString(accountId),
+                ])
+                .execute(this);
+        } catch (_) {
+            // Do nothing
+        }
+    }
+
+    async pingAll() {
+        for (const nodeAccountId of Object.values(this._network.network)) {
+            await this.ping(nodeAccountId);
+        }
     }
 
     /**
