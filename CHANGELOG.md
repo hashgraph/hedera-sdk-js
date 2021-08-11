@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * `*[Transaction|Query].[set|get]MaxRetries()` - Use `*[Transaction|Query].[set|get]MaxAttempts()` instead
 
+### Fixed
+
+ * `PrivateKey.signTransaction()` and `PublicKey.verifyTransaction()` should correctly freeze an unfrozen transaction
+
 ## v2.0.27
 
 ### Added

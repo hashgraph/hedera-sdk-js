@@ -156,9 +156,10 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async fromMnemonic(mnemonic, passphrase = "") {
-        return (typeof mnemonic === "string"
-            ? await Mnemonic.fromString(mnemonic)
-            : mnemonic
+        return (
+            typeof mnemonic === "string"
+                ? await Mnemonic.fromString(mnemonic)
+                : mnemonic
         ).toPrivateKey(passphrase);
     }
 
@@ -274,8 +275,9 @@ export default class PrivateKey extends Key {
             );
         }
 
-        const tx = /** @type {ProtoSignedTransaction} */ (transaction
-            ._signedTransactions[0]);
+        const tx = /** @type {ProtoSignedTransaction} */ (
+            transaction._signedTransactions[0]
+        );
 
         const publicKeyHex = hex.encode(this.publicKey.toBytes());
 
