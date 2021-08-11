@@ -45,6 +45,14 @@ export default class Network {
 
         /** @type {string | null} */
         this._ledgerId = null;
+
+        /** @type {number} */
+        this._nodeWaitTime = 250;
+
+        /** @type {number} */
+        this._maxNodeAttempts = -1;
+
+        this._maxNodesPerTransaction = -1;
     }
 
     /**
@@ -91,7 +99,12 @@ export default class Network {
             // eslint-disable-next-line ie11/no-loop-func,@typescript-eslint/no-unused-vars
             const index = thisNetwork_.findIndex(([url_, _]) => url_ === url);
             if (index < 0) {
-                const node = new Node(key, url, this.createNetworkChannel);
+                const node = new Node(
+                    key,
+                    url,
+                    this._nodeWaitTime,
+                    this.createNetworkChannel
+                );
                 this.networkNodes.set(key.toString(), node);
 
                 this.nodes.push(node);
@@ -104,15 +117,66 @@ export default class Network {
     }
 
     /**
+     * @returns {number}
+     */
+    get maxNodesPerTransaction() {
+        return this._maxNodesPerTransaction;
+    }
+
+    /**
+     * @param {number} maxNodesPerTransaction
+     * @returns {this}
+     */
+    setMaxNodesPerTransaction(maxNodesPerTransaction) {
+        this._maxNodesPerTransaction = maxNodesPerTransaction;
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get maxNodeAttempts() {
+        return this._maxNodeAttempts;
+    }
+
+    /**
+     * @param {number} maxNodeAttempts
+     * @returns {this}
+     */
+    setMaxNodeAttempts(maxNodeAttempts) {
+        this._maxNodeAttempts = maxNodeAttempts;
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get nodeWaitTime() {
+        return this._nodeWaitTime;
+    }
+
+    /**
+     * @param {number} nodeWaitTime
+     * @returns {this}
+     */
+    setNodeWaitTime(nodeWaitTime) {
+        this._nodeWaitTime = nodeWaitTime;
+        for (const node of this.nodes) {
+            node.setWaitTime(nodeWaitTime);
+        }
+        return this;
+    }
+
+    /**
      * @internal
      * @returns {number}
      */
     getNumberOfNodesForTransaction() {
-        const count = this.nodes
-            .map((node) => /** @type {number} */ (node.isHealthy() ? 1 : 0))
-            .reduce((sum, value) => (sum += value));
+        if (this._maxNodesPerTransaction > 0) {
+            return this._maxNodesPerTransaction;
+        }
 
-        return (count + 3 - 1) / 3;
+        return (this.nodes.length + 3 - 1) / 3;
     }
 
     /**
@@ -120,6 +184,23 @@ export default class Network {
      * @returns {AccountId[]}
      */
     getNodeAccountIdsForExecute() {
+        if (this._maxNodeAttempts > 0) {
+            for (let i = 0; i < this.nodes.length; i++) {
+                const node = this.nodes[i];
+
+                if (node.attempts < this._maxNodeAttempts) {
+                    continue;
+                }
+
+                node.close();
+                delete this.network[node.address];
+                this.networkNodes.delete(node.accountId.toString());
+
+                this.nodes.splice(i, 1);
+                i--;
+            }
+        }
+
         this.nodes.sort((a, b) => a.compare(b));
 
         return this.nodes

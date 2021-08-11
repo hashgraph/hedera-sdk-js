@@ -213,4 +213,12 @@ describe("ClientIntegration", function () {
 
         expect(bytes.length).to.be.gt(0);
     });
+
+    it("can pingAll", async function () {
+        this.timeout(60000);
+
+        const env = await IntegrationTestEnv.new();
+
+        await env.client.pingAll();
+    });
 });

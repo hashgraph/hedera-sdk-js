@@ -33,7 +33,7 @@ export default class Executable {
          * @private
          * @type {number}
          */
-        this._maxRetries = 10;
+        this._maxAttempts = 10;
 
         /**
          * The index of the next transaction to be executed.
@@ -71,10 +71,12 @@ export default class Executable {
     }
 
     /**
+     * @deprecated
      * @returns {number}
      */
     get maxRetries() {
-        return this._maxRetries;
+        console.warn("Deprecated: use maxAttempts instead");
+        return this.maxAttempts;
     }
 
     /**
@@ -82,7 +84,23 @@ export default class Executable {
      * @returns {this}
      */
     setMaxRetries(maxRetries) {
-        this._maxRetries = maxRetries;
+        console.warn("Deprecated: use setMaxAttempts() instead");
+        return this.setMaxAttempts(maxRetries);
+    }
+
+    /**
+     * @returns {number}
+     */
+    get maxAttempts() {
+        return this._maxAttempts;
+    }
+
+    /**
+     * @param {number} maxAttempts
+     * @returns {this}
+     */
+    setMaxAttempts(maxAttempts) {
+        this._maxAttempts = maxAttempts;
 
         return this;
     }
@@ -209,6 +227,11 @@ export default class Executable {
     async execute(client) {
         await this._beforeExecute(client);
 
+        const maxAttempts =
+            client._maxAttempts != null
+                ? client._maxAttempts
+                : this._maxAttempts;
+
         for (let attempt = 1 /* loop forever */; ; attempt += 1) {
             const nodeAccountId = this._getNodeAccountId();
             const node = client._network.networkNodes.get(
@@ -245,7 +268,7 @@ export default class Executable {
                 if (
                     error instanceof GrpcServiceError &&
                     this._shouldRetryExceptionally(error) &&
-                    attempt <= this._maxRetries
+                    attempt <= maxAttempts
                 ) {
                     node.increaseDelay();
                     continue;
