@@ -6,7 +6,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## Added
+### Added
+
+ * `Client.pingAll()` - pings all network nodes
+ * `Client.[set|get]NodeWaitTime()` - minimum delay for nodes that are nto responding
+ * `Client.[set|get]MaxAttempts()` - max number of attempts for each request
+ * `Client.[set|get]MaxNodesPerTransaction()` - number of node account IDs to use per request
+ * `CustomFixedFee.[set|get]HbarAmount()` - helper method to set both `denominatingTokenId` and `amount` when fee is an `Hbar` amount
+ * `CustomFixedFee.setDenominatingTokenToSameToken()` - helper method to set `denominatingTokenId` to `0.0.0` which is not obvious
+
+### Changed
+
+ * `Client.ping()` will no longer throw an error
+
+### Deprecated
+
+ * `*[Transaction|Query].[set|get]MaxRetries()` - Use `*[Transaction|Query].[set|get]MaxAttempts()` instead
+
+## v2.0.27
+
+### Added
 
  * Updated `Status` with new response codes
  * Support for `Hbar.[from|to]String()` to be reversible
@@ -27,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.0.26
 
-## Changed
+### Changed
 
  * Updated `Status` and `FeeDataType` with new codes
 

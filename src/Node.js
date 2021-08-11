@@ -13,15 +13,16 @@ export default class Node extends ManagedNode {
     /**
      * @param {AccountId} accountId
      * @param {string} address
+     * @param {number} waitTime
      * @param {(address: string) => ChannelT} channelInitFunction
      */
-    constructor(accountId, address, channelInitFunction) {
+    constructor(accountId, address, waitTime, channelInitFunction) {
         super(address, channelInitFunction);
 
         this.accountId = accountId;
 
         /** @type {number} */
-        this.delay = 250;
+        this.delay = waitTime;
 
         /** @type {number} */
         this.lastUsed = Date.now();
@@ -31,6 +32,25 @@ export default class Node extends ManagedNode {
 
         /** @type {number} */
         this.useCount = 0;
+
+        /** @type {number} */
+        this.attempts = 0;
+
+        /** @type {number} */
+        this.waitTime = waitTime;
+    }
+
+    /**
+     * @param {number} waitTime
+     * @returns {this}
+     */
+    setWaitTime(waitTime) {
+        if (this.delay <= waitTime) {
+            this.delay = waitTime;
+        }
+
+        this.waitTime = waitTime;
+        return this;
     }
 
     inUse() {
@@ -56,7 +76,7 @@ export default class Node extends ManagedNode {
     }
 
     decreaseDelay() {
-        this.delay = Math.max(this.delay / 2, 250);
+        this.delay = Math.max(this.delay / 2, this.waitTime);
     }
 
     /**
