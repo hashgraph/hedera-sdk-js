@@ -3,6 +3,7 @@ import {
     AccountCreateTransaction,
     Hbar,
     AccountId,
+    AccountDeleteTransaction,
 } from "../../src/exports.js";
 import Client from "../../src/client/NodeClient.js";
 import dotenv from "dotenv";
@@ -96,5 +97,31 @@ export default class IntegrationTestEnv {
      */
     static forMainnet() {
         return Client.forMainnet();
+    }
+
+    /**
+     * Test account deletion
+     * @param {Client} client
+     * @param {PrivateKey} key
+     * @param {NodeId : AccountId[]} nodeAccountIds
+     * @param {AccountId | string} accountId
+     */
+    async close(
+        client = undefined, 
+        key = undefined, 
+        nodeAccountIds = undefined,
+        accountId = undefined,
+        ) {
+        let transaction = new AccountDeleteTransaction()
+        .setAccountId(accountId != undefined ? accountId : this.operatorId)
+        .setNodeAccountIds(nodeAccountIds != undefined ? nodeAccountIds : this.nodeAccountIds)
+        .freezeWith(client != undefined ? client : this.client);
+
+        key != undefined ? key.signTransaction(transaction) : this.operatorKey.signTransaction(transaction);
+
+        client != undefined ? transaction.execute(client) : transaction.execute(this.client);
+
+        console.log(transaction.response);
+        return 
     }
 }
