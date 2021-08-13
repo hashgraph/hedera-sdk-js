@@ -1,5 +1,6 @@
 import AccountId from "../account/AccountId.js";
 import Node from "../Node.js";
+import { _ledgerIdToNetworkName, _ledgerIdToLedgerId } from "../NetworkName.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -53,6 +54,24 @@ export default class Network {
         this._maxNodeAttempts = -1;
 
         this._maxNodesPerTransaction = -1;
+    }
+
+    /**
+     * @param {NetworkName} networkName
+     * @returns {void}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setNetworkName(networkName) {
+        this._ledgerId = _ledgerIdToLedgerId(networkName);
+    }
+
+    /**
+     * @returns {string | null}
+     */
+    get networkName() {
+        return this._ledgerId != null
+            ? _ledgerIdToNetworkName(this._ledgerId)
+            : null;
     }
 
     /**
@@ -114,6 +133,7 @@ export default class Network {
         shuffle(this.nodes);
 
         this.network = network;
+        this._ledgerId = null;
     }
 
     /**

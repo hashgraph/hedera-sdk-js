@@ -5,6 +5,8 @@ import {
     Hbar,
 } from "../../src/exports.js";
 
+export { Client };
+
 export default class IntegrationTestEnv {
     /**
      * @type {Client} client

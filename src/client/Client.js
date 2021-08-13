@@ -101,6 +101,22 @@ export default class Client {
     }
 
     /**
+     * @param {NetworkName} networkName
+     * @returns {void}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setNetworkName(networkName) {
+        this._network.setNetworkName(networkName);
+    }
+
+    /**
+     * @returns {string | null}
+     */
+    get networkName() {
+        return this._network.networkName;
+    }
+
+    /**
      * @param {{[key: string]: (string | AccountId)} | NetworkName} network
      * @returns {void}
      */
