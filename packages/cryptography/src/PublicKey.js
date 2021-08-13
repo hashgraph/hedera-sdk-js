@@ -86,7 +86,7 @@ export default class PublicKey extends Key {
     verifyTransaction(transaction) {
         transaction._requireFrozen();
 
-        if (!transaction._isFrozen()) {
+        if (!transaction.isFrozen()) {
             transaction.freeze();
         }
 
@@ -97,11 +97,17 @@ export default class PublicKey extends Key {
             ) {
                 let found = false;
                 for (const sigPair of signedTransaction.sigMap.sigPair) {
-                    const pubKeyPrefix = /** @type {Uint8Array} */ (sigPair.pubKeyPrefix);
+                    const pubKeyPrefix = /** @type {Uint8Array} */ (
+                        sigPair.pubKeyPrefix
+                    );
                     if (arrayEqual(pubKeyPrefix, this._keyData)) {
                         found = true;
-                        const bodyBytes = /** @type {Uint8Array} */ (signedTransaction.bodyBytes);
-                        const signature = /** @type {Uint8Array} */ (sigPair.ed25519);
+                        const bodyBytes = /** @type {Uint8Array} */ (
+                            signedTransaction.bodyBytes
+                        );
+                        const signature = /** @type {Uint8Array} */ (
+                            sigPair.ed25519
+                        );
                         if (
                             !nacl.sign.detached.verify(
                                 bodyBytes,
