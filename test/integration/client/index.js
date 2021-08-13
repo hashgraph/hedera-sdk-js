@@ -7,6 +7,8 @@ import {
 import Client from "../../src/client/NodeClient.js";
 import dotenv from "dotenv";
 
+export { Client };
+
 // load .env (if available)
 dotenv.config();
 

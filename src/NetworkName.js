@@ -45,9 +45,9 @@ export function _ledgerIdToNetworkName(ledgerId) {
         case "0":
             return NetworkName.Mainnet;
         case "1":
-            return NetworkName.Mainnet;
+            return NetworkName.Testnet;
         case "2":
-            return NetworkName.Mainnet;
+            return NetworkName.Previewnet;
         default:
             throw new Error(`unrecognized ledgerId, expected "0", "1", or "2"`);
     }
