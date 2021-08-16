@@ -33,7 +33,7 @@ const derPrefixBytes = hex.decode(derPrefix);
 
 /**
  * @typedef {object} Transaction
- * @property {() => boolean} _isFrozen
+ * @property {() => boolean} isFrozen
  * @property {ProtoSignedTransaction[]} _signedTransactions
  * @property {Set<string>} _signerPublicKeys
  * @property {(publicKey: PublicKey, signature: Uint8Array) => Transaction} addSignature
@@ -156,9 +156,10 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async fromMnemonic(mnemonic, passphrase = "") {
-        return (typeof mnemonic === "string"
-            ? await Mnemonic.fromString(mnemonic)
-            : mnemonic
+        return (
+            typeof mnemonic === "string"
+                ? await Mnemonic.fromString(mnemonic)
+                : mnemonic
         ).toPrivateKey(passphrase);
     }
 
@@ -264,7 +265,7 @@ export default class PrivateKey extends Key {
     signTransaction(transaction) {
         transaction._requireFrozen();
 
-        if (!transaction._isFrozen()) {
+        if (!transaction.isFrozen()) {
             transaction.freeze();
         }
 
@@ -274,8 +275,9 @@ export default class PrivateKey extends Key {
             );
         }
 
-        const tx = /** @type {ProtoSignedTransaction} */ (transaction
-            ._signedTransactions[0]);
+        const tx = /** @type {ProtoSignedTransaction} */ (
+            transaction._signedTransactions[0]
+        );
 
         const publicKeyHex = hex.encode(this.publicKey.toBytes());
 

@@ -49,8 +49,7 @@ describe("primitive/pkcs", function () {
                                                         seq: [
                                                             // HMAC-SHA-256
                                                             {
-                                                                ident:
-                                                                    "1.2.840.113549.2.9",
+                                                                ident: "1.2.840.113549.2.9",
                                                             },
                                                             // no parameters
                                                             {},

@@ -1,4 +1,4 @@
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv, { Client } from "./client/index.js";
 import {
     AccountBalanceQuery,
     AccountId,
@@ -8,6 +8,7 @@ import {
     AccountCreateTransaction,
     AccountDeleteTransaction,
     TransactionId,
+    NetworkName,
 } from "../src/exports.js";
 
 describe("ClientIntegration", function () {
@@ -220,5 +221,23 @@ describe("ClientIntegration", function () {
         const env = await IntegrationTestEnv.new();
 
         await env.client.pingAll();
+    });
+
+    it("can set network name on custom network", async function () {
+        const testnetClient = Client.forTestnet();
+        const previewnetClient = Client.forPreviewnet();
+
+        expect(testnetClient.networkName).to.be.equal(NetworkName.Testnet);
+        expect(previewnetClient.networkName).to.be.equal(
+            NetworkName.Previewnet
+        );
+
+        testnetClient.setNetwork(previewnetClient.network);
+
+        expect(testnetClient.networkName).to.be.null;
+
+        testnetClient.setNetworkName("previewnet");
+
+        expect(testnetClient.networkName).to.be.equal(NetworkName.Previewnet);
     });
 });
