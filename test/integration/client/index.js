@@ -100,7 +100,7 @@ export default class IntegrationTestEnv {
     }
 
     /**
-     * Test account deletion
+     * Test account cleanup
      * @param {Client} client
      * @param {PrivateKey} key
      * @param {NodeId : AccountId[]} nodeAccountIds
@@ -121,7 +121,6 @@ export default class IntegrationTestEnv {
 
         client != undefined ? transaction.execute(client) : transaction.execute(this.client);
 
-        console.log(transaction.response);
-        return 
+        return;
     }
 }
