@@ -82,7 +82,7 @@ Before submitting your pull request, refer to the pull request readiness checkli
 * [ ] Git commit message is detailed and includes context behind the change
 * [ ] If the change is related to an existing Bug Report or Feature Request, please include its issue number
 
-To contribute, please fork the GitHub repository and submit a pull request to the `master` branch.
+To contribute, please fork the GitHub repository and submit a pull request to the `main` branch.
 
 ### Getting Your Pull Request Merged
 
@@ -92,7 +92,7 @@ All Pull Requests must be approved by at least one member of the SDK team before
 
 * Join us in our [Discord][discord] channel; there you can engage with the Hedera team and other developers and enthusiasts.
 
-[license]: https://github.com/hashgraph/hedera-sdk-js/blob/master/LICENSE
+[license]: https://github.com/hashgraph/hedera-sdk-js/blob/main/LICENSE
 [mwe]: https://en.wikipedia.org/wiki/Minimal_Working_Example
 [markdown]: https://guides.github.com/features/mastering-markdown/
 [issues]: https://github.com/hashgraph/hedera-sdk-js/issues

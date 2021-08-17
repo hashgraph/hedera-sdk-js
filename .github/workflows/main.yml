@@ -1,4 +1,4 @@
-name: CI against Hedera Services master branch
+name: CI against Hedera Services main branch
 
 on:
   schedule:
