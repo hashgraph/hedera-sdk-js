@@ -4,7 +4,7 @@
     "type": "commonjs",
     "dependencies": {
         "@hashgraph/sdk": "link:..",
-        "dotenv": "^8.2.0"
+        "dotenv": "^10.0.0"
     },
     "devDependencies": {
         "babel-eslint": "^10.1.0"
