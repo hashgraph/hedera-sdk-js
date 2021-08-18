@@ -4,6 +4,7 @@ import {
     Hbar,
     AccountId,
     AccountDeleteTransaction,
+    TransactionId
 } from "../../src/exports.js";
 import Client from "../../src/client/NodeClient.js";
 import dotenv from "dotenv";
@@ -112,15 +113,20 @@ export default class IntegrationTestEnv {
         nodeAccountIds = undefined,
         accountId = undefined,
         ) {
-        let transaction = new AccountDeleteTransaction()
-        .setAccountId(accountId != undefined ? accountId : this.operatorId)
-        .setNodeAccountIds(nodeAccountIds != undefined ? nodeAccountIds : this.nodeAccountIds)
-        .freezeWith(client != undefined ? client : this.client);
+            let closeClient = client != undefined ? client : this.client;
+            let closeAccountId = accountId != undefined ? accountId : this.operatorId;
+            let closeKey = key != undefined ? key : this.operatorKey;
+            let closeNodeAccountIds = nodeAccountIds != undefined ? nodeAccountIds : this.nodeAccountIds;
 
-        key != undefined ? key.signTransaction(transaction) : this.operatorKey.signTransaction(transaction);
-
-        client != undefined ? transaction.execute(client) : transaction.execute(this.client);
-
-        return;
+            return await ( 
+                await ( 
+                    await new AccountDeleteTransaction()
+                    .setAccountId(closeAccountId)
+                    .setNodeAccountIds(closeNodeAccountIds)
+                    .setTransactionId(TransactionId.generate(closeAccountId))
+                    .freezeWith(closeClient)
+                    .sign(closeKey)
+                ).execute(closeClient)
+            ).getReceipt(closeClient);
     }
 }

@@ -88,16 +88,18 @@ describe("AccountBalanceQuery", function () {
 
         expect(balances.tokens.get(token).toInt()).to.be.equal(0);
 
-        await (
-            await (
-                await new AccountDeleteTransaction()
-                    .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
-                    .setTransferAccountId(operatorId)
-                    .setTransactionId(TransactionId.generate(account))
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+        env.close(env.client, key, env.nodeAccountIds, env.operatorId);
+
+        // await (
+        //     await (
+        //         await new AccountDeleteTransaction()
+        //             .setAccountId(account)
+        //             .setNodeAccountIds([response.nodeId])
+        //             .setTransferAccountId(operatorId)
+        //             .setTransactionId(TransactionId.generate(account))
+        //             .freezeWith(env.client)
+        //             .sign(key)
+        //     ).execute(env.client)
+        // ).getReceipt(env.client);
     });
 });
