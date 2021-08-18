@@ -88,6 +88,7 @@ export const FractionalFee = proto.FractionalFee;
 export const FixedFee = proto.FixedFee;
 export const CustomFee = proto.CustomFee;
 export const AssessedCustomFee = proto.AssessedCustomFee;
+export const RoyaltyFee = proto.RoyaltyFee;
 export const TokenFreezeAccountTransactionBody = proto.TokenFreezeAccountTransactionBody;
 export const TokenUnfreezeAccountTransactionBody = proto.TokenUnfreezeAccountTransactionBody;
 export const TokenGrantKycTransactionBody = proto.TokenGrantKycTransactionBody;
