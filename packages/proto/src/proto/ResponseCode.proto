@@ -251,7 +251,7 @@ enum ResponseCodeEnum {
   CUSTOM_FEE_MUST_BE_POSITIVE = 239; // Only positive fees may be assessed at this time
   TOKEN_HAS_NO_FEE_SCHEDULE_KEY = 240; // Fee schedule key is not set on token
   CUSTOM_FEE_OUTSIDE_NUMERIC_RANGE = 241; // A fractional custom fee exceeded the range of a 64-bit signed integer
-  INVALID_CUSTOM_FRACTIONAL_FEES_SUM = 242; // The sum of all custom fractional fees must be strictly less than 1
+  ROYALTY_FRACTION_CANNOT_EXCEED_ONE = 242; // A royalty cannot exceed the total fungible value exchanged for an NFT
   FRACTIONAL_FEE_MAX_AMOUNT_LESS_THAN_MIN_AMOUNT = 243; // Each fractional custom fee must have its maximum_amount, if specified, at least its minimum_amount
   CUSTOM_SCHEDULE_ALREADY_HAS_NO_FEES = 244; // A fee schedule update tried to clear the custom fees from a token whose fee schedule was already empty
   CUSTOM_FEE_DENOMINATION_MUST_BE_FUNGIBLE_COMMON = 245; // Only tokens of type FUNGIBLE_COMMON can be used to as fee schedule denominations
@@ -269,5 +269,6 @@ enum ResponseCodeEnum {
   CUSTOM_FEE_CHARGING_EXCEEDED_MAX_RECURSION_DEPTH = 257; // The reference chain of custom fees for a transferred token exceeded the maximum length of 2
   CUSTOM_FEE_CHARGING_EXCEEDED_MAX_ACCOUNT_AMOUNTS = 258; // More than 20 balance adjustments were to satisfy a CryptoTransfer and its implied custom fee payments
   INSUFFICIENT_SENDER_ACCOUNT_BALANCE_FOR_CUSTOM_FEE = 259; // The sender account in the token transfer transaction could not afford a custom fee
-
+  SERIAL_NUMBER_LIMIT_REACHED = 260; // Currently no more than 4,294,967,295 NFTs may be minted for a given unique token type
+  CUSTOM_ROYALTY_FEE_ONLY_ALLOWED_FOR_NON_FUNGIBLE_UNIQUE = 261; // Only tokens of type NON_FUNGIBLE_UNIQUE can have royalty fees
 }

@@ -34,6 +34,7 @@ message FractionalFee {
   Fraction fractional_amount = 1; // The fraction of the transferred units to assess as a fee
   int64 minimum_amount = 2; // The minimum amount to assess
   int64 maximum_amount = 3; // The maximum amount to assess (zero implies no maximum)
+  bool net_of_transfers = 4; // If true, assesses the fee to the sender, so the receiver gets the full amount from the token transfer list, and the sender is charged an additional fee; if false, the receiver does NOT get the full amount, but only what is left over after paying the fractional fee
 }
 
 /* A fixed number of units (hbar or token) to assess as a fee during a CryptoTransfer 
@@ -43,6 +44,17 @@ message FixedFee {
   TokenID denominating_token_id = 2; // The denomination of the fee; taken as hbar if left unset and, in a TokenCreate, taken as the id of the newly created token if set to the sentinel value of 0.0.0
 }
 
+/* A fee to assess during a CryptoTransfer that changes ownership of an NFT. Defines
+the fraction of the fungible value exchanged for an NFT that the ledger should collect
+as a royalty. ("Fungible value" includes both ℏ and units of fungible HTS tokens.) When
+the NFT sender does not receive any fungible value, the ledger will assess the fallback
+fee, if present, to the new NFT owner. Royalty fees can only be added to tokens of type
+type NON_FUNGIBLE_UNIQUE. */
+message RoyaltyFee {
+  Fraction exchange_value_fraction = 1; // The fraction of fungible value exchanged for an NFT to collect as royalty
+  FixedFee fallback_fee = 2; // If present, the fixed fee to assess to the NFT receiver when no fungible value is exchanged with the sender
+}
+
 /* A transfer fee to assess during a CryptoTransfer that transfers units of the token 
 to which the fee is attached. A custom fee may be either fixed or fractional, and must specify
 a fee collector account to receive the assessed fees. Only positive fees may be assessed. */
@@ -50,6 +62,7 @@ message CustomFee {
   oneof fee {
     FixedFee fixed_fee = 1; // Fixed fee to be charged
     FractionalFee fractional_fee = 2; // Fractional fee to be charged
+    RoyaltyFee royalty_fee = 4; // Royalty fee to be charged
   }
   AccountID fee_collector_account_id = 3; // The account to receive the custom fee
 }
@@ -59,4 +72,5 @@ message AssessedCustomFee {
   int64 amount = 1; // The number of units assessed for the fee
   TokenID token_id = 2; // The denomination of the fee; taken as hbar if left unset
   AccountID fee_collector_account_id = 3; // The account to receive the assessed fee
+  repeated AccountID effective_payer_account_id = 4; // The account(s) whose final balances would have been higher in the absence of this assessed fee
 }
