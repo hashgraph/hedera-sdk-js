@@ -57,6 +57,7 @@ export { default as Timestamp } from "./Timestamp.js";
 export { default as AssessedCustomFee } from "./token/AssessedCustomFee.js";
 export { default as CustomFee } from "./token/CustomFee.js";
 export { default as CustomFixedFee } from "./token/CustomFixedFee.js";
+export { default as CustomRoyaltyFee } from "./token/CustomRoyaltyFee.js";
 export { default as CustomFractionalFee } from "./token/CustomFractionalFee.js";
 export { default as NftId } from "./token/NftId.js";
 export { default as TokenAssociateTransaction } from "./token/TokenAssociateTransaction.js";

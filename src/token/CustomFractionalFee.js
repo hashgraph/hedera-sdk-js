@@ -3,6 +3,10 @@ import AccountId from "../account/AccountId.js";
 import Long from "long";
 
 /**
+ * @typedef {import("./FeeAssessmentMethod.js").default} FeeAssessmentMethod
+ */
+
+/**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ICustomFee} proto.ICustomFee
  * @typedef {import("@hashgraph/proto").IFractionalFee} proto.IFractionalFee
@@ -17,6 +21,7 @@ export default class CustomFractionalFee extends CustomFee {
      * @param {Long | number} [props.denominator]
      * @param {Long | number} [props.min]
      * @param {Long | number} [props.max]
+     * @param {FeeAssessmentMethod} [props.assessmentMethod]
      */
     constructor(props = {}) {
         super(props);
@@ -55,6 +60,15 @@ export default class CustomFractionalFee extends CustomFee {
 
         if (props.max != null) {
             this.setMax(props.max);
+        }
+
+        /**
+         * @type {?FeeAssessmentMethod}
+         */
+        this._assessmentMethod;
+
+        if (props.assessmentMethod != null) {
+            this.setAssessmentMethod(props.assessmentMethod);
         }
     }
 
@@ -125,6 +139,22 @@ export default class CustomFractionalFee extends CustomFee {
      */
     setMax(max) {
         this._max = typeof max === "number" ? Long.fromNumber(max) : max;
+        return this;
+    }
+
+    /**
+     * @returns {?FeeAssessmentMethod}
+     */
+    get assessmentMethod() {
+        return this._assessmentMethod;
+    }
+
+    /**
+     * @param {FeeAssessmentMethod} assessmentMethod
+     * @returns {CustomFractionalFee}
+     */
+    setAssessmentMethod(assessmentMethod) {
+        this._assessmentMethod = assessmentMethod;
         return this;
     }
 

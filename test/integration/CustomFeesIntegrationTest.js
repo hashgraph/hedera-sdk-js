@@ -9,6 +9,8 @@ import {
     AccountId,
     Status,
     PrivateKey,
+    CustomRoyaltyFee,
+    TokenType,
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
@@ -679,6 +681,88 @@ describe("CustomFees", function () {
             ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenIdInCustomFees);
+        }
+
+        if (!err) {
+            throw new Error("token creation did not error");
+        }
+    });
+
+    it("User can create NFT with RoyaltyFees", async function () {
+        this.timeout(60000);
+
+        const env = await IntegrationTestEnv.new();
+
+        const fee = new CustomRoyaltyFee()
+            .setFeeCollectorAccountId(env.operatorId)
+            .setNumerator(1)
+            .setDenominator(10)
+            .setFallbackFee(
+                new CustomFixedFee()
+                    .setFeeCollectorAccountId(env.operatorId)
+                    .setAmount(1)
+            );
+
+        await (
+            await new TokenCreateTransaction()
+                .setNodeAccountIds(env.nodeAccountIds)
+                .setTokenName("ffff")
+                .setTokenSymbol("F")
+                .setTreasuryAccountId(env.operatorId)
+                .setAdminKey(env.operatorKey)
+                .setKycKey(env.operatorKey)
+                .setFreezeKey(env.operatorKey)
+                .setWipeKey(env.operatorKey)
+                .setSupplyKey(env.operatorKey)
+                .setFeeScheduleKey(env.operatorKey)
+                .setCustomFees([fee])
+                .setTokenType(TokenType.NonFungibleUnique)
+                .setFreezeDefault(false)
+                .execute(env.client)
+        ).getReceipt(env.client);
+    });
+
+    it("User cannot add RoyaltyFees on FTs", async function () {
+        this.timeout(60000);
+
+        const env = await IntegrationTestEnv.new();
+
+        const fee = new CustomRoyaltyFee()
+            .setFeeCollectorAccountId(env.operatorId)
+            .setNumerator(1)
+            .setDenominator(10)
+            .setFallbackFee(
+                new CustomFixedFee()
+                    .setFeeCollectorAccountId(env.operatorId)
+                    .setAmount(1)
+            );
+
+        let err = false;
+
+        try {
+            await (
+                await new TokenCreateTransaction()
+                    .setNodeAccountIds(env.nodeAccountIds)
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setTreasuryAccountId(env.operatorId)
+                    .setAdminKey(env.operatorKey)
+                    .setKycKey(env.operatorKey)
+                    .setFreezeKey(env.operatorKey)
+                    .setWipeKey(env.operatorKey)
+                    .setSupplyKey(env.operatorKey)
+                    .setFeeScheduleKey(env.operatorKey)
+                    .setCustomFees([fee])
+                    .setTokenType(TokenType.FungibleCommon)
+                    .setFreezeDefault(false)
+                    .execute(env.client)
+            ).getReceipt(env.client);
+        } catch (error) {
+            err = error
+                .toString()
+                .includes(
+                    Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique
+                );
         }
 
         if (!err) {
