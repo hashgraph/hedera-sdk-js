@@ -5,12 +5,12 @@ import {
     AccountId,
 } from "../../src/exports.js";
 import Client from "../../src/client/NodeClient.js";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 
 export { Client };
 
 // load .env (if available)
-dotenv.config();
+// dotenv.config();
 
 export default class IntegrationTestEnv {
     /**
@@ -53,11 +53,7 @@ export default class IntegrationTestEnv {
                 "127.0.0.1:50215": "0.0.5",
             });
         } else {
-            try {
-                client = await Client.fromConfigFile(process.env.CONFIG_FILE);
-            } catch (err) {
-                client = Client.forTestnet();
-            }
+            client = await Client.fromConfigFile(process.env.CONFIG_FILE);
         }
 
         try {

@@ -4,6 +4,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import CustomFixedFee from "./CustomFixedFee.js";
 import CustomFractionalFee from "./CustomFractionalFee.js";
+import CustomRoyaltyFee from "./CustomRoyaltyFee.js";
 
 /**
  * @namespace proto
@@ -91,8 +92,10 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
                         ? feeScheduleUpdate.customFees.map((fee) => {
                               if (fee.fixedFee != null) {
                                   return CustomFixedFee._fromProtobuf(fee);
-                              } else {
+                              } else if (fee.fractionalFee != null) {
                                   return CustomFractionalFee._fromProtobuf(fee);
+                              } else {
+                                  return CustomRoyaltyFee._fromProtobuf(fee);
                               }
                           })
                         : undefined,

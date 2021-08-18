@@ -457,6 +457,10 @@ export default class Status {
                 return "CUSTOM_FEE_CHARGING_EXCEEDED_MAX_ACCOUNT_AMOUNTS";
             case Status.InsufficientSenderAccountBalanceForCustomFee:
                 return "INSUFFICIENT_SENDER_ACCOUNT_BALANCE_FOR_CUSTOM_FEE";
+            case Status.SerialNumberLimitReached:
+                return "SERIAL_NUMBER_LIMIT_REACHED";
+            case Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique:
+                return "CUSTOM_ROYALTY_FEE_ONLY_ALLOWED_FOR_NON_FUNGIBLE_UNIQUE";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -905,6 +909,10 @@ export default class Status {
                 return Status.CustomFeeChargingExceededMaxAccountAmounts;
             case 259:
                 return Status.InsufficientSenderAccountBalanceForCustomFee;
+            case 260:
+                return Status.SerialNumberLimitReached;
+            case 261:
+                return Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique;
         }
 
         throw new Error(
@@ -1921,7 +1929,7 @@ Status.TokenHasNoFeeScheduleKey = new Status(240);
 Status.CustomFeeOutsideNumericRange = new Status(241);
 
 /**
- * The sum of all custom fractional fees must be strictly less than 1
+ * A royalty cannot exceed the total fungible value exchanged for an NFT
  */
 Status.InvalidCustomFractionalFeesSum = new Status(242);
 
@@ -2009,3 +2017,13 @@ Status.CustomFeeChargingExceededMaxAccountAmounts = new Status(258);
  * The sender account in the token transfer transaction could not afford a custom fee
  */
 Status.InsufficientSenderAccountBalanceForCustomFee = new Status(259);
+
+/**
+ * Currently no more than 4,294,967,295 NFTs may be minted for a given unique token type
+ */
+Status.SerialNumberLimitReached = new Status(260);
+
+/**
+ * Only tokens of type NON_FUNGIBLE_UNIQUE can have royalty fees
+ */
+Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique = new Status(261);

@@ -13,6 +13,7 @@ export default class AssessedCustomFee {
      * @param {AccountId | string} [props.feeCollectorAccountId]
      * @param {TokenId | string} [props.tokenId]
      * @param {Long | number} [props.amount]
+     * @param {AccountId[]} [props.payerAccountIds]
      */
     constructor(props = {}) {
         /**
@@ -40,6 +41,15 @@ export default class AssessedCustomFee {
 
         if (props.amount != null) {
             this.setAmount(props.amount);
+        }
+
+        /**
+         * @type {?AccountId[]}
+         */
+        this._payerAccountIds;
+
+        if (props.payerAccountIds != null) {
+            this.setPayerAccountIds(props.payerAccountIds);
         }
     }
 
@@ -97,6 +107,22 @@ export default class AssessedCustomFee {
     }
 
     /**
+     * @returns {?AccountId[]}
+     */
+    get payerAccountIds() {
+        return this._payerAccountIds;
+    }
+
+    /**
+     * @param {AccountId[]} payerAccountIds
+     * @returns {AssessedCustomFee}
+     */
+    setPayerAccountIds(payerAccountIds) {
+        this._payerAccountIds = payerAccountIds;
+        return this;
+    }
+
+    /**
      * @internal
      * @param {proto.IAssessedCustomFee} fee
      * @returns {AssessedCustomFee}
@@ -112,6 +138,12 @@ export default class AssessedCustomFee {
                     ? TokenId._fromProtobuf(fee.tokenId)
                     : undefined,
             amount: fee.amount != null ? fee.amount : undefined,
+            payerAccountIds:
+                fee.effectivePayerAccountId != null
+                    ? fee.effectivePayerAccountId.map((id) =>
+                          AccountId._fromProtobuf(id)
+                      )
+                    : undefined,
         });
     }
 
@@ -128,6 +160,10 @@ export default class AssessedCustomFee {
                     : null,
             tokenId: this._tokenId != null ? this._tokenId._toProtobuf() : null,
             amount: this._amount,
+            effectivePayerAccountId:
+                this._payerAccountIds != null
+                    ? this._payerAccountIds.map((id) => id._toProtobuf())
+                    : null,
         };
     }
 }

@@ -1,6 +1,9 @@
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import Timestamp from "../Timestamp.js";
+import FileId from "../file/FileId.js";
+import * as hex from "../encoding/hex.js";
 
 /**
  * @namespace proto
@@ -29,6 +32,9 @@ export default class FreezeTransaction extends Transaction {
      * @param {Object} [props]
      * @param {HourMinute} [props.startTime]
      * @param {HourMinute} [props.endTime]
+     * @param {Timestamp} [props.startTimestamp]
+     * @param {FileId} [props.updateFileId]
+     * @param {Uint8Array | string} [props.fileHash]
      */
     constructor(props = {}) {
         super();
@@ -41,16 +47,48 @@ export default class FreezeTransaction extends Transaction {
 
         /**
          * @private
+         * @type {?Timestamp}
+         */
+        this._startTimestamp = null;
+
+        /**
+         * @private
          * @type {?HourMinute}
          */
         this._endTime = null;
 
+        /**
+         * @private
+         * @type {?FileId}
+         */
+        this._updateFileId = null;
+
+        /**
+         * @private
+         * @type {?Uint8Array}
+         */
+        this._fileHash = null;
+
         if (props.startTime != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setStartTime(props.startTime.hour, props.startTime.minute);
         }
 
         if (props.endTime != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setEndTime(props.endTime.hour, props.endTime.minute);
+        }
+
+        if (props.startTimestamp != null) {
+            this.setStartTimestamp(props.startTimestamp);
+        }
+
+        if (props.updateFileId != null) {
+            this.setUpdateFileId(props.updateFileId);
+        }
+
+        if (props.fileHash != null) {
+            this.setFileHash(props.fileHash);
         }
     }
 
@@ -91,6 +129,15 @@ export default class FreezeTransaction extends Transaction {
                               minute: freeze.endMin,
                           }
                         : undefined,
+                startTimestamp:
+                    freeze.startTime != null
+                        ? Timestamp._fromProtobuf(freeze.startTime)
+                        : undefined,
+                updateFileId:
+                    freeze.updateFile != null
+                        ? FileId._fromProtobuf(freeze.updateFile)
+                        : undefined,
+                fileHash: freeze.fileHash != null ? freeze.fileHash : undefined,
             }),
             transactions,
             signedTransactions,
@@ -101,13 +148,15 @@ export default class FreezeTransaction extends Transaction {
     }
 
     /**
+     * @deprecated - Use `startTimestamp` instead
      * @returns {?HourMinute}
      */
     get startTime() {
-        return this._startTime;
+        return null;
     }
 
     /**
+     * @deprecated - Use `startTimestamp` instead
      * @param {number | string} startHourOrString
      * @param {?number} startMinute
      * @returns {FreezeTransaction}
@@ -131,18 +180,40 @@ export default class FreezeTransaction extends Transaction {
     }
 
     /**
+     * @returns {?Timestamp}
+     */
+    get startTimestamp() {
+        return this._startTimestamp;
+    }
+
+    /**
+     * @param {Timestamp} startTimestamp
+     * @returns {FreezeTransaction}
+     */
+    setStartTimestamp(startTimestamp) {
+        this._requireNotFrozen();
+        this._startTimestamp = startTimestamp;
+
+        return this;
+    }
+
+    /**
+     * @deprecated
      * @returns {?HourMinute}
      */
     get endTime() {
+        console.warn("`FreezeTransaction.endTime` is deprecated");
         return this._endTime;
     }
 
     /**
+     * @deprecated
      * @param {number | string} endHourOrString
      * @param {?number} endMinute
      * @returns {FreezeTransaction}
      */
     setEndTime(endHourOrString, endMinute) {
+        console.warn("`FreezeTransaction.endTime` is deprecated");
         this._requireNotFrozen();
         if (typeof endHourOrString === "string") {
             const split = endHourOrString.split(":");
@@ -156,6 +227,43 @@ export default class FreezeTransaction extends Transaction {
                 minute: /** @type {number} */ (endMinute),
             };
         }
+
+        return this;
+    }
+
+    /**
+     * @returns {?FileId}
+     */
+    get updateFileId() {
+        return this._updateFileId;
+    }
+
+    /**
+     * @param {FileId} updateFileId
+     * @returns {FreezeTransaction}
+     */
+    setUpdateFileId(updateFileId) {
+        this._requireNotFrozen();
+        this._updateFileId = updateFileId;
+
+        return this;
+    }
+
+    /**
+     * @returns {?Uint8Array}
+     */
+    get fileHash() {
+        return this._fileHash;
+    }
+
+    /**
+     * @param {Uint8Array | string} fileHash
+     * @returns {FreezeTransaction}
+     */
+    setFileHash(fileHash) {
+        this._requireNotFrozen();
+        this._fileHash =
+            typeof fileHash === "string" ? hex.decode(fileHash) : fileHash;
 
         return this;
     }
@@ -178,8 +286,15 @@ export default class FreezeTransaction extends Transaction {
         return {
             startHour: this._startTime != null ? this._startTime.hour : null,
             startMin: this._startTime != null ? this._startTime.minute : null,
-            endHour: this._endTime != null ? this._endTime.hour : null,
-            endMin: this._endTime != null ? this._endTime.minute : null,
+            startTime:
+                this._startTimestamp != null
+                    ? this._startTimestamp._toProtobuf()
+                    : null,
+            updateFile:
+                this._updateFileId != null
+                    ? this._updateFileId._toProtobuf()
+                    : null,
+            fileHash: this._fileHash,
         };
     }
 }
