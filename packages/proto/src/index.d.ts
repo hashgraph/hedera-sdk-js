@@ -166,6 +166,8 @@ import ICustomFee = proto.ICustomFee;
 import CustomFee = proto.CustomFee;
 import IAssessedCustomFee = proto.IAssessedCustomFee;
 import AssessedCustomFee = proto.AssessedCustomFee;
+import IRoyaltyFee = proto.IRoyaltyFee;
+import RoyaltyFee = proto.RoyaltyFee;
 import ITokenFreezeAccountTransactionBody = proto.ITokenFreezeAccountTransactionBody;
 import TokenFreezeAccountTransactionBody = proto.TokenFreezeAccountTransactionBody;
 import ITokenUnfreezeAccountTransactionBody = proto.ITokenUnfreezeAccountTransactionBody;
@@ -549,6 +551,8 @@ export {
     CustomFee,
     IAssessedCustomFee,
     AssessedCustomFee,
+    IRoyaltyFee,
+    RoyaltyFee,
     ITokenFreezeAccountTransactionBody,
     TokenFreezeAccountTransactionBody,
     ITokenUnfreezeAccountTransactionBody,

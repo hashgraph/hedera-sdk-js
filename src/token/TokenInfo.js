@@ -9,6 +9,7 @@ import TokenType from "./TokenType.js";
 import TokenSupplyType from "./TokenSupplyType.js";
 import CustomFixedFee from "./CustomFixedFee.js";
 import CustomFractionalFee from "./CustomFractionalFee.js";
+import CustomRoyaltyFee from "./CustomRoyaltyFee.js";
 
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
@@ -270,8 +271,10 @@ export default class TokenInfo {
                     ? info.customFees.map((fee) => {
                           if (fee.fixedFee != null) {
                               return CustomFixedFee._fromProtobuf(fee);
-                          } else {
+                          } else if (fee.fractionalFee != null) {
                               return CustomFractionalFee._fromProtobuf(fee);
+                          } else {
+                              return CustomRoyaltyFee._fromProtobuf(fee);
                           }
                       })
                     : [],

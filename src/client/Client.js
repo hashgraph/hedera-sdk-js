@@ -188,7 +188,9 @@ export default class Client {
                 ? accountId
                 : AccountId.fromString(accountId);
 
-        accountId_.validateChecksum(this);
+        if (this._network._ledgerId != null) {
+            accountId_.validateChecksum(this);
+        }
 
         this._operator = {
             transactionSigner,
