@@ -112,7 +112,7 @@ export default class IntegrationTestEnv {
         key = undefined, 
         nodeAccountIds = undefined,
         accountId = undefined,
-        ) {
+            ) {
             let closeClient = client != undefined ? client : this.client;
             let closeAccountId = accountId != undefined ? accountId : this.operatorId;
             let closeKey = key != undefined ? key : this.operatorKey;
