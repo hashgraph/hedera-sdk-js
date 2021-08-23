@@ -7532,10 +7532,12 @@ react-native-safe-area-context@3.1.9:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.1.9.tgz#48864ea976b0fa57142a2cc523e1fd3314e7247e"
   integrity sha512-wmcGbdyE/vBSL5IjDPReoJUEqxkZsywZw5gPwsVUV1NBpw5eTIdnL6Y0uNKHE25Z661moxPHQz6kwAkYQyorxA==
 
-react-native-screens@~2.15.0:
-  version "2.15.2"
-  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.15.2.tgz#a449700e895b462937211ec72ed6f09652758f06"
-  integrity sha512-CagNf2APXkVoRlF3Mugr264FbKbrBg9eXUkqhIPVeZB8EsdS8XPrnt99yj/pzmT+yJMBY0dGrjXT8+68WYh6YQ==
+react-native-screens@~3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.6.0.tgz#054af728e50c06bff6b3b4fa7b4b656b70f247cd"
+  integrity sha512-emQmSu+B6cOIjJH2OIgpuxd9zCD6xz7/oo5GCetyjsM5qR3sMnVgOxqtK99xPu9XJH/8k7MplXbtJgtk/PHXwA==
+  dependencies:
+    warn-once "^0.1.0"
 
 react-native-unimodules@~0.14.6:
   version "0.14.6"
@@ -8980,6 +8982,11 @@ walker@^1.0.7, walker@~1.0.5:
   integrity sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
   dependencies:
     makeerror "1.0.x"
+
+warn-once@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/warn-once/-/warn-once-0.1.0.tgz#4f58d89b84f968d0389176aa99e0cf0f14ffd4c8"
+  integrity sha512-recZTSvuaH/On5ZU5ywq66y99lImWqzP93+AiUo9LUwG8gXHW+LJjhOd6REJHm7qb0niYqrEQJvbHSQfuJtTqA==
 
 wcwidth@^1.0.1:
   version "1.0.1"
