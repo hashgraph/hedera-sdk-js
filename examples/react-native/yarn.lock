@@ -1675,19 +1675,19 @@
     js-base64 "^3.6.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@1.1.8":
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.1.8.tgz#81169222aeb59f1a19e582fc2aa2e5f0c7880761"
-  integrity sha512-SCKw45a7rX99o6szdB2orJzVSRfTMHNNiTb7FPxOGXyEnXilIjng7S33aMxS9Q34xQLU/fDBrkWiSpn1boZybg==
+"@hashgraph/proto@1.1.9":
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.1.9.tgz#0cdf2cf920b9c1f3784287c4f253dbff15455245"
+  integrity sha512-BOY5LD8NCjFot0EFXla2ZX8Q7UE94ZDQoSKXK/XVwlLgcMNSArdIPfK4zy4EBvLZnWV9ACdo/4szDuVyCqvkrA==
   dependencies:
     protobufjs "^6.11.2"
 
 "@hashgraph/sdk@file:../..":
-  version "2.0.28"
+  version "2.0.29"
   dependencies:
     "@grpc/grpc-js" "^1.3.4"
     "@hashgraph/cryptography" "^1.0.20"
-    "@hashgraph/proto" "1.1.8"
+    "@hashgraph/proto" "1.1.9"
     "@types/crypto-js" "^4.0.2"
     "@types/utf8" "^3.0.0"
     bignumber.js "^9.0.1"
@@ -7327,10 +7327,12 @@ react-native-safe-area-context@3.1.9:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.1.9.tgz#48864ea976b0fa57142a2cc523e1fd3314e7247e"
   integrity sha512-wmcGbdyE/vBSL5IjDPReoJUEqxkZsywZw5gPwsVUV1NBpw5eTIdnL6Y0uNKHE25Z661moxPHQz6kwAkYQyorxA==
 
-react-native-screens@~2.15.0:
-  version "2.15.2"
-  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.15.2.tgz#a449700e895b462937211ec72ed6f09652758f06"
-  integrity sha512-CagNf2APXkVoRlF3Mugr264FbKbrBg9eXUkqhIPVeZB8EsdS8XPrnt99yj/pzmT+yJMBY0dGrjXT8+68WYh6YQ==
+react-native-screens@~3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.5.0.tgz#c40be78dff8e2dff1b00ba8fa670b2e429e632d2"
+  integrity sha512-xew4x0YX0RaDduNYM4gZXkphPwGZIbbu9fTU85xOtT1tOUPm3OU4pFMiN6PF54haMCsaMQRvdOXvLicUVRiptA==
+  dependencies:
+    warn-once "^0.1.0"
 
 react-native-unimodules@~0.12.0:
   version "0.12.0"
@@ -8761,6 +8763,11 @@ walker@^1.0.7, walker@~1.0.5:
   integrity sha1-L3+bj9ENZ3JisYqITijRlhjgKPs=
   dependencies:
     makeerror "1.0.x"
+
+warn-once@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/warn-once/-/warn-once-0.1.0.tgz#4f58d89b84f968d0389176aa99e0cf0f14ffd4c8"
+  integrity sha512-recZTSvuaH/On5ZU5ywq66y99lImWqzP93+AiUo9LUwG8gXHW+LJjhOd6REJHm7qb0niYqrEQJvbHSQfuJtTqA==
 
 wcwidth@^1.0.1:
   version "1.0.1"
