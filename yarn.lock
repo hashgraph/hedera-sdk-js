@@ -331,10 +331,10 @@
     js-base64 "^3.6.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@1.1.8":
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.1.8.tgz#81169222aeb59f1a19e582fc2aa2e5f0c7880761"
-  integrity sha512-SCKw45a7rX99o6szdB2orJzVSRfTMHNNiTb7FPxOGXyEnXilIjng7S33aMxS9Q34xQLU/fDBrkWiSpn1boZybg==
+"@hashgraph/proto@1.1.9":
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.1.9.tgz#0cdf2cf920b9c1f3784287c4f253dbff15455245"
+  integrity sha512-BOY5LD8NCjFot0EFXla2ZX8Q7UE94ZDQoSKXK/XVwlLgcMNSArdIPfK4zy4EBvLZnWV9ACdo/4szDuVyCqvkrA==
   dependencies:
     protobufjs "^6.11.2"
 
