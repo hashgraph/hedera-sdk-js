@@ -129,7 +129,7 @@ export default class Executable {
      * @param {number} maxBackoff
      */
     setMaxBackoff(maxBackoff) {
-        if (maxBackoff >= this.minBackoff){
+        if (maxBackoff >= this.minBackoff) {
             this._maxBackoff = maxBackoff;
         }
     }
@@ -315,7 +315,11 @@ export default class Executable {
 
             switch (this._shouldRetry(request, response)) {
                 case ExecutionState.Retry:
-                    await delayForAttempt(attempt,this._minBackoff,this._maxBackoff); //update this to pass min/max into funct
+                    await delayForAttempt(
+                        attempt,
+                        this._minBackoff,
+                        this._maxBackoff
+                    ); //update this to pass min/max into funct
                     continue;
                 case ExecutionState.Finished:
                     return this._mapResponse(response, nodeAccountId, request);
@@ -336,7 +340,7 @@ export default class Executable {
  * @param {number} maxBackoff
  * @returns {Promise<void>}
  */
-function delayForAttempt(attempt,minBackoff,maxBackoff) {
+function delayForAttempt(attempt, minBackoff, maxBackoff) {
     // 0.1s, 0.2s, 0.4s, 0.8s, ...
     const ms = Math.floor(50 * Math.pow(2, attempt));
     return new Promise((resolve) => setTimeout(resolve, ms));

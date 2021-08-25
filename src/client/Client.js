@@ -361,7 +361,7 @@ export default class Client {
      * @param {number} maxBackoff
      */
     setMaxBackoff(maxBackoff) {
-        if (maxBackoff >= this.minBackoff){
+        if (maxBackoff >= this.minBackoff) {
             this._maxBackoff = maxBackoff;
         }
     }
