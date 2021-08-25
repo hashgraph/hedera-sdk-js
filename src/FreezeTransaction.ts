@@ -4,6 +4,7 @@ import { Transaction } from "./generated/transaction_pb";
 import { TransactionResponse } from "./generated/transaction_response_pb";
 import { FreezeTransactionBody } from "./generated/freeze_pb";
 import { FreezeService } from "./generated/freeze_service_pb_service";
+import { Timestamp, timestampToProto, timestampToDate } from "./Timestamp";
 
 /**
  * Set the freezing period in which the platform will stop creating events and accepting
@@ -22,19 +23,30 @@ export class FreezeTransaction extends SingleTransactionBuilder {
      * @param hour  The start hour (in UTC time), a value between 0 and 23.
      * @param minute  The start minute (in UTC time), a value between 0 and 59.
      */
+    public setStartTime(timestamp: Timestamp): this;
     public setStartTime(date: number | Date): this;
     public setStartTime(hour: number, minute: number): this;
-    public setStartTime(dateOrHour: number | Date, maybeMinute?: number): this {
-        let hour;
-        let minute;
-        if (typeof dateOrHour === "number" && maybeMinute != null) {
-            hour = dateOrHour as number;
+    public setStartTime(
+        dateOrHourOrTimestamp: number | Date | Timestamp,
+        maybeMinute?: number
+    ): this {
+        let hour = 0;
+        let minute = 0;
+        if (typeof dateOrHourOrTimestamp === "number" && maybeMinute != null) {
+            hour = dateOrHourOrTimestamp as number;
             minute = maybeMinute!;
-        } else {
+        } else if (dateOrHourOrTimestamp instanceof Date) {
             console.warn("passing `Date` is deprecated; pass the `hour` and `minute` as separate parameters");
 
-            hour = (dateOrHour as Date).getHours();
-            minute = (dateOrHour as Date).getMinutes();
+            hour = (dateOrHourOrTimestamp as Date).getHours();
+            minute = (dateOrHourOrTimestamp as Date).getMinutes();
+        } else {
+            const timestamp = timestampToProto(dateOrHourOrTimestamp as Timestamp);
+            this._body.setStartTime(timestamp);
+
+            const date = timestampToDate(timestamp);
+            hour = date.getHours();
+            minute = date.getMinutes();
         }
 
         this._body.setStarthour(hour);

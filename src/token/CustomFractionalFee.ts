@@ -2,12 +2,14 @@ import BigNumber from "bignumber.js";
 import { CustomFee as ProtoCustomFee, FractionalFee as ProtoFractionalFee } from "../generated/custom_fees_pb";
 import { Fraction as ProtoFraction } from "../generated/basic_types_pb";
 import { CustomFee } from "./CustomFee";
+import { FeeAssessmentMethod } from "./FeeAssessmentMethod";
 
 export class CustomFractionalFee extends CustomFee {
     public numerator: BigNumber | null = null;
     public denominator: BigNumber | null = null;
     public min: BigNumber | null = null;
     public max: BigNumber | null = null;
+    public assessmentMethod: FeeAssessmentMethod | null = null;
 
     public constructor(fee?: ProtoCustomFee) {
         super(fee);
@@ -28,6 +30,8 @@ export class CustomFractionalFee extends CustomFee {
 
             this.min = new BigNumber(fractionalFee.getMinimumAmount());
             this.max = new BigNumber(fractionalFee.getMaximumAmount());
+            this.assessmentMethod =
+                FeeAssessmentMethod._fromCode(fractionalFee.getNetOfTransfers());
         }
     }
 
@@ -51,6 +55,11 @@ export class CustomFractionalFee extends CustomFee {
         return this;
     }
 
+    public setAssessmentMethod(assessmentMethod: FeeAssessmentMethod): this {
+        this.assessmentMethod = assessmentMethod;
+        return this;
+    }
+
     // NOT A STABLE API
     public _toProto(): ProtoCustomFee {
         const builder = new ProtoCustomFee();
@@ -71,6 +80,10 @@ export class CustomFractionalFee extends CustomFee {
 
         if (this.max != null) {
             fractionalFeeBuilder.setMaximumAmount(this.max.toString());
+        }
+
+        if (this.assessmentMethod != null) {
+            fractionalFeeBuilder.setNetOfTransfers(this.assessmentMethod.code);
         }
 
         fractionalFeeBuilder.setFractionalAmount(fraction);

@@ -7,6 +7,7 @@ export class AssessedCustomFee {
     public readonly amount: BigNumber | null = null;
     public readonly tokenId: TokenId | null = null;
     public readonly feeCollectorAccountId: AccountId | null = null;
+    public readonly payerAccountIds: AccountId[] = [];
 
     public constructor(fee?: ProtoAssessedCustomFee) {
         if (fee != null) {
@@ -17,6 +18,8 @@ export class AssessedCustomFee {
             this.feeCollectorAccountId = fee.hasFeeCollectorAccountId() ?
                 AccountId._fromProto(fee.getFeeCollectorAccountId()!) :
                 null;
+            this.payerAccountIds = fee.getEffectivePayerAccountIdList()
+                .map((accountID) => AccountId._fromProto(accountID));
         }
     }
 
@@ -31,6 +34,9 @@ export class AssessedCustomFee {
         if (this.feeCollectorAccountId != null) {
             builder.setFeeCollectorAccountId(this.feeCollectorAccountId._toProto());
         }
+
+        builder.setEffectivePayerAccountIdList(this.payerAccountIds
+            .map((accountId) => accountId._toProto()));
 
         return builder;
     }
