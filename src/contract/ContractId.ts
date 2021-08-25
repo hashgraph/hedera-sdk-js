@@ -47,9 +47,9 @@ export class ContractId extends PublicKey {
     // NOT A STABLE API
     public static _fromProto(contractId: ContractID): ContractId {
         return new ContractId({
-            shard: contractId.getShardnum(),
-            realm: contractId.getRealmnum(),
-            contract: contractId.getContractnum()
+            shard: new BigNumber(contractId.getShardnum()).toNumber(),
+            realm: new BigNumber(contractId.getRealmnum()).toNumber(),
+            contract: new BigNumber(contractId.getContractnum()).toNumber()
         });
     }
 
@@ -87,9 +87,9 @@ export class ContractId extends PublicKey {
     // NOT A STABLE API
     public _toProto(): ContractID {
         const contractId = new ContractID();
-        contractId.setShardnum(this.shard);
-        contractId.setRealmnum(this.realm);
-        contractId.setContractnum(this.contract);
+        contractId.setShardnum(this.shard.toString());
+        contractId.setRealmnum(this.realm.toString());
+        contractId.setContractnum(this.contract.toString());
         return contractId;
     }
 

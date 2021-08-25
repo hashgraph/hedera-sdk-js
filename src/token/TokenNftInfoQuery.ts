@@ -10,7 +10,7 @@ import { ResponseHeader } from "../generated/response_header_pb";
 import { BaseClient } from "../BaseClient";
 import { TokenNftInfo as ProtoTokenNftInfo, TokenGetNftInfoQuery } from "../generated/token_get_nft_info_pb";
 import { TokenGetNftInfosQuery } from "../generated/token_get_nft_infos_pb";
-import { TokenGetAccountNftInfoQuery } from "../generated/token_get_account_nft_info_pb";
+import { TokenGetAccountNftInfosQuery } from "../generated/token_get_account_nft_infos_pb";
 import { TokenService } from "../generated/token_service_pb_service";
 import { AccountId } from "../account/AccountId";
 import { timestampToDate } from "../Timestamp";
@@ -47,14 +47,14 @@ export interface TokenNftInfo {
 export class TokenNftInfoQuery extends QueryBuilder<TokenNftInfo[]> {
     private readonly _byNftBuilder: TokenGetNftInfoQuery;
     private readonly _byTokenBuilder: TokenGetNftInfosQuery;
-    private readonly _byAccountBuilder: TokenGetAccountNftInfoQuery;
+    private readonly _byAccountBuilder: TokenGetAccountNftInfosQuery;
 
     public constructor() {
         super();
 
         this._byNftBuilder = new TokenGetNftInfoQuery();
         this._byTokenBuilder = new TokenGetNftInfosQuery();
-        this._byAccountBuilder = new TokenGetAccountNftInfoQuery();
+        this._byAccountBuilder = new TokenGetAccountNftInfosQuery();
 
         this._byNftBuilder.setHeader(new QueryHeader());
         this._byTokenBuilder.setHeader(new QueryHeader());

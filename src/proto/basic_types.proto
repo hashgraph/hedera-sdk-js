@@ -31,34 +31,34 @@ option java_multiple_files = true;
 
   Everything is partitioned into realms so that each Solidity smart contract can  access everything in just a single realm, locking all those entities while it's  running, but other smart contracts could potentially run in other realms in  parallel. So realms allow Solidity to be parallelized somewhat, even though the  language itself assumes everything is serial. */
 message ShardID {
-    int64 shardNum = 1; //the shard number (nonnegative)
+    int64 shardNum = 1 [jstype=JS_STRING]; //the shard number (nonnegative)
 }
 
 /* The ID for a realm. Within a given shard, every realm has a unique ID. Each account, file, and contract instance belongs to exactly one realm. */
 message RealmID {
-    int64 shardNum = 1; //The shard number (nonnegative)
-    int64 realmNum = 2; //The realm number (nonnegative)
+    int64 shardNum = 1 [jstype=JS_STRING]; //The shard number (nonnegative)
+    int64 realmNum = 2 [jstype=JS_STRING]; //The realm number (nonnegative)
 }
 
 /* The ID for an a cryptocurrency account  */
 message AccountID {
-    int64 shardNum = 1; //The shard number (nonnegative)
-    int64 realmNum = 2; //The realm number (nonnegative)
-    int64 accountNum = 3; //A nonnegative account number unique within its realm
+    int64 shardNum = 1 [jstype=JS_STRING]; //The shard number (nonnegative)
+    int64 realmNum = 2 [jstype=JS_STRING]; //The realm number (nonnegative)
+    int64 accountNum = 3 [jstype=JS_STRING]; //A nonnegative account number unique within its realm
 }
 
 /* The ID for a file  */
 message FileID {
-    int64 shardNum = 1; //The shard number (nonnegative)
-    int64 realmNum = 2; //The realm number (nonnegative)
-    int64 fileNum = 3; //A nonnegative File number unique within its realm
+    int64 shardNum = 1 [jstype=JS_STRING]; //The shard number (nonnegative)
+    int64 realmNum = 2 [jstype=JS_STRING]; //The realm number (nonnegative)
+    int64 fileNum = 3 [jstype=JS_STRING]; //A nonnegative File number unique within its realm
 }
 
 /* The ID for a smart contract instance  */
 message ContractID {
-    int64 shardNum = 1; //The shard number (nonnegative)
-    int64 realmNum = 2; //The realm number (nonnegative)
-    int64 contractNum = 3; //A nonnegative number unique within its realm
+    int64 shardNum = 1 [jstype=JS_STRING]; //The shard number (nonnegative)
+    int64 realmNum = 2 [jstype=JS_STRING]; //The realm number (nonnegative)
+    int64 contractNum = 3 [jstype=JS_STRING]; //A nonnegative number unique within its realm
 }
 
 /*
@@ -77,7 +77,7 @@ message TransactionID {
 /* An account, and the amount that it sends or receives during a cryptocurrency or token transfer. */
 message AccountAmount {
     AccountID accountID = 1; // The Account ID that sends/receives cryptocurrency or tokens
-    sint64 amount = 2; // The amount of tinybars (for Crypto transfers) or in the lowest denomination (for Token transfers) that the account sends(negative) or receives(positive)
+    sint64 amount = 2 [jstype=JS_STRING]; // The amount of tinybars (for Crypto transfers) or in the lowest denomination (for Token transfers) that the account sends(negative) or receives(positive)
 }
 
 /* A list of accounts and amounts to transfer out of each account (negative) or into it (positive). */
@@ -89,7 +89,7 @@ message TransferList {
 message NftTransfer {
     AccountID senderAccountID = 1; // The accountID of the sender
     AccountID receiverAccountID = 2; // The accountID of the receiver
-    int64 serialNumber = 3; // The serial number of the NFT
+    int64 serialNumber = 3 [jstype=JS_STRING]; // The serial number of the NFT
 }
 
 /* A list of token IDs and amounts representing the transferred out (negative) or into (positive) amounts, represented in the lowest denomination of the token */
@@ -101,29 +101,29 @@ message TokenTransferList {
 
 /* A rational number, used to set the amount of a value transfer to collect as a custom fee */
 message Fraction {
-    int64 numerator = 1; // The rational's numerator
-    int64 denominator = 2; // The rational's denominator; a zero value will result in FRACTION_DIVIDES_BY_ZERO
+    int64 numerator = 1 [jstype=JS_STRING]; // The rational's numerator
+    int64 denominator = 2 [jstype=JS_STRING]; // The rational's denominator; a zero value will result in FRACTION_DIVIDES_BY_ZERO
 }
 
 /* Unique identifier for a topic (used by the consensus service) */
 message TopicID {
-    int64 shardNum = 1; // The shard number (nonnegative)
-    int64 realmNum = 2; // The realm number (nonnegative)
-    int64 topicNum = 3; // Unique topic identifier within a realm (nonnegative).
+    int64 shardNum = 1 [jstype=JS_STRING]; // The shard number (nonnegative)
+    int64 realmNum = 2 [jstype=JS_STRING]; // The realm number (nonnegative)
+    int64 topicNum = 3 [jstype=JS_STRING]; // Unique topic identifier within a realm (nonnegative).
 }
 
 /* Unique identifier for a token */
 message TokenID {
-    int64 shardNum = 1; // A nonnegative shard number
-    int64 realmNum = 2; // A nonnegative realm number
-    int64 tokenNum = 3; // A nonnegative token number
+    int64 shardNum = 1 [jstype=JS_STRING]; // A nonnegative shard number
+    int64 realmNum = 2 [jstype=JS_STRING]; // A nonnegative realm number
+    int64 tokenNum = 3 [jstype=JS_STRING]; // A nonnegative token number
 }
 
 /* Unique identifier for a Schedule */
 message ScheduleID {
-    int64 shardNum = 1; // A nonnegative shard number
-    int64 realmNum = 2; // A nonnegative realm number
-    int64 scheduleNum = 3; // A nonnegative schedule number
+    int64 shardNum = 1 [jstype=JS_STRING]; // A nonnegative shard number
+    int64 realmNum = 2 [jstype=JS_STRING]; // A nonnegative realm number
+    int64 scheduleNum = 3 [jstype=JS_STRING]; // A nonnegative schedule number
 }
 
 /**
@@ -353,17 +353,17 @@ A set of prices the nodes use in determining transaction and query fees, and con
 Nodes multiply the amount of resources consumed by a transaction or query by the corresponding price to calculate the
 appropriate fee. Units are one-thousandth of a tinyCent.*/
 message FeeComponents {
-    int64 min = 1; // A minimum, the calculated fee must be greater than this value
-    int64 max = 2; // A maximum, the calculated fee must be less than this value
-    int64 constant = 3; // A constant contribution to the fee
-    int64 bpt = 4; // The price of bandwidth consumed by a transaction, measured in bytes
-    int64 vpt = 5; // The price per signature verification for a transaction
-    int64 rbh = 6; // The price of RAM consumed by a transaction, measured in byte-hours
-    int64 sbh = 7; // The price of storage consumed by a transaction, measured in byte-hours
-    int64 gas = 8; // The price of computation for a smart contract transaction, measured in gas
-    int64 tv = 9; // The price per hbar transferred for a transfer
-    int64 bpr = 10; // The price of bandwidth for data retrieved from memory for a response, measured in bytes
-    int64 sbpr = 11; // The price of bandwidth for data retrieved from disk for a response, measured in bytes
+    int64 min = 1 [jstype=JS_STRING]; // A minimum, the calculated fee must be greater than this value
+    int64 max = 2 [jstype=JS_STRING]; // A maximum, the calculated fee must be less than this value
+    int64 constant = 3 [jstype=JS_STRING]; // A constant contribution to the fee
+    int64 bpt = 4 [jstype=JS_STRING]; // The price of bandwidth consumed by a transaction, measured in bytes
+    int64 vpt = 5 [jstype=JS_STRING]; // The price per signature verification for a transaction
+    int64 rbh = 6 [jstype=JS_STRING]; // The price of RAM consumed by a transaction, measured in byte-hours
+    int64 sbh = 7 [jstype=JS_STRING]; // The price of storage consumed by a transaction, measured in byte-hours
+    int64 gas = 8 [jstype=JS_STRING]; // The price of computation for a smart contract transaction, measured in gas
+    int64 tv = 9 [jstype=JS_STRING]; // The price per hbar transferred for a transfer
+    int64 bpr = 10 [jstype=JS_STRING]; // The price of bandwidth for data retrieved from memory for a response, measured in bytes
+    int64 sbpr = 11 [jstype=JS_STRING]; // The price of bandwidth for data retrieved from disk for a response, measured in bytes
 }
 
 /* The fees for a specific transaction or query based on the fee data. */
@@ -428,12 +428,12 @@ message NodeAddress {
     int32 portno = 2 [deprecated=true]; // The port number of the grpc server for the node.  Usage is deprecated, ServiceEndpoint is preferred to retrieve a node's list of IP addresses and ports
     bytes memo = 3 [deprecated=true]; // Usage is deprecated, nodeAccountId is preferred to retrieve a node's account ID
     string RSA_PubKey = 4; // The node's hex-encoded X509 RSA public key
-    int64 nodeId = 5; // # A non-sequential identifier for the node
+    int64 nodeId = 5 [jstype=JS_STRING]; // # A non-sequential identifier for the node
     AccountID nodeAccountId = 6; // # The account to be paid for queries and transactions sent to this node
     bytes nodeCertHash = 7; // # The hex-encoded SHA-384 hash of the X509 cert used to encrypt gRPC traffic to the node
     repeated ServiceEndpoint serviceEndpoint = 8; // # A node's service IP addresses and ports
     string description = 9; // A description of the node, with UTF-8 encoding up to 100 bytes
-    int64 stake = 10; // The amount of tinybars staked to the node
+    int64 stake = 10 [jstype=JS_STRING]; // The amount of tinybars staked to the node
 }
 
 /*
@@ -470,7 +470,7 @@ message ServicesConfigurationList {
 message TokenRelationship {
     TokenID tokenId = 1; // The ID of the token
     string symbol = 2; // The Symbol of the token
-    uint64 balance = 3; // For token of type FUNGIBLE_COMMON - the balance that the Account holds in the smallest denomination. For token of type NON_FUNGIBLE_UNIQUE - the number of NFTs held by the account
+    uint64 balance = 3 [jstype=JS_STRING]; // For token of type FUNGIBLE_COMMON - the balance that the Account holds in the smallest denomination. For token of type NON_FUNGIBLE_UNIQUE - the number of NFTs held by the account
     TokenKycStatus kycStatus = 4; // The KYC status of the account (KycNotApplicable, Granted or Revoked). If the token does not have KYC key, KycNotApplicable is returned
     TokenFreezeStatus freezeStatus = 5; // The Freeze status of the account (FreezeNotApplicable, Frozen or Unfrozen). If the token does not have Freeze key, FreezeNotApplicable is returned
     uint32 decimals = 6; // Tokens divide into <tt>10<sup>decimals</sup></tt> pieces
@@ -483,7 +483,7 @@ The transferable unit of a token is its smallest denomination, as given by the t
 Transferable units are not directly comparable across different tokens. */
 message TokenBalance {
     TokenID tokenId = 1; // A unique token id
-    uint64 balance = 2; // Number of transferable units of the identified token. For token of type FUNGIBLE_COMMON - balance in the smallest denomination. For token of type NON_FUNGIBLE_UNIQUE - the number of NFTs held by the account
+    uint64 balance = 2 [jstype=JS_STRING]; // Number of transferable units of the identified token. For token of type FUNGIBLE_COMMON - balance in the smallest denomination. For token of type NON_FUNGIBLE_UNIQUE - the number of NFTs held by the account
     uint32 decimals = 3; // Tokens divide into <tt>10<sup>decimals</sup></tt> pieces
 }
 

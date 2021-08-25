@@ -33,13 +33,13 @@ document in the <a href="https://github.com/hashgraph/hedera-services">Hedera Se
 /* A set of operations which should be collectively throttled at a given milli-ops-per-second limit. */
 message ThrottleGroup {
   repeated HederaFunctionality operations = 1; // The operations to be throttled
-  uint64 milliOpsPerSec = 2; // The number of total operations per second across the entire network, multiplied by 1000. So, to choose 3 operations per second (which on a network of 30 nodes is a tenth of an operation per second for each node), set milliOpsPerSec = 3000. And to choose 3.6 ops per second, use milliOpsPerSec = 3600. Minimum allowed value is 1, and maximum allowed value is 9223372.
+  uint64 milliOpsPerSec = 2 [jstype=JS_STRING]; // The number of total operations per second across the entire network, multiplied by 1000. So, to choose 3 operations per second (which on a network of 30 nodes is a tenth of an operation per second for each node), set milliOpsPerSec = 3000. And to choose 3.6 ops per second, use milliOpsPerSec = 3600. Minimum allowed value is 1, and maximum allowed value is 9223372.
 }
 
 /* A list of throttle groups that should all compete for the same internal bucket. */
 message ThrottleBucket {
   string name = 1; // A name for this bucket (primarily for use in logs)
-  uint64 burstPeriodMs = 2; // The number of milliseconds required for this bucket to drain completely when full. The product of this number and the least common multiple of the milliOpsPerSec values in this bucket must not exceed 9223372036.
+  uint64 burstPeriodMs = 2 [jstype=JS_STRING]; // The number of milliseconds required for this bucket to drain completely when full. The product of this number and the least common multiple of the milliOpsPerSec values in this bucket must not exceed 9223372036.
   repeated ThrottleGroup throttleGroups = 3; // The throttle groups competing for this bucket
 }
 

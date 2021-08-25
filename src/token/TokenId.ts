@@ -45,9 +45,9 @@ export class TokenId {
     // NOT A STABLE API
     public static _fromProto(tokenId: TokenID): TokenId {
         return new TokenId({
-            shard: tokenId.getShardnum(),
-            realm: tokenId.getRealmnum(),
-            token: tokenId.getTokennum()
+            shard: new BigNumber(tokenId.getShardnum()).toNumber(),
+            realm: new BigNumber(tokenId.getRealmnum()).toNumber(),
+            token: new BigNumber(tokenId.getTokennum()).toNumber()
         });
     }
 
@@ -89,9 +89,9 @@ export class TokenId {
     // NOT A STABLE API
     public _toProto(): TokenID {
         const acctId = new TokenID();
-        acctId.setShardnum(this.shard);
-        acctId.setRealmnum(this.realm);
-        acctId.setTokennum(this.token);
+        acctId.setShardnum(this.shard.toString());
+        acctId.setRealmnum(this.realm.toString());
+        acctId.setTokennum(this.token.toString());
         return acctId;
     }
 }

@@ -19,7 +19,7 @@ export function newDuration(seconds: number): Duration {
     }
 
     const duration = new Duration();
-    duration.setSeconds(seconds);
+    duration.setSeconds(seconds.toString());
     return duration;
 }
 

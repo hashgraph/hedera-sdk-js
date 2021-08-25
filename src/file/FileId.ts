@@ -59,9 +59,9 @@ export class FileId {
     // NOT A STABLE API
     public static _fromProto(fileId: FileID): FileId {
         return new FileId({
-            shard: fileId.getShardnum(),
-            realm: fileId.getRealmnum(),
-            file: fileId.getFilenum()
+            shard: new BigNumber(fileId.getShardnum()).toNumber(),
+            realm: new BigNumber(fileId.getRealmnum()).toNumber(),
+            file: new BigNumber(fileId.getFilenum()).toNumber()
         });
     }
 
@@ -99,9 +99,9 @@ export class FileId {
     // NOT A STABLE API
     public _toProto(): FileID {
         const fileId = new FileID();
-        fileId.setShardnum(this.shard);
-        fileId.setRealmnum(this.realm);
-        fileId.setFilenum(this.file);
+        fileId.setShardnum(this.shard.toString());
+        fileId.setRealmnum(this.realm.toString());
+        fileId.setFilenum(this.file.toString());
         return fileId;
     }
 }

@@ -44,9 +44,9 @@ export class ScheduleId {
     // NOT A STABLE API
     public static _fromProto(scheduleId: ScheduleID): ScheduleId {
         return new ScheduleId({
-            shard: scheduleId.getShardnum(),
-            realm: scheduleId.getRealmnum(),
-            schedule: scheduleId.getSchedulenum()
+            shard: new BigNumber(scheduleId.getShardnum()).toNumber(),
+            realm: new BigNumber(scheduleId.getRealmnum()).toNumber(),
+            schedule: new BigNumber(scheduleId.getSchedulenum()).toNumber()
         });
     }
 
@@ -57,9 +57,9 @@ export class ScheduleId {
     // NOT A STABLE API
     public _toProto(): ScheduleID {
         const acctId = new ScheduleID();
-        acctId.setShardnum(this.shard);
-        acctId.setRealmnum(this.realm);
-        acctId.setSchedulenum(this.schedule);
+        acctId.setShardnum(this.shard.toString());
+        acctId.setRealmnum(this.realm.toString());
+        acctId.setSchedulenum(this.schedule.toString());
         return acctId;
     }
 }

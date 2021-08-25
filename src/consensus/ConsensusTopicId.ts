@@ -43,9 +43,9 @@ export class ConsensusTopicId {
     // NOT A STABLE API
     public static _fromProto(topicId: TopicID): ConsensusTopicId {
         return new ConsensusTopicId({
-            shard: topicId.getShardnum(),
-            realm: topicId.getRealmnum(),
-            topic: topicId.getTopicnum()
+            shard: new BigNumber(topicId.getShardnum()).toNumber(),
+            realm: new BigNumber(topicId.getRealmnum()).toNumber(),
+            topic: new BigNumber(topicId.getTopicnum()).toNumber()
         });
     }
 
@@ -83,9 +83,9 @@ export class ConsensusTopicId {
     // NOT A STABLE API
     public _toProto(): TopicID {
         const acctId = new TopicID();
-        acctId.setShardnum(this.shard);
-        acctId.setRealmnum(this.realm);
-        acctId.setTopicnum(this.topic);
+        acctId.setShardnum(this.shard.toString());
+        acctId.setRealmnum(this.realm.toString());
+        acctId.setTopicnum(this.topic.toString());
         return acctId;
     }
 }

@@ -32,15 +32,15 @@ will never be less than the given minimum_amount, and never greater than the giv
 The denomination is always units of the token to which this fractional fee is attached. */
 message FractionalFee {
   Fraction fractional_amount = 1; // The fraction of the transferred units to assess as a fee
-  int64 minimum_amount = 2; // The minimum amount to assess
-  int64 maximum_amount = 3; // The maximum amount to assess (zero implies no maximum)
+  int64 minimum_amount = 2 [jstype=JS_STRING]; // The minimum amount to assess
+  int64 maximum_amount = 3 [jstype=JS_STRING]; // The maximum amount to assess (zero implies no maximum)
   bool net_of_transfers = 4; // If true, assesses the fee to the sender, so the receiver gets the full amount from the token transfer list, and the sender is charged an additional fee; if false, the receiver does NOT get the full amount, but only what is left over after paying the fractional fee
 }
 
 /* A fixed number of units (hbar or token) to assess as a fee during a CryptoTransfer 
 that transfers units of the token to which this fixed fee is attached. */
 message FixedFee {
-  int64 amount = 1; // The number of units to assess as a fee
+  int64 amount = 1 [jstype=JS_STRING]; // The number of units to assess as a fee
   TokenID denominating_token_id = 2; // The denomination of the fee; taken as hbar if left unset and, in a TokenCreate, taken as the id of the newly created token if set to the sentinel value of 0.0.0
 }
 
@@ -69,7 +69,7 @@ message CustomFee {
 
 /* A custom transfer fee that was assessed during handling of a CryptoTransfer. */
 message AssessedCustomFee {
-  int64 amount = 1; // The number of units assessed for the fee
+  int64 amount = 1 [jstype=JS_STRING]; // The number of units assessed for the fee
   TokenID token_id = 2; // The denomination of the fee; taken as hbar if left unset
   AccountID fee_collector_account_id = 3; // The account to receive the assessed fee
   repeated AccountID effective_payer_account_id = 4; // The account(s) whose final balances would have been higher in the absence of this assessed fee

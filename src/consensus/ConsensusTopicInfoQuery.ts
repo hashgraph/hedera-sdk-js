@@ -10,6 +10,7 @@ import { Time } from "../Time";
 import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
 import { AccountId } from "../account/AccountId";
 import { ConsensusTopicId, ConsensusTopicIdLike } from "./ConsensusTopicId";
+import BigNumber from "bignumber.js";
 
 export interface ConsensusTopicInfo {
     topicMemo: string;
@@ -63,7 +64,7 @@ export class ConsensusTopicInfoQuery extends QueryBuilder<ConsensusTopicInfo> {
         return {
             topicMemo: topicInfo.getMemo(),
             runningHash: topicInfo.getRunninghash_asU8(),
-            sequenceNumber: topicInfo.getSequencenumber(),
+            sequenceNumber: new BigNumber(topicInfo.getSequencenumber()).toNumber(),
 
             expirationTime: Time._fromProto(topicInfo.getExpirationtime()!),
 
@@ -75,7 +76,7 @@ export class ConsensusTopicInfoQuery extends QueryBuilder<ConsensusTopicInfo> {
                 _fromProtoKey(topicInfo.getSubmitkey()!) :
                 null,
 
-            autoRenewPeriod: topicInfo.getAutorenewperiod()!.getSeconds(),
+            autoRenewPeriod: new BigNumber(topicInfo.getAutorenewperiod()!.getSeconds()).toNumber(),
             autoRenewAccount: topicInfo.hasAutorenewaccount() ?
                 AccountId._fromProto(topicInfo.getAutorenewaccount()!) :
                 null

@@ -42,7 +42,7 @@ message ConsensusTopicInfo {
     bytes runningHash = 2;
 
     // Sequence number (starting at 1 for the first submitMessage) of messages on the topic.
-    uint64 sequenceNumber = 3;
+    uint64 sequenceNumber = 3 [jstype=JS_STRING];
 
     // Effective consensus timestamp at (and after) which submitMessage calls will no longer succeed on the topic
     // and the topic will expire and after AUTORENEW_GRACE_PERIOD be automatically deleted.

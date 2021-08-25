@@ -50,7 +50,7 @@ export class ContractFunctionResult {
 
             this.errorMessage = result.getErrormessage();
             this.bloom = result.getBloom_asU8();
-            this.gasUsed = result.getGasused();
+            this.gasUsed = new BigNumber(result.getGasused()).toNumber();
             this.logs = contractLogInfoListToSdk(result.getLoginfoList());
         } else {
             this.contractId = new ContractId(0);

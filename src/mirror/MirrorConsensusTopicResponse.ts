@@ -1,6 +1,7 @@
 import { ConsensusTopicResponse } from "../generated/mirror_consensus_service_pb";
 import { Time } from "../Time";
 import * as utf8 from "@stablelib/utf8";
+import BigNumber from "bignumber.js";
 
 export class ConsensusMessageChunk {
     public readonly consensusTimestamp: Time;
@@ -57,7 +58,8 @@ export class MirrorConsensusTopicResponse {
 
             this.message = new Uint8Array();
             this.runningHash = message[ length - 1 ].getRunninghash_asU8();
-            this.sequenceNumber = message[ length - 1 ].getSequencenumber();
+            this.sequenceNumber = new BigNumber(message[ length - 1 ].getSequencenumber())
+                .toNumber();
 
             // eslint-disable-next-line max-len
             message.sort((a, b) => a.getChunkinfo()!.getNumber() < b.getChunkinfo()!.getNumber() ?
@@ -67,7 +69,7 @@ export class MirrorConsensusTopicResponse {
             this.chunks = message.map((m) => new ConsensusMessageChunk(
                 Time._fromProto(m.getConsensustimestamp()!),
                 m.getRunninghash_asU8(),
-                m.getSequencenumber(),
+                new BigNumber(m.getSequencenumber()).toNumber(),
                 m.getMessage_asU8().length
             ));
 
@@ -88,7 +90,7 @@ export class MirrorConsensusTopicResponse {
             this.consensusTimestamp = Time._fromProto(message.getConsensustimestamp()!);
             this.message = message.getMessage_asU8()!;
             this.runningHash = message.getRunninghash_asU8();
-            this.sequenceNumber = message.getSequencenumber();
+            this.sequenceNumber = new BigNumber(message.getSequencenumber()).toNumber();
         }
     }
 

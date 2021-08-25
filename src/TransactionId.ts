@@ -10,6 +10,7 @@ import { BaseClient } from "./BaseClient";
 import { TransactionReceipt } from "./TransactionReceipt";
 import { TransactionRecord } from "./TransactionRecord";
 import { Time } from "./Time";
+import BigNumber from "bignumber.js";
 
 /**
  * Normalized transaction ID returned by various methods in the SDK.
@@ -117,7 +118,7 @@ export class TransactionId {
 
         return new TransactionId({
             account: AccountId._fromProto(orThrow(id.getAccountid())),
-            validStartSeconds: seconds,
+            validStartSeconds: new BigNumber(seconds).toNumber(),
             validStartNanos: nanos
         });
     }
@@ -128,7 +129,7 @@ export class TransactionId {
         txnId.setAccountid(this.accountId._toProto());
 
         const ts = new Timestamp();
-        ts.setSeconds(this.validStart.seconds);
+        ts.setSeconds(this.validStart.seconds.toString());
         ts.setNanos(this.validStart.nanos);
         txnId.setTransactionvalidstart(ts);
 

@@ -225,7 +225,7 @@ export class TransactionReceipt {
             receipt.hasExchangerate() ?
                 exchangeRateSetToSdk(receipt.getExchangerate()!) :
                 null,
-            receipt.getTopicsequencenumber(),
+            new BigNumber(receipt.getTopicsequencenumber()).toNumber(),
             receipt.getTopicrunninghash_asU8(),
             receipt.hasScheduledtransactionid() ?
                 TransactionId._fromProto(receipt.getScheduledtransactionid()!) :

@@ -40,7 +40,7 @@ message ConsensusTopicQuery {
 
     // The maximum number of messages to receive before stopping. If not set or set to zero it will return messages
     // indefinitely.
-    uint64 limit = 4;
+    uint64 limit = 4 [jstype=JS_STRING];
 }
 
 message ConsensusTopicResponse {
@@ -51,9 +51,9 @@ message ConsensusTopicResponse {
 
     bytes runningHash = 3; // The running hash (SHA384) of every message.
 
-    uint64 sequenceNumber = 4; // Starts at 1 for first submitted message. Incremented on each submitted message.
+    uint64 sequenceNumber = 4 [jstype=JS_STRING]; // Starts at 1 for first submitted message. Incremented on each submitted message.
 
-    uint64 runningHashVersion = 5; // Version of the SHA-384 digest used to update the running hash.
+    uint64 runningHashVersion = 5 [jstype=JS_STRING]; // Version of the SHA-384 digest used to update the running hash.
 
     .proto.ConsensusMessageChunkInfo chunkInfo = 6; // Optional information of the current chunk in a fragmented message.
 }

@@ -44,9 +44,9 @@ export class AccountId {
     // NOT A STABLE API
     public static _fromProto(accountId: AccountID): AccountId {
         return new AccountId({
-            shard: accountId.getShardnum(),
-            realm: accountId.getRealmnum(),
-            account: accountId.getAccountnum()
+            shard: new BigNumber(accountId.getShardnum()).toNumber(),
+            realm: new BigNumber(accountId.getRealmnum()).toNumber(),
+            account: new BigNumber(accountId.getAccountnum()).toNumber()
         });
     }
 
@@ -84,9 +84,9 @@ export class AccountId {
     // NOT A STABLE API
     public _toProto(): AccountID {
         const acctId = new AccountID();
-        acctId.setShardnum(this.shard);
-        acctId.setRealmnum(this.realm);
-        acctId.setAccountnum(this.account);
+        acctId.setShardnum(this.shard.toString());
+        acctId.setRealmnum(this.realm.toString());
+        acctId.setAccountnum(this.account.toString());
         return acctId;
     }
 }

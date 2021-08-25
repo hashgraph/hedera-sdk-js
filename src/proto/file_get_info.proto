@@ -42,7 +42,7 @@ message FileGetInfoResponse {
 
     message FileInfo {
         FileID fileID = 1; // The file ID of the file for which information is requested
-        int64 size = 2; // Number of bytes in contents
+        int64 size = 2 [jstype=JS_STRING]; // Number of bytes in contents
         Timestamp expirationTime = 3; // The current time at which this account is set to expire
         bool deleted = 4; // True if deleted but not yet expired
         KeyList keys = 5; // One of these keys must sign in order to modify or delete the file

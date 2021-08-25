@@ -11,6 +11,7 @@ import { ContractFunctionParams } from "./ContractFunctionParams";
 import { ResponseHeader } from "../generated/response_header_pb";
 import { BaseClient } from "../BaseClient";
 import { Hbar } from "../Hbar";
+import BigNumber from "bignumber.js";
 
 /**
  * Call a function of the given smart contract instance, giving it functionParameters as its inputs.
@@ -58,7 +59,7 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
      * The amount of gas to use for the call. All of the gas offered will be charged for.
      */
     public setGas(gas: number): this {
-        this._builder.setGas(gas);
+        this._builder.setGas(gas.toString());
         return this;
     }
 
@@ -67,7 +68,7 @@ export class ContractCallQuery extends QueryBuilder<ContractFunctionResult> {
      * returned more than this number of bytes.
      */
     public setMaxResultSize(size: number): this {
-        this._builder.setMaxresultsize(size);
+        this._builder.setMaxresultsize(size.toString());
         return this;
     }
 

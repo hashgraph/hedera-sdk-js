@@ -1,4 +1,5 @@
 import { Timestamp as ProtoTimestamp } from "./generated/timestamp_pb";
+import BigNumber from "bignumber.js";
 
 export class Time {
     public readonly seconds: number;
@@ -31,13 +32,13 @@ export class Time {
 
     public _toProto(): ProtoTimestamp {
         const proto = new ProtoTimestamp();
-        proto.setSeconds(this.seconds);
+        proto.setSeconds(this.seconds.toString());
         proto.setNanos(this.nanos);
         return proto;
     }
 
     public static _fromProto(timestamp: ProtoTimestamp): Time {
-        return new Time(timestamp.getSeconds(), timestamp.getNanos());
+        return new Time(new BigNumber(timestamp.getSeconds()).toNumber(), timestamp.getNanos());
     }
 
     public _increment(): Time {

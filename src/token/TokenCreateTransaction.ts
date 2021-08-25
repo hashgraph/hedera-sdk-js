@@ -90,7 +90,7 @@ export class TokenCreateTransaction extends SingleTransactionBuilder {
      * @return TokenCreateTransaction
      */
     public setInitialSupply(initialSupply: number): this {
-        this._body.setInitialsupply(initialSupply);
+        this._body.setInitialsupply(initialSupply.toString());
         return this;
     }
 

@@ -46,8 +46,8 @@ import "response_header.proto";
 message TokenGetNftInfosQuery {
     QueryHeader header = 1; // Standard info sent from client to node, including the signed payment, and what kind of response is requested (cost, state proof, both, or neither).
     TokenID tokenID = 2; // The ID of the token for which information is requested
-    int64 start = 3; // Specifies the start index (inclusive) of the range of NFTs to query for. Value must be in the range [0; ownedNFTs-1]
-    int64 end = 4; // Specifies the end index (exclusive) of the range of NFTs to query for. Value must be in the range (start; ownedNFTs]
+    int64 start = 3 [jstype=JS_STRING]; // Specifies the start index (inclusive) of the range of NFTs to query for. Value must be in the range [0; ownedNFTs-1]
+    int64 end = 4 [jstype=JS_STRING]; // Specifies the end index (exclusive) of the range of NFTs to query for. Value must be in the range (start; ownedNFTs]
 }
 
 message TokenGetNftInfosResponse {

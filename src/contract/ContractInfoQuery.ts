@@ -12,6 +12,7 @@ import { ResponseHeader } from "../generated/response_header_pb";
 import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
 import { BaseClient } from "../BaseClient";
 import { Hbar } from "../Hbar";
+import BigNumber from "bignumber.js";
 
 /**
  * Response when the client sends the node ContractGetInfoQuery
@@ -137,8 +138,9 @@ export class ContractInfoQuery extends QueryBuilder<ContractInfo> {
                 null,
 
             expirationTime: timestampToDate(contractInfo.getExpirationtime()!),
-            autoRenewPeriod: contractInfo.getAutorenewperiod()!.getSeconds(),
-            storage: contractInfo.getStorage(),
+            autoRenewPeriod: new BigNumber(contractInfo.getAutorenewperiod()!.getSeconds())
+                .toNumber(),
+            storage: new BigNumber(contractInfo.getStorage()).toNumber(),
             contractMemo: contractInfo.getMemo()
         };
     }

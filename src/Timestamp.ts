@@ -1,4 +1,5 @@
 import { Timestamp as ProtoTimestamp } from "./generated/timestamp_pb";
+import BigNumber from "bignumber.js";
 
 export interface Timestamp {
     seconds: number;
@@ -21,13 +22,16 @@ export function timestampToDate(timestamp: ProtoTimestamp): Date {
 }
 
 export function timestampToMs(timestamp: ProtoTimestamp): number {
-    return timestamp.getSeconds() * 1000 + Math.floor(timestamp.getNanos() / 1_000_000);
+    return new BigNumber(timestamp.getSeconds())
+        .multipliedBy(1000)
+        .plus(Math.floor(timestamp.getNanos() / 1_000_000))
+        .toNumber();
 }
 
 /* eslint-disable-next-line max-len */
 export function timestampToProto({ seconds, nanos }: { seconds: number; nanos: number }): ProtoTimestamp {
     const timestamp = new ProtoTimestamp();
-    timestamp.setSeconds(seconds);
+    timestamp.setSeconds(seconds.toString());
     timestamp.setNanos(nanos);
     return timestamp;
 }

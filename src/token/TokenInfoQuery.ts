@@ -210,7 +210,7 @@ export class TokenInfoQuery extends QueryBuilder<TokenInfo> {
             autoRenewAccount: info.hasAutorenewaccount() ?
                 AccountId._fromProto(info.getAutorenewaccount()!) :
                 null,
-            autoRenewPeriod: info.getAutorenewperiod()!.getSeconds(),
+            autoRenewPeriod: new BigNumber(info.getAutorenewperiod()!.getSeconds()).toNumber(),
             expirationTime: info.hasExpiry() ?
                 timestampToDate(info.getExpiry()!) :
                 null,

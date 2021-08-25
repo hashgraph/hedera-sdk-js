@@ -70,7 +70,7 @@ import "schedule_delete.proto";
 In Hedera Services 0.13.0, it will include only <tt>CryptoTransfer</tt> and
 <tt>ConsensusSubmitMessage</tt> functions. */
 message SchedulableTransactionBody {
-  uint64 transactionFee = 1; // The maximum transaction fee the client is willing to pay
+  uint64 transactionFee = 1 [jstype=JS_STRING]; // The maximum transaction fee the client is willing to pay
   string memo = 2; // A memo to include the execution record; the UTF-8 encoding may be up to 100 bytes and must not include the zero byte
   oneof data {
     ContractCallTransactionBody contractCall = 3; // Calls a function of a contract instance

@@ -49,7 +49,7 @@ message TransactionReceipt {
     TopicID topicID = 6;
 
     // In the receipt of a ConsensusSubmitMessage, the new sequence number of the topic that received the message
-    uint64 topicSequenceNumber = 7;
+    uint64 topicSequenceNumber = 7 [jstype=JS_STRING];
 
     // In the receipt of a ConsensusSubmitMessage, the new running hash of the topic that received the message.
     // This 48-byte field is the output of a particular SHA-384 digest whose input data are determined by the
@@ -96,13 +96,13 @@ message TransactionReceipt {
     bytes topicRunningHash = 8;
 
     // In the receipt of a ConsensusSubmitMessage, the version of the SHA-384 digest used to update the running hash.
-    uint64 topicRunningHashVersion = 9;
+    uint64 topicRunningHashVersion = 9 [jstype=JS_STRING];
 
     // In the receipt of a CreateToken, the id of the newly created token
     TokenID tokenID = 10;
 
     // In the receipt of TokenMint, TokenWipe, TokenBurn, For fungible tokens - the current total supply of this token. For non fungible tokens - the total number of NFTs issued for a given tokenID
-    uint64 newTotalSupply = 11;
+    uint64 newTotalSupply = 11 [jstype=JS_STRING];
 
     // In the receipt of a ScheduleCreate, the id of the newly created Scheduled Entity
     ScheduleID scheduleID = 12;
@@ -111,5 +111,5 @@ message TransactionReceipt {
     TransactionID scheduledTransactionID = 13;
 
     // In the receipt of a TokenMint for tokens of type NON_FUNGIBLE_UNIQUE, the serial numbers of the newly created NFTs
-    repeated int64 serialNumbers = 14;
+    repeated int64 serialNumbers = 14 [jstype=JS_STRING];
 }

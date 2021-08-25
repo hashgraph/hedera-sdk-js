@@ -29,7 +29,7 @@ export class BaseMirrorConsensusTopicQuery {
     }
 
     public setLimit(limit: number): this {
-        this._builder.setLimit(limit);
+        this._builder.setLimit(limit.toString());
         return this;
     }
 

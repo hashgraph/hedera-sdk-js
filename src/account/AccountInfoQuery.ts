@@ -223,7 +223,8 @@ export class AccountInfoQuery extends QueryBuilder<AccountInfo> {
             generateReceiveRecordThreshold: receiveThreshold,
             isReceiverSignatureRequired: accountInfo.getReceiversigrequired(),
             expirationTime: new Date(timestampToMs(accountInfo.getExpirationtime()!)),
-            autoRenewPeriod: accountInfo.getAutorenewperiod()!.getSeconds(),
+            autoRenewPeriod: new BigNumber(accountInfo.getAutorenewperiod()!.getSeconds())
+                .toNumber(),
 
             proxyAccountId: accountInfo.hasProxyaccountid() ?
                 AccountId._fromProto(accountInfo.getProxyaccountid()!) :

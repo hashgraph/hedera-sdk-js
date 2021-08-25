@@ -27,5 +27,5 @@ option java_multiple_files = true;
 
 /* A length of time in seconds. */
 message Duration {
-    int64 seconds = 1; // The number of seconds
+    int64 seconds = 1 [jstype=JS_STRING]; // The number of seconds
 }

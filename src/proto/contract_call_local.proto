@@ -43,7 +43,7 @@ message ContractFunctionResult {
     bytes contractCallResult = 2; // the result returned by the function
     string errorMessage = 3; // message In case there was an error during smart contract execution
     bytes bloom = 4; // bloom filter for record
-    uint64 gasUsed = 5; // units of gas used to execute contract
+    uint64 gasUsed = 5 [jstype=JS_STRING]; // units of gas used to execute contract
     repeated ContractLoginfo logInfo = 6; // the log info for events returned by the function
     repeated ContractID createdContractIDs = 7; // the list of smart contracts that were created by the function call
 }
@@ -62,9 +62,9 @@ the fee for this query.
 message ContractCallLocalQuery {
     QueryHeader header = 1; // standard info sent from client to node, including the signed payment, and what kind of response is requested (cost, state proof, both, or neither). The payment must cover the fees and all of the gas offered.
     ContractID contractID = 2; // the contract instance to call, in the format used in transactions
-    int64 gas = 3; // The amount of gas to use for the call; all of the gas offered will be used and charged a corresponding fee
+    int64 gas = 3 [jstype=JS_STRING]; // The amount of gas to use for the call; all of the gas offered will be used and charged a corresponding fee
     bytes functionParameters = 4; // which function to call, and the parameters to pass to the function
-    int64 maxResultSize = 5; // max number of bytes that the result might include. The run will fail if it would have returned more than this number of bytes.
+    int64 maxResultSize = 5 [jstype=JS_STRING]; // max number of bytes that the result might include. The run will fail if it would have returned more than this number of bytes.
 }
 
 /* Response when the client sends the node ContractCallLocalQuery */

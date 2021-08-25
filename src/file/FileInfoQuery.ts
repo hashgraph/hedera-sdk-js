@@ -11,6 +11,7 @@ import { ResponseHeader } from "../generated/response_header_pb";
 import { BaseClient } from "../BaseClient";
 import { Hbar } from "../Hbar";
 import { PublicKey, _fromProtoKeyList } from "../crypto/PublicKey";
+import BigNumber from "bignumber.js";
 
 /**
  * Response when the client sends the node FileGetInfoQuery.
@@ -101,7 +102,7 @@ export class FileInfoQuery extends QueryBuilder<FileInfo> {
 
         return {
             fileId: FileId._fromProto(fileInfo.getFileid()!),
-            size: fileInfo.getSize(),
+            size: new BigNumber(fileInfo.getSize()).toNumber(),
 
             expirationTime: fileInfo.hasExpirationtime() ?
                 timestampToDate(fileInfo.getExpirationtime()!) :

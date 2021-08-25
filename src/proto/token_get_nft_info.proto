@@ -33,7 +33,7 @@ import "timestamp.proto";
 /* Represents an NFT on the Ledger */
 message NftID {
     TokenID tokenID = 1; // The (non-fungible) token of which this NFT is an instance
-    int64 serialNumber = 2; // The unique identifier of this instance
+    int64 serialNumber = 2 [jstype=JS_STRING]; // The unique identifier of this instance
 }
 
 /* Applicable only to tokens of type NON_FUNGIBLE_UNIQUE. Gets info on a NFT for a given TokenID (of type NON_FUNGIBLE_UNIQUE) and serial number */
