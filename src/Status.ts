@@ -548,9 +548,6 @@ export class Status implements Indexed {
      */
     public static readonly TransferAccountSameAsDeleteAccount = new Status(107);
 
-    /**
-     *
-     */
     public static readonly TotalLedgerBalanceInvalid = new Status(108);
 
     /**
@@ -959,7 +956,7 @@ export class Status implements Indexed {
     public static readonly InsufficientPayerBalanceForCustomFee = new Status(231);
 
     /**
-     * The customFees list is longer than allowed limit 10
+     * More than 10 custom fees were specified
      */
     public static readonly CustomFeesListTooLong = new Status(232);
 
@@ -1009,9 +1006,9 @@ export class Status implements Indexed {
     public static readonly CustomFeeOutsideNumericRange = new Status(241);
 
     /**
-     * The sum of all custom fractional fees must be strictly less than 1
+     * A royalty cannot exceed the total fungible value exchanged for an NFT
      */
-    public static readonly InvalidCustomFractionalFeesSum = new Status(242);
+    public static readonly RoyaltyFractionCannotExceedOne = new Status(242);
 
     /**
      * Each fractional custom fee must have its maximum_amount, if specified, at least its minimum_amount
@@ -1052,6 +1049,61 @@ export class Status implements Indexed {
      * The treasury for a unique token cannot be changed until it owns no NFTs
      */
     public static readonly CurrentTreasuryStillOwnsNfts = new Status(250);
+
+    /**
+     * An account cannot be dissociated from a unique token if it owns NFTs for the token
+     */
+    public static readonly AccountStillOwnsNfts = new Status(251);
+
+    /**
+     * A NFT can only be burned when owned by the unique token's treasury
+     */
+    public static readonly TreasuryMustOwnBurnedNft = new Status(252);
+
+    /**
+     * An account did not own the NFT to be wiped
+     */
+    public static readonly AccountDoesNotOwnWipedNft = new Status(253);
+
+    /**
+     * An AccountAmount token transfers list referenced a token type other than FUNGIBLE_COMMON
+     */
+    public static readonly AccountAmountTransfersOnlyAllowedForFungibleCommon = new Status(254);
+
+    /**
+     * All the NFTs allowed in the current price regime have already been minted
+     */
+    public static readonly MaxNftsInPriceRegimeHaveBeenMinted = new Status(255);
+
+    /**
+     * The payer account has been marked as deleted
+     */
+    public static readonly PayerAccountDeleted = new Status(256);
+
+    /**
+     * The reference chain of custom fees for a transferred token exceeded the maximum length of 2
+     */
+    public static readonly CustomFeeChargingExceededMaxRecursionDepth = new Status(257);
+
+    /**
+     * More than 20 balance adjustments were to satisfy a CryptoTransfer and its implied custom fee payments
+     */
+    public static readonly CustomFeeChargingExceededMaxAccountAmounts = new Status(258);
+
+    /**
+     * The sender account in the token transfer transaction could not afford a custom fee
+     */
+    public static readonly InsufficientSenderAccountBalanceForCustomFee = new Status(259);
+
+    /**
+     * Currently no more than 4,294,967,295 NFTs may be minted for a given unique token type
+     */
+    public static readonly SerialNumberLimitReached = new Status(260);
+
+    /**
+     * Only tokens of type NON_FUNGIBLE_UNIQUE can have royalty fees
+     */
+    public static readonly CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique = new Status(261);
 
     private static [ 0 ] = Status.Ok;
     private static [ 1 ] = Status.InvalidTransaction;
@@ -1253,7 +1305,7 @@ export class Status implements Indexed {
     private static [ 239 ] = Status.CustomFeeMustBePositive;
     private static [ 240 ] = Status.TokenHasNoFeeScheduleKey;
     private static [ 241 ] = Status.CustomFeeOutsideNumericRange;
-    private static [ 242 ] = Status.InvalidCustomFractionalFeesSum;
+    private static [ 242 ] = Status.RoyaltyFractionCannotExceedOne;
     private static [ 243 ] = Status.FractionalFeeMaxAmountLessThanMinAmount;
     private static [ 244 ] = Status.CustomScheduleAlreadyHasNoFees;
     private static [ 245 ] = Status.CustomFeeDenominationMustBeFungibleCommon;
@@ -1262,6 +1314,17 @@ export class Status implements Indexed {
     private static [ 248 ] = Status.InvalidTokenMintMetadata;
     private static [ 249 ] = Status.InvalidTokenBurnMetadata;
     private static [ 250 ] = Status.CurrentTreasuryStillOwnsNfts;
+    private static [ 251 ] = Status.AccountStillOwnsNfts;
+    private static [ 252 ] = Status.TreasuryMustOwnBurnedNft;
+    private static [ 253 ] = Status.AccountDoesNotOwnWipedNft;
+    private static [ 254 ] = Status.AccountAmountTransfersOnlyAllowedForFungibleCommon;
+    private static [ 255 ] = Status.MaxNftsInPriceRegimeHaveBeenMinted;
+    private static [ 256 ] = Status.PayerAccountDeleted;
+    private static [ 257 ] = Status.CustomFeeChargingExceededMaxRecursionDepth;
+    private static [ 258 ] = Status.CustomFeeChargingExceededMaxAccountAmounts;
+    private static [ 259 ] = Status.InsufficientSenderAccountBalanceForCustomFee;
+    private static [ 260 ] = Status.SerialNumberLimitReached;
+    private static [ 261 ] = Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique;
 
     // New functionality added by HTS above
 
@@ -1474,7 +1537,7 @@ export class Status implements Indexed {
             case Status.CustomFeeMustBePositive: return "CUSTOM_FEE_MUST_BE_POSITIVE";
             case Status.TokenHasNoFeeScheduleKey: return "TOKEN_HAS_NO_FEE_SCHEDULE_KEY";
             case Status.CustomFeeOutsideNumericRange: return "CUSTOM_FEE_OUTSIDE_NUMERIC_RANGE";
-            case Status.InvalidCustomFractionalFeesSum: return "INVALID_CUSTOM_FRACTIONAL_FEES_SUM";
+            case Status.RoyaltyFractionCannotExceedOne: return "ROYALTY_FRACTION_CANNOT_EXCEED_ONE";
             case Status.FractionalFeeMaxAmountLessThanMinAmount: return "FRACTIONAL_FEE_MAX_AMOUNT_LESS_THAN_MIN_AMOUNT";
             case Status.CustomScheduleAlreadyHasNoFees: return "CUSTOM_SCHEDULE_ALREADY_HAS_NO_FEES";
             case Status.CustomFeeDenominationMustBeFungibleCommon: return "CUSTOM_FEE_DENOMINATION_MUST_BE_FUNGIBLE_COMMON";
@@ -1483,6 +1546,17 @@ export class Status implements Indexed {
             case Status.InvalidTokenMintMetadata: return "INVALID_TOKEN_MINT_METADATA";
             case Status.InvalidTokenBurnMetadata: return "INVALID_TOKEN_BURN_METADATA";
             case Status.CurrentTreasuryStillOwnsNfts: return "CURRENT_TREASURY_STILL_OWNS_NFTS";
+            case Status.AccountStillOwnsNfts: return "ACCOUNT_STILL_OWNS_NFTS";
+            case Status.TreasuryMustOwnBurnedNft: return "TREASURY_MUST_OWN_BURNED_NFT";
+            case Status.AccountDoesNotOwnWipedNft: return "ACCOUNT_DOES_NOT_OWN_WIPED_NFT";
+            case Status.AccountAmountTransfersOnlyAllowedForFungibleCommon: return "ACCOUNT_AMOUNT_TRANSFERS_ONLY_ALLOWED_FOR_FUNGIBLE_COMMON";
+            case Status.MaxNftsInPriceRegimeHaveBeenMinted: return "MAX_NFTS_IN_PRICE_REGIME_HAVE_BEEN_MINTED";
+            case Status.PayerAccountDeleted: return "PAYER_ACCOUNT_DELETED";
+            case Status.CustomFeeChargingExceededMaxRecursionDepth: return "CUSTOM_FEE_CHARGING_EXCEEDED_MAX_RECURSION_DEPTH";
+            case Status.CustomFeeChargingExceededMaxAccountAmounts: return "CUSTOM_FEE_CHARGING_EXCEEDED_MAX_ACCOUNT_AMOUNTS";
+            case Status.InsufficientSenderAccountBalanceForCustomFee: return "INSUFFICIENT_SENDER_ACCOUNT_BALANCE_FOR_CUSTOM_FEE";
+            case Status.SerialNumberLimitReached: return "SERIAL_NUMBER_LIMIT_REACHED";
+            case Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique: return "CUSTOM_ROYALTY_FEE_ONLY_ALLOWED_FOR_NON_FUNGIBLE_UNIQUE";
             default: return `UNKNOWN STATUS CODE (${this.code})`;
         }
     }

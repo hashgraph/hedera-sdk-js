@@ -1,6 +1,6 @@
 import { AccountUpdateTransaction, Hbar } from "../../../src/exports";
 import { mockClient, privateKey } from "../MockClient";
-import { TransactionBody } from "../../../src/generated/TransactionBody_pb";
+import { TransactionBody } from "../../../src/generated/transaction_body_pb";
 
 describe("AccountUpdateTransaction", () => {
     it("serializes correctly", () => {
