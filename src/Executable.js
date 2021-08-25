@@ -51,6 +51,12 @@ export default class Executable {
          * @type {AccountId[]}
          */
         this._nodeIds = [];
+
+        /** @type {number} */
+        this._minBackoff = 250;
+
+        /** @type {number} */
+        this._maxBackoff = 8000;
     }
 
     /**
@@ -103,6 +109,36 @@ export default class Executable {
         this._maxAttempts = maxAttempts;
 
         return this;
+    }
+
+    /**
+     * @param {number} minBackoff
+     */
+    setMinBackoff(minBackoff) {
+        this._minBackoff = minBackoff;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get minBackoff() {
+        return this._minBackoff;
+    }
+
+    /**
+     * @param {number} maxBackoff
+     */
+    setMaxBackoff(maxBackoff) {
+        if (maxBackoff >= this.minBackoff){
+            this._maxBackoff = maxBackoff;
+        }
+    }
+
+    /**
+     * @returns {number}
+     */
+    get maxBackoff() {
+        return this._maxBackoff;
     }
 
     /**
@@ -279,7 +315,7 @@ export default class Executable {
 
             switch (this._shouldRetry(request, response)) {
                 case ExecutionState.Retry:
-                    await delayForAttempt(attempt);
+                    await delayForAttempt(attempt,this._minBackoff,this._maxBackoff); //update this to pass min/max into funct
                     continue;
                 case ExecutionState.Finished:
                     return this._mapResponse(response, nodeAccountId, request);
@@ -296,9 +332,11 @@ export default class Executable {
 
 /**
  * @param {number} attempt
+ * @param {number} minBackoff
+ * @param {number} maxBackoff
  * @returns {Promise<void>}
  */
-function delayForAttempt(attempt) {
+function delayForAttempt(attempt,minBackoff,maxBackoff) {
     // 0.1s, 0.2s, 0.4s, 0.8s, ...
     const ms = Math.floor(50 * Math.pow(2, attempt));
     return new Promise((resolve) => setTimeout(resolve, ms));

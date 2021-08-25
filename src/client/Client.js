@@ -98,6 +98,12 @@ export default class Client {
 
         /** @type {number | null} */
         this._maxAttempts = null;
+
+        /** @type {number} */
+        this._minBackoff = 250;
+
+        /** @type {number} */
+        this._maxBackoff = 8000;
     }
 
     /**
@@ -335,6 +341,36 @@ export default class Client {
     setMaxNodesPerTransaction(maxNodesPerTransaction) {
         this._network.setMaxNodesPerTransaction(maxNodesPerTransaction);
         return this;
+    }
+
+    /**
+     * @param {number} minBackoff
+     */
+    setMinBackoff(minBackoff) {
+        this._minBackoff = minBackoff;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get minBackoff() {
+        return this._minBackoff;
+    }
+
+    /**
+     * @param {number} maxBackoff
+     */
+    setMaxBackoff(maxBackoff) {
+        if (maxBackoff >= this.minBackoff){
+            this._maxBackoff = maxBackoff;
+        }
+    }
+
+    /**
+     * @returns {number}
+     */
+    get maxBackoff() {
+        return this._maxBackoff;
     }
 
     /**
