@@ -315,11 +315,7 @@ export default class Executable {
 
             switch (this._shouldRetry(request, response)) {
                 case ExecutionState.Retry:
-                    await delayForAttempt(
-                        attempt,
-                        this._minBackoff,
-                        this._maxBackoff
-                    ); //update this to pass min/max into funct
+                    await delayForAttempt(attempt,this._minBackoff,this._maxBackoff);
                     continue;
                 case ExecutionState.Finished:
                     return this._mapResponse(response, nodeAccountId, request);
