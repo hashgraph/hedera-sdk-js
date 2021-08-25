@@ -1,10 +1,10 @@
 import { SingleTransactionBuilder } from "../TransactionBuilder";
-import { Transaction } from "../generated/Transaction_pb";
-import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { Transaction } from "../generated/transaction_pb";
+import { TransactionResponse } from "../generated/transaction_response_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 
-import { FileService } from "../generated/FileService_pb_service";
-import { FileAppendTransactionBody } from "../generated/FileAppend_pb";
+import { FileService } from "../generated/file_service_pb_service";
+import { FileAppendTransactionBody } from "../generated/file_append_pb";
 import { FileId, FileIdLike } from "../file/FileId";
 import * as utf8 from "@stablelib/utf8";
 

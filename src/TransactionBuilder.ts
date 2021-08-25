@@ -1,13 +1,13 @@
 import { BaseClient } from "./BaseClient";
-import { TransactionBody } from "./generated/TransactionBody_pb";
+import { TransactionBody } from "./generated/transaction_body_pb";
 import {
     newDuration,
     runValidation
 } from "./util";
 import { Transaction, transactionCreate, transactionCall } from "./Transaction";
-import { Transaction as Transaction_ } from "./generated/Transaction_pb";
+import { Transaction as Transaction_ } from "./generated/transaction_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { TransactionResponse } from "./generated/TransactionResponse_pb";
+import { TransactionResponse } from "./generated/transaction_response_pb";
 
 import { Hbar, Tinybar, hbarFromTinybarOrHbar, hbarCheck, hbarToProto } from "./Hbar";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;

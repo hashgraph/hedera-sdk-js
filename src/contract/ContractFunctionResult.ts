@@ -1,5 +1,5 @@
 import { ContractLogInfo, contractLogInfoListToSdk } from "./ContractLogInfo";
-import * as pb from "../generated/ContractCallLocal_pb";
+import * as pb from "../generated/contract_call_local_pb";
 import { ContractId } from "./ContractId";
 import BigNumber from "bignumber.js";
 import * as hex from "@stablelib/hex";

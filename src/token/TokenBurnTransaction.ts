@@ -1,9 +1,9 @@
 import { SingleTransactionBuilder } from "../TransactionBuilder";
-import { Transaction } from "../generated/Transaction_pb";
-import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { Transaction } from "../generated/transaction_pb";
+import { TransactionResponse } from "../generated/transaction_response_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { TokenBurnTransactionBody } from "../generated/TokenBurn_pb";
-import { TokenService } from "../generated/TokenService_pb_service";
+import { TokenBurnTransactionBody } from "../generated/token_burn_pb";
+import { TokenService } from "../generated/token_service_pb_service";
 import { TokenId, TokenIdLike } from "./TokenId";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import BigNumber from "bignumber.js";

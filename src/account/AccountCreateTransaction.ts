@@ -1,10 +1,10 @@
 import { SingleTransactionBuilder } from "../TransactionBuilder";
-import { Transaction } from "../generated/Transaction_pb";
-import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { Transaction } from "../generated/transaction_pb";
+import { TransactionResponse } from "../generated/transaction_response_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { CryptoCreateTransactionBody } from "../generated/CryptoCreate_pb";
+import { CryptoCreateTransactionBody } from "../generated/crypto_create_pb";
 import { newDuration } from "../util";
-import { CryptoService } from "../generated/CryptoService_pb_service";
+import { CryptoService } from "../generated/crypto_service_pb_service";
 import {
     Hbar,
     Tinybar,

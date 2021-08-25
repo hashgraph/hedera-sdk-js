@@ -1,11 +1,11 @@
 import { SingleTransactionBuilder } from "../TransactionBuilder";
-import { Transaction } from "../generated/Transaction_pb";
-import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { Transaction } from "../generated/transaction_pb";
+import { TransactionResponse } from "../generated/transaction_response_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { CryptoTransferTransactionBody } from "../generated/CryptoTransfer_pb";
+import { CryptoTransferTransactionBody } from "../generated/crypto_transfer_pb";
 import BigNumber from "bignumber.js";
-import { CryptoService } from "../generated/CryptoService_pb_service";
-import { AccountAmount, TransferList } from "../generated/BasicTypes_pb";
+import { CryptoService } from "../generated/crypto_service_pb_service";
+import { AccountAmount, TransferList } from "../generated/basic_types_pb";
 
 import {
     Hbar,

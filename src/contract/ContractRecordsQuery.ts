@@ -1,13 +1,13 @@
 import { QueryBuilder } from "../QueryBuilder";
-import { QueryHeader } from "../generated/QueryHeader_pb";
-import { Query } from "../generated/Query_pb";
+import { QueryHeader } from "../generated/query_header_pb";
+import { Query } from "../generated/query_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Response } from "../generated/Response_pb";
-import { SmartContractService } from "../generated/SmartContractService_pb_service";
+import { Response } from "../generated/response_pb";
+import { SmartContractService } from "../generated/smart_contract_service_pb_service";
 import { TransactionRecord } from "../TransactionRecord";
 import { ContractId, ContractIdLike } from "./ContractId";
-import { ContractGetRecordsQuery } from "../generated/ContractGetRecords_pb";
-import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { ContractGetRecordsQuery } from "../generated/contract_get_records_pb";
+import { ResponseHeader } from "../generated/response_header_pb";
 
 /**
  * Get all the records for a smart contract instance, for any function call

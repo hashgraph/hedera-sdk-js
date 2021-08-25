@@ -2,9 +2,9 @@ import {
     AccountId,
     AccountIdLike
 } from "./account/AccountId";
-import { TransactionID } from "./generated/BasicTypes_pb";
+import { TransactionID } from "./generated/basic_types_pb";
 import { orThrow } from "./util";
-import { Timestamp } from "./generated/Timestamp_pb";
+import { Timestamp } from "./generated/timestamp_pb";
 import { dateToTimestamp, Timestamp as JsTimestamp } from "./Timestamp";
 import { BaseClient } from "./BaseClient";
 import { TransactionReceipt } from "./TransactionReceipt";

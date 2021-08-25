@@ -1,11 +1,11 @@
 import { QueryBuilder } from "../QueryBuilder";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Query } from "../generated/Query_pb";
-import { QueryHeader } from "../generated/QueryHeader_pb";
-import { Response } from "../generated/Response_pb";
-import { ResponseHeader } from "../generated/ResponseHeader_pb";
-import { ConsensusService } from "../generated/ConsensusService_pb_service";
-import { ConsensusGetTopicInfoQuery } from "../generated/ConsensusGetTopicInfo_pb";
+import { Query } from "../generated/query_pb";
+import { QueryHeader } from "../generated/query_header_pb";
+import { Response } from "../generated/response_pb";
+import { ResponseHeader } from "../generated/response_header_pb";
+import { ConsensusService } from "../generated/consensus_service_pb_service";
+import { ConsensusGetTopicInfoQuery } from "../generated/consensus_get_topic_info_pb";
 import { Time } from "../Time";
 import { PublicKey, _fromProtoKey } from "../crypto/PublicKey";
 import { AccountId } from "../account/AccountId";

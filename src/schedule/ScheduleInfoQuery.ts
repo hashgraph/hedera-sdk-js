@@ -1,23 +1,23 @@
 import { Message } from "google-protobuf";
 
 import { QueryBuilder } from "../QueryBuilder";
-import { ScheduleService } from "../generated/ScheduleService_pb_service";
+import { ScheduleService } from "../generated/schedule_service_pb_service";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Query } from "../generated/Query_pb";
-import { ScheduleGetInfoQuery, ScheduleInfo as ProtoScheduleInfo } from "../generated/ScheduleGetInfo_pb";
+import { Query } from "../generated/query_pb";
+import { ScheduleGetInfoQuery, ScheduleInfo as ProtoScheduleInfo } from "../generated/schedule_get_info_pb";
 import { Transaction } from "../Transaction";
-import { Transaction as ProtoTransaction } from "../generated/Transaction_pb";
-import { QueryHeader } from "../generated/QueryHeader_pb";
-import { SchedulableTransactionBody } from "../generated/SchedulableTransactionBody_pb";
-import { Response } from "../generated/Response_pb";
+import { Transaction as ProtoTransaction } from "../generated/transaction_pb";
+import { QueryHeader } from "../generated/query_header_pb";
+import { SchedulableTransactionBody } from "../generated/schedulable_transaction_body_pb";
+import { Response } from "../generated/response_pb";
 import { ScheduleId, ScheduleIdLike } from "../schedule/ScheduleId";
 import { AccountId } from "../account/AccountId";
 import { timestampToDate } from "../Timestamp";
-import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { ResponseHeader } from "../generated/response_header_pb";
 import { BaseClient } from "../BaseClient";
 import { Hbar } from "../Hbar";
 import { PublicKey, _fromProtoKey, _fromProtoKeyList } from "../crypto/PublicKey";
-import { TransactionBody } from "../generated/TransactionBody_pb";
+import { TransactionBody } from "../generated/transaction_body_pb";
 import { TransactionId } from "../TransactionId";
 import { newDuration } from "../util";
 

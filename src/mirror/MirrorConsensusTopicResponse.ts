@@ -1,4 +1,4 @@
-import { ConsensusTopicResponse } from "../generated/MirrorConsensusService_pb";
+import { ConsensusTopicResponse } from "../generated/mirror_consensus_service_pb";
 import { Time } from "../Time";
 import * as utf8 from "@stablelib/utf8";
 

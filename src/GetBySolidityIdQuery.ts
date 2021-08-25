@@ -1,14 +1,14 @@
 import { QueryBuilder } from "./QueryBuilder";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Query } from "./generated/Query_pb";
-import { Response } from "./generated/Response_pb";
-import { QueryHeader } from "./generated/QueryHeader_pb";
+import { Query } from "./generated/query_pb";
+import { Response } from "./generated/response_pb";
+import { QueryHeader } from "./generated/query_header_pb";
 import { FileId } from "./file/FileId";
 import { ContractId } from "./contract/ContractId";
 import { AccountId } from "./account/AccountId";
-import * as pb from "./generated/GetBySolidityID_pb";
-import { SmartContractService } from "./generated/SmartContractService_pb_service";
-import { ResponseHeader } from "./generated/ResponseHeader_pb";
+import * as pb from "./generated/get_by_solidity_id_pb";
+import { SmartContractService } from "./generated/smart_contract_service_pb_service";
+import { ResponseHeader } from "./generated/response_header_pb";
 
 export type EntityId =
     { type: "ACCOUNT"; accountId: AccountId } |

@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { TokenId } from "./TokenId";
-import { NftID as ProtoNftId } from "../generated/TokenGetNftInfo_pb";
+import { NftID as ProtoNftId } from "../generated/token_get_nft_info_pb";
 
 export class NftId {
     public readonly tokenId: TokenId;

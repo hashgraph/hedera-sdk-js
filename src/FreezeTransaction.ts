@@ -1,9 +1,9 @@
 import { SingleTransactionBuilder } from "./TransactionBuilder";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Transaction } from "./generated/Transaction_pb";
-import { TransactionResponse } from "./generated/TransactionResponse_pb";
-import { FreezeTransactionBody } from "./generated/Freeze_pb";
-import { FreezeService } from "./generated/FreezeService_pb_service";
+import { Transaction } from "./generated/transaction_pb";
+import { TransactionResponse } from "./generated/transaction_response_pb";
+import { FreezeTransactionBody } from "./generated/freeze_pb";
+import { FreezeService } from "./generated/freeze_service_pb_service";
 
 /**
  * Set the freezing period in which the platform will stop creating events and accepting

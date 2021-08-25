@@ -1,5 +1,5 @@
 import * as nacl from "tweetnacl";
-import { Key } from "../generated/BasicTypes_pb";
+import { Key } from "../generated/basic_types_pb";
 import { ed25519PubKeyPrefix } from "./util";
 import { PublicKey } from "./PublicKey";
 import { BadKeyError } from "../errors/BadKeyError";

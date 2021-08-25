@@ -1,11 +1,11 @@
 import { SingleTransactionBuilder } from "../TransactionBuilder";
-import { Transaction } from "../generated/Transaction_pb";
-import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { Transaction } from "../generated/transaction_pb";
+import { TransactionResponse } from "../generated/transaction_response_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 
-import { FileService } from "../generated/FileService_pb_service";
-import { FileCreateTransactionBody } from "../generated/FileCreate_pb";
-import { KeyList } from "../generated/BasicTypes_pb";
+import { FileService } from "../generated/file_service_pb_service";
+import { FileCreateTransactionBody } from "../generated/file_create_pb";
+import { KeyList } from "../generated/basic_types_pb";
 import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { Ed25519PublicKey } from "../crypto/Ed25519PublicKey";
 import * as utf8 from "@stablelib/utf8";

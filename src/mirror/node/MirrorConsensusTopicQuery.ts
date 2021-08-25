@@ -1,6 +1,6 @@
 import * as grpc from "@grpc/grpc-js";
-import { ConsensusTopicResponse } from "../../generated/MirrorConsensusService_pb";
-import { ConsensusService } from "../../generated/MirrorConsensusService_pb_service";
+import { ConsensusTopicResponse } from "../../generated/mirror_consensus_service_pb";
+import { ConsensusService } from "../../generated/mirror_consensus_service_pb_service";
 import { TransactionId } from "../../TransactionId";
 import {
     BaseMirrorConsensusTopicQuery,

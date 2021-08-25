@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { TokenId } from "./TokenId";
 import { AccountId } from "../account/AccountId";
-import { AssessedCustomFee as ProtoAssessedCustomFee } from "../generated/CustomFees_pb";
+import { AssessedCustomFee as ProtoAssessedCustomFee } from "../generated/custom_fees_pb";
 
 export class AssessedCustomFee {
     public readonly amount: BigNumber | null = null;

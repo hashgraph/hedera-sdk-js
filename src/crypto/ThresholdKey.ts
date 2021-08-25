@@ -1,5 +1,5 @@
 import { PublicKey } from "./PublicKey";
-import * as proto from "../generated/BasicTypes_pb";
+import * as proto from "../generated/basic_types_pb";
 
 export class ThresholdKey extends PublicKey {
     private readonly _threshold: number;

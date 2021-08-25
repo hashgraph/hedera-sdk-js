@@ -1,4 +1,4 @@
-import { Timestamp as ProtoTimestamp } from "./generated/Timestamp_pb";
+import { Timestamp as ProtoTimestamp } from "./generated/timestamp_pb";
 
 export interface Timestamp {
     seconds: number;

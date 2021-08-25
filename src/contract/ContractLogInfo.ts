@@ -1,4 +1,4 @@
-import { ContractLoginfo as ProtoContractLoginfo } from "../generated/ContractCallLocal_pb";
+import { ContractLoginfo as ProtoContractLoginfo } from "../generated/contract_call_local_pb";
 import { ContractId } from "./ContractId";
 
 /**

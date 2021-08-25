@@ -1,5 +1,5 @@
 import { PublicKey } from "./PublicKey";
-import * as proto from "../generated/BasicTypes_pb";
+import * as proto from "../generated/basic_types_pb";
 
 export class KeyList {
     private readonly _keys: proto.Key[] = [];

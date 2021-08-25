@@ -1,4 +1,4 @@
-import { TransactionReceipt as ProtoTransactionReceipt } from "./generated/TransactionReceipt_pb";
+import { TransactionReceipt as ProtoTransactionReceipt } from "./generated/transaction_receipt_pb";
 import { AccountId } from "./account/AccountId";
 import { ConsensusTopicId } from "./consensus/ConsensusTopicId";
 import { ContractId } from "./contract/ContractId";

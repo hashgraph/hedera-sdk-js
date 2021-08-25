@@ -1,4 +1,4 @@
-import { AccountAmount as ProtoAccountAmount } from "./generated/BasicTypes_pb";
+import { AccountAmount as ProtoAccountAmount } from "./generated/basic_types_pb";
 import { AccountId } from "./account/AccountId";
 import { Hbar } from "./Hbar";
 

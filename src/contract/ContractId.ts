@@ -1,4 +1,4 @@
-import { ContractID, Key } from "../generated/BasicTypes_pb";
+import { ContractID, Key } from "../generated/basic_types_pb";
 import { normalizeEntityId } from "../util";
 import { PublicKey } from "../crypto/PublicKey";
 import BigNumber from "bignumber.js";

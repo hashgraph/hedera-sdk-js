@@ -1,4 +1,4 @@
-import { TokenSupplyTypeMap } from "../generated/BasicTypes_pb";
+import { TokenSupplyTypeMap } from "../generated/basic_types_pb";
 
 interface Indexed {
     [code: number]: TokenSupplyType;

@@ -1,14 +1,14 @@
 import { QueryBuilder } from "../QueryBuilder";
-import { QueryHeader } from "../generated/QueryHeader_pb";
-import { Query } from "../generated/Query_pb";
+import { QueryHeader } from "../generated/query_header_pb";
+import { Query } from "../generated/query_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Response } from "../generated/Response_pb";
-import { SmartContractService } from "../generated/SmartContractService_pb_service";
+import { Response } from "../generated/response_pb";
+import { SmartContractService } from "../generated/smart_contract_service_pb_service";
 import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractFunctionResult } from "./ContractFunctionResult";
-import { ContractCallLocalQuery } from "../generated/ContractCallLocal_pb";
+import { ContractCallLocalQuery } from "../generated/contract_call_local_pb";
 import { ContractFunctionParams } from "./ContractFunctionParams";
-import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { ResponseHeader } from "../generated/response_header_pb";
 import { BaseClient } from "../BaseClient";
 import { Hbar } from "../Hbar";
 

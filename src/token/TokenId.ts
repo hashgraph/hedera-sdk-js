@@ -1,4 +1,4 @@
-import { TokenID } from "../generated/BasicTypes_pb";
+import { TokenID } from "../generated/basic_types_pb";
 import { normalizeEntityId } from "../util";
 import BigNumber from "bignumber.js";
 import * as hex from "@stablelib/hex";

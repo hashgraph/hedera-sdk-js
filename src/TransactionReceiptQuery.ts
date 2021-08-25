@@ -1,14 +1,14 @@
 import { QueryBuilder } from "./QueryBuilder";
 import { BaseClient } from "./BaseClient";
-import { TransactionGetReceiptQuery as ProtoTransactionGetReceiptQuery } from "./generated/TransactionGetReceipt_pb";
-import { QueryHeader } from "./generated/QueryHeader_pb";
+import { TransactionGetReceiptQuery as ProtoTransactionGetReceiptQuery } from "./generated/transaction_get_receipt_pb";
+import { QueryHeader } from "./generated/query_header_pb";
 import { TransactionId, TransactionIdLike } from "./TransactionId";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Query } from "./generated/Query_pb";
-import { Response } from "./generated/Response_pb";
+import { Query } from "./generated/query_pb";
+import { Response } from "./generated/response_pb";
 import { TransactionReceipt } from "./TransactionReceipt";
-import { CryptoService } from "./generated/CryptoService_pb_service";
-import { ResponseHeader } from "./generated/ResponseHeader_pb";
+import { CryptoService } from "./generated/crypto_service_pb_service";
+import { ResponseHeader } from "./generated/response_header_pb";
 import { Status } from "./Status";
 import { HederaReceiptStatusError } from "./errors/HederaReceiptStatusError";
 

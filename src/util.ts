@@ -1,13 +1,13 @@
-import { KeyList } from "./generated/BasicTypes_pb";
-import { Duration } from "./generated/Duration_pb";
-import { ResponseHeader } from "./generated/ResponseHeader_pb";
-import { Response } from "./generated/Response_pb";
+import { KeyList } from "./generated/basic_types_pb";
+import { Duration } from "./generated/duration_pb";
+import { ResponseHeader } from "./generated/response_header_pb";
+import { Response } from "./generated/response_pb";
 import { LocalValidationError } from "./errors/LocalValidationError";
 import { Ed25519PublicKey } from "./crypto/Ed25519PublicKey";
 import { CustomFee } from "./token/CustomFee";
 import { CustomFixedFee } from "./token/CustomFixedFee";
 import { CustomFractionalFee } from "./token/CustomFractionalFee";
-import { CustomFee as ProtoCustomFee } from "./generated/CustomFees_pb";
+import { CustomFee as ProtoCustomFee } from "./generated/custom_fees_pb";
 
 export function orThrow<T>(val?: T, msg = "value must not be null"): T {
     return reqDefined(val, msg);

@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { TokenId } from "./TokenId";
-import { CustomFee as ProtoCustomFee, FixedFee as ProtoFixedFee } from "../generated/CustomFees_pb";
+import { CustomFee as ProtoCustomFee, FixedFee as ProtoFixedFee } from "../generated/custom_fees_pb";
 import { CustomFee } from "./CustomFee";
 
 export class CustomFixedFee extends CustomFee {

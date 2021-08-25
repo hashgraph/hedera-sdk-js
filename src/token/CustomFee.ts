@@ -1,5 +1,5 @@
 import { AccountId } from "../account/AccountId";
-import { CustomFee as ProtoCustomFee } from "../generated/CustomFees_pb";
+import { CustomFee as ProtoCustomFee } from "../generated/custom_fees_pb";
 
 export abstract class CustomFee {
     public feeCollectorAccountId: AccountId | null = null;

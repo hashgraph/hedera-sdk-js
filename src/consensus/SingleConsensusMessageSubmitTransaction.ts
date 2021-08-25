@@ -1,12 +1,12 @@
 import { SingleTransactionBuilder } from "../TransactionBuilder";
-import { Transaction } from "../generated/Transaction_pb";
-import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { Transaction } from "../generated/transaction_pb";
+import { TransactionResponse } from "../generated/transaction_response_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import {
     ConsensusSubmitMessageTransactionBody,
     ConsensusMessageChunkInfo
-} from "../generated/ConsensusSubmitMessage_pb";
-import { ConsensusService } from "../generated/ConsensusService_pb_service";
+} from "../generated/consensus_submit_message_pb";
+import { ConsensusService } from "../generated/consensus_service_pb_service";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 import { ConsensusTopicId, ConsensusTopicIdLike } from "./ConsensusTopicId";
 import * as utf8 from "@stablelib/utf8";

@@ -1,13 +1,13 @@
 import { QueryBuilder } from "../QueryBuilder";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Query } from "../generated/Query_pb";
-import { Response } from "../generated/Response_pb";
-import { CryptoService } from "../generated/CryptoService_pb_service";
-import { QueryHeader } from "../generated/QueryHeader_pb";
+import { Query } from "../generated/query_pb";
+import { Response } from "../generated/response_pb";
+import { CryptoService } from "../generated/crypto_service_pb_service";
+import { QueryHeader } from "../generated/query_header_pb";
 import { AccountId, AccountIdLike } from "./AccountId";
 import { Transfer } from "../Transfer";
-import { CryptoGetStakersQuery } from "../generated/CryptoGetStakers_pb";
-import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { CryptoGetStakersQuery } from "../generated/crypto_get_stakers_pb";
+import { ResponseHeader } from "../generated/response_header_pb";
 import { Hbar } from "../Hbar";
 
 /**

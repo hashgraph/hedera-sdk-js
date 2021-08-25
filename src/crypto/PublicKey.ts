@@ -1,4 +1,4 @@
-import * as pb from "../generated/BasicTypes_pb";
+import * as pb from "../generated/basic_types_pb";
 
 export abstract class PublicKey {
     public abstract _toProtoKey(): pb.Key;

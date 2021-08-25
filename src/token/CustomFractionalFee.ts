@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
-import { CustomFee as ProtoCustomFee, FractionalFee as ProtoFractionalFee } from "../generated/CustomFees_pb";
-import { Fraction as ProtoFraction } from "../generated/BasicTypes_pb";
+import { CustomFee as ProtoCustomFee, FractionalFee as ProtoFractionalFee } from "../generated/custom_fees_pb";
+import { Fraction as ProtoFraction } from "../generated/basic_types_pb";
 import { CustomFee } from "./CustomFee";
 
 export class CustomFractionalFee extends CustomFee {

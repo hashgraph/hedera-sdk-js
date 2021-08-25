@@ -1,12 +1,12 @@
 import { QueryBuilder } from "../QueryBuilder";
-import { QueryHeader } from "../generated/QueryHeader_pb";
-import { FileGetContentsQuery } from "../generated/FileGetContents_pb";
+import { QueryHeader } from "../generated/query_header_pb";
+import { FileGetContentsQuery } from "../generated/file_get_contents_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Query } from "../generated/Query_pb";
-import { Response } from "../generated/Response_pb";
-import { FileService } from "../generated/FileService_pb_service";
+import { Query } from "../generated/query_pb";
+import { Response } from "../generated/response_pb";
+import { FileService } from "../generated/file_service_pb_service";
 import { FileId, FileIdLike } from "../file/FileId";
-import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { ResponseHeader } from "../generated/response_header_pb";
 
 /**
  * Get the contents of a file. The content field is empty (no bytes) if the file is empty.

@@ -1,9 +1,9 @@
 import { SingleTransactionBuilder } from "../TransactionBuilder";
-import { Transaction } from "../generated/Transaction_pb";
-import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { Transaction } from "../generated/transaction_pb";
+import { TransactionResponse } from "../generated/transaction_response_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { SmartContractService } from "../generated/SmartContractService_pb_service";
-import { ContractCallTransactionBody } from "../generated/ContractCall_pb";
+import { SmartContractService } from "../generated/smart_contract_service_pb_service";
+import { ContractCallTransactionBody } from "../generated/contract_call_pb";
 import { ContractId, ContractIdLike } from "./ContractId";
 import { ContractFunctionParams } from "./ContractFunctionParams";
 import {

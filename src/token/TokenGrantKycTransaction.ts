@@ -1,9 +1,9 @@
 import { SingleTransactionBuilder } from "../TransactionBuilder";
-import { Transaction } from "../generated/Transaction_pb";
-import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { Transaction } from "../generated/transaction_pb";
+import { TransactionResponse } from "../generated/transaction_response_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { TokenGrantKycTransactionBody } from "../generated/TokenGrantKyc_pb";
-import { TokenService } from "../generated/TokenService_pb_service";
+import { TokenGrantKycTransactionBody } from "../generated/token_grant_kyc_pb";
+import { TokenService } from "../generated/token_service_pb_service";
 import { TokenId, TokenIdLike } from "./TokenId";
 import { AccountId, AccountIdLike } from "../account/AccountId";
 import UnaryMethodDefinition = grpc.UnaryMethodDefinition;

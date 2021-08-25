@@ -1,12 +1,12 @@
 import { QueryBuilder } from "../QueryBuilder";
-import { QueryHeader } from "../generated/QueryHeader_pb";
-import { Query } from "../generated/Query_pb";
+import { QueryHeader } from "../generated/query_header_pb";
+import { Query } from "../generated/query_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Response } from "../generated/Response_pb";
-import { SmartContractService } from "../generated/SmartContractService_pb_service";
-import { ContractGetBytecodeQuery } from "../generated/ContractGetBytecode_pb";
+import { Response } from "../generated/response_pb";
+import { SmartContractService } from "../generated/smart_contract_service_pb_service";
+import { ContractGetBytecodeQuery } from "../generated/contract_get_bytecode_pb";
 import { ContractId, ContractIdLike } from "./ContractId";
-import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { ResponseHeader } from "../generated/response_header_pb";
 
 /**
  * Get the bytecode for a smart contract instance.

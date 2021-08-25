@@ -1,11 +1,11 @@
 import { SingleTransactionBuilder } from "../TransactionBuilder";
-import { Transaction } from "../generated/Transaction_pb";
-import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { Transaction } from "../generated/transaction_pb";
+import { TransactionResponse } from "../generated/transaction_response_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { ContractCreateTransactionBody } from "../generated/ContractCreate_pb";
+import { ContractCreateTransactionBody } from "../generated/contract_create_pb";
 import { newDuration } from "../util";
 import BigNumber from "bignumber.js";
-import { SmartContractService } from "../generated/SmartContractService_pb_service";
+import { SmartContractService } from "../generated/smart_contract_service_pb_service";
 
 import {
     Hbar,

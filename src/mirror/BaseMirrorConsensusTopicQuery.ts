@@ -1,4 +1,4 @@
-import { ConsensusTopicQuery } from "../generated/MirrorConsensusService_pb";
+import { ConsensusTopicQuery } from "../generated/mirror_consensus_service_pb";
 import {
     ConsensusTopicId,
     ConsensusTopicIdLike

@@ -1,12 +1,12 @@
 import { SingleTransactionBuilder } from "../TransactionBuilder";
-import { Transaction as ProtoTransaction } from "../generated/Transaction_pb";
+import { Transaction as ProtoTransaction } from "../generated/transaction_pb";
 import { SCHEDULE_CREATE_TRANSACTION, Transaction } from "../Transaction";
-import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { TransactionResponse } from "../generated/transaction_response_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 
-import { ScheduleService } from "../generated/ScheduleService_pb_service";
-import { ScheduleCreateTransactionBody } from "../generated/ScheduleCreate_pb";
-import { KeyList } from "../generated/BasicTypes_pb";
+import { ScheduleService } from "../generated/schedule_service_pb_service";
+import { ScheduleCreateTransactionBody } from "../generated/schedule_create_pb";
+import { KeyList } from "../generated/basic_types_pb";
 import { dateToTimestamp, timestampToProto } from "../Timestamp";
 import { PublicKey } from "../crypto/PublicKey";
 import { AccountId } from "../account/AccountId";

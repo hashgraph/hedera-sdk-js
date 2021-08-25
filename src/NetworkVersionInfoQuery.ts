@@ -1,11 +1,11 @@
 import { QueryBuilder } from "./QueryBuilder";
-import { NetworkGetVersionInfoQuery as ProtoNetworkGetVersionInfoQuery } from "./generated/NetworkGetVersionInfo_pb";
-import { QueryHeader } from "./generated/QueryHeader_pb";
+import { NetworkGetVersionInfoQuery as ProtoNetworkGetVersionInfoQuery } from "./generated/network_get_version_info_pb";
+import { QueryHeader } from "./generated/query_header_pb";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Query } from "./generated/Query_pb";
-import { NetworkService } from "./generated/NetworkService_pb_service";
-import { Response } from "./generated/Response_pb";
-import { ResponseHeader } from "./generated/ResponseHeader_pb";
+import { Query } from "./generated/query_pb";
+import { NetworkService } from "./generated/network_service_pb_service";
+import { Response } from "./generated/response_pb";
+import { ResponseHeader } from "./generated/response_header_pb";
 
 export interface SemanticVersion {
     // Increases with incompatible API changes

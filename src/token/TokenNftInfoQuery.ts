@@ -1,17 +1,17 @@
 import { QueryBuilder } from "../QueryBuilder";
 import { grpc } from "@improbable-eng/grpc-web";
-import { Query } from "../generated/Query_pb";
-import { Response } from "../generated/Response_pb";
-import { QueryHeader } from "../generated/QueryHeader_pb";
+import { Query } from "../generated/query_pb";
+import { Response } from "../generated/response_pb";
+import { QueryHeader } from "../generated/query_header_pb";
 import { Hbar } from "../Hbar";
 import { NftId } from "./NftId";
 import { TokenId } from "./TokenId";
-import { ResponseHeader } from "../generated/ResponseHeader_pb";
+import { ResponseHeader } from "../generated/response_header_pb";
 import { BaseClient } from "../BaseClient";
-import { TokenNftInfo as ProtoTokenNftInfo, TokenGetNftInfoQuery } from "../generated/TokenGetNftInfo_pb";
-import { TokenGetNftInfosQuery } from "../generated/TokenGetNftInfos_pb";
-import { TokenGetAccountNftInfoQuery } from "../generated/TokenGetAccountNftInfo_pb";
-import { TokenService } from "../generated/TokenService_pb_service";
+import { TokenNftInfo as ProtoTokenNftInfo, TokenGetNftInfoQuery } from "../generated/token_get_nft_info_pb";
+import { TokenGetNftInfosQuery } from "../generated/token_get_nft_infos_pb";
+import { TokenGetAccountNftInfoQuery } from "../generated/token_get_account_nft_info_pb";
+import { TokenService } from "../generated/token_service_pb_service";
 import { AccountId } from "../account/AccountId";
 import { timestampToDate } from "../Timestamp";
 

@@ -1,16 +1,16 @@
 /* eslint-disable no-useless-constructor */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { BaseClient, Node } from "./BaseClient";
-import { QueryHeader, ResponseType } from "./generated/QueryHeader_pb";
-import { Query } from "./generated/Query_pb";
-import { Response } from "./generated/Response_pb";
+import { QueryHeader, ResponseType } from "./generated/query_header_pb";
+import { Query } from "./generated/query_pb";
+import { Response } from "./generated/response_pb";
 import { HederaStatusError } from "./errors/HederaStatusError";
 import { MaxQueryPaymentExceededError } from "./errors/MaxQueryPaymentExceededError";
 import { runValidation, setTimeoutAwaitable, timeoutPromise } from "./util";
 import { grpc } from "@improbable-eng/grpc-web";
 import { Hbar, Tinybar, hbarFromTinybarOrHbar, hbarCheck } from "./Hbar";
-import { ResponseHeader } from "./generated/ResponseHeader_pb";
-import { TransactionBody } from "./generated/TransactionBody_pb";
+import { ResponseHeader } from "./generated/response_header_pb";
+import { TransactionBody } from "./generated/transaction_body_pb";
 import { AccountId } from "./account/AccountId";
 import { Status } from "./Status";
 import { HederaPrecheckStatusError } from "./errors/HederaPrecheckStatusError";

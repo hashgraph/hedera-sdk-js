@@ -1,11 +1,11 @@
 import { SingleTransactionBuilder } from "../TransactionBuilder";
-import { Transaction } from "../generated/Transaction_pb";
-import { TransactionResponse } from "../generated/TransactionResponse_pb";
+import { Transaction } from "../generated/transaction_pb";
+import { TransactionResponse } from "../generated/transaction_response_pb";
 import { grpc } from "@improbable-eng/grpc-web";
 import { PublicKey } from "../crypto/PublicKey";
 import { AccountId, AccountIdLike } from "../account/AccountId";
-import { TokenUpdateTransactionBody } from "../generated/TokenUpdate_pb";
-import { TokenService } from "../generated/TokenService_pb_service";
+import { TokenUpdateTransactionBody } from "../generated/token_update_pb";
+import { TokenService } from "../generated/token_service_pb_service";
 import { timestampToProto, dateToTimestamp } from "../Timestamp";
 import { TokenId, TokenIdLike } from "./TokenId";
 import { newDuration } from "../util";
