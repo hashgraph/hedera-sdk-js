@@ -209,9 +209,9 @@ export default class Executable {
      */
     _shouldRetryExceptionally(error) {
         return (
-            error.status === GrpcStatus.Unavailable ||
-            error.status === GrpcStatus.ResourceExhausted ||
-            (error.status === GrpcStatus.Internal &&
+            error.status.code === GrpcStatus.Unavailable.code ||
+            error.status.code === GrpcStatus.ResourceExhausted.code ||
+            (error.status.code === GrpcStatus.Internal.code &&
                 RST_STREAM.test(error.message))
         );
     }
