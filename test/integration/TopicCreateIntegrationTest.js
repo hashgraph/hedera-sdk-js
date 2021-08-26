@@ -17,14 +17,12 @@ describe("TopicCreate", function () {
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
             .setAutoRenewAccountId(operatorId)
-            .setNodeAccountIds(env.nodeAccountIds)
             .execute(env.client);
 
         const topic = (await response.getReceipt(env.client)).topicId;
 
         const info = await new TopicInfoQuery()
             .setTopicId(topic)
-            .setNodeAccountIds([response.nodeId])
             .execute(env.client);
 
         expect(info.topicId.toString()).to.eql(topic.toString());
@@ -44,6 +42,8 @@ describe("TopicCreate", function () {
                 .setTopicId(topic)
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should be executable when no fields are set", async function () {
@@ -57,7 +57,6 @@ describe("TopicCreate", function () {
 
         const info = await new TopicInfoQuery()
             .setTopicId(topic)
-            .setNodeAccountIds([response.nodeId])
             .execute(env.client);
 
         expect(info.topicId.toString()).to.eql(topic.toString());
@@ -69,5 +68,7 @@ describe("TopicCreate", function () {
         expect(info.autoRenewAccountId).to.be.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
+
+        await env.close();
     });
 });

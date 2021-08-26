@@ -15,7 +15,6 @@ describe("FileUpdate", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
             .execute(env.client);
 
@@ -29,7 +28,6 @@ describe("FileUpdate", function () {
 
         let info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(env.client);
 
@@ -44,7 +42,6 @@ describe("FileUpdate", function () {
 
         await (
             await new FileUpdateTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .setFileId(file)
                 .setContents("[e2e::FileUpdateTransaction]")
                 .execute(env.client)
@@ -52,7 +49,6 @@ describe("FileUpdate", function () {
 
         info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(env.client);
 
@@ -68,9 +64,10 @@ describe("FileUpdate", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when file ID is not set", async function () {
@@ -83,7 +80,6 @@ describe("FileUpdate", function () {
         try {
             await (
                 await new FileUpdateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setContents("[e2e::FileUpdateTransaction]")
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -94,5 +90,7 @@ describe("FileUpdate", function () {
         if (!err) {
             throw new Error("file update did not error");
         }
+
+        await env.close();
     });
 });

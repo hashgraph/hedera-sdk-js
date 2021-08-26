@@ -29,14 +29,12 @@ describe("TokenInfo", function () {
             .setFreezeKey(key2)
             .setWipeKey(key3)
             .setSupplyKey(key4)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setFreezeDefault(false)
             .execute(env.client);
 
         const tokenId = (await response.getReceipt(env.client)).tokenId;
 
         const info = await new TokenInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setTokenId(tokenId)
             .execute(env.client);
 
@@ -63,25 +61,25 @@ describe("TokenInfo", function () {
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
+
+        await env.close({ token: tokenId });
     });
 
     it("should be executable with minimal properties set", async function () {
         this.timeout(60000);
 
-        const env = await IntegrationTestEnv.new();
+        const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
             .setTokenSymbol("F")
-            .setNodeAccountIds(env.nodeAccountIds)
             .setTreasuryAccountId(operatorId)
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
 
         let info = await new TokenInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setTokenId(token)
             .execute(env.client);
 
@@ -108,6 +106,8 @@ describe("TokenInfo", function () {
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
+
+        await env.close();
     });
 
     it("should error when token ID is not set", async function () {
@@ -118,9 +118,7 @@ describe("TokenInfo", function () {
         let err = false;
 
         try {
-            await new TokenInfoQuery()
-                .setNodeAccountIds(env.nodeAccountIds)
-                .execute(env.client);
+            await new TokenInfoQuery().execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidTokenId);
         }
@@ -128,5 +126,7 @@ describe("TokenInfo", function () {
         if (!err) {
             throw new Error("token info query did not error");
         }
+
+        await env.close();
     });
 });

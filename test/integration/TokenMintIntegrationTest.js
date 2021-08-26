@@ -28,7 +28,6 @@ describe("TokenMint", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setMaxTransactionFee(new Hbar(1000))
             .execute(env.client);
 
@@ -36,11 +35,12 @@ describe("TokenMint", function () {
 
         await (
             await new TokenMintTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .setAmount(10)
                 .setTokenId(token)
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close({ token });
     });
 
     it("toBytes/fromBytes", async function () {
@@ -62,14 +62,12 @@ describe("TokenMint", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setMaxTransactionFee(new Hbar(1000))
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
 
         let mint = new TokenMintTransaction()
-            .setNodeAccountIds([response.nodeId])
             .setAmount(10)
             .setTokenId(token)
             .freezeWith(env.client);
@@ -79,6 +77,8 @@ describe("TokenMint", function () {
         let mintFromBytes = Transaction.fromBytes(mintBytes);
 
         await (await mintFromBytes.execute(env.client)).getReceipt(env.client);
+
+        await env.close({ token });
     });
 
     it("should error when token ID is not set", async function () {
@@ -91,7 +91,6 @@ describe("TokenMint", function () {
         try {
             await (
                 await new TokenMintTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setAmount(10)
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -102,6 +101,8 @@ describe("TokenMint", function () {
         if (!err) {
             throw new Error("token Mint did not error");
         }
+
+        await env.close();
     });
 
     it("should error when amount is not set", async function () {
@@ -112,7 +113,6 @@ describe("TokenMint", function () {
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TokenCreateTransaction()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
@@ -134,7 +134,6 @@ describe("TokenMint", function () {
         try {
             await (
                 await new TokenMintTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -145,6 +144,8 @@ describe("TokenMint", function () {
         if (!err) {
             throw new Error("token mint did not error");
         }
+
+        await env.close({ token });
     });
 
     it("User cannot mint more than the tokens defined max supply value", async function () {
@@ -166,7 +167,6 @@ describe("TokenMint", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setMaxTransactionFee(new Hbar(1000))
             .setMaxSupply(10)
             .setSupplyType(TokenSupplyType.Finite)
@@ -179,7 +179,6 @@ describe("TokenMint", function () {
         try {
             await (
                 await new TokenMintTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setAmount(11)
                     .setTokenId(token)
                     .execute(env.client)
@@ -191,5 +190,7 @@ describe("TokenMint", function () {
         if (!err) {
             throw new Error("token mint did not error");
         }
+
+        await env.close({ token });
     });
 });

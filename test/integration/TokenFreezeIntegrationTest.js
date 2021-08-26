@@ -20,7 +20,6 @@ describe("TokenFreeze", function () {
         const key = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setKey(key)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
@@ -30,7 +29,6 @@ describe("TokenFreeze", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -49,7 +47,6 @@ describe("TokenFreeze", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -60,7 +57,6 @@ describe("TokenFreeze", function () {
         await (
             await (
                 await new TokenFreezeTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -69,7 +65,6 @@ describe("TokenFreeze", function () {
         ).getReceipt(env.client);
 
         const info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -80,6 +75,8 @@ describe("TokenFreeze", function () {
         expect(relationship.balance.toInt()).to.be.equal(0);
         expect(relationship.isKycGranted).to.be.false;
         expect(relationship.isFrozen).to.be.true;
+
+        await env.close({ token });
     });
 
     it("should be executable with no tokens set", async function () {
@@ -90,7 +87,6 @@ describe("TokenFreeze", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -102,7 +98,6 @@ describe("TokenFreeze", function () {
             await (
                 await (
                     await new TokenFreezeTransaction()
-                        .setNodeAccountIds([response.nodeId])
                         .setAccountId(account)
                         .freezeWith(env.client)
                         .sign(key)
@@ -115,6 +110,8 @@ describe("TokenFreeze", function () {
         if (!err) {
             throw new Error("token freeze did not error");
         }
+
+        await env.close();
     });
 
     it("should error when account ID is not set", async function () {
@@ -136,7 +133,6 @@ describe("TokenFreeze", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setNodeAccountIds(env.nodeAccountIds)
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
@@ -147,7 +143,6 @@ describe("TokenFreeze", function () {
             await (
                 await new TokenFreezeTransaction()
                     .setTokenId(token)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
@@ -157,5 +152,7 @@ describe("TokenFreeze", function () {
         if (!err) {
             throw new Error("token freeze did not error");
         }
+
+        await env.close({ token });
     });
 });

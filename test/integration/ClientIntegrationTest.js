@@ -15,14 +15,11 @@ describe("ClientIntegration", function () {
     it("should be executable", async function () {
         this.timeout(60000);
 
-        const env = await IntegrationTestEnv.new();
+        const env = await IntegrationTestEnv.new({ nodeAccountIds: 100 });
 
         const oldNetwork = env.client.network;
 
-        await new AccountBalanceQuery()
-            .setNodeAccountIds([new AccountId(3)])
-            .setAccountId("3")
-            .execute(env.client);
+        await new AccountBalanceQuery().setAccountId("3").execute(env.client);
 
         let which = "";
 
@@ -100,10 +97,9 @@ describe("ClientIntegration", function () {
 
         env.client.setNetwork(oldNetwork);
 
-        await new AccountBalanceQuery()
-            .setNodeAccountIds([new AccountId(3)])
-            .setAccountId("3")
-            .execute(env.client);
+        await new AccountBalanceQuery().setAccountId("3").execute(env.client);
+
+        await env.close();
     });
 
     it("should error when invalid network on entity ID", async function () {
@@ -147,6 +143,8 @@ describe("ClientIntegration", function () {
         if (!err) {
             throw new Error("query did not error");
         }
+
+        await env.close();
     });
 
     it("can execute with sign on demand", async function () {
@@ -160,7 +158,6 @@ describe("ClientIntegration", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -170,7 +167,6 @@ describe("ClientIntegration", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -188,13 +184,14 @@ describe("ClientIntegration", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(env.client)
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("can get bytes without sign on demand", async function () {
@@ -206,13 +203,14 @@ describe("ClientIntegration", function () {
         const bytes = (
             await new AccountCreateTransaction()
                 .setKey(key.publicKey)
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setInitialBalance(new Hbar(2))
                 .freezeWith(env.client)
                 .sign(key)
         ).toBytes();
 
         expect(bytes.length).to.be.gt(0);
+
+        await env.close();
     });
 
     it("can pingAll", async function () {
@@ -221,6 +219,8 @@ describe("ClientIntegration", function () {
         const env = await IntegrationTestEnv.new();
 
         await env.client.pingAll();
+
+        await env.close();
     });
 
     it("can set network name on custom network", async function () {
@@ -239,5 +239,8 @@ describe("ClientIntegration", function () {
         testnetClient.setNetworkName("previewnet");
 
         expect(testnetClient.networkName).to.be.equal(NetworkName.Previewnet);
+
+        testnetClient.close();
+        previewnetClient.close();
     });
 });

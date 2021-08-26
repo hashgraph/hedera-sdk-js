@@ -22,7 +22,6 @@ describe("TransactionIntegration", function () {
 
         const transaction = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .freezeWith(env.client)
             .signWithOperator(env.client);
 
@@ -43,12 +42,13 @@ describe("TransactionIntegration", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .freezeWith(env.client)
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("signs correctly", async function () {
@@ -60,7 +60,6 @@ describe("TransactionIntegration", function () {
         let transaction = await (
             await new TokenCreateTransaction()
                 .setAdminKey(key.publicKey)
-                .setNodeAccountIds(env.nodeAccountIds)
                 .freezeWith(env.client)
                 .sign(key)
         ).signWithOperator(env.client);
@@ -72,7 +71,6 @@ describe("TransactionIntegration", function () {
         transaction = await (
             await new TokenCreateTransaction()
                 .setAdminKey(key.publicKey)
-                .setNodeAccountIds([new AccountId(3)])
                 .freezeWith(env.client)
                 .signWithOperator(env.client)
         ).sign(key);
@@ -80,6 +78,8 @@ describe("TransactionIntegration", function () {
         expect(transaction._signedTransactions[0].sigMap.sigPair.length).to.eql(
             2
         );
+
+        await env.close();
     });
 
     it("issue-327", async function () {
@@ -94,8 +94,9 @@ describe("TransactionIntegration", function () {
         const publicKey3 = privateKey3.publicKey;
         const publicKey4 = privateKey4.publicKey;
 
-        const transaction = await new TransferTransaction()
-            .setNodeAccountIds(env.nodeAccountIds)
+        const nodeAccountId = Object.values(env.client.network)[0];
+
+        const transaction = new TransferTransaction()
             .addHbarTransfer(
                 env.client.operatorAccountId,
                 new Hbar(1).negated()
@@ -114,7 +115,7 @@ describe("TransactionIntegration", function () {
 
         const signatures = transaction.getSignatures();
 
-        const nodeSignatures = signatures.get(env.nodeAccountIds);
+        const nodeSignatures = signatures.get(nodeAccountId);
 
         const publicKey1Signature = nodeSignatures.get(publicKey1);
         const publicKey2Signature = nodeSignatures.get(publicKey2);
@@ -125,5 +126,7 @@ describe("TransactionIntegration", function () {
         expect(publicKey2Signature).to.be.not.null;
         expect(publicKey3Signature).to.be.not.null;
         expect(publicKey4Signature).to.be.null;
+
+        await env.close();
     });
 });

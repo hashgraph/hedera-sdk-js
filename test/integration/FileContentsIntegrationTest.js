@@ -15,7 +15,6 @@ describe("FileContents", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
             .execute(env.client);
 
@@ -29,7 +28,6 @@ describe("FileContents", function () {
 
         const contents = await new FileContentsQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(1))
             .execute(env.client);
 
@@ -40,9 +38,10 @@ describe("FileContents", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should be executable with empty contents", async function () {
@@ -53,7 +52,6 @@ describe("FileContents", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .execute(env.client);
 
         let receipt = await response.getReceipt(env.client);
@@ -66,7 +64,6 @@ describe("FileContents", function () {
 
         const contents = await new FileContentsQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(1))
             .execute(env.client);
 
@@ -75,9 +72,10 @@ describe("FileContents", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when file ID is not set", async function () {
@@ -90,7 +88,6 @@ describe("FileContents", function () {
         try {
             await new FileContentsQuery()
                 .setQueryPayment(new Hbar(1))
-                .setNodeAccountIds(env.nodeAccountIds)
                 .execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidFileId);
@@ -99,5 +96,7 @@ describe("FileContents", function () {
         if (!err) {
             throw new Error("file contents query did not error");
         }
+
+        await env.close();
     });
 });

@@ -20,7 +20,6 @@ describe("TokenCreate", function () {
         const key4 = PrivateKey.generate();
 
         const response = await new TokenCreateTransaction()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
@@ -37,7 +36,6 @@ describe("TokenCreate", function () {
         const tokenId = (await response.getReceipt(env.client)).tokenId;
 
         const info = await new TokenInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setTokenId(tokenId)
             .execute(env.client);
 
@@ -64,17 +62,18 @@ describe("TokenCreate", function () {
         expect(info.autoRenewPeriod).to.be.not.null;
         expect(info.autoRenewPeriod.seconds.toInt()).to.be.eql(7776000);
         expect(info.expirationTime).to.be.not.null;
+
+        await env.close({ token: tokenId });
     });
 
     it("should be executable with minimal properties set", async function () {
         this.timeout(60000);
 
-        const env = await IntegrationTestEnv.new();
+        const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
-            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenSymbol("F")
             .setTreasuryAccountId(operatorId)
             .execute(env.client);
@@ -82,7 +81,6 @@ describe("TokenCreate", function () {
         const tokenId = (await response.getReceipt(env.client)).tokenId;
 
         const info = await new TokenInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setTokenId(tokenId)
             .execute(env.client);
 
@@ -115,7 +113,6 @@ describe("TokenCreate", function () {
         try {
             await (
                 await new TokenDeleteTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(tokenId)
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -126,6 +123,8 @@ describe("TokenCreate", function () {
         if (!err) {
             throw new Error("token deletion did not error");
         }
+
+        await env.close();
     });
 
     it("should error when token name is not set", async function () {
@@ -140,7 +139,6 @@ describe("TokenCreate", function () {
             await (
                 await new TokenCreateTransaction()
                     .setTokenSymbol("F")
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTreasuryAccountId(operatorId)
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -151,6 +149,8 @@ describe("TokenCreate", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     it("should error when token symbol is not set", async function () {
@@ -165,7 +165,6 @@ describe("TokenCreate", function () {
             await (
                 await new TokenCreateTransaction()
                     .setTokenName("ffff")
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTreasuryAccountId(operatorId)
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -176,6 +175,8 @@ describe("TokenCreate", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     it("should error when treasury account ID is not set", async function () {
@@ -189,7 +190,6 @@ describe("TokenCreate", function () {
             await (
                 await new TokenCreateTransaction()
                     .setTokenName("ffff")
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenSymbol("F")
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -202,6 +202,8 @@ describe("TokenCreate", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     it("should error when admin key does not sign transaction", async function () {
@@ -216,7 +218,6 @@ describe("TokenCreate", function () {
             await (
                 await new TokenCreateTransaction()
                     .setTokenName("ffff")
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(operatorId)
                     .setAdminKey(PrivateKey.generate())
@@ -229,5 +230,7 @@ describe("TokenCreate", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 });

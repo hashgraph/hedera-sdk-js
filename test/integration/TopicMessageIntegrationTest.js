@@ -24,7 +24,6 @@ describe("TopicMessage", function () {
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
             .execute(env.client);
 
@@ -69,6 +68,8 @@ describe("TopicMessage", function () {
         if (!finished) {
             throw new Error("Failed to receive message in 30s");
         }
+
+        await env.close();
     });
 
     it("should be executable with large message", async function () {
@@ -86,7 +87,6 @@ describe("TopicMessage", function () {
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
             .execute(env.client);
 
@@ -131,6 +131,8 @@ describe("TopicMessage", function () {
         if (!finished) {
             throw new Error("Failed to receive message in 45s");
         }
+
+        await env.close();
     });
 
     it("should error when topic ID is not set", async function () {
@@ -153,7 +155,6 @@ describe("TopicMessage", function () {
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
             .execute(env.client);
 
@@ -182,6 +183,8 @@ describe("TopicMessage", function () {
         if (!err) {
             throw new Error("topic message did not error");
         }
+
+        await env.close();
     });
 
     it("should error when message is not set", async function () {
@@ -199,7 +202,6 @@ describe("TopicMessage", function () {
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
             .execute(env.client);
 
@@ -226,5 +228,7 @@ describe("TopicMessage", function () {
         if (!err) {
             throw new Error("topic message did not error");
         }
+
+        await env.close();
     });
 });

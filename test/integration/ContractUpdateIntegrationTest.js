@@ -21,7 +21,6 @@ describe("ContractUpdate", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -35,7 +34,6 @@ describe("ContractUpdate", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -53,7 +51,6 @@ describe("ContractUpdate", function () {
         let contract = receipt.contractId;
 
         let info = await new ContractInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .execute(env.client);
@@ -75,14 +72,12 @@ describe("ContractUpdate", function () {
         await (
             await new ContractUpdateTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .setContractMemo("[e2e::ContractUpdateTransaction]")
                 .execute(env.client)
         ).getReceipt(env.client);
 
         info = await new ContractInfoQuery()
             .setContractId(contract)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(5))
             .execute(env.client);
 
@@ -103,16 +98,16 @@ describe("ContractUpdate", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when contract ID is not set", async function () {
@@ -123,7 +118,6 @@ describe("ContractUpdate", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -137,7 +131,6 @@ describe("ContractUpdate", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -159,7 +152,6 @@ describe("ContractUpdate", function () {
         try {
             await (
                 await new ContractUpdateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setContractMemo("[e2e::ContractUpdateTransaction]")
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -170,19 +162,19 @@ describe("ContractUpdate", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("contract update did not error");
         }
+
+        await env.close();
     });
 });

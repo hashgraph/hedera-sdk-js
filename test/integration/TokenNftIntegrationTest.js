@@ -16,8 +16,7 @@ import {
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
-// eslint-disable-next-line mocha/no-skipped-tests
-describe.skip("TokenNft", function () {
+describe("TokenNft", function () {
     it("should be able to transfer NFT", async function () {
         this.timeout(60000);
 
@@ -28,7 +27,6 @@ describe.skip("TokenNft", function () {
             await (
                 await new AccountCreateTransaction()
                     .setKey(key)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -37,7 +35,6 @@ describe.skip("TokenNft", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTokenType(TokenType.NonFungibleUnique)
@@ -55,7 +52,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -66,7 +62,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -77,7 +72,6 @@ describe.skip("TokenNft", function () {
         const serials = (
             await (
                 await new TokenMintTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .addMetadata("0x01")
                     .addMetadata("0x02")
@@ -88,7 +82,6 @@ describe.skip("TokenNft", function () {
         const serial = serials[0];
 
         let info = await new TokenNftInfoQuery()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setNftId(new NftId(token, serial))
             .execute(env.client);
 
@@ -98,13 +91,11 @@ describe.skip("TokenNft", function () {
 
         await (
             await new TransferTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .addNftTransfer(token, serial, env.operatorId, account)
                 .execute(env.client)
         ).getReceipt(env.client);
 
         info = await new TokenNftInfoQuery()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setNftId(new NftId(token, serial))
             .execute(env.client);
 
@@ -112,7 +103,6 @@ describe.skip("TokenNft", function () {
 
         await (
             await new TokenWipeTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setTokenId(token)
                 .setAccountId(account)
                 .setSerials([serial])
@@ -121,11 +111,12 @@ describe.skip("TokenNft", function () {
 
         await (
             await new TokenBurnTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setTokenId(token)
                 .setSerials([serials[1]])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close({ token });
     });
 
     it("Cannot burn NFTs when NFT is not owned by treasury", async function () {
@@ -138,7 +129,6 @@ describe.skip("TokenNft", function () {
             await (
                 await new AccountCreateTransaction()
                     .setKey(key)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -147,7 +137,6 @@ describe.skip("TokenNft", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTokenType(TokenType.NonFungibleUnique)
@@ -165,7 +154,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -176,7 +164,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -187,7 +174,6 @@ describe.skip("TokenNft", function () {
         const serials = (
             await (
                 await new TokenMintTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .addMetadata("0x01")
                     .execute(env.client)
@@ -197,7 +183,6 @@ describe.skip("TokenNft", function () {
         const serial = serials[0];
 
         let info = await new TokenNftInfoQuery()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setNftId(new NftId(token, serial))
             .execute(env.client);
 
@@ -207,13 +192,11 @@ describe.skip("TokenNft", function () {
 
         await (
             await new TransferTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .addNftTransfer(token, serial, env.operatorId, account)
                 .execute(env.client)
         ).getReceipt(env.client);
 
         info = await new TokenNftInfoQuery()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setNftId(new NftId(token, serial))
             .execute(env.client);
 
@@ -224,7 +207,6 @@ describe.skip("TokenNft", function () {
         try {
             await (
                 await new TokenBurnTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setSerials([serials[0]])
                     .execute(env.client)
@@ -234,6 +216,8 @@ describe.skip("TokenNft", function () {
         }
 
         expect(err).to.be.true;
+
+        await env.close({ token });
     });
 
     it("Cannot mint NFTs if metadata too big", async function () {
@@ -246,7 +230,6 @@ describe.skip("TokenNft", function () {
             await (
                 await new AccountCreateTransaction()
                     .setKey(key)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -255,7 +238,6 @@ describe.skip("TokenNft", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTokenType(TokenType.NonFungibleUnique)
@@ -273,7 +255,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -284,7 +265,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -297,7 +277,6 @@ describe.skip("TokenNft", function () {
         try {
             await (
                 await new TokenMintTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .addMetadata(
                         "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
@@ -309,6 +288,8 @@ describe.skip("TokenNft", function () {
         }
 
         expect(err).to.be.true;
+
+        await env.close({ token });
     });
 
     it("Cannot query NFT info by invalid NftId", async function () {
@@ -321,7 +302,6 @@ describe.skip("TokenNft", function () {
             await (
                 await new AccountCreateTransaction()
                     .setKey(key)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -330,7 +310,6 @@ describe.skip("TokenNft", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTokenType(TokenType.NonFungibleUnique)
@@ -348,7 +327,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -359,7 +337,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -369,7 +346,6 @@ describe.skip("TokenNft", function () {
 
         await (
             await new TokenMintTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setTokenId(token)
                 .addMetadata("0x01")
                 .addMetadata("0x02")
@@ -380,7 +356,6 @@ describe.skip("TokenNft", function () {
 
         try {
             await new TokenNftInfoQuery()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setNftId(new NftId(token, 3))
                 .execute(env.client);
         } catch (error) {
@@ -388,6 +363,8 @@ describe.skip("TokenNft", function () {
         }
 
         expect(err).to.be.true;
+
+        await env.close({ token });
     });
 
     it("Cannot query NFT info by invalid NftId Serial Number", async function () {
@@ -400,7 +377,6 @@ describe.skip("TokenNft", function () {
             await (
                 await new AccountCreateTransaction()
                     .setKey(key)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -409,7 +385,6 @@ describe.skip("TokenNft", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTokenType(TokenType.NonFungibleUnique)
@@ -427,7 +402,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -438,7 +412,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -450,7 +423,6 @@ describe.skip("TokenNft", function () {
 
         try {
             await new TokenNftInfoQuery()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setNftId(new NftId(token, 0))
                 .execute(env.client);
         } catch (error) {
@@ -458,6 +430,8 @@ describe.skip("TokenNft", function () {
         }
 
         expect(err).to.be.true;
+
+        await env.close({ token });
     });
 
     it("Cannot transfer NFTs you don't own", async function () {
@@ -470,7 +444,6 @@ describe.skip("TokenNft", function () {
             await (
                 await new AccountCreateTransaction()
                     .setKey(key)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -479,7 +452,6 @@ describe.skip("TokenNft", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTokenType(TokenType.NonFungibleUnique)
@@ -497,7 +469,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -508,7 +479,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -519,7 +489,6 @@ describe.skip("TokenNft", function () {
         const serials = (
             await (
                 await new TokenMintTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .addMetadata("0x01")
                     .addMetadata("0x02")
@@ -530,7 +499,6 @@ describe.skip("TokenNft", function () {
         let serial = serials[0];
 
         let info = await new TokenNftInfoQuery()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setNftId(new NftId(token, serial))
             .execute(env.client);
 
@@ -540,13 +508,11 @@ describe.skip("TokenNft", function () {
 
         await (
             await new TransferTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .addNftTransfer(token, serial, env.operatorId, account)
                 .execute(env.client)
         ).getReceipt(env.client);
 
         info = await new TokenNftInfoQuery()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setNftId(new NftId(token, serial))
             .execute(env.client);
 
@@ -560,7 +526,6 @@ describe.skip("TokenNft", function () {
             await (
                 await (
                     await new TransferTransaction()
-                        .setNodeAccountIds(env.nodeAccountIds)
                         .addNftTransfer(token, serial, account, env.operatorId)
                         .freezeWith(env.client)
                         .sign(key)
@@ -576,12 +541,13 @@ describe.skip("TokenNft", function () {
 
         await (
             await new TokenWipeTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setTokenId(token)
                 .setAccountId(account)
                 .setSerials([serial])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close({ token });
     });
 
     it("Cannot wipe accounts NFTs if the account doesn't own them", async function () {
@@ -594,7 +560,6 @@ describe.skip("TokenNft", function () {
             await (
                 await new AccountCreateTransaction()
                     .setKey(key)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -603,7 +568,6 @@ describe.skip("TokenNft", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTokenType(TokenType.NonFungibleUnique)
@@ -621,7 +585,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -632,7 +595,6 @@ describe.skip("TokenNft", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -643,7 +605,6 @@ describe.skip("TokenNft", function () {
         const serials = (
             await (
                 await new TokenMintTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .addMetadata("0x01")
                     .addMetadata("0x02")
@@ -654,7 +615,6 @@ describe.skip("TokenNft", function () {
         let serial = serials[0];
 
         let info = await new TokenNftInfoQuery()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setNftId(new NftId(token, serial))
             .execute(env.client);
 
@@ -664,13 +624,11 @@ describe.skip("TokenNft", function () {
 
         await (
             await new TransferTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .addNftTransfer(token, serial, env.operatorId, account)
                 .execute(env.client)
         ).getReceipt(env.client);
 
         info = await new TokenNftInfoQuery()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setNftId(new NftId(token, serial))
             .execute(env.client);
 
@@ -683,7 +641,6 @@ describe.skip("TokenNft", function () {
         try {
             await (
                 await new TokenWipeTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setAccountId(account)
                     .setSerials([serial])
@@ -694,5 +651,7 @@ describe.skip("TokenNft", function () {
         }
 
         expect(err).to.be.true;
+
+        await env.close({ token });
     });
 });

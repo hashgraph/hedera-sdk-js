@@ -32,7 +32,6 @@ describe("ScheduleCreate", function () {
 
         const response = await new AccountCreateTransaction()
             .setInitialBalance(new Hbar(50))
-            .setNodeAccountIds(env.nodeAccountIds)
             .setKey(keyList)
             .execute(env.client);
 
@@ -42,7 +41,6 @@ describe("ScheduleCreate", function () {
         const topicId = (
             await (
                 await new TopicCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setAdminKey(operatorKey)
                     .setAutoRenewAccountId(operatorId)
                     .setTopicMemo("HCS Topic_")
@@ -97,5 +95,7 @@ describe("ScheduleCreate", function () {
         await new ScheduleInfoQuery()
             .setScheduleId(scheduleId)
             .execute(env.client);
+
+        await env.close();
     });
 });

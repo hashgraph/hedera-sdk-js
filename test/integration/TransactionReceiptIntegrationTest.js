@@ -32,7 +32,6 @@ describe("TransactionReceipt", function () {
 
         const response = await new AccountCreateTransaction()
             .setInitialBalance(new Hbar(50))
-            .setNodeAccountIds(env.nodeAccountIds)
             .setKey(keyList)
             .execute(env.client);
 
@@ -42,7 +41,6 @@ describe("TransactionReceipt", function () {
         const topicId = (
             await (
                 await new TopicCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setAdminKey(operatorKey)
                     .setAutoRenewAccountId(operatorId)
                     .setTopicMemo("HCS Topic_")
@@ -84,5 +82,7 @@ describe("TransactionReceipt", function () {
             );
             expect(expected.toString()).to.be.equal(actual.toString());
         }
+
+        await env.close();
     });
 });

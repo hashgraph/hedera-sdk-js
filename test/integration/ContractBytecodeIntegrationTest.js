@@ -21,12 +21,10 @@ describe("ContractBytecode", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
         let receipt = await new TransactionReceiptQuery()
-            .setNodeAccountIds([response.nodeId])
             .setTransactionId(response.transactionId)
             .execute(env.client);
 
@@ -39,7 +37,6 @@ describe("ContractBytecode", function () {
         receipt = await (
             await new ContractCreateTransaction()
                 .setAdminKey(operatorKey)
-                .setNodeAccountIds([response.nodeId])
                 .setGas(2000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
@@ -58,7 +55,6 @@ describe("ContractBytecode", function () {
         const contract = receipt.contractId;
 
         const bytecode = await new ContractByteCodeQuery()
-            .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(2))
             .execute(env.client);
@@ -68,16 +64,16 @@ describe("ContractBytecode", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when contract ID is not set", async function () {
@@ -88,9 +84,7 @@ describe("ContractBytecode", function () {
         let err = false;
 
         try {
-            await new ContractByteCodeQuery()
-                .setNodeAccountIds(env.nodeAccountIds)
-                .execute(env.client);
+            await new ContractByteCodeQuery().execute(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidContractId);
         }
@@ -98,5 +92,7 @@ describe("ContractBytecode", function () {
         if (!err) {
             throw new Error("query did not error");
         }
+
+        await env.close();
     });
 });
