@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `TokenNftInfo.toJson()` - JSON representation of the current `TokenNftInfo`
  * `Timestamp.toString()` - displays as `<seconds>.<nanos>`. Use `Timestamp.toDate()` to print differently
 
+### Deprecated
+
+ * `TokenNftInfoQuery.[set|get]AccountId()` with no replacement
+ * `TokenNftInfoQuery.[set|get]TokenId()` with no replacement
+ * `TokenNftInfoQuery.[set|get]Start()` with no replacement
+ * `TokenNftInfoQuery.[set|get]End()` with no replacement
+
 ## v2.0.29
 
 ### Added

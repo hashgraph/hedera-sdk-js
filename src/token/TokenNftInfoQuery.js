@@ -155,6 +155,7 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * @returns {?AccountId}
      */
     get accountId() {
@@ -165,6 +166,7 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
      *
      * @param {AccountId | string} accountId
@@ -183,6 +185,7 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * @returns {?TokenId}
      */
     get tokenId() {
@@ -193,6 +196,7 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
      *
      * @param {TokenId | string} tokenId
@@ -211,6 +215,7 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * @returns {?Long}
      */
     get start() {
@@ -221,6 +226,7 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
      *
      * @param {Long | number} start
@@ -237,6 +243,7 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * @returns {?Long}
      */
     get end() {
@@ -247,6 +254,7 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
      *
      * @param {Long | number} end
