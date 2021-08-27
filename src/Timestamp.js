@@ -115,4 +115,11 @@ export default class Timestamp {
             timestamp.nanos != null ? timestamp.nanos : 0
         );
     }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return `${this.seconds.toString()}.${this.nanos.toString()}`;
+    }
 }
