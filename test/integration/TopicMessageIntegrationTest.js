@@ -13,9 +13,13 @@ describe("TopicMessage", function () {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
+
+        // Skip this test if we do not have a mirror network
+        if (env.client.mirrorNetwork.length == 0) {
+            return;
+        }
 
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
@@ -38,7 +42,6 @@ describe("TopicMessage", function () {
             })
             // eslint-disable-next-line no-unused-vars
             .subscribe(env.client, (_) => {
-                console.log("here");
                 // Do nothing
             });
 
@@ -74,6 +77,11 @@ describe("TopicMessage", function () {
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
+
+        // Skip this test if we do not have a mirror network
+        if (env.client.mirrorNetwork.length == 0) {
+            return;
+        }
 
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
@@ -132,6 +140,16 @@ describe("TopicMessage", function () {
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
+        // Skip this test if we do not have a mirror network
+        if (env.client.mirrorNetwork.length == 0) {
+            return;
+        }
+
+        // Skip this test if we do not have a mirror network
+        if (env.client.mirrorNetwork.length == 0) {
+            return;
+        }
+
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
@@ -172,6 +190,11 @@ describe("TopicMessage", function () {
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
+
+        // Skip this test if we do not have a mirror network
+        if (env.client.mirrorNetwork.length == 0) {
+            return;
+        }
 
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
