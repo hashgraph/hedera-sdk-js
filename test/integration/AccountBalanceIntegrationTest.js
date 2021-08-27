@@ -12,21 +12,6 @@ import {
 import IntegrationTestEnv from "./client/index.js";
 
 describe("AccountBalanceQuery", function () {
-    it("account 0.0.3 should have a balance higher than 1 tinybar", async function () {
-        this.timeout(60000);
-
-        const env = await IntegrationTestEnv.new();
-
-        const balance = await new AccountBalanceQuery()
-            .setAccountId("3") // balance of node 3
-            .setNodeAccountIds(env.nodeAccountIds)
-            .execute(env.client);
-
-        expect(balance.hbars.toTinybars().toNumber()).to.be.greaterThan(
-            Hbar.fromTinybars(1).toTinybars().toNumber()
-        );
-    });
-
     it("an account that does not exist should return an error", async function () {
         this.timeout(60000);
 

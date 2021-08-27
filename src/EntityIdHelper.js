@@ -253,14 +253,8 @@ export function _checksum(ledgerId, addr) {
  * @param {Client} client
  */
 export function validateChecksum(shard, realm, num, checksum, client) {
-    if (client._network._ledgerId == null) {
-        throw new Error(
-            "Cannot validate entityt ID against a client without a known network"
-        );
-    }
-
-    if (checksum == null) {
-        return;
+    if (client._network._ledgerId == null || checksum == null) {
+        return
     }
 
     const expectedChecksum = _checksum(
