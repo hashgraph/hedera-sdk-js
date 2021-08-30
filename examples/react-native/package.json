@@ -28,7 +28,7 @@
     "@babel/core": "^7.15.0",
     "babel-jest": "~27.1.0",
     "jest": "~25.2.6",
-    "react-test-renderer": "~16.13.1"
+    "react-test-renderer": "~16.14.0"
   },
   "jest": {
     "preset": "react-native"
