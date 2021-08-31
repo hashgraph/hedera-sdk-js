@@ -1,6 +1,7 @@
 import NftId from "./NftId.js";
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
+import * as hex from "../encoding/hex.js";
 
 /**
  * @namespace proto
@@ -83,5 +84,29 @@ export default class TokenNftInfo {
             creationTime: this.creationTime._toProtobuf(),
             metadata: this.metadata,
         };
+    }
+
+    /**
+     * @typedef {object} TokenNftInfoJson
+     * @property {string} nftId
+     * @property {string} accountId
+     * @property {string} creationTime
+     * @property {string | null} metadata
+     * @returns {TokenNftInfoJson}
+     */
+    toJson() {
+        return {
+            nftId: this.nftId.toString(),
+            accountId: this.accountId.toString(),
+            creationTime: this.creationTime.toString(),
+            metadata: this.metadata != null ? hex.encode(this.metadata) : null,
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJson());
     }
 }
