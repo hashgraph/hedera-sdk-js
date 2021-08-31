@@ -42,7 +42,9 @@ describe("AccountId", function () {
         expect(accountId.realm.toNumber()).to.eql(0);
         expect(accountId.shard.toNumber()).to.eql(0);
 
-        expect(accountId.toStringWithChecksum(Client.forMainnet())).to.be.eql("0.0.123-vfmkw");
+        expect(accountId.toStringWithChecksum(Client.forMainnet())).to.be.eql(
+            "0.0.123-vfmkw"
+        );
     });
 
     it("should parse testnet ID with checksum {0.0.123-rmkyk}", function () {
@@ -52,7 +54,9 @@ describe("AccountId", function () {
         expect(accountId.realm.toNumber()).to.eql(0);
         expect(accountId.shard.toNumber()).to.eql(0);
 
-        expect(accountId.toStringWithChecksum(Client.forTestnet())).to.be.eql("0.0.123-rmkyk");
+        expect(accountId.toStringWithChecksum(Client.forTestnet())).to.be.eql(
+            "0.0.123-rmkyk"
+        );
     });
 
     it("should parse previewnet ID with checksum {0.0.123-ntjly}", function () {
@@ -62,7 +66,9 @@ describe("AccountId", function () {
         expect(accountId.realm.toNumber()).to.eql(0);
         expect(accountId.shard.toNumber()).to.eql(0);
 
-        expect(accountId.toStringWithChecksum(Client.forPreviewnet())).to.be.eql("0.0.123-ntjly");
+        expect(
+            accountId.toStringWithChecksum(Client.forPreviewnet())
+        ).to.be.eql("0.0.123-ntjly");
     });
 
     it("should parse 0.0.0", function () {
