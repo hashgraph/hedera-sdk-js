@@ -55,6 +55,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._accountId = null;
         if (properties.accountId != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setAccountId(properties.accountId);
         }
 
@@ -64,6 +65,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._tokenId = null;
         if (properties.tokenId != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setTokenId(properties.tokenId);
         }
 
@@ -73,6 +75,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._start = null;
         if (properties.start != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setStart(properties.start);
         }
 
@@ -82,6 +85,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._end = null;
         if (properties.end != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setEnd(properties.end);
         }
     }
@@ -168,7 +172,6 @@ export default class TokenNftInfoQuery extends Query {
     /**
      * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
-     *
      * @param {AccountId | string} accountId
      * @returns {TokenNftInfoQuery}
      */
@@ -198,7 +201,6 @@ export default class TokenNftInfoQuery extends Query {
     /**
      * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
-     *
      * @param {TokenId | string} tokenId
      * @returns {TokenNftInfoQuery}
      */
@@ -228,7 +230,6 @@ export default class TokenNftInfoQuery extends Query {
     /**
      * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
-     *
      * @param {Long | number} start
      * @returns {TokenNftInfoQuery}
      */
@@ -256,7 +257,6 @@ export default class TokenNftInfoQuery extends Query {
     /**
      * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
-     *
      * @param {Long | number} end
      * @returns {TokenNftInfoQuery}
      */

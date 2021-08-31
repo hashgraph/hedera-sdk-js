@@ -254,7 +254,7 @@ export function _checksum(ledgerId, addr) {
  */
 export function validateChecksum(shard, realm, num, checksum, client) {
     if (client._network._ledgerId == null || checksum == null) {
-        return
+        return;
     }
 
     const expectedChecksum = _checksum(
