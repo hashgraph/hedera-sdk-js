@@ -354,7 +354,7 @@ export default class Client {
      * @returns {number}
      */
     get minBackoff() {
-        return this._minBackoff; 
+        return this._minBackoff;
     }
 
     /**
