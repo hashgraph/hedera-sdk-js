@@ -115,8 +115,10 @@ export default class Executable {
      * @param {number} minBackoff
      */
     setMinBackoff(minBackoff) {
-        if (this._maxBackoff != null && minBackoff >= this._maxBackoff){
-            throw new Error("minBackoff cannot be larger than or equal to maxBackoff.")
+        if (this._maxBackoff != null && minBackoff >= this._maxBackoff) {
+            throw new Error(
+                "minBackoff cannot be larger than or equal to maxBackoff."
+            );
         }
         this._minBackoff = minBackoff;
     }
@@ -132,8 +134,10 @@ export default class Executable {
      * @param {number} maxBackoff
      */
     setMaxBackoff(maxBackoff) {
-        if (this._minBackoff != null && maxBackoff <= this._minBackoff){
-            throw new Error("maxBackoff cannot be smaller than or equal to minBackoff.")
+        if (this._minBackoff != null && maxBackoff <= this._minBackoff) {
+            throw new Error(
+                "maxBackoff cannot be smaller than or equal to minBackoff."
+            );
         }
         this._maxBackoff = maxBackoff;
     }
@@ -148,20 +152,20 @@ export default class Executable {
     /**
      * @param {number} minBackoff
      * @param {number} maxBackoff
-     */    
+     */
     setBackoff(minBackoff, maxBackoff) {
-        if (minBackoff <= maxBackoff){
-            throw new Error("minBackoff cannot be larger than maxBackoff.")
+        if (minBackoff <= maxBackoff) {
+            throw new Error("minBackoff cannot be larger than maxBackoff.");
         }
-        this._minBackoff=minBackoff;
-        this._maxAttempts=maxBackoff;
+        this._minBackoff = minBackoff;
+        this._maxAttempts = maxBackoff;
     }
 
     /**
      * @returns {number | null}
      */
-    get backoff(){
-        return this._maxBackoff,this._maxBackoff
+    get backoff() {
+        return this._maxBackoff, this._maxBackoff;
     }
 
     /**
@@ -371,6 +375,9 @@ export default class Executable {
  */
 function delayForAttempt(attempt, minBackoff, maxBackoff) {
     // 0.1s, 0.2s, 0.4s, 0.8s, ...
-    const ms = Math.min(Math.floor(minBackoff * Math.pow(2, attempt)),maxBackoff);
+    const ms = Math.min(
+        Math.floor(minBackoff * Math.pow(2, attempt)),
+        maxBackoff
+    );
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
