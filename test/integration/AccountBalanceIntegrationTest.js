@@ -1,12 +1,40 @@
 import {
     Status,
+    AccountId,
     AccountBalanceQuery,
     TokenCreateTransaction,
     AccountId,
 } from "../src/exports.js";
-import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
+import IntegrationTestEnv, { Client } from "./client/index.js";
 
 describe("AccountBalanceQuery", function () {
+    it("can connect to previewnet with TLS", async function () {
+        this.timeout(30000);
+
+        const client = Client.forPreviewnet();
+
+        if (
+            !Object.values(client.network)
+                .map((accountId) => accountId.toString())
+                .includes("0.0.4")
+        ) {
+            return;
+        }
+
+        const network = {
+            "0.previewnet.hedera.com:50212": new AccountId(3),
+        };
+
+        client.setNetwork(network);
+
+        for (const nodeAccountId of Object.values(network)) {
+            await new AccountBalanceQuery()
+                .setNodeAccountIds([nodeAccountId])
+                .setAccountId(nodeAccountId)
+                .execute(client);
+        }
+    });
+
     it("an account that does not exist should return an error", async function () {
         this.timeout(60000);
 

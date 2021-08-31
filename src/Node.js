@@ -2,6 +2,7 @@ import ManagedNode from "./ManagedNode.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
+ * @typedef {import("./address_book/NodeAddress.js").default} NodeAddress
  * @typedef {import("./channel/Channel.js").default} Channel
  */
 
@@ -14,7 +15,7 @@ export default class Node extends ManagedNode {
      * @param {AccountId} accountId
      * @param {string} address
      * @param {number} waitTime
-     * @param {(address: string) => ChannelT} channelInitFunction
+     * @param {(address: string, certHash?: Uint8Array) => ChannelT} channelInitFunction
      */
     constructor(accountId, address, waitTime, channelInitFunction) {
         super(address, channelInitFunction);
@@ -38,6 +39,20 @@ export default class Node extends ManagedNode {
 
         /** @type {number} */
         this.waitTime = waitTime;
+
+        /** @type {NodeAddress | null} */
+        this.nodeAddress = null;
+    }
+
+    /**
+     * @param {NodeAddress} nodeAddress
+     * @returns {this}
+     */
+    setNodeAddress(nodeAddress) {
+        this.nodeAddress = nodeAddress;
+        this.certHash =
+            nodeAddress.certHash != null ? nodeAddress.certHash : undefined;
+        return this;
     }
 
     /**

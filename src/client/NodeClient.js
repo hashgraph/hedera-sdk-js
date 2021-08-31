@@ -4,6 +4,7 @@ import Client from "./Client.js";
 import NodeChannel from "../channel/NodeChannel.js";
 import NodeMirrorChannel from "../channel/NodeMirrorChannel.js";
 import AccountId from "../account/AccountId.js";
+import NetworkName from "../NetworkName.js";
 
 const readFileAsync = util.promisify(fs.readFile);
 
@@ -113,19 +114,19 @@ export default class NodeClient extends Client {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
                         this.setMirrorNetwork(MirrorNetwork.MAINNET);
-                        this._network._ledgerId = "0";
+                        this.setNetworkName(NetworkName.Mainnet);
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
                         this.setMirrorNetwork(MirrorNetwork.TESTNET);
-                        this._network._ledgerId = "1";
+                        this.setNetworkName(NetworkName.Testnet);
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
-                        this._network._ledgerId = "2";
+                        this.setNetworkName(NetworkName.Previewnet);
                         break;
 
                     default:
@@ -284,10 +285,10 @@ export default class NodeClient extends Client {
 
     /**
      * @override
-     * @returns {(address: string) => NodeChannel}
+     * @returns {(address: string, certHash?: Uint8Array) => NodeChannel}
      */
     _createNetworkChannel() {
-        return (address) => new NodeChannel(address);
+        return (address, certHash) => new NodeChannel(address, certHash);
     }
 
     /**

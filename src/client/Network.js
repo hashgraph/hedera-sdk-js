@@ -1,9 +1,14 @@
 import AccountId from "../account/AccountId.js";
 import Node from "../Node.js";
 import { _ledgerIdToNetworkName, _ledgerIdToLedgerId } from "../NetworkName.js";
-
+import {
+    PREVIEWNET_ADDRESS_BOOK,
+    TESTNET_ADDRESS_BOOK,
+    MAINNET_ADDRESS_BOOK,
+} from "../address_book/AddressBooks.js";
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../address_book/NodeAddressBook.js").default} NodeAddressBook
  */
 
 /**
@@ -41,7 +46,7 @@ export default class Network {
          */
         this.nodes = [];
 
-        /** @type {(address: string) => ChannelT} */
+        /** @type {(address: string, certHash?: Uint8Array) => ChannelT} */
         this.createNetworkChannel = createNetworkChannel;
 
         /** @type {string | null} */
@@ -54,6 +59,9 @@ export default class Network {
         this._maxNodeAttempts = -1;
 
         this._maxNodesPerTransaction = -1;
+
+        /** @type {NodeAddressBook | null} */
+        this._addressBook = null;
     }
 
     /**
@@ -63,6 +71,32 @@ export default class Network {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setNetworkName(networkName) {
         this._ledgerId = _ledgerIdToLedgerId(networkName);
+
+        switch (networkName) {
+            case "mainnet":
+                this._addressBook = MAINNET_ADDRESS_BOOK;
+                break;
+            case "testnet":
+                this._addressBook = TESTNET_ADDRESS_BOOK;
+                break;
+            case "previewnet":
+                this._addressBook = PREVIEWNET_ADDRESS_BOOK;
+                break;
+        }
+
+        if (this._addressBook != null) {
+            for (const node of this.nodes) {
+                for (const address of this._addressBook.nodeAddresses) {
+                    if (
+                        address.accountId != null &&
+                        address.accountId.toString() ===
+                            node.accountId.toString()
+                    ) {
+                        node.setNodeAddress(address);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -124,8 +158,8 @@ export default class Network {
                     this._nodeWaitTime,
                     this.createNetworkChannel
                 );
-                this.networkNodes.set(key.toString(), node);
 
+                this.networkNodes.set(key.toString(), node);
                 this.nodes.push(node);
             }
         }

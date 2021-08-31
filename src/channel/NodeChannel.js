@@ -2,6 +2,9 @@ import { Client, credentials } from "@grpc/grpc-js";
 import Channel from "./Channel.js";
 import GrpcServicesError from "../grpc/GrpcServiceError.js";
 import GrpcStatus from "../grpc/GrpcStatus.js";
+import * as sha384 from "../cryptography/sha384.js";
+import * as hex from "../encoding/hex.js";
+import * as utf8 from "../encoding/utf8.js";
 
 /**
  * @property {?proto.CryptoService} _crypto
@@ -15,15 +18,48 @@ export default class NodeChannel extends Channel {
     /**
      * @internal
      * @param {string} address
+     * @param {Uint8Array=} certHash
      */
-    constructor(address) {
+    constructor(address, certHash) {
         super();
+
+        console.log(certHash);
+        this.certHash = certHash != null ? utf8.decode(certHash) : null;
+
+        let security;
+
+        if (address.endsWith(":50212") || address.endsWith(":433")) {
+            security = credentials.createSsl(null, null, null, {
+                checkServerIdentity: (_, cert) => {
+                    console.log("ccccccccccccccccccccccccccccccccccc");
+                    console.log(this.certHash);
+
+                    if (this.certHash == null) {
+                        return undefined;
+                    }
+
+                    const hash = hex.encode(sha384.digestSync(cert.raw));
+
+                    if (hash === this.certHash) {
+                        throw new Error(
+                            "failed to validate server certificate hash"
+                        );
+                    }
+
+                    return undefined;
+                },
+            });
+        } else {
+            security = credentials.createInsecure();
+        }
 
         /**
          * @type {Client}
          * @private
          */
-        this._client = new Client(address, credentials.createInsecure(), {
+        this._client = new Client(address, security, {
+            "grpc.ssl_target_name_override": "127.0.0.1",
+            "grpc.default_authority": "127.0.0.1",
             // https://github.com/grpc/grpc-node/issues/1593
             // https://github.com/grpc/grpc-node/issues/1545
             // https://github.com/grpc/grpc/issues/13163
