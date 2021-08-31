@@ -35,6 +35,7 @@ export default class AccountInfo {
      * @param {TokenRelationshipMap} props.tokenRelationships
      * @param {string} props.accountMemo
      * @param {Long} props.ownedNfts
+     * @param {Long} props.maxAutomaticTokenAssociations
      */
     constructor(props) {
         /**
@@ -138,9 +139,15 @@ export default class AccountInfo {
         /** @readonly */
         this.tokenRelationships = props.tokenRelationships;
 
+        /** @readonly */
         this.accountMemo = props.accountMemo;
 
+        /** @readonly */
         this.ownedNfts = props.ownedNfts;
+
+        /** @readonly */
+        this.maxAutomaticTokenAssociations =
+            props.maxAutomaticTokenAssociations;
 
         Object.freeze(this);
     }
@@ -209,6 +216,9 @@ export default class AccountInfo {
             ),
             accountMemo: info.memo != null ? info.memo : "",
             ownedNfts: info.ownedNfts ? info.ownedNfts : Long.ZERO,
+            maxAutomaticTokenAssociations: info.maxAutomaticTokenAssociations
+                ? Long.fromNumber(info.maxAutomaticTokenAssociations)
+                : Long.ZERO,
         });
     }
 
@@ -240,6 +250,8 @@ export default class AccountInfo {
                     : null,
             memo: this.accountMemo,
             ownedNfts: this.ownedNfts,
+            maxAutomaticTokenAssociations:
+                this.maxAutomaticTokenAssociations.toInt(),
         };
     }
 

@@ -7,6 +7,7 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
+import Long from "long";
 
 /**
  * @namespace proto
@@ -40,6 +41,7 @@ export default class AccountCreateTransaction extends Transaction {
      * @param {AccountId} [props.proxyAccountId]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {string} [props.accountMemo]
+     * @param {Long | number} [props.maxAutomaticTokenAssociations]
      */
     constructor(props = {}) {
         super();
@@ -92,6 +94,12 @@ export default class AccountCreateTransaction extends Transaction {
          */
         this._accountMemo = null;
 
+        /**
+         * @private
+         * @type {?Long}
+         */
+        this._maxAutomaticTokenAssociations = null;
+
         if (props.key != null) {
             this.setKey(props.key);
         }
@@ -114,6 +122,12 @@ export default class AccountCreateTransaction extends Transaction {
 
         if (props.accountMemo != null) {
             this.setAccountMemo(props.accountMemo);
+        }
+
+        if (props.maxAutomaticTokenAssociations != null) {
+            this.setMaxAutomaticTokenAssociations(
+                props.maxAutomaticTokenAssociations
+            );
         }
     }
 
@@ -167,6 +181,10 @@ export default class AccountCreateTransaction extends Transaction {
                             : undefined
                         : undefined,
                 accountMemo: create.memo != null ? create.memo : undefined,
+                maxAutomaticTokenAssociations:
+                    create.maxAutomaticTokenAssociations != null
+                        ? create.maxAutomaticTokenAssociations
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -307,6 +325,27 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?Long}
+     */
+    get maxAutomaticTokenAssociations() {
+        return this._maxAutomaticTokenAssociations;
+    }
+
+    /**
+     * @param {Long | number} maxAutomaticTokenAssociations
+     * @returns {this}
+     */
+    setMaxAutomaticTokenAssociations(maxAutomaticTokenAssociations) {
+        this._requireNotFrozen();
+        this._maxAutomaticTokenAssociations =
+            typeof maxAutomaticTokenAssociations === "number"
+                ? Long.fromNumber(maxAutomaticTokenAssociations)
+                : maxAutomaticTokenAssociations;
+
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -356,6 +395,10 @@ export default class AccountCreateTransaction extends Transaction {
             sendRecordThreshold: this._sendRecordThreshold.toTinybars(),
             receiverSigRequired: this._receiverSignatureRequired,
             memo: this._accountMemo,
+            maxAutomaticTokenAssociations:
+                this._maxAutomaticTokenAssociations != null
+                    ? this._maxAutomaticTokenAssociations.toInt()
+                    : null,
         };
     }
 }

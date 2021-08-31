@@ -421,8 +421,8 @@ export default class Status {
                 return "TOKEN_HAS_NO_FEE_SCHEDULE_KEY";
             case Status.CustomFeeOutsideNumericRange:
                 return "CUSTOM_FEE_OUTSIDE_NUMERIC_RANGE";
-            case Status.InvalidCustomFractionalFeesSum:
-                return "INVALID_CUSTOM_FRACTIONAL_FEES_SUM";
+            case Status.RoyaltyFractionCannotExceedOne:
+                return "ROYALTY_FRACTION_CANNOT_EXCEED_ONE";
             case Status.FractionalFeeMaxAmountLessThanMinAmount:
                 return "FRACTIONAL_FEE_MAX_AMOUNT_LESS_THAN_MIN_AMOUNT";
             case Status.CustomScheduleAlreadyHasNoFees:
@@ -461,6 +461,10 @@ export default class Status {
                 return "SERIAL_NUMBER_LIMIT_REACHED";
             case Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique:
                 return "CUSTOM_ROYALTY_FEE_ONLY_ALLOWED_FOR_NON_FUNGIBLE_UNIQUE";
+            case Status.NoRemainingAutoAssociations:
+                return "NO_REMAINING_AUTO_ASSOCIATIONS";
+            case Status.ExistingAutomaticAssociationsExceedGivenLimit:
+                return "EXISTING_AUTOMATIC_ASSOCIATIONS_EXCEED_GIVEN_LIMIT";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -874,7 +878,7 @@ export default class Status {
             case 241:
                 return Status.CustomFeeOutsideNumericRange;
             case 242:
-                return Status.InvalidCustomFractionalFeesSum;
+                return Status.RoyaltyFractionCannotExceedOne;
             case 243:
                 return Status.FractionalFeeMaxAmountLessThanMinAmount;
             case 244:
@@ -913,6 +917,10 @@ export default class Status {
                 return Status.SerialNumberLimitReached;
             case 261:
                 return Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique;
+            case 262:
+                return Status.NoRemainingAutoAssociations;
+            case 263:
+                return Status.ExistingAutomaticAssociationsExceedGivenLimit;
         }
 
         throw new Error(
@@ -944,12 +952,14 @@ Status.InvalidTransaction = new Status(1);
 Status.PayerAccountNotFound = new Status(2);
 
 /**
- * Node Account provided does not match the node account of the node the transaction was submitted to.
+ * Node Account provided does not match the node account of the node the transaction was submitted
+ * to.
  */
 Status.InvalidNodeAccount = new Status(3);
 
 /**
- * Pre-Check error when TransactionValidStart + transactionValidDuration is less than current consensus time.
+ * Pre-Check error when TransactionValidStart + transactionValidDuration is less than current
+ * consensus time.
  */
 Status.TransactionExpired = new Status(4);
 
@@ -984,7 +994,8 @@ Status.InsufficientTxFee = new Status(9);
 Status.InsufficientPayerBalance = new Status(10);
 
 /**
- * This transaction ID is a duplicate of one that was submitted to this node or reached consensus in the last 180 seconds (receipt period)
+ * This transaction ID is a duplicate of one that was submitted to this node or reached consensus
+ * in the last 180 seconds (receipt period)
  */
 Status.DuplicateTransaction = new Status(11);
 
@@ -1034,7 +1045,8 @@ Status.RecordNotFound = new Status(19);
 Status.InvalidSolidityId = new Status(20);
 
 /**
- * The responding node has submitted the transaction to the network. Its final status is still unknown.
+ * The responding node has submitted the transaction to the network. Its final status is still
+ * unknown.
  */
 Status.Unknown = new Status(21);
 
@@ -1104,7 +1116,8 @@ Status.ContractRevertExecuted = new Status(33);
 Status.ContractExecutionException = new Status(34);
 
 /**
- * In Query validation, account with +ve(amount) value should be Receiving node account, the receiver account should be only one account in the list
+ * In Query validation, account with +ve(amount) value should be Receiving node account, the
+ * receiver account should be only one account in the list
  */
 Status.InvalidReceivingNodeAccount = new Status(35);
 
@@ -1184,12 +1197,15 @@ Status.EmptyTransactionBody = new Status(49);
 Status.InvalidTransactionBody = new Status(50);
 
 /**
- * the type of key (base ed25519 key, KeyList, or ThresholdKey) does not match the type of signature (base ed25519 signature, SignatureList, or ThresholdKeySignature)
+ * the type of key (base ed25519 key, KeyList, or ThresholdKey) does not match the type of
+ * signature (base ed25519 signature, SignatureList, or ThresholdKeySignature)
  */
 Status.InvalidSignatureTypeMismatchingKey = new Status(51);
 
 /**
- * the number of key (KeyList, or ThresholdKey) does not match that of signature (SignatureList, or ThresholdKeySignature). e.g. if a keyList has 3 base keys, then the corresponding signatureList should also have 3 base signatures.
+ * the number of key (KeyList, or ThresholdKey) does not match that of signature (SignatureList,
+ * or ThresholdKeySignature). e.g. if a keyList has 3 base keys, then the corresponding
+ * signatureList should also have 3 base signatures.
  */
 Status.InvalidSignatureCountMismatchingKey = new Status(52);
 
@@ -1309,12 +1325,14 @@ Status.AccountRepeatedInAccountAmounts = new Status(74);
 Status.SettingNegativeAccountBalance = new Status(75);
 
 /**
- * when deleting smart contract that has crypto balance either transfer account or transfer smart contract is required
+ * when deleting smart contract that has crypto balance either transfer account or transfer smart
+ * contract is required
  */
 Status.ObtainerRequired = new Status(76);
 
 /**
- * when deleting smart contract that has crypto balance you can not use the same contract id as transferContractId as the one being deleted
+ * when deleting smart contract that has crypto balance you can not use the same contract id as
+ * transferContractId as the one being deleted
  */
 Status.ObtainerSameContractId = new Status(77);
 
@@ -1324,7 +1342,8 @@ Status.ObtainerSameContractId = new Status(77);
 Status.ObtainerDoesNotExist = new Status(78);
 
 /**
- * attempting to modify (update or delete a immutable smart contract, i.e. one created without a admin key)
+ * attempting to modify (update or delete a immutable smart contract, i.e. one created without a
+ * admin key)
  */
 Status.ModifyingImmutableContract = new Status(79);
 
@@ -1339,7 +1358,8 @@ Status.FileSystemException = new Status(80);
 Status.AutorenewDurationNotInRange = new Status(81);
 
 /**
- * Decoding the smart contract binary to a byte array failed. Check that the input is a valid hex string.
+ * Decoding the smart contract binary to a byte array failed. Check that the input is a valid hex
+ * string.
  */
 Status.ErrorDecodingBytestring = new Status(82);
 
@@ -1369,7 +1389,8 @@ Status.InvalidReceiveRecordThreshold = new Status(86);
 Status.InvalidSendRecordThreshold = new Status(87);
 
 /**
- * Special Account Operations should be performed by only Genesis account, return this code if it is not Genesis Account
+ * Special Account Operations should be performed by only Genesis account, return this code if it
+ * is not Genesis Account
  */
 Status.AccountIsNotGenesisAccount = new Status(88);
 
@@ -1434,7 +1455,12 @@ Status.InsufficientLocalCallGas = new Status(99);
 Status.EntityNotAllowedToDelete = new Status(100);
 
 /**
- * Violating one of these rules: 1) treasury account can update all entities below 0.0.1000, 2) account 0.0.50 can update all entities from 0.0.51 - 0.0.80, 3) Network Function Master Account A/c 0.0.50 - Update all Network Function accounts & perform all the Network Functions listed below, 4) Network Function Accounts: i) A/c 0.0.55 - Update Address Book files (0.0.101/102), ii) A/c 0.0.56 - Update Fee schedule (0.0.111), iii) A/c 0.0.57 - Update Exchange Rate (0.0.112).
+ * Violating one of these rules: 1) treasury account can update all entities below 0.0.1000, 2)
+ * account 0.0.50 can update all entities from 0.0.51 - 0.0.80, 3) Network Function Master Account
+ * A/c 0.0.50 - Update all Network Function accounts & perform all the Network Functions listed
+ * below, 4) Network Function Accounts: i) A/c 0.0.55 - Update Address Book files (0.0.101/102),
+ * ii) A/c 0.0.56 - Update Fee schedule (0.0.111), iii) A/c 0.0.57 - Update Exchange Rate
+ * (0.0.112).
  */
 Status.AuthorizationFailed = new Status(101);
 
@@ -1468,11 +1494,7 @@ Status.MaxContractStorageExceeded = new Status(106);
  */
 Status.TransferAccountSameAsDeleteAccount = new Status(107);
 
-/**
- *
- */
 Status.TotalLedgerBalanceInvalid = new Status(108);
-
 /**
  * The expiration date/time on a smart contract may not be reduced
  */
@@ -1529,7 +1551,9 @@ Status.InvalidAutorenewAccount = new Status(159);
 Status.AutorenewAccountNotAllowed = new Status(160);
 
 /**
- * The topic has expired, was not automatically renewed, and is in a 7 day grace period before the topic will be deleted unrecoverably. This error response code will not be returned until autoRenew functionality is supported by HAPI.
+ * The topic has expired, was not automatically renewed, and is in a 7 day grace period before the
+ * topic will be deleted unrecoverably. This error response code will not be returned until
+ * autoRenew functionality is supported by HAPI.
  */
 Status.TopicExpired = new Status(162);
 
@@ -1539,7 +1563,9 @@ Status.TopicExpired = new Status(162);
 Status.InvalidChunkNumber = new Status(163);
 
 /**
- * For every chunk, the payer account that is part of initialTransactionID must match the Payer Account of this transaction. The entire initialTransactionID should match the transactionID of the first chunk, but this is not checked or enforced by Hedera except when the chunk number is 1.
+ * For every chunk, the payer account that is part of initialTransactionID must match the Payer
+ * Account of this transaction. The entire initialTransactionID should match the transactionID of
+ * the first chunk, but this is not checked or enforced by Hedera except when the chunk number is 1.
  */
 Status.InvalidChunkTransactionId = new Status(164);
 
@@ -1549,7 +1575,8 @@ Status.InvalidChunkTransactionId = new Status(164);
 Status.AccountFrozenForToken = new Status(165);
 
 /**
- * An involved account already has more than <tt>tokens.maxPerAccount</tt> associations with non-deleted tokens.
+ * An involved account already has more than <tt>tokens.maxPerAccount</tt> associations with
+ * non-deleted tokens.
  */
 Status.TokensPerAccountLimitExceeded = new Status(166);
 
@@ -1744,12 +1771,14 @@ Status.InvalidSchedulePayerId = new Status(203);
 Status.InvalidScheduleAccountId = new Status(204);
 
 /**
- * The provided sig map did not contain any new valid signatures from required signers of the scheduled transaction
+ * The provided sig map did not contain any new valid signatures from required signers of the
+ * scheduled transaction
  */
 Status.NoNewValidSignatures = new Status(205);
 
 /**
- * The required signers for a scheduled transaction cannot be resolved, for example because they do not exist or have been deleted
+ * The required signers for a scheduled transaction cannot be resolved, for example because they do
+ * not exist or have been deleted
  */
 Status.UnresolvableRequiredSigners = new Status(206);
 
@@ -1759,7 +1788,8 @@ Status.UnresolvableRequiredSigners = new Status(206);
 Status.ScheduledTransactionNotInWhitelist = new Status(207);
 
 /**
- * At least one of the signatures in the provided sig map did not represent a valid signature for any required signer
+ * At least one of the signatures in the provided sig map did not represent a valid signature for
+ * any required signer
  */
 Status.SomeSignaturesWereInvalid = new Status(208);
 
@@ -1769,7 +1799,8 @@ Status.SomeSignaturesWereInvalid = new Status(208);
 Status.TransactionIdFieldNotAllowed = new Status(209);
 
 /**
- * A schedule already exists with the same identifying fields of an attempted ScheduleCreate (that is, all fields other than scheduledPayerAccountID)
+ * A schedule already exists with the same identifying fields of an attempted ScheduleCreate (that
+ * is, all fields other than scheduledPayerAccountID)
  */
 Status.IdenticalScheduleAlreadyCreated = new Status(210);
 
@@ -1799,12 +1830,14 @@ Status.MessageSizeTooLarge = new Status(214);
 Status.OperationRepeatedInBucketGroups = new Status(215);
 
 /**
- * The capacity needed to satisfy all opsPerSec groups in a bucket overflowed a signed 8-byte integral type
+ * The capacity needed to satisfy all opsPerSec groups in a bucket overflowed a signed 8-byte
+ * integral type
  */
 Status.BucketCapacityOverflow = new Status(216);
 
 /**
- * Given the network size in the address book, the node-level capacity for an operation would never be enough to accept a single request; usually means a bucket burstPeriod should be increased
+ * Given the network size in the address book, the node-level capacity for an operation would never
+ * be enough to accept a single request; usually means a bucket burstPeriod should be increased
  */
 Status.NodeCapacityNotSufficientForOperation = new Status(217);
 
@@ -1819,7 +1852,8 @@ Status.BucketHasNoThrottleGroups = new Status(218);
 Status.ThrottleGroupHasZeroOpsPerSec = new Status(219);
 
 /**
- * The throttle definitions file was updated, but some supported operations were not assigned a bucket
+ * The throttle definitions file was updated, but some supported operations were not assigned a
+ * bucket
  */
 Status.SuccessButMissingExpectedOperation = new Status(220);
 
@@ -1829,12 +1863,15 @@ Status.SuccessButMissingExpectedOperation = new Status(220);
 Status.UnparseableThrottleDefinitions = new Status(221);
 
 /**
- * The new throttle definitions system file were invalid, and no more specific error could be divined
+ * The new throttle definitions system file were invalid, and no more specific error could be
+ * divined
  */
 Status.InvalidThrottleDefinitions = new Status(222);
 
 /**
- * The transaction references an account which has passed its expiration without renewal funds available, and currently remains in the ledger only because of the grace period given to expired entities
+ * The transaction references an account which has passed its expiration without renewal funds
+ * available, and currently remains in the ledger only because of the grace period given to expired
+ * entities
  */
 Status.AccountExpiredAndPendingRemoval = new Status(223);
 
@@ -1931,15 +1968,17 @@ Status.CustomFeeOutsideNumericRange = new Status(241);
 /**
  * A royalty cannot exceed the total fungible value exchanged for an NFT
  */
-Status.InvalidCustomFractionalFeesSum = new Status(242);
+Status.RoyaltyFractionCannotExceedOne = new Status(242);
 
 /**
- * Each fractional custom fee must have its maximum_amount, if specified, at least its minimum_amount
+ * Each fractional custom fee must have its maximum_amount, if specified, at least its
+ * minimum_amount
  */
 Status.FractionalFeeMaxAmountLessThanMinAmount = new Status(243);
 
 /**
- * A fee schedule update tried to clear the custom fees from a token whose fee schedule was already empty
+ * A fee schedule update tried to clear the custom fees from a token whose fee schedule was already
+ * empty
  */
 Status.CustomScheduleAlreadyHasNoFees = new Status(244);
 
@@ -2009,7 +2048,8 @@ Status.PayerAccountDeleted = new Status(256);
 Status.CustomFeeChargingExceededMaxRecursionDepth = new Status(257);
 
 /**
- * More than 20 balance adjustments were to satisfy a CryptoTransfer and its implied custom fee payments
+ * More than 20 balance adjustments were to satisfy a CryptoTransfer and its implied custom fee
+ * payments
  */
 Status.CustomFeeChargingExceededMaxAccountAmounts = new Status(258);
 
@@ -2027,3 +2067,13 @@ Status.SerialNumberLimitReached = new Status(260);
  * Only tokens of type NON_FUNGIBLE_UNIQUE can have royalty fees
  */
 Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique = new Status(261);
+
+/**
+ * The account has reached the limit on the automatic associations count.
+ */
+Status.NoRemainingAutoAssociations = new Status(262);
+
+/**
+ * Already existing automatic associations are more than the new maximum automatic associations.
+ */
+Status.ExistingAutomaticAssociationsExceedGivenLimit = new Status(263);
