@@ -19,7 +19,6 @@ describe("ContractExecute", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -33,7 +32,6 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -53,7 +51,6 @@ describe("ContractExecute", function () {
         await (
             await new ContractExecuteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .setGas(10000)
                 .setFunction(
                     "setMessage",
@@ -65,16 +62,16 @@ describe("ContractExecute", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when contract ID is not set", async function () {
@@ -85,7 +82,6 @@ describe("ContractExecute", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -99,7 +95,6 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -121,7 +116,6 @@ describe("ContractExecute", function () {
         try {
             await (
                 await new ContractExecuteTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setGas(10000)
                     .setFunction(
                         "setMessage",
@@ -138,20 +132,20 @@ describe("ContractExecute", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("contract execution did not error");
         }
+
+        await env.close();
     });
 
     it("should error when function is not set", async function () {
@@ -162,7 +156,6 @@ describe("ContractExecute", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -176,7 +169,6 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -198,7 +190,6 @@ describe("ContractExecute", function () {
         try {
             await (
                 await new ContractExecuteTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setContractId(contract)
                     .setGas(10000)
                     .execute(env.client)
@@ -210,20 +201,20 @@ describe("ContractExecute", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("contract execution did not error");
         }
+
+        await env.close();
     });
 
     it("should error when gas is not set", async function () {
@@ -234,7 +225,6 @@ describe("ContractExecute", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -248,7 +238,6 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -270,7 +259,6 @@ describe("ContractExecute", function () {
         try {
             await (
                 await new ContractExecuteTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setContractId(contract)
                     .setFunction(
                         "setMessage",
@@ -287,20 +275,20 @@ describe("ContractExecute", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("contract execution did not error");
         }
+
+        await env.close();
     });
 
     it("should error when function's parameter are not set", async function () {
@@ -311,7 +299,6 @@ describe("ContractExecute", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -325,7 +312,6 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -347,7 +333,6 @@ describe("ContractExecute", function () {
         try {
             await (
                 await new ContractExecuteTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setContractId(contract)
                     .setGas(10000)
                     .setFunction("setMessage")
@@ -360,19 +345,19 @@ describe("ContractExecute", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("contract execution did not error");
         }
+
+        await env.close();
     });
 });

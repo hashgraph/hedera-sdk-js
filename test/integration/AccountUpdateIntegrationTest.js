@@ -22,7 +22,6 @@ describe("AccountUpdate", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -32,7 +31,6 @@ describe("AccountUpdate", function () {
         const account = receipt.accountId;
 
         let info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -53,7 +51,6 @@ describe("AccountUpdate", function () {
                     .setKey(key2.publicKey)
                     // .setAutoRenewPeriod(777600000)
                     // .setExpirationTime(new Date(Date.now() + 7776000000))
-                    .setNodeAccountIds([response.nodeId])
                     .freezeWith(env.client)
                     .sign(key1)
             ).sign(key2)
@@ -62,7 +59,6 @@ describe("AccountUpdate", function () {
         await response.getReceipt(env.client);
 
         info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -80,7 +76,6 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(env.client)
@@ -99,7 +94,6 @@ describe("AccountUpdate", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -118,7 +112,6 @@ describe("AccountUpdate", function () {
                             .setAccountId(account)
                             .setKey(key2.publicKey)
                             .setAutoRenewPeriod(777600000)
-                            .setNodeAccountIds([response.nodeId])
                             .freezeWith(env.client)
                             .sign(key1)
                     ).sign(key2)
@@ -134,7 +127,6 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(env.client.operatorAccountId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(env.client)
@@ -158,7 +150,6 @@ describe("AccountUpdate", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -177,7 +168,6 @@ describe("AccountUpdate", function () {
                             .setAccountId(account)
                             .setKey(key2.publicKey)
                             .setExpirationTime(new Timestamp(Long.MAX, 0))
-                            .setNodeAccountIds([response.nodeId])
                             .freezeWith(env.client)
                             .sign(key1)
                     ).sign(key2)
@@ -205,7 +195,6 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountUpdateTransaction()
                     .setKey(env.client.operatorPublicKey)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
@@ -226,7 +215,6 @@ describe("AccountUpdate", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -239,7 +227,6 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountUpdateTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .freezeWith(env.client)
                     .sign(key1)
             ).execute(env.client)
@@ -249,13 +236,14 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(env.client.operatorAccountId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(env.client)
                     .sign(key1)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error with invalid signature", async function () {
@@ -268,7 +256,6 @@ describe("AccountUpdate", function () {
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -285,7 +272,6 @@ describe("AccountUpdate", function () {
                     await new AccountUpdateTransaction()
                         .setAccountId(account)
                         .setKey(key2.publicKey)
-                        .setNodeAccountIds([response.nodeId])
                         .freezeWith(env.client)
                         .sign(key1)
                 ).execute(env.client)
@@ -298,7 +284,6 @@ describe("AccountUpdate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(env.client.operatorAccountId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(env.client)
@@ -309,5 +294,7 @@ describe("AccountUpdate", function () {
         if (!err) {
             throw new Error("account update did not error");
         }
+
+        await env.close();
     });
 });

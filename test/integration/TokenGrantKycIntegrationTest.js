@@ -21,7 +21,6 @@ describe("TokenGrantKyc", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -48,7 +47,6 @@ describe("TokenGrantKyc", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -59,7 +57,6 @@ describe("TokenGrantKyc", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -68,7 +65,6 @@ describe("TokenGrantKyc", function () {
         ).getReceipt(env.client);
 
         const info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -79,6 +75,8 @@ describe("TokenGrantKyc", function () {
         expect(relationship.balance.toInt()).to.be.equal(0);
         expect(relationship.isKycGranted).to.be.true;
         expect(relationship.isFrozen).to.be.false;
+
+        await env.close({ token });
     });
 
     it("should be executable even when no token IDs are set", async function () {
@@ -89,7 +87,6 @@ describe("TokenGrantKyc", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -113,6 +110,8 @@ describe("TokenGrantKyc", function () {
         if (!err) {
             throw new Error("token grant kyc did not error");
         }
+
+        await env.close();
     });
 
     it("should error when account ID is not set", async function () {
@@ -124,7 +123,6 @@ describe("TokenGrantKyc", function () {
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
-            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenSymbol("F")
             .setDecimals(3)
             .setInitialSupply(1000000)
@@ -154,5 +152,7 @@ describe("TokenGrantKyc", function () {
         if (!err) {
             throw new Error("token association did not error");
         }
+
+        await env.close({ token });
     });
 });

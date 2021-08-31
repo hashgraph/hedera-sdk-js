@@ -20,7 +20,6 @@ describe("ContractCreate", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -34,7 +33,6 @@ describe("ContractCreate", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -52,7 +50,6 @@ describe("ContractCreate", function () {
         let contract = receipt.contractId;
 
         let info = await new ContractInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .execute(env.client);
@@ -74,16 +71,16 @@ describe("ContractCreate", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should be able to create without admin key", async function () {
@@ -94,7 +91,6 @@ describe("ContractCreate", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -107,7 +103,6 @@ describe("ContractCreate", function () {
         const file = receipt.fileId;
 
         response = await new ContractCreateTransaction()
-            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -125,7 +120,6 @@ describe("ContractCreate", function () {
         let contract = receipt.contractId;
 
         let info = await new ContractInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .execute(env.client);
@@ -150,7 +144,6 @@ describe("ContractCreate", function () {
             await (
                 await new ContractDeleteTransaction()
                     .setContractId(contract)
-                    .setNodeAccountIds([response.nodeId])
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
@@ -160,6 +153,8 @@ describe("ContractCreate", function () {
         if (!err) {
             throw new Error("contract deletion did not error");
         }
+
+        await env.close();
     });
 
     it("should error when gas is not set", async function () {
@@ -170,7 +165,6 @@ describe("ContractCreate", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -187,7 +181,6 @@ describe("ContractCreate", function () {
         try {
             await (
                 await new ContractCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setAdminKey(operatorKey)
                     .setConstructorParameters(
                         new ContractFunctionParameters().addString(
@@ -205,6 +198,8 @@ describe("ContractCreate", function () {
         if (!err) {
             throw new Error("contract creation did not error");
         }
+
+        await env.close();
     });
 
     it("should error when contructor parameters are not set", async function () {
@@ -215,7 +210,6 @@ describe("ContractCreate", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -232,7 +226,6 @@ describe("ContractCreate", function () {
         try {
             await (
                 await new ContractCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setAdminKey(operatorKey)
                     .setGas(2000)
                     .setBytecodeFileId(file)
@@ -246,6 +239,8 @@ describe("ContractCreate", function () {
         if (!err) {
             throw new Error("contract creation did not error");
         }
+
+        await env.close();
     });
 
     it("should error when bytecode file ID is not set", async function () {
@@ -261,7 +256,6 @@ describe("ContractCreate", function () {
                 await new ContractCreateTransaction()
                     .setAdminKey(operatorKey)
                     .setGas(2000)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setConstructorParameters(
                         new ContractFunctionParameters().addString(
                             "Hello from Hedera."
@@ -277,5 +271,7 @@ describe("ContractCreate", function () {
         if (!err) {
             throw new Error("contract creation did not error");
         }
+
+        await env.close();
     });
 });

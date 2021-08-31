@@ -16,7 +16,6 @@ describe("FileAppend", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
             .execute(env.client);
 
@@ -30,7 +29,6 @@ describe("FileAppend", function () {
 
         let info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(env.client);
 
@@ -47,14 +45,12 @@ describe("FileAppend", function () {
         await (
             await new FileAppendTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .setContents("[e2e::FileAppendTransaction]")
                 .execute(env.client)
         ).getReceipt(env.client);
 
         info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(1))
             .execute(env.client);
 
@@ -71,9 +67,10 @@ describe("FileAppend", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should be chunk contents", async function () {
@@ -84,7 +81,6 @@ describe("FileAppend", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
             .execute(env.client);
 
@@ -98,7 +94,6 @@ describe("FileAppend", function () {
 
         let info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(env.client);
 
@@ -115,14 +110,12 @@ describe("FileAppend", function () {
         await (
             await new FileAppendTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .setContents(bigContents)
                 .execute(env.client)
         ).getReceipt(env.client);
 
         info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(1))
             .execute(env.client);
 
@@ -139,9 +132,10 @@ describe("FileAppend", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error with no file ID set", async function () {
@@ -152,7 +146,6 @@ describe("FileAppend", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
             .execute(env.client);
 
@@ -169,7 +162,6 @@ describe("FileAppend", function () {
         try {
             await (
                 await new FileAppendTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setContents("[e2e::FileAppendTransaction]")
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -180,13 +172,14 @@ describe("FileAppend", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("file append transaction did not error");
         }
+
+        await env.close();
     });
 
     it("should not error with no contents appended", async function () {
@@ -197,7 +190,6 @@ describe("FileAppend", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
             .execute(env.client);
 
@@ -211,7 +203,6 @@ describe("FileAppend", function () {
 
         await (
             await new FileAppendTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .setFileId(file)
                 .execute(env.client)
         ).getReceipt(env.client);
@@ -219,8 +210,9 @@ describe("FileAppend", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 });

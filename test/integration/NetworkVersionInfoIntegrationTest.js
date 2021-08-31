@@ -8,11 +8,11 @@ describe("NetworkVersionInfo", function () {
         const env = await IntegrationTestEnv.new();
 
         try {
-            await new NetworkVersionInfoQuery()
-                .setNodeAccountIds(env.nodeAccountIds)
-                .execute(env.client);
+            await new NetworkVersionInfoQuery().execute(env.client);
         } catch {
             // Do nothing
         }
+
+        await env.close();
     });
 });

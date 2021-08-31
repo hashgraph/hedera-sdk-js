@@ -17,7 +17,6 @@ describe("AccountDelete", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -27,7 +26,6 @@ describe("AccountDelete", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -45,13 +43,14 @@ describe("AccountDelete", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(env.client)
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error with invalid signature", async function () {
@@ -63,7 +62,6 @@ describe("AccountDelete", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -78,7 +76,6 @@ describe("AccountDelete", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .execute(env.client)
@@ -90,6 +87,8 @@ describe("AccountDelete", function () {
         if (!err) {
             throw new Error("account deletion did not error");
         }
+
+        await env.close();
     });
 
     it("should error with no account ID set", async function () {
@@ -102,7 +101,6 @@ describe("AccountDelete", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setTransferAccountId(env.operatorId)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .freezeWith(env.client)
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -115,5 +113,7 @@ describe("AccountDelete", function () {
         if (!err) {
             throw new Error("account deletion did not error");
         }
+
+        await env.close();
     });
 });

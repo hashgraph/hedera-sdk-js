@@ -17,7 +17,6 @@ describe("AccountRecords", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -28,14 +27,12 @@ describe("AccountRecords", function () {
 
         await (
             await new TransferTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .addHbarTransfer(account, new Hbar(1))
                 .addHbarTransfer(operatorId, new Hbar(1).negated())
                 .execute(env.client)
         ).getReceipt(env.client);
 
         const records = await new AccountRecordsQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(operatorId)
             .setMaxQueryPayment(new Hbar(1))
             .execute(env.client);
@@ -46,12 +43,13 @@ describe("AccountRecords", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(env.client)
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 });

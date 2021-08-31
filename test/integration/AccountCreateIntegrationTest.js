@@ -17,7 +17,6 @@ describe("AccountCreate", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -27,7 +26,6 @@ describe("AccountCreate", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -45,13 +43,14 @@ describe("AccountCreate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(env.client)
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should be executable with only key set", async function () {
@@ -63,7 +62,6 @@ describe("AccountCreate", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .execute(env.client);
 
         const receipt = await response.getReceipt(env.client);
@@ -72,7 +70,6 @@ describe("AccountCreate", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -88,12 +85,13 @@ describe("AccountCreate", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .freezeWith(env.client)
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when key is not set", async function () {
@@ -105,7 +103,6 @@ describe("AccountCreate", function () {
         try {
             const response = await new AccountCreateTransaction()
                 .setInitialBalance(new Hbar(2))
-                .setNodeAccountIds(env.nodeAccountIds)
                 .execute(env.client);
 
             await response.getReceipt(env.client);
@@ -116,6 +113,8 @@ describe("AccountCreate", function () {
         if (!err) {
             throw new Error("account creation did not error");
         }
+
+        await env.close();
     });
 
     it("should be able to sign transaction and verify transaction signtatures", async function () {
@@ -128,7 +127,6 @@ describe("AccountCreate", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .execute(env.client);
 
         const receipt = await response.getReceipt(env.client);
@@ -137,7 +135,6 @@ describe("AccountCreate", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -151,7 +148,6 @@ describe("AccountCreate", function () {
 
         const transaction = new AccountDeleteTransaction()
             .setAccountId(account)
-            .setNodeAccountIds([response.nodeId])
             .setTransferAccountId(operatorId)
             .freezeWith(env.client);
 
@@ -161,5 +157,7 @@ describe("AccountCreate", function () {
         expect(operatorKey.verifyTransaction(transaction)).to.be.false;
 
         await (await transaction.execute(env.client)).getReceipt(env.client);
+
+        await env.close();
     });
 });

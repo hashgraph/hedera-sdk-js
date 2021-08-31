@@ -13,7 +13,6 @@ describe("FileInfo", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
             .execute(env.client);
 
@@ -27,7 +26,6 @@ describe("FileInfo", function () {
 
         const info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(env.client);
 
@@ -43,9 +41,10 @@ describe("FileInfo", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should be executable with empty contents", async function () {
@@ -56,7 +55,6 @@ describe("FileInfo", function () {
 
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .execute(env.client);
 
         const receipt = await response.getReceipt(env.client);
@@ -69,7 +67,6 @@ describe("FileInfo", function () {
 
         const info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(env.client);
 
@@ -85,10 +82,10 @@ describe("FileInfo", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds(env.nodeAccountIds)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should be executable with no keys", async function () {
@@ -108,7 +105,6 @@ describe("FileInfo", function () {
 
         const info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(env.client);
 
@@ -116,5 +112,7 @@ describe("FileInfo", function () {
         expect(info.size.toInt()).to.be.equal(0);
         expect(info.isDeleted).to.be.false;
         expect(info.keys.toArray().length).to.be.equal(0);
+
+        await env.close();
     });
 });

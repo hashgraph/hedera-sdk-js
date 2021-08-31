@@ -23,7 +23,6 @@ describe("TokenWipe", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -32,7 +31,6 @@ describe("TokenWipe", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -51,7 +49,6 @@ describe("TokenWipe", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -62,7 +59,6 @@ describe("TokenWipe", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -72,14 +68,12 @@ describe("TokenWipe", function () {
 
         await (
             await new TransferTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .addTokenTransfer(token, account, 10)
                 .addTokenTransfer(token, env.operatorId, -10)
                 .execute(env.client)
         ).getReceipt(env.client);
 
         let info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -93,7 +87,6 @@ describe("TokenWipe", function () {
 
         await (
             await new TokenWipeTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .setTokenId(token)
                 .setAccountId(account)
                 .setAmount(10)
@@ -101,7 +94,6 @@ describe("TokenWipe", function () {
         ).getReceipt(env.client);
 
         info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -112,6 +104,8 @@ describe("TokenWipe", function () {
         expect(relationship.balance.toInt()).to.be.equal(0);
         expect(relationship.isKycGranted).to.be.true;
         expect(relationship.isFrozen).to.be.false;
+
+        await env.close({ token });
     });
 
     it("should error when token ID is not set", async function () {
@@ -122,7 +116,6 @@ describe("TokenWipe", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -134,7 +127,6 @@ describe("TokenWipe", function () {
             await (
                 await (
                     await new TokenWipeTransaction()
-                        .setNodeAccountIds([response.nodeId])
                         .setAccountId(account)
                         .setAmount(10)
                         .freezeWith(env.client)
@@ -148,6 +140,8 @@ describe("TokenWipe", function () {
         if (!err) {
             throw new Error("token wipe did not error");
         }
+
+        await env.close();
     });
 
     it("should error when account ID is not set", async function () {
@@ -169,7 +163,6 @@ describe("TokenWipe", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setNodeAccountIds(env.nodeAccountIds)
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
@@ -179,7 +172,6 @@ describe("TokenWipe", function () {
         try {
             await (
                 await new TokenWipeTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAmount(10)
                     .execute(env.client)
@@ -191,6 +183,8 @@ describe("TokenWipe", function () {
         if (!err) {
             throw new Error("token wipe did not error");
         }
+
+        await env.close({ token });
     });
 
     it("should error when amount is not set", async function () {
@@ -211,7 +205,6 @@ describe("TokenWipe", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -230,7 +223,6 @@ describe("TokenWipe", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -241,7 +233,6 @@ describe("TokenWipe", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -254,7 +245,6 @@ describe("TokenWipe", function () {
         try {
             await (
                 await new TokenWipeTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .execute(env.client)
@@ -266,5 +256,7 @@ describe("TokenWipe", function () {
         if (!err) {
             throw new Error("token wipe did not error");
         }
+
+        await env.close({ token });
     });
 });

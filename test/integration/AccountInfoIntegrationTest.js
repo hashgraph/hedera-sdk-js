@@ -6,7 +6,6 @@ import {
     Status,
     TransactionId,
     TokenCreateTransaction,
-    TokenAssociateTransaction,
     PrivateKey,
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
@@ -20,10 +19,11 @@ describe("AccountInfo", function () {
 
         const cost = await new AccountInfoQuery()
             .setAccountId(operatorId)
-            .setNodeAccountIds(env.nodeAccountIds)
             .getCost(env.client);
 
         expect(cost.toTinybars().toInt()).to.be.at.least(25);
+
+        await env.close();
     });
 
     it("should be executable", async function () {
@@ -35,7 +35,6 @@ describe("AccountInfo", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -45,7 +44,6 @@ describe("AccountInfo", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -63,7 +61,6 @@ describe("AccountInfo", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(env.client)
@@ -86,7 +83,6 @@ describe("AccountInfo", function () {
         for (let i = 0; i < 300; i++) {
             response[i] = await new AccountCreateTransaction()
                 .setKey(key.publicKey)
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setInitialBalance(new Hbar(2))
                 .execute(env.client);
         }
@@ -97,7 +93,6 @@ describe("AccountInfo", function () {
 
         for (let i = 0; i < 300; i++) {
             info[i] = await new AccountInfoQuery()
-                .setNodeAccountIds([response[i].nodeId])
                 .setAccountId(receipt[i].accountId)
                 .execute(env.client);
         }
@@ -107,7 +102,6 @@ describe("AccountInfo", function () {
                 await (
                     await new AccountDeleteTransaction()
                         .setAccountId(receipt[i].accountId)
-                        .setNodeAccountIds([response[i].nodeId])
                         .setTransferAccountId(operatorId)
                         .setTransactionId(
                             TransactionId.generate(receipt[i].accountId)
@@ -117,43 +111,28 @@ describe("AccountInfo", function () {
                 ).execute(env.client)
             ).getReceipt(env.client);
         }
+
+        await env.close();
     });
 
     it("should reflect token with no keys", async function () {
         this.timeout(60000);
 
-        const env = await IntegrationTestEnv.new();
+        const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
-        const key = PrivateKey.generate();
 
-        let response = await new AccountCreateTransaction()
-            .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
-            .setInitialBalance(new Hbar(2))
-            .execute(env.client);
-
-        const account = (await response.getReceipt(env.client)).accountId;
-
-        response = await new TokenCreateTransaction()
-            .setTokenName("ffff")
-            .setTokenSymbol("F")
-            .setTreasuryAccountId(operatorId)
-            .execute(env.client);
-
-        const token = (await response.getReceipt(env.client)).tokenId;
-
-        await (
+        const token = (
             await (
-                await new TokenAssociateTransaction()
-                    .setTokenIds([token])
-                    .setAccountId(account)
-                    .freezeWith(env.client)
-                    .sign(key)
-            ).execute(env.client)
-        ).getReceipt(env.client);
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setTreasuryAccountId(operatorId)
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).tokenId;
 
         const info = await new AccountInfoQuery()
-            .setAccountId(account)
+            .setAccountId(operatorId)
             .execute(env.client);
 
         const relationship = info.tokenRelationships.get(token);
@@ -163,6 +142,8 @@ describe("AccountInfo", function () {
         expect(relationship.balance.toInt()).to.be.equal(0);
         expect(relationship.isKycGranted).to.be.null;
         expect(relationship.isFrozen).to.be.null;
+
+        await env.close();
     });
 
     it("should be error with no account ID", async function () {
@@ -180,5 +161,7 @@ describe("AccountInfo", function () {
         if (!err) {
             throw new Error("query did not error");
         }
+
+        await env.close();
     });
 });

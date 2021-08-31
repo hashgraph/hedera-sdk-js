@@ -21,7 +21,6 @@ describe("ContractCallIntegration", function () {
 
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -35,7 +34,6 @@ describe("ContractCallIntegration", function () {
 
         receipt = await (
             await new ContractCreateTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .setAdminKey(operatorKey)
                 .setGas(2000)
                 .setConstructorParameters(
@@ -55,7 +53,6 @@ describe("ContractCallIntegration", function () {
         const contract = receipt.contractId;
 
         const callQuery = new ContractCallQuery()
-            .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .setGas(2000)
@@ -72,7 +69,6 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractExecuteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .setGas(10000)
                 .setFunction(
                     "setMessage",
@@ -83,7 +79,6 @@ describe("ContractCallIntegration", function () {
 
         result = await new ContractCallQuery()
             .setContractId(contract)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(5))
             .setGas(2000)
             .setFunction("getMessage")
@@ -94,14 +89,12 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
     });
@@ -114,7 +107,6 @@ describe("ContractCallIntegration", function () {
 
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -128,7 +120,6 @@ describe("ContractCallIntegration", function () {
 
         receipt = await (
             await new ContractCreateTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .setAdminKey(operatorKey)
                 .setGas(2000)
                 .setConstructorParameters(
@@ -151,7 +142,6 @@ describe("ContractCallIntegration", function () {
 
         try {
             await new ContractCallQuery()
-                .setNodeAccountIds([response.nodeId])
                 .setContractId(contract)
                 .setQueryPayment(new Hbar(1))
                 .setGas(2000)
@@ -164,14 +154,12 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -188,7 +176,6 @@ describe("ContractCallIntegration", function () {
 
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -202,7 +189,6 @@ describe("ContractCallIntegration", function () {
 
         receipt = await (
             await new ContractCreateTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .setAdminKey(operatorKey)
                 .setGas(2000)
                 .setConstructorParameters(
@@ -225,7 +211,6 @@ describe("ContractCallIntegration", function () {
 
         try {
             await new ContractCallQuery()
-                .setNodeAccountIds([response.nodeId])
                 .setContractId(contract)
                 .setQueryPayment(new Hbar(1))
                 .setMaxQueryPayment(new Hbar(5))
@@ -237,14 +222,12 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -261,7 +244,6 @@ describe("ContractCallIntegration", function () {
 
         const response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -275,7 +257,6 @@ describe("ContractCallIntegration", function () {
 
         receipt = await (
             await new ContractCreateTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .setAdminKey(operatorKey)
                 .setGas(2000)
                 .setConstructorParameters(
@@ -298,7 +279,6 @@ describe("ContractCallIntegration", function () {
 
         try {
             await new ContractCallQuery()
-                .setNodeAccountIds([response.nodeId])
                 .setGas(2000)
                 .setFunction("getMessage")
                 .setQueryPayment(new Hbar(1))
@@ -311,19 +291,19 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         if (!err) {
             throw new Error("query did not error");
         }
+
+        await env.close();
     });
 });

@@ -15,7 +15,6 @@ describe("TokenBurn", function () {
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TokenCreateTransaction()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
@@ -34,11 +33,12 @@ describe("TokenBurn", function () {
 
         await (
             await new TokenBurnTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .setAmount(10)
                 .setTokenId(token)
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close({ token });
     });
 
     it("should error when token ID is not set", async function () {
@@ -71,7 +71,6 @@ describe("TokenBurn", function () {
         const operatorKey = env.operatorKey.publicKey;
 
         const response = await new TokenCreateTransaction()
-            .setNodeAccountIds(env.nodeAccountIds)
             .setTokenName("ffff")
             .setTokenSymbol("F")
             .setDecimals(3)
@@ -103,5 +102,7 @@ describe("TokenBurn", function () {
         if (!err) {
             throw new Error("token burn did not error");
         }
+
+        await env.close({ token });
     });
 });

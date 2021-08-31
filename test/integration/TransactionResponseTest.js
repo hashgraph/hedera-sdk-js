@@ -16,7 +16,6 @@ describe("TransactionResponse", function () {
 
         const transaction = await new AccountCreateTransaction()
             .setKey(key.publicKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .execute(env.client);
 
         const record = await transaction.getRecord(env.client);
@@ -32,11 +31,12 @@ describe("TransactionResponse", function () {
             await (
                 await new AccountDeleteTransaction()
                     .setAccountId(account)
-                    .setNodeAccountIds([transaction.nodeId])
                     .setTransferAccountId(operatorId)
                     .freezeWith(env.client)
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 });

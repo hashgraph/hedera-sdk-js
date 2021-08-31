@@ -22,7 +22,6 @@ describe("TokenDissociate", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -31,7 +30,6 @@ describe("TokenDissociate", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -50,7 +48,6 @@ describe("TokenDissociate", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -59,14 +56,12 @@ describe("TokenDissociate", function () {
         ).getReceipt(env.client);
 
         let balances = await new AccountBalanceQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
         expect(balances.tokens.get(token).toInt()).to.be.equal(0);
 
         let info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -81,7 +76,6 @@ describe("TokenDissociate", function () {
         await (
             await (
                 await new TokenDissociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -90,18 +84,18 @@ describe("TokenDissociate", function () {
         ).getReceipt(env.client);
 
         balances = await new AccountBalanceQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
         expect(balances.tokens.get(token)).to.be.null;
 
         info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
         expect(info.tokenRelationships.get(token)).to.be.null;
+
+        await env.close({ token });
     });
 
     it("should be executable even when no token IDs are set", async function () {
@@ -112,10 +106,11 @@ describe("TokenDissociate", function () {
 
         await (
             await new TokenDissociateTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setAccountId(operatorId)
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when account ID is not set", async function () {
@@ -137,7 +132,6 @@ describe("TokenDissociate", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setNodeAccountIds(env.nodeAccountIds)
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
@@ -147,7 +141,6 @@ describe("TokenDissociate", function () {
         try {
             await (
                 await new TokenDissociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -158,5 +151,7 @@ describe("TokenDissociate", function () {
         if (!err) {
             throw new Error("token association did not error");
         }
+
+        await env.close({ token });
     });
 });

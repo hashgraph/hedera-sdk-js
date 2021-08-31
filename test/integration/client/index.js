@@ -1,41 +1,61 @@
 import {
     PrivateKey,
     AccountCreateTransaction,
+    AccountDeleteTransaction,
+    TokenDeleteTransaction,
     Hbar,
     AccountId,
 } from "../../src/exports.js";
 import Client from "../../src/client/NodeClient.js";
+
+/**
+ * @typedef {import("../../exports.js").TokenId} TokenId
+ */
 // import dotenv from "dotenv";
 
 export { Client };
 
-// load .env (if available)
-// dotenv.config();
-
 export default class IntegrationTestEnv {
     /**
-     * @type {Client} client
-     * @type {PrivateKey} operatorKey
-     * @type {AccountId} operatorId
-     * @type {AccountId[]} nodeAccountIds
+     * @param {object} options
+     * @property {Client} props.client
+     * @property {PublicKey} options.originalOperatorKey
+     * @property {AccountId} options.originalOperatorId
+     * @property {PrivateKey} options.originalOperatorKey
+     * @property {AccountId} options.newOperatorKey
+     * @property {AccountId[]} options.newOperatorId
      */
-    constructor(client, operatorKey, operatorId, nodeAccountIds) {
+    constructor(options) {
         /** @type {Client} */
-        this.client = client;
+        this.client = options.client;
 
         /** @type {PrivateKey} */
-        this.operatorKey = operatorKey;
+        this.operatorKey = options.newOperatorKey;
 
         /** @type {AccountId} */
-        this.operatorId = operatorId;
+        this.operatorId = options.newOperatorId;
 
-        /** @type {[]} */
-        this.nodeAccountIds = nodeAccountIds;
+        /** @type {PrivateKey} */
+        this.originalOperatorKey = options.originalOperatorKey;
+
+        /** @type {AccountId} */
+        this.originalOperatorId = options.originalOperatorId;
+
+        this.throwaway = options.throwaway;
 
         Object.freeze(this);
     }
 
-    static async new() {
+    /**
+     * @param {object} [options]
+     * @property {number} [options.nodeAccountIds]
+     * @property {number} [options.balance]
+     * @property {boolean} [options.throwaway]
+     */
+    static async new(options = {}) {
+        // load .env (if available)
+        // dotenv.config();
+
         let client;
 
         if (
@@ -56,43 +76,82 @@ export default class IntegrationTestEnv {
             client = await Client.fromConfigFile(process.env.CONFIG_FILE);
         }
 
-        try {
-            const operatorId = AccountId.fromString(
-                process.env.OPERATOR_ID || process.env.VITE_OPERATOR_ID
-            );
+        if (
+            (process.env.OPERATOR_ID != null || process.env.VITE_OPERATOR_ID != null) &&
+            (process.env.OPERATOR_KEY != null || process.env.VITE_OPERATOR_KEY != null)
+        ) {
+            const operatorId = AccountId.fromString(process.env.OPERATOR_ID || process.env.VITE_OPERATOR_ID);
 
             const operatorKey = PrivateKey.fromString(
                 process.env.OPERATOR_KEY || process.env.VITE_OPERATOR_KEY
             );
 
             client.setOperator(operatorId, operatorKey);
-        } catch (err) {
-            // ignore error and complain later
         }
 
         expect(client.operatorAccountId).to.not.be.null;
         expect(client.operatorPublicKey).to.not.be.null;
 
-        const key = PrivateKey.generate();
+        const originalOperatorKey = client.operatorAccountKey;
+        const originalOperatorId = client.operatorAccountId;
+
+        await client
+            .setNodeWaitTime(8000)
+            .setMaxNodeAttempts(1)
+            .pingAll();
+
+        const network = {};
+        const nodeAccountIds = options.nodeAccountIds != null ? options.nodeAccountIds : 1;
+        for (const [ key, value ] of Object.entries(client.network)) {
+            network[key] = value;
+
+            if (Object.keys(network).length >= nodeAccountIds) {
+                break;
+            }
+        }
+        client.setNetwork(network);
+
+        const newOperatorKey = PrivateKey.generate();
 
         const response = await new AccountCreateTransaction()
-            .setKey(key)
-            .setInitialBalance(new Hbar(100))
+            .setKey(newOperatorKey)
+            .setInitialBalance(new Hbar(options.balance != null ? options.balance : 100))
             .execute(client);
 
-        const accountId = (await response.getReceipt(client)).accountId;
+        const newOperatorId = (await response.getReceipt(client)).accountId;
 
-        client.setOperator(accountId, key);
+        client.setOperator(newOperatorId, newOperatorKey);
 
-        return new IntegrationTestEnv(client, key, accountId, [
-            response.nodeId,
-        ]);
+        return new IntegrationTestEnv({
+            client: client,
+            originalOperatorKey: originalOperatorKey,
+            originalOperatorId: originalOperatorId,
+            newOperatorKey: newOperatorKey,
+            newOperatorId: newOperatorId,
+            throwaway: options.throwaway,
+        });
     }
 
     /**
-     * @returns {Client}
+     * @param {object} [options]
+     * @property {TokenId} token
      */
-    static forMainnet() {
-        return Client.forMainnet();
+    async close(options = {}) {
+        if (options.token != null) {
+            await (await new TokenDeleteTransaction()
+                .setTokenId(options.token)
+                .execute(this.client)
+            ).getReceipt(this.client);
+        }
+
+        if (!this.throwaway && this.operatorKey.toString() !== this.originalOperatorId) {
+            await (await new AccountDeleteTransaction()
+                .setAccountId(this.operatorId)
+                .setTransferAccountId(this.originalOperatorId)
+                .execute(this.client)
+            ).getReceipt(this.client);
+        }
+
+        this.client.close();
     }
 }

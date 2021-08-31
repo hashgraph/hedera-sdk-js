@@ -16,7 +16,6 @@ describe("TopicDelete", function () {
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
             .execute(env.client);
 
@@ -27,6 +26,8 @@ describe("TopicDelete", function () {
                 .setTopicId(topic)
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when deleting immutable topic", async function () {
@@ -42,7 +43,6 @@ describe("TopicDelete", function () {
             await (
                 await new TopicDeleteTransaction()
                     .setTopicId(topic)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
@@ -52,5 +52,7 @@ describe("TopicDelete", function () {
         if (!err) {
             throw new Error("topic deletion did not error");
         }
+
+        await env.close();
     });
 });

@@ -22,7 +22,6 @@ describe("TokenTransfer", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -34,7 +33,6 @@ describe("TokenTransfer", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -53,7 +51,6 @@ describe("TokenTransfer", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -64,7 +61,6 @@ describe("TokenTransfer", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -74,7 +70,6 @@ describe("TokenTransfer", function () {
 
         await (
             await new TransferTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .addTokenTransfer(token, account, 10)
                 .addTokenTransfer(token, env.operatorId, -10)
                 .execute(env.client)
@@ -82,12 +77,13 @@ describe("TokenTransfer", function () {
 
         await (
             await new TokenWipeTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .setTokenId(token)
                 .setAccountId(account)
                 .setAmount(10)
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close({ token });
     });
 
     it("should error when no amount is transferred", async function () {
@@ -100,7 +96,6 @@ describe("TokenTransfer", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -112,7 +107,6 @@ describe("TokenTransfer", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -131,7 +125,6 @@ describe("TokenTransfer", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -142,7 +135,6 @@ describe("TokenTransfer", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -155,7 +147,6 @@ describe("TokenTransfer", function () {
         try {
             await (
                 await new TransferTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .addTokenTransfer(token, account, 0)
                     .addTokenTransfer(token, env.operatorId, 0)
                     .execute(env.client)
@@ -167,6 +158,8 @@ describe("TokenTransfer", function () {
         if (!err) {
             throw new Error("Token transfer did not error.");
         }
+
+        await env.close({ token });
     });
 
     it("should error when no  is transferred", async function () {
@@ -179,7 +172,6 @@ describe("TokenTransfer", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -191,7 +183,6 @@ describe("TokenTransfer", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -210,7 +201,6 @@ describe("TokenTransfer", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -221,7 +211,6 @@ describe("TokenTransfer", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -234,7 +223,6 @@ describe("TokenTransfer", function () {
         try {
             await (
                 await new TransferTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .addTokenTransfer(token, account, 10)
                     .addTokenTransfer(token, env.operatorId, -10)
                     .execute(env.client)
@@ -246,5 +234,7 @@ describe("TokenTransfer", function () {
         if (!err) {
             throw new Error("Token transfer did not error.");
         }
+
+        await env.close({ token });
     });
 });

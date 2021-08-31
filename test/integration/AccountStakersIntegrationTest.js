@@ -15,7 +15,6 @@ describe("AccountStakers", function () {
         try {
             await new AccountStakersQuery()
                 .setAccountId(operatorId)
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setMaxQueryPayment(new Hbar(1))
                 .execute(env.client);
         } catch (error) {
@@ -25,5 +24,7 @@ describe("AccountStakers", function () {
         if (!err) {
             throw new Error("query did not error");
         }
+
+        await env.close();
     });
 });
