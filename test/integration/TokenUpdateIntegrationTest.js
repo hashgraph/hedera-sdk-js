@@ -259,7 +259,7 @@ describe("TokenUpdate", function () {
     it("should error updating immutable token", async function () {
         this.timeout(60000);
 
-        const env = await IntegrationTestEnv.new();
+        const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -316,7 +316,7 @@ describe("TokenUpdate", function () {
     it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function () {
         this.timeout(60000);
 
-        const env = await IntegrationTestEnv.new();
+        const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
 
         const response = await new TokenCreateTransaction()
@@ -339,7 +339,7 @@ describe("TokenUpdate", function () {
     it("should error when admin key does not sign transaction", async function () {
         this.timeout(60000);
 
-        const env = await IntegrationTestEnv.new();
+        const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
         const key = PrivateKey.generate();
 
