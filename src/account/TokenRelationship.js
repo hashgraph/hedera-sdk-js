@@ -20,6 +20,7 @@ export default class TokenRelationship {
      * @param {Long} props.balance
      * @param {boolean | null} props.isKycGranted
      * @param {boolean | null} props.isFrozen
+     * @param {boolean | null} props.automaticAssociation
      */
     constructor(props) {
         /**
@@ -28,12 +29,14 @@ export default class TokenRelationship {
          * @readonly
          */
         this.tokenId = props.tokenId;
+
         /**
          * The Symbol of the token
          *
          * @readonly
          */
         this.symbol = props.symbol;
+
         /**
          * The balance that the Account holds in the smallest denomination
          *
@@ -56,6 +59,14 @@ export default class TokenRelationship {
          * @readonly
          */
         this.isFrozen = props.isFrozen;
+
+        /**
+         * Specifies if the relationship is created implicitly. False : explicitly associated, True :
+         * implicitly associated.
+         *
+         * @readonly
+         */
+        this.automaticAssociation = props.automaticAssociation;
 
         Object.freeze(this);
     }
@@ -88,6 +99,10 @@ export default class TokenRelationship {
                     : Long.ZERO,
             isKycGranted,
             isFrozen,
+            automaticAssociation:
+                relationship.automaticAssociation != null
+                    ? relationship.automaticAssociation
+                    : null,
         });
     }
 
@@ -102,6 +117,7 @@ export default class TokenRelationship {
             kycStatus:
                 this.isKycGranted == null ? 0 : this.isKycGranted ? 1 : 2,
             freezeStatus: this.isFrozen == null ? 0 : this.isFrozen ? 1 : 2,
+            automaticAssociation: this.automaticAssociation,
         };
     }
 }

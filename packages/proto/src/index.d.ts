@@ -91,6 +91,8 @@ import ITokenBalance = proto.ITokenBalance;
 import TokenBalance = proto.TokenBalance;
 import ITokenBalances = proto.ITokenBalances;
 import TokenBalances = proto.TokenBalances;
+import ITokenAssociation = proto.ITokenAssociation;
+import TokenAssociation = proto.TokenAssociation;
 import ITimestamp = proto.ITimestamp;
 import Timestamp = proto.Timestamp;
 import ITimestampSeconds = proto.ITimestampSeconds;
@@ -162,12 +164,12 @@ import IFractionalFee = proto.IFractionalFee;
 import FractionalFee = proto.FractionalFee;
 import IFixedFee = proto.IFixedFee;
 import FixedFee = proto.FixedFee;
+import IRoyaltyFee = proto.IRoyaltyFee;
+import RoyaltyFee = proto.RoyaltyFee;
 import ICustomFee = proto.ICustomFee;
 import CustomFee = proto.CustomFee;
 import IAssessedCustomFee = proto.IAssessedCustomFee;
 import AssessedCustomFee = proto.AssessedCustomFee;
-import IRoyaltyFee = proto.IRoyaltyFee;
-import RoyaltyFee = proto.RoyaltyFee;
 import ITokenFreezeAccountTransactionBody = proto.ITokenFreezeAccountTransactionBody;
 import TokenFreezeAccountTransactionBody = proto.TokenFreezeAccountTransactionBody;
 import ITokenUnfreezeAccountTransactionBody = proto.ITokenUnfreezeAccountTransactionBody;
@@ -334,24 +336,9 @@ import ITokenGetNftInfosResponse = proto.ITokenGetNftInfosResponse;
 import TokenGetNftInfosResponse = proto.TokenGetNftInfosResponse;
 import IResponse = proto.IResponse;
 import Response = proto.Response;
-import IClaim = proto.IClaim;
-import Claim = proto.Claim;
-import ICryptoAddClaimTransactionBody = proto.ICryptoAddClaimTransactionBody;
-import CryptoAddClaimTransactionBody = proto.CryptoAddClaimTransactionBody;
-import ICryptoDeleteClaimTransactionBody = proto.ICryptoDeleteClaimTransactionBody;
-import CryptoDeleteClaimTransactionBody = proto.CryptoDeleteClaimTransactionBody;
-import ICryptoGetClaimQuery = proto.ICryptoGetClaimQuery;
-import CryptoGetClaimQuery = proto.CryptoGetClaimQuery;
-import ICryptoGetClaimResponse = proto.ICryptoGetClaimResponse;
-import CryptoGetClaimResponse = proto.CryptoGetClaimResponse;
 import CryptoService = proto.CryptoService;
 import FileService = proto.FileService;
 import FreezeService = proto.FreezeService;
-import IConsensusTopicQuery = proto.IConsensusTopicQuery;
-import ConsensusTopicQuery = proto.ConsensusTopicQuery;
-import IConsensusTopicResponse = proto.IConsensusTopicResponse;
-import ConsensusTopicResponse = proto.ConsensusTopicResponse;
-import MirrorConsensusService = proto.MirrorConsensusService;
 import NetworkService = proto.NetworkService;
 import ScheduleService = proto.ScheduleService;
 import SmartContractService = proto.SmartContractService;
@@ -361,13 +348,7 @@ import IThrottleBucket = proto.IThrottleBucket;
 import ThrottleBucket = proto.ThrottleBucket;
 import IThrottleDefinitions = proto.IThrottleDefinitions;
 import ThrottleDefinitions = proto.ThrottleDefinitions;
-import ITokenGetAccountNftInfoQuery = proto.ITokenGetAccountNftInfoQuery;
-import TokenGetAccountNftInfoQuery = proto.TokenGetAccountNftInfoQuery;
-import ITokenGetAccountNftInfoResponse = proto.ITokenGetAccountNftInfoResponse;
-import TokenGetAccountNftInfoResponse = proto.TokenGetAccountNftInfoResponse;
 import TokenService = proto.TokenService;
-import ITokenTransfersTransactionBody = proto.ITokenTransfersTransactionBody;
-import TokenTransfersTransactionBody = proto.TokenTransfersTransactionBody;
 import ISignedTransaction = proto.ISignedTransaction;
 import SignedTransaction = proto.SignedTransaction;
 import ITransactionList = proto.ITransactionList;
@@ -390,6 +371,11 @@ import IStringValue = proto.IStringValue;
 import StringValue = proto.StringValue;
 import IBytesValue = proto.IBytesValue;
 import BytesValue = proto.BytesValue;
+import IConsensusTopicQuery = proto.IConsensusTopicQuery;
+import ConsensusTopicQuery = proto.ConsensusTopicQuery;
+import IConsensusTopicResponse = proto.IConsensusTopicResponse;
+import ConsensusTopicResponse = proto.ConsensusTopicResponse;
+import MirrorConsensusService = proto.MirrorConsensusService;
 
 export {
     ITokenUnitBalance,
@@ -476,6 +462,8 @@ export {
     TokenBalance,
     ITokenBalances,
     TokenBalances,
+    ITokenAssociation,
+    TokenAssociation,
     ITimestamp,
     Timestamp,
     ITimestampSeconds,
@@ -547,12 +535,12 @@ export {
     FractionalFee,
     IFixedFee,
     FixedFee,
+    IRoyaltyFee,
+    RoyaltyFee,
     ICustomFee,
     CustomFee,
     IAssessedCustomFee,
     AssessedCustomFee,
-    IRoyaltyFee,
-    RoyaltyFee,
     ITokenFreezeAccountTransactionBody,
     TokenFreezeAccountTransactionBody,
     ITokenUnfreezeAccountTransactionBody,
@@ -719,24 +707,9 @@ export {
     TokenGetNftInfosResponse,
     IResponse,
     Response,
-    IClaim,
-    Claim,
-    ICryptoAddClaimTransactionBody,
-    CryptoAddClaimTransactionBody,
-    ICryptoDeleteClaimTransactionBody,
-    CryptoDeleteClaimTransactionBody,
-    ICryptoGetClaimQuery,
-    CryptoGetClaimQuery,
-    ICryptoGetClaimResponse,
-    CryptoGetClaimResponse,
     CryptoService,
     FileService,
     FreezeService,
-    IConsensusTopicQuery,
-    ConsensusTopicQuery,
-    IConsensusTopicResponse,
-    ConsensusTopicResponse,
-    MirrorConsensusService,
     NetworkService,
     ScheduleService,
     SmartContractService,
@@ -746,13 +719,7 @@ export {
     ThrottleBucket,
     IThrottleDefinitions,
     ThrottleDefinitions,
-    ITokenGetAccountNftInfoQuery,
-    TokenGetAccountNftInfoQuery,
-    ITokenGetAccountNftInfoResponse,
-    TokenGetAccountNftInfoResponse,
     TokenService,
-    ITokenTransfersTransactionBody,
-    TokenTransfersTransactionBody,
     ISignedTransaction,
     SignedTransaction,
     ITransactionList,
@@ -775,4 +742,9 @@ export {
     StringValue,
     IBytesValue,
     BytesValue,
+    IConsensusTopicQuery,
+    ConsensusTopicQuery,
+    IConsensusTopicResponse,
+    ConsensusTopicResponse,
+    MirrorConsensusService,
 };

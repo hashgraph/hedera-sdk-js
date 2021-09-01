@@ -1,5 +1,7 @@
 import {
+    AccountInfoQuery,
     AccountCreateTransaction,
+    AccountUpdateTransaction,
     TokenAssociateTransaction,
     TokenGrantKycTransaction,
     TokenCreateTransaction,
@@ -234,6 +236,90 @@ describe("TokenTransfer", function () {
         if (!err) {
             throw new Error("Token transfer did not error.");
         }
+
+        await env.close({ token });
+    });
+
+    it("automatically associates to account", async function () {
+        this.timeout(60000);
+
+        const env = await IntegrationTestEnv.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
+        const key = PrivateKey.generate();
+
+        const response = await new AccountCreateTransaction()
+            .setKey(key)
+            .setInitialBalance(new Hbar(2))
+            .setMaxAutomaticTokenAssociations(10)
+            .execute(env.client);
+
+        const receipt = await response.getReceipt(env.client);
+
+        expect(receipt.accountId).to.not.be.null;
+        const account = receipt.accountId;
+
+        let info = await new AccountInfoQuery()
+            .setAccountId(account)
+            .execute(env.client);
+
+        expect(info.maxAutomaticTokenAssociations.toInt()).to.be.equal(10);
+
+        await (
+            await (
+                await new AccountUpdateTransaction()
+                    .setAccountId(account)
+                    .setMaxAutomaticTokenAssociations(1)
+                    .freezeWith(env.client)
+                    .sign(key)
+            ).execute(env.client)
+        ).getReceipt(env.client);
+
+        info = await new AccountInfoQuery()
+            .setAccountId(account)
+            .execute(env.client);
+
+        expect(info.maxAutomaticTokenAssociations.toInt()).to.be.equal(1);
+
+        const token = (
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setDecimals(3)
+                    .setInitialSupply(1000000)
+                    .setTreasuryAccountId(operatorId)
+                    .setAdminKey(operatorKey)
+                    .setFreezeKey(operatorKey)
+                    .setWipeKey(operatorKey)
+                    .setSupplyKey(operatorKey)
+                    .setFreezeDefault(false)
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).tokenId;
+
+        const record = await (
+            await new TransferTransaction()
+                .addTokenTransfer(token, account, 10)
+                .addTokenTransfer(token, env.operatorId, -10)
+                .execute(env.client)
+        ).getRecord(env.client);
+
+        expect(record.automaticTokenAssociations.length).to.be.equal(1);
+        expect(
+            record.automaticTokenAssociations[0].accountId.toString()
+        ).to.be.equal(account.toString());
+        expect(
+            record.automaticTokenAssociations[0].tokenId.toString()
+        ).to.be.equal(token.toString());
+
+        await (
+            await new TokenWipeTransaction()
+                .setTokenId(token)
+                .setAccountId(account)
+                .setAmount(10)
+                .execute(env.client)
+        ).getReceipt(env.client);
 
         await env.close({ token });
     });
