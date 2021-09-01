@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `TokenNftInfoQuery.[set|get]TokenId()` with no replacement
  * `TokenNftInfoQuery.[set|get]Start()` with no replacement
  * `TokenNftInfoQuery.[set|get]End()` with no replacement
+ * `TokenMintTransaction.[add|set]Metadata()` support for string metadata
 
 ## v2.0.29
 
