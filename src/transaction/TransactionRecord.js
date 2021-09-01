@@ -9,7 +9,6 @@ import TokenNftTransferMap from "../account/TokenNftTransferMap.js";
 import * as proto from "@hashgraph/proto";
 import ScheduleId from "../schedule/ScheduleId.js";
 import AssessedCustomFee from "../token/AssessedCustomFee.js";
-import TokenAssocation from "../token/TokenAssociation.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
@@ -34,7 +33,6 @@ export default class TransactionRecord {
      * @param {?ScheduleId} props.scheduleRef
      * @param {AssessedCustomFee[]} props.assessedCustomFees
      * @param {TokenNftTransferMap} props.nftTransfers
-     * @param {TokenAssocation[]} props.automaticTokenAssociations
      */
     constructor(props) {
         /**
@@ -126,13 +124,6 @@ export default class TransactionRecord {
         /** @readonly */
         this.nftTransfers = props.nftTransfers;
 
-        /**
-         * All token associations implicitly created while handling this transaction
-         *
-         * @readonly
-         */
-        this.automaticTokenAssociations = props.automaticTokenAssociations;
-
         Object.freeze(this);
     }
 
@@ -215,9 +206,6 @@ export default class TransactionRecord {
             assessedCustomFees: this.assessedCustomFees.map((fee) =>
                 fee._toProtobuf()
             ),
-            automaticTokenAssociations: this.automaticTokenAssociations.map(
-                (association) => association._toProtobuf()
-            ),
         };
     }
 
@@ -284,12 +272,6 @@ export default class TransactionRecord {
                     ? record.tokenTransferLists
                     : []
             ),
-            automaticTokenAssociations:
-                record.automaticTokenAssociations != null
-                    ? record.automaticTokenAssociations.map((association) =>
-                          TokenAssocation._fromProtobuf(association)
-                      )
-                    : [],
         });
     }
 

@@ -5,7 +5,6 @@ import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import AccountId from "./AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
-import Long from "long";
 
 /**
  * @namespace proto
@@ -38,7 +37,6 @@ export default class AccountUpdateTransaction extends Transaction {
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {string} [props.accountMemo]
-     * @param {Long | number} [props.maxAutomaticTokenAssociations]
      */
     constructor(props = {}) {
         super();
@@ -85,12 +83,6 @@ export default class AccountUpdateTransaction extends Transaction {
          */
         this._accountMemo = null;
 
-        /**
-         * @private
-         * @type {?Long}
-         */
-        this._maxAutomaticTokenAssociations = null;
-
         if (props.accountId != null) {
             this.setAccountId(props.accountId);
         }
@@ -117,12 +109,6 @@ export default class AccountUpdateTransaction extends Transaction {
 
         if (props.accountMemo != null) {
             this.setAccountMemo(props.accountMemo);
-        }
-
-        if (props.maxAutomaticTokenAssociations != null) {
-            this.setMaxAutomaticTokenAssociations(
-                props.maxAutomaticTokenAssociations
-            );
         }
     }
 
@@ -188,13 +174,6 @@ export default class AccountUpdateTransaction extends Transaction {
                         ? update.memo.value != null
                             ? update.memo.value
                             : undefined
-                        : undefined,
-                maxAutomaticTokenAssociations:
-                    update.maxAutomaticTokenAssociations != null &&
-                    update.maxAutomaticTokenAssociations.value != null
-                        ? Long.fromNumber(
-                              update.maxAutomaticTokenAssociations.value
-                          )
                         : undefined,
             }),
             transactions,
@@ -353,27 +332,6 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
-     * @returns {?Long}
-     */
-    get maxAutomaticTokenAssociations() {
-        return this._maxAutomaticTokenAssociations;
-    }
-
-    /**
-     * @param {Long | number} maxAutomaticTokenAssociations
-     * @returns {this}
-     */
-    setMaxAutomaticTokenAssociations(maxAutomaticTokenAssociations) {
-        this._requireNotFrozen();
-        this._maxAutomaticTokenAssociations =
-            typeof maxAutomaticTokenAssociations === "number"
-                ? Long.fromNumber(maxAutomaticTokenAssociations)
-                : maxAutomaticTokenAssociations;
-
-        return this;
-    }
-
-    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -439,10 +397,6 @@ export default class AccountUpdateTransaction extends Transaction {
                     ? {
                           value: this._accountMemo,
                       }
-                    : null,
-            maxAutomaticTokenAssociations:
-                this._maxAutomaticTokenAssociations != null
-                    ? { value: this._maxAutomaticTokenAssociations.toInt() }
                     : null,
         };
     }
