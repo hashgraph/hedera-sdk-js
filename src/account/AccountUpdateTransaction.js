@@ -189,6 +189,13 @@ export default class AccountUpdateTransaction extends Transaction {
                             ? update.memo.value
                             : undefined
                         : undefined,
+                maxAutomaticTokenAssociations:
+                    update.maxAutomaticTokenAssociations != null &&
+                    update.maxAutomaticTokenAssociations.value != null
+                        ? Long.fromNumber(
+                              update.maxAutomaticTokenAssociations.value
+                          )
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -432,6 +439,10 @@ export default class AccountUpdateTransaction extends Transaction {
                     ? {
                           value: this._accountMemo,
                       }
+                    : null,
+            maxAutomaticTokenAssociations:
+                this._maxAutomaticTokenAssociations != null
+                    ? { value: this._maxAutomaticTokenAssociations.toInt() }
                     : null,
         };
     }
