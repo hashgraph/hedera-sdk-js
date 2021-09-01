@@ -31,7 +31,7 @@ export default class TokenMintTransaction extends Transaction {
      * @param {object} [props]
      * @param {TokenId | string} [props.tokenId]
      * @param {Long | number} [props.amount]
-     * @param {(Uint8Array | string)[]} [props.metadata]
+     * @param {Uint8Array[]} [props.metadata]
      */
     constructor(props = {}) {
         super();
@@ -167,6 +167,13 @@ export default class TokenMintTransaction extends Transaction {
      */
     addMetadata(metadata) {
         this._requireNotFrozen();
+
+        if (typeof metadata === "string") {
+            console.warn(
+                "Passing a `string` for token metadata is considered a bug, and has been removed. Please provide a `Uint8Array` instead."
+            );
+        }
+
         this._metadata.push(
             typeof metadata === "string" ? hex.decode(metadata) : metadata
         );
@@ -175,11 +182,21 @@ export default class TokenMintTransaction extends Transaction {
     }
 
     /**
-     * @param {(Uint8Array | string)[]} metadata
+     * @param {Uint8Array[]} metadata
      * @returns {this}
      */
     setMetadata(metadata) {
         this._requireNotFrozen();
+
+        for (const data of metadata) {
+            if (typeof data === "string") {
+                console.warn(
+                    "Passing a `string` for token metadata is considered a bug, and has been removed. Please provide a `Uint8Array` instead."
+                );
+                break;
+            }
+        }
+
         this._metadata = metadata.map((data) =>
             typeof data === "string" ? hex.decode(data) : data
         );

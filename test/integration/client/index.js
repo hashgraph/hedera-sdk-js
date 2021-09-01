@@ -65,6 +65,11 @@ export default class IntegrationTestEnv {
             client = Client.forPreviewnet();
         } else if (
             process.env.HEDERA_NETWORK != null &&
+            process.env.HEDERA_NETWORK == "testnet"
+        ) {
+            client = Client.forTestnet();
+        } else if (
+            process.env.HEDERA_NETWORK != null &&
             process.env.HEDERA_NETWORK == "localhost"
         ) {
             client = Client.forNetwork({
@@ -72,8 +77,10 @@ export default class IntegrationTestEnv {
                 "127.0.0.1:50214": "0.0.4",
                 "127.0.0.1:50215": "0.0.5",
             });
-        } else {
+        } else if (process.env.CONFIG_FILE != null) {
             client = await Client.fromConfigFile(process.env.CONFIG_FILE);
+        } else {
+            throw new Error("Failed to construct client for IntegrationTestEnv");
         }
 
         if (

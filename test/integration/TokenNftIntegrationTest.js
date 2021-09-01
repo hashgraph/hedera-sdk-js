@@ -73,8 +73,8 @@ describe("TokenNft", function () {
             await (
                 await new TokenMintTransaction()
                     .setTokenId(token)
-                    .addMetadata("0x01")
-                    .addMetadata("0x02")
+                    .addMetadata(Uint8Array.of(0x01))
+                    .addMetadata(Uint8Array.of(0x02))
                     .execute(env.client)
             ).getReceipt(env.client)
         ).serials;
@@ -175,7 +175,7 @@ describe("TokenNft", function () {
             await (
                 await new TokenMintTransaction()
                     .setTokenId(token)
-                    .addMetadata("0x01")
+                    .addMetadata(Uint8Array.of(0x01))
                     .execute(env.client)
             ).getReceipt(env.client)
         ).serials;
@@ -279,7 +279,112 @@ describe("TokenNft", function () {
                 await new TokenMintTransaction()
                     .setTokenId(token)
                     .addMetadata(
-                        "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+                        Uint8Array.of(
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00,
+                            0x00
+                        )
                     )
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -347,8 +452,8 @@ describe("TokenNft", function () {
         await (
             await new TokenMintTransaction()
                 .setTokenId(token)
-                .addMetadata("0x01")
-                .addMetadata("0x02")
+                .addMetadata(Uint8Array.of(0x01))
+                .addMetadata(Uint8Array.of(0x02))
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -490,8 +595,8 @@ describe("TokenNft", function () {
             await (
                 await new TokenMintTransaction()
                     .setTokenId(token)
-                    .addMetadata("0x01")
-                    .addMetadata("0x02")
+                    .addMetadata(Uint8Array.of(0x01))
+                    .addMetadata(Uint8Array.of(0x02))
                     .execute(env.client)
             ).getReceipt(env.client)
         ).serials;
@@ -606,8 +711,8 @@ describe("TokenNft", function () {
             await (
                 await new TokenMintTransaction()
                     .setTokenId(token)
-                    .addMetadata("0x01")
-                    .addMetadata("0x02")
+                    .addMetadata(Uint8Array.of(0x01))
+                    .addMetadata(Uint8Array.of(0x02))
                     .execute(env.client)
             ).getReceipt(env.client)
         ).serials;

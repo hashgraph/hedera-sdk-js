@@ -122,6 +122,7 @@ jobs:
         env:
           OPERATOR_KEY: ${{ secrets.TESTNET_OPERATOR_KEY }}
           OPERATOR_ID: ${{ secrets.TESTNET_OPERATOR_ID }}
+          HEDERA_NETWORK: "testnet"
         run: |
           pnpm install
           pnpm test:integration:node
@@ -154,6 +155,7 @@ jobs:
         env:
           VITE_OPERATOR_KEY: ${{ secrets.TESTNET_OPERATOR_KEY }}
           VITE_OPERATOR_ID: ${{ secrets.TESTNET_OPERATOR_ID }}
+          HEDERA_NETWORK: "testnet"
         run: |
           pnpm install
           pnpm test:integration:browser:chrome
