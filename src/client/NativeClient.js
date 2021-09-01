@@ -166,9 +166,9 @@ export default class NativeClient extends Client {
 
     /**
      * @override
-     * @returns {(address: string) => NativeChannel}
+     * @returns {(address: string) => Promise<NativeChannel>}
      */
     _createNetworkChannel() {
-        return (address) => new NativeChannel(address);
+        return (address) => Promise.resolve(new NativeChannel(address));
     }
 }

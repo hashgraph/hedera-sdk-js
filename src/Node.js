@@ -15,7 +15,7 @@ export default class Node extends ManagedNode {
      * @param {AccountId} accountId
      * @param {string} address
      * @param {number} waitTime
-     * @param {(address: string, certHash?: Uint8Array) => ChannelT} channelInitFunction
+     * @param {(address: string, certHash?: Uint8Array) => Promise<ChannelT>} channelInitFunction
      */
     constructor(accountId, address, waitTime, channelInitFunction) {
         super(address, channelInitFunction);

@@ -449,7 +449,7 @@ export default class Client {
 
     /**
      * @abstract
-     * @returns {(address: string) => ChannelT}
+     * @returns {(address: string) => Promise<ChannelT>}
      */
     _createNetworkChannel() {
         throw new Error("not implemented");

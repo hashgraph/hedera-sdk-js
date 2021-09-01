@@ -12,7 +12,7 @@
 export default class ManagedNode {
     /**
      * @param {string} address
-     * @param {(address: string, certHash?: Uint8Array) => ChannelT} channelInitFunction
+     * @param {(address: string, certHash?: Uint8Array) => Promise<ChannelT>} channelInitFunction
      */
     constructor(address, channelInitFunction) {
         this.address = address;
@@ -23,17 +23,19 @@ export default class ManagedNode {
         /** @type {ChannelT | null} */
         this._channel = null;
 
-        /** @type {(address: string, certHash?: Uint8Array) => ChannelT} */
+        /** @type {(address: string, certHash?: Uint8Array) => Promise<ChannelT>} */
         this._channelInitFunction = channelInitFunction;
     }
 
-    get channel() {
+    async getChannel() {
         if (this._channel != null) {
             return this._channel;
         }
 
-        this._channel = this._channelInitFunction(this.address, this.certHash);
-
+        this._channel = await this._channelInitFunction(
+            this.address,
+            this.certHash
+        );
         return this._channel;
     }
 

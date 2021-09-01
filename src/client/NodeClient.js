@@ -285,10 +285,10 @@ export default class NodeClient extends Client {
 
     /**
      * @override
-     * @returns {(address: string, certHash?: Uint8Array) => NodeChannel}
+     * @returns {(address: string, certHash?: Uint8Array) => Promise<NodeChannel>}
      */
     _createNetworkChannel() {
-        return (address, certHash) => new NodeChannel(address, certHash);
+        return (address, certHash) => NodeChannel.new(address, certHash);
     }
 
     /**

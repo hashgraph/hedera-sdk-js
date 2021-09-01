@@ -329,7 +329,7 @@ export default class Executable {
 
             node.inUse();
 
-            const channel = node.channel;
+            const channel = await node.getChannel();
             const request = await this._makeRequestAsync();
 
             // advance the internal index

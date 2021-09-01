@@ -20,7 +20,7 @@ import {
  */
 export default class Network {
     /**
-     * @param {(address: string) => ChannelT} createNetworkChannel
+     * @param {(address: string) => Promise<ChannelT>} createNetworkChannel
      */
     constructor(createNetworkChannel) {
         /**
@@ -46,7 +46,7 @@ export default class Network {
          */
         this.nodes = [];
 
-        /** @type {(address: string, certHash?: Uint8Array) => ChannelT} */
+        /** @type {(address: string, certHash?: Uint8Array) => Promise<ChannelT>} */
         this.createNetworkChannel = createNetworkChannel;
 
         /** @type {string | null} */

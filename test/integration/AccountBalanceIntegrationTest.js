@@ -25,13 +25,17 @@ describe("AccountBalanceQuery", function () {
             "0.previewnet.hedera.com:50212": new AccountId(3),
         };
 
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         client.setNetwork(network);
 
+        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
         for (const nodeAccountId of Object.values(network)) {
+        console.log("cccccccccccccccccccccc");
             await new AccountBalanceQuery()
                 .setNodeAccountIds([nodeAccountId])
                 .setAccountId(nodeAccountId)
                 .execute(client);
+        console.log("dddddddddddddddddddddddddddd");
         }
     });
 
