@@ -997,10 +997,15 @@ enum ResponseCodeEnum {
   /**
    * The account has reached the limit on the automatic associations count.
    */
-  NO_REMAINING_AUTO_ASSOCIATIONS = 262;
+  NO_REMAINING_AUTOMATIC_ASSOCIATIONS = 262;
 
   /**
    * Already existing automatic associations are more than the new maximum automatic associations.
    */
   EXISTING_AUTOMATIC_ASSOCIATIONS_EXCEED_GIVEN_LIMIT = 263;
+
+  /**
+   * Cannot set the number of automatic associations for an account more than the maximum allowed token associations <tt>tokens.maxPerAccount</tt>
+   */
+  REQUESTED_NUM_AUTOMATIC_ASSOCIATIONS_EXCEEDS_ASSOCIATION_LIMIT = 264;
 }

@@ -461,10 +461,12 @@ export default class Status {
                 return "SERIAL_NUMBER_LIMIT_REACHED";
             case Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique:
                 return "CUSTOM_ROYALTY_FEE_ONLY_ALLOWED_FOR_NON_FUNGIBLE_UNIQUE";
-            case Status.NoRemainingAutoAssociations:
-                return "NO_REMAINING_AUTO_ASSOCIATIONS";
+            case Status.NoRemainingAutomaticAssociations:
+                return "NO_REMAINING_AUTOMATIC_ASSOCIATIONS";
             case Status.ExistingAutomaticAssociationsExceedGivenLimit:
                 return "EXISTING_AUTOMATIC_ASSOCIATIONS_EXCEED_GIVEN_LIMIT";
+            case Status.RequestedNumAutomaticAssociationsExceedsAssociationLimit:
+                return "REQUESTED_NUM_AUTOMATIC_ASSOCIATIONS_EXCEEDS_ASSOCIATION_LIMIT";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -918,9 +920,11 @@ export default class Status {
             case 261:
                 return Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique;
             case 262:
-                return Status.NoRemainingAutoAssociations;
+                return Status.NoRemainingAutomaticAssociations;
             case 263:
                 return Status.ExistingAutomaticAssociationsExceedGivenLimit;
+            case 264:
+                return Status.RequestedNumAutomaticAssociationsExceedsAssociationLimit;
         }
 
         throw new Error(
@@ -2071,9 +2075,17 @@ Status.CustomRoyaltyFeeOnlyAllowedForNonFungibleUnique = new Status(261);
 /**
  * The account has reached the limit on the automatic associations count.
  */
-Status.NoRemainingAutoAssociations = new Status(262);
+Status.NoRemainingAutomaticAssociations = new Status(262);
 
 /**
  * Already existing automatic associations are more than the new maximum automatic associations.
  */
 Status.ExistingAutomaticAssociationsExceedGivenLimit = new Status(263);
+
+/**
+ * Cannot set the number of automatic associations for an account more than the
+ * maximum allowed token associations <tt>tokens.maxPerAccount</tt>
+ */
+Status.RequestedNumAutomaticAssociationsExceedsAssociationLimit = new Status(
+    264
+);
