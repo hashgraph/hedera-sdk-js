@@ -113,14 +113,16 @@ export default class Executable {
 
     /**
      * @param {number} minBackoff
+     * @returns {this}
      */
     setMinBackoff(minBackoff) {
-        if (this._maxBackoff != null && minBackoff >= this._maxBackoff) {
-            throw new Error(
-                "minBackoff cannot be larger than or equal to maxBackoff."
-            );
+        if (minBackoff == null) {
+            throw new Error("minBackoff cannot be null.");
+        } else if (this._maxBackoff != null && minBackoff > this._maxBackoff) {
+            throw new Error("minBackoff cannot be larger than maxBackoff.");
         }
         this._minBackoff = minBackoff;
+        return this;
     }
 
     /**
@@ -131,15 +133,17 @@ export default class Executable {
     }
 
     /**
-     * @param {number} maxBackoff
+     * @param {?number} maxBackoff
+     * @returns {this}
      */
     setMaxBackoff(maxBackoff) {
-        if (this._minBackoff != null && maxBackoff <= this._minBackoff) {
-            throw new Error(
-                "maxBackoff cannot be smaller than or equal to minBackoff."
-            );
+        if (maxBackoff == null) {
+            throw new Error("maxBackoff cannot be null.");
+        } else if (this._minBackoff != null && maxBackoff < this._minBackoff) {
+            throw new Error("maxBackoff cannot be smaller than minBackoff.");
         }
         this._maxBackoff = maxBackoff;
+        return this;
     }
 
     /**
@@ -150,22 +154,34 @@ export default class Executable {
     }
 
     /**
-     * @param {number} minBackoff
-     * @param {number} maxBackoff
+     * @private
+     * @param {?number} minBackoff
+     * @param {?number} maxBackoff
+     * @returns {this}
      */
+    // @ts-ignore
     setBackoff(minBackoff, maxBackoff) {
-        if (minBackoff <= maxBackoff) {
+        if (minBackoff == null) {
+            throw new Error("minBackoff cannot be null.");
+        }
+        if (maxBackoff == null) {
+            throw new Error("maxBackoff cannot be null.");
+        }
+        if (minBackoff > maxBackoff) {
             throw new Error("minBackoff cannot be larger than maxBackoff.");
         }
         this._minBackoff = minBackoff;
         this._maxAttempts = maxBackoff;
+        return this;
     }
 
     /**
-     * @returns {number | null}
+     * @private
+     * @returns
      */
+    // @ts-ignore
     get backoff() {
-        return this._maxBackoff, this._maxBackoff;
+        return [this._minBackoff, this._maxBackoff];
     }
 
     /**

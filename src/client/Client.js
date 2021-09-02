@@ -344,10 +344,18 @@ export default class Client {
     }
 
     /**
-     * @param {number} minBackoff
+     * @param {?number} minBackoff
+     * @returns {this}
      */
     setMinBackoff(minBackoff) {
+        if (minBackoff == null) {
+            throw new Error("minBackoff cannot be null.");
+        }
+        if (minBackoff > this._maxBackoff) {
+            throw new Error("minBackoff cannot be larger than maxBackoff.");
+        }
         this._minBackoff = minBackoff;
+        return this;
     }
 
     /**
@@ -358,12 +366,17 @@ export default class Client {
     }
 
     /**
-     * @param {number} maxBackoff
+     * @param {?number} maxBackoff
+     * @returns {this}
      */
     setMaxBackoff(maxBackoff) {
-        if (maxBackoff >= this.minBackoff) {
-            this._maxBackoff = maxBackoff;
+        if (maxBackoff == null) {
+            throw new Error("maxBackoff cannot be null.");
+        } else if (maxBackoff < this._minBackoff) {
+            throw new Error("maxBackoff cannot be smaller than minBackoff.");
         }
+        this._maxBackoff = maxBackoff;
+        return this;
     }
 
     /**
@@ -371,6 +384,37 @@ export default class Client {
      */
     get maxBackoff() {
         return this._maxBackoff;
+    }
+
+    /**
+     * @private
+     * @param {?number} minBackoff
+     * @param {?number} maxBackoff
+     * @returns {this}
+     */
+    // @ts-ignore
+    setBackoff(minBackoff, maxBackoff) {
+        if (minBackoff == null) {
+            throw new Error("minBackoff cannot be null.");
+        }
+        if (maxBackoff == null) {
+            throw new Error("maxBackoff cannot be null.");
+        }
+        if (minBackoff > maxBackoff) {
+            throw new Error("minBackoff cannot be larger than maxBackoff.");
+        }
+        this._minBackoff = minBackoff;
+        this._maxAttempts = maxBackoff;
+        return this;
+    }
+
+    /**
+     * @private
+     * @returns
+     */
+    // @ts-ignore
+    get backoff() {
+        return [this._minBackoff, this._maxBackoff];
     }
 
     /**
