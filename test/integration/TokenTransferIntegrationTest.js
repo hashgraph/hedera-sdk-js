@@ -1,7 +1,5 @@
 import {
-    AccountInfoQuery,
     AccountCreateTransaction,
-    AccountUpdateTransaction,
     TokenAssociateTransaction,
     TokenGrantKycTransaction,
     TokenCreateTransaction,
