@@ -410,11 +410,14 @@ export default class Client {
 
     /**
      * @private
-     * @returns
+     * @typedef {Object} Backoff
+     * @property {number | null} minBackoff
+     * @property {number | null} maxBackoff
+     * @returns {Backoff}
      */
     // @ts-ignore
     get backoff() {
-        return [this._minBackoff, this._maxBackoff];
+        return {minBackoff:this._minBackoff, maxBackoff:this._maxBackoff};
     }
 
     /**
