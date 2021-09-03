@@ -184,7 +184,7 @@ export default class Executable {
      */
     // @ts-ignore
     get backoff() {
-        return {minBackoff:this._minBackoff, maxBackoff:this._maxBackoff};
+        return { minBackoff: this._minBackoff, maxBackoff: this._maxBackoff };
     }
 
     /**
