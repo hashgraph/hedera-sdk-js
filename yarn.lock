@@ -59,9 +59,9 @@
     source-map "^0.5.0"
 
 "@babel/eslint-parser@^7.14.7":
-  version "7.15.0"
-  resolved "https://registry.yarnpkg.com/@babel/eslint-parser/-/eslint-parser-7.15.0.tgz#b54f06e04d0e93aebcba99f89251e3bf0ee39f21"
-  integrity sha512-+gSPtjSBxOZz4Uh8Ggqu7HbfpB8cT1LwW0DnVVLZEJvzXauiD0Di3zszcBkRmfGGrLdYeHUwcflG7i3tr9kQlw==
+  version "7.15.4"
+  resolved "https://registry.yarnpkg.com/@babel/eslint-parser/-/eslint-parser-7.15.4.tgz#46385943726291fb3e8db99522c8099b15684387"
+  integrity sha512-hPMIAmGNbmQzXJIo2P43Zj9UhRmGev5f9nqdBFOWNGDGh6XKmjby79woBvg6y0Jur6yRfQBneDbUQ8ZVc1krFw==
   dependencies:
     eslint-scope "^5.1.1"
     eslint-visitor-keys "^2.1.0"
@@ -331,10 +331,10 @@
     js-base64 "^3.6.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@1.1.9":
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.1.9.tgz#0cdf2cf920b9c1f3784287c4f253dbff15455245"
-  integrity sha512-BOY5LD8NCjFot0EFXla2ZX8Q7UE94ZDQoSKXK/XVwlLgcMNSArdIPfK4zy4EBvLZnWV9ACdo/4szDuVyCqvkrA==
+"@hashgraph/proto@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-2.0.0.tgz#f34933e23d2676fdaee1bc8a4ffa9da4091814a6"
+  integrity sha512-SgvtrTgZXpAk9c8LuOoOEs4RNqmSZX8/fYu8oDcqpRxAi5mnyChCkLcSneOyWPDJZmaEV1mz+HeO1HJAJUURAw==
   dependencies:
     protobufjs "^6.11.2"
 
