@@ -1368,26 +1368,7 @@
     xcode "^3.0.1"
     xml2js "^0.4.23"
 
-"@expo/config-plugins@3.0.7", "@expo/config-plugins@^3.0.6":
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-3.0.7.tgz#50870e26d34b11740a5841076c921729381d4319"
-  integrity sha512-7YOoFtxB6XqDil+OlGXi7iredKHxXVFCAOIVfFyEDzO3oo0gBmWGmUnHgrPDvpMj0q+adCCh5BL8OcvGfc9ITQ==
-  dependencies:
-    "@expo/config-types" "^42.0.0"
-    "@expo/json-file" "8.2.33"
-    "@expo/plist" "0.0.13"
-    debug "^4.3.1"
-    find-up "~5.0.0"
-    fs-extra "9.0.0"
-    getenv "^1.0.0"
-    glob "7.1.6"
-    resolve-from "^5.0.0"
-    semver "^7.3.5"
-    slash "^3.0.0"
-    xcode "^3.0.1"
-    xml2js "^0.4.23"
-
-"@expo/config-plugins@3.1.0":
+"@expo/config-plugins@3.1.0", "@expo/config-plugins@^3.0.0", "@expo/config-plugins@^3.0.6":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-3.1.0.tgz#0752ff33c5eab21cf42034a44e79df97f0f867f8"
   integrity sha512-V5qxaxCAExBM0TXmbU1QKiZcAGP3ecu7KXede8vByT15cro5PkcWu2sSdJCYbHQ/gw6Vf/i8sr8gKlN8V8TSLg==
@@ -1396,25 +1377,6 @@
     "@expo/json-file" "8.2.33"
     "@expo/plist" "0.0.14"
     chalk "^4.1.2"
-    debug "^4.3.1"
-    find-up "~5.0.0"
-    fs-extra "9.0.0"
-    getenv "^1.0.0"
-    glob "7.1.6"
-    resolve-from "^5.0.0"
-    semver "^7.3.5"
-    slash "^3.0.0"
-    xcode "^3.0.1"
-    xml2js "^0.4.23"
-
-"@expo/config-plugins@^3.0.0":
-  version "3.0.8"
-  resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-3.0.8.tgz#f8842902aea726c2845e837bb59c07ac497e6a04"
-  integrity sha512-reNYaYklOIq8QUY5ua1ubSRhVgY7hllvjingo22HHSaGhX4UvFFKDGYrjBdjcutHD6jw/eYLa8yJS74o1/rqkg==
-  dependencies:
-    "@expo/config-types" "^42.0.0"
-    "@expo/json-file" "8.2.33"
-    "@expo/plist" "0.0.13"
     debug "^4.3.1"
     find-up "~5.0.0"
     fs-extra "9.0.0"
@@ -1436,7 +1398,7 @@
   resolved "https://registry.yarnpkg.com/@expo/config-types/-/config-types-42.0.0.tgz#3e3e125ec092c0c34dbfaf19be5480402de3d677"
   integrity sha512-Rj02OMZke2MrGa/1Y/EScmR7VuWbDEHPJyvfFyyLbadUt+Yv6isCdeFzDt71I7gJlPR9T4fzixeYLrtXXOTq0w==
 
-"@expo/config@5.0.9":
+"@expo/config@5.0.9", "@expo/config@^5.0.6":
   version "5.0.9"
   resolved "https://registry.yarnpkg.com/@expo/config/-/config-5.0.9.tgz#5221af5394599d861515ef8513731f21fbb322db"
   integrity sha512-eZj+cf03wkQQdHSpYvrmiqAsn2dJV10uhHIwXyeFBaFvhds0NgThOldJZfOppQ4QUaGobB/vaJ7UqUa3B0PCMw==
@@ -1472,23 +1434,6 @@
     resolve-from "^5.0.0"
     semver "7.3.2"
     slugify "^1.3.4"
-
-"@expo/config@^5.0.6":
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/@expo/config/-/config-5.0.7.tgz#a419fd7a3ba897b1e10a8f8df8acf775f246aa69"
-  integrity sha512-7Wzao9uALHmRSf59FMsHk1vxW4m4alDCJmfo+enXnl5o6UYiCDYfjNXctMwnW+fBM3opta4FbmmPGIftfXOesw==
-  dependencies:
-    "@babel/code-frame" "~7.10.4"
-    "@expo/config-plugins" "3.0.7"
-    "@expo/config-types" "^42.0.0"
-    "@expo/json-file" "8.2.33"
-    getenv "^1.0.0"
-    glob "7.1.6"
-    require-from-string "^2.0.2"
-    resolve-from "^5.0.0"
-    semver "7.3.2"
-    slugify "^1.3.4"
-    sucrase "^3.20.0"
 
 "@expo/configure-splash-screen@0.3.1":
   version "0.3.1"
@@ -1600,19 +1545,19 @@
     js-base64 "^3.6.1"
     tweetnacl "^1.0.3"
 
-"@hashgraph/proto@1.1.9":
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-1.1.9.tgz#0cdf2cf920b9c1f3784287c4f253dbff15455245"
-  integrity sha512-BOY5LD8NCjFot0EFXla2ZX8Q7UE94ZDQoSKXK/XVwlLgcMNSArdIPfK4zy4EBvLZnWV9ACdo/4szDuVyCqvkrA==
+"@hashgraph/proto@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-2.0.0.tgz#f34933e23d2676fdaee1bc8a4ffa9da4091814a6"
+  integrity sha512-SgvtrTgZXpAk9c8LuOoOEs4RNqmSZX8/fYu8oDcqpRxAi5mnyChCkLcSneOyWPDJZmaEV1mz+HeO1HJAJUURAw==
   dependencies:
     protobufjs "^6.11.2"
 
 "@hashgraph/sdk@file:../..":
-  version "2.0.29"
+  version "2.0.30"
   dependencies:
     "@grpc/grpc-js" "^1.3.4"
     "@hashgraph/cryptography" "^1.0.20"
-    "@hashgraph/proto" "1.1.9"
+    "@hashgraph/proto" "2.0.0"
     "@types/crypto-js" "^4.0.2"
     "@types/utf8" "^3.0.0"
     bignumber.js "^9.0.1"
@@ -3726,10 +3671,10 @@ expo-updates-interface@~0.2.2:
   resolved "https://registry.yarnpkg.com/expo-updates-interface/-/expo-updates-interface-0.2.2.tgz#f754ce2c562f427d87893a9d22a4cbab39e0defd"
   integrity sha512-Gvjk/6DntlPfkoRrrmbl9jzD2YtlNVa9jV9/T1+zdvg9XvO7H+BUgAQ1NYFFx/3Wdk03z+xfCYugRWk9X5nZ5A==
 
-expo-updates@~0.8.4:
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-0.8.4.tgz#6d88a2cd6581052e289c3f1bf13522a36a666545"
-  integrity sha512-unH5pXSYC5RecP8YudcV7NjE9CrwMstmK/A0XPs/CRUJPxdnc1hhN75vrOLZ6z7St5aXvufP3HPORAI4hejRLg==
+expo-updates@~0.8.5:
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-0.8.5.tgz#38da04bb68a222297a1d36a2cc3c2159a0b1f221"
+  integrity sha512-MX4YI80oPvbjLzdo+sNvxRma8TEOxESliADHdbrJQpdILhPZTz6GLSypqDKZps68oyvYWxJqID55EBam1nFlAg==
   dependencies:
     "@expo/config" "^5.0.6"
     "@expo/config-plugins" "^3.0.6"
