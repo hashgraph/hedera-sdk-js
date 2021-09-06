@@ -11,7 +11,7 @@
     "@hashgraph/sdk": "file:../..",
     "expo": "~42.0.3",
     "expo-random": "^11.2.0",
-    "expo-splash-screen": "~0.8.0",
+    "expo-splash-screen": "~0.11.4",
     "expo-status-bar": "~1.0.4",
     "expo-updates": "~0.8.4",
     "react": "16.14.0",
