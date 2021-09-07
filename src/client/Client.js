@@ -392,8 +392,7 @@ export default class Client {
      * @param {?number} maxBackoff
      * @returns {this}
      */
-    // @ts-ignore
-    setBackoff(minBackoff, maxBackoff) {
+    _setBackoff(minBackoff, maxBackoff) {
         if (minBackoff == null) {
             throw new Error("minBackoff cannot be null.");
         }
@@ -415,8 +414,7 @@ export default class Client {
      * @property {number | null} maxBackoff
      * @returns {Backoff}
      */
-    // @ts-ignore
-    get backoff() {
+    get _backoff() {
         return { minBackoff: this._minBackoff, maxBackoff: this._maxBackoff };
     }
 
