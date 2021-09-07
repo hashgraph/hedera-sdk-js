@@ -307,6 +307,13 @@ export default class Executable {
     async execute(client) {
         await this._beforeExecute(client);
 
+        if (this._maxBackoff == null) {
+            this._maxBackoff = client.maxBackoff;
+        }
+        if (this._minBackoff == null) {
+            this._minBackoff = client.minBackoff;
+        }
+
         const maxAttempts =
             client._maxAttempts != null
                 ? client._maxAttempts
@@ -361,12 +368,6 @@ export default class Executable {
 
             switch (this._shouldRetry(request, response)) {
                 case ExecutionState.Retry:
-                    if (this._maxBackoff == null) {
-                        this._maxBackoff = client.maxBackoff;
-                    }
-                    if (this._minBackoff == null) {
-                        this._minBackoff = client.minBackoff;
-                    }
                     await delayForAttempt(
                         attempt,
                         this._minBackoff,
