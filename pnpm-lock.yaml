@@ -21,7 +21,7 @@ specifiers:
   babel-plugin-module-rewrite: ^0.2.0
   bignumber.js: ^9.0.1
   chai: ^4.3.4
-  chromedriver: ^92.0.1
+  chromedriver: ^93.0.1
   crypto-js: ^4.0.0
   dotenv: ^10.0.0
   dpdm: ^3.6.1
@@ -77,7 +77,7 @@ devDependencies:
   babel-plugin-dynamic-import-node: 2.3.3
   babel-plugin-module-rewrite: 0.2.0
   chai: 4.3.4
-  chromedriver: 92.0.1
+  chromedriver: 93.0.1
   dotenv: 10.0.0
   dpdm: 3.6.1
   eslint: 7.30.0
@@ -1998,8 +1998,8 @@ packages:
     resolution: {integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==}
     dev: true
 
-  /axios/0.21.1:
-    resolution: {integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==}
+  /axios/0.21.4:
+    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
       follow-redirects: 1.14.1
     transitivePeerDependencies:
@@ -2317,14 +2317,14 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /chromedriver/92.0.1:
-    resolution: {integrity: sha512-LptlDVCs1GgyFNVbRoHzzy948JDVzTgGiVPXjNj385qXKQP3hjAVBIgyvb/Hco0xSEW8fjwJfsm1eQRmu6t4pQ==}
+  /chromedriver/93.0.1:
+    resolution: {integrity: sha512-KDzbW34CvQLF5aTkm3b5VdlTrvdIt4wEpCzT2p4XJIQWQZEPco5pNce7Lu9UqZQGkhQ4mpZt4Ky6NKVyIS2N8A==}
     engines: {node: '>=10'}
     hasBin: true
     requiresBuild: true
     dependencies:
       '@testim/chrome-version': 1.0.7
-      axios: 0.21.1
+      axios: 0.21.4
       del: 6.0.0
       extract-zip: 2.0.1
       https-proxy-agent: 5.0.0
