@@ -9,29 +9,33 @@
   },
   "dependencies": {
     "@hashgraph/sdk": "file:../..",
-    "expo": "~42.0.3",
-    "expo-random": "^11.2.0",
-    "expo-splash-screen": "~0.8.0",
+    "expo": "^42.0.0",
+    "expo-random": "~11.2.0",
+    "expo-splash-screen": "~0.11.2",
     "expo-status-bar": "~1.0.4",
-    "expo-updates": "~0.8.4",
-    "react": "16.14.0",
-    "react-dom": "16.14.0",
+    "expo-updates": "~0.8.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
     "react-ga": "^3.3.0",
-    "react-native": "~0.64.1",
-    "react-native-gesture-handler": "~1.10.3",
+    "react-native": "0.63.4",
+    "react-native-gesture-handler": "~1.10.2",
     "react-native-reanimated": "~2.2.0",
-    "react-native-screens": "~3.6.0",
-    "react-native-unimodules": "~0.14.6",
-    "react-native-web": "~0.14.13"
+    "react-native-screens": "~3.4.0",
+    "react-native-unimodules": "~0.14.5",
+    "react-native-web": "~0.13.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.0",
-    "babel-jest": "~27.1.0",
-    "jest": "~27.1.0",
-    "react-test-renderer": "~16.14.0"
+    "@babel/core": "~7.9.0",
+    "babel-jest": "~25.2.6",
+    "jest": "~25.2.6",
+    "jest-expo": "^42.0.0",
+    "react-test-renderer": "~16.13.1"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@sentry/.*)"
+    ]
   },
   "private": true
 }
