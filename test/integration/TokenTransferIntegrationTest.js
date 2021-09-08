@@ -1,13 +1,16 @@
 import {
     AccountCreateTransaction,
+    Hbar,
+    PrivateKey,
+    Status,
     TokenAssociateTransaction,
-    TokenGrantKycTransaction,
     TokenCreateTransaction,
+    TokenGrantKycTransaction,
+    TokenMintTransaction,
+    TokenSupplyType,
+    TokenType,
     TokenWipeTransaction,
     TransferTransaction,
-    Hbar,
-    Status,
-    PrivateKey,
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
@@ -233,6 +236,91 @@ describe("TokenTransfer", function () {
 
         if (!err) {
             throw new Error("Token transfer did not error.");
+        }
+
+        await env.close({ token });
+    });
+
+    it("cannot transfer NFT as if it were FT", async function () {
+        this.timeout(60000);
+
+        const env = await IntegrationTestEnv.new({ throwaway: true });
+
+        const key = PrivateKey.generate();
+
+        const account = (
+            await (
+                await new AccountCreateTransaction()
+                    .setKey(key.publicKey)
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).accountId;
+
+        const token = (
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setTreasuryAccountId(env.operatorId)
+                    .setAdminKey(env.operatorKey)
+                    .setKycKey(env.operatorKey)
+                    .setFreezeKey(env.operatorKey)
+                    .setWipeKey(env.operatorKey)
+                    .setSupplyKey(env.operatorKey)
+                    .setFeeScheduleKey(env.operatorKey)
+                    .setTokenType(TokenType.NonFungibleUnique)
+                    .setSupplyType(TokenSupplyType.Finite)
+                    .setMaxSupply(10)
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).tokenId;
+
+        await (
+            await new TokenMintTransaction()
+                .setMetadata([Uint8Array.of([0, 1, 2])])
+                .setTokenId(token)
+                .execute(env.client)
+        ).getReceipt(env.client);
+
+        await (
+            await (
+                await new TokenAssociateTransaction()
+                    .setTokenIds([token])
+                    .setAccountId(account)
+                    .freezeWith(env.client)
+                    .sign(key)
+            ).execute(env.client)
+        ).getReceipt(env.client);
+
+        await (
+            await (
+                await new TokenGrantKycTransaction()
+                    .setTokenId(token)
+                    .setAccountId(account)
+                    .freezeWith(env.client)
+                    .sign(key)
+            ).execute(env.client)
+        ).getReceipt(env.client);
+
+        let err = false;
+
+        try {
+            await (
+                await new TransferTransaction()
+                    .addTokenTransfer(token, env.operatorId, -1)
+                    .addTokenTransfer(token, account, 1)
+                    .execute(env.client)
+            ).getReceipt(env.client);
+        } catch (error) {
+            err = error
+                .toString()
+                .includes(
+                    Status.AccountAmountTransfersOnlyAllowedForFungibleCommon
+                );
+        }
+
+        if (!err) {
+            throw new Error("token update did not error");
         }
 
         await env.close({ token });
