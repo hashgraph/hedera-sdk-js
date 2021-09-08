@@ -153,37 +153,35 @@ export default class Executable {
         return this._maxBackoff;
     }
 
-    /**
-     * @private
-     * @param {?number} minBackoff
-     * @param {?number} maxBackoff
-     * @returns {this}
-     */
-    _setBackoff(minBackoff, maxBackoff) {
-        if (minBackoff == null) {
-            throw new Error("minBackoff cannot be null.");
-        }
-        if (maxBackoff == null) {
-            throw new Error("maxBackoff cannot be null.");
-        }
-        if (minBackoff > maxBackoff) {
-            throw new Error("minBackoff cannot be larger than maxBackoff.");
-        }
-        this._minBackoff = minBackoff;
-        this._maxAttempts = maxBackoff;
-        return this;
-    }
+    // /**
+    //  * @param {?number} minBackoff
+    //  * @param {?number} maxBackoff
+    //  * @returns {this}
+    //  */
+    // _setBackoff(minBackoff, maxBackoff) {
+    //     if (minBackoff == null) {
+    //         throw new Error("minBackoff cannot be null.");
+    //     }
+    //     if (maxBackoff == null) {
+    //         throw new Error("maxBackoff cannot be null.");
+    //     }
+    //     if (minBackoff > maxBackoff) {
+    //         throw new Error("minBackoff cannot be larger than maxBackoff.");
+    //     }
+    //     this._minBackoff = minBackoff;
+    //     this._maxAttempts = maxBackoff;
+    //     return this;
+    // }
 
-    /**
-     * @private
-     * @typedef {Object} Backoff
-     * @property {number | null} minBackoff
-     * @property {number | null} maxBackoff
-     * @returns {Backoff}
-     */
-    get _backoff() {
-        return { minBackoff: this._minBackoff, maxBackoff: this._maxBackoff };
-    }
+    // /**
+    //  * @typedef {Object} Backoff
+    //  * @property {number | null} minBackoff
+    //  * @property {number | null} maxBackoff
+    //  * @returns {Backoff}
+    //  */
+    // get _backoff() {
+    //     return { minBackoff: this._minBackoff, maxBackoff: this._maxBackoff };
+    // }
 
     /**
      * @abstract
