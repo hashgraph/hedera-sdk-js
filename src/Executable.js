@@ -51,6 +51,12 @@ export default class Executable {
          * @type {AccountId[]}
          */
         this._nodeIds = [];
+
+        /** @type {number | null} */
+        this._minBackoff = null;
+
+        /** @type {number | null} */
+        this._maxBackoff = null;
     }
 
     /**
@@ -104,6 +110,78 @@ export default class Executable {
 
         return this;
     }
+
+    /**
+     * @param {number} minBackoff
+     * @returns {this}
+     */
+    setMinBackoff(minBackoff) {
+        if (minBackoff == null) {
+            throw new Error("minBackoff cannot be null.");
+        } else if (this._maxBackoff != null && minBackoff > this._maxBackoff) {
+            throw new Error("minBackoff cannot be larger than maxBackoff.");
+        }
+        this._minBackoff = minBackoff;
+        return this;
+    }
+
+    /**
+     * @returns {number | null}
+     */
+    get minBackoff() {
+        return this._minBackoff;
+    }
+
+    /**
+     * @param {?number} maxBackoff
+     * @returns {this}
+     */
+    setMaxBackoff(maxBackoff) {
+        if (maxBackoff == null) {
+            throw new Error("maxBackoff cannot be null.");
+        } else if (this._minBackoff != null && maxBackoff < this._minBackoff) {
+            throw new Error("maxBackoff cannot be smaller than minBackoff.");
+        }
+        this._maxBackoff = maxBackoff;
+        return this;
+    }
+
+    /**
+     * @returns {number | null}
+     */
+    get maxBackoff() {
+        return this._maxBackoff;
+    }
+
+    // /**
+    //  * @param {?number} minBackoff
+    //  * @param {?number} maxBackoff
+    //  * @returns {this}
+    //  */
+    // _setBackoff(minBackoff, maxBackoff) {
+    //     if (minBackoff == null) {
+    //         throw new Error("minBackoff cannot be null.");
+    //     }
+    //     if (maxBackoff == null) {
+    //         throw new Error("maxBackoff cannot be null.");
+    //     }
+    //     if (minBackoff > maxBackoff) {
+    //         throw new Error("minBackoff cannot be larger than maxBackoff.");
+    //     }
+    //     this._minBackoff = minBackoff;
+    //     this._maxAttempts = maxBackoff;
+    //     return this;
+    // }
+
+    // /**
+    //  * @typedef {Object} Backoff
+    //  * @property {number | null} minBackoff
+    //  * @property {number | null} maxBackoff
+    //  * @returns {Backoff}
+    //  */
+    // get _backoff() {
+    //     return { minBackoff: this._minBackoff, maxBackoff: this._maxBackoff };
+    // }
 
     /**
      * @abstract
@@ -225,6 +303,13 @@ export default class Executable {
     async execute(client) {
         await this._beforeExecute(client);
 
+        if (this._maxBackoff == null) {
+            this._maxBackoff = client.maxBackoff;
+        }
+        if (this._minBackoff == null) {
+            this._minBackoff = client.minBackoff;
+        }
+
         const maxAttempts =
             client._maxAttempts != null
                 ? client._maxAttempts
@@ -279,7 +364,11 @@ export default class Executable {
 
             switch (this._shouldRetry(request, response)) {
                 case ExecutionState.Retry:
-                    await delayForAttempt(attempt);
+                    await delayForAttempt(
+                        attempt,
+                        this._minBackoff,
+                        this._maxBackoff
+                    );
                     continue;
                 case ExecutionState.Finished:
                     return this._mapResponse(response, nodeAccountId, request);
@@ -296,10 +385,15 @@ export default class Executable {
 
 /**
  * @param {number} attempt
+ * @param {number} minBackoff
+ * @param {number} maxBackoff
  * @returns {Promise<void>}
  */
-function delayForAttempt(attempt) {
+function delayForAttempt(attempt, minBackoff, maxBackoff) {
     // 0.1s, 0.2s, 0.4s, 0.8s, ...
-    const ms = Math.floor(50 * Math.pow(2, attempt));
+    const ms = Math.min(
+        Math.floor(minBackoff * Math.pow(2, attempt)),
+        maxBackoff
+    );
     return new Promise((resolve) => setTimeout(resolve, ms));
 }

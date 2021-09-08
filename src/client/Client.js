@@ -98,6 +98,12 @@ export default class Client {
 
         /** @type {number | null} */
         this._maxAttempts = null;
+
+        /** @type {number} */
+        this._minBackoff = 250;
+
+        /** @type {number} */
+        this._maxBackoff = 8000;
     }
 
     /**
@@ -336,6 +342,79 @@ export default class Client {
         this._network.setMaxNodesPerTransaction(maxNodesPerTransaction);
         return this;
     }
+
+    /**
+     * @param {?number} minBackoff
+     * @returns {this}
+     */
+    setMinBackoff(minBackoff) {
+        if (minBackoff == null) {
+            throw new Error("minBackoff cannot be null.");
+        }
+        if (minBackoff > this._maxBackoff) {
+            throw new Error("minBackoff cannot be larger than maxBackoff.");
+        }
+        this._minBackoff = minBackoff;
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get minBackoff() {
+        return this._minBackoff;
+    }
+
+    /**
+     * @param {?number} maxBackoff
+     * @returns {this}
+     */
+    setMaxBackoff(maxBackoff) {
+        if (maxBackoff == null) {
+            throw new Error("maxBackoff cannot be null.");
+        } else if (maxBackoff < this._minBackoff) {
+            throw new Error("maxBackoff cannot be smaller than minBackoff.");
+        }
+        this._maxBackoff = maxBackoff;
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get maxBackoff() {
+        return this._maxBackoff;
+    }
+
+    // /**
+    //  * @param {?number} minBackoff
+    //  * @param {?number} maxBackoff
+    //  * @returns {this}
+    //  */
+    // _setBackoff(minBackoff, maxBackoff) {
+    //     if (minBackoff == null) {
+    //         throw new Error("minBackoff cannot be null.");
+    //     }
+    //     if (maxBackoff == null) {
+    //         throw new Error("maxBackoff cannot be null.");
+    //     }
+    //     if (minBackoff > maxBackoff) {
+    //         throw new Error("minBackoff cannot be larger than maxBackoff.");
+    //     }
+    //     this._minBackoff = minBackoff;
+    //     this._maxAttempts = maxBackoff;
+    //     return this;
+    // }
+
+    // /**
+    //  * @typedef {Object} Backoff
+    //  * @property {number | null} minBackoff
+    //  * @property {number | null} maxBackoff
+    //  * @returns {Backoff}
+    //  */
+    // get _backoff() {
+    //     return { minBackoff: this._minBackoff, maxBackoff: this._maxBackoff };
+    // }
 
     /**
      * @param {AccountId | string} accountId
