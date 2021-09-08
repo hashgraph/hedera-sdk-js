@@ -19,7 +19,6 @@ describe("CryptoTransfer", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -30,7 +29,6 @@ describe("CryptoTransfer", function () {
 
         await (
             await new TransferTransaction()
-                .setNodeAccountIds([response.nodeId])
                 .addHbarTransfer(account, new Hbar(1))
                 .addHbarTransfer(operatorId, new Hbar(-1))
                 .execute(env.client)
@@ -39,15 +37,15 @@ describe("CryptoTransfer", function () {
         await (
             await (
                 await new AccountDeleteTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setAccountId(account)
-                    .setNodeAccountIds([response.nodeId])
                     .setTransferAccountId(operatorId)
                     .setTransactionId(TransactionId.generate(account))
                     .freezeWith(env.client)
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when there is invalid account amounts", async function () {
@@ -59,7 +57,6 @@ describe("CryptoTransfer", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(0))
             .execute(env.client);
 
@@ -73,7 +70,6 @@ describe("CryptoTransfer", function () {
         try {
             await (
                 await new TransferTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .addHbarTransfer(account, new Hbar(1))
                     .addHbarTransfer(operatorId, new Hbar(1))
                     .execute(env.client)
@@ -85,6 +81,8 @@ describe("CryptoTransfer", function () {
         if (!err) {
             throw new Error("Crypto transfer did not error.");
         }
+
+        await env.close();
     });
 
     it("should error when receiver and sender are the same accounts", async function () {
@@ -95,7 +93,6 @@ describe("CryptoTransfer", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(1))
             .execute(env.client);
 
@@ -109,7 +106,6 @@ describe("CryptoTransfer", function () {
         try {
             await (
                 await new TransferTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .addHbarTransfer(account, new Hbar(1))
                     .addHbarTransfer(account, new Hbar(-1))
                     .execute(env.client)
@@ -123,5 +119,7 @@ describe("CryptoTransfer", function () {
         if (!err) {
             throw new Error("Crypto transfer did not error.");
         }
+
+        await env.close();
     });
 });

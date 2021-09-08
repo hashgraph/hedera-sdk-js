@@ -14,7 +14,6 @@ describe("SystemIntegration", function () {
         try {
             await new SystemDeleteTransaction()
                 .setContractId(new ContractId(10))
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setExpirationTime(Timestamp.generate())
                 .execute(env.client);
         } catch (_) {
@@ -56,5 +55,7 @@ describe("SystemIntegration", function () {
         }
 
         expect(errorThrown).to.be.true;
+
+        await env.close();
     });
 });

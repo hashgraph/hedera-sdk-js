@@ -55,6 +55,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._accountId = null;
         if (properties.accountId != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setAccountId(properties.accountId);
         }
 
@@ -64,6 +65,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._tokenId = null;
         if (properties.tokenId != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setTokenId(properties.tokenId);
         }
 
@@ -73,6 +75,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._start = null;
         if (properties.start != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setStart(properties.start);
         }
 
@@ -82,6 +85,7 @@ export default class TokenNftInfoQuery extends Query {
          */
         this._end = null;
         if (properties.end != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setEnd(properties.end);
         }
     }
@@ -155,19 +159,26 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * @returns {?AccountId}
      */
     get accountId() {
+        console.warn(
+            "`TokenNftInfoQuery.accountId` is deprecated with no replacement"
+        );
         return this._accountId;
     }
 
     /**
+     * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
-     *
      * @param {AccountId | string} accountId
      * @returns {TokenNftInfoQuery}
      */
     setAccountId(accountId) {
+        console.warn(
+            "`TokenNftInfoQuery.setAccountId()` is deprecated with no replacement"
+        );
         this._accountId =
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
@@ -177,19 +188,26 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * @returns {?TokenId}
      */
     get tokenId() {
+        console.warn(
+            "`TokenNftInfoQuery.tokenId` is deprecated with no replacement"
+        );
         return this._tokenId;
     }
 
     /**
+     * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
-     *
      * @param {TokenId | string} tokenId
      * @returns {TokenNftInfoQuery}
      */
     setTokenId(tokenId) {
+        console.warn(
+            "`TokenNftInfoQuery.setTokenId()` is deprecated with no replacement"
+        );
         this._tokenId =
             typeof tokenId === "string"
                 ? TokenId.fromString(tokenId)
@@ -199,19 +217,26 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * @returns {?Long}
      */
     get start() {
+        console.warn(
+            "`TokenNftInfoQuery.start` is deprecated with no replacement"
+        );
         return this._start;
     }
 
     /**
+     * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
-     *
      * @param {Long | number} start
      * @returns {TokenNftInfoQuery}
      */
     setStart(start) {
+        console.warn(
+            "`TokenNftInfoQuery.setStart()` is deprecated with no replacement"
+        );
         this._start =
             typeof start === "number" ? Long.fromNumber(start) : start;
 
@@ -219,19 +244,26 @@ export default class TokenNftInfoQuery extends Query {
     }
 
     /**
+     * @deprecated with no replacement
      * @returns {?Long}
      */
     get end() {
+        console.warn(
+            "`TokenNftInfoQuery.end` is deprecated with no replacement"
+        );
         return this._end;
     }
 
     /**
+     * @deprecated with no replacement
      * Set the token ID for which the info is being requested.
-     *
      * @param {Long | number} end
      * @returns {TokenNftInfoQuery}
      */
     setEnd(end) {
+        console.warn(
+            "`TokenNftInfoQuery.setEnd()` is deprecated with no replacement"
+        );
         this._end = typeof end === "number" ? Long.fromNumber(end) : end;
 
         return this;
@@ -260,13 +292,7 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {Promise<proto.IResponse>}
      */
     _execute(channel, request) {
-        if (this._nftId != null) {
-            return channel.token.getTokenNftInfo(request);
-        } else if (this._accountId != null) {
-            return channel.token.getAccountNftInfos(request);
-        } else {
-            return channel.token.getTokenNftInfos(request);
-        }
+        return channel.token.getTokenNftInfo(request);
     }
 
     /**
@@ -276,20 +302,9 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        let infos;
-        if (this._nftId != null) {
-            infos = /** @type {proto.ITokenGetNftInfoResponse} */ (
-                response.tokenGetNftInfo
-            );
-        } else if (this._accountId != null) {
-            infos = /** @type {proto.ITokenGetAccountNftInfosResponse} */ (
-                response.tokenGetAccountNftInfos
-            );
-        } else {
-            infos = /** @type {proto.ITokenGetNftInfosResponse} */ (
-                response.tokenGetNftInfos
-            );
-        }
+        const infos = /** @type {proto.ITokenGetNftInfoResponse} */ (
+            response.tokenGetNftInfo
+        );
 
         return /** @type {proto.IResponseHeader} */ (infos.header);
     }
@@ -304,37 +319,14 @@ export default class TokenNftInfoQuery extends Query {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
-        let nfts = [];
-        /** @type {proto.ITokenGetNftInfoResponse} */ (
-            response.tokenGetNftInfo
-        );
-
-        if (this._nftId != null) {
-            nfts = [
-                /** @type {proto.ITokenNftInfo} */
-                (
-                    /** @type {proto.ITokenGetNftInfoResponse} */ (
-                        response.tokenGetNftInfo
-                    ).nft
-                ),
-            ];
-        } else if (this._accountId != null) {
-            nfts =
-                /** @type {proto.ITokenNftInfo[]} */
-                (
-                    /** @type {proto.ITokenGetAccountNftInfosResponse} */ (
-                        response.tokenGetAccountNftInfos
-                    ).nfts
-                );
-        } else {
-            nfts =
-                /** @type {proto.ITokenNftInfo[]} */
-                (
-                    /** @type {proto.ITokenGetNftInfosResponse} */ (
-                        response.tokenGetNftInfos
-                    ).nfts
-                );
-        }
+        const nfts = [
+            /** @type {proto.ITokenNftInfo} */
+            (
+                /** @type {proto.ITokenGetNftInfoResponse} */ (
+                    response.tokenGetNftInfo
+                ).nft
+            ),
+        ];
 
         return Promise.resolve(
             nfts.map((nft) =>
@@ -352,39 +344,12 @@ export default class TokenNftInfoQuery extends Query {
      * @returns {proto.IQuery}
      */
     _onMakeRequest(header) {
-        if (this._nftId != null) {
-            return {
-                tokenGetNftInfo: {
-                    header,
-                    nftID:
-                        this._nftId != null ? this._nftId._toProtobuf() : null,
-                },
-            };
-        } else if (this._accountId != null) {
-            return {
-                tokenGetAccountNftInfos: {
-                    header,
-                    accountID:
-                        this._accountId != null
-                            ? this._accountId._toProtobuf()
-                            : null,
-                    start: this._start,
-                    end: this._end,
-                },
-            };
-        } else {
-            return {
-                tokenGetNftInfos: {
-                    header,
-                    tokenID:
-                        this._tokenId != null
-                            ? this._tokenId._toProtobuf()
-                            : null,
-                    start: this._start,
-                    end: this._end,
-                },
-            };
-        }
+        return {
+            tokenGetNftInfo: {
+                header,
+                nftID: this._nftId != null ? this._nftId._toProtobuf() : null,
+            },
+        };
     }
 }
 

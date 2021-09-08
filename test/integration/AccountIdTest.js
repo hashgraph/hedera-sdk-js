@@ -1,9 +1,9 @@
 import { AccountId, TokenId } from "../src/exports.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv, { Client } from "./client/index.js";
 
 describe("AccountId", function () {
     it("should generate checksum for account ID", function () {
-        const client = IntegrationTestEnv.forMainnet();
+        const client = Client.forMainnet();
         const accountId = new AccountId(123);
 
         expect(accountId.num.toNumber()).to.eql(123);
@@ -16,7 +16,7 @@ describe("AccountId", function () {
     });
 
     it("should generate checksum for token ID", function () {
-        const client = IntegrationTestEnv.forMainnet();
+        const client = Client.forMainnet();
         const tokenId = new TokenId(123);
 
         expect(tokenId.num.toNumber()).to.eql(123);

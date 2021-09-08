@@ -13,14 +13,17 @@ describe("TopicMessage", function () {
         this.timeout(60000);
 
         const env = await IntegrationTestEnv.new();
-
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
+
+        // Skip this test if we do not have a mirror network
+        if (env.client.mirrorNetwork.length == 0) {
+            return;
+        }
 
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
             .execute(env.client);
 
@@ -38,7 +41,6 @@ describe("TopicMessage", function () {
             })
             // eslint-disable-next-line no-unused-vars
             .subscribe(env.client, (_) => {
-                console.log("here");
                 // Do nothing
             });
 
@@ -66,6 +68,8 @@ describe("TopicMessage", function () {
         if (!finished) {
             throw new Error("Failed to receive message in 30s");
         }
+
+        await env.close();
     });
 
     it("should be executable with large message", async function () {
@@ -75,10 +79,14 @@ describe("TopicMessage", function () {
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
+        // Skip this test if we do not have a mirror network
+        if (env.client.mirrorNetwork.length == 0) {
+            return;
+        }
+
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
             .execute(env.client);
 
@@ -123,6 +131,8 @@ describe("TopicMessage", function () {
         if (!finished) {
             throw new Error("Failed to receive message in 45s");
         }
+
+        await env.close();
     });
 
     it("should error when topic ID is not set", async function () {
@@ -132,10 +142,19 @@ describe("TopicMessage", function () {
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
+        // Skip this test if we do not have a mirror network
+        if (env.client.mirrorNetwork.length == 0) {
+            return;
+        }
+
+        // Skip this test if we do not have a mirror network
+        if (env.client.mirrorNetwork.length == 0) {
+            return;
+        }
+
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
             .execute(env.client);
 
@@ -164,6 +183,8 @@ describe("TopicMessage", function () {
         if (!err) {
             throw new Error("topic message did not error");
         }
+
+        await env.close();
     });
 
     it("should error when message is not set", async function () {
@@ -173,10 +194,14 @@ describe("TopicMessage", function () {
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
 
+        // Skip this test if we do not have a mirror network
+        if (env.client.mirrorNetwork.length == 0) {
+            return;
+        }
+
         const response = await new TopicCreateTransaction()
             .setAdminKey(operatorKey)
             .setSubmitKey(operatorKey)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setAutoRenewAccountId(operatorId)
             .execute(env.client);
 
@@ -203,5 +228,7 @@ describe("TopicMessage", function () {
         if (!err) {
             throw new Error("topic message did not error");
         }
+
+        await env.close();
     });
 });

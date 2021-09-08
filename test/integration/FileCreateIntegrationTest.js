@@ -15,7 +15,6 @@ describe("FileCreate", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
             .execute(env.client);
 
@@ -29,7 +28,6 @@ describe("FileCreate", function () {
 
         let info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(env.client);
 
@@ -45,9 +43,10 @@ describe("FileCreate", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should be executable with empty contents", async function () {
@@ -58,7 +57,6 @@ describe("FileCreate", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .execute(env.client);
 
         let receipt = await response.getReceipt(env.client);
@@ -72,9 +70,10 @@ describe("FileCreate", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should be executable with no keys", async function () {
@@ -89,6 +88,8 @@ describe("FileCreate", function () {
         expect(receipt.fileId).to.not.be.null;
         expect(receipt.fileId != null ? receipt.fileId.num > 0 : false).to.be
             .true;
+
+        await env.close();
     });
 
     it("should error with too large expiration time", async function () {
@@ -104,7 +105,6 @@ describe("FileCreate", function () {
                 await new FileCreateTransaction()
                     .setKeys([operatorKey])
                     .setContents("[e2e::FileCreateTransaction]")
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setExpirationTime(new Timestamp(Date.now() + 99999999, 0))
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -115,5 +115,7 @@ describe("FileCreate", function () {
         if (!err) {
             throw new Error("file creation did not error");
         }
+
+        await env.close();
     });
 });

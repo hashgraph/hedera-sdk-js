@@ -27,7 +27,6 @@ describe("CustomFees", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -44,6 +43,8 @@ describe("CustomFees", function () {
         ).tokenId;
 
         expect(token).to.not.be.null;
+
+        await env.close({ token });
     });
 
     it("User can create a fungible token with a fractional fee schedule", async function () {
@@ -61,7 +62,6 @@ describe("CustomFees", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -78,6 +78,8 @@ describe("CustomFees", function () {
         ).tokenId;
 
         expect(token).to.not.be.null;
+
+        await env.close({ token });
     });
 
     it("User cannot create a fungible token with a fractional fee schedule that has a denominator zero", async function () {
@@ -97,7 +99,6 @@ describe("CustomFees", function () {
         try {
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -118,6 +119,8 @@ describe("CustomFees", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     it("User cannot create a custom fee schedule over 10 entries", async function () {
@@ -137,7 +140,6 @@ describe("CustomFees", function () {
         try {
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -170,6 +172,8 @@ describe("CustomFees", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     it("User can create custom fixed fee schedule with up to 10 entries", async function () {
@@ -184,7 +188,6 @@ describe("CustomFees", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -212,6 +215,8 @@ describe("CustomFees", function () {
         ).tokenId;
 
         expect(token).to.not.be.null;
+
+        await env.close({ token });
     });
 
     it("User can create custom fractional fee schedule with up to 10 entries", async function () {
@@ -229,7 +234,6 @@ describe("CustomFees", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -273,7 +277,6 @@ describe("CustomFees", function () {
         try {
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -294,6 +297,8 @@ describe("CustomFees", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests
@@ -308,7 +313,6 @@ describe("CustomFees", function () {
             await (
                 await new AccountCreateTransaction()
                     .setKey(key)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -321,7 +325,6 @@ describe("CustomFees", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -344,7 +347,6 @@ describe("CustomFees", function () {
         try {
             await (
                 await new TokenFeeScheduleUpdateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setCustomFees([fee])
                     .execute(env.client)
@@ -356,6 +358,8 @@ describe("CustomFees", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     it("User cannot update a token fee schedule without having a fee schedule key signing the transaction", async function () {
@@ -372,7 +376,6 @@ describe("CustomFees", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -389,7 +392,6 @@ describe("CustomFees", function () {
         try {
             await (
                 await new TokenFeeScheduleUpdateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setCustomFees([fee])
                     .execute(env.client)
@@ -401,6 +403,8 @@ describe("CustomFees", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close({ token });
     });
 
     it("User cannot create a token with a fractional fee schedule where the maximum amount is less than the minimum amount", async function () {
@@ -420,7 +424,6 @@ describe("CustomFees", function () {
         try {
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -463,7 +466,6 @@ describe("CustomFees", function () {
         try {
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -486,6 +488,8 @@ describe("CustomFees", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests
@@ -503,7 +507,6 @@ describe("CustomFees", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -521,7 +524,6 @@ describe("CustomFees", function () {
         try {
             await (
                 await new TokenFeeScheduleUpdateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setCustomFees([fee])
                     .execute(env.client)
@@ -535,6 +537,8 @@ describe("CustomFees", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     // eslint-disable-next-line mocha/no-skipped-tests
@@ -549,7 +553,6 @@ describe("CustomFees", function () {
             await (
                 await new AccountCreateTransaction()
                     .setKey(key)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -565,7 +568,6 @@ describe("CustomFees", function () {
             await (
                 await (
                     await new TokenCreateTransaction()
-                        .setNodeAccountIds(env.nodeAccountIds)
                         .setTokenName("ffff")
                         .setTokenSymbol("F")
                         .setTreasuryAccountId(env.operatorId)
@@ -585,7 +587,6 @@ describe("CustomFees", function () {
         try {
             await (
                 await new TokenFeeScheduleUpdateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenId(token)
                     .setCustomFees([fee])
                     .execute(env.client)
@@ -597,6 +598,8 @@ describe("CustomFees", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     it("User can update a fee schedule using the token fee schedule update transaction and fee schedule key", async function () {
@@ -611,7 +614,6 @@ describe("CustomFees", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -631,11 +633,12 @@ describe("CustomFees", function () {
 
         await (
             await new TokenFeeScheduleUpdateTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
                 .setTokenId(token)
                 .setCustomFees([fee])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close({ token });
     });
 
     it("User cannot have an invalid token ID in the custom fee field", async function () {
@@ -649,7 +652,6 @@ describe("CustomFees", function () {
             await (
                 await new AccountCreateTransaction()
                     .setKey(key)
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setInitialBalance(new Hbar(2))
                     .execute(env.client)
             ).getReceipt(env.client)
@@ -665,7 +667,6 @@ describe("CustomFees", function () {
         try {
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -686,6 +687,8 @@ describe("CustomFees", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 
     it("User can create NFT with RoyaltyFees", async function () {
@@ -703,23 +706,26 @@ describe("CustomFees", function () {
                     .setAmount(1)
             );
 
-        await (
-            await new TokenCreateTransaction()
-                .setNodeAccountIds(env.nodeAccountIds)
-                .setTokenName("ffff")
-                .setTokenSymbol("F")
-                .setTreasuryAccountId(env.operatorId)
-                .setAdminKey(env.operatorKey)
-                .setKycKey(env.operatorKey)
-                .setFreezeKey(env.operatorKey)
-                .setWipeKey(env.operatorKey)
-                .setSupplyKey(env.operatorKey)
-                .setFeeScheduleKey(env.operatorKey)
-                .setCustomFees([fee])
-                .setTokenType(TokenType.NonFungibleUnique)
-                .setFreezeDefault(false)
-                .execute(env.client)
-        ).getReceipt(env.client);
+        const token = (
+            await (
+                await new TokenCreateTransaction()
+                    .setTokenName("ffff")
+                    .setTokenSymbol("F")
+                    .setTreasuryAccountId(env.operatorId)
+                    .setAdminKey(env.operatorKey)
+                    .setKycKey(env.operatorKey)
+                    .setFreezeKey(env.operatorKey)
+                    .setWipeKey(env.operatorKey)
+                    .setSupplyKey(env.operatorKey)
+                    .setFeeScheduleKey(env.operatorKey)
+                    .setCustomFees([fee])
+                    .setTokenType(TokenType.NonFungibleUnique)
+                    .setFreezeDefault(false)
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).tokenId;
+
+        await env.close({ token });
     });
 
     it("User cannot add RoyaltyFees on FTs", async function () {
@@ -742,7 +748,6 @@ describe("CustomFees", function () {
         try {
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setTreasuryAccountId(env.operatorId)
@@ -768,5 +773,7 @@ describe("CustomFees", function () {
         if (!err) {
             throw new Error("token creation did not error");
         }
+
+        await env.close();
     });
 });

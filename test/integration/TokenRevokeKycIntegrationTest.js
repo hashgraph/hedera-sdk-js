@@ -22,7 +22,6 @@ describe("TokenRevokeKyc", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -31,7 +30,6 @@ describe("TokenRevokeKyc", function () {
         const token = (
             await (
                 await new TokenCreateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenName("ffff")
                     .setTokenSymbol("F")
                     .setDecimals(3)
@@ -50,7 +48,6 @@ describe("TokenRevokeKyc", function () {
         await (
             await (
                 await new TokenAssociateTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenIds([token])
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -61,7 +58,6 @@ describe("TokenRevokeKyc", function () {
         await (
             await (
                 await new TokenGrantKycTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -70,7 +66,6 @@ describe("TokenRevokeKyc", function () {
         ).getReceipt(env.client);
 
         let info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -85,7 +80,6 @@ describe("TokenRevokeKyc", function () {
         await (
             await (
                 await new TokenRevokeKycTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .setAccountId(account)
                     .freezeWith(env.client)
@@ -94,7 +88,6 @@ describe("TokenRevokeKyc", function () {
         ).getReceipt(env.client);
 
         info = await new AccountInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -105,6 +98,8 @@ describe("TokenRevokeKyc", function () {
         expect(relationship.balance.toInt()).to.be.equal(0);
         expect(relationship.isKycGranted).to.be.false;
         expect(relationship.isFrozen).to.be.false;
+
+        await env.close({ token });
     });
 
     it("should be executable even when no token IDs are set", async function () {
@@ -115,7 +110,6 @@ describe("TokenRevokeKyc", function () {
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
-            .setNodeAccountIds(env.nodeAccountIds)
             .setInitialBalance(new Hbar(2))
             .execute(env.client);
 
@@ -127,7 +121,6 @@ describe("TokenRevokeKyc", function () {
             await (
                 await (
                     await new TokenRevokeKycTransaction()
-                        .setNodeAccountIds([response.nodeId])
                         .setAccountId(account)
                         .freezeWith(env.client)
                         .sign(key)
@@ -140,6 +133,8 @@ describe("TokenRevokeKyc", function () {
         if (!err) {
             throw new Error("token revoke kyc did not error");
         }
+
+        await env.close();
     });
 
     it("should error when account ID is not set", async function () {
@@ -161,7 +156,6 @@ describe("TokenRevokeKyc", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setNodeAccountIds(env.nodeAccountIds)
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
@@ -171,7 +165,6 @@ describe("TokenRevokeKyc", function () {
         try {
             await (
                 await new TokenRevokeKycTransaction()
-                    .setNodeAccountIds([response.nodeId])
                     .setTokenId(token)
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -182,5 +175,7 @@ describe("TokenRevokeKyc", function () {
         if (!err) {
             throw new Error("token association did not error");
         }
+
+        await env.close({ token });
     });
 });

@@ -138,8 +138,10 @@ export default class AccountInfo {
         /** @readonly */
         this.tokenRelationships = props.tokenRelationships;
 
+        /** @readonly */
         this.accountMemo = props.accountMemo;
 
+        /** @readonly */
         this.ownedNfts = props.ownedNfts;
 
         Object.freeze(this);

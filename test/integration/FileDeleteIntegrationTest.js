@@ -14,7 +14,6 @@ describe("FileDelete", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents("[e2e::FileCreateTransaction]")
             .execute(env.client);
 
@@ -28,7 +27,6 @@ describe("FileDelete", function () {
 
         let info = await new FileInfoQuery()
             .setFileId(file)
-            .setNodeAccountIds([response.nodeId])
             .setQueryPayment(new Hbar(22))
             .execute(env.client);
 
@@ -44,9 +42,10 @@ describe("FileDelete", function () {
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when file ID is not set", async function () {
@@ -58,9 +57,7 @@ describe("FileDelete", function () {
 
         try {
             await (
-                await new FileDeleteTransaction()
-                    .setNodeAccountIds(env.nodeAccountIds)
-                    .execute(env.client)
+                await new FileDeleteTransaction().execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidFileId);
@@ -69,5 +66,7 @@ describe("FileDelete", function () {
         if (!err) {
             throw new Error("file deletion did not error");
         }
+
+        await env.close();
     });
 });

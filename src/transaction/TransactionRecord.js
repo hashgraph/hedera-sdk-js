@@ -24,7 +24,7 @@ export default class TransactionRecord {
      * @param {ContractFunctionResult} [props.contractFunctionResult]
      * @param {TransactionReceipt} props.receipt
      * @param {Uint8Array} props.transactionHash
-     * @param {Timestamp} props.consensusTimestampstamp
+     * @param {Timestamp} props.consensusTimestamp
      * @param {TransactionId} props.transactionId
      * @param {string} props.transactionMemo
      * @param {Hbar} props.transactionFee
@@ -56,7 +56,7 @@ export default class TransactionRecord {
          *
          * @readonly
          */
-        this.consensusTimestampstamp = props.consensusTimestampstamp;
+        this.consensusTimestamp = props.consensusTimestamp;
 
         /**
          * The ID of the transaction this record represents.
@@ -106,10 +106,22 @@ export default class TransactionRecord {
          */
         this.tokenTransfers = props.tokenTransfers;
 
+        /**
+         * Reference to the scheduled transaction ID that this transaction record represent
+         *
+         * @readonly
+         */
         this.scheduleRef = props.scheduleRef;
 
+        /**
+         * All custom fees that were assessed during a CryptoTransfer, and must be paid if the
+         * transaction status resolved to SUCCESS
+         *
+         * @readonly
+         */
         this.assessedCustomFees = props.assessedCustomFees;
 
+        /** @readonly */
         this.nftTransfers = props.nftTransfers;
 
         Object.freeze(this);
@@ -154,8 +166,8 @@ export default class TransactionRecord {
             transactionHash:
                 this.transactionHash != null ? this.transactionHash : null,
             consensusTimestamp:
-                this.consensusTimestampstamp != null
-                    ? this.consensusTimestampstamp._toProtobuf()
+                this.consensusTimestamp != null
+                    ? this.consensusTimestamp._toProtobuf()
                     : null,
             transactionID:
                 this.transactionId != null
@@ -222,7 +234,7 @@ export default class TransactionRecord {
                 record.transactionHash != null
                     ? record.transactionHash
                     : new Uint8Array(),
-            consensusTimestampstamp: Timestamp._fromProtobuf(
+            consensusTimestamp: Timestamp._fromProtobuf(
                 /** @type {proto.ITimestamp} */
                 (record.consensusTimestamp)
             ),

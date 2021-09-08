@@ -20,7 +20,6 @@ describe("ContractDelete", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -34,7 +33,6 @@ describe("ContractDelete", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -52,7 +50,6 @@ describe("ContractDelete", function () {
         let contract = receipt.contractId;
 
         let info = await new ContractInfoQuery()
-            .setNodeAccountIds([response.nodeId])
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
             .execute(env.client);
@@ -74,16 +71,16 @@ describe("ContractDelete", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
 
         await (
             await new FileDeleteTransaction()
                 .setFileId(file)
-                .setNodeAccountIds([response.nodeId])
                 .execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
     });
 
     it("should error when contarct ID is not set", async function () {
@@ -94,7 +91,6 @@ describe("ContractDelete", function () {
 
         let response = await new FileCreateTransaction()
             .setKeys([operatorKey])
-            .setNodeAccountIds(env.nodeAccountIds)
             .setContents(smartContractBytecode)
             .execute(env.client);
 
@@ -108,7 +104,6 @@ describe("ContractDelete", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setNodeAccountIds([response.nodeId])
             .setGas(2000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
@@ -127,9 +122,7 @@ describe("ContractDelete", function () {
 
         try {
             await (
-                await new ContractDeleteTransaction()
-                    .setNodeAccountIds([response.nodeId])
-                    .execute(env.client)
+                await new ContractDeleteTransaction().execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.InvalidContractId);
@@ -138,5 +131,7 @@ describe("ContractDelete", function () {
         if (!err) {
             throw new Error("contact deletion did not error");
         }
+
+        await env.close();
     });
 });

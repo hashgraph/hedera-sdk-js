@@ -28,12 +28,14 @@ export default class TokenRelationship {
          * @readonly
          */
         this.tokenId = props.tokenId;
+
         /**
          * The Symbol of the token
          *
          * @readonly
          */
         this.symbol = props.symbol;
+
         /**
          * The balance that the Account holds in the smallest denomination
          *
