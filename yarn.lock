@@ -2885,9 +2885,9 @@ dotenv@^10.0.0:
   integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
 dpdm@^3.6.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/dpdm/-/dpdm-3.7.1.tgz#a870a6b8b0a0f486bfa7f5e1671afe655150d700"
-  integrity sha512-jgJwgo43C/AyzT37JlQUjPLS0jye42ODOSe/nEBcfahFetkjkWclz5LGyr1Nq9rUNn3F+CtqbvJrZfgSIwA2rg==
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/dpdm/-/dpdm-3.8.0.tgz#3bd73433ca97fc54f92f130b1c7d9070d55463ce"
+  integrity sha512-irzNgThrdJEf61l5F3w8yMLjjZfw4c2LL//xZGZ3q7E6YhVBCiEApduRNtSw1Og6UCVub5GzwwZn3WT0tO8hSA==
   dependencies:
     "@types/fs-extra" "^9.0.12"
     "@types/glob" "^7.1.4"
@@ -2896,9 +2896,9 @@ dpdm@^3.6.1:
     fs-extra "^10.0.0"
     glob "^7.1.7"
     ora "^5.4.1"
-    tslib "^2.3.0"
-    typescript "^4.3.5"
-    yargs "^17.1.0"
+    tslib "^2.3.1"
+    typescript "^4.4.3"
+    yargs "^17.1.1"
 
 duplexer@^0.1.1:
   version "0.1.2"
@@ -7386,7 +7386,7 @@ tslib@^1.10.0, tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
 
-tslib@^2.3.0:
+tslib@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
@@ -7493,10 +7493,10 @@ typedoc@^0.21.3:
     shiki "^0.9.8"
     typedoc-default-themes "^0.12.10"
 
-typescript@^4.3.5:
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.2.tgz#6d618640d430e3569a1dfb44f7d7e600ced3ee86"
-  integrity sha512-gzP+t5W4hdy4c+68bfcv0t400HVJMMd2+H9B7gae1nQlBzCqvrXX+6GL/b3GAgyTH966pzrZ70/fRjwAtZksSQ==
+typescript@^4.3.5, typescript@^4.4.3:
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.3.tgz#bdc5407caa2b109efd4f82fe130656f977a29324"
+  integrity sha512-4xfscpisVgqqDfPaJo5vkd+Qd/ItkoagnHpufr+i2QCHBsNYp+G7UAoyFl8aPtx879u38wPV65rZ8qbGZijalA==
 
 uglify-js@^3.1.4:
   version "3.13.5"
@@ -7901,7 +7901,7 @@ yargs@^15.0.2:
     y18n "^4.0.0"
     yargs-parser "^18.1.2"
 
-yargs@^17.1.0:
+yargs@^17.1.1:
   version "17.1.1"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-17.1.1.tgz#c2a8091564bdb196f7c0a67c1d12e5b85b8067ba"
   integrity sha512-c2k48R0PwKIqKhPMWjeiF6y2xY/gPMUlro0sgxqXpbOIohWiLNXWslsootttv7E1e73QPAMQSg5FeySbVcpsPQ==
