@@ -21,58 +21,81 @@ export default class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            transactionId: "Waiting for data",
-            accountId: "Waiting for data",
-            balance: "Waiting for data",
-            mnemonic: "Waiting for data"
+            transactionId: null,
+            info: null,
+            balance: null,
+            mnemonic: null,
         };
     }
 
-    componentDidMount() {
-        new TransferTransaction()
-            .addHbarTransfer(operatorId, -1)
-            .addHbarTransfer("0.0.3", 1)
-            .execute(client)
-            .then((response) => {
-                this.setState({ ...this.state, transactionId: response.transactionId.toString() });
-            })
-            .catch((err) => {
-                this.setState({ ...this.state, transactionId: err.toString() });
-            });
-        new AccountInfoQuery()
-            .setAccountId(operatorId)
-            .execute(client)
-            .then((info) => {
-                this.setState({ ...this.state, accountId: info.accountId.toString() });
-            })
-            .catch((err) => {
-                this.setState({ ...this.state, accountId: err.toString() });
-            });
-        new AccountBalanceQuery()
-            .setAccountId(operatorId)
-            .execute(client)
-            .then((balance) => {
-                this.setState({ ...this.state, balance: balance.hbars.toString() });
-            })
-            .catch((err) => {
-                this.setState({ ...this.state, balance: err.toString() });
-            });
-        Mnemonic.generate12()
-            .then((mnemonic) => {
-                this.setState({ ...this.state, mnemonic: mnemonic.toString() });
-            })
-            .catch((err) => {
-                this.setState({ ...this.state, mnemonic: err.toString() });
-            });
+    async componentDidMount() {
+        try {
+            const response = await new TransferTransaction()
+                .addHbarTransfer(operatorId, -1)
+                .addHbarTransfer("0.0.3", 1)
+                .execute(client);
+
+            this.setState({ ...this.state, transactionId: response.transactionId.toString() });
+        } catch (err) {
+            // this.setState({ ...this.state, transactionId: err.toString() });
+        }
+
+        try {
+            const info = await new AccountInfoQuery()
+                .setAccountId(operatorId)
+                .execute(client);
+
+            this.setState({ ...this.state, info: info.accountId.toString() });
+        } catch (err) {
+            // this.setState({ ...this.state, info: err.toString() });
+        }
+
+        try {
+            const balance = await new AccountBalanceQuery()
+                .setAccountId(operatorId)
+                .execute(client);
+
+            this.setState({ ...this.state, balance: balance.hbars.toString() });
+        } catch (err) {
+            // this.setState({ ...this.state, balance: err.toString() });
+        }
+
+        try {
+            const mnemonic = await Mnemonic.generate12();
+
+            this.setState({ ...this.state, mnemonic: mnemonic.toString() });
+        } catch (err) {
+            // this.setState({ ...this.state, mnemonic: err.toString() });
+        }
     }
 
     render() {
+        let transactionId = null;
+        if (this.state.transactionId != null) {
+            transactionId = <Text testID="transactionId">TransactionId: {this.state.transactionId}</Text>
+        }
+
+        let info = null;
+        if (this.state.info != null) {
+            info = <Text testID="info">Info: {this.state.info}</Text>
+        }
+
+        let balance = null;
+        if (this.state.balance != null) {
+            balance = <Text testID="balance">Balance: {this.state.balance}</Text>
+        }
+
+        let mnemonic = null;
+        if (this.state.mnemonic != null) {
+            mnemonic = <Text testID="mnemonic">Mnemonic: {this.state.mnemonic}</Text>
+        }
+
         return (
             <View style={styles.container}>
-                <Text>TransactionId: {this.state.transactionId}</Text>
-                <Text>AccountInfo.accountId: {this.state.accountId}</Text>
-                <Text>Balance: {this.state.balance}</Text>
-                <Text>Random Mnemonic: {this.state.mnemonic}</Text>
+                {transactionId}
+                {info}
+                {balance}
+                {mnemonic}
                 <StatusBar style="auto" />
             </View>
         );
