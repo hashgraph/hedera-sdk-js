@@ -32,8 +32,9 @@ jobs:
       - name: Build
         run: pnpm install 
 
-
   lint:
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
 
@@ -60,8 +61,9 @@ jobs:
           pnpm install
           pnpm lint 
              
+  test-unit-node:
+    runs-on: ubuntu-latest
 
-  unit\:\:node:
     steps:
       - uses: actions/checkout@v2
 
@@ -88,7 +90,9 @@ jobs:
           pnpm install
           pnpm test:unit:node
 
-  integration\:\:node:
+  test-integration-node:
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
 
@@ -115,9 +119,13 @@ jobs:
           OPERATOR_KEY: ${{ secrets.PREVIEWNET_OPERATOR_KEY }}
           OPERATOR_ID: ${{ secrets.PREVIEWNET_OPERATOR_ID }}
           HEDERA_NETWORK: "previewnet"
-        run: pnpm test:integration:node
+        run: |
+          pnpm install
+          pnpm test:integration:node
 
-  integration\:\:browser\:\:chrome:
+  test-integration-browser-chrome:
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
 
@@ -143,5 +151,7 @@ jobs:
         env:
           VITE_OPERATOR_KEY: ${{ secrets.PREVIEWNET_OPERATOR_KEY }}
           VITE_OPERATOR_ID: ${{ secrets.PREVIEWNET_OPERATOR_ID }}
-          VITE_HEDERA_NETWORK: "previewnet"
-        run: pnpm test:integration:browser:chrome
+          HEDERA_NETWORK: "previewnet"
+        run: |
+          pnpm install
+          pnpm test:integration:browser:chrome

@@ -25,6 +25,7 @@ export default class App extends React.Component {
             info: null,
             balance: null,
             mnemonic: null,
+            error: null,
         };
     }
 
@@ -37,7 +38,7 @@ export default class App extends React.Component {
 
             this.setState({ ...this.state, transactionId: response.transactionId.toString() });
         } catch (err) {
-            // this.setState({ ...this.state, transactionId: err.toString() });
+            this.setState({ ...this.state, error: err.toString() });
         }
 
         try {
@@ -47,7 +48,7 @@ export default class App extends React.Component {
 
             this.setState({ ...this.state, info: info.accountId.toString() });
         } catch (err) {
-            // this.setState({ ...this.state, info: err.toString() });
+            this.setState({ ...this.state, error: err.toString() });
         }
 
         try {
@@ -57,7 +58,7 @@ export default class App extends React.Component {
 
             this.setState({ ...this.state, balance: balance.hbars.toString() });
         } catch (err) {
-            // this.setState({ ...this.state, balance: err.toString() });
+            this.setState({ ...this.state, error: err.toString() });
         }
 
         try {
@@ -65,7 +66,7 @@ export default class App extends React.Component {
 
             this.setState({ ...this.state, mnemonic: mnemonic.toString() });
         } catch (err) {
-            // this.setState({ ...this.state, mnemonic: err.toString() });
+            this.setState({ ...this.state, error: err.toString() });
         }
     }
 
@@ -90,12 +91,18 @@ export default class App extends React.Component {
             mnemonic = <Text testID="mnemonic">Mnemonic: {this.state.mnemonic}</Text>
         }
 
+        let error = null;
+        if (this.state.error != null) {
+            error = <Text testID="error">Error: {this.state.error}</Text>
+        }
+
         return (
             <View style={styles.container}>
                 {transactionId}
                 {info}
                 {balance}
                 {mnemonic}
+                {error}
                 <StatusBar style="auto" />
             </View>
         );

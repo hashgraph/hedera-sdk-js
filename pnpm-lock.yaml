@@ -44,10 +44,11 @@ specifiers:
   nyc: ^15.1.0
   prettier: ^2.3.2
   protobufjs: ^6.11.2
-  typedoc: ^0.21.3
+  typedoc: ^0.22.3
   typescript: ^4.3.5
   utf8: ^3.0.0
   vite: ^2.4.1
+  yalc: ^1.0.0-pre.53
 
 dependencies:
   '@grpc/grpc-js': 1.3.4
@@ -96,9 +97,10 @@ devDependencies:
   npm-run-all: 4.1.5
   nyc: 15.1.0
   prettier: 2.3.2
-  typedoc: 0.21.3_typescript@4.3.5
+  typedoc: 0.22.3_typescript@4.3.5
   typescript: 4.3.5
   vite: 2.4.1
+  yalc: 1.0.0-pre.53
 
 packages:
 
@@ -3639,6 +3641,15 @@ packages:
       universalify: 2.0.0
     dev: true
 
+  /fs-extra/8.1.0:
+    resolution: {integrity: sha512-yhlQgA6mnOJUKOsRUFsgJdQCvkKhcz8tlZG5HBQfReYZy46OwLcY+Zia0mtdHsOo9y/hP+CxMN0TU9QxoOtG4g==}
+    engines: {node: '>=6 <7 || >=8'}
+    dependencies:
+      graceful-fs: 4.2.6
+      jsonfile: 4.0.0
+      universalify: 0.1.2
+    dev: true
+
   /fs-extra/9.1.0:
     resolution: {integrity: sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==}
     engines: {node: '>=10'}
@@ -4159,6 +4170,11 @@ packages:
     resolution: {integrity: sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==}
     dev: true
 
+  /ini/2.0.0:
+    resolution: {integrity: sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==}
+    engines: {node: '>=10'}
+    dev: true
+
   /init-package-json/2.0.3:
     resolution: {integrity: sha512-tk/gAgbMMxR6fn1MgMaM1HpU1ryAmBWWitnxG5OhuNXeX0cbpbgV5jA4AIpQJVNoyOfOevTtO6WX+rPs+EFqaQ==}
     engines: {node: '>=10'}
@@ -4656,6 +4672,12 @@ packages:
       minimist: 1.2.5
     dev: true
 
+  /jsonfile/4.0.0:
+    resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
+    optionalDependencies:
+      graceful-fs: 4.2.6
+    dev: true
+
   /jsonfile/6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
     dependencies:
@@ -5006,9 +5028,9 @@ packages:
     dev: true
     optional: true
 
-  /marked/2.1.3:
-    resolution: {integrity: sha512-/Q+7MGzaETqifOMWYEA7HVMaZb4XbcRfaOzcSsHZEith83KGlvaSG33u0SKu89Mj5h+T8V2hM+8O45Qc5XTgwA==}
-    engines: {node: '>= 10'}
+  /marked/3.0.3:
+    resolution: {integrity: sha512-4oIDhVSQ2s+xNCfek9OnZgCQR/WykGCom02JzIIvi4Pme+MIwPYqvGVW8CQWOXeoZu0TtVB6pTxIuoLm+dKqDA==}
+    engines: {node: '>= 12'}
     hasBin: true
     dev: true
 
@@ -6708,8 +6730,8 @@ packages:
     resolution: {integrity: sha512-mRz/m/JVscCrkMyPqHc/bczi3OQHkLTqXHEFu0zDhK/qfv3UcOA4SVmRCLmos4bhjr9ekVQubj/R7waKapmiQg==}
     dev: true
 
-  /shiki/0.9.5:
-    resolution: {integrity: sha512-XFn+rl3wIowDjzdr5DlHoHgQphXefgUTs2bNp/bZu4WF9gTrTLnKwio3f28VjiFG6Jpip7yQn/p4mMj6OrjrtQ==}
+  /shiki/0.9.10:
+    resolution: {integrity: sha512-xeM7Oc6hY+6iW5O/T5hor8ul7mEprzyl5y4r5zthEHToQNw7MIhREMgU3r2gKDB0NaMLNrkcEQagudCdzE13Lg==}
     dependencies:
       json5: 2.2.0
       onigasm: 2.2.5
@@ -7373,26 +7395,18 @@ packages:
     resolution: {integrity: sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=}
     dev: true
 
-  /typedoc-default-themes/0.12.10:
-    resolution: {integrity: sha512-fIS001cAYHkyQPidWXmHuhs8usjP5XVJjWB8oZGqkTowZaz3v7g3KDZeeqE82FBrmkAnIBOY3jgy7lnPnqATbA==}
-    engines: {node: '>= 8'}
-    dev: true
-
-  /typedoc/0.21.3_typescript@4.3.5:
-    resolution: {integrity: sha512-SE0MytBcr3LpZmo22KxOI5vOvy+4cHl7U3TwYfc7OpUWaZLsDgP1yVqswoIdAUl6qwqskZie6Lyw/nzW5y840w==}
-    engines: {node: '>= 12.20.0'}
+  /typedoc/0.22.3_typescript@4.3.5:
+    resolution: {integrity: sha512-EOWf9Vf3Vfb/jzBzr87uoLybQw9fx3iyXLUcpQn9F2Ks1/ZJN9iGeBbYRU+VNqrWvV4T+aS7Ife7GFEJUf0ohQ==}
+    engines: {node: '>= 12.10.0'}
     hasBin: true
     peerDependencies:
-      typescript: 4.0.x || 4.1.x || 4.2.x || 4.3.x
+      typescript: 4.0.x || 4.1.x || 4.2.x || 4.3.x || 4.4.x
     dependencies:
       glob: 7.1.7
-      handlebars: 4.7.7
       lunr: 2.3.9
-      marked: 2.1.3
+      marked: 3.0.3
       minimatch: 3.0.4
-      progress: 2.0.3
-      shiki: 0.9.5
-      typedoc-default-themes: 0.12.10
+      shiki: 0.9.10
       typescript: 4.3.5
     dev: true
 
@@ -7451,6 +7465,11 @@ packages:
 
   /universal-user-agent/6.0.0:
     resolution: {integrity: sha512-isyNax3wXoKaulPDZWHQqbmIx1k2tb9fb3GGDBRxCscfYV2Ch7WxPArBsFEG8s/safwXTT7H4QGhaIkTp9447w==}
+    dev: true
+
+  /universalify/0.1.2:
+    resolution: {integrity: sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==}
+    engines: {node: '>= 4.0.0'}
     dev: true
 
   /universalify/2.0.0:
@@ -7726,6 +7745,20 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /yalc/1.0.0-pre.53:
+    resolution: {integrity: sha512-tpNqBCpTXplnduzw5XC+FF8zNJ9L/UXmvQyyQj7NKrDNavbJtHvzmZplL5ES/RCnjX7JR7W9wz5GVDXVP3dHUQ==}
+    hasBin: true
+    dependencies:
+      chalk: 4.1.1
+      detect-indent: 6.1.0
+      fs-extra: 8.1.0
+      glob: 7.1.7
+      ignore: 5.1.8
+      ini: 2.0.0
+      npm-packlist: 2.2.2
+      yargs: 16.2.0
+    dev: true
+
   /yallist/3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
     dev: true
@@ -7794,7 +7827,7 @@ packages:
       require-directory: 2.1.1
       string-width: 4.2.2
       y18n: 5.0.8
-      yargs-parser: 20.2.4
+      yargs-parser: 20.2.9
     dev: true
 
   /yargs/17.0.1:

@@ -1,10 +1,10 @@
 describe('Example', () => {
   beforeAll(async () => {
-    await device.launchApp();
-    await device.reloadReactNative();
+    await device.launchApp({ newInstance: true });
   });
 
   beforeEach(async () => {
+    // await device.reloadReactNative();
   });
 
   it('should be able to see transaction ID from TransferTransaction', async () => {
