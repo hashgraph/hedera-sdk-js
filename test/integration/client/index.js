@@ -141,14 +141,20 @@ export default class IntegrationTestEnv {
 
     /**
      * @param {object} [options]
-     * @property {TokenId} token
+     * @property {TokenId | TokenId[]} token
      */
     async close(options = {}) {
         if (options.token != null) {
-            await (await new TokenDeleteTransaction()
-                .setTokenId(options.token)
-                .execute(this.client)
-            ).getReceipt(this.client);
+            if (!Array.isArray(options.token)) {
+                options.token = [options.token];
+            }
+
+            for (const token of options.token) {
+                await (await new TokenDeleteTransaction()
+                    .setTokenId(token)
+                    .execute(this.client)
+                ).getReceipt(this.client);
+            }
         }
 
         if (!this.throwaway && this.operatorKey.toString() !== this.originalOperatorId) {

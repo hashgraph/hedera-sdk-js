@@ -5,6 +5,7 @@ import {
     Hbar,
     Status,
     TokenSupplyType,
+    TokenType,
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/index.js";
 
@@ -185,6 +186,50 @@ describe("TokenMint", function () {
             ).getReceipt(env.client);
         } catch (error) {
             err = error.toString().includes(Status.TokenMaxSupplyReached);
+        }
+
+        if (!err) {
+            throw new Error("token mint did not error");
+        }
+
+        await env.close({ token });
+    });
+
+    it("cannot mint token with invalid metadata", async function () {
+        this.timeout(60000);
+
+        const env = await IntegrationTestEnv.new();
+        const operatorId = env.operatorId;
+        const operatorKey = env.operatorKey.publicKey;
+
+        const response = await new TokenCreateTransaction()
+            .setTokenName("ffff")
+            .setTokenSymbol("F")
+            .setTreasuryAccountId(operatorId)
+            .setAdminKey(operatorKey)
+            .setKycKey(operatorKey)
+            .setFreezeKey(operatorKey)
+            .setWipeKey(operatorKey)
+            .setSupplyKey(operatorKey)
+            .setFreezeDefault(false)
+            .setMaxSupply(10)
+            .setTokenType(TokenType.NonFungibleUnique)
+            .setSupplyType(TokenSupplyType.Finite)
+            .execute(env.client);
+
+        const token = (await response.getReceipt(env.client)).tokenId;
+
+        let err = false;
+
+        try {
+            await (
+                await new TokenMintTransaction()
+                    .setTokenId(token)
+                    .setAmount(1)
+                    .execute(env.client)
+            ).getReceipt(env.client);
+        } catch (error) {
+            err = error.toString().includes(Status.InvalidTokenMintMetadata);
         }
 
         if (!err) {
