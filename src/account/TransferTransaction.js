@@ -236,7 +236,7 @@ export default class TransferTransaction extends Transaction {
         this._requireNotFrozen();
 
         if (this.hbarTransfers.get(accountId) != null) {
-            amount = this.squashTransfers(accountId, amount);
+            amount = this._squashTransfers(accountId, amount);
         }
 
         this._hbarTransfers._set(
@@ -253,16 +253,15 @@ export default class TransferTransaction extends Transaction {
      * @internal
      * @param {AccountId | string} accountId
      * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
-     * @returns {number | Long}
+     * @returns {Hbar}
      */
-    squashTransfers(accountId, amount) {
+    _squashTransfers(accountId, amount) {
         let currentValue = this.hbarTransfers.get(accountId);
-        return Number(
-            Hbar.fromTinybars(
-                (currentValue == null
-                    ? Long.ZERO
-                    : currentValue.toTinybars()
-                ).add(new Hbar(Number(amount)).toTinybars())
+        return Hbar.fromTinybars(
+            (currentValue == null ? Long.ZERO : currentValue.toTinybars()).add(
+                amount instanceof Hbar
+                    ? amount.toTinybars()
+                    : new Hbar(amount).toTinybars()
             )
         );
     }
