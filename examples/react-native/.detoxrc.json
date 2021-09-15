@@ -5,7 +5,8 @@
   "apps": {
     "ios": {
       "type": "ios.app",
-      "binaryPath": "SPECIFY_PATH_TO_YOUR_APP_BINARY"
+      "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/myapp.app",
+      "build": "cd ios && pod install && cd .. && xcodebuild -workspace ios/myapp.xcworkspace -scheme myapp -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build"
     },
     "android": {
       "type": "android.apk",

@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "@hashgraph/sdk": {
-      "signature": "08c291f1fdcc3fbe6f1d671d77634719",
+      "signature": "a50bf5fc00bda7d5aafcb5fdbdd6cd24",
       "file": true
     }
   }
