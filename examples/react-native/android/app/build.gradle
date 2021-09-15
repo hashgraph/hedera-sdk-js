@@ -78,7 +78,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    enableHermes: false
+    enableHermes: (findProperty('expo.jsEngine') ?: "jsc") == "hermes",
 ]
 
 apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
@@ -131,16 +131,16 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    dexOptions {
-       javaMaxHeapSize "6g"
-    }
-
     defaultConfig {
-        applicationId "com.awesomeproject"
+        applicationId "com.myapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        // Detox
+        testBuildType System.getProperty('testBuildType', 'debug')  // This will later be used to control the test apk build type
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     splits {
         abi {
@@ -163,11 +163,17 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
+            // Detox
+            minifyEnabled true
+
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+
+            // Detox-specific additions to pro-guard
+            proguardFile "${rootProject.projectDir}/../node_modules/detox/android/detox/proguard-rules-app.pro"
         }
     }
 
@@ -211,6 +217,14 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    // Detox
+    androidTestImplementation('com.wix:detox:+')
+
+    // TestButler
+    androidTestImplementation 'com.linkedin.testbutler:test-butler-library:2.2.1'
+    androidTestUtil 'com.linkedin.testbutler:test-butler-app:2.2.1'
+
 }
 
 // Run this once to be able to run the application with BUCK

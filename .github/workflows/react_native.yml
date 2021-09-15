@@ -1,0 +1,134 @@
+name: CI against Testnet on React Native
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  android:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
+
+      - run: pnpm install -g yarn
+
+      - name: Build SDK
+        run: pnpm install 
+
+      - name: Install yalc
+        run: pnpm install -g yalc
+
+      - name: Install detox
+        run: pnpm install -g detox-cli
+
+      - name: Locally Publish
+        run: yalc publish
+
+      - name: AVD
+        run: |
+          brew install android-platform-tools
+          pnpm i -g envinfo detox-cli && envinfo
+          echo yes | $ANDROID_HOME/tools/bin/sdkmanager --channel=0 --verbose "system-images;android-28;default;x86_64"
+          $ANDROID_HOME/tools/bin/avdmanager --verbose create avd --force --name "Nexus6P" --package "system-images;android-28;default;x86_64" --sdcard 200M --device 11
+          adb start-server
+
+      - name: Build
+        working-directory: examples/react-native
+        run: |
+          yalc add "@hashgraph/sdk"
+          yarn
+          detox build --configuration android
+
+      - name: Test
+        working-directory: examples/react-native
+        run: |
+          yarn start android --no-interactive &
+          sleep 5
+          detox test --configuration android
+
+  ios:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
+
+      - run: pnpm install -g yarn
+
+      - name: Build SDK
+        run: pnpm install 
+
+      - name: Install yalc
+        run: pnpm install -g yalc
+
+      - name: Install detox
+        run: pnpm install -g detox-cli
+
+      - name: Locally Publish
+        run: yalc publish
+      
+      - name: Build
+        working-directory: examples/react-native
+        run: |
+          brew tap wix/brew
+          brew install applesimutils
+          yalc add "@hashgraph/sdk"
+          yarn
+          detox build --configuration ios
+
+      - name: Test
+        working-directory: examples/react-native
+        run: |
+          yarn start android --no-interactive &
+          sleep 5
+          detox test --configuration ios
