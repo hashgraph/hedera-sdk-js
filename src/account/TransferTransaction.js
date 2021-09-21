@@ -234,6 +234,11 @@ export default class TransferTransaction extends Transaction {
      */
     addHbarTransfer(accountId, amount) {
         this._requireNotFrozen();
+
+        if (this.hbarTransfers.get(accountId) != null) {
+            amount = this._squashTransfers(accountId, amount);
+        }
+
         this._hbarTransfers._set(
             accountId instanceof AccountId
                 ? accountId
@@ -242,6 +247,23 @@ export default class TransferTransaction extends Transaction {
         );
 
         return this;
+    }
+
+    /**
+     * @internal
+     * @param {AccountId | string} accountId
+     * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
+     * @returns {Hbar}
+     */
+    _squashTransfers(accountId, amount) {
+        let currentValue = this.hbarTransfers.get(accountId);
+        return Hbar.fromTinybars(
+            (currentValue == null ? Long.ZERO : currentValue.toTinybars()).add(
+                amount instanceof Hbar
+                    ? amount.toTinybars()
+                    : new Hbar(amount).toTinybars()
+            )
+        );
     }
 
     /**
