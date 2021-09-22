@@ -263,4 +263,55 @@ export default class AccountInfo {
             this._toProtobuf()
         ).finish();
     }
+
+    /**
+     * @returns {string}
+     */
+     toString() {
+        //stringify toJSON
+        let tmp = "";
+        return "";
+    }
+
+    /**
+     * @returns {{}}
+     */
+    toJSON() {
+        return {
+            "AccountInfo":{
+                "ID":{
+                    "accountID":this.accountId.toString(),
+                    "contractAccountID":this.contractAccountId
+                },
+                "Auth":{
+                    "key":this.key.toString(),
+                    "liveHashes":this.liveHashes,
+                    "isRecieverSignatureRequired":this.isReceiverSignatureRequired,
+                },
+                "Proxy":{
+                    "proxyAccountID":this.proxyAccountId,
+                    "proxyRecieved":this.proxyReceived.toString(),
+                },
+                "balance":this.balance.toString(),
+                "deleted":this.isDeleted,
+                // "sendRecordThreshold":"",
+                // "recieveRecordThreshold":"",
+                "expirationTime":this.expirationTime.toString(),
+                "autoRenewPeriod":this.autoRenewPeriod,
+                "tokenRelationships":this.tokenRelationships,
+                "accountMemo":this.accountMemo,
+                "ownedNfts":this.ownedNfts.toString()
+            }
+        };
+    }
+
+    /**
+     * @param {{}} accountInfo
+     * @returns {this}
+     */
+    fromJSON(accountInfo){
+        //proxyrecieved special case
+
+        return this;
+    }
 }

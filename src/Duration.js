@@ -38,4 +38,12 @@ export default class Duration {
     static _fromProtobuf(duration) {
         return new Duration(/** @type {Long} */ (duration.seconds));
     }
+
+    /**
+     * @param {string} seconds
+     * @returns {Duration}
+     */
+    fromString(seconds){
+        return new Duration(Long.fromString(seconds));
+    }
 }
