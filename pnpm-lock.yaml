@@ -6733,7 +6733,7 @@ packages:
   /shiki/0.9.10:
     resolution: {integrity: sha512-xeM7Oc6hY+6iW5O/T5hor8ul7mEprzyl5y4r5zthEHToQNw7MIhREMgU3r2gKDB0NaMLNrkcEQagudCdzE13Lg==}
     dependencies:
-      jsonc-parser: 3.0.0
+      json5: 2.2.0
       onigasm: 2.2.5
       vscode-textmate: 5.2.0
     dev: true
