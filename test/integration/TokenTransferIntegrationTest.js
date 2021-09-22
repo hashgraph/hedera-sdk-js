@@ -327,7 +327,7 @@ describe("TokenTransfer", function () {
 
         await env.close({ token });
     });
-    
+
     it("automatically associates to account", async function () {
         this.timeout(60000);
 
