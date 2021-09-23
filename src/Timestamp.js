@@ -129,7 +129,7 @@ export default class Timestamp {
      */
     fromString(timestamp) {
         let data = timestamp.split(".");
-        if (data[1] == undefined){
+        if (data[1] != undefined){
             return new Timestamp(Long.fromString(data[0]), Long.fromString(data[1]));
         } else {
             throw new Error("Timestamp string misformatted.");

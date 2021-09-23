@@ -267,10 +267,16 @@ export default class AccountInfo {
     /**
      * @returns {string}
      */
-     toString() {
-        //stringify toJSON
-        let tmp = "";
-        return "";
+    toString() {
+        return JSON.stringify(this.toJSON());
+    }
+
+    /**
+     * @param {string} accountInfo
+     * @returns {AccountInfo}
+     */
+    fromString(accountInfo){
+        return new AccountInfo(JSON.parse(accountInfo));
     }
 
     /**
@@ -278,40 +284,20 @@ export default class AccountInfo {
      */
     toJSON() {
         return {
-            "AccountInfo":{
-                "ID":{
-                    "accountID":this.accountId.toString(),
-                    "contractAccountID":this.contractAccountId
-                },
-                "Auth":{
-                    "key":this.key.toString(),
-                    "liveHashes":this.liveHashes,
-                    "isRecieverSignatureRequired":this.isReceiverSignatureRequired,
-                },
-                "Proxy":{
-                    "proxyAccountID":this.proxyAccountId,
-                    "proxyRecieved":this.proxyReceived.toString(),
-                },
-                "balance":this.balance.toString(),
-                "deleted":this.isDeleted,
-                // "sendRecordThreshold":"",
-                // "recieveRecordThreshold":"",
-                "expirationTime":this.expirationTime.toString(),
-                "autoRenewPeriod":this.autoRenewPeriod,
-                "tokenRelationships":this.tokenRelationships,
-                "accountMemo":this.accountMemo,
-                "ownedNfts":this.ownedNfts.toString()
-            }
+            "accountId":this.accountId.toString(),
+            "contractAccountId":this.contractAccountId,
+            "key":this.key.toString(),
+            "liveHashes":this.liveHashes,
+            "isRecieverSignatureRequired":this.isReceiverSignatureRequired,
+            "proxyAccountID":this.proxyAccountId,
+            "proxyRecieved":this.proxyReceived.toString(),
+            "balance":this.balance.toString(),
+            "deleted":this.isDeleted,
+            "expirationTime":this.expirationTime.toString(),
+            "autoRenewPeriod":this.autoRenewPeriod,
+            "tokenRelationships":this.tokenRelationships,
+            "accountMemo":this.accountMemo,
+            "ownedNfts":this.ownedNfts.toString()
         };
-    }
-
-    /**
-     * @param {{}} accountInfo
-     * @returns {this}
-     */
-    fromJSON(accountInfo){
-        //proxyrecieved special case
-
-        return this;
     }
 }
