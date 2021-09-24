@@ -339,7 +339,8 @@ export default class TopicMessageQuery {
 
         const cancel = client._mirrorNetwork
             .getNextMirrorNode()
-            .channel.makeServerStreamRequest(
+            .getChannel()
+            .makeServerStreamRequest(
                 request,
                 (data) => {
                     const message = proto.ConsensusTopicResponse.decode(data);

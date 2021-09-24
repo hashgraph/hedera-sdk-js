@@ -6,6 +6,7 @@ import {
     TESTNET_ADDRESS_BOOK,
     MAINNET_ADDRESS_BOOK,
 } from "../address_book/AddressBooks.js";
+
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../address_book/NodeAddressBook.js").default} NodeAddressBook
@@ -20,7 +21,7 @@ import {
  */
 export default class Network {
     /**
-     * @param {(address: string) => Promise<ChannelT>} createNetworkChannel
+     * @param {(address: string) => ChannelT} createNetworkChannel
      */
     constructor(createNetworkChannel) {
         /**
@@ -46,7 +47,7 @@ export default class Network {
          */
         this.nodes = [];
 
-        /** @type {(address: string, certHash?: Uint8Array) => Promise<ChannelT>} */
+        /** @type {(address: string, cert?: string) => ChannelT} */
         this.createNetworkChannel = createNetworkChannel;
 
         /** @type {string | null} */
@@ -134,7 +135,7 @@ export default class Network {
 
                 const nodesIndex = this.nodes.findIndex(
                     // eslint-disable-next-line ie11/no-loop-func
-                    (node) => node.address === url
+                    (node) => node.address.toString() === url
                 );
                 if (nodesIndex >= 0) {
                     this.nodes.splice(nodesIndex, 1);
@@ -152,12 +153,13 @@ export default class Network {
             // eslint-disable-next-line ie11/no-loop-func,@typescript-eslint/no-unused-vars
             const index = thisNetwork_.findIndex(([url_, _]) => url_ === url);
             if (index < 0) {
-                const node = new Node(
-                    key,
-                    url,
-                    this._nodeWaitTime,
-                    this.createNetworkChannel
-                );
+                const node = new Node({
+                    newNode: {
+                        address: url,
+                        accountId: key,
+                        channelInitFunction: this.createNetworkChannel,
+                    },
+                }).setMinBackoff(this.nodeWaitTime);
 
                 this.networkNodes.set(key.toString(), node);
                 this.nodes.push(node);
@@ -216,7 +218,7 @@ export default class Network {
     setNodeWaitTime(nodeWaitTime) {
         this._nodeWaitTime = nodeWaitTime;
         for (const node of this.nodes) {
-            node.setWaitTime(nodeWaitTime);
+            node.setMinBackoff(nodeWaitTime);
         }
         return this;
     }
@@ -242,12 +244,12 @@ export default class Network {
             for (let i = 0; i < this.nodes.length; i++) {
                 const node = this.nodes[i];
 
-                if (node.attempts < this._maxNodeAttempts) {
+                if (node._attempts < this._maxNodeAttempts) {
                     continue;
                 }
 
                 node.close();
-                delete this.network[node.address];
+                delete this.network[node.address.toString()];
                 this.networkNodes.delete(node.accountId.toString());
 
                 this.nodes.splice(i, 1);

@@ -4,6 +4,22 @@ import ManagedNode from "./ManagedNode.js";
  * @typedef {import("./account/AccountId.js").default} AccountId
  * @typedef {import("./address_book/NodeAddress.js").default} NodeAddress
  * @typedef {import("./channel/Channel.js").default} Channel
+ * @typedef {import("./ManagedNodeAddress.js").default} ManagedNodeAddress
+ */
+
+/**
+ * @template {Channel} ChannelT
+ * @typedef {object} NewNode
+ * @property {AccountId} accountId
+ * @property {string} address
+ * @property {(address: string, cert?: string) => ChannelT} channelInitFunction
+ */
+
+/**
+ * @template {Channel} ChannelT
+ * @typedef {object} CloneNode
+ * @property {Node<ChannelT>} node
+ * @property {ManagedNodeAddress} address
  */
 
 /**
@@ -12,36 +28,60 @@ import ManagedNode from "./ManagedNode.js";
  */
 export default class Node extends ManagedNode {
     /**
-     * @param {AccountId} accountId
-     * @param {string} address
-     * @param {number} waitTime
-     * @param {(address: string, certHash?: Uint8Array) => Promise<ChannelT>} channelInitFunction
+     * @param {object} props
+     * @param {NewNode<ChannelT>=} [props.newNode]
+     * @param {CloneNode<ChannelT>=} [props.cloneNode]
      */
-    constructor(accountId, address, waitTime, channelInitFunction) {
-        super(address, channelInitFunction);
+    constructor(props = {}) {
+        super(props);
 
-        this.accountId = accountId;
+        if (props.newNode != null) {
+            /** @type {AccountId} */
+            this._accountId = props.newNode.accountId;
 
-        /** @type {number} */
-        this.delay = waitTime;
+            /** @type {NodeAddress | null} */
+            this._nodeAddress = null;
+        } else if (props.cloneNode != null) {
+            /** @type {AccountId} */
+            this._accountId = props.cloneNode.node._accountId;
 
-        /** @type {number} */
-        this.lastUsed = Date.now();
+            /** @type {NodeAddress | null} */
+            this._nodeAddress = props.cloneNode.node._nodeAddress;
+        } else {
+            throw new Error(`failed to create node: ${JSON.stringify(props)}`);
+        }
+    }
 
-        /** @type {number} */
-        this.delayUntil = Date.now();
+    /**
+     * @returns {Node<ChannelT>}
+     */
+    toInsecure() {
+        return new Node({
+            cloneNode: { node: this, address: this._address.toInsecure() },
+        });
+    }
 
-        /** @type {number} */
-        this.useCount = 0;
+    /**
+     * @returns {Node<ChannelT>}
+     */
+    toSecure() {
+        return new Node({
+            cloneNode: { node: this, address: this._address.toSecure() },
+        });
+    }
 
-        /** @type {number} */
-        this.attempts = 0;
+    /**
+     * @returns {AccountId}
+     */
+    get accountId() {
+        return this._accountId;
+    }
 
-        /** @type {number} */
-        this.waitTime = waitTime;
-
-        /** @type {NodeAddress | null} */
-        this.nodeAddress = null;
+    /**
+     * @returns {NodeAddress | null}
+     */
+    get nodeAddress() {
+        return this._nodeAddress;
     }
 
     /**
@@ -49,100 +89,7 @@ export default class Node extends ManagedNode {
      * @returns {this}
      */
     setNodeAddress(nodeAddress) {
-        this.nodeAddress = nodeAddress;
-        this.certHash =
-            nodeAddress.certHash != null ? nodeAddress.certHash : undefined;
+        this._nodeAddress = nodeAddress;
         return this;
-    }
-
-    /**
-     * @param {number} waitTime
-     * @returns {this}
-     */
-    setWaitTime(waitTime) {
-        if (this.delay <= waitTime) {
-            this.delay = waitTime;
-        }
-
-        this.waitTime = waitTime;
-        return this;
-    }
-
-    inUse() {
-        this.useCount++;
-        this.lastUsed = Date.now();
-    }
-
-    /**
-     * Determines if this node is healthy by checking if this node hasn't been
-     * in use for a the required `delay` period. Since this looks at `this.lastUsed`
-     * and that value is only set in the `wait()` method, any node that has not
-     * returned a bad gRPC status will always be considered healthy.
-     *
-     * @returns {boolean}
-     */
-    isHealthy() {
-        return this.delayUntil <= Date.now();
-    }
-
-    increaseDelay() {
-        this.delay = Math.min(this.delay * 2, 8000);
-        this.delayUntil = Date.now() + this.delay;
-    }
-
-    decreaseDelay() {
-        this.delay = Math.max(this.delay / 2, this.waitTime);
-    }
-
-    /**
-     * This is only ever called if the node itself is down.
-     * A node returning a transaction with a bad status code does not indicate
-     * the node is down, and hence this method will not be called.
-     *
-     * @returns {Promise<void>}
-     */
-    wait() {
-        const delay = this.delayUntil - this.lastUsed;
-        return new Promise((resolve) => setTimeout(resolve, delay));
-    }
-
-    /**
-     * @param {Node<*>} node
-     * @returns {number}
-     */
-    compare(node) {
-        if (this.isHealthy() && node.isHealthy()) {
-            if (this.useCount < node.useCount) {
-                return -1;
-            } else if (this.useCount > node.useCount) {
-                return 1;
-            } else {
-                if (this.lastUsed < node.lastUsed) {
-                    return -1;
-                } else if (this.lastUsed > node.lastUsed) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        } else if (this.isHealthy() && !node.isHealthy()) {
-            return -1;
-        } else if (!this.isHealthy() && node.isHealthy()) {
-            return 1;
-        } else {
-            if (this.useCount < node.useCount) {
-                return -1;
-            } else if (this.useCount > node.useCount) {
-                return 1;
-            } else {
-                if (this.lastUsed < node.lastUsed) {
-                    return -1;
-                } else if (this.lastUsed > node.lastUsed) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        }
     }
 }
