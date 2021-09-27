@@ -117,4 +117,10 @@ service TokenService {
      * Gets info on NFTs N through M on the list of NFTs associated with a given Token of type NON_FUNGIBLE
      */
     rpc getTokenNftInfos (Query) returns (Response);
+
+    // Pause the token
+    rpc pauseToken (Transaction) returns (TransactionResponse);
+
+    //  Unpause the token
+    rpc unpauseToken (Transaction) returns (TransactionResponse);
 }
