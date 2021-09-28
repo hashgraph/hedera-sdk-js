@@ -96,6 +96,33 @@ export default class ManagedNode {
     }
 
     /**
+     * @abstract
+     * @returns {ManagedNode<ChannelT>}
+     */
+    // eslint-disable-next-line jsdoc/require-returns-check
+    toInsecure() {
+        throw new Error("not implemented");
+    }
+
+    /**
+     * @abstract
+     * @returns {ManagedNode<ChannelT>}
+     */
+    // eslint-disable-next-line jsdoc/require-returns-check
+    toSecure() {
+        throw new Error("not implemented");
+    }
+
+    /**
+     * @param {string} ledgerId
+     * @returns {this}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setCert(ledgerId) {
+        return this;
+    }
+
+    /**
      * @returns {ManagedNodeAddress}
      */
     get address() {

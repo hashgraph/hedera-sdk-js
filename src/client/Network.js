@@ -1,11 +1,12 @@
 import AccountId from "../account/AccountId.js";
 import Node from "../Node.js";
-import { _ledgerIdToNetworkName, _ledgerIdToLedgerId } from "../NetworkName.js";
+import { _ledgerIdToNetworkName } from "../NetworkName.js";
 import {
     PREVIEWNET_ADDRESS_BOOK,
     TESTNET_ADDRESS_BOOK,
     MAINNET_ADDRESS_BOOK,
 } from "../address_book/AddressBooks.js";
+import ManagedNetwork from "./ManagedNetwork.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -18,81 +19,22 @@ import {
 
 /**
  * @template {Channel} ChannelT
+ * @augments {ManagedNetwork<ChannelT, Node<Channel>, {[key: string]: (string | AccountId)}, [string, (string | AccountId)][], [string, (string | AccountId)]>}
  */
-export default class Network {
+export default class Network extends ManagedNetwork {
     /**
      * @param {(address: string) => ChannelT} createNetworkChannel
      */
     constructor(createNetworkChannel) {
-        /**
-         * Map of node account ID (as a string)
-         * to the node URL.
-         *
-         * @internal
-         * @type {Map<string, Node<ChannelT>>}
-         */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this._network = new Map();
-
-        /**
-         * List of node account IDs.
-         *
-         * @private
-         * @type {Node<ChannelT>[]}
-         */
-        this._nodes = [];
+        super(createNetworkChannel);
 
         /** @type {(address: string, cert?: string) => ChannelT} */
         this._createNetworkChannel = createNetworkChannel;
-
-        /** @type {string | null} */
-        this._ledgerId = null;
-
-        /** @type {number} */
-        this._minBackoff = 250;
-
-        /** @type {number} */
-        this._maxNodeAttempts = -1;
 
         this._maxNodesPerTransaction = -1;
 
         /** @type {NodeAddressBook | null} */
         this._addressBook = null;
-
-        this._transportSecurity = false;
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    isTransportSecurity() {
-        return this._transportSecurity;
-    }
-
-    /**
-     * @param {boolean} transportSecurity
-     * @returns {this}
-     */
-    setTransportSecurity(transportSecurity) {
-        if (this._transportSecurity != transportSecurity) {
-            this._network.clear();
-
-            for (let i = 0; i < this._nodes.length; i++) {
-                let node = this._nodes[i];
-                node.close();
-
-                node = transportSecurity
-                    ? node
-                          .toSecure()
-                          .setCert(this._ledgerId != null ? this._ledgerId : "")
-                    : node.toInsecure();
-                this._nodes[i] = node;
-                this._network.set(node.accountId.toString(), node);
-            }
-        }
-
-        this._transportSecurity = transportSecurity;
-        return this;
     }
 
     /**
@@ -114,11 +56,11 @@ export default class Network {
 
     /**
      * @param {NetworkName} networkName
-     * @returns {void}
+     * @returns {this}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setNetworkName(networkName) {
-        this._ledgerId = _ledgerIdToLedgerId(networkName);
+        super.setNetworkName(networkName);
 
         switch (networkName) {
             case "mainnet":
@@ -145,6 +87,8 @@ export default class Network {
                 }
             }
         }
+
+        return this;
     }
 
     /**
@@ -157,65 +101,82 @@ export default class Network {
     }
 
     /**
+     * @abstract
      * @param {{[key: string]: (string | AccountId)}} network
+     * @returns {[string, (string | AccountId)][]}
      */
-    setNetwork(network) {
-        const network_ = Object.entries(network);
-        const thisNetwork_ = Object.entries(this.network);
+    _createIterableNetwork(network) {
+        return Object.entries(network);
+    }
 
-        // Remove address that no longer exist
-        for (const [url, accountId] of thisNetwork_) {
-            const key =
-                accountId instanceof AccountId
-                    ? accountId
-                    : AccountId.fromString(accountId);
+    /**
+     * @abstract
+     * @param {[string, (string | AccountId)]} entry
+     * @returns {Node<Channel>}
+     */
+    _createNodeFromNetworkEntry(entry) {
+        const accountId =
+            typeof entry[1] === "string"
+                ? AccountId.fromString(entry[1])
+                : entry[1];
 
-            // eslint-disable-next-line ie11/no-loop-func,@typescript-eslint/no-unused-vars
-            const index = network_.findIndex(([url_, _]) => url_ === url);
-            if (index < 0) {
-                const node = this._network.get(key.toString());
-                if (node != null) {
-                    node.close();
-                }
+        return new Node({
+            newNode: {
+                address: entry[0],
+                accountId,
+                channelInitFunction: this._createNetworkChannel,
+            },
+        }).setMinBackoff(this._minBackoff);
+    }
 
-                this._network.delete(key.toString());
+    /**
+     * @abstract
+     * @param {{[key: string]: (string | AccountId)}} network
+     * @returns {number[]}
+     */
+    _getNodesToRemove(network) {
+        const indexes = [];
 
-                const nodesIndex = this._nodes.findIndex(
-                    // eslint-disable-next-line ie11/no-loop-func
-                    (node) => node.address.toString() === url
-                );
-                if (nodesIndex >= 0) {
-                    this._nodes.splice(nodesIndex, 1);
-                }
+        for (let i = this._nodes.length - 1; i >= 0; i--) {
+            const node = this._nodes[i];
+            const accountId = network[node.address.toString()];
+
+            if (accountId != null && accountId !== node.accountId.toString()) {
+                indexes.push(i);
             }
         }
 
-        // Add new address to the list
-        for (const [url, accountId] of network_) {
-            const key =
-                accountId instanceof AccountId
-                    ? accountId
-                    : AccountId.fromString(accountId);
+        return indexes;
+    }
 
-            // eslint-disable-next-line ie11/no-loop-func,@typescript-eslint/no-unused-vars
-            const index = thisNetwork_.findIndex(([url_, _]) => url_ === url);
-            if (index < 0) {
-                const node = new Node({
-                    newNode: {
-                        address: url,
-                        accountId: key,
-                        channelInitFunction: this._createNetworkChannel,
-                    },
-                }).setMinBackoff(this.minBackoff);
+    /**
+     * @abstract
+     * @param {Node<ChannelT>} node
+     */
+    _removeNodeFromNetwork(node) {
+        this._network.delete(node.accountId.toString());
+    }
 
-                this._network.set(key.toString(), node);
-                this._nodes.push(node);
+    /**
+     * @abstract
+     * @param {[string, (string | AccountId)]} entry
+     * @returns {boolean}
+     */
+    _checkNetworkContainsEntry(entry) {
+        for (const node of this._nodes) {
+            if (node.address.toString() === entry[0]) {
+                return true;
             }
         }
 
-        shuffle(this._nodes);
+        return false;
+    }
 
-        this._ledgerId = null;
+    /**
+     * @param {Node<ChannelT>} node
+     */
+    _addNodeToNetwork(node) {
+        this._network.set(node.accountId.toString(), node);
     }
 
     /**
@@ -308,38 +269,5 @@ export default class Network {
         return this._nodes
             .slice(0, this.getNumberOfNodesForTransaction())
             .map((node) => node.accountId);
-    }
-
-    close() {
-        for (const node of this._nodes) {
-            node.close();
-        }
-
-        this._network.clear();
-        this._nodes = [];
-    }
-}
-
-/**
- * https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
- *
- * @template T
- * @param {Array<T>} array
- */
-function shuffle(array) {
-    var currentIndex = array.length,
-        temporaryValue,
-        randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
     }
 }

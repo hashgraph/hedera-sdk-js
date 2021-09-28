@@ -55,21 +55,25 @@ export default class Node extends ManagedNode {
     }
 
     /**
-     * @returns {Node<ChannelT>}
+     * @returns {ManagedNode<ChannelT>}
      */
     toInsecure() {
-        return new Node({
-            cloneNode: { node: this, address: this._address.toInsecure() },
-        });
+        return /** @type {this} */ (
+            new Node({
+                cloneNode: { node: this, address: this._address.toInsecure() },
+            })
+        );
     }
 
     /**
-     * @returns {Node<ChannelT>}
+     * @returns {ManagedNode<ChannelT>}
      */
     toSecure() {
-        return new Node({
-            cloneNode: { node: this, address: this._address.toSecure() },
-        });
+        return /** @type {this} */ (
+            new Node({
+                cloneNode: { node: this, address: this._address.toSecure() },
+            })
+        );
     }
 
     /**
