@@ -18,18 +18,14 @@ import ManagedNetwork from "./ManagedNetwork.js";
  */
 
 /**
- * @template {Channel} ChannelT
- * @augments {ManagedNetwork<ChannelT, Node, {[key: string]: (string | AccountId)}, [string, (string | AccountId)][], [string, (string | AccountId)]>}
+ * @augments {ManagedNetwork<Channel, Node, {[key: string]: (string | AccountId)}, [string, (string | AccountId)][], [string, (string | AccountId)]>}
  */
 export default class Network extends ManagedNetwork {
     /**
-     * @param {(address: string) => ChannelT} createNetworkChannel
+     * @param {(address: string) => Channel} createNetworkChannel
      */
     constructor(createNetworkChannel) {
         super(createNetworkChannel);
-
-        /** @type {(address: string, cert?: string) => ChannelT} */
-        this._createNetworkChannel = createNetworkChannel;
 
         this._maxNodesPerTransaction = -1;
 
@@ -47,8 +43,8 @@ export default class Network extends ManagedNetwork {
         var n = {};
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (const [_, value] of this._network) {
-            n[value.address.toString()] = value.accountId;
+        for (const node of this._nodes) {
+            n[node.address.toString()] = node.accountId;
         }
 
         return n;

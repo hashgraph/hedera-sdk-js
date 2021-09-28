@@ -1,4 +1,5 @@
 import MirrorNode from "../MirrorNode.js";
+import ManagedNetwork from "./ManagedNetwork.js";
 
 /**
  * @typedef {import("../channel/MirrorChannel.js").default} MirrorChannel
@@ -6,85 +7,113 @@ import MirrorNode from "../MirrorNode.js";
 
 /**
  * @typedef {import("./Client.js").NetworkName} NetworkName
+ * @augments {ManagedNetwork<MirrorChannel, MirrorNode, string[], string[], string>}
  */
-export default class MirrorNetwork {
+export default class MirrorNetwork extends ManagedNetwork {
     /**
-     * @param {((address: string) => MirrorChannel)?} channelInitFunction
+     * @param {(address: string) => MirrorChannel} channelInitFunction
      */
     constructor(channelInitFunction) {
-        /**
-         * Map of node account ID (as a string)
-         * to the node URL.
-         *
-         * @internal
-         * @type {string[]}
-         */
-        this.network = [];
-
-        /**
-         * Map of node account ID (as a string)
-         * to the node URL.
-         *
-         * @internal
-         * @type {Map<string, MirrorNode>}
-         */
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this.networkNodes = new Map();
-
-        this.index = 0;
-
-        /** @type {((address: string) => MirrorChannel)?} */
-        this._channelInitFunction = channelInitFunction;
+        super(channelInitFunction);
     }
 
     /**
-     * @param {string[]} network
+     * @returns {string[]}
      */
-    setMirrorNetwork(network) {
-        if (this._channelInitFunction == null) {
-            // silently fail on client boot if mirror network is not
-            // supported
-            return;
+    get network() {
+        /**
+         * @type {string[]}
+         */
+        var n = [];
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const node of this._nodes) {
+            n.push(node.address.toString());
         }
 
-        this.close();
-        this.network = network;
+        return n;
+    }
 
-        for (const address of this.network) {
-            this.networkNodes.set(
-                address,
-                new MirrorNode({
-                    newNode: {
-                        address,
-                        channelInitFunction: this._channelInitFunction,
-                    },
-                })
-            );
+    /**
+     * @abstract
+     * @param {string[]} network
+     * @returns {string[]}
+     */
+    _createIterableNetwork(network) {
+        return network;
+    }
+
+    /**
+     * @abstract
+     * @param {string} entry
+     * @returns {MirrorNode}
+     */
+    _createNodeFromNetworkEntry(entry) {
+        return new MirrorNode({
+            newNode: {
+                address: entry,
+                channelInitFunction: this._createNetworkChannel,
+            },
+        }).setMinBackoff(this._minBackoff);
+    }
+
+    /**
+     * @abstract
+     * @param {string[]} network
+     * @returns {number[]}
+     */
+    _getNodesToRemove(network) {
+        const indexes = [];
+
+        for (let i = this._nodes.length - 1; i >= 0; i--) {
+            const node = this._nodes[i];
+
+            if (!network.includes(node.address.toString())) {
+                indexes.push(i);
+            }
         }
 
-        this.index = 0;
+        return indexes;
+    }
+
+    /**
+     * @abstract
+     * @param {MirrorNode} node
+     */
+    _removeNodeFromNetwork(node) {
+        this._network.delete(node.address.toString());
+    }
+
+    /**
+     * @abstract
+     * @param {string} entry
+     * @returns {boolean}
+     */
+    _checkNetworkContainsEntry(entry) {
+        for (const node of this._nodes) {
+            if (node.address.toString() === entry) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param {MirrorNode} node
+     */
+    _addNodeToNetwork(node) {
+        this._network.set(node.address.toString(), node);
     }
 
     /**
      * @returns {MirrorNode}
      */
     getNextMirrorNode() {
-        if (this._channelInitFunction == null) {
+        if (this._createNetworkChannel == null) {
             throw new Error("mirror network not supported on browser");
         }
 
-        const node = this.network[this.index];
-        this.index = (this.index + 1) % this.network.length;
-        return /** @type {MirrorNode} */ (this.networkNodes.get(node));
-    }
-
-    close() {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (const [_, node] of this.networkNodes) {
-            node.close();
-        }
-
-        this.networkNodes.clear();
-        this.network = [];
+        return this._getNumberOfMostHealthyNodes(1)[0];
     }
 }

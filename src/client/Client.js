@@ -61,7 +61,7 @@ export default class Client {
          * to the node URL.
          *
          * @internal
-         * @type {Network<ChannelT>}
+         * @type {Network}
          */
         this._network = new Network(this._createNetworkChannel());
 
@@ -474,10 +474,9 @@ export default class Client {
 
     /**
      * @abstract
-     * @returns {((address: string) => MirrorChannelT)?}
+     * @returns {(address: string) => MirrorChannelT}
      */
     _createMirrorNetworkChannel() {
-        // throw new Error("not implemented");
-        return null;
+        throw new Error("not implemented");
     }
 }

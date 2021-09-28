@@ -179,6 +179,39 @@ export default class MangedNetwork {
         throw new Error("not implemented");
     }
 
+    _removeDeadNodes() {
+        if (this._maxNodeAttempts > 0) {
+            for (let i = this._nodes.length - 1; i >= 0; i--) {
+                const node = this._nodes[i];
+
+                if (node.attempts >= this._maxNodeAttempts) {
+                    node.close();
+
+                    this._removeNodeFromNetwork(node);
+                    this._nodes.splice(i, 1);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param {number} count
+     * @returns {NetworkNodeT[]}
+     */
+    _getNumberOfMostHealthyNodes(count) {
+        this._removeDeadNodes();
+        this._nodes.sort();
+
+        /** @type {NetworkNodeT[]} */
+        const nodes = [];
+
+        for (let i = 0; i < count; i++) {
+            nodes.push(this._nodes[i]);
+        }
+
+        return nodes;
+    }
+
     /**
      * @param {SdkNetworkT} network
      * @returns {this}

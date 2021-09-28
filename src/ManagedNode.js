@@ -132,6 +132,13 @@ export default class ManagedNode {
     /**
      * @returns {number}
      */
+    get attempts() {
+        return this._attempts;
+    }
+
+    /**
+     * @returns {number}
+     */
     get minBackoff() {
         return this._minBackoff;
     }

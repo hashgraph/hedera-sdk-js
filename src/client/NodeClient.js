@@ -265,21 +265,19 @@ export default class NodeClient extends Client {
         if (typeof mirrorNetwork === "string") {
             switch (mirrorNetwork) {
                 case "previewnet":
-                    this._mirrorNetwork.setMirrorNetwork(
-                        MirrorNetwork.PREVIEWNET
-                    );
+                    this._mirrorNetwork.setNetwork(MirrorNetwork.PREVIEWNET);
                     break;
                 case "testnet":
-                    this._mirrorNetwork.setMirrorNetwork(MirrorNetwork.TESTNET);
+                    this._mirrorNetwork.setNetwork(MirrorNetwork.TESTNET);
                     break;
                 case "mainnet":
-                    this._mirrorNetwork.setMirrorNetwork(MirrorNetwork.MAINNET);
+                    this._mirrorNetwork.setNetwork(MirrorNetwork.MAINNET);
                     break;
                 default:
-                    this._mirrorNetwork.setMirrorNetwork([mirrorNetwork]);
+                    this._mirrorNetwork.setNetwork([mirrorNetwork]);
             }
         } else {
-            this._mirrorNetwork.setMirrorNetwork(mirrorNetwork);
+            this._mirrorNetwork.setNetwork(mirrorNetwork);
         }
     }
 
