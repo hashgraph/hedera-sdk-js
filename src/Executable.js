@@ -317,9 +317,7 @@ export default class Executable {
 
         for (let attempt = 1 /* loop forever */; ; attempt += 1) {
             const nodeAccountId = this._getNodeAccountId();
-            const node = client._network.networkNodes.get(
-                nodeAccountId.toString()
-            );
+            const node = client._network._network.get(nodeAccountId.toString());
 
             if (node == null) {
                 throw new Error(

@@ -1,6 +1,5 @@
 import {
     Status,
-    AccountId,
     AccountBalanceQuery,
     TokenCreateTransaction,
     AccountId,
@@ -11,23 +10,27 @@ describe("AccountBalanceQuery", function () {
     it("can connect to previewnet with TLS", async function () {
         this.timeout(30000);
 
-        const client = Client.forPreviewnet();
+        const client = Client.forPreviewnet().setTransportSecurity(true);
 
-        if (
-            !Object.values(client.network)
-                .map((accountId) => accountId.toString())
-                .includes("0.0.4")
-        ) {
-            return;
+        for (const [address, nodeAccountId] of Object.entries(client.network)) {
+            expect(address.endsWith(":50212")).to.be.true;
+
+            await new AccountBalanceQuery()
+                .setNodeAccountIds([nodeAccountId])
+                .setAccountId(nodeAccountId)
+                .setMaxAttempts(1)
+                .execute(client);
         }
+    });
 
-        const network = {
-            "1.previewnet.hedera.com:50212": new AccountId(4),
-        };
+    it("can connect to testnet with TLS", async function () {
+        this.timeout(30000);
 
-        client.setNetwork(network);
+        const client = Client.forTestnet().setTransportSecurity(true);
 
-        for (const nodeAccountId of Object.values(network)) {
+        for (const [address, nodeAccountId] of Object.entries(client.network)) {
+            expect(address.endsWith(":50212")).to.be.true;
+
             await new AccountBalanceQuery()
                 .setNodeAccountIds([nodeAccountId])
                 .setAccountId(nodeAccountId)

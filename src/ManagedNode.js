@@ -56,7 +56,7 @@ export default class ManagedNode {
             this._maxBackoff = 80000;
         } else if (props.cloneNode != null) {
             /** @type {ManagedNodeAddress} */
-            this._address = props.cloneNode.node._address;
+            this._address = props.cloneNode.address;
 
             /** @type {string=} */
             this._cert = props.cloneNode.node._cert;

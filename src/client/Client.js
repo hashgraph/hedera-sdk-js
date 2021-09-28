@@ -108,11 +108,12 @@ export default class Client {
 
     /**
      * @param {NetworkName} networkName
-     * @returns {void}
+     * @returns {this}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setNetworkName(networkName) {
         this._network.setNetworkName(networkName);
+        return this;
     }
 
     /**
@@ -159,6 +160,22 @@ export default class Client {
      */
     setSignOnDemand(signOnDemand) {
         this._signOnDemand = signOnDemand;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isTransportSecurity() {
+        return this._network.isTransportSecurity();
+    }
+
+    /**
+     * @param {boolean} transportSecurity
+     * @returns {this}
+     */
+    setTransportSecurity(transportSecurity) {
+        this._network.setTransportSecurity(transportSecurity);
+        return this;
     }
 
     /**
@@ -315,7 +332,7 @@ export default class Client {
      * @returns {number}
      */
     get nodeWaitTime() {
-        return this._network.nodeWaitTime;
+        return this._network.minBackoff;
     }
 
     /**
@@ -323,7 +340,7 @@ export default class Client {
      * @returns {this}
      */
     setNodeWaitTime(nodeWaitTime) {
-        this._network.setNodeWaitTime(nodeWaitTime);
+        this._network.setMinBackoff(nodeWaitTime);
         return this;
     }
 

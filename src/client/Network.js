@@ -25,11 +25,6 @@ export default class Network {
      */
     constructor(createNetworkChannel) {
         /**
-         * @type {{[key: string]: (string | AccountId)}}
-         */
-        this.network = {};
-
-        /**
          * Map of node account ID (as a string)
          * to the node URL.
          *
@@ -37,7 +32,7 @@ export default class Network {
          * @type {Map<string, Node<ChannelT>>}
          */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this.networkNodes = new Map();
+        this._network = new Map();
 
         /**
          * List of node account IDs.
@@ -45,16 +40,16 @@ export default class Network {
          * @private
          * @type {Node<ChannelT>[]}
          */
-        this.nodes = [];
+        this._nodes = [];
 
         /** @type {(address: string, cert?: string) => ChannelT} */
-        this.createNetworkChannel = createNetworkChannel;
+        this._createNetworkChannel = createNetworkChannel;
 
         /** @type {string | null} */
         this._ledgerId = null;
 
         /** @type {number} */
-        this._nodeWaitTime = 250;
+        this._minBackoff = 250;
 
         /** @type {number} */
         this._maxNodeAttempts = -1;
@@ -63,6 +58,58 @@ export default class Network {
 
         /** @type {NodeAddressBook | null} */
         this._addressBook = null;
+
+        this._transportSecurity = false;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    isTransportSecurity() {
+        return this._transportSecurity;
+    }
+
+    /**
+     * @param {boolean} transportSecurity
+     * @returns {this}
+     */
+    setTransportSecurity(transportSecurity) {
+        if (this._transportSecurity != transportSecurity) {
+            this._network.clear();
+
+            for (let i = 0; i < this._nodes.length; i++) {
+                let node = this._nodes[i];
+                node.close();
+
+                node = transportSecurity
+                    ? node
+                          .toSecure()
+                          .setCert(this._ledgerId != null ? this._ledgerId : "")
+                    : node.toInsecure();
+                this._nodes[i] = node;
+                this._network.set(node.accountId.toString(), node);
+            }
+        }
+
+        this._transportSecurity = transportSecurity;
+        return this;
+    }
+
+    /**
+     * @returns {{[key: string]: (string | AccountId)}}
+     */
+    get network() {
+        /**
+         * @type {{[key: string]: (string | AccountId)}}
+         */
+        var n = {};
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const [_, value] of this._network) {
+            n[value.address.toString()] = value.accountId;
+        }
+
+        return n;
     }
 
     /**
@@ -86,7 +133,7 @@ export default class Network {
         }
 
         if (this._addressBook != null) {
-            for (const node of this.nodes) {
+            for (const node of this._nodes) {
                 for (const address of this._addressBook.nodeAddresses) {
                     if (
                         address.accountId != null &&
@@ -126,19 +173,19 @@ export default class Network {
             // eslint-disable-next-line ie11/no-loop-func,@typescript-eslint/no-unused-vars
             const index = network_.findIndex(([url_, _]) => url_ === url);
             if (index < 0) {
-                const node = this.networkNodes.get(key.toString());
+                const node = this._network.get(key.toString());
                 if (node != null) {
                     node.close();
                 }
 
-                this.networkNodes.delete(key.toString());
+                this._network.delete(key.toString());
 
-                const nodesIndex = this.nodes.findIndex(
+                const nodesIndex = this._nodes.findIndex(
                     // eslint-disable-next-line ie11/no-loop-func
                     (node) => node.address.toString() === url
                 );
                 if (nodesIndex >= 0) {
-                    this.nodes.splice(nodesIndex, 1);
+                    this._nodes.splice(nodesIndex, 1);
                 }
             }
         }
@@ -157,18 +204,17 @@ export default class Network {
                     newNode: {
                         address: url,
                         accountId: key,
-                        channelInitFunction: this.createNetworkChannel,
+                        channelInitFunction: this._createNetworkChannel,
                     },
-                }).setMinBackoff(this.nodeWaitTime);
+                }).setMinBackoff(this.minBackoff);
 
-                this.networkNodes.set(key.toString(), node);
-                this.nodes.push(node);
+                this._network.set(key.toString(), node);
+                this._nodes.push(node);
             }
         }
 
-        shuffle(this.nodes);
+        shuffle(this._nodes);
 
-        this.network = network;
         this._ledgerId = null;
     }
 
@@ -207,18 +253,18 @@ export default class Network {
     /**
      * @returns {number}
      */
-    get nodeWaitTime() {
-        return this._nodeWaitTime;
+    get minBackoff() {
+        return this._minBackoff;
     }
 
     /**
-     * @param {number} nodeWaitTime
+     * @param {number} minBackoff
      * @returns {this}
      */
-    setNodeWaitTime(nodeWaitTime) {
-        this._nodeWaitTime = nodeWaitTime;
-        for (const node of this.nodes) {
-            node.setMinBackoff(nodeWaitTime);
+    setMinBackoff(minBackoff) {
+        this._minBackoff = minBackoff;
+        for (const node of this._nodes) {
+            node.setMinBackoff(minBackoff);
         }
         return this;
     }
@@ -232,7 +278,7 @@ export default class Network {
             return this._maxNodesPerTransaction;
         }
 
-        return (this.nodes.length + 3 - 1) / 3;
+        return (this._nodes.length + 3 - 1) / 3;
     }
 
     /**
@@ -241,8 +287,8 @@ export default class Network {
      */
     getNodeAccountIdsForExecute() {
         if (this._maxNodeAttempts > 0) {
-            for (let i = 0; i < this.nodes.length; i++) {
-                const node = this.nodes[i];
+            for (let i = 0; i < this._nodes.length; i++) {
+                const node = this._nodes[i];
 
                 if (node._attempts < this._maxNodeAttempts) {
                     continue;
@@ -250,28 +296,27 @@ export default class Network {
 
                 node.close();
                 delete this.network[node.address.toString()];
-                this.networkNodes.delete(node.accountId.toString());
+                this._network.delete(node.accountId.toString());
 
-                this.nodes.splice(i, 1);
+                this._nodes.splice(i, 1);
                 i--;
             }
         }
 
-        this.nodes.sort((a, b) => a.compare(b));
+        this._nodes.sort((a, b) => a.compare(b));
 
-        return this.nodes
+        return this._nodes
             .slice(0, this.getNumberOfNodesForTransaction())
             .map((node) => node.accountId);
     }
 
     close() {
-        for (const node of this.nodes) {
+        for (const node of this._nodes) {
             node.close();
         }
 
-        this.networkNodes.clear();
-        this.nodes = [];
-        this.network = {};
+        this._network.clear();
+        this._nodes = [];
     }
 }
 
