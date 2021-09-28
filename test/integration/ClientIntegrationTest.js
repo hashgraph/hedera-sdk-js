@@ -243,4 +243,28 @@ describe("ClientIntegration", function () {
         testnetClient.close();
         previewnetClient.close();
     });
+
+    it("errors when fetching accounts", async function () {
+        this.timeout(10000000);
+
+        const client = Client.forMainnet();
+
+        const network = Object.values(client.network);
+        let networkIndex = 0;
+
+        for (let i = 0; i < 30000; i++) {
+            try {
+                await new AccountBalanceQuery()
+                    .setNodeAccountIds([network[networkIndex]])
+                    .setAccountId(`0.0.${i}`)
+                    .execute(client);
+
+                    i++;
+            } catch (err) {
+                // Do nothing
+            }
+
+            networkIndex = (networkIndex + 1) % network.length;
+        }
+    });
 });
