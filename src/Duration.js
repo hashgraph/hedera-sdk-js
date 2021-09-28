@@ -43,7 +43,14 @@ export default class Duration {
      * @param {string} seconds
      * @returns {Duration}
      */
-    fromString(seconds){
+    fromString(seconds) {
         return new Duration(Long.fromString(seconds));
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return this.seconds.toString();
     }
 }

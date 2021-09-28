@@ -271,33 +271,34 @@ export default class AccountInfo {
         return JSON.stringify(this.toJSON());
     }
 
-    /**
-     * @param {string} accountInfo
-     * @returns {AccountInfo}
-     */
-    fromString(accountInfo){
-        return new AccountInfo(JSON.parse(accountInfo));
-    }
+    // Under Development
+    // /**
+    //  * @param {string} accountInfo
+    //  * @returns {AccountInfo}
+    //  */
+    // fromString(accountInfo) {
+    //     return new AccountInfo(JSON.parse(accountInfo));
+    // }
 
     /**
      * @returns {{}}
      */
     toJSON() {
         return {
-            "accountId":this.accountId.toString(),
-            "contractAccountId":this.contractAccountId,
-            "key":this.key.toString(),
-            "liveHashes":this.liveHashes,
-            "isRecieverSignatureRequired":this.isReceiverSignatureRequired,
-            "proxyAccountID":this.proxyAccountId,
-            "proxyRecieved":this.proxyReceived.toString(),
-            "balance":this.balance.toString(),
-            "deleted":this.isDeleted,
-            "expirationTime":this.expirationTime.toString(),
-            "autoRenewPeriod":this.autoRenewPeriod,
-            "tokenRelationships":this.tokenRelationships,
-            "accountMemo":this.accountMemo,
-            "ownedNfts":this.ownedNfts.toString()
+            accountId: this.accountId.toString(),
+            contractAccountId: this.contractAccountId,
+            key: this.key.toString(),
+            liveHashes: this.liveHashes,
+            isRecieverSignatureRequired: this.isReceiverSignatureRequired,
+            proxyAccountId: this.proxyAccountId,
+            proxyReceived: this.proxyReceived.toString(),
+            balance: this.balance.toString(),
+            deleted: this.isDeleted,
+            expirationTime: this.expirationTime.toString(),
+            autoRenewPeriod: this.autoRenewPeriod.toString(),
+            tokenRelationships: this.tokenRelationships.toString(),
+            accountMemo: this.accountMemo,
+            ownedNfts: this.ownedNfts.toString(),
         };
     }
 }
