@@ -137,7 +137,7 @@ export default class Network extends ManagedNetwork {
             const node = this._nodes[i];
             const accountId = network[node.address.toString()];
 
-            if (accountId != null && accountId !== node.accountId.toString()) {
+            if (accountId == null || accountId !== node.accountId.toString()) {
                 indexes.push(i);
             }
         }

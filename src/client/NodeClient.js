@@ -259,7 +259,7 @@ export default class NodeClient extends Client {
 
     /**
      * @param {string[] | string | NetworkName} mirrorNetwork
-     * @returns {void}
+     * @returns {this}
      */
     setMirrorNetwork(mirrorNetwork) {
         if (typeof mirrorNetwork === "string") {
@@ -279,6 +279,8 @@ export default class NodeClient extends Client {
         } else {
             this._mirrorNetwork.setNetwork(mirrorNetwork);
         }
+
+        return this;
     }
 
     /**
