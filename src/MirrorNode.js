@@ -6,35 +6,32 @@ import ManagedNode from "./ManagedNode.js";
  */
 
 /**
- * @template {MirrorChannel} ChannelT
  * @typedef {object} NewNode
  * @property {string} address
- * @property {(address: string, cert?: string) => ChannelT} channelInitFunction
+ * @property {(address: string, cert?: string) => MirrorChannel} channelInitFunction
  */
 
 /**
- * @template {MirrorChannel} ChannelT
  * @typedef {object} CloneNode
- * @property {MirrorNode<ChannelT>} node
+ * @property {MirrorNode} node
  * @property {ManagedNodeAddress} address
  */
 
 /**
- * @template {MirrorChannel} ChannelT
- * @augments {ManagedNode<ChannelT>}
+ * @augments {ManagedNode<MirrorChannel>}
  */
 export default class MirrorNode extends ManagedNode {
     /**
      * @param {object} props
-     * @param {NewNode<ChannelT>=} [props.newNode]
-     * @param {CloneNode<ChannelT>=} [props.cloneNode]
+     * @param {NewNode=} [props.newNode]
+     * @param {CloneNode=} [props.cloneNode]
      */
     constructor(props = {}) {
         super(props);
     }
 
     /**
-     * @returns {MirrorNode<ChannelT>}
+     * @returns {MirrorNode}
      */
     toInsecure() {
         return new MirrorNode({
@@ -43,7 +40,7 @@ export default class MirrorNode extends ManagedNode {
     }
 
     /**
-     * @returns {MirrorNode<ChannelT>}
+     * @returns {MirrorNode}
      */
     toSecure() {
         return new MirrorNode({

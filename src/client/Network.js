@@ -19,7 +19,7 @@ import ManagedNetwork from "./ManagedNetwork.js";
 
 /**
  * @template {Channel} ChannelT
- * @augments {ManagedNetwork<ChannelT, Node<Channel>, {[key: string]: (string | AccountId)}, [string, (string | AccountId)][], [string, (string | AccountId)]>}
+ * @augments {ManagedNetwork<ChannelT, Node, {[key: string]: (string | AccountId)}, [string, (string | AccountId)][], [string, (string | AccountId)]>}
  */
 export default class Network extends ManagedNetwork {
     /**
@@ -112,7 +112,7 @@ export default class Network extends ManagedNetwork {
     /**
      * @abstract
      * @param {[string, (string | AccountId)]} entry
-     * @returns {Node<Channel>}
+     * @returns {Node}
      */
     _createNodeFromNetworkEntry(entry) {
         const accountId =
@@ -151,7 +151,7 @@ export default class Network extends ManagedNetwork {
 
     /**
      * @abstract
-     * @param {Node<ChannelT>} node
+     * @param {Node} node
      */
     _removeNodeFromNetwork(node) {
         this._network.delete(node.accountId.toString());
@@ -173,7 +173,7 @@ export default class Network extends ManagedNetwork {
     }
 
     /**
-     * @param {Node<ChannelT>} node
+     * @param {Node} node
      */
     _addNodeToNetwork(node) {
         this._network.set(node.accountId.toString(), node);

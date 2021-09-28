@@ -10,29 +10,26 @@ import { PREVIEWNET_CERTS, TESTNET_CERTS, MAINNET_CERTS } from "./NodeCerts.js";
  */
 
 /**
- * @template {Channel} ChannelT
  * @typedef {object} NewNode
  * @property {AccountId} accountId
  * @property {string} address
- * @property {(address: string, cert?: string) => ChannelT} channelInitFunction
+ * @property {(address: string, cert?: string) => Channel} channelInitFunction
  */
 
 /**
- * @template {Channel} ChannelT
  * @typedef {object} CloneNode
- * @property {Node<ChannelT>} node
+ * @property {Node} node
  * @property {ManagedNodeAddress} address
  */
 
 /**
- * @template {Channel} ChannelT
- * @augments {ManagedNode<ChannelT>}
+ * @augments {ManagedNode<Channel>}
  */
 export default class Node extends ManagedNode {
     /**
      * @param {object} props
-     * @param {NewNode<ChannelT>=} [props.newNode]
-     * @param {CloneNode<ChannelT>=} [props.cloneNode]
+     * @param {NewNode=} [props.newNode]
+     * @param {CloneNode=} [props.cloneNode]
      */
     constructor(props = {}) {
         super(props);
@@ -55,7 +52,7 @@ export default class Node extends ManagedNode {
     }
 
     /**
-     * @returns {ManagedNode<ChannelT>}
+     * @returns {ManagedNode<Channel>}
      */
     toInsecure() {
         return /** @type {this} */ (
@@ -66,7 +63,7 @@ export default class Node extends ManagedNode {
     }
 
     /**
-     * @returns {ManagedNode<ChannelT>}
+     * @returns {ManagedNode<Channel>}
      */
     toSecure() {
         return /** @type {this} */ (

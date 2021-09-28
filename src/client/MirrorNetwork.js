@@ -26,7 +26,7 @@ export default class MirrorNetwork {
          * to the node URL.
          *
          * @internal
-         * @type {Map<string, MirrorNode<MirrorChannel>>}
+         * @type {Map<string, MirrorNode>}
          */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this.networkNodes = new Map();
@@ -66,7 +66,7 @@ export default class MirrorNetwork {
     }
 
     /**
-     * @returns {MirrorNode<MirrorChannel>}
+     * @returns {MirrorNode}
      */
     getNextMirrorNode() {
         if (this._channelInitFunction == null) {
@@ -75,9 +75,7 @@ export default class MirrorNetwork {
 
         const node = this.network[this.index];
         this.index = (this.index + 1) % this.network.length;
-        return /** @type {MirrorNode<MirrorChannel>} */ (
-            this.networkNodes.get(node)
-        );
+        return /** @type {MirrorNode} */ (this.networkNodes.get(node));
     }
 
     close() {
