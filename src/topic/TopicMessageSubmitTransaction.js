@@ -164,13 +164,17 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     setMessage(message) {
         this._requireNotFrozen();
         if (message == undefined) {
-            throw new Error("TopicSubmitMessageTransaction.setMessage() given undefined message.");
+            throw new Error(
+                "TopicSubmitMessageTransaction.setMessage() given undefined message."
+            );
         }
         if (typeof message === "string" || message instanceof Uint8Array) {
-            this._message = typeof message === "string" ? utf8.encode(message) : message;
-        }
-        else{
-            throw new Error("TopicSubmitMessageTransaction.setMessage() given non string/Uint8Array message.");
+            this._message =
+                typeof message === "string" ? utf8.encode(message) : message;
+        } else {
+            throw new Error(
+                "TopicSubmitMessageTransaction.setMessage() given non string/Uint8Array message."
+            );
         }
         return this;
     }
