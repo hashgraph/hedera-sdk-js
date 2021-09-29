@@ -12,6 +12,23 @@ import {
  * @typedef {import("../../src/client/Client.js").Client<*, *>} Client
  */
 
+export { Client };
+
+/**
+ * @typedef {number} minVersion
+ */
+export function skipTestDueToNodeJsVersion(minVersion) {
+    if (
+        process == null ||
+        process.versions == null ||
+        process.versions.node == null ||
+        parseInt(process.versions.node.split(".")[0]) < minVersion
+    ) {
+        console.log("skipping test due to unsupported nodejs version");
+        return true;
+    }
+}
+
 export default class BaseIntegrationTestEnv {
     /**
      * @param {object} options

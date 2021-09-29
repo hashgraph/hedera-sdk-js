@@ -4,11 +4,17 @@ import {
     TokenCreateTransaction,
     AccountId,
 } from "../src/exports.js";
-import IntegrationTestEnv, { Client } from "./client/index.js";
+import IntegrationTestEnv, {
+    Client,
+    skipTestDueToNodeJsVersion,
+} from "./client/index.js";
 
 describe("AccountBalanceQuery", function () {
     it("can connect to previewnet with TLS", async function () {
         this.timeout(30000);
+        if (skipTestDueToNodeJsVersion(16)) {
+            return;
+        }
 
         const client = Client.forPreviewnet().setTransportSecurity(true);
 
@@ -25,6 +31,10 @@ describe("AccountBalanceQuery", function () {
 
     it("can connect to testnet with TLS", async function () {
         this.timeout(30000);
+
+        if (skipTestDueToNodeJsVersion(16)) {
+            return;
+        }
 
         const client = Client.forTestnet().setTransportSecurity(true);
 
