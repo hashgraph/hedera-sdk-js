@@ -35,7 +35,7 @@ describe("AccountInfo", function () {
         expect(accountInfo["contractAccountId"]).to.eql(
             "0000000000000000000000000000000000000001"
         );
-        expect(accountInfo["isDeleted"]).to.eql(false);;
+        expect(accountInfo["isDeleted"]).to.eql(false);
         expect(accountInfo["proxyAccountId"]).to.eql(
             "0000000000000000000000000000000000000002"
         );
