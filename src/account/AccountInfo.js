@@ -13,6 +13,24 @@ import Duration from "../Duration.js";
  */
 
 /**
+ * @typedef {object} AccountInfoJson
+ * @property {string} props.accountId
+ * @property {?string} props.contractAccountId
+ * @property {boolean} props.isDeleted
+ * @property {?AccountId} props.proxyAccountId
+ * @property {string} props.proxyReceived
+ * @property {string} props.key
+ * @property {string} props.balance
+ * @property {boolean} props.isReceiverSignatureRequired
+ * @property {string} props.expirationTime
+ * @property {string} props.autoRenewPeriod
+ * @property {LiveHash[]} props.liveHashes
+ * @property {string} props.tokenRelationships
+ * @property {string} props.accountMemo
+ * @property {string} props.ownedNfts
+ */
+
+/**
  * Current information about an account, including the balance.
  */
 export default class AccountInfo {
@@ -276,12 +294,12 @@ export default class AccountInfo {
     //  * @param {string} accountInfo
     //  * @returns {AccountInfo}
     //  */
-    // fromString(accountInfo) {
+    // static fromString(accountInfo) {
     //     return new AccountInfo(JSON.parse(accountInfo));
     // }
 
     /**
-     * @returns {{}}
+     * @returns {AccountInfoJson}
      */
     toJSON() {
         return {
@@ -289,11 +307,11 @@ export default class AccountInfo {
             contractAccountId: this.contractAccountId,
             key: this.key.toString(),
             liveHashes: this.liveHashes,
-            isRecieverSignatureRequired: this.isReceiverSignatureRequired,
+            isReceiverSignatureRequired: this.isReceiverSignatureRequired,
             proxyAccountId: this.proxyAccountId,
             proxyReceived: this.proxyReceived.toString(),
             balance: this.balance.toString(),
-            deleted: this.isDeleted,
+            isDeleted: this.isDeleted,
             expirationTime: this.expirationTime.toString(),
             autoRenewPeriod: this.autoRenewPeriod.toString(),
             tokenRelationships: this.tokenRelationships.toString(),
