@@ -127,7 +127,7 @@ export default class Timestamp {
      * @param {string} timestamp
      * @returns {Timestamp}
      */
-    fromString(timestamp) {
+    static fromString(timestamp) {
         let data = timestamp.split(".", 2);
         if (data[1] != undefined) {
             return new Timestamp(

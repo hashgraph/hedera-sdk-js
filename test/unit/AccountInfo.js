@@ -29,35 +29,30 @@ describe("AccountInfo", function () {
         props.accountMemo = "This is a memo";
         props.ownedNfts = new Long(1);
 
+        const accountInfoJSON = {
+            "accountId":props.accountId.toString(),
+            "contractAccountId":props.contractAccountId,
+            "isDeleted":props.isDeleted,
+            "proxyAccountId":props.proxyAccountId,
+            "proxyReceived":props.proxyReceived.toString(),
+            "key":props.key,
+            "balance":props.balance.toString(),
+            "isReceiverSignatureRequired":props.isReceiverSignatureRequired,
+            "expirationTime":props.expirationTime.toString(),
+            "autoRenewPeriod":props.autoRenewPeriod.toString(),
+            "liveHashes":props.liveHashes,
+            "tokenRelationships":props.tokenRelationships,
+            "accountMemo":props.accountMemo,
+            "ownedNfts":props.ownedNfts.toString(),
+        }
+
         const accountInfo = new AccountInfo(props).toJSON();
 
-        expect(accountInfo["accountId"]).to.eql("1.1.1");
-        expect(accountInfo["contractAccountId"]).to.eql(
-            "0000000000000000000000000000000000000001"
-        );
-        expect(accountInfo["isDeleted"]).to.eql(false);
-        expect(accountInfo["proxyAccountId"]).to.eql(
-            "0000000000000000000000000000000000000002"
-        );
-        expect(accountInfo["proxyReceived"]).to.eql(new Hbar(1).toString());
-        expect(accountInfo["key"]).to.eql(new Key().toString());
-        expect(accountInfo["balance"]).to.eql(new Hbar(1).toString());
-        expect(accountInfo["isReceiverSignatureRequired"]).to.eql(false);
-        expect(accountInfo["expirationTime"]).to.eql(
-            new Timestamp(1, 1).toString()
-        );
-        expect(accountInfo["autoRenewPeriod"]).to.eql(
-            new Duration(1).toString()
-        );
-        expect(accountInfo["liveHashes"]).to.eql([]);
-        expect(accountInfo["tokenRelationships"]).to.eql(
-            new TokenRelationshipMap().toString()
-        );
-        expect(accountInfo["accountMemo"]).to.eql("This is a memo");
-        expect(accountInfo["ownedNfts"]).to.eql(new Long(1).toString());
+        expect(accountInfo).to.eql(accountInfoJSON);
     });
 
     it("should construct string object from AccountInfo JSON", function () {
+        const accountInfoString = '{"accountId":"1.1.1","contractAccountId":"0000000000000000000000000000000000000001","key":{},"liveHashes":[],"isReceiverSignatureRequired":false,"proxyAccountId":"0000000000000000000000000000000000000002","proxyReceived":"1 ℏ","balance":"1 ℏ","isDeleted":false,"expirationTime":"1.1","autoRenewPeriod":"1","tokenRelationships":{"_map":{},"__map":{}},"accountMemo":"This is a memo","ownedNfts":"1"}';
         const props = {};
         props.accountId = new AccountId(1, 1, 1);
         props.contractAccountId = "0000000000000000000000000000000000000001";
@@ -74,10 +69,22 @@ describe("AccountInfo", function () {
         props.accountMemo = "This is a memo";
         props.ownedNfts = new Long(1);
 
-        const accountInfoString = new AccountInfo(props).toString();
+        const accountInfo = new AccountInfo(props).toString();
 
-        expect(accountInfoString).to.eql(
-            '{"accountId":"1.1.1","contractAccountId":"0000000000000000000000000000000000000001","key":"[object Object]","liveHashes":[],"isReceiverSignatureRequired":false,"proxyAccountId":"0000000000000000000000000000000000000002","proxyReceived":"1 ℏ","balance":"1 ℏ","isDeleted":false,"expirationTime":"1.1","autoRenewPeriod":"1","tokenRelationships":"{}","accountMemo":"This is a memo","ownedNfts":"1"}'
-        );
+        expect(accountInfo).to.eql(accountInfoString);
     });
+
+    it("should construct AccountInfo from fromString", function () {
+        const accountInfoString = '{"accountId":"1.1.1","contractAccountId":"0000000000000000000000000000000000000001","key":{},"liveHashes":[],"isReceiverSignatureRequired":false,"proxyAccountId":"0000000000000000000000000000000000000002","proxyReceived":"1 ℏ","balance":"1 ℏ","isDeleted":false,"expirationTime":"1.1","autoRenewPeriod":"1","tokenRelationships":{"_map":{},"__map":{}},"accountMemo":"This is a memo","ownedNfts":"1"}';
+        const accountInfo = AccountInfo.fromString(accountInfoString).toString();
+
+        expect(accountInfo).to.eql(accountInfoString);
+    }); 
+
+    it("should construct AccountInfo from fromJSON", function () {
+        const accountInfoJSON = {"accountId":"1.1.1","contractAccountId":"0000000000000000000000000000000000000001","key":{},"liveHashes":[],"isReceiverSignatureRequired":false,"proxyAccountId":"0000000000000000000000000000000000000002","proxyReceived":"1 ℏ","balance":"1 ℏ","isDeleted":false,"expirationTime":"1.1","autoRenewPeriod":"1","tokenRelationships":{"_map":{},"__map":{}},"accountMemo":"This is a memo","ownedNfts":"1"};
+        const accountInfo = AccountInfo.fromJSON(accountInfoJSON);
+
+        expect(JSON.stringify(accountInfoJSON)).to.eql(accountInfo.toString());
+    }); 
 });

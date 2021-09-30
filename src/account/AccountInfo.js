@@ -19,13 +19,13 @@ import Duration from "../Duration.js";
  * @property {boolean} props.isDeleted
  * @property {?AccountId} props.proxyAccountId
  * @property {string} props.proxyReceived
- * @property {string} props.key
+ * @property {Key} props.key
  * @property {string} props.balance
  * @property {boolean} props.isReceiverSignatureRequired
  * @property {string} props.expirationTime
  * @property {string} props.autoRenewPeriod
  * @property {LiveHash[]} props.liveHashes
- * @property {string} props.tokenRelationships
+ * @property {TokenRelationshipMap} props.tokenRelationships
  * @property {string} props.accountMemo
  * @property {string} props.ownedNfts
  */
@@ -60,7 +60,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.accountId = props.accountId;
+        this.accountId = props.accountId instanceof AccountId ? props.accountId : AccountId.fromString(props.accountId);
 
         /**
          * The Contract Account ID comprising of both the contract instance and the cryptocurrency
@@ -94,7 +94,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.proxyReceived = props.proxyReceived;
+        this.proxyReceived = props.proxyReceived instanceof Hbar ? props.proxyReceived : Hbar.fromString(props.proxyReceived);
 
         /**
          * The key for the account, which must sign in order to transfer out, or to modify the account
@@ -109,7 +109,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.balance = props.balance;
+        this.balance = props.balance instanceof Hbar ? props.balance : Hbar.fromString(props.balance);
 
         /**
          * The threshold amount (in tinybars) for which an account record is created (and this account
@@ -139,7 +139,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.expirationTime = props.expirationTime;
+        this.expirationTime = props.expirationTime instanceof Timestamp ? props.expirationTime : Timestamp.fromString(props.expirationTime);
 
         /**
          * The duration for expiration time will extend every this many seconds. If there are
@@ -148,19 +148,19 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.autoRenewPeriod = props.autoRenewPeriod;
+        this.autoRenewPeriod = props.autoRenewPeriod instanceof Duration ? props.autoRenewPeriod : Duration.fromString(props.autoRenewPeriod);
 
         /** @readonly */
         this.liveHashes = props.liveHashes;
 
         /** @readonly */
-        this.tokenRelationships = props.tokenRelationships;
+        this.tokenRelationships = props.tokenRelationships; //needs fromString
 
         /** @readonly */
         this.accountMemo = props.accountMemo;
 
         /** @readonly */
-        this.ownedNfts = props.ownedNfts;
+        this.ownedNfts = props.ownedNfts instanceof Long ? props.ownedNfts : Long.fromString(props.ownedNfts);
 
         Object.freeze(this);
     }
@@ -289,14 +289,14 @@ export default class AccountInfo {
         return JSON.stringify(this.toJSON());
     }
 
-    // Under Development
-    // /**
-    //  * @param {string} accountInfo
-    //  * @returns {AccountInfo}
-    //  */
-    // static fromString(accountInfo) {
-    //     return new AccountInfo(JSON.parse(accountInfo));
-    // }
+    // TODO:
+    /**
+     * @param {string} accountInfo
+     * @returns {AccountInfo}
+     */
+    static fromString(accountInfo) {
+        return new AccountInfo(JSON.parse(accountInfo));
+    }
 
     /**
      * @returns {AccountInfoJson}
@@ -305,7 +305,7 @@ export default class AccountInfo {
         return {
             accountId: this.accountId.toString(),
             contractAccountId: this.contractAccountId,
-            key: this.key.toString(),
+            key: this.key,
             liveHashes: this.liveHashes,
             isReceiverSignatureRequired: this.isReceiverSignatureRequired,
             proxyAccountId: this.proxyAccountId,
@@ -314,9 +314,17 @@ export default class AccountInfo {
             isDeleted: this.isDeleted,
             expirationTime: this.expirationTime.toString(),
             autoRenewPeriod: this.autoRenewPeriod.toString(),
-            tokenRelationships: this.tokenRelationships.toString(),
+            tokenRelationships: this.tokenRelationships, 
             accountMemo: this.accountMemo,
             ownedNfts: this.ownedNfts.toString(),
         };
+    }
+
+    /**
+     * @param {any} accountInfo
+     * @returns {AccountInfo}
+     */
+    static fromJSON(accountInfo){
+        return new AccountInfo(accountInfo);
     }
 }
