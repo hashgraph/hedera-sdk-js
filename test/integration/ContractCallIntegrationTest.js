@@ -14,7 +14,7 @@ const smartContractBytecode =
 
 describe("ContractCallIntegration", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -100,7 +100,7 @@ describe("ContractCallIntegration", function () {
     });
 
     it("should error when function to call is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -169,7 +169,7 @@ describe("ContractCallIntegration", function () {
     });
 
     it("should error when gas is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -237,7 +237,7 @@ describe("ContractCallIntegration", function () {
     });
 
     it("should error when contract ID is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;

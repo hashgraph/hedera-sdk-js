@@ -13,7 +13,7 @@ import {
 
 describe("ClientIntegration", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new({ nodeAccountIds: 100 });
 
@@ -103,7 +103,7 @@ describe("ClientIntegration", function () {
     });
 
     it("should error when invalid network on entity ID", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -148,7 +148,7 @@ describe("ClientIntegration", function () {
     });
 
     it("can execute with sign on demand", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         env.client.setSignOnDemand(true);
@@ -195,7 +195,7 @@ describe("ClientIntegration", function () {
     });
 
     it("can get bytes without sign on demand", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generate();
@@ -214,7 +214,7 @@ describe("ClientIntegration", function () {
     });
 
     it("can pingAll", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
 

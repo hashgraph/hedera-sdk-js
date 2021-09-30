@@ -12,7 +12,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("ScheduleCreate", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
         const operatorId = env.operatorId;

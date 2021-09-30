@@ -8,7 +8,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileCreate", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -50,7 +50,7 @@ describe("FileCreate", function () {
     });
 
     it("should be executable with empty contents", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -77,7 +77,7 @@ describe("FileCreate", function () {
     });
 
     it("should be executable with no keys", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -93,7 +93,7 @@ describe("FileCreate", function () {
     });
 
     it("should error with too large expiration time", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;

@@ -3,7 +3,7 @@ import { NetworkVersionInfoQuery } from "../../src/exports.js";
 
 describe("NetworkVersionInfo", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
 

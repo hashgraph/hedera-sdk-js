@@ -14,7 +14,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenWipe", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -109,7 +109,7 @@ describe("TokenWipe", function () {
     });
 
     it("should error when token ID is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generate();
@@ -145,7 +145,7 @@ describe("TokenWipe", function () {
     });
 
     it("should error when account ID is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -188,7 +188,7 @@ describe("TokenWipe", function () {
     });
 
     it("should error when amount is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

@@ -50,7 +50,7 @@ describe("AccountBalanceQuery", function () {
     });
 
     it("an account that does not exist should return an error", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -103,7 +103,7 @@ describe("AccountBalanceQuery", function () {
     });
 
     it("should reflect token with no keys", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;

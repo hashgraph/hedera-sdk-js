@@ -11,7 +11,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenMint", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -45,7 +45,7 @@ describe("TokenMint", function () {
     });
 
     it("toBytes/fromBytes", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -83,7 +83,7 @@ describe("TokenMint", function () {
     });
 
     it("should error when token ID is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -107,7 +107,7 @@ describe("TokenMint", function () {
     });
 
     it("should error when amount is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -150,7 +150,7 @@ describe("TokenMint", function () {
     });
 
     it("User cannot mint more than the tokens defined max supply value", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -196,7 +196,7 @@ describe("TokenMint", function () {
     });
 
     it("cannot mint token with invalid metadata", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

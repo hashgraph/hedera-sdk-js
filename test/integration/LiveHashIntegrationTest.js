@@ -13,7 +13,7 @@ import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js
 
 describe("LiveHash", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const _hash = hex.decode(
             "100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002"

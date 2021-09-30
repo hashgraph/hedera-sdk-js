@@ -9,7 +9,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenCreate", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -67,7 +67,7 @@ describe("TokenCreate", function () {
     });
 
     it("should be executable with minimal properties set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
@@ -128,7 +128,7 @@ describe("TokenCreate", function () {
     });
 
     it("should error when token name is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -154,7 +154,7 @@ describe("TokenCreate", function () {
     });
 
     it("should error when token symbol is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -180,7 +180,7 @@ describe("TokenCreate", function () {
     });
 
     it("should error when treasury account ID is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -207,7 +207,7 @@ describe("TokenCreate", function () {
     });
 
     it("should error when admin key does not sign transaction", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

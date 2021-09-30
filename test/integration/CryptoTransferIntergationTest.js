@@ -11,7 +11,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("CryptoTransfer", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -49,7 +49,7 @@ describe("CryptoTransfer", function () {
     });
 
     it("should error when there is invalid account amounts", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -86,7 +86,7 @@ describe("CryptoTransfer", function () {
     });
 
     it("should error when receiver and sender are the same accounts", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generate();

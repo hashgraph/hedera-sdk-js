@@ -18,7 +18,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenTransfer", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -92,7 +92,7 @@ describe("TokenTransfer", function () {
     });
 
     it("should error when no amount is transferred", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -168,7 +168,7 @@ describe("TokenTransfer", function () {
     });
 
     it("should error when no  is transferred", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -244,7 +244,7 @@ describe("TokenTransfer", function () {
     });
 
     it("cannot transfer NFT as if it were FT", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new({ throwaway: true });
 
@@ -329,7 +329,7 @@ describe("TokenTransfer", function () {
     });
 
     it("automatically associates to account", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

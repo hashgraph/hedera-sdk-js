@@ -9,7 +9,7 @@ import { bigContents } from "./contents.js";
 
 describe("FileAppend", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -74,7 +74,7 @@ describe("FileAppend", function () {
     });
 
     it("should be chunk contents", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -139,7 +139,7 @@ describe("FileAppend", function () {
     });
 
     it("should error with no file ID set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -183,7 +183,7 @@ describe("FileAppend", function () {
     });
 
     it("should not error with no contents appended", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;

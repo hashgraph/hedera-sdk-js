@@ -7,7 +7,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileDelete", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -49,7 +49,7 @@ describe("FileDelete", function () {
     });
 
     it("should error when file ID is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
 

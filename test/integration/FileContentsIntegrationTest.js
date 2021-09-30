@@ -8,7 +8,7 @@ import * as utf8 from "../src/encoding/utf8.js";
 
 describe("FileContents", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -45,7 +45,7 @@ describe("FileContents", function () {
     });
 
     it("should be executable with empty contents", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -79,7 +79,7 @@ describe("FileContents", function () {
     });
 
     it("should error when file ID is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
 
