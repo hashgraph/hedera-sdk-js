@@ -154,7 +154,7 @@ export default class AccountInfo {
         this.liveHashes = props.liveHashes;
 
         /** @readonly */
-        this.tokenRelationships = props.tokenRelationships; //needs fromString
+        this.tokenRelationships = props.tokenRelationships;
 
         /** @readonly */
         this.accountMemo = props.accountMemo;
@@ -289,7 +289,6 @@ export default class AccountInfo {
         return JSON.stringify(this.toJSON());
     }
 
-    // TODO:
     /**
      * @param {string} accountInfo
      * @returns {AccountInfo}
