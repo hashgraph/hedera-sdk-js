@@ -165,6 +165,15 @@ export default class WebClient extends Client {
     }
 
     /**
+     * @param {string[] | string | NetworkName} mirrorNetwork
+     * @returns {void}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setMirrorNetwork(mirrorNetwork) {
+        // Do nothing as this is not currently supported
+    }
+
+    /**
      * @override
      * @returns {(address: string) => WebChannel}
      */

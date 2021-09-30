@@ -5,14 +5,14 @@
  * @typedef {import("./address_book/NodeAddress.js").default} NodeAddress
  */
 
-const HOST_AND_PORT = /^(?<address>.*):(?<port>\d+)/;
+const HOST_AND_PORT = /^(?<address>.*)(:(?<port>\d+))?/;
 
 export default class ManagedNodeAddress {
     /**
      * @param {object} props
      * @param {string} [props.address]
      * @param {string} [props.host]
-     * @param {number} [props.port]
+     * @param {number | null} [props.port]
      */
     constructor(props = {}) {
         if (props.address != null) {
@@ -27,15 +27,20 @@ export default class ManagedNodeAddress {
                 hostAndPortResult.groups["address"]
             );
 
-            /** @type {number} */
-            this._port = parseInt(
-                /** @type {string }*/ (hostAndPortResult.groups["port"])
-            );
+            /** @type {number | null} */
+            this._port =
+                hostAndPortResult.groups["port"] != null
+                    ? parseInt(
+                          /** @type {string }*/ (
+                              hostAndPortResult.groups["port"]
+                          )
+                      )
+                    : null;
         } else if (props.host != null && props.port != null) {
             /** @type {string} */
             this._address = props.host;
 
-            /** @type {number} */
+            /** @type {number | null} */
             this._port = props.port;
         } else {
             throw new Error(
@@ -92,7 +97,7 @@ export default class ManagedNodeAddress {
     }
 
     /**
-     * @returns {number}
+     * @returns {number | null}
      */
     get port() {
         return this._port;
@@ -109,6 +114,10 @@ export default class ManagedNodeAddress {
      * @returns {string}
      */
     toString() {
-        return `${this.address}:${this.port}`;
+        if (this.port == null) {
+            return this.address;
+        } else {
+            return `${this.address}:${this.port}`;
+        }
     }
 }

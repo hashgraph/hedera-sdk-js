@@ -1,9 +1,0 @@
-{
-  "version": "v1",
-  "packages": {
-    "@hashgraph/sdk": {
-      "signature": "a50bf5fc00bda7d5aafcb5fdbdd6cd24",
-      "file": true
-    }
-  }
-}
