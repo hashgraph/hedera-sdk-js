@@ -1,6 +1,6 @@
 import TopicMessageSubmitTransaction from "../src/topic/TopicMessageSubmitTransaction.js";
 import * as utf8 from "../src/encoding/utf8.js";
-import { util } from "../src/util.js";
+import * as util from "../src/util.js";
 
 describe("TopicMessageSubmitTransaction", function () {
     it("setMessage should throw error when passed no message", function () {
@@ -10,7 +10,7 @@ describe("TopicMessageSubmitTransaction", function () {
         try {
             topicMessageSubmitTransaction.setMessage();
         } catch (error) {
-            expect(error.message).to.eql(util.requireNonNullError);
+            expect(error.message).to.eql(util.REQUIRE_NON_NULL_ERROR);
         }
     });
 
@@ -24,7 +24,7 @@ describe("TopicMessageSubmitTransaction", function () {
             topicMessageSubmitTransaction.setMessage(message);
         } catch (error) {
             expect(error.message).to.eql(
-                util.requireStringError || util.requireUint8ArrayError
+                util.REQUIRE_STRING_ERROR || util.REQUIRE_UINT8ARRAY_ERROR
             );
         }
     });

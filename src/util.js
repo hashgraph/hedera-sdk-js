@@ -1,46 +1,44 @@
-export class util {
-    /**
-     * Utility Error Messages
-     */
-    static requireNonNullError = "This value cannot be null nor undefined.";
-    static requireStringError = "This value must be a string.";
-    static requireUint8ArrayError = "This value must be a Uint8Array.";
+/**
+ * Utility Error Messages
+ */
+export const REQUIRE_NON_NULL_ERROR = "This value cannot be null | undefined.";
+export const REQUIRE_STRING_ERROR = "This value must be a string.";
+export const REQUIRE_UINT8ARRAY_ERROR = "This value must be a Uint8Array.";
 
-    /**
-     * @param {any | null | undefined} variable
-     * @returns {boolean}
-     */
-    static requireNonNull(variable) {
-        if (variable == null || variable == undefined) {
-            throw new Error(this.requireNonNullError);
-        } else {
-            return true;
-        }
+/**
+ * @param {any | null | undefined} variable
+ * @returns {boolean}
+ */
+export function REQUIRE_NON_NULL(variable) {
+    if (variable == null || variable == undefined) {
+        throw new Error(REQUIRE_NON_NULL_ERROR);
+    } else {
+        return true;
     }
+}
 
-    /**
-     * @param {any | null | undefined} variable
-     * @returns {boolean}
-     */
-    static requireString(variable) {
-        this.requireNonNull(variable);
-        if (typeof variable !== "string") {
-            throw new Error(this.requireStringError);
-        } else {
-            return true;
-        }
+/**
+ * @param {any | null | undefined} variable
+ * @returns {boolean}
+ */
+export function REQUIRE_STRING(variable) {
+    REQUIRE_NON_NULL(variable);
+    if (typeof variable !== "string") {
+        throw new Error(REQUIRE_STRING_ERROR);
+    } else {
+        return true;
     }
+}
 
-    /**
-     * @param {any | null | undefined} variable
-     * @returns {boolean}
-     */
-    static requireUint8Array(variable) {
-        this.requireNonNull(variable);
-        if (!(variable instanceof Uint8Array)) {
-            throw new Error(this.requireUint8ArrayError);
-        } else {
-            return true;
-        }
+/**
+ * @param {any | null | undefined} variable
+ * @returns {boolean}
+ */
+export function REQUIRE_UINT8ARRAY(variable) {
+    REQUIRE_NON_NULL(variable);
+    if (!(variable instanceof Uint8Array)) {
+        throw new Error(REQUIRE_UINT8ARRAY_ERROR);
+    } else {
+        return true;
     }
 }
