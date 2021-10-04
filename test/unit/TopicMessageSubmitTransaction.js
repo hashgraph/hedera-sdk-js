@@ -1,5 +1,6 @@
 import TopicMessageSubmitTransaction from "../src/topic/TopicMessageSubmitTransaction.js";
 import * as utf8 from "../src/encoding/utf8.js";
+import { util } from "../src/util.js";
 
 describe("TopicMessageSubmitTransaction", function () {
     it("setMessage should throw error when passed no message", function () {
@@ -9,13 +10,11 @@ describe("TopicMessageSubmitTransaction", function () {
         try {
             topicMessageSubmitTransaction.setMessage();
         } catch (error) {
-            expect(error.message).to.eql(
-                "TopicSubmitMessageTransaction.setMessage() given undefined message."
-            );
+            expect(error.message).to.eql(util.requireNonNullError);
         }
     });
 
-    it("setMessage should throw error when passed invalid message", function () {
+    it("setMessage should throw error when passed non string/Uint8Array message", function () {
         const message = { message: "this is a message" };
 
         const topicMessageSubmitTransaction =
@@ -25,7 +24,7 @@ describe("TopicMessageSubmitTransaction", function () {
             topicMessageSubmitTransaction.setMessage(message);
         } catch (error) {
             expect(error.message).to.eql(
-                "TopicSubmitMessageTransaction.setMessage() given non string/Uint8Array message."
+                util.requireStringError || util.requireUint8ArrayError
             );
         }
     });
