@@ -165,7 +165,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     setMessage(message) {
         this._requireNotFrozen();
 
-        if (util.REQUIRE_STRING(message) || util.REQUIRE_UINT8ARRAY(message)) {
+        if (util.requireString(message) || util.requireUint8Array(message)) {
             this._message =
                 typeof message === "string" ? utf8.encode(message) : message;
         }
