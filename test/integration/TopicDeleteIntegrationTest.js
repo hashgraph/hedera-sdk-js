@@ -3,7 +3,7 @@ import {
     TopicDeleteTransaction,
     Status,
 } from "../src/exports.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TopicDelete", function () {
     it("should be executable", async function () {

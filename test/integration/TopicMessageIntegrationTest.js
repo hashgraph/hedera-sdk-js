@@ -5,7 +5,7 @@ import {
     TopicMessageQuery,
     Status,
 } from "../src/exports.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import { bigContents } from "./contents.js";
 
 describe("TopicMessage", function () {

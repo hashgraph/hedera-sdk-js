@@ -1,4 +1,4 @@
-import IntegrationTestEnv, { Client } from "./client/index.js";
+import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
 import {
     AccountBalanceQuery,
     AccountId,

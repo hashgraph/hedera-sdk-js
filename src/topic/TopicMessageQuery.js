@@ -454,7 +454,7 @@ export default class TopicMessageQuery {
                 throw new Error("(BUG) listener is unexpectedly not set");
             }
         } catch (error) {
-            this._errorHandler(topicMessage, error);
+            this._errorHandler(topicMessage, /** @type {Error} */ (error));
         }
     }
 }

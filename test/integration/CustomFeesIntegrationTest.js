@@ -16,7 +16,7 @@ import {
     TokenType,
     TokenGrantKycTransaction,
 } from "../src/exports.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("CustomFees", function () {
     it("User can create a fungible token with a fixed custom fee schedule", async function () {

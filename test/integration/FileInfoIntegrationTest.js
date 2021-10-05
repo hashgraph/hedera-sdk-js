@@ -2,7 +2,7 @@ import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
 import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
 import FileInfoQuery from "../src/file/FileInfoQuery.js";
 import Hbar from "../src/Hbar.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileInfo", function () {
     it("should be executable", async function () {

@@ -9,7 +9,7 @@ import {
     Status,
     PrivateKey,
 } from "../src/exports.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenRevokeKyc", function () {
     it("should be executable", async function () {

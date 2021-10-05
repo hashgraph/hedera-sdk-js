@@ -1,5 +1,5 @@
 import { AccountId, TokenId } from "../src/exports.js";
-import IntegrationTestEnv, { Client } from "./client/index.js";
+import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountId", function () {
     it("should generate checksum for account ID", function () {

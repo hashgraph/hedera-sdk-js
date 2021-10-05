@@ -3,7 +3,7 @@ import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
 import FileInfoQuery from "../src/file/FileInfoQuery.js";
 import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileDelete", function () {
     it("should be executable", async function () {

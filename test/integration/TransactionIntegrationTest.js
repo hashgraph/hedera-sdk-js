@@ -7,7 +7,7 @@ import {
     TransferTransaction,
     Hbar,
 } from "../src/index.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import * as hex from "../../src/encoding/hex.js";
 
 describe("TransactionIntegration", function () {

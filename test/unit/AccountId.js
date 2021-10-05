@@ -1,6 +1,6 @@
 import AccountId from "../src/account/AccountId.js";
-import Long from "long";
-import { Client } from "../integration/client/index.js";
+import BigNumber from "bignumber.js";
+import { Client } from "../integration/client/NodeIntegrationTestEnv.js";
 
 describe("AccountId", function () {
     it("should construct from (shard, realm, num)", function () {
@@ -221,7 +221,7 @@ describe("AccountId", function () {
         }
 
         try {
-            new AccountId(Long.fromValue(-1));
+            new AccountId(new BigNumber(-1));
         } catch {
             err = true;
         }
@@ -234,9 +234,9 @@ describe("AccountId", function () {
 
         try {
             new AccountId(
-                Long.fromValue(-1),
-                Long.fromValue(-1),
-                Long.fromValue(-1)
+                new BigNumber(-1),
+                new BigNumber(-1),
+                new BigNumber(-1)
             );
         } catch {
             err = true;

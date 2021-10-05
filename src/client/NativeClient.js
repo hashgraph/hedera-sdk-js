@@ -56,14 +56,17 @@ export default class NativeClient extends Client {
                 switch (props.network) {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
+                        this.setNetworkName("mainnet");
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
+                        this.setNetworkName("testnet");
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
+                        this.setNetworkName("previewnet");
                         break;
 
                     default:

@@ -3,7 +3,7 @@ import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
 import FileContentsQuery from "../src/file/FileContentsQuery.js";
 import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import * as utf8 from "../src/encoding/utf8.js";
 
 describe("FileContents", function () {
