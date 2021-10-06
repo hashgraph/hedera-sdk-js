@@ -6,6 +6,7 @@ import TopicId from "./TopicId.js";
 import * as utf8 from "../encoding/utf8.js";
 import TransactionId from "../transaction/TransactionId.js";
 import Timestamp from "../Timestamp.js";
+import * as util from "../util.js";
 
 /**
  * @namespace proto
@@ -163,9 +164,11 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      */
     setMessage(message) {
         this._requireNotFrozen();
-        this._message =
-            typeof message === "string" ? utf8.encode(message) : message;
 
+        if (util.requireString(message) || util.requireUint8Array(message)) {
+            this._message =
+                typeof message === "string" ? utf8.encode(message) : message;
+        }
         return this;
     }
 
