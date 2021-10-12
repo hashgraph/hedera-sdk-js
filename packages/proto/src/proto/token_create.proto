@@ -191,4 +191,10 @@ message TokenCreateTransactionBody {
      * The custom fees to be assessed during a CryptoTransfer that transfers units of this token
      */
     repeated CustomFee custom_fees = 21;
+
+    /**
+     * The Key which can pause and unpause the Token.
+     * If Empty the token pause status defaults to PauseNotApplicable, otherwise Unpaused.
+     */
+    Key pause_key = 22;
 }

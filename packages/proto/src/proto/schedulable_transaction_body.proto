@@ -65,6 +65,9 @@ import "token_dissociate.proto";
 
 import "schedule_delete.proto";
 
+import "token_pause.proto";
+import "token_unpause.proto";
+
 /**
  * A schedulable transaction. Note that the global/dynamic system property
  * <tt>scheduling.whitelist</tt> controls which transaction types may be scheduled.  In Hedera
@@ -243,5 +246,15 @@ message SchedulableTransactionBody {
      * Marks a schedule in the network's action queue as deleted, preventing it from executing
      */
     ScheduleDeleteTransactionBody scheduleDelete = 34;
+
+    /**
+     * Pauses the Token
+     */
+     TokenPauseTransactionBody token_pause = 35;
+
+     /**
+      * Unpauses the Token
+      */
+     TokenUnpauseTransactionBody token_unpause = 36;
   }
 }
