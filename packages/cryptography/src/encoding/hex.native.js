@@ -309,3 +309,18 @@ export function encodeToByteString(data) {
 
     return string;
 }
+
+/**
+ * @param {string} text
+ * @returns {Uint8Array}
+ */
+export function decodeFromByteString(text) {
+    const buffer = new Uint8Array(text.length);
+    const view = new DataView(buffer.buffer);
+
+    for (let i = 0; i < text.length; i++) {
+        view.setUint8(i, text.charCodeAt(i));
+    }
+    
+    return buffer;
+}

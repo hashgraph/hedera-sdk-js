@@ -1,4 +1,4 @@
-import * as utf8 from "utf8";
+import utf8 from "utf8";
 import * as hex from "./hex.native.js";
 
 /**
@@ -14,5 +14,5 @@ export function decode(data) {
  * @returns {Uint8Array}
  */
 export function encode(text) {
-    return hex.decode(utf8.encode(text));
+    return hex.decodeFromByteString(utf8.encode(text));
 }
