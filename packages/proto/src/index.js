@@ -197,3 +197,4 @@ export const StringValue = proto.StringValue;
 export const BytesValue = proto.BytesValue;
 export const TokenPauseTransactionBody = proto.TokenPauseTransactionBody;
 export const TokenUnpauseTransactionBody = proto.TokenUnpauseTransactionBody;
+export const TokenPauseStatus = proto.TokenPauseStatus;
