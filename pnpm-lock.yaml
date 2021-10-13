@@ -55,7 +55,6 @@ dependencies:
   '@hashgraph/cryptography': 1.0.20
   '@hashgraph/proto': 2.0.0
   '@types/crypto-js': 4.0.2
-  '@types/utf8': 3.0.0
   bignumber.js: 9.0.1
   crypto-js: 4.1.1
   js-base64: 3.7.2
@@ -73,6 +72,7 @@ devDependencies:
   '@types/chai': 4.2.22
   '@types/long': 4.0.1
   '@types/node': 16.10.2
+  '@types/utf8': 3.0.0
   '@typescript-eslint/eslint-plugin': 4.33.0_d753869925cce96d3eb2141eeedafe57
   '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.4.3
   babel-plugin-dynamic-import-node: 2.3.3
@@ -1512,7 +1512,6 @@ packages:
 
   /@types/utf8/3.0.0:
     resolution: {integrity: sha512-QrhvCktdm5wD48axAnjqSzPH9lOj0MiCYfMX6MSqGs2Jv+txwvdxviXiCEj8zSCWIEDU9SIJ7g9pU5KtxRgYSg==}
-    dev: false
 
   /@types/yargs-parser/20.2.1:
     resolution: {integrity: sha512-7tFImggNeNBVMsn0vLrpn1H1uPrUBdnARPTpZoitY37ZrdJREzf7I16tMrlK3hen349gr1NYh8CmZQa7CTG6Aw==}

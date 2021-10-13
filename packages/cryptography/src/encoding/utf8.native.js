@@ -1,12 +1,12 @@
-import "fastestsmallesttextencoderdecoder";
+import * as utf8 from "utf8";
+import * as hex from "./hex.native.js";
 
 /**
  * @param {Uint8Array} data
  * @returns {string}
  */
 export function decode(data) {
-    // eslint-disable-next-line node/no-unsupported-features/node-builtins
-    return new TextDecoder().decode(data);
+    return utf8.decode(hex.encodeToByteString(data));
 }
 
 /**
@@ -14,6 +14,5 @@ export function decode(data) {
  * @returns {Uint8Array}
  */
 export function encode(text) {
-    // eslint-disable-next-line node/no-unsupported-features/node-builtins
-    return new TextEncoder().encode(text);
+    return hex.decode(utf8.encode(text));
 }
