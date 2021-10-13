@@ -6,16 +6,13 @@ import {
     Hbar,
     AccountId,
 } from "../../src/exports.js";
-import Client from "../../src/client/NodeClient.js";
 
 /**
- * @typedef {import("../../exports.js").TokenId} TokenId
+ * @typedef {import("../../src/exports.js").TokenId} TokenId
+ * @typedef {import("../../src/client/Client.js").Client<*, *>} Client
  */
-// import dotenv from "dotenv";
 
-export { Client };
-
-export default class IntegrationTestEnv {
+export default class BaseIntegrationTestEnv {
     /**
      * @param {object} options
      * @property {Client} props.client
@@ -48,50 +45,43 @@ export default class IntegrationTestEnv {
 
     /**
      * @param {object} [options]
+     * @property {Client<*, *>} options.client
+     * @property {{ [key: string]: string}} options.env
      * @property {number} [options.nodeAccountIds]
      * @property {number} [options.balance]
      * @property {boolean} [options.throwaway]
      */
     static async new(options = {}) {
-        // load .env (if available)
-        // dotenv.config();
-
         let client;
 
         if (
-            process.env.HEDERA_NETWORK != null &&
-            process.env.HEDERA_NETWORK == "previewnet"
+            options.env.HEDERA_NETWORK != null &&
+            options.env.HEDERA_NETWORK == "previewnet"
         ) {
-            client = Client.forPreviewnet();
+            client = options.client.forPreviewnet();
         } else if (
-            process.env.HEDERA_NETWORK != null &&
-            process.env.HEDERA_NETWORK == "testnet"
+            options.env.HEDERA_NETWORK != null &&
+            options.env.HEDERA_NETWORK == "testnet"
         ) {
-            client = Client.forTestnet();
+            client = options.client.forTestnet();
         } else if (
-            process.env.HEDERA_NETWORK != null &&
-            process.env.HEDERA_NETWORK == "localhost"
+            options.env.HEDERA_NETWORK != null &&
+            options.env.HEDERA_NETWORK == "localhost"
         ) {
-            client = Client.forNetwork({
+            client = options.client.forNetwork({
                 "127.0.0.1:50213": "0.0.3",
                 "127.0.0.1:50214": "0.0.4",
                 "127.0.0.1:50215": "0.0.5",
             });
-        } else if (process.env.CONFIG_FILE != null) {
-            client = await Client.fromConfigFile(process.env.CONFIG_FILE);
+        } else if (options.env.CONFIG_FILE != null) {
+            client = await options.client.fromConfigFile(options.env.CONFIG_FILE);
         } else {
             throw new Error("Failed to construct client for IntegrationTestEnv");
         }
 
-        if (
-            (process.env.OPERATOR_ID != null || process.env.VITE_OPERATOR_ID != null) &&
-            (process.env.OPERATOR_KEY != null || process.env.VITE_OPERATOR_KEY != null)
-        ) {
-            const operatorId = AccountId.fromString(process.env.OPERATOR_ID || process.env.VITE_OPERATOR_ID);
-
-            const operatorKey = PrivateKey.fromString(
-                process.env.OPERATOR_KEY || process.env.VITE_OPERATOR_KEY
-            );
+        if (options.env.OPERATOR_ID != null && options.env.OPERATOR_KEY != null) {
+            const operatorId = AccountId.fromString(options.env.OPERATOR_ID);
+            const operatorKey = PrivateKey.fromString(options.env.OPERATOR_KEY);
 
             client.setOperator(operatorId, operatorKey);
         }
@@ -129,7 +119,7 @@ export default class IntegrationTestEnv {
 
         client.setOperator(newOperatorId, newOperatorKey);
 
-        return new IntegrationTestEnv({
+        return new BaseIntegrationTestEnv({
             client: client,
             originalOperatorKey: originalOperatorKey,
             originalOperatorId: originalOperatorId,

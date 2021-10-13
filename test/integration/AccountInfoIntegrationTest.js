@@ -8,7 +8,7 @@ import {
     TokenCreateTransaction,
     PrivateKey,
 } from "../src/exports.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountInfo", function () {
     it("should be able to query cost", async function () {

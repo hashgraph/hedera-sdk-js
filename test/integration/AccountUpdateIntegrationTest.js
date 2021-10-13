@@ -6,7 +6,7 @@ import Hbar from "../src/Hbar.js";
 import Timestamp from "../src/Timestamp.js";
 import Status from "../src/Status.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import { PrivateKey } from "../src/index.js";
 import Long from "long";
 

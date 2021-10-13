@@ -5,7 +5,7 @@ import LiveHashAddTransaction from "../src/account/LiveHashAddTransaction.js";
 import LiveHashDeleteTransaction from "../src/account/LiveHashDeleteTransaction.js";
 import LiveHashQuery from "../src/account/LiveHashQuery.js";
 import TransactionReceiptQuery from "../../src/transaction/TransactionReceiptQuery.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import { PrivateKey } from "../src/index.js";
 import Long from "long";
 import * as hex from "../src/encoding/hex.js";

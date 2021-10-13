@@ -1,6 +1,6 @@
 import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
 import FileInfoQuery from "../src/file/FileInfoQuery.js";
 import FileAppendTransaction from "../src/file/FileAppendTransaction.js";

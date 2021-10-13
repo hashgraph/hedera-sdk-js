@@ -4,7 +4,7 @@ import AccountInfoQuery from "../src/account/AccountInfoQuery.js";
 import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
 import TransactionId from "../../src/transaction/TransactionId.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import { PrivateKey } from "../src/index.js";
 
 describe("AccountDelete", function () {

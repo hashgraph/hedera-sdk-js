@@ -14,7 +14,7 @@ import {
     TokenWipeTransaction,
     TokenBurnTransaction,
 } from "../src/exports.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenNft", function () {
     it("should be able to transfer NFT", async function () {

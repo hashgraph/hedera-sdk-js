@@ -8,7 +8,7 @@ import {
     TransactionId,
     KeyList,
 } from "../src/exports.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TransactionReceipt", function () {
     it("should exist in the `ReceiptStatusError`", async function () {

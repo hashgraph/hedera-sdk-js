@@ -1,6 +1,6 @@
 import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import ContractCreateTransaction from "../src/contract/ContractCreateTransaction.js";
 import ContractFunctionParameters from "../src/contract/ContractFunctionParameters.js";
 import { ContractCallQuery } from "../src/exports.js";

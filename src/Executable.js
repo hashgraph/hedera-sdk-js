@@ -346,7 +346,9 @@ export default class Executable {
             try {
                 response = await this._execute(channel, request);
             } catch (err) {
-                const error = GrpcServiceError._fromResponse(err);
+                const error = GrpcServiceError._fromResponse(
+                    /** @type {Error} */ (err)
+                );
 
                 if (
                     error instanceof GrpcServiceError &&

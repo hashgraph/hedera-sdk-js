@@ -1,6 +1,6 @@
 import Hbar from "../src/Hbar.js";
 import Status from "../src/Status.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import { AccountStakersQuery } from "../../src/exports.js";
 
 describe("AccountStakers", function () {

@@ -6,7 +6,7 @@ import {
     Hbar,
     Status,
 } from "../src/exports.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenBurn", function () {
     it("should be executable", async function () {

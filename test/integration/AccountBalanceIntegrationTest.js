@@ -3,7 +3,7 @@ import {
     AccountBalanceQuery,
     TokenCreateTransaction,
 } from "../src/exports.js";
-import IntegrationTestEnv from "./client/index.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountBalanceQuery", function () {
     it("an account that does not exist should return an error", async function () {
