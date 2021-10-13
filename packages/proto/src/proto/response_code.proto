@@ -62,7 +62,8 @@ enum ResponseCodeEnum {
   INVALID_TRANSACTION_START = 5;
 
   /**
-   * valid transaction duration is a positive non zero number that does not exceed 120 seconds
+   * The given transactionValidDuration was either non-positive, or greater than the maximum 
+   * valid duration of 180 secs.
    */
   INVALID_TRANSACTION_DURATION = 6;
 
@@ -1008,4 +1009,19 @@ enum ResponseCodeEnum {
    * Cannot set the number of automatic associations for an account more than the maximum allowed token associations <tt>tokens.maxPerAccount</tt>
    */
   REQUESTED_NUM_AUTOMATIC_ASSOCIATIONS_EXCEEDS_ASSOCIATION_LIMIT = 264;
+
+  /**
+   * Token is paused. This Token cannot be a part of any kind of Transaction until unpaused.
+   */
+   TOKEN_IS_PAUSED = 265;
+
+  /**
+   * Pause key is not set on token
+   */
+   TOKEN_HAS_NO_PAUSE_KEY = 266;
+ 
+  /**
+   * The provided pause key was invalid
+   */
+   INVALID_PAUSE_KEY = 267;
 }

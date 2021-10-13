@@ -182,6 +182,16 @@ message TokenInfo {
      * The custom fees to be assessed during a CryptoTransfer that transfers units of this token
      */
     repeated CustomFee custom_fees = 23;
+
+    /**
+     * The Key which can pause and unpause the Token.
+     */
+    Key pause_key = 24;
+
+    /**
+     * Specifies whether the token is paused or not. PauseNotApplicable is returned if pauseKey is not set.
+     */
+    TokenPauseStatus pause_status = 25;
 }
 
 /**
