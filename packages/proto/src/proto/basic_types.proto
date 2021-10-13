@@ -427,6 +427,26 @@ enum TokenKycStatus {
 }
 
 /**
+ * Possible Pause statuses returned on TokenGetInfoQuery
+ */
+ enum TokenPauseStatus {
+    /**
+     * Indicates that a Token has no pauseKey
+     */
+    PauseNotApplicable = 0;
+
+    /**
+     * Indicates that a Token is Paused
+     */
+    Paused = 1;
+
+    /**
+     * Indicates that a Token is Unpaused
+     */
+    Unpaused = 2;
+}
+
+/**
  * A Key can be a public key from one of the three supported systems (ed25519, RSA-3072,  ECDSA with
  * p384). Or, it can be the ID of a smart contract instance, which is authorized to act as if it had
  * a key. If an account has an ed25519 key associated with it, then the corresponding private key
@@ -981,6 +1001,16 @@ enum HederaFunctionality {
      * Update a token's custom fee schedule, if permissible
      */
     TokenFeeScheduleUpdate = 77;
+
+    /**
+     * Pause the Token
+     */
+     TokenPause = 79;
+
+     /**
+      * Unpause the Token
+      */
+     TokenUnpause = 80;
 }
 
 /**
@@ -1174,7 +1204,9 @@ message NodeAddress {
     bytes memo = 3 [deprecated=true];
 
     /**
-     * The node's hex-encoded X509 RSA public key
+     * The node's X509 RSA public key used to sign stream files (e.g., record stream 
+     * files). Precisely, this field is a string of hexadecimal characters which, 
+     * translated to binary, are the public key's DER encoding.  
      */
     string RSA_PubKey = 4;
 
@@ -1189,7 +1221,10 @@ message NodeAddress {
     AccountID nodeAccountId = 6;
 
     /**
-     * # The hex-encoded SHA-384 hash of the X509 cert used to encrypt gRPC traffic to the node
+     * # Hash of the node's TLS certificate. Precisely, this field is a string of 
+     * hexadecimal characters which, translated to binary, are the SHA-384 hash of 
+     * the UTF-8 NFKD encoding of the node's TLS cert in PEM format. Its value can be 
+     * used to verify the node's certificate it presents during TLS negotiations.
      */
     bytes nodeCertHash = 7;
 
