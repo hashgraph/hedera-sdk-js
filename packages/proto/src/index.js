@@ -195,3 +195,5 @@ export const UInt32Value = proto.UInt32Value;
 export const BoolValue = proto.BoolValue;
 export const StringValue = proto.StringValue;
 export const BytesValue = proto.BytesValue;
+export const TokenPauseTransactionBody = proto.TokenPauseTransactionBody;
+export const TokenUnpauseTransactionBody = proto.TokenUnpauseTransactionBody;

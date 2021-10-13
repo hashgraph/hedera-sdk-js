@@ -376,6 +376,10 @@ import ConsensusTopicQuery = proto.ConsensusTopicQuery;
 import IConsensusTopicResponse = proto.IConsensusTopicResponse;
 import ConsensusTopicResponse = proto.ConsensusTopicResponse;
 import MirrorConsensusService = proto.MirrorConsensusService;
+import ITokenPauseTransactionBody = proto.ITokenPauseTransactionBody;
+import TokenPauseTransactionBody = proto.TokenPauseTransactionBody;
+import ITokenUnpauseTransactionBody = proto.ITokenUnpauseTransactionBody;
+import TokenUnpauseTransactionBody = proto.TokenUnpauseTransactionBody;
 
 export {
     ITokenUnitBalance,
@@ -747,4 +751,8 @@ export {
     IConsensusTopicResponse,
     ConsensusTopicResponse,
     MirrorConsensusService,
+    ITokenPauseTransactionBody,
+    TokenPauseTransactionBody,
+    ITokenUnpauseTransactionBody,
+    TokenUnpauseTransactionBody,
 };
