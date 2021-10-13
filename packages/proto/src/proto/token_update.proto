@@ -135,4 +135,10 @@ message TokenUpdateTransactionBody {
      * currently have this key, transaction will resolve to TOKEN_HAS_NO_FEE_SCHEDULE_KEY
      */
     Key fee_schedule_key = 14;
+
+    /**
+     * The Key which can pause and unpause the Token. If the Token does not currently have a pause key,
+     * transaction will resolve to TOKEN_HAS_NO_PAUSE_KEY
+     */
+    Key pause_key = 15;
 }
