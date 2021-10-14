@@ -27,8 +27,8 @@ export default class NodeChannel extends Channel {
             // https://github.com/grpc/grpc-node/issues/1593
             // https://github.com/grpc/grpc-node/issues/1545
             // https://github.com/grpc/grpc/issues/13163
-            'grpc.keepalive_timeout_ms': 1,
-            'grpc.keepalive_permit_without_calls': 1,
+            "grpc.keepalive_timeout_ms": 1,
+            "grpc.keepalive_permit_without_calls": 1,
         });
     }
 
@@ -62,13 +62,13 @@ export default class NodeChannel extends Channel {
                 }
             }, 10_000);
 
-            this._client.getChannel().getConnectivityState(false)
+            this._client.getChannel().getConnectivityState(false);
 
             this._client.makeUnaryRequest(
                 `/proto.${serviceName}/${method.name}`,
                 (value) => value,
                 (value) => {
-                    received = true
+                    received = true;
                     return value;
                 },
                 Buffer.from(requestData),

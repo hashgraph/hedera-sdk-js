@@ -32,7 +32,7 @@ describe("AccountBalanceQuery", function () {
     it("should error", async function () {
         this.timeout(60000);
 
-        const client = Client.forNetwork({ 
+        const client = Client.forNetwork({
             "35.237.200.180:50211": new AccountId(3),
             "35.242.233.154:50211": new AccountId(10),
         });
@@ -42,7 +42,7 @@ describe("AccountBalanceQuery", function () {
         try {
             await new AccountBalanceQuery()
                 .setMaxAttempts(3)
-                .setNodeAccountIds([ new AccountId(10) ])
+                .setNodeAccountIds([new AccountId(10)])
                 .setAccountId(new AccountId(10))
                 .execute(client);
         } catch (error) {
@@ -55,7 +55,7 @@ describe("AccountBalanceQuery", function () {
 
         await new AccountBalanceQuery()
             .setMaxAttempts(3)
-            .setNodeAccountIds([ new AccountId(10), new AccountId(3) ])
+            .setNodeAccountIds([new AccountId(10), new AccountId(3)])
             .setAccountId(new AccountId(10))
             .execute(client);
     });
