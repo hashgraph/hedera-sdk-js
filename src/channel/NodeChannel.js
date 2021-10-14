@@ -1,5 +1,7 @@
 import { Client, credentials } from "@grpc/grpc-js";
 import Channel from "./Channel.js";
+import GrpcServicesError from "../grpc/GrpcServiceError.js";
+import GrpcStatus from "../grpc/GrpcStatus.js";
 
 /**
  * @property {?proto.CryptoService} _crypto
@@ -21,7 +23,13 @@ export default class NodeChannel extends Channel {
          * @type {Client}
          * @private
          */
-        this._client = new Client(address, credentials.createInsecure());
+        this._client = new Client(address, credentials.createInsecure(), {
+            // https://github.com/grpc/grpc-node/issues/1593
+            // https://github.com/grpc/grpc-node/issues/1545
+            // https://github.com/grpc/grpc/issues/13163
+            'grpc.keepalive_timeout_ms': 1,
+            'grpc.keepalive_permit_without_calls': 1,
+        });
     }
 
     /**
@@ -40,10 +48,29 @@ export default class NodeChannel extends Channel {
      */
     _createUnaryClient(serviceName) {
         return (method, requestData, callback) => {
+            if (this._client.getChannel().getConnectivityState(false) == 4) {
+                callback(new GrpcServicesError(GrpcStatus.Unavailable));
+                return;
+            }
+
+            let received = false;
+
+            setTimeout(() => {
+                if (!received) {
+                    this._client.close();
+                    callback(new GrpcServicesError(GrpcStatus.Unavailable));
+                }
+            }, 10_000);
+
+            this._client.getChannel().getConnectivityState(false)
+
             this._client.makeUnaryRequest(
                 `/proto.${serviceName}/${method.name}`,
                 (value) => value,
-                (value) => value,
+                (value) => {
+                    received = true
+                    return value;
+                },
                 Buffer.from(requestData),
                 callback
             );
