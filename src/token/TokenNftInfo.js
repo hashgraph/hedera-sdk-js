@@ -7,6 +7,7 @@ import * as hex from "../encoding/hex.js";
  * @namespace proto
  * @typedef {import("@hashgraph/proto").TokenFreezeStatus} proto.TokenFreezeStatus
  * @typedef {import("@hashgraph/proto").TokenKycStatus} proto.TokenKycStatus
+ * @typedef {import("@hashgraph/proto").TokenPauseStatus} proto.TokenPauseStatus
  * @typedef {import("@hashgraph/proto").ITokenNftInfo} proto.ITokenNftInfo
  * @typedef {import("@hashgraph/proto").INftID} proto.INftID
  * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
