@@ -32,11 +32,13 @@ export default class TokenInfo {
      * @param {Key | null} props.adminKey;
      * @param {Key | null} props.kycKey;
      * @param {Key | null} props.freezeKey;
+     * @param {Key | null} props.pauseKey;
      * @param {Key | null} props.wipeKey;
      * @param {Key | null} props.supplyKey;
      * @param {Key | null} props.feeScheduleKey;
      * @param {boolean | null} props.defaultFreezeStatus;
      * @param {boolean | null} props.defaultKycStatus;
+     * @param {boolean | null} props.defaultPauseStatus;
      * @param {boolean} props.isDeleted;
      * @param {AccountId | null} props.autoRenewAccountId;
      * @param {Duration | null} props.autoRenewPeriod;
@@ -114,6 +116,13 @@ export default class TokenInfo {
         this.freezeKey = props.freezeKey;
 
         /**
+         * The Key which can pause and unpause the Token.
+         *
+         * @readonly
+         */
+        this.pauseKey = props.pauseKey;
+
+        /**
          * The key which can wipe token balance of an account. If empty, wipe is not possible
          *
          * @readonly
@@ -137,7 +146,8 @@ export default class TokenInfo {
          *      Frozen = true;
          *      Unfrozen = false;
          *
-          @readonly */
+         * @readonly
+         */
         this.defaultFreezeStatus = props.defaultFreezeStatus;
 
         /**
@@ -150,6 +160,17 @@ export default class TokenInfo {
          * @readonly
          */
         this.defaultKycStatus = props.defaultKycStatus;
+
+        /**
+         * The default pause status of Hedera accounts relative to this token.
+         * PauseNotApplicable is returned if pauseKey is not set
+         *      PauseNotApplicable = null;
+         *      Paused = true;
+         *      Unpaused = false;
+         *
+         * @readonly
+         */
+        this.defaultPauseStatus = props.defaultPauseStatus;
 
         /**
          * Specifies whether the token was deleted or not
@@ -208,6 +229,9 @@ export default class TokenInfo {
         const defaultKycStatus = /** @type {proto.TokenKycStatus} */ (
             info.defaultKycStatus
         );
+        const defaultPauseStatus = /**@type {proto.TokenPauseStatus} */ (
+            info.defaultPauseStatus
+        );
 
         const autoRenewAccountId =
             info.autoRenewAccount != null
@@ -233,6 +257,8 @@ export default class TokenInfo {
             kycKey: info.kycKey != null ? keyFromProtobuf(info.kycKey) : null,
             freezeKey:
                 info.freezeKey != null ? keyFromProtobuf(info.freezeKey) : null,
+            pauseKey:
+                info.pauseKey != null ? keyFromProtobuf(info.pauseKey) : null,
             wipeKey:
                 info.wipeKey != null ? keyFromProtobuf(info.wipeKey) : null,
             supplyKey:
@@ -245,6 +271,8 @@ export default class TokenInfo {
                 defaultFreezeStatus === 0 ? null : defaultFreezeStatus == 1,
             defaultKycStatus:
                 defaultKycStatus === 0 ? null : defaultKycStatus == 1,
+            defaultPauseStatus:
+                defaultPauseStatus === 0 ? null : defaultPauseStatus == 1,
             isDeleted: /** @type {boolean} */ (info.deleted),
             autoRenewAccountId: !(
                 autoRenewAccountId.shard.toInt() == 0 &&
@@ -309,6 +337,8 @@ export default class TokenInfo {
             kycKey: this.kycKey != null ? keyToProtobuf(this.kycKey) : null,
             freezeKey:
                 this.freezeKey != null ? keyToProtobuf(this.freezeKey) : null,
+            pauseKey:
+                this.pauseKey != null ? keyToProtobuf(this.pauseKey) : null,
             wipeKey: this.wipeKey != null ? keyToProtobuf(this.wipeKey) : null,
             supplyKey:
                 this.supplyKey != null ? keyToProtobuf(this.supplyKey) : null,
@@ -326,6 +356,12 @@ export default class TokenInfo {
                 this.defaultKycStatus == null
                     ? 0
                     : this.defaultKycStatus
+                    ? 1
+                    : 2,
+            defaultPauseStatus:
+                this.defaultPauseStatus == null
+                    ? 0
+                    : this.defaultPauseStatus
                     ? 1
                     : 2,
             deleted: this.isDeleted,
