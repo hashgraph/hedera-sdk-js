@@ -141,6 +141,10 @@ export default class RequestType {
                 return "SCHEDULE_SIGN";
             case RequestType.ScheduleGetInfo:
                 return "SCHEDULE_GET_INFO";
+            case RequestType.TokenPause:
+                return "TOKEN_PAUSE";
+            case RequestType.TokenUnpause:
+                return "TOKEN_UNPAUSE";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -273,6 +277,10 @@ export default class RequestType {
                 return RequestType.ScheduleSign;
             case 73:
                 return RequestType.ScheduleGetInfo;
+            case 79:
+                return RequestType.TokenPause;
+            case 80:
+                return RequestType.TokenUnpause;
         }
 
         throw new Error(
@@ -587,3 +595,13 @@ RequestType.ScheduleSign = new RequestType(72);
  * Get Scheduled Transaction Information
  */
 RequestType.ScheduleGetInfo = new RequestType(73);
+
+/**
+ * Pause the Token
+ */
+RequestType.TokenPause = new RequestType(79);
+
+/**
+ * Unpause the Token
+ */
+RequestType.TokenUnpause = new RequestType(80);
