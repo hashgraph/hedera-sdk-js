@@ -48,6 +48,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @param {Key} [props.adminKey]
      * @param {Key} [props.kycKey]
      * @param {Key} [props.freezeKey]
+     * @param {Key} [props.pauseKey]
      * @param {Key} [props.wipeKey]
      * @param {Key} [props.supplyKey]
      * @param {Key} [props.feeScheduleKey]
@@ -111,6 +112,12 @@ export default class TokenCreateTransaction extends Transaction {
          * @type {?Key}
          */
         this._freezeKey = null;
+
+        /**
+         * @private
+         * @type {?Key}
+         */
+        this._pauseKey = null;
 
         /**
          * @private
@@ -218,6 +225,10 @@ export default class TokenCreateTransaction extends Transaction {
             this.setFreezeKey(props.freezeKey);
         }
 
+        if (props.pauseKey != null) {
+            this.setPauseKey(props.pauseKey);
+        }
+
         if (props.wipeKey != null) {
             this.setWipeKey(props.wipeKey);
         }
@@ -312,6 +323,10 @@ export default class TokenCreateTransaction extends Transaction {
                 freezeKey:
                     create.freezeKey != null
                         ? keyFromProtobuf(create.freezeKey)
+                        : undefined,
+                pauseKey:
+                    create.pauseKey != null
+                        ? keyFromProtobuf(create.pauseKey)
                         : undefined,
                 wipeKey:
                     create.wipeKey != null
@@ -515,6 +530,24 @@ export default class TokenCreateTransaction extends Transaction {
     setFreezeKey(key) {
         this._requireNotFrozen();
         this._freezeKey = key;
+
+        return this;
+    }
+
+    /**
+     * @returns {?Key}
+     */
+    get pauseKey() {
+        return this._pauseKey;
+    }
+
+    /**
+     * @param {Key} key
+     * @returns {this}
+     */
+    setPauseKey(key){
+        this._requireNotFrozen();
+        this._pauseKey = key;
 
         return this;
     }
@@ -807,6 +840,8 @@ export default class TokenCreateTransaction extends Transaction {
             kycKey: this._kycKey != null ? keyToProtobuf(this._kycKey) : null,
             freezeKey:
                 this._freezeKey != null ? keyToProtobuf(this._freezeKey) : null,
+            pauseKey:
+                this._pauseKey != null ? keyToProtobuf(this._pauseKey) : null,
             wipeKey:
                 this._wipeKey != null ? keyToProtobuf(this._wipeKey) : null,
             supplyKey:

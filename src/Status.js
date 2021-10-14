@@ -467,6 +467,12 @@ export default class Status {
                 return "EXISTING_AUTOMATIC_ASSOCIATIONS_EXCEED_GIVEN_LIMIT";
             case Status.RequestedNumAutomaticAssociationsExceedsAssociationLimit:
                 return "REQUESTED_NUM_AUTOMATIC_ASSOCIATIONS_EXCEEDS_ASSOCIATION_LIMIT";
+            case Status.TokenIsPaused:
+                return "TOKEN_IS_PAUSED";
+            case Status.TokenHasNoPauseKey:
+                return "TOKEN_HAS_NO_PAUSE_KEY";
+            case Status.InvalidPauseKey:
+                return "INVALID_PAUSE_KEY";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -925,6 +931,12 @@ export default class Status {
                 return Status.ExistingAutomaticAssociationsExceedGivenLimit;
             case 264:
                 return Status.RequestedNumAutomaticAssociationsExceedsAssociationLimit;
+            case 265:
+                return Status.TokenIsPaused;
+            case 266:
+                return Status.TokenHasNoPauseKey;
+            case 267:
+                return Status.InvalidPauseKey;
         }
 
         throw new Error(
@@ -2089,3 +2101,18 @@ Status.ExistingAutomaticAssociationsExceedGivenLimit = new Status(263);
 Status.RequestedNumAutomaticAssociationsExceedsAssociationLimit = new Status(
     264
 );
+
+/**
+ * Token is paused. This Token cannot be a part of any kind of Transaction until unpaused.
+ */
+Status.TokenIsPaused = new Status(265);
+
+/**
+ * Pause key is not set on token
+ */
+Status.TokenHasNoPauseKey = new Status(266);
+
+/**
+ * The provided pause key was invalid
+ */
+Status.InvalidPauseKey = new Status(267);
