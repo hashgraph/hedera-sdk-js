@@ -154,8 +154,8 @@ export default class TokenInfo {
          * The default KYC status (KycNotApplicable or Revoked) of Hedera accounts relative to this token. KycNotApplicable
          * is returned if KYC key is not set, otherwise Revoked
          *      KycNotApplicable = null;
-         *      Paused = true;
-         *      Unpaused = false;
+         *      Granted = true;
+         *      Revoked = false;
          *
          * @readonly
          */
@@ -165,8 +165,8 @@ export default class TokenInfo {
          * The default pause status of Hedera accounts relative to this token.
          * PauseNotApplicable is returned if pauseKey is not set
          *      PauseNotApplicable = null;
-         *      Granted = true;
-         *      Revoked = false;
+         *      Paused = true;
+         *      Unpaused = false;
          *
          * @readonly
          */
