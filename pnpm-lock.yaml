@@ -8,7 +8,7 @@ specifiers:
   '@babel/plugin-transform-modules-commonjs': ^7.15.4
   '@babel/register': ^7.15.3
   '@grpc/grpc-js': ^1.3.4
-  '@hashgraph/cryptography': ^1.0.20
+  '@hashgraph/cryptography': ^1.0.21
   '@hashgraph/proto': 2.0.0
   '@types/chai': ^4.2.22
   '@types/crypto-js': ^4.0.2
@@ -52,7 +52,7 @@ specifiers:
 
 dependencies:
   '@grpc/grpc-js': 1.3.7
-  '@hashgraph/cryptography': 1.0.20
+  '@hashgraph/cryptography': 1.0.21
   '@hashgraph/proto': 2.0.0
   bignumber.js: 9.0.1
   crypto-js: 4.1.1
@@ -437,19 +437,17 @@ packages:
       '@types/node': 16.10.2
     dev: false
 
-  /@hashgraph/cryptography/1.0.20:
-    resolution: {integrity: sha512-rdKKnENJfs0gsqAtY+7nzpG9TQshtnf+F3/PdH8z+qdy4mo4RSULBMc55FkWWNZLnoA4/34wEW8kohjFEzsLRA==}
+  /@hashgraph/cryptography/1.0.21:
+    resolution: {integrity: sha512-X48u9VJ/MssHxUEivc5HRhTBKRtjYFCLCYLWlm/vtrwXf2g/CEyOWF7iSxgoSzhGqDxYWjDnBpWcqsTOlm/MgQ==}
     engines: {node: '>=10.0.0'}
     dependencies:
-      '@types/crypto-js': 4.0.2
-      '@types/utf8': 3.0.0
       bignumber.js: 9.0.1
       crypto-js: 4.1.1
       expo-crypto: 9.2.0
       expo-random: 11.2.0
-      fastestsmallesttextencoderdecoder: 1.0.22
       js-base64: 3.7.2
       tweetnacl: 1.0.3
+      utf8: 3.0.0
     dev: false
 
   /@hashgraph/proto/2.0.0:
@@ -1449,6 +1447,7 @@ packages:
 
   /@types/crypto-js/4.0.2:
     resolution: {integrity: sha512-sCVniU+h3GcGqxOmng11BRvf9TfN9yIs8KKjB8C8d75W69cpTfZG80gau9yTx5SxF3gvHGbJhdESzzvnjtf3Og==}
+    dev: true
 
   /@types/fs-extra/9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
@@ -1511,6 +1510,7 @@ packages:
 
   /@types/utf8/3.0.0:
     resolution: {integrity: sha512-QrhvCktdm5wD48axAnjqSzPH9lOj0MiCYfMX6MSqGs2Jv+txwvdxviXiCEj8zSCWIEDU9SIJ7g9pU5KtxRgYSg==}
+    dev: true
 
   /@types/yargs-parser/20.2.1:
     resolution: {integrity: sha512-7tFImggNeNBVMsn0vLrpn1H1uPrUBdnARPTpZoitY37ZrdJREzf7I16tMrlK3hen349gr1NYh8CmZQa7CTG6Aw==}
@@ -3406,10 +3406,6 @@ packages:
   /fast-levenshtein/2.0.6:
     resolution: {integrity: sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=}
     dev: true
-
-  /fastestsmallesttextencoderdecoder/1.0.22:
-    resolution: {integrity: sha512-Pb8d48e+oIuY4MaM64Cd7OW1gt4nxCHs7/ddPPZ/Ic3sg8yVGM7O9wDvZ7us6ScaUupzM+pfBolwtYhN1IxBIw==}
-    dev: false
 
   /fastq/1.13.0:
     resolution: {integrity: sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==}
