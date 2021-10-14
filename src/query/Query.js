@@ -403,6 +403,8 @@ export default class Query extends Executable {
             // wrapping around to ensure we are cycling
             super._nextNodeIndex =
                 (this._nextNodeIndex + 1) % this._paymentTransactions.length;
+        } else {
+            super._advanceRequest();
         }
     }
 }
