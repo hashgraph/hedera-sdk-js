@@ -38,7 +38,7 @@ export default class TokenInfo {
      * @param {Key | null} props.feeScheduleKey;
      * @param {boolean | null} props.defaultFreezeStatus;
      * @param {boolean | null} props.defaultKycStatus;
-     * @param {boolean | null} props.defaultPauseStatus;
+     * @param {boolean | null} props.pauseStatus;
      * @param {boolean} props.isDeleted;
      * @param {AccountId | null} props.autoRenewAccountId;
      * @param {Duration | null} props.autoRenewPeriod;
@@ -170,7 +170,7 @@ export default class TokenInfo {
          *
          * @readonly
          */
-        this.defaultPauseStatus = props.defaultPauseStatus;
+        this.pauseStatus = props.pauseStatus;
 
         /**
          * Specifies whether the token was deleted or not
@@ -229,8 +229,8 @@ export default class TokenInfo {
         const defaultKycStatus = /** @type {proto.TokenKycStatus} */ (
             info.defaultKycStatus
         );
-        const defaultPauseStatus = /**@type {proto.TokenPauseStatus} */ (
-            info.defaultPauseStatus
+        const pauseStatus = /**@type {proto.TokenPauseStatus} */ (
+            info.pauseStatus
         );
 
         const autoRenewAccountId =
@@ -271,8 +271,7 @@ export default class TokenInfo {
                 defaultFreezeStatus === 0 ? null : defaultFreezeStatus == 1,
             defaultKycStatus:
                 defaultKycStatus === 0 ? null : defaultKycStatus == 1,
-            defaultPauseStatus:
-                defaultPauseStatus === 0 ? null : defaultPauseStatus == 1,
+            pauseStatus: pauseStatus === 0 ? null : pauseStatus == 1,
             isDeleted: /** @type {boolean} */ (info.deleted),
             autoRenewAccountId: !(
                 autoRenewAccountId.shard.toInt() == 0 &&
@@ -358,12 +357,8 @@ export default class TokenInfo {
                     : this.defaultKycStatus
                     ? 1
                     : 2,
-            defaultPauseStatus:
-                this.defaultPauseStatus == null
-                    ? 0
-                    : this.defaultPauseStatus
-                    ? 1
-                    : 2,
+            pauseStatus:
+                this.pauseStatus == null ? 0 : this.pauseStatus ? 1 : 2,
             deleted: this.isDeleted,
             autoRenewAccount:
                 this.autoRenewAccountId != null

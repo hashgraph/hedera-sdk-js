@@ -10,6 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * gRPC client not timing out on unresponsive connections
 
+## v2.2.0-beta.1
+
+### Added
+
+ * Support for HIP-24 (token pausing)
+    * `TokenInfo.pauseKey`
+    * `TokenInfo.pauseStatus`
+    * `TokenCreateTransaction.pauseKey`
+    * `TokenUpdateTransaction.pauseKey`
+    * `TokenPauseTransaction`
+    * `TokenUnpauseTransaction`
+
 ## v2.1.1
 
 ### Fixed

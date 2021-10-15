@@ -545,7 +545,7 @@ export default class TokenCreateTransaction extends Transaction {
      * @param {Key} key
      * @returns {this}
      */
-    setPauseKey(key){
+    setPauseKey(key) {
         this._requireNotFrozen();
         this._pauseKey = key;
 
