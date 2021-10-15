@@ -10,21 +10,24 @@ describe("TopicMessageSubmitTransaction", function () {
         try {
             topicMessageSubmitTransaction.setMessage();
         } catch (error) {
-            expect(error.message).to.eql(util.REQUIRE_STRING_OR_UINT8ARRAY_ERROR);
+            expect(error.message).to.eql(
+                util.REQUIRE_STRING_OR_UINT8ARRAY_ERROR
+            );
         }
     });
 
     it("setMessage should throw error when passed non string/Uint8Array message", function () {
         const message = { message: "this is an invalid message" };
-        
+
         const topicMessageSubmitTransaction =
             new TopicMessageSubmitTransaction();
 
         try {
             topicMessageSubmitTransaction.setMessage(message);
-        }
-        catch (error){
-            expect(error.message).to.eql(util.REQUIRE_STRING_OR_UINT8ARRAY_ERROR);
+        } catch (error) {
+            expect(error.message).to.eql(
+                util.REQUIRE_STRING_OR_UINT8ARRAY_ERROR
+            );
         }
     });
 
