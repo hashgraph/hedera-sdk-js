@@ -67,6 +67,7 @@ export { default as TokenDeleteTransaction } from "./token/TokenDeleteTransactio
 export { default as TokenDissociateTransaction } from "./token/TokenDissociateTransaction.js";
 export { default as TokenFeeScheduleUpdateTransaction } from "./token/TokenFeeScheduleUpdateTransaction.js";
 export { default as TokenFreezeTransaction } from "./token/TokenFreezeTransaction.js";
+export { default as TokenPauseTransaction } from "./token/TokenPauseTransaction.js";
 export { default as TokenGrantKycTransaction } from "./token/TokenGrantKycTransaction.js";
 export { default as TokenId } from "./token/TokenId.js";
 export { default as TokenInfo } from "./token/TokenInfo.js";
@@ -78,6 +79,7 @@ export { default as TokenRevokeKycTransaction } from "./token/TokenRevokeKycTran
 export { default as TokenSupplyType } from "./token/TokenSupplyType.js";
 export { default as TokenType } from "./token/TokenType.js";
 export { default as TokenUnfreezeTransaction } from "./token/TokenUnfreezeTransaction.js";
+export { default as TokenUnpauseTransaction } from "./token/TokenUnpauseTransaction.js";
 export { default as TokenUpdateTransaction } from "./token/TokenUpdateTransaction.js";
 export { default as TokenWipeTransaction } from "./token/TokenWipeTransaction.js";
 export { default as TopicCreateTransaction } from "./topic/TopicCreateTransaction.js";

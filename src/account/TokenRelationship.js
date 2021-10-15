@@ -6,7 +6,6 @@ import TokenId from "../token/TokenId.js";
  * @typedef {import("@hashgraph/proto").ITokenRelationship} proto.ITokenRelationship
  * @typedef {import("@hashgraph/proto").TokenKycStatus} proto.TokenKycStatus
  * @typedef {import("@hashgraph/proto").TokenFreezeStatus} proto.TokenFreezeStatus
- * @typedef {import("@hashgraph/proto").TokenPauseStatus} proto.TokenPauseStatus
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  */
 
@@ -21,7 +20,6 @@ export default class TokenRelationship {
      * @param {Long} props.balance
      * @param {boolean | null} props.isKycGranted
      * @param {boolean | null} props.isFrozen
-     * @param {boolean | null} props.isPaused
      * @param {boolean | null} props.automaticAssociation
      */
     constructor(props) {
@@ -63,14 +61,6 @@ export default class TokenRelationship {
         this.isFrozen = props.isFrozen;
 
         /**
-         * The Pause status of the account (PauseNotApplicable, Paused or Unpaused). If the token
-         * does not have Pause key, PauseNotApplicable is returned
-         *
-         * @readonly
-         */
-        this.isPaused = props.isPaused;
-
-        /**
          * Specifies if the relationship is created implicitly. False : explicitly associated, True :
          * implicitly associated.
          *
@@ -97,10 +87,6 @@ export default class TokenRelationship {
             relationship.freezeStatus == null || relationship.freezeStatus === 0
                 ? null
                 : relationship.freezeStatus === 1;
-        const isPaused =
-            relationship.pauseStatus == null || relationship.pauseStatus === 0
-                ? null
-                : relationship.pauseStatus === 1;
 
         return new TokenRelationship({
             tokenId,
@@ -113,7 +99,6 @@ export default class TokenRelationship {
                     : Long.ZERO,
             isKycGranted,
             isFrozen,
-            isPaused,
             automaticAssociation:
                 relationship.automaticAssociation != null
                     ? relationship.automaticAssociation
@@ -132,7 +117,6 @@ export default class TokenRelationship {
             kycStatus:
                 this.isKycGranted == null ? 0 : this.isKycGranted ? 1 : 2,
             freezeStatus: this.isFrozen == null ? 0 : this.isFrozen ? 1 : 2,
-            pauseStatus: this.isPaused == null ? 0 : this.isPaused ? 1 : 2,
             automaticAssociation: this.automaticAssociation,
         };
     }
