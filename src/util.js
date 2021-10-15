@@ -61,7 +61,9 @@ export function requireString(variable) {
     if (!isString(requireNonNull(variable))) {
         throw new Error(REQUIRE_STRING_ERROR);
     } else {
-        return String(variable);
+        /** @type {string} */ (variable);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return variable;
     }
 }
 
@@ -75,7 +77,9 @@ export function requireUint8Array(variable) {
     if (!isUint8Array(requireNonNull(variable))) {
         throw new Error(REQUIRE_UINT8ARRAY_ERROR);
     } else {
-        return new Uint8Array(variable);
+        /** @type {Uint8Array} */ (variable);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return variable;
     }
 }
 
@@ -101,11 +105,9 @@ export function requireNonNull(variable) {
  */
 export function requireStringOrUint8Array(variable) {
     if (isStringOrUint8Array(variable)) {
-        try {
-            return requireString(variable);
-        } catch {
-            return requireUint8Array(variable);
-        }
+        /** @type {string | Uint8Array} */ (variable);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return variable;
     } else {
         throw new Error(REQUIRE_STRING_OR_UINT8ARRAY_ERROR);
     }
