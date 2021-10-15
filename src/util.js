@@ -55,13 +55,13 @@ export function isStringOrUint8Array(variable) {
  * Takes any param and throws custom error if non string.
  *
  * @param {any | null | undefined} variable
- * @returns {boolean}
+ * @returns {string}
  */
 export function requireString(variable) {
     if (!isString(requireNonNull(variable))) {
         throw new Error(REQUIRE_STRING_ERROR);
     } else {
-        return variable;
+        return String(variable);
     }
 }
 
@@ -69,21 +69,21 @@ export function requireString(variable) {
  * Takes any param and throws custom error if non Uint8Array.
  *
  * @param {any | null | undefined} variable
- * @returns {boolean}
+ * @returns {Uint8Array}
  */
 export function requireUint8Array(variable) {
     if (!isUint8Array(requireNonNull(variable))) {
         throw new Error(REQUIRE_UINT8ARRAY_ERROR);
     } else {
-        return variable;
+        return new Uint8Array(variable);
     }
 }
 
 /**
  * Takes any param and throws custom error if null or undefined.
  *
- * @param {any | null | undefined} variable
- * @returns {any}
+ * @param {object} variable
+ * @returns {object}
  */
 export function requireNonNull(variable) {
     if (!isNonNull(variable)) {
@@ -101,7 +101,11 @@ export function requireNonNull(variable) {
  */
 export function requireStringOrUint8Array(variable) {
     if (isString(variable) || isUint8Array(variable)) {
-        return variable;
+        try {
+            return requireString(variable);
+        } catch {
+            return requireUint8Array(variable);
+        }
     } else {
         throw new Error(REQUIRE_STRING_OR_UINT8ARRAY_ERROR);
     }
