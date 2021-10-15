@@ -100,7 +100,7 @@ export function requireNonNull(variable) {
  * @returns {string | Uint8Array}
  */
 export function requireStringOrUint8Array(variable) {
-    if (isString(variable) || isUint8Array(variable)) {
+    if (isStringOrUint8Array(variable)) {
         try {
             return requireString(variable);
         } catch {
