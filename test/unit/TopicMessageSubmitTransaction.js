@@ -10,26 +10,25 @@ describe("TopicMessageSubmitTransaction", function () {
         try {
             topicMessageSubmitTransaction.setMessage();
         } catch (error) {
-            expect(error.message).to.eql(util.REQUIRE_NON_NULL_ERROR);
+            expect(error.message).to.eql(util.REQUIRE_STRING_OR_UINT8ARRAY_ERROR);
         }
     });
 
     it("setMessage should throw error when passed non string/Uint8Array message", function () {
-        const message = { message: "this is a message" };
-
+        const message = { message: "this is an invalid message" };
+        
         const topicMessageSubmitTransaction =
             new TopicMessageSubmitTransaction();
 
         try {
             topicMessageSubmitTransaction.setMessage(message);
-        } catch (error) {
-            expect(error.message).to.eql(
-                util.REQUIRE_STRING_ERROR || util.REQUIRE_UINT8ARRAY_ERROR
-            );
+        }
+        catch (error){
+            expect(error.message).to.eql(util.REQUIRE_STRING_OR_UINT8ARRAY_ERROR);
         }
     });
 
-    it("setMessage should not throw error when passed valid message", function () {
+    it("setMessage should not throw error when passed valid string message", function () {
         const message = "this is a message";
 
         const topicMessageSubmitTransaction =
@@ -40,5 +39,16 @@ describe("TopicMessageSubmitTransaction", function () {
         expect(utf8.decode(topicMessageSubmitTransaction.message)).to.eql(
             message
         );
+    });
+
+    it("setMessage should not throw error when passed valid Uint8Array message", function () {
+        const message = utf8.encode("this is a message");
+
+        const topicMessageSubmitTransaction =
+            new TopicMessageSubmitTransaction();
+
+        topicMessageSubmitTransaction.setMessage(message);
+
+        expect(topicMessageSubmitTransaction.message).to.eql(message);
     });
 });
