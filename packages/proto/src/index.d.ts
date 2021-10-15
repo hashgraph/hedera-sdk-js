@@ -381,6 +381,7 @@ import TokenPauseTransactionBody = proto.TokenPauseTransactionBody;
 import ITokenUnpauseTransactionBody = proto.ITokenUnpauseTransactionBody;
 import TokenUnpauseTransactionBody = proto.TokenUnpauseTransactionBody;
 import TokenPauseStatus = proto.TokenPauseStatus;
+import FreezeType = proto.FreezeType;
 
 export {
     ITokenUnitBalance,
@@ -757,4 +758,5 @@ export {
     ITokenUnpauseTransactionBody,
     TokenUnpauseTransactionBody,
     TokenPauseStatus,
+    FreezeType,
 };
