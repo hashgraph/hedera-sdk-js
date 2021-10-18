@@ -321,20 +321,18 @@
   dependencies:
     "@types/node" ">=12.12.47"
 
-"@hashgraph/cryptography@^1.0.20":
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.20.tgz#da5ffb826af88a853ec3367734264ef1cd977f11"
-  integrity sha512-rdKKnENJfs0gsqAtY+7nzpG9TQshtnf+F3/PdH8z+qdy4mo4RSULBMc55FkWWNZLnoA4/34wEW8kohjFEzsLRA==
+"@hashgraph/cryptography@^1.0.21":
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.21.tgz#9cce4c25c18df7fcace8b0a39d1c3ea12529fb3e"
+  integrity sha512-X48u9VJ/MssHxUEivc5HRhTBKRtjYFCLCYLWlm/vtrwXf2g/CEyOWF7iSxgoSzhGqDxYWjDnBpWcqsTOlm/MgQ==
   dependencies:
-    "@types/crypto-js" "^4.0.2"
-    "@types/utf8" "^3.0.0"
     bignumber.js "^9.0.1"
     crypto-js "^4.0.0"
     expo-crypto "^9.2.0"
     expo-random "^11.2.0"
-    fastestsmallesttextencoderdecoder "^1.0.22"
     js-base64 "^3.6.1"
     tweetnacl "^1.0.3"
+    utf8 "^3.0.0"
 
 "@hashgraph/proto@2.0.0":
   version "2.0.0"
@@ -3285,11 +3283,6 @@ fast-levenshtein@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
-
-fastestsmallesttextencoderdecoder@^1.0.22:
-  version "1.0.22"
-  resolved "https://registry.yarnpkg.com/fastestsmallesttextencoderdecoder/-/fastestsmallesttextencoderdecoder-1.0.22.tgz#59b47e7b965f45258629cc6c127bf783281c5e93"
-  integrity sha512-Pb8d48e+oIuY4MaM64Cd7OW1gt4nxCHs7/ddPPZ/Ic3sg8yVGM7O9wDvZ7us6ScaUupzM+pfBolwtYhN1IxBIw==
 
 fastq@^1.6.0:
   version "1.8.0"
