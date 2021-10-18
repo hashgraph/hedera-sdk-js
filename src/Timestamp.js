@@ -129,13 +129,12 @@ export default class Timestamp {
      */
     static fromString(timestamp) {
         let data = timestamp.split(".", 2);
-        if (data[1] != undefined) {
-            return new Timestamp(
-                Long.fromString(data[0]),
-                Long.fromString(data[1])
-            );
-        } else {
+        if (data.length != 2) {
             throw new Error("Timestamp string misformatted.");
         }
+        return new Timestamp(
+            Long.fromString(data[0]),
+            Long.fromString(data[1])
+        );
     }
 }

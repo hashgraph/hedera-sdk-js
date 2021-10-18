@@ -10,6 +10,15 @@ import TokenId from "../token/TokenId.js";
  */
 
 /**
+ * @typedef {object} TokenRelationshipJson
+ * @param {string} tokenId
+ * @param {string} symbol
+ * @param {string} balance
+ * @param {string | null} isKycGranted
+ * @param {string | null} isFrozen
+ */
+
+/**
  * Token's information related to the given Account
  */
 export default class TokenRelationship {
@@ -104,6 +113,49 @@ export default class TokenRelationship {
             kycStatus:
                 this.isKycGranted == null ? 0 : this.isKycGranted ? 1 : 2,
             freezeStatus: this.isFrozen == null ? 0 : this.isFrozen ? 1 : 2,
+        };
+    }
+
+    /**
+     * @param {string} tokenRelationship
+     * @returns {TokenRelationship}
+     */
+    static fromString(tokenRelationship){
+        return TokenRelationship.fromJSON(JSON.parse(tokenRelationship));
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString(){
+        return JSON.stringify(this.toJSON());
+    }
+
+    /**
+     * @param {any} tokenRelationshipJson
+     * @returns {TokenRelationship}
+     */
+    static fromJSON(tokenRelationshipJson){
+        let props={
+            tokenId:TokenId.fromString(tokenRelationshipJson["tokenId"]),
+            symbol:tokenRelationshipJson["symbol"],
+            balance:tokenRelationshipJson["balance"],
+            isKycGranted:tokenRelationshipJson["isKycGranted"],
+            isFrozen:tokenRelationshipJson["isFrozen"],
+        };
+        return new TokenRelationship(props);
+    }
+
+    /**
+     * @returns {TokenRelationshipJson}
+     */
+    toJSON(){
+        return {
+            tokenId:this.tokenId.toString(),
+            symbol:this.symbol,
+            balance: this.balance.toString(),
+            isKycGranted:this.isKycGranted,
+            isFrozen:this.isFrozen,
         };
     }
 }

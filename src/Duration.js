@@ -51,6 +51,6 @@ export default class Duration {
      * @returns {string}
      */
     toString() {
-        return this.seconds.toString();
+        return `${this.seconds.toString()}s`;
     }
 }

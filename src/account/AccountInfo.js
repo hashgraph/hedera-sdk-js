@@ -25,7 +25,7 @@ import Duration from "../Duration.js";
  * @property {string} props.expirationTime
  * @property {string} props.autoRenewPeriod
  * @property {LiveHash[]} props.liveHashes
- * @property {TokenRelationshipMap} props.tokenRelationships
+ * @property {TokenRelationshipMap | string} props.tokenRelationships
  * @property {string} props.accountMemo
  * @property {string} props.ownedNfts
  */
@@ -60,7 +60,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.accountId = props.accountId instanceof AccountId ? props.accountId : AccountId.fromString(props.accountId);
+        this.accountId = props.accountId;
 
         /**
          * The Contract Account ID comprising of both the contract instance and the cryptocurrency
@@ -94,7 +94,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.proxyReceived = props.proxyReceived instanceof Hbar ? props.proxyReceived : Hbar.fromString(props.proxyReceived);
+        this.proxyReceived = props.proxyReceived;
 
         /**
          * The key for the account, which must sign in order to transfer out, or to modify the account
@@ -109,7 +109,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.balance = props.balance instanceof Hbar ? props.balance : Hbar.fromString(props.balance);
+        this.balance = props.balance;
 
         /**
          * The threshold amount (in tinybars) for which an account record is created (and this account
@@ -139,7 +139,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.expirationTime = props.expirationTime instanceof Timestamp ? props.expirationTime : Timestamp.fromString(props.expirationTime);
+        this.expirationTime = props.expirationTime;
 
         /**
          * The duration for expiration time will extend every this many seconds. If there are
@@ -148,7 +148,7 @@ export default class AccountInfo {
          *
          * @readonly
          */
-        this.autoRenewPeriod = props.autoRenewPeriod instanceof Duration ? props.autoRenewPeriod : Duration.fromString(props.autoRenewPeriod);
+        this.autoRenewPeriod = props.autoRenewPeriod;
 
         /** @readonly */
         this.liveHashes = props.liveHashes;
@@ -160,7 +160,7 @@ export default class AccountInfo {
         this.accountMemo = props.accountMemo;
 
         /** @readonly */
-        this.ownedNfts = props.ownedNfts instanceof Long ? props.ownedNfts : Long.fromString(props.ownedNfts);
+        this.ownedNfts = props.ownedNfts;
 
         Object.freeze(this);
     }
@@ -313,7 +313,7 @@ export default class AccountInfo {
             isDeleted: this.isDeleted,
             expirationTime: this.expirationTime.toString(),
             autoRenewPeriod: this.autoRenewPeriod.toString(),
-            tokenRelationships: this.tokenRelationships, 
+            tokenRelationships: this.tokenRelationships.toString(),
             accountMemo: this.accountMemo,
             ownedNfts: this.ownedNfts.toString(),
         };
@@ -323,7 +323,83 @@ export default class AccountInfo {
      * @param {any} accountInfo
      * @returns {AccountInfo}
      */
-    static fromJSON(accountInfo){
-        return new AccountInfo(accountInfo);
+    static fromJSON(accountInfo) {
+        const props={
+        accountId:AccountId.fromString(accountInfo["accountId"]),
+        contractAccountId:accountInfo["contractAccountId"],
+        isDeleted:accountInfo["isDeleted"],
+        proxyAccountId:accountInfo["proxyAccountId"],
+        proxyReceived:Hbar.fromString(accountInfo["proxyReceived"]),
+        key:accountInfo["key"],
+        balance:Hbar.fromString(accountInfo["balance"]),
+        isReceiverSignatureRequired:accountInfo["isReceiverSignatureRequired"],
+        expirationTime:Timestamp.fromString(accountInfo["expirationTime"]),
+        autoRenewPeriod:Duration.fromString(accountInfo["autoRenewPeriod"]),
+        liveHashes:accountInfo["liveHashes"],
+        tokenRelationships:TokenRelationshipMap.fromString(accountInfo["tokenRelationships"]),
+        accountMemo:accountInfo["accountMemo"],
+        ownedNfts:Long.fromString(accountInfo["ownedNfts"]),
+    };
+        // @ts-ignore
+        return new AccountInfo(props);
     }
+
+
+
+
+    // /**
+    //  * @returns {string}
+    //  */
+    //  toString() {
+    //     return JSON.stringify(this.toJSON());
+    // }
+
+    // /**
+    //  * @param {string} objectMap
+    //  * @returns {{}}
+    //  */
+    // fromString(objectMap){
+    //     return this.fromJSON(JSON.parse(objectMap));
+    // }
+
+    // /**
+    //  * @returns {{}}
+    //  */
+    // toJSON(){
+    //     /** @type {Object.<string, string>} */
+    //     const map = {};
+
+    //     for (const [key, value] of this._map) {
+    //         map[key] = value.toString();
+    //     }
+
+    //     return map;
+    // }
+
+    // /**
+    //  * @param {any} objectMap
+    //  * @returns {{}}
+    //  */
+    // fromJSON(objectMap){
+    //     //parse to token relationship
+    //     console.log(objectMap);
+    //     for (var key in objectMap){
+    //         if (objectMap.hasOwnProperty(key)){
+    //             console.log(TokenId.fromString(objectMap[key]));
+    //         }
+    //     }
+
+    //     return new ObjectMap(objectMap);
+    // }
+
+
+
+
+
+
+
+
+
+
+
 }

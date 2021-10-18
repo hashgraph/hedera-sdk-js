@@ -54,4 +54,48 @@ export default class TokenRelationshipMap extends ObjectMap {
 
         return list;
     }
+    
+    /**
+     * @returns {string}
+     */
+     toString() {
+        return JSON.stringify(this.toJSON());
+    }
+
+    /**
+     * @param {string} objectMap
+     * @returns {TokenRelationshipMap}
+     */
+    static fromString(objectMap){
+        return this.fromJSON(JSON.parse(objectMap));
+    }
+
+    /**
+     * @returns {object}
+     */
+    toJSON(){
+        /** @type {Object.<string, string>} */
+        const map = {};
+
+        for (const [key, value] of this._map) {
+            map[key] = value.toString();
+        }
+
+        return map;
+    }
+
+    /**
+     * @param {any} objectMap
+     * @returns {TokenRelationshipMap}
+     */
+    static fromJSON(objectMap){
+        const tokenRelationshipMap = new TokenRelationshipMap();
+
+        for (var key in objectMap){
+            if (objectMap.hasOwnProperty(key)){
+                tokenRelationshipMap._set(TokenId.fromString(key),TokenRelationship.fromString(objectMap[key]));
+            }
+        }
+        return tokenRelationshipMap;
+    }
 }
