@@ -1,8 +1,10 @@
 import {
     Status,
     AccountBalanceQuery,
+    AccountCreateTransaction,
     TokenCreateTransaction,
     AccountId,
+    PrivateKey,
 } from "../src/exports.js";
 import { RST_STREAM } from "../src/Executable.js";
 import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
@@ -26,6 +28,32 @@ describe("AccountBalanceQuery", function () {
 
         try {
             await query.execute(client);
+        } catch (error) {
+            expect(RST_STREAM.test(error.toString())).to.be.true;
+        }
+
+        expect(shouldRetryExceptionally).to.have.been.called.twice;
+    });
+
+    it("transaction retries on error", async function() {
+        this.timeout(60000);
+
+        // Random operator
+        const key = PrivateKey.generate();
+        const accountId = new AccountId(10);
+
+        const client = Client.forMainnet()
+            .setOperator(accountId, key);
+
+        const transaction = new AccountCreateTransaction()
+            .setMaxAttempts(2)
+            .setKey(PrivateKey.generate().publicKey)
+            .setNodeAccountIds([new AccountId(4)]);
+
+        var shouldRetryExceptionally = chai.spy.on(transaction, '_shouldRetryExceptionally');
+
+        try {
+            await transaction.execute(client);
         } catch (error) {
             expect(RST_STREAM.test(error.toString())).to.be.true;
         }
