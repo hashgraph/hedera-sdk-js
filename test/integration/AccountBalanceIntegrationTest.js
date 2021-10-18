@@ -7,6 +7,24 @@ import {
 import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountBalanceQuery", function () {
+    it("errors", async function() {
+        this.timeout(60000);
+
+        const client = Client.forMainnet();
+
+        const query = new AccountBalanceQuery()
+            .setMaxAttempts(2)
+            .setAccountId(new AccountId(4))
+            .setNodeAccountIds([new AccountId(4)]);
+
+
+        try {
+            await query.execute(client);
+        } catch {
+            // Do nothign we're expecting to fail
+        }
+    });
+
     it("an account that does not exist should return an error", async function () {
         this.timeout(60000);
 
