@@ -150,7 +150,10 @@ export default class FreezeTransaction extends Transaction {
                         ? FileId._fromProtobuf(freeze.updateFile)
                         : undefined,
                 fileHash: freeze.fileHash != null ? freeze.fileHash : undefined,
-                // freezeType: freeze.freezeType != null ? freeze.freezeType : undefined,
+                freezeType:
+                    freeze.freezeType != null
+                        ? FreezeType._fromCode(freeze.freezeType)
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -284,7 +287,7 @@ export default class FreezeTransaction extends Transaction {
     /**
      * @returns {?FreezeType}
      */
-    get freezeType(){
+    get freezeType() {
         return this._freezeType;
     }
 
@@ -292,9 +295,9 @@ export default class FreezeTransaction extends Transaction {
      * @param {FreezeType} freezeType
      * @returns {FreezeTransaction}
      */
-    setFreezeType(freezeType){
+    setFreezeType(freezeType) {
         this._requireNotFrozen();
-        this._freezeType=freezeType;
+        this._freezeType = freezeType;
         return this;
     }
 
@@ -325,7 +328,8 @@ export default class FreezeTransaction extends Transaction {
                     ? this._updateFileId._toProtobuf()
                     : null,
             fileHash: this._fileHash,
-            // freezeType: this._freezeType != null ? this._freezeType.valueOf() : null,
+            freezeType:
+                this._freezeType != null ? this._freezeType.valueOf() : null,
         };
     }
 }
