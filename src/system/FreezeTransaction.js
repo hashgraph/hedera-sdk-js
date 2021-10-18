@@ -317,8 +317,6 @@ export default class FreezeTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            startHour: this._startTime != null ? this._startTime.hour : null,
-            startMin: this._startTime != null ? this._startTime.minute : null,
             startTime:
                 this._startTimestamp != null
                     ? this._startTimestamp._toProtobuf()
