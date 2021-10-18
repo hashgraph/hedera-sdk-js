@@ -286,9 +286,6 @@ export default class Executable {
      * @returns {boolean}
      */
     _shouldRetryExceptionally(error) {
-        console.log(error);
-        console.log(error.status._code === GrpcStatus.Internal._code);
-        console.log(RST_STREAM.test(error.message));
         return (
             error.status._code === GrpcStatus.Unavailable._code ||
             error.status._code === GrpcStatus.ResourceExhausted._code ||

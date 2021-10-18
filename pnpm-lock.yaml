@@ -21,6 +21,7 @@ specifiers:
   babel-plugin-module-rewrite: ^0.2.0
   bignumber.js: ^9.0.1
   chai: ^4.3.4
+  chai-spies: ^1.0.0
   chromedriver: ^94.0.0
   crypto-js: ^4.0.0
   dotenv: ^10.0.0
@@ -78,6 +79,7 @@ devDependencies:
   babel-plugin-dynamic-import-node: 2.3.3
   babel-plugin-module-rewrite: 0.2.0
   chai: 4.3.4
+  chai-spies: 1.0.0_chai@4.3.4
   chromedriver: 94.0.0
   dotenv: 10.0.0
   dpdm: 3.8.0
@@ -2151,6 +2153,15 @@ packages:
 
   /caseless/0.12.0:
     resolution: {integrity: sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=}
+    dev: true
+
+  /chai-spies/1.0.0_chai@4.3.4:
+    resolution: {integrity: sha512-elF2ZUczBsFoP07qCfMO/zeggs8pqCf3fZGyK5+2X4AndS8jycZYID91ztD9oQ7d/0tnS963dPkd0frQEThDsg==}
+    engines: {node: '>= 4.0.0'}
+    peerDependencies:
+      chai: '*'
+    dependencies:
+      chai: 4.3.4
     dev: true
 
   /chai/4.3.4:

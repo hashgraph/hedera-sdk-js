@@ -4,10 +4,15 @@ import {
     TokenCreateTransaction,
     AccountId,
 } from "../src/exports.js";
+import { RST_STREAM } from "../src/Executable.js";
 import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
+import chai from "chai";
+import spies from "chai-spies";
+
+chai.use(spies);
 
 describe("AccountBalanceQuery", function () {
-    it("errors", async function() {
+    it("retries on error", async function() {
         this.timeout(60000);
 
         const client = Client.forMainnet();
@@ -17,12 +22,15 @@ describe("AccountBalanceQuery", function () {
             .setAccountId(new AccountId(4))
             .setNodeAccountIds([new AccountId(4)]);
 
+        var shouldRetryExceptionally = chai.spy.on(query, '_shouldRetryExceptionally');
 
         try {
             await query.execute(client);
-        } catch {
-            // Do nothign we're expecting to fail
+        } catch (error) {
+            expect(RST_STREAM.test(error.toString())).to.be.true;
         }
+
+        expect(shouldRetryExceptionally).to.have.been.called.twice;
     });
 
     it("an account that does not exist should return an error", async function () {
