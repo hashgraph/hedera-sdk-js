@@ -4,6 +4,7 @@ import Transaction, {
 import Timestamp from "../Timestamp.js";
 import FileId from "../file/FileId.js";
 import * as hex from "../encoding/hex.js";
+import FreezeType from "../FreezeType.js";
 
 /**
  * @namespace proto
@@ -35,6 +36,7 @@ export default class FreezeTransaction extends Transaction {
      * @param {Timestamp} [props.startTimestamp]
      * @param {FileId} [props.updateFileId]
      * @param {Uint8Array | string} [props.fileHash]
+     * @param { FreezeType } [props.freezeType]
      */
     constructor(props = {}) {
         super();
@@ -69,6 +71,12 @@ export default class FreezeTransaction extends Transaction {
          */
         this._fileHash = null;
 
+        /**
+         * @private
+         * @type {?FreezeType}
+         */
+        this._freezeType = null;
+
         if (props.startTime != null) {
             // eslint-disable-next-line deprecation/deprecation
             this.setStartTime(props.startTime.hour, props.startTime.minute);
@@ -89,6 +97,10 @@ export default class FreezeTransaction extends Transaction {
 
         if (props.fileHash != null) {
             this.setFileHash(props.fileHash);
+        }
+
+        if (props.freezeType != null) {
+            this.setFreezeType(props.freezeType);
         }
     }
 
@@ -138,6 +150,7 @@ export default class FreezeTransaction extends Transaction {
                         ? FileId._fromProtobuf(freeze.updateFile)
                         : undefined,
                 fileHash: freeze.fileHash != null ? freeze.fileHash : undefined,
+                // freezeType: freeze.freezeType != null ? freeze.freezeType : undefined,
             }),
             transactions,
             signedTransactions,
@@ -269,6 +282,23 @@ export default class FreezeTransaction extends Transaction {
     }
 
     /**
+     * @returns {?FreezeType}
+     */
+    get freezeType(){
+        return this._freezeType;
+    }
+
+    /**
+     * @param {FreezeType} freezeType
+     * @returns {FreezeTransaction}
+     */
+    setFreezeType(freezeType){
+        this._requireNotFrozen();
+        this._freezeType=freezeType;
+        return this;
+    }
+
+    /**
      * @override
      * @protected
      * @returns {NonNullable<proto.TransactionBody["data"]>}
@@ -295,6 +325,7 @@ export default class FreezeTransaction extends Transaction {
                     ? this._updateFileId._toProtobuf()
                     : null,
             fileHash: this._fileHash,
+            // freezeType: this._freezeType != null ? this._freezeType.valueOf() : null,
         };
     }
 }

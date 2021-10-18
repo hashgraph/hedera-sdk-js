@@ -473,6 +473,28 @@ export default class Status {
                 return "TOKEN_HAS_NO_PAUSE_KEY";
             case Status.InvalidPauseKey:
                 return "INVALID_PAUSE_KEY";
+            case Status.FreezeUpdateFileDoesNotExist:
+                return "FREEZE_UPDATE_FILE_DOES_NOT_EXIST";
+            case Status.FreezeUpdateFileHashDoesNotMatch:
+                return "FREEZE_UPDATE_FILE_HASH_DOES_NOT_MATCH";
+            case Status.NoUpgradeHasBeenPrepared:
+                return "NO_UPGRADE_HAS_BEEN_PREPARED";
+            case Status.NoFreezeIsScheduled:
+                return "NO_FREEZE_IS_SCHEDULED";
+            case Status.UpdateFileHashChangedSincePrepareUpgrade:
+                return "UPDATE_FILE_HASH_CHANGED_SINCE_PREPARE_UPGRADE";
+            case Status.FreezeStartTimeMustBeFuture:
+                return "FREEZE_START_TIME_MUST_BE_FUTURE";
+            case Status.PreparedUpdateFileIsImmutable:
+                return "PREPARED_UPDATE_FILE_IS_IMMUTABLE";
+            case Status.FreezeAlreadyScheduled:
+                return "FREEZE_ALREADY_SCHEDULED";
+            case Status.FreezeUpgradeInProgress:
+                return "FREEZE_UPGRADE_IN_PROGRESS";
+            case Status.UpdateFileIdDoesNotMatchPrepared:
+                return "UPDATE_FILE_ID_DOES_NOT_MATCH_PREPARED";
+            case Status.UpdateFileHashDoesNotMatchPrepared:
+                return "UPDATE_FILE_HASH_DOES_NOT_MATCH_PREPARED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -937,11 +959,33 @@ export default class Status {
                 return Status.TokenHasNoPauseKey;
             case 267:
                 return Status.InvalidPauseKey;
+            case 268:
+                return Status.FreezeUpdateFileDoesNotExist;
+            case 269:
+                return Status.FreezeUpdateFileHashDoesNotMatch;
+            case 270:
+                return Status.NoUpgradeHasBeenPrepared;
+            case 271:
+                return Status.NoFreezeIsScheduled;
+            case 272:
+                return Status.UpdateFileHashChangedSincePrepareUpgrade;
+            case 273:
+                return Status.FreezeStartTimeMustBeFuture;
+            case 274:
+                return Status.PreparedUpdateFileIsImmutable;
+            case 275:
+                return Status.FreezeAlreadyScheduled;
+            case 276:
+                return Status.FreezeUpgradeInProgress;
+            case 277:
+                return Status.UpdateFileIdDoesNotMatchPrepared;
+            case 278:
+                return Status.UpdateFileHashDoesNotMatchPrepared;
+            default:
+                throw new Error(
+                    `(BUG) Status.fromCode() does not handle code: ${code}`
+                );
         }
-
-        throw new Error(
-            `(BUG) Status.fromCode() does not handle code: ${code}`
-        );
     }
 
     /**
@@ -2116,3 +2160,64 @@ Status.TokenHasNoPauseKey = new Status(266);
  * The provided pause key was invalid
  */
 Status.InvalidPauseKey = new Status(267);
+
+/**
+ * The update file in a freeze transaction body must exist.
+ */
+Status.FreezeUpdateFileDoesNotExist = new Status(268);
+
+/**
+ * The hash of the update file in a freeze transaction body must match the in-memory hash.
+ */
+Status.FreezeUpdateFileHashDoesNotMatch = new Status(269);
+
+/**
+ * A FREEZE_UPGRADE transaction was handled with no previous update prepared.
+ */
+Status.NoUpgradeHasBeenPrepared = new Status(270);
+
+/**
+ * A FREEZE_ABORT transaction was handled with no scheduled freeze.
+ */
+Status.NoFreezeIsScheduled = new Status(271);
+
+/**
+ * The update file hash when handling a FREEZE_UPGRADE transaction differs from the file
+ * hash at the time of handling the PREPARE_UPGRADE transaction.
+ */
+Status.UpdateFileHashChangedSincePrepareUpgrade = new Status(272);
+
+/**
+ * The given freeze start time was in the (consensus) past.
+ */
+Status.FreezeStartTimeMustBeFuture = new Status(273);
+
+/**
+ * The prepared update file cannot be updated or appended until either the upgrade has
+ * been completed, or a FREEZE_ABORT has been handled.
+ */
+Status.PreparedUpdateFileIsImmutable = new Status(274);
+
+/**
+ * Once a freeze is scheduled, it must be aborted before any other type of freeze can
+ * can be performed.
+ */
+Status.FreezeAlreadyScheduled = new Status(275);
+
+/**
+ * If an NMT upgrade has been prepared, the following operation must be a FREEZE_UPGRADE.
+ * (To issue a FREEZE_ONLY, submit a FREEZE_ABORT first.)
+ */
+Status.FreezeUpgradeInProgress = new Status(276);
+
+/**
+ * If an NMT upgrade has been prepared, the subsequent FREEZE_UPGRADE transaction must
+ * confirm the id of the file to be used in the upgrade.
+ */
+Status.UpdateFileIdDoesNotMatchPrepared = new Status(277);
+
+/**
+ * If an NMT upgrade has been prepared, the subsequent FREEZE_UPGRADE transaction must
+ * confirm the hash of the file to be used in the upgrade.
+ */
+Status.UpdateFileHashDoesNotMatchPrepared = new Status(278);
