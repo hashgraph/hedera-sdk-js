@@ -32,7 +32,7 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(2000)
+            .setGas(75000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -51,14 +51,14 @@ describe("ContractExecute", function () {
         await (
             await new ContractExecuteTransaction()
                 .setContractId(contract)
-                .setGas(10000)
+                .setGas(75000)
                 .setFunction(
                     "setMessage",
                     new ContractFunctionParameters().addString("new message")
                 )
                 .execute(env.client)
         ).getReceipt(env.client);
-
+        
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
@@ -95,7 +95,7 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(2000)
+            .setGas(75000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -116,7 +116,7 @@ describe("ContractExecute", function () {
         try {
             await (
                 await new ContractExecuteTransaction()
-                    .setGas(10000)
+                    .setGas(75000)
                     .setFunction(
                         "setMessage",
                         new ContractFunctionParameters().addString(
@@ -169,7 +169,7 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(2000)
+            .setGas(75000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -191,7 +191,7 @@ describe("ContractExecute", function () {
             await (
                 await new ContractExecuteTransaction()
                     .setContractId(contract)
-                    .setGas(10000)
+                    .setGas(75000)
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
@@ -238,7 +238,7 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(2000)
+            .setGas(75000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -312,7 +312,7 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(2000)
+            .setGas(75000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -334,7 +334,7 @@ describe("ContractExecute", function () {
             await (
                 await new ContractExecuteTransaction()
                     .setContractId(contract)
-                    .setGas(10000)
+                    .setGas(75000)
                     .setFunction("setMessage")
                     .execute(env.client)
             ).getReceipt(env.client);

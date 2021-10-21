@@ -35,7 +35,7 @@ describe("ContractCallIntegration", function () {
         receipt = await (
             await new ContractCreateTransaction()
                 .setAdminKey(operatorKey)
-                .setGas(2000)
+                .setGas(75000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
                         "Hello from Hedera."
@@ -55,7 +55,7 @@ describe("ContractCallIntegration", function () {
         const callQuery = new ContractCallQuery()
             .setContractId(contract)
             .setQueryPayment(new Hbar(1))
-            .setGas(2000)
+            .setGas(75000)
             .setFunction("getMessage");
 
         const cost = callQuery.getCost(env.client);
@@ -69,7 +69,7 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractExecuteTransaction()
                 .setContractId(contract)
-                .setGas(10000)
+                .setGas(75000)
                 .setFunction(
                     "setMessage",
                     new ContractFunctionParameters().addString("new message")
@@ -80,7 +80,7 @@ describe("ContractCallIntegration", function () {
         result = await new ContractCallQuery()
             .setContractId(contract)
             .setQueryPayment(new Hbar(5))
-            .setGas(2000)
+            .setGas(75000)
             .setFunction("getMessage")
             .execute(env.client);
 
@@ -121,7 +121,7 @@ describe("ContractCallIntegration", function () {
         receipt = await (
             await new ContractCreateTransaction()
                 .setAdminKey(operatorKey)
-                .setGas(2000)
+                .setGas(75000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
                         "Hello from Hedera."
@@ -144,7 +144,7 @@ describe("ContractCallIntegration", function () {
             await new ContractCallQuery()
                 .setContractId(contract)
                 .setQueryPayment(new Hbar(1))
-                .setGas(2000)
+                .setGas(75000)
                 .setMaxQueryPayment(new Hbar(5))
                 .execute(env.client);
         } catch (error) {
@@ -190,7 +190,7 @@ describe("ContractCallIntegration", function () {
         receipt = await (
             await new ContractCreateTransaction()
                 .setAdminKey(operatorKey)
-                .setGas(2000)
+                .setGas(75000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
                         "Hello from Hedera."
@@ -258,7 +258,7 @@ describe("ContractCallIntegration", function () {
         receipt = await (
             await new ContractCreateTransaction()
                 .setAdminKey(operatorKey)
-                .setGas(2000)
+                .setGas(75000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
                         "Hello from Hedera."
@@ -279,7 +279,7 @@ describe("ContractCallIntegration", function () {
 
         try {
             await new ContractCallQuery()
-                .setGas(2000)
+                .setGas(75000)
                 .setFunction("getMessage")
                 .setQueryPayment(new Hbar(1))
                 .setMaxQueryPayment(new Hbar(5))

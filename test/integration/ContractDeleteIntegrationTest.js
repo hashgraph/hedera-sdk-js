@@ -33,7 +33,7 @@ describe("ContractDelete", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(2000)
+            .setGas(75000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -104,7 +104,7 @@ describe("ContractDelete", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(2000)
+            .setGas(75000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
