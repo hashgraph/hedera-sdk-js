@@ -35,6 +35,7 @@ export default class FreezeTransaction extends Transaction {
      * @param {HourMinute} [props.endTime]
      * @param {Timestamp} [props.startTimestamp]
      * @param {FileId} [props.updateFileId]
+     * @param {FileId} [props.fileId]
      * @param {Uint8Array | string} [props.fileHash]
      * @param { FreezeType } [props.freezeType]
      */
@@ -63,7 +64,7 @@ export default class FreezeTransaction extends Transaction {
          * @private
          * @type {?FileId}
          */
-        this._updateFileId = null;
+        this._fileId = null;
 
         /**
          * @private
@@ -93,6 +94,10 @@ export default class FreezeTransaction extends Transaction {
 
         if (props.updateFileId != null) {
             this.setUpdateFileId(props.updateFileId);
+        }
+
+        if (props.fileId != null) {
+            this.setFileId(props.fileId);
         }
 
         if (props.fileHash != null) {
@@ -248,19 +253,36 @@ export default class FreezeTransaction extends Transaction {
     }
 
     /**
+     * @deprecated - Use `fileId` instead
      * @returns {?FileId}
      */
     get updateFileId() {
-        return this._updateFileId;
+        return this.fileId;
     }
 
     /**
+     * @deprecated - Use `setFileId()` instead
      * @param {FileId} updateFileId
      * @returns {FreezeTransaction}
      */
     setUpdateFileId(updateFileId) {
+        return this.setFileId(updateFileId);
+    }
+
+    /**
+     * @returns {?FileId}
+     */
+    get fileId() {
+        return this._fileId;
+    }
+
+    /**
+     * @param {FileId} fileId
+     * @returns {FreezeTransaction}
+     */
+    setFileId(fileId) {
         this._requireNotFrozen();
-        this._updateFileId = updateFileId;
+        this._fileId = fileId;
 
         return this;
     }
@@ -322,9 +344,7 @@ export default class FreezeTransaction extends Transaction {
                     ? this._startTimestamp._toProtobuf()
                     : null,
             updateFile:
-                this._updateFileId != null
-                    ? this._updateFileId._toProtobuf()
-                    : null,
+                this._fileId != null ? this._fileId._toProtobuf() : null,
             fileHash: this._fileHash,
             freezeType:
                 this._freezeType != null ? this._freezeType.valueOf() : null,

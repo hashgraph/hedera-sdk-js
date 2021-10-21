@@ -58,7 +58,7 @@ describe("ContractExecute", function () {
                 )
                 .execute(env.client)
         ).getReceipt(env.client);
-        
+
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)

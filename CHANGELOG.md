@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.2.0
 
+### Added
+
+ * `FreezeType`
+ * `FreezeTransaction.[get|set]FreezeType()`
+ * `FreezeTransaction.[get|set]FileId()`
+ * `FreezeTransaction.[get|set]FileHash()`
+
+### Deprecated
+
+ * `FreezeTransaction.[get|set]UpdateFileId()`, use `.[get|set]FileId()` instead.
+
+## v2.2.0
+
 ### Fixed
 
  * gRPC client not timing out on unresponsive connections
