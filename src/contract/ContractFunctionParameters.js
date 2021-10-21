@@ -4,6 +4,7 @@ import ContractFunctionSelector, {
 import * as utf8 from "../encoding/utf8.js";
 import * as hex from "../encoding/hex.js";
 import BigNumber from "bignumber.js";
+import * as util from "../util.js";
 
 export default class ContractFunctionParameters {
     constructor() {
@@ -213,12 +214,14 @@ export default class ContractFunctionParameters {
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {BigNumber | number} value
      * @returns {ContractFunctionParameters}
      */
     addUint256(value) {
         this._selector.addUint256();
-
+        if (util.isNumber(value)) {
+            value = new BigNumber(value);
+        }
         return this._addParam(value, false);
     }
 

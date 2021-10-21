@@ -6,6 +6,8 @@ export const REQUIRE_STRING_ERROR = "This value must be a string.";
 export const REQUIRE_UINT8ARRAY_ERROR = "This value must be a Uint8Array.";
 export const REQUIRE_STRING_OR_UINT8ARRAY_ERROR =
     "This value must be a string or Uint8Array.";
+export const REQUIRE_NUMBER_ERROR = "This value must be a Number.";
+export const REQUIRE_TYPE_ERROR = "The provided variables are not matching types.";
 
 /**
  * Takes any param and returns false if null or undefined.
@@ -22,6 +24,17 @@ export function isNonNull(variable) {
 }
 
 /**
+ * Takes any param and returns true if param variable and type are the same.
+ *
+ * @param {any | null | undefined} variable
+ * @param {any | null | undefined} type
+ * @returns {boolean}
+ */
+export function isType(variable, type) {
+    return typeof variable == type;
+}
+
+/**
  * Takes any param and returns true if param is not null and of type Uint8Array.
  *
  * @param {any | null | undefined} variable
@@ -29,6 +42,16 @@ export function isNonNull(variable) {
  */
 export function isUint8Array(variable) {
     return isNonNull(variable) && variable instanceof Uint8Array;
+}
+
+/**
+ * Takes any param and returns true if param is not null and of type Number.
+ *
+ * @param {any | null | undefined} variable
+ * @returns {boolean}
+ */
+export function isNumber(variable) {
+    return isNonNull(variable) && variable instanceof Number;
 }
 
 /**
@@ -49,6 +72,36 @@ export function isString(variable) {
  */
 export function isStringOrUint8Array(variable) {
     return isString(variable) || isUint8Array(variable);
+}
+
+/**
+ * Takes any param and throws custom error if null or undefined.
+ *
+ * @param {object} variable
+ * @returns {object}
+ */
+export function requireNonNull(variable) {
+    if (!isNonNull(variable)) {
+        throw new Error(REQUIRE_NON_NULL_ERROR);
+    } else {
+        return variable;
+    }
+}
+
+/**
+ * Takes any param and throws custom error if params are not same type.
+ *
+ * @param {any | null | undefined} variable
+ * @param {any | null | undefined} type
+ * @returns {object}
+ */
+export function requireType(variable, type) {
+    if (!isType(variable, type)) {
+        throw new Error(REQUIRE_TYPE_ERROR);
+    } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return variable;
+    }
 }
 
 /**
@@ -82,16 +135,17 @@ export function requireUint8Array(variable) {
 }
 
 /**
- * Takes any param and throws custom error if null or undefined.
+ * Takes any param and throws custom error if non Uint8Array.
  *
- * @param {object} variable
- * @returns {object}
+ * @param {any | null | undefined} variable
+ * @returns {number}
  */
-export function requireNonNull(variable) {
-    if (!isNonNull(variable)) {
-        throw new Error(REQUIRE_NON_NULL_ERROR);
+export function requireNumber(variable) {
+    if (!isNumber(requireNonNull(variable))) {
+        throw new Error(REQUIRE_NUMBER_ERROR);
     } else {
-        return variable;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return /** @type {number} */ (variable);
     }
 }
 
