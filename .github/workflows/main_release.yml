@@ -1,4 +1,4 @@
-name: CI against the latest Hedera Services release
+name: Hedera Services Latest Release
 
 on:
   schedule:

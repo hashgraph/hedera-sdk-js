@@ -1,4 +1,4 @@
-name: CI against Previewnet
+name: Previewnet
 
 on:
   schedule:
