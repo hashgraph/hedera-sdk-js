@@ -7,7 +7,7 @@ import {
 import IntegrationTestEnv, {
     Client,
     skipTestDueToNodeJsVersion,
-} from "./client/index.js";
+} from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountBalanceQuery", function () {
     it("can connect to previewnet with TLS", async function () {
