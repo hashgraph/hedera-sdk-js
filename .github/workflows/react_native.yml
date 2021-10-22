@@ -1,12 +1,13 @@
-name: CI against Testnet on React Native
+name: React Native
 
 on:
   push:
     branches:
       - main
+      - develop
   pull_request:
     branches:
-      - main
+      - develop
 
 jobs:
   android:

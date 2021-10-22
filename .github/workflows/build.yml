@@ -1,12 +1,21 @@
-name: Previewnet
+name: Build
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ '12', '14', '16' ]
 
     steps:
       - uses: actions/checkout@v2
@@ -23,7 +32,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: ${{ matrix.node }}
 
       - uses: pnpm/action-setup@v2.0.1
         with:
@@ -34,6 +43,9 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ '12', '14', '16' ]
 
     steps:
       - uses: actions/checkout@v2
@@ -50,7 +62,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: ${{ matrix.node }}
 
       - uses: pnpm/action-setup@v2.0.1
         with:
@@ -63,6 +75,9 @@ jobs:
              
   test-unit-node:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ '12', '14', '16' ]
 
     steps:
       - uses: actions/checkout@v2
@@ -79,7 +94,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: ${{ matrix.node }}
 
       - uses: pnpm/action-setup@v2.0.1
         with:
@@ -89,69 +104,3 @@ jobs:
         run: |
           pnpm install
           pnpm test:unit:node
-
-  test-integration-node:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '12'
-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.0.2
-
-      - name: Run Integration Tests
-        env:
-          OPERATOR_KEY: ${{ secrets.PREVIEWNET_OPERATOR_KEY }}
-          OPERATOR_ID: ${{ secrets.PREVIEWNET_OPERATOR_ID }}
-          HEDERA_NETWORK: "previewnet"
-        run: |
-          pnpm install
-          pnpm test:integration:node
-
-  test-integration-browser-chrome:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '12'
-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.0.2
-
-      - name: Run Integration Tests Browser Chrome
-        env:
-          VITE_OPERATOR_KEY: ${{ secrets.PREVIEWNET_OPERATOR_KEY }}
-          VITE_OPERATOR_ID: ${{ secrets.PREVIEWNET_OPERATOR_ID }}
-          HEDERA_NETWORK: "previewnet"
-        run: |
-          pnpm install
-          pnpm test:integration:browser:chrome
