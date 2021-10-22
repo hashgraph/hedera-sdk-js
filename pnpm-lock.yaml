@@ -26,7 +26,7 @@ specifiers:
   dotenv: ^10.0.0
   dpdm: ^3.8.0
   eslint: ^7.32.0
-  eslint-plugin-chai-expect: ^2.2.0
+  eslint-plugin-chai-expect: ^3.0.0
   eslint-plugin-compat: ^3.13.0
   eslint-plugin-deprecation: ^1.2.1
   eslint-plugin-ie11: ^1.0.0
@@ -82,7 +82,7 @@ devDependencies:
   dotenv: 10.0.0
   dpdm: 3.8.0
   eslint: 7.32.0
-  eslint-plugin-chai-expect: 2.2.0_eslint@7.32.0
+  eslint-plugin-chai-expect: 3.0.0_eslint@7.32.0
   eslint-plugin-compat: 3.13.0_eslint@7.32.0
   eslint-plugin-deprecation: 1.2.1_eslint@7.32.0+typescript@4.4.4
   eslint-plugin-ie11: 1.0.0
@@ -3319,11 +3319,11 @@ packages:
       pkg-dir: 2.0.0
     dev: true
 
-  /eslint-plugin-chai-expect/2.2.0_eslint@7.32.0:
-    resolution: {integrity: sha512-ExTJKhgeYMfY8wDj3UiZmgpMKJOUHGNHmWMlxT49JUDB1vTnw0sSNfXJSxnX+LcebyBD/gudXzjzD136WqPJrQ==}
-    engines: {node: 6.* || 8.* || >= 10.*}
+  /eslint-plugin-chai-expect/3.0.0_eslint@7.32.0:
+    resolution: {integrity: sha512-NS0YBcToJl+BRKBSMCwRs/oHJIX67fG5Gvb4tGked+9Wnd1/PzKijd82B2QVKcSSOwRe+pp4RAJ2AULeck4eQw==}
+    engines: {node: 10.* || 12.* || >= 14.*}
     peerDependencies:
-      eslint: '>=2.0.0 <= 7.x'
+      eslint: '>=2.0.0 <= 8.x'
     dependencies:
       eslint: 7.32.0
     dev: true
