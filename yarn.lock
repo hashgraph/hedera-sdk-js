@@ -333,7 +333,7 @@
     protobufjs "^6.10.0"
     yargs "^16.1.1"
 
-"@hashgraph/cryptography@^1.0.21":
+"@hashgraph/cryptography@^1.0.20":
   version "1.0.21"
   resolved "https://registry.yarnpkg.com/@hashgraph/cryptography/-/cryptography-1.0.21.tgz#9cce4c25c18df7fcace8b0a39d1c3ea12529fb3e"
   integrity sha512-X48u9VJ/MssHxUEivc5HRhTBKRtjYFCLCYLWlm/vtrwXf2g/CEyOWF7iSxgoSzhGqDxYWjDnBpWcqsTOlm/MgQ==
@@ -346,10 +346,10 @@
     tweetnacl "^1.0.3"
     utf8 "^3.0.0"
 
-"@hashgraph/proto@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-2.0.0.tgz#f34933e23d2676fdaee1bc8a4ffa9da4091814a6"
-  integrity sha512-SgvtrTgZXpAk9c8LuOoOEs4RNqmSZX8/fYu8oDcqpRxAi5mnyChCkLcSneOyWPDJZmaEV1mz+HeO1HJAJUURAw==
+"@hashgraph/proto@2.0.1-beta.2":
+  version "2.0.1-beta.2"
+  resolved "https://registry.yarnpkg.com/@hashgraph/proto/-/proto-2.0.1-beta.2.tgz#af09265f66f9afd228040251fea39a35b814f741"
+  integrity sha512-35WpyOmMBEn6kFOKVQefnip1TlK5OFkjfTJqAfTymfwuUJeALipaSakhOP0Xj8crTqgupTN/mEl3poq3X+vuhA==
   dependencies:
     protobufjs "^6.11.2"
 
@@ -2979,10 +2979,10 @@ eslint-module-utils@^2.7.0:
     find-up "^2.1.0"
     pkg-dir "^2.0.0"
 
-eslint-plugin-chai-expect@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-chai-expect/-/eslint-plugin-chai-expect-2.2.0.tgz#ff41fb00067fe6ff26e72b04ab1011ecaf3cb249"
-  integrity sha512-ExTJKhgeYMfY8wDj3UiZmgpMKJOUHGNHmWMlxT49JUDB1vTnw0sSNfXJSxnX+LcebyBD/gudXzjzD136WqPJrQ==
+eslint-plugin-chai-expect@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-chai-expect/-/eslint-plugin-chai-expect-3.0.0.tgz#812d7384756177b2d424040cb3c20e78606db1b2"
+  integrity sha512-NS0YBcToJl+BRKBSMCwRs/oHJIX67fG5Gvb4tGked+9Wnd1/PzKijd82B2QVKcSSOwRe+pp4RAJ2AULeck4eQw==
 
 eslint-plugin-compat@^3.13.0:
   version "3.13.0"
