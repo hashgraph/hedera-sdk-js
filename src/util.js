@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+
 /**
  * Utility Error Messages
  */
@@ -7,7 +9,11 @@ export const REQUIRE_UINT8ARRAY_ERROR = "This value must be a Uint8Array.";
 export const REQUIRE_STRING_OR_UINT8ARRAY_ERROR =
     "This value must be a string or Uint8Array.";
 export const REQUIRE_NUMBER_ERROR = "This value must be a Number.";
-export const REQUIRE_TYPE_ERROR = "The provided variables are not matching types.";
+export const REQUIRE_TYPE_ERROR =
+    "The provided variables are not matching types.";
+export const REQUIRE_BIGNUMBER_ERROR = "This value must be a BigNumber.";
+
+//Soft Checks
 
 /**
  * Takes any param and returns false if null or undefined.
@@ -51,7 +57,20 @@ export function isUint8Array(variable) {
  * @returns {boolean}
  */
 export function isNumber(variable) {
-    return isNonNull(variable) && variable instanceof Number;
+    return (
+        isNonNull(variable) &&
+        (typeof variable == "number" || variable instanceof Number)
+    );
+}
+
+/**
+ * Takes any param and returns true if param is not null and of type BigNumber.
+ *
+ * @param {any | null | undefined} variable
+ * @returns {boolean}
+ */
+export function isBigNumber(variable) {
+    return isNonNull(variable) && variable instanceof BigNumber;
 }
 
 /**
@@ -73,6 +92,8 @@ export function isString(variable) {
 export function isStringOrUint8Array(variable) {
     return isString(variable) || isUint8Array(variable);
 }
+
+//Requires
 
 /**
  * Takes any param and throws custom error if null or undefined.
@@ -101,6 +122,21 @@ export function requireType(variable, type) {
     } else {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return variable;
+    }
+}
+
+/**
+ * Takes any param and throws custom error if non BigNumber.
+ *
+ * @param {any | null | undefined} variable
+ * @returns {BigNumber}
+ */
+export function requireBigNumber(variable) {
+    if (!isBigNumber(requireNonNull(variable))) {
+        throw new Error(REQUIRE_BIGNUMBER_ERROR);
+    } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return /** @type {BigNumber} */ (variable);
     }
 }
 
@@ -162,4 +198,36 @@ export function requireStringOrUint8Array(variable) {
     } else {
         throw new Error(REQUIRE_STRING_OR_UINT8ARRAY_ERROR);
     }
+}
+
+//Conversions
+
+/**
+ * Converts number or string to BigNumber.
+ *
+ * @param {any | null | undefined} variable
+ * @returns {BigNumber}
+ */
+export function convertToBigNumber(variable) {
+    if (isNumber(variable) || isString(variable)) {
+        return new BigNumber(variable);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return /** @type {BigNumber} */ (variable);
+}
+
+/**
+ * Converts Array of Numbers or Strings to Array of BigNumbers.
+ *
+ * @param {any | null | undefined} variable
+ * @returns {Array<BigNumber>}
+ */
+export function convertToBigNumberArray(variable) {
+    if (variable instanceof Array) {
+        for (var i = 0; i < variable.length; i++) {
+            variable[i] = new BigNumber(variable[i]);
+        }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return /** @type {Array<BigNumber>} */ (variable);
 }
