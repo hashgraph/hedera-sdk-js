@@ -6,7 +6,7 @@ describe("ContractFunctionParameters", function () {
         const contractFunctionParameters =
             new ContractFunctionParameters.default();
 
-        const num = Number(111);
+        const num = 111;
         const cfp = contractFunctionParameters.addUint256(num);
 
         const bigNum = BigNumber(111);
@@ -19,13 +19,11 @@ describe("ContractFunctionParameters", function () {
         const contractFunctionParameters =
             new ContractFunctionParameters.default();
 
-        const numArray = new Array();
-        numArray[0] = new Number(111);
+        const numArray = [111, 1112];
 
         const cfp = contractFunctionParameters.addUint256Array(numArray);
 
-        const bigArray = new Array();
-        bigArray[0] = new BigNumber(111);
+        const bigArray = [new BigNumber(111), new BigNumber(1112)];
 
         contractFunctionParameters.addUint256Array(bigArray);
 

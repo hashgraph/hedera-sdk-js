@@ -9,9 +9,14 @@ export const REQUIRE_UINT8ARRAY_ERROR = "This value must be a Uint8Array.";
 export const REQUIRE_STRING_OR_UINT8ARRAY_ERROR =
     "This value must be a string or Uint8Array.";
 export const REQUIRE_NUMBER_ERROR = "This value must be a Number.";
+export const REQUIRE_BIGNUMBER_ERROR = "This value must be a BigNumber.";
+export const REQUIRE_ARRAY_ERROR = "The provided variable must be an Array.";
+
 export const REQUIRE_TYPE_ERROR =
     "The provided variables are not matching types.";
-export const REQUIRE_BIGNUMBER_ERROR = "This value must be a BigNumber.";
+
+export const FUNCTION_CONVERT_TO_BIGNUMBER_ERROR =
+    "This value must be a String, Number, or BigNumber to be converted.";
 
 //Soft Checks
 
@@ -209,11 +214,10 @@ export function requireStringOrUint8Array(variable) {
  * @returns {BigNumber}
  */
 export function convertToBigNumber(variable) {
-    if (isNumber(variable) || isString(variable)) {
+    if (isNumber(variable) || isString(variable) || isBigNumber(variable)) {
         return new BigNumber(variable);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return /** @type {BigNumber} */ (variable);
+    throw new Error(FUNCTION_CONVERT_TO_BIGNUMBER_ERROR);
 }
 
 /**
@@ -224,10 +228,10 @@ export function convertToBigNumber(variable) {
  */
 export function convertToBigNumberArray(variable) {
     if (variable instanceof Array) {
-        for (var i = 0; i < variable.length; i++) {
-            variable[i] = new BigNumber(variable[i]);
-        }
+        return /** @type {Array<BigNumber>} */ (
+            variable.map(convertToBigNumber)
+        );
+    } else {
+        throw new Error();
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return /** @type {Array<BigNumber>} */ (variable);
 }
