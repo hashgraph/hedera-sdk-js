@@ -10,9 +10,7 @@ describe("TopicMessageSubmitTransaction", function () {
         try {
             topicMessageSubmitTransaction.setMessage();
         } catch (error) {
-            expect(error.message).to.eql(
-                util.REQUIRE_NON_NULL_ERROR
-            );
+            expect(error.message).to.eql(util.REQUIRE_NON_NULL_ERROR);
         }
     });
 

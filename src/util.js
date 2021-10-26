@@ -95,7 +95,9 @@ export function isString(variable) {
  * @returns {boolean}
  */
 export function isStringOrUint8Array(variable) {
-    return isNonNull(variable) && (isString(variable) || isUint8Array(variable));
+    return (
+        isNonNull(variable) && (isString(variable) || isUint8Array(variable))
+    );
 }
 
 //Requires
