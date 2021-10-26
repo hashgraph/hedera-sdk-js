@@ -4,6 +4,7 @@ import ContractFunctionSelector, {
 import * as utf8 from "../encoding/utf8.js";
 import * as hex from "../encoding/hex.js";
 import BigNumber from "bignumber.js";
+import * as util from "../util.js";
 
 export default class ContractFunctionParameters {
     constructor() {
@@ -109,7 +110,7 @@ export default class ContractFunctionParameters {
     addInt8(value) {
         this._selector.addInt8();
 
-        return this._addParam(value, false);
+        return this._addParam(util.convertToBigNumber(value), false);
     }
 
     /**
@@ -119,7 +120,7 @@ export default class ContractFunctionParameters {
     addInt32(value) {
         this._selector.addInt32();
 
-        return this._addParam(value, false);
+        return this._addParam(util.convertToBigNumber(value), false);
     }
 
     /**
@@ -129,7 +130,7 @@ export default class ContractFunctionParameters {
     addInt64(value) {
         this._selector.addInt64();
 
-        return this._addParam(value, false);
+        return this._addParam(util.convertToBigNumber(value), false);
     }
 
     /**
@@ -139,7 +140,7 @@ export default class ContractFunctionParameters {
     addInt256(value) {
         this._selector.addInt256();
 
-        return this._addParam(value, false);
+        return this._addParam(util.convertToBigNumber(value), false);
     }
 
     /**
@@ -149,7 +150,7 @@ export default class ContractFunctionParameters {
     addInt8Array(value) {
         this._selector.addInt8Array();
 
-        return this._addParam(value, true);
+        return this._addParam(util.convertToBigNumberArray(value), true);
     }
 
     /**
@@ -159,7 +160,7 @@ export default class ContractFunctionParameters {
     addInt32Array(value) {
         this._selector.addInt32Array();
 
-        return this._addParam(value, true);
+        return this._addParam(util.convertToBigNumberArray(value), true);
     }
 
     /**
@@ -169,7 +170,7 @@ export default class ContractFunctionParameters {
     addInt64Array(value) {
         this._selector.addInt64Array();
 
-        return this._addParam(value, true);
+        return this._addParam(util.convertToBigNumberArray(value), true);
     }
 
     /**
@@ -178,8 +179,8 @@ export default class ContractFunctionParameters {
      */
     addInt256Array(value) {
         this._selector.addInt256Array();
-
-        return this._addParam(value, true);
+        console.log("asdf");
+        return this._addParam(util.convertToBigNumberArray(value), true);
     }
 
     /**
@@ -189,7 +190,7 @@ export default class ContractFunctionParameters {
     addUint8(value) {
         this._selector.addUint8();
 
-        return this._addParam(value, false);
+        return this._addParam(util.convertToBigNumber(value), false);
     }
 
     /**
@@ -199,7 +200,7 @@ export default class ContractFunctionParameters {
     addUint32(value) {
         this._selector.addUint32();
 
-        return this._addParam(value, false);
+        return this._addParam(util.convertToBigNumber(value), false);
     }
 
     /**
@@ -209,17 +210,17 @@ export default class ContractFunctionParameters {
     addUint64(value) {
         this._selector.addUint64();
 
-        return this._addParam(value, false);
+        return this._addParam(util.convertToBigNumber(value), false);
     }
 
     /**
-     * @param {BigNumber} value
+     * @param {BigNumber | number} value
      * @returns {ContractFunctionParameters}
      */
     addUint256(value) {
         this._selector.addUint256();
 
-        return this._addParam(value, false);
+        return this._addParam(util.convertToBigNumber(value), false);
     }
 
     /**
@@ -229,7 +230,7 @@ export default class ContractFunctionParameters {
     addUint8Array(value) {
         this._selector.addUint8Array();
 
-        return this._addParam(value, true);
+        return this._addParam(util.convertToBigNumberArray(value), true);
     }
 
     /**
@@ -239,7 +240,7 @@ export default class ContractFunctionParameters {
     addUint32Array(value) {
         this._selector.addUint32Array();
 
-        return this._addParam(value, true);
+        return this._addParam(util.convertToBigNumberArray(value), true);
     }
 
     /**
@@ -249,7 +250,7 @@ export default class ContractFunctionParameters {
     addUint64Array(value) {
         this._selector.addUint64Array();
 
-        return this._addParam(value, true);
+        return this._addParam(util.convertToBigNumberArray(value), true);
     }
 
     /**
@@ -259,7 +260,7 @@ export default class ContractFunctionParameters {
     addUint256Array(value) {
         this._selector.addUint256Array();
 
-        return this._addParam(value, true);
+        return this._addParam(util.convertToBigNumberArray(value), true);
     }
 
     /**
