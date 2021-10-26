@@ -146,6 +146,14 @@ export function fromSolidityAddress(address) {
 }
 
 /**
+ * @param {[Long,Long,Long]} address
+ * @returns {string}
+ */
+export function toSolidityAddress(address){
+    return "";
+}
+
+/**
  * Parse the address string addr and return an object with the results (8 fields).
  * The first four fields are numbers, which could be implemented as signed 32 bit
  * integers, and the last four are strings.
