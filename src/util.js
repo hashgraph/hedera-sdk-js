@@ -42,7 +42,7 @@ export function isNonNull(variable) {
  * @returns {boolean}
  */
 export function isType(variable, type) {
-    return typeof variable == type;
+    return typeof variable == typeof type;
 }
 
 /**
@@ -95,7 +95,7 @@ export function isString(variable) {
  * @returns {boolean}
  */
 export function isStringOrUint8Array(variable) {
-    return isString(variable) || isUint8Array(variable);
+    return isNonNull(variable) && (isString(variable) || isUint8Array(variable));
 }
 
 //Requires
@@ -197,7 +197,7 @@ export function requireNumber(variable) {
  * @returns {string | Uint8Array}
  */
 export function requireStringOrUint8Array(variable) {
-    if (isStringOrUint8Array(variable)) {
+    if (isStringOrUint8Array(requireNonNull(variable))) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return /** @type {string | Uint8Array} */ (variable);
     } else {
@@ -214,6 +214,7 @@ export function requireStringOrUint8Array(variable) {
  * @returns {BigNumber}
  */
 export function convertToBigNumber(variable) {
+    requireNonNull(variable);
     if (isNumber(variable) || isString(variable) || isBigNumber(variable)) {
         return new BigNumber(variable);
     }
@@ -232,6 +233,6 @@ export function convertToBigNumberArray(variable) {
             variable.map(convertToBigNumber)
         );
     } else {
-        throw new Error();
+        throw new Error(REQUIRE_ARRAY_ERROR);
     }
 }
