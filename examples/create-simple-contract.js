@@ -4,15 +4,14 @@ const {
     Client,
     PrivateKey,
     ContractCreateTransaction,
-    ContractExecuteTransaction,
     FileCreateTransaction,
-    ContractFunctionParameters,
+    ContractDeleteTransaction,
     ContractCallQuery,
     Hbar,
     AccountId,
 } = require("@hashgraph/sdk");
 
-const helloWorld = require("./stateful.json");
+const helloWorld = require("./hello_world.json");
 
 async function main() {
     let client;
@@ -41,10 +40,7 @@ async function main() {
     console.log(`contract bytecode file: ${fileId}`);
 
     const contractTransactionResponse = await new ContractCreateTransaction()
-        .setConstructorParameters(
-            new ContractFunctionParameters()
-                .addString("hello from hedera!"))
-        .setGas(100000000)
+        .setGas(75000)
         .setBytecodeFileId(fileId)
         .setAdminKey(client.operatorPublicKey)
         .execute(client);
@@ -57,7 +53,7 @@ async function main() {
     const contractCallResult = await new ContractCallQuery()
         .setGas(75000)
         .setContractId(contractId)
-        .setFunction("get_message")
+        .setFunction("greet")
         .setQueryPayment(new Hbar(1))
         .execute(client);
 
@@ -68,29 +64,13 @@ async function main() {
     const message = contractCallResult.getString(0);
     console.log(`contract message: ${message}`);
 
-    const contractExecTransactionResponse = await new ContractExecuteTransaction()
+    const contractDeleteResult = await new ContractDeleteTransaction()
         .setContractId(contractId)
-        .setGas(100000000)
-        .setFunction("set_message", new ContractFunctionParameters()
-            .addString("hello from hedera again!"))
         .execute(client);
 
-    await contractExecTransactionResponse.getReceipt(client);
+    const contractDeleteReceipt = await contractDeleteResult.getReceipt(client);
 
-    const contractUpdateResult = await new ContractCallQuery()
-        .setContractId(contractId)
-        .setGas(100000000)
-        .setFunction("get_message")
-        .setQueryPayment(new Hbar(3))
-        .execute(client);
-
-    if (contractUpdateResult.errorMessage != null && contractUpdateResult.errorMessage != "") {
-        console.log(`error calling contract: ${contractUpdateResult.errorMessage}`);
-        return;
-    }
-
-    const message2 = contractUpdateResult.getString(0);
-    console.log(`contract returned message: ${message2}`);
+    console.log("contract successfully deleted");
 }
 
 void main();
