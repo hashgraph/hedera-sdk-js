@@ -31,7 +31,7 @@ specifiers:
   eslint-plugin-deprecation: ^1.2.1
   eslint-plugin-ie11: ^1.0.0
   eslint-plugin-import: ^2.24.2
-  eslint-plugin-jsdoc: ^36.1.0
+  eslint-plugin-jsdoc: ^37.0.0
   eslint-plugin-mocha: ^9.0.0
   eslint-plugin-node: ^11.1.0
   geckodriver: ^2.0.4
@@ -87,7 +87,7 @@ devDependencies:
   eslint-plugin-deprecation: 1.2.1_eslint@7.32.0+typescript@4.4.4
   eslint-plugin-ie11: 1.0.0
   eslint-plugin-import: 2.25.2_eslint@7.32.0
-  eslint-plugin-jsdoc: 36.1.1_eslint@7.32.0
+  eslint-plugin-jsdoc: 37.0.0_eslint@7.32.0
   eslint-plugin-mocha: 9.0.0_eslint@7.32.0
   eslint-plugin-node: 11.1.0_eslint@7.32.0
   geckodriver: 2.0.4
@@ -599,13 +599,13 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
-  /@es-joy/jsdoccomment/0.10.8:
-    resolution: {integrity: sha512-3P1JiGL4xaR9PoTKUHa2N/LKwa2/eUdRqGwijMWWgBqbFEqJUVpmaOi2TcjcemrsRMgFLBzQCK4ToPhrSVDiFQ==}
-    engines: {node: ^12 || ^14 || ^16}
+  /@es-joy/jsdoccomment/0.12.0:
+    resolution: {integrity: sha512-Gw4/j9v36IKY8ET+W0GoOzrRw17xjf21EIFFRL3zx21fF5MnqmeNpNi+PU/LKjqLpPb2Pw2XdlJbYM31VVo/PQ==}
+    engines: {node: ^12 || ^14 || ^16 || ^17}
     dependencies:
       comment-parser: 1.2.4
       esquery: 1.4.0
-      jsdoc-type-pratt-parser: 1.1.1
+      jsdoc-type-pratt-parser: 2.0.0
     dev: true
 
   /@eslint/eslintrc/0.4.3:
@@ -3400,18 +3400,18 @@ packages:
       tsconfig-paths: 3.11.0
     dev: true
 
-  /eslint-plugin-jsdoc/36.1.1_eslint@7.32.0:
-    resolution: {integrity: sha512-nuLDvH1EJaKx0PCa9oeQIxH6pACIhZd1gkalTUxZbaxxwokjs7TplqY0Q8Ew3CoZaf5aowm0g/Z3JGHCatt+gQ==}
-    engines: {node: ^12 || ^14 || ^16}
+  /eslint-plugin-jsdoc/37.0.0_eslint@7.32.0:
+    resolution: {integrity: sha512-Pv5/Y9stNPHJEoF9GM+pcB9nOT4sNToVxv9v5vsyr8tbam0tM4DUKFShtJBZ+fZFdwhFaQU1hGcPQqsjy+dKCQ==}
+    engines: {node: ^12 || ^14 || ^16 || ^17}
     peerDependencies:
-      eslint: ^6.0.0 || ^7.0.0
+      eslint: ^7.0.0 || ^8.0.0
     dependencies:
-      '@es-joy/jsdoccomment': 0.10.8
+      '@es-joy/jsdoccomment': 0.12.0
       comment-parser: 1.2.4
       debug: 4.3.2
       eslint: 7.32.0
       esquery: 1.4.0
-      jsdoc-type-pratt-parser: 1.1.1
+      jsdoc-type-pratt-parser: 2.0.0
       lodash: 4.17.21
       regextras: 0.8.0
       semver: 7.3.5
@@ -4737,8 +4737,8 @@ packages:
     resolution: {integrity: sha1-peZUwuWi3rXyAdls77yoDA7y9RM=}
     dev: true
 
-  /jsdoc-type-pratt-parser/1.1.1:
-    resolution: {integrity: sha512-uelRmpghNwPBuZScwgBG/OzodaFk5RbO5xaivBdsAY70icWfShwZ7PCMO0x1zSkOa8T1FzHThmrdoyg/0AwV5g==}
+  /jsdoc-type-pratt-parser/2.0.0:
+    resolution: {integrity: sha512-sUuj2j48wxrEpbFjDp1sAesAxPiLT+z0SWVmMafyIINs6Lj5gIPKh3VrkBZu4E/Dv+wHpOot0m6H8zlHQjwqeQ==}
     engines: {node: '>=12.0.0'}
     dev: true
 
