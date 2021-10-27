@@ -87,7 +87,7 @@ devDependencies:
   eslint-plugin-deprecation: 1.2.1_eslint@7.32.0+typescript@4.4.4
   eslint-plugin-ie11: 1.0.0
   eslint-plugin-import: 2.25.2_eslint@7.32.0
-  eslint-plugin-jsdoc: 37.0.0_eslint@7.32.0
+  eslint-plugin-jsdoc: 37.0.3_eslint@7.32.0
   eslint-plugin-mocha: 9.0.0_eslint@7.32.0
   eslint-plugin-node: 11.1.0_eslint@7.32.0
   geckodriver: 2.0.4
@@ -3400,8 +3400,8 @@ packages:
       tsconfig-paths: 3.11.0
     dev: true
 
-  /eslint-plugin-jsdoc/37.0.0_eslint@7.32.0:
-    resolution: {integrity: sha512-Pv5/Y9stNPHJEoF9GM+pcB9nOT4sNToVxv9v5vsyr8tbam0tM4DUKFShtJBZ+fZFdwhFaQU1hGcPQqsjy+dKCQ==}
+  /eslint-plugin-jsdoc/37.0.3_eslint@7.32.0:
+    resolution: {integrity: sha512-Qg/gIZAfcrM4Qu/JzcnxPGD45Je6wPLFzMZQboeqit/CL4aY6wuzBTkgUMiWXfw/PaPl+sb0GF1XdBlV23ReDA==}
     engines: {node: ^12 || ^14 || ^16 || ^17}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0
