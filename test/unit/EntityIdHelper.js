@@ -27,15 +27,11 @@ describe("EntityIdHelper", function () {
     });
 
     it("should prove to|fromSolidityAddress are reversible", function () {
-        const arrayLong = [new Long(11),new Long(12),new Long(13)];
+        const arrayLong = [new Long(11), new Long(12), new Long(13)];
 
-        console.log(EntityIdHelper.toSolidityAddress(arrayLong));
-
-        const address = EntityIdHelper.fromSolidityAddress(EntityIdHelper.toSolidityAddress(arrayLong));
-        
-
-        // console.log(address);
-        
+        const address = EntityIdHelper.fromSolidityAddress(
+            EntityIdHelper.toSolidityAddress(arrayLong)
+        );
 
         expect(address).to.eql(arrayLong);
     });

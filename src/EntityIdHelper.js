@@ -140,8 +140,8 @@ export function fromSolidityAddress(address) {
     }
 
     const shard = Long.fromBytesBE([0, 0, 0, 0, ...addr.slice(0, 4)]);
-    const realm = Long.fromBytesBE(addr.slice(4, 12));
-    const num = Long.fromBytesBE(addr.slice(12, 20));
+    const realm = Long.fromBytesBE(Array.from(addr.slice(4, 12)));
+    const num = Long.fromBytesBE(Array.from(addr.slice(12, 20)));
 
     return [shard, realm, num];
 }
@@ -153,10 +153,11 @@ export function fromSolidityAddress(address) {
 export function toSolidityAddress(address) {
     const buffer = new Uint8Array(20);
     const view = new DataView(buffer.buffer, 0, 20);
+    const [shard, realm, num] = address;
 
-    view.setUint32(0, util.convertToNumber(address[0])); //shard
-    view.setUint32(8, util.convertToNumber(address[1])); //realm
-    view.setUint32(16, util.convertToNumber(address[2]));//num
+    view.setUint32(0, util.convertToNumber(shard));
+    view.setUint32(8, util.convertToNumber(realm));
+    view.setUint32(16, util.convertToNumber(num));
 
     return hex.encode(buffer);
 }
