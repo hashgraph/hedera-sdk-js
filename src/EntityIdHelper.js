@@ -139,9 +139,9 @@ export function fromSolidityAddress(address) {
                 expected length 40, got length ${address.length}`);
     }
 
-    const shard = Long.fromBytesBE(Array.from(addr.slice(0, 4)));
-    const realm = Long.fromBytesBE(Array.from(addr.slice(4, 12)));
-    const num = Long.fromBytesBE(Array.from(addr.slice(12, 20)));
+    const shard = Long.fromBytesBE([0, 0, 0, 0, ...addr.slice(0, 4)]);
+    const realm = Long.fromBytesBE(addr.slice(4, 12));
+    const num = Long.fromBytesBE(addr.slice(12, 20));
 
     return [shard, realm, num];
 }

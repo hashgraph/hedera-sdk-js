@@ -9,7 +9,7 @@ describe("EntityIdHelper", function () {
             new Long(1),
             new Long(1),
         ]);
-        const addressExpected = "";
+        const addressExpected = "0000000100000000000000010000000000000001";
         expect(address).to.eql(addressExpected);
 
         address = EntityIdHelper.toSolidityAddress([1, 1, 1]);
