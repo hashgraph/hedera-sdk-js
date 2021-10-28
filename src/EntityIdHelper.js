@@ -1,6 +1,7 @@
 import Long from "long";
 import * as hex from "./encoding/hex.js";
 import BadEntityIdError from "./BadEntityIdError.js";
+import * as util from "../src/util.js";
 
 /**
  * @typedef {import("./client/Client.js").default<*, *>} Client
@@ -138,11 +139,27 @@ export function fromSolidityAddress(address) {
                 expected length 40, got length ${address.length}`);
     }
 
-    const shard = Long.fromBytesBE(Array.from(addr.slice(0, 4)));
+    const shard = Long.fromBytesBE([0, 0, 0, 0, ...addr.slice(0, 4)]);
     const realm = Long.fromBytesBE(Array.from(addr.slice(4, 12)));
     const num = Long.fromBytesBE(Array.from(addr.slice(12, 20)));
 
     return [shard, realm, num];
+}
+
+/**
+ * @param {[Long,Long,Long] | [number,number,number]} address
+ * @returns {string}
+ */
+export function toSolidityAddress(address) {
+    const buffer = new Uint8Array(20);
+    const view = new DataView(buffer.buffer, 0, 20);
+    const [shard, realm, num] = address;
+
+    view.setUint32(0, util.convertToNumber(shard));
+    view.setUint32(8, util.convertToNumber(realm));
+    view.setUint32(16, util.convertToNumber(num));
+
+    return hex.encode(buffer);
 }
 
 /**

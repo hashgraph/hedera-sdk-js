@@ -104,6 +104,13 @@ export default class ContractId extends Key {
     }
 
     /**
+     * @returns {string}
+     */
+    toSolidityAddress() {
+        return entity_id.toSolidityAddress([this.shard, this.realm, this.num]);
+    }
+
+    /**
      * @internal
      * @returns {proto.IContractID}
      */

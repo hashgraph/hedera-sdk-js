@@ -100,6 +100,13 @@ export default class AccountId {
     }
 
     /**
+     * @returns {string}
+     */
+    toSolidityAddress() {
+        return entity_id.toSolidityAddress([this.shard, this.realm, this.num]);
+    }
+
+    /**
      * @internal
      * @returns {proto.IAccountID}
      */

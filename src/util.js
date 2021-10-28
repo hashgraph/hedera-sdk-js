@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import Long from "long";
 
 /**
  * Utility Error Messages
@@ -11,12 +12,17 @@ export const REQUIRE_STRING_OR_UINT8ARRAY_ERROR =
 export const REQUIRE_NUMBER_ERROR = "This value must be a Number.";
 export const REQUIRE_BIGNUMBER_ERROR = "This value must be a BigNumber.";
 export const REQUIRE_ARRAY_ERROR = "The provided variable must be an Array.";
+export const REQUIRE_LONG_ERROR = "This value must be a Long.";
 
 export const REQUIRE_TYPE_ERROR =
     "The provided variables are not matching types.";
 
 export const FUNCTION_CONVERT_TO_BIGNUMBER_ERROR =
     "This value must be a String, Number, or BigNumber to be converted.";
+export const FUNCTION_CONVERT_TO_NUMBER_ERROR =
+    "This value must be a String, Number, or BigNumber to be converted.";
+export const FUNCTION_CONVERT_TO_NUMBER_PARSE_ERROR =
+    "Unable to parse given variable. Returns NaN.";
 
 //Soft Checks
 
@@ -76,6 +82,16 @@ export function isNumber(variable) {
  */
 export function isBigNumber(variable) {
     return isNonNull(variable) && variable instanceof BigNumber;
+}
+
+/**
+ * Takes any param and returns true if param is not null and of type BigNumber.
+ *
+ * @param {any | null | undefined} variable
+ * @returns {boolean}
+ */
+export function isLong(variable) {
+    return isNonNull(variable) && variable instanceof Long;
 }
 
 /**
@@ -144,6 +160,21 @@ export function requireBigNumber(variable) {
     } else {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return /** @type {BigNumber} */ (variable);
+    }
+}
+
+/**
+ * Takes any param and throws custom error if non BigNumber.
+ *
+ * @param {any | null | undefined} variable
+ * @returns {Long}
+ */
+export function requireLong(variable) {
+    if (!isLong(requireNonNull(variable))) {
+        throw new Error(REQUIRE_LONG_ERROR);
+    } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        return /** @type {Long} */ (variable);
     }
 }
 
@@ -217,7 +248,12 @@ export function requireStringOrUint8Array(variable) {
  */
 export function convertToBigNumber(variable) {
     requireNonNull(variable);
-    if (isNumber(variable) || isString(variable) || isBigNumber(variable)) {
+    if (
+        isBigNumber(variable) ||
+        isString(variable) ||
+        isNumber(variable) ||
+        isLong(variable)
+    ) {
         return new BigNumber(variable);
     }
     throw new Error(FUNCTION_CONVERT_TO_BIGNUMBER_ERROR);
@@ -236,5 +272,28 @@ export function convertToBigNumberArray(variable) {
         );
     } else {
         throw new Error(REQUIRE_ARRAY_ERROR);
+    }
+}
+
+/**
+ * @param {*} variable
+ * @returns {number}
+ */
+export function convertToNumber(variable) {
+    requireNonNull(variable);
+    if (
+        isBigNumber(variable) ||
+        isString(variable) ||
+        isNumber(variable) ||
+        isLong(variable)
+    ) {
+        const num = parseInt(variable);
+        if (isNaN(num)) {
+            throw new Error(FUNCTION_CONVERT_TO_NUMBER_PARSE_ERROR);
+        } else {
+            return num;
+        }
+    } else {
+        throw new Error(FUNCTION_CONVERT_TO_NUMBER_ERROR);
     }
 }

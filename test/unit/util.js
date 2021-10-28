@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import Long from "long";
 import * as util from "../src/util.js";
 
 describe("util.js", function () {
@@ -290,5 +291,38 @@ describe("util.js", function () {
         expect(util.convertToBigNumberArray(bigNumberArray)).to.eql(
             bigNumberArray
         );
+    });
+
+    it("convert: convertToNumber should convert string or BigNumber to number", function () {
+        try {
+            util.convertToNumber(null);
+        } catch (error) {
+            expect(error.message).to.eql(util.REQUIRE_NON_NULL_ERROR);
+        }
+
+        try {
+            util.convertToNumber(undefined);
+        } catch (error) {
+            expect(error.message).to.eql(util.REQUIRE_NON_NULL_ERROR);
+        }
+
+        try {
+            util.convertToNumber({});
+        } catch (error) {
+            expect(error.message).to.eql(util.FUNCTION_CONVERT_TO_NUMBER_ERROR);
+        }
+
+        try {
+            util.convertToNumber("asdf");
+        } catch (error) {
+            expect(error.message).to.eql(
+                util.FUNCTION_CONVERT_TO_NUMBER_PARSE_ERROR
+            );
+        }
+
+        expect(util.convertToNumber(1)).to.eql(1);
+        expect(util.convertToNumber("1")).to.eql(1);
+        expect(util.convertToNumber(new BigNumber(1))).to.eql(1);
+        expect(util.convertToNumber(new Long(1))).to.eql(1);
     });
 });
