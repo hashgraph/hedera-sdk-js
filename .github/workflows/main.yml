@@ -7,6 +7,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [ 'current', 'latest' ]
 
     steps:
       - name: Cache Gradle packages
@@ -50,13 +53,26 @@ jobs:
           repository: hashgraph/hedera-services
           path: hedera-services
 
-      - name: Build Hedera Services
+      - name: Get Current Tag
+        working-directory: hedera-services
+        if: ${{ matrix.version == 'current' }}
         run: |
-          cd hedera-services
           git tag MASTER
           echo "TAG=MASTER" >> .env
-          docker build -t services-node:MASTER .
-          cd ..
+          echo "TAG=MASTER" >> $GITHUB_ENV
+
+      - name: Get Latest Tag
+        if: ${{ matrix.version == 'latest' }}
+        working-directory: hedera-services
+        run: |
+          git fetch --unshallow --tags
+          export TAG=$(git log --tags --simplify-by-decoration --pretty="format:%d" | grep "^\s(tag:\sv[0-9]\+\.[0-9]\+\.[0-9]\+\(-[A-Za-z0-9]\+\(\.[0-9]\+\)\?\)\?)\$" | head -n 1 | sed -e "s#\s(tag:\s\(.*\))#\1#g")
+          echo "TAG=$TAG" > .env
+          echo "TAG=$TAG" > $GITHUB_ENV
+
+      - name: Build Hedera Services
+        working-directory: hedera-services
+        run: docker build -t services-node:$TAG .
 
       - name: Fetch Hedera SDK
         uses: actions/checkout@v2
