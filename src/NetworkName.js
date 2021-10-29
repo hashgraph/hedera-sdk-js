@@ -1,8 +1,12 @@
 /**
+ * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName
+ */
+
+/**
  * @typedef {object} NetworkNameType
- * @property {string} Mainnet
- * @property {string} Testnet
- * @property {string} Previewnet
+ * @property {ClientNetworkName} Mainnet
+ * @property {ClientNetworkName} Testnet
+ * @property {ClientNetworkName} Previewnet
  */
 
 /**

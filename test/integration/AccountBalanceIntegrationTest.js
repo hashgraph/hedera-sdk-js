@@ -4,11 +4,53 @@ import {
     TokenCreateTransaction,
     AccountId,
 } from "../src/exports.js";
-import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
+import IntegrationTestEnv, {
+    Client,
+    skipTestDueToNodeJsVersion,
+} from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountBalanceQuery", function () {
+    it("can connect to previewnet with TLS", async function () {
+        this.timeout(30000);
+        if (skipTestDueToNodeJsVersion(16)) {
+            return;
+        }
+
+        const client = Client.forPreviewnet().setTransportSecurity(true);
+
+        for (const [address, nodeAccountId] of Object.entries(client.network)) {
+            expect(address.endsWith(":50212")).to.be.true;
+
+            await new AccountBalanceQuery()
+                .setNodeAccountIds([nodeAccountId])
+                .setAccountId(nodeAccountId)
+                .setMaxAttempts(1)
+                .execute(client);
+        }
+    });
+
+    it("can connect to testnet with TLS", async function () {
+        this.timeout(30000);
+
+        if (skipTestDueToNodeJsVersion(16)) {
+            return;
+        }
+
+        const client = Client.forTestnet().setTransportSecurity(true);
+
+        for (const [address, nodeAccountId] of Object.entries(client.network)) {
+            expect(address.endsWith(":50212")).to.be.true;
+
+            await new AccountBalanceQuery()
+                .setNodeAccountIds([nodeAccountId])
+                .setAccountId(nodeAccountId)
+                .setMaxAttempts(1)
+                .execute(client);
+        }
+    });
+
     it("an account that does not exist should return an error", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -61,7 +103,7 @@ describe("AccountBalanceQuery", function () {
     });
 
     it("should reflect token with no keys", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;

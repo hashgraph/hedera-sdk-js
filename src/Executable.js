@@ -317,9 +317,7 @@ export default class Executable {
 
         for (let attempt = 1 /* loop forever */; ; attempt += 1) {
             const nodeAccountId = this._getNodeAccountId();
-            const node = client._network.networkNodes.get(
-                nodeAccountId.toString()
-            );
+            const node = client._network._network.get(nodeAccountId.toString());
 
             if (node == null) {
                 throw new Error(
@@ -327,9 +325,7 @@ export default class Executable {
                 );
             }
 
-            node.inUse();
-
-            const channel = node.channel;
+            const channel = node.getChannel();
             const request = await this._makeRequestAsync();
 
             // advance the internal index

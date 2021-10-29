@@ -12,7 +12,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenGrantKyc", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -80,7 +80,7 @@ describe("TokenGrantKyc", function () {
     });
 
     it("should be executable even when no token IDs are set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const key = PrivateKey.generate();
@@ -115,7 +115,7 @@ describe("TokenGrantKyc", function () {
     });
 
     it("should error when account ID is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;

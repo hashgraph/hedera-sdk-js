@@ -16,7 +16,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenUpdate", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -108,7 +108,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should be able to update treasury", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -226,7 +226,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should be executable when no properties except token ID are set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -262,7 +262,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should error updating immutable token", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
@@ -297,7 +297,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should error when token ID is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
 
@@ -319,7 +319,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should be exectuable when updating immutable token, but not setting any fields besides token ID", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
@@ -342,7 +342,7 @@ describe("TokenUpdate", function () {
     });
 
     it("should error when admin key does not sign transaction", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
@@ -383,7 +383,7 @@ describe("TokenUpdate", function () {
 
     // eslint-disable-next-line mocha/no-skipped-tests
     it.skip("cannot change current treasury until no NFTs are owned", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new({ throwaway: true });
 

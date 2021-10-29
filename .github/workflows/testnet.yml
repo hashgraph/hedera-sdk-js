@@ -7,6 +7,10 @@ on:
 jobs:
   test-integration-node:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ '12', '14', '16' ]
+
 
     steps:
       - uses: actions/checkout@v2
@@ -23,7 +27,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: ${{ matrix.node }}
 
       - uses: pnpm/action-setup@v2.0.1
         with:

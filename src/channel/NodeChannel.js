@@ -15,21 +15,37 @@ export default class NodeChannel extends Channel {
     /**
      * @internal
      * @param {string} address
+     * @param {string=} cert
      */
-    constructor(address) {
+    constructor(address, cert) {
         super();
+
+        this.cert = cert;
+
+        let security;
+        let options;
+
+        if (this.cert != null) {
+            security = credentials.createSsl(Buffer.from(this.cert));
+            options = {
+                "grpc.ssl_target_name_override": "127.0.0.1",
+                "grpc.default_authority": "127.0.0.1",
+                "grpc.http_connect_creds": "0",
+                // https://github.com/grpc/grpc-node/issues/1593
+                // https://github.com/grpc/grpc-node/issues/1545
+                // https://github.com/grpc/grpc/issues/13163
+                "grpc.keepalive_timeout_ms": 1,
+                "grpc.keepalive_permit_without_calls": 1,
+            };
+        } else {
+            security = credentials.createInsecure();
+        }
 
         /**
          * @type {Client}
          * @private
          */
-        this._client = new Client(address, credentials.createInsecure(), {
-            // https://github.com/grpc/grpc-node/issues/1593
-            // https://github.com/grpc/grpc-node/issues/1545
-            // https://github.com/grpc/grpc/issues/13163
-            "grpc.keepalive_timeout_ms": 1,
-            "grpc.keepalive_permit_without_calls": 1,
-        });
+        this._client = new Client(address, security, options);
     }
 
     /**
@@ -62,8 +78,6 @@ export default class NodeChannel extends Channel {
                 }
             }, 10_000);
 
-            this._client.getChannel().getConnectivityState(false);
-
             this._client.makeUnaryRequest(
                 `/proto.${serviceName}/${method.name}`,
                 (value) => value,
@@ -72,7 +86,9 @@ export default class NodeChannel extends Channel {
                     return value;
                 },
                 Buffer.from(requestData),
-                callback
+                (e, r) => {
+                    callback(e, r);
+                }
             );
         };
     }

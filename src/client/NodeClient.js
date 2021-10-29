@@ -4,6 +4,7 @@ import Client from "./Client.js";
 import NodeChannel from "../channel/NodeChannel.js";
 import NodeMirrorChannel from "../channel/NodeMirrorChannel.js";
 import AccountId from "../account/AccountId.js";
+import NetworkName from "../NetworkName.js";
 
 const readFileAsync = util.promisify(fs.readFile);
 
@@ -113,19 +114,19 @@ export default class NodeClient extends Client {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
                         this.setMirrorNetwork(MirrorNetwork.MAINNET);
-                        this._network._ledgerId = "0";
+                        this.setNetworkName(NetworkName.Mainnet);
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
                         this.setMirrorNetwork(MirrorNetwork.TESTNET);
-                        this._network._ledgerId = "1";
+                        this.setNetworkName(NetworkName.Testnet);
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
-                        this._network._ledgerId = "2";
+                        this.setNetworkName(NetworkName.Previewnet);
                         break;
 
                     default:
@@ -258,36 +259,36 @@ export default class NodeClient extends Client {
 
     /**
      * @param {string[] | string | NetworkName} mirrorNetwork
-     * @returns {void}
+     * @returns {this}
      */
     setMirrorNetwork(mirrorNetwork) {
         if (typeof mirrorNetwork === "string") {
             switch (mirrorNetwork) {
                 case "previewnet":
-                    this._mirrorNetwork.setMirrorNetwork(
-                        MirrorNetwork.PREVIEWNET
-                    );
+                    this._mirrorNetwork.setNetwork(MirrorNetwork.PREVIEWNET);
                     break;
                 case "testnet":
-                    this._mirrorNetwork.setMirrorNetwork(MirrorNetwork.TESTNET);
+                    this._mirrorNetwork.setNetwork(MirrorNetwork.TESTNET);
                     break;
                 case "mainnet":
-                    this._mirrorNetwork.setMirrorNetwork(MirrorNetwork.MAINNET);
+                    this._mirrorNetwork.setNetwork(MirrorNetwork.MAINNET);
                     break;
                 default:
-                    this._mirrorNetwork.setMirrorNetwork([mirrorNetwork]);
+                    this._mirrorNetwork.setNetwork([mirrorNetwork]);
             }
         } else {
-            this._mirrorNetwork.setMirrorNetwork(mirrorNetwork);
+            this._mirrorNetwork.setNetwork(mirrorNetwork);
         }
+
+        return this;
     }
 
     /**
      * @override
-     * @returns {(address: string) => NodeChannel}
+     * @returns {(address: string, cert?: string) => NodeChannel}
      */
     _createNetworkChannel() {
-        return (address) => new NodeChannel(address);
+        return (address, cert) => new NodeChannel(address, cert);
     }
 
     /**

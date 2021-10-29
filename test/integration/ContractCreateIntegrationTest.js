@@ -13,7 +13,7 @@ let smartContractBytecode =
 
 describe("ContractCreate", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -84,7 +84,7 @@ describe("ContractCreate", function () {
     });
 
     it("should be able to create without admin key", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -158,7 +158,7 @@ describe("ContractCreate", function () {
     });
 
     it("should error when gas is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -203,7 +203,7 @@ describe("ContractCreate", function () {
     });
 
     it("should error when contructor parameters are not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;
@@ -244,7 +244,7 @@ describe("ContractCreate", function () {
     });
 
     it("should error when bytecode file ID is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;

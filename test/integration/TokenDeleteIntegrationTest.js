@@ -7,7 +7,7 @@ import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenDelete", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -39,7 +39,7 @@ describe("TokenDelete", function () {
     });
 
     it("should error with no token ID set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
         const env = await IntegrationTestEnv.new();
 
         let err = false;

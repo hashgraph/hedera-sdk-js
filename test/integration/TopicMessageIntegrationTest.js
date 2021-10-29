@@ -10,7 +10,7 @@ import { bigContents } from "./contents.js";
 
 describe("TopicMessage", function () {
     it("should be executable", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -73,7 +73,7 @@ describe("TopicMessage", function () {
     });
 
     it("should be executable with large message", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -136,7 +136,7 @@ describe("TopicMessage", function () {
     });
 
     it("should error when topic ID is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
@@ -188,7 +188,7 @@ describe("TopicMessage", function () {
     });
 
     it("should error when message is not set", async function () {
-        this.timeout(60000);
+        this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
