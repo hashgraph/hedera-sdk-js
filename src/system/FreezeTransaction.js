@@ -93,6 +93,7 @@ export default class FreezeTransaction extends Transaction {
         }
 
         if (props.updateFileId != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setUpdateFileId(props.updateFileId);
         }
 
