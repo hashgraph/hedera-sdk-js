@@ -263,7 +263,6 @@ export default class ContractCallQuery extends Query {
                         : null,
                 gas: this._gas,
                 functionParameters: this._functionParameters,
-                maxResultSize: this._maxResultSize,
             },
         };
     }
