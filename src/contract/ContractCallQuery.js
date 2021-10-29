@@ -76,6 +76,7 @@ export default class ContractCallQuery extends Query {
         }
 
         /**
+         * @deprecated
          * @private
          * @type {?Long}
          */
@@ -178,10 +179,12 @@ export default class ContractCallQuery extends Query {
     }
 
     /**
+     * @deprecated
      * @param {number | Long} size
      * @returns {ContractCallQuery}
      */
     setMaxResultSize(size) {
+        console.warn("Deprecated: there is no replacement");
         this._maxResultSize =
             size instanceof Long ? size : Long.fromValue(size);
         return this;
