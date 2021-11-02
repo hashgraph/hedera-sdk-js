@@ -1,7 +1,7 @@
 import Long from "long";
 import * as hex from "./encoding/hex.js";
 import BadEntityIdError from "./BadEntityIdError.js";
-import * as util from "../src/util.js";
+import * as util from "./util.js";
 
 /**
  * @typedef {import("./client/Client.js").default<*, *>} Client
