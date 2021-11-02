@@ -17,11 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * `*Id.fromSolidityAddress()`
 
-### Deprecated
-
- * `ContractUpdateTransaction.[set|get]ByteCodeFileId()`
- * `ContractCallQuery.[set|get]MaxResultSize()`
-
 ## v2.3.0
 
 ### Added
