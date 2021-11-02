@@ -35,4 +35,18 @@ describe("EntityIdHelper", function () {
 
         expect(address).to.eql(arrayLong);
     });
+
+    it("should throw error in toSolidityAddress when parseInt fails", function () {
+        const arrayLong = [new Long(11), null, new Long(13)];
+
+        try {
+            EntityIdHelper.fromSolidityAddress(
+                EntityIdHelper.toSolidityAddress(arrayLong)
+            );
+        } catch (error) {
+            expect(error.message).to.eql(
+                "Unable to parse given variable. Returns NaN."
+            );
+        }
+    });
 });

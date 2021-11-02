@@ -1,7 +1,6 @@
 import Long from "long";
 import * as hex from "./encoding/hex.js";
 import BadEntityIdError from "./BadEntityIdError.js";
-import * as util from "../src/util.js";
 
 /**
  * @typedef {import("./client/Client.js").default<*, *>} Client
@@ -155,9 +154,17 @@ export function toSolidityAddress(address) {
     const view = new DataView(buffer.buffer, 0, 20);
     const [shard, realm, num] = address;
 
-    view.setUint32(0, util.convertToNumber(shard));
-    view.setUint32(8, util.convertToNumber(realm));
-    view.setUint32(16, util.convertToNumber(num));
+    const convertedShard = parseInt(String(shard));
+    const convertedRealm = parseInt(String(realm));
+    const convertedNum = parseInt(String(num));
+
+    if (isNaN(convertedShard) || isNaN(convertedRealm) || isNaN(convertedNum)) {
+        throw new Error("Unable to parse given variable. Returns NaN.");
+    }
+
+    view.setUint32(0, convertedShard);
+    view.setUint32(8, convertedRealm);
+    view.setUint32(16, convertedNum);
 
     return hex.encode(buffer);
 }
