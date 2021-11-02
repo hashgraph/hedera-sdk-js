@@ -294,16 +294,13 @@ export default class ContractUpdateTransaction extends Transaction {
     }
 
     /**
-     * @deprecated
      * @returns {?FileId}
      */
     get bytecodeFileId() {
-        console.warn("Deprecated: there is no replacement");
         return this._bytecodeFileId;
     }
 
     /**
-     * @deprecated
      * @param {FileId | string} bytecodeFileId
      * @returns {this}
      */
