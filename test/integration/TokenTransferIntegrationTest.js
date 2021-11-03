@@ -1,10 +1,10 @@
 import {
-    AccountInfoQuery,
     AccountCreateTransaction,
+    AccountInfoQuery,
+    AccountUpdateTransaction,
     Hbar,
     PrivateKey,
     Status,
-    AccountUpdateTransaction,
     TokenAssociateTransaction,
     TokenCreateTransaction,
     TokenGrantKycTransaction,

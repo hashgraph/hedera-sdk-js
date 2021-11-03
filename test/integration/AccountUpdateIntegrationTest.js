@@ -1,13 +1,15 @@
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
-import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
-import AccountUpdateTransaction from "../src/account/AccountUpdateTransaction.js";
-import AccountInfoQuery from "../src/account/AccountInfoQuery.js";
-import Hbar from "../src/Hbar.js";
-import Timestamp from "../src/Timestamp.js";
-import Status from "../src/Status.js";
-import TransactionId from "../../src/transaction/TransactionId.js";
+import {
+    AccountCreateTransaction,
+    AccountDeleteTransaction,
+    AccountInfoQuery,
+    AccountUpdateTransaction,
+    Hbar,
+    PrivateKey,
+    Status,
+    Timestamp,
+    TransactionId,
+} from "../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
-import { PrivateKey } from "../src/index.js";
 import Long from "long";
 
 describe("AccountUpdate", function () {

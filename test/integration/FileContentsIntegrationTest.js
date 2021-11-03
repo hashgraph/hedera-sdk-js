@@ -1,10 +1,12 @@
-import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
-import FileContentsQuery from "../src/file/FileContentsQuery.js";
-import Hbar from "../src/Hbar.js";
-import Status from "../src/Status.js";
-import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
+import {
+    FileContentsQuery,
+    FileCreateTransaction,
+    FileDeleteTransaction,
+    Hbar,
+    Status,
+} from "../src/exports.js";
 import * as utf8 from "../src/encoding/utf8.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileContents", function () {
     it("should be executable", async function () {

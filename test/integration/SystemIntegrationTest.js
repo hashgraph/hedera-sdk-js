@@ -1,8 +1,10 @@
+import {
+    ContractId,
+    FileId,
+    SystemDeleteTransaction,
+    Timestamp,
+} from "../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
-import SystemDeleteTransaction from "../../src/system/SystemDeleteTransaction.js";
-import ContractId from "../src/contract/ContractId.js";
-import FileId from "../src/file/FileId.js";
-import Timestamp from "../src/Timestamp.js";
 
 describe("SystemIntegration", function () {
     it("should be executable", async function () {

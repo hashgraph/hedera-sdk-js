@@ -1,8 +1,10 @@
+import {
+    AccountCreateTransaction,
+    AccountDeleteTransaction,
+    PrivateKey,
+} from "../src/exports.js";
 import * as hex from "../src/encoding/hex.js";
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
-import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
-import { PrivateKey } from "../src/index.js";
 
 describe("TransactionResponse", function () {
     it("should be executable", async function () {

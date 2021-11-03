@@ -1,8 +1,10 @@
-import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
-import FileInfoQuery from "../src/file/FileInfoQuery.js";
-import Hbar from "../src/Hbar.js";
-import Status from "../src/Status.js";
+import {
+    FileCreateTransaction,
+    FileDeleteTransaction,
+    FileInfoQuery,
+    Hbar,
+    Status,
+} from "../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileDelete", function () {

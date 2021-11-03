@@ -134,6 +134,19 @@ export default class ContractUpdateTransaction extends Transaction {
             body.contractUpdateInstance
         );
 
+        let autoRenewPeriod = undefined;
+        if (
+            update.autoRenewPeriod != null &&
+            update.autoRenewPeriod.seconds != null
+        ) {
+            autoRenewPeriod = update.autoRenewPeriod.seconds;
+        }
+
+        let contractMemo = undefined;
+        if (update.memoWrapper != null && update.memoWrapper.value != null) {
+            contractMemo = update.memoWrapper.value;
+        }
+
         return Transaction._fromProtobufTransactions(
             new ContractUpdateTransaction({
                 contractId:
@@ -166,18 +179,8 @@ export default class ContractUpdateTransaction extends Transaction {
                               )
                           )
                         : undefined,
-                autoRenewPeriod:
-                    update.autoRenewPeriod != null
-                        ? update.autoRenewPeriod.seconds != null
-                            ? update.autoRenewPeriod.seconds
-                            : undefined
-                        : undefined,
-                contractMemo:
-                    update.memoWrapper != null
-                        ? update.memoWrapper.value != null
-                            ? update.memoWrapper.value
-                            : undefined
-                        : undefined,
+                autoRenewPeriod,
+                contractMemo,
             }),
             transactions,
             signedTransactions,

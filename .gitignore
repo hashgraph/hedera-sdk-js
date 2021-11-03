@@ -19,3 +19,4 @@ docs/
 # instabul (code coverage)
 .nyc_output/
 .coverage/
+.yalc
