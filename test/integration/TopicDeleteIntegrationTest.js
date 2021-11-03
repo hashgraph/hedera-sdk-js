@@ -1,7 +1,7 @@
 import {
+    Status,
     TopicCreateTransaction,
     TopicDeleteTransaction,
-    Status,
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 

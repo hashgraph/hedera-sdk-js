@@ -1,11 +1,13 @@
-import Hbar from "../src/Hbar.js";
-import Status from "../src/Status.js";
-import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
-import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
-import FileInfoQuery from "../src/file/FileInfoQuery.js";
-import FileAppendTransaction from "../src/file/FileAppendTransaction.js";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
+import {
+    FileAppendTransaction,
+    FileCreateTransaction,
+    FileDeleteTransaction,
+    FileInfoQuery,
+    Hbar,
+    Status,
+} from "../src/exports.js";
 import { bigContents } from "./contents.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileAppend", function () {
     it("should be executable", async function () {

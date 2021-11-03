@@ -1,12 +1,14 @@
-import { ContractByteCodeQuery } from "../../src/exports.js";
-import ContractCreateTransaction from "../src/contract/ContractCreateTransaction.js";
-import ContractDeleteTransaction from "../src/contract/ContractDeleteTransaction.js";
-import ContractFunctionParameters from "../src/contract/ContractFunctionParameters.js";
-import FileCreateTransaction from "../src/file/FileCreateTransaction.js";
-import FileDeleteTransaction from "../src/file/FileDeleteTransaction.js";
-import Hbar from "../src/Hbar.js";
-import Status from "../src/Status.js";
-import TransactionReceiptQuery from "../../src/transaction/TransactionReceiptQuery.js";
+import {
+    ContractByteCodeQuery,
+    ContractCreateTransaction,
+    ContractDeleteTransaction,
+    ContractFunctionParameters,
+    FileCreateTransaction,
+    FileDeleteTransaction,
+    Hbar,
+    Status,
+    TransactionReceiptQuery,
+} from "../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 let smartContractBytecode =

@@ -1,14 +1,14 @@
 import {
-    AccountId,
-    PrivateKey,
     AccountCreateTransaction,
     AccountDeleteTransaction,
+    AccountId,
+    Hbar,
+    PrivateKey,
     TokenCreateTransaction,
     TransferTransaction,
-    Hbar,
-} from "../src/index.js";
+} from "../src/exports.js";
+import * as hex from "../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
-import * as hex from "../../src/encoding/hex.js";
 
 describe("TransactionIntegration", function () {
     it("should be executable", async function () {

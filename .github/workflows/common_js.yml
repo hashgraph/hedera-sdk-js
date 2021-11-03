@@ -1,0 +1,62 @@
+name: Common JS
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test-integration-node:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ '12', '14', '16' ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
+
+      - name: Build SDK
+        run: pnpm install 
+
+      - name: Install yalc
+        run: pnpm install -g yalc
+
+      - name: Install detox
+        run: pnpm install -g detox-cli
+
+      - name: Locally Publish
+        run: yalc publish
+
+      - name: Install dependencies
+        working-directory: common_js_test
+        run: |
+          yalc add "@hashgraph/sdk"
+          pnpm i
+          
+      - name: Test
+        working-directory: common_js_test
+        run: |
+          pnpm test

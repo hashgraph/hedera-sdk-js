@@ -1,8 +1,8 @@
 import {
+    PrivateKey,
+    Status,
     TokenCreateTransaction,
     TokenInfoQuery,
-    Status,
-    PrivateKey,
 } from "../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 

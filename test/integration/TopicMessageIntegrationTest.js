@@ -1,12 +1,12 @@
 import {
+    Status,
     TopicCreateTransaction,
     TopicDeleteTransaction,
-    TopicMessageSubmitTransaction,
     TopicMessageQuery,
-    Status,
+    TopicMessageSubmitTransaction,
 } from "../src/exports.js";
-import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import { bigContents } from "./contents.js";
+import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TopicMessage", function () {
     it("should be executable", async function () {

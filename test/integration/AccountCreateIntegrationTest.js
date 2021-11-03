@@ -1,11 +1,13 @@
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
-import AccountDeleteTransaction from "../src/account/AccountDeleteTransaction.js";
-import AccountInfoQuery from "../src/account/AccountInfoQuery.js";
-import Hbar from "../src/Hbar.js";
-import Status from "../src/Status.js";
-import TransactionId from "../../src/transaction/TransactionId.js";
+import {
+    AccountCreateTransaction,
+    AccountDeleteTransaction,
+    AccountInfoQuery,
+    Hbar,
+    PrivateKey,
+    Status,
+    TransactionId,
+} from "../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
-import { PrivateKey } from "../src/index.js";
 
 describe("AccountCreate", function () {
     it("should be executable", async function () {
