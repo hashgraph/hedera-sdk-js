@@ -39,7 +39,7 @@ export default class ObjectMap {
         const k = typeof key === "string" ? key : key.toString();
 
         this._map.set(k, value);
-        this.__map.set(typeof k === "string" ? this._fromString(k) : k, value);
+        this.__map.set(key, value);
     }
 
     /**
