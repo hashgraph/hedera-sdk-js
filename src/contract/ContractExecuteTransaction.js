@@ -205,10 +205,13 @@ export default class ContractExecuteTransaction extends Transaction {
 
     /**
      * @param {Uint8Array} functionParameters
+     * @returns {this}
      */
     setFunctionParameters(functionParameters) {
         this._requireNotFrozen();
         this._functionParameters = functionParameters;
+
+        return this;
     }
 
     /**
