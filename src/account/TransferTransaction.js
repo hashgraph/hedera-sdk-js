@@ -164,6 +164,25 @@ export default class TransferTransaction extends Transaction {
                     /** @type {Long} */ (transfer.amount)
                 );
             }
+
+            for (const transfer of list.nftTransfers != null
+                ? list.nftTransfers
+                : []) {
+                transfers.addNftTransfer(
+                    tokenId,
+                    /** @type {Long} */ (transfer.serialNumber),
+                    AccountId._fromProtobuf(
+                        /** @type {proto.IAccountID} */ (
+                            transfer.senderAccountID
+                        )
+                    ),
+                    AccountId._fromProtobuf(
+                        /** @type {proto.IAccountID} */ (
+                            transfer.receiverAccountID
+                        )
+                    )
+                );
+            }
         }
 
         const accountAmounts =
