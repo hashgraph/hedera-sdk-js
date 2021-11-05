@@ -394,8 +394,6 @@ export default class TransferTransaction extends Transaction {
         }
 
         for (const [tokenId, value] of this._nftTransfers) {
-            let found = false;
-
             // eslint-disable-next-line ie11/no-loop-func
             const nftTransfers = value.map((transfer) => {
                 return {
@@ -416,12 +414,7 @@ export default class TransferTransaction extends Transaction {
                 }
             }
 
-            if (!found) {
-                tokenTransfers.push({
-                    token: tokenId._toProtobuf(),
-                    nftTransfers,
-                });
-            }
+            tokenTransfers.push({ token: tokenId._toProtobuf(), nftTransfers });
         }
 
         for (const [accountId, value] of this._hbarTransfers) {
