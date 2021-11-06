@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "packages": {
+    "@hashgraph/sdk": {
+      "signature": "8307be82b124cdff68ed416d5469895c",
+      "file": true,
+      "replaced": "link:.."
+    },
+    "@hashgraph/proto": {
+      "signature": "5c35111335da5f8ffc148e130f6d6343",
+      "file": true,
+      "replaced": "link:../packages/proto"
+    }
+  }
+}
