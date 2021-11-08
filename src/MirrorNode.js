@@ -31,6 +31,13 @@ export default class MirrorNode extends ManagedNode {
     }
 
     /**
+     * @returns {string}
+     */
+    getKey() {
+        return this._address.toString();
+    }
+
+    /**
      * @returns {MirrorNode}
      */
     toInsecure() {

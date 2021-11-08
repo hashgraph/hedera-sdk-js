@@ -7,7 +7,7 @@ import ManagedNetwork from "./ManagedNetwork.js";
 
 /**
  * @typedef {import("./Client.js").NetworkName} NetworkName
- * @augments {ManagedNetwork<MirrorChannel, MirrorNode, string[], string[], string>}
+ * @augments {ManagedNetwork<MirrorChannel, MirrorNode, string>}
  */
 export default class MirrorNetwork extends ManagedNetwork {
     /**
@@ -15,6 +15,14 @@ export default class MirrorNetwork extends ManagedNetwork {
      */
     constructor(channelInitFunction) {
         super(channelInitFunction);
+    }
+
+    /**
+     * @param {string[]} network
+     */
+    setNetwork(network) {
+        // eslint-disable-next-line ie11/no-collection-args
+        this._setNetwork(new Map(network.map((address) => [address, address])));
     }
 
     /**
@@ -36,22 +44,13 @@ export default class MirrorNetwork extends ManagedNetwork {
 
     /**
      * @abstract
-     * @param {string[]} network
-     * @returns {string[]}
-     */
-    _createIterableNetwork(network) {
-        return network;
-    }
-
-    /**
-     * @abstract
-     * @param {string} entry
+     * @param {[string, string]} entry
      * @returns {MirrorNode}
      */
     _createNodeFromNetworkEntry(entry) {
         return new MirrorNode({
             newNode: {
-                address: entry,
+                address: entry[1],
                 channelInitFunction: this._createNetworkChannel,
             },
         }).setMinBackoff(this._minBackoff);
@@ -59,51 +58,23 @@ export default class MirrorNetwork extends ManagedNetwork {
 
     /**
      * @abstract
-     * @param {string[]} network
+     * @param {Map<string, string>} network
      * @returns {number[]}
      */
     _getNodesToRemove(network) {
         const indexes = [];
 
+        const values = Object.values(network);
+
         for (let i = this._nodes.length - 1; i >= 0; i--) {
             const node = this._nodes[i];
 
-            if (!network.includes(node.address.toString())) {
+            if (!values.includes(node.address.toString())) {
                 indexes.push(i);
             }
         }
 
         return indexes;
-    }
-
-    /**
-     * @abstract
-     * @param {MirrorNode} node
-     */
-    _removeNodeFromNetwork(node) {
-        this._network.delete(node.address.toString());
-    }
-
-    /**
-     * @abstract
-     * @param {string} entry
-     * @returns {boolean}
-     */
-    _checkNetworkContainsEntry(entry) {
-        for (const node of this._nodes) {
-            if (node.address.toString() === entry) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param {MirrorNode} node
-     */
-    _addNodeToNetwork(node) {
-        this._network.set(node.address.toString(), node);
     }
 
     /**

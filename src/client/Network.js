@@ -18,7 +18,7 @@ import ManagedNetwork from "./ManagedNetwork.js";
  */
 
 /**
- * @augments {ManagedNetwork<Channel, Node, {[key: string]: (string | AccountId)}, [string, (string | AccountId)][], [string, (string | AccountId)]>}
+ * @augments {ManagedNetwork<Channel, Node, AccountId>}
  */
 export default class Network extends ManagedNetwork {
     /**
@@ -31,6 +31,26 @@ export default class Network extends ManagedNetwork {
 
         /** @type {NodeAddressBook | null} */
         this._addressBook = null;
+    }
+
+    /**
+     * @param {{[key: string]: (string | AccountId)}} network
+     */
+    setNetwork(network) {
+        this._setNetwork(
+            // eslint-disable-next-line ie11/no-collection-args
+            new Map(
+                // eslint-disable-next-line ie11/no-collection-args
+                Object.entries(network).map(([key, value]) => {
+                    return [
+                        key,
+                        typeof value === "string"
+                            ? AccountId.fromString(value)
+                            : value,
+                    ];
+                })
+            )
+        );
     }
 
     /**
@@ -98,15 +118,6 @@ export default class Network extends ManagedNetwork {
 
     /**
      * @abstract
-     * @param {{[key: string]: (string | AccountId)}} network
-     * @returns {[string, (string | AccountId)][]}
-     */
-    _createIterableNetwork(network) {
-        return Object.entries(network);
-    }
-
-    /**
-     * @abstract
      * @param {[string, (string | AccountId)]} entry
      * @returns {Node}
      */
@@ -127,7 +138,7 @@ export default class Network extends ManagedNetwork {
 
     /**
      * @abstract
-     * @param {{[key: string]: (string | AccountId)}} network
+     * @param {Map<string, AccountId>} network
      * @returns {number[]}
      */
     _getNodesToRemove(network) {
@@ -135,22 +146,17 @@ export default class Network extends ManagedNetwork {
 
         for (let i = this._nodes.length - 1; i >= 0; i--) {
             const node = this._nodes[i];
-            const accountId = network[node.address.toString()];
+            const accountId = network.get(node.address.toString());
 
-            if (accountId == null || accountId !== node.accountId.toString()) {
+            if (
+                accountId == null ||
+                accountId.toString() !== node.accountId.toString()
+            ) {
                 indexes.push(i);
             }
         }
 
         return indexes;
-    }
-
-    /**
-     * @abstract
-     * @param {Node} node
-     */
-    _removeNodeFromNetwork(node) {
-        this._network.delete(node.accountId.toString());
     }
 
     /**
@@ -166,13 +172,6 @@ export default class Network extends ManagedNetwork {
         }
 
         return false;
-    }
-
-    /**
-     * @param {Node} node
-     */
-    _addNodeToNetwork(node) {
-        this._network.set(node.accountId.toString(), node);
     }
 
     /**
