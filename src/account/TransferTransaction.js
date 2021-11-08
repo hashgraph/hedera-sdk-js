@@ -164,6 +164,25 @@ export default class TransferTransaction extends Transaction {
                     /** @type {Long} */ (transfer.amount)
                 );
             }
+
+            for (const transfer of list.nftTransfers != null
+                ? list.nftTransfers
+                : []) {
+                transfers.addNftTransfer(
+                    tokenId,
+                    /** @type {Long} */ (transfer.serialNumber),
+                    AccountId._fromProtobuf(
+                        /** @type {proto.IAccountID} */ (
+                            transfer.senderAccountID
+                        )
+                    ),
+                    AccountId._fromProtobuf(
+                        /** @type {proto.IAccountID} */ (
+                            transfer.receiverAccountID
+                        )
+                    )
+                );
+            }
         }
 
         const accountAmounts =
@@ -375,8 +394,6 @@ export default class TransferTransaction extends Transaction {
         }
 
         for (const [tokenId, value] of this._nftTransfers) {
-            let found = false;
-
             // eslint-disable-next-line ie11/no-loop-func
             const nftTransfers = value.map((transfer) => {
                 return {
@@ -397,12 +414,7 @@ export default class TransferTransaction extends Transaction {
                 }
             }
 
-            if (!found) {
-                tokenTransfers.push({
-                    token: tokenId._toProtobuf(),
-                    nftTransfers,
-                });
-            }
+            tokenTransfers.push({ token: tokenId._toProtobuf(), nftTransfers });
         }
 
         for (const [accountId, value] of this._hbarTransfers) {
