@@ -1,10 +1,10 @@
 import { AccountInfoQuery } from "../src/exports.js";
-import GrpcServer, { UNAVAILABLE, PRIVATE_KEY } from "./server.js";
+import Mocker, { UNAVAILABLE, PRIVATE_KEY } from "./Mocker.js";
 import Long from "long";
 
 describe("AccountInfo", function () {
     it("should retry on `UNAVAILABLE`", async function () {
-        const { client, server } = await GrpcServer.withResponses([
+        const { client, server } = await Mocker.withResponses([
             { error: UNAVAILABLE },
             {
                 response: {
