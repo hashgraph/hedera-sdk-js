@@ -1086,4 +1086,10 @@ enum ResponseCodeEnum {
    * confirm the hash of the file to be used in the upgrade.
    */
   UPDATE_FILE_HASH_DOES_NOT_MATCH_PREPARED = 278;
+
+  /**
+   * Consensus throttle did not allow execution of this transaction. System is throttled at
+   * consensus level.
+   */
+  CONSENSUS_GAS_EXHAUSTED = 279;
 }
