@@ -151,9 +151,21 @@ class GrpcServer {
     constructor(paths, name) {
         this.server = new grpc.Server();
 
-        this.package = /** @type {grpc.GrpcObject} */ (
+        const pkg = /** @type {grpc.GrpcObject} */ (
             grpc.loadPackageDefinition(loader.loadSync(paths))[name]
         );
+
+        this.services = Object.entries(pkg)
+            .map(([key, value]) => {
+                return typeof value === "function"
+                    ? /** @type {grpc.ServiceDefinition<grpc.UntypedServiceImplementation>} */ (
+                          /** @type {grpc.GrpcObject} */ (pkg[key])["service"]
+                      )
+                    : null;
+            })
+            .filter((service) => service != null);
+
+        Object.freeze(this);
     }
 
     /**
@@ -163,26 +175,12 @@ class GrpcServer {
      * @returns {this}
      */
     addResponses(responses) {
-        let services = [];
-
-        for (const [key, value] of Object.entries(this.package)) {
-            if (typeof value === "function") {
-                const service =
-                    /** @type {grpc.ServiceDefinition<grpc.UntypedServiceImplementation>} */ (
-                        /** @type {grpc.GrpcObject} */ (this.package[key])[
-                            "service"
-                        ]
-                    );
-                services.push(service);
-            }
-        }
-
         /** @type {grpc.UntypedServiceImplementation} */
         const router = {};
 
         let index = 0;
 
-        for (const service of services) {
+        for (const service of this.services) {
             for (const key of Object.keys(service)) {
                 router[key] = /** @type {grpc.handleUnaryCall<any, any>} */ (
                     _,
@@ -237,12 +235,8 @@ class GrpcServer {
      * @param {boolean} force
      * @param {() => void} callback
      */
-    close(force = false, callback = () => {}) {
-        if (force) {
-            this.server.forceShutdown();
-        } else {
-            this.server.tryShutdown(callback);
-        }
+    close() {
+        this.server.forceShutdown();
     }
 }
 
