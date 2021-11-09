@@ -495,6 +495,8 @@ export default class Status {
                 return "UPDATE_FILE_ID_DOES_NOT_MATCH_PREPARED";
             case Status.UpdateFileHashDoesNotMatchPrepared:
                 return "UPDATE_FILE_HASH_DOES_NOT_MATCH_PREPARED";
+            case Status.ConsensusGasExhausted:
+                return "CONSENSUS_GAS_EXHAUSTED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -981,6 +983,8 @@ export default class Status {
                 return Status.UpdateFileIdDoesNotMatchPrepared;
             case 278:
                 return Status.UpdateFileHashDoesNotMatchPrepared;
+            case 279:
+                return Status.ConsensusGasExhausted;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2221,3 +2225,9 @@ Status.UpdateFileIdDoesNotMatchPrepared = new Status(277);
  * confirm the hash of the file to be used in the upgrade.
  */
 Status.UpdateFileHashDoesNotMatchPrepared = new Status(278);
+
+/**
+ * Consensus throttle did not allow execution of this transaction. System is throttled at
+ * consensus level.
+ */
+Status.ConsensusGasExhausted = new Status(279);
