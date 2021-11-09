@@ -1,6 +1,10 @@
-import { Client, AccountBalanceQuery } from "@hashgraph/sdk";
-import GrpcServer from "./server.js";
+import { Client, PrivateKey, AccountInfoQuery } from "@hashgraph/sdk";
+import GrpcServer, { UNAVAILABLE } from "./server.js";
 import Long from "long";
+
+const PRIVATE_KEY = PrivateKey.fromString(
+    "302e020100300506032b657004220420d45e1557156908c967804615af59a000be88c7aa7058bfcbe0f46b16c28f887d"
+);
 
 /**
  * @template {*} RequestType
@@ -115,24 +119,57 @@ const PROTOS = [
 ];
 
 const server = new GrpcServer(PROTOS, "proto")
-    .addService("CryptoService", [{
+    .addResponse([
+        { error: UNAVAILABLE },
+        {
             response: {
-                cryptogetAccountBalance: {
-                    header: { nodeTransactionPrecheckCode: 0 },
-                    balance: Long.fromValue(10),
+                cryptoGetInfo: {
+                    header: {
+                        nodeTransactionPrecheckCode: 0,
+                        responseType: 2,
+                        cost: Long.fromNumber(25),
+                    },
                 },
-            }
-        }],
-    )
+            },
+        },
+        {
+            response: {
+                cryptoGetInfo: {
+                    header: { nodeTransactionPrecheckCode: 0 },
+                    accountInfo: {
+                        accountID: {
+                            shardNum: Long.ZERO,
+                            realmNum: Long.ZERO,
+                            accountNum: Long.fromNumber(10),
+                        },
+                        key: {
+                            ed25519: PRIVATE_KEY.publicKey.toBytes(),
+                        },
+                        expirationTime: {
+                            seconds: Long.fromNumber(10),
+                            nanos: 9,
+                        },
+                    },
+                },
+            },
+        },
+    ])
     .listen("0.0.0.0:50211");
 
+/**
+ *
+ */
 async function main() {
-    const client = Client.forNetwork({ "0.0.0.0:50211": "0.0.3" });
+    const client = Client.forNetwork({ "0.0.0.0:50211": "0.0.3" }).setOperator(
+        "0.0.1854",
+        PRIVATE_KEY
+    );
 
-    let balance = await new AccountBalanceQuery()
+    let info = await new AccountInfoQuery()
         .setAccountId("0.0.3")
         .execute(client);
-    console.log(balance.hbars.toString());
+
+    console.log(JSON.stringify(info));
 
     server.close(true);
 }

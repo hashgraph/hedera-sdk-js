@@ -1,18 +1,28 @@
 import * as grpc from "grpc";
 import * as loader from "@grpc/proto-loader";
 
-const ABORTED = { name: "ABORTED", message: "no response found", code: 10 };
-
-/**
- * @typedef {object} Response
- * @property {any} [response]
- * @property {any} [error]
- */
+export const ABORTED = {
+    name: "ABORTED",
+    message: "no response found",
+    code: 10,
+};
+export const UNAVAILABLE = {
+    name: "UNAVAILABLE",
+    message: "node is UNAVAILABLE",
+    code: 14,
+};
 
 /**
  * @namespace {proto}
  * @typedef {import("@hashgraph/proto").Response} proto.Response
  * @typedef {import("@hashgraph/proto").Query} proto.Query
+ * @typedef {import("@hashgraph/proto").TransactionResponse} proto.TransactionResponse
+ */
+
+/**
+ * @typedef {object} Response
+ * @property {proto.Response | proto.TransactionResponse} [response]
+ * @property {grpc.ServiceError} [error]
  */
 
 export default class GrpcServer {
@@ -31,42 +41,59 @@ export default class GrpcServer {
     /**
      * Adds a service to the gRPC server
      *
-     * @param {string} name
      * @param {Response[]} responses
      * @returns {this}
      */
-    addService(name, responses) {
-        const service =
-            /** @type {grpc.ServiceDefinition<grpc.UntypedServiceImplementation>} */ (
-                /** @type {grpc.GrpcObject} */ (this.package[name])["service"]
-            );
+    addResponse(responses) {
+        let services = [];
 
-        // console.log(Object.keys(service));
+        for (const [key, value] of Object.entries(this.package)) {
+            if (typeof value === "function") {
+                const service =
+                    /** @type {grpc.ServiceDefinition<grpc.UntypedServiceImplementation>} */ (
+                        /** @type {grpc.GrpcObject} */ (this.package[key])[
+                            "service"
+                        ]
+                    );
+                services.push(service);
+            }
+        }
 
         /** @type {grpc.UntypedServiceImplementation} */
         const router = {};
 
         let index = 0;
 
-        for (const key of Object.keys(service)) {
-            router[key] = /** @type {grpc.handleUnaryCall<any, any>} */ (
+        for (const service of services) {
+            for (const key of Object.keys(service)) {
+                // eslint-disable-next-line ie11/no-loop-func
+                router[key] = /** @type {grpc.handleUnaryCall<any, any>} */ (
                     _,
                     callback
                 ) => {
-                    if (responses[index] != null && responses[index].response != null) {
-                        callback(null, responses[0].response);
-                    } else if (responses[index] != null && responses[index].error != null) {
-                        callback(responses[0].error, null);
-                    } else {
-                        callback(ABORTED , null);
+                    const response = responses[index];
+
+                    if (response == null) {
+                        callback(ABORTED, null);
                     }
+
+                    const value = response.response;
+                    const error =
+                        response.error != null
+                            ? response.error
+                            : value == null
+                            ? ABORTED
+                            : null;
+
+                    callback(error, value);
 
                     index += 1;
                 };
+            }
+
+            this.server.addService(service, router);
         }
 
-
-        this.server.addService(service, router);
         return this;
     }
 
@@ -85,6 +112,7 @@ export default class GrpcServer {
      * @param {boolean} force
      * @param {() => void} callback
      */
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     close(force = false, callback = () => {}) {
         if (force) {
             this.server.forceShutdown();
