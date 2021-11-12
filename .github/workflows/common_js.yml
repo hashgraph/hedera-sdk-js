@@ -39,7 +39,7 @@ jobs:
           version: 6.0.2
 
       - name: Build SDK
-        run: pnpm install 
+        run: pnpm install --force 
 
       - name: Install yalc
         run: pnpm install -g yalc
