@@ -166,11 +166,17 @@ export default class WebClient extends Client {
 
     /**
      * @param {string[] | string | NetworkName} mirrorNetwork
-     * @returns {void}
+     * @returns {this}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setMirrorNetwork(mirrorNetwork) {
-        // Do nothing as this is not currently supported
+        if (typeof mirrorNetwork === "string") {
+            this._mirrorNetwork.setNetwork([]);
+        } else {
+            this._mirrorNetwork.setNetwork(mirrorNetwork);
+        }
+
+        return this;
     }
 
     /**
@@ -179,5 +185,15 @@ export default class WebClient extends Client {
      */
     _createNetworkChannel() {
         return (address) => new WebChannel(address);
+    }
+
+    /**
+     * @override
+     * @returns {(address: string) => *}
+     */
+    _createMirrorNetworkChannel() {
+        return () => {
+            throw new Error("mirror support is not supported in browsers");
+        };
     }
 }
