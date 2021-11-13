@@ -89,5 +89,5 @@ jobs:
           docker-compose up &
           sleep 45
           cd ../hedera-sdk-js
-          pnpm install
+          pnpm install --force
           pnpm test:integration:node

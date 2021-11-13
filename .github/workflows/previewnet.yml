@@ -30,7 +30,7 @@ jobs:
           version: 6.0.2
 
       - name: Build
-        run: pnpm install 
+        run: pnpm install --force 
 
   lint:
     runs-on: ubuntu-latest
@@ -58,7 +58,7 @@ jobs:
 
       - name: Lint
         run: |
-          pnpm install
+          pnpm install --force
           pnpm lint 
              
   test-unit-node:
@@ -87,7 +87,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          pnpm install
+          pnpm install --force
           pnpm test:unit:node
 
   test-integration-node:
@@ -120,7 +120,7 @@ jobs:
           OPERATOR_ID: ${{ secrets.PREVIEWNET_OPERATOR_ID }}
           HEDERA_NETWORK: "previewnet"
         run: |
-          pnpm install
+          pnpm install --force
           pnpm test:integration:node
 
   test-integration-browser-chrome:
@@ -153,5 +153,5 @@ jobs:
           VITE_OPERATOR_ID: ${{ secrets.PREVIEWNET_OPERATOR_ID }}
           HEDERA_NETWORK: "previewnet"
         run: |
-          pnpm install
+          pnpm install --force
           pnpm test:integration:browser:chrome

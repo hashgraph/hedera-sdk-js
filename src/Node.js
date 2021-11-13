@@ -52,6 +52,13 @@ export default class Node extends ManagedNode {
     }
 
     /**
+     * @returns {string}
+     */
+    getKey() {
+        return this._accountId.toString();
+    }
+
+    /**
      * @returns {ManagedNode<Channel>}
      */
     toInsecure() {

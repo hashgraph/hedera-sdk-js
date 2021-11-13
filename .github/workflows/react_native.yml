@@ -43,7 +43,7 @@ jobs:
       - run: pnpm install -g yarn
 
       - name: Build SDK
-        run: pnpm install 
+        run: pnpm install --force 
 
       - name: Install yalc
         run: pnpm install -g yalc
@@ -57,7 +57,7 @@ jobs:
       - name: AVD
         run: |
           brew install android-platform-tools
-          pnpm i -g envinfo detox-cli && envinfo
+          pnpm install -g envinfo detox-cli && envinfo
           echo yes | $ANDROID_HOME/tools/bin/sdkmanager --channel=0 --verbose "system-images;android-28;default;x86_64"
           $ANDROID_HOME/tools/bin/avdmanager --verbose create avd --force --name "Nexus6P" --package "system-images;android-28;default;x86_64" --sdcard 200M --device 11
           adb start-server
@@ -108,7 +108,7 @@ jobs:
       - run: pnpm install -g yarn
 
       - name: Build SDK
-        run: pnpm install 
+        run: pnpm install --force 
 
       - name: Install yalc
         run: pnpm install -g yalc

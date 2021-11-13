@@ -24,10 +24,8 @@ import { _ledgerIdToNetworkName, _ledgerIdToLedgerId } from "../NetworkName.js";
 
 /**
  * @template {Channel | MirrorChannel} ChannelT
- * @template {Node | MirrorNode} NetworkNodeT
- * @template {*} SdkNetworkT
- * @template {{ [Symbol.iterator]: () => IterableIterator<SdkNetworkEntryT> }} IterableSdkNetworkT
- * @template {*} SdkNetworkEntryT
+ * @template {ManagedNode<ChannelT>} NetworkNodeT
+ * @template {{ toString: () => string }} KeyT
  */
 export default class MangedNetwork {
     /**
@@ -96,7 +94,7 @@ export default class MangedNetwork {
                         : node.toInsecure()
                 );
                 this._nodes[i] = node;
-                this._addNodeToNetwork(node);
+                this._network.set(node.getKey(), node);
             }
         }
 
@@ -124,17 +122,7 @@ export default class MangedNetwork {
 
     /**
      * @abstract
-     * @param {SdkNetworkT} network
-     * @returns {IterableSdkNetworkT}
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _createIterableNetwork(network) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @param {SdkNetworkEntryT} entry
+     * @param {[string, KeyT]} entry
      * @returns {NetworkNodeT}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -144,38 +132,11 @@ export default class MangedNetwork {
 
     /**
      * @abstract
-     * @param {SdkNetworkT} network
+     * @param {Map<string, KeyT>} network
      * @returns {number[]}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _getNodesToRemove(network) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @param {NetworkNodeT} node
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _removeNodeFromNetwork(node) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @param {SdkNetworkEntryT} entry
-     * @returns {boolean}
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _checkNetworkContainsEntry(entry) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @param {NetworkNodeT} node
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _addNodeToNetwork(node) {
         throw new Error("not implemented");
     }
 
@@ -187,7 +148,7 @@ export default class MangedNetwork {
                 if (node.attempts >= this._maxNodeAttempts) {
                     node.close();
 
-                    this._removeNodeFromNetwork(node);
+                    this._network.delete(node.getKey());
                     this._nodes.splice(i, 1);
                 }
             }
@@ -213,34 +174,23 @@ export default class MangedNetwork {
     }
 
     /**
-     * @param {SdkNetworkT} network
+     * @param {Map<string, KeyT>} network
      * @returns {this}
      */
-    setNetwork(network) {
-        const iterableNetwork = this._createIterableNetwork(network);
-
-        // Short circuit network creation
-        if (this._nodes.length === 0) {
-            for (const entry of iterableNetwork) {
-                const node = this._createNodeFromNetworkEntry(entry);
-                this._addNodeToNetwork(node);
-                this._nodes.push(node);
-            }
-        }
-
+    _setNetwork(network) {
         // Remove nodes that are not in the new network
         for (const i of this._getNodesToRemove(network)) {
             const node = this._nodes[i];
             node.close();
-            this._removeNodeFromNetwork(node);
+            this._network.delete(node.getKey());
             this._nodes.splice(i, 1);
         }
 
         // Add new nodes
-        for (const entry of iterableNetwork) {
-            if (!this._checkNetworkContainsEntry(entry)) {
-                const node = this._createNodeFromNetworkEntry(entry);
-                this._addNodeToNetwork(node);
+        for (const [key, value] of network) {
+            if (!this._network.has(value.toString())) {
+                const node = this._createNodeFromNetworkEntry([key, value]);
+                this._network.set(node.getKey(), node);
                 this._nodes.push(node);
             }
         }

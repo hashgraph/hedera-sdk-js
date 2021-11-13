@@ -53,7 +53,7 @@ export default class ManagedNode {
             this._useCount = 0;
             this._attempts = 0;
             this._minBackoff = 250;
-            this._maxBackoff = 80000;
+            this._maxBackoff = 8000;
         } else if (props.cloneNode != null) {
             /** @type {ManagedNodeAddress} */
             this._address = props.cloneNode.address;
@@ -93,6 +93,15 @@ export default class ManagedNode {
                 `failed to create ManagedNode: ${JSON.stringify(props)}`
             );
         }
+    }
+
+    /**
+     * @abstract
+     * @returns {string}
+     */
+    // eslint-disable-next-line jsdoc/require-returns-check
+    getKey() {
+        throw new Error("not implemented");
     }
 
     /**

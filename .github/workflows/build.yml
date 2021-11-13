@@ -39,7 +39,7 @@ jobs:
           version: 6.0.2
 
       - name: Build
-        run: pnpm install 
+        run: pnpm install --force
 
   lint:
     runs-on: ubuntu-latest
@@ -70,7 +70,7 @@ jobs:
 
       - name: Lint
         run: |
-          pnpm install
+          pnpm install --force
           pnpm lint 
              
   test-unit-node:
@@ -102,5 +102,5 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          pnpm install
+          pnpm install --force
           pnpm test:unit:node
