@@ -242,27 +242,8 @@ export default class Network extends ManagedNetwork {
      * @returns {AccountId[]}
      */
     getNodeAccountIdsForExecute() {
-        if (this._maxNodeAttempts > 0) {
-            for (let i = 0; i < this._nodes.length; i++) {
-                const node = this._nodes[i];
-
-                if (node._attempts < this._maxNodeAttempts) {
-                    continue;
-                }
-
-                node.close();
-                delete this.network[node.address.toString()];
-                this._network.delete(node.accountId.toString());
-
-                this._nodes.splice(i, 1);
-                i--;
-            }
-        }
-
-        this._nodes.sort((a, b) => a.compare(b));
-
-        return this._nodes
-            .slice(0, this.getNumberOfNodesForTransaction())
-            .map((node) => node.accountId);
+        return this._getNumberOfMostHealthyNodes(
+            this.getNumberOfNodesForTransaction()
+        ).map((node) => node.accountId);
     }
 }
