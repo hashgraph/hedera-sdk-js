@@ -26,6 +26,7 @@ export default class ContractFunctionResult {
      * @param {Uint8Array} result.bloom
      * @param {Long} result.gasUsed
      * @param {ContractLogInfo[]} result.logs
+     * @param {ContractId[]} result.createdContractIds
      * @param {Uint8Array} result.bytes
      */
     constructor(result) {
@@ -55,6 +56,8 @@ export default class ContractFunctionResult {
          * The log info for events returned by the function.
          */
         this.logs = result.logs;
+
+        this.createdContractIds = result.createdContractIds;
     }
 
     /**
@@ -80,6 +83,10 @@ export default class ContractFunctionResult {
             logs: (result.logInfo != null ? result.logInfo : []).map((info) =>
                 ContractLogInfo._fromProtobuf(info)
             ),
+            createdContractIds: (result.createdContractIDs != null
+                ? result.createdContractIDs
+                : []
+            ).map((contractId) => ContractId._fromProtobuf(contractId)),
         });
     }
 
