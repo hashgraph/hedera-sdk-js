@@ -317,6 +317,8 @@ export default class TransferTransaction extends Transaction {
         return this._nftTransfers;
     }
 
+    //@param 
+
     /**
      * @internal
      * @param {TokenId | string} tokenId
