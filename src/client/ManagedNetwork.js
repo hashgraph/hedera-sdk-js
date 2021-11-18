@@ -37,7 +37,7 @@ export default class MangedNetwork {
          * to the node URL.
          *
          * @internal
-         * @type {Map<string, NetworkNodeT>}
+         * @type {Map<string, NetworkNodeT[]>}
          */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this._network = new Map();
@@ -94,7 +94,15 @@ export default class MangedNetwork {
                         : node.toInsecure()
                 );
                 this._nodes[i] = node;
-                this._network.set(node.getKey(), node);
+
+                const nodes =
+                    this._network.get(node.getKey()) != null
+                        ? /** @type {NetworkNodeT[]} */ (
+                              this._network.get(node.getKey())
+                          )
+                        : [];
+                nodes.push(node);
+                this._network.set(node.getKey(), nodes);
             }
         }
 
@@ -145,12 +153,11 @@ export default class MangedNetwork {
             for (let i = this._nodes.length - 1; i >= 0; i--) {
                 const node = this._nodes[i];
 
-                if (node.attempts >= this._maxNodeAttempts) {
-                    node.close();
-
-                    this._network.delete(node.getKey());
-                    this._nodes.splice(i, 1);
+                if (node._attempts < this._maxNodeAttempts) {
+                    continue;
                 }
+
+                this._closeNode(i);
             }
         }
     }
@@ -161,16 +168,59 @@ export default class MangedNetwork {
      */
     _getNumberOfMostHealthyNodes(count) {
         this._removeDeadNodes();
-        this._nodes.sort();
+        this._nodes.sort((a, b) => a.compare(b));
+
+        for (const [, value] of this._network) {
+            // eslint-disable-next-line ie11/no-loop-func
+            value.sort((a, b) => a.compare(b));
+        }
 
         /** @type {NetworkNodeT[]} */
         const nodes = [];
+        const keys = new Set();
 
-        for (let i = 0; i < count; i++) {
-            nodes.push(this._nodes[i]);
+        for (const node of this._nodes) {
+            if (keys.size >= count) {
+                break;
+            }
+
+            if (!keys.has(node.getKey())) {
+                nodes.push(node);
+            }
         }
 
         return nodes;
+    }
+
+    /**
+     * @param {number} i
+     */
+    _closeNode(i) {
+        const node = this._nodes[i];
+
+        node.close();
+        this._removeNodeFromNetwork(node);
+        this._nodes.splice(i, 1);
+    }
+
+    /**
+     * @param {NetworkNodeT} node
+     */
+    _removeNodeFromNetwork(node) {
+        const network = /** @type {NetworkNodeT[]} */ (
+            this._network.get(node.getKey())
+        );
+
+        for (let j = 0; j < network.length; j++) {
+            if (network[j] === node) {
+                network.splice(j, 1);
+                break;
+            }
+        }
+
+        if (network.length === 0) {
+            this._network.delete(node.getKey());
+        }
     }
 
     /**
@@ -180,22 +230,29 @@ export default class MangedNetwork {
     _setNetwork(network) {
         // Remove nodes that are not in the new network
         for (const i of this._getNodesToRemove(network)) {
-            const node = this._nodes[i];
-            node.close();
-            this._network.delete(node.getKey());
-            this._nodes.splice(i, 1);
+            this._closeNode(i);
         }
 
         // Add new nodes
         for (const [key, value] of network) {
-            if (!this._network.has(value.toString())) {
-                const node = this._createNodeFromNetworkEntry([key, value]);
-                this._network.set(node.getKey(), node);
-                this._nodes.push(node);
-            }
+            const node = this._createNodeFromNetworkEntry([key, value]);
+
+            this._nodes.push(node);
+
+            const network = this._network.has(node.getKey())
+                ? /** @type {NetworkNodeT[]} */ (
+                      this._network.get(node.getKey())
+                  )
+                : [];
+            network.push(node);
+            this._network.set(node.getKey(), network);
         }
 
         shuffle(this._nodes);
+        for (const [, value] of this._network) {
+            shuffle(value);
+        }
+
         this._ledgerId = null;
         return this;
     }
@@ -233,6 +290,16 @@ export default class MangedNetwork {
             node.setMinBackoff(minBackoff);
         }
         return this;
+    }
+
+    /**
+     * @param {KeyT} key
+     * @returns {NetworkNodeT}
+     */
+    getNode(key) {
+        return /** @type {NetworkNodeT[]} */ (
+            this._network.get(key.toString())
+        )[0];
     }
 
     close() {
