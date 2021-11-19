@@ -128,6 +128,7 @@ export function requireNonNull(variable) {
     if (!isNonNull(variable)) {
         throw new Error(REQUIRE_NON_NULL_ERROR);
     } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return variable;
     }
 }

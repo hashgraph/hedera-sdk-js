@@ -8,6 +8,7 @@ import Long from "long";
 import TokenTransferMap from "./TokenTransferMap.js";
 import HbarTransferMap from "./HbarTransferMap.js";
 import TokenNftTransferMap from "./TokenNftTransferMap.js";
+//eslint-disable-next-line
 import NftId from "../token/NftId.js";
 import * as util from "../util.js";
 
@@ -340,11 +341,18 @@ export default class TransferTransaction extends Transaction {
         let sender;
 
         if (util.isNonNull(/** @type {NftId} */ (tokenIdOrNftId).serial)) {
-            tokenId = /** @type {TokenId | string} */ (/** @type {NftId} */ (tokenIdOrNftId).tokenId);
-            serial = /** @type {number | Long} */ (/** @type {NftId} */ (tokenIdOrNftId).serial);
-            sender = /** @type {AccountId | string} */ (senderAccountIdOrSerialNumber);
-            recipient = /** @type {AccountId | string} */ (recipientAccountIdOrSenderAccountId);
-
+            tokenId = /** @type {TokenId | string} */ (
+                /** @type {NftId} */ (tokenIdOrNftId).tokenId
+            );
+            serial = /** @type {number | Long} */ (
+                /** @type {NftId} */ (tokenIdOrNftId).serial
+            );
+            sender = /** @type {AccountId | string} */ (
+                senderAccountIdOrSerialNumber
+            );
+            recipient = /** @type {AccountId | string} */ (
+                recipientAccountIdOrSenderAccountId
+            );
         } else {
             tokenId = /** @type {TokenId | string} */ (tokenIdOrNftId);
             serial = /** @type {number | Long} */ (
