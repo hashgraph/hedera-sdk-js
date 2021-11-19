@@ -121,7 +121,7 @@ export function isStringOrUint8Array(variable) {
 /**
  * Takes any param and throws custom error if null or undefined.
  *
- * @param {object} variable
+ * @param {any} variable
  * @returns {object}
  */
 export function requireNonNull(variable) {

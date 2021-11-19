@@ -6,6 +6,9 @@ import AccountId from "../src/account/AccountId.js";
 import Transaction from "../src/transaction/Transaction.js";
 import TransactionId from "../src/transaction/TransactionId.js";
 import Timestamp from "../src/Timestamp.js";
+import NftId from "../src/token/NftId.js";
+import Long from "long";
+import * as util from "../src/util.js";
 import Long from "long";
 
 describe("TransferTransaction", function () {
@@ -66,6 +69,113 @@ describe("TransferTransaction", function () {
         expect(transferTransaction.nftTransfers.values()).to.eql(
             transferTransactionFromBytes.nftTransfers.values()
         );
+    });
+
+    it("should use nftid case for addNftTransfer",function(){
+        let transferTransaction = new TransferTransaction();
+
+        let tokenId = new TokenId(1,2,3);
+        let serial = Long.fromString("1234567890");
+
+        let nftId = new NftId(tokenId,serial);
+        let sender = AccountId.fromString("1.1.1");
+        let recipient = AccountId.fromString("2.2.2");
+
+        let check = {
+            serial:
+                typeof serial === "number"
+                    ? Long.fromNumber(serial)
+                    : serial,
+            sender:
+                typeof sender === "string"
+                    ? AccountId.fromString(sender)
+                    : sender,
+            recipient:
+                typeof recipient === "string"
+                    ? AccountId.fromString(recipient)
+                    : recipient,
+        };
+
+        transferTransaction.addNftTransfer(nftId,sender,recipient);
+
+        expect(transferTransaction.nftTransfers.values().next().value[0]).to.eql(check);
+        expect(transferTransaction.nftTransfers.keys().next().value).to.eql(tokenId);
+    });
+
+    it("should use tokenId/serial case for addNftTransfer",function(){
+        let transferTransaction = new TransferTransaction();
+
+        let tokenId = new TokenId(1,2,3);
+        let serial = Long.fromString("1234567890");
+
+        let sender = AccountId.fromString("1.1.1");
+        let recipient = AccountId.fromString("2.2.2");
+
+        let check = {
+            serial:
+                typeof serial === "number"
+                    ? Long.fromNumber(serial)
+                    : serial,
+            sender:
+                typeof sender === "string"
+                    ? AccountId.fromString(sender)
+                    : sender,
+            recipient:
+                typeof recipient === "string"
+                    ? AccountId.fromString(recipient)
+                    : recipient,
+        };
+
+        transferTransaction.addNftTransfer(tokenId, serial, sender, recipient);
+
+        expect(transferTransaction.nftTransfers.values().next().value[0]).to.eql(check);
+        expect(transferTransaction.nftTransfers.keys().next().value).to.eql(tokenId);
+    });
+
+    it("should use tokenId/serial case for addNftTransfer",function(){
+        let transferTransaction = new TransferTransaction();
+
+        let tokenId = new TokenId(1,2,3);
+        let serial = Long.fromString("1234567890");
+
+        let sender = AccountId.fromString("1.1.1");
+        let recipient = AccountId.fromString("2.2.2");
+
+        let check = {
+            serial:
+                typeof serial === "number"
+                    ? Long.fromNumber(serial)
+                    : serial,
+            sender:
+                typeof sender === "string"
+                    ? AccountId.fromString(sender)
+                    : sender,
+            recipient:
+                typeof recipient === "string"
+                    ? AccountId.fromString(recipient)
+                    : recipient,
+        };
+
+        transferTransaction.addNftTransfer(tokenId, serial, sender, recipient);
+
+        expect(transferTransaction.nftTransfers.values().next().value[0]).to.eql(check);
+        expect(transferTransaction.nftTransfers.keys().next().value).to.eql(tokenId);
+    });
+
+    it("should throw error when undefined in addNftTransfer",function(){
+        let transferTransaction = new TransferTransaction();
+
+        let tokenId = new TokenId(1,2,3);
+        let serial = Long.fromString("1234567890");
+
+        let sender = AccountId.fromString("1.1.1");
+        let recipient = undefined;
+
+        try {
+            transferTransaction.addNftTransfer(tokenId, serial, sender, recipient);            
+        } catch (error) {
+            expect(error.message).to.eql(util.REQUIRE_NON_NULL_ERROR);
+        }
     });
 
     it("should order transfers", function () {
