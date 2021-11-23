@@ -7,7 +7,6 @@ const {
 } = require("@hashgraph/sdk");
 
 async function main() {
-    let client;
     let previewClient;
     let testClient;
     let mainClient;
