@@ -122,4 +122,18 @@ export default class Timestamp {
     toString() {
         return `${this.seconds.toString()}.${this.nanos.toString()}`;
     }
+
+    /**
+     * @param {Timestamp} other
+     * @returns {number}
+     */
+    compare(other) {
+        const comparison = this.seconds.compare(other.seconds);
+
+        if (comparison != 0) {
+            return comparison;
+        }
+
+        return this.nanos.compare(other.nanos);
+    }
 }

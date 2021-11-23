@@ -170,4 +170,22 @@ export default class TransactionId {
             this.scheduled
         );
     }
+
+    /**
+     * @param {TransactionId} other
+     * @returns {number}
+     */
+    compare(other) {
+        const comparison = /** @type {AccountId} */ (this.accountId).compare(
+            /** @type {AccountId} */ (other.accountId)
+        );
+
+        if (comparison != 0) {
+            return comparison;
+        }
+
+        return /** @type {Timestamp} */ (this.validStart).compare(
+            /** @type {Timestamp} */ (other.validStart)
+        );
+    }
 }

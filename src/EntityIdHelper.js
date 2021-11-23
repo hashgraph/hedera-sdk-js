@@ -70,6 +70,25 @@ export function constructor(props, realm, num) {
 }
 
 /**
+ * @param {[Long, Long, Long]} a
+ * @param {[Long, Long, Long]} b
+ * @returns {number}
+ */
+export function compare(a, b) {
+    let comparison = a[0].compare(b[0]);
+    if (comparison != 0) {
+        return comparison;
+    }
+
+    comparison = a[1].compare(b[1]);
+    if (comparison != 0) {
+        return comparison;
+    }
+
+    return a[2].compare(b[2]);
+}
+
+/**
  * @typedef {object} ParseAddressResult
  * @property {number} status
  * @property {Long} [num1]
