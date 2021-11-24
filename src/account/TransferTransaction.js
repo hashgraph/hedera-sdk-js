@@ -374,61 +374,138 @@ export default class TransferTransaction extends Transaction {
      * @returns {proto.ICryptoTransferTransactionBody}
      */
     _makeTransactionData() {
-        /** @type {proto.ITokenTransferList[]} */
-        const tokenTransfers = [];
-        const hbarTransfers = [];
+        /** @type {Set<string>} */
+        const tokenIds = new Set();
 
-        for (const [tokenId, value] of this._tokenTransfers) {
-            const transfers = [];
-            for (const [accountId, amount] of value) {
-                transfers.push({
-                    accountID: accountId._toProtobuf(),
-                    amount: amount,
+        for (const tokenId of this._tokenTransfers.keys()) {
+            tokenIds.add(tokenId.toString());
+        }
+
+        for (const tokenId of this._nftTransfers.keys()) {
+            tokenIds.add(tokenId.toString());
+        }
+
+        const tokenTransfers = Array.from(tokenIds, (tokenId) => {
+            const thisTokenTransfers = this._tokenTransfers.get(tokenId);
+            const thisNftTransfers = this._nftTransfers.get(tokenId);
+
+            let transfers;
+            let nftTransfers;
+
+            if (thisTokenTransfers != null) {
+                transfers = Array.from(
+                    thisTokenTransfers,
+                    ([accountId, amount]) => {
+                        return {
+                            accountId,
+                            amount,
+                        };
+                    }
+                );
+
+                transfers.sort((a, b) => {
+                    const accountIdComparison = a.accountId.compare(
+                        b.accountId
+                    );
+                    if (accountIdComparison != 0) {
+                        return accountIdComparison;
+                    }
+
+                    return a.amount.compare(b.amount);
                 });
             }
 
-            tokenTransfers.push({
-                token: tokenId._toProtobuf(),
-                transfers,
-            });
-        }
+            if (thisNftTransfers != null) {
+                // eslint-disable-next-line ie11/no-loop-func
+                nftTransfers = thisNftTransfers.map((transfer) => {
+                    return {
+                        sender: transfer.sender,
+                        recipient: transfer.recipient,
+                        serialNumber: transfer.serial,
+                    };
+                });
 
-        for (const [tokenId, value] of this._nftTransfers) {
-            // eslint-disable-next-line ie11/no-loop-func
-            const nftTransfers = value.map((transfer) => {
-                return {
-                    senderAccountID: transfer.sender._toProtobuf(),
-                    receiverAccountID: transfer.recipient._toProtobuf(),
-                    serialNumber: transfer.serial,
-                };
-            });
+                nftTransfers.sort((a, b) => {
+                    const senderComparision = a.sender.compare(b.sender);
+                    if (senderComparision != 0) {
+                        return senderComparision;
+                    }
 
-            for (const tokenTransfer of tokenTransfers) {
-                if (
-                    tokenTransfer.token != null &&
-                    tokenTransfer.token.shardNum === tokenId.shard &&
-                    tokenTransfer.token.realmNum === tokenId.realm &&
-                    tokenTransfer.token.tokenNum === tokenId.num
-                ) {
-                    tokenTransfer.nftTransfers = nftTransfers;
-                }
+                    const recipientComparision = a.recipient.compare(
+                        b.recipient
+                    );
+                    if (recipientComparision != 0) {
+                        return recipientComparision;
+                    }
+
+                    return a.serialNumber.compare(b.serialNumber);
+                });
             }
 
-            tokenTransfers.push({ token: tokenId._toProtobuf(), nftTransfers });
-        }
+            return {
+                token: TokenId.fromString(tokenId),
+                transfers,
+                nftTransfers,
+            };
+        });
 
-        for (const [accountId, value] of this._hbarTransfers) {
-            hbarTransfers.push({
-                accountID: accountId._toProtobuf(),
-                amount: value.toTinybars(),
-            });
-        }
+        const hbarTransfers = Array.from(
+            this._hbarTransfers,
+            ([accountId, amount]) => {
+                return {
+                    accountId,
+                    amount,
+                };
+            }
+        );
+
+        tokenTransfers.sort((a, b) => {
+            return a.token.compare(b.token);
+        });
+
+        hbarTransfers.sort((a, b) => {
+            const accountIdComparison = a.accountId.compare(b.accountId);
+            if (accountIdComparison != 0) {
+                return accountIdComparison;
+            }
+
+            return a.amount.toTinybars().compare(b.amount.toTinybars());
+        });
 
         return {
             transfers: {
-                accountAmounts: hbarTransfers,
+                accountAmounts: hbarTransfers.map((transfer) => {
+                    return {
+                        accountID: transfer.accountId._toProtobuf(),
+                        amount: transfer.amount.toTinybars(),
+                    };
+                }),
             },
-            tokenTransfers,
+            tokenTransfers: tokenTransfers.map((tokenTransfer) => {
+                return {
+                    token: tokenTransfer.token._toProtobuf(),
+                    transfers: (tokenTransfer.transfers != null
+                        ? tokenTransfer.transfers
+                        : []
+                    ).map((transfer) => {
+                        return {
+                            accountID: transfer.accountId._toProtobuf(),
+                            amount: transfer.amount,
+                        };
+                    }),
+                    nftTransfers: (tokenTransfer.nftTransfers != null
+                        ? tokenTransfer.nftTransfers
+                        : []
+                    ).map((nftTransfer) => {
+                        return {
+                            senderAccountID: nftTransfer.sender._toProtobuf(),
+                            receiverAccountID:
+                                nftTransfer.recipient._toProtobuf(),
+                            serialNumber: nftTransfer.serialNumber,
+                        };
+                    }),
+                };
+            }),
         };
     }
 }

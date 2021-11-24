@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * Support for multiple IPs per node
 
+### Fixed
+
+ * `TransferTransaction` should deterministically order transfers before submitting transaction
+
 ## v2.5.0
 
 ### Fixed

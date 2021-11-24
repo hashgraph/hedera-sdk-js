@@ -152,4 +152,15 @@ export default class ContractId extends Key {
         id._checksum = this._checksum;
         return id;
     }
+
+    /**
+     * @param {ContractId} other
+     * @returns {number}
+     */
+    compare(other) {
+        return entity_id.compare(
+            [this.shard, this.realm, this.num],
+            [other.shard, other.realm, other.num]
+        );
+    }
 }
