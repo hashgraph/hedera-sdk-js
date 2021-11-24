@@ -109,7 +109,7 @@ describe("TransferTransaction", function () {
         let check = {
             serial: serial,
             sender: sender,
-            recipient: recipient
+            recipient: recipient,
         };
 
         transferTransaction.addNftTransfer(tokenId, serial, sender, recipient);
