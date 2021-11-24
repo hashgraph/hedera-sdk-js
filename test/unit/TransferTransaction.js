@@ -82,16 +82,9 @@ describe("TransferTransaction", function () {
         let recipient = AccountId.fromString("2.2.2");
 
         let check = {
-            serial:
-                typeof serial === "number" ? Long.fromNumber(serial) : serial,
-            sender:
-                typeof sender === "string"
-                    ? AccountId.fromString(sender)
-                    : sender,
-            recipient:
-                typeof recipient === "string"
-                    ? AccountId.fromString(recipient)
-                    : recipient,
+            serial: serial,
+            sender: sender,
+            recipient: recipient,
         };
 
         transferTransaction.addNftTransfer(nftId, sender, recipient);
@@ -114,16 +107,9 @@ describe("TransferTransaction", function () {
         let recipient = AccountId.fromString("2.2.2");
 
         let check = {
-            serial:
-                typeof serial === "number" ? Long.fromNumber(serial) : serial,
-            sender:
-                typeof sender === "string"
-                    ? AccountId.fromString(sender)
-                    : sender,
-            recipient:
-                typeof recipient === "string"
-                    ? AccountId.fromString(recipient)
-                    : recipient,
+            serial: serial,
+            sender: sender,
+            recipient: recipient
         };
 
         transferTransaction.addNftTransfer(tokenId, serial, sender, recipient);

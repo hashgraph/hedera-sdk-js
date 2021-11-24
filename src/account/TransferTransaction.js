@@ -8,13 +8,12 @@ import Long from "long";
 import TokenTransferMap from "./TokenTransferMap.js";
 import HbarTransferMap from "./HbarTransferMap.js";
 import TokenNftTransferMap from "./TokenNftTransferMap.js";
-//eslint-disable-next-line
-import NftId from "../token/NftId.js";
 import * as util from "../util.js";
 
 /**
  * @typedef {import("../long.js").LongObject} LongObject
  * @typedef {import("bignumber.js").default} BigNumber
+ * @typedef {import("../token/NftId.js").default} NftId
  */
 
 /**
@@ -362,27 +361,30 @@ export default class TransferTransaction extends Transaction {
                 recipientAccountIdOrSenderAccountId
             );
         }
+        if (recipient != undefined && recipient != null) {
+            this._nftTransfers.__set(
+                typeof tokenId === "string"
+                    ? TokenId.fromString(tokenId)
+                    : tokenId,
+                {
+                    serial:
+                        typeof serial === "number"
+                            ? Long.fromNumber(serial)
+                            : serial,
+                    sender:
+                        typeof sender === "string"
+                            ? AccountId.fromString(sender)
+                            : sender,
 
-        util.requireNonNull(recipient);
-
-        this._nftTransfers.__set(
-            typeof tokenId === "string" ? TokenId.fromString(tokenId) : tokenId,
-            {
-                serial:
-                    typeof serial === "number"
-                        ? Long.fromNumber(serial)
-                        : serial,
-                sender:
-                    typeof sender === "string"
-                        ? AccountId.fromString(sender)
-                        : sender,
-                //@ts-ignore
-                recipient:
-                    typeof recipient === "string"
-                        ? AccountId.fromString(recipient)
-                        : recipient,
-            }
-        );
+                    recipient:
+                        typeof recipient === "string"
+                            ? AccountId.fromString(recipient)
+                            : recipient,
+                }
+            );
+        } else {
+            util.requireNonNull(recipient);
+        }
 
         return this;
     }
