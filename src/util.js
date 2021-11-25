@@ -121,13 +121,14 @@ export function isStringOrUint8Array(variable) {
 /**
  * Takes any param and throws custom error if null or undefined.
  *
- * @param {object} variable
+ * @param {any} variable
  * @returns {object}
  */
 export function requireNonNull(variable) {
     if (!isNonNull(variable)) {
         throw new Error(REQUIRE_NON_NULL_ERROR);
     } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return variable;
     }
 }
