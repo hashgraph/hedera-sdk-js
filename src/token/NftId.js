@@ -25,16 +25,19 @@ export default class NftId {
      * @returns {NftId}
      */
     static fromString(text) {
-        const strings = text.split("@");
+        const strings =
+            text.split("/").length > 1 ? text.split("/") : text.split("@");
 
         for (const string of strings) {
             if (string === "") {
-                throw new Error("invalid format for NftId");
+                throw new Error(
+                    "invalid format for NftId: use [token]/[serial] or [token]@[serial]"
+                );
             }
         }
 
-        const serial = Long.fromString(strings[0]);
-        const token = TokenId.fromString(strings[1]);
+        const token = TokenId.fromString(strings[0]);
+        const serial = Long.fromString(strings[1]);
 
         return new NftId(token, serial);
     }

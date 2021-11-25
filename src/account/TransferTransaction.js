@@ -9,11 +9,11 @@ import TokenTransferMap from "./TokenTransferMap.js";
 import HbarTransferMap from "./HbarTransferMap.js";
 import TokenNftTransferMap from "./TokenNftTransferMap.js";
 import * as util from "../util.js";
+import NftId from "../token/NftId.js";
 
 /**
  * @typedef {import("../long.js").LongObject} LongObject
  * @typedef {import("bignumber.js").default} BigNumber
- * @typedef {import("../token/NftId.js").default} NftId
  */
 
 /**
@@ -337,54 +337,56 @@ export default class TransferTransaction extends Transaction {
 
         let tokenId;
         let serial;
-        let sender;
+        let senderId;
+        let recipientId;
 
-        if (util.isNonNull(/** @type {NftId} */ (tokenIdOrNftId).serial)) {
-            tokenId = /** @type {TokenId | string} */ (
-                /** @type {NftId} */ (tokenIdOrNftId).tokenId
-            );
-            serial = /** @type {number | Long} */ (
-                /** @type {NftId} */ (tokenIdOrNftId).serial
-            );
-            sender = /** @type {AccountId | string} */ (
-                senderAccountIdOrSerialNumber
-            );
-            recipient = /** @type {AccountId | string} */ (
-                recipientAccountIdOrSenderAccountId
-            );
-        } else {
-            tokenId = /** @type {TokenId | string} */ (tokenIdOrNftId);
-            serial = /** @type {number | Long} */ (
-                senderAccountIdOrSerialNumber
-            );
-            sender = /** @type {AccountId | string} */ (
-                recipientAccountIdOrSenderAccountId
-            );
+        if (typeof tokenIdOrNftId === "string") {
+            if (tokenIdOrNftId.includes("/") || tokenIdOrNftId.includes("@")) {
+                tokenIdOrNftId = NftId.fromString(tokenIdOrNftId);
+            } else {
+                tokenIdOrNftId = TokenId.fromString(tokenIdOrNftId);
+            }
         }
-        if (recipient != undefined && recipient != null) {
-            this._nftTransfers.__set(
-                typeof tokenId === "string"
-                    ? TokenId.fromString(tokenId)
-                    : tokenId,
-                {
-                    serial:
-                        typeof serial === "number"
-                            ? Long.fromNumber(serial)
-                            : serial,
-                    sender:
-                        typeof sender === "string"
-                            ? AccountId.fromString(sender)
-                            : sender,
 
-                    recipient:
-                        typeof recipient === "string"
-                            ? AccountId.fromString(recipient)
-                            : recipient,
-                }
+        if (tokenIdOrNftId instanceof NftId) {
+            tokenId = tokenIdOrNftId.tokenId;
+            serial = tokenIdOrNftId.serial;
+            senderId = /** @type {AccountId | string} */ (
+                senderAccountIdOrSerialNumber
             );
-        } else {
+            recipientId = /** @type {AccountId | string} */ (
+                recipientAccountIdOrSenderAccountId
+            );
+        } else if (tokenIdOrNftId instanceof TokenId) {
+            tokenId = /** @type {TokenId} */ (tokenIdOrNftId);
+            serial = /** @type {Long|number} */ (senderAccountIdOrSerialNumber);
+            senderId = /** @type {AccountId | string} */ (
+                recipientAccountIdOrSenderAccountId
+            );
             util.requireNonNull(recipient);
+            recipientId = /** @type {AccountId | string} */ (recipient);
+        } else {
+            throw new Error("unintended type for tokenIdOrNftId");
         }
+
+        this._nftTransfers.__set(
+            typeof tokenId === "string" ? TokenId.fromString(tokenId) : tokenId,
+            {
+                serial:
+                    typeof serial === "number"
+                        ? Long.fromNumber(serial)
+                        : serial,
+                sender:
+                    typeof senderId === "string"
+                        ? AccountId.fromString(senderId)
+                        : senderId,
+
+                recipient:
+                    typeof recipientId === "string"
+                        ? AccountId.fromString(recipientId)
+                        : recipientId,
+            }
+        );
 
         return this;
     }
