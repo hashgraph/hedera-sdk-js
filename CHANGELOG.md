@@ -9,10 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
  * Support for multiple IPs per node
+ * New smart contract response codes
 
 ### Fixed
 
  * `TransferTransaction` should deterministically order transfers before submitting transaction
+
+## v2.6.0-beta.1
+
+## Added
+
+ * New smart contract response codes
 
 ## v2.5.0
 
