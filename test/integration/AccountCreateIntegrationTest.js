@@ -137,6 +137,7 @@ describe("AccountCreate", function () {
         const account = receipt.accountId;
 
         const info = await new AccountInfoQuery()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .execute(env.client);
 
@@ -149,6 +150,7 @@ describe("AccountCreate", function () {
         expect(info.proxyReceived.toTinybars().toNumber()).to.be.equal(0);
 
         const transaction = new AccountDeleteTransaction()
+            .setNodeAccountIds([response.nodeId])
             .setAccountId(account)
             .setTransferAccountId(operatorId)
             .freezeWith(env.client);

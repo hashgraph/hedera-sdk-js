@@ -254,7 +254,7 @@ export function _checksum(ledgerId, addr) {
     let id = ledgerId + "000000000000";
     let h = [];
     for (var i = 0; i < id.length; i += 2) {
-        h.push(parseInt(id.substr(i, 2), 16));
+        h.push(parseInt(id.substring(i, i + 2), 16));
     }
     for (let i = 0; i < addr.length; i++) {
         d.push(addr[i] === "." ? 10 : parseInt(addr[i], 10));

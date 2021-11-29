@@ -97,6 +97,7 @@ describe("TransactionIntegration", function () {
         const nodeAccountId = Object.values(env.client.network)[0];
 
         const transaction = new TransferTransaction()
+            .setNodeAccountIds([nodeAccountId])
             .addHbarTransfer(
                 env.client.operatorAccountId,
                 new Hbar(1).negated()
