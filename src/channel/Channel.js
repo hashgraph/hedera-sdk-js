@@ -233,9 +233,12 @@ export function encodeRequest(data) {
 
 /**
  * @param {ArrayBuffer} data
+ * @param {number} byteOffset
+ * @param {number} byteLength
  * @returns {Uint8Array}
  */
-export function decodeUnaryResponse(data) {
+export function decodeUnaryResponse(data, byteOffset = 0, byteLength = data.byteLength) {
+    const dataView = new DataView(data, byteOffset, byteLength);
     let dataOffset = 0;
 
     /** @type {?Uint8Array} */
@@ -244,11 +247,10 @@ export function decodeUnaryResponse(data) {
     // 0 = successful
     let status = 0;
 
-    while (dataOffset < data.byteLength) {
-        const dataView = new DataView(data, dataOffset);
-        const frameByte = dataView.getUint8(0);
+    while (dataOffset < dataView.byteLength) {
+        const frameByte = dataView.getUint8(dataOffset + 0);
         const frameType = frameByte >> 7;
-        const frameByteLength = dataView.getUint32(1);
+        const frameByteLength = dataView.getUint32(dataOffset + 1);
         const frameData = new Uint8Array(data, dataOffset + 5, frameByteLength);
 
         if (frameType === 0) {

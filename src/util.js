@@ -297,3 +297,17 @@ export function convertToNumber(variable) {
         throw new Error(FUNCTION_CONVERT_TO_NUMBER_ERROR);
     }
 }
+
+/**
+ * Creates a DataView on top of an Uint8Array that could be or not be pooled, ensuring that we don't get out of bounds.
+ *
+ * @param {Uint8Array} arr
+ * @param {number | undefined} offset
+ * @param {number | undefined} length
+ * @returns {DataView}
+ */
+export function safeView(arr, offset = 0, length = arr.byteLength) {
+    if (!(Number.isInteger(offset) && offset >= 0)) throw new Error('Invalid offset!')
+    if (!(Number.isInteger(length) && length > 0)) throw new Error('Invalid length!')
+    return new DataView(arr.buffer, arr.byteOffset + offset, Math.min(length, arr.byteLength - offset));
+}

@@ -152,7 +152,7 @@ export function fromSolidityAddress(address) {
  */
 export function toSolidityAddress(address) {
     const buffer = new Uint8Array(20);
-    const view = new DataView(buffer.buffer, 0, 20);
+    const view = util.safeView(buffer);
     const [shard, realm, num] = address;
 
     view.setUint32(0, util.convertToNumber(shard));

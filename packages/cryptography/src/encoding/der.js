@@ -141,18 +141,14 @@ function decodeInt(intBytes) {
         return intBytes[0];
     }
 
-    let view = new DataView(
-        intBytes.buffer,
-        intBytes.byteOffset,
-        intBytes.byteLength
-    );
+    let view = new DataView(intBytes.buffer, intBytes.byteOffset, intBytes.byteLength);
 
     if (len === 2) return view.getUint16(0, false);
 
     if (len === 3) {
         // prefix a zero byte and we'll treat it as a 32-bit int
         const data = Uint8Array.of(0, ...intBytes);
-        view = new DataView(data.buffer);
+        view = new DataView(data.buffer, data.byteOffset, data.byteLength);
     }
 
     if (len > 4) {
