@@ -151,7 +151,7 @@ export default class ContractFunctionResult {
         // .getInt32() interprets as big-endian
         // Using DataView instead of Uint32Array because the latter interprets
         // using platform endianness which is little-endian on x86
-        const position = (index != null ? index : 0) * 32 + 28
+        const position = (index != null ? index : 0) * 32 + 28;
         return util.safeView(this.bytes).getInt32(position);
     }
 
@@ -195,7 +195,7 @@ export default class ContractFunctionResult {
         // .getUint32() interprets as big-endian
         // Using DataView instead of Uint32Array because the latter interprets
         // using platform endianness which is little-endian on x86
-        const position = (index != null ? index : 0) * 32 + 28
+        const position = (index != null ? index : 0) * 32 + 28;
         return util.safeView(this.bytes).getUint32(position);
     }
 

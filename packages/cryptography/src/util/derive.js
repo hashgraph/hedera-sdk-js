@@ -10,7 +10,11 @@ export function legacy(seed, index) {
     const password = new Uint8Array(seed.length + 8);
     password.set(seed, 0);
 
-    const view = new DataView(password.buffer, password.byteOffset, password.byteLength);
+    const view = new DataView(
+        password.buffer,
+        password.byteOffset,
+        password.byteLength
+    );
 
     if (index === 0xffffffffff) {
         view.setInt32(seed.length + 0, 0xff);

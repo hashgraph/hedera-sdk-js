@@ -141,7 +141,11 @@ function decodeInt(intBytes) {
         return intBytes[0];
     }
 
-    let view = new DataView(intBytes.buffer, intBytes.byteOffset, intBytes.byteLength);
+    let view = new DataView(
+        intBytes.buffer,
+        intBytes.byteOffset,
+        intBytes.byteLength
+    );
 
     if (len === 2) return view.getUint16(0, false);
 

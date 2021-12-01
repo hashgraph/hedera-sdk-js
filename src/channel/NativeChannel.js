@@ -86,7 +86,11 @@ export default class NativeChannel extends Channel {
                 );
             }
 
-            const unaryResponse = decodeUnaryResponse(responseBuffer.buffer, responseBuffer.byteOffset, responseBuffer.byteLength);
+            const unaryResponse = decodeUnaryResponse(
+                responseBuffer.buffer,
+                responseBuffer.byteOffset,
+                responseBuffer.byteLength
+            );
 
             callback(null, unaryResponse);
         };

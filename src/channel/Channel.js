@@ -237,7 +237,11 @@ export function encodeRequest(data) {
  * @param {number} byteLength
  * @returns {Uint8Array}
  */
-export function decodeUnaryResponse(data, byteOffset = 0, byteLength = data.byteLength) {
+export function decodeUnaryResponse(
+    data,
+    byteOffset = 0,
+    byteLength = data.byteLength
+) {
     const dataView = new DataView(data, byteOffset, byteLength);
     let dataOffset = 0;
 
