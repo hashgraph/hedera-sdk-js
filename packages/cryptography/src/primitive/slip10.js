@@ -12,7 +12,11 @@ export async function derive(parentKey, chainCode, index) {
     // 0x00 + parentKey + index(BE)
     input[0] = 0;
     input.set(parentKey, 1);
-    new DataView(input.buffer).setUint32(33, index, false);
+    new DataView(input.buffer, input.byteOffset, input.byteLength).setUint32(
+        33,
+        index,
+        false
+    );
 
     // set the index to hardened
     input[33] |= 128;

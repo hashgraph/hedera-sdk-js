@@ -321,6 +321,6 @@ export function decodeFromByteString(text) {
     for (let i = 0; i < text.length; i++) {
         view.setUint8(i, text.charCodeAt(i));
     }
-    
+
     return buffer;
 }

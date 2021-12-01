@@ -383,10 +383,7 @@ export default class ContractFunctionParameters {
 
         for (const [i, { dynamic, value }] of this._arguments.entries()) {
             if (dynamic) {
-                const view = new DataView(
-                    func.buffer,
-                    nameOffset + i * 32 + 28
-                );
+                const view = util.safeView(func, nameOffset + i * 32 + 28);
                 view.setUint32(0, offset);
                 func.set(value, view.getUint32(0) + nameOffset);
                 offset += value.length;
@@ -406,7 +403,7 @@ export default class ContractFunctionParameters {
  */
 function argumentToBytes(param, ty) {
     let value = new Uint8Array(32);
-    let valueView = new DataView(value.buffer, 0);
+    let valueView = util.safeView(value);
     /** @type {Uint8Array} */
     let par;
 
@@ -463,7 +460,7 @@ function argumentToBytes(param, ty) {
                 );
         }
 
-        valueView = new DataView(value.buffer, 28);
+        valueView = util.safeView(value, 28);
         valueView.setUint32(0, values.length);
 
         let offset = 32 * values.length;
@@ -489,7 +486,7 @@ function argumentToBytes(param, ty) {
                 case ArgumentType.bytes:
                 case ArgumentType.string:
                     // eslint-disable-next-line no-case-declarations
-                    const view = new DataView(value.buffer, (i + 1) * 32 + 28);
+                    const view = util.safeView(value, (i + 1) * 32 + 28);
                     view.setUint32(0, offset);
                     value.set(e, view.getUint32(0) + 32);
                     offset += e.length;
@@ -623,7 +620,7 @@ function argumentToBytes(param, ty) {
 
             value.set(par, 32);
 
-            valueView = new DataView(value.buffer, 28);
+            valueView = util.safeView(value, 28);
             valueView.setUint32(0, par.length);
             return value;
         default:

@@ -152,7 +152,7 @@ function decodeInt(intBytes) {
     if (len === 3) {
         // prefix a zero byte and we'll treat it as a 32-bit int
         const data = Uint8Array.of(0, ...intBytes);
-        view = new DataView(data.buffer);
+        view = new DataView(data.buffer, data.byteOffset, data.byteLength);
     }
 
     if (len > 4) {
