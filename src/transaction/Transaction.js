@@ -883,20 +883,13 @@ export default class Transaction extends Executable {
             for (let i = this._transactions.length; i < index; i++) {
                 this._transactions.push(null);
             }
-        } else if (
-            this._transactions.length > index &&
-            this._transactions[index] != null &&
-            /** @type {proto.ITransaction} */ (this._transactions[index])
-                .signedTransactionBytes != null
-        ) {
-            return;
         }
 
-        this._transactions.push({
+        this._transactions[index] = {
             signedTransactionBytes: ProtoSignedTransaction.encode(
                 this._signedTransactions[index]
             ).finish(),
-        });
+        };
     }
 
     /**
