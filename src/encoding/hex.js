@@ -1,13 +1,4 @@
 /**
- * @type {string[]}
- */
-const byteToHex = [];
-
-for (let n = 0; n <= 0xff; n += 1) {
-    byteToHex.push(n.toString(16).padStart(2, "0"));
-}
-
-/**
  * @param {Uint8Array} data
  * @returns {string}
  */
