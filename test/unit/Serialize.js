@@ -52,23 +52,23 @@ describe("Mix signing and serialization", function () {
         const tx = buildTx(params);
         sign(tx, PRIVATE_KEY1);
         sign(tx, PRIVATE_KEY2);
-        const serialized = serialize(tx, "hex");
+        const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
     });
     it("Call serialize before signing without using it", function () {
         const tx = buildTx(params);
-        serialize(tx, "hex");
+        serialize(tx);
         sign(tx, PRIVATE_KEY1);
         sign(tx, PRIVATE_KEY2);
-        const serialized = serialize(tx, "hex");
+        const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
     });
     it("Call serialize between signing without using it", function () {
         const tx = buildTx(params);
         sign(tx, PRIVATE_KEY1);
-        serialize(tx, "hex");
+        serialize(tx);
         sign(tx, PRIVATE_KEY2);
-        const serialized = serialize(tx, "hex");
+        const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
     });
     it("Serialize, deserialize then sign", function () {
@@ -76,7 +76,7 @@ describe("Mix signing and serialization", function () {
         tx = deserialize(serialize(tx));
         sign(tx, PRIVATE_KEY1);
         sign(tx, PRIVATE_KEY2);
-        const serialized = serialize(tx, "hex");
+        const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
     });
     it("Sign, serialize, deserialize then sign again", function () {
@@ -84,7 +84,7 @@ describe("Mix signing and serialization", function () {
         sign(tx, PRIVATE_KEY1);
         tx = deserialize(serialize(tx));
         sign(tx, PRIVATE_KEY2);
-        const serialized = serialize(tx, "hex");
+        const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
     });
     it("Sign then serialize, deserialize", function () {
@@ -92,7 +92,7 @@ describe("Mix signing and serialization", function () {
         sign(tx, PRIVATE_KEY1);
         sign(tx, PRIVATE_KEY2);
         tx = deserialize(serialize(tx));
-        const serialized = serialize(tx, "hex");
+        const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
     });
 });
