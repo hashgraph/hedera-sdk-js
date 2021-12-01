@@ -1,18 +1,12 @@
-import nacl from "tweetnacl";
-import PublicKey from "./PublicKey.js";
 import Mnemonic from "./Mnemonic.js";
-import { arrayStartsWith } from "./util/array.js";
-import { createKeystore, loadKeystore } from "./primitive/keystore.js";
 import BadKeyError from "./BadKeyError.js";
 import * as hex from "./encoding/hex.js";
-import { read as readPem } from "./encoding/pem.js";
-import * as slip10 from "./primitive/slip10.js";
 import Key from "./Key.js";
-import * as random from "./primitive/random.js";
-import * as derive from "./util/derive.js";
+import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
 
-const derPrefix = "302e020100300506032b657004220420";
-const derPrefixBytes = hex.decode(derPrefix);
+/**
+ * @typedef {import("./PublicKey.js").default} PublicKey
+ */
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -48,25 +42,17 @@ export default class PrivateKey extends Key {
     /**
      * @hideconstructor
      * @internal
-     * @param {nacl.SignKeyPair} keyPair
-     * @param {?Uint8Array} chainCode
+     * @param {Ed25519PrivateKey} key
      */
-    constructor(keyPair, chainCode) {
+    constructor(key) {
         super();
 
         /**
-         * @type {nacl.SignKeyPair}
+         * @type {Ed25519PrivateKey}
          * @readonly
          * @private
          */
-        this._keyPair = keyPair;
-
-        /**
-         * @type {?Uint8Array}
-         * @readonly
-         * @private
-         */
-        this._chainCode = chainCode;
+        this._key = key;
     }
 
     /**
@@ -74,15 +60,34 @@ export default class PrivateKey extends Key {
      *
      * @returns {PrivateKey}
      */
-    static generate() {
-        // 32 bytes for the secret key
-        // 32 bytes for the chain code (to support derivation)
-        const entropy = random.bytes(64);
+    static generateEd25519() {
+        return new PrivateKey(Ed25519PrivateKey.generate());
+    }
 
-        return new PrivateKey(
-            nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
-            entropy.subarray(32)
-        );
+    //     /**
+    //      * Generate a random EDSA private key.
+    //      *
+    //      * @returns {PrivateKey}
+    //      */
+    //     static generateECDSA() {
+    //         // 32 bytes for the secret key
+    //         // 32 bytes for the chain code (to support derivation)
+    //         const entropy = random.bytes(64);
+    //
+    //         return new PrivateKey(
+    //             nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
+    //             entropy.subarray(32)
+    //         );
+    //     }
+
+    /**
+     * Depredated - Use `generateEd25519()` instead
+     * Generate a random Ed25519 private key.
+     *
+     * @returns {PrivateKey}
+     */
+    static generate() {
+        return PrivateKey.generateEd25519();
     }
 
     /**
@@ -91,14 +96,7 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async generateAsync() {
-        // 32 bytes for the secret key
-        // 32 bytes for the chain code (to support derivation)
-        const entropy = await random.bytesAsync(64);
-
-        return new PrivateKey(
-            nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
-            entropy.subarray(32)
-        );
+        return new PrivateKey(await Ed25519PrivateKey.generateAsync());
     }
 
     /**
@@ -108,30 +106,16 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static fromBytes(data) {
-        switch (data.length) {
-            case 48:
-                if (arrayStartsWith(data, derPrefixBytes)) {
-                    const keyPair = nacl.sign.keyPair.fromSeed(
-                        data.subarray(16)
-                    );
-
-                    return new PrivateKey(keyPair, null);
-                }
-
-                break;
-
-            case 32:
-                return new PrivateKey(nacl.sign.keyPair.fromSeed(data), null);
-
-            case 64:
-                // priv + pub key
-                return new PrivateKey(
-                    nacl.sign.keyPair.fromSecretKey(data),
-                    null
-                );
-
-            default:
+        try {
+            return new PrivateKey(Ed25519PrivateKey.fromBytes(data));
+        } catch {
+            // Do nothing
         }
+
+        // try {
+        //     return new PrivateKey(EcdsaPrivateKey.fromBytes(data));
+        // } catch {
+        // }
 
         throw new BadKeyError(
             `invalid private key length: ${data.length} bytes`
@@ -174,7 +158,9 @@ export default class PrivateKey extends Key {
      * @throws {BadKeyError} If the passphrase is incorrect or the hash fails to validate.
      */
     static async fromKeystore(data, passphrase = "") {
-        return PrivateKey.fromBytes(await loadKeystore(data, passphrase));
+        return new PrivateKey(
+            await Ed25519PrivateKey.fromKeystore(data, passphrase)
+        );
     }
 
     /**
@@ -191,7 +177,9 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async fromPem(data, passphrase = "") {
-        return new PrivateKey(await readPem(data, passphrase), null);
+        return new PrivateKey(
+            await Ed25519PrivateKey.fromPem(data, passphrase)
+        );
     }
 
     /**
@@ -207,19 +195,7 @@ export default class PrivateKey extends Key {
      * @throws If this key does not support derivation.
      */
     async derive(index) {
-        if (this._chainCode == null) {
-            throw new Error("this private key does not support key derivation");
-        }
-
-        const { keyData, chainCode } = await slip10.derive(
-            this.toBytes(),
-            this._chainCode,
-            index
-        );
-
-        const keyPair = nacl.sign.keyPair.fromSeed(keyData);
-
-        return new PrivateKey(keyPair, chainCode);
+        return new PrivateKey(await this._key.derive(index));
     }
 
     /**
@@ -228,12 +204,7 @@ export default class PrivateKey extends Key {
      * @throws If this key does not support derivation.
      */
     async legacyDerive(index) {
-        const keyBytes = await derive.legacy(
-            this.toBytes().subarray(0, 32),
-            index
-        );
-
-        return PrivateKey.fromBytes(keyBytes);
+        return new PrivateKey(await this._key.legacyDerive(index));
     }
 
     /**
@@ -245,7 +216,7 @@ export default class PrivateKey extends Key {
      * @returns {PublicKey}
      */
     get publicKey() {
-        return new PublicKey(this._keyPair.publicKey);
+        return this._key.publicKey;
     }
 
     /**
@@ -255,7 +226,7 @@ export default class PrivateKey extends Key {
      * @returns {Uint8Array} - The signature bytes without the message
      */
     sign(bytes) {
-        return nacl.sign.detached(bytes, this._keyPair.secretKey);
+        return this._key.sign(bytes);
     }
 
     /**
@@ -320,22 +291,21 @@ export default class PrivateKey extends Key {
      * @returns {boolean}
      */
     isDerivable() {
-        return this._chainCode != null;
+        return this._key.isDerivable();
     }
 
     /**
      * @returns {Uint8Array}
      */
     toBytes() {
-        // copy the bytes so they can't be modified accidentally
-        return this._keyPair.secretKey.slice(0, 32);
+        return this._key.toBytes();
     }
 
     /**
      * @returns {string}
      */
     toString() {
-        return derPrefix + hex.encode(this.toBytes());
+        return this._key.toString();
     }
 
     /**
@@ -351,6 +321,6 @@ export default class PrivateKey extends Key {
      * @returns {Promise<Uint8Array>}
      */
     toKeystore(passphrase = "") {
-        return createKeystore(this.toBytes(), passphrase);
+        return this._key.toKeystore(passphrase);
     }
 }

@@ -1,4 +1,5 @@
 import PrivateKey from "./PrivateKey.js";
+import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
 import BadMnemonicError from "./BadMnemonicError.js";
 import BadMnemonicReason from "./BadMnemonicReason.js";
 import legacyWords from "./words/legacy.js";
@@ -285,7 +286,7 @@ export default class Mnemonic {
 
         const keyPair = nacl.sign.keyPair.fromSeed(keyData);
 
-        return new PrivateKey(keyPair, chainCode);
+        return new PrivateKey(new Ed25519PrivateKey(keyPair, chainCode));
     }
 
     /**
