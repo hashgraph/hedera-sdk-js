@@ -156,6 +156,18 @@ message TransactionID {
      * Whether the Transaction is of type Scheduled or no
      */
     bool scheduled = 3;
+
+    /**
+     * The identifier for an internal transaction that was spawned as part 
+     * of handling a user transaction. (These internal transactions share the 
+     * transactionValidStart and accountID of the user transaction, so a
+     * nonce is necessary to give them a unique TransactionID.)
+     * 
+     * An example is when a "parent" ContractCreate or ContractCall transaction 
+     * calls one or more HTS precompiled contracts; each of the "child" 
+     * transactions spawned for a precompile has a id with a different nonce.
+     */
+    int32 nonce = 4;
 }
 
 /**
