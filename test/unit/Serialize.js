@@ -27,12 +27,21 @@ const params = {
     memo: "Transaction (de)serialization test",
 };
 
-const serialize = (tx) => tx.toBytes().toString("hex");
-const deserialize = (s) => Transaction.fromBytes(Buffer.from(s, "hex"));
-const sign = (tx, privateKeyHex) =>
-    PrivateKey.fromBytes(Buffer.from(privateKeyHex, "hex")).signTransaction(tx);
+function serialize(tx) {
+    return tx.toBytes().toString("hex");
+}
 
-const buildTx = (params) => {
+function deserialize(s) {
+    return Transaction.fromBytes(Buffer.from(s, "hex"));
+}
+
+function sign(tx, privateKeyHex) {
+    return PrivateKey.fromBytes(
+        Buffer.from(privateKeyHex, "hex")
+    ).signTransaction(tx);
+}
+
+function buildTx(params) {
     const transactionId = TransactionId.withValidStart(
         params.operatorId,
         params.validStart
@@ -45,7 +54,7 @@ const buildTx = (params) => {
         .addHbarTransfer(params.senderId, params.amount.negated())
         .addHbarTransfer(params.recipientId, params.amount);
     return unbuiltTx.freeze();
-};
+}
 
 describe("Mix signing and serialization", function () {
     it("Sign then serialize", function () {
@@ -55,6 +64,7 @@ describe("Mix signing and serialization", function () {
         const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
     });
+
     it("Call serialize before signing without using it", function () {
         const tx = buildTx(params);
         serialize(tx);
@@ -63,6 +73,7 @@ describe("Mix signing and serialization", function () {
         const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
     });
+
     it("Call serialize between signing without using it", function () {
         const tx = buildTx(params);
         sign(tx, PRIVATE_KEY1);
@@ -71,6 +82,7 @@ describe("Mix signing and serialization", function () {
         const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
     });
+
     it("Serialize, deserialize then sign", function () {
         let tx = buildTx(params);
         tx = deserialize(serialize(tx));
@@ -79,6 +91,7 @@ describe("Mix signing and serialization", function () {
         const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
     });
+
     it("Sign, serialize, deserialize then sign again", function () {
         let tx = buildTx(params);
         sign(tx, PRIVATE_KEY1);
@@ -87,6 +100,7 @@ describe("Mix signing and serialization", function () {
         const serialized = serialize(tx);
         expect(serialized).equals(SERIALIZED);
     });
+
     it("Sign then serialize, deserialize", function () {
         let tx = buildTx(params);
         sign(tx, PRIVATE_KEY1);
