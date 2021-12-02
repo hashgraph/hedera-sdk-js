@@ -310,7 +310,7 @@ export function convertToNumber(variable) {
 export function safeView(arr, offset = 0, length = arr.byteLength) {
     if (!(Number.isInteger(offset) && offset >= 0))
         throw new Error("Invalid offset!");
-    if (!(Number.isInteger(length) && length > 0))
+    if (!(Number.isInteger(length) && length >= 0))
         throw new Error("Invalid length!");
     return new DataView(
         arr.buffer,
