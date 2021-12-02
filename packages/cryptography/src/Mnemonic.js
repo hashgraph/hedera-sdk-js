@@ -11,6 +11,7 @@ import * as hmac from "./primitive/hmac.js";
 import * as slip10 from "./primitive/slip10.js";
 import * as entropy from "./util/entropy.js";
 import * as random from "./primitive/random.js";
+// import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
 
 /**
  * Multi-word mnemonic phrase (BIP-39).
@@ -123,6 +124,27 @@ export default class Mnemonic {
 
         return await this._toPrivateKey(passphrase);
     }
+
+    // /**
+    //  * Recover an ecdsa private key from this mnemonic phrase, with an
+    //  * optional passphrase.
+    //  *
+    //  * @param {string} [passphrase]
+    //  * @returns {Promise<EcdsaPrivateKey>}
+    //  */
+    //      async toEcdsaPrivateKey(passphrase = "") {
+    //         if (this._isLegacy) {
+    //             if (passphrase.length > 0) {
+    //                 throw new Error(
+    //                     "legacy 22-word mnemonics do not support passphrases"
+    //                 );
+    //             }
+
+    //             return this.toLegacyPrivateKey();
+    //         }
+
+    //         return await this._toEcdsaPrivateKey(passphrase);
+    //     }
 
     /**
      * Recover a mnemonic phrase from a string, splitting on spaces. Handles 12, 22 (legacy), and 24 words.

@@ -2,6 +2,7 @@
 // import Mnemonic from "./Mnemonic.js";
 // import { arrayStartsWith } from "./util/array.js";
 // import { createKeystore, loadKeystore } from "./primitive/keystore.js";
+import nacl from "tweetnacl";
 import BadKeyError from "./BadKeyError.js";
 import * as hex from "./encoding/hex.js";
 // import { read as readPem } from "./encoding/pem.js";
@@ -9,7 +10,7 @@ import * as hex from "./encoding/hex.js";
 // import * as derive from "./util/derive.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 
-// const derPrefix = "302e020100300506032b657004220420";
+const derPrefix = "302e020100300506032b657004220420";
 // const derPrefixBytes = hex.decode(derPrefix);
 
 /**
@@ -74,7 +75,7 @@ export default class EcdsaPrivateKey {
             );
         }
     }
-    
+
     /**
      * Construct a private key from a hex-encoded string.
      *
@@ -82,9 +83,11 @@ export default class EcdsaPrivateKey {
      * @returns {EcdsaPrivateKey}
      */
     static fromString(text) {
+        console.log(hex.decode(text));
+
         return EcdsaPrivateKey.fromBytes(hex.decode(text));
     }
-    
+
     // /**
     //  * Recover a private key from a mnemonic phrase (and optionally a password).
     //  *
@@ -99,7 +102,7 @@ export default class EcdsaPrivateKey {
     //             : mnemonic
     //     ).toEcdsaPrivateKey(passphrase);
     // }
-    // 
+    //
     // /**
     //  * Recover a private key from a keystore, previously created by `.toKeystore()`.
     //  *
@@ -113,7 +116,7 @@ export default class EcdsaPrivateKey {
     // static async fromKeystore(data, passphrase = "") {
     //     return EcdsaPrivateKey.fromBytes(await loadKeystore(data, passphrase));
     // }
-    // 
+    //
     // /**
     //  * Recover a private key from a pem string; the private key may be encrypted.
     //  *
@@ -130,7 +133,7 @@ export default class EcdsaPrivateKey {
     // static async fromPem(data, passphrase = "") {
     //     return new EcdsaPrivateKey(await readPem(data, passphrase), null);
     // }
-    // 
+    //
     // /**
     //  * Derive a new private key at the given wallet index.
     //  *
@@ -147,18 +150,18 @@ export default class EcdsaPrivateKey {
     //     if (this._chainCode == null) {
     //         throw new Error("this private key does not support key derivation");
     //     }
-    // 
+    //
     //     const { keyData, chainCode } = await slip10.derive(
     //         this.toBytes(),
     //         this._chainCode,
     //         index
     //     );
-    // 
+    //
     //     const keyPair = nacl.sign.keyPair.fromSeed(keyData);
-    // 
+    //
     //     return new EcdsaPrivateKey(keyPair, chainCode);
     // }
-    // 
+    //
     // /**
     //  * @param {number} index
     //  * @returns {Promise<EcdsaPrivateKey>}
@@ -169,10 +172,10 @@ export default class EcdsaPrivateKey {
     //         this.toBytes().subarray(0, 32),
     //         index
     //     );
-    // 
+    //
     //     return EcdsaPrivateKey.fromBytes(keyBytes);
     // }
-    // 
+    //
     // /**
     //  * Get the public key associated with this private key.
     //  *
@@ -184,17 +187,17 @@ export default class EcdsaPrivateKey {
     // get publicKey() {
     //     return new PublicKey(this._keyPair.publicKey);
     // }
-    // 
-    // /**
-    //  * Sign a message with this private key.
-    //  *
-    //  * @param {Uint8Array} bytes
-    //  * @returns {Uint8Array} - The signature bytes without the message
-    //  */
-    // sign(bytes) {
-    //     return nacl.sign.detached(bytes, this._keyPair.secretKey);
-    // }
-    // 
+
+    /**
+     * Sign a message with this private key.
+     *
+     * @param {Uint8Array} bytes
+     * @returns {Uint8Array} - The signature bytes without the message
+     */
+    sign(bytes) {
+        return nacl.sign.detached(bytes, this._keyPair.privateKey);
+    }
+
     // /**
     //  * Check if `derive` can be called on this private key.
     //  *
@@ -205,22 +208,22 @@ export default class EcdsaPrivateKey {
     // isDerivable() {
     //     return this._chainCode != null;
     // }
-    // 
-    // /**
-    //  * @returns {Uint8Array}
-    //  */
-    // toBytes() {
-    //     // copy the bytes so they can't be modified accidentally
-    //     return this._keyPair.secretKey.slice(0, 32);
-    // }
-    // 
-    // /**
-    //  * @returns {string}
-    //  */
-    // toString() {
-    //     return derPrefix + hex.encode(this.toBytes());
-    // }
-    // 
+    //
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        // copy the bytes so they can't be modified accidentally
+        return this._keyPair.privateKey.slice(0, 32);
+    }
+    //
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return derPrefix + hex.encode(this.toBytes());
+    }
+    //
     // /**
     //  * Create a keystore with a given passphrase.
     //  *
