@@ -23,8 +23,8 @@ export function generate() {
     const result = crypto.generateKeyPairSync("ec", options);
 
     return {
-        publicKey: result.publicKey.export(),
-        privateKey: result.privateKey.export(),
+        publicKey: /** @type {Buffer} */ (/** @type {unknown} */ (result.publicKey)),
+        privateKey: /** @type {Buffer} */ (/** @type {unknown} */ (result.privateKey)),
     };
 }
 
@@ -39,8 +39,8 @@ export function generateAsync() {
             }
 
             resolve({
-                publicKey: publicKey.export(),
-                privateKey: privateKey.export(),
+                publicKey: /** @type {Buffer} */ (/** @type {unknown} */ (publicKey)),
+                privateKey: /** @type {Buffer} */ (/** @type {unknown} */ (privateKey)),
             });
         })
     );

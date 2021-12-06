@@ -83,9 +83,32 @@ export default class EcdsaPrivateKey {
      * @returns {EcdsaPrivateKey}
      */
     static fromString(text) {
-        console.log(hex.decode(text));
+        return EcdsaPrivateKey.fromBytes(hex.decode(text));//.replace(derPrefix,'')
+    }
 
-        return EcdsaPrivateKey.fromBytes(hex.decode(text));
+    /**
+     * Sign a message with this private key.
+     *
+     * @param {Uint8Array} bytes
+     * @returns {Uint8Array} - The signature bytes without the message
+     */
+    sign(bytes) {
+        return nacl.sign.detached(bytes, this._keyPair.privateKey);
+    }
+    
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        // copy the bytes so they can't be modified accidentally
+        return this._keyPair.privateKey.slice(0, 32);
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return derPrefix + hex.encode(this.toBytes());
     }
 
     // /**
@@ -188,15 +211,7 @@ export default class EcdsaPrivateKey {
     //     return new PublicKey(this._keyPair.publicKey);
     // }
 
-    /**
-     * Sign a message with this private key.
-     *
-     * @param {Uint8Array} bytes
-     * @returns {Uint8Array} - The signature bytes without the message
-     */
-    sign(bytes) {
-        return nacl.sign.detached(bytes, this._keyPair.privateKey);
-    }
+
 
     // /**
     //  * Check if `derive` can be called on this private key.
@@ -209,20 +224,7 @@ export default class EcdsaPrivateKey {
     //     return this._chainCode != null;
     // }
     //
-    /**
-     * @returns {Uint8Array}
-     */
-    toBytes() {
-        // copy the bytes so they can't be modified accidentally
-        return this._keyPair.privateKey.slice(0, 32);
-    }
-    //
-    /**
-     * @returns {string}
-     */
-    toString() {
-        return derPrefix + hex.encode(this.toBytes());
-    }
+
     //
     // /**
     //  * Create a keystore with a given passphrase.
