@@ -1,34 +1,43 @@
 import crypto from "crypto";
 import { promisify } from "util";
 
-const generateKeyPairAsync = promisify(crypto.generateKeyPair)
+const generateKeyPairAsync = promisify(crypto.generateKeyPair);
 
 /**
  * @typedef {import("../EcdsaPrivateKey.js").KeyPair} KeyPair
  */
 
-const options = {
+const createOptions = {
     namedCurve: "secp256k1",
 };
+
+/** @type {crypto.KeyExportOptions<"der">} */
+const privateKeyExportOptions = { type: "pkcs8", format: "der" };
+
+/** @type {crypto.KeyExportOptions<"der">} */
+const publicKeyExportOptions = { type: "spki", format: "der" };
 
 /**
  * @returns {KeyPair}
  */
 export function generate() {
-    const result = crypto.generateKeyPairSync("ec", options);
+    const result = crypto.generateKeyPairSync("ec", createOptions);
 
     return {
-        publicKey: /** @type {Buffer} */ (/** @type {unknown} */ (result.publicKey)),
-        privateKey: /** @type {Buffer} */ (/** @type {unknown} */ (result.privateKey)),
+        privateKey: result.privateKey.export(privateKeyExportOptions),
+        publicKey: result.publicKey.export(publicKeyExportOptions),
     };
 }
 
+/**
+ * @returns {Promise<KeyPair>}
+ */
 export async function generateAsync() {
-    const result = await generateKeyPairAsync("ec", options);
+    const result = await generateKeyPairAsync("ec", createOptions);
 
     return {
-        publicKey: result.publicKey.export(),
-        privateKey: result.privateKey.export(),
+        privateKey: result.privateKey.export(privateKeyExportOptions),
+        publicKey: result.publicKey.export(publicKeyExportOptions),
     };
 }
 
@@ -36,33 +45,19 @@ export async function generateAsync() {
  * @param {Uint8Array} data
  * @returns {KeyPair}
  */
-export function fromBytesDer(data) {
-    const privateKey = crypto
-        .createPrivateKey({
-            type: "pkcs8",
-            key: Buffer.from(data),
-        })
-        .export();
-
-    const publicKey = crypto.createPublicKey(privateKey).export();
-
-    return {
-        publicKey,
-        privateKey,
-    };
-}
-
-/**
- * @param {Uint8Array} data
- * @returns {KeyPair}
- */
-export function fromBytesRaw(data) {
-    const privateKey = crypto.createPrivateKey(Buffer.from(data)).export();
-    const publicKey = crypto.createPublicKey(privateKey).export();
+export function fromBytes(data) {
+    const privateKey = crypto.createPrivateKey({
+        type: "pkcs8",
+        format: "der",
+        key: Buffer.from(data),
+    });
+    const publicKey = crypto
+        .createPublicKey(privateKey)
+        .export(publicKeyExportOptions);
 
     return {
+        privateKey: privateKey.export(privateKeyExportOptions),
         publicKey,
-        privateKey,
     };
 }
 
@@ -72,9 +67,13 @@ export function fromBytesRaw(data) {
  * @returns {Uint8Array}
  */
 export function sign(keydata, data) {
-    const privateKey = crypto.createPrivateKey(Buffer.from(keydata));
+    const privateKey = crypto.createPrivateKey({
+        type: "pkcs8",
+        format: "der",
+        key: Buffer.from(keydata),
+    });
 
-    const sign = crypto.createSign('SHA256');
+    const sign = crypto.createSign("SHA256");
     sign.write(data);
     sign.end();
 
@@ -88,10 +87,13 @@ export function sign(keydata, data) {
  * @returns {boolean}
  */
 export function verify(keydata, message, signature) {
-    const privateKey = crypto.createPrivateKey(Buffer.from(keydata));
-    const publicKey = crypto.createPublicKey(privateKey).export();
+    const publicKey = crypto.createPublicKey({
+        type: "spki",
+        format: "der",
+        key: Buffer.from(keydata),
+    });
 
-    const verify = crypto.createVerify('SHA256');
+    const verify = crypto.createVerify("SHA256");
     verify.write(message);
     verify.end();
 

@@ -2,7 +2,8 @@ import BadKeyError from "../BadKeyError.js";
 import { EncryptedPrivateKeyInfo } from "../primitive/pkcs.js";
 import * as der from "./der.js";
 import * as base64 from "./base64.js";
-import nacl from "tweetnacl";
+import Ed25519PrivateKey from "../Ed25519PrivateKey.js";
+import EcdsaPrivateKey from "../EcdsaPrivateKey.js";
 
 const BEGIN_PRIVATEKEY = "-----BEGIN PRIVATE KEY-----\n";
 const END_PRIVATEKEY = "-----END PRIVATE KEY-----\n";
@@ -13,7 +14,7 @@ const END_ENCRYPTED_PRIVATEKEY = "-----END ENCRYPTED PRIVATE KEY-----\n";
 /**
  * @param {string} pem
  * @param {string} [passphrase]
- * @returns {Promise<nacl.SignKeyPair>}
+ * @returns {Promise<Ed25519PrivateKey | EcdsaPrivateKey | Uint8Array>}
  */
 export async function read(pem, passphrase) {
     const beginTag = passphrase ? BEGIN_ENCRYPTED_PRIVATEKEY : BEGIN_PRIVATEKEY;
@@ -37,15 +38,27 @@ export async function read(pem, passphrase) {
         try {
             encrypted = EncryptedPrivateKeyInfo.parse(key);
         } catch (error) {
+            const message =
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                error != null && /** @type {Error} */ (error).message != null
+                    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                      /** @type {Error} */ (error).message
+                    : "";
+
             throw new BadKeyError(
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/explicit-module-boundary-types
-                `failed to parse encrypted private key: ${error.message}`
+                `failed to parse encrypted private key: ${message}`
             );
         }
 
         const decrypted = await encrypted.decrypt(passphrase);
 
-        if (decrypted.algId.algIdent !== "1.3.101.112") {
+        let publicKey = null;
+
+        if (decrypted.algId.algIdent === "1.3.101.112") {
+            publicKey = Ed25519PrivateKey;
+        } else if (decrypted.algId.algIdent !== "1.3.132.0.10") {
+            publicKey = EcdsaPrivateKey;
+        } else {
             throw new BadKeyError(
                 `unknown private key algorithm ${decrypted.algId.toString()}`
             );
@@ -53,14 +66,14 @@ export async function read(pem, passphrase) {
 
         const keyData = der.decode(decrypted.privateKey);
 
-        if ("bytes" in keyData) {
-            return nacl.sign.keyPair.fromSeed(keyData.bytes);
+        if (!("bytes" in keyData)) {
+            throw new BadKeyError(
+                `expected ASN bytes, got ${JSON.stringify(keyData)}`
+            );
         }
 
-        throw new BadKeyError(
-            `expected ASN bytes, got ${JSON.stringify(keyData)}`
-        );
+        publicKey.fromBytes(keyData.bytes);
     }
 
-    return nacl.sign.keyPair.fromSeed(key.subarray(16));
+    return key.subarray(16);
 }

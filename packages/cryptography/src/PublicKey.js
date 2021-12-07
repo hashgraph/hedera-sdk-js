@@ -1,15 +1,13 @@
-import nacl from "tweetnacl";
 import Key from "./Key.js";
-import { arrayEqual, arrayStartsWith } from "./util/array.js";
+import { arrayEqual } from "./util/array.js";
 import BadKeyError from "./BadKeyError.js";
 import * as hex from "./encoding/hex.js";
+import Ed25519PublicKey from "./Ed25519PublicKey.js";
+import EcdsaPublicKey from "./EcdsaPublicKey.js";
 
 /**
  * @typedef {import("./PrivateKey.js").Transaction} Transaction
  */
-
-const derPrefix = "302a300506032b6570032100";
-const derPrefixBytes = hex.decode(derPrefix);
 
 /**
  * An public key on the Hedera™ network.
@@ -18,17 +16,17 @@ export default class PublicKey extends Key {
     /**
      * @internal
      * @hideconstructor
-     * @param {Uint8Array} keyData
+     * @param {Ed25519PublicKey | EcdsaPublicKey} key
      */
-    constructor(keyData) {
+    constructor(key) {
         super();
 
         /**
-         * @type {Uint8Array}
+         * @type {Ed25519PublicKey | EcdsaPublicKey}
          * @private
          * @readonly
          */
-        this._keyData = keyData;
+        this._key = key;
     }
 
     /**
@@ -36,23 +34,37 @@ export default class PublicKey extends Key {
      * @returns {PublicKey}
      */
     static fromBytes(data) {
-        switch (data.length) {
-            case 32:
-                return new PublicKey(data);
+        try {
+            return new PublicKey(Ed25519PublicKey.fromBytes(data));
+        } catch {
+            // Do nothing
+        }
 
-            case 44:
-                if (arrayStartsWith(data, derPrefixBytes)) {
-                    return new PublicKey(data.subarray(12));
-                }
-
-                break;
-
-            default:
+        try {
+            return new PublicKey(EcdsaPublicKey.fromBytes(data));
+        } catch {
+            // Do nothing
         }
 
         throw new BadKeyError(
             `invalid public key length: ${data.length} bytes`
         );
+    }
+
+    /**
+     * @param {Uint8Array} data
+     * @returns {PublicKey}
+     */
+    static fromBytesEd25519(data) {
+        return new PublicKey(Ed25519PublicKey.fromBytes(data));
+    }
+
+    /**
+     * @param {Uint8Array} data
+     * @returns {PublicKey}
+     */
+    static fromBytesEcdsa(data) {
+        return new PublicKey(EcdsaPublicKey.fromBytes(data));
     }
 
     /**
@@ -76,7 +88,7 @@ export default class PublicKey extends Key {
      * @returns {boolean}
      */
     verify(message, signature) {
-        return nacl.sign.detached.verify(message, signature, this._keyData);
+        return this._key.verify(message, signature);
     }
 
     /**
@@ -100,7 +112,7 @@ export default class PublicKey extends Key {
                     const pubKeyPrefix = /** @type {Uint8Array} */ (
                         sigPair.pubKeyPrefix
                     );
-                    if (arrayEqual(pubKeyPrefix, this._keyData)) {
+                    if (arrayEqual(pubKeyPrefix, this.toBytesRaw())) {
                         found = true;
                         const bodyBytes = /** @type {Uint8Array} */ (
                             signedTransaction.bodyBytes
@@ -108,13 +120,7 @@ export default class PublicKey extends Key {
                         const signature = /** @type {Uint8Array} */ (
                             sigPair.ed25519
                         );
-                        if (
-                            !nacl.sign.detached.verify(
-                                bodyBytes,
-                                signature,
-                                this._keyData
-                            )
-                        ) {
+                        if (this.verify(bodyBytes, signature)) {
                             return false;
                         }
                     }
@@ -133,14 +139,42 @@ export default class PublicKey extends Key {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return this._keyData.slice();
+        return this.toBytesDer();
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytesDer() {
+        return this._key.toBytesDer();
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytesRaw() {
+        return this._key.toBytesRaw();
     }
 
     /**
      * @returns {string}
      */
     toString() {
-        return derPrefix + hex.encode(this._keyData);
+        return this.toStringDer();
+    }
+
+    /**
+     * @returns {string}
+     */
+    toStringDer() {
+        return hex.encode(this.toBytesDer());
+    }
+
+    /**
+     * @returns {string}
+     */
+    toStringRaw() {
+        return hex.encode(this.toBytesRaw());
     }
 
     /**
@@ -148,6 +182,18 @@ export default class PublicKey extends Key {
      * @returns {boolean}
      */
     equals(other) {
-        return arrayEqual(this._keyData, other._keyData);
+        if (
+            this._key instanceof Ed25519PublicKey &&
+            other instanceof Ed25519PublicKey
+        ) {
+            return this._key.equals(other);
+        } else if (
+            this._key instanceof EcdsaPublicKey &&
+            other instanceof EcdsaPublicKey
+        ) {
+            return this._key.equals(other);
+        } else {
+            return false;
+        }
     }
 }

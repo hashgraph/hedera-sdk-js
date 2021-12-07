@@ -1,13 +1,14 @@
 import Mnemonic from "./Mnemonic.js";
 import BadKeyError from "./BadKeyError.js";
-import * as hex from "./encoding/hex.js";
 import Key from "./Key.js";
 import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
 import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
-
-/**
- * @typedef {import("./PublicKey.js").default} PublicKey
- */
+import * as hex from "./encoding/hex.js";
+import * as slip10 from "./primitive/slip10.js";
+import * as derive from "./util/derive.js";
+import { createKeystore, loadKeystore } from "./primitive/keystore.js";
+import { read as readPem } from "./encoding/pem.js";
+import PublicKey from "./PublicKey.js";
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -109,7 +110,7 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async generateEcdsaAsync() {
-        throw new Error("not implemented");
+        return new PrivateKey(await EcdsaPrivateKey.generateAsync());
     }
 
     /**
@@ -125,10 +126,11 @@ export default class PrivateKey extends Key {
             // Do nothing
         }
 
-        // try {
-        //     return new PrivateKey(EcdsaPrivateKey.fromBytes(data));
-        // } catch {
-        // }
+        try {
+            return new PrivateKey(EcdsaPrivateKey.fromBytes(data));
+        } catch {
+            // Do nothing
+        }
 
         throw new BadKeyError(
             `invalid private key length: ${data.length} bytes`
@@ -211,9 +213,7 @@ export default class PrivateKey extends Key {
      * @throws {BadKeyError} If the passphrase is incorrect or the hash fails to validate.
      */
     static async fromKeystore(data, passphrase = "") {
-        return new PrivateKey(
-            await Ed25519PrivateKey.fromKeystore(data, passphrase)
-        );
+        return PrivateKey.fromBytes(await loadKeystore(data, passphrase));
     }
 
     /**
@@ -230,9 +230,16 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async fromPem(data, passphrase = "") {
-        return new PrivateKey(
-            await Ed25519PrivateKey.fromPem(data, passphrase)
-        );
+        const pem = await readPem(data, passphrase);
+
+        if (
+            pem instanceof Ed25519PrivateKey ||
+            pem instanceof EcdsaPrivateKey
+        ) {
+            return new PrivateKey(pem);
+        }
+
+        return PrivateKey.fromBytes(pem);
     }
 
     /**
@@ -248,7 +255,18 @@ export default class PrivateKey extends Key {
      * @throws If this key does not support derivation.
      */
     async derive(index) {
-        return new PrivateKey(await this._key.derive(index));
+        // return new PrivateKey(await this._key.derive(index));
+        if (this._key._chainCode == null) {
+            throw new Error("this private key does not support key derivation");
+        }
+
+        const { keyData, chainCode } = await slip10.derive(
+            this.toBytesRaw(),
+            this._key._chainCode,
+            index
+        );
+
+        return new PrivateKey(this._key.constructor(keyData, chainCode));
     }
 
     /**
@@ -257,11 +275,12 @@ export default class PrivateKey extends Key {
      * @throws If this key does not support derivation.
      */
     async legacyDerive(index) {
-        if (this._key instanceof EcdsaPrivateKey) {
-            throw new Error("ECDSA does not support legacy derive");
-        }
+        const keyBytes = await derive.legacy(
+            this.toBytesRaw().subarray(0, 32),
+            index
+        );
 
-        return new PrivateKey(await this._key.legacyDerive(index));
+        return new PrivateKey(this._key.constructor(keyBytes));
     }
 
     /**
@@ -273,7 +292,7 @@ export default class PrivateKey extends Key {
      * @returns {PublicKey}
      */
     get publicKey() {
-        return this._key.publicKey;
+        return new PublicKey(this._key.publicKey);
     }
 
     /**
@@ -348,14 +367,14 @@ export default class PrivateKey extends Key {
      * @returns {boolean}
      */
     isDerivable() {
-        return this._key.isDerivable();
+        return this._key._chainCode != null;
     }
 
     /**
      * @returns {Uint8Array}
      */
     toBytes() {
-        return this._key.toBytes();
+        return this.toBytesDer();
     }
 
     /**
@@ -376,21 +395,21 @@ export default class PrivateKey extends Key {
      * @returns {string}
      */
     toString() {
-        return this._key.toString();
+        return this.toStringDer();
     }
 
     /**
      * @returns {string}
      */
     toStringDer() {
-        return this._key.toString();
+        return hex.encode(this.toBytesDer());
     }
 
     /**
      * @returns {string}
      */
     toStringRaw() {
-        return this._key.toString();
+        return hex.encode(this.toBytesRaw());
     }
 
     /**
@@ -406,6 +425,6 @@ export default class PrivateKey extends Key {
      * @returns {Promise<Uint8Array>}
      */
     toKeystore(passphrase = "") {
-        return this._key.toKeystore(passphrase);
+        return createKeystore(this.toBytesRaw(), passphrase);
     }
 }

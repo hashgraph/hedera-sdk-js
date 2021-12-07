@@ -1,86 +1,33 @@
-import { expect } from "chai";
 import EcdsaPrivateKey from "../src/EcdsaPrivateKey.js";
+import * as hex from "../src/encoding/hex.js";
+
+const RAW_KEY =
+    "8776c6b831a1b61ac10dac0304a2843de4716f54b1919bb91a2685d0fe3f3048";
 
 describe("EcdsaPrivateKey", function () {
-<<<<<<< HEAD
     it("generate should return Ecdsa object", function () {
-        let ecdsa = EcdsaPrivateKey.generate();
-        // console.log(ecdsa.toString());
-        expect(ecdsa != undefined && ecdsa != null);
+        EcdsaPrivateKey.generate();
     });
 
-    it("generateAsync should return Ecdsa object", async function(){
-        let ecdsa = EcdsaPrivateKey.generateAsync();
-
-        expect(ecdsa != undefined && ecdsa != null);
+    it("generateAsync should return Ecdsa object", async function () {
+        await EcdsaPrivateKey.generateAsync();
     });
 
-    it("toString should return stringified key",function(){
-        let ecdsa = EcdsaPrivateKey.generate().toString();
-
-        expect(typeof ecdsa).to.eql("string");
+    it("toBytesDer and toBytesRaw work", function () {
+        EcdsaPrivateKey.generate();
     });
 
-    it("fromString should generate key from string with prefix",function(){
-        let ecdsa = EcdsaPrivateKey.fromString("302e020100300506032b657004220420308184020100301006072a8648ce3d020106052b8104000a046d306b02010104");//302e020100300506032b657004220420
-
-        // console.log(ecdsa);
-        // console.log(ecdsa.toString());
+    it("fromStringRaw and fromStringDer work", function () {
+        EcdsaPrivateKey.fromStringDer(
+            hex.encode(EcdsaPrivateKey.fromStringRaw(RAW_KEY).toBytesDer())
+        );
     });
 
-    it("fromString should generate key from string without prefix",function(){
-        let ecdsa = EcdsaPrivateKey.fromString("308184020100301006072a8648ce3d020106052b8104000a046d306b02010104");
+    it("can sign and verify", function () {
+        const key = EcdsaPrivateKey.fromStringRaw(RAW_KEY);
+        const message = "hello world";
+        const signature = key.sign(message);
 
-        // console.log(ecdsa);
-        // console.log(ecdsa.toString());
+        expect(key.publicKey.verify(message, signature)).to.be.true;
     });
-
-    it("toBytes should return key bytes",function(){
-        let ecdsa = EcdsaPrivateKey.generate().toBytes();
-
-        expect(ecdsa != undefined && ecdsa != null);
-    });
-
-=======
-    // it("generate should return Ecdsa object", function () {
-    //     let ecdsa = EcdsaPrivateKey.generate();
-    //     console.log(ecdsa);
-    // });
-    //
-    // it("generateAsync should return Ecdsa object", async function(){
-    //     let ecdsa = EcdsaPrivateKey.generateAsync();
-    //     console.log(ecdsa);
-    // });
-    //
-    // it("toString should return stringified key",function(){
-    //     let ecdsa = EcdsaPrivateKey.generate();
-    //     console.log(ecdsa);
-    // });
-    //
-    // it("fromString should generate key from string",function(){
-    //     let ecdsa = EcdsaPrivateKey.fromString("");
-    //     console.log(ecdsa);
-    // });
-    //
-    // it("toBytes should return key bytes",function(){
-    //     let ecdsa = EcdsaPrivateKey.generate();
-    //     console.log(ecdsa);
-    // });
-    //
->>>>>>> bd9c781b (feat: implement `verify` and `sign` for ECDSA)
-    // it("fromBytes should generate key from bytes",function(){
-    //     let bytesKey = "";
-    //     let ecdsa = EcdsaPrivateKey.fromBytes(bytesKey);
-        
-    // });
-<<<<<<< HEAD
-
-=======
-    //
->>>>>>> bd9c781b (feat: implement `verify` and `sign` for ECDSA)
-    // it("sign should return key-signed bytes",function(){
-    //     let ecdsa = EcdsaPrivateKey.generate().sign(new Uint8Array("dc d4 8d 7a 97 04 36 7b 07 cf"));
-        
-    //     console.log(ecdsa);
-    // });
 });

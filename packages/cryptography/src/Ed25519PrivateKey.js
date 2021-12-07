@@ -1,13 +1,9 @@
 import nacl from "tweetnacl";
-import PublicKey from "./PublicKey.js";
 import { arrayStartsWith } from "./util/array.js";
-import { createKeystore, loadKeystore } from "./primitive/keystore.js";
 import BadKeyError from "./BadKeyError.js";
 import * as hex from "./encoding/hex.js";
-import { read as readPem } from "./encoding/pem.js";
-import * as slip10 from "./primitive/slip10.js";
 import * as random from "./primitive/random.js";
-import * as derive from "./util/derive.js";
+import Ed25519PublicKey from "./Ed25519PublicKey.js";
 
 export const derPrefix = "302e020100300506032b657004220420";
 export const derPrefixBytes = hex.decode(derPrefix);
@@ -16,8 +12,8 @@ export default class Ed25519PrivateKey {
     /**
      * @hideconstructor
      * @internal
-     * @param {nacl.SignKeyPair} keyPair
-     * @param {?Uint8Array} chainCode
+     * @param {nacl.SignKeyPair | Uint8Array} keyPair
+     * @param {Uint8Array=} chainCode
      */
     constructor(keyPair, chainCode) {
         /**
@@ -25,14 +21,16 @@ export default class Ed25519PrivateKey {
          * @readonly
          * @private
          */
-        this._keyPair = keyPair;
+        this._keyPair =
+            keyPair instanceof Uint8Array
+                ? nacl.sign.keyPair.fromSeed(keyPair)
+                : keyPair;
 
         /**
          * @type {?Uint8Array}
          * @readonly
-         * @private
          */
-        this._chainCode = chainCode;
+        this._chainCode = chainCode != null ? chainCode : null;
     }
 
     /**
@@ -100,11 +98,9 @@ export default class Ed25519PrivateKey {
             );
         }
 
-        const keyPair = nacl.sign.keyPair.fromSeed(
-            data.subarray(16)
-        );
+        const keyPair = nacl.sign.keyPair.fromSeed(data.subarray(16));
 
-        return new Ed25519PrivateKey(keyPair, null);
+        return new Ed25519PrivateKey(keyPair);
     }
 
     /**
@@ -116,16 +112,12 @@ export default class Ed25519PrivateKey {
     static fromBytesRaw(data) {
         switch (data.length) {
             case 32:
-                return new Ed25519PrivateKey(
-                    nacl.sign.keyPair.fromSeed(data),
-                    null
-                );
+                return new Ed25519PrivateKey(nacl.sign.keyPair.fromSeed(data));
 
             case 64:
                 // priv + pub key
                 return new Ed25519PrivateKey(
-                    nacl.sign.keyPair.fromSecretKey(data),
-                    null
+                    nacl.sign.keyPair.fromSecretKey(data)
                 );
 
             default:
@@ -143,7 +135,7 @@ export default class Ed25519PrivateKey {
      * @returns {Ed25519PrivateKey}
      */
     static fromString(text) {
-        return Ed25519PrivateKey.fromStringDer(text);
+        return Ed25519PrivateKey.fromBytes(hex.decode(text));
     }
 
     /**
@@ -167,90 +159,15 @@ export default class Ed25519PrivateKey {
     }
 
     /**
-     * Recover a private key from a keystore, previously created by `.toKeystore()`.
-     *
-     * This key will _not_ support child key derivation.
-     *
-     * @param {Uint8Array} data
-     * @param {string} [passphrase]
-     * @returns {Promise<Ed25519PrivateKey>}
-     * @throws {BadKeyError} If the passphrase is incorrect or the hash fails to validate.
-     */
-    static async fromKeystore(data, passphrase = "") {
-        return Ed25519PrivateKey.fromBytes(
-            await loadKeystore(data, passphrase)
-        );
-    }
-
-    /**
-     * Recover a private key from a pem string; the private key may be encrypted.
-     *
-     * This method assumes the .pem file has been converted to a string already.
-     *
-     * If `passphrase` is not null or empty, this looks for the first `ENCRYPTED PRIVATE KEY`
-     * section and uses `passphrase` to decrypt it; otherwise, it looks for the first `PRIVATE KEY`
-     * section and decodes that as a DER-encoded  private key.
-     *
-     * @param {string} data
-     * @param {string} [passphrase]
-     * @returns {Promise<Ed25519PrivateKey>}
-     */
-    static async fromPem(data, passphrase = "") {
-        return new Ed25519PrivateKey(await readPem(data, passphrase), null);
-    }
-
-    /**
-     * Derive a new private key at the given wallet index.
-     *
-     * Only currently supported for keys created with `fromMnemonic()`; other keys will throw
-     * an error.
-     *
-     * You can check if a key supports derivation with `.supportsDerivation()`
-     *
-     * @param {number} index
-     * @returns {Promise<Ed25519PrivateKey>}
-     * @throws If this key does not support derivation.
-     */
-    async derive(index) {
-        if (this._chainCode == null) {
-            throw new Error("this private key does not support key derivation");
-        }
-
-        const { keyData, chainCode } = await slip10.derive(
-            this.toBytes(),
-            this._chainCode,
-            index
-        );
-
-        const keyPair = nacl.sign.keyPair.fromSeed(keyData);
-
-        return new Ed25519PrivateKey(keyPair, chainCode);
-    }
-
-    /**
-     * @param {number} index
-     * @returns {Promise<Ed25519PrivateKey>}
-     * @throws If this key does not support derivation.
-     */
-    async legacyDerive(index) {
-        const keyBytes = await derive.legacy(
-            this.toBytes().subarray(0, 32),
-            index
-        );
-
-        return Ed25519PrivateKey.fromBytes(keyBytes);
-    }
-
-    /**
      * Get the public key associated with this private key.
      *
      * The public key can be freely given and used by other parties to verify
      * the signatures generated by this private key.
      *
-     * @returns {PublicKey}
+     * @returns {Ed25519PublicKey}
      */
     get publicKey() {
-        return new PublicKey(this._keyPair.publicKey);
+        return new Ed25519PublicKey(this._keyPair.publicKey);
     }
 
     /**
@@ -264,31 +181,16 @@ export default class Ed25519PrivateKey {
     }
 
     /**
-     * Check if `derive` can be called on this private key.
-     *
-     * This is only the case if the key was created from a mnemonic.
-     *
-     * @returns {boolean}
-     */
-    isDerivable() {
-        return this._chainCode != null;
-    }
-
-    /**
-     * @returns {Uint8Array}
-     */
-    toBytes() {
-        return this.toBytesDer();
-    }
-
-    /**
      * @returns {Uint8Array}
      */
     toBytesDer() {
         const bytes = new Uint8Array(derPrefixBytes.length + 32);
 
         bytes.set(derPrefixBytes, 0);
-        bytes.set(this._keyPair.secretKey.subarray(0, 32), derPrefixBytes.length);
+        bytes.set(
+            this._keyPair.secretKey.subarray(0, 32),
+            derPrefixBytes.length
+        );
 
         return bytes;
     }
@@ -299,42 +201,5 @@ export default class Ed25519PrivateKey {
     toBytesRaw() {
         // copy the bytes so they can't be modified accidentally
         return this._keyPair.secretKey.slice(0, 32);
-    }
-
-    /**
-     * @returns {string}
-     */
-    toString() {
-        return this.toStringDer();
-    }
-
-    /**
-     * @returns {string}
-     */
-    toStringDer() {
-        return derPrefix + hex.encode(this.toBytes());
-    }
-
-    /**
-     * @returns {string}
-     */
-    toStringRaw() {
-        return hex.encode(this.toBytes());
-    }
-
-    /**
-     * Create a keystore with a given passphrase.
-     *
-     * The key can be recovered later with `fromKeystore()`.
-     *
-     * Note that this will not retain the ancillary data used for
-     * deriving child keys, thus `.derive()` on the restored key will
-     * throw even if this instance supports derivation.
-     *
-     * @param {string} [passphrase]
-     * @returns {Promise<Uint8Array>}
-     */
-    toKeystore(passphrase = "") {
-        return createKeystore(this.toBytes(), passphrase);
     }
 }
