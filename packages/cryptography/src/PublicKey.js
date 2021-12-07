@@ -1,9 +1,9 @@
 import Key from "./Key.js";
-import { arrayEqual } from "./util/array.js";
 import BadKeyError from "./BadKeyError.js";
-import * as hex from "./encoding/hex.js";
 import Ed25519PublicKey from "./Ed25519PublicKey.js";
 import EcdsaPublicKey from "./EcdsaPublicKey.js";
+import { arrayEqual } from "./util/array.js";
+import * as hex from "./encoding/hex.js";
 
 /**
  * @typedef {import("./PrivateKey.js").Transaction} Transaction

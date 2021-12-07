@@ -1,9 +1,9 @@
+import BadKeyError from "./BadKeyError.js";
+import Ed25519PublicKey from "./Ed25519PublicKey.js";
 import nacl from "tweetnacl";
 import { arrayStartsWith } from "./util/array.js";
-import BadKeyError from "./BadKeyError.js";
 import * as hex from "./encoding/hex.js";
 import * as random from "./primitive/random.js";
-import Ed25519PublicKey from "./Ed25519PublicKey.js";
 
 export const derPrefix = "302e020100300506032b657004220420";
 export const derPrefixBytes = hex.decode(derPrefix);

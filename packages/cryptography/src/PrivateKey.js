@@ -3,12 +3,12 @@ import BadKeyError from "./BadKeyError.js";
 import Key from "./Key.js";
 import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
 import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
+import PublicKey from "./PublicKey.js";
+import { createKeystore, loadKeystore } from "./primitive/keystore.js";
+import { read as readPem } from "./encoding/pem.js";
 import * as hex from "./encoding/hex.js";
 import * as slip10 from "./primitive/slip10.js";
 import * as derive from "./util/derive.js";
-import { createKeystore, loadKeystore } from "./primitive/keystore.js";
-import { read as readPem } from "./encoding/pem.js";
-import PublicKey from "./PublicKey.js";
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -266,7 +266,7 @@ export default class PrivateKey extends Key {
             index
         );
 
-        return new PrivateKey(this._key.constructor(keyData, chainCode));
+        return new PrivateKey(new this._key.constructor(keyData, chainCode));
     }
 
     /**
@@ -280,7 +280,7 @@ export default class PrivateKey extends Key {
             index
         );
 
-        return new PrivateKey(this._key.constructor(keyBytes));
+        return new PrivateKey(new this._key.constructor(keyBytes));
     }
 
     /**

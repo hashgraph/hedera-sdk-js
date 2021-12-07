@@ -1,7 +1,7 @@
-import nacl from "tweetnacl";
 import Key from "./Key.js";
-import { arrayEqual, arrayStartsWith } from "./util/array.js";
 import BadKeyError from "./BadKeyError.js";
+import nacl from "tweetnacl";
+import { arrayEqual, arrayStartsWith } from "./util/array.js";
 import * as hex from "./encoding/hex.js";
 
 const derPrefix = "302a300506032b6570032100";

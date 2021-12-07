@@ -1,6 +1,6 @@
 import Key from "./Key.js";
-import { arrayEqual, arrayStartsWith } from "./util/array.js";
 import BadKeyError from "./BadKeyError.js";
+import { arrayEqual, arrayStartsWith } from "./util/array.js";
 import * as hex from "./encoding/hex.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 

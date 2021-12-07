@@ -52,12 +52,12 @@ export async function read(pem, passphrase) {
 
         const decrypted = await encrypted.decrypt(passphrase);
 
-        let publicKey = null;
+        let privateKey = null;
 
         if (decrypted.algId.algIdent === "1.3.101.112") {
-            publicKey = Ed25519PrivateKey;
-        } else if (decrypted.algId.algIdent !== "1.3.132.0.10") {
-            publicKey = EcdsaPrivateKey;
+            privateKey = Ed25519PrivateKey;
+        } else if (decrypted.algId.algIdent === "1.3.132.0.10") {
+            privateKey = EcdsaPrivateKey;
         } else {
             throw new BadKeyError(
                 `unknown private key algorithm ${decrypted.algId.toString()}`
@@ -72,7 +72,7 @@ export async function read(pem, passphrase) {
             );
         }
 
-        publicKey.fromBytes(keyData.bytes);
+        return privateKey.fromBytes(keyData.bytes);
     }
 
     return key.subarray(16);
