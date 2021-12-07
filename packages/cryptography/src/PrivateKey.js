@@ -3,6 +3,7 @@ import BadKeyError from "./BadKeyError.js";
 import * as hex from "./encoding/hex.js";
 import Key from "./Key.js";
 import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
+import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
 
 /**
  * @typedef {import("./PublicKey.js").default} PublicKey
@@ -42,13 +43,13 @@ export default class PrivateKey extends Key {
     /**
      * @hideconstructor
      * @internal
-     * @param {Ed25519PrivateKey} key
+     * @param {Ed25519PrivateKey | EcdsaPrivateKey} key
      */
     constructor(key) {
         super();
 
         /**
-         * @type {Ed25519PrivateKey}
+         * @type {Ed25519PrivateKey | EcdsaPrivateKey}
          * @readonly
          * @private
          */
@@ -64,21 +65,14 @@ export default class PrivateKey extends Key {
         return new PrivateKey(Ed25519PrivateKey.generate());
     }
 
-    //     /**
-    //      * Generate a random EDSA private key.
-    //      *
-    //      * @returns {PrivateKey}
-    //      */
-    //     static generateECDSA() {
-    //         // 32 bytes for the secret key
-    //         // 32 bytes for the chain code (to support derivation)
-    //         const entropy = random.bytes(64);
-    //
-    //         return new PrivateKey(
-    //             nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
-    //             entropy.subarray(32)
-    //         );
-    //     }
+    /**
+     * Generate a random EDSA private key.
+     *
+     * @returns {PrivateKey}
+     */
+    static generateECDSA() {
+        return new PrivateKey(EcdsaPrivateKey.generate());
+    }
 
     /**
      * Depredated - Use `generateEd25519()` instead
@@ -91,16 +85,35 @@ export default class PrivateKey extends Key {
     }
 
     /**
+     * Depredated - Use `generateEd25519Async()` instead
      * Generate a random Ed25519 private key.
      *
      * @returns {Promise<PrivateKey>}
      */
     static async generateAsync() {
+        return PrivateKey.generateEd25519Async();
+    }
+
+    /**
+     * Generate a random Ed25519 private key.
+     *
+     * @returns {Promise<PrivateKey>}
+     */
+    static async generateEd25519Async() {
         return new PrivateKey(await Ed25519PrivateKey.generateAsync());
     }
 
     /**
-     * Construct a private key from bytes.
+     * Generate a random ECDSA private key.
+     *
+     * @returns {Promise<PrivateKey>}
+     */
+    static async generateEcdsaAsync() {
+        throw new Error("not implemented");
+    }
+
+    /**
+     * Construct a private key from bytes. Requires DER header.
      *
      * @param {Uint8Array} data
      * @returns {PrivateKey}
@@ -123,13 +136,53 @@ export default class PrivateKey extends Key {
     }
 
     /**
-     * Construct a private key from a hex-encoded string.
+     * Construct a ECDSA private key from bytes.
+     *
+     * @param {Uint8Array} data
+     * @returns {PrivateKey}
+     */
+    static fromBytesEcdsa(data) {
+        return new PrivateKey(EcdsaPrivateKey.fromBytes(data));
+    }
+
+    /**
+     * Construct a ED25519 private key from bytes.
+     *
+     * @param {Uint8Array} data
+     * @returns {PrivateKey}
+     */
+    static fromBytesEd25519(data) {
+        return new PrivateKey(Ed25519PrivateKey.fromBytes(data));
+    }
+
+    /**
+     * Construct a private key from a hex-encoded string. Requires DER header.
      *
      * @param {string} text
      * @returns {PrivateKey}
      */
     static fromString(text) {
         return PrivateKey.fromBytes(hex.decode(text));
+    }
+
+    /**
+     * Construct a ECDSA private key from a hex-encoded string.
+     *
+     * @param {string} text
+     * @returns {PrivateKey}
+     */
+    static fromStringEcdsa(text) {
+        return PrivateKey.fromBytesEcdsa(hex.decode(text));
+    }
+
+    /**
+     * Construct a Ed25519 private key from a hex-encoded string.
+     *
+     * @param {string} text
+     * @returns {PrivateKey}
+     */
+    static fromStringEd25519(text) {
+        return PrivateKey.fromBytesEd25519(hex.decode(text));
     }
 
     /**
@@ -204,6 +257,10 @@ export default class PrivateKey extends Key {
      * @throws If this key does not support derivation.
      */
     async legacyDerive(index) {
+        if (this._key instanceof EcdsaPrivateKey) {
+            throw new Error("ECDSA does not support legacy derive");
+        }
+
         return new PrivateKey(await this._key.legacyDerive(index));
     }
 
@@ -302,9 +359,37 @@ export default class PrivateKey extends Key {
     }
 
     /**
+     * @returns {Uint8Array}
+     */
+    toBytesDer() {
+        return this._key.toBytesDer();
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytesRaw() {
+        return this._key.toBytesRaw();
+    }
+
+    /**
      * @returns {string}
      */
     toString() {
+        return this._key.toString();
+    }
+
+    /**
+     * @returns {string}
+     */
+    toStringDer() {
+        return this._key.toString();
+    }
+
+    /**
+     * @returns {string}
+     */
+    toStringRaw() {
         return this._key.toString();
     }
 

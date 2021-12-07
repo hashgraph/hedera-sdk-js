@@ -9,8 +9,8 @@ import * as slip10 from "./primitive/slip10.js";
 import * as random from "./primitive/random.js";
 import * as derive from "./util/derive.js";
 
-const derPrefix = "302e020100300506032b657004220420";
-const derPrefixBytes = hex.decode(derPrefix);
+export const derPrefix = "302e020100300506032b657004220420";
+export const derPrefixBytes = hex.decode(derPrefix);
 
 export default class Ed25519PrivateKey {
     /**
@@ -76,16 +76,45 @@ export default class Ed25519PrivateKey {
     static fromBytes(data) {
         switch (data.length) {
             case 48:
-                if (arrayStartsWith(data, derPrefixBytes)) {
-                    const keyPair = nacl.sign.keyPair.fromSeed(
-                        data.subarray(16)
-                    );
+                return Ed25519PrivateKey.fromBytesDer(data);
+            case 32:
+            case 64:
+                return Ed25519PrivateKey.fromBytesRaw(data);
+            default:
+                throw new BadKeyError(
+                    `invalid private key length: ${data.length} bytes`
+                );
+        }
+    }
 
-                    return new Ed25519PrivateKey(keyPair, null);
-                }
+    /**
+     * Construct a private key from bytes with DER header.
+     *
+     * @param {Uint8Array} data
+     * @returns {Ed25519PrivateKey}
+     */
+    static fromBytesDer(data) {
+        if (data.length != 48 || !arrayStartsWith(data, derPrefixBytes)) {
+            throw new BadKeyError(
+                `invalid private key length: ${data.length} bytes`
+            );
+        }
 
-                break;
+        const keyPair = nacl.sign.keyPair.fromSeed(
+            data.subarray(16)
+        );
 
+        return new Ed25519PrivateKey(keyPair, null);
+    }
+
+    /**
+     * Construct a private key from bytes without DER header.
+     *
+     * @param {Uint8Array} data
+     * @returns {Ed25519PrivateKey}
+     */
+    static fromBytesRaw(data) {
+        switch (data.length) {
             case 32:
                 return new Ed25519PrivateKey(
                     nacl.sign.keyPair.fromSeed(data),
@@ -114,7 +143,27 @@ export default class Ed25519PrivateKey {
      * @returns {Ed25519PrivateKey}
      */
     static fromString(text) {
-        return Ed25519PrivateKey.fromBytes(hex.decode(text));
+        return Ed25519PrivateKey.fromStringDer(text);
+    }
+
+    /**
+     * Construct a private key from a hex-encoded string.
+     *
+     * @param {string} text
+     * @returns {Ed25519PrivateKey}
+     */
+    static fromStringDer(text) {
+        return Ed25519PrivateKey.fromBytesDer(hex.decode(text));
+    }
+
+    /**
+     * Construct a private key from a hex-encoded string.
+     *
+     * @param {string} text
+     * @returns {Ed25519PrivateKey}
+     */
+    static fromStringRaw(text) {
+        return Ed25519PrivateKey.fromBytesRaw(hex.decode(text));
     }
 
     /**
@@ -229,6 +278,25 @@ export default class Ed25519PrivateKey {
      * @returns {Uint8Array}
      */
     toBytes() {
+        return this.toBytesDer();
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytesDer() {
+        const bytes = new Uint8Array(derPrefixBytes.length + 32);
+
+        bytes.set(derPrefixBytes, 0);
+        bytes.set(this._keyPair.secretKey.subarray(0, 32), derPrefixBytes.length);
+
+        return bytes;
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytesRaw() {
         // copy the bytes so they can't be modified accidentally
         return this._keyPair.secretKey.slice(0, 32);
     }
@@ -237,7 +305,21 @@ export default class Ed25519PrivateKey {
      * @returns {string}
      */
     toString() {
+        return this.toStringDer();
+    }
+
+    /**
+     * @returns {string}
+     */
+    toStringDer() {
         return derPrefix + hex.encode(this.toBytes());
+    }
+
+    /**
+     * @returns {string}
+     */
+    toStringRaw() {
+        return hex.encode(this.toBytes());
     }
 
     /**
