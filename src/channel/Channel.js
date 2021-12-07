@@ -255,7 +255,15 @@ export function decodeUnaryResponse(
         const frameByte = dataView.getUint8(dataOffset + 0);
         const frameType = frameByte >> 7;
         const frameByteLength = dataView.getUint32(dataOffset + 1);
-        const frameData = new Uint8Array(data, dataOffset + 5, frameByteLength);
+        const frameOffset = dataOffset + 5; // offset from the start of the dataView
+        if (frameOffset + frameByteLength > dataView.byteLength) {
+            throw new Error("(BUG) unexpected frame length past the boundary");
+        }
+        const frameData = new Uint8Array(
+            data,
+            dataView.byteOffset + frameOffset,
+            frameByteLength
+        );
 
         if (frameType === 0) {
             if (unaryResponse != null) {
