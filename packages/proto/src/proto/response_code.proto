@@ -1102,4 +1102,4 @@ enum ResponseCodeEnum {
   * All contract storage allocated to the current price regime has been consumed.
   */
   MAX_STORAGE_IN_PRICE_REGIME_HAS_BEEN_USED = 281;
-}
+} 
