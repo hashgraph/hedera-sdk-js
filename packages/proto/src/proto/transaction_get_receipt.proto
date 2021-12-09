@@ -54,10 +54,17 @@ message TransactionGetReceiptQuery {
      * receipt of processing the first consensus transaction with the given id whose status was
      * neither <tt>INVALID_NODE_ACCOUNT</tt> nor <tt>INVALID_PAYER_SIGNATURE</tt>; <b>or</b>, if no
      * such receipt exists, the receipt of processing the first transaction to reach consensus with
-     * the given transaction id..
+     * the given transaction id.
      */
     bool includeDuplicates = 3;
+
+    /**
+     * Whether the response should include the receipts of any child transactions spawned by the 
+     * top-level transaction with the given transactionID. 
+     */
+    bool include_child_receipts = 4;
 }
+
 /**
  * Response when the client sends the node TransactionGetReceiptQuery. If it created a new entity
  * (account, file, or smart contract instance) then one of the three ID fields will be filled in
@@ -81,8 +88,13 @@ message TransactionGetReceiptResponse {
     TransactionReceipt receipt = 2;
 
     /**
-     * The receipts of processing all consensus transaction with the same id as the distinguished
-     * receipt above, in chronological order.
+     * The receipts of processing all transactions with the given id, in consensus time order.
      */
     repeated TransactionReceipt duplicateTransactionReceipts = 4;
+
+    /**
+     * The receipts (if any) of all child transactions spawned by the transaction with the 
+     * given top-level id, in consensus order. Always empty if the top-level status is UNKNOWN.
+     */
+    repeated TransactionReceipt child_transaction_receipts = 5;
 }
