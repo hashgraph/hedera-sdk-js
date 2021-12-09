@@ -526,6 +526,11 @@ message Key {
          */
         KeyList keyList = 6;
 
+        /**
+         * Compressed ECDSA(secp256k1) public key bytes
+         */
+        bytes ECDSA_secp256k1 = 7;
+
         /**  
          * A smart contract that, if the recipient of the active message frame, should be treated
          * as having signed. (Note this does not mean the <i>code being executed in the frame</i> 
