@@ -30,6 +30,7 @@ export default class CostQuery extends Executable {
         super();
 
         this._query = query;
+        this._nodeIds = query._nodeIds;
 
         /**
          * @type {proto.IQueryHeader | null}
@@ -149,7 +150,15 @@ export default class CostQuery extends Executable {
      * @returns {AccountId}
      */
     _getNodeAccountId() {
-        return this._query._getNodeAccountId();
+        if (this._nodeIds.length > 0) {
+            // if there are payment transactions,
+            // we need to use the node of the current payment transaction
+            return this._nodeIds[this._nextNodeIndex];
+        } else {
+            throw new Error(
+                "(BUG) nodeAccountIds were not set for query before executing"
+            );
+        }
     }
 }
 
