@@ -1092,4 +1092,14 @@ enum ResponseCodeEnum {
    * consensus level.
    */
   CONSENSUS_GAS_EXHAUSTED = 279;
+
+  /**
+  * A precompiled contract succeeded, but was later reverted.
+  */
+  REVERTED_SUCCESS = 280;
+
+  /**
+  * All contract storage allocated to the current price regime has been consumed.
+  */
+  MAX_STORAGE_IN_PRICE_REGIME_HAS_BEEN_USED = 281;
 }

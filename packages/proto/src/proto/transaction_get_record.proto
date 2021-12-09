@@ -59,6 +59,12 @@ message TransactionGetRecordQuery {
      * given transaction id..
      */
     bool includeDuplicates = 3;
+
+    /**
+     * Whether the response should include the records of any child transactions spawned by the 
+     * top-level transaction with the given transactionID. 
+     */
+    bool include_child_records = 4;
 }
 
 /**
@@ -84,5 +90,11 @@ message TransactionGetRecordResponse {
      * record above, in chronological order.
      */
     repeated TransactionRecord duplicateTransactionRecords = 4;
+
+    /**
+     * The records of processing all child transaction spawned by the transaction with the given 
+     * top-level id, in consensus order. Always empty if the top-level status is UNKNOWN.
+     */
+    repeated TransactionRecord child_transaction_records = 5;
 }
 
