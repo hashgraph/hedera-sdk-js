@@ -156,6 +156,18 @@ message TransactionID {
      * Whether the Transaction is of type Scheduled or no
      */
     bool scheduled = 3;
+
+    /**
+     * The identifier for an internal transaction that was spawned as part 
+     * of handling a user transaction. (These internal transactions share the 
+     * transactionValidStart and accountID of the user transaction, so a
+     * nonce is necessary to give them a unique TransactionID.)
+     * 
+     * An example is when a "parent" ContractCreate or ContractCall transaction 
+     * calls one or more HTS precompiled contracts; each of the "child" 
+     * transactions spawned for a precompile has a id with a different nonce.
+     */
+    int32 nonce = 4;
 }
 
 /**
@@ -513,6 +525,21 @@ message Key {
          * A list of Keys of the Key type.
          */
         KeyList keyList = 6;
+
+        /**
+         * Compressed ECDSA(secp256k1) public key bytes
+         */
+        bytes ECDSA_secp256k1 = 7;
+
+        /**  
+         * A smart contract that, if the recipient of the active message frame, should be treated
+         * as having signed. (Note this does not mean the <i>code being executed in the frame</i> 
+         * will belong to the given contract, since it could be running another contract's code via 
+         * <tt>delegatecall</tt>. So setting this key is a more permissive version of setting the
+         * contractID key, which also requires the code in the active message frame belong to the
+         * the contract with the given id.)
+         */
+        ContractID delegatable_contract_id = 8; 
     }
 }
 
