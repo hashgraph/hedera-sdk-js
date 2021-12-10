@@ -2,6 +2,7 @@ import BadKeyError from "./BadKeyError.js";
 import EcdsaPublicKey from "./EcdsaPublicKey.js";
 import * as hex from "./encoding/hex.js";
 import * as ecdsa from "./primitive/ecdsa.js";
+import { arrayStartsWith } from "./util/array.js";
 
 const derPrefix =
     "30813E020100301006072a8648ce3d020106052b8104000a042730250201010420";
@@ -79,7 +80,13 @@ export default class EcdsaPrivateKey {
      * @returns {EcdsaPrivateKey}
      */
     static fromBytesDer(data) {
-        return new EcdsaPrivateKey(ecdsa.fromBytes(data));
+        if (data.length != 32 && !arrayStartsWith(data, derPrefixBytes)) {
+            throw new BadKeyError("invalid der header");
+        }
+
+        return new EcdsaPrivateKey(
+            ecdsa.fromBytes(data.subarray(derPrefixBytes.length))
+        );
     }
 
     /**
@@ -89,10 +96,7 @@ export default class EcdsaPrivateKey {
      * @returns {EcdsaPrivateKey}
      */
     static fromBytesRaw(data) {
-        const bytes = new Uint8Array(derPrefixBytes.length + data.length);
-        bytes.set(derPrefixBytes, 0);
-        bytes.set(data, derPrefixBytes.length);
-        return new EcdsaPrivateKey(ecdsa.fromBytes(bytes));
+        return new EcdsaPrivateKey(ecdsa.fromBytes(data));
     }
 
     /**

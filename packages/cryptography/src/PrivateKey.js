@@ -266,7 +266,7 @@ export default class PrivateKey extends Key {
             index
         );
 
-        return new PrivateKey(new this._key.constructor(keyData, chainCode));
+        return new PrivateKey(this._key.constructor(keyData, chainCode));
     }
 
     /**
@@ -280,7 +280,7 @@ export default class PrivateKey extends Key {
             index
         );
 
-        return new PrivateKey(new this._key.constructor(keyBytes));
+        return new PrivateKey(this._key.constructor(keyBytes));
     }
 
     /**

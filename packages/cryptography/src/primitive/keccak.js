@@ -87,7 +87,10 @@ function update(state, message) {
             }
         }
         for (i = state.start; index < length && i < byteCount; ++index) {
-            code = typeof message === "string" ? message.charCodeAt(index) : message[index];
+            code =
+                typeof message === "string"
+                    ? message.charCodeAt(index)
+                    : message[index];
             if (code < 0x80) {
                 blocks[i >> 2] |= code << SHIFT[i++ & 3];
             } else if (code < 0x800) {
@@ -102,7 +105,10 @@ function update(state, message) {
                 code =
                     0x10000 +
                     (((code & 0x3ff) << 10) |
-                        ((typeof message === "string" ? message.charCodeAt(++index): message[++index]) & 0x3ff));
+                        ((typeof message === "string"
+                            ? message.charCodeAt(++index)
+                            : message[++index]) &
+                            0x3ff));
                 blocks[i >> 2] |= (0xf0 | (code >> 18)) << SHIFT[i++ & 3];
                 blocks[i >> 2] |=
                     (0x80 | ((code >> 12) & 0x3f)) << SHIFT[i++ & 3];

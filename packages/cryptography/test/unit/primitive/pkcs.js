@@ -88,7 +88,6 @@ describe("primitive/pkcs", function () {
     });
 
     it("decrypts the proper private key", async function () {
-        expect(true).to.be.true;
         const encrypted = EncryptedPrivateKeyInfo.parse(data);
         const decrypted = await encrypted.decrypt(passphrase);
 

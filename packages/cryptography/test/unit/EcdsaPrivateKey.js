@@ -29,5 +29,8 @@ describe("EcdsaPrivateKey", function () {
         const signature = key.sign(message);
 
         expect(key.publicKey.verify(message, signature)).to.be.true;
+
+        signature[0] = signature[0] + (1 % 255);
+        expect(key.publicKey.verify(message, signature)).to.be.false;
     });
 });

@@ -1,43 +1,46 @@
-import crypto from "crypto";
-import { promisify } from "util";
-
-const generateKeyPairAsync = promisify(crypto.generateKeyPair);
+import BadKeyError from "../BadKeyError.js";
+import { keccak256 } from "./keccak.js";
+import * as secp256k1 from "secp256k1";
+import * as random from "./random.js";
 
 /**
  * @typedef {import("../EcdsaPrivateKey.js").KeyPair} KeyPair
  */
 
-const createOptions = {
-    namedCurve: "secp256k1",
-};
-
-/** @type {crypto.KeyExportOptions<"der">} */
-const privateKeyExportOptions = { type: "pkcs8", format: "der" };
-
-/** @type {crypto.KeyExportOptions<"der">} */
-const publicKeyExportOptions = { type: "spki", format: "der" };
-
 /**
  * @returns {KeyPair}
  */
 export function generate() {
-    const result = crypto.generateKeyPairSync("ec", createOptions);
+    let privateKey;
+
+    do {
+        privateKey = random.bytes(32);
+    } while (!secp256k1.privateKeyVerify(privateKey));
+
+    const publicKey = secp256k1.publicKeyCreate(privateKey);
 
     return {
-        privateKey: result.privateKey.export(privateKeyExportOptions),
-        publicKey: result.publicKey.export(publicKeyExportOptions),
+        privateKey,
+        publicKey,
     };
 }
 
 /**
  * @returns {Promise<KeyPair>}
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function generateAsync() {
-    const result = await generateKeyPairAsync("ec", createOptions);
+    let privateKey;
+
+    do {
+        privateKey = await random.bytesAsync(32);
+    } while (!secp256k1.privateKeyVerify(privateKey));
+
+    const publicKey = secp256k1.publicKeyCreate(privateKey);
 
     return {
-        privateKey: result.privateKey.export(privateKeyExportOptions),
-        publicKey: result.publicKey.export(publicKeyExportOptions),
+        privateKey,
+        publicKey,
     };
 }
 
@@ -45,39 +48,29 @@ export async function generateAsync() {
  * @param {Uint8Array} data
  * @returns {KeyPair}
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function fromBytes(data) {
-    const privateKey = crypto.createPrivateKey({
-        type: "pkcs8",
-        format: "der",
-        key: Buffer.from(data),
-    });
-    const publicKey = crypto
-        .createPublicKey(privateKey)
-        .export(publicKeyExportOptions);
+    if (!secp256k1.privateKeyVerify(data)) {
+        throw new BadKeyError("invalid private key bytes");
+    }
+
+    const publicKey = secp256k1.publicKeyCreate(data);
 
     return {
-        privateKey: privateKey.export(privateKeyExportOptions),
+        privateKey: data,
         publicKey,
     };
 }
 
 /**
  * @param {Uint8Array} keydata
- * @param {Uint8Array} data
+ * @param {Uint8Array} message
  * @returns {Uint8Array}
  */
-export function sign(keydata, data) {
-    const privateKey = crypto.createPrivateKey({
-        type: "pkcs8",
-        format: "der",
-        key: Buffer.from(keydata),
-    });
-
-    const sign = crypto.createSign("SHA256");
-    sign.write(data);
-    sign.end();
-
-    return sign.sign(privateKey);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function sign(keydata, message) {
+    const data = keccak256(message);
+    return secp256k1.ecdsaSign(data, keydata).signature;
 }
 
 /**
@@ -86,16 +79,8 @@ export function sign(keydata, data) {
  * @param {Uint8Array} signature
  * @returns {boolean}
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function verify(keydata, message, signature) {
-    const publicKey = crypto.createPublicKey({
-        type: "spki",
-        format: "der",
-        key: Buffer.from(keydata),
-    });
-
-    const verify = crypto.createVerify("SHA256");
-    verify.write(message);
-    verify.end();
-
-    return verify.verify(publicKey, signature);
+    const data = keccak256(message);
+    return secp256k1.ecdsaVerify(signature, data, keydata);
 }

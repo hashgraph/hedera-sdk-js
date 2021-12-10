@@ -174,7 +174,9 @@ describe("PrivateKey", function () {
         );
 
         const privateKey5 = PrivateKey.fromString(androidWalletPrivKey);
-        expect(privateKey5.toBytesRaw()).to.deep.equal(androidWalletPrivKeyBytes);
+        expect(privateKey5.toBytesRaw()).to.deep.equal(
+            androidWalletPrivKeyBytes
+        );
         expect(privateKey5.publicKey.toBytesRaw()).to.deep.equal(
             androidWalletPubKeyBytes
         );
