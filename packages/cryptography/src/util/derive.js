@@ -18,7 +18,7 @@ export function legacy(seed, index) {
 
     if (index === 0xffffffffff) {
         view.setInt32(seed.length + 0, 0xff);
-        view.setInt32(seed.length + 4, index >>> 32);
+        view.setInt32(seed.length + 4, -1); // 0xffffffff
     } else {
         view.setInt32(seed.length + 0, index < 0 ? -1 : 0);
         view.setInt32(seed.length + 4, index);
