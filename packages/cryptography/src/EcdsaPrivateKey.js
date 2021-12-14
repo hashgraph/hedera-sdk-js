@@ -4,8 +4,7 @@ import * as hex from "./encoding/hex.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 import { arrayStartsWith } from "./util/array.js";
 
-const derPrefix =
-    "30813E020100301006072a8648ce3d020106052b8104000a042730250201010420";
+const derPrefix = "3030020100300706052b8104000a04220420";
 const derPrefixBytes = hex.decode(derPrefix);
 
 /**
@@ -64,7 +63,7 @@ export default class EcdsaPrivateKey {
         switch (data.length) {
             case 32:
                 return EcdsaPrivateKey.fromBytesRaw(data);
-            case 48:
+            case 45:
                 return EcdsaPrivateKey.fromBytesDer(data);
             default:
                 throw new BadKeyError(
