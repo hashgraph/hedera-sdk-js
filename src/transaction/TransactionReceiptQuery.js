@@ -32,6 +32,8 @@ export default class TransactionReceiptQuery extends Query {
     /**
      * @param {object} [props]
      * @param {TransactionId | string} [props.transactionId]
+     * @param {boolean} [props.includeDuplicates]
+     * @param {boolean} [props.includeChildReceipts]
      */
     constructor(props = {}) {
         super();
@@ -42,8 +44,28 @@ export default class TransactionReceiptQuery extends Query {
          */
         this._transactionId = null;
 
+        /**
+         * @private
+         * @type {?boolean}
+         */
+        this._includeChildReceipts = null;
+
+        /**
+         * @private
+         * @type {?boolean}
+         */
+        this._includeDuplicates = null;
+
         if (props.transactionId != null) {
             this.setTransactionId(props.transactionId);
+        }
+
+        if (props.includeChildReceipts != null) {
+            this.setChildReceipts(props.includeChildReceipts);
+        }
+
+        if (props.includeDuplicates != null) {
+            this.setDuplicates(props.includeDuplicates);
         }
     }
 
@@ -61,6 +83,14 @@ export default class TransactionReceiptQuery extends Query {
             transactionId: receipt.transactionID
                 ? TransactionId._fromProtobuf(receipt.transactionID)
                 : undefined,
+            includeDuplicates:
+                receipt.includeDuplicates != null
+                    ? receipt.includeDuplicates
+                    : undefined,
+            includeChildReceipts:
+                receipt.includeChildReceipts != null
+                    ? receipt.includeChildReceipts
+                    : undefined,
         });
     }
 
@@ -84,6 +114,42 @@ export default class TransactionReceiptQuery extends Query {
                 : transactionId.clone();
 
         return this;
+    }
+
+    /**
+     * @param {boolean} includeDuplicates
+     * @returns {TransactionReceiptQuery}
+     */
+    setDuplicates(includeDuplicates) {
+        this._includeDuplicates = includeDuplicates;
+        return this;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get duplicates() {
+        return this._includeDuplicates != null
+            ? this._includeDuplicates
+            : false;
+    }
+
+    /**
+     * @param {boolean} includeChildReceipts
+     * @returns {TransactionReceiptQuery}
+     */
+    setChildReceipts(includeChildReceipts) {
+        this._includeChildReceipts = includeChildReceipts;
+        return this;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get childReceipts() {
+        return this._includeChildReceipts != null
+            ? this._includeChildReceipts
+            : false;
     }
 
     /**
@@ -273,6 +339,8 @@ export default class TransactionReceiptQuery extends Query {
                     this._transactionId != null
                         ? this._transactionId._toProtobuf()
                         : null,
+                includeDuplicates: this._includeDuplicates,
+                includeChildReceipts: this._includeChildReceipts,
             },
         };
     }
