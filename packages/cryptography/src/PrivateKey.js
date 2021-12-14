@@ -266,7 +266,11 @@ export default class PrivateKey extends Key {
             index
         );
 
-        return new PrivateKey(this._key.constructor(keyData, chainCode));
+        /** @type {new (bytes: Uint8Array, chainCode?: Uint8Array) => Ed25519PrivateKey | EcdsaPrivateKey} */
+        const constructor = /** @type {any} */ (this._key.constructor);
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        return new PrivateKey(new constructor(keyData, chainCode));
     }
 
     /**
@@ -280,7 +284,11 @@ export default class PrivateKey extends Key {
             index
         );
 
-        return new PrivateKey(this._key.constructor(keyBytes));
+        /** @type {new (bytes: Uint8Array) => Ed25519PrivateKey | EcdsaPrivateKey} */
+        const constructor = /** @type {any} */ (this._key.constructor);
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        return new PrivateKey(new constructor(keyBytes));
     }
 
     /**
