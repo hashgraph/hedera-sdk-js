@@ -124,12 +124,18 @@ export const ABORTED = {
     message: "no response found",
     code: 10,
 };
+
 export const UNAVAILABLE = {
     name: "UNAVAILABLE",
     message: "node is UNAVAILABLE",
     code: 14,
 };
 
+export const INTERNAL = {
+    name: "INTERNAL",
+    message: "Received RST_STREAM with code 0",
+    code: 13,
+};
 /**
  * @namespace {proto}
  * @typedef {import("@hashgraph/proto").Response} proto.Response
@@ -244,17 +250,77 @@ export default class Mocker {
     /**
      * Creates a mock server and client with the given responses
      *
-     * @param {Response[]} responses
-     * @returns {Proimse<{ server: GrpcServer; client: Client }>}
+     * @param {Response[][]} responses
+     * @returns {Proimse<{ server: GrpcServers; client: Client }>}
      */
     static async withResponses(responses) {
-        const server = await new GrpcServer(PROTOS, "proto")
-            .addResponses(responses)
-            .listen("0.0.0.0:50211");
-        const client = Client.forNetwork({
-            "0.0.0.0:50211": "0.0.3",
-        }).setOperator("0.0.1854", PRIVATE_KEY);
+        const servers = new GrpcServers();
 
-        return { client, server };
+        for (const response of responses) {
+            servers.addServer(response);
+        }
+
+        const client = await servers.listen();
+        client.setOperator("0.0.1854", PRIVATE_KEY);
+
+        return { client, servers };
+    }
+}
+
+class GrpcServers {
+    constructor() {
+        /** @type {GrpcServer[]} */
+        this._servers = [];
+
+        /** @type {string[]} */
+        this._addresses = [];
+
+        /** @type {string[]} */
+        this._nodeAccountIds = [];
+
+        this._index = 0;
+    }
+
+    /**
+     * @param {Response[]} responses
+     * @returns {this}
+     */
+    addServer(responses) {
+        const address = `0.0.0.0:${50213 + this._index}`;
+        const nodeAccountId = `0.0.${3 + this._index}`;
+        const server = new GrpcServer(PROTOS, "proto").addResponses(responses);
+
+        this._servers.push(server);
+        this._addresses.push(address);
+        this._nodeAccountIds.push(nodeAccountId);
+
+        this._index += 1;
+
+        return this;
+    }
+
+    /**
+     * @returns {Promise<Client>}
+     */
+    async listen() {
+        const network = {};
+
+        for (let i = 0; i < this._servers.length; i++) {
+            const server = this._servers[i];
+            const address = this._addresses[i];
+            const nodeAccountId = this._nodeAccountIds[i];
+
+            network[address] = nodeAccountId;
+
+            await server.listen(address);
+        }
+
+        return Client.forNetwork(network);
+    }
+
+    close() {
+        for (const server of this._servers) {
+            server.close();
+        }
     }
 }

@@ -16,7 +16,7 @@ export const ExecutionState = {
     Error: "Error",
 };
 
-export const RST_STREAM = /\brst[^0-9a-zA-Z]stream\b/gi;
+export const RST_STREAM = /\brst[^0-9a-zA-Z]stream\b/i;
 
 /**
  * @abstract
