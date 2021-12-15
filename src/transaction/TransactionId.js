@@ -18,8 +18,9 @@ export default class TransactionId {
      * @param {?AccountId} accountId
      * @param {?Timestamp} validStart
      * @param {?boolean} scheduled
+     * @param {?number} nonce
      */
-    constructor(accountId, validStart, scheduled = false) {
+    constructor(accountId, validStart, scheduled = false, nonce = null) {
         /**
          * The Account ID that paid for this transaction.
          *
@@ -39,7 +40,18 @@ export default class TransactionId {
 
         this.scheduled = scheduled;
 
+        this.nonce = nonce;
+
         Object.freeze(this);
+    }
+
+    /**
+     * @param {number} nonce
+     * @returns {TransactionId}
+     */
+    setNonce(nonce) {
+        this.nonce = nonce;
+        return this;
     }
 
     /**
@@ -74,17 +86,31 @@ export default class TransactionId {
      * @returns {TransactionId}
      */
     static fromString(wholeId) {
-        let [id, scheduled] = wholeId.split("?");
+        let account, seconds, nanos, isScheduled, nonce;
+        let rest;
 
-        const [account, time] = id.split("@");
-        const [seconds, nanos] = time
-            .split(".")
-            .map((value) => Long.fromValue(value));
+        [account, rest] = wholeId.split("@");
+        [seconds, rest] = rest.split(".");
+        if (rest.includes("?")) {
+            [nanos, rest] = rest.split("?scheduled");
+            isScheduled = true;
+            if (rest.includes("/")) {
+                nonce = rest.replace("/", "");
+            } else {
+                nonce = null;
+            }
+        } else if (rest.includes("/")) {
+            [nanos, nonce] = rest.split("/");
+            isScheduled = false;
+        } else {
+            nanos = rest;
+        }
 
         return new TransactionId(
             AccountId.fromString(account),
-            new Timestamp(seconds, nanos),
-            scheduled === "scheduled"
+            new Timestamp(Long.fromValue(seconds), Long.fromValue(nanos)),
+            isScheduled,
+            nonce != null ? Number(nonce) : null
         );
     }
 
@@ -102,13 +128,12 @@ export default class TransactionId {
      */
     toString() {
         if (this.accountId != null && this.validStart != null) {
-            return `${this.accountId.toString()}@${this.validStart.seconds.toString()}.${this.validStart.nanos.toString()}${
-                this.scheduled ? "?scheduled" : ""
-            }`;
+            const nonce =
+                this.nonce != null ? "/".concat(this.nonce.toString()) : "";
+            const scheduled = this.scheduled ? "?scheduled" : "";
+            return `${this.accountId.toString()}@${this.validStart.seconds.toString()}.${this.validStart.nanos.toString()}${scheduled}${nonce}`;
         } else {
-            throw new Error(
-                "Neither `nonce` or `accountId` and `validStart` are set"
-            );
+            throw new Error("neither `accountId` nor `validStart` are set");
         }
     }
 
@@ -122,7 +147,8 @@ export default class TransactionId {
             return new TransactionId(
                 AccountId._fromProtobuf(id.accountID),
                 Timestamp._fromProtobuf(id.transactionValidStart),
-                id.scheduled
+                id.scheduled,
+                id.nonce
             );
         } else {
             throw new Error(
@@ -142,6 +168,7 @@ export default class TransactionId {
             transactionValidStart:
                 this.validStart != null ? this.validStart._toProtobuf() : null,
             scheduled: this.scheduled,
+            nonce: this.nonce,
         };
     }
 
@@ -167,7 +194,8 @@ export default class TransactionId {
         return new TransactionId(
             this.accountId,
             this.validStart,
-            this.scheduled
+            this.scheduled,
+            this.nonce
         );
     }
 
