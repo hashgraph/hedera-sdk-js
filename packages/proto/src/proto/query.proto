@@ -49,6 +49,8 @@ import "transaction_get_fast_record.proto";
 import "consensus_get_topic_info.proto";
 
 import "network_get_version_info.proto";
+import "network_get_execution_time.proto";
+
 import "token_get_info.proto";
 import "schedule_get_info.proto";
 
@@ -182,5 +184,10 @@ message Query {
          * Get a list of NFTs for the token
          */
         TokenGetNftInfosQuery tokenGetNftInfos = 56;
+
+        /**
+         * Gets <tt>handleTransaction</tt> times for one or more "sufficiently recent" TransactionIDs
+         */
+        NetworkGetExecutionTimeQuery networkGetExecutionTime = 57;
     }
 }

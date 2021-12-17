@@ -104,9 +104,11 @@ service TokenService {
     rpc getTokenInfo (Query) returns (Response);
 
     /**
-     * Gets info on NFTs N through M on the list of NFTs associated with a given account
+     * (DEPRECATED) Gets info on NFTs N through M on the list of NFTs associated with a given account
      */
-    rpc getAccountNftInfos (Query) returns (Response);
+    rpc getAccountNftInfos (Query) returns (Response) {
+         option deprecated = true;
+    };
 
     /**
      * Retrieves the metadata of an NFT by TokenID and serial number
@@ -114,17 +116,15 @@ service TokenService {
     rpc getTokenNftInfo (Query) returns (Response);
 
     /**
-     * Gets info on NFTs N through M on the list of NFTs associated with a given Token of type NON_FUNGIBLE
+     * (DEPRECATED) Gets info on NFTs N through M on the list of NFTs associated with a given Token of type NON_FUNGIBLE
      */
-    rpc getTokenNftInfos (Query) returns (Response);
+    rpc getTokenNftInfos (Query) returns (Response) {
+         option deprecated = true;
+    };
 
-    /**
-     * Pause the token
-     */
+    // Pause the token
     rpc pauseToken (Transaction) returns (TransactionResponse);
 
-    /**
-     * Unpause the token
-     */
+    //  Unpause the token
     rpc unpauseToken (Transaction) returns (TransactionResponse);
 }

@@ -286,6 +286,21 @@ message TransactionBody {
     TokenDissociateTransactionBody tokenDissociate = 41;
 
     /**
+     * Updates a token's custom fee schedule
+     */
+    TokenFeeScheduleUpdateTransactionBody token_fee_schedule_update = 45;
+
+    /**
+     * Pauses the Token
+     */
+    TokenPauseTransactionBody token_pause = 46;
+
+    /**
+     * Unpauses the Token
+     */
+    TokenUnpauseTransactionBody token_unpause = 47;
+
+    /**
      * Creates a schedule in the network's action queue
      */
     ScheduleCreateTransactionBody scheduleCreate = 42;
@@ -299,20 +314,5 @@ message TransactionBody {
      * Adds one or more Ed25519 keys to the affirmed signers of a scheduled transaction
      */
     ScheduleSignTransactionBody scheduleSign = 44;
-
-    /**
-     * Updates a token's custom fee schedule
-     */
-    TokenFeeScheduleUpdateTransactionBody token_fee_schedule_update = 45;
-
-    /**
-     * Pauses the Token
-     */
-    TokenPauseTransactionBody token_pause = 46;
-
-     /**
-      * Unpauses the Token
-      */
-    TokenUnpauseTransactionBody token_unpause = 47;
   }
 }

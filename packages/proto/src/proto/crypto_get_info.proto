@@ -156,7 +156,17 @@ message CryptoGetInfoResponse {
         /**
          * The maximum number of tokens that an Account can be implicitly associated with.
          */
-        uint32 max_automatic_token_associations = 18;
+        int32 max_automatic_token_associations = 18;
+
+        /**
+         * The alias of this account
+         */
+        bytes alias = 19;
+
+        /**
+         * The ledger ID the response was returned from; please see <a href="https://github.com/hashgraph/hedera-improvement-proposal/blob/master/HIP/hip-198.md">HIP-198</a> for the network-specific IDs. 
+         */
+        bytes ledger_id = 20;
     }
 
     /**
