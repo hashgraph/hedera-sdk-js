@@ -42,6 +42,7 @@ describe("TokenUnpauseTransaction", function () {
                     nanos: 3,
                 },
                 scheduled: null,
+                nonce: null,
             },
             nodeAccountID: null,
             transactionValidDuration: {

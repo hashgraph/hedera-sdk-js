@@ -1,5 +1,6 @@
 import * as entity_id from "../EntityIdHelper.js";
 import * as proto from "@hashgraph/proto";
+import { PublicKey } from "../exports.js";
 
 /**
  * @typedef {import("long").Long} Long
@@ -14,8 +15,9 @@ export default class AccountId {
      * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
+     * @param {?PublicKey} aliasKey
      */
-    constructor(props, realm, num) {
+    constructor(props, realm, num, aliasKey = null) {
         const result = entity_id.constructor(props, realm, num);
 
         this.shard = result.shard;
@@ -26,8 +28,14 @@ export default class AccountId {
          * @type {string | null}
          */
         this._checksum = null;
+
+        /**
+         * @type {PublicKey | null}
+         */
+        this.aliasKey = aliasKey;
     }
 
+    //TODO
     /**
      * @param {string} text
      * @returns {AccountId}
@@ -39,6 +47,7 @@ export default class AccountId {
         return id;
     }
 
+    //TODO
     /**
      * @internal
      * @param {proto.IAccountID} id
@@ -70,6 +79,7 @@ export default class AccountId {
         this.validateChecksum(client);
     }
 
+    //TODO
     /**
      * @param {Client} client
      */
@@ -106,6 +116,7 @@ export default class AccountId {
         return entity_id.toSolidityAddress([this.shard, this.realm, this.num]);
     }
 
+    //TODO
     /**
      * @internal
      * @returns {proto.IAccountID}
@@ -129,9 +140,16 @@ export default class AccountId {
      * @returns {string}
      */
     toString() {
-        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
+        if (this.num == null && this.aliasKey != null) {
+            return `${this.shard.toString()}.${this.realm.toString()}.${this.aliasKey.toString()}`;
+        } else if (this.num == null && this.aliasKey == null) {
+            throw new Error("toString : both num and aliasKey are null");
+        } else {
+            return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
+        }
     }
 
+    //TODO
     /**
      * @param {Client} client
      * @returns {string}
@@ -161,6 +179,7 @@ export default class AccountId {
         return id;
     }
 
+    //TODO
     /**
      * @param {AccountId} other
      * @returns {number}

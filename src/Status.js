@@ -497,6 +497,12 @@ export default class Status {
                 return "UPDATE_FILE_HASH_DOES_NOT_MATCH_PREPARED";
             case Status.ConsensusGasExhausted:
                 return "CONSENSUS_GAS_EXHAUSTED";
+            case Status.RevertedSuccess:
+                return "REVERTED_SUCCESS";
+            case Status.MaxStorageInPriceRegimeHasBeenUsed:
+                return "MAX_STORAGE_IN_PRICE_REGIME_HAS_BEEN_USED";
+            case Status.InvalidAliasKey:
+                return "INVALID_ALIAS_KEY";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -985,6 +991,12 @@ export default class Status {
                 return Status.UpdateFileHashDoesNotMatchPrepared;
             case 279:
                 return Status.ConsensusGasExhausted;
+            case 280:
+                return Status.RevertedSuccess;
+            case 281:
+                return Status.MaxStorageInPriceRegimeHasBeenUsed;
+            case 282:
+                return Status.InvalidAliasKey;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2231,3 +2243,20 @@ Status.UpdateFileHashDoesNotMatchPrepared = new Status(278);
  * consensus level.
  */
 Status.ConsensusGasExhausted = new Status(279);
+
+/**
+ * A precompiled contract succeeded, but was later reverted.
+ */
+Status.RevertedSuccess = new Status(280);
+
+/**
+ * All contract storage allocated to the current price regime has been consumed.
+ */
+Status.MaxStorageInPriceRegimeHasBeenUsed = new Status(281);
+
+/**
+ * An alias used in a CryptoTransfer transaction is not the serialization of a primitive Key
+ * message--that is, a Key with a single Ed25519 or ECDSA(secp256k1) public key and no 
+ * unknown protobuf fields.
+ */
+Status.InvalidAliasKey = new Status(282);

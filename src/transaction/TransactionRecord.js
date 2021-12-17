@@ -35,6 +35,7 @@ export default class TransactionRecord {
      * @param {AssessedCustomFee[]} props.assessedCustomFees
      * @param {TokenNftTransferMap} props.nftTransfers
      * @param {TokenAssocation[]} props.automaticTokenAssociations
+     * @param {Timestamp} props.parentConsensusTimestamp
      */
     constructor(props) {
         /**
@@ -133,6 +134,13 @@ export default class TransactionRecord {
          */
         this.automaticTokenAssociations = props.automaticTokenAssociations;
 
+        /**
+         * The parent consensus timestamp
+         *
+         * @readonly
+         */
+        this.parentConsensusTimestamp = props.parentConsensusTimestamp;
+
         Object.freeze(this);
     }
 
@@ -218,6 +226,10 @@ export default class TransactionRecord {
             automaticTokenAssociations: this.automaticTokenAssociations.map(
                 (association) => association._toProtobuf()
             ),
+            parentConsensusTimestamp:
+                this.parentConsensusTimestamp != null
+                    ? this.parentConsensusTimestamp._toProtobuf()
+                    : null,
         };
     }
 
@@ -290,6 +302,11 @@ export default class TransactionRecord {
                           TokenAssocation._fromProtobuf(association)
                       )
                     : [],
+            parentConsensusTimestamp: Timestamp._fromProtobuf(
+                /** @type {proto.ITimestamp} */ (
+                    record.parentConsensusTimestamp
+                )
+            ),
         });
     }
 
