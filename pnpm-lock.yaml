@@ -10,7 +10,7 @@ specifiers:
   '@grpc/grpc-js': ^1.3.4
   '@grpc/proto-loader': ^0.6.6
   '@hashgraph/cryptography': ^1.0.20
-  '@hashgraph/proto': 2.0.1-beta.2
+  '@hashgraph/proto': 2.1.0
   '@types/chai': ^4.2.22
   '@types/crypto-js': ^4.0.2
   '@types/long': ^4.0.1
@@ -54,7 +54,7 @@ specifiers:
 dependencies:
   '@grpc/grpc-js': 1.4.4
   '@hashgraph/cryptography': 1.0.21
-  '@hashgraph/proto': 2.0.1-beta.2
+  '@hashgraph/proto': 2.1.0
   bignumber.js: 9.0.1
   crypto-js: 4.1.1
   js-base64: 3.7.2
@@ -464,8 +464,8 @@ packages:
       utf8: 3.0.0
     dev: false
 
-  /@hashgraph/proto/2.0.1-beta.2:
-    resolution: {integrity: sha512-35WpyOmMBEn6kFOKVQefnip1TlK5OFkjfTJqAfTymfwuUJeALipaSakhOP0Xj8crTqgupTN/mEl3poq3X+vuhA==}
+  /@hashgraph/proto/2.1.0:
+    resolution: {integrity: sha512-af/egSgxVXgNEmPpVJkqpx/wfb6Cji02mdzovikoVp4A26lSXLGxAXUG4gsUjG59KGuZnWfIqxP8GO11PRs0Ew==}
     engines: {node: '>=10.0.0'}
     dependencies:
       protobufjs: 6.11.2

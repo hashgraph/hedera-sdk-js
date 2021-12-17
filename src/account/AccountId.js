@@ -1,11 +1,15 @@
 import * as entity_id from "../EntityIdHelper.js";
 import * as proto from "@hashgraph/proto";
-import { PublicKey } from "../exports.js";
+import { PublicKey } from "@hashgraph/cryptography";
+import Long from "long";
 
 /**
- * @typedef {import("long").Long} Long
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
+
+const regex = new RegExp(
+    "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.((?:[0-9a-fA-F][0-9a-fA-F])+)$"
+);
 
 /**
  * The ID for a crypto-currency account on Hedera.
@@ -14,40 +18,46 @@ export default class AccountId {
     /**
      * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
-     * @param {(number | Long)=} num
-     * @param {?PublicKey} aliasKey
+     * @param {(number | Long | PublicKey)=} numOrAliasKey
      */
-    constructor(props, realm, num, aliasKey = null) {
-        const result = entity_id.constructor(props, realm, num);
+    constructor(props, realm, numOrAliasKey) {
+        const result = entity_id.constructor(props, realm, numOrAliasKey);
 
         this.shard = result.shard;
         this.realm = result.realm;
         this.num = result.num;
+        this.aliasKey = result.aliasKey;
 
         /**
          * @type {string | null}
          */
         this._checksum = null;
-
-        /**
-         * @type {PublicKey | null}
-         */
-        this.aliasKey = aliasKey;
     }
 
-    //TODO
     /**
      * @param {string} text
      * @returns {AccountId}
      */
     static fromString(text) {
-        const result = entity_id.fromString(text);
-        const id = new AccountId(result);
-        id._checksum = result.checksum;
-        return id;
+        try {
+            const result = entity_id.fromString(text);
+            const id = new AccountId(result);
+            id._checksum = result.checksum;
+            return id;
+        } catch {
+            let match = regex.exec(text);
+            if (match == null) {
+                throw new Error("invalid account ID");
+            }
+
+            return new AccountId(
+                Long.fromString(match[1]),
+                Long.fromString(match[2]),
+                PublicKey.fromString(match[3]),
+            );
+        }
     }
 
-    //TODO
     /**
      * @internal
      * @param {proto.IAccountID} id
@@ -140,21 +150,20 @@ export default class AccountId {
      * @returns {string}
      */
     toString() {
-        if (this.num == null && this.aliasKey != null) {
-            return `${this.shard.toString()}.${this.realm.toString()}.${this.aliasKey.toString()}`;
-        } else if (this.num == null && this.aliasKey == null) {
-            throw new Error("toString : both num and aliasKey are null");
-        } else {
-            return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
-        }
+        const account = this.aliasKey != null ? this.aliasKey.toString() : this.num.toString();
+
+        return `${this.shard.toString()}.${this.realm.toString()}.${account}`;
     }
 
-    //TODO
     /**
      * @param {Client} client
      * @returns {string}
      */
     toStringWithChecksum(client) {
+        if (this.aliasKey == null) {
+            throw new Error("cannot calculate checksum with an account ID that has a aliasKey");
+        }
+
         return entity_id.toStringWithChecksum(this.toString(), client);
     }
 
@@ -163,10 +172,18 @@ export default class AccountId {
      * @returns {boolean}
      */
     equals(other) {
+        let account = false;
+
+        if (this.aliasKey != null && other.aliasKey != null) {
+            account = this.aliasKey.equals(other.aliasKey);
+        } else if (this.aliasKey == null && other.aliasKey == null) {
+            account = this.num.eq(other.num);
+        }
+
         return (
             this.shard.eq(other.shard) &&
             this.realm.eq(other.realm) &&
-            this.num.eq(other.num)
+            account
         );
     }
 
@@ -179,15 +196,27 @@ export default class AccountId {
         return id;
     }
 
-    //TODO
     /**
      * @param {AccountId} other
      * @returns {number}
      */
     compare(other) {
-        return entity_id.compare(
-            [this.shard, this.realm, this.num],
-            [other.shard, other.realm, other.num]
-        );
+        let comparison = this.shard.compare(other.shard);
+        if (comparison != 0) {
+            return comparison;
+        }
+
+        comparison = this.realm.compare(other.realm);
+        if (comparison != 0) {
+            return comparison;
+        }
+
+        if (this.aliasKey != null && other.aliasKey != null) {
+            return this.aliasKey.compare(other.aliasKey);
+        } else if (this.aliasKey == null && other.aliasKey == null) {
+            return this.num.compare(other.num);
+        } else {
+            return 0;
+        }
     }
 }
