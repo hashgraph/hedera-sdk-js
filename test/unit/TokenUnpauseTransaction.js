@@ -42,6 +42,7 @@ describe("TokenPauseTransaction", function () {
                     nanos: 3,
                 },
                 scheduled: null,
+                nonce: null,
             },
             nodeAccountID: null,
             transactionValidDuration: {

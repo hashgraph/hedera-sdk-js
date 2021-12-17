@@ -34,6 +34,8 @@ export default class TransactionRecordQuery extends Query {
     /**
      * @param {object} [props]
      * @param {TransactionId} [props.transactionId]
+     * @param {boolean} [props.includeChildRecords]
+     * @param {boolean} [props.includeDuplicates]
      */
     constructor(props = {}) {
         super();
@@ -44,8 +46,28 @@ export default class TransactionRecordQuery extends Query {
          */
         this._transactionId = null;
 
+        /**
+         * @private
+         * @type {?boolean}
+         */
+        this._includeChildRecords = null;
+
+        /**
+         * @private
+         * @type {?boolean}
+         */
+        this._includeDuplicates = null;
+
         if (props.transactionId != null) {
             this.setTransactionId(props.transactionId);
+        }
+
+        if (props.includeChildRecords != null) {
+            this.setIncludeChildRecords(props.includeChildRecords);
+        }
+
+        if (props.includeDuplicates != null) {
+            this.setDuplicates(props.includeDuplicates);
         }
     }
 
@@ -70,6 +92,14 @@ export default class TransactionRecordQuery extends Query {
             transactionId: record.transactionID
                 ? TransactionId._fromProtobuf(record.transactionID)
                 : undefined,
+            includeChildRecords:
+                record.includeChildRecords != null
+                    ? record.includeChildRecords
+                    : undefined,
+            includeDuplicates:
+                record.includeDuplicates != null
+                    ? record.includeDuplicates
+                    : undefined,
         });
     }
 
@@ -86,6 +116,40 @@ export default class TransactionRecordQuery extends Query {
                 : transactionId.clone();
 
         return this;
+    }
+
+    /**
+     * @param {boolean} includeChildRecords
+     * @returns {TransactionRecordQuery}
+     */
+    setIncludeChildRecords(includeChildRecords) {
+        this._includeChildRecords = includeChildRecords;
+        return this;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get includeChildRecords() {
+        return this._includeChildRecords != null
+            ? this._includeChildRecords
+            : false;
+    }
+
+    /**
+     * @param {boolean} includeDuplicates
+     * @returns {TransactionRecordQuery}
+     */
+    setDuplicates(includeDuplicates) {
+        this._duplicates = includeDuplicates;
+        return this;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get duplicates() {
+        return this._duplicates != null ? this._duplicates : false;
     }
 
     /**
@@ -288,6 +352,8 @@ export default class TransactionRecordQuery extends Query {
                     this._transactionId != null
                         ? this._transactionId._toProtobuf()
                         : null,
+                includeChildRecords: this._includeChildRecords,
+                includeDuplicates: this._includeDuplicates,
             },
         };
     }
