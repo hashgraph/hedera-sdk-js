@@ -138,7 +138,9 @@ export default class AccountRecordsQuery extends Query {
         );
 
         return Promise.resolve(
-            records.map((record) => TransactionRecord._fromProtobuf(record))
+            records.map((record) =>
+                TransactionRecord._fromProtobuf({ transactionRecord: record })
+            )
         );
     }
 

@@ -34,7 +34,7 @@ export default class TransactionRecordQuery extends Query {
     /**
      * @param {object} [props]
      * @param {TransactionId} [props.transactionId]
-     * @param {boolean} [props.includeChildRecords]
+     * @param {boolean} [props.includeChildren]
      * @param {boolean} [props.includeDuplicates]
      */
     constructor(props = {}) {
@@ -50,7 +50,7 @@ export default class TransactionRecordQuery extends Query {
          * @private
          * @type {?boolean}
          */
-        this._includeChildRecords = null;
+        this._includeChildren = null;
 
         /**
          * @private
@@ -62,8 +62,8 @@ export default class TransactionRecordQuery extends Query {
             this.setTransactionId(props.transactionId);
         }
 
-        if (props.includeChildRecords != null) {
-            this.setIncludeChildRecords(props.includeChildRecords);
+        if (props.includeChildren != null) {
+            this.setIncludeChildRecords(props.includeChildren);
         }
 
         if (props.includeDuplicates != null) {
@@ -92,7 +92,7 @@ export default class TransactionRecordQuery extends Query {
             transactionId: record.transactionID
                 ? TransactionId._fromProtobuf(record.transactionID)
                 : undefined,
-            includeChildRecords:
+            includeChildren:
                 record.includeChildRecords != null
                     ? record.includeChildRecords
                     : undefined,
@@ -119,21 +119,19 @@ export default class TransactionRecordQuery extends Query {
     }
 
     /**
-     * @param {boolean} includeChildRecords
+     * @param {boolean} includeChildren
      * @returns {TransactionRecordQuery}
      */
-    setIncludeChildRecords(includeChildRecords) {
-        this._includeChildRecords = includeChildRecords;
+    setIncludeChildRecords(includeChildren) {
+        this._includeChildren = includeChildren;
         return this;
     }
 
     /**
      * @returns {boolean}
      */
-    get includeChildRecords() {
-        return this._includeChildRecords != null
-            ? this._includeChildRecords
-            : false;
+    get includeChildren() {
+        return this._includeChildren != null ? this._includeChildren : false;
     }
 
     /**
@@ -271,7 +269,7 @@ export default class TransactionRecordQuery extends Query {
         return new ReceiptStatusError({
             status,
             transactionId: this._getTransactionId(),
-            transactionReceipt: TransactionReceipt._fromProtobuf(receipt),
+            transactionReceipt: TransactionReceipt._fromProtobuf({ receipt }),
         });
     }
 
@@ -329,13 +327,7 @@ export default class TransactionRecordQuery extends Query {
             response.transactionGetRecord
         );
 
-        return Promise.resolve(
-            TransactionRecord._fromProtobuf(
-                /** @type {proto.ITransactionRecord} */ (
-                    record.transactionRecord
-                )
-            )
-        );
+        return Promise.resolve(TransactionRecord._fromProtobuf(record));
     }
 
     /**
@@ -352,7 +344,7 @@ export default class TransactionRecordQuery extends Query {
                     this._transactionId != null
                         ? this._transactionId._toProtobuf()
                         : null,
-                includeChildRecords: this._includeChildRecords,
+                includeChildRecords: this._includeChildren,
                 includeDuplicates: this._includeDuplicates,
             },
         };

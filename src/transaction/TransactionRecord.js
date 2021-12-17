@@ -36,6 +36,8 @@ export default class TransactionRecord {
      * @param {TokenNftTransferMap} props.nftTransfers
      * @param {TokenAssocation[]} props.automaticTokenAssociations
      * @param {Timestamp} props.parentConsensusTimestamp
+     * @param {TransactionRecord[]} props.duplicates
+     * @param {TransactionRecord[]} props.children
      */
     constructor(props) {
         /**
@@ -141,12 +143,22 @@ export default class TransactionRecord {
          */
         this.parentConsensusTimestamp = props.parentConsensusTimestamp;
 
+        /**
+         * @readonly
+         */
+        this.duplicates = props.duplicates;
+
+        /**
+         * @readonly
+         */
+        this.children = props.children;
+
         Object.freeze(this);
     }
 
     /**
      * @internal
-     * @returns {proto.ITransactionRecord}
+     * @returns {proto.ITransactionGetRecordResponse}
      */
     _toProtobuf() {
         const tokenTransfers = this.tokenTransfers._toProtobuf();
@@ -177,68 +189,108 @@ export default class TransactionRecord {
             }
         }
 
+        const duplicates = this.duplicates.map(
+            (record) =>
+                /** @type {proto.ITransactionRecord} */ (
+                    record._toProtobuf().transactionRecord
+                )
+        );
+        const children = this.children.map(
+            (record) =>
+                /** @type {proto.ITransactionRecord} */ (
+                    record._toProtobuf().transactionRecord
+                )
+        );
+
         return {
-            receipt: this.receipt._toProtobuf(),
+            duplicateTransactionRecords: duplicates,
+            childTransactionRecords: children,
+            transactionRecord: {
+                receipt: this.receipt._toProtobuf().receipt,
 
-            transactionHash:
-                this.transactionHash != null ? this.transactionHash : null,
-            consensusTimestamp:
-                this.consensusTimestamp != null
-                    ? this.consensusTimestamp._toProtobuf()
-                    : null,
-            transactionID:
-                this.transactionId != null
-                    ? this.transactionId._toProtobuf()
-                    : null,
-            memo: this.transactionMemo != null ? this.transactionMemo : null,
+                transactionHash:
+                    this.transactionHash != null ? this.transactionHash : null,
+                consensusTimestamp:
+                    this.consensusTimestamp != null
+                        ? this.consensusTimestamp._toProtobuf()
+                        : null,
+                transactionID:
+                    this.transactionId != null
+                        ? this.transactionId._toProtobuf()
+                        : null,
+                memo:
+                    this.transactionMemo != null ? this.transactionMemo : null,
 
-            transactionFee:
-                this.transactionFee != null
-                    ? this.transactionFee.toTinybars()
-                    : null,
+                transactionFee:
+                    this.transactionFee != null
+                        ? this.transactionFee.toTinybars()
+                        : null,
 
-            contractCallResult:
-                this.contractFunctionResult != null
-                    ? this.contractFunctionResult
-                    : null,
+                contractCallResult:
+                    this.contractFunctionResult != null
+                        ? this.contractFunctionResult
+                        : null,
 
-            contractCreateResult:
-                this.contractFunctionResult != null
-                    ? this.contractFunctionResult
-                    : null,
+                contractCreateResult:
+                    this.contractFunctionResult != null
+                        ? this.contractFunctionResult
+                        : null,
 
-            transferList:
-                this.transfers != null
-                    ? {
-                          accountAmounts: this.transfers.map((transfer) =>
-                              transfer._toProtobuf()
-                          ),
-                      }
-                    : null,
-            tokenTransferLists,
-            scheduleRef:
-                this.scheduleRef != null
-                    ? this.scheduleRef._toProtobuf()
-                    : null,
-            assessedCustomFees: this.assessedCustomFees.map((fee) =>
-                fee._toProtobuf()
-            ),
-            automaticTokenAssociations: this.automaticTokenAssociations.map(
-                (association) => association._toProtobuf()
-            ),
-            parentConsensusTimestamp:
-                this.parentConsensusTimestamp != null
-                    ? this.parentConsensusTimestamp._toProtobuf()
-                    : null,
+                transferList:
+                    this.transfers != null
+                        ? {
+                              accountAmounts: this.transfers.map((transfer) =>
+                                  transfer._toProtobuf()
+                              ),
+                          }
+                        : null,
+                tokenTransferLists,
+                scheduleRef:
+                    this.scheduleRef != null
+                        ? this.scheduleRef._toProtobuf()
+                        : null,
+                assessedCustomFees: this.assessedCustomFees.map((fee) =>
+                    fee._toProtobuf()
+                ),
+                automaticTokenAssociations: this.automaticTokenAssociations.map(
+                    (association) => association._toProtobuf()
+                ),
+                parentConsensusTimestamp:
+                    this.parentConsensusTimestamp != null
+                        ? this.parentConsensusTimestamp._toProtobuf()
+                        : null,
+            },
         };
     }
 
     /**
      * @internal
-     * @param {proto.ITransactionRecord} record
+     * @param {proto.ITransactionGetRecordResponse} response
      * @returns {TransactionRecord}
      */
-    static _fromProtobuf(record) {
+    static _fromProtobuf(response) {
+        const record = /** @type {proto.ITransactionRecord} */ (
+            response.transactionRecord
+        );
+
+        const children =
+            response.childTransactionRecords != null
+                ? response.childTransactionRecords.map((child) =>
+                      TransactionRecord._fromProtobuf({
+                          transactionRecord: child,
+                      })
+                  )
+                : [];
+
+        const duplicates =
+            response.duplicateTransactionRecords != null
+                ? response.duplicateTransactionRecords.map((duplicate) =>
+                      TransactionRecord._fromProtobuf({
+                          transactionRecord: duplicate,
+                      })
+                  )
+                : [];
+
         const contractFunctionResult =
             record.contractCallResult != null
                 ? ContractFunctionResult._fromProtobuf(
@@ -251,9 +303,11 @@ export default class TransactionRecord {
                 : undefined;
 
         return new TransactionRecord({
-            receipt: TransactionReceipt._fromProtobuf(
-                /** @type {proto.ITransactionReceipt} */ (record.receipt)
-            ),
+            receipt: TransactionReceipt._fromProtobuf({
+                receipt: /** @type {proto.ITransactionReceipt} */ (
+                    record.receipt
+                ),
+            }),
             transactionHash:
                 record.transactionHash != null
                     ? record.transactionHash
@@ -307,6 +361,8 @@ export default class TransactionRecord {
                     record.parentConsensusTimestamp
                 )
             ),
+            duplicates,
+            children,
         });
     }
 
@@ -316,7 +372,7 @@ export default class TransactionRecord {
      */
     static fromBytes(bytes) {
         return TransactionRecord._fromProtobuf(
-            proto.TransactionRecord.decode(bytes)
+            proto.TransactionGetRecordResponse.decode(bytes)
         );
     }
 
@@ -324,6 +380,8 @@ export default class TransactionRecord {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.TransactionRecord.encode(this._toProtobuf()).finish();
+        return proto.TransactionGetRecordResponse.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

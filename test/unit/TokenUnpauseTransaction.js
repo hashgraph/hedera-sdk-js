@@ -36,6 +36,7 @@ describe("TokenPauseTransaction", function () {
                     accountNum: Long.fromNumber(1),
                     shardNum: Long.fromNumber(0),
                     realmNum: Long.fromNumber(0),
+                    alias: null,
                 },
                 transactionValidStart: {
                     seconds: Long.fromNumber(2),

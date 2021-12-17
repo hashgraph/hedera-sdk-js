@@ -2,6 +2,7 @@ import * as entity_id from "../EntityIdHelper.js";
 import * as proto from "@hashgraph/proto";
 import { PublicKey } from "@hashgraph/cryptography";
 import Long from "long";
+import { keyToProtobuf } from "../cryptography/protobuf.js";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -53,7 +54,7 @@ export default class AccountId {
             return new AccountId(
                 Long.fromString(match[1]),
                 Long.fromString(match[2]),
-                PublicKey.fromString(match[3]),
+                PublicKey.fromString(match[3])
             );
         }
     }
@@ -89,11 +90,16 @@ export default class AccountId {
         this.validateChecksum(client);
     }
 
-    //TODO
     /**
      * @param {Client} client
      */
     validateChecksum(client) {
+        if (this.aliasKey != null) {
+            throw new Error(
+                "cannot calculate checksum with an account ID that has a aliasKey"
+            );
+        }
+
         entity_id.validateChecksum(
             this.shard,
             this.realm,
@@ -126,13 +132,16 @@ export default class AccountId {
         return entity_id.toSolidityAddress([this.shard, this.realm, this.num]);
     }
 
-    //TODO
     /**
      * @internal
      * @returns {proto.IAccountID}
      */
     _toProtobuf() {
         return {
+            alias:
+                this.aliasKey != null
+                    ? proto.Key.encode(keyToProtobuf(this.aliasKey)).finish()
+                    : null,
             accountNum: this.num,
             shardNum: this.shard,
             realmNum: this.realm,
@@ -150,7 +159,10 @@ export default class AccountId {
      * @returns {string}
      */
     toString() {
-        const account = this.aliasKey != null ? this.aliasKey.toString() : this.num.toString();
+        const account =
+            this.aliasKey != null
+                ? this.aliasKey.toString()
+                : this.num.toString();
 
         return `${this.shard.toString()}.${this.realm.toString()}.${account}`;
     }
@@ -160,8 +172,10 @@ export default class AccountId {
      * @returns {string}
      */
     toStringWithChecksum(client) {
-        if (this.aliasKey == null) {
-            throw new Error("cannot calculate checksum with an account ID that has a aliasKey");
+        if (this.aliasKey != null) {
+            throw new Error(
+                "cannot calculate checksum with an account ID that has a aliasKey"
+            );
         }
 
         return entity_id.toStringWithChecksum(this.toString(), client);
@@ -181,9 +195,7 @@ export default class AccountId {
         }
 
         return (
-            this.shard.eq(other.shard) &&
-            this.realm.eq(other.realm) &&
-            account
+            this.shard.eq(other.shard) && this.realm.eq(other.realm) && account
         );
     }
 
@@ -212,7 +224,16 @@ export default class AccountId {
         }
 
         if (this.aliasKey != null && other.aliasKey != null) {
-            return this.aliasKey.compare(other.aliasKey);
+            const t = this.aliasKey.toString();
+            const o = other.aliasKey.toString();
+
+            if (t > o) {
+                return 1;
+            } else if (t < o) {
+                return -1;
+            } else {
+                return 0;
+            }
         } else if (this.aliasKey == null && other.aliasKey == null) {
             return this.num.compare(other.num);
         } else {

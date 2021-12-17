@@ -2256,7 +2256,7 @@ Status.MaxStorageInPriceRegimeHasBeenUsed = new Status(281);
 
 /**
  * An alias used in a CryptoTransfer transaction is not the serialization of a primitive Key
- * message--that is, a Key with a single Ed25519 or ECDSA(secp256k1) public key and no 
+ * message--that is, a Key with a single Ed25519 or ECDSA(secp256k1) public key and no
  * unknown protobuf fields.
  */
 Status.InvalidAliasKey = new Status(282);
