@@ -131,7 +131,7 @@ message ContractCallLocalQuery {
     bytes functionParameters = 4;
 
     /**
-     * [Deprecated] max number of bytes that the result might include. The run will fail if it would have returned more than this number of bytes.
+     * max number of bytes that the result might include. The run will fail if it would have returned more than this number of bytes.
      */
     int64 maxResultSize = 5 [deprecated=true];
 }

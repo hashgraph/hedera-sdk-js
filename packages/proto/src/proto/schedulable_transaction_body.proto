@@ -62,11 +62,10 @@ import "token_burn.proto";
 import "token_wipe_account.proto";
 import "token_associate.proto";
 import "token_dissociate.proto";
-
-import "schedule_delete.proto";
-
 import "token_pause.proto";
 import "token_unpause.proto";
+
+import "schedule_delete.proto";
 
 /**
  * A schedulable transaction. Note that the global/dynamic system property
@@ -243,18 +242,18 @@ message SchedulableTransactionBody {
     TokenDissociateTransactionBody tokenDissociate = 33;
 
     /**
+     * Pauses the Token
+     */
+    TokenPauseTransactionBody token_pause = 35;
+
+    /**
+     * Unpauses the Token
+     */
+    TokenUnpauseTransactionBody token_unpause = 36;
+
+    /**
      * Marks a schedule in the network's action queue as deleted, preventing it from executing
      */
     ScheduleDeleteTransactionBody scheduleDelete = 34;
-
-    /**
-     * Pauses the Token
-     */
-     TokenPauseTransactionBody token_pause = 35;
-
-     /**
-      * Unpauses the Token
-      */
-     TokenUnpauseTransactionBody token_unpause = 36;
   }
 }

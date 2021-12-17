@@ -128,5 +128,5 @@ message CryptoUpdateTransactionBody {
      * The maximum number of tokens that an Account can be implicitly associated with. Up to a 1000
      * including implicit and explicit associations.
      */
-    google.protobuf.UInt32Value max_automatic_token_associations = 15;
+    google.protobuf.Int32Value max_automatic_token_associations = 15;
 }

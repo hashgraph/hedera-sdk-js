@@ -39,6 +39,14 @@ service NetworkService {
     rpc getVersionInfo (Query) returns (Response);
 
     /**
+     * Retrieves the time in nanoseconds spent in <tt>handleTransaction</tt> for one or more 
+     * TransactionIDs (assuming they have reached consensus "recently", since only a limited 
+     * number of execution times are kept in-memory, depending on the value of the node-local 
+     * property <tt>stats.executionTimesToTrack</tt>).
+     */
+    rpc getExecutionTime (Query) returns (Response);
+
+    /**
      * Submits a "wrapped" transaction to the network, skipping its standard prechecks. (Note that
      * the "wrapper" <tt>UncheckedSubmit</tt> transaction is still subject to normal prechecks,
      * including an authorization requirement that its payer be either the treasury or system admin

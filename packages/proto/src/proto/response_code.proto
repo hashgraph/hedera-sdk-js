@@ -64,6 +64,7 @@ enum ResponseCodeEnum {
   /**
    * The given transactionValidDuration was either non-positive, or greater than the maximum 
    * valid duration of 180 secs.
+   * 
    */
   INVALID_TRANSACTION_DURATION = 6;
 
@@ -1006,25 +1007,25 @@ enum ResponseCodeEnum {
   EXISTING_AUTOMATIC_ASSOCIATIONS_EXCEED_GIVEN_LIMIT = 263;
 
   /**
-   * Cannot set the number of automatic associations for an account more than the maximum allowed
-   * token associations <tt>tokens.maxPerAccount</tt>
+   * Cannot set the number of automatic associations for an account more than the maximum allowed 
+   * token associations <tt>tokens.maxPerAccount</tt>.
    */
   REQUESTED_NUM_AUTOMATIC_ASSOCIATIONS_EXCEEDS_ASSOCIATION_LIMIT = 264;
 
   /**
    * Token is paused. This Token cannot be a part of any kind of Transaction until unpaused.
    */
-   TOKEN_IS_PAUSED = 265;
+  TOKEN_IS_PAUSED = 265;
 
   /**
    * Pause key is not set on token
    */
-   TOKEN_HAS_NO_PAUSE_KEY = 266;
- 
+  TOKEN_HAS_NO_PAUSE_KEY = 266;
+
   /**
    * The provided pause key was invalid
    */
-   INVALID_PAUSE_KEY = 267;
+  INVALID_PAUSE_KEY = 267;
 
   /** 
    * The update file in a freeze transaction body must exist.
@@ -1094,12 +1095,19 @@ enum ResponseCodeEnum {
   CONSENSUS_GAS_EXHAUSTED = 279;
 
   /**
-  * A precompiled contract succeeded, but was later reverted.
-  */
+   * A precompiled contract succeeded, but was later reverted.
+   */
   REVERTED_SUCCESS = 280;
 
   /**
-  * All contract storage allocated to the current price regime has been consumed.
-  */
+   * All contract storage allocated to the current price regime has been consumed.
+   */
   MAX_STORAGE_IN_PRICE_REGIME_HAS_BEEN_USED = 281;
-} 
+
+  /**
+   * An alias used in a CryptoTransfer transaction is not the serialization of a primitive Key
+   * message--that is, a Key with a single Ed25519 or ECDSA(secp256k1) public key and no 
+   * unknown protobuf fields.
+   */
+  INVALID_ALIAS_KEY = 282;
+}

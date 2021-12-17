@@ -129,5 +129,5 @@ message CryptoCreateTransactionBody {
      * The maximum number of tokens that an Account can be implicitly associated with. Defaults to 0
      * and up to a maximum value of 1000.
      */
-    uint32 max_automatic_token_associations = 14;
+    int32 max_automatic_token_associations = 14;
 }

@@ -49,6 +49,7 @@ import "transaction_get_fast_record.proto";
 import "consensus_get_topic_info.proto";
 
 import "network_get_version_info.proto";
+import "network_get_execution_time.proto";
 
 import "token_get_account_nft_infos.proto";
 import "token_get_info.proto";
@@ -178,5 +179,10 @@ message Response {
          * A list of the NFTs for the token
          */
         TokenGetNftInfosResponse tokenGetNftInfos = 156;
+
+        /**
+         * Execution times of "sufficiently recent" transactions
+         */
+        NetworkGetExecutionTimeResponse networkGetExecutionTime = 157;
     }
 }

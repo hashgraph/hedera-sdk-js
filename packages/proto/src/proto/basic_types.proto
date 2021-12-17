@@ -79,9 +79,32 @@ message AccountID {
     int64 realmNum = 2;
 
     /**
-     * A nonnegative account number unique within its realm
+     * The account number unique within its realm which can be either a non-negative integer or an alias public key.
+     * For any AccountID fields in the query response, transaction record or transaction receipt only accountNum will
+     * be populated.
      */
-    int64 accountNum = 3;
+    oneof account {
+
+        /**
+         * A non-negative account number unique within its realm
+         */
+        int64 accountNum = 3;
+
+        /**
+         * The public key bytes to be used as the account's alias. The public key bytes are the result of serializing
+         * a protobuf Key message for any primitive key type. Currently only primitive key bytes are supported as an alias
+         * (ThresholdKey, KeyList, ContractID, and delegatable_contract_id are not supported)
+         *
+         * At most one account can ever have a given alias and it is used for account creation if it
+         * was automatically created using a crypto transfer. It will be null if an account is created normally.
+         * It is immutable once it is set for an account.
+         *
+         * If a transaction auto-creates the account, any further transfers to that alias will simply be deposited
+         * in that account, without creating anything, and with no creation fee being charged.
+         */
+        bytes alias = 4;
+    }
+
 }
 
 /**
@@ -441,7 +464,7 @@ enum TokenKycStatus {
 /**
  * Possible Pause statuses returned on TokenGetInfoQuery
  */
- enum TokenPauseStatus {
+enum TokenPauseStatus {
     /**
      * Indicates that a Token has no pauseKey
      */
@@ -453,21 +476,26 @@ enum TokenKycStatus {
     Paused = 1;
 
     /**
-     * Indicates that a Token is Unpaused
+     * Indicates that a Token is Unpaused.
      */
     Unpaused = 2;
 }
 
 /**
- * A Key can be a public key from one of the three supported systems (ed25519, RSA-3072,  ECDSA with
- * p384). Or, it can be the ID of a smart contract instance, which is authorized to act as if it had
- * a key. If an account has an ed25519 key associated with it, then the corresponding private key
- * must sign any transaction to transfer cryptocurrency out of it. And similarly for RSA and ECDSA.
+ * A Key can be a public key from either the Ed25519 or ECDSA(secp256k1) signature schemes, where
+ * in the ECDSA(secp256k1) case we require the 33-byte compressed form of the public key. We call
+ * these public keys <b>primitive keys</b>.
+ * 
+ * If an account has primitive key associated to it, then the corresponding private key must sign 
+ * any transaction to transfer cryptocurrency out of it. 
  *
- * A Key can be a smart contract ID, which means that smart contract is to authorize operations as
- * if it had signed with a key that it owned. The smart contract doesn't actually have a key, and
- * doesn't actually sign a transaction. But it's as if a virtual transaction were created, and the
- * smart contract signed it with a private key.
+ * A Key can also be the ID of a smart contract instance, which is then authorized to perform any 
+ * precompiled contract action that requires this key to sign. 
+ *
+ * Note that when a Key is a smart contract ID, it <i>doesn't</i> mean the contract with that ID 
+ * will actually create a cryptographic signature. It only means that when the contract calls a 
+ * precompiled contract, the resulting "child transaction" will be authorized to perform any action
+ * controlled by the Key.
  *
  * A Key can be a "threshold key", which means a list of M keys, any N of which must sign in order
  * for the threshold signature to be considered valid. The keys within a threshold signature may
@@ -480,18 +508,16 @@ enum TokenKycStatus {
  * a transaction to delete the file. So it's a single list that sometimes acts as a 1-of-M threshold
  * key, and sometimes acts as an M-of-M threshold key.  A key list is always an M-of-M, unless
  * specified otherwise in documentation. A key list can have nested key lists or threshold keys.
- * Nested key lists are always M-of-M. A key list can have repeated Ed25519 public keys, but all
+ * Nested key lists are always M-of-M. A key list can have repeated primitive public keys, but all
  * repeated keys are only required to sign once.
  *
  * A Key can contain a ThresholdKey or KeyList, which in turn contain a Key, so this mutual
  * recursion would allow nesting arbitrarily deep. A ThresholdKey which contains a list of primitive
- * keys (e.g., ed25519) has 3 levels: ThresholdKey -> KeyList -> Key. A KeyList which contains
- * several primitive keys (e.g., ed25519) has 2 levels: KeyList -> Key. A Key with 2 levels of
- * nested ThresholdKeys has 7 levels: Key -> ThresholdKey -> KeyList -> Key -> ThresholdKey ->
- * KeyList -> Key.
+ * keys has 3 levels: ThresholdKey -> KeyList -> Key. A KeyList which contains several primitive
+ * keys has 2 levels: KeyList -> Key. A Key with 2 levels of nested ThresholdKeys has 7 levels:
+ * Key -> ThresholdKey -> KeyList -> Key -> ThresholdKey -> KeyList -> Key.
  *
  * Each Key should not have more than 46 levels, which implies 15 levels of nested ThresholdKeys.
- * Only ed25519 primitive keys are currently supported.
  */
 message Key {
     oneof key {
@@ -501,17 +527,17 @@ message Key {
         ContractID contractID = 1;
 
         /**
-         * ed25519 public key bytes
+         * Ed25519 public key bytes
          */
         bytes ed25519 = 2;
 
         /**
-         * RSA-3072 public key bytes
+         * (NOT SUPPORTED) RSA-3072 public key bytes
          */
         bytes RSA_3072 = 3;
 
         /**
-         * ECDSA with the p-384 curve public key bytes
+         * (NOT SUPPORTED) ECDSA with the p-384 curve public key bytes
          */
         bytes ECDSA_384 = 4;
 
@@ -575,27 +601,10 @@ message KeyList {
 }
 
 /**
- * A Signature corresponding to a Key. It is a sequence of bytes holding a public key signature from
- * one of the three supported systems (ed25519, RSA-3072,  ECDSA with p384). Or, it can be a list of
- * signatures corresponding to a single threshold key. Or, it can be the ID of a smart contract
- * instance, which is authorized to act as if it had a key. If an account has an ed25519 key
- * associated with it, then the corresponding private key must sign any transaction to transfer
- * cryptocurrency out of it.  If it has a smart contract ID associated with it, then that smart
- * contract is allowed to transfer cryptocurrency out of it. The smart contract doesn't actually
- * have a key, and  doesn't actually sign a transaction. But it's as if a virtual transaction were
- * created, and the smart contract signed it with a private key. A key can also be a "threshold
- * key", which means a list of M keys, any N of which must sign in order for the threshold signature
- * to be considered valid. The keys within a threshold signature may themselves be threshold
- * signatures, to allow complex signature requirements (this nesting is not supported in the
- * currently, but will be supported in a future version of API). If a Signature message is missing
- * the "signature" field, then this is considered to be a null signature. That is useful in cases
- * such as threshold signatures, where some of the signatures can be null.  The definition of Key
- * uses mutual recursion, so it allows nesting that is arbitrarily deep. But the current API only
- * accepts Key messages up to 3 levels deep, such as a list of threshold keys, each of which is a
- * list of primitive keys. Therefore, the matching Signature will have the same limitation. This
- * restriction may be relaxed in future versions of the API, to allow deeper nesting.
+ * This message is <b>DEPRECATED</b> and <b>UNUSABLE</b> with network nodes. It is retained 
+ * here only for historical reasons.
  *
- * This message is deprecated and succeeded by SignaturePair and SignatureMap messages.
+ * Please use the SignaturePair and SignatureMap messages.
  */
 message Signature {
     option deprecated = true;
@@ -635,9 +644,10 @@ message Signature {
 }
 
 /**
- * A signature corresponding to a ThresholdKey. For an N-of-M threshold key, this is a list of M
- * signatures, at least N of which must be non-null.  This message is deprecated and succeeded by
- * SignaturePair and SignatureMap messages.
+ * This message is <b>DEPRECATED</b> and <b>UNUSABLE</b> with network nodes. It is retained 
+ * here only for historical reasons.
+ *
+ * Please use the SignaturePair and SignatureMap messages.
  */
 message ThresholdSignature {
     option deprecated = true;
@@ -650,8 +660,10 @@ message ThresholdSignature {
 }
 
 /**
- * The signatures corresponding to a KeyList of the same length.  This message is deprecated and
- * succeeded by SignaturePair and SignatureMap messages.
+ * This message is <b>DEPRECATED</b> and <b>UNUSABLE</b> with network nodes. It is retained 
+ * here only for historical reasons.
+ *
+ * Please use the SignaturePair and SignatureMap messages.
  */
 message SignatureList {
     option deprecated = true;
@@ -663,9 +675,17 @@ message SignatureList {
 }
 
 /**
- * The client may use any number of bytes from 0 to the whole length of the public key for
- * pubKeyPrefix.  If 0 bytes is used, then it is assumed that only one public key is used to sign.
- * Only ed25519 keys and hence signatures are currently supported. 
+ * The client may use any number of bytes from zero to the whole length of the public key for
+ * pubKeyPrefix. If zero bytes are used, then it must be that only one primitive key is required
+ * to sign the linked transaction; it will surely resolve to <tt>INVALID_SIGNATURE</tt> otherwise. 
+ * 
+ * <b>IMPORTANT:</b> In the special case that a signature is being provided for a key used to 
+ * authorize a precompiled contract, the <tt>pubKeyPrefix</tt> must contain the <b>entire public 
+ * key</b>! That is, if the key is a Ed25519 key, the <tt>pubKeyPrefix</tt> should be 32 bytes 
+ * long. If the key is a ECDSA(secp256k1) key, the <tt>pubKeyPrefix</tt> should be 33 bytes long, 
+ * since we require the compressed form of the public key. 
+ * 
+ * Only Ed25519 and ECDSA(secp256k1) keys and hence signatures are currently supported. 
  */
 message SignaturePair {
     /**
@@ -693,6 +713,11 @@ message SignaturePair {
          * ECDSA p-384 signature
          */
         bytes ECDSA_384 = 5;
+
+        /**
+         * ECDSA(secp256k1) signature
+         */
+        bytes ECDSA_secp256k1 = 6;
     }
 }
 
@@ -1030,14 +1055,19 @@ enum HederaFunctionality {
     TokenFeeScheduleUpdate = 77;
 
     /**
+     * Get execution time(s) by TransactionID, if available
+     */
+    NetworkGetExecutionTime = 78;
+
+    /**
      * Pause the Token
      */
-     TokenPause = 79;
+    TokenPause = 79;
 
-     /**
-      * Unpause the Token
-      */
-     TokenUnpause = 80;
+    /**
+     * Unpause the Token
+     */
+    TokenUnpause = 80;
 }
 
 /**
