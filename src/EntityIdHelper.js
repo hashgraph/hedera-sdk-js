@@ -2,6 +2,7 @@ import Long from "long";
 import * as hex from "./encoding/hex.js";
 import BadEntityIdError from "./BadEntityIdError.js";
 import * as util from "./util.js";
+import { PublicKey } from "@hashgraph/cryptography";
 
 /**
  * @typedef {import("./client/Client.js").default<*, *>} Client
@@ -19,6 +20,7 @@ import * as util from "./util.js";
  * @property {Long} shard
  * @property {Long} realm
  * @property {Long} num
+ * @property {PublicKey | null} aliasKey
  */
 
 /**
@@ -36,13 +38,18 @@ const regex = RegExp(
 /**
  * @param {number | Long | IEntityId} props
  * @param {(number | null | Long)=} realm
- * @param {(number | null | Long)=} num
+ * @param {(number | null | Long | PublicKey)=} numOrAliasKey
  * @returns {IEntityIdResult}
  */
-export function constructor(props, realm, num) {
+export function constructor(props, realm, numOrAliasKey) {
     let shard_ = Long.ZERO;
     let realm_ = Long.ZERO;
     let num_ = Long.ZERO;
+    let aliasKey_ = null;
+
+    if (numOrAliasKey instanceof PublicKey) {
+        aliasKey_ = numOrAliasKey;
+    }
 
     if (typeof props === "number" || Long.isLong(props)) {
         if (realm == null || typeof realm === "string") {
@@ -50,7 +57,7 @@ export function constructor(props, realm, num) {
         } else {
             shard_ = Long.fromValue(props);
             realm_ = Long.fromValue(realm);
-            num_ = num != null ? Long.fromValue(num) : Long.ZERO;
+            num_ = numOrAliasKey != null && !(numOrAliasKey instanceof PublicKey) ? Long.fromValue(numOrAliasKey) : Long.ZERO;
         }
     } else {
         shard_ = Long.fromValue(props.shard != null ? props.shard : 0);
@@ -66,6 +73,7 @@ export function constructor(props, realm, num) {
         shard: shard_,
         realm: realm_,
         num: num_,
+        aliasKey: aliasKey_,
     };
 }
 
