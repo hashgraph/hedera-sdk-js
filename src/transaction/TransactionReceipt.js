@@ -31,6 +31,8 @@ export default class TransactionReceipt {
      * @param {?Long} props.totalSupply
      * @param {?TransactionId} props.scheduledTransactionId
      * @param {Long[]} props.serials
+     * @param {TransactionReceipt[]} props.duplicates
+     * @param {TransactionReceipt[]} props.children
      */
     constructor(props) {
         /**
@@ -114,58 +116,111 @@ export default class TransactionReceipt {
 
         this.serials = props.serials;
 
+        /**
+         * @readonly
+         */
+        this.duplicates = props.duplicates;
+
+        /**
+         * @readonly
+         */
+        this.children = props.children;
+
         Object.freeze(this);
     }
 
     /**
      * @internal
-     * @returns {proto.ITransactionReceipt}
+     * @returns {proto.ITransactionGetReceiptResponse}
      */
     _toProtobuf() {
+        const duplicates = this.duplicates.map(
+            (receipt) =>
+                /** @type {proto.ITransactionReceipt} */ (
+                    receipt._toProtobuf().receipt
+                )
+        );
+        const children = this.children.map(
+            (receipt) =>
+                /** @type {proto.ITransactionReceipt} */ (
+                    receipt._toProtobuf().receipt
+                )
+        );
+
         return {
-            status: this.status.valueOf(),
+            duplicateTransactionReceipts: duplicates,
+            childTransactionReceipts: children,
+            receipt: {
+                status: this.status.valueOf(),
 
-            accountID:
-                this.accountId != null ? this.accountId._toProtobuf() : null,
-            fileID: this.fileId != null ? this.fileId._toProtobuf() : null,
-            contractID:
-                this.contractId != null ? this.contractId._toProtobuf() : null,
-            topicID: this.topicId != null ? this.topicId._toProtobuf() : null,
-            tokenID: this.topicId != null ? this.topicId._toProtobuf() : null,
-            scheduleID:
-                this.topicId != null ? this.topicId._toProtobuf() : null,
-
-            topicRunningHash:
-                this.topicRunningHash == null ? null : this.topicRunningHash,
-
-            topicSequenceNumber: this.topicSequenceNumber,
-
-            exchangeRate: {
-                nextRate: null,
-                currentRate:
-                    this.exchangeRate != null
-                        ? this.exchangeRate._toProtobuf()
+                accountID:
+                    this.accountId != null
+                        ? this.accountId._toProtobuf()
                         : null,
+                fileID: this.fileId != null ? this.fileId._toProtobuf() : null,
+                contractID:
+                    this.contractId != null
+                        ? this.contractId._toProtobuf()
+                        : null,
+                topicID:
+                    this.topicId != null ? this.topicId._toProtobuf() : null,
+                tokenID:
+                    this.topicId != null ? this.topicId._toProtobuf() : null,
+                scheduleID:
+                    this.topicId != null ? this.topicId._toProtobuf() : null,
+
+                topicRunningHash:
+                    this.topicRunningHash == null
+                        ? null
+                        : this.topicRunningHash,
+
+                topicSequenceNumber: this.topicSequenceNumber,
+
+                exchangeRate: {
+                    nextRate: null,
+                    currentRate:
+                        this.exchangeRate != null
+                            ? this.exchangeRate._toProtobuf()
+                            : null,
+                },
+
+                scheduledTransactionID:
+                    this.scheduledTransactionId != null
+                        ? this.scheduledTransactionId._toProtobuf()
+                        : null,
+
+                serialNumbers: this.serials,
             },
-
-            scheduledTransactionID:
-                this.scheduledTransactionId != null
-                    ? this.scheduledTransactionId._toProtobuf()
-                    : null,
-
-            serialNumbers: this.serials,
         };
     }
 
     /**
      * @internal
-     * @param {proto.ITransactionReceipt} receipt
+     * @param {proto.ITransactionGetReceiptResponse} response
      * @returns {TransactionReceipt}
      */
-    static _fromProtobuf(receipt) {
+    static _fromProtobuf(response) {
+        const receipt = /** @type {proto.ITransactionReceipt} */ (
+            response.receipt
+        );
+
         const exchangeRateSet = /** @type {proto.IExchangeRateSet} */ (
             receipt.exchangeRate
         );
+
+        const children =
+            response.childTransactionReceipts != null
+                ? response.childTransactionReceipts.map((child) =>
+                      TransactionReceipt._fromProtobuf({ receipt: child })
+                  )
+                : [];
+
+        const duplicates =
+            response.duplicateTransactionReceipts != null
+                ? response.duplicateTransactionReceipts.map((duplicate) =>
+                      TransactionReceipt._fromProtobuf({ receipt: duplicate })
+                  )
+                : [];
 
         return new TransactionReceipt({
             status: Status._fromCode(
@@ -230,6 +285,8 @@ export default class TransactionReceipt {
                       )
                     : null,
             serials: receipt.serialNumbers != null ? receipt.serialNumbers : [],
+            children,
+            duplicates,
         });
     }
 
@@ -239,7 +296,7 @@ export default class TransactionReceipt {
      */
     static fromBytes(bytes) {
         return TransactionReceipt._fromProtobuf(
-            proto.TransactionReceipt.decode(bytes)
+            proto.TransactionGetReceiptResponse.decode(bytes)
         );
     }
 
@@ -247,6 +304,8 @@ export default class TransactionReceipt {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.TransactionReceipt.encode(this._toProtobuf()).finish();
+        return proto.TransactionGetReceiptResponse.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

@@ -33,7 +33,7 @@ export default class TransactionReceiptQuery extends Query {
      * @param {object} [props]
      * @param {TransactionId | string} [props.transactionId]
      * @param {boolean} [props.includeDuplicates]
-     * @param {boolean} [props.includeChildReceipts]
+     * @param {boolean} [props.includeChildren]
      */
     constructor(props = {}) {
         super();
@@ -48,7 +48,7 @@ export default class TransactionReceiptQuery extends Query {
          * @private
          * @type {?boolean}
          */
-        this._includeChildReceipts = null;
+        this._includeChildren = null;
 
         /**
          * @private
@@ -60,8 +60,8 @@ export default class TransactionReceiptQuery extends Query {
             this.setTransactionId(props.transactionId);
         }
 
-        if (props.includeChildReceipts != null) {
-            this.setChildReceipts(props.includeChildReceipts);
+        if (props.includeChildren != null) {
+            this.setChildReceipts(props.includeChildren);
         }
 
         if (props.includeDuplicates != null) {
@@ -87,7 +87,7 @@ export default class TransactionReceiptQuery extends Query {
                 receipt.includeDuplicates != null
                     ? receipt.includeDuplicates
                     : undefined,
-            includeChildReceipts:
+            includeChildren:
                 receipt.includeChildReceipts != null
                     ? receipt.includeChildReceipts
                     : undefined,
@@ -135,11 +135,11 @@ export default class TransactionReceiptQuery extends Query {
     }
 
     /**
-     * @param {boolean} includeChildReceipts
+     * @param {boolean} includeChildren
      * @returns {TransactionReceiptQuery}
      */
-    setChildReceipts(includeChildReceipts) {
-        this._includeChildReceipts = includeChildReceipts;
+    setChildReceipts(includeChildren) {
+        this._includeChildren = includeChildren;
         return this;
     }
 
@@ -147,9 +147,7 @@ export default class TransactionReceiptQuery extends Query {
      * @returns {boolean}
      */
     get childReceipts() {
-        return this._includeChildReceipts != null
-            ? this._includeChildReceipts
-            : false;
+        return this._includeChildren != null ? this._includeChildren : false;
     }
 
     /**
@@ -261,7 +259,9 @@ export default class TransactionReceiptQuery extends Query {
         return new ReceiptStatusError({
             status,
             transactionId: this._getTransactionId(),
-            transactionReceipt: TransactionReceipt._fromProtobuf(receipt),
+            transactionReceipt: TransactionReceipt._fromProtobuf(
+                transactionGetReceipt
+            ),
         });
     }
 
@@ -318,11 +318,10 @@ export default class TransactionReceiptQuery extends Query {
             /** @type {proto.ITransactionGetReceiptResponse} */ (
                 response.transactionGetReceipt
             );
-        const receipt = /** @type {proto.ITransactionReceipt} */ (
-            transactionGetReceipt.receipt
-        );
 
-        return Promise.resolve(TransactionReceipt._fromProtobuf(receipt));
+        return Promise.resolve(
+            TransactionReceipt._fromProtobuf(transactionGetReceipt)
+        );
     }
 
     /**
@@ -340,7 +339,7 @@ export default class TransactionReceiptQuery extends Query {
                         ? this._transactionId._toProtobuf()
                         : null,
                 includeDuplicates: this._includeDuplicates,
-                includeChildReceipts: this._includeChildReceipts,
+                includeChildReceipts: this._includeChildren,
             },
         };
     }

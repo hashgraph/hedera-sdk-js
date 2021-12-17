@@ -10,6 +10,7 @@ import { PublicKey } from "@hashgraph/cryptography";
 
 /**
  * @typedef {object} IEntityId
+ * @property {(PublicKey | null)=} aliasKey
  * @property {number | Long} num
  * @property {(number | Long)=} shard
  * @property {(number | Long)=} realm
@@ -20,7 +21,7 @@ import { PublicKey } from "@hashgraph/cryptography";
  * @property {Long} shard
  * @property {Long} realm
  * @property {Long} num
- * @property {PublicKey | null} aliasKey
+ * @property {(PublicKey | null)=} aliasKey
  */
 
 /**
@@ -29,6 +30,7 @@ import { PublicKey } from "@hashgraph/cryptography";
  * @property {Long} realm
  * @property {Long} num
  * @property {string | null} checksum
+ * @property {PublicKey | null} aliasKey
  */
 
 const regex = RegExp(
@@ -45,7 +47,7 @@ export function constructor(props, realm, numOrAliasKey) {
     let shard_ = Long.ZERO;
     let realm_ = Long.ZERO;
     let num_ = Long.ZERO;
-    let aliasKey_ = null;
+    let aliasKey_;
 
     if (numOrAliasKey instanceof PublicKey) {
         aliasKey_ = numOrAliasKey;
@@ -57,12 +59,16 @@ export function constructor(props, realm, numOrAliasKey) {
         } else {
             shard_ = Long.fromValue(props);
             realm_ = Long.fromValue(realm);
-            num_ = numOrAliasKey != null && !(numOrAliasKey instanceof PublicKey) ? Long.fromValue(numOrAliasKey) : Long.ZERO;
+            num_ =
+                numOrAliasKey != null && !(numOrAliasKey instanceof PublicKey)
+                    ? Long.fromValue(numOrAliasKey)
+                    : Long.ZERO;
         }
     } else {
         shard_ = Long.fromValue(props.shard != null ? props.shard : 0);
         realm_ = Long.fromValue(props.realm != null ? props.realm : 0);
         num_ = Long.fromValue(props.num != null ? props.num : 0);
+        aliasKey_ = props.aliasKey;
     }
 
     if (shard_.isNegative() || realm_.isNegative() || num_.isNegative()) {
@@ -149,6 +155,7 @@ export function fromString(text) {
         realm,
         num,
         checksum,
+        aliasKey: null,
     };
 }
 

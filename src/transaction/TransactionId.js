@@ -18,7 +18,7 @@ export default class TransactionId {
      * @param {?AccountId} accountId
      * @param {?Timestamp} validStart
      * @param {?boolean} scheduled
-     * @param {?number} nonce
+     * @param {?Long | number} nonce
      */
     constructor(accountId, validStart, scheduled = false, nonce = null) {
         /**
@@ -40,17 +40,20 @@ export default class TransactionId {
 
         this.scheduled = scheduled;
 
-        this.nonce = nonce;
+        this.nonce = null;
+        if (nonce != null) {
+            this.setNonce(nonce);
+        }
 
         Object.freeze(this);
     }
 
     /**
-     * @param {number} nonce
+     * @param {Long | number} nonce
      * @returns {TransactionId}
      */
     setNonce(nonce) {
-        this.nonce = nonce;
+        this.nonce = typeof nonce === "number" ? Long.fromNumber(nonce) : nonce;
         return this;
     }
 
@@ -88,6 +91,7 @@ export default class TransactionId {
     static fromString(wholeId) {
         let account, seconds, nanos, isScheduled, nonce;
         let rest;
+        // 1.1.1@5.4?scheduled/117
 
         [account, rest] = wholeId.split("@");
         [seconds, rest] = rest.split(".");
@@ -110,7 +114,7 @@ export default class TransactionId {
             AccountId.fromString(account),
             new Timestamp(Long.fromValue(seconds), Long.fromValue(nanos)),
             isScheduled,
-            nonce != null ? Number(nonce) : null
+            nonce != null ? Long.fromString(nonce) : null
         );
     }
 
@@ -168,7 +172,7 @@ export default class TransactionId {
             transactionValidStart:
                 this.validStart != null ? this.validStart._toProtobuf() : null,
             scheduled: this.scheduled,
-            nonce: this.nonce,
+            nonce: this.nonce != null ? this.nonce.toInt() : null,
         };
     }
 

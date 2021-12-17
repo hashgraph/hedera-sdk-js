@@ -1,8 +1,42 @@
 import AccountId from "../src/account/AccountId.js";
 import BigNumber from "bignumber.js";
 import { Client } from "../integration/client/NodeIntegrationTestEnv.js";
+import { PublicKey } from "@hashgraph/cryptography";
 
 describe("AccountId", function () {
+    it("constructors", function () {
+        expect(new AccountId(3).toString()).to.be.equal("0.0.3");
+        expect(new AccountId(1, 2, 3).toString()).to.be.equal("1.2.3");
+        expect(
+            new AccountId({
+                shard: 1,
+                realm: 2,
+                num: 3,
+                aliasKey: null,
+            }).toString()
+        ).to.be.equal("1.2.3");
+        expect(
+            new AccountId({
+                shard: 1,
+                realm: 2,
+                num: 0,
+                aliasKey: PublicKey.fromString(
+                    "302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
+                ),
+            }).toString()
+        ).to.be.equal(
+            "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
+        );
+        expect(AccountId.fromString("1.2.3").toString()).to.be.equal("1.2.3");
+        expect(
+            AccountId.fromString(
+                "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
+            ).toString()
+        ).to.be.equal(
+            "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
+        );
+    });
+
     it("should construct from (shard, realm, num)", function () {
         const accountId = new AccountId(10, 50, 25050);
 
