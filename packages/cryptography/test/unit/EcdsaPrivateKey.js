@@ -28,9 +28,11 @@ describe("EcdsaPrivateKey", function () {
         const message = "hello world";
         const signature = key.sign(message);
 
+        expect(signature.length).to.be.equal(64);
         expect(key.publicKey.verify(message, signature)).to.be.true;
 
         signature[0] = signature[0] + (1 % 255);
         expect(key.publicKey.verify(message, signature)).to.be.false;
+        expect(key.publicKey.toBytesRaw().length).to.be.equal(33);
     });
 });
