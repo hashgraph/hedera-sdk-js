@@ -7,8 +7,11 @@ import Long from "long";
 import TokenRelationshipMap from "./TokenRelationshipMap.js";
 import * as proto from "@hashgraph/proto";
 import Duration from "../Duration.js";
+import { KeyList } from "@hashgraph/cryptography";
+import ContractId from "../contract/ContractId.js";
 
 /**
+ * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
  * @typedef {import("@hashgraph/cryptography").Key} Key
  */
 
@@ -36,6 +39,7 @@ export default class AccountInfo {
      * @param {string} props.accountMemo
      * @param {Long} props.ownedNfts
      * @param {Long} props.maxAutomaticTokenAssociations
+     * @param {PublicKey | null} props.aliasKey
      */
     constructor(props) {
         /**
@@ -149,6 +153,8 @@ export default class AccountInfo {
         this.maxAutomaticTokenAssociations =
             props.maxAutomaticTokenAssociations;
 
+        this.aliasKey = props.aliasKey;
+
         Object.freeze(this);
     }
 
@@ -158,6 +164,15 @@ export default class AccountInfo {
      * @returns {AccountInfo}
      */
     static _fromProtobuf(info) {
+        let aliasKey =
+            info.alias != null
+                ? keyFromProtobuf(proto.Key.decode(info.alias))
+                : null;
+
+        if (aliasKey instanceof KeyList || aliasKey instanceof ContractId) {
+            aliasKey = null;
+        }
+
         return new AccountInfo({
             accountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (info.accountID)
@@ -219,6 +234,7 @@ export default class AccountInfo {
             maxAutomaticTokenAssociations: info.maxAutomaticTokenAssociations
                 ? Long.fromNumber(info.maxAutomaticTokenAssociations)
                 : Long.ZERO,
+            aliasKey,
         });
     }
 
@@ -252,6 +268,10 @@ export default class AccountInfo {
             ownedNfts: this.ownedNfts,
             maxAutomaticTokenAssociations:
                 this.maxAutomaticTokenAssociations.toInt(),
+            alias:
+                this.aliasKey != null
+                    ? proto.Key.encode(keyToProtobuf(this.aliasKey)).finish()
+                    : null,
         };
     }
 

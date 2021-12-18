@@ -61,11 +61,11 @@ export default class TransactionReceiptQuery extends Query {
         }
 
         if (props.includeChildren != null) {
-            this.setChildReceipts(props.includeChildren);
+            this.setIncludeChildren(props.includeChildren);
         }
 
         if (props.includeDuplicates != null) {
-            this.setDuplicates(props.includeDuplicates);
+            this.setIncludeDuplicates(props.includeDuplicates);
         }
     }
 
@@ -120,7 +120,7 @@ export default class TransactionReceiptQuery extends Query {
      * @param {boolean} includeDuplicates
      * @returns {TransactionReceiptQuery}
      */
-    setDuplicates(includeDuplicates) {
+    setIncludeDuplicates(includeDuplicates) {
         this._includeDuplicates = includeDuplicates;
         return this;
     }
@@ -128,7 +128,7 @@ export default class TransactionReceiptQuery extends Query {
     /**
      * @returns {boolean}
      */
-    get duplicates() {
+    get includeDuplicates() {
         return this._includeDuplicates != null
             ? this._includeDuplicates
             : false;
@@ -138,7 +138,7 @@ export default class TransactionReceiptQuery extends Query {
      * @param {boolean} includeChildren
      * @returns {TransactionReceiptQuery}
      */
-    setChildReceipts(includeChildren) {
+    setIncludeChildren(includeChildren) {
         this._includeChildren = includeChildren;
         return this;
     }
@@ -146,7 +146,7 @@ export default class TransactionReceiptQuery extends Query {
     /**
      * @returns {boolean}
      */
-    get childReceipts() {
+    get includeChildren() {
         return this._includeChildren != null ? this._includeChildren : false;
     }
 
