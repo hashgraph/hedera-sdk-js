@@ -67,7 +67,7 @@ export default class AccountId {
      */
     static _fromProtobuf(id) {
         let key =
-            id.alias != null
+            id.alias != null && id.alias.length > 0
                 ? keyFromProtobuf(proto.Key.decode(id.alias))
                 : null;
 

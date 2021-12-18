@@ -86,6 +86,10 @@ export function keyFromProtobuf(key) {
         return PublicKey.fromBytes(key.ed25519);
     }
 
+    if (key.ECDSASecp256k1 != null && key.ECDSASecp256k1.byteLength > 0) {
+        return PublicKey.fromBytes(key.ECDSASecp256k1);
+    }
+
     if (key.thresholdKey != null && key.thresholdKey.threshold != null) {
         const kl =
             key.thresholdKey.keys != null

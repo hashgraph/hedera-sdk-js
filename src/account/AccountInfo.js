@@ -165,7 +165,7 @@ export default class AccountInfo {
      */
     static _fromProtobuf(info) {
         let aliasKey =
-            info.alias != null
+            info.alias != null && info.alias.length > 0
                 ? keyFromProtobuf(proto.Key.decode(info.alias))
                 : null;
 
