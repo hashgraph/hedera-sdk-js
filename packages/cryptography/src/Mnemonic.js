@@ -1,15 +1,17 @@
 import PrivateKey from "./PrivateKey.js";
+import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
 import BadMnemonicError from "./BadMnemonicError.js";
 import BadMnemonicReason from "./BadMnemonicReason.js";
 import legacyWords from "./words/legacy.js";
 import bip39Words from "./words/bip39.js";
+import nacl from "tweetnacl";
 import * as sha256 from "./primitive/sha256.js";
 import * as pbkdf2 from "./primitive/pbkdf2.js";
-import nacl from "tweetnacl";
 import * as hmac from "./primitive/hmac.js";
 import * as slip10 from "./primitive/slip10.js";
 import * as entropy from "./util/entropy.js";
 import * as random from "./primitive/random.js";
+// import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
 
 /**
  * Multi-word mnemonic phrase (BIP-39).
@@ -122,6 +124,27 @@ export default class Mnemonic {
 
         return await this._toPrivateKey(passphrase);
     }
+
+    // /**
+    //  * Recover an ecdsa private key from this mnemonic phrase, with an
+    //  * optional passphrase.
+    //  *
+    //  * @param {string} [passphrase]
+    //  * @returns {Promise<EcdsaPrivateKey>}
+    //  */
+    //      async toEcdsaPrivateKey(passphrase = "") {
+    //         if (this._isLegacy) {
+    //             if (passphrase.length > 0) {
+    //                 throw new Error(
+    //                     "legacy 22-word mnemonics do not support passphrases"
+    //                 );
+    //             }
+
+    //             return this.toLegacyPrivateKey();
+    //         }
+
+    //         return await this._toEcdsaPrivateKey(passphrase);
+    //     }
 
     /**
      * Recover a mnemonic phrase from a string, splitting on spaces. Handles 12, 22 (legacy), and 24 words.
@@ -285,7 +308,7 @@ export default class Mnemonic {
 
         const keyPair = nacl.sign.keyPair.fromSeed(keyData);
 
-        return new PrivateKey(keyPair, chainCode);
+        return new PrivateKey(new Ed25519PrivateKey(keyPair, chainCode));
     }
 
     /**

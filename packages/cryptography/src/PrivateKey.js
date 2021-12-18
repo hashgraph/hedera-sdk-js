@@ -1,18 +1,14 @@
-import nacl from "tweetnacl";
-import PublicKey from "./PublicKey.js";
 import Mnemonic from "./Mnemonic.js";
-import { arrayStartsWith } from "./util/array.js";
-import { createKeystore, loadKeystore } from "./primitive/keystore.js";
 import BadKeyError from "./BadKeyError.js";
-import * as hex from "./encoding/hex.js";
-import { read as readPem } from "./encoding/pem.js";
-import * as slip10 from "./primitive/slip10.js";
 import Key from "./Key.js";
-import * as random from "./primitive/random.js";
+import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
+import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
+import PublicKey from "./PublicKey.js";
+import { createKeystore, loadKeystore } from "./primitive/keystore.js";
+import { read as readPem } from "./encoding/pem.js";
+import * as hex from "./encoding/hex.js";
+import * as slip10 from "./primitive/slip10.js";
 import * as derive from "./util/derive.js";
-
-const derPrefix = "302e020100300506032b657004220420";
-const derPrefixBytes = hex.decode(derPrefix);
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -48,25 +44,17 @@ export default class PrivateKey extends Key {
     /**
      * @hideconstructor
      * @internal
-     * @param {nacl.SignKeyPair} keyPair
-     * @param {?Uint8Array} chainCode
+     * @param {Ed25519PrivateKey | EcdsaPrivateKey} key
      */
-    constructor(keyPair, chainCode) {
+    constructor(key) {
         super();
 
         /**
-         * @type {nacl.SignKeyPair}
+         * @type {Ed25519PrivateKey | EcdsaPrivateKey}
          * @readonly
          * @private
          */
-        this._keyPair = keyPair;
-
-        /**
-         * @type {?Uint8Array}
-         * @readonly
-         * @private
-         */
-        this._chainCode = chainCode;
+        this._key = key;
     }
 
     /**
@@ -74,15 +62,37 @@ export default class PrivateKey extends Key {
      *
      * @returns {PrivateKey}
      */
-    static generate() {
-        // 32 bytes for the secret key
-        // 32 bytes for the chain code (to support derivation)
-        const entropy = random.bytes(64);
+    static generateEd25519() {
+        return new PrivateKey(Ed25519PrivateKey.generate());
+    }
 
-        return new PrivateKey(
-            nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
-            entropy.subarray(32)
-        );
+    /**
+     * Generate a random EDSA private key.
+     *
+     * @returns {PrivateKey}
+     */
+    static generateECDSA() {
+        return new PrivateKey(EcdsaPrivateKey.generate());
+    }
+
+    /**
+     * Depredated - Use `generateEd25519()` instead
+     * Generate a random Ed25519 private key.
+     *
+     * @returns {PrivateKey}
+     */
+    static generate() {
+        return PrivateKey.generateEd25519();
+    }
+
+    /**
+     * Depredated - Use `generateEd25519Async()` instead
+     * Generate a random Ed25519 private key.
+     *
+     * @returns {Promise<PrivateKey>}
+     */
+    static async generateAsync() {
+        return PrivateKey.generateEd25519Async();
     }
 
     /**
@@ -90,47 +100,36 @@ export default class PrivateKey extends Key {
      *
      * @returns {Promise<PrivateKey>}
      */
-    static async generateAsync() {
-        // 32 bytes for the secret key
-        // 32 bytes for the chain code (to support derivation)
-        const entropy = await random.bytesAsync(64);
-
-        return new PrivateKey(
-            nacl.sign.keyPair.fromSeed(entropy.subarray(0, 32)),
-            entropy.subarray(32)
-        );
+    static async generateEd25519Async() {
+        return new PrivateKey(await Ed25519PrivateKey.generateAsync());
     }
 
     /**
-     * Construct a private key from bytes.
+     * Generate a random ECDSA private key.
+     *
+     * @returns {Promise<PrivateKey>}
+     */
+    static async generateEcdsaAsync() {
+        return new PrivateKey(await EcdsaPrivateKey.generateAsync());
+    }
+
+    /**
+     * Construct a private key from bytes. Requires DER header.
      *
      * @param {Uint8Array} data
      * @returns {PrivateKey}
      */
     static fromBytes(data) {
-        switch (data.length) {
-            case 48:
-                if (arrayStartsWith(data, derPrefixBytes)) {
-                    const keyPair = nacl.sign.keyPair.fromSeed(
-                        data.subarray(16)
-                    );
+        try {
+            return new PrivateKey(Ed25519PrivateKey.fromBytes(data));
+        } catch {
+            // Do nothing
+        }
 
-                    return new PrivateKey(keyPair, null);
-                }
-
-                break;
-
-            case 32:
-                return new PrivateKey(nacl.sign.keyPair.fromSeed(data), null);
-
-            case 64:
-                // priv + pub key
-                return new PrivateKey(
-                    nacl.sign.keyPair.fromSecretKey(data),
-                    null
-                );
-
-            default:
+        try {
+            return new PrivateKey(EcdsaPrivateKey.fromBytes(data));
+        } catch {
+            // Do nothing
         }
 
         throw new BadKeyError(
@@ -139,13 +138,53 @@ export default class PrivateKey extends Key {
     }
 
     /**
-     * Construct a private key from a hex-encoded string.
+     * Construct a ECDSA private key from bytes.
+     *
+     * @param {Uint8Array} data
+     * @returns {PrivateKey}
+     */
+    static fromBytesEcdsa(data) {
+        return new PrivateKey(EcdsaPrivateKey.fromBytes(data));
+    }
+
+    /**
+     * Construct a ED25519 private key from bytes.
+     *
+     * @param {Uint8Array} data
+     * @returns {PrivateKey}
+     */
+    static fromBytesEd25519(data) {
+        return new PrivateKey(Ed25519PrivateKey.fromBytes(data));
+    }
+
+    /**
+     * Construct a private key from a hex-encoded string. Requires DER header.
      *
      * @param {string} text
      * @returns {PrivateKey}
      */
     static fromString(text) {
         return PrivateKey.fromBytes(hex.decode(text));
+    }
+
+    /**
+     * Construct a ECDSA private key from a hex-encoded string.
+     *
+     * @param {string} text
+     * @returns {PrivateKey}
+     */
+    static fromStringEcdsa(text) {
+        return PrivateKey.fromBytesEcdsa(hex.decode(text));
+    }
+
+    /**
+     * Construct a Ed25519 private key from a hex-encoded string.
+     *
+     * @param {string} text
+     * @returns {PrivateKey}
+     */
+    static fromStringEd25519(text) {
+        return PrivateKey.fromBytesEd25519(hex.decode(text));
     }
 
     /**
@@ -191,7 +230,16 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async fromPem(data, passphrase = "") {
-        return new PrivateKey(await readPem(data, passphrase), null);
+        const pem = await readPem(data, passphrase);
+
+        if (
+            pem instanceof Ed25519PrivateKey ||
+            pem instanceof EcdsaPrivateKey
+        ) {
+            return new PrivateKey(pem);
+        }
+
+        return PrivateKey.fromBytes(pem);
     }
 
     /**
@@ -207,19 +255,22 @@ export default class PrivateKey extends Key {
      * @throws If this key does not support derivation.
      */
     async derive(index) {
-        if (this._chainCode == null) {
+        // return new PrivateKey(await this._key.derive(index));
+        if (this._key._chainCode == null) {
             throw new Error("this private key does not support key derivation");
         }
 
         const { keyData, chainCode } = await slip10.derive(
-            this.toBytes(),
-            this._chainCode,
+            this.toBytesRaw(),
+            this._key._chainCode,
             index
         );
 
-        const keyPair = nacl.sign.keyPair.fromSeed(keyData);
+        /** @type {new (bytes: Uint8Array, chainCode?: Uint8Array) => Ed25519PrivateKey | EcdsaPrivateKey} */
+        const constructor = /** @type {any} */ (this._key.constructor);
 
-        return new PrivateKey(keyPair, chainCode);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        return new PrivateKey(new constructor(keyData, chainCode));
     }
 
     /**
@@ -229,11 +280,15 @@ export default class PrivateKey extends Key {
      */
     async legacyDerive(index) {
         const keyBytes = await derive.legacy(
-            this.toBytes().subarray(0, 32),
+            this.toBytesRaw().subarray(0, 32),
             index
         );
 
-        return PrivateKey.fromBytes(keyBytes);
+        /** @type {new (bytes: Uint8Array) => Ed25519PrivateKey | EcdsaPrivateKey} */
+        const constructor = /** @type {any} */ (this._key.constructor);
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        return new PrivateKey(new constructor(keyBytes));
     }
 
     /**
@@ -245,7 +300,7 @@ export default class PrivateKey extends Key {
      * @returns {PublicKey}
      */
     get publicKey() {
-        return new PublicKey(this._keyPair.publicKey);
+        return new PublicKey(this._key.publicKey);
     }
 
     /**
@@ -255,7 +310,7 @@ export default class PrivateKey extends Key {
      * @returns {Uint8Array} - The signature bytes without the message
      */
     sign(bytes) {
-        return nacl.sign.detached(bytes, this._keyPair.secretKey);
+        return this._key.sign(bytes);
     }
 
     /**
@@ -320,22 +375,49 @@ export default class PrivateKey extends Key {
      * @returns {boolean}
      */
     isDerivable() {
-        return this._chainCode != null;
+        return this._key._chainCode != null;
     }
 
     /**
      * @returns {Uint8Array}
      */
     toBytes() {
-        // copy the bytes so they can't be modified accidentally
-        return this._keyPair.secretKey.slice(0, 32);
+        return this.toBytesDer();
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytesDer() {
+        return this._key.toBytesDer();
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytesRaw() {
+        return this._key.toBytesRaw();
     }
 
     /**
      * @returns {string}
      */
     toString() {
-        return derPrefix + hex.encode(this.toBytes());
+        return this.toStringDer();
+    }
+
+    /**
+     * @returns {string}
+     */
+    toStringDer() {
+        return hex.encode(this.toBytesDer());
+    }
+
+    /**
+     * @returns {string}
+     */
+    toStringRaw() {
+        return hex.encode(this.toBytesRaw());
     }
 
     /**
@@ -351,6 +433,6 @@ export default class PrivateKey extends Key {
      * @returns {Promise<Uint8Array>}
      */
     toKeystore(passphrase = "") {
-        return createKeystore(this.toBytes(), passphrase);
+        return createKeystore(this.toBytesRaw(), passphrase);
     }
 }

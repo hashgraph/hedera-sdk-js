@@ -50,7 +50,7 @@
         "src/"
     ],
     "engines": {
-        "node": ">=10.0.0"
+        "node": ">=12.0.0"
     },
     "browserslist": [
         "last 1 Chrome versions",
@@ -67,13 +67,14 @@
         "prepare": "run-s compile lint:types",
         "test": "run-s test:node test:browser:chrome test:browser:firefox",
         "test:node": "env HEDERA_SDK_TEST='' mocha -r @babel/register -r chai/register-expect 'test/unit/**/*.js'",
-        "test:browser:chrome": "vite serve --port 9001 test/ & sleep 2; mocha-webdriver-runner --headless-chrome http://localhost:9001/; kill %1",
-        "test:browser:firefox": "vite serve --port 9002 test/ & sleep 2; mocha-webdriver-runner --headless-firefox http://localhost:9002/; kill %1",
-        "test:browser:safari": "vite serve --port 9003 test/ & sleep 2; mocha-webdriver-runner --safari http://localhost:9003/; kill %1"
+        "test:browser:chrome": "vite -c vite.config.cjs serve --port 9001 test/ & sleep 10; mocha-webdriver-runner --headless-chrome http://localhost:9001/index.html",
+        "test:browser:firefox": "vite -c vite.config.cjs serve --port 9002 test/ & sleep 10; mocha-webdriver-runner --headless-firefox http://localhost:9002/index.html",
+        "test:browser:safari": "vite -c vite.config.cjs serve --port 9003 test/ & sleep 10; mocha-webdriver-runner --safari http://localhost:9003/unit.html"
     },
     "dependencies": {
         "bignumber.js": "^9.0.1",
         "crypto-js": "^4.0.0",
+        "elliptic": "^6.5.4",
         "expo-crypto": "^9.2.0",
         "expo-random": "^11.2.0",
         "js-base64": "^3.6.1",
@@ -83,17 +84,18 @@
     "devDependencies": {
         "@babel/cli": "^7.14.5",
         "@babel/core": "^7.14.6",
+        "@babel/eslint-parser": "^7.16.3",
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@babel/plugin-transform-modules-commonjs": "^7.14.5",
+        "@types/crypto-js": "^4.0.2",
+        "@types/elliptic": "^6.4.14",
+        "@types/utf8": "^3.0.0",
         "@typescript-eslint/eslint-plugin": "^4.28.2",
         "@typescript-eslint/parser": "^4.28.2",
-        "@types/crypto-js": "^4.0.2",
-        "@types/utf8": "^3.0.0",
-        "babel-eslint": "^10.1.0",
         "babel-plugin-dynamic-import-node": "^2.3.3",
         "babel-plugin-module-rewrite": "^0.2.0",
         "chai": "^4.3.4",
-        "chromedriver": "^91.0.1",
+        "chromedriver": "^96.0.0",
         "eslint": "^7.30.0",
         "eslint-plugin-chai-expect": "^2.2.0",
         "eslint-plugin-compat": "^3.9.0",
@@ -104,12 +106,12 @@
         "eslint-plugin-mocha": "^9.0.0",
         "eslint-plugin-node": "^11.1.0",
         "geckodriver": "^2.0.1",
-        "mocha": "^9.0.2",
+        "mocha": "^9.1.3",
         "mocha-webdriver-runner": "^0.6.3",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.3.2",
         "serve": "^12.0.0",
         "typescript": "^4.3.5",
-        "vite": "^1.0.0-rc.13"
+        "vite": "^2.6.14"
     }
 }

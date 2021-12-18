@@ -1,6 +1,6 @@
 import { EncryptedPrivateKeyInfo } from "../../../src/primitive/pkcs.js";
-import * as der from "../../../src/encoding/der.js";
 import PrivateKey from "../../../src/PrivateKey.js";
+import * as der from "../../../src/encoding/der.js";
 import * as base64 from "../../../src/encoding/base64.js";
 import * as hex from "../../../src/encoding/hex.js";
 

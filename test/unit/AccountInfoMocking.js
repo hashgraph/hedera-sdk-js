@@ -28,6 +28,7 @@ const ACCOUNT_INFO_QUERY_RESPONSE = {
                 seconds: Long.fromNumber(10),
                 nanos: 9,
             },
+            alias: null,
         },
     },
 };
