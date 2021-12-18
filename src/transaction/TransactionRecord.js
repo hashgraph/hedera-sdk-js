@@ -287,7 +287,7 @@ export default class TransactionRecord {
         );
 
         let aliasKey =
-            record.alias != null
+            record.alias != null && record.alias.length > 0
                 ? keyFromProtobuf(proto.Key.decode(record.alias))
                 : null;
 

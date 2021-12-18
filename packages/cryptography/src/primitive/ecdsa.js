@@ -1,0 +1,80 @@
+import { keccak256 } from "./keccak.js";
+import * as hex from "../encoding/hex.js";
+import elliptic from "elliptic";
+
+const secp256k1 = new elliptic.ec("secp256k1");
+
+/**
+ * @typedef {import("../EcdsaPrivateKey.js").KeyPair} KeyPair
+ */
+
+/**
+ * @returns {KeyPair}
+ */
+export function generate() {
+    const keypair = secp256k1.genKeyPair();
+
+    return {
+        privateKey: hex.decode(keypair.getPrivate("hex")),
+        publicKey: hex.decode(keypair.getPublic("hex")),
+    };
+}
+
+/**
+ * @returns {Promise<KeyPair>}
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function generateAsync() {
+    return Promise.resolve(generate());
+}
+
+/**
+ * @param {Uint8Array} data
+ * @returns {KeyPair}
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function fromBytes(data) {
+    const keypair = secp256k1.keyFromPrivate(data);
+
+    return {
+        privateKey: hex.decode(keypair.getPrivate("hex")),
+        publicKey: hex.decode(keypair.getPublic("hex")),
+    };
+}
+
+/**
+ * @param {Uint8Array} keydata
+ * @param {Uint8Array} message
+ * @returns {Uint8Array}
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function sign(keydata, message) {
+    const data = keccak256(message);
+    const keypair = secp256k1.keyFromPrivate(keydata);
+    const signature = keypair.sign(data);
+
+    const r = signature.r.toArray("be", 32);
+    const s = signature.s.toArray("be", 32);
+
+    const result = new Uint8Array(64);
+    result.set(r, 0);
+    result.set(s, 32);
+    return result;
+}
+
+/**
+ * @param {Uint8Array} keydata
+ * @param {Uint8Array} message
+ * @param {Uint8Array} signature
+ * @returns {boolean}
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function verify(keydata, message, signature) {
+    const data = keccak256(message);
+    const keypair = secp256k1.keyFromPublic(keydata);
+
+    return keypair.verify(data, {
+        r: signature.subarray(0, 32),
+        s: signature.subarray(32, 64),
+    });
+}

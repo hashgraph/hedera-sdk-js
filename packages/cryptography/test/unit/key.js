@@ -154,28 +154,30 @@ describe("PrivateKey", function () {
     });
 
     it("should produce same publicKey", function () {
-        expect(privateKey.publicKey.toBytes()).to.deep.equal(pubKeyBytes);
+        expect(privateKey.publicKey.toBytesRaw()).to.deep.equal(pubKeyBytes);
     });
 
     it("should return correct value when using fromString", function () {
         const privateKey = PrivateKey.fromString(privKeyStr);
-        expect(privateKey.toBytes()).to.deep.equal(privKeyBytes);
+        expect(privateKey.toBytesRaw()).to.deep.equal(privKeyBytes);
 
         const privateKey2 = PrivateKey.fromString(privAndPubKeyStr);
-        expect(privateKey2.toBytes()).to.deep.equal(privKeyBytes);
+        expect(privateKey2.toBytesRaw()).to.deep.equal(privKeyBytes);
 
         const privateKey3 = PrivateKey.fromString(rawPrivKeyStr);
-        expect(privateKey3.toBytes()).to.deep.equal(privKeyBytes);
+        expect(privateKey3.toBytesRaw()).to.deep.equal(privKeyBytes);
 
         const privateKey4 = PrivateKey.fromString(iosWalletPrivKey);
-        expect(privateKey4.toBytes()).to.deep.equal(iosWalletPrivKeyBytes);
-        expect(privateKey4.publicKey.toBytes()).to.deep.equal(
+        expect(privateKey4.toBytesRaw()).to.deep.equal(iosWalletPrivKeyBytes);
+        expect(privateKey4.publicKey.toBytesRaw()).to.deep.equal(
             iosWalletPubKeyBytes
         );
 
         const privateKey5 = PrivateKey.fromString(androidWalletPrivKey);
-        expect(privateKey5.toBytes()).to.deep.equal(androidWalletPrivKeyBytes);
-        expect(privateKey5.publicKey.toBytes()).to.deep.equal(
+        expect(privateKey5.toBytesRaw()).to.deep.equal(
+            androidWalletPrivKeyBytes
+        );
+        expect(privateKey5.publicKey.toBytesRaw()).to.deep.equal(
             androidWalletPubKeyBytes
         );
     });
@@ -214,8 +216,8 @@ describe("PrivateKey", function () {
         const iosKey = await PrivateKey.fromMnemonic(iosMnemonic, "");
         const iosChildKey = await iosKey.derive(0);
 
-        expect(iosChildKey.toBytes()).to.deep.equal(iosWalletPrivKeyBytes);
-        expect(iosChildKey.publicKey.toBytes()).to.deep.equal(
+        expect(iosChildKey.toBytesRaw()).to.deep.equal(iosWalletPrivKeyBytes);
+        expect(iosChildKey.publicKey.toBytesRaw()).to.deep.equal(
             iosWalletPubKeyBytes
         );
 
@@ -225,10 +227,10 @@ describe("PrivateKey", function () {
         const androidKey = await PrivateKey.fromMnemonic(androidMnemonic, "");
         const androidChildKey = await androidKey.derive(0);
 
-        expect(androidChildKey.toBytes()).to.deep.equal(
+        expect(androidChildKey.toBytesRaw()).to.deep.equal(
             androidWalletPrivKeyBytes
         );
-        expect(androidChildKey.publicKey.toBytes()).to.deep.equal(
+        expect(androidChildKey.publicKey.toBytesRaw()).to.deep.equal(
             androidWalletPubKeyBytes
         );
     });
