@@ -78,6 +78,10 @@ export function keyFromProtobuf(key) {
         return ContractId._fromProtobuf(key.contractID);
     }
 
+    if (key.delegatableContractId != null) {
+        return ContractId._fromProtobuf(key.delegatableContractId);
+    }
+
     if (key.ed25519 != null && key.ed25519.byteLength > 0) {
         return PublicKey.fromBytes(key.ed25519);
     }

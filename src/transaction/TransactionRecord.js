@@ -10,8 +10,12 @@ import * as proto from "@hashgraph/proto";
 import ScheduleId from "../schedule/ScheduleId.js";
 import AssessedCustomFee from "../token/AssessedCustomFee.js";
 import TokenAssocation from "../token/TokenAssociation.js";
+import { keyToProtobuf, keyFromProtobuf } from "../cryptography/protobuf.js";
+import { KeyList } from "@hashgraph/cryptography";
+import ContractId from "../contract/ContractId.js";
 
 /**
+ * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
  * @typedef {import("../token/TokenId.js").default} TokenId
  */
 
@@ -36,6 +40,7 @@ export default class TransactionRecord {
      * @param {TokenNftTransferMap} props.nftTransfers
      * @param {TokenAssocation[]} props.automaticTokenAssociations
      * @param {Timestamp} props.parentConsensusTimestamp
+     * @param {PublicKey | null} props.aliasKey
      * @param {TransactionRecord[]} props.duplicates
      * @param {TransactionRecord[]} props.children
      */
@@ -142,6 +147,8 @@ export default class TransactionRecord {
          * @readonly
          */
         this.parentConsensusTimestamp = props.parentConsensusTimestamp;
+
+        this.aliasKey = props.aliasKey;
 
         /**
          * @readonly
@@ -259,6 +266,12 @@ export default class TransactionRecord {
                     this.parentConsensusTimestamp != null
                         ? this.parentConsensusTimestamp._toProtobuf()
                         : null,
+                alias:
+                    this.aliasKey != null
+                        ? proto.Key.encode(
+                              keyToProtobuf(this.aliasKey)
+                          ).finish()
+                        : null,
             },
         };
     }
@@ -272,6 +285,15 @@ export default class TransactionRecord {
         const record = /** @type {proto.ITransactionRecord} */ (
             response.transactionRecord
         );
+
+        let aliasKey =
+            record.alias != null
+                ? keyFromProtobuf(proto.Key.decode(record.alias))
+                : null;
+
+        if (aliasKey instanceof KeyList || aliasKey instanceof ContractId) {
+            aliasKey = null;
+        }
 
         const children =
             response.childTransactionRecords != null
@@ -361,6 +383,7 @@ export default class TransactionRecord {
                     record.parentConsensusTimestamp
                 )
             ),
+            aliasKey,
             duplicates,
             children,
         });

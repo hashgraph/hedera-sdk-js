@@ -63,11 +63,11 @@ export default class TransactionRecordQuery extends Query {
         }
 
         if (props.includeChildren != null) {
-            this.setIncludeChildRecords(props.includeChildren);
+            this.setIncludeChildren(props.includeChildren);
         }
 
         if (props.includeDuplicates != null) {
-            this.setDuplicates(props.includeDuplicates);
+            this.setIncludeDuplicates(props.includeDuplicates);
         }
     }
 
@@ -122,7 +122,7 @@ export default class TransactionRecordQuery extends Query {
      * @param {boolean} includeChildren
      * @returns {TransactionRecordQuery}
      */
-    setIncludeChildRecords(includeChildren) {
+    setIncludeChildren(includeChildren) {
         this._includeChildren = includeChildren;
         return this;
     }
@@ -138,7 +138,7 @@ export default class TransactionRecordQuery extends Query {
      * @param {boolean} includeDuplicates
      * @returns {TransactionRecordQuery}
      */
-    setDuplicates(includeDuplicates) {
+    setIncludeDuplicates(includeDuplicates) {
         this._duplicates = includeDuplicates;
         return this;
     }
@@ -146,7 +146,7 @@ export default class TransactionRecordQuery extends Query {
     /**
      * @returns {boolean}
      */
-    get duplicates() {
+    get includeDuplicates() {
         return this._duplicates != null ? this._duplicates : false;
     }
 
