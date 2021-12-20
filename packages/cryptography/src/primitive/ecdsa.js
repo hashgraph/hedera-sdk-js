@@ -16,7 +16,7 @@ export function generate() {
 
     return {
         privateKey: hex.decode(keypair.getPrivate("hex")),
-        publicKey: hex.decode(keypair.getPublic("hex")),
+        publicKey: hex.decode(keypair.getPublic(true, "hex")),
     };
 }
 
@@ -38,7 +38,7 @@ export function fromBytes(data) {
 
     return {
         privateKey: hex.decode(keypair.getPrivate("hex")),
-        publicKey: hex.decode(keypair.getPublic("hex")),
+        publicKey: hex.decode(keypair.getPublic(true, "hex")),
     };
 }
 
