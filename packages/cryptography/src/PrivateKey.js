@@ -62,7 +62,7 @@ export default class PrivateKey extends Key {
      *
      * @returns {PrivateKey}
      */
-    static generateEd25519() {
+    static generateED25519() {
         return new PrivateKey(Ed25519PrivateKey.generate());
     }
 
@@ -82,7 +82,7 @@ export default class PrivateKey extends Key {
      * @returns {PrivateKey}
      */
     static generate() {
-        return PrivateKey.generateEd25519();
+        return PrivateKey.generateED25519();
     }
 
     /**
@@ -92,7 +92,7 @@ export default class PrivateKey extends Key {
      * @returns {Promise<PrivateKey>}
      */
     static async generateAsync() {
-        return PrivateKey.generateEd25519Async();
+        return PrivateKey.generateED25519Async();
     }
 
     /**
@@ -100,7 +100,7 @@ export default class PrivateKey extends Key {
      *
      * @returns {Promise<PrivateKey>}
      */
-    static async generateEd25519Async() {
+    static async generateED25519Async() {
         return new PrivateKey(await Ed25519PrivateKey.generateAsync());
     }
 
@@ -109,7 +109,7 @@ export default class PrivateKey extends Key {
      *
      * @returns {Promise<PrivateKey>}
      */
-    static async generateEcdsaAsync() {
+    static async generateECDSAAsync() {
         return new PrivateKey(await EcdsaPrivateKey.generateAsync());
     }
 
@@ -143,7 +143,7 @@ export default class PrivateKey extends Key {
      * @param {Uint8Array} data
      * @returns {PrivateKey}
      */
-    static fromBytesEcdsa(data) {
+    static fromBytesECDSA(data) {
         return new PrivateKey(EcdsaPrivateKey.fromBytes(data));
     }
 
@@ -153,7 +153,7 @@ export default class PrivateKey extends Key {
      * @param {Uint8Array} data
      * @returns {PrivateKey}
      */
-    static fromBytesEd25519(data) {
+    static fromBytesED25519(data) {
         return new PrivateKey(Ed25519PrivateKey.fromBytes(data));
     }
 
@@ -173,8 +173,8 @@ export default class PrivateKey extends Key {
      * @param {string} text
      * @returns {PrivateKey}
      */
-    static fromStringEcdsa(text) {
-        return PrivateKey.fromBytesEcdsa(hex.decode(text));
+    static fromStringECDSA(text) {
+        return PrivateKey.fromBytesECDSA(hex.decode(text));
     }
 
     /**
@@ -183,8 +183,8 @@ export default class PrivateKey extends Key {
      * @param {string} text
      * @returns {PrivateKey}
      */
-    static fromStringEd25519(text) {
-        return PrivateKey.fromBytesEd25519(hex.decode(text));
+    static fromStringED25519(text) {
+        return PrivateKey.fromBytesED25519(hex.decode(text));
     }
 
     /**
