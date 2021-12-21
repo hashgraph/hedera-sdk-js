@@ -17,7 +17,7 @@ describe("TokenAssociate", function () {
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)

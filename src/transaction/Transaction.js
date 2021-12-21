@@ -19,6 +19,7 @@ import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
 import { arrayEqual } from "../array.js";
 import { PublicKey } from "@hashgraph/cryptography";
+import { keyToSignatureProtobuf } from "../cryptography/protobuf.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -27,6 +28,7 @@ import { PublicKey } from "@hashgraph/cryptography";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignaturePair} proto.ISignaturePair
  * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").ITransactionList} proto.ITransactionList
  * @typedef {import("@hashgraph/proto").ITransactionID} proto.ITransactionID
@@ -468,7 +470,7 @@ export default class Transaction extends Executable {
     async signWith(publicKey, transactionSigner) {
         this._requireFrozen();
 
-        const publicKeyData = publicKey.toBytes();
+        const publicKeyData = publicKey.toBytesRaw();
 
         // note: this omits the DER prefix on purpose because Hedera doesn't
         // support that in the protobuf. this means that we would fail
@@ -505,10 +507,9 @@ export default class Transaction extends Executable {
                 signedTransaction.sigMap.sigPair = [];
             }
 
-            signedTransaction.sigMap.sigPair.push({
-                pubKeyPrefix: publicKeyData,
-                ed25519: signature,
-            });
+            signedTransaction.sigMap.sigPair.push(
+                keyToSignatureProtobuf(publicKey, signature)
+            );
         }
 
         return this;
@@ -553,7 +554,7 @@ export default class Transaction extends Executable {
         if (!this.isFrozen()) {
             this.freeze();
         }
-        const publicKeyData = publicKey.toBytes();
+        const publicKeyData = publicKey.toBytesRaw();
         const publicKeyHex = hex.encode(publicKeyData);
 
         if (this._signerPublicKeys.has(publicKeyHex)) {
@@ -572,10 +573,9 @@ export default class Transaction extends Executable {
                 transaction.sigMap.sigPair = [];
             }
 
-            transaction.sigMap.sigPair.push({
-                pubKeyPrefix: publicKeyData,
-                ed25519: signature,
-            });
+            transaction.sigMap.sigPair.push(
+                keyToSignatureProtobuf(publicKey, signature)
+            );
         }
 
         this._signerPublicKeys.add(publicKeyHex);
@@ -829,7 +829,7 @@ export default class Transaction extends Executable {
                     signer != null &&
                     arrayEqual(
                         signedTransaction.sigMap.sigPair[0].pubKeyPrefix,
-                        publicKey.toBytes()
+                        publicKey.toBytesRaw()
                     )
                 ) {
                     return;
@@ -855,10 +855,9 @@ export default class Transaction extends Executable {
                 signedTransaction.sigMap.sigPair = [];
             }
 
-            signedTransaction.sigMap.sigPair.push({
-                pubKeyPrefix: publicKey.toBytes(),
-                ed25519: signature,
-            });
+            signedTransaction.sigMap.sigPair.push(
+                keyToSignatureProtobuf(publicKey, signature)
+            );
         }
     }
 

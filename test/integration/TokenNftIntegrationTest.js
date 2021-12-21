@@ -21,7 +21,7 @@ describe("TokenNft", function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (
@@ -123,7 +123,7 @@ describe("TokenNft", function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (
@@ -224,7 +224,7 @@ describe("TokenNft", function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (
@@ -401,7 +401,7 @@ describe("TokenNft", function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (
@@ -476,7 +476,7 @@ describe("TokenNft", function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (
@@ -543,7 +543,7 @@ describe("TokenNft", function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (
@@ -659,7 +659,7 @@ describe("TokenNft", function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (

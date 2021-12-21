@@ -22,7 +22,7 @@ const ACCOUNT_INFO_QUERY_RESPONSE = {
                 accountNum: Long.fromNumber(10),
             },
             key: {
-                ed25519: PRIVATE_KEY.publicKey.toBytes(),
+                ed25519: PRIVATE_KEY.publicKey.toBytesRaw(),
             },
             expirationTime: {
                 seconds: Long.fromNumber(10),

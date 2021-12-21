@@ -17,12 +17,12 @@ describe("TransactionReceipt", function () {
         const operatorKey = env.operatorKey.publicKey;
         const operatorId = env.operatorId;
 
-        const key1 = PrivateKey.generate();
+        const key1 = PrivateKey.generateED25519();
 
         // Submit Key
-        const key2 = PrivateKey.generate();
+        const key2 = PrivateKey.generateED25519();
 
-        const key3 = PrivateKey.generate();
+        const key3 = PrivateKey.generateED25519();
 
         const keyList = KeyList.of(
             key1.publicKey,

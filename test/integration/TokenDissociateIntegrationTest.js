@@ -23,7 +23,7 @@ describe("TokenDissociate", function () {
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
@@ -165,7 +165,7 @@ describe("TokenDissociate", function () {
 
         const env = await IntegrationTestEnv.new({ throwaway: true });
 
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (

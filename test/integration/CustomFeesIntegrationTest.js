@@ -311,7 +311,7 @@ describe("CustomFees", function () {
 
         const env = await IntegrationTestEnv.new();
 
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (
@@ -551,7 +551,7 @@ describe("CustomFees", function () {
 
         const env = await IntegrationTestEnv.new();
 
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (
@@ -650,7 +650,7 @@ describe("CustomFees", function () {
 
         const env = await IntegrationTestEnv.new();
 
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (
@@ -786,7 +786,7 @@ describe("CustomFees", function () {
 
         const env = await IntegrationTestEnv.new();
 
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const accountId = (
             await (
@@ -1045,7 +1045,7 @@ describe("CustomFees", function () {
 
         let err = false;
 
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account1 = (
             await (
@@ -1196,7 +1196,7 @@ describe("CustomFees", function () {
 
         let err = false;
 
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account1 = (
             await (

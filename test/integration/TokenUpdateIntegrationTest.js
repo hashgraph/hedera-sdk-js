@@ -21,10 +21,10 @@ describe("TokenUpdate", function () {
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
-        const key1 = PrivateKey.generate();
-        const key2 = PrivateKey.generate();
-        const key3 = PrivateKey.generate();
-        const key4 = PrivateKey.generate();
+        const key1 = PrivateKey.generateED25519();
+        const key2 = PrivateKey.generateED25519();
+        const key3 = PrivateKey.generateED25519();
+        const key4 = PrivateKey.generateED25519();
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
@@ -113,11 +113,11 @@ describe("TokenUpdate", function () {
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
-        const key1 = PrivateKey.generate();
-        const key2 = PrivateKey.generate();
-        const key3 = PrivateKey.generate();
-        const key4 = PrivateKey.generate();
-        const key5 = PrivateKey.generate();
+        const key1 = PrivateKey.generateED25519();
+        const key2 = PrivateKey.generateED25519();
+        const key3 = PrivateKey.generateED25519();
+        const key4 = PrivateKey.generateED25519();
+        const key5 = PrivateKey.generateED25519();
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
@@ -231,10 +231,10 @@ describe("TokenUpdate", function () {
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
-        const key1 = PrivateKey.generate();
-        const key2 = PrivateKey.generate();
-        const key3 = PrivateKey.generate();
-        const key4 = PrivateKey.generate();
+        const key1 = PrivateKey.generateED25519();
+        const key2 = PrivateKey.generateED25519();
+        const key3 = PrivateKey.generateED25519();
+        const key4 = PrivateKey.generateED25519();
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")
@@ -346,7 +346,7 @@ describe("TokenUpdate", function () {
 
         const env = await IntegrationTestEnv.new({ throwaway: true });
         const operatorId = env.operatorId;
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const response = await (
             await new TokenCreateTransaction()
@@ -387,7 +387,7 @@ describe("TokenUpdate", function () {
 
         const env = await IntegrationTestEnv.new({ throwaway: true });
 
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const account = (
             await (
