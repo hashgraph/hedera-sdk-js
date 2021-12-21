@@ -442,6 +442,17 @@ export default class TokenUpdateTransaction extends Transaction {
     }
 
     /**
+     * @param {Key} key
+     * @returns {this}
+     */
+    setsupplyKey(key) {
+        this._requireNotFrozen();
+        this._supplyKey = key;
+
+        return this;
+    }
+
+    /**
      * @returns {?Timestamp}
      */
     get expirationTime() {
