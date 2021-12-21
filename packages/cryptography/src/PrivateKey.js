@@ -14,6 +14,7 @@ import * as derive from "./util/derive.js";
  * @typedef {object} ProtoSignaturePair
  * @property {(Uint8Array | null)=} pubKeyPrefix
  * @property {(Uint8Array | null)=} ed25519
+ * @property {(Uint8Array | null)=} ECDSASecp256k1
  */
 
 /**
@@ -334,7 +335,7 @@ export default class PrivateKey extends Key {
             transaction._signedTransactions[0]
         );
 
-        const publicKeyHex = hex.encode(this.publicKey.toBytes());
+        const publicKeyHex = hex.encode(this.publicKey.toBytesRaw());
 
         if (tx.sigMap == null) {
             tx.sigMap = {};
@@ -357,11 +358,18 @@ export default class PrivateKey extends Key {
             tx.bodyBytes != null ? tx.bodyBytes : new Uint8Array()
         );
 
-        tx.sigMap.sigPair.push({
-            pubKeyPrefix: this.publicKey.toBytes(),
-            ed25519: siganture,
-        });
+        /** @type {ProtoSignaturePair} */
+        const protoSignature = {
+            pubKeyPrefix: this.publicKey.toBytesRaw(),
+        };
 
+        if (this._key instanceof Ed25519PrivateKey) {
+            protoSignature.ed25519 = siganture;
+        } else {
+            protoSignature.ECDSASecp256k1 = siganture;
+        }
+
+        tx.sigMap.sigPair.push(protoSignature);
         transaction._signerPublicKeys.add(publicKeyHex);
 
         return siganture;
@@ -382,7 +390,11 @@ export default class PrivateKey extends Key {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return this.toBytesDer();
+        if (this._key instanceof Ed25519PrivateKey) {
+            return this.toBytesRaw();
+        } else {
+            return this.toBytesDer();
+        }
     }
 
     /**
