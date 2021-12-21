@@ -117,8 +117,8 @@ export default class PublicKey extends Key {
                         const bodyBytes = /** @type {Uint8Array} */ (
                             signedTransaction.bodyBytes
                         );
-                        const signature = /** @type {Uint8Array} */ (
-                            sigPair.ed25519
+                        const signature = sigPair.ed25519 != null ? sigPair.ed25519 : /** @type {Uint8Array} */ (
+                            sigPair.ECDSASecp256k1
                         );
                         if (this.verify(bodyBytes, signature)) {
                             return false;
