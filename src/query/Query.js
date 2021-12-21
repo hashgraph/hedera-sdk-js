@@ -128,6 +128,10 @@ export default class Query extends Executable {
      * @returns {Promise<Hbar>}
      */
     getCost(client) {
+        if (this._nodeIds.length == 0) {
+            this._nodeIds = client._network.getNodeAccountIdsForExecute();
+        }
+
         if (COST_QUERY.length != 1) {
             throw new Error("CostQuery has not been loaded yet");
         }

@@ -39,7 +39,7 @@ export default class TransactionRecord {
      * @param {AssessedCustomFee[]} props.assessedCustomFees
      * @param {TokenNftTransferMap} props.nftTransfers
      * @param {TokenAssocation[]} props.automaticTokenAssociations
-     * @param {Timestamp} props.parentConsensusTimestamp
+     * @param {Timestamp | null} props.parentConsensusTimestamp
      * @param {PublicKey | null} props.aliasKey
      * @param {TransactionRecord[]} props.duplicates
      * @param {TransactionRecord[]} props.children
@@ -378,11 +378,10 @@ export default class TransactionRecord {
                           TokenAssocation._fromProtobuf(association)
                       )
                     : [],
-            parentConsensusTimestamp: Timestamp._fromProtobuf(
-                /** @type {proto.ITimestamp} */ (
-                    record.parentConsensusTimestamp
-                )
-            ),
+            parentConsensusTimestamp:
+                record.parentConsensusTimestamp != null
+                    ? Timestamp._fromProtobuf(record.parentConsensusTimestamp)
+                    : null,
             aliasKey,
             duplicates,
             children,
