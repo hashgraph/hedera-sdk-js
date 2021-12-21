@@ -167,7 +167,7 @@ export default class TokenUpdateTransaction extends Transaction {
         }
 
         if (props.supplyKey != null) {
-            this.setsupplyKey(props.supplyKey);
+            this.setSupplyKey(props.supplyKey);
         }
 
         if (props.autoRenewAccountId != null) {
@@ -434,7 +434,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {Key} key
      * @returns {this}
      */
-    setsupplyKey(key) {
+    setSupplyKey(key) {
         this._requireNotFrozen();
         this._supplyKey = key;
 
