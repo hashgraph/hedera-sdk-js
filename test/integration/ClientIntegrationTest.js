@@ -63,7 +63,7 @@ describe("ClientIntegration", function () {
         env.client.setSignOnDemand(true);
 
         const operatorId = env.operatorId;
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
@@ -107,7 +107,7 @@ describe("ClientIntegration", function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const bytes = (
             await new AccountCreateTransaction()

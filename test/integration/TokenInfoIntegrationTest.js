@@ -13,10 +13,10 @@ describe("TokenInfo", function () {
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
-        const key1 = PrivateKey.generate();
-        const key2 = PrivateKey.generate();
-        const key3 = PrivateKey.generate();
-        const key4 = PrivateKey.generate();
+        const key1 = PrivateKey.generateED25519();
+        const key2 = PrivateKey.generateED25519();
+        const key3 = PrivateKey.generateED25519();
+        const key4 = PrivateKey.generateED25519();
 
         const response = await new TokenCreateTransaction()
             .setTokenName("ffff")

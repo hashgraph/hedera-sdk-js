@@ -25,7 +25,7 @@ describe("LiveHash", function () {
         const operatorId = env.operatorId;
         let errorThrown = false;
 
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)

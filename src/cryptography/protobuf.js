@@ -4,6 +4,7 @@ import ContractId from "../contract/ContractId.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").IKey} proto.IKey
+ * @typedef {import("@hashgraph/proto").ISignaturePair} proto.ISignaturePair
  * @typedef {import("@hashgraph/proto").IKeyList} proto.IKeyList
  * @typedef {import("@hashgraph/proto").IThresholdKey} proto.IThresholdKey
  */
@@ -11,6 +12,26 @@ import ContractId from "../contract/ContractId.js";
 /**
  * @typedef {import("@hashgraph/cryptography").Key} Key
  */
+
+/**
+ * @param {PublicKey} publicKey
+ * @param {Uint8Array} signature
+ * @returns {proto.ISignaturePair}
+ */
+export function keyToSignatureProtobuf(publicKey, signature) {
+    /** @type {proto.ISignaturePair} */
+    const protoSignature = {
+        pubKeyPrefix: publicKey.toBytesRaw(),
+    };
+
+    if (publicKey.toStringDer().startsWith("302a300506032b6570032100")) {
+        protoSignature.ed25519 = signature;
+    } else {
+        protoSignature.ECDSASecp256k1 = signature;
+    }
+
+    return protoSignature;
+}
 
 /**
  * @param {Key} key
@@ -22,9 +43,15 @@ export function keyToProtobuf(key) {
     }
 
     if (key instanceof PublicKey) {
-        return {
-            ed25519: key.toBytes(),
-        };
+        if (key.toStringDer().startsWith("302a300506032b6570032100")) {
+            return {
+                ed25519: key.toBytesRaw(),
+            };
+        } else {
+            return {
+                ECDSASecp256k1: key.toBytesRaw(),
+            };
+        }
     }
 
     if (key instanceof KeyList) {

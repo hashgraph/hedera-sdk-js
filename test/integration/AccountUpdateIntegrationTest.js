@@ -19,8 +19,8 @@ describe("AccountUpdate", function () {
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
 
-        const key1 = PrivateKey.generate();
-        const key2 = PrivateKey.generate();
+        const key1 = PrivateKey.generateED25519();
+        const key2 = PrivateKey.generateED25519();
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
@@ -91,8 +91,8 @@ describe("AccountUpdate", function () {
 
         const env = await IntegrationTestEnv.new();
 
-        const key1 = PrivateKey.generate();
-        const key2 = PrivateKey.generate();
+        const key1 = PrivateKey.generateED25519();
+        const key2 = PrivateKey.generateED25519();
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
@@ -147,8 +147,8 @@ describe("AccountUpdate", function () {
 
         const env = await IntegrationTestEnv.new();
 
-        const key1 = PrivateKey.generate();
-        const key2 = PrivateKey.generate();
+        const key1 = PrivateKey.generateED25519();
+        const key2 = PrivateKey.generateED25519();
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
@@ -213,7 +213,7 @@ describe("AccountUpdate", function () {
 
         const env = await IntegrationTestEnv.new();
 
-        const key1 = PrivateKey.generate();
+        const key1 = PrivateKey.generateED25519();
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)
@@ -253,8 +253,8 @@ describe("AccountUpdate", function () {
 
         const env = await IntegrationTestEnv.new();
 
-        const key1 = PrivateKey.generate();
-        const key2 = PrivateKey.generate();
+        const key1 = PrivateKey.generateED25519();
+        const key2 = PrivateKey.generateED25519();
 
         let response = await new AccountCreateTransaction()
             .setKey(key1.publicKey)

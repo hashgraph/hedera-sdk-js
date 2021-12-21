@@ -108,7 +108,7 @@ export default class BaseIntegrationTestEnv {
         }
         client.setNetwork(network);
 
-        const newOperatorKey = PrivateKey.generate();
+        const newOperatorKey = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
             .setKey(newOperatorKey)

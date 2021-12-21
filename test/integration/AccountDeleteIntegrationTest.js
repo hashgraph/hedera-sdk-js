@@ -15,7 +15,7 @@ describe("AccountDelete", function () {
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)
@@ -60,7 +60,7 @@ describe("AccountDelete", function () {
 
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
             .setKey(key.publicKey)

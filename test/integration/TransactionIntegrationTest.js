@@ -18,7 +18,7 @@ describe("TransactionIntegration", function () {
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const transaction = await new AccountCreateTransaction()
             .setKey(key.publicKey)
@@ -55,7 +55,7 @@ describe("TransactionIntegration", function () {
         this.timeout(10000);
 
         const env = await IntegrationTestEnv.new();
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         let transaction = await (
             await new TokenCreateTransaction()
@@ -85,10 +85,10 @@ describe("TransactionIntegration", function () {
     it("issue-327", async function () {
         this.timeout(30000);
         const env = await IntegrationTestEnv.new();
-        const privateKey1 = PrivateKey.generate();
-        const privateKey2 = PrivateKey.generate();
-        const privateKey3 = PrivateKey.generate();
-        const privateKey4 = PrivateKey.generate();
+        const privateKey1 = PrivateKey.generateED25519();
+        const privateKey2 = PrivateKey.generateED25519();
+        const privateKey3 = PrivateKey.generateED25519();
+        const privateKey4 = PrivateKey.generateED25519();
         const publicKey1 = privateKey1.publicKey;
         const publicKey2 = privateKey2.publicKey;
         const publicKey3 = privateKey3.publicKey;

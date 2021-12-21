@@ -14,7 +14,7 @@ describe("TransactionResponse", function () {
         const operatorId = env.operatorId;
         expect(operatorId).to.not.be.null;
 
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const transaction = await new AccountCreateTransaction()
             .setKey(key.publicKey)

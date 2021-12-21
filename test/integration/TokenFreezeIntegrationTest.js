@@ -17,7 +17,7 @@ describe("TokenFreeze", function () {
         const env = await IntegrationTestEnv.new();
         const operatorId = env.operatorId;
         const operatorKey = env.operatorKey.publicKey;
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)
@@ -83,7 +83,7 @@ describe("TokenFreeze", function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const response = await new AccountCreateTransaction()
             .setKey(key)

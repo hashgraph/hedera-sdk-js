@@ -7,7 +7,7 @@ import {
 
 describe("PublicKey", function () {
     it("`verifyTransaction` works", async function () {
-        const key = PrivateKey.generate();
+        const key = PrivateKey.generateED25519();
 
         const transaction = new TransferTransaction()
             .setTransactionId(TransactionId.generate(new AccountId(5)))
