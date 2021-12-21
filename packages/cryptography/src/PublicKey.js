@@ -139,7 +139,11 @@ export default class PublicKey extends Key {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return this.toBytesDer();
+        if (this._key instanceof Ed25519PublicKey) {
+            return this.toBytesRaw();
+        } else {
+            return this.toBytesDer();
+        }
     }
 
     /**
