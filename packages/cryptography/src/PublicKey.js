@@ -120,7 +120,7 @@ export default class PublicKey extends Key {
                         const signature = sigPair.ed25519 != null ? sigPair.ed25519 : /** @type {Uint8Array} */ (
                             sigPair.ECDSASecp256k1
                         );
-                        if (this.verify(bodyBytes, signature)) {
+                        if (!this.verify(bodyBytes, signature)) {
                             return false;
                         }
                     }
