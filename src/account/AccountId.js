@@ -1,9 +1,8 @@
-import ContractId from "../contract/ContractId.js";
 import Long from "long";
-import { PublicKey, KeyList } from "@hashgraph/cryptography";
-import { keyToProtobuf, keyFromProtobuf } from "../cryptography/protobuf.js";
 import * as entity_id from "../EntityIdHelper.js";
 import * as proto from "@hashgraph/proto";
+import Key from "../Key.js";
+import PublicKey from "../PublicKey.js";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -68,10 +67,10 @@ export default class AccountId {
     static _fromProtobuf(id) {
         let key =
             id.alias != null && id.alias.length > 0
-                ? keyFromProtobuf(proto.Key.decode(id.alias))
+                ? Key._fromProtobufKey(proto.Key.decode(id.alias))
                 : null;
 
-        if (key instanceof KeyList || key instanceof ContractId) {
+        if (!(key instanceof PublicKey)) {
             key = null;
         }
 
@@ -150,7 +149,7 @@ export default class AccountId {
         return {
             alias:
                 this.aliasKey != null
-                    ? proto.Key.encode(keyToProtobuf(this.aliasKey)).finish()
+                    ? proto.Key.encode(this.aliasKey._toProtobufKey()).finish()
                     : null,
             accountNum: this.num,
             shardNum: this.shard,

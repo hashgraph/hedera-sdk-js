@@ -2,18 +2,12 @@ import AccountId from "./AccountId.js";
 import LiveHash from "./LiveHash.js";
 import Hbar from "../Hbar.js";
 import Timestamp from "../Timestamp.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 import TokenRelationshipMap from "./TokenRelationshipMap.js";
 import * as proto from "@hashgraph/proto";
 import Duration from "../Duration.js";
-import { KeyList } from "@hashgraph/cryptography";
-import ContractId from "../contract/ContractId.js";
-
-/**
- * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
- * @typedef {import("@hashgraph/cryptography").Key} Key
- */
+import Key from "../Key.js";
+import PublicKey from "../PublicKey.js";
 
 /**
  * Current information about an account, including the balance.
@@ -166,10 +160,10 @@ export default class AccountInfo {
     static _fromProtobuf(info) {
         let aliasKey =
             info.alias != null && info.alias.length > 0
-                ? keyFromProtobuf(proto.Key.decode(info.alias))
+                ? Key._fromProtobufKey(proto.Key.decode(info.alias))
                 : null;
 
-        if (aliasKey instanceof KeyList || aliasKey instanceof ContractId) {
+        if (!(aliasKey instanceof PublicKey)) {
             aliasKey = null;
         }
 
@@ -180,7 +174,7 @@ export default class AccountInfo {
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : null,
             isDeleted: info.deleted != null ? info.deleted : false,
-            key: keyFromProtobuf(/** @type {proto.IKey} */ (info.key)),
+            key: Key._fromProtobufKey(/** @type {proto.IKey} */ (info.key)),
             balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),
             sendRecordThreshold: Hbar.fromTinybars(
                 info.generateSendRecordThreshold != null
@@ -251,7 +245,7 @@ export default class AccountInfo {
                     ? this.proxyAccountId._toProtobuf()
                     : null,
             proxyReceived: this.proxyReceived.toTinybars(),
-            key: keyToProtobuf(this.key),
+            key: this.key._toProtobufKey(),
             balance: this.balance.toTinybars(),
             generateSendRecordThreshold: this.sendRecordThreshold.toTinybars(),
             generateReceiveRecordThreshold:
@@ -270,7 +264,7 @@ export default class AccountInfo {
                 this.maxAutomaticTokenAssociations.toInt(),
             alias:
                 this.aliasKey != null
-                    ? proto.Key.encode(keyToProtobuf(this.aliasKey)).finish()
+                    ? proto.Key.encode(this.aliasKey._toProtobufKey()).finish()
                     : null,
         };
     }

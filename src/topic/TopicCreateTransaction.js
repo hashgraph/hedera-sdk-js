@@ -1,10 +1,10 @@
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import AccountId from "../account/AccountId.js";
 import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Duration from "../Duration.js";
+import Key from "../Key.js";
 
 /**
  * @namespace proto
@@ -17,7 +17,6 @@ import Duration from "../Duration.js";
  */
 
 /**
- * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
@@ -115,11 +114,11 @@ export default class TopicCreateTransaction extends Transaction {
             new TopicCreateTransaction({
                 adminKey:
                     create.adminKey != null
-                        ? keyFromProtobuf(create.adminKey)
+                        ? Key._fromProtobufKey(create.adminKey)
                         : undefined,
                 submitKey:
                     create.submitKey != null
-                        ? keyFromProtobuf(create.submitKey)
+                        ? Key._fromProtobufKey(create.submitKey)
                         : undefined,
                 autoRenewAccountId:
                     create.autoRenewAccount != null
@@ -276,9 +275,11 @@ export default class TopicCreateTransaction extends Transaction {
     _makeTransactionData() {
         return {
             adminKey:
-                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
+                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
             submitKey:
-                this._submitKey != null ? keyToProtobuf(this._submitKey) : null,
+                this._submitKey != null
+                    ? this._submitKey._toProtobufKey()
+                    : null,
             autoRenewAccount:
                 this._autoRenewAccountId != null
                     ? this._autoRenewAccountId._toProtobuf()

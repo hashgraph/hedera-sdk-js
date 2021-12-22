@@ -18,8 +18,7 @@ import {
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
 import { arrayEqual } from "../array.js";
-import { PublicKey } from "@hashgraph/cryptography";
-import { keyToSignatureProtobuf } from "../cryptography/protobuf.js";
+import PublicKey from "../PublicKey.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -42,7 +41,7 @@ import { keyToSignatureProtobuf } from "../cryptography/protobuf.js";
 
 /**
  * @typedef {import("../schedule/ScheduleCreateTransaction.js").default} ScheduleCreateTransaction
- * @typedef {import("@hashgraph/cryptography").PrivateKey} PrivateKey
+ * @typedef {import("../PrivateKey.js").default} PrivateKey
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
@@ -104,7 +103,7 @@ export default class Transaction extends Executable {
          * Set of public keys (as string) who have signed this transaction so
          * we do not allow them to sign it again.
          *
-         * @private
+         * @internal
          * @type {Set<string>}
          */
         this._signerPublicKeys = new Set();
@@ -508,7 +507,7 @@ export default class Transaction extends Executable {
             }
 
             signedTransaction.sigMap.sigPair.push(
-                keyToSignatureProtobuf(publicKey, signature)
+                publicKey._toProtobufSignature(signature)
             );
         }
 
@@ -551,9 +550,11 @@ export default class Transaction extends Executable {
      */
     addSignature(publicKey, signature) {
         this._requireOneNodeAccountId();
+
         if (!this.isFrozen()) {
             this.freeze();
         }
+
         const publicKeyData = publicKey.toBytesRaw();
         const publicKeyHex = hex.encode(publicKeyData);
 
@@ -574,7 +575,7 @@ export default class Transaction extends Executable {
             }
 
             transaction.sigMap.sigPair.push(
-                keyToSignatureProtobuf(publicKey, signature)
+                publicKey._toProtobufSignature(signature)
             );
         }
 
@@ -856,7 +857,7 @@ export default class Transaction extends Executable {
             }
 
             signedTransaction.sigMap.sigPair.push(
-                keyToSignatureProtobuf(publicKey, signature)
+                publicKey._toProtobufSignature(signature)
             );
         }
     }
@@ -1104,7 +1105,7 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * @private
+     * @internal
      */
     _requireFrozen() {
         if (!this._isFrozen()) {
