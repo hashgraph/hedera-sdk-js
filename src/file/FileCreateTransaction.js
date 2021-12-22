@@ -3,10 +3,10 @@ import Transaction, {
     TRANSACTION_REGISTRY,
     DEFAULT_AUTO_RENEW_PERIOD,
 } from "../transaction/Transaction.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import * as utf8 from "../encoding/utf8.js";
 import Timestamp from "../Timestamp.js";
-import { KeyList } from "@hashgraph/cryptography";
+import Key from "../Key.js";
+import KeyList from "../KeyList.js";
 
 /**
  * @namespace proto
@@ -19,7 +19,6 @@ import { KeyList } from "@hashgraph/cryptography";
  */
 
 /**
- * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
@@ -111,7 +110,7 @@ export default class FileCreateTransaction extends Transaction {
                     create.keys != null
                         ? create.keys.keys != null
                             ? create.keys.keys.map((key) =>
-                                  keyFromProtobuf(key)
+                                  Key._fromProtobufKey(key)
                               )
                             : undefined
                         : undefined,
@@ -272,7 +271,7 @@ export default class FileCreateTransaction extends Transaction {
             keys:
                 this._keys != null
                     ? {
-                          keys: this._keys.map((key) => keyToProtobuf(key)),
+                          keys: this._keys.map((key) => key._toProtobufKey()),
                       }
                     : null,
             expirationTime: this._expirationTime._toProtobuf(),

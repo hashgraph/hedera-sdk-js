@@ -1,14 +1,10 @@
 import TopicId from "./TopicId.js";
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 import Duration from "../Duration.js";
 import * as proto from "@hashgraph/proto";
-
-/**
- * @typedef {import("@hashgraph/cryptography").Key} Key
- */
+import Key from "../Key.js";
 
 /**
  * Current state of a topic.
@@ -118,9 +114,13 @@ export default class TopicInfo {
                     ? Timestamp._fromProtobuf(info.expirationTime)
                     : null,
             adminKey:
-                info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
+                info.adminKey != null
+                    ? Key._fromProtobufKey(info.adminKey)
+                    : null,
             submitKey:
-                info.submitKey != null ? keyFromProtobuf(info.submitKey) : null,
+                info.submitKey != null
+                    ? Key._fromProtobufKey(info.submitKey)
+                    : null,
             autoRenewPeriod:
                 info.autoRenewPeriod != null
                     ? new Duration(
@@ -150,10 +150,12 @@ export default class TopicInfo {
                         ? this.expirationTime._toProtobuf()
                         : null,
                 adminKey:
-                    this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
+                    this.adminKey != null
+                        ? this.adminKey._toProtobufKey()
+                        : null,
                 submitKey:
                     this.submitKey != null
-                        ? keyToProtobuf(this.submitKey)
+                        ? this.submitKey._toProtobufKey()
                         : null,
                 autoRenewPeriod:
                     this.autoRenewPeriod != null

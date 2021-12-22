@@ -2,9 +2,9 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import AccountId from "./AccountId.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
-import { KeyList } from "@hashgraph/cryptography";
+import Key from "../Key.js";
+import KeyList from "../KeyList.js";
 
 /**
  * @namespace proto
@@ -18,7 +18,6 @@ import { KeyList } from "@hashgraph/cryptography";
  */
 
 /**
- * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
@@ -105,7 +104,7 @@ export default class LiveHashAddTransaction extends Transaction {
                     liveHash_.keys != null
                         ? liveHash_.keys.keys != null
                             ? liveHash_.keys.keys.map((key) =>
-                                  keyFromProtobuf(key)
+                                  Key._fromProtobufKey(key)
                               )
                             : undefined
                         : undefined,
@@ -245,7 +244,9 @@ export default class LiveHashAddTransaction extends Transaction {
                 keys:
                     this._keys != null
                         ? {
-                              keys: this._keys.map((key) => keyToProtobuf(key)),
+                              keys: this._keys.map((key) =>
+                                  key._toProtobufKey()
+                              ),
                           }
                         : undefined,
                 duration:

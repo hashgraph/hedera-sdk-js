@@ -1,6 +1,7 @@
 import * as entity_id from "../EntityIdHelper.js";
 import { Key } from "@hashgraph/cryptography";
 import * as proto from "@hashgraph/proto";
+import CACHE from "../Cache.js";
 
 /**
  * @typedef {import("long").Long} Long
@@ -163,4 +164,23 @@ export default class ContractId extends Key {
             [other.shard, other.realm, other.num]
         );
     }
+
+    /**
+     * @returns {proto.IKey}
+     */
+    _toProtobufKey() {
+        return {
+            contractID: this._toProtobuf(),
+        };
+    }
+
+    /**
+     * @param {proto.IContractID} key
+     * @returns {ContractId}
+     */
+    static __fromProtobufKey(key) {
+        return ContractId._fromProtobuf(key);
+    }
 }
+
+CACHE.contractId = (key) => ContractId.__fromProtobufKey(key);
