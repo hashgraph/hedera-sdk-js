@@ -1,6 +1,5 @@
 import TokenId from "./TokenId.js";
 import AccountId from "../account/AccountId.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
@@ -10,9 +9,9 @@ import TokenSupplyType from "./TokenSupplyType.js";
 import CustomFixedFee from "./CustomFixedFee.js";
 import CustomFractionalFee from "./CustomFractionalFee.js";
 import CustomRoyaltyFee from "./CustomRoyaltyFee.js";
+import Key from "../Key.js";
 
 /**
- * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("./CustomFee.js").default} CustomFee
  */
 
@@ -253,19 +252,30 @@ export default class TokenInfo {
                       )
                     : null,
             adminKey:
-                info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
-            kycKey: info.kycKey != null ? keyFromProtobuf(info.kycKey) : null,
+                info.adminKey != null
+                    ? Key._fromProtobufKey(info.adminKey)
+                    : null,
+            kycKey:
+                info.kycKey != null ? Key._fromProtobufKey(info.kycKey) : null,
             freezeKey:
-                info.freezeKey != null ? keyFromProtobuf(info.freezeKey) : null,
+                info.freezeKey != null
+                    ? Key._fromProtobufKey(info.freezeKey)
+                    : null,
             pauseKey:
-                info.pauseKey != null ? keyFromProtobuf(info.pauseKey) : null,
+                info.pauseKey != null
+                    ? Key._fromProtobufKey(info.pauseKey)
+                    : null,
             wipeKey:
-                info.wipeKey != null ? keyFromProtobuf(info.wipeKey) : null,
+                info.wipeKey != null
+                    ? Key._fromProtobufKey(info.wipeKey)
+                    : null,
             supplyKey:
-                info.supplyKey != null ? keyFromProtobuf(info.supplyKey) : null,
+                info.supplyKey != null
+                    ? Key._fromProtobufKey(info.supplyKey)
+                    : null,
             feeScheduleKey:
                 info.feeScheduleKey != null
-                    ? keyFromProtobuf(info.feeScheduleKey)
+                    ? Key._fromProtobufKey(info.feeScheduleKey)
                     : null,
             defaultFreezeStatus:
                 defaultFreezeStatus === 0 ? null : defaultFreezeStatus == 1,
@@ -332,18 +342,19 @@ export default class TokenInfo {
                     ? this.treasuryAccountId._toProtobuf()
                     : null,
             adminKey:
-                this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
-            kycKey: this.kycKey != null ? keyToProtobuf(this.kycKey) : null,
+                this.adminKey != null ? this.adminKey._toProtobufKey() : null,
+            kycKey: this.kycKey != null ? this.kycKey._toProtobufKey() : null,
             freezeKey:
-                this.freezeKey != null ? keyToProtobuf(this.freezeKey) : null,
+                this.freezeKey != null ? this.freezeKey._toProtobufKey() : null,
             pauseKey:
-                this.pauseKey != null ? keyToProtobuf(this.pauseKey) : null,
-            wipeKey: this.wipeKey != null ? keyToProtobuf(this.wipeKey) : null,
+                this.pauseKey != null ? this.pauseKey._toProtobufKey() : null,
+            wipeKey:
+                this.wipeKey != null ? this.wipeKey._toProtobufKey() : null,
             supplyKey:
-                this.supplyKey != null ? keyToProtobuf(this.supplyKey) : null,
+                this.supplyKey != null ? this.supplyKey._toProtobufKey() : null,
             feeScheduleKey:
                 this.feeScheduleKey != null
-                    ? keyToProtobuf(this.feeScheduleKey)
+                    ? this.feeScheduleKey._toProtobufKey()
                     : null,
             defaultFreezeStatus:
                 this.defaultFreezeStatus == null

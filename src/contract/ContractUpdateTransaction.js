@@ -4,9 +4,9 @@ import FileId from "../file/FileId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import { keyToProtobuf, keyFromProtobuf } from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
 import Timestamp from "../Timestamp.js";
+import Key from "../Key.js";
 
 /**
  * @namespace proto
@@ -22,7 +22,6 @@ import Timestamp from "../Timestamp.js";
  */
 
 /**
- * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
@@ -169,7 +168,7 @@ export default class ContractUpdateTransaction extends Transaction {
                         : undefined,
                 adminKey:
                     update.adminKey != null
-                        ? keyFromProtobuf(update.adminKey)
+                        ? Key._fromProtobufKey(update.adminKey)
                         : undefined,
                 proxyAccountId:
                     update.proxyAccountID != null
@@ -399,7 +398,7 @@ export default class ContractUpdateTransaction extends Transaction {
                     ? this._expirationTime._toProtobuf()
                     : null,
             adminKey:
-                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
+                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
             proxyAccountID:
                 this._proxyAccountId != null
                     ? this._proxyAccountId._toProtobuf()

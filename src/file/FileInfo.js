@@ -1,12 +1,8 @@
 import FileId from "./FileId.js";
 import Timestamp from "../Timestamp.js";
-import { KeyList } from "@hashgraph/cryptography";
 import Long from "long";
-import {
-    keyListFromProtobuf,
-    keyListToProtobuf,
-} from "../cryptography/protobuf.js";
 import * as proto from "@hashgraph/proto";
+import KeyList from "../KeyList.js";
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -83,7 +79,7 @@ export default class FileInfo {
             isDeleted: /** @type {boolean} */ (info.deleted),
             keys:
                 info.keys != null
-                    ? keyListFromProtobuf(info.keys)
+                    ? KeyList.__fromProtobufKeyList(info.keys)
                     : new KeyList(),
             fileMemo: info.memo != null ? info.memo : "",
         });
@@ -99,7 +95,7 @@ export default class FileInfo {
             size: this.size,
             expirationTime: this.expirationTime._toProtobuf(),
             deleted: this.isDeleted,
-            keys: keyListToProtobuf(this.keys),
+            keys: this.keys._toProtobufKey().keyList,
             memo: this.fileMemo,
         };
     }

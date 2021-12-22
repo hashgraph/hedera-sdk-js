@@ -1,4 +1,13 @@
-export * from "@hashgraph/cryptography";
+export {
+    BadKeyError,
+    BadMnemonicError,
+    BadMnemonicReason,
+} from "@hashgraph/cryptography";
+export { default as PrivateKey } from "./PrivateKey.js";
+export { default as PublicKey } from "./PublicKey.js";
+export { default as KeyList } from "./KeyList.js";
+export { default as Key } from "./Key.js";
+export { default as Mnemonic } from "./Mnemonic.js";
 
 export { default as AccountBalanceQuery } from "./account/AccountBalanceQuery.js";
 export { default as AccountCreateTransaction } from "./account/AccountCreateTransaction.js";

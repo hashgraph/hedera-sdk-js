@@ -1,11 +1,11 @@
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import AccountId from "./AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
 import Long from "long";
+import Key from "../Key.js";
 
 /**
  * @namespace proto
@@ -19,7 +19,6 @@ import Long from "long";
  */
 
 /**
- * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
@@ -159,7 +158,7 @@ export default class AccountUpdateTransaction extends Transaction {
                         : undefined,
                 key:
                     update.key != null
-                        ? keyFromProtobuf(update.key)
+                        ? Key._fromProtobufKey(update.key)
                         : undefined,
                 receiverSignatureRequired:
                     update.receiverSigRequired != null
@@ -415,7 +414,7 @@ export default class AccountUpdateTransaction extends Transaction {
         return {
             accountIDToUpdate:
                 this._accountId != null ? this._accountId._toProtobuf() : null,
-            key: this._key != null ? keyToProtobuf(this._key) : null,
+            key: this._key != null ? this._key._toProtobufKey() : null,
             expirationTime:
                 this._expirationTime != null
                     ? this._expirationTime._toProtobuf()
