@@ -30,6 +30,13 @@ export default class PublicKey extends Key {
     }
 
     /**
+     * @returns {string}
+     */
+    get _type() {
+        return this._key._type;
+    }
+
+    /**
      * @param {Uint8Array} data
      * @returns {PublicKey}
      */
@@ -55,7 +62,7 @@ export default class PublicKey extends Key {
      * @param {Uint8Array} data
      * @returns {PublicKey}
      */
-    static fromBytesEd25519(data) {
+    static fromBytesED25519(data) {
         return new PublicKey(Ed25519PublicKey.fromBytes(data));
     }
 
@@ -63,7 +70,7 @@ export default class PublicKey extends Key {
      * @param {Uint8Array} data
      * @returns {PublicKey}
      */
-    static fromBytesEcdsa(data) {
+    static fromBytesECDSA(data) {
         return new PublicKey(EcdsaPublicKey.fromBytes(data));
     }
 
@@ -81,6 +88,22 @@ export default class PublicKey extends Key {
     }
 
     /**
+     * @param {string} text
+     * @returns {PublicKey}
+     */
+    static fromStringED25519(text) {
+        return PublicKey.fromBytesED25519(hex.decode(text));
+    }
+
+    /**
+     * @param {string} text
+     * @returns {PublicKey}
+     */
+    static fromStringECDSA(text) {
+        return PublicKey.fromBytesECDSA(hex.decode(text));
+    }
+
+    /**
      * Verify a signature on a message with this public key.
      *
      * @param {Uint8Array} message
@@ -92,10 +115,13 @@ export default class PublicKey extends Key {
     }
 
     /**
+     * @deprecated - use `@hashgraph/sdk`.PublicKey instead
      * @param {Transaction} transaction
      * @returns {boolean}
      */
     verifyTransaction(transaction) {
+        console.log("Deprecated: use `@hashgraph/sdk`.PublicKey instead");
+
         transaction._requireFrozen();
 
         if (!transaction.isFrozen()) {
@@ -117,9 +143,12 @@ export default class PublicKey extends Key {
                         const bodyBytes = /** @type {Uint8Array} */ (
                             signedTransaction.bodyBytes
                         );
-                        const signature = sigPair.ed25519 != null ? sigPair.ed25519 : /** @type {Uint8Array} */ (
-                            sigPair.ECDSASecp256k1
-                        );
+                        const signature =
+                            sigPair.ed25519 != null
+                                ? sigPair.ed25519
+                                : /** @type {Uint8Array} */ (
+                                      sigPair.ECDSASecp256k1
+                                  );
                         if (!this.verify(bodyBytes, signature)) {
                             return false;
                         }

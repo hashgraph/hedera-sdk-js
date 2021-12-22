@@ -1,10 +1,6 @@
 import AccountId from "./AccountId.js";
-import { KeyList } from "@hashgraph/cryptography";
-import {
-    keyListFromProtobuf,
-    keyListToProtobuf,
-} from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
+import KeyList from "../KeyList.js";
 
 /**
  * @namespace proto
@@ -56,7 +52,7 @@ export default class LiveHash {
             hash: liveHash_.hash != null ? liveHash_.hash : new Uint8Array(),
             keys:
                 liveHash_.keys != null
-                    ? keyListFromProtobuf(liveHash_.keys)
+                    ? KeyList.__fromProtobufKeyList(liveHash_.keys)
                     : new KeyList(),
             duration: Duration._fromProtobuf(
                 /** @type {proto.IDuration} */ (liveHash_.duration)
@@ -72,7 +68,7 @@ export default class LiveHash {
         return {
             accountId: this.accountId._toProtobuf(),
             hash: this.hash,
-            keys: keyListToProtobuf(this.keys),
+            keys: this.keys._toProtobufKey().keyList,
             duration: this.duration._toProtobuf(),
         };
     }

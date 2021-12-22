@@ -53,7 +53,7 @@ async function main() {
     console.log("\"Creating\" a new account");
 
     const privateKey = PrivateKey.generateED25519();
-    const publicKey = privateKey.getPublicKey();
+    const publicKey = privateKey.publicKey;
 
     // Assuming that the target shard and realm are known.
     // For now they are virtually always 0 and 0.
@@ -83,19 +83,19 @@ async function main() {
 
 
     console.log("Transferring some Hbar to the new account");
-    new TransferTransaction()
-        .addHbarTransfer(OPERATOR_ID, new Hbar(10).negated())
+    await (await new TransferTransaction()
+        .addHbarTransfer(client.operatorAccountId, new Hbar(10).negated())
         .addHbarTransfer(aliasAccountId, new Hbar(10))
         .execute(client)
-        .getReceipt(client);
+    ).getReceipt(client);
 
-    const balance = new AccountBalanceQuery()
+    const balance = await new AccountBalanceQuery()
         .setAccountId(aliasAccountId)
         .execute(client);
 
     console.log("Balances of the new account: " + balance);
 
-    const info = new AccountInfoQuery()
+    const info = await new AccountInfoQuery()
         .setAccountId(aliasAccountId)
         .execute(client);
 

@@ -28,6 +28,13 @@ export default class EcdsaPublicKey extends Key {
     }
 
     /**
+     * @returns {string}
+     */
+    get _type() {
+        return "secp256k1";
+    }
+
+    /**
      * @param {Uint8Array} data
      * @returns {EcdsaPublicKey}
      */

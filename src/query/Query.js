@@ -13,7 +13,6 @@ import {
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
-import { keyToSignatureProtobuf } from "../cryptography/protobuf.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -476,7 +475,7 @@ export async function _makePaymentTransaction(
         );
 
         signedTransaction.sigMap = {
-            sigPair: [keyToSignatureProtobuf(operator.publicKey, signature)],
+            sigPair: [operator.publicKey._toProtobufSignature(signature)],
         };
     }
 
