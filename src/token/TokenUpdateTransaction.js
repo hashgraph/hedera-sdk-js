@@ -442,6 +442,7 @@ export default class TokenUpdateTransaction extends Transaction {
     }
 
     /**
+     * @deprecated
      * @param {Key} key
      * @returns {this}
      */
