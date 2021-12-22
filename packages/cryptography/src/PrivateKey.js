@@ -59,6 +59,13 @@ export default class PrivateKey extends Key {
     }
 
     /**
+     * @returns {string}
+     */
+    get _type() {
+        return this._key._type;
+    }
+
+    /**
      * Generate a random Ed25519 private key.
      *
      * @returns {PrivateKey}
