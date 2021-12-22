@@ -1,5 +1,6 @@
 /**
  * @typedef {import("./contract/ContractId.js").default} ContractId
+ * @typedef {import("./account/AccountId.js").default} AccountId
  * @typedef {import("./KeyList.js").default} KeyList
  * @typedef {import("./PublicKey.js").default} PublicKey
  * @typedef {import("./PrivateKey.js").default} PrivateKey
@@ -42,6 +43,9 @@ const CACHE = {
 
     /** @type {((key: cryptography.PrivateKey) => PrivateKey) | null} */
     privateKeyConstructor: null,
+
+    /** @type {((shard: Long | number, realm: Long | number, key: PublicKey) => AccountId) | null} */
+    accountIdConstructor: null,
 };
 
 export default CACHE;

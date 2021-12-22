@@ -3,6 +3,7 @@ import * as entity_id from "../EntityIdHelper.js";
 import * as proto from "@hashgraph/proto";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
+import CACHE from "../Cache.js";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -250,3 +251,6 @@ export default class AccountId {
         }
     }
 }
+
+CACHE.accountIdConstructor = (shard, realm, key) =>
+    new AccountId(shard, realm, key);

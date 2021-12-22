@@ -2,10 +2,10 @@ import * as cryptography from "@hashgraph/cryptography";
 import { arrayEqual } from "./array.js";
 import Key from "./Key.js";
 import CACHE from "./Cache.js";
-import AccountId from "./account/AccountId.js";
 
 /**
  * @typedef {import("./transaction/Transaction.js").default} Transaction
+ * @typedef {import("./account/AccountId.js").default} AccountId
  */
 
 /**
@@ -225,7 +225,11 @@ export default class PublicKey extends Key {
      * @returns {AccountId}
      */
     toAccountId(shard, realm) {
-        return new AccountId(shard, realm, this);
+        if (CACHE.accountIdConstructor == null) {
+            throw new Error("`AccountId` not loaded");
+        }
+
+        return CACHE.accountIdConstructor(shard, realm, this);
     }
 }
 
