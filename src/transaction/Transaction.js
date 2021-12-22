@@ -19,6 +19,8 @@ import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
 import { arrayEqual } from "../array.js";
 import PublicKey from "../PublicKey.js";
+import List from "./List.js";
+import AsynchronyLevel from "../AsynchronyLevel.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -27,6 +29,7 @@ import PublicKey from "../PublicKey.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").ISignatureMap} proto.ISignatureMap
  * @typedef {import("@hashgraph/proto").ISignaturePair} proto.ISignaturePair
  * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").ITransactionList} proto.ITransactionList
@@ -134,11 +137,11 @@ export default class Transaction extends Executable {
 
         /**
          * @protected
-         * @type {TransactionId[]}
+         * @type {List<TransactionId>}
          */
-        this._transactionIds = [];
+        this._transactionIds = new List();
 
-        this._signOnDemand = false;
+        this._asynchronyLevel = AsynchronyLevel.None;
 
         /**
          * @private
@@ -299,9 +302,9 @@ export default class Transaction extends Executable {
 
         transaction._transactions = transactions;
         transaction._signedTransactions = signedTransactions;
-        transaction._transactionIds = transactionIds;
-        transaction._nodeIds = nodeIds;
-        transaction._nextNodeIndex = 0;
+        transaction._transactionIds.setList(transactionIds);
+        transaction._nodeAccountIds.setList(nodeIds);
+        transaction._nextNodeAccountIdIndex = 0;
         transaction._nextTransactionIndex = 0;
         transaction._transactionValidDuration =
             body.transactionValidDuration != null &&
@@ -422,13 +425,13 @@ export default class Transaction extends Executable {
      * @returns {TransactionId}
      */
     get transactionId() {
-        if (this._transactionIds.length === 0) {
+        if (this._transactionIds.list.length === 0) {
             throw new Error(
                 "transaction must have been frozen before getting the transaction ID, try calling `freeze`"
             );
         }
 
-        return this._transactionIds[this._nextTransactionIndex];
+        return this._transactionIds.list[this._nextTransactionIndex];
     }
 
     /**
@@ -446,7 +449,7 @@ export default class Transaction extends Executable {
      */
     setTransactionId(transactionId) {
         this._requireNotFrozen();
-        this._transactionIds = [transactionId];
+        this._transactionIds.setList([transactionId], true);
 
         return this;
     }
@@ -485,7 +488,7 @@ export default class Transaction extends Executable {
         this._transactions = [];
         this._signerPublicKeys.add(publicKeyHex);
 
-        if (this._signOnDemand) {
+        if (!this._asynchronyLevel.isNone) {
             this._publicKeys.push(publicKey);
             this._transactionSigners.push(transactionSigner);
 
@@ -532,15 +535,6 @@ export default class Transaction extends Executable {
         }
 
         return this.signWith(operator.publicKey, operator.transactionSigner);
-    }
-    /**
-     * @internal
-     * @protected
-     */
-    _requireOneNodeAccountId() {
-        if (this._nodeIds.length != 1) {
-            throw "transaction did not have exactly one node ID set";
-        }
     }
 
     /**
@@ -590,11 +584,8 @@ export default class Transaction extends Executable {
      * @returns {SignatureMap}
      */
     getSignatures() {
-        if (this._signOnDemand) {
-            throw new Error(
-                "Please use `getSignaturesAsync()` if `signOnDemand` is enabled"
-            );
-        }
+        this._requireFrozen();
+        this._requireAsynchronyLevelNone();
 
         this._buildAllTransactions();
 
@@ -608,6 +599,63 @@ export default class Transaction extends Executable {
         await this._buildAllTransactionsAsync();
 
         return SignatureMap._fromTransaction(this);
+    }
+
+    /**
+     * @param {?import("../client/Client.js").default<Channel, *>} client
+     */
+    _setMaxTransactionFee(client) {
+        if (client != null && this._maxTransactionFee == null) {
+            this._maxTransactionFee = client.maxTransactionFee;
+        }
+    }
+
+    /**
+     * @param {?import("../client/Client.js").default<Channel, *>} client
+     */
+    _setTransactionIds(client) {
+        if (client != null && this._transactionIds.isEmpty) {
+            this.setTransactionId(TransactionId.generate(client._operatorRequired.accountId));
+        }
+
+        if (this._transactionIds.isEmpty) {
+            throw new Error(
+                "`transactionId` must be set or `client` must be provided with `freezeWith`"
+            );
+        }
+
+        if (client != null) {
+            for (const transactionId of this._transactionIds.list) {
+                if (transactionId.accountId != null) {
+                    transactionId.accountId.validateChecksum(client);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param {?import("../client/Client.js").default<Channel, *>} client
+     */
+    _setNodeAccountIds(client) {
+        if (!this._nodeAccountIds.isEmpty) {
+            return;
+        }
+
+        if (client == null) {
+            throw new Error(
+                "`nodeAccountId` must be set or `client` must be provided with `freezeWith`"
+            );
+        }
+        
+        this._nodeAccountIds.setList(
+            client._network.getNodeAccountIdsForExecute()
+        );
+    }
+
+    _buildSignedTransactions() {
+        this._signedTransactions = this._nodeAccountIds.list.map((nodeId) =>
+            this._makeSignedTransaction(nodeId)
+        );
     }
 
     /**
@@ -631,49 +679,20 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     freezeWith(client) {
-        if (client != null) {
-            this._signOnDemand = client._signOnDemand;
+        this._asynchronyLevel = client != null ? client._asynchronyLevel : AsynchronyLevel.None;
+
+        switch (this._asynchronyLevel) {
+            case AsynchronyLevel.None:
+                this._setMaxTransactionFee(client);
+                this._setTransactionIds(client);
+                this._setNodeAccountIds(client);
+                this._buildSignedTransactions();
+            break;
+            case AsynchronyLevel.Sign:
+            break;
+            case AsynchronyLevel.Build:
+            break;
         }
-
-        if (client != null && this._maxTransactionFee == null) {
-            this._maxTransactionFee = client.maxTransactionFee;
-        }
-
-        if (client != null && this._transactionIds.length === 0) {
-            const operator = client._operator;
-
-            if (operator == null) {
-                throw new Error(
-                    "`client` must have an `operator` or `transactionId` must be set"
-                );
-            }
-
-            this.setTransactionId(TransactionId.generate(operator.accountId));
-        }
-
-        if (this._transactionIds.length === 0) {
-            throw new Error(
-                "`transactionId` must be set or `client` must be provided with `freezeWith`"
-            );
-        }
-
-        if (client != null && this._transactionIds[0].accountId != null) {
-            this._transactionIds[0].accountId.validateChecksum(client);
-        }
-
-        if (this._nodeIds.length > 0) {
-            // Do nothing
-        } else if (client != null) {
-            this._nodeIds = client._network.getNodeAccountIdsForExecute();
-        } else {
-            throw new Error(
-                "`nodeAccountId` must be set or `client` must be provided with `freezeWith`"
-            );
-        }
-
-        this._signedTransactions = this._nodeIds.map((nodeId) =>
-            this._makeSignedTransaction(nodeId)
-        );
 
         return this;
     }
@@ -685,12 +704,7 @@ export default class Transaction extends Executable {
      */
     toBytes() {
         this._requireFrozen();
-
-        if (this._signOnDemand) {
-            throw new Error(
-                "Please use `toBytesAsync()` if `signOnDemand` is enabled"
-            );
-        }
+        this._requireAsynchronyLevelNone();
 
         this._buildAllTransactions();
 
@@ -797,8 +811,8 @@ export default class Transaction extends Executable {
      */
     async _makeRequestAsync() {
         const index =
-            this._nextTransactionIndex * this._nodeIds.length +
-            this._nextNodeIndex;
+            this._nextTransactionIndex * this._nodeAccountIds.length +
+            this._nextNodeAccountIdIndex;
 
         if (this._signOnDemand) {
             await this._buildTransactionAsync(index);
@@ -813,7 +827,7 @@ export default class Transaction extends Executable {
      * @param {number} index
      * @internal
      */
-    async _signTranscation(index) {
+    async _signTransaction(index) {
         const signedTransaction = this._signedTransactions[index];
 
         const bodyBytes = /** @type {Uint8Array} */ (
@@ -916,7 +930,7 @@ export default class Transaction extends Executable {
             return;
         }
 
-        await this._signTranscation(index);
+        await this._signTransaction(index);
 
         this._transactions.push({
             signedTransactionBytes: ProtoSignedTransaction.encode(
@@ -1006,13 +1020,15 @@ export default class Transaction extends Executable {
      * @returns {AccountId}
      */
     _getNodeAccountId() {
-        if (this._nodeIds.length === 0) {
+        if (this._nodeAccountIds.isEmpty) {
             throw new Error(
                 "(BUG) Transaction::_getNodeAccountId called before transaction has been frozen"
             );
         }
 
-        return this._nodeIds[this._nextNodeIndex % this._nodeIds.length];
+        return this._nodeAccountIds.list[
+            this._nextNodeAccountIdIndex % this._nodeAccountIds.length
+        ];
     }
 
     /**
@@ -1046,8 +1062,8 @@ export default class Transaction extends Executable {
                     : null,
             memo: this._transactionMemo,
             transactionID:
-                this._transactionIds[this._nextTransactionIndex] != null
-                    ? this._transactionIds[
+                this._transactionIds.list[this._nextTransactionIndex] != null
+                    ? this._transactionIds.list[
                           this._nextTransactionIndex
                       ]._toProtobuf()
                     : null,
@@ -1113,6 +1129,17 @@ export default class Transaction extends Executable {
     /**
      * @internal
      */
+    _requireAsynchronyLevelNone() {
+        if (!this._asynchronyLevel.isNone) {
+            throw new Error(
+                "Please use `toBytesAsync()` if `signOnDemand` is enabled"
+            );
+        }
+    }
+
+    /**
+     * @internal
+     */
     _requireFrozen() {
         if (!this._isFrozen()) {
             throw new Error(
@@ -1120,6 +1147,17 @@ export default class Transaction extends Executable {
             );
         }
     }
+
+    /**
+     * @internal
+     * @protected
+     */
+    _requireOneNodeAccountId() {
+        if (this._nodeAccountIds.length != 1) {
+            throw "transaction did not have exactly one node ID set";
+        }
+    }
+
 }
 
 /**

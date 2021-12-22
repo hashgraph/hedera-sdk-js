@@ -1,5 +1,6 @@
 import GrpcServiceError from "./grpc/GrpcServiceError.js";
 import GrpcStatus from "./grpc/GrpcStatus.js";
+import List from "./transaction/List.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -41,16 +42,16 @@ export default class Executable {
          * @protected
          * @type {number}
          */
-        this._nextNodeIndex = 0;
+        this._nextNodeAccountIdIndex = 0;
 
         /**
          * List of node account IDs for each transaction that has been
          * built.
          *
          * @internal
-         * @type {AccountId[]}
+         * @type {List<AccountId>}
          */
-        this._nodeIds = [];
+        this._nodeAccountIds = new List();
 
         /** @type {number | null} */
         this._minBackoff = null;
@@ -63,7 +64,7 @@ export default class Executable {
      * @returns {?AccountId[]}
      */
     get nodeAccountIds() {
-        return this._nodeIds.length != 0 ? this._nodeIds : null;
+        return this._nodeAccountIds.isEmpty ? null : this._nodeAccountIds.list;
     }
 
     /**
@@ -71,8 +72,7 @@ export default class Executable {
      * @returns {this}
      */
     setNodeAccountIds(nodeIds) {
-        this._nodeIds = nodeIds;
-
+        this._nodeAccountIds.setList(nodeIds, true);
         return this;
     }
 
@@ -152,36 +152,6 @@ export default class Executable {
     get maxBackoff() {
         return this._maxBackoff;
     }
-
-    // /**
-    //  * @param {?number} minBackoff
-    //  * @param {?number} maxBackoff
-    //  * @returns {this}
-    //  */
-    // _setBackoff(minBackoff, maxBackoff) {
-    //     if (minBackoff == null) {
-    //         throw new Error("minBackoff cannot be null.");
-    //     }
-    //     if (maxBackoff == null) {
-    //         throw new Error("maxBackoff cannot be null.");
-    //     }
-    //     if (minBackoff > maxBackoff) {
-    //         throw new Error("minBackoff cannot be larger than maxBackoff.");
-    //     }
-    //     this._minBackoff = minBackoff;
-    //     this._maxAttempts = maxBackoff;
-    //     return this;
-    // }
-
-    // /**
-    //  * @typedef {Object} Backoff
-    //  * @property {number | null} minBackoff
-    //  * @property {number | null} maxBackoff
-    //  * @returns {Backoff}
-    //  */
-    // get _backoff() {
-    //     return { minBackoff: this._minBackoff, maxBackoff: this._maxBackoff };
-    // }
 
     /**
      * @abstract
@@ -265,7 +235,8 @@ export default class Executable {
     _advanceRequest() {
         // each time we move our cursor to the next transaction
         // wrapping around to ensure we are cycling
-        this._nextNodeIndex = (this._nextNodeIndex + 1) % this._nodeIds.length;
+        this._nextNodeAccountIdIndex =
+            (this._nextNodeAccountIdIndex + 1) % this._nodeAccountIds.length;
     }
 
     /**

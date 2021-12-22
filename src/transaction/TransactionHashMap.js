@@ -22,8 +22,8 @@ export default class TransactionHashMap extends ObjectMap {
     static async _fromTransaction(transaction) {
         const hashes = new TransactionHashMap();
 
-        for (let i = 0; i < transaction._nodeIds.length; i++) {
-            const nodeAccountId = transaction._nodeIds[i];
+        for (let i = 0; i < transaction._nodeAccountIds.length; i++) {
+            const nodeAccountId = transaction._nodeAccountIds.list[i];
             const tx = /** @type {proto.ITransaction} */ (
                 transaction._transactions[i]
             );
