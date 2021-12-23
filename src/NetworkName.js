@@ -1,24 +1,24 @@
-
-
-
 const DEFAULT_ERROR = "Default case reached for: ";
 
-// const MAINNET = "mainnet";
-// const TESTNET = "testnet";
-// const PREVIEWNET = "previewnet";
-
-export default class NetworkName { 
+export default class NetworkName {
     /**
      * @hideconstructor
      * @internal
-     * @param {number} networkId
+     * @param {number|string} networkId
      */
     constructor(networkId) {
-        /** @readonly */
-        this._networkId = networkId;
+        /**
+         * @readonly
+         * @type {number}
+         */
+        this._networkId =
+            typeof networkId == "string" ? parseInt(networkId) : networkId;
 
-        /** @readonly */
-        this._networkName = this.networkNameFromId(networkId);
+        /**
+         * @readonly
+         * @type {string}
+         */
+        this._networkName = NetworkName.networkNameFromId(this._networkId);
 
         Object.freeze(this);
     }
@@ -26,14 +26,14 @@ export default class NetworkName {
     /**
      * @returns {number}
      */
-    get networkId(){
+    get networkId() {
         return this._networkId;
     }
 
     /**
      * @returns {string}
      */
-    get networkName(){
+    get networkName() {
         return this._networkName;
     }
 
@@ -48,25 +48,39 @@ export default class NetworkName {
      * @param {string} networkNameOrId
      * @returns {NetworkName}
      */
-    static fromString(networkNameOrId){
-        switch (networkNameOrId){
-            case "0" || "mainnet":
-                return NetworkName.Mainnet;
-            case "1" || "testnet":
-                return NetworkName.Testnet;
-            case "2" || "previewnet":
-                return NetworkName.Previewnet;
+    static fromString(networkNameOrId) {
+        switch (networkNameOrId) {
+            case "0":
+            case NetworkName.MAINNET:
+                return new NetworkName(0);
+            case "1":
+            case NetworkName.TESTNET:
+                return new NetworkName(1);
+            case "2":
+            case NetworkName.PREVIEWNET:
+                return new NetworkName(2);
             default:
                 throw new Error(DEFAULT_ERROR.concat("fromString"));
         }
     }
 
-    // /**
-    //  * @returns 
-    //  */
-    // _toProtobuf(){
+    /**
+     * @returns {Uint8Array}
+     */
+    _toProtobuf() {
+        //returns bytes obj for 0,1,2
+        return new Uint8Array(this._networkId);
+    }
 
-    // }
+    /**
+     * @param {string|number} networkId
+     * @returns {Uint8Array}
+     */
+    static _networkIdToProtobuf(networkId) {
+        return new Uint8Array(
+            typeof networkId != "string" ? networkId : parseInt(networkId)
+        );
+    }
 
     // /**
     //  * @internal
@@ -74,21 +88,25 @@ export default class NetworkName {
     //  * @returns {NetworkName}
     //  */
     // static _fromProtobuf(networkName){
+    //     //returns NetworkName from bytes 0,1,2
 
     // }
 
     /**
-     * @param {number} networkId
+     * @param {number|string} networkId
      * @returns {NetworkName}
      */
-    static fromNetworkId(networkId){
+    static fromNetworkId(networkId) {
         switch (networkId) {
             case 0:
-                return NetworkName.Mainnet;
+            case "0":
+                return new NetworkName(0);
             case 1:
-                return NetworkName.Testnet;
+            case "1":
+                return new NetworkName(1);
             case 2:
-                return NetworkName.Previewnet;
+            case "2":
+                return new NetworkName(2);
             default:
                 throw new Error(DEFAULT_ERROR.concat("fromNetworkId"));
         }
@@ -98,14 +116,14 @@ export default class NetworkName {
      * @param {string} networkName
      * @returns {NetworkName}
      */
-    static fromNetworkName(networkName){
-        switch(networkName){
-            case "mainnet":
-                return NetworkName.Mainnet;
-            case "testnet":
-                return NetworkName.Testnet;
-            case "previewnet":
-                return NetworkName.Previewnet;
+    static fromNetworkName(networkName) {
+        switch (networkName) {
+            case NetworkName.MAINNET:
+                return new NetworkName(0);
+            case NetworkName.TESTNET:
+                return new NetworkName(1);
+            case NetworkName.PREVIEWNET:
+                return new NetworkName(2);
             default:
                 throw new Error(DEFAULT_ERROR.concat("fromNetworkName"));
         }
@@ -115,13 +133,13 @@ export default class NetworkName {
      * @param {string} networkName
      * @returns {number}
      */
-    networkIdFromName(networkName){
-        switch (networkName){
-            case "mainnet":
+    static networkIdFromName(networkName) {
+        switch (networkName) {
+            case NetworkName.MAINNET:
                 return 0;
-            case "testnet":
+            case NetworkName.TESTNET:
                 return 1;
-            case "previewnet":
+            case NetworkName.PREVIEWNET:
                 return 2;
             default:
                 throw new Error(DEFAULT_ERROR.concat("networkIdFromName"));
@@ -129,31 +147,34 @@ export default class NetworkName {
     }
 
     /**
-     * @param {number} networkId
+     * @param {number|string} networkId
      * @returns {string}
      */
-    networkNameFromId(networkId) {
+    static networkNameFromId(networkId) {
         switch (networkId) {
             case 0:
-                return "mainnet";
+            case "0":
+                return NetworkName.MAINNET;
             case 1:
-                return "testnet";
+            case "1":
+                return NetworkName.TESTNET;
             case 2:
-                return "previewnet";
+            case "2":
+                return NetworkName.PREVIEWNET;
             default:
                 throw new Error(DEFAULT_ERROR.concat("networkNameFromId"));
         }
     }
-
 }
 
-NetworkName.Mainnet = new NetworkName(0);
+NetworkName.MAINNET = "mainnet";
 
-NetworkName.Testnet = new NetworkName(1);
+NetworkName.TESTNET = "testnet";
 
-NetworkName.Previewnet = new NetworkName(2);
+NetworkName.PREVIEWNET = "previewnet";
 
 
+//commented and archived 
 
 // /**
 //  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName

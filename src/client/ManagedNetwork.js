@@ -1,4 +1,4 @@
-import { _ledgerIdToNetworkName, _ledgerIdToLedgerId } from "../NetworkName.js";
+import NetworkName from "../NetworkName.js";
 // import {
 //     PREVIEWNET_ADDRESS_BOOK,
 //     TESTNET_ADDRESS_BOOK,
@@ -13,9 +13,9 @@ import { _ledgerIdToNetworkName, _ledgerIdToLedgerId } from "../NetworkName.js";
  * @typedef {import("../address_book/NodeAddressBook.js").default} NodeAddressBook
  */
 
-/**
- * @typedef {import("./Client.js").NetworkName} NetworkName
- */
+// /**
+//  * @typedef {import("./Client.js").NetworkName} NetworkName
+//  */
 
 /**
  * @template {Channel | MirrorChannel} ChannelT
@@ -111,11 +111,11 @@ export default class MangedNetwork {
     }
 
     /**
-     * @param {NetworkName} networkName
+     * @param {string} networkName
      * @returns {this}
      */
     setNetworkName(networkName) {
-        this._ledgerId = _ledgerIdToLedgerId(networkName);
+        this._ledgerId = NetworkName.networkIdFromName(networkName).toString();
         return this;
     }
 
@@ -124,7 +124,7 @@ export default class MangedNetwork {
      */
     get networkName() {
         return this._ledgerId != null
-            ? _ledgerIdToNetworkName(this._ledgerId)
+            ? NetworkName.networkNameFromId(this._ledgerId)
             : null;
     }
 

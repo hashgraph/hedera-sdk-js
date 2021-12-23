@@ -1,5 +1,5 @@
 import ManagedNode from "./ManagedNode.js";
-import { _ledgerIdToNetworkName } from "./NetworkName.js";
+import NetworkName from "./NetworkName.js";
 import { PREVIEWNET_CERTS, TESTNET_CERTS, MAINNET_CERTS } from "./NodeCerts.js";
 
 /**
@@ -85,7 +85,7 @@ export default class Node extends ManagedNode {
      * @returns {this}
      */
     setCert(ledgerId) {
-        const networkName = _ledgerIdToNetworkName(ledgerId);
+        const networkName = NetworkName.networkNameFromId(ledgerId);
 
         switch (networkName) {
             case "previewnet":

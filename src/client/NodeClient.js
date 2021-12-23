@@ -10,8 +10,8 @@ const readFileAsync = util.promisify(fs.readFile);
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
- * @typedef {import("./Client.js").NetworkName} NetworkName
  */
+//@typedef {import("./Client.js").NetworkName} NetworkName
 
 export const Network = {
     /**
@@ -114,19 +114,19 @@ export default class NodeClient extends Client {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
                         this.setMirrorNetwork(MirrorNetwork.MAINNET);
-                        this.setNetworkName(NetworkName.Mainnet);
+                        this.setNetworkName(NetworkName.MAINNET);
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
                         this.setMirrorNetwork(MirrorNetwork.TESTNET);
-                        this.setNetworkName(NetworkName.Testnet);
+                        this.setNetworkName(NetworkName.TESTNET);
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
-                        this.setNetworkName(NetworkName.Previewnet);
+                        this.setNetworkName(NetworkName.PREVIEWNET);
                         break;
 
                     default:
@@ -199,7 +199,7 @@ export default class NodeClient extends Client {
     }
 
     /**
-     * @param {NetworkName} network
+     * @param {string} network
      * @returns {NodeClient}
      */
     static forName(network) {
@@ -234,7 +234,7 @@ export default class NodeClient extends Client {
     }
 
     /**
-     * @param {{[key: string]: (string | AccountId)} | NetworkName} network
+     * @param {{[key: string]: (string | AccountId)} | string} network
      * @returns {void}
      */
     setNetwork(network) {
@@ -258,7 +258,7 @@ export default class NodeClient extends Client {
     }
 
     /**
-     * @param {string[] | string | NetworkName} mirrorNetwork
+     * @param {string[] | string} mirrorNetwork
      * @returns {this}
      */
     setMirrorNetwork(mirrorNetwork) {

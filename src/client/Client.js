@@ -11,10 +11,6 @@ import MirrorNetwork from "./MirrorNetwork.js";
  */
 
 /**
- * @typedef {"mainnet" | "testnet" | "previewnet"} NetworkName
- */
-
-/**
  * @typedef {object} Operator
  * @property {string | PrivateKey} privateKey
  * @property {string | AccountId} accountId
@@ -29,8 +25,8 @@ import MirrorNetwork from "./MirrorNetwork.js";
 
 /**
  * @typedef {object} ClientConfiguration
- * @property {{[key: string]: (string | AccountId)} | NetworkName} network
- * @property {string[] | NetworkName | string} [mirrorNetwork]
+ * @property {{[key: string]: (string | AccountId)} | string} network
+ * @property {string[] | string} [mirrorNetwork]
  * @property {Operator} [operator]
  */
 
@@ -107,10 +103,9 @@ export default class Client {
     }
 
     /**
-     * @param {NetworkName} networkName
+     * @param {string} networkName
      * @returns {this}
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setNetworkName(networkName) {
         this._network.setNetworkName(networkName);
         return this;
@@ -124,7 +119,7 @@ export default class Client {
     }
 
     /**
-     * @param {{[key: string]: (string | AccountId)} | NetworkName} network
+     * @param {{[key: string]: (string | AccountId)} | string} network
      * @returns {void}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -140,7 +135,7 @@ export default class Client {
     }
 
     /**
-     * @param {string[] | string | NetworkName} mirrorNetwork
+     * @param {string[] | string} mirrorNetwork
      * @returns {void}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

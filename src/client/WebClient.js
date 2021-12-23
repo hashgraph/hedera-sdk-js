@@ -1,10 +1,10 @@
 import Client from "./Client.js";
 import WebChannel from "../channel/WebChannel.js";
 import AccountId from "../account/AccountId.js";
+import NetworkName from "../NetworkName.js";
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
- * @typedef {import("./Client.js").NetworkName} NetworkName
  */
 
 export const Network = {
@@ -56,17 +56,17 @@ export default class WebClient extends Client {
                 switch (props.network) {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
-                        this.setNetworkName("mainnet");
+                        this.setNetworkName(NetworkName.MAINNET);
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
-                        this.setNetworkName("testnet");
+                        this.setNetworkName(NetworkName.TESTNET);
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
-                        this.setNetworkName("previewnet");
+                        this.setNetworkName(NetworkName.PREVIEWNET);
                         break;
 
                     default:
@@ -101,7 +101,7 @@ export default class WebClient extends Client {
      * chose nodes to send transactions to. For one transaction, at most 1/3 of the nodes will be
      * tried.
      *
-     * @param {{[key: string]: (string | AccountId)} | import("./Client.js").NetworkName} network
+     * @param {{[key: string]: (string | AccountId)} | string} network
      * @returns {WebClient}
      */
     static forNetwork(network) {
@@ -109,7 +109,7 @@ export default class WebClient extends Client {
     }
 
     /**
-     * @param {NetworkName} network
+     * @param {string} network
      * @returns {WebClient}
      */
     static forName(network) {
@@ -144,7 +144,7 @@ export default class WebClient extends Client {
     }
 
     /**
-     * @param {{[key: string]: (string | AccountId)} | NetworkName} network
+     * @param {{[key: string]: (string | AccountId)} | string} network
      * @returns {void}
      */
     setNetwork(network) {
@@ -165,7 +165,7 @@ export default class WebClient extends Client {
     }
 
     /**
-     * @param {string[] | string | NetworkName} mirrorNetwork
+     * @param {string[] | string} mirrorNetwork
      * @returns {this}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,6 +1,6 @@
 import AccountId from "../account/AccountId.js";
 import Node from "../Node.js";
-import { _ledgerIdToNetworkName } from "../NetworkName.js";
+import NetworkName from "../NetworkName.js";
 import {
     PREVIEWNET_ADDRESS_BOOK,
     TESTNET_ADDRESS_BOOK,
@@ -13,9 +13,9 @@ import ManagedNetwork from "./ManagedNetwork.js";
  * @typedef {import("../address_book/NodeAddressBook.js").default} NodeAddressBook
  */
 
-/**
- * @typedef {import("./Client.js").NetworkName} NetworkName
- */
+// /**
+//  * @typedef {import("./Client.js").NetworkName} NetworkName
+//  */
 
 /**
  * @augments {ManagedNetwork<Channel, Node, AccountId>}
@@ -71,7 +71,7 @@ export default class Network extends ManagedNetwork {
     }
 
     /**
-     * @param {NetworkName} networkName
+     * @param {string} networkName
      * @returns {this}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -112,7 +112,7 @@ export default class Network extends ManagedNetwork {
      */
     get networkName() {
         return this._ledgerId != null
-            ? _ledgerIdToNetworkName(this._ledgerId)
+            ? NetworkName.networkNameFromId(this._ledgerId)
             : null;
     }
 

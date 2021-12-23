@@ -6,7 +6,6 @@ import ManagedNetwork from "./ManagedNetwork.js";
  */
 
 /**
- * @typedef {import("./Client.js").NetworkName} NetworkName
  * @augments {ManagedNetwork<MirrorChannel, MirrorNode, string>}
  */
 export default class MirrorNetwork extends ManagedNetwork {
