@@ -1,3 +1,5 @@
+import * as proto from "@hashgraph/proto";
+
 const DEFAULT_ERROR = "Default case reached for: ";
 
 export default class NetworkName {
@@ -65,15 +67,6 @@ export default class NetworkName {
     }
 
     /**
-     * @returns {Uint8Array}
-     */
-    _toProtobuf() {
-        //returns bytes obj for 0,1,2
-        //need help here
-        return new Uint8Array(this._networkId);
-    }
-
-    /**
      * @param {string|number} networkId
      * @returns {Uint8Array}
      */
@@ -83,15 +76,27 @@ export default class NetworkName {
         );
     }
 
-    // /**
-    //  * @internal
-    //  * @param {proto.INetworkName} networkName
-    //  * @returns {NetworkName}
-    //  */
-    // static _fromProtobuf(networkName){
-    //     //returns NetworkName from bytes 0,1,2
+    /**
+     * @returns {Uint8Array}
+     */
+    _toProtobuf() {
+        //TODO
+        //Rename to toBytes?
+        //returns bytes obj for 0,1,2
+        return new Uint8Array(this._networkId);
+    }
 
-    // }
+    /**
+     * @internal
+     * @param {Uint8Array} networkName
+     * @returns {NetworkName}
+     */
+    static _fromProtobuf(networkName){
+        //TODO
+        //rename to fromBytes?
+        //returns NetworkName from bytes 0,1,2
+        return new NetworkName(0);
+    }
 
     /**
      * @param {number|string} networkId
