@@ -1,9 +1,10 @@
 import AccountId from "../account/AccountId.js";
 import AccountBalanceQuery from "../account/AccountBalanceQuery.js";
-import { PrivateKey, PublicKey } from "@hashgraph/cryptography";
 import Hbar from "../Hbar.js";
 import Network from "./Network.js";
 import MirrorNetwork from "./MirrorNetwork.js";
+import PublicKey from "../PublicKey.js";
+import PrivateKey from "../PrivateKey.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -397,36 +398,6 @@ export default class Client {
     get maxBackoff() {
         return this._maxBackoff;
     }
-
-    // /**
-    //  * @param {?number} minBackoff
-    //  * @param {?number} maxBackoff
-    //  * @returns {this}
-    //  */
-    // _setBackoff(minBackoff, maxBackoff) {
-    //     if (minBackoff == null) {
-    //         throw new Error("minBackoff cannot be null.");
-    //     }
-    //     if (maxBackoff == null) {
-    //         throw new Error("maxBackoff cannot be null.");
-    //     }
-    //     if (minBackoff > maxBackoff) {
-    //         throw new Error("minBackoff cannot be larger than maxBackoff.");
-    //     }
-    //     this._minBackoff = minBackoff;
-    //     this._maxAttempts = maxBackoff;
-    //     return this;
-    // }
-
-    // /**
-    //  * @typedef {Object} Backoff
-    //  * @property {number | null} minBackoff
-    //  * @property {number | null} maxBackoff
-    //  * @returns {Backoff}
-    //  */
-    // get _backoff() {
-    //     return { minBackoff: this._minBackoff, maxBackoff: this._maxBackoff };
-    // }
 
     /**
      * @param {AccountId | string} accountId

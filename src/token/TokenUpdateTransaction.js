@@ -2,10 +2,10 @@ import TokenId from "./TokenId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
+import Key from "../Key.js";
 
 /**
  * @namespace proto
@@ -20,7 +20,6 @@ import Duration from "../Duration.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
- * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
@@ -226,23 +225,23 @@ export default class TokenUpdateTransaction extends Transaction {
                         : undefined,
                 adminKey:
                     update.adminKey != null
-                        ? keyFromProtobuf(update.adminKey)
+                        ? Key._fromProtobufKey(update.adminKey)
                         : undefined,
                 kycKey:
                     update.kycKey != null
-                        ? keyFromProtobuf(update.kycKey)
+                        ? Key._fromProtobufKey(update.kycKey)
                         : undefined,
                 freezeKey:
                     update.freezeKey != null
-                        ? keyFromProtobuf(update.freezeKey)
+                        ? Key._fromProtobufKey(update.freezeKey)
                         : undefined,
                 wipeKey:
                     update.wipeKey != null
-                        ? keyFromProtobuf(update.wipeKey)
+                        ? Key._fromProtobufKey(update.wipeKey)
                         : undefined,
                 supplyKey:
                     update.supplyKey != null
-                        ? keyFromProtobuf(update.supplyKey)
+                        ? Key._fromProtobufKey(update.supplyKey)
                         : undefined,
                 autoRenewAccountId:
                     update.autoRenewAccount != null
@@ -264,7 +263,7 @@ export default class TokenUpdateTransaction extends Transaction {
                         : undefined,
                 feeScheduleKey:
                     update.feeScheduleKey != null
-                        ? keyFromProtobuf(update.feeScheduleKey)
+                        ? Key._fromProtobufKey(update.feeScheduleKey)
                         : undefined,
             }),
             transactions,
@@ -600,14 +599,18 @@ export default class TokenUpdateTransaction extends Transaction {
                     ? this._treasuryAccountId._toProtobuf()
                     : null,
             adminKey:
-                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
-            kycKey: this._kycKey != null ? keyToProtobuf(this._kycKey) : null,
+                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
+            kycKey: this._kycKey != null ? this._kycKey._toProtobufKey() : null,
             freezeKey:
-                this._freezeKey != null ? keyToProtobuf(this._freezeKey) : null,
+                this._freezeKey != null
+                    ? this._freezeKey._toProtobufKey()
+                    : null,
             wipeKey:
-                this._wipeKey != null ? keyToProtobuf(this._wipeKey) : null,
+                this._wipeKey != null ? this._wipeKey._toProtobufKey() : null,
             supplyKey:
-                this._supplyKey != null ? keyToProtobuf(this._supplyKey) : null,
+                this._supplyKey != null
+                    ? this._supplyKey._toProtobufKey()
+                    : null,
             autoRenewAccount:
                 this._autoRenewAccountId != null
                     ? this._autoRenewAccountId._toProtobuf()
@@ -628,7 +631,7 @@ export default class TokenUpdateTransaction extends Transaction {
                     : null,
             feeScheduleKey:
                 this._feeScheduleKey != null
-                    ? keyToProtobuf(this._feeScheduleKey)
+                    ? this._feeScheduleKey._toProtobufKey()
                     : null,
         };
     }

@@ -1,11 +1,5 @@
 import ScheduleId from "./ScheduleId.js";
 import AccountId from "../account/AccountId.js";
-import {
-    keyFromProtobuf,
-    keyToProtobuf,
-    keyListFromProtobuf,
-    keyListToProtobuf,
-} from "../cryptography/protobuf.js";
 import Timestamp from "../Timestamp.js";
 import Transaction from "../transaction/Transaction.js";
 import {
@@ -15,6 +9,8 @@ import {
     SchedulableTransactionBody as ProtoSchedulableTransactionBody,
 } from "@hashgraph/proto";
 import TransactionId from "../transaction/TransactionId.js";
+import Key from "../Key.js";
+import KeyList from "../KeyList.js";
 
 /**
  * @namespace proto
@@ -30,11 +26,6 @@ import TransactionId from "../transaction/TransactionId.js";
  * @typedef {import("@hashgraph/proto").IDuration} proto.IDuration
  * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- */
-
-/**
- * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("@hashgraph/cryptography").KeyList} KeyList
  */
 
 /**
@@ -151,9 +142,13 @@ export default class ScheduleInfo {
                     ? info.scheduledTransactionBody
                     : null,
             adminKey:
-                info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
+                info.adminKey != null
+                    ? Key._fromProtobufKey(info.adminKey)
+                    : null,
             signers:
-                info.signers != null ? keyListFromProtobuf(info.signers) : null,
+                info.signers != null
+                    ? KeyList.__fromProtobufKeyList(info.signers)
+                    : null,
             scheduleMemo: info.memo != null ? info.memo : null,
             expirationTime:
                 info.expirationTime != null
@@ -200,9 +195,11 @@ export default class ScheduleInfo {
                     ? this.schedulableTransactionBody
                     : null,
             adminKey:
-                this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
+                this.adminKey != null ? this.adminKey._toProtobufKey() : null,
             signers:
-                this.signers != null ? keyListToProtobuf(this.signers) : null,
+                this.signers != null
+                    ? this.signers._toProtobufKey().keyList
+                    : null,
             memo: this.scheduleMemo != null ? this.scheduleMemo : "",
             expirationTime:
                 this.expirationTime != null

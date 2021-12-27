@@ -34,6 +34,13 @@ export default class Ed25519PrivateKey {
     }
 
     /**
+     * @returns {string}
+     */
+    get _type() {
+        return "ED25519";
+    }
+
+    /**
      * Generate a random Ed25519 private key.
      *
      * @returns {Ed25519PrivateKey}

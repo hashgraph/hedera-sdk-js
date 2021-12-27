@@ -5,9 +5,9 @@ import Transaction, {
     DEFAULT_RECORD_THRESHOLD,
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Duration from "../Duration.js";
 import Long from "long";
+import Key from "../Key.js";
 
 /**
  * @namespace proto
@@ -22,7 +22,6 @@ import Long from "long";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
- * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../Timestamp.js").default} Timestamp
@@ -156,7 +155,7 @@ export default class AccountCreateTransaction extends Transaction {
             new AccountCreateTransaction({
                 key:
                     create.key != null
-                        ? keyFromProtobuf(create.key)
+                        ? Key._fromProtobufKey(create.key)
                         : undefined,
                 initialBalance:
                     create.initialBalance != null
@@ -381,7 +380,7 @@ export default class AccountCreateTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            key: this._key != null ? keyToProtobuf(this._key) : null,
+            key: this._key != null ? this._key._toProtobufKey() : null,
             initialBalance:
                 this._initialBalance != null
                     ? this._initialBalance.toTinybars()

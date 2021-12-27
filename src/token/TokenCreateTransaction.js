@@ -3,7 +3,6 @@ import Transaction, {
     DEFAULT_AUTO_RENEW_PERIOD,
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
@@ -13,6 +12,7 @@ import CustomFractionalFee from "./CustomFractionalFee.js";
 import CustomRoyaltyFee from "./CustomRoyaltyFee.js";
 import TokenType from "./TokenType.js";
 import TokenSupplyType from "./TokenSupplyType.js";
+import Key from "../Key.js";
 
 /**
  * @namespace proto
@@ -27,7 +27,6 @@ import TokenSupplyType from "./TokenSupplyType.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
- * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
@@ -314,31 +313,31 @@ export default class TokenCreateTransaction extends Transaction {
                         : undefined,
                 adminKey:
                     create.adminKey != null
-                        ? keyFromProtobuf(create.adminKey)
+                        ? Key._fromProtobufKey(create.adminKey)
                         : undefined,
                 kycKey:
                     create.kycKey != null
-                        ? keyFromProtobuf(create.kycKey)
+                        ? Key._fromProtobufKey(create.kycKey)
                         : undefined,
                 freezeKey:
                     create.freezeKey != null
-                        ? keyFromProtobuf(create.freezeKey)
+                        ? Key._fromProtobufKey(create.freezeKey)
                         : undefined,
                 pauseKey:
                     create.pauseKey != null
-                        ? keyFromProtobuf(create.pauseKey)
+                        ? Key._fromProtobufKey(create.pauseKey)
                         : undefined,
                 wipeKey:
                     create.wipeKey != null
-                        ? keyFromProtobuf(create.wipeKey)
+                        ? Key._fromProtobufKey(create.wipeKey)
                         : undefined,
                 supplyKey:
                     create.supplyKey != null
-                        ? keyFromProtobuf(create.supplyKey)
+                        ? Key._fromProtobufKey(create.supplyKey)
                         : undefined,
                 feeScheduleKey:
                     create.feeScheduleKey != null
-                        ? keyFromProtobuf(create.feeScheduleKey)
+                        ? Key._fromProtobufKey(create.feeScheduleKey)
                         : undefined,
                 freezeDefault:
                     create.freezeDefault != null
@@ -836,19 +835,23 @@ export default class TokenCreateTransaction extends Transaction {
                     ? this._treasuryAccountId._toProtobuf()
                     : null,
             adminKey:
-                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
-            kycKey: this._kycKey != null ? keyToProtobuf(this._kycKey) : null,
+                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
+            kycKey: this._kycKey != null ? this._kycKey._toProtobufKey() : null,
             freezeKey:
-                this._freezeKey != null ? keyToProtobuf(this._freezeKey) : null,
+                this._freezeKey != null
+                    ? this._freezeKey._toProtobufKey()
+                    : null,
             pauseKey:
-                this._pauseKey != null ? keyToProtobuf(this._pauseKey) : null,
+                this._pauseKey != null ? this._pauseKey._toProtobufKey() : null,
             wipeKey:
-                this._wipeKey != null ? keyToProtobuf(this._wipeKey) : null,
+                this._wipeKey != null ? this._wipeKey._toProtobufKey() : null,
             supplyKey:
-                this._supplyKey != null ? keyToProtobuf(this._supplyKey) : null,
+                this._supplyKey != null
+                    ? this._supplyKey._toProtobufKey()
+                    : null,
             feeScheduleKey:
                 this._feeScheduleKey != null
-                    ? keyToProtobuf(this._feeScheduleKey)
+                    ? this._feeScheduleKey._toProtobufKey()
                     : null,
             freezeDefault: this._freezeDefault,
             autoRenewAccount:

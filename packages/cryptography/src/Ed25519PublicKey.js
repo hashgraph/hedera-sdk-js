@@ -28,6 +28,13 @@ export default class Ed25519PublicKey extends Key {
     }
 
     /**
+     * @returns {string}
+     */
+    get _type() {
+        return "ED25519";
+    }
+
+    /**
      * @param {Uint8Array} data
      * @returns {Ed25519PublicKey}
      */
