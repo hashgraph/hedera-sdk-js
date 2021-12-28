@@ -13,10 +13,6 @@ import NetworkName from "../NetworkName.js";
  * @typedef {import("../address_book/NodeAddressBook.js").default} NodeAddressBook
  */
 
-// /**
-//  * @typedef {import("./Client.js").NetworkName} NetworkName
-//  */
-
 /**
  * @template {Channel | MirrorChannel} ChannelT
  * @typedef {import("../ManagedNode.js").default<ChannelT>} ManagedNode

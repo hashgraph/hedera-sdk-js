@@ -13,10 +13,6 @@ import ManagedNetwork from "./ManagedNetwork.js";
  * @typedef {import("../address_book/NodeAddressBook.js").default} NodeAddressBook
  */
 
-// /**
-//  * @typedef {import("./Client.js").NetworkName} NetworkName
-//  */
-
 /**
  * @augments {ManagedNetwork<Channel, Node, AccountId>}
  */
