@@ -8,6 +8,7 @@ specifiers:
   '@babel/plugin-transform-modules-commonjs': ^7.16.0
   '@babel/register': ^7.16.0
   '@grpc/grpc-js': ^1.4.4
+  '@grpc/proto-loader': ^0.6.7
   '@hashgraph/cryptography': ^1.1.0-beta.4
   '@hashgraph/proto': 2.1.1
   '@types/chai': ^4.2.22
@@ -2215,6 +2216,7 @@ packages:
   /chokidar/3.5.2:
     resolution: {integrity: sha512-ekGhOnNVPgT77r4K/U3GDhu+FQ2S8TnK/s2KbIGXi0SZWuwkZ2QNyfWdZW+TVfn84DpEP7rLeCt2UI6bJ8GwbQ==}
     engines: {node: '>= 8.10.0'}
+    requiresBuild: true
     dependencies:
       anymatch: 3.1.2
       braces: 3.0.2
@@ -2823,6 +2825,10 @@ packages:
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
     dev: false
+
+  /emoji-regex/7.0.3:
+    resolution: {integrity: sha512-CwBLREIQ7LvYFB0WyRvwhq5N5qPhc6PMjD6bYggFlI5YyDgl+0vxq5VHbMOFqLg7hfWzmu8T5Z1QofhmTIhItA==}
+    dev: true
 
   /emoji-regex/8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
