@@ -1,10 +1,10 @@
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import AccountId from "../account/AccountId.js";
 import TopicId from "./TopicId.js";
 import Duration from "../Duration.js";
+import Key from "../Key.js";
 
 /**
  * @namespace proto
@@ -17,7 +17,6 @@ import Duration from "../Duration.js";
  */
 
 /**
- * @typedef {import("@hashgraph/cryptography").Key} Key
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
@@ -137,11 +136,11 @@ export default class TopicUpdateTransaction extends Transaction {
                         : undefined,
                 adminKey:
                     update.adminKey != null
-                        ? keyFromProtobuf(update.adminKey)
+                        ? Key._fromProtobufKey(update.adminKey)
                         : undefined,
                 submitKey:
                     update.submitKey != null
-                        ? keyFromProtobuf(update.submitKey)
+                        ? Key._fromProtobufKey(update.submitKey)
                         : undefined,
                 autoRenewAccountId:
                     update.autoRenewAccount != null
@@ -379,9 +378,11 @@ export default class TopicUpdateTransaction extends Transaction {
         return {
             topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
             adminKey:
-                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
+                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
             submitKey:
-                this._submitKey != null ? keyToProtobuf(this._submitKey) : null,
+                this._submitKey != null
+                    ? this._submitKey._toProtobufKey()
+                    : null,
             memo:
                 this._topicMemo != null
                     ? {

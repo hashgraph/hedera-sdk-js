@@ -36,6 +36,13 @@ export default class EcdsaPrivateKey {
     }
 
     /**
+     * @returns {string}
+     */
+    get _type() {
+        return "secp256k1";
+    }
+
+    /**
      * Generate a random ECDSA private key.
      *
      * @returns {EcdsaPrivateKey}

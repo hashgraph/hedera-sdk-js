@@ -3,7 +3,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
     SCHEDULE_CREATE_TRANSACTION,
 } from "../transaction/Transaction.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
+import Key from "../Key.js";
 
 /**
  * @namespace proto
@@ -19,13 +19,12 @@ import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
- * @typedef {import("@hashgraph/cryptography").Key} Key
- * @typedef {import("@hashgraph/cryptography").PublicKey} PublicKey
- * @typedef {import("@hashgraph/cryptography").PrivateKey} PrivateKey
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("../PublicKey.js").default} PublicKey
+ * @typedef {import("../PrivateKey.js").default} PrivateKey
  */
 
 /**
@@ -109,7 +108,7 @@ export default class ScheduleCreateTransaction extends Transaction {
             new ScheduleCreateTransaction({
                 adminKey:
                     create.adminKey != null
-                        ? keyFromProtobuf(create.adminKey)
+                        ? Key._fromProtobufKey(create.adminKey)
                         : undefined,
                 payerAccountID:
                     create.payerAccountID != null
@@ -253,7 +252,7 @@ export default class ScheduleCreateTransaction extends Transaction {
     _makeTransactionData() {
         return {
             adminKey:
-                this._adminKey != null ? keyToProtobuf(this._adminKey) : null,
+                this._adminKey != null ? this._adminKey._toProtobufKey() : null,
             payerAccountID:
                 this._payerAccountId != null
                     ? this._payerAccountId._toProtobuf()

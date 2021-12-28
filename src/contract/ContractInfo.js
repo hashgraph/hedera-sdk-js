@@ -3,14 +3,10 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
 import Hbar from "../Hbar.js";
-import { keyFromProtobuf, keyToProtobuf } from "../cryptography/protobuf.js";
 import Long from "long";
 import * as proto from "@hashgraph/proto";
 import TokenRelationshipMap from "../account/TokenRelationshipMap.js";
-
-/**
- * @typedef {import("@hashgraph/cryptography").Key} Key
- */
+import Key from "../Key.js";
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -142,7 +138,9 @@ export default class ContractInfo {
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : "",
             adminKey:
-                info.adminKey != null ? keyFromProtobuf(info.adminKey) : null,
+                info.adminKey != null
+                    ? Key._fromProtobufKey(info.adminKey)
+                    : null,
             expirationTime: Timestamp._fromProtobuf(
                 /** @type {proto.ITimestamp} */ (info.expirationTime)
             ),
@@ -172,7 +170,7 @@ export default class ContractInfo {
             accountID: this.accountId._toProtobuf(),
             contractAccountID: this.contractAccountId,
             adminKey:
-                this.adminKey != null ? keyToProtobuf(this.adminKey) : null,
+                this.adminKey != null ? this.adminKey._toProtobufKey() : null,
             expirationTime: this.expirationTime._toProtobuf(),
             autoRenewPeriod:
                 this.autoRenewPeriod != null
