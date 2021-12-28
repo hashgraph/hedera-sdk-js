@@ -68,32 +68,30 @@ export default class NetworkName {
      * @param {string|number} networkId
      * @returns {Uint8Array}
      */
-    static _networkIdToProtobuf(networkId) {
+    static networkIdToProtobuf(networkId) {
         return new Uint8Array(
-            typeof networkId != "string" ? networkId : parseInt(networkId)
+            typeof networkId != "string" ? [networkId] : [parseInt(networkId)]
         );
     }
 
     /**
      * @returns {Uint8Array}
      */
-    _toProtobuf() {
-        //TODO
-        //Rename to toBytes?
-        //returns bytes obj for 0,1,2
-        return new Uint8Array(this._networkId);
+    toProtobuf() {
+        // TODO
+        // rename?
+        return new Uint8Array([this._networkId]);
     }
 
-    // /**
-    //  * @internal
-    //  * @param {Uint8Array} networkName
-    //  * @returns {NetworkName}
-    //  */
-    // static _fromProtobuf(networkName) {
-    //TODO
-    //rename to fromBytes?
-    //returns NetworkName from bytes 0,1,2
-    // }
+    /**
+     * @param {Uint8Array} networkName
+     * @returns {NetworkName}
+     */
+    static fromProtobuf(networkName) {
+        // TODO
+        // rename?
+        return this.fromNetworkId(networkName[0]);
+    }
 
     /**
      * @param {number|string} networkId

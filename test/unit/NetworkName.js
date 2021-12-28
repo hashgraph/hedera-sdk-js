@@ -87,34 +87,59 @@ describe("NetworkName", function () {
         expect(networkName.networkName).to.eql(NetworkName.PREVIEWNET);
     });
 
-    // it("_toProtobuf returns Uint8Array of NetworkId",function () {
-    //     let networkName = new NetworkName(1);
-    //     console.log(networkName._toProtobuf());
-    //     expect(networkName._toProtobuf()).to.eql("0");
+    it("toProtobuf returns Uint8Array of networkId", function () {
+        let networkName = new NetworkName(0);
+        expect(networkName.toProtobuf()[0]).to.eql(0);
 
-    //     networkName = new NetworkName("0");
-    //     expect(networkName._toProtobuf()).to.eql("0");
+        networkName = new NetworkName("0");
+        expect(networkName.toProtobuf()[0]).to.eql(0);
 
-    //     networkName = new NetworkName(1);
-    //     expect(networkName._toProtobuf()).to.eql("1");
+        networkName = new NetworkName(1);
+        expect(networkName.toProtobuf()[0]).to.eql(1);
 
-    //     networkName = new NetworkName("1");
-    //     expect(networkName._toProtobuf()).to.eql("1");
+        networkName = new NetworkName("1");
+        expect(networkName.toProtobuf()[0]).to.eql(1);
 
-    //     networkName = new NetworkName(2);
-    //     expect(networkName._toProtobuf()).to.eql("2");
+        networkName = new NetworkName(2);
+        expect(networkName.toProtobuf()[0]).to.eql(2);
 
-    //     networkName = new NetworkName("2");
-    //     expect(networkName._toProtobuf()).to.eql("2");
-    // });
+        networkName = new NetworkName("2");
+        expect(networkName.toProtobuf()[0]).to.eql(2);
+    });
 
-    // it("_networkIdToProtobuf returns Uint8Array of networkId",function () {
+    it("networkIdToProtobuf returns Uint8Array of networkId", function () {
+        expect(NetworkName.networkIdToProtobuf(0)[0]).to.eql(0);
+        expect(NetworkName.networkIdToProtobuf("0")[0]).to.eql(0);
 
-    // });
+        expect(NetworkName.networkIdToProtobuf(1)[0]).to.eql(1);
+        expect(NetworkName.networkIdToProtobuf("1")[0]).to.eql(1);
 
-    // it("_fromProtobuf returns NetworkName from bytes", function() {
+        expect(NetworkName.networkIdToProtobuf(2)[0]).to.eql(2);
+        expect(NetworkName.networkIdToProtobuf("2")[0]).to.eql(2);
+    });
 
-    // });
+    it("fromProtobuf returns NetworkName from bytes", function () {
+        expect(NetworkName.fromProtobuf(new Uint8Array([0])).networkId).to.eql(
+            0
+        );
+        expect(
+            NetworkName.fromProtobuf(new Uint8Array([0])).networkName
+        ).to.eql(NetworkName.MAINNET);
+
+        expect(NetworkName.fromProtobuf(new Uint8Array([1])).networkId).to.eql(
+            1
+        );
+        expect(
+            NetworkName.fromProtobuf(new Uint8Array([1])).networkName
+        ).to.eql(NetworkName.TESTNET);
+
+        expect(NetworkName.fromProtobuf(new Uint8Array([2])).networkId).to.eql(
+            2
+        );
+        expect(
+            NetworkName.fromProtobuf(new Uint8Array([2])).networkName
+        ).to.eql(NetworkName.PREVIEWNET);
+    });
 
     it("fromNetworkId returns NetworkName", function () {
         let networkName = NetworkName.fromNetworkId(0);
