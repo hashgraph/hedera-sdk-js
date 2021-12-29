@@ -48,7 +48,7 @@ export default class AsynchronyLevel {
     }
 
     /**
-     * @returns {boolean} 
+     * @returns {boolean}
      */
     get isNone() {
         return this._code === AsynchronyLevel.None._code;

@@ -129,7 +129,9 @@ export default class Query extends Executable {
      */
     getCost(client) {
         if (this._nodeAccountIds.isEmpty) {
-            this._nodeAccountIds.setList(client._network.getNodeAccountIdsForExecute());
+            this._nodeAccountIds.setList(
+                client._network.getNodeAccountIdsForExecute()
+            );
         }
 
         if (COST_QUERY.length != 1) {
@@ -199,7 +201,9 @@ export default class Query extends Executable {
         }
 
         if (this._nodeAccountIds.isEmpty) {
-            this._nodeAccountIds.setList(client._network.getNodeAccountIdsForExecute());
+            this._nodeAccountIds.setList(
+                client._network.getNodeAccountIdsForExecute()
+            );
         }
 
         const operator = client._operator;

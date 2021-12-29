@@ -615,7 +615,13 @@ export default class Transaction extends Executable {
      */
     _setTransactionIds(client) {
         if (client != null && this._transactionIds.isEmpty) {
-            this.setTransactionId(TransactionId.generate(client._operatorRequired.accountId));
+            if (client._operator == null) {
+                throw new Error("`client` must have an `operator` set");
+            }
+
+            this.setTransactionId(
+                TransactionId.generate(client._operator.accountId)
+            );
         }
 
         if (this._transactionIds.isEmpty) {
@@ -646,7 +652,7 @@ export default class Transaction extends Executable {
                 "`nodeAccountId` must be set or `client` must be provided with `freezeWith`"
             );
         }
-        
+
         this._nodeAccountIds.setList(
             client._network.getNodeAccountIdsForExecute()
         );
@@ -679,19 +685,21 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     freezeWith(client) {
-        this._asynchronyLevel = client != null ? client._asynchronyLevel : AsynchronyLevel.None;
+        this._asynchronyLevel =
+            client != null ? client._asynchronyLevel : AsynchronyLevel.None;
+
+        this._setMaxTransactionFee(client);
 
         switch (this._asynchronyLevel) {
             case AsynchronyLevel.None:
-                this._setMaxTransactionFee(client);
+            case AsynchronyLevel.Sign:
                 this._setTransactionIds(client);
                 this._setNodeAccountIds(client);
                 this._buildSignedTransactions();
-            break;
-            case AsynchronyLevel.Sign:
-            break;
+                break;
             case AsynchronyLevel.Build:
-            break;
+                this._setNodeAccountIds(client);
+                break;
         }
 
         return this;
@@ -897,19 +905,30 @@ export default class Transaction extends Executable {
      * @internal
      */
     _buildTransaction(index) {
-        if (this._transactions.length < index) {
-            for (let i = this._transactions.length; i < index; i++) {
-                this._transactions.push(null);
-            }
+        switch (this._asynchronyLevel) {
+            case AsynchronyLevel.None:
+            case AsynchronyLevel.Sign:
+                if (this._transactions.length < index) {
+                    for (let i = this._transactions.length; i < index; i++) {
+                        this._transactions.push(null);
+                    }
+                }
+
+                this._transactions[index] = {
+                    signedTransactionBytes: ProtoSignedTransaction.encode(
+                        this._signedTransactions[index]
+                    ).finish(),
+                };
+                break;
+            case AsynchronyLevel.Build:
+                this._transactions[index] = {
+                    signedTransactionBytes: ProtoSignedTransaction.encode(
+                        this._makeSignedTransaction(this._nodeAccountIds.next)
+                    ).finish(),
+                };
+
+                break;
         }
-
-        // console.log(JSON.stringify(this._signedTransactions[index]));
-
-        this._transactions[index] = {
-            signedTransactionBytes: ProtoSignedTransaction.encode(
-                this._signedTransactions[index]
-            ).finish(),
-        };
     }
 
     /**
@@ -1157,7 +1176,6 @@ export default class Transaction extends Executable {
             throw "transaction did not have exactly one node ID set";
         }
     }
-
 }
 
 /**

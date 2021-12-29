@@ -109,19 +109,6 @@ export default class Client {
     }
 
     /**
-     * @returns {ClientOperator} 
-     */
-    get _requiredOperator() {
-        if (this._operator == null) {
-            throw new Error(
-                "`client` must have an `operator` must be set"
-            );
-        }
-
-        return this._operator;
-    }
-
-    /**
      * @param {NetworkName} networkName
      * @returns {this}
      */
@@ -172,7 +159,6 @@ export default class Client {
 
     /**
      * @deprecated - use `setAsynchronyLevel()` instead
-     *
      * @param {boolean} signOnDemand
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
