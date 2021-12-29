@@ -23,6 +23,7 @@ package proto;
  */
 
 import "timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 option java_package = "com.hederahashgraph.api.proto.java";
 option java_multiple_files = true;
@@ -264,6 +265,12 @@ message TokenTransferList {
      * which has a sender and receiver account, including the serial number of the NFT
      */
     repeated NftTransfer nftTransfers = 3;
+
+    /**
+     * If present, the number of decimals this fungible token type is expected to have. The transfer
+     * will fail with UNEXPECTED_TOKEN_DECIMALS if the actual decimals differ.
+     */
+    google.protobuf.UInt32Value expected_decimals = 4;
 }
 
 /**
