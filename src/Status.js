@@ -503,6 +503,8 @@ export default class Status {
                 return "MAX_STORAGE_IN_PRICE_REGIME_HAS_BEEN_USED";
             case Status.InvalidAliasKey:
                 return "INVALID_ALIAS_KEY";
+            case Status.UnexpectedTokenDecimals:
+                return "UNEXPECTED_TOKEN_DECIMALS";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -997,6 +999,8 @@ export default class Status {
                 return Status.MaxStorageInPriceRegimeHasBeenUsed;
             case 282:
                 return Status.InvalidAliasKey;
+            case 283:
+                return Status.UnexpectedTokenDecimals;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2260,3 +2264,9 @@ Status.MaxStorageInPriceRegimeHasBeenUsed = new Status(281);
  * unknown protobuf fields.
  */
 Status.InvalidAliasKey = new Status(282);
+
+/**
+ * A fungible token transfer expected a different number of decimals than the involved
+ * type actually has.
+ */
+Status.UnexpectedTokenDecimals = new Status(283);
