@@ -45,6 +45,7 @@ export default class TokenUpdateTransaction extends Transaction {
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {string} [props.tokenMemo]
      * @param {Key} [props.feeScheduleKey]
+     * @param {Key} [props.pauseKey]
      */
     constructor(props = {}) {
         super();
@@ -133,6 +134,12 @@ export default class TokenUpdateTransaction extends Transaction {
          */
         this._feeScheduleKey = null;
 
+        /**
+         * @private
+         * @type {?Key}
+         */
+        this._pauseKey = null;
+
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);
         }
@@ -187,6 +194,10 @@ export default class TokenUpdateTransaction extends Transaction {
 
         if (props.feeScheduleKey != null) {
             this.setFeeScheduleKey(props.feeScheduleKey);
+        }
+
+        if (props.pauseKey != null) {
+            this.setPauseKey(props.pauseKey);
         }
     }
 
@@ -534,6 +545,16 @@ export default class TokenUpdateTransaction extends Transaction {
         this._requireNotFrozen();
         this._feeScheduleKey = feeScheduleKey;
 
+        return this;
+    }
+
+    /**
+     * @param {Key} pauseKey
+     * @returns {this}
+     */
+    setPauseKey(pauseKey) {
+        this._requireNotFrozen();
+        this._pauseKey = pauseKey;
         return this;
     }
 
