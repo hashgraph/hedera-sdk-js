@@ -1110,4 +1110,10 @@ enum ResponseCodeEnum {
    * unknown protobuf fields.
    */
   INVALID_ALIAS_KEY = 282;
+
+  /**
+   * A fungible token transfer expected a different number of decimals than the involved 
+   * type actually has.
+   */
+  UNEXPECTED_TOKEN_DECIMALS = 283;
 }
