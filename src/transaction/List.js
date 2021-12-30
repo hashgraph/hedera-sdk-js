@@ -41,6 +41,15 @@ export default class List {
         return this.get(this.advance());
     }
 
+    get current() {
+        let index = this.index - 1;
+        if (index < 0) {
+            index = this.length - 1;
+        }
+
+        return this.get(index);
+    }
+
     /**
      * @returns {number}
      */

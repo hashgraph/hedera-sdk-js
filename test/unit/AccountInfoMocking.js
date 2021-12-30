@@ -90,7 +90,87 @@ describe("AccountInfo", function () {
         servers.close();
     });
 
-    it("should generate new transaction ID per execution unless explicitly set", async function () {
+    it("should not generate new transaction ID per execution if sign on demand is disabled", async function () {
+        this.timeout(10000);
+
+        const transactionIds = new Set();
+        let count = 0;
+
+        /**
+         * @type {(request: proto.ITransaction) => proto.ITransactionResponse}
+         */
+        const call = (request) => {
+            expect(request.signedTransactionBytes).to.not.be.null;
+            const signedTransaction = proto.SignedTransaction.decode(
+                request.signedTransactionBytes
+            );
+
+            expect(signedTransaction.bodyBytes).to.not.be.null;
+            const transactionBody = proto.TransactionBody.decode(
+                signedTransaction.bodyBytes
+            );
+
+            expect(transactionBody.transactionId).to.not.be.null;
+            const transactionId = TransactionId._fromProtobuf(
+                transactionBody.transactionID
+            ).toString();
+            expect(transactionId).to.not.be.equal("");
+
+            if (count == 0) {
+                expect(transactionIds.has(transactionId)).to.be.false;
+            } else {
+                expect(transactionIds.has(transactionId)).to.be.true;
+            }
+            transactionIds.add(transactionId);
+
+            const sigMap = /** @type {proto.ISignatureMap} */ (
+                signedTransaction.sigMap
+            );
+
+            expect(sigMap.sigPair).to.be.not.null;
+            expect(sigMap.sigPair.length).to.be.not.equal(0);
+
+            for (const sigPair of sigMap.sigPair) {
+                let verified = false;
+
+                if (sigPair.ed25519 != null) {
+                    verified = PublicKey.fromBytesED25519(
+                        sigPair.pubKeyPrefix
+                    ).verify(signedTransaction.bodyBytes, sigPair.ed25519);
+                } else if (sigPair.ECDSASecp256k1 != null) {
+                    verified = PublicKey.fromBytesECDSA(
+                        sigPair.pubKeyPrefix
+                    ).verify(
+                        signedTransaction.bodyBytes,
+                        sigPair.ECDSASecp256k1
+                    );
+                }
+
+                expect(verified).to.be.true;
+            }
+
+            const nodeTransactionPrecheckCode =
+                count < 2
+                    ? proto.ResponseCodeEnum.OK
+                    : proto.ResponseCodeEnum.BUSY;
+
+            count += 1;
+
+            return { nodeTransactionPrecheckCode };
+        };
+
+        const responses1 = [{ call }, { call }, { call }];
+
+        const { client, servers } = await Mocker.withResponses([responses1]);
+
+        await new FileCreateTransaction()
+            .setContents("hello 1")
+            .execute(client);
+
+        servers.close();
+    });
+
+    it("should generate new transaction ID per execution", async function () {
         this.timeout(10000);
 
         const transactionIds = new Set();
@@ -119,7 +199,9 @@ describe("AccountInfo", function () {
             expect(transactionIds.has(transactionId)).to.be.false;
             transactionIds.add(transactionId);
 
-            const sigMap = /** @type {proto.ISignatureMap} */ (signedTransaction.sigMap);
+            const sigMap = /** @type {proto.ISignatureMap} */ (
+                signedTransaction.sigMap
+            );
 
             expect(sigMap.sigPair).to.be.not.null;
             expect(sigMap.sigPair.length).to.be.not.equal(0);
@@ -128,9 +210,16 @@ describe("AccountInfo", function () {
                 let verified = false;
 
                 if (sigPair.ed25519 != null) {
-                    verified = PublicKey.fromBytesED25519(sigPair.pubKeyPrefix).verify(signedTransaction.bodyBytes, sigPair.ed25519);
+                    verified = PublicKey.fromBytesED25519(
+                        sigPair.pubKeyPrefix
+                    ).verify(signedTransaction.bodyBytes, sigPair.ed25519);
                 } else if (sigPair.ECDSASecp256k1 != null) {
-                    verified = PublicKey.fromBytesECDSA(sigPair.pubKeyPrefix).verify(signedTransaction.bodyBytes, sigPair.ECDSASecp256k1);
+                    verified = PublicKey.fromBytesECDSA(
+                        sigPair.pubKeyPrefix
+                    ).verify(
+                        signedTransaction.bodyBytes,
+                        sigPair.ECDSASecp256k1
+                    );
                 }
 
                 expect(verified).to.be.true;
@@ -146,22 +235,13 @@ describe("AccountInfo", function () {
             return { nodeTransactionPrecheckCode };
         };
 
-        const responses1 = [{ call }, { call }, { call }, { call }, { call }, { call }];
+        const responses1 = [{ call }, { call }, { call }];
 
         const { client, servers } = await Mocker.withResponses([responses1]);
 
         client.setSignOnDemand(true);
 
         await new FileCreateTransaction()
-            .setContents("hello 1")
-            .execute(client);
-
-        client.setSignOnDemand(false);
-        transactionIds.clear();
-        count = 0;
-
-        await new FileCreateTransaction()
-            .setTransactionId(TransactionId.generate(client.operatorAccountId))
             .setContents("hello 1")
             .execute(client);
 

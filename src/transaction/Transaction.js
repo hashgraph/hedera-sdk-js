@@ -428,13 +428,13 @@ export default class Transaction extends Executable {
      * @returns {TransactionId}
      */
     get transactionId() {
-        if (this._transactionIds.list.length === 0) {
+        if (this._transactionIds.isEmpty) {
             throw new Error(
                 "transaction must have been frozen before getting the transaction ID, try calling `freeze`"
             );
         }
 
-        return this._transactionIds.list[this._nextTransactionIndex];
+        return this._transactionIds.next;
     }
 
     /**
@@ -607,14 +607,7 @@ export default class Transaction extends Executable {
     }
 
     _setTransactionId() {
-        if (this._operator != null && this._transactionIds.isEmpty) {
-            const transactionId = TransactionId.generate(
-                this._operator.accountId
-            );
-            this._transactionIds.setList([transactionId]);
-        }
-
-        if (this._transactionIds.isEmpty) {
+        if (this._operator == null && this._transactionIds.isEmpty) {
             throw new Error(
                 "`transactionId` must be set or `client` must be provided with `freezeWith`"
             );
@@ -686,6 +679,7 @@ export default class Transaction extends Executable {
         }
 
         if (!this._signOnDemand) {
+            this._buildNewTransactionIdList();
             this._buildSignedTransactions();
         }
 
@@ -786,16 +780,28 @@ export default class Transaction extends Executable {
 
         // on execute, sign each transaction with the operator, if present
         // and we are signing a transaction that used the default transaction ID
-
-        const transactionId = this.transactionId;
         const operatorAccountId = client.operatorAccountId;
 
-        if (
-            operatorAccountId != null &&
-            transactionId.accountId != null &&
-            operatorAccountId.equals(transactionId.accountId)
-        ) {
-            await this.signWithOperator(client);
+        if (operatorAccountId == null) {
+            return;
+        }
+
+        if (!this._signOnDemand) {
+            const transactionId = this.transactionId;
+
+            if (
+                transactionId.accountId != null &&
+                operatorAccountId.equals(transactionId.accountId)
+            ) {
+                await this.signWithOperator(client);
+            }
+        } else {
+            if (
+                this._operator != null &&
+                this._operator.accountId.equals(operatorAccountId)
+            ) {
+                await this.signWithOperator(client);
+            }
         }
     }
 
@@ -805,11 +811,18 @@ export default class Transaction extends Executable {
      * @returns {Promise<proto.ITransaction>}
      */
     async _makeRequestAsync() {
-        this._buildNewTransactionIdList();
         if (this._signOnDemand) {
+            this._buildNewTransactionIdList();
             return await this._buildTransactionAsync();
         } else {
-            this._buildTransaction(this._nextTransactionIndex);
+            const index =
+                this._nextTransactionIndex * this._nodeAccountIds.length +
+                this._nodeAccountIds.index;
+
+            this._buildTransaction(index);
+            return /** @type {proto.ITransaction} */ (
+                this._transactions[index]
+            );
         }
     }
 
@@ -853,18 +866,14 @@ export default class Transaction extends Executable {
     }
 
     _buildNewTransactionIdList() {
-        if (
-            this._transactionIds.locked ||
-            this._transactionIds.isEmpty ||
-            this._operator == null
-        ) {
+        if (this._transactionIds.locked || this._operator == null) {
             return;
         }
 
         const list = [];
         const timestamp = Timestamp.generate();
 
-        for (let i = 0; i < this._transactionIds.length; i++) {
+        for (let i = 0; i < Math.max(this._transactionIds.length, 1); i++) {
             const transactionId = TransactionId.withValidStart(
                 this._operator.accountId,
                 timestamp.plusNanos(i)
