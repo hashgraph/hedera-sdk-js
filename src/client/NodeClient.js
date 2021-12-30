@@ -114,19 +114,19 @@ export default class NodeClient extends Client {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
                         this.setMirrorNetwork(MirrorNetwork.MAINNET);
-                        this.setNetworkName(NetworkName.MAINNET);
+                        this.setNetworkName(NetworkName.NETNAMES[0]);
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
                         this.setMirrorNetwork(MirrorNetwork.TESTNET);
-                        this.setNetworkName(NetworkName.TESTNET);
+                        this.setNetworkName(NetworkName.NETNAMES[1]);
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
-                        this.setNetworkName(NetworkName.PREVIEWNET);
+                        this.setNetworkName(NetworkName.NETNAMES[2]);
                         break;
 
                     default:

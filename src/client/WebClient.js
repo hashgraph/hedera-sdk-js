@@ -56,17 +56,17 @@ export default class WebClient extends Client {
                 switch (props.network) {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
-                        this.setNetworkName(NetworkName.MAINNET);
+                        this.setNetworkName(NetworkName.NETNAMES[0]);
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
-                        this.setNetworkName(NetworkName.TESTNET);
+                        this.setNetworkName(NetworkName.NETNAMES[1]);
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
-                        this.setNetworkName(NetworkName.PREVIEWNET);
+                        this.setNetworkName(NetworkName.NETNAMES[2]);
                         break;
 
                     default:

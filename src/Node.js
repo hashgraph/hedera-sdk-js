@@ -85,7 +85,7 @@ export default class Node extends ManagedNode {
      * @returns {this}
      */
     setCert(ledgerId) {
-        const networkName = NetworkName.networkNameFromId(ledgerId);
+        const networkName = NetworkName.toName(ledgerId);
 
         switch (networkName) {
             case "previewnet":

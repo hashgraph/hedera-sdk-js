@@ -111,7 +111,7 @@ export default class MangedNetwork {
      * @returns {this}
      */
     setNetworkName(networkName) {
-        this._ledgerId = NetworkName.networkIdFromName(networkName).toString();
+        this._ledgerId = NetworkName.toId(networkName).toString();
         return this;
     }
 
@@ -120,7 +120,7 @@ export default class MangedNetwork {
      */
     get networkName() {
         return this._ledgerId != null
-            ? NetworkName.networkNameFromId(this._ledgerId)
+            ? NetworkName.toName(this._ledgerId)
             : null;
     }
 

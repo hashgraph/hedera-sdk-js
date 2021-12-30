@@ -108,7 +108,7 @@ export default class Network extends ManagedNetwork {
      */
     get networkName() {
         return this._ledgerId != null
-            ? NetworkName.networkNameFromId(this._ledgerId)
+            ? NetworkName.toName(this._ledgerId)
             : null;
     }
 
