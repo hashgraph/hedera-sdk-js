@@ -11,12 +11,16 @@ export default class List {
 
     /**
      * @param {T[]} list
-     * @param {boolean=} isSetByUser
+     * @param {boolean=} locked
      * @returns {this}
      */
-    setList(list, isSetByUser = false) {
+    setList(list, locked = false) {
+        if (this.locked && !locked) {
+            throw new Error("attempting to override transaction IDs");
+        }
+
         this.list = list;
-        this.isSetByUser = isSetByUser;
+        this.locked = locked;
         this.index = 0;
 
         return this;
@@ -27,13 +31,7 @@ export default class List {
      * @returns {T}
      */
     get(index) {
-        if (index > this.list.length) {
-            throw new Error(
-                `index ${index} out of bounds for list of length ${this.list.length}`
-            );
-        }
-
-        return this.list[index];
+        return this.list[index % this.list.length];
     }
 
     /**

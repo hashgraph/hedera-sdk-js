@@ -145,6 +145,7 @@ export const INTERNAL = {
 
 /**
  * @typedef {object} Response
+ * @property {(request: proto.Transaction | proto.Query) => proto.Response | proto.TransactionResponse} [call]
  * @property {proto.Response | proto.TransactionResponse} [response]
  * @property {grpc.ServiceError} [error]
  */
@@ -189,22 +190,32 @@ class GrpcServer {
         for (const service of this.services) {
             for (const key of Object.keys(service)) {
                 router[key] = /** @type {grpc.handleUnaryCall<any, any>} */ (
-                    _,
+                    call,
                     callback
                 ) => {
+                    const request = call.request;
                     const response = responses[index];
 
                     if (response == null) {
                         callback(ABORTED, null);
                     }
 
-                    const value = response.response;
-                    const error =
-                        response.error != null
-                            ? response.error
-                            : value == null
-                            ? ABORTED
-                            : null;
+                    let value = null;
+                    let error = null;
+
+                    if (response.response != null) {
+                        value = response.response;
+                    }
+
+                    if (response.call != null) {
+                        value = response.call(request);
+                    }
+
+                    if (response.error != null) {
+                        error = response.error;
+                    } else if (value == null) {
+                        error = ABORTED;
+                    }
 
                     callback(error, value);
 

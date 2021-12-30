@@ -6,6 +6,7 @@ import List from "./transaction/List.js";
  * @typedef {import("./account/AccountId.js").default} AccountId
  * @typedef {import("./channel/Channel.js").default} Channel
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("./client/Client.js").ClientOperator} ClientOperator
  */
 
 /**
@@ -53,11 +54,18 @@ export default class Executable {
          */
         this._nodeAccountIds = new List();
 
+        this._signOnDemand = false;
+
         /** @type {number | null} */
         this._minBackoff = null;
 
         /** @type {number | null} */
         this._maxBackoff = null;
+
+        /**
+         * @type {ClientOperator | null}
+         */
+        this._operator = null;
     }
 
     /**

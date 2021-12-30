@@ -5,7 +5,6 @@ import Network from "./Network.js";
 import MirrorNetwork from "./MirrorNetwork.js";
 import PublicKey from "../PublicKey.js";
 import PrivateKey from "../PrivateKey.js";
-import AsynchronyLevel from "../AsynchronyLevel.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -94,7 +93,7 @@ export default class Client {
             }
         }
 
-        this._asynchronyLevel = AsynchronyLevel.None;
+        this._signOnDemand = false;
 
         this._autoValidateChecksums = false;
 
@@ -158,21 +157,17 @@ export default class Client {
     }
 
     /**
-     * @deprecated - use `setAsynchronyLevel()` instead
-     * @param {boolean} signOnDemand
+     * @returns {boolean}
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    setSignOnDemand(signOnDemand) {
-        console.log("Deprecated: use `setAsynchronyLevel()` instead");
-
-        this._asynchronyLevel = AsynchronyLevel.Sign;
+    get signOnDemand() {
+        return this._signOnDemand;
     }
 
     /**
-     * @param {AsynchronyLevel} asynchronyLevel
+     * @param {boolean} signOnDemand
      */
-    setAsynchronyLevel(asynchronyLevel) {
-        this._asynchronyLevel = asynchronyLevel;
+    setSignOnDemand(signOnDemand) {
+        this._signOnDemand = signOnDemand;
     }
 
     /**
