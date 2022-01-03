@@ -23,10 +23,6 @@ export default class LedgerId {
      * @returns {LedgerId}
      */
     static fromString(ledgerId) {
-        ledgerId =
-            hex.decode(ledgerId).toString().length >= 1
-                ? hex.decode(ledgerId).toString()
-                : ledgerId;
 
         switch (ledgerId) {
             case LedgerId.NETNAMES[0]:
