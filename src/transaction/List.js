@@ -11,19 +11,46 @@ export default class List {
 
     /**
      * @param {T[]} list
-     * @param {boolean=} locked
      * @returns {this}
      */
-    setList(list, locked = false) {
-        if (this.locked && !locked) {
-            throw new Error("attempting to override transaction IDs");
+    setList(list) {
+        if (this.locked) {
+            throw new Error("list is locked");
         }
 
         this.list = list;
-        this.locked = locked;
         this.index = 0;
 
         return this;
+    }
+
+    /**
+     * @param {T[]} items
+     * @returns {this}
+     */
+    push(...items) {
+        if (this.locked) {
+            throw new Error("list is locked");
+        }
+
+        this.list.push(...items);
+        return this;
+    }
+
+    /**
+     * @returns {this}
+     */
+    setLocked() {
+        this.locked = true;
+        return this;
+    }
+
+    clear() {
+        if (this.locked) {
+            throw new Error("list is locked");
+        }
+
+        this.list = [];
     }
 
     /**
@@ -31,7 +58,34 @@ export default class List {
      * @returns {T}
      */
     get(index) {
-        return this.list[index % this.list.length];
+        return this.list[index];
+    }
+
+    /**
+     * @param {number} index
+     * @param {T} item
+     * @returns {this}
+     */
+    set(index, item) {
+        if (this.locked) {
+            throw new Error("list is locked");
+        }
+
+        this.list[index] = item;
+        return this;
+    }
+
+    /**
+     * @param {number} index
+     * @param {() => T} lambda
+     * @returns {this}
+     */
+    setIfAbsent(index, lambda) {
+        if (this.list[index] == null) {
+            this.list[index] = lambda();
+        }
+
+        return this;
     }
 
     /**
@@ -41,6 +95,9 @@ export default class List {
         return this.get(this.advance());
     }
 
+    /**
+     * @returns {T}
+     */
     get current() {
         let index = this.index - 1;
         if (index < 0) {

@@ -25,7 +25,7 @@ export default class TransactionHashMap extends ObjectMap {
         for (let i = 0; i < transaction._nodeAccountIds.length; i++) {
             const nodeAccountId = transaction._nodeAccountIds.list[i];
             const tx = /** @type {proto.ITransaction} */ (
-                transaction._transactions[i]
+                transaction._transactions.get(i)
             );
             const hash = await sha384.digest(
                 /** @type {Uint8Array} */ (tx.signedTransactionBytes)

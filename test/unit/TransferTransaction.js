@@ -38,7 +38,7 @@ describe("TransferTransaction", function () {
         ).to.be.equal(new Hbar(expectedHbar).to(HbarUnit.Hbar).toNumber());
     });
 
-    it("should load ntf transfers from bytes", function () {
+    it("should load nft transfers from bytes", function () {
         const transferTransaction = new TransferTransaction();
         transferTransaction.addNftTransfer(
             tokenId1,

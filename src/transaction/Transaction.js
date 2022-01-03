@@ -88,18 +88,18 @@ export default class Transaction extends Executable {
          * transaction. Each one should share the same transaction ID.
          *
          * @internal
-         * @type {(proto.ITransaction | null)[]}
+         * @type {List<proto.ITransaction | null>}
          */
-        this._transactions = [];
+        this._transactions = new List();
 
         /**
          * List of proto transactions that have been built from this SDK
          * transaction. Each one should share the same transaction ID.
          *
          * @internal
-         * @type {proto.ISignedTransaction[]}
+         * @type {List<proto.ISignedTransaction>}
          */
-        this._signedTransactions = [];
+        this._signedTransactions = new List();
 
         /**
          * Set of public keys (as string) who have signed this transaction so
@@ -178,10 +178,10 @@ export default class Transaction extends Executable {
 
         const list = ProtoTransactionList.decode(bytes).transactionList;
 
-        if (list.length == 0) {
+        if (list.length === 0) {
             const transaction = ProtoTransaction.decode(bytes);
 
-            if (transaction.signedTransactionBytes.length != 0) {
+            if (transaction.signedTransactionBytes.length !== 0) {
                 list.push(transaction);
             } else {
                 list.push({
@@ -303,10 +303,11 @@ export default class Transaction extends Executable {
             }
         }
 
-        transaction._transactions = transactions;
-        transaction._signedTransactions = signedTransactions;
-        transaction._transactionIds.setList(transactionIds, true);
-        transaction._nodeAccountIds.setList(nodeIds, true);
+        transaction._transactions.setList(transactions);
+        transaction._signedTransactions.setList(signedTransactions).setLocked();
+        transaction._transactionIds.setList(transactionIds).setLocked();
+        transaction._nodeAccountIds.setList(nodeIds).setLocked();
+
         transaction._nextNodeAccountIdIndex = 0;
         transaction._nextTransactionIndex = 0;
         transaction._transactionValidDuration =
@@ -452,7 +453,7 @@ export default class Transaction extends Executable {
      */
     setTransactionId(transactionId) {
         this._requireNotFrozen();
-        this._transactionIds.setList([transactionId], true);
+        this._transactionIds.setList([transactionId]).setLocked();
 
         return this;
     }
@@ -473,7 +474,7 @@ export default class Transaction extends Executable {
      * @returns {Promise<this>}
      */
     async signWith(publicKey, transactionSigner) {
-        if (!this._signOnDemand) {
+        if (!super._signOnDemand) {
             this._requireFrozen();
         }
 
@@ -490,17 +491,17 @@ export default class Transaction extends Executable {
             return this;
         }
 
-        this._transactions = [];
+        this._transactions.clear();
         this._signerPublicKeys.add(publicKeyHex);
 
-        if (this._signOnDemand) {
+        if (super._signOnDemand) {
             this._publicKeys.push(publicKey);
             this._transactionSigners.push(transactionSigner);
 
             return this;
         }
 
-        for (const signedTransaction of this._signedTransactions) {
+        for (const signedTransaction of this._signedTransactions.list) {
             const bodyBytes = /** @type {Uint8Array} */ (
                 signedTransaction.bodyBytes
             );
@@ -562,9 +563,9 @@ export default class Transaction extends Executable {
             return this;
         }
 
-        this._transactions = [];
+        this._transactions.clear();
 
-        for (const transaction of this._signedTransactions) {
+        for (const transaction of this._signedTransactions.list) {
             if (transaction.sigMap == null) {
                 transaction.sigMap = {};
             }
@@ -634,8 +635,14 @@ export default class Transaction extends Executable {
     }
 
     _buildSignedTransactions() {
-        this._signedTransactions = this._nodeAccountIds.list.map((nodeId) =>
-            this._makeSignedTransaction(nodeId)
+        if (this._signedTransactions.locked) {
+            return;
+        }
+
+        this._signedTransactions.setList(
+            this._nodeAccountIds.list.map((nodeId) =>
+                this._makeSignedTransaction(nodeId)
+            )
         );
     }
 
@@ -660,7 +667,7 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     freezeWith(client) {
-        this._signOnDemand = client != null ? client._signOnDemand : false;
+        super._signOnDemand = client != null ? client._signOnDemand : false;
         this._operator = client != null ? client._operator : null;
         this._maxTransactionFee =
             client != null && this._maxTransactionFee == null
@@ -678,9 +685,19 @@ export default class Transaction extends Executable {
             }
         }
 
-        if (!this._signOnDemand) {
+        if (!super._signOnDemand) {
             this._buildNewTransactionIdList();
             this._buildSignedTransactions();
+        }
+
+        if (this._operator != null) {
+            const publicKeyHex = hex.encode(
+                this._operator.publicKey.toBytesRaw()
+            );
+
+            this._signerPublicKeys.add(publicKeyHex);
+            this._publicKeys.push(this._operator.publicKey);
+            this._transactionSigners.push(this._operator.transactionSigner);
         }
 
         return this;
@@ -695,11 +712,16 @@ export default class Transaction extends Executable {
         this._requireFrozen();
         this._requireNotSignOnDemand();
 
+        // Locking the transaction IDs and node account IDs is necessary for consistency
+        // between before and after execution
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
+
         this._buildAllTransactions();
 
         return ProtoTransactionList.encode({
             transactionList: /** @type {proto.ITransaction[]} */ (
-                this._transactions
+                this._transactions.list
             ),
         }).finish();
     }
@@ -710,11 +732,19 @@ export default class Transaction extends Executable {
     async toBytesAsync() {
         this._requireFrozen();
 
+        // Locking the transaction IDs and node account IDs is necessary for consistency
+        // between before and after execution
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
+
         await this._buildAllTransactionsAsync();
+
+        this._transactions.setLocked();
+        this._signedTransactions.setLocked();
 
         return ProtoTransactionList.encode({
             transactionList: /** @type {proto.ITransaction[]} */ (
-                this._transactions
+                this._transactions.list
             ),
         }).finish();
     }
@@ -725,11 +755,19 @@ export default class Transaction extends Executable {
     async getTransactionHash() {
         this._requireFrozen();
 
+        // Locking the transaction IDs and node account IDs is necessary for consistency
+        // between before and after execution
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
+
         await this._buildAllTransactionsAsync();
+
+        this._transactions.setLocked();
+        this._signedTransactions.setLocked();
 
         return sha384.digest(
             /** @type {Uint8Array} */ (
-                /** @type {proto.ITransaction} */ (this._transactions[0])
+                /** @type {proto.ITransaction} */ (this._transactions.get(0))
                     .signedTransactionBytes
             )
         );
@@ -740,7 +778,17 @@ export default class Transaction extends Executable {
      */
     async getTransactionHashPerNode() {
         this._requireFrozen();
+
+        // Locking the transaction IDs and node account IDs is necessary for consistency
+        // between before and after execution
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
+
         await this._buildAllTransactionsAsync();
+
+        this._transactions.setLocked();
+        this._signedTransactions.setLocked();
+
         return await TransactionHashMap._fromTransaction(this);
     }
 
@@ -786,7 +834,8 @@ export default class Transaction extends Executable {
             return;
         }
 
-        if (!this._signOnDemand) {
+        // Sign with operator if necessary
+        if (!super._signOnDemand) {
             const transactionId = this.transactionId;
 
             if (
@@ -811,19 +860,23 @@ export default class Transaction extends Executable {
      * @returns {Promise<proto.ITransaction>}
      */
     async _makeRequestAsync() {
-        if (this._signOnDemand) {
-            this._buildNewTransactionIdList();
-            return await this._buildTransactionAsync();
-        } else {
-            const index =
-                this._nextTransactionIndex * this._nodeAccountIds.length +
-                this._nodeAccountIds.index;
+        const index =
+            this._nextTransactionIndex * this._nodeAccountIds.length +
+            this._nodeAccountIds.index;
 
+        if (this._signedTransactions.locked || this._transactions.locked) {
             this._buildTransaction(index);
             return /** @type {proto.ITransaction} */ (
-                this._transactions[index]
+                this._transactions.get(index)
             );
         }
+
+        if (!this._transactionIds.locked) {
+            this._buildNewTransactionIdList();
+        }
+
+        // Nothing is locked we can build a new transaction
+        return await this._buildTransactionAsync();
     }
 
     /**
@@ -895,15 +948,20 @@ export default class Transaction extends Executable {
 
     async _buildAllTransactionsAsync() {
         this._buildNewTransactionIdList();
+        this._buildSignedTransactions();
+
+        if (this._transactions.locked) {
+            return;
+        }
 
         for (let i = 0; i < this._signedTransactions.length; i++) {
-            await this._buildTransactionAsync();
+            this._transactions.push(await this._buildTransactionAsync());
         }
     }
 
     /**
-     * @param {number} index
      * @internal
+     * @param {number} index
      */
     _buildTransaction(index) {
         if (this._transactions.length < index) {
@@ -912,11 +970,13 @@ export default class Transaction extends Executable {
             }
         }
 
-        this._transactions[index] = {
-            signedTransactionBytes: ProtoSignedTransaction.encode(
-                this._signedTransactions[index]
-            ).finish(),
-        };
+        this._transactions.setIfAbsent(index, () => {
+            return {
+                signedTransactionBytes: ProtoSignedTransaction.encode(
+                    this._signedTransactions.get(index)
+                ).finish(),
+            };
+        });
     }
 
     /**
@@ -1046,6 +1106,8 @@ export default class Transaction extends Executable {
      * @returns {proto.ITransactionBody}
      */
     _makeTransactionBody(nodeId) {
+        const transactionId = this._transactionIds.next;
+
         return {
             [this._getTransactionDataCase()]: this._makeTransactionData(),
             transactionFee:
@@ -1053,7 +1115,7 @@ export default class Transaction extends Executable {
                     ? this._maxTransactionFee.toTinybars()
                     : null,
             memo: this._transactionMemo,
-            transactionID: this._transactionIds.next._toProtobuf(),
+            transactionID: transactionId._toProtobuf(),
             nodeAccountID: nodeId != null ? nodeId._toProtobuf() : null,
             transactionValidDuration: {
                 seconds: Long.fromNumber(this._transactionValidDuration),
@@ -1099,7 +1161,11 @@ export default class Transaction extends Executable {
      * @returns {boolean}
      */
     _isFrozen() {
-        return this._signedTransactions.length > 0;
+        return (
+            super._signOnDemand ||
+            this._signedTransactions.length > 0 ||
+            this._transactions.length > 0
+        );
     }
 
     /**
@@ -1117,7 +1183,7 @@ export default class Transaction extends Executable {
      * @internal
      */
     _requireNotSignOnDemand() {
-        if (this._signOnDemand) {
+        if (super._signOnDemand) {
             throw new Error(
                 "Please use `toBytesAsync()` if `signOnDemand` is enabled"
             );

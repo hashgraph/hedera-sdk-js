@@ -80,7 +80,7 @@ export default class Executable {
      * @returns {this}
      */
     setNodeAccountIds(nodeIds) {
-        this._nodeAccountIds.setList(nodeIds, true);
+        this._nodeAccountIds.setList(nodeIds).setLocked();
         return this;
     }
 

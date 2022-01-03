@@ -8,6 +8,7 @@ import {
 import Mocker, { UNAVAILABLE, INTERNAL, PRIVATE_KEY } from "./Mocker.js";
 import Long from "long";
 import * as proto from "@hashgraph/proto";
+import * as hex from "../src/encoding/hex.js";
 
 const ACCOUNT_INFO_QUERY_COST_RESPONSE = {
     cryptoGetInfo: {
@@ -86,6 +87,54 @@ describe("AccountInfo", function () {
             .execute(client);
 
         expect(info.accountId.toString()).to.be.equal("0.0.10");
+
+        servers.close();
+    });
+
+    it("should be able to execute after getting transaction hashes", async function () {
+        this.timeout(10000);
+
+        const responses1 = [{ response: { nodeTransactionPrecheckCode: 0 } }];
+
+        const { client, servers } = await Mocker.withResponses([responses1]);
+
+        client.setSignOnDemand(true);
+
+        const transaction = new FileCreateTransaction()
+            .setNodeAccountIds([new AccountId(3)])
+            .setContents("hello 1")
+            .freezeWith(client);
+
+        const hash = await transaction.getTransactionHash();
+        const response = await transaction.execute(client);
+
+        expect(hash.length).to.be.equal(48);
+        expect(hex.encode(hash)).to.be.equal(
+            hex.encode(response.transactionHash)
+        );
+
+        servers.close();
+    });
+
+    it("should be able to execute after getting transaction hashes with sign on demand disabled", async function () {
+        this.timeout(10000);
+
+        const responses1 = [{ response: { nodeTransactionPrecheckCode: 0 } }];
+
+        const { client, servers } = await Mocker.withResponses([responses1]);
+
+        const transaction = new FileCreateTransaction()
+            .setNodeAccountIds([new AccountId(3)])
+            .setContents("hello 1")
+            .freezeWith(client);
+
+        const hash = await transaction.getTransactionHash();
+        const response = await transaction.execute(client);
+
+        expect(hash.length).to.be.equal(48);
+        expect(hex.encode(hash)).to.be.equal(
+            hex.encode(response.transactionHash)
+        );
 
         servers.close();
     });

@@ -217,9 +217,9 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         const initialTransactionId = this.transactionId._toProtobuf();
         let nextTransactionId = this.transactionId;
 
-        super._transactions = [];
-        super._transactionIds.setList([]);
-        super._signedTransactions = [];
+        this._transactions.clear();
+        this._transactionIds.clear();
+        this._signedTransactions.clear();
         super._nextTransactionIndex = 0;
 
         for (let chunk = 0; chunk < chunks; chunk++) {
