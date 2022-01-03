@@ -23,7 +23,6 @@ export default class LedgerId {
      * @returns {LedgerId}
      */
     static fromString(ledgerId) {
-
         switch (ledgerId) {
             case LedgerId.NETNAMES[0]:
             case "0":
