@@ -1,4 +1,5 @@
 import NetworkName from "../src/NetworkName.js";
+import LedgerId from "../src/LedgerId.js";
 
 describe("NetworkName", function () {
     it("toBytes", function () {
@@ -10,6 +11,9 @@ describe("NetworkName", function () {
 
         networkName = NetworkName.PREVIEWNET;
         expect(networkName.toBytes()).to.eql(new Uint8Array([2]));
+
+        networkName = NetworkName.OTHER;
+        expect(networkName.toBytes()).to.eql(new Uint8Array([3]));
     });
 
     it("fromBytes", function () {
@@ -21,6 +25,9 @@ describe("NetworkName", function () {
 
         networkName = NetworkName.fromBytes(new Uint8Array([2]));
         expect(networkName.toString()).to.eql(NetworkName.NETNAMES[2]);
+
+        networkName = NetworkName.fromBytes(new Uint8Array([3]));
+        expect(networkName.toString()).to.eql(NetworkName.NETNAMES[3]);
     });
 
     it("fromString", function () {
@@ -32,22 +39,36 @@ describe("NetworkName", function () {
 
         networkName = NetworkName.fromString(NetworkName.NETNAMES[2]);
         expect(networkName.toString()).to.eql(NetworkName.NETNAMES[2]);
+
+        networkName = NetworkName.fromString(NetworkName.NETNAMES[3]);
+        expect(networkName.toString()).to.eql(NetworkName.NETNAMES[3]);
     });
 
-    it("isMainnet|Testnet|Previewnet", function () {
-        let networkName = NetworkName.MAINNET;
-        expect(networkName.isMainnet()).to.eql(true);
-        expect(networkName.isTestnet()).to.eql(false);
-        expect(networkName.isPreviewnet()).to.eql(false);
+    it("toName", function () {
+        expect(NetworkName.toName(0)).to.eql(NetworkName.NETNAMES[0]);
+        expect(NetworkName.toName("0")).to.eql(NetworkName.NETNAMES[0]);
+        expect(NetworkName.toName(LedgerId.MAINNET)).to.eql(
+            NetworkName.NETNAMES[0]
+        );
 
-        networkName = NetworkName.TESTNET;
-        expect(networkName.isMainnet()).to.eql(false);
-        expect(networkName.isTestnet()).to.eql(true);
-        expect(networkName.isPreviewnet()).to.eql(false);
+        expect(NetworkName.toName(1)).to.eql(NetworkName.NETNAMES[1]);
+        expect(NetworkName.toName("1")).to.eql(NetworkName.NETNAMES[1]);
+        expect(NetworkName.toName(LedgerId.TESTNET)).to.eql(
+            NetworkName.NETNAMES[1]
+        );
 
-        networkName = NetworkName.PREVIEWNET;
-        expect(networkName.isMainnet()).to.eql(false);
-        expect(networkName.isTestnet()).to.eql(false);
-        expect(networkName.isPreviewnet()).to.eql(true);
+        expect(NetworkName.toName(2)).to.eql(NetworkName.NETNAMES[2]);
+        expect(NetworkName.toName("2")).to.eql(NetworkName.NETNAMES[2]);
+        expect(NetworkName.toName(LedgerId.PREVIEWNET)).to.eql(
+            NetworkName.NETNAMES[2]
+        );
+
+        expect(NetworkName.toName(3)).to.eql(NetworkName.NETNAMES[3]);
+        expect(NetworkName.toName("3")).to.eql(NetworkName.NETNAMES[3]);
+        expect(NetworkName.toName(LedgerId.OTHER)).to.eql(
+            NetworkName.NETNAMES[3]
+        );
     });
+
+    it("toId", function () {});
 });

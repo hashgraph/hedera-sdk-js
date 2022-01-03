@@ -9,14 +9,21 @@ export default class NetworkName {
     /**
      * @hideconstructor
      * @internal
-     * @param {string} networkName
+     * @param {string|number} networkName
      */
     constructor(networkName) {
         /**
+         * 0, 1, 2 are translated to mainnet, testnet, and previewnet.
+         * Other values are treated as "other".
+         *
          * @readonly
-         * @type {string}
+         * @type {string|number}
          */
-        this._networkName = networkName;
+        this._networkName = NetworkName.NETNAMES.includes(
+            networkName.toString()
+        )
+            ? networkName
+            : NetworkName.toName(networkName);
 
         Object.freeze(this);
     }
@@ -40,7 +47,9 @@ export default class NetworkName {
      * @returns {string}
      */
     toString() {
-        return this._networkName;
+        return typeof this._networkName == "string"
+            ? this._networkName
+            : this._networkName.toString();
     }
 
     /**
@@ -50,11 +59,17 @@ export default class NetworkName {
     static fromString(networkName) {
         switch (networkName) {
             case NetworkName.NETNAMES[0]:
+            case "0":
                 return NetworkName.MAINNET;
             case NetworkName.NETNAMES[1]:
+            case "1":
                 return NetworkName.TESTNET;
             case NetworkName.NETNAMES[2]:
+            case "2":
                 return NetworkName.PREVIEWNET;
+            case NetworkName.NETNAMES[3]:
+            case "3":
+                return NetworkName.OTHER;
             default:
                 throw new Error(
                     DEFAULT_ERROR.concat("fromString: networkName = ").concat(
@@ -70,9 +85,13 @@ export default class NetworkName {
      */
     static toName(ledgerId) {
         ledgerId =
-            ledgerId instanceof LedgerId
-                ? ledgerId.ledgerId.toString()
-                : ledgerId;
+            ledgerId instanceof LedgerId ? ledgerId.toString() : ledgerId;
+
+        if (NetworkName.NETNAMES.includes(ledgerId.toString())) {
+            //if LedgerId was constructed with a network name, return name
+            return ledgerId.toString();
+        }
+
         switch (ledgerId) {
             case 0:
             case "0":
@@ -84,7 +103,7 @@ export default class NetworkName {
             case "2":
                 return NetworkName.NETNAMES[2];
             default:
-                throw new Error(DEFAULT_ERROR.concat("nameFromId"));
+                return NetworkName.NETNAMES[3];
         }
     }
 
@@ -101,31 +120,12 @@ export default class NetworkName {
             case NetworkName.NETNAMES[2]:
                 return 2;
             default:
-                throw new Error(DEFAULT_ERROR.concat("idFromName"));
+                return 3;
         }
     }
-
-    /**
-     * @returns {boolean}
-     */
-    isMainnet() {
-        return this._networkName == NetworkName.NETNAMES[0];
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    isTestnet() {
-        return this._networkName == NetworkName.NETNAMES[1];
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    isPreviewnet() {
-        return this._networkName == NetworkName.NETNAMES[2];
-    }
 }
+
+NetworkName.NETNAMES = ["mainnet", "testnet", "previewnet", "other"];
 
 NetworkName.MAINNET = new NetworkName("mainnet");
 
@@ -133,4 +133,4 @@ NetworkName.TESTNET = new NetworkName("testnet");
 
 NetworkName.PREVIEWNET = new NetworkName("previewnet");
 
-NetworkName.NETNAMES = ["mainnet", "testnet", "previewnet"];
+NetworkName.OTHER = new NetworkName("other");

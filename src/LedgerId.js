@@ -19,13 +19,6 @@ export default class LedgerId {
     }
 
     /**
-     * @returns {Uint8Array}
-     */
-    get ledgerId() {
-        return this._ledgerId;
-    }
-
-    /**
      * @param {string} ledgerId
      * @returns {LedgerId}
      */
@@ -45,6 +38,9 @@ export default class LedgerId {
             case LedgerId.NETNAMES[2]:
             case "2":
                 return LedgerId.PREVIEWNET;
+            case LedgerId.NETNAMES[3]:
+            case "3":
+                return LedgerId.OTHER;
             default:
                 throw new Error(
                     DEFAULT_ERROR.concat("fromString: ledgerId = ").concat(
@@ -69,6 +65,8 @@ export default class LedgerId {
                 return LedgerId.NETNAMES[1];
             case 2:
                 return LedgerId.NETNAMES[2];
+            case 3:
+                return LedgerId.NETNAMES[3];
             default:
                 return hex.encode(this._ledgerId);
         }
@@ -112,6 +110,13 @@ export default class LedgerId {
     isPreviewnet() {
         return this.toString() == LedgerId.NETNAMES[2];
     }
+
+    /**
+     * @returns {boolean}
+     */
+    isOther() {
+        return this.toString() == LedgerId.NETNAMES[3];
+    }
 }
 
 LedgerId.MAINNET = new LedgerId(new Uint8Array([0]));
@@ -120,4 +125,6 @@ LedgerId.TESTNET = new LedgerId(new Uint8Array([1]));
 
 LedgerId.PREVIEWNET = new LedgerId(new Uint8Array([2]));
 
-LedgerId.NETNAMES = ["mainnet", "testnet", "previewnet"];
+LedgerId.OTHER = new LedgerId(new Uint8Array([3]));
+
+LedgerId.NETNAMES = ["mainnet", "testnet", "previewnet", "other"];
