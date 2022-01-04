@@ -3,70 +3,70 @@ import LedgerId from "../src/LedgerId.js";
 
 describe("NetworkName", function () {
     it("toBytes", function () {
-        let networkName = NetworkName.MAINNET;
+        let networkName = new NetworkName("mainnet");
         expect(networkName.toBytes()).to.eql(new Uint8Array([0]));
 
-        networkName = NetworkName.TESTNET;
+        networkName = new NetworkName("testnet");
         expect(networkName.toBytes()).to.eql(new Uint8Array([1]));
 
-        networkName = NetworkName.PREVIEWNET;
+        networkName = new NetworkName("previewnet");
         expect(networkName.toBytes()).to.eql(new Uint8Array([2]));
 
-        networkName = NetworkName.OTHER;
+        networkName = new NetworkName("other");
         expect(networkName.toBytes()).to.eql(new Uint8Array([3]));
     });
 
     it("fromBytes", function () {
         let networkName = NetworkName.fromBytes(new Uint8Array([0]));
-        expect(networkName.toString()).to.eql(NetworkName.NETNAMES[0]);
+        expect(networkName.toString()).to.eql("mainnet");
 
         networkName = NetworkName.fromBytes(new Uint8Array([1]));
-        expect(networkName.toString()).to.eql(NetworkName.NETNAMES[1]);
+        expect(networkName.toString()).to.eql("testnet");
 
         networkName = NetworkName.fromBytes(new Uint8Array([2]));
-        expect(networkName.toString()).to.eql(NetworkName.NETNAMES[2]);
+        expect(networkName.toString()).to.eql("previewnet");
 
         networkName = NetworkName.fromBytes(new Uint8Array([3]));
-        expect(networkName.toString()).to.eql(NetworkName.NETNAMES[3]);
+        expect(networkName.toString()).to.eql("other");
     });
 
     it("fromString", function () {
-        let networkName = NetworkName.fromString(NetworkName.NETNAMES[0]);
-        expect(networkName.toString()).to.eql(NetworkName.NETNAMES[0]);
+        let networkName = NetworkName.fromString("mainnet");
+        expect(networkName.toString()).to.eql("mainnet");
 
-        networkName = NetworkName.fromString(NetworkName.NETNAMES[1]);
-        expect(networkName.toString()).to.eql(NetworkName.NETNAMES[1]);
+        networkName = NetworkName.fromString("testnet");
+        expect(networkName.toString()).to.eql("testnet");
 
-        networkName = NetworkName.fromString(NetworkName.NETNAMES[2]);
-        expect(networkName.toString()).to.eql(NetworkName.NETNAMES[2]);
+        networkName = NetworkName.fromString("previewnet");
+        expect(networkName.toString()).to.eql("previewnet");
 
-        networkName = NetworkName.fromString(NetworkName.NETNAMES[3]);
-        expect(networkName.toString()).to.eql(NetworkName.NETNAMES[3]);
+        networkName = NetworkName.fromString("other");
+        expect(networkName.toString()).to.eql("other");
     });
 
     it("toName", function () {
-        expect(NetworkName.toName(0)).to.eql(NetworkName.NETNAMES[0]);
-        expect(NetworkName.toName("0")).to.eql(NetworkName.NETNAMES[0]);
-        expect(NetworkName.toName(LedgerId.MAINNET)).to.eql(
-            NetworkName.NETNAMES[0]
+        expect(NetworkName.toName(0)).to.eql("mainnet");
+        expect(NetworkName.toName("0")).to.eql("mainnet");
+        expect(NetworkName.toName(new LedgerId(new Uint8Array([0])))).to.eql(
+            "mainnet"
         );
 
-        expect(NetworkName.toName(1)).to.eql(NetworkName.NETNAMES[1]);
-        expect(NetworkName.toName("1")).to.eql(NetworkName.NETNAMES[1]);
-        expect(NetworkName.toName(LedgerId.TESTNET)).to.eql(
-            NetworkName.NETNAMES[1]
+        expect(NetworkName.toName(1)).to.eql("testnet");
+        expect(NetworkName.toName("1")).to.eql("testnet");
+        expect(NetworkName.toName(new LedgerId(new Uint8Array([1])))).to.eql(
+            "testnet"
         );
 
-        expect(NetworkName.toName(2)).to.eql(NetworkName.NETNAMES[2]);
-        expect(NetworkName.toName("2")).to.eql(NetworkName.NETNAMES[2]);
-        expect(NetworkName.toName(LedgerId.PREVIEWNET)).to.eql(
-            NetworkName.NETNAMES[2]
+        expect(NetworkName.toName(2)).to.eql("previewnet");
+        expect(NetworkName.toName("2")).to.eql("previewnet");
+        expect(NetworkName.toName(new LedgerId(new Uint8Array([2])))).to.eql(
+            "previewnet"
         );
 
-        expect(NetworkName.toName(3)).to.eql(NetworkName.NETNAMES[3]);
-        expect(NetworkName.toName("3")).to.eql(NetworkName.NETNAMES[3]);
-        expect(NetworkName.toName(LedgerId.OTHER)).to.eql(
-            NetworkName.NETNAMES[3]
+        expect(NetworkName.toName(3)).to.eql("other");
+        expect(NetworkName.toName("3")).to.eql("other");
+        expect(NetworkName.toName(new LedgerId(new Uint8Array([3])))).to.eql(
+            "other"
         );
     });
 

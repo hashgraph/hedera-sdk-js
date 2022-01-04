@@ -19,9 +19,7 @@ export default class NetworkName {
          * @readonly
          * @type {string|number}
          */
-        this._networkName = NetworkName.NETNAMES.includes(
-            networkName.toString()
-        )
+        this._networkName = NETNAMES.includes(networkName.toString())
             ? networkName
             : NetworkName.toName(networkName);
 
@@ -58,18 +56,18 @@ export default class NetworkName {
      */
     static fromString(networkName) {
         switch (networkName) {
-            case NetworkName.NETNAMES[0]:
+            case NETNAMES[0]:
             case "0":
-                return NetworkName.MAINNET;
-            case NetworkName.NETNAMES[1]:
+                return MAINNET;
+            case NETNAMES[1]:
             case "1":
-                return NetworkName.TESTNET;
-            case NetworkName.NETNAMES[2]:
+                return TESTNET;
+            case NETNAMES[2]:
             case "2":
-                return NetworkName.PREVIEWNET;
-            case NetworkName.NETNAMES[3]:
+                return PREVIEWNET;
+            case NETNAMES[3]:
             case "3":
-                return NetworkName.OTHER;
+                return OTHER;
             default:
                 throw new Error(
                     DEFAULT_ERROR.concat("fromString: networkName = ").concat(
@@ -87,7 +85,7 @@ export default class NetworkName {
         ledgerId =
             ledgerId instanceof LedgerId ? ledgerId.toString() : ledgerId;
 
-        if (NetworkName.NETNAMES.includes(ledgerId.toString())) {
+        if (NETNAMES.includes(ledgerId.toString())) {
             //if LedgerId was constructed with a network name, return name
             return ledgerId.toString();
         }
@@ -95,15 +93,15 @@ export default class NetworkName {
         switch (ledgerId) {
             case 0:
             case "0":
-                return NetworkName.NETNAMES[0];
+                return NETNAMES[0];
             case 1:
             case "1":
-                return NetworkName.NETNAMES[1];
+                return NETNAMES[1];
             case 2:
             case "2":
-                return NetworkName.NETNAMES[2];
+                return NETNAMES[2];
             default:
-                return NetworkName.NETNAMES[3];
+                return NETNAMES[3];
         }
     }
 
@@ -113,11 +111,11 @@ export default class NetworkName {
      */
     static toId(networkName) {
         switch (networkName) {
-            case NetworkName.NETNAMES[0]:
+            case NETNAMES[0]:
                 return 0;
-            case NetworkName.NETNAMES[1]:
+            case NETNAMES[1]:
                 return 1;
-            case NetworkName.NETNAMES[2]:
+            case NETNAMES[2]:
                 return 2;
             default:
                 return 3;
@@ -125,12 +123,12 @@ export default class NetworkName {
     }
 }
 
-NetworkName.NETNAMES = ["mainnet", "testnet", "previewnet", "other"];
+const NETNAMES = ["mainnet", "testnet", "previewnet", "other"];
 
-NetworkName.MAINNET = new NetworkName("mainnet");
+const MAINNET = new NetworkName("mainnet");
 
-NetworkName.TESTNET = new NetworkName("testnet");
+const TESTNET = new NetworkName("testnet");
 
-NetworkName.PREVIEWNET = new NetworkName("previewnet");
+const PREVIEWNET = new NetworkName("previewnet");
 
-NetworkName.OTHER = new NetworkName("other");
+const OTHER = new NetworkName("other");

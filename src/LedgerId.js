@@ -24,18 +24,18 @@ export default class LedgerId {
      */
     static fromString(ledgerId) {
         switch (ledgerId) {
-            case LedgerId.NETNAMES[0]:
+            case NETNAMES[0]:
             case "0":
-                return LedgerId.MAINNET;
-            case LedgerId.NETNAMES[1]:
+                return MAINNET;
+            case NETNAMES[1]:
             case "1":
-                return LedgerId.TESTNET;
-            case LedgerId.NETNAMES[2]:
+                return TESTNET;
+            case NETNAMES[2]:
             case "2":
-                return LedgerId.PREVIEWNET;
-            case LedgerId.NETNAMES[3]:
+                return PREVIEWNET;
+            case NETNAMES[3]:
             case "3":
-                return LedgerId.OTHER;
+                return OTHER;
             default:
                 throw new Error(
                     DEFAULT_ERROR.concat("fromString: ledgerId = ").concat(
@@ -55,13 +55,13 @@ export default class LedgerId {
     toString() {
         switch (this._ledgerId[0]) {
             case 0:
-                return LedgerId.NETNAMES[0];
+                return NETNAMES[0];
             case 1:
-                return LedgerId.NETNAMES[1];
+                return NETNAMES[1];
             case 2:
-                return LedgerId.NETNAMES[2];
+                return NETNAMES[2];
             case 3:
-                return LedgerId.NETNAMES[3];
+                return NETNAMES[3];
             default:
                 return hex.encode(this._ledgerId);
         }
@@ -89,37 +89,30 @@ export default class LedgerId {
      * @returns {boolean}
      */
     isMainnet() {
-        return this.toString() == LedgerId.NETNAMES[0];
+        return this.toString() == NETNAMES[0];
     }
 
     /**
      * @returns {boolean}
      */
     isTestnet() {
-        return this.toString() == LedgerId.NETNAMES[1];
+        return this.toString() == NETNAMES[1];
     }
 
     /**
      * @returns {boolean}
      */
     isPreviewnet() {
-        return this.toString() == LedgerId.NETNAMES[2];
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    isOther() {
-        return this.toString() == LedgerId.NETNAMES[3];
+        return this.toString() == NETNAMES[2];
     }
 }
 
-LedgerId.MAINNET = new LedgerId(new Uint8Array([0]));
+const NETNAMES = ["mainnet", "testnet", "previewnet", "other"];
 
-LedgerId.TESTNET = new LedgerId(new Uint8Array([1]));
+const MAINNET = new LedgerId(new Uint8Array([0]));
 
-LedgerId.PREVIEWNET = new LedgerId(new Uint8Array([2]));
+const TESTNET = new LedgerId(new Uint8Array([1]));
 
-LedgerId.OTHER = new LedgerId(new Uint8Array([3]));
+const PREVIEWNET = new LedgerId(new Uint8Array([2]));
 
-LedgerId.NETNAMES = ["mainnet", "testnet", "previewnet", "other"];
+const OTHER = new LedgerId(new Uint8Array([3]));

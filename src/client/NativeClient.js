@@ -1,10 +1,10 @@
 import Client from "./Client.js";
 import NativeChannel from "../channel/NativeChannel.js";
 import AccountId from "../account/AccountId.js";
-import NetworkName from "../NetworkName.js";
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
+ * @typedef {import("../NetworkName.js")} NetworkName
  */
 
 export const Network = {
@@ -56,17 +56,17 @@ export default class NativeClient extends Client {
                 switch (props.network) {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
-                        this.setNetworkName(NetworkName.NETNAMES[0]);
+                        this.setNetworkName("mainnet");
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
-                        this.setNetworkName(NetworkName.NETNAMES[1]);
+                        this.setNetworkName("testnet");
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
-                        this.setNetworkName(NetworkName.NETNAMES[2]);
+                        this.setNetworkName("previewnet");
                         break;
 
                     default:
