@@ -561,6 +561,13 @@ export default class TokenUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?Key}
+     */
+    get pauseKey() {
+        return this._pauseKey;
+    }
+
+    /**
      * @param {Key} pauseKey
      * @returns {this}
      */
