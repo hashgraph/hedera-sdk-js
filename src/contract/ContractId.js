@@ -1,5 +1,5 @@
 import * as entity_id from "../EntityIdHelper.js";
-import { Key } from "@hashgraph/cryptography";
+import Key from "../Key.js";
 import * as proto from "@hashgraph/proto";
 import CACHE from "../Cache.js";
 

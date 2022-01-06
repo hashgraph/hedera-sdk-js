@@ -70,7 +70,7 @@ export default class EcdsaPrivateKey {
         switch (data.length) {
             case 32:
                 return EcdsaPrivateKey.fromBytesRaw(data);
-            case 45:
+            case 50:
                 return EcdsaPrivateKey.fromBytesDer(data);
             default:
                 throw new BadKeyError(

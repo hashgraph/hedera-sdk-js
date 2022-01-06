@@ -17,9 +17,6 @@ import * as hex from "../encoding/hex.js";
  * @typedef {import("@hashgraph/proto").IDuration} proto.IDuration
  */
 
-/**
- * @typedef {import("@hashgraph/cryptography").Key} Key
- */
 export default class TokenNftInfo {
     /**
      * @private
