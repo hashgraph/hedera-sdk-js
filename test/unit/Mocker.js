@@ -1,4 +1,4 @@
-import { PrivateKey } from "../src/exports.js";
+import { PrivateKey, PublicKey } from "../src/exports.js";
 import Client from "../src/client/NodeClient.js";
 import * as grpc from "@grpc/grpc-js";
 import * as loader from "@grpc/proto-loader";
@@ -145,7 +145,7 @@ export const INTERNAL = {
 
 /**
  * @typedef {object} Response
- * @property {(request: proto.Transaction | proto.Query) => proto.Response | proto.TransactionResponse} [call]
+ * @property {(request: proto.Transaction | proto.Query, index?: number) => proto.Response | proto.TransactionResponse} [call]
  * @property {proto.Response | proto.TransactionResponse} [response]
  * @property {grpc.ServiceError} [error]
  */
@@ -208,7 +208,7 @@ class GrpcServer {
                     }
 
                     if (response.call != null) {
-                        value = response.call(request);
+                        value = response.call(request, index);
                     }
 
                     if (response.error != null) {
@@ -275,6 +275,41 @@ export default class Mocker {
         client.setOperator("0.0.1854", PRIVATE_KEY);
 
         return { client, servers };
+    }
+
+    /**
+     * @param {proto.ISignedTransaction | null | undefined}
+     * @returns {boolean}
+     */
+    static verifySignatures(signedTransaction) {
+        if (
+            signedTransaction.bodyBytes == null ||
+            signedTransaction.sigMap == null ||
+            signedTransaction.sigMap.sigPair == null ||
+            signedTransaction.sigMap.sigPair.length === 0
+        ) {
+            return false;
+        }
+
+        for (const sigPair of signedTransaction.sigMap.sigPair) {
+            let verified = false;
+
+            if (sigPair.ed25519 != null) {
+                verified = PublicKey.fromBytesED25519(
+                    sigPair.pubKeyPrefix
+                ).verify(signedTransaction.bodyBytes, sigPair.ed25519);
+            } else if (sigPair.ECDSASecp256k1 != null) {
+                verified = PublicKey.fromBytesECDSA(
+                    sigPair.pubKeyPrefix
+                ).verify(signedTransaction.bodyBytes, sigPair.ECDSASecp256k1);
+            }
+
+            if (!verified) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 

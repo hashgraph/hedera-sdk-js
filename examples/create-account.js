@@ -28,7 +28,7 @@ async function main() {
     console.log(`public key = ${newKey.publicKey}`);
 
     const response = await new AccountCreateTransaction()
-        .setInitialBalance(new Hbar(100000)) // 10 h
+        .setInitialBalance(new Hbar(10)) // 10 h
         .setKey(newKey.publicKey)
         .execute(client);
 

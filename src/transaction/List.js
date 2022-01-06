@@ -71,7 +71,12 @@ export default class List {
             throw new Error("list is locked");
         }
 
-        this.list[index] = item;
+        if (index == this.length) {
+            this.list.push(item);
+        } else {
+            this.list[index] = item;
+        }
+
         return this;
     }
 
@@ -81,8 +86,8 @@ export default class List {
      * @returns {this}
      */
     setIfAbsent(index, lambda) {
-        if (this.list[index] == null) {
-            this.list[index] = lambda();
+        if (index == this.length || this.list[index] == null) {
+            this.set(index, lambda());
         }
 
         return this;

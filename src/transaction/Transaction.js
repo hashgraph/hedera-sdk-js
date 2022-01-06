@@ -157,6 +157,12 @@ export default class Transaction extends Executable {
          * @type {(((message: Uint8Array) => Promise<Uint8Array>) | null)[]}
          */
         this._transactionSigners = [];
+
+        /**
+         * @private
+         * @type {?boolean}
+         */
+        this._regenerateTransactionId = null;
     }
 
     /**
@@ -405,6 +411,27 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * @returns {?boolean}
+     */
+    get regenerateTransactionId() {
+        return this._regenerateTransactionId;
+    }
+
+    /**
+     * Set the maximum transaction fee the operator (paying account)
+     * is willing to pay.
+     *
+     * @param {boolean} regenerateTransactionId
+     * @returns {this}
+     */
+    setRegenerateTransactionId(regenerateTransactionId) {
+        this._requireNotFrozen();
+        this._regenerateTransactionId = regenerateTransactionId;
+
+        return this;
+    }
+
+    /**
      * @returns {string}
      */
     get transactionMemo() {
@@ -429,6 +456,8 @@ export default class Transaction extends Executable {
      * @returns {TransactionId}
      */
     get transactionId() {
+        this._transactionIds.setLocked();
+
         if (this._transactionIds.isEmpty) {
             throw new Error(
                 "transaction must have been frozen before getting the transaction ID, try calling `freeze`"
@@ -565,6 +594,12 @@ export default class Transaction extends Executable {
 
         this._transactions.clear();
 
+        // Locking the transaction IDs and node account IDs is necessary for consistency
+        // between before and after execution
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
+        this._signedTransactions.setLocked();
+
         for (const transaction of this._signedTransactions.list) {
             if (transaction.sigMap == null) {
                 transaction.sigMap = {};
@@ -595,6 +630,9 @@ export default class Transaction extends Executable {
 
         this._buildAllTransactions();
 
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
+
         return SignatureMap._fromTransaction(this);
     }
 
@@ -602,7 +640,20 @@ export default class Transaction extends Executable {
      * @returns {Promise<SignatureMap>}
      */
     async getSignaturesAsync() {
+        // Locking the transaction IDs and node account IDs is necessary for consistency
+        // between before and after execution
+        if (!this._transactionIds.isEmpty) {
+            this._transactionIds.setLocked();
+        }
+
+        if (!this._nodeAccountIds.isEmpty) {
+            this._nodeAccountIds.setLocked();
+        }
+
         await this._buildAllTransactionsAsync();
+
+        this._transactions.setLocked();
+        this._signedTransactions.setLocked();
 
         return SignatureMap._fromTransaction(this);
     }
@@ -673,6 +724,10 @@ export default class Transaction extends Executable {
             client != null && this._maxTransactionFee == null
                 ? client.maxTransactionFee
                 : this._maxTransactionFee;
+        this._regenerateTransactionId =
+            client != null && this._regenerateTransactionId == null
+                ? client.defaultRegenerateTransactionId
+                : this._regenerateTransactionId;
 
         this._setNodeAccountIds(client);
         this._setTransactionId();
@@ -685,8 +740,9 @@ export default class Transaction extends Executable {
             }
         }
 
+        this._buildNewTransactionIdList();
+
         if (!super._signOnDemand) {
-            this._buildNewTransactionIdList();
             this._buildSignedTransactions();
         }
 
@@ -757,8 +813,13 @@ export default class Transaction extends Executable {
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
-        this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        if (!this._transactionIds.isEmpty) {
+            this._transactionIds.setLocked();
+        }
+
+        if (!this._nodeAccountIds.isEmpty) {
+            this._nodeAccountIds.setLocked();
+        }
 
         await this._buildAllTransactionsAsync();
 
@@ -781,13 +842,15 @@ export default class Transaction extends Executable {
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
-        this._transactionIds.setLocked();
-        this._nodeAccountIds.setLocked();
+        if (!this._transactionIds.isEmpty) {
+            this._transactionIds.setLocked();
+        }
+
+        if (!this._nodeAccountIds.isEmpty) {
+            this._nodeAccountIds.setLocked();
+        }
 
         await this._buildAllTransactionsAsync();
-
-        this._transactions.setLocked();
-        this._signedTransactions.setLocked();
 
         return await TransactionHashMap._fromTransaction(this);
     }
@@ -836,7 +899,7 @@ export default class Transaction extends Executable {
 
         // Sign with operator if necessary
         if (!super._signOnDemand) {
-            const transactionId = this.transactionId;
+            const transactionId = this._transactionIds.current;
 
             if (
                 transactionId.accountId != null &&
@@ -869,10 +932,6 @@ export default class Transaction extends Executable {
             return /** @type {proto.ITransaction} */ (
                 this._transactions.get(index)
             );
-        }
-
-        if (!this._transactionIds.locked) {
-            this._buildNewTransactionIdList();
         }
 
         // Nothing is locked we can build a new transaction
@@ -923,31 +982,21 @@ export default class Transaction extends Executable {
             return;
         }
 
-        const list = [];
-        const timestamp = Timestamp.generate();
+        const transactionId = TransactionId.withValidStart(
+            this._operator.accountId,
+            Timestamp.generate()
+        );
 
-        for (let i = 0; i < Math.max(this._transactionIds.length, 1); i++) {
-            const transactionId = TransactionId.withValidStart(
-                this._operator.accountId,
-                timestamp.plusNanos(i)
-            );
-
-            list.push(transactionId);
-        }
-
-        this._transactionIds.setList(list);
+        this._transactionIds.set(this._nextTransactionIndex, transactionId);
     }
 
     _buildAllTransactions() {
-        this._buildNewTransactionIdList();
-
         for (let i = 0; i < this._signedTransactions.length; i++) {
             this._buildTransaction(i);
         }
     }
 
     async _buildAllTransactionsAsync() {
-        this._buildNewTransactionIdList();
         this._buildSignedTransactions();
 
         if (this._transactions.locked) {
@@ -1015,6 +1064,16 @@ export default class Transaction extends Executable {
                 return ExecutionState.Retry;
             case Status.Ok:
                 return ExecutionState.Finished;
+            case Status.TransactionExpired:
+                if (
+                    this._regenerateTransactionId == null ||
+                    this._regenerateTransactionId
+                ) {
+                    this._buildNewTransactionIdList();
+                    return ExecutionState.Retry;
+                } else {
+                    return ExecutionState.Error;
+                }
             default:
                 return ExecutionState.Error;
         }
@@ -1059,6 +1118,8 @@ export default class Transaction extends Executable {
 
         this._nextTransactionIndex =
             (this._nextTransactionIndex + 1) % this._transactionIds.length;
+
+        this._transactionIds.advance();
 
         return new TransactionResponse({
             nodeId,
@@ -1106,8 +1167,6 @@ export default class Transaction extends Executable {
      * @returns {proto.ITransactionBody}
      */
     _makeTransactionBody(nodeId) {
-        const transactionId = this._transactionIds.next;
-
         return {
             [this._getTransactionDataCase()]: this._makeTransactionData(),
             transactionFee:
@@ -1115,7 +1174,7 @@ export default class Transaction extends Executable {
                     ? this._maxTransactionFee.toTinybars()
                     : null,
             memo: this._transactionMemo,
-            transactionID: transactionId._toProtobuf(),
+            transactionID: this._transactionIds.current._toProtobuf(),
             nodeAccountID: nodeId != null ? nodeId._toProtobuf() : null,
             transactionValidDuration: {
                 seconds: Long.fromNumber(this._transactionValidDuration),

@@ -1,9 +1,9 @@
+import { expect } from "chai";
 import {
     AccountInfoQuery,
     AccountId,
     FileCreateTransaction,
     TransactionId,
-    PublicKey,
 } from "../src/exports.js";
 import Mocker, { UNAVAILABLE, INTERNAL, PRIVATE_KEY } from "./Mocker.js";
 import Long from "long";
@@ -139,96 +139,22 @@ describe("AccountInfo", function () {
         servers.close();
     });
 
-    it("should not generate new transaction ID per execution if sign on demand is disabled", async function () {
+    it("should generate new transaction ID when TRANSACTION_EXPIRED is return", async function () {
         this.timeout(10000);
 
         const transactionIds = new Set();
-        let count = 0;
+        const callResponses = [
+            {
+                nodeTransactionPrecheckCode:
+                    proto.ResponseCodeEnum.TRANSACTION_EXPIRED,
+            },
+            { nodeTransactionPrecheckCode: proto.ResponseCodeEnum.OK },
+        ];
 
         /**
-         * @type {(request: proto.ITransaction) => proto.ITransactionResponse}
+         * @type {(request: proto.ITransaction, index: number) => proto.ITransactionResponse}
          */
-        const call = (request) => {
-            expect(request.signedTransactionBytes).to.not.be.null;
-            const signedTransaction = proto.SignedTransaction.decode(
-                request.signedTransactionBytes
-            );
-
-            expect(signedTransaction.bodyBytes).to.not.be.null;
-            const transactionBody = proto.TransactionBody.decode(
-                signedTransaction.bodyBytes
-            );
-
-            expect(transactionBody.transactionId).to.not.be.null;
-            const transactionId = TransactionId._fromProtobuf(
-                transactionBody.transactionID
-            ).toString();
-            expect(transactionId).to.not.be.equal("");
-
-            if (count == 0) {
-                expect(transactionIds.has(transactionId)).to.be.false;
-            } else {
-                expect(transactionIds.has(transactionId)).to.be.true;
-            }
-            transactionIds.add(transactionId);
-
-            const sigMap = /** @type {proto.ISignatureMap} */ (
-                signedTransaction.sigMap
-            );
-
-            expect(sigMap.sigPair).to.be.not.null;
-            expect(sigMap.sigPair.length).to.be.not.equal(0);
-
-            for (const sigPair of sigMap.sigPair) {
-                let verified = false;
-
-                if (sigPair.ed25519 != null) {
-                    verified = PublicKey.fromBytesED25519(
-                        sigPair.pubKeyPrefix
-                    ).verify(signedTransaction.bodyBytes, sigPair.ed25519);
-                } else if (sigPair.ECDSASecp256k1 != null) {
-                    verified = PublicKey.fromBytesECDSA(
-                        sigPair.pubKeyPrefix
-                    ).verify(
-                        signedTransaction.bodyBytes,
-                        sigPair.ECDSASecp256k1
-                    );
-                }
-
-                expect(verified).to.be.true;
-            }
-
-            const nodeTransactionPrecheckCode =
-                count < 2
-                    ? proto.ResponseCodeEnum.OK
-                    : proto.ResponseCodeEnum.BUSY;
-
-            count += 1;
-
-            return { nodeTransactionPrecheckCode };
-        };
-
-        const responses1 = [{ call }, { call }, { call }];
-
-        const { client, servers } = await Mocker.withResponses([responses1]);
-
-        await new FileCreateTransaction()
-            .setContents("hello 1")
-            .execute(client);
-
-        servers.close();
-    });
-
-    it("should generate new transaction ID per execution", async function () {
-        this.timeout(10000);
-
-        const transactionIds = new Set();
-        let count = 0;
-
-        /**
-         * @type {(request: proto.ITransaction) => proto.ITransactionResponse}
-         */
-        const call = (request) => {
+        const call = (request, index) => {
             expect(request.signedTransactionBytes).to.not.be.null;
             const signedTransaction = proto.SignedTransaction.decode(
                 request.signedTransactionBytes
@@ -248,40 +174,10 @@ describe("AccountInfo", function () {
             expect(transactionIds.has(transactionId)).to.be.false;
             transactionIds.add(transactionId);
 
-            const sigMap = /** @type {proto.ISignatureMap} */ (
-                signedTransaction.sigMap
-            );
+            // Verify signatures exist
+            expect(Mocker.verifySignatures(signedTransaction)).to.be.true;
 
-            expect(sigMap.sigPair).to.be.not.null;
-            expect(sigMap.sigPair.length).to.be.not.equal(0);
-
-            for (const sigPair of sigMap.sigPair) {
-                let verified = false;
-
-                if (sigPair.ed25519 != null) {
-                    verified = PublicKey.fromBytesED25519(
-                        sigPair.pubKeyPrefix
-                    ).verify(signedTransaction.bodyBytes, sigPair.ed25519);
-                } else if (sigPair.ECDSASecp256k1 != null) {
-                    verified = PublicKey.fromBytesECDSA(
-                        sigPair.pubKeyPrefix
-                    ).verify(
-                        signedTransaction.bodyBytes,
-                        sigPair.ECDSASecp256k1
-                    );
-                }
-
-                expect(verified).to.be.true;
-            }
-
-            const nodeTransactionPrecheckCode =
-                count < 2
-                    ? proto.ResponseCodeEnum.OK
-                    : proto.ResponseCodeEnum.BUSY;
-
-            count += 1;
-
-            return { nodeTransactionPrecheckCode };
+            return callResponses[index];
         };
 
         const responses1 = [{ call }, { call }, { call }];
@@ -291,6 +187,92 @@ describe("AccountInfo", function () {
         client.setSignOnDemand(true);
 
         await new FileCreateTransaction()
+            .setContents("hello 1")
+            .execute(client);
+
+        servers.close();
+    });
+
+    it("should error `TRANSACTION_EXPIRED` is return and client disabled transaction regeneration", async function () {
+        this.timeout(10000);
+
+        const responses1 = [
+            {
+                response: {
+                    nodeTransactionPrecheckCode:
+                        proto.ResponseCodeEnum.TRANSACTION_EXPIRED,
+                },
+            },
+        ];
+
+        const { client, servers } = await Mocker.withResponses([responses1]);
+
+        client.setSignOnDemand(true);
+
+        try {
+            await new FileCreateTransaction()
+                .setContents("hello 1")
+                .setRegenerateTransactionId(false)
+                .execute(client);
+        } catch (error) {
+            if (!/^.*TRANSACTION_EXPIRED$/.test(error)) {
+                throw error;
+            }
+        }
+
+        servers.close();
+    });
+
+    it("should still regenerate transaction IDs on `TRANSACTION_EXPIRED` when client disabled it, but transaction re-enabled it", async function () {
+        this.timeout(10000);
+
+        const transactionIds = new Set();
+        const callResponses = [
+            {
+                nodeTransactionPrecheckCode:
+                    proto.ResponseCodeEnum.TRANSACTION_EXPIRED,
+            },
+            { nodeTransactionPrecheckCode: proto.ResponseCodeEnum.OK },
+        ];
+
+        /**
+         * @type {(request: proto.ITransaction, index: number) => proto.ITransactionResponse}
+         */
+        const call = (request, index) => {
+            expect(request.signedTransactionBytes).to.not.be.null;
+            const signedTransaction = proto.SignedTransaction.decode(
+                request.signedTransactionBytes
+            );
+
+            expect(signedTransaction.bodyBytes).to.not.be.null;
+            const transactionBody = proto.TransactionBody.decode(
+                signedTransaction.bodyBytes
+            );
+
+            expect(transactionBody.transactionId).to.not.be.null;
+            const transactionId = TransactionId._fromProtobuf(
+                transactionBody.transactionID
+            ).toString();
+            expect(transactionId).to.not.be.equal("");
+
+            expect(transactionIds.has(transactionId)).to.be.false;
+            transactionIds.add(transactionId);
+
+            // Verify signatures exist
+            expect(Mocker.verifySignatures(signedTransaction)).to.be.true;
+
+            return callResponses[index];
+        };
+
+        const responses1 = [{ call }, { call }, { call }];
+
+        const { client, servers } = await Mocker.withResponses([responses1]);
+
+        client.setSignOnDemand(true);
+        client.setDefaultRegenerateTransactionId(false);
+
+        await new FileCreateTransaction()
+            .setRegenerateTransactionId(true)
             .setContents("hello 1")
             .execute(client);
 
