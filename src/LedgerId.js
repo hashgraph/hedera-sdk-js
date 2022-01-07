@@ -1,7 +1,5 @@
 import * as hex from "./encoding/hex.js";
 
-const DEFAULT_ERROR = "Default case reached for: ";
-
 export default class LedgerId {
     /**
      * @hideconstructor
@@ -26,22 +24,21 @@ export default class LedgerId {
         switch (ledgerId) {
             case NETNAMES[0]:
             case "0":
-                return MAINNET;
+                return LedgerId.MAINNET;
             case NETNAMES[1]:
             case "1":
-                return TESTNET;
+                return LedgerId.TESTNET;
             case NETNAMES[2]:
             case "2":
-                return PREVIEWNET;
-            case NETNAMES[3]:
-            case "3":
-                return OTHER;
-            default:
-                throw new Error(
-                    DEFAULT_ERROR.concat("fromString: ledgerId = ").concat(
-                        ledgerId
-                    )
-                );
+                return LedgerId.PREVIEWNET;
+            default: {
+                let ledgerIdDecoded = hex.decode(ledgerId);
+                if (ledgerIdDecoded.length == 0 && ledgerId.length != 0) {
+                    throw new Error("Default reached for fromString");
+                } else {
+                    return new LedgerId(ledgerIdDecoded);
+                }
+            }
         }
     }
 
@@ -60,8 +57,23 @@ export default class LedgerId {
                 return NETNAMES[1];
             case 2:
                 return NETNAMES[2];
-            case 3:
-                return NETNAMES[3];
+            default:
+                return hex.encode(this._ledgerId);
+        }
+    }
+
+    /**
+     * @returns {string}
+     */
+    _toStringForChecksum() {
+        //legacy checksum logic from NetworkName
+        switch (this._ledgerId[0]) {
+            case 0:
+                return "0";
+            case 1:
+                return "1";
+            case 2:
+                return "2";
             default:
                 return hex.encode(this._ledgerId);
         }
@@ -107,12 +119,10 @@ export default class LedgerId {
     }
 }
 
-const NETNAMES = ["mainnet", "testnet", "previewnet", "other"];
+const NETNAMES = ["mainnet", "testnet", "previewnet"];
 
-const MAINNET = new LedgerId(new Uint8Array([0]));
+LedgerId.MAINNET = new LedgerId(new Uint8Array([0]));
 
-const TESTNET = new LedgerId(new Uint8Array([1]));
+LedgerId.TESTNET = new LedgerId(new Uint8Array([1]));
 
-const PREVIEWNET = new LedgerId(new Uint8Array([2]));
-
-const OTHER = new LedgerId(new Uint8Array([3]));
+LedgerId.PREVIEWNET = new LedgerId(new Uint8Array([2]));

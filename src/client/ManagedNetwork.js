@@ -1,4 +1,4 @@
-import NetworkName from "../NetworkName.js";
+import LedgerId from "../LedgerId.js";
 // import {
 //     PREVIEWNET_ADDRESS_BOOK,
 //     TESTNET_ADDRESS_BOOK,
@@ -49,7 +49,7 @@ export default class MangedNetwork {
         /** @type {(address: string, cert?: string) => ChannelT} */
         this._createNetworkChannel = createNetworkChannel;
 
-        /** @type {string | null} */
+        /** @type {LedgerId | null} */
         this._ledgerId = null;
 
         /** @type {number} */
@@ -85,7 +85,9 @@ export default class MangedNetwork {
                         ? node
                               .toSecure()
                               .setCert(
-                                  this._ledgerId != null ? this._ledgerId : ""
+                                  this._ledgerId != null
+                                      ? this._ledgerId._toStringForChecksum()
+                                      : ""
                               )
                         : node.toInsecure()
                 );
@@ -107,21 +109,41 @@ export default class MangedNetwork {
     }
 
     /**
+     * @deprecated
      * @param {string} networkName
      * @returns {this}
      */
     setNetworkName(networkName) {
-        this._ledgerId = NetworkName.toId(networkName).toString();
+        console.warn("Deprecated: Use `setLedgerId` instead");
+        return this.setLedgerId(networkName);
+    }
+
+    /**
+     * @deprecated
+     * @returns {string | null}
+     */
+    get networkName() {
+        console.warn("Deprecated: Use `ledgerId` instead");
+        return this.ledgerId != null ? this.ledgerId.toString() : null;
+    }
+
+    /**
+     * @param {string|LedgerId} ledgerId
+     * @returns {this}
+     */
+    setLedgerId(ledgerId) {
+        this._ledgerId =
+            typeof ledgerId === "string"
+                ? LedgerId.fromString(ledgerId)
+                : ledgerId;
         return this;
     }
 
     /**
-     * @returns {string | null}
+     * @returns {LedgerId | null}
      */
-    get networkName() {
-        return this._ledgerId != null
-            ? NetworkName.toName(this._ledgerId)
-            : null;
+    get ledgerId() {
+        return this._ledgerId != null ? this._ledgerId : null;
     }
 
     /**

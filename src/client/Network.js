@@ -1,6 +1,5 @@
 import AccountId from "../account/AccountId.js";
 import Node from "../Node.js";
-import NetworkName from "../NetworkName.js";
 import {
     PREVIEWNET_ADDRESS_BOOK,
     TESTNET_ADDRESS_BOOK,
@@ -72,7 +71,7 @@ export default class Network extends ManagedNetwork {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setNetworkName(networkName) {
-        super.setNetworkName(networkName);
+        super.setLedgerId(networkName);
 
         switch (networkName) {
             case "mainnet":
@@ -107,9 +106,7 @@ export default class Network extends ManagedNetwork {
      * @returns {string | null}
      */
     get networkName() {
-        return this._ledgerId != null
-            ? NetworkName.toName(this._ledgerId)
-            : null;
+        return this._ledgerId != null ? this._ledgerId.toString() : null;
     }
 
     /**

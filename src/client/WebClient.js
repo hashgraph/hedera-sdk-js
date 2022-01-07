@@ -1,6 +1,7 @@
 import Client from "./Client.js";
 import WebChannel from "../channel/WebChannel.js";
 import AccountId from "../account/AccountId.js";
+import LedgerId from "../LedgerId.js";
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
@@ -55,17 +56,17 @@ export default class WebClient extends Client {
                 switch (props.network) {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
-                        this.setNetworkName("mainnet");
+                        this.setLedgerId(LedgerId.MAINNET);
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
-                        this.setNetworkName("testnet");
+                        this.setLedgerId(LedgerId.TESTNET);
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
-                        this.setNetworkName("previewnet");
+                        this.setLedgerId(LedgerId.PREVIEWNET);
                         break;
 
                     default:

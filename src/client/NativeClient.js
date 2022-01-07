@@ -1,10 +1,10 @@
 import Client from "./Client.js";
 import NativeChannel from "../channel/NativeChannel.js";
 import AccountId from "../account/AccountId.js";
+import LedgerId from "../LedgerId.js";
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
- * @typedef {import("../NetworkName.js")} NetworkName
  */
 
 export const Network = {
@@ -56,17 +56,17 @@ export default class NativeClient extends Client {
                 switch (props.network) {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
-                        this.setNetworkName("mainnet");
+                        this.setLedgerId(LedgerId.MAINNET);
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
-                        this.setNetworkName("testnet");
+                        this.setLedgerId(LedgerId.TESTNET);
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
-                        this.setNetworkName("previewnet");
+                        this.setLedgerId(LedgerId.PREVIEWNET);
                         break;
 
                     default:
@@ -165,7 +165,7 @@ export default class NativeClient extends Client {
     }
 
     /**
-     * @param {string[] | string | NetworkName} mirrorNetwork
+     * @param {string[] | string} mirrorNetwork
      * @returns {void}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

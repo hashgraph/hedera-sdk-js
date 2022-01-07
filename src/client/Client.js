@@ -5,6 +5,7 @@ import Network from "./Network.js";
 import MirrorNetwork from "./MirrorNetwork.js";
 import PublicKey from "../PublicKey.js";
 import PrivateKey from "../PrivateKey.js";
+import LedgerId from "../LedgerId.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -29,6 +30,10 @@ import PrivateKey from "../PrivateKey.js";
  * @property {{[key: string]: (string | AccountId)} | string} network
  * @property {string[] | string} [mirrorNetwork]
  * @property {Operator} [operator]
+ */
+
+/**
+ * @typedef {"mainnet" | "testnet" | "previewnet"} NetworkName
  */
 
 /**
@@ -104,19 +109,45 @@ export default class Client {
     }
 
     /**
-     * @param {string} networkName
+     * @deprecated
+     * @param {NetworkName} networkName
      * @returns {this}
      */
     setNetworkName(networkName) {
-        this._network.setNetworkName(networkName);
+        //uses custom NetworkName type
+        //remove if phasing out set|get NetworkName
+        console.warn("Deprecated: Use `setLedgerId` instead");
+        return this.setLedgerId(networkName);
+    }
+
+    /**
+     * @deprecated
+     * @returns {string | null}
+     */
+    get networkName() {
+        console.warn("Deprecated: Use `ledgerId` instead");
+        return this.ledgerId != null ? this.ledgerId.toString() : null;
+    }
+
+    /**
+     * @param {string|LedgerId} ledgerId
+     * @returns {this}
+     */
+    setLedgerId(ledgerId) {
+        this._network.setLedgerId(
+            typeof ledgerId === "string"
+                ? LedgerId.fromString(ledgerId)
+                : ledgerId
+        );
+
         return this;
     }
 
     /**
-     * @returns {string | null}
+     * @returns {LedgerId | null}
      */
-    get networkName() {
-        return this._network.networkName;
+    get ledgerId() {
+        return this._network._ledgerId != null ? this._network.ledgerId : null;
     }
 
     /**

@@ -4,6 +4,7 @@ import Client from "./Client.js";
 import NodeChannel from "../channel/NodeChannel.js";
 import NodeMirrorChannel from "../channel/NodeMirrorChannel.js";
 import AccountId from "../account/AccountId.js";
+import LedgerId from "../LedgerId.js";
 
 const readFileAsync = util.promisify(fs.readFile);
 
@@ -113,19 +114,19 @@ export default class NodeClient extends Client {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
                         this.setMirrorNetwork(MirrorNetwork.MAINNET);
-                        this.setNetworkName("mainnet");
+                        this.setLedgerId(LedgerId.MAINNET);
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
                         this.setMirrorNetwork(MirrorNetwork.TESTNET);
-                        this.setNetworkName("testnet");
+                        this.setLedgerId(LedgerId.TESTNET);
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
-                        this.setNetworkName("previewnet");
+                        this.setLedgerId(LedgerId.PREVIEWNET);
                         break;
 
                     default:
@@ -241,15 +242,15 @@ export default class NodeClient extends Client {
             switch (network) {
                 case "previewnet":
                     this._network.setNetwork(Network.PREVIEWNET);
-                    this._network._ledgerId = "2";
+                    this._network._ledgerId = LedgerId.PREVIEWNET;
                     break;
                 case "testnet":
                     this._network.setNetwork(Network.TESTNET);
-                    this._network._ledgerId = "1";
+                    this._network._ledgerId = LedgerId.TESTNET;
                     break;
                 case "mainnet":
                     this._network.setNetwork(Network.MAINNET);
-                    this._network._ledgerId = "0";
+                    this._network._ledgerId = LedgerId.MAINNET;
             }
         } else {
             this._network.setNetwork(network);
