@@ -27,10 +27,6 @@ import TokenDecimalMap from "./TokenDecimalMap.js";
  * @property {TokenBalanceJson[]} tokens
  */
 
-/**
- * @typedef {import("@hashgraph/cryptography").Key} Key
- */
-
 export default class AccountBalance {
     /**
      * @private

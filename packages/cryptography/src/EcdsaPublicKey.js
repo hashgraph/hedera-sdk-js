@@ -70,7 +70,7 @@ export default class EcdsaPublicKey extends Key {
      * @returns {EcdsaPublicKey}
      */
     static fromBytesRaw(data) {
-        if (data.length != 32) {
+        if (data.length != 33) {
             throw new BadKeyError(
                 `invalid public key length: ${data.length} bytes`
             );
@@ -107,10 +107,12 @@ export default class EcdsaPublicKey extends Key {
      * @returns {Uint8Array}
      */
     toBytesDer() {
-        const bytes = new Uint8Array(derPrefixBytes.length + 32);
+        const bytes = new Uint8Array(
+            derPrefixBytes.length + this._keyData.length
+        );
 
         bytes.set(derPrefixBytes, 0);
-        bytes.set(this._keyData.subarray(0, 32), derPrefixBytes.length);
+        bytes.set(this._keyData, derPrefixBytes.length);
 
         return bytes;
     }
@@ -119,7 +121,7 @@ export default class EcdsaPublicKey extends Key {
      * @returns {Uint8Array}
      */
     toBytesRaw() {
-        return this._keyData.slice();
+        return new Uint8Array(this._keyData.subarray());
     }
 
     /**

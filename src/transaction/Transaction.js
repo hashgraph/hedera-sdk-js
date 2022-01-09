@@ -800,7 +800,11 @@ export default class Transaction extends Executable {
             this._nextTransactionIndex * this._nodeIds.length +
             this._nextNodeIndex;
 
-        await this._buildTransactionAsync(index);
+        if (this._signOnDemand) {
+            await this._buildTransactionAsync(index);
+        } else {
+            this._buildTransaction(index);
+        }
 
         return /** @type {proto.ITransaction} */ (this._transactions[index]);
     }
@@ -884,6 +888,8 @@ export default class Transaction extends Executable {
                 this._transactions.push(null);
             }
         }
+
+        // console.log(JSON.stringify(this._signedTransactions[index]));
 
         this._transactions[index] = {
             signedTransactionBytes: ProtoSignedTransaction.encode(

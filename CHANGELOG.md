@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### v2.7.0-beta.3
+## v2.7.0-beta.4
+
+### Fixed
+
+ * Signing data which contains bytes larger than a value of 127
+ * `[Private|Public]Key.fromBytesEcdsa()` checking for the wrong bytes length
+
+## v2.7.0-beta.3
 
 ### Added
 
@@ -16,13 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * `TokenUpdateTransaction.setsupplyKey()` - use `setSupplyKey()` instead
 
-### v2.7.0-beta.2
+## v2.7.0-beta.2
 
 ### Added
 
  * `[Private|Public]Key.toAccountId()`
 
-### v2.7.0-beta.1
+## v2.7.0-beta.1
 
 ### Added
 
