@@ -1,5 +1,6 @@
 import { keccak256 } from "../cryptography/keccak.js";
 import * as hex from "../encoding/hex.js";
+import * as utf8 from "../encoding/utf8.js";
 
 /**
  * @enum {number}
@@ -268,7 +269,8 @@ export default class ContractFunctionSelector {
             throw new Error("`name` required for ContractFunctionSelector");
         }
 
-        return hex.decode(keccak256(this.toString()).slice(0, 4));
+        const func = hex.encode(utf8.encode(this.toString()));
+        return hex.decode(keccak256(`0x${func}`)).slice(0, 4);
     }
 
     /**
