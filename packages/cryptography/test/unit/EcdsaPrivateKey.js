@@ -36,4 +36,19 @@ describe("EcdsaPrivateKey", function () {
         expect(key.publicKey.verify(message, signature)).to.be.true;
         expect(key.publicKey.toBytesRaw().length).to.be.equal(33);
     });
+
+    it("can sign and verify body bytes", function () {
+        const key = EcdsaPrivateKey.fromStringRaw(RAW_KEY);
+        const message = hex.decode(
+            "0a0e0a0408011001120608001000180412060800100018031880c2d72f220208783200721a0a180a0a0a0608001000180410130a0a0a060800100018051014"
+        );
+        const signature = key.sign(message);
+
+        expect(signature.length).to.be.equal(64);
+        expect(hex.encode(signature)).to.be.equal(
+            "63201532040178a60e2738bdaaa00d628004b15d109162fa42e066fcb6720190bc7b8c440eaa028009404d56bebeea7f9c94d4dc07042c63cb0bcf0cab0ee737"
+        );
+        expect(key.publicKey.verify(message, signature)).to.be.true;
+        expect(key.publicKey.toBytesRaw().length).to.be.equal(33);
+    });
 });

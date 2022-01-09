@@ -49,7 +49,8 @@ export function fromBytes(data) {
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function sign(keydata, message) {
-    const data = keccak256(message);
+    const msg = hex.encode(message);
+    const data = hex.decode(keccak256(`0x${msg}`));
     const keypair = secp256k1.keyFromPrivate(keydata);
     const signature = keypair.sign(data);
 
@@ -70,7 +71,8 @@ export function sign(keydata, message) {
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function verify(keydata, message, signature) {
-    const data = keccak256(message);
+    const msg = hex.encode(message);
+    const data = hex.decode(keccak256(`0x${msg}`));
     const keypair = secp256k1.keyFromPublic(keydata);
 
     return keypair.verify(data, {

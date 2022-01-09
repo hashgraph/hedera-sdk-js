@@ -2,14 +2,13 @@
 // https://github.com/MaiaVictor/eth-lib/blob/da0971f5b09964d9c8449975fa87933f0c9fef35/src/hash.js
 //  - added type declarations
 //  - switched to es6 module syntax
+//
+// Disable linting for entire file because it's nearly all pure JS
+// eslint-disable
 
-/** @type {number[]} */
+const HEX_CHARS = "0123456789abcdef".split("");
 const KECCAK_PADDING = [1, 256, 65536, 16777216];
-
-/** @type {number[]} */
 const SHIFT = [0, 8, 16, 24];
-
-/** @type {number[]} */
 const RC = [
     1, 0, 32898, 0, 32906, 2147483648, 2147516416, 2147483648, 32907, 0,
     2147483649, 0, 2147516545, 2147483648, 32777, 2147483648, 138, 0, 136, 0,
@@ -20,7 +19,7 @@ const RC = [
 ];
 
 /**
- * @typedef {object} Keccak
+ * @typedef {object} KeccakT
  * @property {number[]} blocks
  * @property {number} blockCount
  * @property {number} outputBlocks
@@ -28,45 +27,23 @@ const RC = [
  * @property {number} start
  * @property {number} block
  * @property {boolean} reset
- * @property {?number} lastByteIndex
+ * @property {number=} lastByteIndex
  */
 
-/**
- * @param {number} bits
- * @returns {Keccak}
- */
-function createKeccakState(bits) {
-    return {
-        blocks: [],
-        reset: true,
-        block: 0,
-        start: 0,
-        lastByteIndex: null,
-        blockCount: (1600 - (bits << 1)) >> 5,
-        outputBlocks: bits >> 5,
-        s: zeroFill(50),
-    };
-}
+/** @type {(bits: number) => KeccakT} */
+const Keccak = (bits) => ({
+    blocks: [],
+    reset: true,
+    block: 0,
+    start: 0,
+    blockCount: (1600 - (bits << 1)) >> 5,
+    outputBlocks: bits >> 5,
+    // @ts-ignore
+    s: ((s) => [].concat(s, s, s, s, s))([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+});
 
-/**
- * @param {number} n
- * @returns {number[]}
- */
-function zeroFill(n) {
-    /** @type {number[]} */
-    let arr = Array(n);
-
-    for (let i = 0; i < n; ++i) arr[i] = 0;
-
-    return arr;
-}
-
-/**
- * @param {Keccak} state
- * @param {string | Uint8Array} message
- * @returns {Uint8Array}
- */
-function update(state, message) {
+/** @type {(state: KeccakT, message: string | number[]) => string} */
+const update = (state, /** @type {string | number[]} */ message) => {
     var length = message.length,
         blocks = state.blocks,
         byteCount = state.blockCount << 2,
@@ -74,7 +51,7 @@ function update(state, message) {
         outputBlocks = state.outputBlocks,
         s = state.s,
         index = 0,
-        i = 0,
+        i,
         code;
 
     // update
@@ -86,35 +63,35 @@ function update(state, message) {
                 blocks[i] = 0;
             }
         }
-        for (i = state.start; index < length && i < byteCount; ++index) {
-            code =
-                typeof message === "string"
-                    ? message.charCodeAt(index)
-                    : message[index];
-            if (code < 0x80) {
-                blocks[i >> 2] |= code << SHIFT[i++ & 3];
-            } else if (code < 0x800) {
-                blocks[i >> 2] |= (0xc0 | (code >> 6)) << SHIFT[i++ & 3];
-                blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
-            } else if (code < 0xd800 || code >= 0xe000) {
-                blocks[i >> 2] |= (0xe0 | (code >> 12)) << SHIFT[i++ & 3];
-                blocks[i >> 2] |=
-                    (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
-                blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
-            } else {
-                code =
-                    0x10000 +
-                    (((code & 0x3ff) << 10) |
-                        ((typeof message === "string"
-                            ? message.charCodeAt(++index)
-                            : message[++index]) &
-                            0x3ff));
-                blocks[i >> 2] |= (0xf0 | (code >> 18)) << SHIFT[i++ & 3];
-                blocks[i >> 2] |=
-                    (0x80 | ((code >> 12) & 0x3f)) << SHIFT[i++ & 3];
-                blocks[i >> 2] |=
-                    (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
-                blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
+        if (typeof message !== "string") {
+            for (i = state.start; index < length && i < byteCount; ++index) {
+                blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
+            }
+        } else {
+            for (i = state.start; index < length && i < byteCount; ++index) {
+                code = message.charCodeAt(index);
+                if (code < 0x80) {
+                    blocks[i >> 2] |= code << SHIFT[i++ & 3];
+                } else if (code < 0x800) {
+                    blocks[i >> 2] |= (0xc0 | (code >> 6)) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
+                } else if (code < 0xd800 || code >= 0xe000) {
+                    blocks[i >> 2] |= (0xe0 | (code >> 12)) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |=
+                        (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
+                } else {
+                    code =
+                        0x10000 +
+                        (((code & 0x3ff) << 10) |
+                            (message.charCodeAt(++index) & 0x3ff));
+                    blocks[i >> 2] |= (0xf0 | (code >> 18)) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |=
+                        (0x80 | ((code >> 12) & 0x3f)) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |=
+                        (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
+                }
             }
         }
         state.lastByteIndex = i;
@@ -132,9 +109,9 @@ function update(state, message) {
     }
 
     // finalize
-    i = /** @type {number} */ (state.lastByteIndex);
+    i = state.lastByteIndex;
+    // @ts-ignore
     blocks[i >> 2] |= KECCAK_PADDING[i & 3];
-
     if (state.lastByteIndex === byteCount) {
         blocks[0] = blocks[blockCount];
         for (i = 1; i < blockCount + 1; ++i) {
@@ -145,33 +122,37 @@ function update(state, message) {
     for (i = 0; i < blockCount; ++i) {
         s[i] ^= blocks[i];
     }
-
     f(s);
 
-    const buffer = new ArrayBuffer(outputBlocks * 4);
-    const view = new DataView(buffer);
-
-    i = 0;
+    // toString
+    var hex = "";
+    var block;
     var j = 0;
-
+    i = 0;
     while (j < outputBlocks) {
         for (i = 0; i < blockCount && j < outputBlocks; ++i, ++j) {
-            view.setInt32(i * 4, s[i], true);
+            block = s[i];
+            hex +=
+                HEX_CHARS[(block >> 4) & 0x0f] +
+                HEX_CHARS[block & 0x0f] +
+                HEX_CHARS[(block >> 12) & 0x0f] +
+                HEX_CHARS[(block >> 8) & 0x0f] +
+                HEX_CHARS[(block >> 20) & 0x0f] +
+                HEX_CHARS[(block >> 16) & 0x0f] +
+                HEX_CHARS[(block >> 28) & 0x0f] +
+                HEX_CHARS[(block >> 24) & 0x0f];
         }
-
         if (j % blockCount === 0) {
             f(s);
             i = 0;
         }
     }
+    // @ts-ignore
+    return "0x" + hex;
+};
 
-    return new Uint8Array(buffer);
-}
-
-/**
- * @param {number[]} s
- */
-function f(s) {
+/** @type {(s: number[]) => void} */
+const f = (s) => {
     var h,
         l,
         n,
@@ -414,16 +395,22 @@ function f(s) {
         s[0] ^= RC[n];
         s[1] ^= RC[n + 1];
     }
-}
+};
+
+const keccak = (/** @type {number} */ bits) => (/** @type {string} */ str) => {
+    var msg;
+    if (str.slice(0, 2) === "0x") {
+        msg = [];
+        for (var i = 2, l = str.length; i < l; i += 2)
+            msg.push(parseInt(str.slice(i, i + 2), 16));
+    } else {
+        msg = str;
+    }
+    // @ts-ignore
+    return update(Keccak(bits, bits), msg);
+};
 
 /**
- * @param {number} bits
- * @returns {(message: string | Uint8Array) => Uint8Array}
+ * @type {(message: string) => string}
  */
-function createKeccak(bits) {
-    return function (message) {
-        return update(createKeccakState(bits), message);
-    };
-}
-
-export const keccak256 = createKeccak(256);
+export const keccak256 = keccak(256);

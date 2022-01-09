@@ -357,7 +357,14 @@ export default class PrivateKey extends Key {
                 sigPair.pubKeyPrefix != null &&
                 hex.encode(sigPair.pubKeyPrefix) === publicKeyHex
             ) {
-                return /** @type {Uint8Array} */ (sigPair.ed25519);
+                switch (this._type) {
+                    case "ED25519":
+                        return /** @type {Uint8Array} */ (sigPair.ed25519);
+                    case "secp256k1":
+                        return /** @type {Uint8Array} */ (
+                            sigPair.ECDSASecp256k1
+                        );
+                }
             }
         }
 
@@ -370,10 +377,13 @@ export default class PrivateKey extends Key {
             pubKeyPrefix: this.publicKey.toBytesRaw(),
         };
 
-        if (this._key instanceof Ed25519PrivateKey) {
-            protoSignature.ed25519 = siganture;
-        } else {
-            protoSignature.ECDSASecp256k1 = siganture;
+        switch (this._type) {
+            case "ED25519":
+                protoSignature.ed25519 = siganture;
+                break;
+            case "secp256k1":
+                protoSignature.ECDSASecp256k1 = siganture;
+                break;
         }
 
         tx.sigMap.sigPair.push(protoSignature);
