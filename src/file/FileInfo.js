@@ -3,6 +3,7 @@ import Timestamp from "../Timestamp.js";
 import Long from "long";
 import * as proto from "@hashgraph/proto";
 import KeyList from "../KeyList.js";
+import LedgerId from "../LedgerId.js";
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -17,6 +18,7 @@ export default class FileInfo {
      * @param {boolean} props.isDeleted
      * @param {KeyList} props.keys
      * @param {string} props.fileMemo
+     * @param {LedgerId|null} props.ledgerId
      */
     constructor(props) {
         /**
@@ -57,6 +59,8 @@ export default class FileInfo {
 
         this.fileMemo = props.fileMemo;
 
+        this.ledgerId = props.ledgerId;
+
         Object.freeze(this);
     }
 
@@ -82,6 +86,10 @@ export default class FileInfo {
                     ? KeyList.__fromProtobufKeyList(info.keys)
                     : new KeyList(),
             fileMemo: info.memo != null ? info.memo : "",
+            ledgerId:
+                info.ledgerId != null
+                    ? LedgerId.fromBytes(info.ledgerId)
+                    : null,
         });
     }
 
@@ -97,6 +105,7 @@ export default class FileInfo {
             deleted: this.isDeleted,
             keys: this.keys._toProtobufKey().keyList,
             memo: this.fileMemo,
+            ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
         };
     }
 
