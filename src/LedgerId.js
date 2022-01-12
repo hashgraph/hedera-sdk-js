@@ -50,7 +50,7 @@ export default class LedgerId {
      * @returns {string}
      */
     toString() {
-        if (this._ledgerId.length == 1){
+        if (this._ledgerId.length == 1) {
             switch (this._ledgerId[0]) {
                 case 0:
                     return NETNAMES[0];
@@ -71,7 +71,7 @@ export default class LedgerId {
      */
     _toStringForChecksum() {
         // legacy checksum logic from NetworkName
-        if (this._ledgerId.length == 1){
+        if (this._ledgerId.length == 1) {
             switch (this._ledgerId[0]) {
                 case 0:
                     return "0";
