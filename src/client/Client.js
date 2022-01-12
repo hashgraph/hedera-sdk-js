@@ -114,8 +114,8 @@ export default class Client {
      * @returns {this}
      */
     setNetworkName(networkName) {
-        //uses custom NetworkName type
-        //remove if phasing out set|get NetworkName
+        // uses custom NetworkName type
+        // remove if phasing out set|get NetworkName
         console.warn("Deprecated: Use `setLedgerId` instead");
         return this.setLedgerId(networkName);
     }

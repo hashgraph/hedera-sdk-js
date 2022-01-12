@@ -104,14 +104,4 @@ describe("LedgerId", function () {
         expect(ledgerId.isTestnet()).to.eql(false);
         expect(ledgerId.isMainnet()).to.eql(false);
     });
-
-    it("toString throws error when length > 1", function () {
-        try {
-            new LedgerId(new Uint8Array([0, 1])).toString();
-        } catch (error) {
-            expect(error.message).to.eql(
-                "unsupported ledgerId length greater than 1"
-            );
-        }
-    });
 });
