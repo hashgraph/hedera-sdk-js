@@ -50,15 +50,19 @@ export default class LedgerId {
      * @returns {string}
      */
     toString() {
-        switch (this._ledgerId[0]) {
-            case 0:
-                return NETNAMES[0];
-            case 1:
-                return NETNAMES[1];
-            case 2:
-                return NETNAMES[2];
-            default:
-                return hex.encode(this._ledgerId);
+        if (this._ledgerId.length == 1){
+            switch (this._ledgerId[0]) {
+                case 0:
+                    return NETNAMES[0];
+                case 1:
+                    return NETNAMES[1];
+                case 2:
+                    return NETNAMES[2];
+                default:
+                    return hex.encode(this._ledgerId);
+            }
+        } else {
+            return hex.encode(this._ledgerId);
         }
     }
 
@@ -67,15 +71,19 @@ export default class LedgerId {
      */
     _toStringForChecksum() {
         // legacy checksum logic from NetworkName
-        switch (this._ledgerId[0]) {
-            case 0:
-                return "0";
-            case 1:
-                return "1";
-            case 2:
-                return "2";
-            default:
-                return hex.encode(this._ledgerId);
+        if (this._ledgerId.length == 1){
+            switch (this._ledgerId[0]) {
+                case 0:
+                    return "0";
+                case 1:
+                    return "1";
+                case 2:
+                    return "2";
+                default:
+                    return hex.encode(this._ledgerId);
+            }
+        } else {
+            return hex.encode(this._ledgerId);
         }
     }
 
