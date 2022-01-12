@@ -129,12 +129,10 @@ export { default as LedgerId } from "./LedgerId.js";
 /**
  * @type {NetworkNameType}
  */
-const NetworkName = {
+export const NetworkName = {
     Mainnet: "mainnet",
     Testnet: "testnet",
     Previewnet: "previewnet",
 };
-
-export default NetworkName;
 
 import "./query/CostQuery.js";
