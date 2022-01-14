@@ -1,6 +1,5 @@
 import AccountId from "../account/AccountId.js";
 import Node from "../Node.js";
-import { _ledgerIdToNetworkName } from "../NetworkName.js";
 import {
     PREVIEWNET_ADDRESS_BOOK,
     TESTNET_ADDRESS_BOOK,
@@ -11,10 +10,6 @@ import ManagedNetwork from "./ManagedNetwork.js";
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../address_book/NodeAddressBook.js").default} NodeAddressBook
- */
-
-/**
- * @typedef {import("./Client.js").NetworkName} NetworkName
  */
 
 /**
@@ -71,12 +66,12 @@ export default class Network extends ManagedNetwork {
     }
 
     /**
-     * @param {NetworkName} networkName
+     * @param {string} networkName
      * @returns {this}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setNetworkName(networkName) {
-        super.setNetworkName(networkName);
+        super.setLedgerId(networkName);
 
         switch (networkName) {
             case "mainnet":
@@ -111,9 +106,7 @@ export default class Network extends ManagedNetwork {
      * @returns {string | null}
      */
     get networkName() {
-        return this._ledgerId != null
-            ? _ledgerIdToNetworkName(this._ledgerId)
-            : null;
+        return this._ledgerId != null ? this._ledgerId.toString() : null;
     }
 
     /**

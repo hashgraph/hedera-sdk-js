@@ -2,6 +2,7 @@ import NftId from "./NftId.js";
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import * as hex from "../encoding/hex.js";
+import LedgerId from "../LedgerId.js";
 
 /**
  * @namespace proto
@@ -21,10 +22,11 @@ export default class TokenNftInfo {
     /**
      * @private
      * @param {object} props
-     * @param {NftId} props.nftId;
-     * @param {AccountId} props.accountId;
-     * @param {Timestamp} props.creationTime;
-     * @param {Uint8Array | null} props.metadata;
+     * @param {NftId} props.nftId
+     * @param {AccountId} props.accountId
+     * @param {Timestamp} props.creationTime
+     * @param {Uint8Array | null} props.metadata
+     * @param {LedgerId|null} props.ledgerId
      */
     constructor(props) {
         /**
@@ -49,6 +51,8 @@ export default class TokenNftInfo {
          */
         this.metadata = props.metadata;
 
+        this.ledgerId = props.ledgerId;
+
         Object.freeze(this);
     }
 
@@ -69,6 +73,10 @@ export default class TokenNftInfo {
                 /** @type {proto.ITimestamp} */ (info.creationTime)
             ),
             metadata: info.metadata !== undefined ? info.metadata : null,
+            ledgerId:
+                info.ledgerId != null
+                    ? LedgerId.fromBytes(info.ledgerId)
+                    : null,
         });
     }
 
@@ -81,6 +89,7 @@ export default class TokenNftInfo {
             accountID: this.accountId._toProtobuf(),
             creationTime: this.creationTime._toProtobuf(),
             metadata: this.metadata,
+            ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
         };
     }
 
@@ -90,6 +99,7 @@ export default class TokenNftInfo {
      * @property {string} accountId
      * @property {string} creationTime
      * @property {string | null} metadata
+     * @property {string | null} ledgerId
      * @returns {TokenNftInfoJson}
      */
     toJson() {
@@ -98,6 +108,7 @@ export default class TokenNftInfo {
             accountId: this.accountId.toString(),
             creationTime: this.creationTime.toString(),
             metadata: this.metadata != null ? hex.encode(this.metadata) : null,
+            ledgerId: this.ledgerId != null ? this.ledgerId.toString() : null,
         };
     }
 
