@@ -3,6 +3,7 @@ import {
     PrivateKey,
     TransactionId,
     TransferTransaction,
+    Transaction,
 } from "../src/exports.js";
 
 describe("PublicKey", function () {
@@ -24,6 +25,25 @@ describe("PublicKey", function () {
         expect(key2.publicKey.verifyTransaction(transaction)).to.be.true;
 
         const signatures = transaction.getSignatures();
+        expect(signatures.size).to.be.equal(1);
+
+        for (const [nodeAccountId, nodeSignatures] of signatures) {
+            expect(nodeAccountId.toString()).equals("0.0.6");
+
+            expect(nodeSignatures.size).to.be.equal(2);
+            for (const [publicKey] of nodeSignatures) {
+                expect(publicKey.verifyTransaction(transaction)).to.be.true;
+            }
+        }
+
+        const bytes = transaction.toBytes();
+
+        transaction = Transaction.fromBytes(bytes);
+
+        expect(key1.publicKey.verifyTransaction(transaction)).to.be.true;
+        expect(key2.publicKey.verifyTransaction(transaction)).to.be.true;
+
+        signatures = transaction.getSignatures();
         expect(signatures.size).to.be.equal(1);
 
         for (const [nodeAccountId, nodeSignatures] of signatures) {
