@@ -95,6 +95,22 @@ export default class TopicId {
     static fromBytes(bytes) {
         return TopicId._fromProtobuf(ProtoTopicID.decode(bytes));
     }
+    
+    /**
+     * @param {string} address
+     * @returns {TopicId}
+     */
+    static fromSolidityAddress(address) {
+        const [shard, realm, topic] = entity_id.fromSolidityAddress(address);
+        return new TopicId(shard, realm, topic);
+    }
+
+    /**
+     * @returns {string}
+     */
+    toSolidityAddress() {
+        return entity_id.toSolidityAddress([this.shard, this.realm, this.num]);
+    }
 
     /**
      * @returns {proto.ITopicID}
