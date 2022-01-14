@@ -10,6 +10,7 @@ import CustomFixedFee from "./CustomFixedFee.js";
 import CustomFractionalFee from "./CustomFractionalFee.js";
 import CustomRoyaltyFee from "./CustomRoyaltyFee.js";
 import Key from "../Key.js";
+import LedgerId from "../LedgerId.js";
 
 /**
  * @typedef {import("./CustomFee.js").default} CustomFee
@@ -47,6 +48,7 @@ export default class TokenInfo {
      * @param {TokenType | null} props.tokenType;
      * @param {TokenSupplyType | null} props.supplyType;
      * @param {Long | null} props.maxSupply;
+     * @param {LedgerId|null} props.ledgerId
      */
     constructor(props) {
         /**
@@ -214,6 +216,8 @@ export default class TokenInfo {
         this.supplyType = props.supplyType;
 
         this.maxSupply = props.maxSupply;
+
+        this.ledgerId = props.ledgerId;
     }
 
     /**
@@ -324,6 +328,10 @@ export default class TokenInfo {
                     ? TokenSupplyType._fromCode(info.supplyType)
                     : null,
             maxSupply: info.maxSupply != null ? info.maxSupply : null,
+            ledgerId:
+                info.ledgerId != null
+                    ? LedgerId.fromBytes(info.ledgerId)
+                    : null,
         });
     }
 
@@ -388,6 +396,7 @@ export default class TokenInfo {
             tokenType: this.tokenType != null ? this.tokenType._code : null,
             supplyType: this.supplyType != null ? this.supplyType._code : null,
             maxSupply: this.maxSupply,
+            ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
         };
     }
 

@@ -4,14 +4,14 @@ import Client from "./Client.js";
 import NodeChannel from "../channel/NodeChannel.js";
 import NodeMirrorChannel from "../channel/NodeMirrorChannel.js";
 import AccountId from "../account/AccountId.js";
-import NetworkName from "../NetworkName.js";
+import LedgerId from "../LedgerId.js";
 
 const readFileAsync = util.promisify(fs.readFile);
 
 /**
  * @typedef {import("./Client.js").ClientConfiguration} ClientConfiguration
- * @typedef {import("./Client.js").NetworkName} NetworkName
  */
+//@typedef {import("./Client.js").NetworkName} NetworkName
 
 export const Network = {
     /**
@@ -114,19 +114,19 @@ export default class NodeClient extends Client {
                     case "mainnet":
                         this.setNetwork(Network.MAINNET);
                         this.setMirrorNetwork(MirrorNetwork.MAINNET);
-                        this.setNetworkName(NetworkName.Mainnet);
+                        this.setLedgerId(LedgerId.MAINNET);
                         break;
 
                     case "testnet":
                         this.setNetwork(Network.TESTNET);
                         this.setMirrorNetwork(MirrorNetwork.TESTNET);
-                        this.setNetworkName(NetworkName.Testnet);
+                        this.setLedgerId(LedgerId.TESTNET);
                         break;
 
                     case "previewnet":
                         this.setNetwork(Network.PREVIEWNET);
                         this.setMirrorNetwork(MirrorNetwork.PREVIEWNET);
-                        this.setNetworkName(NetworkName.Previewnet);
+                        this.setLedgerId(LedgerId.PREVIEWNET);
                         break;
 
                     default:
@@ -199,7 +199,7 @@ export default class NodeClient extends Client {
     }
 
     /**
-     * @param {NetworkName} network
+     * @param {string} network
      * @returns {NodeClient}
      */
     static forName(network) {
@@ -234,7 +234,7 @@ export default class NodeClient extends Client {
     }
 
     /**
-     * @param {{[key: string]: (string | AccountId)} | NetworkName} network
+     * @param {{[key: string]: (string | AccountId)} | string} network
      * @returns {void}
      */
     setNetwork(network) {
@@ -242,15 +242,15 @@ export default class NodeClient extends Client {
             switch (network) {
                 case "previewnet":
                     this._network.setNetwork(Network.PREVIEWNET);
-                    this._network._ledgerId = "2";
+                    this._network._ledgerId = LedgerId.PREVIEWNET;
                     break;
                 case "testnet":
                     this._network.setNetwork(Network.TESTNET);
-                    this._network._ledgerId = "1";
+                    this._network._ledgerId = LedgerId.TESTNET;
                     break;
                 case "mainnet":
                     this._network.setNetwork(Network.MAINNET);
-                    this._network._ledgerId = "0";
+                    this._network._ledgerId = LedgerId.MAINNET;
             }
         } else {
             this._network.setNetwork(network);
@@ -258,7 +258,7 @@ export default class NodeClient extends Client {
     }
 
     /**
-     * @param {string[] | string | NetworkName} mirrorNetwork
+     * @param {string[] | string} mirrorNetwork
      * @returns {this}
      */
     setMirrorNetwork(mirrorNetwork) {

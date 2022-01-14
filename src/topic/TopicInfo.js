@@ -5,6 +5,7 @@ import Long from "long";
 import Duration from "../Duration.js";
 import * as proto from "@hashgraph/proto";
 import Key from "../Key.js";
+import LedgerId from "../LedgerId.js";
 
 /**
  * Current state of a topic.
@@ -22,6 +23,7 @@ export default class TopicInfo {
      * @param {?Key} props.submitKey
      * @param {?Duration} props.autoRenewPeriod
      * @param {?AccountId} props.autoRenewAccountId
+     * @param {LedgerId|null} props.ledgerId
      */
     constructor(props) {
         /**
@@ -83,6 +85,8 @@ export default class TopicInfo {
          */
         this.autoRenewAccountId = props.autoRenewAccountId;
 
+        this.ledgerId = props.ledgerId;
+
         Object.freeze(this);
     }
 
@@ -130,6 +134,10 @@ export default class TopicInfo {
             autoRenewAccountId:
                 info.autoRenewAccount != null
                     ? AccountId._fromProtobuf(info.autoRenewAccount)
+                    : null,
+            ledgerId:
+                info.ledgerId != null
+                    ? LedgerId.fromBytes(info.ledgerId)
                     : null,
         });
     }

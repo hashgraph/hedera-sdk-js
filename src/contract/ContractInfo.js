@@ -7,6 +7,7 @@ import Long from "long";
 import * as proto from "@hashgraph/proto";
 import TokenRelationshipMap from "../account/TokenRelationshipMap.js";
 import Key from "../Key.js";
+import LedgerId from "../LedgerId.js";
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -26,6 +27,7 @@ export default class ContractInfo {
      * @param {Hbar} props.balance
      * @param {boolean} props.isDeleted
      * @param {TokenRelationshipMap} props.tokenRelationships
+     * @param {LedgerId|null} props.ledgerId
      */
     constructor(props) {
         /**
@@ -115,6 +117,8 @@ export default class ContractInfo {
          */
         this.tokenRelationships = props.tokenRelationships;
 
+        this.ledgerId = props.ledgerId;
+
         Object.freeze(this);
     }
 
@@ -157,6 +161,10 @@ export default class ContractInfo {
             tokenRelationships: TokenRelationshipMap._fromProtobuf(
                 info.tokenRelationships != null ? info.tokenRelationships : []
             ),
+            ledgerId:
+                info.ledgerId != null
+                    ? LedgerId.fromBytes(info.ledgerId)
+                    : null,
         });
     }
 
@@ -184,6 +192,7 @@ export default class ContractInfo {
                 this.tokenRelationships != null
                     ? this.tokenRelationships._toProtobuf()
                     : null,
+            ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
         };
     }
 

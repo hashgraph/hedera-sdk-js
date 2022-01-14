@@ -47,7 +47,6 @@ export { default as LiveHash } from "./account/LiveHash.js";
 export { default as LiveHashAddTransaction } from "./account/LiveHashAddTransaction.js";
 export { default as LiveHashDeleteTransaction } from "./account/LiveHashDeleteTransaction.js";
 export { default as LiveHashQuery } from "./account/LiveHashQuery.js";
-export { default as NetworkName } from "./NetworkName.js";
 export { default as NetworkVersionInfo } from "./network/NetworkVersionInfo.js";
 export { default as NetworkVersionInfoQuery } from "./network/NetworkVersionInfoQuery.js";
 export { default as ProxyStaker } from "./account/ProxyStaker.js";
@@ -114,5 +113,26 @@ export { default as TransferTransaction } from "./account/TransferTransaction.js
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
 export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
+export { default as LedgerId } from "./LedgerId.js";
+
+/**
+ * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName
+ */
+
+/**
+ * @typedef {object} NetworkNameType
+ * @property {ClientNetworkName} Mainnet
+ * @property {ClientNetworkName} Testnet
+ * @property {ClientNetworkName} Previewnet
+ */
+
+/**
+ * @type {NetworkNameType}
+ */
+export const NetworkName = {
+    Mainnet: "mainnet",
+    Testnet: "testnet",
+    Previewnet: "previewnet",
+};
 
 import "./query/CostQuery.js";

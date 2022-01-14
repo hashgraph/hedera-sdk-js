@@ -8,6 +8,7 @@ import * as proto from "@hashgraph/proto";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
+import LedgerId from "../LedgerId.js";
 
 /**
  * Current information about an account, including the balance.
@@ -34,6 +35,7 @@ export default class AccountInfo {
      * @param {Long} props.ownedNfts
      * @param {Long} props.maxAutomaticTokenAssociations
      * @param {PublicKey | null} props.aliasKey
+     * @param {LedgerId|null} props.ledgerId
      */
     constructor(props) {
         /**
@@ -149,6 +151,8 @@ export default class AccountInfo {
 
         this.aliasKey = props.aliasKey;
 
+        this.ledgerId = props.ledgerId;
+
         Object.freeze(this);
     }
 
@@ -229,6 +233,10 @@ export default class AccountInfo {
                 ? Long.fromNumber(info.maxAutomaticTokenAssociations)
                 : Long.ZERO,
             aliasKey,
+            ledgerId:
+                info.ledgerId != null
+                    ? LedgerId.fromBytes(info.ledgerId)
+                    : null,
         });
     }
 
@@ -266,6 +274,7 @@ export default class AccountInfo {
                 this.aliasKey != null
                     ? proto.Key.encode(this.aliasKey._toProtobufKey()).finish()
                     : null,
+            ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
         };
     }
 

@@ -1,5 +1,4 @@
 import ManagedNode from "./ManagedNode.js";
-import { _ledgerIdToNetworkName } from "./NetworkName.js";
 import { PREVIEWNET_CERTS, TESTNET_CERTS, MAINNET_CERTS } from "./NodeCerts.js";
 
 /**
@@ -7,6 +6,7 @@ import { PREVIEWNET_CERTS, TESTNET_CERTS, MAINNET_CERTS } from "./NodeCerts.js";
  * @typedef {import("./address_book/NodeAddress.js").default} NodeAddress
  * @typedef {import("./channel/Channel.js").default} Channel
  * @typedef {import("./ManagedNodeAddress.js").default} ManagedNodeAddress
+ * @typedef {import("./LedgerId.js").default} LedgerId
  */
 
 /**
@@ -81,13 +81,11 @@ export default class Node extends ManagedNode {
     }
 
     /**
-     * @param {string} ledgerId
+     * @param {LedgerId|string} ledgerId
      * @returns {this}
      */
     setCert(ledgerId) {
-        const networkName = _ledgerIdToNetworkName(ledgerId);
-
-        switch (networkName) {
+        switch (ledgerId.toString()) {
             case "previewnet":
                 this._cert = PREVIEWNET_CERTS[this._accountId.toString()];
                 break;

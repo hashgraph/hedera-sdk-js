@@ -309,7 +309,7 @@ export function validateChecksum(shard, realm, num, checksum, client) {
     }
 
     const expectedChecksum = _checksum(
-        client._network._ledgerId,
+        client._network._ledgerId._toStringForChecksum(),
         `${shard.toString()}.${realm.toString()}.${num.toString()}`
     );
 
@@ -336,7 +336,10 @@ export function toStringWithChecksum(string, client) {
         );
     }
 
-    const checksum = _checksum(client._network._ledgerId, string);
+    const checksum = _checksum(
+        client._network._ledgerId._toStringForChecksum(),
+        string
+    );
 
     return `${string}-${checksum}`;
 }
