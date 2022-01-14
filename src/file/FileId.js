@@ -92,7 +92,7 @@ export default class FileId {
     }
     
     /**
-     * @param {string} solidity address
+     * @param {string} address
      * @returns {FileId}
      */
     static fromSolidityAddress(address) {
