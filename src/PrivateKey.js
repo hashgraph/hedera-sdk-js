@@ -258,7 +258,7 @@ export default class PrivateKey extends Key {
      * @returns {Uint8Array}
      */
     signTransaction(transaction) {
-        const tx = transaction._signedTransactions[0];
+        const tx = transaction._signedTransactions.get(0);
         const signature =
             tx.bodyBytes != null ? this.sign(tx.bodyBytes) : new Uint8Array();
 
