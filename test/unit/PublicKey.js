@@ -3,6 +3,7 @@ import {
     PrivateKey,
     TransactionId,
     TransferTransaction,
+    Transaction,
 } from "../src/exports.js";
 
 describe("PublicKey", function () {
@@ -10,7 +11,7 @@ describe("PublicKey", function () {
         const key1 = PrivateKey.generateED25519();
         const key2 = PrivateKey.generateECDSA();
 
-        const transaction = new TransferTransaction()
+        let transaction = new TransferTransaction()
             .setTransactionId(TransactionId.generate(new AccountId(5)))
             .setNodeAccountIds([new AccountId(6)])
             .addHbarTransfer("0.0.3", -1)
@@ -23,7 +24,7 @@ describe("PublicKey", function () {
         expect(key1.publicKey.verifyTransaction(transaction)).to.be.true;
         expect(key2.publicKey.verifyTransaction(transaction)).to.be.true;
 
-        const signatures = transaction.getSignatures();
+        let signatures = transaction.getSignatures();
         expect(signatures.size).to.be.equal(1);
 
         for (const [nodeAccountId, nodeSignatures] of signatures) {
@@ -34,5 +35,15 @@ describe("PublicKey", function () {
                 expect(publicKey.verifyTransaction(transaction)).to.be.true;
             }
         }
+
+        const bytes = transaction.toBytes();
+
+        transaction = Transaction.fromBytes(bytes);
+
+        expect(key1.publicKey.verifyTransaction(transaction)).to.be.true;
+        expect(key2.publicKey.verifyTransaction(transaction)).to.be.true;
+
+        signatures = transaction.getSignatures();
+        expect(signatures.size).to.be.equal(1);
     });
 });
