@@ -90,6 +90,22 @@ export default class FileId {
     static fromBytes(bytes) {
         return FileId._fromProtobuf(proto.FileID.decode(bytes));
     }
+    
+    /**
+     * @param {string} solidity address
+     * @returns {FileId}
+     */
+    static fromSolidityAddress(address) {
+        const [shard, realm, file] = entity_id.fromSolidityAddress(address);
+        return new FileId(shard, realm, file);
+    }
+
+    /**
+     * @returns {string} solidity address
+     */
+    toSolidityAddress() {
+        return entity_id.toSolidityAddress([this.shard, this.realm, this.num]);
+    }
 
     /**
      * @internal
