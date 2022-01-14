@@ -5,7 +5,7 @@
  * @typedef {import("./address_book/NodeAddress.js").default} NodeAddress
  */
 
-const HOST_AND_PORT = /^(?<address>.*)(:(?<port>\d+))?/;
+export const HOST_AND_PORT = /^(\S+):(\d+)$/;
 
 export default class ManagedNodeAddress {
     /**
@@ -18,21 +18,21 @@ export default class ManagedNodeAddress {
         if (props.address != null) {
             const hostAndPortResult = HOST_AND_PORT.exec(props.address);
 
-            if (hostAndPortResult == null || hostAndPortResult.groups == null) {
+            if (hostAndPortResult == null) {
                 throw new Error(`failed to parse address: ${props.address}`);
             }
 
             /** @type {string} */
             this._address = /** @type {string} */ (
-                hostAndPortResult.groups["address"]
+                hostAndPortResult[1]
             );
 
             /** @type {number | null} */
             this._port =
-                hostAndPortResult.groups["port"] != null
+                hostAndPortResult[2] != null
                     ? parseInt(
                           /** @type {string }*/ (
-                              hostAndPortResult.groups["port"]
+                              hostAndPortResult[2]
                           )
                       )
                     : null;
