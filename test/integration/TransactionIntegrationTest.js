@@ -2,6 +2,7 @@ import {
     AccountCreateTransaction,
     AccountDeleteTransaction,
     AccountId,
+    FileCreateTransaction,
     Hbar,
     PrivateKey,
     TokenCreateTransaction,
@@ -47,6 +48,25 @@ describe("TransactionIntegration", function () {
                     .sign(key)
             ).execute(env.client)
         ).getReceipt(env.client);
+
+        await env.close();
+    });
+
+    it("signs on demand", async function () {
+        this.timeout(10000);
+
+        const env = await IntegrationTestEnv.new();
+        env.client.setSignOnDemand(true);
+
+        const fileId = (
+            await (
+                await new FileCreateTransaction()
+                    .setContents("test")
+                    .execute(env.client)
+            ).getReceipt(env.client)
+        ).fileId;
+
+        expect(fileId.num).to.not.be.equal(0);
 
         await env.close();
     });

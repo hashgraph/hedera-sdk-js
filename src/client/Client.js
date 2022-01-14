@@ -106,6 +106,8 @@ export default class Client {
 
         /** @type {number} */
         this._maxBackoff = 8000;
+
+        this._defaultRegenerateTransactionId = true;
     }
 
     /**
@@ -180,6 +182,13 @@ export default class Client {
      */
     get mirrorNetwork() {
         return this._mirrorNetwork.network;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get signOnDemand() {
+        return this._signOnDemand;
     }
 
     /**
@@ -302,6 +311,25 @@ export default class Client {
      */
     setMaxTransactionFee(maxTransactionFee) {
         this._maxTransactionFee = maxTransactionFee;
+        return this;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get defaultRegenerateTransactionId() {
+        return this._defaultRegenerateTransactionId;
+    }
+
+    /**
+     * Set if a new transaction ID should be generated when a `TRANSACTION_EXPIRED` status
+     * is returned.
+     *
+     * @param {boolean} defaultRegenerateTransactionId
+     * @returns {this}
+     */
+    setDefaultRegenerateTransactionId(defaultRegenerateTransactionId) {
+        this._defaultRegenerateTransactionId = defaultRegenerateTransactionId;
         return this;
     }
 

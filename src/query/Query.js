@@ -128,8 +128,10 @@ export default class Query extends Executable {
      * @returns {Promise<Hbar>}
      */
     getCost(client) {
-        if (this._nodeIds.length == 0) {
-            this._nodeIds = client._network.getNodeAccountIdsForExecute();
+        if (this._nodeAccountIds.isEmpty) {
+            this._nodeAccountIds.setList(
+                client._network.getNodeAccountIdsForExecute()
+            );
         }
 
         if (COST_QUERY.length != 1) {
@@ -198,8 +200,10 @@ export default class Query extends Executable {
             this._validateChecksums(client);
         }
 
-        if (this._nodeIds.length == 0) {
-            this._nodeIds = client._network.getNodeAccountIdsForExecute();
+        if (this._nodeAccountIds.isEmpty) {
+            this._nodeAccountIds.setList(
+                client._network.getNodeAccountIdsForExecute()
+            );
         }
 
         const operator = client._operator;
@@ -246,7 +250,7 @@ export default class Query extends Executable {
             }
         }
 
-        for (const node of this._nodeIds) {
+        for (const node of this._nodeAccountIds.list) {
             this._paymentTransactions.push(
                 await _makePaymentTransaction(
                     /** @type {import("../transaction/TransactionId.js").default} */ (
@@ -282,7 +286,8 @@ export default class Query extends Executable {
         if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             header = {
                 responseType: ProtoResponseType.ANSWER_ONLY,
-                payment: this._paymentTransactions[this._nextNodeIndex],
+                payment:
+                    this._paymentTransactions[this._nextNodeAccountIdIndex],
             };
         }
 
@@ -310,7 +315,8 @@ export default class Query extends Executable {
 
         if (this._isPaymentRequired() && this._paymentTransactions != null) {
             header = {
-                payment: this._paymentTransactions[this._nextNodeIndex],
+                payment:
+                    this._paymentTransactions[this._nextNodeAccountIdIndex],
                 responseType: ProtoResponseType.ANSWER_ONLY,
             };
         }
@@ -385,10 +391,10 @@ export default class Query extends Executable {
      * @returns {AccountId}
      */
     _getNodeAccountId() {
-        if (this._nodeIds.length > 0) {
+        if (!this._nodeAccountIds.isEmpty) {
             // if there are payment transactions,
             // we need to use the node of the current payment transaction
-            return this._nodeIds[this._nextNodeIndex];
+            return this._nodeAccountIds.list[this._nextNodeAccountIdIndex];
         } else {
             throw new Error(
                 "(BUG) nodeAccountIds were not set for query before executing"
@@ -405,8 +411,9 @@ export default class Query extends Executable {
         if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             // each time we move our cursor to the next transaction
             // wrapping around to ensure we are cycling
-            super._nextNodeIndex =
-                (this._nextNodeIndex + 1) % this._paymentTransactions.length;
+            super._nextNodeAccountIdIndex =
+                (this._nextNodeAccountIdIndex + 1) %
+                this._paymentTransactions.length;
         } else {
             super._advanceRequest();
         }

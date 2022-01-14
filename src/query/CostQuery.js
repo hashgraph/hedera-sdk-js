@@ -30,7 +30,7 @@ export default class CostQuery extends Executable {
         super();
 
         this._query = query;
-        this._nodeIds = query._nodeIds;
+        this._nodeAccountIds.setList(query._nodeAccountIds.list);
 
         /**
          * @type {proto.IQueryHeader | null}
@@ -64,9 +64,10 @@ export default class CostQuery extends Executable {
             );
         }
 
-        if (this._query._nodeIds.length == 0) {
-            this._query._nodeIds =
-                client._network.getNodeAccountIdsForExecute();
+        if (this._query._nodeAccountIds.isEmpty) {
+            this._query._nodeAccountIds.setList(
+                client._network.getNodeAccountIdsForExecute()
+            );
         }
 
         this._header = {
@@ -150,10 +151,10 @@ export default class CostQuery extends Executable {
      * @returns {AccountId}
      */
     _getNodeAccountId() {
-        if (this._nodeIds.length > 0) {
+        if (!this._nodeAccountIds.isEmpty) {
             // if there are payment transactions,
             // we need to use the node of the current payment transaction
-            return this._nodeIds[this._nextNodeIndex];
+            return this._nodeAccountIds.list[this._nextNodeAccountIdIndex];
         } else {
             throw new Error(
                 "(BUG) nodeAccountIds were not set for query before executing"
