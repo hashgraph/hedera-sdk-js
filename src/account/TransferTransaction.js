@@ -5,6 +5,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import Long from "long";
+import NullableTokenDecimalMap from "./NullableTokenDecimalMap.js";
 import TokenTransferMap from "./TokenTransferMap.js";
 import HbarTransferMap from "./HbarTransferMap.js";
 import TokenNftTransferMap from "./TokenNftTransferMap.js";
@@ -82,6 +83,12 @@ export default class TransferTransaction extends Transaction {
          * @type {TokenTransferMap}
          */
         this._tokenTransfers = new TokenTransferMap();
+
+        /**
+         * @private
+         * @type {NullableTokenDecimalMap}
+         */
+        this._tokenDecimals = new NullableTokenDecimalMap();
 
         /**
          * @private
@@ -229,15 +236,64 @@ export default class TransferTransaction extends Transaction {
     addTokenTransfer(tokenId, accountId, amount) {
         this._requireNotFrozen();
 
+        const token =
+            tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId);
+
         this._tokenTransfers.__set(
-            tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId),
+            token,
             accountId instanceof AccountId
                 ? accountId
                 : AccountId.fromString(accountId),
             amount instanceof Long ? amount : Long.fromNumber(amount)
         );
 
+        const currentDecimals = this._tokenDecimals.get(token);
+        if (currentDecimals == null) {
+            this._tokenDecimals._set(token, null);
+        }
+
         return this;
+    }
+
+    /**
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string} accountId
+     * @param {number | Long} amount
+     * @param {number} decimals
+     * @returns {this}
+     */
+    addTokenTransferWithDecimals(tokenId, accountId, amount, decimals) {
+        this._requireNotFrozen();
+
+        const token =
+            tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId);
+
+        this._tokenTransfers.__set(
+            token,
+            accountId instanceof AccountId
+                ? accountId
+                : AccountId.fromString(accountId),
+            amount instanceof Long ? amount : Long.fromNumber(amount)
+        );
+
+        const currentDecimals = this._tokenDecimals.get(token);
+
+        if (currentDecimals != null && currentDecimals != decimals) {
+            throw new Error("token ID decimal mismatch");
+        }
+
+        if (currentDecimals == null) {
+            this._tokenDecimals._set(token, decimals);
+        }
+
+        return this;
+    }
+
+    /**
+     * @returns {NullableTokenDecimalMap}
+     */
+    get tokenIdDecimals() {
+        return this._tokenDecimals;
     }
 
     /**
@@ -527,6 +583,9 @@ export default class TransferTransaction extends Transaction {
             tokenTransfers: tokenTransfers.map((tokenTransfer) => {
                 return {
                     token: tokenTransfer.token._toProtobuf(),
+                    expectedDecimals: this._tokenDecimals.get(
+                        tokenTransfer.token
+                    ),
                     transfers: (tokenTransfer.transfers != null
                         ? tokenTransfer.transfers
                         : []

@@ -1,7 +1,7 @@
 /**
  * @abstract
  * @template {{ toString(): string }} KeyT
- * @template {{ toString(): string }} ValueT
+ * @template {any} ValueT
  */
 export default class ObjectMap {
     /**
@@ -74,11 +74,11 @@ export default class ObjectMap {
      * @returns {string}
      */
     toString() {
-        /** @type {Object.<string, string>} */
+        /** @type {Object.<string, any>} */
         const map = {};
 
         for (const [key, value] of this._map) {
-            map[key] = value.toString();
+            map[key] = value;
         }
 
         return JSON.stringify(map);

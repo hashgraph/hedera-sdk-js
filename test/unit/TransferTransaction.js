@@ -192,16 +192,30 @@ describe("TransferTransaction", function () {
         );
     });
 
+    it("should save decimals", function () {
+        const transferTransaction = new TransferTransaction()
+            .addTokenTransferWithDecimals(tokenId2, accountId4, -1, 10)
+            .addTokenTransferWithDecimals(tokenId2, accountId3, 2, 10)
+            .addTokenTransferWithDecimals(tokenId1, accountId2, -3, 11)
+            .addTokenTransferWithDecimals(tokenId1, accountId1, -4, 11);
+
+        const expectedDecimals = transferTransaction.tokenIdDecimals;
+
+        expect(expectedDecimals.size).to.equal(2);
+        expect(expectedDecimals.get(tokenId1)).to.equal(11);
+        expect(expectedDecimals.get(tokenId2)).to.equal(10);
+    });
+
     it("should order transfers", function () {
         const transferTransaction = new TransferTransaction()
             // Insert in reverse order
             .addNftTransfer(tokenId4, serialNum1, accountId2, accountId4)
             .addNftTransfer(tokenId4, serialNum1, accountId1, accountId3)
             .addNftTransfer(tokenId3, serialNum1, accountId1, accountId2)
-            .addTokenTransfer(tokenId2, accountId4, -1)
-            .addTokenTransfer(tokenId2, accountId3, 2)
-            .addTokenTransfer(tokenId1, accountId2, -3)
-            .addTokenTransfer(tokenId1, accountId1, -4)
+            .addTokenTransferWithDecimals(tokenId2, accountId4, -1, 10)
+            .addTokenTransferWithDecimals(tokenId2, accountId3, 2, 10)
+            .addTokenTransferWithDecimals(tokenId1, accountId2, -3, 11)
+            .addTokenTransferWithDecimals(tokenId1, accountId1, -4, 11)
             .addHbarTransfer(accountId2, -1)
             .addHbarTransfer(accountId1, 1)
             .setTransactionId(new TransactionId(accountId3, timestamp1))
@@ -237,6 +251,7 @@ describe("TransferTransaction", function () {
                     realmNum: Long.fromNumber(1),
                     tokenNum: Long.fromNumber(1),
                 },
+                expectedDecimals: 11,
                 transfers: [
                     {
                         accountID: {
@@ -265,6 +280,7 @@ describe("TransferTransaction", function () {
                     realmNum: Long.fromNumber(2),
                     tokenNum: Long.fromNumber(2),
                 },
+                expectedDecimals: 10,
                 transfers: [
                     {
                         accountID: {
@@ -293,6 +309,7 @@ describe("TransferTransaction", function () {
                     realmNum: Long.fromNumber(3),
                     tokenNum: Long.fromNumber(3),
                 },
+                expectedDecimals: null,
                 transfers: [],
                 nftTransfers: [
                     {
@@ -318,6 +335,7 @@ describe("TransferTransaction", function () {
                     realmNum: Long.fromNumber(4),
                     tokenNum: Long.fromNumber(4),
                 },
+                expectedDecimals: null,
                 transfers: [],
                 nftTransfers: [
                     {
