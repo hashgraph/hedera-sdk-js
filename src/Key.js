@@ -33,13 +33,13 @@ export default class Key {
         }
 
         if (key.delegatableContractId != null) {
-            if (CACHE.contractId == null) {
+            if (CACHE.delegateContractId == null) {
                 throw new Error(
                     "`ContractId` was not loaded before decoding `Key`"
                 );
             }
 
-            return CACHE.contractId(key.delegatableContractId);
+            return CACHE.delegateContractId(key.delegatableContractId);
         }
 
         if (key.ed25519 != null && key.ed25519.byteLength > 0) {
