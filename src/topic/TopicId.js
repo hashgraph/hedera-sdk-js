@@ -95,7 +95,7 @@ export default class TopicId {
     static fromBytes(bytes) {
         return TopicId._fromProtobuf(ProtoTopicID.decode(bytes));
     }
-    
+
     /**
      * @param {string} address
      * @returns {TopicId}

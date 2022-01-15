@@ -90,7 +90,7 @@ export default class FileId {
     static fromBytes(bytes) {
         return FileId._fromProtobuf(proto.FileID.decode(bytes));
     }
-    
+
     /**
      * @param {string} address
      * @returns {FileId}
