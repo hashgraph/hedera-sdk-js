@@ -46,6 +46,9 @@ const CACHE = {
 
     /** @type {((shard: Long | number, realm: Long | number, key: PublicKey) => AccountId) | null} */
     accountIdConstructor: null,
+
+    /** @type {FromProtobufKeyFuncT<proto.IContractID, ContractId> | null} */
+    delegateContractId: null,
 };
 
 export default CACHE;
