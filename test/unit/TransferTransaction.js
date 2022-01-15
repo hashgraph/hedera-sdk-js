@@ -251,7 +251,7 @@ describe("TransferTransaction", function () {
                     realmNum: Long.fromNumber(1),
                     tokenNum: Long.fromNumber(1),
                 },
-                expectedDecimals: 11,
+                expectedDecimals: { value: 11 },
                 transfers: [
                     {
                         accountID: {
@@ -280,7 +280,7 @@ describe("TransferTransaction", function () {
                     realmNum: Long.fromNumber(2),
                     tokenNum: Long.fromNumber(2),
                 },
-                expectedDecimals: 10,
+                expectedDecimals: { value: 10 },
                 transfers: [
                     {
                         accountID: {

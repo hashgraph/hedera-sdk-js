@@ -581,11 +581,18 @@ export default class TransferTransaction extends Transaction {
                 }),
             },
             tokenTransfers: tokenTransfers.map((tokenTransfer) => {
+                const expectedDecimals = this._tokenDecimals.get(
+                    tokenTransfer.token
+                );
+
                 return {
                     token: tokenTransfer.token._toProtobuf(),
-                    expectedDecimals: this._tokenDecimals.get(
-                        tokenTransfer.token
-                    ),
+                    expectedDecimals:
+                        expectedDecimals != null
+                            ? {
+                                  value: expectedDecimals,
+                              }
+                            : null,
                     transfers: (tokenTransfer.transfers != null
                         ? tokenTransfer.transfers
                         : []
