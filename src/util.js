@@ -255,6 +255,7 @@ export function convertToBigNumber(variable) {
         isNumber(variable) ||
         isLong(variable)
     ) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         return new BigNumber(variable);
     }
     throw new Error(FUNCTION_CONVERT_TO_BIGNUMBER_ERROR);
@@ -288,6 +289,7 @@ export function convertToNumber(variable) {
         isNumber(variable) ||
         isLong(variable)
     ) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const num = parseInt(variable);
         if (isNaN(num)) {
             throw new Error(FUNCTION_CONVERT_TO_NUMBER_PARSE_ERROR);

@@ -274,7 +274,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     }
 
     /**
-     * @param {import("../client/Client.js").default<*, *>} client
+     * @param {import("../client/Client.js").default<Channel, *>} client
      * @returns {Promise<TransactionResponse>}
      */
     async execute(client) {
@@ -282,7 +282,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     }
 
     /**
-     * @param {import("../client/Client.js").default<*, *>} client
+     * @param {import("../client/Client.js").default<Channel, *>} client
      * @returns {Promise<TransactionResponse[]>}
      */
     async executeAll(client) {

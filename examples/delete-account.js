@@ -1,13 +1,15 @@
-require("dotenv").config();
-
-const {
+import {
     Client,
     PrivateKey,
     AccountCreateTransaction,
     AccountDeleteTransaction,
     Hbar,
     AccountId,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 async function main() {
     let client;
@@ -17,7 +19,7 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
@@ -25,8 +27,8 @@ async function main() {
 
     const newKey = PrivateKey.generate();
 
-    console.log(`private key = ${newKey}`);
-    console.log(`public key = ${newKey.publicKey}`);
+    console.log(`private key = ${newKey.toString()}`);
+    console.log(`public key = ${newKey.publicKey.toString()}`);
 
     const response = await new AccountCreateTransaction()
         .setInitialBalance(new Hbar(10)) // 10 h
@@ -35,7 +37,7 @@ async function main() {
 
     const receipt = await response.getReceipt(client);
 
-    console.log(`created account id = ${receipt.accountId}`);
+    console.log(`created account id = ${receipt.accountId.toString()}`);
 
     const transaction = new AccountDeleteTransaction()
         .setNodeAccountIds([response.nodeId])
@@ -45,9 +47,9 @@ async function main() {
 
     newKey.signTransaction(transaction);
 
-    transaction.execute(client);
+    await transaction.execute(client);
 
-    console.log(`deleted account id = ${receipt.accountId}`);
+    console.log(`deleted account id = ${receipt.accountId.toString()}`);
 }
 
 void main();

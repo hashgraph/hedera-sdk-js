@@ -1,6 +1,4 @@
-require("dotenv").config();
-
-const {
+import {
     AccountBalanceQuery,
     AccountCreateTransaction,
     AccountDeleteTransaction,
@@ -15,7 +13,11 @@ const {
     TransferTransaction,
     TokenWipeTransaction,
     TransactionId,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 async function main() {
     let client;
@@ -25,7 +27,7 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
@@ -33,8 +35,8 @@ async function main() {
 
     const newKey = PrivateKey.generate();
 
-    console.log(`private key = ${newKey}`);
-    console.log(`public key = ${newKey.publicKey}`);
+    console.log(`private key = ${newKey.toString()}`);
+    console.log(`public key = ${newKey.publicKey.toString()}`);
 
     let resp = await new AccountCreateTransaction()
         .setKey(newKey.publicKey)
@@ -44,7 +46,7 @@ async function main() {
     const transactionReceipt = await resp.getReceipt(client);
     const newAccountId = transactionReceipt.accountId;
 
-    console.log(`account id = ${newAccountId}`);
+    console.log(`account id = ${newAccountId.toString()}`);
 
     resp = await new TokenCreateTransaction()
         .setNodeAccountIds([resp.nodeId])
@@ -62,7 +64,7 @@ async function main() {
         .execute(client);
 
     const tokenId = (await resp.getReceipt(client)).tokenId;
-    console.log(`token id = ${tokenId}`);
+    console.log(`token id = ${tokenId.toString()}`);
 
     await (
         await (
@@ -75,7 +77,9 @@ async function main() {
         ).execute(client)
     ).getReceipt(client);
 
-    console.log(`Associated account ${newAccountId} with token ${tokenId}`);
+    console.log(
+        `Associated account ${newAccountId.toString()} with token ${tokenId.toString()}`
+    );
 
     await (
         await new TokenGrantKycTransaction()
@@ -85,7 +89,9 @@ async function main() {
             .execute(client)
     ).getReceipt(client);
 
-    console.log(`Granted KYC for account ${newAccountId} on token ${tokenId}`);
+    console.log(
+        `Granted KYC for account ${newAccountId.toString()} on token ${tokenId.toString()}`
+    );
 
     await (
         await new TransferTransaction()
@@ -96,7 +102,7 @@ async function main() {
     ).getReceipt(client);
 
     console.log(
-        `Sent 10 tokens from account ${client.operatorAccountId} to account ${newAccountId} on token ${tokenId}`
+        `Sent 10 tokens from account ${client.operatorAccountId.toString()} to account ${newAccountId.toString()} on token ${tokenId.toString()}`
     );
 
     const balances = await new AccountBalanceQuery()
@@ -104,9 +110,9 @@ async function main() {
         .execute(client);
 
     console.log(
-        `Token balances for ${
-            client.operatorAccountId
-        } are ${balances.tokens.toString()}`
+        `Token balances for ${client.operatorAccountId.toString()} are ${balances.tokens
+            .toString()
+            .toString()}`
     );
 
     await (
@@ -118,7 +124,7 @@ async function main() {
             .execute(client)
     ).getReceipt(client);
 
-    console.log(`Wiped balance of account ${newAccountId}`);
+    console.log(`Wiped balance of account ${newAccountId.toString()}`);
 
     await (
         await new TokenDeleteTransaction()
@@ -127,7 +133,7 @@ async function main() {
             .execute(client)
     ).getReceipt(client);
 
-    console.log(`Deleted token ${tokenId}`);
+    console.log(`Deleted token ${tokenId.toString()}`);
 
     await (
         await (
@@ -142,7 +148,7 @@ async function main() {
         ).execute(client)
     ).getReceipt(client);
 
-    console.log(`Deleted account ${newAccountId}`);
+    console.log(`Deleted account ${newAccountId.toString()}`);
 }
 
-main();
+void main();

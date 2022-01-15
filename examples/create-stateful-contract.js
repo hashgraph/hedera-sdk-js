@@ -1,6 +1,4 @@
-require("dotenv").config();
-
-const {
+import {
     Client,
     PrivateKey,
     ContractCreateTransaction,
@@ -10,10 +8,14 @@ const {
     ContractCallQuery,
     Hbar,
     AccountId,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 // Import the compiled contract
-const helloWorld = require("./stateful.json");
+import stateful from "./stateful.json";
 
 async function main() {
     let client;
@@ -23,14 +25,14 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
 
     // The contract bytecode is located on the `object` field
-    const contractByteCode = helloWorld.object;
+    const contractByteCode = /** @type {string} */ (stateful.object);
 
     // Create a file on Hedera which contains the contact bytecode.
     // Note: The contract bytecode **must** be hex encoded, it should not
@@ -42,11 +44,11 @@ async function main() {
 
     // Fetch the receipt for transaction that created the file
     const fileReceipt = await fileTransactionResponse.getReceipt(client);
-    
+
     // The file ID is located on the transaction receipt
     const fileId = fileReceipt.fileId;
 
-    console.log(`contract bytecode file: ${fileId}`);
+    console.log(`contract bytecode file: ${fileId.toString()}`);
 
     // Create the contract
     const contractTransactionResponse = await new ContractCreateTransaction()
@@ -54,8 +56,8 @@ async function main() {
         // In this case we are passing in a string with the value "hello from hedera!"
         // as the only parameter that is passed to the contract
         .setConstructorParameters(
-            new ContractFunctionParameters()
-                .addString("hello from hedera!"))
+            new ContractFunctionParameters().addString("hello from hedera!")
+        )
         // Set gas to create the contract
         .setGas(75000)
         // The contract bytecode must be set to the file ID containing the contract bytecode
@@ -66,12 +68,14 @@ async function main() {
         .execute(client);
 
     // Fetch the receipt for the transaction that created the contract
-    const contractReceipt = await contractTransactionResponse.getReceipt(client);
+    const contractReceipt = await contractTransactionResponse.getReceipt(
+        client
+    );
 
     // The conract ID is located on the transaction receipt
     const contractId = contractReceipt.contractId;
 
-    console.log(`new contract ID: ${contractId}`);
+    console.log(`new contract ID: ${contractId.toString()}`);
 
     // Call a method on a contract that exists on Hedera
     // Note: `ContractCallQuery` cannot mutate a contract, it will only return the last state
@@ -87,8 +91,13 @@ async function main() {
         .execute(client);
 
     // Check if an error was returned
-    if (contractCallResult.errorMessage != null && contractCallResult.errorMessage != "") {
-        console.log(`error calling contract: ${contractCallResult.errorMessage}`);
+    if (
+        contractCallResult.errorMessage != null &&
+        contractCallResult.errorMessage != ""
+    ) {
+        console.log(
+            `error calling contract: ${contractCallResult.errorMessage}`
+        );
     }
 
     // Get the message from the result
@@ -104,23 +113,28 @@ async function main() {
     console.log(`contract message: ${message}`);
 
     // Call a method on a contract exists on Hedera, but is allowed to mutate the contract state
-    const contractExecTransactionResponse = await new ContractExecuteTransaction()
-        // Set which contract
-        .setContractId(contractId)
-        // Set the gas to execute the contract call
-        .setGas(75000)
-        // Set the function to call and the parameters to send
-        // in this case we're calling function "set_message" with a single
-        // string paramater of value "hello from hedera again!"
-        // If instead the "set_message" method were to require "string[], uint32, string"
-        // parameters then you must do:
-        //      new ContractFunctionParameters()
-        //          .addStringArray(["string 1", "string 2"])
-        //          .addUint32(1)
-        //          .addString("string 3")
-        .setFunction("set_message", new ContractFunctionParameters()
-            .addString("hello from hedera again!"))
-        .execute(client);
+    const contractExecTransactionResponse =
+        await new ContractExecuteTransaction()
+            // Set which contract
+            .setContractId(contractId)
+            // Set the gas to execute the contract call
+            .setGas(75000)
+            // Set the function to call and the parameters to send
+            // in this case we're calling function "set_message" with a single
+            // string paramater of value "hello from hedera again!"
+            // If instead the "set_message" method were to require "string[], uint32, string"
+            // parameters then you must do:
+            //      new ContractFunctionParameters()
+            //          .addStringArray(["string 1", "string 2"])
+            //          .addUint32(1)
+            //          .addString("string 3")
+            .setFunction(
+                "set_message",
+                new ContractFunctionParameters().addString(
+                    "hello from hedera again!"
+                )
+            )
+            .execute(client);
 
     await contractExecTransactionResponse.getReceipt(client);
 
@@ -138,8 +152,13 @@ async function main() {
         .execute(client);
 
     // Check if there were any errors
-    if (contractUpdateResult.errorMessage != null && contractUpdateResult.errorMessage != "") {
-        console.log(`error calling contract: ${contractUpdateResult.errorMessage}`);
+    if (
+        contractUpdateResult.errorMessage != null &&
+        contractUpdateResult.errorMessage != ""
+    ) {
+        console.log(
+            `error calling contract: ${contractUpdateResult.errorMessage}`
+        );
         return;
     }
 

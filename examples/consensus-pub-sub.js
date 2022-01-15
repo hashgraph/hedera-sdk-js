@@ -1,13 +1,15 @@
-require("dotenv").config();
-
-const {
+import {
     Client,
     PrivateKey,
     AccountId,
     TopicMessageQuery,
     TopicCreateTransaction,
     TopicMessageSubmitTransaction,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 async function main() {
     let client;
@@ -17,7 +19,7 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
@@ -30,7 +32,7 @@ async function main() {
     const receipt = await response.getReceipt(client);
     const topicId = receipt.topicId;
 
-    console.log(`topicId = ${topicId}`);
+    console.log(`topicId = ${topicId.toString()}`);
 
     new TopicMessageQuery()
         .setTopicId(topicId)
@@ -56,11 +58,15 @@ async function main() {
     }
 }
 
+/**
+ * @param {number} ms
+ * @returns {Promise<void>}
+ */
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-main();
+void main();
 
 const bigContents = `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquam augue sem, ut mattis dui laoreet a. Curabitur consequat est euismod, scelerisque metus et, tristique dui. Nulla commodo mauris ut faucibus ultricies. Quisque venenatis nisl nec augue tempus, at efficitur elit eleifend. Duis pharetra felis metus, sed dapibus urna vehicula id. Duis non venenatis turpis, sit amet ornare orci. Donec non interdum quam. Sed finibus nunc et risus finibus, non sagittis lorem cursus. Proin pellentesque tempor aliquam. Sed congue nisl in enim bibendum, condimentum vehicula nisi feugiat.

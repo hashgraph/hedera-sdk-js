@@ -87,7 +87,11 @@ export default class WebClient extends Client {
      */
     static fromConfig(data) {
         return new WebClient(
-            typeof data === "string" ? JSON.parse(data) : data
+            typeof data === "string"
+                ? /** @type {ClientConfiguration | undefined} */ (
+                      JSON.parse(data)
+                  )
+                : data
         );
     }
 

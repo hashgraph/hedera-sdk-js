@@ -1,6 +1,4 @@
-require("dotenv").config();
-
-const {
+import {
     Client,
     PrivateKey,
     AccountCreateTransaction,
@@ -8,7 +6,11 @@ const {
     AccountId,
     KeyList,
     TransferTransaction,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 let user1Key;
 let user2Key;
@@ -21,7 +23,7 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment; variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
@@ -41,7 +43,7 @@ async function main() {
 
     let receipt = await response.getReceipt(client);
 
-    console.log(`account id = ${receipt.accountId}`);
+    console.log(`account id = ${receipt.accountId.toString()}`);
 
     // create a transfer from new account to 0.0.3
     const transferTransaction = new TransferTransaction()
@@ -56,6 +58,7 @@ async function main() {
 
     const result = await transferTransaction.execute(client);
     receipt = await result.getReceipt(client);
+
     console.log(receipt.status.toString());
 }
 

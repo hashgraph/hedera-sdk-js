@@ -1,5 +1,4 @@
-require("dotenv").config();
-const {
+import {
     Client,
     PrivateKey,
     AccountId,
@@ -11,7 +10,15 @@ const {
     ScheduleSignTransaction,
     ScheduleInfoQuery,
     TransactionRecordQuery,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
+/**
+ * @typedef {import("@hashgraph/sdk").AccountBalance} AccountBalance
+ */
 
 async function main() {
     // set up client
@@ -22,7 +29,7 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
@@ -36,8 +43,8 @@ async function main() {
         const publicKey = privateKey.publicKey;
         privateKeyList.push(privateKey);
         publicKeyList.push(publicKey);
-        console.log(`${i + 1}. public key: ${publicKey}`);
-        console.log(`${i + 1}. private key: ${privateKey}`);
+        console.log(`${i + 1}. public key: ${publicKey.toString()}`);
+        console.log(`${i + 1}. private key: ${privateKey.toString()}`);
     }
     const thresholdKey = new KeyList(publicKeyList, 3);
 
@@ -50,7 +57,9 @@ async function main() {
 
     const txAccountCreateReceipt = await txAccountCreate.getReceipt(client);
     const multiSigAccountId = txAccountCreateReceipt.accountId;
-    console.log("3-of-4 multi-sig account ID: " + multiSigAccountId);
+    console.log(
+        `3-of-4 multi-sig account ID:  ${multiSigAccountId.toString()}`
+    );
     await queryBalance(multiSigAccountId, client);
 
     // schedule crypto transfer from multi-sig account to operator account
@@ -67,9 +76,9 @@ async function main() {
     const txScheduleReceipt = await txSchedule.getReceipt(client);
     console.log("Schedule status: " + txScheduleReceipt.status.toString());
     const scheduleId = txScheduleReceipt.scheduleId;
-    console.log("Schedule ID: " + scheduleId);
+    console.log(`Schedule ID:  ${scheduleId.toString()}`);
     const scheduledTxId = txScheduleReceipt.scheduledTransactionId;
-    console.log("Scheduled tx ID: " + scheduledTxId);
+    console.log(`Scheduled tx ID:  ${scheduledTxId.toString()}`);
 
     // add 2. signature
     const txScheduleSign1 = await (
@@ -114,18 +123,21 @@ async function main() {
     console.log(recordScheduledTx);
 }
 
-async function queryBalance(accoundId, client) {
+/**
+ * @param {AccountId} accountId
+ * @param {Client} client
+ * @returns {Promise<AccountBalance>}
+ */
+async function queryBalance(accountId, client) {
     const accountBalance = await new AccountBalanceQuery()
-        .setAccountId(accoundId)
+        .setAccountId(accountId)
         .execute(client);
     console.log(
-        "Balance of account " +
-            accoundId +
-            ": " +
-            accountBalance.hbars.toTinybars() +
-            " tinybar"
+        `Balance of account ${accountId.toString()}: ${accountBalance.hbars
+            .toTinybars()
+            .toInt()} tinybar`
     );
     return accountBalance;
 }
 
-main();
+void main();

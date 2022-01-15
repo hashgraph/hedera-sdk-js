@@ -1,6 +1,4 @@
-require("dotenv").config();
-
-const {
+import {
     Client,
     PrivateKey,
     PublicKey,
@@ -9,7 +7,11 @@ const {
     AccountBalanceQuery,
     AccountInfoQuery,
     TransferTransaction,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 async function main() {
     let client;
@@ -21,7 +23,7 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
@@ -50,7 +52,7 @@ async function main() {
      * AccountId is the moment that that account actually begins to exist in the Hedera ledger.
      */
 
-    console.log("\"Creating\" a new account");
+    console.log('"Creating" a new account');
 
     const privateKey = PrivateKey.generateED25519();
     const publicKey = privateKey.publicKey;
@@ -59,8 +61,8 @@ async function main() {
     // For now they are virtually always 0 and 0.
     const aliasAccountId = publicKey.toAccountId(0, 0);
 
-    console.log("New account ID: " + aliasAccountId);
-    console.log("Just the aliasKey: " + aliasAccountId.aliasKey);
+    console.log(`New account ID: ${aliasAccountId.toString()}`);
+    console.log(`Just the aliasKey: ${aliasAccountId.aliasKey.toString()}`);
 
     /*
      * Note that no queries or transactions have taken place yet.
@@ -75,31 +77,33 @@ async function main() {
      * aliasKey AccountId
      */
 
-    const fromString = AccountId.fromString("0.0.302a300506032b6570032100114e6abc371b82dab5c15ea149f02d34a012087b163516dd70f44acafabf7777");
+    AccountId.fromString(
+        "0.0.302a300506032b6570032100114e6abc371b82dab5c15ea149f02d34a012087b163516dd70f44acafabf7777"
+    );
 
-    const fromKeyString = PublicKey
-            .fromString("302a300506032b6570032100114e6abc371b82dab5c15ea149f02d34a012087b163516dd70f44acafabf7777")
-            .toAccountId(0, 0);
-
+    PublicKey.fromString(
+        "302a300506032b6570032100114e6abc371b82dab5c15ea149f02d34a012087b163516dd70f44acafabf7777"
+    ).toAccountId(0, 0);
 
     console.log("Transferring some Hbar to the new account");
-    await (await new TransferTransaction()
-        .addHbarTransfer(client.operatorAccountId, new Hbar(10).negated())
-        .addHbarTransfer(aliasAccountId, new Hbar(10))
-        .execute(client)
+    await (
+        await new TransferTransaction()
+            .addHbarTransfer(client.operatorAccountId, new Hbar(10).negated())
+            .addHbarTransfer(aliasAccountId, new Hbar(10))
+            .execute(client)
     ).getReceipt(client);
 
     const balance = await new AccountBalanceQuery()
         .setAccountId(aliasAccountId)
         .execute(client);
 
-    console.log("Balances of the new account: " + balance);
+    console.log(`Balances of the new account: ${balance.toString()}`);
 
     const info = await new AccountInfoQuery()
         .setAccountId(aliasAccountId)
         .execute(client);
 
-    console.log("Info about the new account: " + info);
+    console.log(`Info about the new account: ${info.toString()}`);
 
     /*
      * Note that once an account exists in the ledger, it is assigned a normal AccountId, which can be retrieved
@@ -109,8 +113,8 @@ async function main() {
      * now refer to it by its normal AccountId
      */
 
-    console.log("The normal account ID: " + info.accountId);
-    console.log("The alias key: " + info.aliasKey);
+    console.log(`The normal account ID: ${info.accountId.toString()}`);
+    console.log(`The alias key: ${info.aliasKey.toString()}`);
 
     console.log("Example complete!");
     client.close();

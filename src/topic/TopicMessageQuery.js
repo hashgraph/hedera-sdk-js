@@ -299,7 +299,7 @@ export default class TopicMessageQuery {
     }
 
     /**
-     * @param {Client<*>} client
+     * @param {Client<Channel>} client
      * @param {((message: TopicMessage, error: Error) => void) | null} errorHandler
      * @param {(message: TopicMessage) => void} listener
      * @returns {SubscriptionHandle}
@@ -319,7 +319,7 @@ export default class TopicMessageQuery {
 
     /**
      * @private
-     * @param {import("../client/Client.js").default<Channel, MirrorChannel>} client
+     * @param {Client<Channel>} client
      * @returns {void}
      */
     _makeServerStreamRequest(client) {

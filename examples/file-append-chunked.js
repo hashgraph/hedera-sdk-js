@@ -1,6 +1,4 @@
-require("dotenv").config();
-
-const {
+import {
     Client,
     FileCreateTransaction,
     FileAppendTransaction,
@@ -8,7 +6,11 @@ const {
     PrivateKey,
     AccountId,
     Hbar,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const bigContents = `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquam augue sem, ut mattis dui laoreet a. Curabitur consequat est euismod, scelerisque metus et, tristique dui. Nulla commodo mauris ut faucibus ultricies. Quisque venenatis nisl nec augue tempus, at efficitur elit eleifend. Duis pharetra felis metus, sed dapibus urna vehicula id. Duis non venenatis turpis, sit amet ornare orci. Donec non interdum quam. Sed finibus nunc et risus finibus, non sagittis lorem cursus. Proin pellentesque tempor aliquam. Sed congue nisl in enim bibendum, condimentum vehicula nisi feugiat.
@@ -66,7 +68,7 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
@@ -81,7 +83,7 @@ async function main() {
     const receipt = await resp.getReceipt(client);
     const fileId = receipt.fileId;
 
-    console.log("file ID = " + fileId);
+    console.log(`file ID = ${fileId.toString()}`);
 
     await (
         await new FileAppendTransaction()
@@ -97,9 +99,8 @@ async function main() {
         .execute(client);
 
     console.log(
-        "File content length according to `FileInfoQuery`:",
-        contents.length
+        `File content length according to \`FileInfoQuery\`: ${contents.length}`
     );
 }
 
-main();
+void main();

@@ -9,6 +9,7 @@ export { default as KeyList } from "./KeyList.js";
 export { default as Key } from "./Key.js";
 export { default as Mnemonic } from "./Mnemonic.js";
 
+export { default as AccountBalance } from "./account/AccountBalance.js";
 export { default as AccountBalanceQuery } from "./account/AccountBalanceQuery.js";
 export { default as AccountCreateTransaction } from "./account/AccountCreateTransaction.js";
 export { default as AccountDeleteTransaction } from "./account/AccountDeleteTransaction.js";

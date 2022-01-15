@@ -1,6 +1,4 @@
-require("dotenv").config();
-
-const {
+import {
     Client,
     PrivateKey,
     ContractCreateTransaction,
@@ -9,10 +7,14 @@ const {
     ContractCallQuery,
     Hbar,
     AccountId,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 // Import the compiled contract
-const helloWorld = require("./hello_world.json");
+import helloWorld from './hello_world.json';
 
 async function main() {
     let client;
@@ -22,7 +24,7 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
@@ -45,7 +47,7 @@ async function main() {
     // The file ID is located on the transaction receipt
     const fileId = fileReceipt.fileId;
 
-    console.log(`contract bytecode file: ${fileId}`);
+    console.log(`contract bytecode file: ${fileId.toString()}`);
 
     // Create the contract
     const contractTransactionResponse = await new ContractCreateTransaction()
@@ -59,12 +61,14 @@ async function main() {
         .execute(client);
 
     // Fetch the receipt for the transaction that created the contract
-    const contractReceipt = await contractTransactionResponse.getReceipt(client);
+    const contractReceipt = await contractTransactionResponse.getReceipt(
+        client
+    );
 
     // The conract ID is located on the transaction receipt
     const contractId = contractReceipt.contractId;
 
-    console.log(`new contract ID: ${contractId}`);
+    console.log(`new contract ID: ${contractId.toString()}`);
 
     // Call a method on a contract that exists on Hedera
     // Note: `ContractCallQuery` cannot mutate a contract, it will only return the last state
@@ -79,8 +83,13 @@ async function main() {
         .setQueryPayment(new Hbar(1))
         .execute(client);
 
-    if (contractCallResult.errorMessage != null && contractCallResult.errorMessage != "") {
-        console.log(`error calling contract: ${contractCallResult.errorMessage}`);
+    if (
+        contractCallResult.errorMessage != null &&
+        contractCallResult.errorMessage != ""
+    ) {
+        console.log(
+            `error calling contract: ${contractCallResult.errorMessage}`
+        );
     }
 
     // Get the message from the result
@@ -103,7 +112,7 @@ async function main() {
     // Note: The admin key of the contract needs to sign the transaction
     // In this case the client operator is the same as the admin key so the
     // automatic signing takes care of this for you
-    const contractDeleteReceipt = await contractDeleteResult.getReceipt(client);
+    await contractDeleteResult.getReceipt(client);
 
     console.log("contract successfully deleted");
 }

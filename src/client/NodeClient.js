@@ -169,7 +169,11 @@ export default class NodeClient extends Client {
      */
     static fromConfig(data) {
         return new NodeClient(
-            typeof data === "string" ? JSON.parse(data) : data
+            typeof data === "string"
+                ? /** @type {ClientConfiguration | undefined} */ (
+                      JSON.parse(data)
+                  )
+                : data
         );
     }
 

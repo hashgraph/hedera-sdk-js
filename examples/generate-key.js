@@ -1,11 +1,10 @@
-const { Mnemonic } = require("@hashgraph/sdk");
-const { assert } = require("console");
+import { Mnemonic } from "@hashgraph/sdk";
 
 async function main() {
     // generate a 24-word mnemonic
     const mnemonic = await Mnemonic.generate();
 
-    console.log(`mnemonic = ${mnemonic}`);
+    console.log(`mnemonic = ${mnemonic.toString()}`);
 
     // convert to a new root key
     const rootKey = await mnemonic.toPrivateKey();
@@ -14,8 +13,8 @@ async function main() {
     // WARN: don't hand out your root key
     const key = await rootKey.derive(0);
 
-    console.log(`private key = ${key}`);
-    console.log(`public key = ${key.publicKey}`);
+    console.log(`private key = ${key.toString()}`);
+    console.log(`public key = ${key.publicKey.toString()}`);
 
     // [...]
 
@@ -23,9 +22,9 @@ async function main() {
     // this takes space-separated or comma-separated words
     const recoveredMnemonic = await Mnemonic.fromString(mnemonic.toString());
     const recoveredRootKey = await recoveredMnemonic.toPrivateKey();
-    const recoveredKey = await recoveredRootKey.derive(0);
 
-    assert(recoveredKey.toString() === key.toString());
+    // Returns the recover key
+    await recoveredRootKey.derive(0);
 }
 
 void main();

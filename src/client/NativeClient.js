@@ -87,7 +87,11 @@ export default class NativeClient extends Client {
      */
     static fromConfig(data) {
         return new NativeClient(
-            typeof data === "string" ? JSON.parse(data) : data
+            typeof data === "string"
+                ? /** @type {ClientConfiguration | undefined} */ (
+                      JSON.parse(data)
+                  )
+                : data
         );
     }
 

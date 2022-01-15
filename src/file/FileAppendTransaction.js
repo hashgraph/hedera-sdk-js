@@ -21,7 +21,7 @@ import Timestamp from "../Timestamp.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
- * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../client/Client.js").default<Channel, *>} Client
  * @typedef {import("../account/AccountId.js").default} AccountId
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
  * @typedef {import("../schedule/ScheduleCreateTransaction.js").default} ScheduleCreateTransaction
@@ -333,7 +333,7 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
-     * @param {import("../client/Client.js").default<*, *>} client
+     * @param {import("../client/Client.js").default<Channel, *>} client
      * @returns {Promise<TransactionResponse>}
      */
     async execute(client) {
@@ -341,7 +341,7 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
-     * @param {import("../client/Client.js").default<*, *>} client
+     * @param {import("../client/Client.js").default<Channel, *>} client
      * @returns {Promise<TransactionResponse[]>}
      */
     async executeAll(client) {

@@ -1,12 +1,14 @@
-require("dotenv").config();
-
-const {
+import {
     Client,
     AccountInfoQuery,
     Hbar,
     AccountId,
     PrivateKey,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 async function main() {
     let client;
@@ -16,7 +18,7 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
@@ -27,7 +29,7 @@ async function main() {
         .setQueryPayment(new Hbar(1))
         .execute(client);
 
-    console.log(`info.key                          = ${info.key}`);
+    console.log(`info.key                          = ${info.key.toString()}`);
 
     console.log(
         `info.isReceiverSignatureRequired  =`,
@@ -35,7 +37,9 @@ async function main() {
     );
 
     console.log(
-        `info.expirationTime               = ${info.expirationTime.toDate()}`
+        `info.expirationTime               = ${info.expirationTime
+            .toDate()
+            .toString()}`
     );
 }
 

@@ -1,11 +1,13 @@
-require("dotenv").config();
-
-const {
+import {
     Client,
     AccountBalanceQuery,
     PrivateKey,
     AccountId,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 async function main() {
     let client;
@@ -15,7 +17,7 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
@@ -26,7 +28,7 @@ async function main() {
         .execute(client);
 
     console.log(
-        `${client.operatorAccountId.toString()} balance = ${balance.hbars}`
+        `${client.operatorAccountId.toString()} balance = ${balance.hbars.toString()}`
     );
 }
 

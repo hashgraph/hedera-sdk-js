@@ -1,12 +1,14 @@
-require("dotenv").config();
-
-const {
+import {
     Client,
     TopicCreateTransaction,
     TopicMessageSubmitTransaction,
     PrivateKey,
     AccountId,
-} = require("@hashgraph/sdk");
+} from "@hashgraph/sdk";
+
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 async function main() {
     let client;
@@ -16,7 +18,7 @@ async function main() {
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
-    } catch {
+    } catch (error) {
         throw new Error(
             "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
         );
@@ -26,7 +28,7 @@ async function main() {
     const createResponse = await new TopicCreateTransaction().execute(client);
     const createReceipt = await createResponse.getReceipt(client);
 
-    console.log(`topic id = ${createReceipt.topicId}`);
+    console.log(`topic id = ${createReceipt.topicId.toString()}`);
 
     // send one message
     const sendResponse = await new TopicMessageSubmitTransaction({
@@ -36,7 +38,9 @@ async function main() {
 
     const sendReceipt = await sendResponse.getReceipt(client);
 
-    console.log(`topic sequence number = ${sendReceipt.topicSequenceNumber}`);
+    console.log(
+        `topic sequence number = ${sendReceipt.topicSequenceNumber.toString()}`
+    );
 }
 
 void main();
