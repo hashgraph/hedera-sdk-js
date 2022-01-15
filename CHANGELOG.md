@@ -4,6 +4,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.7.0
+
+### Added
+
+ * `[Private|Public]Key.toAccountId()`
+ * `TokenUpdateTransaction.[get|set]PauseKey()`
+ * `TokenUpdateTransaction.setSupplyKey()`
+ * Updated `Status` with new response codes
+ * `AccountId.aliasKey`, including `AccountId.[to|from]String()` support.
+ * `[PublicKey|PrivateKey].toAccountId()`.
+ * `aliasKey` fields in `TransactionRecord` and `AccountInfo`.
+ * `nonce` field in `TransactionId`, including `TransactionId.[set|get]Nonce()`
+ * `children` fields in `TransactionRecord` and `TransactionReceipt`
+ * `duplicates` field in `TransactionReceipt`
+ * `[TransactionReceiptQuery|TransactionRecordQuery].[set|get]IncludeChildren()`
+ * `TransactionReceiptQuery.[set|get]IncludeDuplicates()`
+ * New response codes.
+ * Support for ECDSA SecP256K1 keys.
+ * `PrivateKey.generate[ED25519|ECDSA]()`
+ * `[Private|Public]Key.from[Bytes|String][DER|ED25519|ECDSA]()`
+ * `[Private|Public]Key.to[Bytes|String][Raw|DER]()`
+
+### Fixed
+
+ * Requests should retry on `INTERNAL` consistently
+ * Signing data which contains bytes larger than a value of 127
+ * `[Private|Public]Key.fromBytesEcdsa()` checking for the wrong bytes length
+
+### Deprecated
+
+ * `TokenUpdateTransaction.setsupplyKey()` - use `setSupplyKey()` instead
+ * `PrivateKey.generate()`, use `PrivateKey.generate[ED25519|ECDSA]()` instead.
+
 ## v2.7.0-beta.4
 
 ### Fixed

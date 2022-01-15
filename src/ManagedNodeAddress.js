@@ -23,18 +23,12 @@ export default class ManagedNodeAddress {
             }
 
             /** @type {string} */
-            this._address = /** @type {string} */ (
-                hostAndPortResult[1]
-            );
+            this._address = /** @type {string} */ (hostAndPortResult[1]);
 
             /** @type {number | null} */
             this._port =
                 hostAndPortResult[2] != null
-                    ? parseInt(
-                          /** @type {string }*/ (
-                              hostAndPortResult[2]
-                          )
-                      )
+                    ? parseInt(/** @type {string }*/ (hostAndPortResult[2]))
                     : null;
         } else if (props.host != null && props.port != null) {
             /** @type {string} */
