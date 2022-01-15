@@ -16,6 +16,10 @@ export default class ObjectMap {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this.__map = new Map();
 
+        /** @type {Map<KeyT, Long>} */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this.___map = new Map();
+
         this._fromString = fromString;
     }
 

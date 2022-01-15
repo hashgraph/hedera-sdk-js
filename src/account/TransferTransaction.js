@@ -73,6 +73,7 @@ export default class TransferTransaction extends Transaction {
      * @param {(TransferTokensInput)[]} [props.tokenTransfers]
      * @param {(TransferHbarInput)[]} [props.hbarTransfers]
      * @param {(TransferNftInput)[]} [props.nftTransfers]
+     * @param {Long} [props.tokenIdDecimals]
      */
     constructor(props = {}) {
         super();
@@ -94,6 +95,13 @@ export default class TransferTransaction extends Transaction {
          * @type {TokenNftTransferMap}
          */
         this._nftTransfers = new TokenNftTransferMap();
+
+        /**
+         * @private
+         * @type {Long|null}
+         */
+        this._tokenIdDecimals =
+            props.tokenIdDecimals != undefined ? props.tokenIdDecimals : null;
 
         this.setMaxTransactionFee(new Hbar(1));
 
@@ -221,6 +229,13 @@ export default class TransferTransaction extends Transaction {
     }
 
     /**
+     * @returns {Long|null}
+     */
+    get tokenIdDecimals() {
+        return this._tokenIdDecimals;
+    }
+
+    /**
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} accountId
      * @param {number | Long} amount
@@ -235,6 +250,28 @@ export default class TransferTransaction extends Transaction {
                 ? accountId
                 : AccountId.fromString(accountId),
             amount instanceof Long ? amount : Long.fromNumber(amount)
+        );
+
+        return this;
+    }
+
+    /**
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string} accountId
+     * @param {number | Long} amount
+     * @param {Long} tokenIdDecimals
+     * @returns {this}
+     */
+    addTokenTransferWithDecimals(tokenId, accountId, amount, tokenIdDecimals) {
+        this._requireNotFrozen();
+
+        this._tokenTransfers.__set(
+            tokenId instanceof TokenId ? tokenId : TokenId.fromString(tokenId),
+            accountId instanceof AccountId
+                ? accountId
+                : AccountId.fromString(accountId),
+            amount instanceof Long ? amount : Long.fromNumber(amount),
+            tokenIdDecimals
         );
 
         return this;

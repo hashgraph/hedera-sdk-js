@@ -24,8 +24,9 @@ export default class TokenTransferMap extends ObjectMap {
      * @param {TokenId} tokenId
      * @param {AccountId} accountId
      * @param {Long} amount
+     * @param {Long|null} tokenIdDecimals
      */
-    __set(tokenId, accountId, amount) {
+    __set(tokenId, accountId, amount, tokenIdDecimals = null) {
         const token = tokenId.toString();
 
         let _map = this._map.get(token);
@@ -33,6 +34,9 @@ export default class TokenTransferMap extends ObjectMap {
             _map = new TokenTransferAccountMap();
             this._map.set(token, _map);
             this.__map.set(tokenId, _map);
+            if (tokenIdDecimals != null) {
+                this.___map.set(tokenId, tokenIdDecimals);
+            }
         }
 
         _map._set(accountId, amount);
