@@ -43,7 +43,7 @@
         "eslint-plugin-jsdoc": "^37.0.3",
         "eslint-plugin-mocha": "^9.0.0",
         "eslint-plugin-node": "^11.1.0",
-        "geckodriver": "^2.0.4",
+        "geckodriver": "^3.0.1",
         "lerna": "^4.0.0",
         "mocha": "^7.2.0",
         "mocha-webdriver-runner": "^0.6.3",
