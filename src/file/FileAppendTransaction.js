@@ -281,6 +281,9 @@ export default class FileAppendTransaction extends Transaction {
 
         let nextTransactionId = this.transactionId;
 
+        // Hack around the locked list. Should refactor a bit to remove such code
+        this._transactionIds.locked = false;
+
         this._transactions.clear();
         this._transactionIds.clear();
         this._signedTransactions.clear();
