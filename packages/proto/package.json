@@ -43,9 +43,9 @@
         "compile:proto_ts": "pbts -o src/proto.d.ts src/proto.js",
         "lint": "run-s lint:*",
         "lint:types": "tsc",
-        "lint:format": "prettier src '*.json' 'src/*.js' --check",
-        "lint:js": "eslint --fix 'src/**/*.js'",
-        "format": "prettier src '*.json' 'src/*.js' --write",
+        "lint:format": "prettier src \"*.json\" \"src/*.js\" --check",
+        "lint:js": "eslint --fix \"src/**/*.js\"",
+        "format": "prettier src \"*.json\" \"src/*.js\" --write",
         "build": "run-s compile cp:ts lint",
         "prepare": "run-s compile cp:ts"
     },
