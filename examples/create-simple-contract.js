@@ -14,7 +14,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 // Import the compiled contract
-import helloWorld from './hello_world.json';
+import helloWorld from "./hello_world.json";
 
 async function main() {
     let client;
