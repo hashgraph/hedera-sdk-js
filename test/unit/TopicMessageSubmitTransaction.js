@@ -1,6 +1,6 @@
-import TopicMessageSubmitTransaction from "../src/topic/TopicMessageSubmitTransaction.js";
-import * as utf8 from "../src/encoding/utf8.js";
-import * as util from "../src/util.js";
+import TopicMessageSubmitTransaction from "../../src/topic/TopicMessageSubmitTransaction.js";
+import * as utf8 from "../../src/encoding/utf8.js";
+import * as util from "../../src/util.js";
 
 describe("TopicMessageSubmitTransaction", function () {
     it("setMessage should throw error when passed no message", function () {

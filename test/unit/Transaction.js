@@ -1,11 +1,11 @@
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
-import TransactionId from "../src/transaction/TransactionId.js";
-import Transaction from "../src/transaction/Transaction.js";
-import AccountId from "../src/account/AccountId.js";
-import Hbar from "../src/Hbar.js";
-import Timestamp from "../src/Timestamp.js";
-import * as hex from "../src/encoding/hex.js";
-import { PrivateKey } from "../src/exports.js";
+import AccountCreateTransaction from "../../src/account/AccountCreateTransaction.js";
+import TransactionId from "../../src/transaction/TransactionId.js";
+import Transaction from "../../src/transaction/Transaction.js";
+import AccountId from "../../src/account/AccountId.js";
+import Hbar from "../../src/Hbar.js";
+import Timestamp from "../../src/Timestamp.js";
+import * as hex from "../../src/encoding/hex.js";
+import { PrivateKey } from "../../src/exports.js";
 
 describe("Transaction", function () {
     it("toBytes", async function () {
