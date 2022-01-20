@@ -1,7 +1,7 @@
-import AccountId from "../src/account/AccountId.js";
+import AccountId from "../../src/account/AccountId.js";
 import BigNumber from "bignumber.js";
 import { Client } from "../integration/client/NodeIntegrationTestEnv.js";
-import PublicKey from "../src/PublicKey.js";
+import PublicKey from "../../src/PublicKey.js";
 
 describe("AccountId", function () {
     it("constructors", function () {

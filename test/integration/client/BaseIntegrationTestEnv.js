@@ -5,11 +5,11 @@ import {
     TokenDeleteTransaction,
     Hbar,
     AccountId,
-} from "../../src/exports.js";
+} from "../../../src/exports.js";
 
 /**
- * @typedef {import("../../src/exports.js").TokenId} TokenId
- * @typedef {import("../../src/client/Client.js").Client<*, *>} Client
+ * @typedef {import("../../../src/exports.js").TokenId} TokenId
+ * @typedef {import("../../../src/client/Client.js").Client<*, *>} Client
  */
 
 export default class BaseIntegrationTestEnv {

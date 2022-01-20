@@ -1,14 +1,14 @@
-import TransferTransaction from "../src/account/TransferTransaction.js";
-import HbarUnit from "../src/HbarUnit.js";
-import Hbar from "../src/Hbar.js";
-import TokenId from "../src/token/TokenId.js";
-import AccountId from "../src/account/AccountId.js";
-import Transaction from "../src/transaction/Transaction.js";
-import TransactionId from "../src/transaction/TransactionId.js";
-import Timestamp from "../src/Timestamp.js";
-import NftId from "../src/token/NftId.js";
+import TransferTransaction from "../../src/account/TransferTransaction.js";
+import HbarUnit from "../../src/HbarUnit.js";
+import Hbar from "../../src/Hbar.js";
+import TokenId from "../../src/token/TokenId.js";
+import AccountId from "../../src/account/AccountId.js";
+import Transaction from "../../src/transaction/Transaction.js";
+import TransactionId from "../../src/transaction/TransactionId.js";
+import Timestamp from "../../src/Timestamp.js";
+import NftId from "../../src/token/NftId.js";
 import Long from "long";
-import * as util from "../src/util.js";
+import * as util from "../../src/util.js";
 
 describe("TransferTransaction", function () {
     const tokenId1 = new TokenId(1, 1, 1);

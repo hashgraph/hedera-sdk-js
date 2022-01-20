@@ -1,4 +1,4 @@
-import ManagedNodeAddress from "../src/ManagedNodeAddress.js";
+import ManagedNodeAddress from "../../src/ManagedNodeAddress.js";
 
 describe("ManagedNodeAddress", function () {
     it("fromString", function () {

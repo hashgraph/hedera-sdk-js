@@ -7,7 +7,7 @@ import {
     Transaction,
     TransactionId,
     TransferTransaction,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 
 const PRIVATE_KEY1 =
     "302e020100300506032b657004220420ba0cc58a039afe36f3bd1f1c4ef44750268b35b5388dcae326752816da33be3f";

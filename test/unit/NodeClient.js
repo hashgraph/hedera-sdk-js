@@ -1,4 +1,4 @@
-import { Client } from "../src/index.js";
+import { Client } from "../../src/index.js";
 
 describe("Client", function () {
     it("should support multiple IPs per node account ID", async function () {

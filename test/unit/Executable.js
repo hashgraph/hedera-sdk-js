@@ -1,4 +1,4 @@
-import { RST_STREAM } from "../src/Executable.js";
+import { RST_STREAM } from "../../src/Executable.js";
 
 describe("Executable", function () {
     it("RST_STREAM regex matches actual response returned", function () {
