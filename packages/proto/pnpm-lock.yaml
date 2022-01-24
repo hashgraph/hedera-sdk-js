@@ -29,6 +29,7 @@ specifiers:
   typescript: ^4.5.5
 
 dependencies:
+  proto: link:packages/proto
   protobufjs: 6.11.2
 
 devDependencies:

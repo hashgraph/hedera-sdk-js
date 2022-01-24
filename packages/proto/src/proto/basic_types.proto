@@ -85,7 +85,6 @@ message AccountID {
      * be populated.
      */
     oneof account {
-
         /**
          * A non-negative account number unique within its realm
          */
@@ -105,7 +104,6 @@ message AccountID {
          */
         bytes alias = 4;
     }
-
 }
 
 /**
@@ -142,10 +140,32 @@ message ContractID {
      */
     int64 realmNum = 2;
 
-    /**
-     * A nonnegative number unique within its realm
-     */
-    int64 contractNum = 3;
+    oneof contract {
+        /**
+        * A nonnegative number unique within a given shard and realm
+        */
+        int64 contractNum = 3;
+
+        /**
+        * The 20-byte EVM address of the contract to call. 
+        * 
+        * Every contract has an EVM address determined by its <tt>shard.realm.num</tt> id.
+        * This address is as follows:
+        *   <ol>
+        *     <li>The first 4 bytes are the big-endian representation of the shard.</li>
+        *     <li>The next 8 bytes are the big-endian representation of the realm.</li>
+        *     <li>The final 8 bytes are the big-endian representation of the number.</li>
+        *   </ol>  
+        * 
+        * Contracts created via CREATE2 have an <b>additional, primary address</b> that is 
+        * derived from the <a href="https://eips.ethereum.org/EIPS/eip-1014">EIP-1014</a> 
+        * specification, and does not have a simple relation to a <tt>shard.realm.num</tt> id. 
+        * 
+        * (Please do note that CREATE2 contracts can also be referenced by the three-part 
+        * EVM address described above.)
+        */
+        bytes evm_address = 4;
+    }
 }
 
 /**
