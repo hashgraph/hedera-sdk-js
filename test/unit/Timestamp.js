@@ -1,4 +1,6 @@
-import { Timestamp } from "../../src/exports.js";
+import {
+    Timestamp,
+} from "../../src/exports.js";
 
 describe("Timestamp", function () {
     it("plusNanos works correctly", async function () {

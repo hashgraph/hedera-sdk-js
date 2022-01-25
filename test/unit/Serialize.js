@@ -1,4 +1,5 @@
 import { expect } from "chai";
+
 import {
     AccountId,
     Hbar,
@@ -8,6 +9,8 @@ import {
     TransactionId,
     TransferTransaction,
 } from "../../src/exports.js";
+
+import * as hex from "../../src/encoding/hex.js";
 
 const PRIVATE_KEY1 =
     "302e020100300506032b657004220420ba0cc58a039afe36f3bd1f1c4ef44750268b35b5388dcae326752816da33be3f";
@@ -28,16 +31,16 @@ const params = {
 };
 
 function serialize(tx) {
-    return tx.toBytes().toString("hex");
+    return hex.encode(tx.toBytes());
 }
 
 function deserialize(s) {
-    return Transaction.fromBytes(Buffer.from(s, "hex"));
+    return Transaction.fromBytes(hex.decode(s));
 }
 
 function sign(tx, privateKeyHex) {
     return PrivateKey.fromBytes(
-        Buffer.from(privateKeyHex, "hex")
+        hex.decode(privateKeyHex)
     ).signTransaction(tx);
 }
 

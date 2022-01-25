@@ -1,7 +1,8 @@
-import "mocha";
-
 import { expect } from "chai";
-import { ContractId } from "../../src/exports.js";
+
+import {
+    ContractId,
+} from "../../src/exports.js";
 import * as hex from "../../src/encoding/hex.js";
 import Long from "long";
 

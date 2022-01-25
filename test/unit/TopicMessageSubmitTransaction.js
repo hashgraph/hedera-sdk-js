@@ -1,4 +1,3 @@
-import "mocha";
 import { expect } from "chai";
 
 import {
@@ -63,7 +62,7 @@ describe("TopicMessageSubmitTransaction", function () {
         expect(topicMessageSubmitTransaction.message).to.eql(message);
     });
 
-    it("setMaxChunkSize()", function () {
+    it("setChunkSize()", function () {
         const spenderAccountId1 = new AccountId(7);
         const topicId = new TopicId(8);
         const nodeAccountId = new AccountId(10, 11, 12);
@@ -75,7 +74,7 @@ describe("TopicMessageSubmitTransaction", function () {
             )
             .setNodeAccountIds([nodeAccountId])
             .setTopicId(topicId)
-            .setMaxChunkSize(1)
+            .setChunkSize(1)
             .setMessage("12345")
             .freeze();
 
