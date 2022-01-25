@@ -98,25 +98,31 @@ describe("ManagedNodeAddress", function () {
         }
     });
 
-    it("NodeNetwork parses", function() {
-        Object.keys(NodeNetwork.MAINNET)
-            .map((address) => ManagedNodeAddress.fromString(address));
+    it("NodeNetwork parses", function () {
+        Object.keys(NodeNetwork.MAINNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
 
-        Object.keys(NodeNetwork.TESTNET)
-            .map((address) => ManagedNodeAddress.fromString(address));
+        Object.keys(NodeNetwork.TESTNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
 
-        Object.keys(NodeNetwork.PREVIEWNET)
-            .map((address) => ManagedNodeAddress.fromString(address));
+        Object.keys(NodeNetwork.PREVIEWNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
     });
 
-    it("WebNetwork parses", function() {
-        Object.keys(WebNetwork.MAINNET)
-            .map((address) => ManagedNodeAddress.fromString(address));
+    it("WebNetwork parses", function () {
+        Object.keys(WebNetwork.MAINNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
 
-        Object.keys(WebNetwork.TESTNET)
-            .map((address) => ManagedNodeAddress.fromString(address));
+        Object.keys(WebNetwork.TESTNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
 
-        Object.keys(WebNetwork.PREVIEWNET)
-            .map((address) => ManagedNodeAddress.fromString(address));
+        Object.keys(WebNetwork.PREVIEWNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
     });
 });
