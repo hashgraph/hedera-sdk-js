@@ -4,7 +4,7 @@ import {
     AccountId,
     AccountInfoQuery,
     Hbar,
-    NetworkName,
+    LedgerId,
     PrivateKey,
     TransactionId,
 } from "../src/exports.js";
@@ -16,14 +16,14 @@ describe("ClientIntegration", function () {
 
         const env = await IntegrationTestEnv.new();
 
-        if (env.client._networkName == null) {
+        if (env.client.ledgerId == null) {
             return;
         }
 
         let err = false;
 
         let network;
-        switch (env.client._networkName) {
+        switch (env.client.ledgerId.toString()) {
             case "mainnet":
                 network = "testnet";
                 break;
@@ -35,7 +35,7 @@ describe("ClientIntegration", function () {
                 break;
             default:
                 throw new Error(
-                    `(BUG) operator network is unrecognized value: ${env.client._networkName}`
+                    `(BUG) operator network is unrecognized value: ${env.client.ledgerId.toString()}`
                 );
         }
 
@@ -136,18 +136,16 @@ describe("ClientIntegration", function () {
         const testnetClient = Client.forTestnet();
         const previewnetClient = Client.forPreviewnet();
 
-        expect(testnetClient.networkName).to.be.equal(NetworkName.Testnet);
-        expect(previewnetClient.networkName).to.be.equal(
-            NetworkName.Previewnet
-        );
+        expect(testnetClient.ledgerId).to.be.equal(LedgerId.TESTNET);
+        expect(previewnetClient.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
 
         testnetClient.setNetwork(previewnetClient.network);
 
-        expect(testnetClient.networkName).to.be.null;
+        expect(testnetClient.ledgerId).to.be.null;
 
-        testnetClient.setNetworkName("previewnet");
+        testnetClient.setLedgerId("previewnet");
 
-        expect(testnetClient.networkName).to.be.equal(NetworkName.Previewnet);
+        expect(testnetClient.ledgerId).to.be.equal(LedgerId.PREVIEWNET);
 
         testnetClient.close();
         previewnetClient.close();
