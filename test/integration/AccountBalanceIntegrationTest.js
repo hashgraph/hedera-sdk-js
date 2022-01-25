@@ -3,7 +3,7 @@ import {
     AccountId,
     Status,
     TokenCreateTransaction,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import IntegrationTestEnv, {
     Client,
     skipTestDueToNodeJsVersion,

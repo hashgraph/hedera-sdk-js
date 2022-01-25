@@ -5,7 +5,7 @@ import {
     FileInfoQuery,
     Hbar,
     Status,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import { bigContents } from "./contents.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 

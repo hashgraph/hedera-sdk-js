@@ -1,4 +1,4 @@
-import { AccountStakersQuery, Hbar, Status } from "../src/exports.js";
+import { AccountStakersQuery, Hbar, Status } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountStakers", function () {

@@ -9,7 +9,7 @@ import {
     TokenGrantKycTransaction,
     TokenWipeTransaction,
     TransferTransaction,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenWipe", function () {

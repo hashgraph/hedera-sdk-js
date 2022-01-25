@@ -1,4 +1,4 @@
-import { NetworkVersionInfoQuery } from "../src/exports.js";
+import { NetworkVersionInfoQuery } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("NetworkVersionInfo", function () {
