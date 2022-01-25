@@ -503,7 +503,7 @@ export default class Transaction extends Executable {
      * @returns {Promise<this>}
      */
     async signWith(publicKey, transactionSigner) {
-        if (!super._signOnDemand) {
+        if (!this._signOnDemand) {
             this._requireFrozen();
         }
 
@@ -523,7 +523,7 @@ export default class Transaction extends Executable {
         this._transactions.clear();
         this._signerPublicKeys.add(publicKeyHex);
 
-        if (super._signOnDemand) {
+        if (this._signOnDemand) {
             this._publicKeys.push(publicKey);
             this._transactionSigners.push(transactionSigner);
 
@@ -718,7 +718,7 @@ export default class Transaction extends Executable {
      * @returns {this}
      */
     freezeWith(client) {
-        super._signOnDemand = client != null ? client._signOnDemand : false;
+        this._signOnDemand = client != null ? client._signOnDemand : false;
         this._operator = client != null ? client._operator : null;
         this._maxTransactionFee =
             client != null && this._maxTransactionFee == null
@@ -742,18 +742,8 @@ export default class Transaction extends Executable {
 
         this._buildNewTransactionIdList();
 
-        if (!super._signOnDemand) {
+        if (!this._signOnDemand) {
             this._buildSignedTransactions();
-        }
-
-        if (this._operator != null) {
-            const publicKeyHex = hex.encode(
-                this._operator.publicKey.toBytesRaw()
-            );
-
-            this._signerPublicKeys.add(publicKeyHex);
-            this._publicKeys.push(this._operator.publicKey);
-            this._transactionSigners.push(this._operator.transactionSigner);
         }
 
         return this;
@@ -889,31 +879,11 @@ export default class Transaction extends Executable {
             this._validateChecksums(client);
         }
 
-        // on execute, sign each transaction with the operator, if present
-        // and we are signing a transaction that used the default transaction ID
-        const operatorAccountId = client.operatorAccountId;
-
-        if (operatorAccountId == null) {
-            return;
-        }
-
-        // Sign with operator if necessary
-        if (!super._signOnDemand) {
-            const transactionId = this._transactionIds.current;
-
-            if (
-                transactionId.accountId != null &&
-                operatorAccountId.equals(transactionId.accountId)
-            ) {
-                await this.signWithOperator(client);
-            }
-        } else {
-            if (
-                this._operator != null &&
-                this._operator.accountId.equals(operatorAccountId)
-            ) {
-                await this.signWithOperator(client);
-            }
+        if (this._operator != null) {
+            await this.signWith(
+                this._operator.publicKey,
+                this._operator.transactionSigner
+            );
         }
     }
 
@@ -927,7 +897,7 @@ export default class Transaction extends Executable {
             this._nextTransactionIndex * this._nodeAccountIds.length +
             this._nodeAccountIds.index;
 
-        if (this._signedTransactions.locked || this._transactions.locked) {
+        if (!this._signOnDemand) {
             this._buildTransaction(index);
             return /** @type {proto.ITransaction} */ (
                 this._transactions.get(index)
@@ -1221,7 +1191,7 @@ export default class Transaction extends Executable {
      */
     _isFrozen() {
         return (
-            super._signOnDemand ||
+            this._signOnDemand ||
             this._signedTransactions.length > 0 ||
             this._transactions.length > 0
         );
@@ -1242,7 +1212,7 @@ export default class Transaction extends Executable {
      * @internal
      */
     _requireNotSignOnDemand() {
-        if (super._signOnDemand) {
+        if (this._signOnDemand) {
             throw new Error(
                 "Please use `toBytesAsync()` if `signOnDemand` is enabled"
             );

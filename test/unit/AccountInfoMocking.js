@@ -100,10 +100,11 @@ describe("AccountInfo", function () {
 
         client.setSignOnDemand(true);
 
-        const transaction = new FileCreateTransaction()
+        const transaction = await new FileCreateTransaction()
             .setNodeAccountIds([new AccountId(3)])
             .setContents("hello 1")
-            .freezeWith(client);
+            .freezeWith(client)
+            .signWithOperator(client);
 
         const hash = await transaction.getTransactionHash();
         const response = await transaction.execute(client);
@@ -123,10 +124,11 @@ describe("AccountInfo", function () {
 
         const { client, servers } = await Mocker.withResponses([responses1]);
 
-        const transaction = new FileCreateTransaction()
+        const transaction = await new FileCreateTransaction()
             .setNodeAccountIds([new AccountId(3)])
             .setContents("hello 1")
-            .freezeWith(client);
+            .freezeWith(client)
+            .signWithOperator(client);
 
         const hash = await transaction.getTransactionHash();
         const response = await transaction.execute(client);
