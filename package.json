@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/sdk",
-    "version": "2.7.1",
+    "version": "2.8.0-beta.2",
     "description": "Hedera™ Hashgraph SDK",
     "types": "./lib/index.d.ts",
     "main": "./lib/index.cjs",
@@ -64,7 +64,7 @@
         "test": "run-s test:node test:browser",
         "test:node": "env HEDERA_SDK_TEST=\"\" run-s test:unit:node test:integration:node",
         "test:unit:node": "nyc mocha -r @babel/register -r chai/register-expect \"test/unit/*.js\"",
-        "test:integration:node": "env HEDERA_SDK_TEST=\"\" nyc mocha -r @babel/register -r chai/register-expect \"test/integration/*.js\"",
+        "test:integration:node": "env HEDERA_SDK_TEST=\"\" nyc mocha -r @babel/register -r chai/register-expect \"test/integration/AccountCreateIntegrationTest.js\"",
         "test:browser": "run-s test:unit:browser test:integration:browser",
         "test:browser:chrome": "run-s test:unit:browser:chrome test:integration:browser:chrome",
         "test:browser:firefox": "run-s test:unit:browser:firefox test:integration:browser:firefox",
