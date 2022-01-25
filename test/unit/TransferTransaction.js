@@ -207,7 +207,7 @@ describe("TransferTransaction", function () {
     });
 
     it("should order transfers", function () {
-        const transferTransaction = new TransferTransaction()
+        const transaction = new TransferTransaction()
             // Insert in reverse order
             .addNftTransfer(tokenId4, serialNum1, accountId2, accountId4)
             .addNftTransfer(tokenId4, serialNum1, accountId1, accountId3)
@@ -221,6 +221,10 @@ describe("TransferTransaction", function () {
             .setTransactionId(new TransactionId(accountId3, timestamp1))
             .setNodeAccountIds([accountId4])
             .freeze();
+
+        const transferTransaction = Transaction.fromBytes(
+            transaction.toBytes()
+        );
 
         const data = transferTransaction._makeTransactionData();
 
