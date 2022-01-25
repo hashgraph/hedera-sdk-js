@@ -1,6 +1,6 @@
 import ManagedNodeAddress from "../../src/ManagedNodeAddress.js";
-import { Network as NodeNetwork } from "../src/client/NodeClient.js";
-import { Network as WebNetwork } from "../src/client/WebClient.js";
+import { Network as NodeNetwork } from "../../src/client/NodeClient.js";
+import { Network as WebNetwork } from "../../src/client/WebClient.js";
 
 describe("ManagedNodeAddress", function () {
     it("fromString", function () {
