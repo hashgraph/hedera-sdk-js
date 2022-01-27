@@ -128,6 +128,7 @@ export const ContractGetBytecodeResponse = proto.ContractGetBytecodeResponse;
 export const ContractGetRecordsQuery = proto.ContractGetRecordsQuery;
 export const ContractGetRecordsResponse = proto.ContractGetRecordsResponse;
 export const ContractStateChange = proto.ContractStateChange;
+export const StorageChange = proto.StorageChange;
 export const TransactionRecord = proto.TransactionRecord;
 export const TransactionReceipt = proto.TransactionReceipt;
 export const ExchangeRate = proto.ExchangeRate;
