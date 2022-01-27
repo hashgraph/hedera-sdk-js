@@ -1116,4 +1116,41 @@ enum ResponseCodeEnum {
    * type actually has.
    */
   UNEXPECTED_TOKEN_DECIMALS = 283;
+
+  /**
+   * An approved allowance specifies a spender account that is the same as the hbar/token
+   * owner account.
+   */
+  SPENDER_ACCOUNT_SAME_AS_OWNER = 284;
+
+  /**
+   * The establishment or adjustment of an approved allowance cause the token allowance
+   * to exceed the token maximum supply.
+   */
+  AMOUNT_EXCEEDS_TOKEN_MAX_SUPPLY = 285;
+
+  /**
+   * The specified amount for an approved allowance cannot be negative.
+   */
+  NEGATIVE_ALLOWANCE_AMOUNT = 286;
+
+  /**
+   * The approveForAll flag cannot be set for a fungible token.
+   */
+  CANNOT_APPROVE_FOR_ALL_FUNGIBLE_COMMON = 287;
+
+  /**
+   * The spender does not have an existing approved allowance with the hbar/token owner.
+   */
+  SPENDER_DOES_NOT_HAVE_ALLOWANCE = 288;
+
+  /**
+   * The transfer amount exceeds the current approved allowance for the spender account.
+   */
+  AMOUNT_EXCEEDS_ALLOWANCE = 289;
+
+  /**
+   * The payer account of an approveAllowances or adjustAllowance transaction is attempting to go beyond the maximum allowed number of allowances.
+   */
+  MAX_ALLOWANCES_EXCEEDED = 290;
 }

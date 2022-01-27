@@ -29,6 +29,8 @@ import "basic_types.proto";
 import "query_header.proto";
 import "response_header.proto";
 
+import "google/protobuf/wrappers.proto";
+
 /**
  * The log information for an event returned by a smart contract function call. One function call
  * may return several such events.
@@ -96,6 +98,12 @@ message ContractFunctionResult {
      * the list of smart contracts that were created by the function call
      */
     repeated ContractID createdContractIDs = 7;
+
+    /**
+     * the list of state reads and changes caused by this function call
+     */
+    repeated ContractStateChange stateChanges = 8;
+
 }
 
 /**
@@ -149,4 +157,46 @@ message ContractCallLocalResponse {
      * the value returned by the function (if it completed and didn't fail)
      */
     ContractFunctionResult functionResult = 2;
+}
+
+/**
+ * The storage changes to a smart contract's storage as a side effect of the function call.
+ */
+message ContractStateChange {
+
+    /**
+     * The contract to which the storage changes apply to
+     */
+    ContractID contractID = 1;
+
+    /**
+     * The list of storage changes.
+     */
+    repeated StorageChange storageChanges = 2;
+}
+
+/**
+ * A storage slot change description.
+ */
+message StorageChange {
+    /**
+     * The storage slot changed.  Up to 32 bytes, big-endian, zero bytes left trimmed.
+     */
+    bytes slot = 1;
+
+    /**
+     * The value read from the storage slot.  Up to 32 bytes, big-endian, zero bytes left trimmed.
+     *
+     * Because of the way SSTORE operations are charged the slot is always read before being written to.
+     */
+    bytes valueRead = 2;
+
+    /**
+     * The new value written to the slot.  Up to 32 bytes, big-endian, zero bytes left trimmed.
+     *
+     * If a value of zero is written the valueWritten will be present but the inner value will be absent.
+     *
+     * If a value was read and not written this value will not be present.
+     */
+    google.protobuf.BytesValue valueWritten = 3;
 }

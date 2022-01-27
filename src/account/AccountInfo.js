@@ -9,6 +9,8 @@ import Duration from "../Duration.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import LedgerId from "../LedgerId.js";
+import HbarAllowance from "./HbarAllowance.js";
+import TokenAllowance from "./TokenAllowance.js";
 
 /**
  * Current information about an account, including the balance.
@@ -35,7 +37,9 @@ export default class AccountInfo {
      * @param {Long} props.ownedNfts
      * @param {Long} props.maxAutomaticTokenAssociations
      * @param {PublicKey | null} props.aliasKey
-     * @param {LedgerId|null} props.ledgerId
+     * @param {LedgerId | null} props.ledgerId
+     * @param {HbarAllowance[]} props.hbarAllowances
+     * @param {TokenAllowance[]} props.tokenAllowances
      */
     constructor(props) {
         /**
@@ -153,6 +157,10 @@ export default class AccountInfo {
 
         this.ledgerId = props.ledgerId;
 
+        this.hbarAllowances = props.hbarAllowances;
+
+        this.tokenAllowances = props.tokenAllowances;
+
         Object.freeze(this);
     }
 
@@ -237,6 +245,15 @@ export default class AccountInfo {
                 info.ledgerId != null
                     ? LedgerId.fromBytes(info.ledgerId)
                     : null,
+
+            hbarAllowances: (info.allowances != null
+                ? info.allowances
+                : []
+            ).map((allowance) => HbarAllowance._fromProtobuf(allowance)),
+            tokenAllowances: (info.tokenAllowances != null
+                ? info.tokenAllowances
+                : []
+            ).map((allowance) => TokenAllowance._fromProtobuf(allowance)),
         });
     }
 
