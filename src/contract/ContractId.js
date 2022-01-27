@@ -3,9 +3,9 @@ import Key from "../Key.js";
 import * as proto from "@hashgraph/proto";
 import CACHE from "../Cache.js";
 import * as hex from "../encoding/hex.js";
+import Long from "long";
 
 /**
- * @typedef {import("long").Long} Long
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
@@ -51,10 +51,21 @@ export default class ContractId extends Key {
      * @returns {ContractId}
      */
     static fromString(text) {
-        const result = entity_id.fromString(text);
-        const id = new ContractId(result);
-        id._checksum = result.checksum;
-        return id;
+        const result = entity_id.fromStringSplitter(text);
+
+        if (Number.isNaN(result.shard) || Number.isNaN(result.realm)) {
+            throw new Error("invalid format for entity ID");
+        }
+
+        const shard =
+            result.shard != null ? Long.fromString(result.shard) : Long.ZERO;
+        const realm =
+            result.realm != null ? Long.fromString(result.realm) : Long.ZERO;
+        const [num, evmAddress] = Number.isSafeInteger(result.numOrHex)
+            ? [Long.fromString(result.numOrHex), undefined]
+            : [Long.ZERO, hex.decode(result.numOrHex)];
+
+        return new ContractId(shard, realm, num, evmAddress);
     }
 
     /**
