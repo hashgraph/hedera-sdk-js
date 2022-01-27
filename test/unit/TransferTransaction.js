@@ -1,3 +1,5 @@
+import { expect } from "chai";
+
 import TransferTransaction from "../../src/account/TransferTransaction.js";
 import HbarUnit from "../../src/HbarUnit.js";
 import Hbar from "../../src/Hbar.js";
@@ -36,38 +38,6 @@ describe("TransferTransaction", function () {
         expect(
             transfer.hbarTransfers.get(accountId).to(HbarUnit.Hbar).toNumber()
         ).to.be.equal(new Hbar(expectedHbar).to(HbarUnit.Hbar).toNumber());
-    });
-
-    it("should load nft transfers from bytes", function () {
-        const transferTransaction = new TransferTransaction();
-        transferTransaction.addNftTransfer(
-            tokenId1,
-            serialNum1,
-            accountId1,
-            accountId2
-        );
-        transferTransaction.addNftTransfer(
-            tokenId1,
-            serialNum1,
-            accountId1,
-            accountId2
-        );
-        transferTransaction.setTransactionId(
-            new TransactionId(new AccountId(3, 3, 3), new Timestamp(4, 4))
-        );
-        transferTransaction.setNodeAccountIds([accountId4]);
-        transferTransaction.freeze();
-
-        const transferTransactionFromBytes = Transaction.fromBytes(
-            transferTransaction.toBytes()
-        );
-
-        expect(transferTransaction.nftTransfers.keys()).to.eql(
-            transferTransactionFromBytes.nftTransfers.keys()
-        );
-        expect(transferTransaction.nftTransfers.values()).to.eql(
-            transferTransactionFromBytes.nftTransfers.values()
-        );
     });
 
     it("should use nftid case for addNftTransfer", function () {
@@ -248,6 +218,7 @@ describe("TransferTransaction", function () {
                 amount: Long.fromNumber(-100000000),
             },
         ]);
+
         expect(data.tokenTransfers).to.deep.equal([
             {
                 token: {
