@@ -131,7 +131,7 @@ message ContractFunctionResult {
      * (Please do note that CREATE2 contracts can also be referenced by the three-part 
      * EVM address described above.)
      */
-     bytes evm_address = 9;
+     google.protobuf.BytesValue evm_address = 9;
 }
 
 /**
