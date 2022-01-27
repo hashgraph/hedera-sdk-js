@@ -2,6 +2,7 @@ import * as entity_id from "../EntityIdHelper.js";
 import Key from "../Key.js";
 import * as proto from "@hashgraph/proto";
 import CACHE from "../Cache.js";
+import * as hex from "../encoding/hex.js";
 
 /**
  * @typedef {import("long").Long} Long
@@ -16,8 +17,9 @@ export default class ContractId extends Key {
      * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
+     * @param {Uint8Array=} evmAddress
      */
-    constructor(props, realm, num) {
+    constructor(props, realm, num, evmAddress) {
         super();
 
         const result = entity_id.constructor(props, realm, num);
@@ -26,10 +28,22 @@ export default class ContractId extends Key {
         this.realm = result.realm;
         this.num = result.num;
 
+        this.evmAddress = evmAddress != null ? evmAddress : null;
+
         /**
          * @type {string | null}
          */
         this._checksum = null;
+    }
+
+    /**
+     * @param {Long | number} shard
+     * @param {Long | number} realm
+     * @param {string} evmAddress
+     * @returns {ContractId}
+     */
+    static fromEvmAddress(shard, realm, evmAddress) {
+        return new ContractId(shard, realm, 0, hex.decode(evmAddress));
     }
 
     /**
@@ -96,10 +110,13 @@ export default class ContractId extends Key {
     }
 
     /**
+     * @deprecated - Use `ContractId.fromEvmAddress()` instead
      * @param {string} address
      * @returns {ContractId}
      */
     static fromSolidityAddress(address) {
+        console.warn("Deprecated: use `ContractId.fromEvmAdress()` instead");
+
         const [shard, realm, contract] = entity_id.fromSolidityAddress(address);
         return new ContractId(shard, realm, contract);
     }
@@ -108,7 +125,15 @@ export default class ContractId extends Key {
      * @returns {string}
      */
     toSolidityAddress() {
-        return entity_id.toSolidityAddress([this.shard, this.realm, this.num]);
+        if (this.evmAddress != null) {
+            return hex.encode(this.evmAddress);
+        } else {
+            return entity_id.toSolidityAddress([
+                this.shard,
+                this.realm,
+                this.num,
+            ]);
+        }
     }
 
     /**
@@ -120,6 +145,7 @@ export default class ContractId extends Key {
             contractNum: this.num,
             shardNum: this.shard,
             realmNum: this.realm,
+            evmAddress: this.evmAddress,
         };
     }
 
@@ -127,7 +153,13 @@ export default class ContractId extends Key {
      * @returns {string}
      */
     toString() {
-        return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
+        if (this.evmAddress != null) {
+            return `${this.shard.toString()}.${this.realm.toString()}.${hex.encode(
+                this.evmAddress
+            )}`;
+        } else {
+            return `${this.shard.toString()}.${this.realm.toString()}.${this.num.toString()}`;
+        }
     }
 
     /**
@@ -151,6 +183,7 @@ export default class ContractId extends Key {
     clone() {
         const id = new ContractId(this);
         id._checksum = this._checksum;
+        id.evmAddress = this.evmAddress;
         return id;
     }
 

@@ -28,6 +28,7 @@ export default class ContractFunctionResult {
      * @param {Long} result.gasUsed
      * @param {ContractLogInfo[]} result.logs
      * @param {ContractId[]} result.createdContractIds
+     * @param {Uint8Array | null} result.evmAddress
      * @param {Uint8Array} result.bytes
      */
     constructor(result) {
@@ -59,6 +60,8 @@ export default class ContractFunctionResult {
         this.logs = result.logs;
 
         this.createdContractIds = result.createdContractIds;
+
+        this.evmAddress = result.evmAddress;
     }
 
     /**
@@ -88,6 +91,10 @@ export default class ContractFunctionResult {
                 ? result.createdContractIDs
                 : []
             ).map((contractId) => ContractId._fromProtobuf(contractId)),
+            evmAddress:
+                result.evmAddress != null && result.evmAddress.value != null
+                    ? result.evmAddress.value
+                    : null,
         });
     }
 
