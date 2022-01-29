@@ -1,14 +1,16 @@
-import BigNumber from "bignumber.js";
-import * as proto from "@hashgraph/proto";
-import { toSolidityAddress } from "../EntityIdHelper";
+import { proto } from "@hashgraph/proto/lib/proto";
+
+/**
+ * @namespace {proto}
+ */
 
 export default class StorageChange{
          /**
-     * @private
+     * 
      * @param {object} props
-     * @param {BigNumber} props.slot
-     * @param {BigNumber?} props.valueRead
-     * @param {BigNumber?} props.valueWritten 
+     * @param {Uint8Array?} props.slot
+     * @param {Uint8Array?} props.valueRead
+     * @param {import("@hashgraph/proto").IBytesValue?} props.valueWritten 
      */
     constructor(props){
         this.slot = props.slot;
@@ -17,17 +19,15 @@ export default class StorageChange{
     }
 
     /**
-     * @internal
-     * @param change
-     * @param {IStorageChange} change, 
+     * @param {proto.IStorageChange} change
      * @returns {StorageChange}
      */
     static _fromProtobuf(change) {
         const storageChange = new StorageChange(
             {
-                slot: change.slot !=null ? change.slot : undefined, 
-                valueRead: change.valueRead !=null ? change.valueRead : undefined, 
-                valueWritten: change.valueWritten !=null ? change.valueWritten : undefined 
+                slot: change.slot != null ? change.slot : null, 
+                valueRead: change.valueRead != null ? change.valueRead : null, 
+                valueWritten: change.valueWritten != null ? change.valueWritten : null 
             }
         );
         return storageChange;
@@ -35,7 +35,6 @@ export default class StorageChange{
 
 
     /**
-     * @internal
      * @returns {proto.IStorageChange}
      */
     _toProtobuf(){

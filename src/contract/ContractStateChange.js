@@ -7,7 +7,7 @@ export default class ContractStateChange{
      * @private
      * @param {object} props
      * @param {ContractId} props.contractId
-     * @param {StorageChange[]} props.storageChanges
+     * @param {StorageChange[]?} props.storageChanges
      */
     constructor(props){
         this.contractId = props.contractId;
@@ -25,22 +25,22 @@ export default class ContractStateChange{
             contractId: ContractId._fromProtobuf(
                 /** @type {proto.IContractID} */ (change.contractID)
             ),
-            storageChanges: StorageChange._fromProtobuf(
-                /** @type {proto.IStorageChange[]} */ (change.storageChanges) 
-            )
+            storageChanges: change.storageChanges ? change.storageChanges.map(
+                storageChange => StorageChange._fromProtobuf(storageChange)
+            ) : null
         });
     }
 
     /**
      * @internal
-     * @returns {proto.IContractStateChange} change
+     * @returns {proto.IContractStateChange}
      */
-    _toProtobuf() {
-        const _storageChanges = this.storageChanges.map(storageChange => storageChange._toProtobuf());
+    static _toProtobuf() {
         return {
             contractID: this.contractId._toProtobuf(),
-            storageChanges: {_storageChanges}
+            storageChanges: this.storageChanges
         };
     }
 
 }
+
