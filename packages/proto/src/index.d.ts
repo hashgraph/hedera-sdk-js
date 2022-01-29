@@ -126,6 +126,10 @@ import IContractCreateTransactionBody = proto.IContractCreateTransactionBody;
 import ContractCreateTransactionBody = proto.ContractCreateTransactionBody;
 import IContractUpdateTransactionBody = proto.IContractUpdateTransactionBody;
 import ContractUpdateTransactionBody = proto.ContractUpdateTransactionBody;
+import IContractStateChange = proto.IContractStateChange;
+import ContractStateChange = proto.ContractStateChange;
+import IStorageChange = proto.IStorageChange;
+import StorageChange = proto.StorageChange;
 import ILiveHash = proto.ILiveHash;
 import LiveHash = proto.LiveHash;
 import ICryptoAddLiveHashTransactionBody = proto.ICryptoAddLiveHashTransactionBody;
@@ -513,6 +517,8 @@ export {
     ContractCreateTransactionBody,
     IContractUpdateTransactionBody,
     ContractUpdateTransactionBody,
+    IContractStateChange,
+    ContractStateChange,
     ILiveHash,
     LiveHash,
     ICryptoAddLiveHashTransactionBody,
