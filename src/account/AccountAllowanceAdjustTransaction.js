@@ -185,17 +185,34 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         this._requireNotFrozen();
 
         const id = typeof nftId === "string" ? NftId.fromString(nftId) : nftId;
+        const spender =
+            typeof spenderAccountId === "string"
+                ? AccountId.fromString(spenderAccountId)
+                : spenderAccountId;
+        let found = false;
 
-        this._nftAllowances.push(
-            new TokenNftAllowance({
-                tokenId: id.tokenId,
-                spenderAccountId:
-                    typeof spenderAccountId === "string"
-                        ? AccountId.fromString(spenderAccountId)
-                        : spenderAccountId,
-                serialNumbers: [id.serial],
-            })
-        );
+        for (const allowance of this._nftAllowances) {
+            if (
+                allowance.tokenId.compare(id.tokenId) === 0 &&
+                allowance.spenderAccountId.compare(spender) === 0
+            ) {
+                if (allowance.serialNumbers != null) {
+                    allowance.serialNumbers.push(id.serial);
+                }
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            this._nftAllowances.push(
+                new TokenNftAllowance({
+                    tokenId: id.tokenId,
+                    spenderAccountId: spender,
+                    serialNumbers: [id.serial],
+                })
+            );
+        }
 
         return this;
     }
