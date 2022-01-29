@@ -8,8 +8,8 @@ import {
     PrivateKey,
     TransactionId,
     TransactionReceiptQuery,
-} from "../src/exports.js";
-import * as hex from "../src/encoding/hex.js";
+} from "../../src/exports.js";
+import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import Long from "long";
 

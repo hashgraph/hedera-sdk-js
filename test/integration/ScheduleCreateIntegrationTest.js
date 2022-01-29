@@ -7,7 +7,7 @@ import {
     ScheduleSignTransaction,
     TopicCreateTransaction,
     TopicMessageSubmitTransaction,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("ScheduleCreate", function () {

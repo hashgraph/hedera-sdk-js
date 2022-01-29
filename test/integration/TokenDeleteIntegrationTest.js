@@ -2,7 +2,7 @@ import {
     TokenCreateTransaction,
     TokenDeleteTransaction,
     Status,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenDelete", function () {

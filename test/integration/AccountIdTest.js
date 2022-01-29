@@ -1,4 +1,4 @@
-import { AccountId, TokenId } from "../src/exports.js";
+import { AccountId, TokenId } from "../../src/exports.js";
 import IntegrationTestEnv, { Client } from "./client/NodeIntegrationTestEnv.js";
 
 describe("AccountId", function () {

@@ -5,7 +5,7 @@ import {
     TokenCreateTransaction,
     TokenSupplyType,
     TokenType,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenBurn", function () {

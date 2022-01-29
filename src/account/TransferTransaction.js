@@ -192,6 +192,16 @@ export default class TransferTransaction extends Transaction {
                     )
                 );
             }
+
+            if (
+                list.expectedDecimals != null &&
+                list.expectedDecimals.value != null
+            ) {
+                transfers._tokenDecimals._set(
+                    tokenId,
+                    list.expectedDecimals.value
+                );
+            }
         }
 
         const accountAmounts =

@@ -2,8 +2,8 @@ import {
     AccountCreateTransaction,
     AccountDeleteTransaction,
     PrivateKey,
-} from "../src/exports.js";
-import * as hex from "../src/encoding/hex.js";
+} from "../../src/exports.js";
+import * as hex from "../../src/encoding/hex.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TransactionResponse", function () {

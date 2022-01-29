@@ -1,4 +1,6 @@
 import ManagedNodeAddress from "../../src/ManagedNodeAddress.js";
+import { Network as NodeNetwork } from "../../src/client/NodeClient.js";
+import { Network as WebNetwork } from "../../src/client/WebClient.js";
 
 describe("ManagedNodeAddress", function () {
     it("fromString", function () {
@@ -94,5 +96,33 @@ describe("ManagedNodeAddress", function () {
         if (!err) {
             throw new Error("fromString did not error");
         }
+    });
+
+    it("NodeNetwork parses", function () {
+        Object.keys(NodeNetwork.MAINNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
+
+        Object.keys(NodeNetwork.TESTNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
+
+        Object.keys(NodeNetwork.PREVIEWNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
+    });
+
+    it("WebNetwork parses", function () {
+        Object.keys(WebNetwork.MAINNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
+
+        Object.keys(WebNetwork.TESTNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
+
+        Object.keys(WebNetwork.PREVIEWNET).map((address) =>
+            ManagedNodeAddress.fromString(address)
+        );
     });
 });

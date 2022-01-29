@@ -42,7 +42,11 @@ export async function createCipheriv(algorithm, key, iv, data) {
     );
 
     return new Uint8Array(
-        await window.crypto.subtle.encrypt(algorithm_, key_, data)
+        // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#return_value
+        /** @type {ArrayBuffer} */ (
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            await window.crypto.subtle.encrypt(algorithm_, key_, data)
+        )
     );
 }
 
@@ -85,6 +89,10 @@ export async function createDecipheriv(algorithm, key, iv, data) {
     );
 
     return new Uint8Array(
-        await window.crypto.subtle.decrypt(algorithm_, key_, data)
+        // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/encrypt#return_value
+        /** @type {ArrayBuffer} */ (
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            await window.crypto.subtle.decrypt(algorithm_, key_, data)
+        )
     );
 }

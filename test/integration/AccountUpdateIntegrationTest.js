@@ -8,7 +8,7 @@ import {
     Status,
     Timestamp,
     TransactionId,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 import Long from "long";
 

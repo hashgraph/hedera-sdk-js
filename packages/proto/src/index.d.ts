@@ -509,8 +509,11 @@ export {
     ContractUpdateTransactionBody,
     IContractStateChange,
     ContractStateChange,
+<<<<<<< HEAD
     IStorageChange,
     StorageChange,
+=======
+>>>>>>> de276018fc5f01a67ab42d6733141e1ff65e8686
     ILiveHash,
     LiveHash,
     ICryptoAddLiveHashTransactionBody,

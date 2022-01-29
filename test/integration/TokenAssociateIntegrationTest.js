@@ -7,7 +7,7 @@ import {
     Status,
     TokenAssociateTransaction,
     TokenCreateTransaction,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenAssociate", function () {
