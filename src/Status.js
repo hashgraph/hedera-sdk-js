@@ -505,6 +505,20 @@ export default class Status {
                 return "INVALID_ALIAS_KEY";
             case Status.UnexpectedTokenDecimals:
                 return "UNEXPECTED_TOKEN_DECIMALS";
+            case Status.SpenderAccountSameAsOwner:
+                return "SPENDER_ACCOUNT_SAME_AS_OWNER";
+            case Status.AmountExceedsTokenMaxSupply:
+                return "AMOUNT_EXCEEDS_TOKEN_MAX_SUPPLY";
+            case Status.NegativeAllowanceAmount:
+                return "NEGATIVE_ALLOWANCE_AMOUNT";
+            case Status.CannotApproveForAllFungibleCommon:
+                return "CANNOT_APPROVE_FOR_ALL_FUNGIBLE_COMMON";
+            case Status.SpenderDoesNotHaveAllowance:
+                return "SPENDER_DOES_NOT_HAVE_ALLOWANCE";
+            case Status.AmountExceedsAllowance:
+                return "AMOUNT_EXCEEDS_ALLOWANCE";
+            case Status.MaxAllowancesExceeded:
+                return "MAX_ALLOWANCES_EXCEEDED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1001,6 +1015,20 @@ export default class Status {
                 return Status.InvalidAliasKey;
             case 283:
                 return Status.UnexpectedTokenDecimals;
+            case 284:
+                return Status.SpenderAccountSameAsOwner;
+            case 285:
+                return Status.AmountExceedsTokenMaxSupply;
+            case 286:
+                return Status.NegativeAllowanceAmount;
+            case 287:
+                return Status.CannotApproveForAllFungibleCommon;
+            case 288:
+                return Status.SpenderDoesNotHaveAllowance;
+            case 289:
+                return Status.AmountExceedsAllowance;
+            case 290:
+                return Status.MaxAllowancesExceeded;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2270,3 +2298,40 @@ Status.InvalidAliasKey = new Status(282);
  * type actually has.
  */
 Status.UnexpectedTokenDecimals = new Status(283);
+
+/**
+ * An approved allowance specifies a spender account that is the same as the hbar/token
+ * owner account.
+ */
+Status.SpenderAccountSameAsOwner = new Status(284);
+
+/**
+ * The establishment or adjustment of an approved allowance cause the token allowance
+ * to exceed the token maximum supply.
+ */
+Status.AmountExceedsTokenMaxSupply = new Status(285);
+
+/**
+ * The specified amount for an approved allowance cannot be negative.
+ */
+Status.NegativeAllowanceAmount = new Status(286);
+
+/**
+ * The approveForAll flag cannot be set for a fungible token.
+ */
+Status.CannotApproveForAllFungibleCommon = new Status(287);
+
+/**
+ * The spender does not have an existing approved allowance with the hbar/token owner.
+ */
+Status.SpenderDoesNotHaveAllowance = new Status(288);
+
+/**
+ * The transfer amount exceeds the current approved allowance for the spender account.
+ */
+Status.AmountExceedsAllowance = new Status(289);
+
+/**
+ * The payer account of an approveAllowances or adjustAllowance transaction is attempting to go beyond the maximum allowed number of allowances.
+ */
+Status.MaxAllowancesExceeded = new Status(290);

@@ -29,6 +29,8 @@ import "basic_types.proto";
 import "query_header.proto";
 import "response_header.proto";
 
+import "google/protobuf/wrappers.proto";
+
 /**
  * The log information for an event returned by a smart contract function call. One function call
  * may return several such events.
@@ -93,9 +95,43 @@ message ContractFunctionResult {
     repeated ContractLoginfo logInfo = 6;
 
     /**
-     * the list of smart contracts that were created by the function call
+     * [DEPRECATED] the list of smart contracts that were created by the function call.
+     * 
+     * The created ids will now _also_ be externalized through internal transaction 
+     * records, where each record has its alias field populated with the new contract's 
+     * EVM address. (This is needed for contracts created with CREATE2, since 
+     * there is no longer a simple relationship between the new contract's 0.0.X id 
+     * and its Solidity address.)
      */
-    repeated ContractID createdContractIDs = 7;
+    repeated ContractID createdContractIDs = 7 [deprecated=true];
+
+    /**
+     * the list of state reads and changes caused by this function call
+     */
+    repeated ContractStateChange state_changes = 8;
+
+    /**
+     * The new contract's 20-byte EVM address. Only populated after release 0.23, 
+     * where each created contract will have its own record. (This is an important 
+     * point--the field is not <tt>repeated</tt> because there will be a separate 
+     * child record for each created contract.)
+     * 
+     * Every contract has an EVM address determined by its <tt>shard.realm.num</tt> id.
+     * This address is as follows:
+     *   <ol>
+     *     <li>The first 4 bytes are the big-endian representation of the shard.</li>
+     *     <li>The next 8 bytes are the big-endian representation of the realm.</li>
+     *     <li>The final 8 bytes are the big-endian representation of the number.</li>
+     *   </ol>  
+     * 
+     * Contracts created via CREATE2 have an <b>additional, primary address</b> that is 
+     * derived from the <a href="https://eips.ethereum.org/EIPS/eip-1014">EIP-1014</a> 
+     * specification, and does not have a simple relation to a <tt>shard.realm.num</tt> id. 
+     * 
+     * (Please do note that CREATE2 contracts can also be referenced by the three-part 
+     * EVM address described above.)
+     */
+     google.protobuf.BytesValue evm_address = 9;
 }
 
 /**
@@ -116,7 +152,7 @@ message ContractCallLocalQuery {
     QueryHeader header = 1;
 
     /**
-     * the contract instance to call, in the format used in transactions
+     * The contract to make a static call against
      */
     ContractID contractID = 2;
 
@@ -149,4 +185,46 @@ message ContractCallLocalResponse {
      * the value returned by the function (if it completed and didn't fail)
      */
     ContractFunctionResult functionResult = 2;
+}
+
+/**
+ * The storage changes to a smart contract's storage as a side effect of the function call.
+ */
+message ContractStateChange {
+
+    /**
+     * The contract to which the storage changes apply to
+     */
+    ContractID contractID = 1;
+
+    /**
+     * The list of storage changes.
+     */
+    repeated StorageChange storageChanges = 2;
+}
+
+/**
+ * A storage slot change description.
+ */
+message StorageChange {
+    /**
+     * The storage slot changed.  Up to 32 bytes, big-endian, zero bytes left trimmed.
+     */
+    bytes slot = 1;
+
+    /**
+     * The value read from the storage slot.  Up to 32 bytes, big-endian, zero bytes left trimmed.
+     *
+     * Because of the way SSTORE operations are charged the slot is always read before being written to.
+     */
+    bytes valueRead = 2;
+
+    /**
+     * The new value written to the slot.  Up to 32 bytes, big-endian, zero bytes left trimmed.
+     *
+     * If a value of zero is written the valueWritten will be present but the inner value will be absent.
+     *
+     * If a value was read and not written this value will not be present.
+     */
+    google.protobuf.BytesValue valueWritten = 3;
 }
