@@ -5,6 +5,7 @@ import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
 import Long from "long";
+import ContractStateChange from "./ContractStateChange.js";
 
 /**
  * @namespace proto
@@ -29,6 +30,7 @@ export default class ContractFunctionResult {
      * @param {ContractLogInfo[]} result.logs
      * @param {ContractId[]} result.createdContractIds
      * @param {Uint8Array | null} result.evmAddress
+     * @param {ContractStateChange[]} result.stateChanges
      * @param {Uint8Array} result.bytes
      */
     constructor(result) {
@@ -59,9 +61,21 @@ export default class ContractFunctionResult {
          */
         this.logs = result.logs;
 
+        /**
+         * @deprecated the list of smart contracts that were created by the function call.
+         *
+         * The created ids will now _also_ be externalized through internal transaction
+         * records, where each record has its alias field populated with the new contract's
+         * EVM address. (This is needed for contracts created with CREATE2, since
+         * there is no longer a simple relationship between the new contract's 0.0.X id
+         * and its Solidity address.)
+         */
+        // eslint-disable-next-line deprecation/deprecation
         this.createdContractIds = result.createdContractIds;
 
         this.evmAddress = result.evmAddress;
+
+        this.stateChanges = result.stateChanges;
     }
 
     /**
@@ -95,6 +109,10 @@ export default class ContractFunctionResult {
                 result.evmAddress != null && result.evmAddress.value != null
                     ? result.evmAddress.value
                     : null,
+            stateChanges: (result.stateChanges != null
+                ? result.stateChanges
+                : []
+            ).map((change) => ContractStateChange._fromProtobuf(change)),
         });
     }
 

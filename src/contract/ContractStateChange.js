@@ -2,16 +2,18 @@ import * as proto from "@hashgraph/proto";
 import ContractId from "./ContractId.js";
 import StorageChange from "./StorageChange.js";
 
-export default class ContractStateChange{
-     /**
+export default class ContractStateChange {
+    /**
      * @private
      * @param {object} props
      * @param {ContractId} props.contractId
      * @param {StorageChange[]} props.storageChanges
      */
-    constructor(props){
+    constructor(props) {
         this.contractId = props.contractId;
         this.storageChanges = props.storageChanges;
+
+        Object.freeze(this);
     }
 
     /**
@@ -20,15 +22,25 @@ export default class ContractStateChange{
      * @returns {ContractStateChange}
      */
     static _fromProtobuf(change) {
-
         return new ContractStateChange({
             contractId: ContractId._fromProtobuf(
                 /** @type {proto.IContractID} */ (change.contractID)
             ),
-            storageChanges: StorageChange._fromProtobuf(
-                /** @type {proto.IStorageChange[]} */ (change.storageChanges) 
-            )
+            storageChanges: (change.storageChanges != null
+                ? change.storageChanges
+                : []
+            ).map((change) => StorageChange._fromProtobuf(change)),
         });
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {ContractStateChange}
+     */
+    static fromBytes(bytes) {
+        return ContractStateChange._fromProtobuf(
+            proto.ContractStateChange.decode(bytes)
+        );
     }
 
     /**
@@ -36,11 +48,19 @@ export default class ContractStateChange{
      * @returns {proto.IContractStateChange} change
      */
     _toProtobuf() {
-        const _storageChanges = this.storageChanges.map(storageChange => storageChange._toProtobuf());
+        const storageChanges = this.storageChanges.map((storageChange) =>
+            storageChange._toProtobuf()
+        );
         return {
             contractID: this.contractId._toProtobuf(),
-            storageChanges: {_storageChanges}
+            storageChanges,
         };
     }
 
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.ContractStateChange.encode(this._toProtobuf()).finish();
+    }
 }

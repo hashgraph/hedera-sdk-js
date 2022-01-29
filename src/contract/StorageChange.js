@@ -1,16 +1,14 @@
-import BigNumber from "bignumber.js";
 import * as proto from "@hashgraph/proto";
-import { toSolidityAddress } from "../EntityIdHelper";
 
-export default class StorageChange{
-         /**
+export default class StorageChange {
+    /**
      * @private
      * @param {object} props
-     * @param {BigNumber} props.slot
-     * @param {BigNumber?} props.valueRead
-     * @param {BigNumber?} props.valueWritten 
+     * @param {Uint8Array} props.slot
+     * @param {Uint8Array} props.valueRead
+     * @param {Uint8Array?} props.valueWritten
      */
-    constructor(props){
+    constructor(props) {
         this.slot = props.slot;
         this.valueRead = props.valueRead;
         this.valueWritten = props.valueWritten;
@@ -18,31 +16,45 @@ export default class StorageChange{
 
     /**
      * @internal
-     * @param change
-     * @param {IStorageChange} change, 
+     * @param {proto.IStorageChange} change
      * @returns {StorageChange}
      */
     static _fromProtobuf(change) {
-        const storageChange = new StorageChange(
-            {
-                slot: change.slot !=null ? change.slot : undefined, 
-                valueRead: change.valueRead !=null ? change.valueRead : undefined, 
-                valueWritten: change.valueWritten !=null ? change.valueWritten : undefined 
-            }
-        );
-        return storageChange;
+        return new StorageChange({
+            slot: /** @type {Uint8Array} */ (change.slot),
+            valueRead: /** @type {Uint8Array} */ (change.valueRead),
+            valueWritten:
+                change.valueWritten != null && change.valueWritten.value != null
+                    ? change.valueWritten.value
+                    : null,
+        });
     }
 
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {StorageChange}
+     */
+    static fromBytes(bytes) {
+        return StorageChange._fromProtobuf(proto.StorageChange.decode(bytes));
+    }
 
     /**
      * @internal
      * @returns {proto.IStorageChange}
      */
-    _toProtobuf(){
+    _toProtobuf() {
         return {
-            slot : this.slot,
+            slot: this.slot,
             valueRead: this.valueRead,
-            valueWritten: this.valueWritten
-        }
+            valueWritten:
+                this.valueWritten != null ? { value: this.valueWritten } : null,
+        };
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return proto.StorageChange.encode(this._toProtobuf()).finish();
     }
 }
