@@ -80,13 +80,7 @@
     "dependencies": {
         "@grpc/grpc-js": "^1.5.3",
         "@hashgraph/cryptography": "^1.1.0-beta.5",
-<<<<<<< HEAD
         "@hashgraph/proto": "link:packages/proto",
-||||||| parent of 3fdccc37 (initial commit with some classes added.)
-        "@hashgraph/proto": "2.1.2",
-=======
-        "@hashgraph/proto": "link:packages\\proto",
->>>>>>> 3fdccc37 (initial commit with some classes added.)
         "bignumber.js": "^9.0.2",
         "crypto-js": "^4.1.1",
         "js-base64": "^3.7.2",
