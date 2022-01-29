@@ -17,7 +17,6 @@ describe("TransferTransaction", function () {
     const tokenId2 = new TokenId(2, 2, 2);
     const tokenId3 = new TokenId(3, 3, 3);
     const tokenId4 = new TokenId(4, 4, 4);
-    const serialNum1 = Long.fromNumber(111);
     const accountId1 = new AccountId(1, 1, 1);
     const accountId2 = new AccountId(2, 2, 2);
     const accountId3 = new AccountId(3, 3, 3);
@@ -177,6 +176,8 @@ describe("TransferTransaction", function () {
     });
 
     it("should order transfers", function () {
+        const serialNum1 = Long.fromNumber(111);
+
         const transaction = new TransferTransaction()
             // Insert in reverse order
             .addNftTransfer(tokenId4, serialNum1, accountId2, accountId4)
