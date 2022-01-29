@@ -50,7 +50,6 @@
         "prepare": "run-s compile cp:ts"
     },
     "dependencies": {
-        "proto": "link:packages\\proto",
         "protobufjs": "^6.11.2"
     },
     "devDependencies": {
