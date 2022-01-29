@@ -7,11 +7,7 @@ export default class ContractStateChange{
      * @private
      * @param {object} props
      * @param {ContractId} props.contractId
-<<<<<<< HEAD
      * @param {StorageChange[]?} props.storageChanges
-=======
-     * @param {StorageChange[]} props.storageChanges
->>>>>>> de276018fc5f01a67ab42d6733141e1ff65e8686
      */
     constructor(props){
         this.contractId = props.contractId;
@@ -29,21 +25,14 @@ export default class ContractStateChange{
             contractId: ContractId._fromProtobuf(
                 /** @type {proto.IContractID} */ (change.contractID)
             ),
-<<<<<<< HEAD
             storageChanges: change.storageChanges ? change.storageChanges.map(
                 storageChange => StorageChange._fromProtobuf(storageChange)
             ) : null
-=======
-            storageChanges: StorageChange._fromProtobuf(
-                /** @type {proto.IStorageChange[]} */ (change.storageChanges) 
-            )
->>>>>>> de276018fc5f01a67ab42d6733141e1ff65e8686
         });
     }
 
     /**
      * @internal
-<<<<<<< HEAD
      * @returns {proto.IContractStateChange}
      */
     static _toProtobuf() {
@@ -55,16 +44,3 @@ export default class ContractStateChange{
 
 }
 
-=======
-     * @returns {proto.IContractStateChange} change
-     */
-    _toProtobuf() {
-        const _storageChanges = this.storageChanges.map(storageChange => storageChange._toProtobuf());
-        return {
-            contractID: this.contractId._toProtobuf(),
-            storageChanges: {_storageChanges}
-        };
-    }
-
-}
->>>>>>> de276018fc5f01a67ab42d6733141e1ff65e8686
