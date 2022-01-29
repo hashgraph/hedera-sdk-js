@@ -5,7 +5,6 @@ import {
     TopicMessageSubmitTransaction,
     AccountId,
     Timestamp,
-    Transaction,
     TransactionId,
     TopicId,
 } from "../../src/exports.js";

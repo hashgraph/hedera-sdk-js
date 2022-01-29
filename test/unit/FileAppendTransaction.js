@@ -27,8 +27,9 @@ describe("FileAppendTransaction", function () {
             .setContents("12345")
             .freeze();
 
-        transaction = /** @type {FileAppendTransaction} */ (Transaction.fromBytes(transaction.toBytes()))
-            .setMaxChunkSize(1);
+        transaction = /** @type {FileAppendTransaction} */ (
+            Transaction.fromBytes(transaction.toBytes())
+        ).setMaxChunkSize(1);
 
         let data = transaction._makeTransactionData();
         transaction._startIndex++;
