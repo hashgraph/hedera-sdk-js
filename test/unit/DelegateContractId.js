@@ -16,6 +16,7 @@ describe("DelegateContractId", function () {
             shardNum: Long.fromNumber(1),
             realmNum: Long.fromNumber(2),
             contractNum: Long.fromNumber(3),
+            evmAddress: null,
         };
         const idProtoKey = {
             delegatableContractId: idProto,

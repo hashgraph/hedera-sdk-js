@@ -170,7 +170,7 @@ export default class TransferTransaction extends Transaction {
                     AccountId._fromProtobuf(
                         /** @type {proto.IAccountID} */ (transfer.accountID)
                     ),
-                    /** @type {Long} */ (transfer.amount)
+                    Long.fromValue(/** @type {Long} */ (transfer.amount))
                 );
             }
 
@@ -179,7 +179,7 @@ export default class TransferTransaction extends Transaction {
                 : []) {
                 transfers.addNftTransfer(
                     tokenId,
-                    /** @type {Long} */ (transfer.serialNumber),
+                    Long.fromValue(/** @type {Long} */ (transfer.serialNumber)),
                     AccountId._fromProtobuf(
                         /** @type {proto.IAccountID} */ (
                             transfer.senderAccountID

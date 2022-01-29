@@ -61,7 +61,7 @@ describe("AccountAllowanceAdjustTransaction", function () {
                     approvedForAll: null,
                 },
                 {
-                    serialNumbers: [ serialNumber2 ],
+                    serialNumbers: [serialNumber2],
                     spender: spenderAccountId2._toProtobuf(),
                     tokenId: tokenId2._toProtobuf(),
                     approvedForAll: null,

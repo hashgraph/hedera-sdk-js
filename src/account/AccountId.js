@@ -9,10 +9,6 @@ import CACHE from "../Cache.js";
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
-const regex = new RegExp(
-    "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.((?:[0-9a-fA-F][0-9a-fA-F])+)$"
-);
-
 /**
  * The ID for a crypto-currency account on Hedera.
  */
@@ -20,15 +16,16 @@ export default class AccountId {
     /**
      * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
-     * @param {(number | Long | PublicKey)=} numOrAliasKey
+     * @param {(number | Long)=} num
+     * @param {(PublicKey)=} aliasKey
      */
-    constructor(props, realm, numOrAliasKey) {
-        const result = entity_id.constructor(props, realm, numOrAliasKey);
+    constructor(props, realm, num, aliasKey) {
+        const result = entity_id.constructor(props, realm, num);
 
         this.shard = result.shard;
         this.realm = result.realm;
         this.num = result.num;
-        this.aliasKey = result.aliasKey;
+        this.aliasKey = aliasKey != null ? aliasKey : null;
 
         /**
          * @type {string | null}
@@ -41,23 +38,22 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromString(text) {
-        try {
-            const result = entity_id.fromString(text);
-            const id = new AccountId(result);
-            id._checksum = result.checksum;
-            return id;
-        } catch {
-            let match = regex.exec(text);
-            if (match == null) {
-                throw new Error("invalid account ID");
-            }
+        const result = entity_id.fromStringSplitter(text);
 
-            return new AccountId(
-                Long.fromString(match[1]),
-                Long.fromString(match[2]),
-                PublicKey.fromString(match[3])
-            );
+        if (Number.isNaN(result.shard) || Number.isNaN(result.realm)) {
+            throw new Error("invalid format for entity ID");
         }
+
+        const shard =
+            result.shard != null ? Long.fromString(result.shard) : Long.ZERO;
+        const realm =
+            result.realm != null ? Long.fromString(result.realm) : Long.ZERO;
+        const [num, publicKey] =
+            result.numOrHex.length < 20
+                ? [Long.fromString(result.numOrHex), undefined]
+                : [Long.ZERO, PublicKey.fromString(result.numOrHex)];
+
+        return new AccountId(shard, realm, num, publicKey);
     }
 
     /**
@@ -69,18 +65,17 @@ export default class AccountId {
         let key =
             id.alias != null && id.alias.length > 0
                 ? Key._fromProtobufKey(proto.Key.decode(id.alias))
-                : null;
+                : undefined;
 
         if (!(key instanceof PublicKey)) {
-            key = null;
+            key = undefined;
         }
-
-        const account = key != null ? key : /** @type {Long} */ (id.accountNum);
 
         return new AccountId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
-            account
+            id.accountNum != null ? id.accountNum : 0,
+            key
         );
     }
 
@@ -253,4 +248,4 @@ export default class AccountId {
 }
 
 CACHE.accountIdConstructor = (shard, realm, key) =>
-    new AccountId(shard, realm, key);
+    new AccountId(shard, realm, Long.ZERO, key);

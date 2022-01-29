@@ -231,15 +231,16 @@ export default class TransactionRecord {
                         ? this.transactionFee.toTinybars()
                         : null,
 
-                contractCallResult:
-                    this.contractFunctionResult != null
-                        ? this.contractFunctionResult
-                        : null,
-
-                contractCreateResult:
-                    this.contractFunctionResult != null
-                        ? this.contractFunctionResult
-                        : null,
+                // TODO: Implement `ContractFunctionResult._toProtobuf()`
+                //                 contractCallResult:
+                //                     this.contractFunctionResult != null
+                //                         ? this.contractFunctionResult
+                //                         : null,
+                //
+                //                 contractCreateResult:
+                //                     this.contractFunctionResult != null
+                //                         ? this.contractFunctionResult
+                //                         : null,
 
                 transferList:
                     this.transfers != null
