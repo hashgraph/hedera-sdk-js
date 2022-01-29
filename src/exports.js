@@ -10,7 +10,7 @@ export { default as Key } from "./Key.js";
 export { default as Mnemonic } from "./Mnemonic.js";
 
 export { default as AccountAllowanceAdjustTransaction } from "./account/AccountAllowanceAdjustTransaction.js";
-export { default as AccountAllowanceApprovalTransaction } from "./account/AccountAllowanceApprovalTransaction.js";
+export { default as AccountAllowanceApproveTransaction } from "./account/AccountAllowanceApproveTransaction.js";
 export { default as AccountBalance } from "./account/AccountBalance.js";
 export { default as AccountBalanceQuery } from "./account/AccountBalanceQuery.js";
 export { default as AccountCreateTransaction } from "./account/AccountCreateTransaction.js";
@@ -51,7 +51,6 @@ export { default as FileUpdateTransaction } from "./file/FileUpdateTransaction.j
 export { default as FreezeTransaction } from "./system/FreezeTransaction.js";
 export { default as Hbar } from "./Hbar.js";
 export { default as HbarAllowance } from "./account/HbarAllowance.js";
-export { default as HbarApproval } from "./account/HbarApproval.js";
 export { default as HbarUnit } from "./HbarUnit.js";
 export { default as LiveHash } from "./account/LiveHash.js";
 export { default as LiveHashAddTransaction } from "./account/LiveHashAddTransaction.js";
@@ -74,7 +73,7 @@ export { default as SystemDeleteTransaction } from "./system/SystemDeleteTransac
 export { default as SystemUndeleteTransaction } from "./system/SystemUndeleteTransaction.js";
 export { default as Timestamp } from "./Timestamp.js";
 export { default as TokenAllowance } from "./account/TokenAllowance.js";
-export { default as TokenApproval } from "./account/TokenApproval.js";
+export { default as TokenNftAllowance } from "./account/TokenNftAllowance.js";
 export { default as TokenAssociateTransaction } from "./token/TokenAssociateTransaction.js";
 export { default as TokenBurnTransaction } from "./token/TokenBurnTransaction.js";
 export { default as TokenCreateTransaction } from "./token/TokenCreateTransaction.js";

@@ -4,18 +4,18 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITokenAllowance} proto.ITokenAllowance
+ * @typedef {import("@hashgraph/proto").INftAllowance} proto.INftAllowance
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  */
 
-export default class TokenAllowance {
+export default class TokenNftAllowance {
     /**
      * @internal
      * @param {object} props
      * @param {TokenId} props.tokenId
      * @param {AccountId} props.spenderAccountId
-     * @param {Long | null} props.amount
+     * @param {Long[] | null} props.serialNumbers
      */
     constructor(props) {
         /**
@@ -39,40 +39,46 @@ export default class TokenAllowance {
          *
          * @readonly
          */
-        this.amount = props.amount;
+        this.serialNumbers = props.serialNumbers;
 
         Object.freeze(this);
     }
 
     /**
      * @internal
-     * @param {proto.ITokenAllowance} allowance
-     * @returns {TokenAllowance}
+     * @param {proto.INftAllowance} allowance
+     * @returns {TokenNftAllowance}
      */
     static _fromProtobuf(allowance) {
-        return new TokenAllowance({
+        return new TokenNftAllowance({
             tokenId: TokenId._fromProtobuf(
                 /** @type {proto.ITokenID} */ (allowance.tokenId)
             ),
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (allowance.spender)
             ),
-            amount:
-                allowance.amount != null
-                    ? Long.fromValue(/** @type {Long} */ (allowance.amount))
-                    : null,
+            serialNumbers:
+                allowance.approvedForAll != null &&
+                allowance.approvedForAll.value
+                    ? null
+                    : allowance.serialNumbers != null
+                    ? allowance.serialNumbers.map((serialNumber) =>
+                          Long.fromValue(serialNumber)
+                      )
+                    : [],
         });
     }
 
     /**
      * @internal
-     * @returns {proto.ITokenAllowance}
+     * @returns {proto.INftAllowance}
      */
     _toProtobuf() {
         return {
             tokenId: this.tokenId._toProtobuf(),
             spender: this.spenderAccountId._toProtobuf(),
-            amount: this.amount,
+            approvedForAll: this.serialNumbers == null ? { value: true } : null,
+            serialNumbers: this.serialNumbers,
         };
     }
 }

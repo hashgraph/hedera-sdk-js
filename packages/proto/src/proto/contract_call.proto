@@ -41,7 +41,7 @@ import "basic_types.proto";
  */
 message ContractCallTransactionBody {
     /**
-     * the contract instance to call, in the format used in transactions
+     * The contract to call
      */
     ContractID contractID = 1;
 

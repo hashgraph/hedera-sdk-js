@@ -3,10 +3,12 @@ import Transaction, {
 } from "../transaction/Transaction.js";
 import AccountId from "./AccountId.js";
 import TokenId from "../token/TokenId.js";
-import HbarApproval from "./HbarApproval.js";
-import TokenApproval from "./TokenApproval.js";
+import NftId from "../token/NftId.js";
 import Long from "long";
 import Hbar from "../Hbar.js";
+import HbarAllowance from "./HbarAllowance.js";
+import TokenAllowance from "./TokenAllowance.js";
+import TokenNftAllowance from "./TokenNftAllowance.js";
 
 /**
  * @namespace proto
@@ -30,28 +32,36 @@ import Hbar from "../Hbar.js";
 /**
  * Change properties for the given account.
  */
-export default class AccountAllowanceApprovalTransaction extends Transaction {
+export default class AccountAllowanceApproveTransaction extends Transaction {
     /**
      * @param {object} [props]
-     * @param {HbarApproval[]} [props.hbarApprovals]
-     * @param {TokenApproval[]} [props.tokenApprovals]
+     * @param {HbarAllowance[]} [props.hbarApprovals]
+     * @param {TokenAllowance[]} [props.tokenApprovals]
+     * @param {TokenNftAllowance[]} [props.nftApprovals]
      */
     constructor(props = {}) {
         super();
 
         /**
          * @private
-         * @type {HbarApproval[]}
+         * @type {HbarAllowance[]}
          */
         this._hbarApprovals =
             props.hbarApprovals != null ? props.hbarApprovals : [];
 
         /**
          * @private
-         * @type {TokenApproval[]}
+         * @type {TokenAllowance[]}
          */
         this._tokenApprovals =
             props.tokenApprovals != null ? props.tokenApprovals : [];
+
+        /**
+         * @private
+         * @type {TokenNftAllowance[]}
+         */
+        this._nftApprovals =
+            props.nftApprovals != null ? props.nftApprovals : [];
     }
 
     /**
@@ -61,7 +71,7 @@ export default class AccountAllowanceApprovalTransaction extends Transaction {
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
      * @param {proto.ITransactionBody[]} bodies
-     * @returns {AccountAllowanceApprovalTransaction}
+     * @returns {AccountAllowanceApproveTransaction}
      */
     static _fromProtobuf(
         transactions,
@@ -77,15 +87,19 @@ export default class AccountAllowanceApprovalTransaction extends Transaction {
             );
 
         return Transaction._fromProtobufTransactions(
-            new AccountAllowanceApprovalTransaction({
-                hbarApprovals: (allowanceApproval.cryptoApproval != null
-                    ? allowanceApproval.cryptoApproval
+            new AccountAllowanceApproveTransaction({
+                hbarApprovals: (allowanceApproval.cryptoAllowances != null
+                    ? allowanceApproval.cryptoAllowances
                     : []
-                ).map((approval) => HbarApproval._fromProtobuf(approval)),
-                tokenApprovals: (allowanceApproval.tokenApproval != null
-                    ? allowanceApproval.tokenApproval
+                ).map((approval) => HbarAllowance._fromProtobuf(approval)),
+                tokenApprovals: (allowanceApproval.tokenAllowances != null
+                    ? allowanceApproval.tokenAllowances
                     : []
-                ).map((approval) => TokenApproval._fromProtobuf(approval)),
+                ).map((approval) => TokenAllowance._fromProtobuf(approval)),
+                nftApprovals: (allowanceApproval.nftAllowances != null
+                    ? allowanceApproval.nftAllowances
+                    : []
+                ).map((approval) => TokenNftAllowance._fromProtobuf(approval)),
             }),
             transactions,
             signedTransactions,
@@ -96,7 +110,7 @@ export default class AccountAllowanceApprovalTransaction extends Transaction {
     }
 
     /**
-     * @returns {HbarApproval[]}
+     * @returns {HbarAllowance[]}
      */
     get hbarApprovals() {
         return this._hbarApprovals;
@@ -106,13 +120,13 @@ export default class AccountAllowanceApprovalTransaction extends Transaction {
      * @internal
      * @param {AccountId | string} spenderAccountId
      * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
-     * @returns {AccountAllowanceApprovalTransaction}
+     * @returns {AccountAllowanceApproveTransaction}
      */
-    addHbarApproval(spenderAccountId, amount) {
+    addHbarAllowance(spenderAccountId, amount) {
         this._requireNotFrozen();
 
         this._hbarApprovals.push(
-            new HbarApproval({
+            new HbarAllowance({
                 spenderAccountId:
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
@@ -125,7 +139,7 @@ export default class AccountAllowanceApprovalTransaction extends Transaction {
     }
 
     /**
-     * @returns {TokenApproval[]}
+     * @returns {TokenAllowance[]}
      */
     get tokenApprovals() {
         return this._tokenApprovals;
@@ -136,13 +150,13 @@ export default class AccountAllowanceApprovalTransaction extends Transaction {
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} spenderAccountId
      * @param {Long | number} amount
-     * @returns {AccountAllowanceApprovalTransaction}
+     * @returns {AccountAllowanceApproveTransaction}
      */
-    addTokenApproval(tokenId, spenderAccountId, amount) {
+    addTokenAllowance(tokenId, spenderAccountId, amount) {
         this._requireNotFrozen();
 
         this._tokenApprovals.push(
-            new TokenApproval({
+            new TokenAllowance({
                 tokenId:
                     typeof tokenId === "string"
                         ? TokenId.fromString(tokenId)
@@ -155,6 +169,57 @@ export default class AccountAllowanceApprovalTransaction extends Transaction {
                     typeof amount === "number"
                         ? Long.fromNumber(amount)
                         : amount,
+            })
+        );
+
+        return this;
+    }
+
+    /**
+     * @internal
+     * @param {NftId | string} nftId
+     * @param {AccountId | string} spenderAccountId
+     * @returns {AccountAllowanceApproveTransaction}
+     */
+    addTokenNftAllowance(nftId, spenderAccountId) {
+        this._requireNotFrozen();
+
+        const id = typeof nftId === "string" ? NftId.fromString(nftId) : nftId;
+
+        this._nftApprovals.push(
+            new TokenNftAllowance({
+                tokenId: id.tokenId,
+                spenderAccountId:
+                    typeof spenderAccountId === "string"
+                        ? AccountId.fromString(spenderAccountId)
+                        : spenderAccountId,
+                serialNumbers: [id.serial],
+            })
+        );
+
+        return this;
+    }
+
+    /**
+     * @internal
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string} spenderAccountId
+     * @returns {AccountAllowanceApproveTransaction}
+     */
+    addAllTokenNftAllowance(tokenId, spenderAccountId) {
+        this._requireNotFrozen();
+
+        this._nftApprovals.push(
+            new TokenNftAllowance({
+                tokenId:
+                    typeof tokenId === "string"
+                        ? TokenId.fromString(tokenId)
+                        : tokenId,
+                spenderAccountId:
+                    typeof spenderAccountId === "string"
+                        ? AccountId.fromString(spenderAccountId)
+                        : spenderAccountId,
+                serialNumbers: null,
             })
         );
 
@@ -201,10 +266,13 @@ export default class AccountAllowanceApprovalTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            cryptoApproval: this._hbarApprovals.map((approval) =>
+            cryptoAllowances: this._hbarApprovals.map((approval) =>
                 approval._toProtobuf()
             ),
-            tokenApproval: this._tokenApprovals.map((approval) =>
+            tokenAllowances: this._tokenApprovals.map((approval) =>
+                approval._toProtobuf()
+            ),
+            nftAllowances: this._nftApprovals.map((approval) =>
                 approval._toProtobuf()
             ),
         };
@@ -214,5 +282,5 @@ export default class AccountAllowanceApprovalTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "cryptoApproveAllowance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountAllowanceApprovalTransaction._fromProtobuf
+    AccountAllowanceApproveTransaction._fromProtobuf
 );

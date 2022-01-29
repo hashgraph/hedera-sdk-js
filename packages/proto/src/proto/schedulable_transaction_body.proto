@@ -64,6 +64,7 @@ import "token_burn.proto";
 import "token_wipe_account.proto";
 import "token_associate.proto";
 import "token_dissociate.proto";
+import "token_fee_schedule_update.proto";
 import "token_pause.proto";
 import "token_unpause.proto";
 

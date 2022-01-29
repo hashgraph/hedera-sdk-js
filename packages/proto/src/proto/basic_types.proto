@@ -85,7 +85,6 @@ message AccountID {
      * be populated.
      */
     oneof account {
-
         /**
          * A non-negative account number unique within its realm
          */
@@ -105,7 +104,6 @@ message AccountID {
          */
         bytes alias = 4;
     }
-
 }
 
 /**
@@ -142,10 +140,32 @@ message ContractID {
      */
     int64 realmNum = 2;
 
-    /**
-     * A nonnegative number unique within its realm
-     */
-    int64 contractNum = 3;
+    oneof contract {
+        /**
+        * A nonnegative number unique within a given shard and realm
+        */
+        int64 contractNum = 3;
+
+        /**
+        * The 20-byte EVM address of the contract to call. 
+        * 
+        * Every contract has an EVM address determined by its <tt>shard.realm.num</tt> id.
+        * This address is as follows:
+        *   <ol>
+        *     <li>The first 4 bytes are the big-endian representation of the shard.</li>
+        *     <li>The next 8 bytes are the big-endian representation of the realm.</li>
+        *     <li>The final 8 bytes are the big-endian representation of the number.</li>
+        *   </ol>  
+        * 
+        * Contracts created via CREATE2 have an <b>additional, primary address</b> that is 
+        * derived from the <a href="https://eips.ethereum.org/EIPS/eip-1014">EIP-1014</a> 
+        * specification, and does not have a simple relation to a <tt>shard.realm.num</tt> id. 
+        * 
+        * (Please do note that CREATE2 contracts can also be referenced by the three-part 
+        * EVM address described above.)
+        */
+        bytes evm_address = 4;
+    }
 }
 
 /**
@@ -209,6 +229,12 @@ message AccountAmount {
      * receives(positive)
      */
     sint64 amount = 2;
+
+    /**
+     * If true then the transfer is expected to be an approved allowance and the
+     * accountID is expected to be the owner. The default is false (omitted).
+     */
+    bool is_approval = 3;
 }
 
 /**
@@ -242,6 +268,12 @@ message NftTransfer {
      * The serial number of the NFT
      */
     int64 serialNumber = 3;
+
+    /**
+     * If true then the transfer is expected to be an approved allowance and the
+     * senderAccountID is expected to be the owner. The default is false (omitted).
+     */
+    bool is_approval = 4;
 }
 
 /**
@@ -1472,4 +1504,66 @@ message TokenBalances {
 message TokenAssociation {
     TokenID token_id = 1;  // The token involved in the association
     AccountID account_id = 2; // The account involved in the association
+}
+
+/**
+ * An approved allowance of hbar transfers for a spender.
+ */
+message CryptoAllowance {
+    /**
+     * The account ID of the spender of the hbar allowance.
+     */
+    AccountID spender = 1;
+
+    /**
+     * The amount of the spender's allowance in tinybars.
+     */
+    int64 amount = 2;
+}
+
+/**
+ * An approved allowance of non-fungible token transfers for a spender.
+ */
+message NftAllowance {
+    /**
+     * The token that the allowance pertains to.
+     */
+    TokenID tokenId = 1;
+
+    /**
+     * The account ID of the token allowance spender.
+     */
+    AccountID spender = 2;
+
+    /**
+     * The list of serial numbers that the spender is permitted to transfer.
+     */
+    repeated int64 serialNumbers = 3;
+
+    /**
+     * If true, the spender has access to all of the account owner's NFT instances (currently
+     * owned and any in the future). If this field is set to true the serialNumbers field
+     * should be empty.
+     */
+    google.protobuf.BoolValue approvedForAll = 4;
+}
+
+/**
+ * An approved allowance of fungible token transfers for a spender.
+ */
+message TokenAllowance {
+    /**
+     * The token that the allowance pertains to.
+     */
+    TokenID tokenId = 1;
+
+    /**
+     * The account ID of the token allowance spender.
+     */
+    AccountID spender = 2;
+
+    /**
+     * The amount of the spender's token allowance.
+     */
+    int64 amount = 3;
 }

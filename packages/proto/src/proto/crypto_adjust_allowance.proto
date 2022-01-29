@@ -28,31 +28,36 @@ option java_multiple_files = true;
 import "basic_types.proto";
 
 /**
- * Modifies or creates the hbar/token allowance for a spender <b>relative to the payer account
- * of this transaction</b>. 
+ * Modifies or creates an hbar/token allowance for a spender <b>relative to the payer account
+ * of this transaction</b>.
  *
- * (So if account <tt>0.0.X</tt> pays for this transaction, then at consensus the spender 
- * account will have new allowances to spend hbar or tokens from <tt>0.0.X</tt>). 
- * 
- * <b>IMPORTANT</b>: If an allowance for the spender does not currently exist, this transaction 
+ * (So if account <tt>0.0.X</tt> pays for this transaction, then at consensus the spender
+ * account will have new allowances to spend hbar or tokens from <tt>0.0.X</tt>).
+ *
+ * If the allowance already exists, the hbar/token amount will be used to adjust the current
+ * allowance balance. If this value is negative the approved allowance will be decreased.
+ * The adjusted allowance balance cannot exceed the total supply of the token nor can it
+ * be negative.
+ *
+ * If the allowance does not exist, it will be created with the hbar/token amount being used
+ * as the allowance balance.
+ *
+ * <b>IMPORTANT</b>: If an allowance for the spender does not currently exist, this transaction
  * behaves like an allowance approval.
  */
 message CryptoAdjustAllowanceTransactionBody {
     /**
-     * The token that the allowance pertains to. If this field is omitted, the adjustment
-     * will be made against the spender's hbar allowance with the payer account.
+     * List of hbar allowances approved by the account owner.
      */
-    TokenID token = 1;
+    repeated CryptoAllowance cryptoAllowances = 1;
 
     /**
-     * The account ID of the spender of the hbar/token allowance.
+     * List of non-fungible token allowances approved by the account owner.
      */
-    AccountID spender = 2;
+    repeated NftAllowance nftAllowances = 2;
 
     /**
-     * The amount to adjust the current allowance balance by. If this value is negative
-     * the approved allowance will be decreased. The adjusted allowance balance cannot
-     * exceed the total supply of the token nor can it be negative.
+     * List of fungible token allowances approved by the account owner.
      */
-    int64 amount = 3;
+    repeated TokenAllowance tokenAllowances = 3;
 }

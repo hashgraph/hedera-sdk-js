@@ -142,10 +142,6 @@ import ICryptoUpdateTransactionBody = proto.ICryptoUpdateTransactionBody;
 import CryptoUpdateTransactionBody = proto.CryptoUpdateTransactionBody;
 import ICryptoApproveAllowanceTransactionBody = proto.ICryptoApproveAllowanceTransactionBody;
 import CryptoApproveAllowanceTransactionBody = proto.CryptoApproveAllowanceTransactionBody;
-import ICryptoApproval = proto.CryptoApproveAllowanceTransactionBody.ICryptoApproval;
-import CryptoApproval = proto.CryptoApproveAllowanceTransactionBody.CryptoApproval;
-import ITokenApproval = proto.CryptoApproveAllowanceTransactionBody.ITokenApproval;
-import TokenApproval = proto.CryptoApproveAllowanceTransactionBody.TokenApproval;
 import CryptoAdjustAllowanceTransactionBody = proto.CryptoAdjustAllowanceTransactionBody;
 import ICryptoAdjustAllowanceTransactionBody = proto.ICryptoAdjustAllowanceTransactionBody;
 import IFileAppendTransactionBody = proto.IFileAppendTransactionBody;
@@ -274,10 +270,12 @@ import ICryptoGetInfoResponse = proto.ICryptoGetInfoResponse;
 import CryptoGetInfoResponse = proto.CryptoGetInfoResponse;
 import IAccountInfo = proto.CryptoGetInfoResponse.IAccountInfo;
 import AccountInfo = proto.CryptoGetInfoResponse.AccountInfo;
-import ICryptoAllowance = proto.CryptoGetInfoResponse.ICryptoAllowance;
-import CryptoAllowance = proto.CryptoGetInfoResponse.CryptoAllowance;
-import ITokenAllowance = proto.CryptoGetInfoResponse.ITokenAllowance;
-import TokenAllowance = proto.CryptoGetInfoResponse.TokenAllowance;
+import ICryptoAllowance = proto.ICryptoAllowance;
+import CryptoAllowance = proto.CryptoAllowance;
+import ITokenAllowance = proto.ITokenAllowance;
+import TokenAllowance = proto.TokenAllowance;
+import INftAllowance = proto.INftAllowance;
+import NftAllowance = proto.NftAllowance;
 import ICryptoGetLiveHashQuery = proto.ICryptoGetLiveHashQuery;
 import CryptoGetLiveHashQuery = proto.CryptoGetLiveHashQuery;
 import ICryptoGetLiveHashResponse = proto.ICryptoGetLiveHashResponse;
@@ -531,10 +529,6 @@ export {
     CryptoUpdateTransactionBody,
     ICryptoApproveAllowanceTransactionBody,
     CryptoApproveAllowanceTransactionBody,
-    ICryptoApproval,
-    CryptoApproval,
-    ITokenApproval,
-    TokenApproval,
     CryptoAdjustAllowanceTransactionBody,
     ICryptoAdjustAllowanceTransactionBody,
     IFileAppendTransactionBody,
@@ -667,6 +661,8 @@ export {
     CryptoAllowance,
     ITokenAllowance,
     TokenAllowance,
+    INftAllowance,
+    NftAllowance,
     ICryptoGetLiveHashQuery,
     CryptoGetLiveHashQuery,
     ICryptoGetLiveHashResponse,

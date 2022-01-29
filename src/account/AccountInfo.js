@@ -11,6 +11,7 @@ import PublicKey from "../PublicKey.js";
 import LedgerId from "../LedgerId.js";
 import HbarAllowance from "./HbarAllowance.js";
 import TokenAllowance from "./TokenAllowance.js";
+import TokenNftAllowance from "./TokenNftAllowance.js";
 
 /**
  * Current information about an account, including the balance.
@@ -40,6 +41,7 @@ export default class AccountInfo {
      * @param {LedgerId | null} props.ledgerId
      * @param {HbarAllowance[]} props.hbarAllowances
      * @param {TokenAllowance[]} props.tokenAllowances
+     * @param {TokenNftAllowance[]} props.nftAllowances
      */
     constructor(props) {
         /**
@@ -161,6 +163,8 @@ export default class AccountInfo {
 
         this.tokenAllowances = props.tokenAllowances;
 
+        this.nftAllowances = props.nftAllowances;
+
         Object.freeze(this);
     }
 
@@ -246,14 +250,18 @@ export default class AccountInfo {
                     ? LedgerId.fromBytes(info.ledgerId)
                     : null,
 
-            hbarAllowances: (info.allowances != null
-                ? info.allowances
+            hbarAllowances: (info.cryptoAllowances != null
+                ? info.cryptoAllowances
                 : []
             ).map((allowance) => HbarAllowance._fromProtobuf(allowance)),
             tokenAllowances: (info.tokenAllowances != null
                 ? info.tokenAllowances
                 : []
             ).map((allowance) => TokenAllowance._fromProtobuf(allowance)),
+            nftAllowances: (info.nftAllowances != null
+                ? info.nftAllowances
+                : []
+            ).map((allowance) => TokenNftAllowance._fromProtobuf(allowance)),
         });
     }
 

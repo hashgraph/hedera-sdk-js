@@ -4,7 +4,7 @@ import { expect } from "chai";
 import Long from "long";
 
 import {
-    AccountAllowanceAdjustTransaction,
+    AccountAllowanceApproveTransaction,
     AccountId,
     Hbar,
     NftId,
@@ -14,7 +14,7 @@ import {
     TransactionId,
 } from "../../src/exports.js";
 
-describe("AccountAllowanceAdjustTransaction", function () {
+describe("AccountAllowanceApproveTransaction", function () {
     it("should round trip from bytes and maintain order", function () {
         const tokenId1 = new TokenId(1);
         const tokenId2 = new TokenId(141);
@@ -26,7 +26,7 @@ describe("AccountAllowanceAdjustTransaction", function () {
         const hbarAmount = Hbar.fromTinybars(100);
         const tokenAmount = Long.fromNumber(101);
 
-        let transaction = new AccountAllowanceAdjustTransaction()
+        let transaction = new AccountAllowanceApproveTransaction()
             .setTransactionId(
                 TransactionId.withValidStart(spenderAccountId, timestamp1)
             )
