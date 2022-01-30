@@ -12,6 +12,7 @@ import AssessedCustomFee from "../token/AssessedCustomFee.js";
 import TokenAssocation from "../token/TokenAssociation.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
+import TokenTransfer from "../token/TokenTransfer.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
@@ -33,6 +34,7 @@ export default class TransactionRecord {
      * @param {Hbar} props.transactionFee
      * @param {Transfer[]} props.transfers
      * @param {TokenTransferMap} props.tokenTransfers
+     * @param {TokenTransfer[]} props.tokenTransfersList
      * @param {?ScheduleId} props.scheduleRef
      * @param {AssessedCustomFee[]} props.assessedCustomFees
      * @param {TokenNftTransferMap} props.nftTransfers
@@ -113,6 +115,13 @@ export default class TransactionRecord {
          * @readonly
          */
         this.tokenTransfers = props.tokenTransfers;
+
+        /**
+         * All the token transfers from this account
+         *
+         * @readonly
+         */
+        this.tokenTransfersList = props.tokenTransfersList;
 
         /**
          * Reference to the scheduled transaction ID that this transaction record represent
@@ -344,14 +353,20 @@ export default class TransactionRecord {
             transactionFee: Hbar.fromTinybars(
                 record.transactionFee != null ? record.transactionFee : 0
             ),
-            transfers: (record.transferList != null
-                ? record.transferList.accountAmounts != null
-                    ? record.transferList.accountAmounts
+            transfers: Transfer._fromProtobuf(
+                record.transferList != null
+                    ? record.transferList.accountAmounts != null
+                        ? record.transferList.accountAmounts
+                        : []
                     : []
-                : []
-            ).map((aa) => Transfer._fromProtobuf(aa)),
+            ),
             contractFunctionResult,
             tokenTransfers: TokenTransferMap._fromProtobuf(
+                record.tokenTransferLists != null
+                    ? record.tokenTransferLists
+                    : []
+            ),
+            tokenTransfersList: TokenTransfer._fromProtobuf(
                 record.tokenTransferLists != null
                     ? record.tokenTransferLists
                     : []

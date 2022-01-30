@@ -21,6 +21,7 @@ export default class Transfer {
      * @param {object} props
      * @param {AccountId | string} props.accountId
      * @param {number | string | Long | BigNumber | Hbar} props.amount
+     * @param {boolean} props.isApproved
      */
     constructor(props) {
         /**
@@ -35,31 +36,38 @@ export default class Transfer {
 
         /**
          * The amount of tinybars that the account sends(negative) or receives(positive).
-         *
-         * @readonly
          */
         this.amount =
             props.amount instanceof Hbar
                 ? props.amount
                 : new Hbar(props.amount);
 
-        Object.freeze(this);
+        this.isApproved = props.isApproved;
     }
 
     /**
      * @internal
-     * @param {proto.IAccountAmount} transfer
-     * @returns {Transfer}
+     * @param {proto.IAccountAmount[]} accountAmounts
+     * @returns {Transfer[]}
      */
-    static _fromProtobuf(transfer) {
-        return new Transfer({
-            accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (transfer.accountID)
-            ),
-            amount: Hbar.fromTinybars(
-                transfer.amount != null ? transfer.amount : 0
-            ),
-        });
+    static _fromProtobuf(accountAmounts) {
+        const transfers = [];
+
+        for (const transfer of accountAmounts) {
+            transfers.push(
+                new Transfer({
+                    accountId: AccountId._fromProtobuf(
+                        /** @type {proto.IAccountID} */ (transfer.accountID)
+                    ),
+                    amount: Hbar.fromTinybars(
+                        transfer.amount != null ? transfer.amount : 0
+                    ),
+                    isApproved: /** @type {boolean} */ (transfer.isApproval),
+                })
+            );
+        }
+
+        return transfers;
     }
 
     /**
@@ -70,6 +78,7 @@ export default class Transfer {
         return {
             accountID: this.accountId._toProtobuf(),
             amount: this.amount.toTinybars(),
+            isApproval: this.isApproved,
         };
     }
 }

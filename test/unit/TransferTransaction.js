@@ -10,7 +10,6 @@ import TransactionId from "../../src/transaction/TransactionId.js";
 import Timestamp from "../../src/Timestamp.js";
 import NftId from "../../src/token/NftId.js";
 import Long from "long";
-import * as util from "../../src/util.js";
 
 describe("TransferTransaction", function () {
     const tokenId1 = new TokenId(1, 1, 1);
@@ -53,6 +52,7 @@ describe("TransferTransaction", function () {
             serial: serial,
             sender: sender,
             recipient: recipient,
+            isApproved: false,
         };
 
         transferTransaction.addNftTransfer(nftId, sender, recipient);
@@ -78,6 +78,7 @@ describe("TransferTransaction", function () {
             serial: serial,
             sender: sender,
             recipient: recipient,
+            isApproved: false,
         };
 
         transferTransaction.addNftTransfer(tokenId, serial, sender, recipient);
@@ -88,27 +89,6 @@ describe("TransferTransaction", function () {
         expect(transferTransaction.nftTransfers.keys().next().value).to.eql(
             tokenId
         );
-    });
-
-    it("should throw error when undefined in addNftTransfer", function () {
-        let transferTransaction = new TransferTransaction();
-
-        let tokenId = new TokenId(1, 2, 3);
-        let serial = Long.fromString("1234567890");
-
-        let sender = AccountId.fromString("1.1.1");
-        let recipient = undefined;
-
-        try {
-            transferTransaction.addNftTransfer(
-                tokenId,
-                serial,
-                sender,
-                recipient
-            );
-        } catch (error) {
-            expect(error.message).to.eql(util.REQUIRE_NON_NULL_ERROR);
-        }
     });
 
     it("should parse string NftId", function () {
@@ -124,6 +104,7 @@ describe("TransferTransaction", function () {
             serial: serial,
             sender: sender,
             recipient: recipient,
+            isApproved: false,
         };
 
         transferTransaction.addNftTransfer(tokenId, sender, recipient);
@@ -149,6 +130,7 @@ describe("TransferTransaction", function () {
             serial: serial,
             sender: sender,
             recipient: recipient,
+            isApproved: false,
         };
 
         transferTransaction.addNftTransfer(tokenId, serial, sender, recipient);
@@ -179,7 +161,7 @@ describe("TransferTransaction", function () {
         const serialNum1 = Long.fromNumber(111);
 
         const transaction = new TransferTransaction()
-            // Insert in reverse order
+            // Insert in reverse order to confirm they get reordered
             .addNftTransfer(tokenId4, serialNum1, accountId2, accountId4)
             .addNftTransfer(tokenId4, serialNum1, accountId1, accountId3)
             .addNftTransfer(tokenId3, serialNum1, accountId1, accountId2)
@@ -189,6 +171,9 @@ describe("TransferTransaction", function () {
             .addTokenTransferWithDecimals(tokenId1, accountId1, -4, 11)
             .addHbarTransfer(accountId2, -1)
             .addHbarTransfer(accountId1, 1)
+            .setHbarTransferApproval(accountId1, true)
+            .setTokenTransferApproval(tokenId1, accountId1, true)
+            .setNftTransferApproval(new NftId(tokenId4, serialNum1), true)
             .setTransactionId(new TransactionId(accountId3, timestamp1))
             .setNodeAccountIds([accountId4])
             .freeze();
@@ -208,6 +193,7 @@ describe("TransferTransaction", function () {
                     alias: null,
                 },
                 amount: Long.fromNumber(100000000),
+                isApproval: true,
             },
             {
                 accountID: {
@@ -217,10 +203,11 @@ describe("TransferTransaction", function () {
                     alias: null,
                 },
                 amount: Long.fromNumber(-100000000),
+                isApproval: false,
             },
         ]);
 
-        expect(data.tokenTransfers[2]).to.deep.equal(
+        expect(data.tokenTransfers).to.deep.equal(
             [
                 {
                     token: {
@@ -238,6 +225,7 @@ describe("TransferTransaction", function () {
                                 alias: null,
                             },
                             amount: Long.fromNumber(-4),
+                            isApproval: true,
                         },
                         {
                             accountID: {
@@ -247,6 +235,7 @@ describe("TransferTransaction", function () {
                                 alias: null,
                             },
                             amount: Long.fromNumber(-3),
+                            isApproval: false,
                         },
                     ],
                     nftTransfers: [],
@@ -267,6 +256,7 @@ describe("TransferTransaction", function () {
                                 alias: null,
                             },
                             amount: Long.fromNumber(2),
+                            isApproval: false,
                         },
                         {
                             accountID: {
@@ -276,6 +266,7 @@ describe("TransferTransaction", function () {
                                 alias: null,
                             },
                             amount: Long.fromNumber(-1),
+                            isApproval: false,
                         },
                     ],
                     nftTransfers: [],
@@ -303,6 +294,7 @@ describe("TransferTransaction", function () {
                                 alias: null,
                             },
                             serialNumber: serialNum1,
+                            isApproval: false,
                         },
                     ],
                 },
@@ -329,25 +321,11 @@ describe("TransferTransaction", function () {
                                 alias: null,
                             },
                             serialNumber: serialNum1,
-                        },
-                        {
-                            senderAccountID: {
-                                shardNum: Long.fromNumber(2),
-                                realmNum: Long.fromNumber(2),
-                                accountNum: Long.fromNumber(2),
-                                alias: null,
-                            },
-                            receiverAccountID: {
-                                shardNum: Long.fromNumber(4),
-                                realmNum: Long.fromNumber(4),
-                                accountNum: Long.fromNumber(4),
-                                alias: null,
-                            },
-                            serialNumber: serialNum1,
+                            isApproval: true,
                         },
                     ],
                 },
-            ][2]
+            ]
         );
     });
 });
