@@ -17,7 +17,8 @@ describe("TokenUnpauseTransaction", function () {
             )
             .setNodeAccountIds([new AccountId(4)])
             .setTokenId("0.0.5")
-            .setTransactionMemo("random memo");
+            .setTransactionMemo("random memo")
+            .freeze();
 
         const protobuf = transaction._makeTransactionBody();
 

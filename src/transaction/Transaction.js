@@ -728,8 +728,8 @@ export default class Transaction extends Executable {
         this._operator = client != null ? client._operator : null;
         this._maxTransactionFee =
             this._maxTransactionFee == null
-                ? client != null
-                    ? client.maxTransactionFee
+                ? client != null && client.defaultMaxTransactionFee != null
+                    ? client.defaultMaxTransactionFee
                     : this._defaultMaxTransactionFee
                 : this._maxTransactionFee;
         this._regenerateTransactionId =
