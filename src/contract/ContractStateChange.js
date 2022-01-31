@@ -19,8 +19,7 @@ export default class ContractStateChange{
      * @param {proto.IContractStateChange} change
      * @returns {ContractStateChange}
      */
-    static _fromProtobuf(change) {
-
+    _fromProtobuf(change) {
         return new ContractStateChange({
             contractId: ContractId._fromProtobuf(
                 /** @type {proto.IContractID} */ (change.contractID)
@@ -35,12 +34,13 @@ export default class ContractStateChange{
      * @internal
      * @returns {proto.IContractStateChange}
      */
-    static _toProtobuf() {
+    _toProtobuf() {
         return {
-            contractID: this.contractId._toProtobuf(),
+            contractID: this.contractId ? this.contractId._toProtobuf() : null,
             storageChanges: this.storageChanges
         };
     }
 
 }
+
 
