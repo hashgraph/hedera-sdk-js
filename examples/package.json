@@ -11,7 +11,7 @@
     },
     "dependencies": {
         "@hashgraph/sdk": "link:..",
-        "dotenv": "^10.0.0"
+        "dotenv": "^14.3.2"
     },
     "devDependencies": {
         "@babel/cli": "^7.16.0",
@@ -32,7 +32,7 @@
         "babel-plugin-module-rewrite": "^0.2.0",
         "chai": "^4.3.4",
         "chromedriver": "^96.0.0",
-        "dotenv": "^10.0.0",
+        "dotenv": "^14.3.2",
         "dpdm": "^3.8.0",
         "eslint": "^7.32.0",
         "eslint-plugin-chai-expect": "^3.0.0",
