@@ -65,9 +65,12 @@ export default class TokenTransfer {
             const tokenId = TokenId._fromProtobuf(
                 /** @type {proto.ITokenID} */ (tokenTransfer.token)
             );
-            const expectedDecimals = tokenTransfer.expectedDecimals != null
-                ? /** @type {number | null } */ (tokenTransfer.expectedDecimals.value)
-                : null;
+            const expectedDecimals =
+                tokenTransfer.expectedDecimals != null
+                    ? /** @type {number | null } */ (
+                          tokenTransfer.expectedDecimals.value
+                      )
+                    : null;
 
             for (const transfer of tokenTransfer.transfers != null
                 ? tokenTransfer.transfers
