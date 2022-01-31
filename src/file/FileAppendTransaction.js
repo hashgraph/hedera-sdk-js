@@ -68,7 +68,7 @@ export default class FileAppendTransaction extends Transaction {
          */
         this._maxChunkSize = CHUNK_SIZE;
 
-        this.setMaxTransactionFee(new Hbar(5));
+        this._defaultMaxTransactionFee = new Hbar(5);
 
         if (props.fileId != null) {
             this.setFileId(props.fileId);

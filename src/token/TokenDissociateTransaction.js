@@ -46,7 +46,7 @@ export default class TokenDissociateTransaction extends Transaction {
          */
         this._accountId = null;
 
-        this.setMaxTransactionFee(new Hbar(5));
+        this._defaultMaxTransactionFee = new Hbar(5);
 
         if (props.tokenIds != null) {
             this.setTokenIds(props.tokenIds);

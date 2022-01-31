@@ -1,11 +1,15 @@
-import AccountCreateTransaction from "../../src/account/AccountCreateTransaction.js";
-import TransactionId from "../../src/transaction/TransactionId.js";
-import Transaction from "../../src/transaction/Transaction.js";
-import AccountId from "../../src/account/AccountId.js";
-import Hbar from "../../src/Hbar.js";
-import Timestamp from "../../src/Timestamp.js";
+import {
+    AccountCreateTransaction,
+    AccountId,
+    FileCreateTransaction,
+    Hbar,
+    PrivateKey,
+    Timestamp,
+    Transaction,
+    TransactionId,
+} from "../../src/exports.js";
 import * as hex from "../../src/encoding/hex.js";
-import { PrivateKey } from "../../src/exports.js";
+import Client from "../../src/client/NodeClient.js";
 
 describe("Transaction", function () {
     it("toBytes", async function () {
@@ -99,5 +103,22 @@ describe("Transaction", function () {
                 expect(publicKey.verifyTransaction(transaction)).to.be.true;
             }
         }
+    });
+
+    it("sets max transaction fee", async function () {
+        const nodeAccountId = new AccountId(3);
+        const client = Client.forTestnet().setMaxTransactionFee(
+            Hbar.fromTinybars(1)
+        );
+
+        const transaction = new FileCreateTransaction()
+            .setNodeAccountIds([nodeAccountId])
+            .setTransactionId(TransactionId.generate(nodeAccountId))
+            .setContents("Hello world")
+            .freezeWith(client);
+
+        expect(transaction.maxTransactionFee.toTinybars().toInt()).to.be.equal(
+            1
+        );
     });
 });

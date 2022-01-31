@@ -99,7 +99,7 @@ export default class TransferTransaction extends Transaction {
          */
         this._nftTransfers = [];
 
-        this.setMaxTransactionFee(new Hbar(1));
+        this._defaultMaxTransactionFee = new Hbar(1);
 
         for (const transfer of props.tokenTransfers != null
             ? props.tokenTransfers
