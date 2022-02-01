@@ -296,7 +296,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
 
         if (this._message != null && this._message.length > this._chunkSize) {
             throw new Error(
-                `cannot scheduled \`TopicMessageSubmitTransaction\` with message over ${this._chunkSize} bytes`
+                `cannot schedule \`TopicMessageSubmitTransaction\` with message over ${this._chunkSize} bytes`
             );
         }
 

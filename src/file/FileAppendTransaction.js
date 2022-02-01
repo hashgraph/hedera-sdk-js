@@ -355,7 +355,7 @@ export default class FileAppendTransaction extends Transaction {
 
         if (this._contents != null && this._contents.length > this._chunkSize) {
             throw new Error(
-                `cannot scheduled \`FileAppendTransaction\` with message over ${this._chunkSize} bytes`
+                `cannot schedule \`FileAppendTransaction\` with message over ${this._chunkSize} bytes`
             );
         }
 
