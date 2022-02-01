@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
  * `ContractId.fromEvmAddress()`
- * `ContractId.evmAddres`
+ * `ContractFunctionResult.stateChanges`
+ * `ContractFunctionResult.evmAddress`
+ * `ContractStateChange`
+ * `StorageChange`
+ * `[FileAppend|TopicMessageSubmit]Transaction.[set|get]ChunkSize()`, and changed default chunk size for `FileAppendTransaction` to 2048.
+ * `AccountAllowance[Adjust|Approve]Transaction`
+ * `TransactionRecord.tokenTransfersList`
 
 ## v2.8.0-beta.2
 
