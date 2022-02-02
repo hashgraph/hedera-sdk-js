@@ -35,6 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `[FileAppend|TopicMessageSubmit]Transaction.[set|get]ChunkSize()`, and changed default chunk size for `FileAppendTransaction` to 2048.
  * `AccountAllowance[Adjust|Approve]Transaction`
  * `TransactionRecord.tokenTransfersList`
+ * `AccountAllowance[Adjust|Approve]Transaction`
+ * `AccountInfo.[hbar|token|tokenNft]Allowances`
+ * `[Hbar|Token|TokenNft]Allowance`
+ * `[Hbar|Token|TokenNft]Allowance`
+ * `TransferTransaction.set[Hbar|Token|TokenNft]TransferApproval()`
 
 ## v2.8.0
 
