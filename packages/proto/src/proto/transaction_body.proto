@@ -121,14 +121,14 @@ message TransactionBody {
     ContractCallTransactionBody contractCall = 7;
 
     /**
-     * Creates a contract instance
-     */
-    ContractCreateTransactionBody contractCreateInstance = 8;
+    * Creates a contract instance
+    */
+    ContractWrappedCallTransactionBody contractWrappedCall = 50;
 
     /**
      * Creates a contract instance
      */
-    ContractWrappedCallTransactionBody contractWrappedCallInstance = 48;
+    ContractCreateTransactionBody contractCreateInstance = 8;
 
     /**
      * Updates a contract

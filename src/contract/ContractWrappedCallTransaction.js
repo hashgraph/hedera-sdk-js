@@ -140,7 +140,7 @@ export default class ContractWrappedCallTransaction extends Transaction {
     ) {
         const body = bodies[0];
         const create = /** @type {proto.IContractWrappedCallTransactionBody} */ (
-            body.contractWrappedCallInstance
+            body.contractWrappedCall
         );
 
         return Transaction._fromProtobufTransactions(
@@ -360,7 +360,7 @@ export default class ContractWrappedCallTransaction extends Transaction {
      * @returns {NonNullable<proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "contractWrappedCallInstance";
+        return "contractWrappedCall";
     }
 
     /**
@@ -392,7 +392,7 @@ export default class ContractWrappedCallTransaction extends Transaction {
 }
 
 TRANSACTION_REGISTRY.set(
-    "contractWrappedCallInstance",
+    "contractWrappedCall",
     // eslint-disable-next-line @typescript-eslint/unbound-method
     ContractWrappedCallTransaction._fromProtobuf
 );

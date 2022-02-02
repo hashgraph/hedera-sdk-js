@@ -66,7 +66,7 @@ message RealmID {
 }
 
 /**
- * The ID for an a cryptocurrency account 
+ * The ID for an a cryptocurrency account
  */
 message AccountID {
     /**
@@ -109,7 +109,7 @@ message AccountID {
 }
 
 /**
- * The ID for a file 
+ * The ID for a file
  */
 message FileID {
     /**
@@ -129,7 +129,7 @@ message FileID {
 }
 
 /**
- * The ID for a smart contract instance 
+ * The ID for a smart contract instance
  */
 message ContractID {
     /**
@@ -182,13 +182,13 @@ message TransactionID {
     bool scheduled = 3;
 
     /**
-     * The identifier for an internal transaction that was spawned as part 
-     * of handling a user transaction. (These internal transactions share the 
+     * The identifier for an internal transaction that was spawned as part
+     * of handling a user transaction. (These internal transactions share the
      * transactionValidStart and accountID of the user transaction, so a
      * nonce is necessary to give them a unique TransactionID.)
-     * 
-     * An example is when a "parent" ContractCreate or ContractCall transaction 
-     * calls one or more HTS precompiled contracts; each of the "child" 
+     *
+     * An example is when a "parent" ContractCreate or ContractCall transaction
+     * calls one or more HTS precompiled contracts; each of the "child"
      * transactions spawned for a precompile has a id with a different nonce.
      */
     int32 nonce = 4;
@@ -371,19 +371,19 @@ enum TokenType {
 }
 
 /**
- * Allows a set of resource prices to be scoped to a certain type of a HAPI operation. 
- * 
+ * Allows a set of resource prices to be scoped to a certain type of a HAPI operation.
+ *
  * For example, the resource prices for a TokenMint operation are different between minting fungible
  * and non-fungible tokens. This enum allows us to "mark" a set of prices as applying to one or the
  * other.
- * 
+ *
  * Similarly, the resource prices for a basic TokenCreate without a custom fee schedule yield a
  * total price of $1. The resource prices for a TokenCreate with a custom fee schedule are different
  * and yield a total base price of $2.
  */
 enum SubType {
     /**
-     * The resource prices have no special scope 
+     * The resource prices have no special scope
      */
     DEFAULT = 0;
 
@@ -492,15 +492,15 @@ enum TokenPauseStatus {
  * A Key can be a public key from either the Ed25519 or ECDSA(secp256k1) signature schemes, where
  * in the ECDSA(secp256k1) case we require the 33-byte compressed form of the public key. We call
  * these public keys <b>primitive keys</b>.
- * 
- * If an account has primitive key associated to it, then the corresponding private key must sign 
- * any transaction to transfer cryptocurrency out of it. 
  *
- * A Key can also be the ID of a smart contract instance, which is then authorized to perform any 
- * precompiled contract action that requires this key to sign. 
+ * If an account has primitive key associated to it, then the corresponding private key must sign
+ * any transaction to transfer cryptocurrency out of it.
  *
- * Note that when a Key is a smart contract ID, it <i>doesn't</i> mean the contract with that ID 
- * will actually create a cryptographic signature. It only means that when the contract calls a 
+ * A Key can also be the ID of a smart contract instance, which is then authorized to perform any
+ * precompiled contract action that requires this key to sign.
+ *
+ * Note that when a Key is a smart contract ID, it <i>doesn't</i> mean the contract with that ID
+ * will actually create a cryptographic signature. It only means that when the contract calls a
  * precompiled contract, the resulting "child transaction" will be authorized to perform any action
  * controlled by the Key.
  *
@@ -564,15 +564,15 @@ message Key {
          */
         bytes ECDSA_secp256k1 = 7;
 
-        /**  
+        /**
          * A smart contract that, if the recipient of the active message frame, should be treated
-         * as having signed. (Note this does not mean the <i>code being executed in the frame</i> 
-         * will belong to the given contract, since it could be running another contract's code via 
+         * as having signed. (Note this does not mean the <i>code being executed in the frame</i>
+         * will belong to the given contract, since it could be running another contract's code via
          * <tt>delegatecall</tt>. So setting this key is a more permissive version of setting the
          * contractID key, which also requires the code in the active message frame belong to the
          * the contract with the given id.)
          */
-        ContractID delegatable_contract_id = 8; 
+        ContractID delegatable_contract_id = 8;
     }
 }
 
@@ -608,7 +608,7 @@ message KeyList {
 }
 
 /**
- * This message is <b>DEPRECATED</b> and <b>UNUSABLE</b> with network nodes. It is retained 
+ * This message is <b>DEPRECATED</b> and <b>UNUSABLE</b> with network nodes. It is retained
  * here only for historical reasons.
  *
  * Please use the SignaturePair and SignatureMap messages.
@@ -651,7 +651,7 @@ message Signature {
 }
 
 /**
- * This message is <b>DEPRECATED</b> and <b>UNUSABLE</b> with network nodes. It is retained 
+ * This message is <b>DEPRECATED</b> and <b>UNUSABLE</b> with network nodes. It is retained
  * here only for historical reasons.
  *
  * Please use the SignaturePair and SignatureMap messages.
@@ -667,7 +667,7 @@ message ThresholdSignature {
 }
 
 /**
- * This message is <b>DEPRECATED</b> and <b>UNUSABLE</b> with network nodes. It is retained 
+ * This message is <b>DEPRECATED</b> and <b>UNUSABLE</b> with network nodes. It is retained
  * here only for historical reasons.
  *
  * Please use the SignaturePair and SignatureMap messages.
@@ -684,15 +684,15 @@ message SignatureList {
 /**
  * The client may use any number of bytes from zero to the whole length of the public key for
  * pubKeyPrefix. If zero bytes are used, then it must be that only one primitive key is required
- * to sign the linked transaction; it will surely resolve to <tt>INVALID_SIGNATURE</tt> otherwise. 
- * 
- * <b>IMPORTANT:</b> In the special case that a signature is being provided for a key used to 
- * authorize a precompiled contract, the <tt>pubKeyPrefix</tt> must contain the <b>entire public 
- * key</b>! That is, if the key is a Ed25519 key, the <tt>pubKeyPrefix</tt> should be 32 bytes 
- * long. If the key is a ECDSA(secp256k1) key, the <tt>pubKeyPrefix</tt> should be 33 bytes long, 
- * since we require the compressed form of the public key. 
- * 
- * Only Ed25519 and ECDSA(secp256k1) keys and hence signatures are currently supported. 
+ * to sign the linked transaction; it will surely resolve to <tt>INVALID_SIGNATURE</tt> otherwise.
+ *
+ * <b>IMPORTANT:</b> In the special case that a signature is being provided for a key used to
+ * authorize a precompiled contract, the <tt>pubKeyPrefix</tt> must contain the <b>entire public
+ * key</b>! That is, if the key is a Ed25519 key, the <tt>pubKeyPrefix</tt> should be 32 bytes
+ * long. If the key is a ECDSA(secp256k1) key, the <tt>pubKeyPrefix</tt> should be 33 bytes long,
+ * since we require the compressed form of the public key.
+ *
+ * Only Ed25519 and ECDSA(secp256k1) keys and hence signatures are currently supported.
  */
 message SignaturePair {
     /**
@@ -1075,6 +1075,16 @@ enum HederaFunctionality {
      * Unpause the Token
      */
     TokenUnpause = 80;
+
+    /**
+     * Smart Contract Call of a Wrapped External Format
+     */
+    ContractWrappedCall = 83;
+
+    /**
+     * Smart Contract Create Contract of a Wrapped External Format
+     */
+    ContractWrappedCreate = 84;
 }
 
 /**
@@ -1242,7 +1252,7 @@ message ServiceEndpoint {
 /**
  * The data about a node, including its service endpoints and the Hedera account to be paid for
  * services provided by the node (that is, queries answered and transactions submitted.)
- * 
+ *
  * If the <tt>serviceEndpoint</tt> list is not set, or empty, then the endpoint given by the
  * (deprecated) <tt>ipAddress</tt> and <tt>portno</tt> fields should be used.
  *
@@ -1268,9 +1278,9 @@ message NodeAddress {
     bytes memo = 3 [deprecated=true];
 
     /**
-     * The node's X509 RSA public key used to sign stream files (e.g., record stream 
-     * files). Precisely, this field is a string of hexadecimal characters which, 
-     * translated to binary, are the public key's DER encoding.  
+     * The node's X509 RSA public key used to sign stream files (e.g., record stream
+     * files). Precisely, this field is a string of hexadecimal characters which,
+     * translated to binary, are the public key's DER encoding.
      */
     string RSA_PubKey = 4;
 
@@ -1285,9 +1295,9 @@ message NodeAddress {
     AccountID nodeAccountId = 6;
 
     /**
-     * # Hash of the node's TLS certificate. Precisely, this field is a string of 
-     * hexadecimal characters which, translated to binary, are the SHA-384 hash of 
-     * the UTF-8 NFKD encoding of the node's TLS cert in PEM format. Its value can be 
+     * # Hash of the node's TLS certificate. Precisely, this field is a string of
+     * hexadecimal characters which, translated to binary, are the SHA-384 hash of
+     * the UTF-8 NFKD encoding of the node's TLS cert in PEM format. Its value can be
      * used to verify the node's certificate it presents during TLS negotiations.
      */
     bytes nodeCertHash = 7;
