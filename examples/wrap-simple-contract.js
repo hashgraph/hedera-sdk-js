@@ -2,12 +2,12 @@ import {
     Client,
     PrivateKey,
     ContractWrappedCallTransaction,
-    WrappedTransactionType.EthereumFrontier,
     FileCreateTransaction,
     ContractDeleteTransaction,
     ContractCallQuery,
     Hbar,
-    AccountId, ContractId,
+    AccountId,
+    ContractId, WrappedTransactionType,
 } from "@hashgraph/sdk";
 
 import * as dotenv from "dotenv";
@@ -16,6 +16,8 @@ dotenv.config();
 
 // Import the compiled contract
 import helloWorld from "./hello_world.json";
+import {toUint8Array} from "js-base64";
+import EthereumFeeMarket from "WrappedTransactionType.EthereumFeeMarket";
 
 async function main() {
     let client;
@@ -51,9 +53,9 @@ async function main() {
     console.log(`contract bytecode file: ${fileId.toString()}`);
 
     // Create the contract
-    const contractWeappedCallTransactionResponse = await new ContractWrappedCallTransaction()
+    const contractWrappedCallTransactionResponse = await new ContractWrappedCallTransaction()
         // Set gas to create the contract
-        .setWrappedTransactionType(EthereumFrontier)
+        .setWrappedTransactionType(EthereumFeeMarket)
         // The contract bytecode must be set to the file ID containing the contract bytecode
         .setForeignTransactionBytes(toUint8Array(contractByteCode))
 
@@ -69,7 +71,7 @@ async function main() {
         .execute(client);
 
     // Fetch the receipt for the transaction that created the contract
-    const contractReceipt = await contractWeappedCallTransactionResponse.getReceipt(
+    const contractReceipt = await contractWrappedCallTransactionResponse.getReceipt(
         client
     );
 
