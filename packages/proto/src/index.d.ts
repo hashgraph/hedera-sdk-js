@@ -122,6 +122,8 @@ import IFreezeTransactionBody = proto.IFreezeTransactionBody;
 import FreezeTransactionBody = proto.FreezeTransactionBody;
 import IContractCallTransactionBody = proto.IContractCallTransactionBody;
 import ContractCallTransactionBody = proto.ContractCallTransactionBody;
+import IContractWrappedCallTransactionBody = proto.IContractWrappedCallTransactionBody;
+import ContractWrappedCallTransactionBody = proto.ContractWrappedCallTransactionBody;
 import IContractCreateTransactionBody = proto.IContractCreateTransactionBody;
 import ContractCreateTransactionBody = proto.ContractCreateTransactionBody;
 import IContractUpdateTransactionBody = proto.IContractUpdateTransactionBody;
@@ -382,6 +384,7 @@ import ITokenUnpauseTransactionBody = proto.ITokenUnpauseTransactionBody;
 import TokenUnpauseTransactionBody = proto.TokenUnpauseTransactionBody;
 import TokenPauseStatus = proto.TokenPauseStatus;
 import FreezeType = proto.FreezeType;
+import WrappedTransactionType = proto.WrappedTransactionType;
 
 export {
     ITokenUnitBalance,
@@ -503,6 +506,8 @@ export {
     ContractCreateTransactionBody,
     IContractUpdateTransactionBody,
     ContractUpdateTransactionBody,
+    IContractWrappedCallTransactionBody,
+    ContractWrappedCallTransactionBody,
     ILiveHash,
     LiveHash,
     ICryptoAddLiveHashTransactionBody,
@@ -759,4 +764,5 @@ export {
     TokenUnpauseTransactionBody,
     TokenPauseStatus,
     FreezeType,
+    WrappedTransactionType,
 };

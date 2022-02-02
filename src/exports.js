@@ -22,6 +22,8 @@ export { default as AccountUpdateTransaction } from "./account/AccountUpdateTran
 export { default as ContractByteCodeQuery } from "./contract/ContractByteCodeQuery.js";
 export { default as ContractCallQuery } from "./contract/ContractCallQuery.js";
 export { default as ContractCreateTransaction } from "./contract/ContractCreateTransaction.js";
+export { default as ContractWrappedCallTransaction } from "./contract/ContractWrappedCallTransaction.js";
+export { default as WrappedTransactionType } from "./contract/WrappedTransactionType.js";
 export { default as ContractDeleteTransaction } from "./contract/ContractDeleteTransaction.js";
 export { default as ContractExecuteTransaction } from "./contract/ContractExecuteTransaction.js";
 export { default as ContractFunctionParameters } from "./contract/ContractFunctionParameters.js";

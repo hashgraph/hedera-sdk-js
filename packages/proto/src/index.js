@@ -65,6 +65,7 @@ export const SystemDeleteTransactionBody = proto.SystemDeleteTransactionBody;
 export const SystemUndeleteTransactionBody = proto.SystemUndeleteTransactionBody;
 export const FreezeTransactionBody = proto.FreezeTransactionBody;
 export const ContractCallTransactionBody = proto.ContractCallTransactionBody;
+export const ContractWrappedCallTransactionBody = proto.ContractWrappedCallTransactionBody;
 export const ContractCreateTransactionBody = proto.ContractCreateTransactionBody;
 export const ContractUpdateTransactionBody = proto.ContractUpdateTransactionBody;
 export const LiveHash = proto.LiveHash;

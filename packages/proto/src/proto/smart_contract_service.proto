@@ -48,6 +48,11 @@ service SmartContractService {
     rpc contractCallMethod (Transaction) returns (TransactionResponse);
 
     /**
+     * Calls a contract via a wrapped transaction
+     */
+    rpc contractWrappedCallMethod (Transaction) returns (TransactionResponse);
+
+    /**
      * Retrieves the contract information
      */
     rpc getContractInfo (Query) returns (Response);
