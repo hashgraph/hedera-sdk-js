@@ -16,6 +16,7 @@ export default class HbarAllowance {
      * @internal
      * @param {object} props
      * @param {AccountId} props.spenderAccountId
+     * @param {AccountId} props.ownerAccountId
      * @param {Hbar} props.amount
      */
     constructor(props) {
@@ -25,6 +26,14 @@ export default class HbarAllowance {
          * @readonly
          */
         this.spenderAccountId = props.spenderAccountId;
+
+        /**
+         * The account ID of the hbar allowance owner.
+         *
+         * @readonly
+         */
+        this.spenderAccountId = props.ownerAccountId;
+
 
         /**
          * The current balance of the spender's allowance in tinybars.
@@ -46,6 +55,9 @@ export default class HbarAllowance {
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (approval.spender)
             ),
+            ownerAccountId: AccountId._fromProtobuf(
+                /**@type {proto.IAccountID}*/ (approval.owner)
+            ),
             amount: Hbar.fromTinybars(
                 approval.amount != null ? approval.amount : 0
             ),
@@ -59,6 +71,7 @@ export default class HbarAllowance {
     _toProtobuf() {
         return {
             spender: this.spenderAccountId._toProtobuf(),
+            owner: this.ownerAccountId._toProtobuf(),
             amount: this.amount.toTinybars(),
         };
     }
