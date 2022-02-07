@@ -39,9 +39,7 @@ function deserialize(s) {
 }
 
 function sign(tx, privateKeyHex) {
-    return PrivateKey.fromBytes(
-        hex.decode(privateKeyHex)
-    ).signTransaction(tx);
+    return PrivateKey.fromBytes(hex.decode(privateKeyHex)).signTransaction(tx);
 }
 
 function buildTx(params) {

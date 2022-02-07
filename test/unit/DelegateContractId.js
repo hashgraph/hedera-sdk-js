@@ -1,10 +1,6 @@
 import { expect } from "chai";
 
-import {
-    ContractId,
-    DelegateContractId,
-    Key,
-} from "../../src/exports.js";
+import { ContractId, DelegateContractId, Key } from "../../src/exports.js";
 import Long from "long";
 
 describe("DelegateContractId", function () {

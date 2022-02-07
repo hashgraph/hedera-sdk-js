@@ -1,10 +1,6 @@
 import { expect } from "chai";
 
-import {
-    TokenNftAllowance,
-    TokenId, 
-    AccountId,
-} from "../../src/exports.js";
+import { TokenNftAllowance, TokenId, AccountId } from "../../src/exports.js";
 import Long from "long";
 
 describe("TokenNftAllowance", function () {

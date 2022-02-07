@@ -1,13 +1,10 @@
-import {
-    ContractFunctionParameters,
-} from "../../src/exports.js";
+import { ContractFunctionParameters } from "../../src/exports.js";
 
 import BigNumber from "bignumber.js";
 
 describe("ContractFunctionParameters", function () {
     it("should convert number to BigNumber in addUint256()", function () {
-        const contractFunctionParameters =
-            new ContractFunctionParameters();
+        const contractFunctionParameters = new ContractFunctionParameters();
 
         const num = 111;
         const cfp = contractFunctionParameters.addUint256(num);
@@ -19,8 +16,7 @@ describe("ContractFunctionParameters", function () {
     });
 
     it("should convert number to BigNumber in addUint256Array()", function () {
-        const contractFunctionParameters =
-            new ContractFunctionParameters();
+        const contractFunctionParameters = new ContractFunctionParameters();
 
         const numArray = [111, 1112];
 
