@@ -1179,4 +1179,31 @@ enum ResponseCodeEnum {
    * No allowances have been specified in the approval/adjust transaction.
    */
   EMPTY_ALLOWANCES = 295;
+
+  /**
+   * Spender is repeated more than once in Crypto or Token or NFT allowance lists in a single
+   * CryptoApproveAllowance or CryptoAdjustAllowance transaction.
+   */
+  SPENDER_ACCOUNT_REPEATED_IN_ALLOWANCES = 296;
+
+  /**
+   * Serial numbers are repeated in nft allowance for a single spender account
+   */
+  REPEATED_SERIAL_NUMS_IN_NFT_ALLOWANCES = 297;
+
+  /**
+   * Fungible common token used in NFT allowances
+   */
+  FUNGIBLE_TOKEN_IN_NFT_ALLOWANCES = 298;
+
+  /**
+   * Non fungible token used in fungible token allowances
+   */
+  NFT_IN_FUNGIBLE_TOKEN_ALLOWANCES = 299;
+
+  /**
+   * An approval/adjustment transaction was submitted where the payer and owner account are
+   * not the same. Currently only the owner is permitted to perform these operations.
+   */
+  PAYER_AND_OWNER_NOT_EQUAL = 300;
 }
