@@ -132,6 +132,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId,
                 amount: amount instanceof Hbar ? amount : new Hbar(amount),
+                ownerAccountId: null,
             })
         );
 
@@ -169,6 +170,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                     typeof amount === "number"
                         ? Long.fromNumber(amount)
                         : amount,
+                ownerAccountId: null,
             })
         );
 
@@ -210,6 +212,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                     tokenId: id.tokenId,
                     spenderAccountId: spender,
                     serialNumbers: [id.serial],
+                    ownerAccountId: null,
                 })
             );
         }
@@ -237,6 +240,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId,
                 serialNumbers: null,
+                ownerAccountId: null,
             })
         );
 
