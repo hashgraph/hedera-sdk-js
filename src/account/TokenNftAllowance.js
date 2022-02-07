@@ -65,9 +65,12 @@ export default class TokenNftAllowance {
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (allowance.spender)
             ),
-            ownerAccountId: allowance.owner != null ? AccountId._fromProtobuf(
-                /**@type {proto.IAccountID}*/ (allowance.owner)
-            ) : null,
+            ownerAccountId:
+                allowance.owner != null
+                    ? AccountId._fromProtobuf(
+                          /**@type {proto.IAccountID}*/ (allowance.owner)
+                      )
+                    : null,
             serialNumbers:
                 allowance.approvedForAll != null &&
                 allowance.approvedForAll.value
