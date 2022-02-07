@@ -54,9 +54,12 @@ export default class HbarAllowance {
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (approval.spender)
             ),
-            ownerAccountId: approval.owner != null ? AccountId._fromProtobuf(
-                /**@type {proto.IAccountID}*/ (approval.owner)
-            ) : null,
+            ownerAccountId:
+                approval.owner != null
+                    ? AccountId._fromProtobuf(
+                          /**@type {proto.IAccountID}*/ (approval.owner)
+                      )
+                    : null,
             amount: Hbar.fromTinybars(
                 approval.amount != null ? approval.amount : 0
             ),

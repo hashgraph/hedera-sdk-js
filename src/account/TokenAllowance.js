@@ -65,9 +65,12 @@ export default class TokenAllowance {
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (allowance.spender)
             ),
-            ownerAccountId: allowance.owner != null ? AccountId._fromProtobuf(
-                /**@type {proto.IAccountID}*/ (allowance.owner)
-            ) : null,
+            ownerAccountId:
+                allowance.owner != null
+                    ? AccountId._fromProtobuf(
+                          /**@type {proto.IAccountID}*/ (allowance.owner)
+                      )
+                    : null,
             amount:
                 allowance.amount != null
                     ? Long.fromValue(/** @type {Long} */ (allowance.amount))
