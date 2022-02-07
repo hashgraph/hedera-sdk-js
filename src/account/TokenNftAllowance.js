@@ -15,7 +15,7 @@ export default class TokenNftAllowance {
      * @param {object} props
      * @param {TokenId} props.tokenId
      * @param {AccountId} props.spenderAccountId
-     * @param {AccountId} props.ownerAccountId
+     * @param {AccountId | null} props.ownerAccountId
      * @param {Long[] | null} props.serialNumbers
      */
     constructor(props) {
@@ -33,14 +33,12 @@ export default class TokenNftAllowance {
          */
         this.spenderAccountId = props.spenderAccountId;
 
-
         /**
          * The account ID of the owner of the hbar allowance.
          *
          * @readonly
          */
-        this.spenderAccountId = props.ownerAccountId;
-
+        this.ownerAccountId = props.ownerAccountId;
 
         /**
          * The current balance of the spender's token allowance.
@@ -67,9 +65,9 @@ export default class TokenNftAllowance {
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {proto.IAccountID} */ (allowance.spender)
             ),
-            ownerAccountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (allowance.owner)
-            ),
+            ownerAccountId: allowance.owner != null ? AccountId._fromProtobuf(
+                /**@type {proto.IAccountID}*/ (allowance.owner)
+            ) : null,
             serialNumbers:
                 allowance.approvedForAll != null &&
                 allowance.approvedForAll.value
@@ -90,7 +88,10 @@ export default class TokenNftAllowance {
         return {
             tokenId: this.tokenId._toProtobuf(),
             spender: this.spenderAccountId._toProtobuf(),
-            owner: this.ownerAccountId._toProtobuf(),
+            owner:
+                this.ownerAccountId != null
+                    ? this.ownerAccountId._toProtobuf()
+                    : null,
             approvedForAll: this.serialNumbers == null ? { value: true } : null,
             serialNumbers: this.serialNumbers,
         };

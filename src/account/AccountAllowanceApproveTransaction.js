@@ -132,6 +132,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId,
                 amount: amount instanceof Hbar ? amount : new Hbar(amount),
+                ownerAccountId: null,
             })
         );
 
@@ -169,6 +170,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                     typeof amount === "number"
                         ? Long.fromNumber(amount)
                         : amount,
+                ownerAccountId: null,
             })
         );
 
@@ -213,6 +215,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                             ? AccountId.fromString(spenderAccountId)
                             : spenderAccountId,
                     serialNumbers: [id.serial],
+                    ownerAccountId: null,
                 })
             );
         }
@@ -239,6 +242,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId,
                 serialNumbers: null,
+                ownerAccountId: null,
             })
         );
 
