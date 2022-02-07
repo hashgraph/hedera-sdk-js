@@ -49,24 +49,28 @@ describe("AccountAllowanceAdjustTransaction", function () {
         expect(data).to.deep.equal({
             cryptoAllowances: [
                 {
+                    owner: null,
                     amount: hbarAmount.toTinybars(),
                     spender: spenderAccountId1._toProtobuf(),
                 },
             ],
             nftAllowances: [
                 {
+                    owner: null,
                     serialNumbers: [serialNumber1, serialNumber2],
                     spender: spenderAccountId1._toProtobuf(),
                     tokenId: tokenId2._toProtobuf(),
                     approvedForAll: null,
                 },
                 {
+                    owner: null,
                     serialNumbers: [serialNumber2],
                     spender: spenderAccountId2._toProtobuf(),
                     tokenId: tokenId2._toProtobuf(),
                     approvedForAll: null,
                 },
                 {
+                    owner: null,
                     serialNumbers: null,
                     spender: spenderAccountId1._toProtobuf(),
                     tokenId: tokenId1._toProtobuf(),
@@ -75,6 +79,7 @@ describe("AccountAllowanceAdjustTransaction", function () {
             ],
             tokenAllowances: [
                 {
+                    owner: null,
                     amount: tokenAmount,
                     spender: spenderAccountId1._toProtobuf(),
                     tokenId: tokenId1._toProtobuf(),
