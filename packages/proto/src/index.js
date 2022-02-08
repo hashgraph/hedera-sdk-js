@@ -206,3 +206,5 @@ export const TokenPauseTransactionBody = proto.TokenPauseTransactionBody;
 export const TokenUnpauseTransactionBody = proto.TokenUnpauseTransactionBody;
 export const TokenPauseStatus = proto.TokenPauseStatus;
 export const FreezeType = proto.FreezeType;
+export const AddressBookQuery = proto.AddressBookQuery;
+export const MirrorNetworkService = proto.MirrorNetworkService;
