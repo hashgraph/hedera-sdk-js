@@ -5,6 +5,8 @@ import Transaction, {
 import ContractId from "./ContractId.js";
 import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import Long from "long";
+import RLP from 'rlp';
+import {Buffer} from "buffer";
 
 /**
  * @namespace proto
@@ -226,6 +228,172 @@ export default class ContractExecuteTransaction extends Transaction {
                 : new ContractFunctionParameters()._build(name);
 
         return this;
+    }
+
+    /**
+     * @param {string} foreignTx
+     */
+    populateFromForeignTransaction(foreignTx) {
+        const uintArrayTxn = new TextEncoder().encode(foreignTx);
+        switch (uintArrayTxn[0]) {
+            case 1:
+                return this.populateFromEIP2930Tx(foreignTx);
+            case 2:
+                return this.populateFromEIP1559Tx(foreignTx);
+            default:
+                return this.populateFromEthTx(foreignTx);
+        }
+    }
+
+    /**
+     * @param {string} foreignTx
+     */
+    populateFromEIP2930Tx(foreignTx) {
+        // throw new RuntimeException("NIY");
+    }
+
+    /**
+     * @param {string} foreignTx
+     */
+    populateFromEthTx(foreignTx) {
+        // throw new RuntimeException("NIY");
+    }
+
+    /**
+     *
+     * @param {Buffer} buffer
+     * @param start
+     * @param end
+     * @returns {bigint}
+     */
+    bufferToBigInt(buffer, start = 0, end = buffer.length) {
+        const bufferAsHexString = buffer.slice(start, end).toString("hex");
+        return BigInt(`0x${bufferAsHexString}`);
+    }
+
+    /**
+     * @param {string} foreignTx
+     */
+    populateFromEIP1559Tx(foreignTx) {
+        if (foreignTx.startsWith("0x")) {
+            foreignTx = foreignTx.substring(2);
+        }
+
+        var data = Buffer.from(foreignTx, 'hex');
+
+        var decoded =
+            RLP.decode(Uint8Array.from(data));
+
+        console.log(decoded);
+
+        var chainId = ArrayBuffer.isView(decoded[0])
+            ? Buffer.from(decoded[0]).readIntBE(0,decoded[0].length)
+            : null;
+        console.log('chainId: ' + chainId);
+        var nonce = ArrayBuffer.isView(decoded[1])
+            ? Buffer.from(decoded[1]).readIntBE(0,decoded[1].length)
+            : null;
+        console.log('nonce: ' + nonce);
+        var maxPriorityFee = ArrayBuffer.isView(decoded[2])
+            ? this.bufferToBigInt(Buffer.from(decoded[2]))
+            : null;
+        console.log('maxPriorityFee: ' + maxPriorityFee);
+        var maxGasFee = ArrayBuffer.isView(decoded[3])
+            ? this.bufferToBigInt(Buffer.from(decoded[3]))
+            : null;
+        console.log('maxGasFee: ' + maxGasFee);
+        var gasLimit = ArrayBuffer.isView(decoded[4])
+            ? Buffer.from(decoded[4]).readIntBE(0,decoded[4].length)
+            : null;
+        console.log('gasLimit: ' + gasLimit);
+        var receiver = ArrayBuffer.isView(decoded[5])
+            ? Buffer.from(decoded[5]).toString('hex')
+            : null;
+        console.log('receiver: ' + receiver);
+        var amount = ArrayBuffer.isView(decoded[6])
+            ? this.bufferToBigInt(Buffer.from(decoded[6]))
+            : null;
+        console.log('amount: ' + amount);
+        var callData = ArrayBuffer.isView(decoded[7])
+            ? Buffer.from(decoded[7]).toString('hex')
+            : null;
+        console.log('callData: ' + callData);
+        var callDataStart = callData != null
+            ? foreignTx.indexOf(callData) / 2
+    : null;
+        console.log('calldataStart: ' + callDataStart);
+        var callDataLength = callData != null
+            ? callData.length / 2
+            : null;
+        console.log('callDataLength: ' + callDataLength);
+        // fixme handle access list?
+        var accessList = decoded[8];
+        console.log('acl: ' + accessList);
+        var recId = ArrayBuffer.isView(decoded[9])
+            ? this.bufferToBigInt(Buffer.from(decoded[9]))
+            : null;
+        console.log('recId: ' + recId);
+        var r = ArrayBuffer.isView(decoded[10])
+            ? Buffer.from(decoded[10]).toString('hex')
+            : null;
+        console.log('r: ' + r);
+        var s = ArrayBuffer.isView(decoded[11])
+            ? Buffer.from(decoded[11]).toString('hex')
+            : null;
+        console.log('s: ' + s);
+
+        return "";
+
+        // var rlpIter = RLPDecoder.RLP_STRICT.sequenceIterator(foreignTx);
+        //
+        // var type = rlpIter.next().asByte();
+        // var transactionType = ForeignTransactionType.ETHEREUM_EIP_1559;
+        // // check type == 2
+        // var txIter = rlpIter.next().asRLPList().iterator();
+        //
+        // var chainId = txIter.next().asInt();
+        // var nonce = txIter.next().asInt();
+        // var maxPriorityFee = txIter.next().asBigInt();
+        // var maxGasFee = txIter.next().asBigInt();
+        // var gasLimit = txIter.next().asLong();
+        // var receiver = txIter.next().data();
+        // var amount = txIter.next().asBigInt();
+        // var callData = txIter.next().data();
+        // var callDataStart = com.google.common.primitives.Bytes.indexOf(foreignTx, callData);
+        // var callDataLength = callData.length;
+        // // fixme handle access list?
+        // Object accessList = txIter.next();
+        // var recId = txIter.next().asInt();
+        // var r = txIter.next().data();
+        // var s = txIter.next().data();
+        // // verify we're done?
+        //
+        // var senderPubKey =
+        //     recoverEcdsaSecp256k1Key(
+        //         chainId,
+        //         nonce,
+        //         maxPriorityFee,
+        //         maxGasFee,
+        //         gas,
+        //         receiver,
+        //         amount,
+        //         callData,
+        //         accessList,
+        //         recId,
+        //         r,
+        //         s);
+        // //TODO how to map to aliased accounts?
+        //
+        // setForeignTransactionData(new ForeignTransactionData(ForeignTransactionType.ETHEREUM_EIP_1559,
+        //     foreignTx, callDataStart, callDataLength, nonce));
+        //
+        // senderId = AccountId.fromProtobuf(AccountID.newBuilder().setAlias(ByteString.copyFrom(senderPubKey)).build());
+        // contractId = ContractId.fromSolidityAddress(Hex.toHexString(receiver));
+        // gas = gasLimit;
+        // payableAmount = new Hbar(amount.longValueExact(), HbarUnit.TINYBAR);
+        // functionParameters = null;
+        //
+        // return this;
     }
 
     /**

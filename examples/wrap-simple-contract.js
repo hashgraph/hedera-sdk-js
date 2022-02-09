@@ -2,7 +2,6 @@ import {
     Client,
     PrivateKey,
     ContractWrappedCallTransaction,
-    FileCreateTransaction,
     ContractDeleteTransaction,
     ContractCallQuery,
     Hbar,
@@ -15,15 +14,17 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 // Import the compiled contract
-import helloWorld from "./hello_world.json";
+import helloWorld from "./hello_world.json" assert {type: "json"};
 import {toUint8Array} from "js-base64";
-import EthereumFeeMarket from "WrappedTransactionType.EthereumFeeMarket";
 
-async function main() {
+/**
+ * @param {JSON} [jsonTransaction]
+ */
+async function main(jsonTransaction) {
     let client;
 
     try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+        client = Client.forTestnet().setOperator(
             AccountId.fromString(process.env.OPERATOR_ID),
             PrivateKey.fromString(process.env.OPERATOR_KEY)
         );
@@ -36,33 +37,15 @@ async function main() {
     // The contract bytecode is located on the `object` field
     const contractByteCode = helloWorld.object;
 
-    // Create a file on Hedera which contains the contact bytecode.
-    // Note: The contract bytecode **must** be hex encoded, it should not
-    // be the actual data the hex represents
-    const fileTransactionResponse = await new FileCreateTransaction()
-        .setKeys([client.operatorPublicKey])
-        .setContents(contractByteCode)
-        .execute(client);
-
-    // Fetch the receipt for transaction that created the file
-    const fileReceipt = await fileTransactionResponse.getReceipt(client);
-
-    // The file ID is located on the transaction receipt
-    const fileId = fileReceipt.fileId;
-
-    console.log(`contract bytecode file: ${fileId.toString()}`);
-
     // Create the contract
     const contractWrappedCallTransactionResponse = await new ContractWrappedCallTransaction()
         // Set gas to create the contract
-        .setWrappedTransactionType(EthereumFeeMarket)
+        .setWrappedTransactionType(WrappedTransactionType.EthereumFrontier)
         // The contract bytecode must be set to the file ID containing the contract bytecode
         .setForeignTransactionBytes(toUint8Array(contractByteCode))
-
         .setNonce(1)
         .setFunctionParameterStart(100)
         .setFunctionParameterLength(123)
-
         .setContractId(new ContractId(123,234,345))
         // Set the admin key on the contract in case the contract should be deleted or
         // updated in the future
