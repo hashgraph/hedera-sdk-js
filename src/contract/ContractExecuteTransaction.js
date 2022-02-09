@@ -289,58 +289,57 @@ export default class ContractExecuteTransaction extends Transaction {
         var chainId = ArrayBuffer.isView(decoded[0])
             ? Buffer.from(decoded[0]).readIntBE(0,decoded[0].length)
             : null;
-        console.log('chainId: ' + chainId);
+
         var nonce = ArrayBuffer.isView(decoded[1])
             ? Buffer.from(decoded[1]).readIntBE(0,decoded[1].length)
             : null;
-        console.log('nonce: ' + nonce);
+
         var maxPriorityFee = ArrayBuffer.isView(decoded[2])
             ? this.bufferToBigInt(Buffer.from(decoded[2]))
             : null;
-        console.log('maxPriorityFee: ' + maxPriorityFee);
+
         var maxGasFee = ArrayBuffer.isView(decoded[3])
             ? this.bufferToBigInt(Buffer.from(decoded[3]))
             : null;
-        console.log('maxGasFee: ' + maxGasFee);
+
         var gasLimit = ArrayBuffer.isView(decoded[4])
             ? Buffer.from(decoded[4]).readIntBE(0,decoded[4].length)
             : null;
-        console.log('gasLimit: ' + gasLimit);
+
         var receiver = ArrayBuffer.isView(decoded[5])
             ? Buffer.from(decoded[5]).toString('hex')
             : null;
-        console.log('receiver: ' + receiver);
+
         var amount = ArrayBuffer.isView(decoded[6])
             ? this.bufferToBigInt(Buffer.from(decoded[6]))
             : null;
-        console.log('amount: ' + amount);
+
         var callData = ArrayBuffer.isView(decoded[7])
-            ? Buffer.from(decoded[7]).toString('hex')
+            ? Buffer.from(decoded[7])
             : null;
-        console.log('callData: ' + callData);
+
         var callDataStart = callData != null
-            ? foreignTx.indexOf(callData) / 2
-    : null;
-        console.log('calldataStart: ' + callDataStart);
-        var callDataLength = callData != null
-            ? callData.length / 2
+            ? Buffer.from(foreignTx, 'hex').indexOf(callData)
             : null;
-        console.log('callDataLength: ' + callDataLength);
+
+        var callDataLength = callData != null
+            ? callData.length
+            : null;
+
         // fixme handle access list?
         var accessList = decoded[8];
-        console.log('acl: ' + accessList);
+
         var recId = ArrayBuffer.isView(decoded[9])
             ? this.bufferToBigInt(Buffer.from(decoded[9]))
             : null;
-        console.log('recId: ' + recId);
+
         var r = ArrayBuffer.isView(decoded[10])
             ? Buffer.from(decoded[10]).toString('hex')
             : null;
-        console.log('r: ' + r);
+
         var s = ArrayBuffer.isView(decoded[11])
             ? Buffer.from(decoded[11]).toString('hex')
             : null;
-        console.log('s: ' + s);
 
         return "";
 
