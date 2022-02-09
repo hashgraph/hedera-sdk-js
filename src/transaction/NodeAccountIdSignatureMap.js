@@ -1,5 +1,5 @@
-import PublicKey from "../PublicKey.js";
 import ObjectMap from "../ObjectMap.js";
+import PublicKey from "../PublicKey.js";
 
 /**
  * @augments {ObjectMap<PublicKey, Uint8Array>}

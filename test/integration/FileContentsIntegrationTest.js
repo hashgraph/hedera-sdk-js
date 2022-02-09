@@ -4,8 +4,8 @@ import {
     FileDeleteTransaction,
     Hbar,
     Status,
-} from "../src/exports.js";
-import * as utf8 from "../src/encoding/utf8.js";
+} from "../../src/exports.js";
+import * as utf8 from "../../src/encoding/utf8.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("FileContents", function () {

@@ -124,7 +124,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             );
         }
 
-        this._transactionIds = [transactionId];
+        this._transactionIds.setList([transactionId]);
 
         return this;
     }
@@ -217,9 +217,12 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         const initialTransactionId = this.transactionId._toProtobuf();
         let nextTransactionId = this.transactionId;
 
-        super._transactions = [];
-        super._transactionIds = [];
-        super._signedTransactions = [];
+        // Hack around the locked list. Should refactor a bit to remove such code
+        this._transactionIds.locked = false;
+
+        this._transactions.clear();
+        this._transactionIds.clear();
+        this._signedTransactions.clear();
         super._nextTransactionIndex = 0;
 
         for (let chunk = 0; chunk < chunks; chunk++) {
@@ -229,9 +232,9 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                 number: chunk + 1,
             };
 
-            this._transactionIds.push(nextTransactionId);
+            this._transactionIds.list.push(nextTransactionId);
 
-            for (const nodeAccountId of this._nodeIds) {
+            for (const nodeAccountId of this._nodeAccountIds.list) {
                 this._signedTransactions.push(
                     this._makeSignedTransaction(nodeAccountId)
                 );

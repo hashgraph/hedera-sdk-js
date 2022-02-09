@@ -1,5 +1,5 @@
-import * as hex from "../src/encoding/hex.js";
-import LedgerId from "../src/LedgerId.js";
+import * as hex from "../../src/encoding/hex.js";
+import LedgerId from "../../src/LedgerId.js";
 
 const MAINNET = "mainnet";
 const HEX_MAINNET = hex.encode(new Uint8Array([0]));

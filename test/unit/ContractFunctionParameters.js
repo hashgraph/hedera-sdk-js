@@ -1,5 +1,5 @@
 import BigNumber from "bignumber.js";
-import * as ContractFunctionParameters from "../src/contract/ContractFunctionParameters.js";
+import * as ContractFunctionParameters from "../../src/contract/ContractFunctionParameters.js";
 
 describe("ContractFunctionParameters", function () {
     it("should convert number to BigNumber in addUint256()", function () {

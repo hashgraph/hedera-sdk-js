@@ -2,7 +2,7 @@ import {
     TopicCreateTransaction,
     TopicDeleteTransaction,
     TopicInfoQuery,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TopicCreate", function () {

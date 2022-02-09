@@ -41,7 +41,7 @@ export default class TransactionId {
         this.scheduled = scheduled;
 
         this.nonce = null;
-        if (nonce != null) {
+        if (nonce != null && nonce != 0) {
             this.setNonce(nonce);
         }
 

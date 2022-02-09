@@ -1,4 +1,4 @@
-import Client from "../../src/client/NodeClient.js";
+import Client from "../../../src/client/NodeClient.js";
 import BaseIntegrationTestEnv from "./BaseIntegrationTestEnv.js";
 
 export { Client };

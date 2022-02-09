@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import Long from "long";
-import * as util from "../src/util.js";
+import * as util from "../../src/util.js";
 
 describe("util.js", function () {
     it("soft check: isNonNull should return false if null and true if non-null", function () {

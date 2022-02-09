@@ -11,7 +11,7 @@ import {
     TokenType,
     TokenUpdateTransaction,
     TransferTransaction,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 describe("TokenUpdate", function () {

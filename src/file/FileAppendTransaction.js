@@ -7,6 +7,7 @@ import * as utf8 from "../encoding/utf8.js";
 import FileId from "./FileId.js";
 import TransactionId from "../transaction/TransactionId.js";
 import Timestamp from "../Timestamp.js";
+import List from "../transaction/List.js";
 
 /**
  * @namespace proto
@@ -77,8 +78,8 @@ export default class FileAppendTransaction extends Transaction {
         /** @type {number} */
         this._startIndex = 0;
 
-        /** @type {TransactionId[]} */
-        this._transactionIds = [];
+        /** @type {List<TransactionId>} */
+        this._transactionIds = new List();
     }
 
     /**
@@ -165,7 +166,7 @@ export default class FileAppendTransaction extends Transaction {
             );
         }
 
-        this._transactionIds = [transactionId];
+        this._transactionIds.setList([transactionId]);
 
         return this;
     }
@@ -280,17 +281,20 @@ export default class FileAppendTransaction extends Transaction {
 
         let nextTransactionId = this.transactionId;
 
-        super._transactions = [];
-        super._transactionIds = [];
-        super._signedTransactions = [];
+        // Hack around the locked list. Should refactor a bit to remove such code
+        this._transactionIds.locked = false;
+
+        this._transactions.clear();
+        this._transactionIds.clear();
+        this._signedTransactions.clear();
         super._nextTransactionIndex = 0;
 
         for (let chunk = 0; chunk < chunks; chunk++) {
             this._startIndex = chunk * CHUNK_SIZE;
 
-            this._transactionIds.push(nextTransactionId);
+            this._transactionIds.list.push(nextTransactionId);
 
-            for (const nodeAccountId of this._nodeIds) {
+            for (const nodeAccountId of this._nodeAccountIds.list) {
                 this._signedTransactions.push(
                     this._makeSignedTransaction(nodeAccountId)
                 );

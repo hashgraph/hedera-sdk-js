@@ -1,6 +1,6 @@
-import DelegateContractId from "../src/contract/DelegateContractId.js";
-import ContractId from "../src/contract/ContractId.js";
-import Key from "../src/Key.js";
+import DelegateContractId from "../../src/contract/DelegateContractId.js";
+import ContractId from "../../src/contract/ContractId.js";
+import Key from "../../src/Key.js";
 import Long from "long";
 
 describe("DelegateContractId", function () {

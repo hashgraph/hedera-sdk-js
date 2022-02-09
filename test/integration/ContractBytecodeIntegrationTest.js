@@ -8,7 +8,7 @@ import {
     Hbar,
     Status,
     TransactionReceiptQuery,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 let smartContractBytecode =

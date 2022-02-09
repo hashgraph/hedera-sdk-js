@@ -1,6 +1,6 @@
-import Mnemonic from "../src/Mnemonic.js";
-import BadMnemonicError from "../src/BadMnemonicError.js";
-import BadMnemonicReason from "../src/BadMnemonicReason.js";
+import Mnemonic from "../../src/Mnemonic.js";
+import BadMnemonicError from "../../src/BadMnemonicError.js";
+import BadMnemonicReason from "../../src/BadMnemonicReason.js";
 
 describe("Mnemonic", function () {
     it("should generate 24 words", async function () {

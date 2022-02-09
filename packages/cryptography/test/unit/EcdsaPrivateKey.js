@@ -1,6 +1,6 @@
-import EcdsaPrivateKey from "../src/EcdsaPrivateKey.js";
-import * as hex from "../src/encoding/hex.js";
-import * as utf8 from "../src/encoding/utf8.js";
+import EcdsaPrivateKey from "../../src/EcdsaPrivateKey.js";
+import * as hex from "../../src/encoding/hex.js";
+import * as utf8 from "../../src/encoding/utf8.js";
 
 const RAW_KEY =
     "8776c6b831a1b61ac10dac0304a2843de4716f54b1919bb91a2685d0fe3f3048";

@@ -1,11 +1,11 @@
-import AccountCreateTransaction from "../src/account/AccountCreateTransaction.js";
-import TransactionId from "../src/transaction/TransactionId.js";
-import Transaction from "../src/transaction/Transaction.js";
-import AccountId from "../src/account/AccountId.js";
-import Hbar from "../src/Hbar.js";
-import Timestamp from "../src/Timestamp.js";
-import * as hex from "../src/encoding/hex.js";
-import { PrivateKey } from "../src/exports.js";
+import AccountCreateTransaction from "../../src/account/AccountCreateTransaction.js";
+import TransactionId from "../../src/transaction/TransactionId.js";
+import Transaction from "../../src/transaction/Transaction.js";
+import AccountId from "../../src/account/AccountId.js";
+import Hbar from "../../src/Hbar.js";
+import Timestamp from "../../src/Timestamp.js";
+import * as hex from "../../src/encoding/hex.js";
+import { PrivateKey } from "../../src/exports.js";
 
 describe("Transaction", function () {
     it("toBytes", async function () {
@@ -71,5 +71,33 @@ describe("Transaction", function () {
                 .toTinybars()
                 .toString()
         ).to.be.equal(new Hbar(1).toTinybars().toString());
+    });
+
+    it("sign", async function () {
+        const key1 = PrivateKey.generateED25519();
+        const key2 = PrivateKey.generateECDSA();
+
+        const transaction = new AccountCreateTransaction()
+            .setNodeAccountIds([new AccountId(6)])
+            .setTransactionId(TransactionId.generate(new AccountId(7)))
+            .freeze();
+
+        await transaction.sign(key1);
+        await transaction.sign(key2);
+
+        expect(key1.publicKey.verifyTransaction(transaction)).to.be.true;
+        expect(key2.publicKey.verifyTransaction(transaction)).to.be.true;
+
+        const signatures = transaction.getSignatures();
+        expect(signatures.size).to.be.equal(1);
+
+        for (const [nodeAccountId, nodeSignatures] of signatures) {
+            expect(nodeAccountId.toString()).equals("0.0.6");
+
+            expect(nodeSignatures.size).to.be.equal(2);
+            for (const [publicKey] of nodeSignatures) {
+                expect(publicKey.verifyTransaction(transaction)).to.be.true;
+            }
+        }
     });
 });

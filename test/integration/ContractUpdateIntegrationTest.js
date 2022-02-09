@@ -8,7 +8,7 @@ import {
     FileDeleteTransaction,
     Hbar,
     Status,
-} from "../src/exports.js";
+} from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
 
 let smartContractBytecode =

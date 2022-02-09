@@ -1,5 +1,5 @@
 import { keccak256 } from "../../src/cryptography/keccak.js";
-import * as hex from "../src/encoding/hex.js";
+import * as hex from "../../src/encoding/hex.js";
 
 describe("keccak256", function () {
     it("should hash to the expected value", function () {
