@@ -7,6 +7,8 @@ import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import Long from "long";
 import RLP from 'rlp';
 import {Buffer} from "buffer";
+import {bufToBigint} from 'bigint-conversion';
+import {keccak256} from 'keccak256';
 
 /**
  * @namespace proto
@@ -260,18 +262,6 @@ export default class ContractExecuteTransaction extends Transaction {
     }
 
     /**
-     *
-     * @param {Buffer} buffer
-     * @param start
-     * @param end
-     * @returns {bigint}
-     */
-    bufferToBigInt(buffer, start = 0, end = buffer.length) {
-        const bufferAsHexString = buffer.slice(start, end).toString("hex");
-        return BigInt(`0x${bufferAsHexString}`);
-    }
-
-    /**
      * @param {string} foreignTx
      */
     populateFromEIP1559Tx(foreignTx) {
@@ -295,11 +285,11 @@ export default class ContractExecuteTransaction extends Transaction {
             : null;
 
         var maxPriorityFee = ArrayBuffer.isView(decoded[2])
-            ? this.bufferToBigInt(Buffer.from(decoded[2]))
+            ? bufToBigint(Buffer.from(decoded[2]))
             : null;
 
         var maxGasFee = ArrayBuffer.isView(decoded[3])
-            ? this.bufferToBigInt(Buffer.from(decoded[3]))
+            ? bufToBigint(Buffer.from(decoded[3]))
             : null;
 
         var gasLimit = ArrayBuffer.isView(decoded[4])
@@ -311,7 +301,7 @@ export default class ContractExecuteTransaction extends Transaction {
             : null;
 
         var amount = ArrayBuffer.isView(decoded[6])
-            ? this.bufferToBigInt(Buffer.from(decoded[6]))
+            ? bufToBigint(Buffer.from(decoded[6]))
             : null;
 
         var callData = ArrayBuffer.isView(decoded[7])
@@ -330,7 +320,7 @@ export default class ContractExecuteTransaction extends Transaction {
         var accessList = decoded[8];
 
         var recId = ArrayBuffer.isView(decoded[9])
-            ? this.bufferToBigInt(Buffer.from(decoded[9]))
+            ? bufToBigint(Buffer.from(decoded[9]))
             : null;
 
         var r = ArrayBuffer.isView(decoded[10])
@@ -341,46 +331,20 @@ export default class ContractExecuteTransaction extends Transaction {
             ? Buffer.from(decoded[11]).toString('hex')
             : null;
 
-        return "";
-
-        // var rlpIter = RLPDecoder.RLP_STRICT.sequenceIterator(foreignTx);
-        //
-        // var type = rlpIter.next().asByte();
-        // var transactionType = ForeignTransactionType.ETHEREUM_EIP_1559;
-        // // check type == 2
-        // var txIter = rlpIter.next().asRLPList().iterator();
-        //
-        // var chainId = txIter.next().asInt();
-        // var nonce = txIter.next().asInt();
-        // var maxPriorityFee = txIter.next().asBigInt();
-        // var maxGasFee = txIter.next().asBigInt();
-        // var gasLimit = txIter.next().asLong();
-        // var receiver = txIter.next().data();
-        // var amount = txIter.next().asBigInt();
-        // var callData = txIter.next().data();
-        // var callDataStart = com.google.common.primitives.Bytes.indexOf(foreignTx, callData);
-        // var callDataLength = callData.length;
-        // // fixme handle access list?
-        // Object accessList = txIter.next();
-        // var recId = txIter.next().asInt();
-        // var r = txIter.next().data();
-        // var s = txIter.next().data();
-        // // verify we're done?
-        //
-        // var senderPubKey =
-        //     recoverEcdsaSecp256k1Key(
-        //         chainId,
-        //         nonce,
-        //         maxPriorityFee,
-        //         maxGasFee,
-        //         gas,
-        //         receiver,
-        //         amount,
-        //         callData,
-        //         accessList,
-        //         recId,
-        //         r,
-        //         s);
+        var senderPubKey =
+            this.recoverEcdsaSecp256k1Key(
+                chainId,
+                nonce,
+                maxPriorityFee,
+                maxGasFee,
+                gasLimit,
+                receiver,
+                amount,
+                callData,
+                accessList,
+                recId,
+                r,
+                s);
         // //TODO how to map to aliased accounts?
         //
         // setForeignTransactionData(new ForeignTransactionData(ForeignTransactionType.ETHEREUM_EIP_1559,
@@ -393,6 +357,90 @@ export default class ContractExecuteTransaction extends Transaction {
         // functionParameters = null;
         //
         // return this;
+    }
+
+    /**
+     *
+     * @param {number} chainId
+     * @param {number} nonce
+     * @param {BigInt} maxPriorityFee
+     * @param {BigInt} maxGasFee
+     * @param {number} gasLimit
+     * @param {Uint8Array} receiver
+     * @param {BigInt} amount
+     * @param {Uint8Array} callData
+     * @param {Uint8Array} accessList
+     * @param {BigInt} recId
+     * @param {Uint8Array} r
+     * @param {Uint8Array} s
+     * @reture {Uint8Array}
+     */
+    recoverEcdsaSecp256k1Key(
+        chainId,
+        nonce,
+        maxPriorityFee,
+        maxGasFee,
+        gasLimit,
+        receiver,
+        amount,
+        callData,
+        accessList,
+        recId,
+        r,
+        s
+    ) {
+        const message =
+            RLP.encode(
+                [
+                    2,
+                    [
+                        chainId,
+                        nonce,
+                        maxPriorityFee.valueOf(),
+                        maxGasFee.valueOf(),
+                        gasLimit,
+                        receiver,
+                        amount.valueOf(),
+                        callData,
+                        []
+                    ]
+                ]
+           );
+
+        const dataHash = keccak256(message);
+
+        // byte[] signature = new byte[64];
+        // System.arraycopy(r, 0, signature, 0, r.length);
+        // System.arraycopy(s, 0, signature, 32, s.length);
+        //
+        // final secp256k1_ecdsa_recoverable_signature parsedSignature =
+        //     new secp256k1_ecdsa_recoverable_signature();
+        //
+        // if (secp256k1_ecdsa_recoverable_signature_parse_compact(
+        //         CONTEXT, parsedSignature, signature, recId)
+        //     == 0) {
+        //     throw new IllegalArgumentException("Could not parse signature");
+        // }
+        // final secp256k1_pubkey newPubKey = new secp256k1_pubkey();
+        // if (secp256k1_ecdsa_recover(CONTEXT, newPubKey, parsedSignature, dataHash) == 0) {
+        //     return new byte[0];
+        // }
+        //
+        // final ByteBuffer recoveredKey = ByteBuffer.allocate(33);
+        // final LongByReference keySize = new LongByReference(recoveredKey.limit());
+        // LibSecp256k1.secp256k1_ec_pubkey_serialize(
+        //     CONTEXT,
+        //     recoveredKey,
+        //     keySize,
+        //     newPubKey,
+        //     0x0102 /* SECP256K1_EC_COMPRESSED */);
+        //
+        // final ByteBuffer recoveredFullKey = ByteBuffer.allocate(65);
+        // final LongByReference fullKeySize = new LongByReference(recoveredFullKey.limit());
+        // LibSecp256k1.secp256k1_ec_pubkey_serialize(
+        //     CONTEXT, recoveredFullKey, fullKeySize, newPubKey, SECP256K1_EC_UNCOMPRESSED);
+        //
+        // return recoveredKey.array();
     }
 
     /**
