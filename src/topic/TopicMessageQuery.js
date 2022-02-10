@@ -156,7 +156,7 @@ export default class TopicMessageQuery {
          * @private
          * @type {number}
          */
-        this._maxBackoff = 8000;
+        this._maxBackoff = 3600000;
 
         /**
          * @private
@@ -307,7 +307,7 @@ export default class TopicMessageQuery {
     subscribe(client, errorHandler, listener) {
         this._handle = new SubscriptionHandle();
         this._listener = listener;
-
+        
         if (errorHandler != null) {
             this._errorHandler = errorHandler;
         }
@@ -407,7 +407,7 @@ export default class TopicMessageQuery {
                         this._retryHandler(error)
                     ) {
                         const delay = Math.min(
-                            250 * 2 ** this._attempt,
+                            client._mirrorNetwork.getNextMirrorNode()._minBackoff * 2 ** this._attempt,
                             this._maxBackoff
                         );
                         console.warn(

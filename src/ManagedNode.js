@@ -47,13 +47,13 @@ export default class ManagedNode {
             /** @type {(address: string, cert?: string) => ChannelT} */
             this._channelInitFunction = props.newNode.channelInitFunction;
 
-            this._currentBackoff = 250;
+            this._currentBackoff = 8000;
             this._lastUsed = Date.now();
             this._backoffUntil = Date.now();
             this._useCount = 0;
             this._attempts = 0;
-            this._minBackoff = 250;
-            this._maxBackoff = 8000;
+            this._minBackoff = 8000;
+            this._maxBackoff = 3600000;
         } else if (props.cloneNode != null) {
             /** @type {ManagedNodeAddress} */
             this._address = props.cloneNode.address;

@@ -53,7 +53,7 @@ export default class MangedNetwork {
         this._ledgerId = null;
 
         /** @type {number} */
-        this._minBackoff = 250;
+        this._minBackoff = 8000;
 
         /** @type {number} */
         this._maxNodeAttempts = -1;
