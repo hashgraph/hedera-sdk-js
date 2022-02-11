@@ -8,7 +8,7 @@ import Long from "long";
 import RLP from 'rlp';
 import {Buffer} from "buffer";
 import {bufToBigint} from 'bigint-conversion';
-import {keccak256} from 'keccak256';
+const secp256k1 = require('secp256k1');
 
 /**
  * @namespace proto
@@ -320,7 +320,7 @@ export default class ContractExecuteTransaction extends Transaction {
         var accessList = decoded[8];
 
         var recId = ArrayBuffer.isView(decoded[9])
-            ? bufToBigint(Buffer.from(decoded[9]))
+            ? Buffer.from(decoded[9]).readIntBE(0,decoded[9].length)
             : null;
 
         var r = ArrayBuffer.isView(decoded[10])
@@ -345,6 +345,8 @@ export default class ContractExecuteTransaction extends Transaction {
                 recId,
                 r,
                 s);
+
+        setFore
         // //TODO how to map to aliased accounts?
         //
         // setForeignTransactionData(new ForeignTransactionData(ForeignTransactionType.ETHEREUM_EIP_1559,
@@ -370,7 +372,7 @@ export default class ContractExecuteTransaction extends Transaction {
      * @param {BigInt} amount
      * @param {Uint8Array} callData
      * @param {Uint8Array} accessList
-     * @param {BigInt} recId
+     * @param {number} recId
      * @param {Uint8Array} r
      * @param {Uint8Array} s
      * @reture {Uint8Array}
@@ -407,40 +409,11 @@ export default class ContractExecuteTransaction extends Transaction {
                 ]
            );
 
-        const dataHash = keccak256(message);
+        const signature = Buffer.concat([r,s]);
 
-        // byte[] signature = new byte[64];
-        // System.arraycopy(r, 0, signature, 0, r.length);
-        // System.arraycopy(s, 0, signature, 32, s.length);
-        //
-        // final secp256k1_ecdsa_recoverable_signature parsedSignature =
-        //     new secp256k1_ecdsa_recoverable_signature();
-        //
-        // if (secp256k1_ecdsa_recoverable_signature_parse_compact(
-        //         CONTEXT, parsedSignature, signature, recId)
-        //     == 0) {
-        //     throw new IllegalArgumentException("Could not parse signature");
-        // }
-        // final secp256k1_pubkey newPubKey = new secp256k1_pubkey();
-        // if (secp256k1_ecdsa_recover(CONTEXT, newPubKey, parsedSignature, dataHash) == 0) {
-        //     return new byte[0];
-        // }
-        //
-        // final ByteBuffer recoveredKey = ByteBuffer.allocate(33);
-        // final LongByReference keySize = new LongByReference(recoveredKey.limit());
-        // LibSecp256k1.secp256k1_ec_pubkey_serialize(
-        //     CONTEXT,
-        //     recoveredKey,
-        //     keySize,
-        //     newPubKey,
-        //     0x0102 /* SECP256K1_EC_COMPRESSED */);
-        //
-        // final ByteBuffer recoveredFullKey = ByteBuffer.allocate(65);
-        // final LongByReference fullKeySize = new LongByReference(recoveredFullKey.limit());
-        // LibSecp256k1.secp256k1_ec_pubkey_serialize(
-        //     CONTEXT, recoveredFullKey, fullKeySize, newPubKey, SECP256K1_EC_UNCOMPRESSED);
-        //
-        // return recoveredKey.array();
+        const newPubKey = secp256k1.ecdsaRecover(signature, recId, message, true)
+
+        return newPubKey;
     }
 
     /**

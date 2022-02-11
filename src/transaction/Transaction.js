@@ -130,6 +130,12 @@ export default class Transaction extends Executable {
 
         /**
          * @private
+         * @type {ForeignTransactionData | null}
+         */
+        this._foreignTransactionData = null;
+
+        /**
+         * @private
          * @type {string}
          */
         this._transactionMemo = "";
