@@ -41,7 +41,14 @@ import "basic_types.proto";
  */
 message ContractCallTransactionBody {
     /**
-     * the contract instance to call, in the format used in transactions
+     * The account that is the "sender." If not present it is the accountId from the transactionId.
+     * Typically a different value than specified in the transactionId requires a valid signature 
+     * over either the hedera transaction or foreign transaction data.
+     */
+    AccountID senderID = 5;
+    
+    /**
+     * The contract to call
      */
     ContractID contractID = 1;
 

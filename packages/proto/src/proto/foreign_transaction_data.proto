@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package proto;
+
+/*-
+ * ‌
+ * Hedera Network Services Protobuf
+ * ​
+ * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
+ * ​
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ‍
+ */
+
+option java_package = "com.hederahashgraph.api.proto.java";
+option java_multiple_files = true;
+
+enum ForeignTransactionType {
+
+    /**
+     * The "original" transaction, aka "Type 0" (legacy designation) and 
+     * "Frontier" (that was the fork it was enabled at)
+     */
+    ETHEREUM = 0;
+
+    /**
+     * The first alternate transaction format, aka "Type 1" (based on byte 0 
+     * being 0x01), "Berlin" (the fork it was introduced at), or "Access 
+     * Lists" (as that was the feature it enabled).
+     */
+    ETHEREUM_EIP_2930 = 1;
+
+    /**
+     * The second alternate transaction format, aka "Type 1" (based on byte 0 
+     * being 0x01) "London" (the fork it was introduced at), and "Fee Market"
+     * (as that was the feature it enabled).
+     */
+    ETHEREUM_EIP_1559 = 2;
+}
+
+message ForeignTransactionData {
+    
+    /**
+     * The type of foreign transaction in this data. Type will not be sniffed
+     * from the transaction bytes, it must match this value.
+     */
+    ForeignTransactionType foreign_transaction_type = 1;
+    
+    /**
+     * The unredacted and complete transaction bytes.
+     */
+    bytes foreign_transaction_bytes = 2;
+    
+    /**
+     * If there is a "payload" such as function parameters or sharded data 
+     * where does it start in the foreign transaction bytes?
+     */
+    int32 payload_start = 3;
+
+    /**
+     * If there is a "payload" such as function parameters or sharded data 
+     * how many bytes is it?
+     */
+    int32 payload_length = 4;
+
+    /**
+     * The nonce or sequence number of the foreign transaction, if present. 
+     */
+    int64 nonce = 5;
+}

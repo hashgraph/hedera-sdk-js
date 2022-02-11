@@ -29,7 +29,7 @@ import "response.proto";
 import "transaction.proto";
 
 /**
- * Transactions and queries for the file service.
+ * Transactions and queries for the file service. 
  */
 service SmartContractService {
     /**
@@ -46,11 +46,6 @@ service SmartContractService {
      * Calls a contract
      */
     rpc contractCallMethod (Transaction) returns (TransactionResponse);
-
-    /**
-     * Calls a contract via a wrapped transaction
-     */
-    rpc contractWrappedCall (Transaction) returns (TransactionResponse);
 
     /**
      * Retrieves the contract information

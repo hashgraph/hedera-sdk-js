@@ -81,6 +81,7 @@
         "@grpc/grpc-js": "^1.5.1",
         "@hashgraph/cryptography": "^1.1.0-beta.5",
         "@hashgraph/proto": "^2.1.100",
+        "@types/secp256k1": "^4.0.3",
         "bigint-conversion": "^2.2.1",
         "bignumber.js": "^9.0.2",
         "crypto-js": "^4.1.1",
@@ -89,6 +90,7 @@
         "long": "^4.0.0",
         "protobufjs": "^6.11.2",
         "rlp": "^3.0.0",
+        "secp256k1": "^4.0.3",
         "utf8": "^3.0.0"
     },
     "devDependencies": {

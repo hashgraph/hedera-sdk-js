@@ -33,8 +33,8 @@ import "duration.proto";
  * the receipt, and can be retrieved by the Record or with a GetByKey query. The instance will run
  * the bytecode stored in a previously created file, referenced either by FileID or by the
  * transaction ID of the transaction that created the file
- * 
- * 
+ *
+ *
  * The constructor will be executed using the given amount of gas, and any unspent gas will be
  * refunded to the paying account. Constructor inputs come from the given constructorParameters.
  *  - The instance will exist for autoRenewPeriod seconds. When that is reached, it will renew
@@ -82,6 +82,13 @@ import "duration.proto";
  *    If there are no admin keys, then it cannot be changed after the smart contract is created.
  */
 message ContractCreateTransactionBody {
+    /**
+     * The account that is the "sender." If not present it is the accountId from the transactionId.
+     * Typically a different value than specified in the transactionId requires a valid signature
+     * over either the hedera transaction or foreign transaction data.
+     */
+    AccountID senderID = 14;
+
     /**
      * the file containing the smart contract byte code. A copy will be made and held by the
      * contract instance, and have the same expiration time as the instance. The file is referenced
