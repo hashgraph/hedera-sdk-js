@@ -396,6 +396,9 @@ import ITokenUnpauseTransactionBody = proto.ITokenUnpauseTransactionBody;
 import TokenUnpauseTransactionBody = proto.TokenUnpauseTransactionBody;
 import TokenPauseStatus = proto.TokenPauseStatus;
 import FreezeType = proto.FreezeType;
+import AddressBookQuery = proto.AddressBookQuery;
+import IAddressBookQuery = proto.IAddressBookQuery;
+import MirrorNetworkService = proto.MirrorNetworkService;
 
 export {
     ITokenUnitBalance,
@@ -787,4 +790,7 @@ export {
     TokenUnpauseTransactionBody,
     TokenPauseStatus,
     FreezeType,
+    AddressBookQuery,
+    IAddressBookQuery,
+    MirrorNetworkService,
 };
