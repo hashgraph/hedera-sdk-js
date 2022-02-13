@@ -341,6 +341,8 @@ export default class TopicMessageQuery {
             .getNextMirrorNode()
             .getChannel()
             .makeServerStreamRequest(
+                "ConsensusService",
+                "subscribeTopic",
                 request,
                 (data) => {
                     const message = proto.ConsensusTopicResponse.decode(data);

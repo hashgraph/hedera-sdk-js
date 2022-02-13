@@ -40,17 +40,25 @@ export default class NodeMirrorChannel extends MirrorChannel {
     /**
      * @override
      * @internal
+     * @param {string} serviceName
+     * @param {string} methodName
      * @param {Uint8Array} requestData
      * @param {(data: Uint8Array) => void} callback
      * @param {(error: MirrorError | Error) => void} error
      * @param {() => void} end
      * @returns {() => void}
      */
-    makeServerStreamRequest(requestData, callback, error, end) {
+    makeServerStreamRequest(
+        serviceName,
+        methodName,
+        requestData,
+        callback,
+        error,
+        end
+    ) {
         const stream = this._client
             .makeServerStreamRequest(
-                // `/proto.ConsensusService/SubscribeTopic`,
-                "/com.hedera.mirror.api.proto.ConsensusService/subscribeTopic",
+                `/com.hedera.mirror.api.proto.${serviceName}/${methodName}`,
                 (value) => value,
                 (value) => value,
                 Buffer.from(requestData)
