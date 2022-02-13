@@ -64,7 +64,7 @@
         "test": "run-s test:node test:browser",
         "test:node": "env HEDERA_SDK_TEST=\"\" run-s test:unit:node test:integration:node",
         "test:unit:node": "nyc mocha --inline-diffs -r @babel/register -r chai/register-expect.js \"test/unit/*.js\"",
-        "test:integration:node": "env HEDERA_SDK_TEST=\"\" nyc mocha -r @babel/register -r chai/register-expect \"test/integration/AccountCreateIntegrationTest.js\"",
+        "test:integration:node": "env HEDERA_SDK_TEST=\"\" nyc mocha -r @babel/register -r chai/register-expect.js \"test/integration/**.js\"",
         "test:browser": "run-s test:unit:browser test:integration:browser",
         "test:browser:chrome": "run-s test:unit:browser:chrome test:integration:browser:chrome",
         "test:browser:firefox": "run-s test:unit:browser:firefox test:integration:browser:firefox",
