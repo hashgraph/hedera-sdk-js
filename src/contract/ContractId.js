@@ -61,9 +61,10 @@ export default class ContractId extends Key {
             result.shard != null ? Long.fromString(result.shard) : Long.ZERO;
         const realm =
             result.realm != null ? Long.fromString(result.realm) : Long.ZERO;
-        const [num, evmAddress] = Number.isSafeInteger(result.numOrHex)
-            ? [Long.fromString(result.numOrHex), undefined]
-            : [Long.ZERO, hex.decode(result.numOrHex)];
+        const [num, evmAddress] =
+            result.numOrHex.length < 40
+                ? [Long.fromString(result.numOrHex), undefined]
+                : [Long.ZERO, hex.decode(result.numOrHex)];
 
         return new ContractId(shard, realm, num, evmAddress);
     }

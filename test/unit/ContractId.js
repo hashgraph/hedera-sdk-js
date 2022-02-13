@@ -8,6 +8,10 @@ import Long from "long";
 describe("ContractId", function () {
     const evmAddress = "0011223344556677889900112233445577889900";
 
+    it("fromString() with num", function () {
+        expect(ContractId.fromString(`1.2.3`).toString()).to.be.equal(`1.2.3`);
+    });
+
     it("fromString() with evmAddress", function () {
         expect(
             ContractId.fromString(`1.2.${evmAddress}`).toString()

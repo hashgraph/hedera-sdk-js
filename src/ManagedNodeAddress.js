@@ -62,7 +62,7 @@ export default class ManagedNodeAddress {
             case 50212:
                 port = 50211;
                 break;
-            case 433:
+            case 443:
                 port = 5600;
         }
 
@@ -77,7 +77,7 @@ export default class ManagedNodeAddress {
                 port = 50212;
                 break;
             case 5600:
-                port = 433;
+                port = 443;
         }
 
         return new ManagedNodeAddress({ host: this.address, port });
@@ -101,7 +101,7 @@ export default class ManagedNodeAddress {
      * @returns {boolean}
      */
     isTransportSecurity() {
-        return this._port == 50212 || this._port == 433;
+        return this._port == 50212 || this._port == 443;
     }
 
     /**

@@ -136,4 +136,24 @@ describe("Client", function () {
         expect(network.includes("hcs.testnet1.mirrornode.hedera.com:5600")).to
             .be.true;
     });
+
+    it("should maintain TLS after setting a mirror network with TLS", function () {
+        const client = Client.forNetwork({})
+            .setTransportSecurity(true)
+            .setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"]);
+
+        expect(client.mirrorNetwork).to.deep.equal([
+            "mainnet-public.mirrornode.hedera.com:443",
+        ]);
+
+        client.setTransportSecurity(false);
+        expect(client.mirrorNetwork).to.deep.equal([
+            "mainnet-public.mirrornode.hedera.com:5600",
+        ]);
+
+        client.setTransportSecurity(true);
+        expect(client.mirrorNetwork).to.deep.equal([
+            "mainnet-public.mirrornode.hedera.com:443",
+        ]);
+    });
 });
