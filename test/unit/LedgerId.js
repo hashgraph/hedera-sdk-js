@@ -1,5 +1,7 @@
+import { expect } from "chai";
+
+import { LedgerId } from "../../src/exports.js";
 import * as hex from "../../src/encoding/hex.js";
-import LedgerId from "../../src/LedgerId.js";
 
 const MAINNET = "mainnet";
 const HEX_MAINNET = hex.encode(new Uint8Array([0]));

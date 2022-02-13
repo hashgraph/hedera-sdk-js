@@ -36,15 +36,7 @@ jobs:
         with:
           version: 6.0.2
 
-      - name: Run Integration Tests Browser Chrome
-        env:
-          VITE_OPERATOR_KEY: ${{ secrets.TESTNET_OPERATOR_KEY }}
-          VITE_OPERATOR_ID: ${{ secrets.TESTNET_OPERATOR_ID }}
-          VITE_HEDERA_NETWORK: "testnet"
+      - name: Run unit tests against Chrome
         run: |
-          touch .env
-          echo 'VITE_HEDERA_NETWORK="testnet"' >> .env
-          echo "VITE_OPERATOR_KEY=$VITE_OPERATOR_KEY" >> .env
-          echo "VITE_OPERATOR_ID=$VITE_OPERATOR_ID" >> .env
-          pnpm install --force
-          pnpm test:integration:browser:chrome
+          pnpm install
+          pnpm test:unit:browser:chrome
