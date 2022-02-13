@@ -50,7 +50,8 @@
         "prepare": "run-s compile cp:ts"
     },
     "dependencies": {
-        "protobufjs": "^6.11.2"
+        "protobufjs": "^6.11.2",
+        "long": "^4.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.16.8",
