@@ -1,6 +1,6 @@
-import TransactionId from "../../src/transaction/TransactionId.js";
-import AccountId from "../../src/account/AccountId.js";
-import Timestamp from "../../src/Timestamp.js";
+import { expect } from "chai";
+
+import { TransactionId, AccountId, Timestamp } from "../../src/exports.js";
 
 describe("TransactionId", function () {
     it("should parse {shard}.{realm}.{num}@{seconds}.{nanos}", function () {

@@ -1,8 +1,7 @@
-import "mocha";
 import { expect } from "chai";
-import Long from "long";
 
 import { TokenNftAllowance, TokenId, AccountId } from "../../src/exports.js";
+import Long from "long";
 
 describe("TokenNftAllowance", function () {
     it("toProtobuf() with serial numbers", function () {

@@ -1,4 +1,3 @@
-import "mocha";
 import { expect } from "chai";
 
 import { HbarAllowance, AccountId, Hbar } from "../../src/exports.js";

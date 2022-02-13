@@ -1,8 +1,7 @@
-import "mocha";
 import { expect } from "chai";
-import Long from "long";
 
 import { TokenAllowance, AccountId, TokenId } from "../../src/exports.js";
+import Long from "long";
 
 describe("TokenAllowance", function () {
     it("toProtobuf()", function () {

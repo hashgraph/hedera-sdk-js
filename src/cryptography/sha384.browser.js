@@ -4,5 +4,5 @@
  */
 export async function digest(data) {
     // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
-    return new Uint8Array(await crypto.subtle.digest("SHA-384", data));
+    return new Uint8Array(await window.crypto.subtle.digest("SHA-384", data));
 }
