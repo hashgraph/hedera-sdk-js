@@ -165,11 +165,9 @@ export default class TransactionReceipt {
                 topicID:
                     this.topicId != null ? this.topicId._toProtobuf() : null,
                 tokenID:
-                    this.tokenId != null ? this.tokenId._toProtobuf() : null,
+                    this.topicId != null ? this.topicId._toProtobuf() : null,
                 scheduleID:
-                    this.scheduleId != null
-                        ? this.scheduleId._toProtobuf()
-                        : null,
+                    this.topicId != null ? this.topicId._toProtobuf() : null,
 
                 topicRunningHash:
                     this.topicRunningHash == null
@@ -192,7 +190,6 @@ export default class TransactionReceipt {
                         : null,
 
                 serialNumbers: this.serials,
-                newTotalSupply: this.totalSupply,
             },
         };
     }
