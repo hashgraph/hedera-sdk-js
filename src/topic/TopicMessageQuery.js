@@ -156,7 +156,7 @@ export default class TopicMessageQuery {
          * @private
          * @type {number}
          */
-        this._maxBackoff = 3600000;
+        this._maxBackoff = 360000;
 
         /**
          * @private

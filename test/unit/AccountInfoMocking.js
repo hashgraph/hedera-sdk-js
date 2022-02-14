@@ -61,7 +61,7 @@ describe("AccountInfo", function () {
     });
 
     it("should retry on `INTERNAL` and retry multiple nodes", async function () {
-        this.timeout(10000);
+        this.timeout(360000);
 
         const responses1 = [
             { error: INTERNAL },
@@ -92,7 +92,7 @@ describe("AccountInfo", function () {
     });
 
     it("should be able to execute after getting transaction hashes", async function () {
-        this.timeout(10000);
+        this.timeout(360000);
 
         const responses1 = [{ response: { nodeTransactionPrecheckCode: 0 } }];
 
@@ -118,7 +118,7 @@ describe("AccountInfo", function () {
     });
 
     it("should be able to execute after getting transaction hashes with sign on demand disabled", async function () {
-        this.timeout(10000);
+        this.timeout(360000);
 
         const responses1 = [{ response: { nodeTransactionPrecheckCode: 0 } }];
 
@@ -142,7 +142,7 @@ describe("AccountInfo", function () {
     });
 
     it("should generate new transaction ID when TRANSACTION_EXPIRED is return", async function () {
-        this.timeout(10000);
+        this.timeout(360000);
 
         const transactionIds = new Set();
         const callResponses = [
@@ -196,7 +196,7 @@ describe("AccountInfo", function () {
     });
 
     it("should error `TRANSACTION_EXPIRED` is return and client disabled transaction regeneration", async function () {
-        this.timeout(10000);
+        this.timeout(360000);
 
         const responses1 = [
             {
@@ -226,7 +226,7 @@ describe("AccountInfo", function () {
     });
 
     it("should still regenerate transaction IDs on `TRANSACTION_EXPIRED` when client disabled it, but transaction re-enabled it", async function () {
-        this.timeout(10000);
+        this.timeout(360000);
 
         const transactionIds = new Set();
         const callResponses = [
