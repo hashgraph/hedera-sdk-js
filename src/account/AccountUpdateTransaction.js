@@ -6,17 +6,8 @@ import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
 import Long from "long";
 import Key from "../Key.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ICryptoUpdateTransactionBody} proto.ICryptoUpdateTransactionBody
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- */
+import * as proto from "@hashgraph/proto";
+import PublicKey from "../PublicKey.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -38,6 +29,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @param {Timestamp | Date} [props.expirationTime]
      * @param {string} [props.accountMemo]
      * @param {Long | number} [props.maxAutomaticTokenAssociations]
+     * @param {Key} [props.aliasKey]
      */
     constructor(props = {}) {
         super();
@@ -90,6 +82,12 @@ export default class AccountUpdateTransaction extends Transaction {
          */
         this._maxAutomaticTokenAssociations = null;
 
+        /**
+         * @private
+         * @type {?Key}
+         */
+        this._aliasKey = null;
+
         if (props.accountId != null) {
             this.setAccountId(props.accountId);
         }
@@ -123,6 +121,10 @@ export default class AccountUpdateTransaction extends Transaction {
                 props.maxAutomaticTokenAssociations
             );
         }
+
+        if (props.aliasKey != null) {
+            this.setAliasKey(props.aliasKey);
+        }
     }
 
     /**
@@ -145,6 +147,15 @@ export default class AccountUpdateTransaction extends Transaction {
         const update = /** @type {proto.ICryptoUpdateTransactionBody} */ (
             body.cryptoUpdateAccount
         );
+
+        let aliasKey =
+            update.alias != null && update.alias.length > 0
+                ? Key._fromProtobufKey(proto.Key.decode(update.alias))
+                : undefined;
+
+        if (!(aliasKey instanceof PublicKey)) {
+            aliasKey = undefined;
+        }
 
         return Transaction._fromProtobufTransactions(
             new AccountUpdateTransaction({
@@ -195,6 +206,7 @@ export default class AccountUpdateTransaction extends Transaction {
                               update.maxAutomaticTokenAssociations.value
                           )
                         : undefined,
+                aliasKey,
             }),
             transactions,
             signedTransactions,
@@ -373,6 +385,24 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?Key}
+     */
+    get aliasKey() {
+        return this._aliasKey;
+    }
+
+    /**
+     * @param {Key} aliasKey
+     * @returns {this}
+     */
+    setAliasKey(aliasKey) {
+        this._requireNotFrozen();
+        this._aliasKey = aliasKey;
+
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -442,6 +472,10 @@ export default class AccountUpdateTransaction extends Transaction {
             maxAutomaticTokenAssociations:
                 this._maxAutomaticTokenAssociations != null
                     ? { value: this._maxAutomaticTokenAssociations.toInt() }
+                    : null,
+            alias:
+                this._key != null
+                    ? proto.Key.encode(this._key._toProtobufKey()).finish()
                     : null,
         };
     }

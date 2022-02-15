@@ -39,6 +39,8 @@ import "crypto_delete.proto";
 import "crypto_delete_live_hash.proto";
 import "crypto_transfer.proto";
 import "crypto_update.proto";
+import "crypto_approve_allowance.proto";
+import "crypto_adjust_allowance.proto";
 
 import "file_append.proto";
 import "file_create.proto";
@@ -114,6 +116,9 @@ message TransactionBody {
    */
   string memo = 6;
 
+  /**
+   * The choices here are arranged by service in roughly lexicographical order. The field ordinals are non-sequential, and a result of the historical order of implementation.
+   */
   oneof data {
     /**
      * Calls a function of a contract instance
@@ -139,6 +144,16 @@ message TransactionBody {
      * Attach a new livehash to an account
      */
     CryptoAddLiveHashTransactionBody cryptoAddLiveHash = 10;
+
+    /**
+     * Adjusts the approved allowance for a spender to transfer the paying account's hbar or tokens.
+     */
+    CryptoAdjustAllowanceTransactionBody cryptoAdjustAllowance = 48;
+
+    /**
+     * Adds one or more approved allowances for spenders to transfer the paying account's hbar or tokens.
+     */
+    CryptoApproveAllowanceTransactionBody cryptoApproveAllowance = 49;
 
     /**
      * Create a new cryptocurrency account

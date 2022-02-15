@@ -6,7 +6,7 @@ package proto;
  * ‌
  * Hedera Network Services Protobuf
  * ​
- * Copyright (C) 2018 - 2021 Hedera Hashgraph, LLC
+ * Copyright (C) 2018 - 2022 Hedera Hashgraph, LLC
  * ​
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import "basic_types.proto";
 import "query_header.proto";
 import "response_header.proto";
 import "crypto_add_live_hash.proto";
+import "google/protobuf/wrappers.proto";
 
 /**
  * Get all the information about an account, including the balance. This does not get the list of
@@ -58,7 +59,6 @@ message CryptoGetInfoResponse {
      * or both, or neither
      */
     ResponseHeader header = 1;
-
 
     message AccountInfo {
         /**
@@ -167,6 +167,21 @@ message CryptoGetInfoResponse {
          * The ledger ID the response was returned from; please see <a href="https://github.com/hashgraph/hedera-improvement-proposal/blob/master/HIP/hip-198.md">HIP-198</a> for the network-specific IDs. 
          */
         bytes ledger_id = 20;
+
+        /**
+         * All of the hbar allowances approved by the account owner.
+         */
+        repeated CryptoAllowance crypto_allowances = 21;
+
+        /**
+         * All of the non-fungible token allowances approved by the account owner.
+         */
+        repeated NftAllowance nft_allowances = 22;
+
+        /**
+         * All of the fungible token allowances approved by the account owner.
+         */
+        repeated TokenAllowance token_allowances = 23;
     }
 
     /**

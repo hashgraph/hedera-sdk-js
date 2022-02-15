@@ -2,7 +2,6 @@ import Long from "long";
 import * as hex from "./encoding/hex.js";
 import BadEntityIdError from "./BadEntityIdError.js";
 import * as util from "./util.js";
-import PublicKey from "./PublicKey.js";
 
 /**
  * @typedef {import("./client/Client.js").default<*, *>} Client
@@ -10,7 +9,6 @@ import PublicKey from "./PublicKey.js";
 
 /**
  * @typedef {object} IEntityId
- * @property {(PublicKey | null)=} aliasKey
  * @property {number | Long} num
  * @property {(number | Long)=} shard
  * @property {(number | Long)=} realm
@@ -21,7 +19,14 @@ import PublicKey from "./PublicKey.js";
  * @property {Long} shard
  * @property {Long} realm
  * @property {Long} num
- * @property {(PublicKey | null)=} aliasKey
+ */
+
+/**
+ * @typedef {object} IEntityIdParts
+ * @property {string?} shard
+ * @property {string?} realm
+ * @property {string} numOrHex
+ * @property {string?} checksum
  */
 
 /**
@@ -30,7 +35,6 @@ import PublicKey from "./PublicKey.js";
  * @property {Long} realm
  * @property {Long} num
  * @property {string | null} checksum
- * @property {PublicKey | null} aliasKey
  */
 
 const regex = RegExp(
@@ -38,48 +42,53 @@ const regex = RegExp(
 );
 
 /**
+ * This regex supports entity IDs
+ *  - as stand alone nubmers
+ *  - as shard.realm.num
+ *  - as shard.realm.hex
+ *  - can optionally provide checksum for any of the above
+ */
+const ENTITY_ID_REGEX = /^(\d+)(?:\.(\d+)\.([a-fA-F0-9]+))?(?:-([a-z]{5}))?$/;
+
+/**
  * @param {number | Long | IEntityId} props
- * @param {(number | null | Long)=} realm
- * @param {(number | null | Long | PublicKey)=} numOrAliasKey
+ * @param {(number | null | Long)=} realmOrNull
+ * @param {(number | null | Long)=} numOrNull
  * @returns {IEntityIdResult}
  */
-export function constructor(props, realm, numOrAliasKey) {
-    let shard_ = Long.ZERO;
-    let realm_ = Long.ZERO;
-    let num_ = Long.ZERO;
-    let aliasKey_;
-
-    if (numOrAliasKey instanceof PublicKey) {
-        aliasKey_ = numOrAliasKey;
+export function constructor(props, realmOrNull, numOrNull) {
+    if (
+        (realmOrNull == null && numOrNull != null) ||
+        (realmOrNull != null && numOrNull == null)
+    ) {
+        throw new Error("invalid entity ID");
     }
 
-    if (typeof props === "number" || Long.isLong(props)) {
-        if (realm == null || typeof realm === "string") {
-            num_ = Long.fromValue(props);
-        } else {
-            shard_ = Long.fromValue(props);
-            realm_ = Long.fromValue(realm);
-            num_ =
-                numOrAliasKey != null && !(numOrAliasKey instanceof PublicKey)
-                    ? Long.fromValue(numOrAliasKey)
-                    : Long.ZERO;
-        }
-    } else {
-        shard_ = Long.fromValue(props.shard != null ? props.shard : 0);
-        realm_ = Long.fromValue(props.realm != null ? props.realm : 0);
-        num_ = Long.fromValue(props.num != null ? props.num : 0);
-        aliasKey_ = props.aliasKey;
-    }
+    const [shard, realm, num] =
+        typeof props === "number" || Long.isLong(props)
+            ? [
+                  numOrNull != null
+                      ? Long.fromValue(/** @type {Long | number} */ (props))
+                      : Long.ZERO,
+                  realmOrNull != null ? Long.fromValue(realmOrNull) : Long.ZERO,
+                  numOrNull != null
+                      ? Long.fromValue(numOrNull)
+                      : Long.fromValue(/** @type {Long | number} */ (props)),
+              ]
+            : [
+                  props.shard != null ? Long.fromValue(props.shard) : Long.ZERO,
+                  props.realm != null ? Long.fromValue(props.realm) : Long.ZERO,
+                  Long.fromValue(props.num),
+              ];
 
-    if (shard_.isNegative() || realm_.isNegative() || num_.isNegative()) {
+    if (shard.isNegative() || realm.isNegative() || num.isNegative()) {
         throw new Error("negative numbers are not allowed in IDs");
     }
 
     return {
-        shard: shard_,
-        realm: realm_,
-        num: num_,
-        aliasKey: aliasKey_,
+        shard,
+        realm,
+        num,
     };
 }
 
@@ -116,46 +125,52 @@ export function compare(a, b) {
 
 /**
  * @param {string} text
+ * @returns {IEntityIdParts}
+ */
+export function fromStringSplitter(text) {
+    const match = ENTITY_ID_REGEX.exec(text);
+
+    if (match == null) {
+        throw new Error(`failed to parse entity id: ${text}`);
+    }
+
+    if (match[2] == null && match[3] == null) {
+        return {
+            shard: "0",
+            realm: "0",
+            numOrHex: match[1],
+            checksum: match[4],
+        };
+    } else {
+        return {
+            shard: match[1],
+            realm: match[2],
+            numOrHex: match[3],
+            checksum: match[4],
+        };
+    }
+}
+
+/**
+ * @param {string} text
  * @returns {IEntityIdResultWithChecksum}
  */
 export function fromString(text) {
-    const [id, checksum] = text.split("-");
-    const parts = id.split(".");
+    const result = fromStringSplitter(text);
 
-    for (const part of parts) {
-        if (part === "") {
-            throw new Error("invalid format for entity ID");
-        }
-    }
-
-    const components = parts.map(Number);
-
-    for (const component of components) {
-        if (Number.isNaN(component)) {
-            throw new Error("invalid format for entity ID");
-        }
-    }
-
-    let shard = Long.ZERO;
-    let realm = Long.ZERO;
-    let num;
-
-    if (components.length === 1) {
-        num = Long.fromNumber(components[0]);
-    } else if (components.length === 3) {
-        shard = Long.fromNumber(components[0]);
-        realm = Long.fromNumber(components[1]);
-        num = Long.fromNumber(components[2]);
-    } else {
+    if (
+        Number.isNaN(result.shard) ||
+        Number.isNaN(result.realm) ||
+        Number.isNaN(result.numOrHex)
+    ) {
         throw new Error("invalid format for entity ID");
     }
 
     return {
-        shard,
-        realm,
-        num,
-        checksum,
-        aliasKey: null,
+        shard: result.shard != null ? Long.fromString(result.shard) : Long.ZERO,
+        realm: result.realm != null ? Long.fromString(result.realm) : Long.ZERO,
+        num: Long.fromString(result.numOrHex),
+        checksum: result.checksum,
     };
 }
 

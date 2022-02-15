@@ -190,7 +190,7 @@ export default class TokenCreateTransaction extends Transaction {
          */
         this._maxSupply = null;
 
-        this.setMaxTransactionFee(new Hbar(30));
+        this._defaultMaxTransactionFee = new Hbar(30);
 
         if (props.tokenName != null) {
             this.setTokenName(props.tokenName);

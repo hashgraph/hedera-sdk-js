@@ -505,6 +505,30 @@ export default class Status {
                 return "INVALID_ALIAS_KEY";
             case Status.UnexpectedTokenDecimals:
                 return "UNEXPECTED_TOKEN_DECIMALS";
+            case Status.InvalidProxyAccountId:
+                return "INVALID_PROXY_ACCOUNT_ID";
+            case Status.InvalidTransferAccountId:
+                return "INVALID_TRANSFER_ACCOUNT_ID";
+            case Status.InvalidFeeCollectorAccountId:
+                return "INVALID_FEE_COLLECTOR_ACCOUNT_ID";
+            case Status.AliasIsImmutable:
+                return "ALIAS_IS_IMMUTABLE";
+            case Status.SpenderAccountSameAsOwner:
+                return "SPENDER_ACCOUNT_SAME_AS_OWNER";
+            case Status.AmountExceedsTokenMaxSupply:
+                return "AMOUNT_EXCEEDS_TOKEN_MAX_SUPPLY";
+            case Status.NegativeAllowanceAmount:
+                return "NEGATIVE_ALLOWANCE_AMOUNT";
+            case Status.CannotApproveForAllFungibleCommon:
+                return "CANNOT_APPROVE_FOR_ALL_FUNGIBLE_COMMON";
+            case Status.SpenderDoesNotHaveAllowance:
+                return "SPENDER_DOES_NOT_HAVE_ALLOWANCE";
+            case Status.AmountExceedsAllowance:
+                return "AMOUNT_EXCEEDS_ALLOWANCE";
+            case Status.MaxAllowancesExceeded:
+                return "MAX_ALLOWANCES_EXCEEDED";
+            case Status.EmptyAllowances:
+                return "EMPTY_ALLOWANCES";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1001,6 +1025,30 @@ export default class Status {
                 return Status.InvalidAliasKey;
             case 283:
                 return Status.UnexpectedTokenDecimals;
+            case 284:
+                return Status.InvalidProxyAccountId;
+            case 285:
+                return Status.InvalidTransferAccountId;
+            case 286:
+                return Status.InvalidFeeCollectorAccountId;
+            case 287:
+                return Status.AliasIsImmutable;
+            case 288:
+                return Status.SpenderAccountSameAsOwner;
+            case 289:
+                return Status.AmountExceedsTokenMaxSupply;
+            case 290:
+                return Status.NegativeAllowanceAmount;
+            case 291:
+                return Status.CannotApproveForAllFungibleCommon;
+            case 292:
+                return Status.SpenderDoesNotHaveAllowance;
+            case 293:
+                return Status.AmountExceedsAllowance;
+            case 294:
+                return Status.MaxAllowancesExceeded;
+            case 295:
+                return Status.EmptyAllowances;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2270,3 +2318,66 @@ Status.InvalidAliasKey = new Status(282);
  * type actually has.
  */
 Status.UnexpectedTokenDecimals = new Status(283);
+
+/**
+ * The proxy account id is invalid or does not exist.
+ */
+Status.InvalidProxyAccountId = new Status(284);
+
+/**
+ * The transfer account id in CryptoDelete transaction is invalid or does not exist.
+ */
+Status.InvalidTransferAccountId = new Status(285);
+
+/**
+ * The fee collector account id in TokenFeeScheduleUpdate is invalid or does not exist.
+ */
+Status.InvalidFeeCollectorAccountId = new Status(286);
+
+/**
+ * The alias already set on an account cannot be updated using CryptoUpdate transaction.
+ */
+Status.AliasIsImmutable = new Status(287);
+
+/**
+ * An approved allowance specifies a spender account that is the same as the hbar/token
+ * owner account.
+ */
+Status.SpenderAccountSameAsOwner = new Status(288);
+
+/**
+ * The establishment or adjustment of an approved allowance cause the token allowance
+ * to exceed the token maximum supply.
+ */
+Status.AmountExceedsTokenMaxSupply = new Status(289);
+
+/**
+ * The specified amount for an approved allowance cannot be negative.
+ */
+Status.NegativeAllowanceAmount = new Status(290);
+
+/**
+ * The approveForAll flag cannot be set for a fungible token.
+ */
+Status.CannotApproveForAllFungibleCommon = new Status(291);
+
+/**
+ * The spender does not have an existing approved allowance with the hbar/token owner.
+ */
+Status.SpenderDoesNotHaveAllowance = new Status(292);
+
+/**
+ * The transfer amount exceeds the current approved allowance for the spender account.
+ */
+Status.AmountExceedsAllowance = new Status(293);
+
+/**
+ * The payer account of an approveAllowances or adjustAllowance transaction is attempting
+ * to go beyond the maximum allowed number of allowances.
+ */
+Status.MaxAllowancesExceeded = new Status(294);
+
+/**
+ * No allowances have been specified in the approval/adjust transaction.
+ */
+Status.EmptyAllowances = new Status(295);

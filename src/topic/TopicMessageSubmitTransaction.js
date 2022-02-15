@@ -32,6 +32,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @param {TopicId | string} [props.topicId]
      * @param {Uint8Array | string} [props.message]
      * @param {number} [props.maxChunks]
+     * @param {number} [props.chunkSize]
      */
     constructor(props = {}) {
         super();
@@ -62,8 +63,18 @@ export default class TopicMessageSubmitTransaction extends Transaction {
          */
         this._maxChunks = 20;
 
+        /**
+         * @private
+         * @type {number}
+         */
+        this._chunkSize = CHUNK_SIZE;
+
         if (props.maxChunks != null) {
             this.setMaxChunks(props.maxChunks);
+        }
+
+        if (props.chunkSize != null) {
+            this.setChunkSize(props.chunkSize);
         }
 
         /** @type {proto.IConsensusMessageChunkInfo | null} */
@@ -166,7 +177,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         this._requireNotFrozen();
         message = util.requireStringOrUint8Array(message);
         this._message =
-            typeof message === "string" ? utf8.encode(message) : message;
+            message instanceof Uint8Array ? message : utf8.encode(message);
         return this;
     }
 
@@ -188,6 +199,22 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     }
 
     /**
+     * @returns {?number}
+     */
+    get chunkSize() {
+        return this._chunkSize;
+    }
+
+    /**
+     * @param {number} chunkSize
+     * @returns {this}
+     */
+    setChunkSize(chunkSize) {
+        this._chunkSize = chunkSize;
+        return this;
+    }
+
+    /**
      * Freeze this transaction from further modification to prepare for
      * signing or serialization.
      *
@@ -205,7 +232,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         }
 
         const chunks = Math.floor(
-            (this._message.length + (CHUNK_SIZE - 1)) / CHUNK_SIZE
+            (this._message.length + (this._chunkSize - 1)) / this._chunkSize
         );
 
         if (chunks > this._maxChunks) {
@@ -267,9 +294,9 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     schedule() {
         this._requireNotFrozen();
 
-        if (this._message != null && this._message.length > CHUNK_SIZE) {
+        if (this._message != null && this._message.length > this._chunkSize) {
             throw new Error(
-                `cannot scheduled \`TopicMessageSubmitTransaction\` with message over ${CHUNK_SIZE} bytes`
+                `cannot schedule \`TopicMessageSubmitTransaction\` with message over ${this._chunkSize} bytes`
             );
         }
 
@@ -344,8 +371,8 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     _makeTransactionData() {
         if (this._chunkInfo != null && this._message != null) {
             const num = /** @type {number} */ (this._chunkInfo.number);
-            const startIndex = (num - 1) * CHUNK_SIZE;
-            let endIndex = startIndex + CHUNK_SIZE;
+            const startIndex = (num - 1) * this._chunkSize;
+            let endIndex = startIndex + this._chunkSize;
 
             if (endIndex > this._message.length) {
                 endIndex = this._message.length;

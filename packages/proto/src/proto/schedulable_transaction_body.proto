@@ -37,6 +37,8 @@ import "crypto_create.proto";
 import "crypto_delete.proto";
 import "crypto_transfer.proto";
 import "crypto_update.proto";
+import "crypto_approve_allowance.proto";
+import "crypto_adjust_allowance.proto";
 
 import "file_append.proto";
 import "file_create.proto";
@@ -62,6 +64,7 @@ import "token_burn.proto";
 import "token_wipe_account.proto";
 import "token_associate.proto";
 import "token_dissociate.proto";
+import "token_fee_schedule_update.proto";
 import "token_pause.proto";
 import "token_unpause.proto";
 
@@ -85,6 +88,9 @@ message SchedulableTransactionBody {
    */
   string memo = 2;
 
+  /**
+   * The choices here are arranged by service in roughly lexicographical order. The field ordinals are non-sequential, and a result of the historical order of implementation.
+   */
   oneof data {
     /**
      * Calls a function of a contract instance
@@ -105,6 +111,16 @@ message SchedulableTransactionBody {
      * Delete contract and transfer remaining balance into specified account
      */
     ContractDeleteTransactionBody contractDeleteInstance = 6;
+
+    /**
+     * Adjusts the approved allowance for a spender to transfer the paying account's hbar or tokens.
+     */
+    CryptoAdjustAllowanceTransactionBody cryptoAdjustAllowance = 37;
+
+    /**
+     * Adds one or more approved allowances for spenders to transfer the paying account's hbar or tokens.
+     */
+    CryptoApproveAllowanceTransactionBody cryptoApproveAllowance = 38;
 
     /**
      * Create a new cryptocurrency account
@@ -240,6 +256,11 @@ message SchedulableTransactionBody {
      * Dissociate tokens from an account
      */
     TokenDissociateTransactionBody tokenDissociate = 33;
+
+    /**
+     * Updates a token's custom fee schedule
+     */
+    TokenFeeScheduleUpdateTransactionBody token_fee_schedule_update = 39;
 
     /**
      * Pauses the Token

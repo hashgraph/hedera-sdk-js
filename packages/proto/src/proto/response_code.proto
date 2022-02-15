@@ -476,12 +476,12 @@ enum ResponseCodeEnum {
   /**
    * [Deprecated]. attempt to set negative receive record threshold
    */
-  INVALID_RECEIVE_RECORD_THRESHOLD = 86 [deprecated=true];
+  INVALID_RECEIVE_RECORD_THRESHOLD = 86 [deprecated = true];
 
   /**
    * [Deprecated]. attempt to set negative send record threshold
    */
-  INVALID_SEND_RECORD_THRESHOLD = 87 [deprecated=true];
+  INVALID_SEND_RECORD_THRESHOLD = 87 [deprecated = true];
 
   /**
    * Special Account Operations should be performed by only Genesis account, return this code if it
@@ -1116,4 +1116,67 @@ enum ResponseCodeEnum {
    * type actually has.
    */
   UNEXPECTED_TOKEN_DECIMALS = 283;
+
+  /**
+   * The proxy account id is invalid or does not exist.
+   */
+  INVALID_PROXY_ACCOUNT_ID = 284;
+
+  /**
+   * The transfer account id in CryptoDelete transaction is invalid or does not exist.
+   */
+  INVALID_TRANSFER_ACCOUNT_ID = 285;
+
+  /**
+   * The fee collector account id in TokenFeeScheduleUpdate is invalid or does not exist.
+   */
+  INVALID_FEE_COLLECTOR_ACCOUNT_ID = 286;
+
+  /**
+   * The alias already set on an account cannot be updated using CryptoUpdate transaction.
+   */
+  ALIAS_IS_IMMUTABLE = 287;
+
+  /**
+   * An approved allowance specifies a spender account that is the same as the hbar/token
+   * owner account.
+   */
+  SPENDER_ACCOUNT_SAME_AS_OWNER = 288;
+
+  /**
+   * The establishment or adjustment of an approved allowance cause the token allowance
+   * to exceed the token maximum supply.
+   */
+  AMOUNT_EXCEEDS_TOKEN_MAX_SUPPLY = 289;
+
+  /**
+   * The specified amount for an approved allowance cannot be negative.
+   */
+  NEGATIVE_ALLOWANCE_AMOUNT = 290;
+
+  /**
+   * The approveForAll flag cannot be set for a fungible token.
+   */
+  CANNOT_APPROVE_FOR_ALL_FUNGIBLE_COMMON = 291;
+
+  /**
+   * The spender does not have an existing approved allowance with the hbar/token owner.
+   */
+  SPENDER_DOES_NOT_HAVE_ALLOWANCE = 292;
+
+  /**
+   * The transfer amount exceeds the current approved allowance for the spender account.
+   */
+  AMOUNT_EXCEEDS_ALLOWANCE = 293;
+
+  /**
+   * The payer account of an approveAllowances or adjustAllowance transaction is attempting
+   * to go beyond the maximum allowed number of allowances.
+   */
+  MAX_ALLOWANCES_EXCEEDED = 294;
+
+  /**
+   * No allowances have been specified in the approval/adjust transaction.
+   */
+  EMPTY_ALLOWANCES = 295;
 }

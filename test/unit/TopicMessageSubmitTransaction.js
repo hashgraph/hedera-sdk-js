@@ -1,4 +1,14 @@
-import TopicMessageSubmitTransaction from "../../src/topic/TopicMessageSubmitTransaction.js";
+import "mocha";
+import { expect } from "chai";
+
+import {
+    TopicMessageSubmitTransaction,
+    AccountId,
+    Timestamp,
+    TransactionId,
+    TopicId,
+} from "../../src/exports.js";
+
 import * as utf8 from "../../src/encoding/utf8.js";
 import * as util from "../../src/util.js";
 
@@ -51,5 +61,68 @@ describe("TopicMessageSubmitTransaction", function () {
         topicMessageSubmitTransaction.setMessage(message);
 
         expect(topicMessageSubmitTransaction.message).to.eql(message);
+    });
+
+    it("setMaxChunkSize()", function () {
+        const spenderAccountId1 = new AccountId(7);
+        const topicId = new TopicId(8);
+        const nodeAccountId = new AccountId(10, 11, 12);
+        const timestamp1 = new Timestamp(14, 15);
+
+        let transaction = new TopicMessageSubmitTransaction()
+            .setTransactionId(
+                TransactionId.withValidStart(spenderAccountId1, timestamp1)
+            )
+            .setNodeAccountIds([nodeAccountId])
+            .setTopicId(topicId)
+            .setMaxChunkSize(1)
+            .setMessage("12345")
+            .freeze();
+
+        transaction._chunkInfo = { number: 1 };
+
+        let data = transaction._makeTransactionData();
+
+        expect(data).to.deep.equal({
+            chunkInfo: { number: 1 },
+            message: new Uint8Array([49]),
+            topicID: topicId._toProtobuf(),
+        });
+
+        transaction._chunkInfo.number++;
+        data = transaction._makeTransactionData();
+
+        expect(data).to.deep.equal({
+            chunkInfo: { number: 2 },
+            message: new Uint8Array([50]),
+            topicID: topicId._toProtobuf(),
+        });
+
+        transaction._chunkInfo.number++;
+        data = transaction._makeTransactionData();
+
+        expect(data).to.deep.equal({
+            chunkInfo: { number: 3 },
+            message: new Uint8Array([51]),
+            topicID: topicId._toProtobuf(),
+        });
+
+        transaction._chunkInfo.number++;
+        data = transaction._makeTransactionData();
+
+        expect(data).to.deep.equal({
+            chunkInfo: { number: 4 },
+            message: new Uint8Array([52]),
+            topicID: topicId._toProtobuf(),
+        });
+
+        transaction._chunkInfo.number++;
+        data = transaction._makeTransactionData();
+
+        expect(data).to.deep.equal({
+            chunkInfo: { number: 5 },
+            message: new Uint8Array([53]),
+            topicID: topicId._toProtobuf(),
+        });
     });
 });
