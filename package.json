@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/sdk",
-    "version": "2.9.0-beta.1",
+    "version": "2.10.0-beta.1",
     "description": "Hedera™ Hashgraph SDK",
     "types": "./lib/index.d.ts",
     "main": "./lib/index.cjs",
@@ -59,7 +59,7 @@
         "lint:format": "prettier src \"test/unit/*.js\" \"test/integration/*.js\" \"*.json\" \"src/*.js\" --check",
         "lint:js": "eslint --fix \"src/**/*.js\" \"test/integration/**/*.js\" \"test/unit/**/*.js\"",
         "format": "prettier src \"test/unit/*.js\" \"test/integration/*.js\" \"*.json\" \"src/*.js\" --write",
-        "prepare": "run-s compile:js lint:types",
+        "prepublishOnly": "./release_test.sh",
         "bundle:browser": "vite -c vite.config.cjs build",
         "test": "run-s test:node test:browser",
         "test:node": "env HEDERA_SDK_TEST=\"\" run-s test:unit:node test:integration:node",
@@ -80,7 +80,7 @@
     "dependencies": {
         "@grpc/grpc-js": "^1.5.3",
         "@hashgraph/cryptography": "^1.1.0-beta.5",
-        "@hashgraph/proto": "link:packages/proto",
+        "@hashgraph/proto": "2.1.4",
         "bignumber.js": "^9.0.2",
         "crypto-js": "^4.1.1",
         "js-base64": "^3.7.2",
