@@ -13,13 +13,14 @@ import {
     SignedTransaction as ProtoSignedTransaction,
     TransactionList as ProtoTransactionList,
     TransactionBody as ProtoTransactionBody,
-    ResponseCodeEnum,
+    ResponseCodeEnum
 } from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
 import PublicKey from "../PublicKey.js";
 import List from "./List.js";
 import Timestamp from "../Timestamp.js";
+import ForeignTransactionData from "./ForeignTransactionData.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -454,6 +455,26 @@ export default class Transaction extends Executable {
     setTransactionMemo(transactionMemo) {
         this._requireNotFrozen();
         this._transactionMemo = transactionMemo;
+
+        return this;
+    }
+
+    /**
+     * @returns {ForeignTransactionData | null}
+     */
+    get foreignTransactionData() {
+        return this._foreignTransactionData;
+    }
+
+    /**
+     * Set foreign transaction data.
+     *
+     * @param {ForeignTransactionData} foreignTransactionData
+     * @returns {this}
+     */
+    setForeignTransactionData(foreignTransactionData) {
+        this._requireNotFrozen();
+        this._foreignTransactionData = foreignTransactionData;
 
         return this;
     }

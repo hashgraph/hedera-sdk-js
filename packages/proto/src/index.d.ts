@@ -114,6 +114,8 @@ import ITransaction = proto.ITransaction;
 import Transaction = proto.Transaction;
 import ITransactionBody = proto.ITransactionBody;
 import TransactionBody = proto.TransactionBody;
+import IForeignTransactionData = proto.IForeignTransactionData;
+import ForeignTransactionData = proto.ForeignTransactionData;
 import ISystemDeleteTransactionBody = proto.ISystemDeleteTransactionBody;
 import SystemDeleteTransactionBody = proto.SystemDeleteTransactionBody;
 import ISystemUndeleteTransactionBody = proto.ISystemUndeleteTransactionBody;
@@ -385,6 +387,7 @@ import TokenUnpauseTransactionBody = proto.TokenUnpauseTransactionBody;
 import TokenPauseStatus = proto.TokenPauseStatus;
 import FreezeType = proto.FreezeType;
 import WrappedTransactionType = proto.WrappedTransactionType;
+import ForeignTransactionType = proto.ForeignTransactionType;
 
 export {
     ITokenUnitBalance,
@@ -494,6 +497,8 @@ export {
     Transaction,
     ITransactionBody,
     TransactionBody,
+    IForeignTransactionData,
+    ForeignTransactionData,
     ISystemDeleteTransactionBody,
     SystemDeleteTransactionBody,
     ISystemUndeleteTransactionBody,
@@ -765,4 +770,5 @@ export {
     TokenPauseStatus,
     FreezeType,
     WrappedTransactionType,
+    ForeignTransactionType,
 };

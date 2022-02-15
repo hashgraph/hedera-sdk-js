@@ -8,6 +8,8 @@ import Long from "long";
 import RLP from 'rlp';
 import {Buffer} from "buffer";
 import {bufToBigint} from 'bigint-conversion';
+import {ForeignTransactionType} from "@hashgraph/proto";
+import ForeignTransactionData from "../transaction/ForeignTransactionData.js";
 const secp256k1 = require('secp256k1');
 
 /**
@@ -331,6 +333,19 @@ export default class ContractExecuteTransaction extends Transaction {
             ? Buffer.from(decoded[11]).toString('hex')
             : null;
 
+        if (chainId != null
+            && nonce != null
+            && maxPriorityFee != null
+            && maxGasFee != null
+            && gasLimit != null
+            && receiver != null
+            && amount != null
+            && callData != null
+            && recId != null
+            && r != null
+            && s != null
+
+        )
         var senderPubKey =
             this.recoverEcdsaSecp256k1Key(
                 chainId,
@@ -338,19 +353,25 @@ export default class ContractExecuteTransaction extends Transaction {
                 maxPriorityFee,
                 maxGasFee,
                 gasLimit,
-                receiver,
+                Buffer.from(receiver),
                 amount,
                 callData,
-                accessList,
                 recId,
-                r,
-                s);
+                Buffer.from(r),
+                Buffer.from(s)
+            );
 
-        setFore
-        // //TODO how to map to aliased accounts?
-        //
-        // setForeignTransactionData(new ForeignTransactionData(ForeignTransactionType.ETHEREUM_EIP_1559,
-        //     foreignTx, callDataStart, callDataLength, nonce));
+        if (callDataStart != null && callDataLength != null && nonce != null) {
+            this.setForeignTransactionData(
+                new ForeignTransactionData()
+                    .setForeignTransactionType(ForeignTransactionType.ETHEREUM_EIP_1559)
+                    .setForeignTransactionBytes(Buffer.from(foreignTx))
+                    .setPayloadStart(callDataStart)
+                    .setPayloadLength(callDataLength)
+                    .setNonce(nonce)
+            );
+        }
+
         //
         // senderId = AccountId.fromProtobuf(AccountID.newBuilder().setAlias(ByteString.copyFrom(senderPubKey)).build());
         // contractId = ContractId.fromSolidityAddress(Hex.toHexString(receiver));
@@ -371,7 +392,6 @@ export default class ContractExecuteTransaction extends Transaction {
      * @param {Uint8Array} receiver
      * @param {BigInt} amount
      * @param {Uint8Array} callData
-     * @param {Uint8Array} accessList
      * @param {number} recId
      * @param {Uint8Array} r
      * @param {Uint8Array} s
@@ -386,7 +406,6 @@ export default class ContractExecuteTransaction extends Transaction {
         receiver,
         amount,
         callData,
-        accessList,
         recId,
         r,
         s

@@ -61,6 +61,7 @@ export const ResponseType = proto.ResponseType;
 export const QueryHeader = proto.QueryHeader;
 export const Transaction = proto.Transaction;
 export const TransactionBody = proto.TransactionBody;
+export const ForeignTransactionData = proto.ForeignTransactionData;
 export const SystemDeleteTransactionBody = proto.SystemDeleteTransactionBody;
 export const SystemUndeleteTransactionBody = proto.SystemUndeleteTransactionBody;
 export const FreezeTransactionBody = proto.FreezeTransactionBody;

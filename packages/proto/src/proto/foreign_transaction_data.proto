@@ -28,20 +28,20 @@ option java_multiple_files = true;
 enum ForeignTransactionType {
 
     /**
-     * The "original" transaction, aka "Type 0" (legacy designation) and 
+     * The "original" transaction, aka "Type 0" (legacy designation) and
      * "Frontier" (that was the fork it was enabled at)
      */
     ETHEREUM = 0;
 
     /**
-     * The first alternate transaction format, aka "Type 1" (based on byte 0 
-     * being 0x01), "Berlin" (the fork it was introduced at), or "Access 
+     * The first alternate transaction format, aka "Type 1" (based on byte 0
+     * being 0x01), "Berlin" (the fork it was introduced at), or "Access
      * Lists" (as that was the feature it enabled).
      */
     ETHEREUM_EIP_2930 = 1;
 
     /**
-     * The second alternate transaction format, aka "Type 1" (based on byte 0 
+     * The second alternate transaction format, aka "Type 1" (based on byte 0
      * being 0x01) "London" (the fork it was introduced at), and "Fee Market"
      * (as that was the feature it enabled).
      */
@@ -49,32 +49,32 @@ enum ForeignTransactionType {
 }
 
 message ForeignTransactionData {
-    
+
     /**
      * The type of foreign transaction in this data. Type will not be sniffed
      * from the transaction bytes, it must match this value.
      */
     ForeignTransactionType foreign_transaction_type = 1;
-    
+
     /**
      * The unredacted and complete transaction bytes.
      */
     bytes foreign_transaction_bytes = 2;
-    
+
     /**
-     * If there is a "payload" such as function parameters or sharded data 
+     * If there is a "payload" such as function parameters or sharded data
      * where does it start in the foreign transaction bytes?
      */
     int32 payload_start = 3;
 
     /**
-     * If there is a "payload" such as function parameters or sharded data 
+     * If there is a "payload" such as function parameters or sharded data
      * how many bytes is it?
      */
     int32 payload_length = 4;
 
     /**
-     * The nonce or sequence number of the foreign transaction, if present. 
+     * The nonce or sequence number of the foreign transaction, if present.
      */
     int64 nonce = 5;
 }

@@ -1,7 +1,6 @@
-import AccountId from "../account/AccountId.js";
-import Timestamp from "../Timestamp.js";
 import * as proto from "@hashgraph/proto";
 import Long from "long";
+import {ForeignTransactionType} from "@hashgraph/proto";
 
 /**
  * The client-generated ID for a transaction.
@@ -12,209 +11,172 @@ import Long from "long";
  */
 export default class ForeignTransactionData {
     /**
+     * @param {?proto.ForeignTransactionType} foreignTransactionType
      * @param {?Uint8Array} foreignTransactionBytes
      * @param {?number} payloadStart
      * @param {?number} payloadLength
      * @param {?Long | number} nonce
      */
-    constructor(foreignTransactionBytes, payloadStart, payloadLength, nonce = null) {
+
+    /**
+     * @param {object} [props]
+     * @param {proto.ForeignTransactionType} [props.foreignTransactionType]
+     * @param {Uint8Array} [props.foreignTransactionBytes]
+     * @param {number} [props.payloadStart]
+     * @param {number} [props.payloadLength]
+     * @param {Long | number} [props.nonce]
+     */
+    constructor(props = {}) {
         /**
-         * The Account ID that paid for this transaction.
-         *
-         * @readonly
+         * @private
+         * @type {?proto.ForeignTransactionType}
          */
-        this.foreignTransactionBytes = foreignTransactionBytes;
+        this._foreignTransactionType = ForeignTransactionType.ETHEREUM_EIP_1559;
+
+
+        if (props.foreignTransactionType != null) {
+            this.setForeignTransactionType(props.foreignTransactionType);
+        }
 
         /**
-         * The time from when this transaction is valid.
-         *
-         * When a transaction is submitted there is additionally a validDuration (defaults to 120s)
-         * and together they define a time window that a transaction may be processed in.
-         *
-         * @readonly
+         * @private
+         * @type {?Uint8Array}
          */
-        this.payloadStart = payloadStart;
+        this._foreignTransactionBytes = null;
+        if (props.foreignTransactionBytes != null) {
+            this.setForeignTransactionBytes(props.foreignTransactionBytes);
+        }
 
-        this.payloadLength = payloadLength;
+        /**
+         * @private
+         * @type {?number}
+         */
+        this._payloadStart = null;
+        if (props.payloadStart) {
+            this.setPayloadStart(props.payloadStart);
+        }
 
+        /**
+         * @private
+         * @type {?number}
+         */
+        this._payloadLength = null;
+        if (props.payloadLength != null) {
+            this.setPayloadLength(props.payloadLength);
+        }
+
+        /**
+         * @private
+         * @type {?number}
+         */
         this.nonce = null;
-        if (nonce != null && nonce != 0) {
-            this.setNonce(nonce);
+        if (props.nonce != null && props.nonce != 0) {
+            this.setNonce(props.nonce);
         }
 
         Object.freeze(this);
     }
 
     /**
+     * @param {proto.ForeignTransactionType} foreignTransactionType
+     * @returns {ForeignTransactionData}
+     */
+    setForeignTransactionType(foreignTransactionType) {
+        this._foreignTransactionType = foreignTransactionType;
+        return this;
+    }
+
+    /**
+     * @param {Uint8Array} foreignTransactionBytes
+     * @returns {ForeignTransactionData}
+     */
+    setForeignTransactionBytes(foreignTransactionBytes) {
+        this._foreignTransactionBytes = foreignTransactionBytes;
+        return this;
+    }
+
+    /**
+     * @param {number} payloadStart
+     * @returns {ForeignTransactionData}
+     */
+    setPayloadStart(payloadStart) {
+        this._payloadStart = typeof payloadStart === "number" ? payloadStart : null;
+        return this;
+    }
+
+    /**
+     * @param {number} payloadLength
+     * @returns {ForeignTransactionData}
+     */
+    setPayloadLength(payloadLength) {
+        this._payloadLength = typeof payloadLength === "number" ? payloadLength : null;
+        return this;
+    }
+
+    /**
      * @param {Long | number} nonce
-     * @returns {TransactionId}
+     * @returns {ForeignTransactionData}
      */
     setNonce(nonce) {
-        this.nonce = typeof nonce === "number" ? Long.fromNumber(nonce) : nonce;
+        this._nonce = typeof nonce === "number" ? Long.fromNumber(nonce) : nonce;
         return this;
-    }
-
-    /**
-     * @param {AccountId} accountId
-     * @param {Timestamp} validStart
-     * @returns {TransactionId}
-     */
-    static withValidStart(accountId, validStart) {
-        return new TransactionId(accountId, validStart, null);
-    }
-
-    /**
-     * Generates a new transaction ID for the given account ID.
-     *
-     * Note that transaction IDs are made of the valid start of the transaction and the account
-     * that will be charged the transaction fees for the transaction.
-     *
-     * @param {AccountId | string} id
-     * @returns {TransactionId}
-     */
-    static generate(id) {
-        return new TransactionId(
-            typeof id === "string"
-                ? AccountId.fromString(id)
-                : new AccountId(id),
-            Timestamp.generate()
-        );
-    }
-
-    /**
-     * @param {string} wholeId
-     * @returns {TransactionId}
-     */
-    static fromString(wholeId) {
-        let account, seconds, nanos, isScheduled, nonce;
-        let rest;
-        // 1.1.1@5.4?scheduled/117
-
-        [account, rest] = wholeId.split("@");
-        [seconds, rest] = rest.split(".");
-        if (rest.includes("?")) {
-            [nanos, rest] = rest.split("?scheduled");
-            isScheduled = true;
-            if (rest.includes("/")) {
-                nonce = rest.replace("/", "");
-            } else {
-                nonce = null;
-            }
-        } else if (rest.includes("/")) {
-            [nanos, nonce] = rest.split("/");
-            isScheduled = false;
-        } else {
-            nanos = rest;
-        }
-
-        return new TransactionId(
-            AccountId.fromString(account),
-            new Timestamp(Long.fromValue(seconds), Long.fromValue(nanos)),
-            isScheduled,
-            nonce != null ? Long.fromString(nonce) : null
-        );
-    }
-
-    /**
-     * @param {boolean} scheduled
-     * @returns {this}
-     */
-    setScheduled(scheduled) {
-        this.scheduled = scheduled;
-        return this;
-    }
-
-    /**
-     * @returns {string}
-     */
-    toString() {
-        if (this.accountId != null && this.validStart != null) {
-            const nonce =
-                this.nonce != null ? "/".concat(this.nonce.toString()) : "";
-            const scheduled = this.scheduled ? "?scheduled" : "";
-            return `${this.accountId.toString()}@${this.validStart.seconds.toString()}.${this.validStart.nanos.toString()}${scheduled}${nonce}`;
-        } else {
-            throw new Error("neither `accountId` nor `validStart` are set");
-        }
     }
 
     /**
      * @internal
-     * @param {proto.ITransactionID} id
-     * @returns {TransactionId}
+     * @param {proto.IForeignTransactionData} foreignTransactionData
+     * @returns {ForeignTransactionData}
      */
-    static _fromProtobuf(id) {
-        if (id.accountID != null && id.transactionValidStart != null) {
-            return new TransactionId(
-                AccountId._fromProtobuf(id.accountID),
-                Timestamp._fromProtobuf(id.transactionValidStart),
-                id.scheduled,
-                id.nonce
-            );
+    static _fromProtobuf(foreignTransactionData) {
+        if (foreignTransactionData.foreignTransactionType != null
+            && foreignTransactionData.foreignTransactionBytes instanceof Uint8Array
+            && foreignTransactionData.nonce != null
+            && foreignTransactionData.payloadStart
+            && foreignTransactionData.payloadLength) {
+            return new ForeignTransactionData()
+                .setForeignTransactionType(foreignTransactionData.foreignTransactionType)
+                .setForeignTransactionBytes(foreignTransactionData.foreignTransactionBytes)
+                .setPayloadStart(foreignTransactionData.payloadStart)
+                .setPayloadLength(foreignTransactionData.payloadLength)
+                .setNonce(foreignTransactionData.nonce);
         } else {
             throw new Error(
-                "Neither `nonce` or `accountID` and `transactionValidStart` are set"
+                "Neither `nonce` or `foreignTransactionBytes` or `payloadStart` or `payloadLength` are set"
             );
         }
     }
 
     /**
      * @internal
-     * @returns {proto.ITransactionID}
+     * @returns {proto.IForeignTransactionData}
      */
     _toProtobuf() {
         return {
-            accountID:
-                this.accountId != null ? this.accountId._toProtobuf() : null,
-            transactionValidStart:
-                this.validStart != null ? this.validStart._toProtobuf() : null,
-            scheduled: this.scheduled,
-            nonce: this.nonce != null ? this.nonce.toInt() : null,
+            foreignTransactionType:
+                this._foreignTransactionType != null ? this._foreignTransactionType : null,
+            foreignTransactionBytes:
+                this._foreignTransactionBytes != null ? this._foreignTransactionBytes : null,
+            payloadStart:
+                this._payloadStart != null ? this._payloadStart : null,
+            payloadLength:
+                this._payloadLength != null ? this._payloadLength : null,
+            nonce:
+                this.nonce != null ? Long.fromNumber(this.nonce) : null,
         };
     }
 
     /**
      * @param {Uint8Array} bytes
-     * @returns {TransactionId}
+     * @returns {ForeignTransactionData}
      */
     static fromBytes(bytes) {
-        return TransactionId._fromProtobuf(proto.TransactionID.decode(bytes));
+        return ForeignTransactionData._fromProtobuf(proto.ForeignTransactionData.decode(bytes));
     }
 
     /**
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.TransactionID.encode(this._toProtobuf()).finish();
-    }
-
-    /**
-     * @returns {TransactionId}
-     */
-    clone() {
-        return new TransactionId(
-            this.accountId,
-            this.validStart,
-            this.scheduled,
-            this.nonce
-        );
-    }
-
-    /**
-     * @param {TransactionId} other
-     * @returns {number}
-     */
-    compare(other) {
-        const comparison = /** @type {AccountId} */ (this.accountId).compare(
-            /** @type {AccountId} */ (other.accountId)
-        );
-
-        if (comparison != 0) {
-            return comparison;
-        }
-
-        return /** @type {Timestamp} */ (this.validStart).compare(
-            /** @type {Timestamp} */ (other.validStart)
-        );
+        return proto.ForeignTransactionData.encode(this._toProtobuf()).finish();
     }
 }
