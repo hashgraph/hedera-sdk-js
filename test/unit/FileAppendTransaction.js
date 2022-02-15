@@ -11,7 +11,7 @@ import {
 } from "../../src/exports.js";
 
 describe("FileAppendTransaction", function () {
-    it("setMaxChunkSize()", function () {
+    it("setChunkSize()", function () {
         const spenderAccountId1 = new AccountId(7);
         const fileId = new FileId(8);
         const nodeAccountId = new AccountId(10, 11, 12);
@@ -23,13 +23,13 @@ describe("FileAppendTransaction", function () {
             )
             .setNodeAccountIds([nodeAccountId])
             .setFileId(fileId)
-            .setMaxChunkSize(1)
+            .setChunkSize(1)
             .setContents("12345")
             .freeze();
 
         transaction = /** @type {FileAppendTransaction} */ (
             Transaction.fromBytes(transaction.toBytes())
-        ).setMaxChunkSize(1);
+        ).setChunkSize(1);
 
         let data = transaction._makeTransactionData();
         transaction._startIndex++;
