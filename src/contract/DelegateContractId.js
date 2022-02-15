@@ -1,5 +1,6 @@
 import CACHE from "../Cache.js";
 import ContractId from "./ContractId.js";
+import * as hex from "../encoding/hex.js";
 
 /**
  * @namespace {proto}
@@ -17,9 +18,20 @@ export default class DelegateContractId extends ContractId {
      * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
+     * @param {Uint8Array=} evmAddress
      */
-    constructor(props, realm, num) {
-        super(props, realm, num);
+    constructor(props, realm, num, evmAddress) {
+        super(props, realm, num, evmAddress);
+    }
+
+    /**
+     * @param {Long | number} shard
+     * @param {Long | number} realm
+     * @param {string} evmAddress
+     * @returns {ContractId}
+     */
+    static fromEvmAddress(shard, realm, evmAddress) {
+        return new DelegateContractId(shard, realm, 0, hex.decode(evmAddress));
     }
 
     /**
@@ -48,10 +60,12 @@ export default class DelegateContractId extends ContractId {
     }
 
     /**
+     * @deprecated - Use `DelegateContractId.fromEvmAddress()` instead
      * @param {string} address
      * @returns {DelegateContractId}
      */
     static fromSolidityAddress(address) {
+        // eslint-disable-next-line deprecation/deprecation
         return new DelegateContractId(ContractId.fromSolidityAddress(address));
     }
 

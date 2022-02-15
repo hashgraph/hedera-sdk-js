@@ -5,14 +5,19 @@ if [ "$(git diff --name-only | wc -l)" -gt 0 ]; then
     exit 1
 fi
 
-pnpm i && pnpm format && pnpm lint
+pnpm i
+pnpm compile:js
+pnpm format
+pnpm lint
 pnpm test:unit:node
 
 pushd examples
-pnpm i && pnpm format && pnpm lint
+pnpm i
+pnpm format
+pnpm lint
 popd
 
-yalc publish
+yalc publish --no-scripts
 
 pushd common_js_test
 yalc add @hashgraph/sdk

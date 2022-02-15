@@ -57,9 +57,9 @@ describe("ManagedNodeAddress", function () {
         expect(mirrorNodeAddressSecure.address).to.be.equal(
             "hcs.mainnet.mirrornode.hedera.com"
         );
-        expect(mirrorNodeAddressSecure.port).to.be.equal(433);
+        expect(mirrorNodeAddressSecure.port).to.be.equal(443);
         expect(mirrorNodeAddressSecure.toString()).to.be.equal(
-            "hcs.mainnet.mirrornode.hedera.com:433"
+            "hcs.mainnet.mirrornode.hedera.com:443"
         );
 
         const mirrorNodeAddressInsecure = mirrorNodeAddressSecure.toInsecure();
@@ -74,7 +74,7 @@ describe("ManagedNodeAddress", function () {
         let err = false;
         try {
             ManagedNodeAddress.fromString(
-                "this is a random string with spaces:433"
+                "this is a random string with spaces:443"
             );
         } catch {
             err = true;

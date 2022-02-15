@@ -1,3 +1,4 @@
+import Long from "long";
 import TokenId from "../token/TokenId.js";
 import AccountId from "../account/AccountId.js";
 import ObjectMap from "../ObjectMap.js";
@@ -16,6 +17,7 @@ import ObjectMap from "../ObjectMap.js";
  * @property {AccountId} sender
  * @property {AccountId} recipient
  * @property {Long} serial
+ * @property {boolean} isApproved
  */
 
 /**
@@ -69,7 +71,10 @@ export default class TokenNftTransferMap extends ObjectMap {
                 tokenTransfersMap.__set(token, {
                     sender,
                     recipient,
-                    serial: /** @type {Long} */ (aa.serialNumber),
+                    serial: Long.fromValue(
+                        /** @type {Long} */ (aa.serialNumber)
+                    ),
+                    isApproved: false,
                 });
             }
         }

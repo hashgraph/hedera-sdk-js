@@ -92,7 +92,7 @@ export default class ContractCreateTransaction extends Transaction {
          */
         this._contractMemo = null;
 
-        this.setMaxTransactionFee(new Hbar(20));
+        this._defaultMaxTransactionFee = new Hbar(20);
 
         if (props.bytecodeFileId != null) {
             this.setBytecodeFileId(props.bytecodeFileId);

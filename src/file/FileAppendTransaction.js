@@ -1,7 +1,6 @@
 import Hbar from "../Hbar.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
-    CHUNK_SIZE,
 } from "../transaction/Transaction.js";
 import * as utf8 from "../encoding/utf8.js";
 import FileId from "./FileId.js";
@@ -39,6 +38,7 @@ export default class FileAppendTransaction extends Transaction {
      * @param {FileId | string} [props.fileId]
      * @param {Uint8Array | string} [props.contents]
      * @param {number} [props.maxChunks]
+     * @param {number} [props.chunkSize]
      */
     constructor(props = {}) {
         super();
@@ -61,7 +61,13 @@ export default class FileAppendTransaction extends Transaction {
          */
         this._maxChunks = 20;
 
-        this.setMaxTransactionFee(new Hbar(5));
+        /**
+         * @private
+         * @type {number}
+         */
+        this._chunkSize = 2048;
+
+        this._defaultMaxTransactionFee = new Hbar(5);
 
         if (props.fileId != null) {
             this.setFileId(props.fileId);
@@ -73,6 +79,10 @@ export default class FileAppendTransaction extends Transaction {
 
         if (props.maxChunks != null) {
             this.setMaxChunks(props.maxChunks);
+        }
+
+        if (props.chunkSize != null) {
+            this.setChunkSize(props.chunkSize);
         }
 
         /** @type {number} */
@@ -253,6 +263,22 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
+     * @returns {?number}
+     */
+    get chunkSize() {
+        return this._chunkSize;
+    }
+
+    /**
+     * @param {number} chunkSize
+     * @returns {this}
+     */
+    setChunkSize(chunkSize) {
+        this._chunkSize = chunkSize;
+        return this;
+    }
+
+    /**
      * Freeze this transaction from further modification to prepare for
      * signing or serialization.
      *
@@ -270,7 +296,7 @@ export default class FileAppendTransaction extends Transaction {
         }
 
         const chunks = Math.floor(
-            (this._contents.length + (CHUNK_SIZE - 1)) / CHUNK_SIZE
+            (this._contents.length + (this._chunkSize - 1)) / this._chunkSize
         );
 
         if (chunks > this._maxChunks) {
@@ -290,7 +316,7 @@ export default class FileAppendTransaction extends Transaction {
         super._nextTransactionIndex = 0;
 
         for (let chunk = 0; chunk < chunks; chunk++) {
-            this._startIndex = chunk * CHUNK_SIZE;
+            this._startIndex = chunk * this._chunkSize;
 
             this._transactionIds.list.push(nextTransactionId);
 
@@ -327,9 +353,9 @@ export default class FileAppendTransaction extends Transaction {
     schedule() {
         this._requireNotFrozen();
 
-        if (this._contents != null && this._contents.length > CHUNK_SIZE) {
+        if (this._contents != null && this._contents.length > this._chunkSize) {
             throw new Error(
-                `cannot scheduled \`FileAppendTransaction\` with message over ${CHUNK_SIZE} bytes`
+                `cannot schedule \`FileAppendTransaction\` with message over ${this._chunkSize} bytes`
             );
         }
 
@@ -414,7 +440,7 @@ export default class FileAppendTransaction extends Transaction {
      */
     _makeTransactionData() {
         const length = this._contents != null ? this._contents.length : 0;
-        let endIndex = this._startIndex + CHUNK_SIZE;
+        let endIndex = this._startIndex + this._chunkSize;
         if (endIndex > length) {
             endIndex = length;
         }

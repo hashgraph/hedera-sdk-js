@@ -124,10 +124,16 @@ export default class Transaction extends Executable {
         this._transactionValidDuration = DEFAULT_TRANSACTION_VALID_DURATION;
 
         /**
-         * @private
+         * @protected
          * @type {Hbar}
          */
-        this._maxTransactionFee = new Hbar(2);
+        this._defaultMaxTransactionFee = new Hbar(2);
+
+        /**
+         * @private
+         * @type {Hbar | null}
+         */
+        this._maxTransactionFee = null;
 
         /**
          * @private
@@ -748,8 +754,10 @@ export default class Transaction extends Executable {
         this._signOnDemand = client != null ? client._signOnDemand : false;
         this._operator = client != null ? client._operator : null;
         this._maxTransactionFee =
-            client != null && this._maxTransactionFee == null
-                ? client.maxTransactionFee
+            this._maxTransactionFee == null
+                ? client != null && client.defaultMaxTransactionFee != null
+                    ? client.defaultMaxTransactionFee
+                    : this._defaultMaxTransactionFee
                 : this._maxTransactionFee;
         this._regenerateTransactionId =
             client != null && this._regenerateTransactionId == null

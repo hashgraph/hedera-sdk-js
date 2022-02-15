@@ -130,6 +130,10 @@ import IContractCreateTransactionBody = proto.IContractCreateTransactionBody;
 import ContractCreateTransactionBody = proto.ContractCreateTransactionBody;
 import IContractUpdateTransactionBody = proto.IContractUpdateTransactionBody;
 import ContractUpdateTransactionBody = proto.ContractUpdateTransactionBody;
+import IContractStateChange = proto.IContractStateChange;
+import ContractStateChange = proto.ContractStateChange;
+import IStorageChange = proto.IStorageChange;
+import StorageChange = proto.StorageChange;
 import ILiveHash = proto.ILiveHash;
 import LiveHash = proto.LiveHash;
 import ICryptoAddLiveHashTransactionBody = proto.ICryptoAddLiveHashTransactionBody;
@@ -144,6 +148,10 @@ import ICryptoTransferTransactionBody = proto.ICryptoTransferTransactionBody;
 import CryptoTransferTransactionBody = proto.CryptoTransferTransactionBody;
 import ICryptoUpdateTransactionBody = proto.ICryptoUpdateTransactionBody;
 import CryptoUpdateTransactionBody = proto.CryptoUpdateTransactionBody;
+import ICryptoApproveAllowanceTransactionBody = proto.ICryptoApproveAllowanceTransactionBody;
+import CryptoApproveAllowanceTransactionBody = proto.CryptoApproveAllowanceTransactionBody;
+import CryptoAdjustAllowanceTransactionBody = proto.CryptoAdjustAllowanceTransactionBody;
+import ICryptoAdjustAllowanceTransactionBody = proto.ICryptoAdjustAllowanceTransactionBody;
 import IFileAppendTransactionBody = proto.IFileAppendTransactionBody;
 import FileAppendTransactionBody = proto.FileAppendTransactionBody;
 import IFileCreateTransactionBody = proto.IFileCreateTransactionBody;
@@ -270,6 +278,12 @@ import ICryptoGetInfoResponse = proto.ICryptoGetInfoResponse;
 import CryptoGetInfoResponse = proto.CryptoGetInfoResponse;
 import IAccountInfo = proto.CryptoGetInfoResponse.IAccountInfo;
 import AccountInfo = proto.CryptoGetInfoResponse.AccountInfo;
+import ICryptoAllowance = proto.ICryptoAllowance;
+import CryptoAllowance = proto.CryptoAllowance;
+import ITokenAllowance = proto.ITokenAllowance;
+import TokenAllowance = proto.TokenAllowance;
+import INftAllowance = proto.INftAllowance;
+import NftAllowance = proto.NftAllowance;
 import ICryptoGetLiveHashQuery = proto.ICryptoGetLiveHashQuery;
 import CryptoGetLiveHashQuery = proto.CryptoGetLiveHashQuery;
 import ICryptoGetLiveHashResponse = proto.ICryptoGetLiveHashResponse;
@@ -511,8 +525,10 @@ export {
     ContractCreateTransactionBody,
     IContractUpdateTransactionBody,
     ContractUpdateTransactionBody,
-    IContractWrappedCallTransactionBody,
-    ContractWrappedCallTransactionBody,
+    IContractStateChange,
+    ContractStateChange,
+    IStorageChange,
+    StorageChange,
     ILiveHash,
     LiveHash,
     ICryptoAddLiveHashTransactionBody,
@@ -527,6 +543,10 @@ export {
     CryptoTransferTransactionBody,
     ICryptoUpdateTransactionBody,
     CryptoUpdateTransactionBody,
+    ICryptoApproveAllowanceTransactionBody,
+    CryptoApproveAllowanceTransactionBody,
+    CryptoAdjustAllowanceTransactionBody,
+    ICryptoAdjustAllowanceTransactionBody,
     IFileAppendTransactionBody,
     FileAppendTransactionBody,
     IFileCreateTransactionBody,
@@ -653,6 +673,12 @@ export {
     CryptoGetInfoResponse,
     IAccountInfo,
     AccountInfo,
+    ICryptoAllowance,
+    CryptoAllowance,
+    ITokenAllowance,
+    TokenAllowance,
+    INftAllowance,
+    NftAllowance,
     ICryptoGetLiveHashQuery,
     CryptoGetLiveHashQuery,
     ICryptoGetLiveHashResponse,

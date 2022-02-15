@@ -12,18 +12,17 @@ describe("AccountId", function () {
                 shard: 1,
                 realm: 2,
                 num: 3,
-                aliasKey: null,
             }).toString()
         ).to.be.equal("1.2.3");
         expect(
-            new AccountId({
-                shard: 1,
-                realm: 2,
-                num: 0,
-                aliasKey: PublicKey.fromString(
+            new AccountId(
+                1,
+                2,
+                0,
+                PublicKey.fromString(
                     "302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
-                ),
-            }).toString()
+                )
+            ).toString()
         ).to.be.equal(
             "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
         );

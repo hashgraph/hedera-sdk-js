@@ -75,9 +75,9 @@ export default class Client {
 
         /**
          * @private
-         * @type {Hbar}
+         * @type {?Hbar}
          */
-        this._maxTransactionFee = new Hbar(2);
+        this._defaultMaxTransactionFee = null;
 
         /**
          * @private
@@ -211,6 +211,7 @@ export default class Client {
      */
     setTransportSecurity(transportSecurity) {
         this._network.setTransportSecurity(transportSecurity);
+        this._mirrorNetwork.setTransportSecurity(transportSecurity);
         return this;
     }
 
@@ -296,21 +297,41 @@ export default class Client {
     }
 
     /**
-     * @returns {Hbar}
+     * @deprecated - Use `defaultMaxTransactionFee` instead
+     * @returns {?Hbar}
      */
     get maxTransactionFee() {
-        return this._maxTransactionFee;
+        return this._defaultMaxTransactionFee;
     }
 
     /**
+     * @deprecated - Use `setDefaultMaxTransactionFee()` instead
      * Set the maximum fee to be paid for transactions
      * executed by this client.
-     *
      * @param {Hbar} maxTransactionFee
      * @returns {this}
      */
     setMaxTransactionFee(maxTransactionFee) {
-        this._maxTransactionFee = maxTransactionFee;
+        this._defaultMaxTransactionFee = maxTransactionFee;
+        return this;
+    }
+
+    /**
+     * @returns {?Hbar}
+     */
+    get defaultMaxTransactionFee() {
+        return this._defaultMaxTransactionFee;
+    }
+
+    /**
+     * Set the defaultimum fee to be paid for transactions
+     * executed by this client.
+     *
+     * @param {Hbar} defaultMaxTransactionFee
+     * @returns {this}
+     */
+    setDefaultMaxTransactionFee(defaultMaxTransactionFee) {
+        this._defaultMaxTransactionFee = defaultMaxTransactionFee;
         return this;
     }
 

@@ -64,7 +64,7 @@ export default class FileCreateTransaction extends Transaction {
          */
         this._fileMemo = null;
 
-        this.setMaxTransactionFee(new Hbar(5));
+        this._defaultMaxTransactionFee = new Hbar(5);
 
         if (props.keys != null) {
             this.setKeys(props.keys);
