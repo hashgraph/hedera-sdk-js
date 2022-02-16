@@ -8,7 +8,6 @@ import Long from "long";
 import RLP from 'rlp';
 import {Buffer} from "buffer";
 import {bufToBigint} from 'bigint-conversion';
-import {ForeignTransactionType} from "@hashgraph/proto";
 import ForeignTransactionData from "../transaction/ForeignTransactionData.js";
 import {AccountId, HbarUnit } from "../exports.js";
 import keccak256 from "keccak256";
@@ -248,6 +247,10 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {ContractExecuteTransaction}
      */
     populateFromForeignTransaction(foreignTx) {
+        if (foreignTx.startsWith("0x")) {
+            foreignTx = foreignTx.substring(2);
+        }
+
         const uintArrayTxn = Buffer.from(foreignTx, 'hex');
         switch (uintArrayTxn[0]) {
             case 1:
@@ -285,14 +288,12 @@ export default class ContractExecuteTransaction extends Transaction {
         var decoded =
             RLP.decode(Uint8Array.from(data));
 
-        console.log(decoded);
-
         var chainId = ArrayBuffer.isView(decoded[0])
-            ? Buffer.from(decoded[0]).readIntBE(0,decoded[0].length)
+            ? Buffer.from(decoded[0]).readIntBE(0, decoded[0].length)
             : null;
 
         var nonce = ArrayBuffer.isView(decoded[1])
-            ? Buffer.from(decoded[1]).readIntBE(0,decoded[1].length)
+            ? Buffer.from(decoded[1]).readIntBE(0, decoded[1].length)
             : null;
 
         var maxPriorityFee = ArrayBuffer.isView(decoded[2])
@@ -304,7 +305,7 @@ export default class ContractExecuteTransaction extends Transaction {
             : null;
 
         var gasLimit = ArrayBuffer.isView(decoded[4])
-            ? Buffer.from(decoded[4]).readIntBE(0,decoded[4].length)
+            ? Buffer.from(decoded[4]).readIntBE(0, decoded[4].length)
             : null;
 
         var receiver = ArrayBuffer.isView(decoded[5])
@@ -330,9 +331,17 @@ export default class ContractExecuteTransaction extends Transaction {
         // fixme handle access list?
         // var accessList = decoded[8];
 
-        var recId = ArrayBuffer.isView(decoded[9])
-            ? Buffer.from(decoded[9]).readIntBE(0,decoded[9].length)
-            : null;
+        var recId = null;
+        if (ArrayBuffer.isView(decoded[9])) {
+
+            if (Buffer.from(decoded[9]).length === 0) {
+                recId = 0;
+            }
+            else {
+                recId = Buffer.from(decoded[9]).readIntBE(0, decoded[9].length);
+            }
+        }
+
 
         var r = ArrayBuffer.isView(decoded[10])
             ? Buffer.from(decoded[10]).toString('hex')
@@ -376,16 +385,15 @@ export default class ContractExecuteTransaction extends Transaction {
             this._senderId = PublicKey.fromBytesECDSA(senderPubKey).toAccountId(0,0);
         }
 
-        console.log(this);
-
         if (callDataStart != null && callDataLength != null && nonce != null) {
             this.setForeignTransactionData(
                 new ForeignTransactionData(
                     {
                         foreignTransactionType: 2,
-                        foreignTransactionBytes: Buffer.from(foreignTx),
+                        foreignTransactionBytes: Buffer.from(foreignTx, 'hex'),
                         payloadStart: callDataStart,
-                        payloadLength: callDataLength
+                        payloadLength: callDataLength,
+                        nonce: nonce
                     }
                 )
             );
@@ -393,8 +401,10 @@ export default class ContractExecuteTransaction extends Transaction {
         }
 
         if (receiver != null) {
-            this.setContractId(ContractId.fromEvmAddress(0, 0, receiver));
+            this.setContractId(ContractId.fromEvmAddress(0,0,receiver));
         }
+
+        console.log(this._contractId);
 
         if (gasLimit != null) {
             this.setGas(gasLimit);
@@ -457,18 +467,9 @@ export default class ContractExecuteTransaction extends Transaction {
 
         const signature = Buffer.concat([r,s]);
 
-        console.log(signature);
-        console.log(signature.length);
-
         const hash = keccak256(Buffer.from(message));
 
-        console.log(hash);
-        console.log(hash.length);
-
         const newPubKey = secp256k1.ecdsaRecover(signature, recId, hash, true);
-
-        console.log("newPubKey");
-        console.log(newPubKey);
 
         return newPubKey;
     }

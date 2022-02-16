@@ -69,7 +69,7 @@ export default class ForeignTransactionData {
          * @private
          * @type {?number}
          */
-        this.nonce = null;
+        this._nonce = null;
         if (props.nonce != null && props.nonce != 0) {
             this.setNonce(props.nonce);
         }
@@ -114,11 +114,11 @@ export default class ForeignTransactionData {
     }
 
     /**
-     * @param {Long | number} nonce
+     * @param {number} nonce
      * @returns {ForeignTransactionData}
      */
     setNonce(nonce) {
-        this._nonce = typeof nonce === "number" ? Long.fromNumber(nonce) : nonce;
+        this._nonce = nonce;
         return this;
     }
 
