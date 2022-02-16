@@ -11,6 +11,8 @@ import {bufToBigint} from 'bigint-conversion';
 import {ForeignTransactionType} from "@hashgraph/proto";
 import ForeignTransactionData from "../transaction/ForeignTransactionData.js";
 import {AccountId, HbarUnit } from "../exports.js";
+import keccak256 from "keccak256";
+import PublicKey from "../PublicKey.js";
 const secp256k1 = require('secp256k1');
 
 /**
@@ -182,12 +184,10 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {ContractExecuteTransaction}
      */
     setGas(gas) {
-        // this._requireNotFrozen();
-        // this._gas = gas instanceof Long ? gas : Long.fromValue(gas);
+        this._requireNotFrozen();
+        this._gas = gas instanceof Long ? gas : Long.fromValue(gas);
 
-        throw new Error("Hello");
-
-        // return this;
+        return this;
     }
 
     /**
@@ -248,8 +248,7 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {ContractExecuteTransaction}
      */
     populateFromForeignTransaction(foreignTx) {
-        return this;
-        const uintArrayTxn = new TextEncoder().encode(foreignTx);
+        const uintArrayTxn = Buffer.from(foreignTx, 'hex');
         switch (uintArrayTxn[0]) {
             case 1:
                 return this.populateFromEIP2930Tx(foreignTx);
@@ -281,11 +280,7 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {ContractExecuteTransaction}
      */
     populateFromEIP1559Tx(foreignTx) {
-        if (foreignTx.startsWith("0x")) {
-            foreignTx = foreignTx.substring(2);
-        }
-
-        var data = Buffer.from(foreignTx, 'hex');
+        var data = Buffer.from(foreignTx.substring(2), 'hex');
 
         var decoded =
             RLP.decode(Uint8Array.from(data));
@@ -372,23 +367,27 @@ export default class ContractExecuteTransaction extends Transaction {
                     amount,
                     callData,
                     recId,
-                    Buffer.from(r),
-                    Buffer.from(s)
+                    Buffer.from(r, 'hex'),
+                    Buffer.from(s, 'hex')
                 );
         }
 
         if (senderPubKey != null) {
-            this._senderId = AccountId.fromSolidityAddress(senderPubKey.toString());
+            this._senderId = PublicKey.fromBytesECDSA(senderPubKey).toAccountId(0,0);
         }
+
+        console.log(this);
 
         if (callDataStart != null && callDataLength != null && nonce != null) {
             this.setForeignTransactionData(
-                new ForeignTransactionData()
-                    .setForeignTransactionType(ForeignTransactionType.ETHEREUM_EIP_1559)
-                    .setForeignTransactionBytes(Buffer.from(foreignTx))
-                    .setPayloadStart(callDataStart)
-                    .setPayloadLength(callDataLength)
-                    .setNonce(nonce)
+                new ForeignTransactionData(
+                    {
+                        foreignTransactionType: 2,
+                        foreignTransactionBytes: Buffer.from(foreignTx),
+                        payloadStart: callDataStart,
+                        payloadLength: callDataLength
+                    }
+                )
             );
 
         }
@@ -458,7 +457,18 @@ export default class ContractExecuteTransaction extends Transaction {
 
         const signature = Buffer.concat([r,s]);
 
-        const newPubKey = secp256k1.ecdsaRecover(signature, recId, message, true)
+        console.log(signature);
+        console.log(signature.length);
+
+        const hash = keccak256(Buffer.from(message));
+
+        console.log(hash);
+        console.log(hash.length);
+
+        const newPubKey = secp256k1.ecdsaRecover(signature, recId, hash, true);
+
+        console.log("newPubKey");
+        console.log(newPubKey);
 
         return newPubKey;
     }

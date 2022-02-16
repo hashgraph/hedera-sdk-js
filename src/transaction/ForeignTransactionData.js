@@ -31,7 +31,7 @@ export default class ForeignTransactionData {
          * @private
          * @type {?proto.ForeignTransactionType}
          */
-        this._foreignTransactionType = ForeignTransactionType.ETHEREUM_EIP_1559;
+        this._foreignTransactionType = null;
 
 
         if (props.foreignTransactionType != null) {
