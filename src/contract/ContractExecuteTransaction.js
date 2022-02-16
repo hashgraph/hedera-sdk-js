@@ -10,6 +10,7 @@ import {Buffer} from "buffer";
 import {bufToBigint} from 'bigint-conversion';
 import {ForeignTransactionType} from "@hashgraph/proto";
 import ForeignTransactionData from "../transaction/ForeignTransactionData.js";
+import {AccountId, HbarUnit } from "../exports.js";
 const secp256k1 = require('secp256k1');
 
 /**
@@ -29,7 +30,7 @@ const secp256k1 = require('secp256k1');
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
- * @typedef {import("../account/AccountId.js").default} AccountId
+ * @typedef {import("../account/AccountId.js").default} AccountIdType
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  */
 
@@ -56,6 +57,12 @@ export default class ContractExecuteTransaction extends Transaction {
          * @type {?ContractId}
          */
         this._contractId = null;
+
+        /**
+         * @private
+         * @type {?AccountIdType}
+         */
+        this._senderId = null;
 
         /**
          * @private
@@ -99,7 +106,7 @@ export default class ContractExecuteTransaction extends Transaction {
      * @param {proto.ITransaction[]} transactions
      * @param {proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
-     * @param {AccountId[]} nodeIds
+     * @param {AccountIdType[]} nodeIds
      * @param {proto.ITransactionBody[]} bodies
      * @returns {ContractExecuteTransaction}
      */
@@ -175,10 +182,12 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {ContractExecuteTransaction}
      */
     setGas(gas) {
-        this._requireNotFrozen();
-        this._gas = gas instanceof Long ? gas : Long.fromValue(gas);
+        // this._requireNotFrozen();
+        // this._gas = gas instanceof Long ? gas : Long.fromValue(gas);
 
-        return this;
+        throw new Error("Hello");
+
+        // return this;
     }
 
     /**
@@ -236,8 +245,10 @@ export default class ContractExecuteTransaction extends Transaction {
 
     /**
      * @param {string} foreignTx
+     * @returns {ContractExecuteTransaction}
      */
     populateFromForeignTransaction(foreignTx) {
+        return this;
         const uintArrayTxn = new TextEncoder().encode(foreignTx);
         switch (uintArrayTxn[0]) {
             case 1:
@@ -251,20 +262,23 @@ export default class ContractExecuteTransaction extends Transaction {
 
     /**
      * @param {string} foreignTx
+     * @returns {ContractExecuteTransaction}
      */
     populateFromEIP2930Tx(foreignTx) {
-        // throw new RuntimeException("NIY");
+        throw new Error("NIY");
     }
 
     /**
      * @param {string} foreignTx
+     * @returns {ContractExecuteTransaction}
      */
     populateFromEthTx(foreignTx) {
-        // throw new RuntimeException("NIY");
+        throw new Error("NIY");
     }
 
     /**
      * @param {string} foreignTx
+     * @returns {ContractExecuteTransaction}
      */
     populateFromEIP1559Tx(foreignTx) {
         if (foreignTx.startsWith("0x")) {
@@ -319,7 +333,7 @@ export default class ContractExecuteTransaction extends Transaction {
             : null;
 
         // fixme handle access list?
-        var accessList = decoded[8];
+        // var accessList = decoded[8];
 
         var recId = ArrayBuffer.isView(decoded[9])
             ? Buffer.from(decoded[9]).readIntBE(0,decoded[9].length)
@@ -333,6 +347,8 @@ export default class ContractExecuteTransaction extends Transaction {
             ? Buffer.from(decoded[11]).toString('hex')
             : null;
 
+        var senderPubKey = null;
+
         if (chainId != null
             && nonce != null
             && maxPriorityFee != null
@@ -344,22 +360,26 @@ export default class ContractExecuteTransaction extends Transaction {
             && recId != null
             && r != null
             && s != null
+        ) {
+            senderPubKey =
+                this.recoverEcdsaSecp256k1Key(
+                    chainId,
+                    nonce,
+                    maxPriorityFee,
+                    maxGasFee,
+                    gasLimit,
+                    Buffer.from(receiver),
+                    amount,
+                    callData,
+                    recId,
+                    Buffer.from(r),
+                    Buffer.from(s)
+                );
+        }
 
-        )
-        var senderPubKey =
-            this.recoverEcdsaSecp256k1Key(
-                chainId,
-                nonce,
-                maxPriorityFee,
-                maxGasFee,
-                gasLimit,
-                Buffer.from(receiver),
-                amount,
-                callData,
-                recId,
-                Buffer.from(r),
-                Buffer.from(s)
-            );
+        if (senderPubKey != null) {
+            this._senderId = AccountId.fromSolidityAddress(senderPubKey.toString());
+        }
 
         if (callDataStart != null && callDataLength != null && nonce != null) {
             this.setForeignTransactionData(
@@ -370,16 +390,24 @@ export default class ContractExecuteTransaction extends Transaction {
                     .setPayloadLength(callDataLength)
                     .setNonce(nonce)
             );
+
         }
 
-        //
-        // senderId = AccountId.fromProtobuf(AccountID.newBuilder().setAlias(ByteString.copyFrom(senderPubKey)).build());
-        // contractId = ContractId.fromSolidityAddress(Hex.toHexString(receiver));
-        // gas = gasLimit;
-        // payableAmount = new Hbar(amount.longValueExact(), HbarUnit.TINYBAR);
-        // functionParameters = null;
-        //
-        // return this;
+        if (receiver != null) {
+            this.setContractId(ContractId.fromEvmAddress(0, 0, receiver));
+        }
+
+        if (gasLimit != null) {
+            this.setGas(gasLimit);
+        }
+
+        if (amount != null) {
+            this.setPayableAmount(new Hbar(amount.toString(), HbarUnit.Tinybar));
+        }
+
+        this._functionParameters = null;
+
+        return this;
     }
 
     /**

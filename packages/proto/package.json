@@ -50,6 +50,7 @@
         "prepare": "run-s compile cp:ts"
     },
     "dependencies": {
+        "@babel/plugin-transform-modules-commonjs": "^7.16.8",
         "protobufjs": "^6.11.2"
     },
     "devDependencies": {

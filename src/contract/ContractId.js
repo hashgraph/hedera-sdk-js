@@ -127,7 +127,7 @@ export default class ContractId extends Key {
      * @returns {ContractId}
      */
     static fromSolidityAddress(address) {
-        console.warn("Deprecated: use `ContractId.fromEvmAdress()` instead");
+        console.warn("Deprecated: use `ContractId.fromEvmAddress()` instead");
 
         const [shard, realm, contract] = entity_id.fromSolidityAddress(address);
         return new ContractId(shard, realm, contract);
