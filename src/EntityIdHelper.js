@@ -81,9 +81,9 @@ export function constructor(props, realmOrNull, numOrNull) {
                   Long.fromValue(props.num),
               ];
 
-    if (shard.isNegative() || realm.isNegative() || num.isNegative()) {
-        throw new Error("negative numbers are not allowed in IDs");
-    }
+    // if (shard.isNegative() || realm.isNegative() || num.isNegative()) {
+    //     throw new Error("negative numbers are not allowed in IDs");
+    // }
 
     return {
         shard,

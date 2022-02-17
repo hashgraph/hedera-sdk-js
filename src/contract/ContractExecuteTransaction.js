@@ -63,7 +63,7 @@ export default class ContractExecuteTransaction extends Transaction {
          * @private
          * @type {?AccountIdType}
          */
-        this._senderId = null;
+        this._senderID = null;
 
         /**
          * @private
@@ -285,8 +285,14 @@ export default class ContractExecuteTransaction extends Transaction {
     populateFromEIP1559Tx(foreignTx) {
         var data = Buffer.from(foreignTx.substring(2), 'hex');
 
+        console.log("data");
+        console.log(data);
+
         var decoded =
             RLP.decode(Uint8Array.from(data));
+
+        console.log("decoded");
+        console.log(decoded);
 
         var chainId = ArrayBuffer.isView(decoded[0])
             ? Buffer.from(decoded[0]).readIntBE(0, decoded[0].length)
@@ -315,6 +321,9 @@ export default class ContractExecuteTransaction extends Transaction {
         var amount = ArrayBuffer.isView(decoded[6])
             ? bufToBigint(Buffer.from(decoded[6]))
             : null;
+
+        console.log("amount");
+        console.log(amount);
 
         var callData = ArrayBuffer.isView(decoded[7])
             ? Buffer.from(decoded[7])
@@ -372,7 +381,7 @@ export default class ContractExecuteTransaction extends Transaction {
                     maxPriorityFee,
                     maxGasFee,
                     gasLimit,
-                    Buffer.from(receiver),
+                    Buffer.from(receiver, 'hex'),
                     amount,
                     callData,
                     recId,
@@ -381,8 +390,18 @@ export default class ContractExecuteTransaction extends Transaction {
                 );
         }
 
-        if (senderPubKey != null) {
-            this._senderId = PublicKey.fromBytesECDSA(senderPubKey).toAccountId(0,0);
+        try {
+            if (senderPubKey != null) {
+                console.log("senderPubKey");
+                console.log(Buffer.from(senderPubKey));
+                console.log(Buffer.from(senderPubKey).toString('hex'));
+                this._senderID = PublicKey.fromBytesECDSA(senderPubKey).toAccountId(0, 0);
+
+                console.log(this._senderID.toString());
+            }
+        } catch (e) {
+            console.log(e);
+            throw e;
         }
 
         if (callDataStart != null && callDataLength != null && nonce != null) {
@@ -454,29 +473,42 @@ export default class ContractExecuteTransaction extends Transaction {
         r,
         s
     ) {
-        const message =
+        var message =
             RLP.encode(
                 [
-                    2,
-                    [
-                        chainId,
-                        nonce,
-                        maxPriorityFee.valueOf(),
-                        maxGasFee.valueOf(),
-                        gasLimit,
-                        receiver,
-                        amount.valueOf(),
-                        callData,
-                        []
-                    ]
+                    chainId,
+                    nonce,
+                    maxPriorityFee.valueOf(),
+                    maxGasFee.valueOf(),
+                    gasLimit,
+                    receiver,
+                    amount.valueOf(),
+                    callData,
+                    []
                 ]
+
            );
+
+        const zeroTwo = new Uint8Array([2]);
+
+        message = Buffer.concat([zeroTwo,Buffer.from(message)]);
+
+        console.log(Buffer.from(message).toString('hex'));
 
         const signature = Buffer.concat([r,s]);
 
+        console.log("signature");
+        console.log(signature);
+
         const hash = keccak256(Buffer.from(message));
 
-        const newPubKey = secp256k1.ecdsaRecover(signature, recId, hash, true);
+        console.log("hash");
+        console.log(hash);
+
+        const newPubKey = secp256k1.ecdsaRecover(signature, recId, Buffer.from(hash), true);
+
+        console.log("newPubKey");
+        console.log(newPubKey);
 
         return newPubKey;
     }
@@ -523,6 +555,10 @@ export default class ContractExecuteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
+            senderID:
+                this._senderID != null
+                    ? this._senderID._toProtobuf()
+                    : null,
             contractID:
                 this._contractId != null
                     ? this._contractId._toProtobuf()

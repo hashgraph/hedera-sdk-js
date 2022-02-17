@@ -4,7 +4,7 @@ import { arrayEqual, arrayStartsWith } from "./util/array.js";
 import * as hex from "./encoding/hex.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 
-const derPrefix = "302f300706052b8104000a0324000421";
+const derPrefix = "302d300706052b8104000a032200";
 const derPrefixBytes = hex.decode(derPrefix);
 
 /**
