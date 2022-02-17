@@ -1,5 +1,5 @@
-import PublicKey from "../../../src/PublicKey.js";
-import KeyList from "../../../src/KeyList.js";
+import PublicKey from "../../src/PublicKey.js";
+import KeyList from "../../src/KeyList.js";
 
 describe("KeyList", function () {
     this.timeout(15000);
