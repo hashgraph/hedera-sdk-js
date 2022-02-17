@@ -114,11 +114,11 @@ export default class ForeignTransactionData {
     }
 
     /**
-     * @param {number} nonce
+     * @param {Long | number} nonce
      * @returns {ForeignTransactionData}
      */
     setNonce(nonce) {
-        this._nonce = nonce;
+        this._nonce = nonce instanceof Long ? nonce.toNumber() : nonce;
         return this;
     }
 
@@ -161,7 +161,7 @@ export default class ForeignTransactionData {
             payloadLength:
                 this._payloadLength != null ? this._payloadLength : null,
             nonce:
-                this.nonce != null ? Long.fromNumber(this.nonce) : null,
+                this._nonce != null ? Long.fromNumber(this._nonce) : null,
         };
     }
 
