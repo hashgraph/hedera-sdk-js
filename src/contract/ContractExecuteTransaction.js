@@ -400,8 +400,15 @@ export default class ContractExecuteTransaction extends Transaction {
 
         }
 
-        if (receiver != null) {
-            this.setContractId(ContractId.fromEvmAddress(0,0,receiver));
+
+        try {
+            if (receiver != null) {
+                console.log(receiver);
+                this.setContractId(ContractId.fromSolidityAddress(receiver));
+            }
+        } catch (e) {
+            console.log(e);
+            throw e;
         }
 
         console.log(this._contractId);
@@ -491,6 +498,12 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {Promise<proto.ITransactionResponse>}
      */
     _execute(channel, request) {
+        console.log("hit _execute");
+        console.log(request);
+        if (request.signedTransactionBytes != null) {
+            console.log(Buffer.from(request.signedTransactionBytes).toString('hex'));
+            console.log(request.signedTransactionBytes.length);
+        }
         return channel.smartContract.contractCallMethod(request);
     }
 
