@@ -16,6 +16,7 @@ import Long from "long";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../PublicKey.js").default} PublicKey
  */
 
 /**
@@ -62,6 +63,11 @@ export default class Query extends Executable {
 
         /** @type {?Hbar} */
         this._maxQueryPayment = null;
+
+        /**
+         * @type {?ClientOperator}
+         */
+        this._operator = null;
     }
 
     /**
@@ -187,6 +193,21 @@ export default class Query extends Executable {
     }
 
     /**
+     * @param {AccountId} accountId
+     * @param {PublicKey} publicKey
+     * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
+     * @returns {this}
+     */
+    _setOperatorWith(accountId, publicKey, transactionSigner) {
+        this._operator = {
+            transactionSigner,
+            accountId,
+            publicKey,
+        };
+        return this;
+    }
+
+    /**
      * @template MirrorChannelT
      * @param {import("../client/Client.js").default<Channel, MirrorChannelT>} client
      * @returns {Promise<void>}
@@ -206,7 +227,8 @@ export default class Query extends Executable {
             );
         }
 
-        const operator = client._operator;
+        const operator =
+            this._operator != null ? this._operator : client._operator;
 
         if (this._paymentTransactionId == null) {
             if (this._isPaymentRequired()) {

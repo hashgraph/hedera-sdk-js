@@ -29,6 +29,7 @@ module.exports = {
         // does not handle return types being annotated in a type comment
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-empty-function": "off",
 
         // allow import syntax as we compile that away with babel for node
         "node/no-unsupported-features/es-syntax": [

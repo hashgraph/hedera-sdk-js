@@ -33,6 +33,7 @@ export default class CostQuery extends Executable {
         this._grpcDeadline = query._grpcDeadline;
         this._requestTimeout = query._requestTimeout;
         this._nodeAccountIds.setList(query._nodeAccountIds.list);
+        this._operator = query._operator;
 
         /**
          * @type {proto.IQueryHeader | null}
@@ -58,7 +59,8 @@ export default class CostQuery extends Executable {
             throw new Error("Cannot do CostQuery without Client");
         }
 
-        const operator = client._operator;
+        const operator =
+            this._operator != null ? this._operator : client._operator;
 
         if (operator == null) {
             throw new Error(
