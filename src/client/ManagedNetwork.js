@@ -203,6 +203,7 @@ export default class MangedNetwork {
             }
 
             if (!keys.has(node.getKey())) {
+                keys.add(node.getKey());
                 nodes.push(node);
             }
         }
