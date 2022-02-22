@@ -23,7 +23,7 @@ describe("Timestamp", function () {
         expect(timestamp.nanos.toInt()).to.be.eql(1);
     });
 
-    it("fromDate()", function() {
+    it("fromDate()", function () {
         let timestamp = Timestamp.fromDate(999999998);
 
         expect(timestamp.seconds.toInt()).to.be.eql(0);

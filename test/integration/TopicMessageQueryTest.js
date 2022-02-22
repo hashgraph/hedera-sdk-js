@@ -8,7 +8,6 @@ describe("TopicMessageQuery", function () {
         const client = Client.forNetwork({});
         client.setTransportSecurity(true);
         client.setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"]);
-        client.mirroNetwork();
 
         let finished = false;
         let endTime = Date.now() + 5000;
