@@ -1,22 +1,15 @@
 import * as $protobuf from "protobufjs/minimal.js";
-import { proto } from "./proto.js";
+import { proto, com, google } from "./proto.js";
 
 // re-export protobuf reader and writer for usage by @hashgraph/sdk
 import Reader = $protobuf.Reader;
 import Writer = $protobuf.Writer;
 
-/**
- * @ typedef {import("./proto.js").proto.proto.ITokenUnitBalance} proto.ITokenUnitBalance
- */
-
-/**
- * @exports proto
- */
-
 export { Reader, Writer };
 
-
-import ISingleAccountBalances = proto.SingleAccountBalances;
+import ITokenUnitBalance = proto.ITokenUnitBalance;
+import TokenUnitBalance = proto.TokenUnitBalance;
+import ISingleAccountBalances = proto.ISingleAccountBalances;
 import SingleAccountBalances = proto.SingleAccountBalances;
 import IAllAccountBalances = proto.IAllAccountBalances;
 import AllAccountBalances = proto.AllAccountBalances;
@@ -380,40 +373,42 @@ import ISignedTransaction = proto.ISignedTransaction;
 import SignedTransaction = proto.SignedTransaction;
 import ITransactionList = proto.ITransactionList;
 import TransactionList = proto.TransactionList;
-import IDoubleValue = proto.IDoubleValue;
-import DoubleValue = proto.DoubleValue;
-import IFloatValue = proto.IFloatValue;
-import FloatValue = proto.FloatValue;
-import IInt64Value = proto.IInt64Value;
-import Int64Value = proto.Int64Value;
-import IUInt64Value = proto.IUInt64Value;
-import UInt64Value = proto.UInt64Value;
-import IInt32Value = proto.IInt32Value;
-import Int32Value = proto.Int32Value;
-import IUInt32Value = proto.IUInt32Value;
-import UInt32Value = proto.UInt32Value;
-import IBoolValue = proto.IBoolValue;
-import BoolValue = proto.BoolValue;
-import IStringValue = proto.IStringValue;
-import StringValue = proto.StringValue;
-import IBytesValue = proto.IBytesValue;
-import BytesValue = proto.BytesValue;
-import IConsensusTopicQuery = proto.IConsensusTopicQuery;
-import ConsensusTopicQuery = proto.ConsensusTopicQuery;
-import IConsensusTopicResponse = proto.IConsensusTopicResponse;
-import ConsensusTopicResponse = proto.ConsensusTopicResponse;
-import MirrorConsensusService = proto.MirrorConsensusService;
+import IDoubleValue = google.protobuf.IDoubleValue;
+import DoubleValue = google.protobuf.DoubleValue;
+import IFloatValue = google.protobuf.IFloatValue;
+import FloatValue = google.protobuf.FloatValue;
+import IInt64Value = google.protobuf.IInt64Value;
+import Int64Value = google.protobuf.Int64Value;
+import IUInt64Value = google.protobuf.IUInt64Value;
+import UInt64Value = google.protobuf.UInt64Value;
+import IInt32Value = google.protobuf.IInt32Value;
+import Int32Value = google.protobuf.Int32Value;
+import IUInt32Value = google.protobuf.IUInt32Value;
+import UInt32Value = google.protobuf.UInt32Value;
+import IBoolValue = google.protobuf.IBoolValue;
+import BoolValue = google.protobuf.BoolValue;
+import IStringValue = google.protobuf.IStringValue;
+import StringValue = google.protobuf.StringValue;
+import IBytesValue = google.protobuf.IBytesValue;
+import BytesValue = google.protobuf.BytesValue;
+import IConsensusTopicQuery = com.hedera.mirror.api.proto.IConsensusTopicQuery;
+import ConsensusTopicQuery = com.hedera.mirror.api.proto.ConsensusTopicQuery;
+import IConsensusTopicResponse = com.hedera.mirror.api.proto.IConsensusTopicResponse;
+import ConsensusTopicResponse = com.hedera.mirror.api.proto.ConsensusTopicResponse;
+import MirrorConsensusService = com.hedera.mirror.api.proto.ConsensusService;
 import ITokenPauseTransactionBody = proto.ITokenPauseTransactionBody;
 import TokenPauseTransactionBody = proto.TokenPauseTransactionBody;
 import ITokenUnpauseTransactionBody = proto.ITokenUnpauseTransactionBody;
 import TokenUnpauseTransactionBody = proto.TokenUnpauseTransactionBody;
 import TokenPauseStatus = proto.TokenPauseStatus;
 import FreezeType = proto.FreezeType;
-import AddressBookQuery = proto.AddressBookQuery;
-import IAddressBookQuery = proto.IAddressBookQuery;
-import MirrorNetworkService = proto.MirrorNetworkService;
+import AddressBookQuery = com.hedera.mirror.api.proto.AddressBookQuery;
+import IAddressBookQuery = com.hedera.mirror.api.proto.IAddressBookQuery;
+import MirrorNetworkService = com.hedera.mirror.api.proto.NetworkService;
 
 export {
+    ITokenUnitBalance,
+    TokenUnitBalance,
     ISingleAccountBalances,
     SingleAccountBalances,
     IAllAccountBalances,
