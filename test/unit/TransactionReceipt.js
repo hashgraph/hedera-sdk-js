@@ -5,7 +5,6 @@ import {
     ContractId,
     ExchangeRate,
     FileId,
-    Hbar,
     ScheduleId,
     Status,
     Timestamp,
@@ -17,7 +16,7 @@ import {
 import Long from "long";
 
 describe("TransactionReceipt", function () {
-    it("[from|to]Protobuf()", function () {
+    it("[from|to]Bytes()", function () {
         const status = Status.Ok;
         const accountId = AccountId.fromString("0.0.1");
         const fileId = FileId.fromString("0.0.2");
@@ -26,8 +25,8 @@ describe("TransactionReceipt", function () {
         const tokenId = TokenId.fromString("0.0.4");
         const scheduleId = ScheduleId.fromString("0.0.5");
         const exchangeRate = new ExchangeRate({
-            hbars: Hbar.fromTinybars(6),
-            cents: Long.fromNumber(7),
+            hbars: 6,
+            cents: 7,
             expirationTime: new Date(8),
         });
         const topicSequenceNumber = Long.fromNumber(9);
@@ -58,9 +57,7 @@ describe("TransactionReceipt", function () {
         });
 
         expect(
-            TransactionReceipt._fromProtobuf(
-                receipt._toProtobuf()
-            )._toProtobuf()
+            TransactionReceipt.fromBytes(receipt.toBytes())._toProtobuf()
         ).to.deep.equal({
             receipt: {
                 status: status._code,
@@ -77,8 +74,8 @@ describe("TransactionReceipt", function () {
                     nextRate: null,
                 },
                 scheduledTransactionID: scheduledTransactionId._toProtobuf(),
-                newTotalSupply: totalSupply,
                 serialNumbers: serials,
+                newTotalSupply: totalSupply,
             },
             duplicateTransactionReceipts: [],
             childTransactionReceipts: [],

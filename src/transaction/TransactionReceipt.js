@@ -271,15 +271,17 @@ export default class TransactionReceipt {
             topicSequenceNumber:
                 receipt.topicSequenceNumber == null
                     ? null
-                    : Long.fromValue(receipt.topicSequenceNumber),
+                    : Long.fromString(receipt.topicSequenceNumber.toString()),
 
             topicRunningHash:
                 receipt.topicRunningHash != null
-                    ? receipt.topicRunningHash
+                    ? new Uint8Array(receipt.topicRunningHash)
                     : null,
 
             totalSupply:
-                receipt.newTotalSupply != null ? receipt.newTotalSupply : null,
+                receipt.newTotalSupply != null
+                    ? Long.fromString(receipt.newTotalSupply.toString())
+                    : null,
 
             scheduledTransactionId:
                 receipt.scheduledTransactionID != null
