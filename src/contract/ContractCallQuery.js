@@ -3,6 +3,7 @@ import ContractId from "./ContractId.js";
 import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import ContractFunctionResult from "./ContractFunctionResult.js";
 import Long from "long";
+import { AccountId } from "../exports.js";
 
 /**
  * @namespace proto
@@ -18,7 +19,7 @@ import Long from "long";
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
- * @typedef {import("../account/AccountId.js").default} AccountId
+ * @typedef {import("../account/AccountId.js").default} AccountIdType
  */
 
 /**
@@ -49,6 +50,12 @@ export default class ContractCallQuery extends Query {
         if (props.contractId != null) {
             this.setContractId(props.contractId);
         }
+
+        /**
+         * @private
+         * @type {?AccountIdType}
+         */
+        this._senderID = null;
 
         /**
          * @private
@@ -128,6 +135,21 @@ export default class ContractCallQuery extends Query {
             typeof contractId === "string"
                 ? ContractId.fromString(contractId)
                 : contractId.clone();
+
+        return this;
+    }
+
+    /**
+     * Set the sender ID for which the call is being requested.
+     *
+     * @param {AccountId | string} senderId
+     * @returns {ContractCallQuery}
+     */
+    setSenderId(senderId) {
+        this._senderID =
+            typeof senderId === "string"
+                ? AccountId.fromSolidityAddress(senderId)
+                : senderId.clone();
 
         return this;
     }
@@ -259,7 +281,6 @@ export default class ContractCallQuery extends Query {
                         ? this._contractId._toProtobuf()
                         : null,
                 gas: this._gas,
-                maxResultSize: this._maxResultSize,
                 functionParameters: this._functionParameters,
             },
         };

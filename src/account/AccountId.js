@@ -22,9 +22,9 @@ export default class AccountId {
     constructor(props, realm, num, aliasKey) {
         const result = entity_id.constructor(props, realm, num);
 
-        this.shard = result.shard;
-        this.realm = result.realm;
-        this.num = result.num;
+        this.shard = Number(result.shard);
+        this.realm = Number(result.realm);
+        this.num = Number(result.num);
         this.aliasKey = aliasKey != null ? aliasKey : null;
 
         /**
@@ -45,13 +45,13 @@ export default class AccountId {
         }
 
         const shard =
-            result.shard != null ? Long.fromString(result.shard) : Long.ZERO;
+            result.shard != null ? Number(result.shard) : Number(0);
         const realm =
-            result.realm != null ? Long.fromString(result.realm) : Long.ZERO;
+            result.realm != null ? Number(result.realm) : Number(0);
         const [num, publicKey] =
             result.numOrHex.length < 20
-                ? [Long.fromString(result.numOrHex), undefined]
-                : [Long.ZERO, PublicKey.fromString(result.numOrHex)];
+                ? [Number(result.numOrHex), undefined]
+                : [Number(0), PublicKey.fromString(result.numOrHex)];
 
         return new AccountId(shard, realm, num, publicKey);
     }
