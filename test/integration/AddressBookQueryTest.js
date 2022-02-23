@@ -11,6 +11,6 @@ describe("AddressBookQuery", function () {
             .setFileId("0.0.102")
             .execute(client);
 
-        expect(addressBook.nodeAddresses.length > 0).to.be.true;
+        expect(addressBook.nodeAddresses.length).to.be.above(0);
     });
 });

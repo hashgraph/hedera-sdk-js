@@ -63,7 +63,7 @@ export default class TransactionId {
      * @returns {TransactionId}
      */
     static withValidStart(accountId, validStart) {
-        return new TransactionId(accountId, validStart, null);
+        return new TransactionId(accountId, validStart);
     }
 
     /**
@@ -151,8 +151,8 @@ export default class TransactionId {
             return new TransactionId(
                 AccountId._fromProtobuf(id.accountID),
                 Timestamp._fromProtobuf(id.transactionValidStart),
-                id.scheduled,
-                id.nonce
+                id.scheduled != null ? id.scheduled : undefined,
+                id.nonce != null ? id.nonce : undefined
             );
         } else {
             throw new Error(

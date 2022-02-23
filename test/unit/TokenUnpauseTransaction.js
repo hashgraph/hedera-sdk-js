@@ -43,7 +43,7 @@ describe("TokenPauseTransaction", function () {
                     seconds: Long.fromNumber(2),
                     nanos: 3,
                 },
-                scheduled: null,
+                scheduled: false,
                 nonce: null,
             },
             nodeAccountID: null,
