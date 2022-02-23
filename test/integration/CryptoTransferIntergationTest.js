@@ -5,11 +5,38 @@ import {
     PrivateKey,
     Status,
     TransactionId,
+    AccountId,
     TransferTransaction,
+    Transaction,
 } from "../../src/exports.js";
 import IntegrationTestEnv from "./client/NodeIntegrationTestEnv.js";
+import { Client } from "../../src/index.js";
 
 describe("CryptoTransfer", function () {
+    it("should not require node account IDs to be explicitly set", async function () {
+        this.timeout(120000);
+
+        const operatorId = AccountId.fromString("0.0.9523");
+        const operatorKey = PrivateKey.fromString(
+            "91dad4f120ca225ce66deb1d6fb7ecad0e53b5e879aa45b0c5e0db7923f26d08"
+        );
+
+        const client = Client.forTestnet();
+
+        let transaction = new TransferTransaction()
+            .setTransactionId(TransactionId.generate(operatorId))
+            .addHbarTransfer(operatorId, -1)
+            .addHbarTransfer(AccountId.fromString("0.0.3"), 1)
+            .freezeWith(client);
+
+        const bytes = transaction.toBytes();
+
+        transaction = Transaction.fromBytes(bytes);
+        transaction = await transaction.sign(operatorKey);
+
+        await (await transaction.execute(client)).getReceipt(client);
+    });
+
     it("should be executable", async function () {
         this.timeout(120000);
 
