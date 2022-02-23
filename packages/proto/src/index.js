@@ -1,5 +1,5 @@
 import * as $protobuf from "protobufjs/minimal.js";
-import { proto } from "./proto.js";
+import { proto, com } from "./proto.js";
 import Long from "long";
 
 /**
@@ -206,7 +206,7 @@ export const FileService = proto.FileService;
 export const FreezeService = proto.FreezeService;
 export const ConsensusTopicQuery = proto.ConsensusTopicQuery;
 export const ConsensusTopicResponse = proto.ConsensusTopicResponse;
-export const MirrorConsensusService = proto.MirrorConsensusService;
+export const MirrorConsensusService = com.hedera.mirror.api.proto.ConsensusService;
 export const NetworkService = proto.NetworkService;
 export const ScheduleService = proto.ScheduleService;
 export const SmartContractService = proto.SmartContractService;
@@ -228,4 +228,4 @@ export const TokenUnpauseTransactionBody = proto.TokenUnpauseTransactionBody;
 export const TokenPauseStatus = proto.TokenPauseStatus;
 export const FreezeType = proto.FreezeType;
 export const AddressBookQuery = proto.AddressBookQuery;
-export const MirrorNetworkService = proto.MirrorNetworkService;
+export const MirrorNetworkService = com.hedera.mirror.api.proto.NetworkService;

@@ -20,7 +20,7 @@
 
 syntax = "proto3";
 
-package proto;
+package com.hedera.mirror.api.proto;
 
 /**
  * Required for the reactor-grpc generator to work correctly
@@ -95,6 +95,6 @@ message ConsensusTopicResponse {
  * The Mirror Service provides the ability to query a stream of Hedera Consensus Service (HCS)
  * messages for an HCS Topic via a specific (possibly open-ended) time range.
  */
-service MirrorConsensusService {
+service ConsensusService {
     rpc subscribeTopic (ConsensusTopicQuery) returns (stream ConsensusTopicResponse);
 }

@@ -5,11 +5,18 @@ import { proto } from "./proto.js";
 import Reader = $protobuf.Reader;
 import Writer = $protobuf.Writer;
 
+/**
+ * @ typedef {import("./proto.js").proto.proto.ITokenUnitBalance} proto.ITokenUnitBalance
+ */
+
+/**
+ * @exports proto
+ */
+
 export { Reader, Writer };
 
-import ITokenUnitBalance = proto.ITokenUnitBalance;
-import TokenUnitBalance = proto.TokenUnitBalance;
-import ISingleAccountBalances = proto.ISingleAccountBalances;
+
+import ISingleAccountBalances = proto.SingleAccountBalances;
 import SingleAccountBalances = proto.SingleAccountBalances;
 import IAllAccountBalances = proto.IAllAccountBalances;
 import AllAccountBalances = proto.AllAccountBalances;
@@ -407,8 +414,6 @@ import IAddressBookQuery = proto.IAddressBookQuery;
 import MirrorNetworkService = proto.MirrorNetworkService;
 
 export {
-    ITokenUnitBalance,
-    TokenUnitBalance,
     ISingleAccountBalances,
     SingleAccountBalances,
     IAllAccountBalances,
