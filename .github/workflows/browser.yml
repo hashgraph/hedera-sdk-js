@@ -39,4 +39,5 @@ jobs:
       - name: Run unit tests against Chrome
         run: |
           pnpm install
+          pnpm compile:js
           pnpm test:unit:browser:chrome

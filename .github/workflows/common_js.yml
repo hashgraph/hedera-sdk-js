@@ -39,7 +39,9 @@ jobs:
           version: 6.0.2
 
       - name: Build SDK
-        run: pnpm install --force 
+        run: |
+          pnpm install
+          pnpm compile:js
 
       - name: Install yalc
         run: pnpm install -g yalc
