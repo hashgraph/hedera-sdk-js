@@ -16,11 +16,15 @@ describe("ExchangeRateSet", function () {
         const currentExpirationTime = new Date("January 20, 1970 01:08:34 UTC");
         currentExpirationTime.setMilliseconds(800);
         expect(exchangeRateSet.currentRate.expirationTime).to.deep.equal(currentExpirationTime);
+        let exchangeRate = 19.338333333333335;
+        expect(exchangeRate).to.equal(exchangeRateSet.currentRate.exchangeRate);
 
         expect(exchangeRateSet.nextRate.cents).to.equal(587660);
         expect(exchangeRateSet.nextRate.hbars).to.equal(30000);
         const nextExpirationTime = new Date("January 20, 1970 01:08:38 UTC");
         nextExpirationTime.setMilliseconds(400);
         expect(exchangeRateSet.nextRate.expirationTime).to.deep.equal(nextExpirationTime);
+        exchangeRate = 19.588666666666665;
+        expect(exchangeRate).to.equal(exchangeRateSet.nextRate.exchangeRate);
     });
 });
