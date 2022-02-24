@@ -40,6 +40,7 @@ export { default as CustomFixedFee } from "./token/CustomFixedFee.js";
 export { default as CustomFractionalFee } from "./token/CustomFractionalFee.js";
 export { default as CustomRoyaltyFee } from "./token/CustomRoyaltyFee.js";
 export { default as ExchangeRate } from "./ExchangeRate.js";
+export { default as ExchangeRateSet } from "./ExchangeRateSet.js";
 export { default as FileAppendTransaction } from "./file/FileAppendTransaction.js";
 export { default as FileContentsQuery } from "./file/FileContentsQuery.js";
 export { default as FileCreateTransaction } from "./file/FileCreateTransaction.js";
