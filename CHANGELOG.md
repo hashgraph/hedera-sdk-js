@@ -4,11 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.9.1
+## v2.10.0-beta.1
+
+### Added
+
+ * `AddressBookQuery`
+ * Status codes
+ * `*[Transaction|Query].setGrpcDeadline()`
+ * `*Allowance.ownerAccountId`
 
 ### Fixed
 
  * Mirror network incorrectly using `433` for TLS instead of `443`
+ * `TransactionReceipt` protobuf encoding
+ * `ContractId.fromString()`
 
 ## v2.9.0
 
@@ -35,6 +44,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `[FileAppend|TopicMessageSubmit]Transaction.[set|get]ChunkSize()`, and changed default chunk size for `FileAppendTransaction` to 2048.
  * `AccountAllowance[Adjust|Approve]Transaction`
  * `TransactionRecord.tokenTransfersList`
+ * `AccountAllowance[Adjust|Approve]Transaction`
+ * `AccountInfo.[hbar|token|tokenNft]Allowances`
+ * `[Hbar|Token|TokenNft]Allowance`
+ * `[Hbar|Token|TokenNft]Allowance`
+ * `TransferTransaction.set[Hbar|Token|TokenNft]TransferApproval()`
 
 ## v2.8.0
 

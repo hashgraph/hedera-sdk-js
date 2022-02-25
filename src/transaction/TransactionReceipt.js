@@ -165,9 +165,11 @@ export default class TransactionReceipt {
                 topicID:
                     this.topicId != null ? this.topicId._toProtobuf() : null,
                 tokenID:
-                    this.topicId != null ? this.topicId._toProtobuf() : null,
+                    this.tokenId != null ? this.tokenId._toProtobuf() : null,
                 scheduleID:
-                    this.topicId != null ? this.topicId._toProtobuf() : null,
+                    this.scheduleId != null
+                        ? this.scheduleId._toProtobuf()
+                        : null,
 
                 topicRunningHash:
                     this.topicRunningHash == null
@@ -190,6 +192,7 @@ export default class TransactionReceipt {
                         : null,
 
                 serialNumbers: this.serials,
+                newTotalSupply: this.totalSupply,
             },
         };
     }
@@ -268,15 +271,17 @@ export default class TransactionReceipt {
             topicSequenceNumber:
                 receipt.topicSequenceNumber == null
                     ? null
-                    : Long.fromValue(receipt.topicSequenceNumber),
+                    : Long.fromString(receipt.topicSequenceNumber.toString()),
 
             topicRunningHash:
                 receipt.topicRunningHash != null
-                    ? receipt.topicRunningHash
+                    ? new Uint8Array(receipt.topicRunningHash)
                     : null,
 
             totalSupply:
-                receipt.newTotalSupply != null ? receipt.newTotalSupply : null,
+                receipt.newTotalSupply != null
+                    ? Long.fromString(receipt.newTotalSupply.toString())
+                    : null,
 
             scheduledTransactionId:
                 receipt.scheduledTransactionID != null

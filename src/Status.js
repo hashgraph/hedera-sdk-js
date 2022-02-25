@@ -529,6 +529,16 @@ export default class Status {
                 return "MAX_ALLOWANCES_EXCEEDED";
             case Status.EmptyAllowances:
                 return "EMPTY_ALLOWANCES";
+            case Status.SpenderAccountRepeatedInAllowances:
+                return "SPENDER_ACCOUNT_REPEATED_IN_ALLOWANCES";
+            case Status.RepeatedSerialNumsInNFTAllowances:
+                return "REPEATED_SERIAL_NUMS_IN_NFT_ALLOWANCES";
+            case Status.FungibleTokenInNFTAllowances:
+                return "FUNGIBLE_TOKEN_IN_NFT_ALLOWANCES";
+            case Status.NFTInFungibleTokenAllowances:
+                return "NFT_IN_FUNGIBLE_PAYER_ALLOWANCES";
+            case Status.PayerAndOwnerNotEqual:
+                return "PAYER_AND_OWNER_NOT_EQUAL";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1049,6 +1059,16 @@ export default class Status {
                 return Status.MaxAllowancesExceeded;
             case 295:
                 return Status.EmptyAllowances;
+            case 296:
+                return Status.SpenderAccountRepeatedInAllowances;
+            case 297:
+                return Status.RepeatedSerialNumsInNFTAllowances;
+            case 298:
+                return Status.FungibleTokenInNFTAllowances;
+            case 299:
+                return Status.NFTInFungibleTokenAllowances;
+            case 300:
+                return Status.PayerAndOwnerNotEqual;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2381,3 +2401,30 @@ Status.MaxAllowancesExceeded = new Status(294);
  * No allowances have been specified in the approval/adjust transaction.
  */
 Status.EmptyAllowances = new Status(295);
+
+/**
+ * Spender is repeated more than once in Crypto or Token or NFT allowance lists in a single
+ * CryptoApproveAllowance or CryptoAdjustAllowance transaction.
+ */
+Status.SpenderAccountRepeatedInAllowances = new Status(296);
+
+/**
+ * Serial numbers are repeated in nft allowance for a single spender account
+ */
+Status.RepeatedSerialNumsInNFTAllowances = new Status(297);
+
+/**
+ * Fungible common token used in NFT allowances
+ */
+Status.FungibleTokenInNFTAllowances = new Status(298);
+
+/**
+ * Non fungible token used in fungible token allowances
+ */
+Status.NFTInFungibleTokenAllowances = new Status(299);
+
+/**
+ * An approval/adjustment transaction was submitted where the payer and owner account are
+ * not the same. Currently only the owner is permitted to perform these operations.
+ */
+Status.PayerAndOwnerNotEqual = new Status(300);

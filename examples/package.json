@@ -9,6 +9,9 @@
         "lint:js": "eslint --fix '*.js' '*.json'",
         "format": "prettier '*.js' '*.json' --write"
     },
+    "engines": {
+        "node": ">=10.17.0"
+    },
     "dependencies": {
         "@hashgraph/sdk": "link:..",
         "dotenv": "^14.3.0"

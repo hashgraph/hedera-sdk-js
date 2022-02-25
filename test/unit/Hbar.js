@@ -1,5 +1,6 @@
-import Hbar from "../../src/Hbar.js";
-import HbarUnit from "../../src/HbarUnit.js";
+import { expect } from "chai";
+
+import { Hbar, HbarUnit } from "../../src/exports.js";
 
 describe("Hbar", function () {
     it("should pass regex, convert, and reverse [to|from]String", function () {

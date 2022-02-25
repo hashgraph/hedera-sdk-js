@@ -108,6 +108,8 @@ export default class Client {
         this._maxBackoff = 8000;
 
         this._defaultRegenerateTransactionId = true;
+
+        this._requestTimeout = null;
     }
 
     /**
@@ -477,6 +479,22 @@ export default class Client {
      */
     get maxBackoff() {
         return this._maxBackoff;
+    }
+
+    /**
+     * @param {number} requestTimeout - Number of milliseconds
+     * @returns {this}
+     */
+    setRequestTimeout(requestTimeout) {
+        this._requestTimeout = requestTimeout;
+        return this;
+    }
+
+    /**
+     * @returns {?number}
+     */
+    get requestTimeout() {
+        return this._requestTimeout;
     }
 
     /**

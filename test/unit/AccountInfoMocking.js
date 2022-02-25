@@ -280,4 +280,93 @@ describe("AccountInfo", function () {
 
         servers.close();
     });
+
+    it("should timeout if Client.setRequestTimeout is set", async function () {
+        const { client, servers } = await Mocker.withResponses([
+            [
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+            ],
+        ]);
+
+        client.setRequestTimeout(1);
+
+        let err = false;
+
+        try {
+            await new AccountInfoQuery().setAccountId("0.0.3").execute(client);
+        } catch (error) {
+            err = error.message == "timeout exceeded";
+        }
+
+        servers.close();
+
+        if (!err) {
+            throw new Error("request didn't timeout");
+        }
+    });
+
+    it("should timeout if Executable.execute(client, requestTimeout) is set", async function () {
+        const { client, servers } = await Mocker.withResponses([
+            [
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+            ],
+        ]);
+
+        let err = false;
+
+        try {
+            await new AccountInfoQuery()
+                .setAccountId("0.0.3")
+                .execute(client, 1);
+        } catch (error) {
+            err = error.message == "timeout exceeded";
+        }
+
+        servers.close();
+
+        if (!err) {
+            throw new Error("request didn't timeout");
+        }
+    });
+
+    it("should timeout if gRPC deadline is reached", async function () {
+        const { client, servers } = await Mocker.withResponses([
+            [
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+            ],
+        ]);
+
+        let err = false;
+
+        try {
+            await new AccountInfoQuery()
+                .setAccountId("0.0.3")
+                .setGrpcDeadline(1)
+                .execute(client);
+        } catch (error) {
+            err = error.message == "grpc deadline exceeded";
+        }
+
+        servers.close();
+
+        if (!err) {
+            throw new Error("request didn't timeout");
+        }
+    });
 });

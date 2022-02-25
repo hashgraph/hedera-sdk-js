@@ -66,6 +66,11 @@ export default class Executable {
          * @type {ClientOperator | null}
          */
         this._operator = null;
+
+        /** @type {number | null} */
+        this._requestTimeout = null;
+
+        this._grpcDeadline = null;
     }
 
     /**
@@ -115,6 +120,23 @@ export default class Executable {
      */
     setMaxAttempts(maxAttempts) {
         this._maxAttempts = maxAttempts;
+
+        return this;
+    }
+
+    /**
+     * @returns {?number}
+     */
+    get grpcDeadline() {
+        return this._grpcDeadline;
+    }
+
+    /**
+     * @param {number} grpcDeadline
+     * @returns {this}
+     */
+    setGrpcDeadline(grpcDeadline) {
+        this._grpcDeadline = grpcDeadline;
 
         return this;
     }
@@ -277,14 +299,21 @@ export default class Executable {
      * @template {Channel} ChannelT
      * @template MirrorChannelT
      * @param {import("./client/Client.js").default<ChannelT, MirrorChannelT>} client
+     * @param {number=} requestTimeout
      * @returns {Promise<OutputT>}
      */
-    async execute(client) {
+    async execute(client, requestTimeout) {
+        if (this._requestTimeout == null) {
+            this._requestTimeout =
+                requestTimeout != null ? requestTimeout : client.requestTimeout;
+        }
+
         await this._beforeExecute(client);
 
         if (this._maxBackoff == null) {
             this._maxBackoff = client.maxBackoff;
         }
+
         if (this._minBackoff == null) {
             this._minBackoff = client.minBackoff;
         }
@@ -294,7 +323,16 @@ export default class Executable {
                 ? client._maxAttempts
                 : this._maxAttempts;
 
+        const startTime = Date.now();
+
         for (let attempt = 1 /* loop forever */; ; attempt += 1) {
+            if (
+                this._requestTimeout != null &&
+                startTime + this._requestTimeout > Date.now()
+            ) {
+                throw new Error("timeout exceeded");
+            }
+
             const nodeAccountId = this._getNodeAccountId();
             const node = client._network.getNode(nodeAccountId);
 
@@ -319,7 +357,25 @@ export default class Executable {
             }
 
             try {
-                response = await this._execute(channel, request);
+                const promises = [];
+                if (this._grpcDeadline != null) {
+                    promises.push(
+                        // eslint-disable-next-line ie11/no-loop-func
+                        new Promise((_, reject) =>
+                            setTimeout(
+                                // eslint-disable-next-line ie11/no-loop-func
+                                () =>
+                                    reject(new Error("grpc deadline exceeded")),
+                                /** @type {number=} */ (this._grpcDeadline)
+                            )
+                        )
+                    );
+                }
+                promises.push(this._execute(channel, request));
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                response = /** @type {ResponseT} */ (
+                    await Promise.race(promises)
+                );
             } catch (err) {
                 const error = GrpcServiceError._fromResponse(
                     /** @type {Error} */ (err)
