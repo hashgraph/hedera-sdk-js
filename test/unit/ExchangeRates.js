@@ -2,14 +2,14 @@ import "mocha";
 import { expect } from "chai";
 
 import {
-    ExchangeRateSet
+    ExchangeRates
 } from "../../src/exports.js";
 
 const exchangeRateSetBytes = Buffer.from("0a1008b0ea0110b6b4231a0608f0bade9006121008b0ea01108cef231a060880d7de9006", "hex");
 
-describe("ExchangeRateSet", function () {
+describe("ExchangeRates", function () {
     it("fromBytes", function () {
-        const exchangeRateSet = ExchangeRateSet.fromBytes(exchangeRateSetBytes);
+        const exchangeRateSet = ExchangeRates.fromBytes(exchangeRateSetBytes);
 
         expect(exchangeRateSet.currentRate.cents).to.equal(580150);
         expect(exchangeRateSet.currentRate.hbars).to.equal(30000);
@@ -17,7 +17,7 @@ describe("ExchangeRateSet", function () {
         currentExpirationTime.setMilliseconds(800);
         expect(exchangeRateSet.currentRate.expirationTime).to.deep.equal(currentExpirationTime);
         let exchangeRate = 19.338333333333335;
-        expect(exchangeRate).to.equal(exchangeRateSet.currentRate.exchangeRate);
+        expect(exchangeRate).to.equal(exchangeRateSet.currentRate.exchangeRateInCents);
 
         expect(exchangeRateSet.nextRate.cents).to.equal(587660);
         expect(exchangeRateSet.nextRate.hbars).to.equal(30000);
@@ -25,6 +25,6 @@ describe("ExchangeRateSet", function () {
         nextExpirationTime.setMilliseconds(400);
         expect(exchangeRateSet.nextRate.expirationTime).to.deep.equal(nextExpirationTime);
         exchangeRate = 19.588666666666665;
-        expect(exchangeRate).to.equal(exchangeRateSet.nextRate.exchangeRate);
+        expect(exchangeRate).to.equal(exchangeRateSet.nextRate.exchangeRateInCents);
     });
 });

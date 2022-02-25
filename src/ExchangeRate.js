@@ -7,7 +7,7 @@ export default class ExchangeRate {
      * @param {number} props.hbars
      * @param {number} props.cents
      * @param {Date} props.expirationTime
-     * @param {number} props.exchangeRate
+     * @param {number} props.exchangeRateInCents
      */
     constructor(props) {
         /**
@@ -40,7 +40,7 @@ export default class ExchangeRate {
          * @readonly
          * @type {number}
          */
-        this.exchangeRate = props.cents / props.hbars;
+        this.exchangeRateInCents = props.cents / props.hbars;
 
         Object.freeze(this);
     }
