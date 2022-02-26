@@ -7,6 +7,7 @@ import * as utf8 from "../encoding/utf8.js";
 import Timestamp from "../Timestamp.js";
 import Key from "../Key.js";
 import KeyList from "../KeyList.js";
+import Long from "long";
 
 /**
  * @namespace proto
@@ -48,8 +49,10 @@ export default class FileCreateTransaction extends Transaction {
          * @private
          * @type {Timestamp}
          */
-        this._expirationTime = Timestamp.fromDate(
-            Date.now() + DEFAULT_AUTO_RENEW_PERIOD.toInt() * 1000
+        this._expirationTime = new Timestamp(0, 0).plusNanos(
+            Long.fromNumber(Date.now())
+                .mul(1000000)
+                .add(DEFAULT_AUTO_RENEW_PERIOD.mul(1000000000))
         );
 
         /**
