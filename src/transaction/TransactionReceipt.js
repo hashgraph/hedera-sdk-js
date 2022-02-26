@@ -289,7 +289,12 @@ export default class TransactionReceipt {
                           receipt.scheduledTransactionID
                       )
                     : null,
-            serials: receipt.serialNumbers != null ? receipt.serialNumbers : [],
+            serials:
+                receipt.serialNumbers != null
+                    ? receipt.serialNumbers.map((serial) =>
+                          Long.fromValue(serial)
+                      )
+                    : [],
             children,
             duplicates,
         });
