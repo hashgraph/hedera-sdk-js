@@ -5,6 +5,7 @@ import Long from "long";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").ITokenAllowance} proto.ITokenAllowance
+ * @typedef {import("@hashgraph/proto").IGrantedTokenAllowance} proto.IGrantedTokenAllowance
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  */
@@ -71,6 +72,27 @@ export default class TokenAllowance {
                           /**@type {proto.IAccountID}*/ (allowance.owner)
                       )
                     : null,
+            amount:
+                allowance.amount != null
+                    ? Long.fromValue(/** @type {Long} */ (allowance.amount))
+                    : null,
+        });
+    }
+
+    /**
+     * @internal
+     * @param {proto.IGrantedTokenAllowance} allowance
+     * @returns {TokenAllowance}
+     */
+    static _fromGrantedProtobuf(allowance) {
+        return new TokenAllowance({
+            tokenId: TokenId._fromProtobuf(
+                /** @type {proto.ITokenID} */ (allowance.tokenId)
+            ),
+            spenderAccountId: AccountId._fromProtobuf(
+                /** @type {proto.IAccountID} */ (allowance.spender)
+            ),
+            ownerAccountId: null,
             amount:
                 allowance.amount != null
                     ? Long.fromValue(/** @type {Long} */ (allowance.amount))

@@ -1202,8 +1202,12 @@ enum ResponseCodeEnum {
   NFT_IN_FUNGIBLE_TOKEN_ALLOWANCES = 299;
 
   /**
-   * An approval/adjustment transaction was submitted where the payer and owner account are
-   * not the same. Currently only the owner is permitted to perform these operations.
+   * The account id specified as the owner is invalid or does not exist.
    */
-  PAYER_AND_OWNER_NOT_EQUAL = 300;
+  INVALID_ALLOWANCE_OWNER_ID = 300;
+
+  /**
+   * The account id specified as the spender is invalid or does not exist.
+   */
+  INVALID_ALLOWANCE_SPENDER_ID = 301;
 }
