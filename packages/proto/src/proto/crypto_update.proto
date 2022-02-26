@@ -129,12 +129,4 @@ message CryptoUpdateTransactionBody {
      * including implicit and explicit associations.
      */
     google.protobuf.Int32Value max_automatic_token_associations = 15;
-
-    /**
-     * If set, the new public key bytes to be used as the account's alias. Alias can be updated
-     * only on accounts that does not have it set previously. It will be immutable once it is
-     * set on an account. For successful update of alias, the corresponding alias private key
-     * should sign the transaction.
-     */
-    bytes alias = 16;
 }

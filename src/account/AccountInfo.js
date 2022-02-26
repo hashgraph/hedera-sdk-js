@@ -250,18 +250,22 @@ export default class AccountInfo {
                     ? LedgerId.fromBytes(info.ledgerId)
                     : null,
 
-            hbarAllowances: (info.cryptoAllowances != null
-                ? info.cryptoAllowances
+            hbarAllowances: (info.grantedCryptoAllowances != null
+                ? info.grantedCryptoAllowances
                 : []
-            ).map((allowance) => HbarAllowance._fromProtobuf(allowance)),
-            tokenAllowances: (info.tokenAllowances != null
-                ? info.tokenAllowances
+            ).map((allowance) => HbarAllowance._fromGrantedProtobuf(allowance)),
+            tokenAllowances: (info.grantedTokenAllowances != null
+                ? info.grantedTokenAllowances
                 : []
-            ).map((allowance) => TokenAllowance._fromProtobuf(allowance)),
-            nftAllowances: (info.nftAllowances != null
-                ? info.nftAllowances
+            ).map((allowance) =>
+                TokenAllowance._fromGrantedProtobuf(allowance)
+            ),
+            nftAllowances: (info.grantedNftAllowances != null
+                ? info.grantedNftAllowances
                 : []
-            ).map((allowance) => TokenNftAllowance._fromProtobuf(allowance)),
+            ).map((allowance) =>
+                TokenNftAllowance._fromGrantedProtobuf(allowance)
+            ),
         });
     }
 

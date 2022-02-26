@@ -7,7 +7,6 @@ export default class ExchangeRate {
      * @param {number} props.hbars
      * @param {number} props.cents
      * @param {Date} props.expirationTime
-     * @param {number} props.exchangeRateInCents
      */
     constructor(props) {
         /**
