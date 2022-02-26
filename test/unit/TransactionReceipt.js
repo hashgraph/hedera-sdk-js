@@ -38,47 +38,55 @@ describe("TransactionReceipt", function () {
         );
         const serials = [Long.fromNumber(15)];
 
-        const receipt = new TransactionReceipt({
-            status,
-            accountId,
-            fileId,
-            contractId,
-            topicId,
-            tokenId,
-            scheduleId,
-            exchangeRate,
-            topicSequenceNumber,
-            topicRunningHash,
-            totalSupply,
-            scheduledTransactionId,
-            serials,
-            duplicates: [],
-            children: [],
-        });
-
-        expect(
-            TransactionReceipt.fromBytes(receipt.toBytes())._toProtobuf()
-        ).to.deep.equal({
-            receipt: {
-                status: status._code,
-                accountID: accountId._toProtobuf(),
-                contractID: contractId._toProtobuf(),
-                fileID: fileId._toProtobuf(),
-                scheduleID: scheduleId._toProtobuf(),
-                tokenID: tokenId._toProtobuf(),
-                topicID: topicId._toProtobuf(),
-                topicRunningHash,
+        const receipt = TransactionReceipt.fromBytes(
+            new TransactionReceipt({
+                status,
+                accountId,
+                fileId,
+                contractId,
+                topicId,
+                tokenId,
+                scheduleId,
+                exchangeRate,
                 topicSequenceNumber,
-                exchangeRate: {
-                    currentRate: exchangeRate._toProtobuf(),
-                    nextRate: null,
-                },
-                scheduledTransactionID: scheduledTransactionId._toProtobuf(),
-                serialNumbers: serials,
-                newTotalSupply: totalSupply,
-            },
-            duplicateTransactionReceipts: [],
-            childTransactionReceipts: [],
+                topicRunningHash,
+                totalSupply,
+                scheduledTransactionId,
+                serials,
+                duplicates: [],
+                children: [],
+            }).toBytes()
+        )._toProtobuf();
+
+        expect(receipt.receipt.status).to.deep.equal(status._code);
+        expect(receipt.receipt.accountID).to.deep.equal(
+            accountId._toProtobuf()
+        );
+        expect(receipt.receipt.contractID).to.deep.equal(
+            contractId._toProtobuf()
+        );
+        expect(receipt.receipt.fileID).to.deep.equal(fileId._toProtobuf());
+        expect(receipt.receipt.scheduleID).to.deep.equal(
+            scheduleId._toProtobuf()
+        );
+        expect(receipt.receipt.tokenID).to.deep.equal(tokenId._toProtobuf());
+        expect(receipt.receipt.topicID).to.deep.equal(topicId._toProtobuf());
+        expect(receipt.receipt.topicRunningHash).to.deep.equal(
+            topicRunningHash
+        );
+        expect(receipt.receipt.topicSequenceNumber).to.deep.equal(
+            topicSequenceNumber
+        );
+        expect(receipt.receipt.exchangeRate).to.deep.equal({
+            currentRate: exchangeRate._toProtobuf(),
+            nextRate: null,
         });
+        expect(receipt.receipt.scheduledTransactionID).to.deep.equal(
+            scheduledTransactionId._toProtobuf()
+        );
+        expect(receipt.receipt.serialNumbers).to.deep.equal(serials);
+        expect(receipt.receipt.newTotalSupply).to.deep.equal(totalSupply);
+        expect(receipt.duplicateTransactionReceipts).to.deep.equal([]);
+        expect(receipt.childTransactionReceipts).to.deep.equal([]);
     });
 });
