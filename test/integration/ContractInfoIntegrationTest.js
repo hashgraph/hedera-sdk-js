@@ -34,7 +34,7 @@ describe("ContractInfo", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(75000)
+            .setGas(100000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -64,7 +64,7 @@ describe("ContractInfo", function () {
         expect(
             info.adminKey != null ? info.adminKey.toString() : ""
         ).to.be.equal(operatorKey.toString());
-        expect(info.storage.toInt()).to.be.equal(926);
+        expect(info.storage.toInt()).to.be.equal(128);
         expect(info.contractMemo).to.be.equal(
             "[e2e::ContractCreateTransaction]"
         );
@@ -72,6 +72,7 @@ describe("ContractInfo", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -103,7 +104,7 @@ describe("ContractInfo", function () {
         const file = receipt.fileId;
 
         response = await new ContractCreateTransaction()
-            .setGas(75000)
+            .setGas(100000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -133,7 +134,7 @@ describe("ContractInfo", function () {
         // expect(info.adminKey.toString()).to.be.equal(
         //     info.contractId.toString()
         // );
-        expect(info.storage.toInt()).to.be.equal(926);
+        expect(info.storage.toInt()).to.be.equal(128);
         expect(info.contractMemo).to.be.equal(
             "[e2e::ContractCreateTransaction]"
         );
@@ -161,7 +162,7 @@ describe("ContractInfo", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(75000)
+            .setGas(100000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -190,6 +191,7 @@ describe("ContractInfo", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
