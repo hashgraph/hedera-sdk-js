@@ -5,6 +5,7 @@ import Long from "long";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").INftAllowance} proto.INftAllowance
+ * @typedef {import("@hashgraph/proto").IGrantedNftAllowance} proto.IGrantedNftAllowance
  * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
  * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
  */
@@ -74,6 +75,31 @@ export default class TokenNftAllowance {
             serialNumbers:
                 allowance.approvedForAll != null &&
                 allowance.approvedForAll.value
+                    ? null
+                    : allowance.serialNumbers != null
+                    ? allowance.serialNumbers.map((serialNumber) =>
+                          Long.fromValue(serialNumber)
+                      )
+                    : [],
+        });
+    }
+
+    /**
+     * @internal
+     * @param {proto.IGrantedNftAllowance} allowance
+     * @returns {TokenNftAllowance}
+     */
+    static _fromGrantedProtobuf(allowance) {
+        return new TokenNftAllowance({
+            tokenId: TokenId._fromProtobuf(
+                /** @type {proto.ITokenID} */ (allowance.tokenId)
+            ),
+            spenderAccountId: AccountId._fromProtobuf(
+                /** @type {proto.IAccountID} */ (allowance.spender)
+            ),
+            ownerAccountId: null,
+            serialNumbers:
+                allowance.approvedForAll != null && allowance.approvedForAll
                     ? null
                     : allowance.serialNumbers != null
                     ? allowance.serialNumbers.map((serialNumber) =>
