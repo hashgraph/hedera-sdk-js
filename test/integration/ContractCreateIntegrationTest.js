@@ -73,6 +73,7 @@ describe("ContractCreate", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -105,7 +106,7 @@ describe("ContractCreate", function () {
         const file = receipt.fileId;
 
         response = await new ContractCreateTransaction()
-            .setGas(75000)
+            .setGas(100000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -229,7 +230,7 @@ describe("ContractCreate", function () {
             await (
                 await new ContractCreateTransaction()
                     .setAdminKey(operatorKey)
-                    .setGas(75000)
+                    .setGas(100000)
                     .setBytecodeFileId(file)
                     .setContractMemo("[e2e::ContractCreateTransaction]")
                     .execute(env.client)
@@ -257,7 +258,7 @@ describe("ContractCreate", function () {
             await (
                 await new ContractCreateTransaction()
                     .setAdminKey(operatorKey)
-                    .setGas(75000)
+                    .setGas(100000)
                     .setConstructorParameters(
                         new ContractFunctionParameters().addString(
                             "Hello from Hedera."
