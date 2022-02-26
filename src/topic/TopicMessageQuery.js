@@ -6,6 +6,7 @@ import TopicId from "./TopicId.js";
 import Long from "long";
 import Timestamp from "../Timestamp.js";
 import { RST_STREAM } from "../Executable.js";
+import Logger from "js-logger";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -94,7 +95,7 @@ export default class TopicMessageQuery {
          * @type {() => void}
          */
         this._completionHandler = () => {
-            console.log(
+            Logger.log(
                 `Subscription to topic ${
                     this._topicId != null ? this._topicId.toString() : ""
                 } complete`

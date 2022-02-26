@@ -168,6 +168,18 @@ export default class TopicInfoQuery extends Query {
             },
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            /** @type {import("../transaction/TransactionId.js").default} */ (
+                this._paymentTransactionId
+            ).validStart
+        );
+        return `TopicInfoQuery:${timestamp.toString()}`;
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

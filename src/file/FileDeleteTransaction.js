@@ -148,6 +148,16 @@ export default class FileDeleteTransaction extends Transaction {
             fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `FileDeleteTransaction:${timestamp.toString()}`;
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

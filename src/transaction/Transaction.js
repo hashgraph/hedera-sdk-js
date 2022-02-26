@@ -20,6 +20,7 @@ import AccountId from "../account/AccountId.js";
 import PublicKey from "../PublicKey.js";
 import List from "./List.js";
 import Timestamp from "../Timestamp.js";
+import Logger from "js-logger";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -1046,6 +1047,10 @@ export default class Transaction extends Executable {
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
                 : ResponseCodeEnum.OK
+        );
+
+        Logger.debug(
+            `[${this._getLogId()}] received status ${status.toString()}`
         );
 
         switch (status) {

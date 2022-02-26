@@ -13,6 +13,7 @@ import {
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
+import Logger from "js-logger";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -63,6 +64,8 @@ export default class Query extends Executable {
 
         /** @type {?Hbar} */
         this._maxQueryPayment = null;
+
+        this._timestamp = Date.now();
     }
 
     /**
@@ -138,6 +141,8 @@ export default class Query extends Executable {
         if (COST_QUERY.length != 1) {
             throw new Error("CostQuery has not been loaded yet");
         }
+
+        this._timestamp = Date.now();
 
         return COST_QUERY[0](this).execute(client);
     }
@@ -264,6 +269,8 @@ export default class Query extends Executable {
                 )
             );
         }
+
+        this._timestamp = Date.now();
     }
 
     /**
@@ -351,6 +358,10 @@ export default class Query extends Executable {
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
                 : ResponseCodeEnum.OK
+        );
+
+        Logger.debug(
+            `[${this._getLogId()}] received status ${status.toString()}`
         );
 
         switch (status) {

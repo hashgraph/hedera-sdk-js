@@ -167,6 +167,18 @@ export default class ScheduleInfoQuery extends Query {
             },
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            /** @type {import("../transaction/TransactionId.js").default} */ (
+                this._paymentTransactionId
+            ).validStart
+        );
+        return `ScheduleInfoQuery:${timestamp.toString()}`;
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

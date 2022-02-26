@@ -230,7 +230,7 @@ export default class ManagedNode {
     /**
      * @returns {number}
      */
-    _unhealthyBackoffRemaining() {
+    getRemainingTime() {
         return this._backoffUntil - this._lastUsed;
     }
 
@@ -242,8 +242,9 @@ export default class ManagedNode {
      * @returns {Promise<void>}
      */
     wait() {
-        const _currentBackoff = this._backoffUntil - this._lastUsed;
-        return new Promise((resolve) => setTimeout(resolve, _currentBackoff));
+        return new Promise((resolve) =>
+            setTimeout(resolve, this.getRemainingTime())
+        );
     }
 
     /**
@@ -252,8 +253,8 @@ export default class ManagedNode {
      */
     compare(node) {
         let comparison =
-            this._unhealthyBackoffRemaining() -
-            node._unhealthyBackoffRemaining();
+            this.getRemainingTime() -
+            node.getRemainingTime();
         if (comparison != 0) {
             return comparison;
         }

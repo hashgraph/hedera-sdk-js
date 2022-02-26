@@ -170,6 +170,16 @@ export default class LiveHashDeleteTransaction extends Transaction {
                 this._accountId != null ? this._accountId._toProtobuf() : null,
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `LiveHashDeleteTransaction:${timestamp.toString()}`;
+    }
 }
 
 TRANSACTION_REGISTRY.set(

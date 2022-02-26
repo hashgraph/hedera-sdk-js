@@ -49,6 +49,13 @@ export default class CostQuery extends Executable {
     }
 
     /**
+     * @returns {string}
+     */
+    _getLogId() {
+        return `CostQuery:${this._query._getLogId()}`;
+    }
+
+    /**
      * @abstract
      * @protected
      * @param {import("../client/Client.js").default<*, *>} client

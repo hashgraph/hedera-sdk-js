@@ -6,6 +6,7 @@ import PrecheckStatusError from "../PrecheckStatusError.js";
 import ReceiptStatusError from "../ReceiptStatusError.js";
 import { ExecutionState } from "../Executable.js";
 import { ResponseCodeEnum } from "@hashgraph/proto";
+import Logger from "js-logger";
 
 /**
  * @namespace proto
@@ -177,6 +178,10 @@ export default class TransactionReceiptQuery extends Query {
                 : ResponseCodeEnum.OK
         );
 
+        Logger.debug(
+            `[${this._getLogId()}] received node precheck status ${status.toString()}`
+        );
+
         switch (status) {
             case Status.Busy:
             case Status.Unknown:
@@ -200,6 +205,10 @@ export default class TransactionReceiptQuery extends Query {
         );
 
         status = Status._fromCode(receiptStatusCode);
+
+        Logger.debug(
+            `[${this._getLogId()}] received receipt status ${status.toString()}`
+        );
 
         switch (status) {
             case Status.Busy:
@@ -342,6 +351,13 @@ export default class TransactionReceiptQuery extends Query {
                 includeChildReceipts: this._includeChildren,
             },
         };
+    }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        return `TransactionReceiptQuery:${this._timestamp.toString()}`;
     }
 }
 
