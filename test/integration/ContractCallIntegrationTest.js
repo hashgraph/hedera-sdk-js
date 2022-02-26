@@ -37,7 +37,7 @@ describe("ContractCallIntegration", function () {
         receipt = await (
             await new ContractCreateTransaction()
                 .setAdminKey(operatorKey)
-                .setGas(75000)
+                .setGas(100000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
                         "Hello from Hedera."
@@ -91,6 +91,7 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -123,7 +124,7 @@ describe("ContractCallIntegration", function () {
         receipt = await (
             await new ContractCreateTransaction()
                 .setAdminKey(operatorKey)
-                .setGas(75000)
+                .setGas(100000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
                         "Hello from Hedera."
@@ -156,6 +157,7 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -192,7 +194,7 @@ describe("ContractCallIntegration", function () {
         receipt = await (
             await new ContractCreateTransaction()
                 .setAdminKey(operatorKey)
-                .setGas(75000)
+                .setGas(100000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
                         "Hello from Hedera."
@@ -224,6 +226,7 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -260,7 +263,7 @@ describe("ContractCallIntegration", function () {
         receipt = await (
             await new ContractCreateTransaction()
                 .setAdminKey(operatorKey)
-                .setGas(75000)
+                .setGas(100000)
                 .setConstructorParameters(
                     new ContractFunctionParameters().addString(
                         "Hello from Hedera."
@@ -293,6 +296,7 @@ describe("ContractCallIntegration", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
