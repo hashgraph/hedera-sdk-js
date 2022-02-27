@@ -47,13 +47,13 @@ export default class ManagedNode {
             /** @type {(address: string, cert?: string) => ChannelT} */
             this._channelInitFunction = props.newNode.channelInitFunction;
 
-            this._currentBackoff = 250;
             this._lastUsed = Date.now();
             this._backoffUntil = Date.now();
             this._useCount = 0;
-            this._attempts = 0;
-            this._minBackoff = 250;
-            this._maxBackoff = 8000;
+            this._badGrpcStatusCount = 0;
+            this._minBackoff = 8000;
+            this._maxBackoff = 1000 * 60 * 60;
+            this._currentBackoff = this._minBackoff;
         } else if (props.cloneNode != null) {
             /** @type {ManagedNodeAddress} */
             this._address = props.cloneNode.address;
@@ -81,7 +81,7 @@ export default class ManagedNode {
             this._useCount = props.cloneNode.node._useCount;
 
             /** @type {number} */
-            this._attempts = props.cloneNode.node._attempts;
+            this._badGrpcStatusCount = props.cloneNode.node._badGrpcStatusCount;
 
             /** @type {number} */
             this._minBackoff = props.cloneNode.node._minBackoff;
@@ -142,7 +142,7 @@ export default class ManagedNode {
      * @returns {number}
      */
     get attempts() {
-        return this._attempts;
+        return this._badGrpcStatusCount;
     }
 
     /**
@@ -228,6 +228,13 @@ export default class ManagedNode {
     }
 
     /**
+     * @returns {number}
+     */
+    _unhealthyBackoffRemaining() {
+        return this._backoffUntil - this._lastUsed;
+    }
+
+    /**
      * This is only ever called if the node itself is down.
      * A node returning a transaction with a bad status code does not indicate
      * the node is down, and hence this method will not be called.
@@ -244,39 +251,29 @@ export default class ManagedNode {
      * @returns {number}
      */
     compare(node) {
-        if (this.isHealthy() && node.isHealthy()) {
-            if (this._useCount < node._useCount) {
-                return -1;
-            } else if (this._useCount > node._useCount) {
-                return 1;
-            } else {
-                if (this._lastUsed < node._lastUsed) {
-                    return -1;
-                } else if (this._lastUsed > node._lastUsed) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        } else if (this.isHealthy() && !node.isHealthy()) {
-            return -1;
-        } else if (!this.isHealthy() && node.isHealthy()) {
-            return 1;
-        } else {
-            if (this._useCount < node._useCount) {
-                return -1;
-            } else if (this._useCount > node._useCount) {
-                return 1;
-            } else {
-                if (this._lastUsed < node._lastUsed) {
-                    return -1;
-                } else if (this._lastUsed > node._lastUsed) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
+        let comparison =
+            this._unhealthyBackoffRemaining() -
+            node._unhealthyBackoffRemaining();
+        if (comparison != 0) {
+            return comparison;
         }
+
+        comparison = this._currentBackoff - node._currentBackoff;
+        if (comparison != 0) {
+            return comparison;
+        }
+
+        comparison = this._badGrpcStatusCount - node._badGrpcStatusCount;
+        if (comparison != 0) {
+            return comparison;
+        }
+
+        comparison = this._useCount - node._useCount;
+        if (comparison != 0) {
+            return comparison;
+        }
+
+        return this._lastUsed - node._lastUsed;
     }
 
     close() {

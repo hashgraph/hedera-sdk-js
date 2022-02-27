@@ -53,7 +53,7 @@ export default class MangedNetwork {
         this._ledgerId = null;
 
         /** @type {number} */
-        this._minBackoff = 250;
+        this._minBackoff = 8000;
 
         /** @type {number} */
         this._maxNodeAttempts = -1;
@@ -171,7 +171,7 @@ export default class MangedNetwork {
             for (let i = this._nodes.length - 1; i >= 0; i--) {
                 const node = this._nodes[i];
 
-                if (node._attempts < this._maxNodeAttempts) {
+                if (node._badGrpcStatusCount < this._maxNodeAttempts) {
                     continue;
                 }
 

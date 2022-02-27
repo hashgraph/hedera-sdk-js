@@ -102,10 +102,10 @@ export default class Client {
         this._maxAttempts = null;
 
         /** @type {number} */
-        this._minBackoff = 250;
+        this._minBackoff = 8000;
 
         /** @type {number} */
-        this._maxBackoff = 8000;
+        this._maxBackoff = 1000 * 60 * 60;
 
         this._defaultRegenerateTransactionId = true;
 
