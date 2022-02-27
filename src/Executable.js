@@ -8,6 +8,7 @@ import List from "./transaction/List.js";
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  * @typedef {import("./client/Client.js").ClientOperator} ClientOperator
  * @typedef {import("./Signer.js").default} Signer
+ * @typedef {import("./PublicKey.js").default} PublicKey
  */
 
 /**
@@ -297,11 +298,26 @@ export default class Executable {
     }
 
     /**
+     * @param {AccountId} accountId
+     * @param {PublicKey} publicKey
+     * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
+     * @returns {this}
+     */
+    _setOperatorWith(accountId, publicKey, transactionSigner) {
+        this._operator = {
+            transactionSigner,
+            accountId,
+            publicKey,
+        };
+        return this;
+    }
+
+    /**
      * @param {Signer} signer
      * @returns {Promise<OutputT>}
      */
     async executeWithSigner(signer) {
-        return signer._executeRequest(this);
+        return signer.sendRequest(this);
     }
 
     /**

@@ -100,32 +100,11 @@ export default class Signer {
 
     /**
      * @abstract
-     * @template {any} O
-     * @param {Query<O>} query
-     * @returns {Promise<O>}
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    sendQuery(query) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
      * @param {Transaction} transaction
      * @returns {Promise<Transaction>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     signTransaction(transaction) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @param {Transaction} transaction
-     * @returns {Promise<TransactionReceipt>}
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    sendTransaction(transaction) {
         throw new Error("not implemented");
     }
 
@@ -158,7 +137,7 @@ export default class Signer {
      * @returns {Promise<OutputT>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _executeRequest(request) {
+    sendRequest(request) {
         throw new Error("not implemented");
     }
 }

@@ -97,27 +97,6 @@ export default class Provider {
 
     /**
      * @abstract
-     * @template {any} O
-     * @param {Query<O>} query
-     * @returns {Promise<O>}
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    sendQuery(query) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @param {Transaction} transaction
-     * @returns {Promise<TransactionResponse>}
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    sendTransaction(transaction) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
      * @param {TransactionResponse} response
      * @returns {Promise<TransactionReceipt>}
      */
@@ -135,7 +114,7 @@ export default class Provider {
      * @returns {Promise<OutputT>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _executeRequest(request) {
+    sendRequest(request) {
         throw new Error("not implemented");
     }
 }

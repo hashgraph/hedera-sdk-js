@@ -63,11 +63,6 @@ export default class Query extends Executable {
 
         /** @type {?Hbar} */
         this._maxQueryPayment = null;
-
-        /**
-         * @type {?ClientOperator}
-         */
-        this._operator = null;
     }
 
     /**
@@ -190,21 +185,6 @@ export default class Query extends Executable {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
     _validateChecksums(client) {
         // Do nothing
-    }
-
-    /**
-     * @param {AccountId} accountId
-     * @param {PublicKey} publicKey
-     * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
-     * @returns {this}
-     */
-    _setOperatorWith(accountId, publicKey, transactionSigner) {
-        this._operator = {
-            transactionSigner,
-            accountId,
-            publicKey,
-        };
-        return this;
     }
 
     /**

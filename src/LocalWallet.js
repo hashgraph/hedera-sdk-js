@@ -127,7 +127,7 @@ export default class LocalWallet extends Wallet {
      * @returns {Promise<AccountBalance>}
      */
     getAccountBalance() {
-        return this.sendQuery(
+        return this.sendRequest(
             new AccountBalanceQuery().setAccountId(this.accountId)
         );
     }
@@ -137,7 +137,7 @@ export default class LocalWallet extends Wallet {
      * @returns {Promise<AccountInfo>}
      */
     getAccountInfo() {
-        return this.sendQuery(
+        return this.sendRequest(
             new AccountInfoQuery().setAccountId(this.accountId)
         );
     }
@@ -147,19 +147,8 @@ export default class LocalWallet extends Wallet {
      * @returns {Promise<TransactionRecord[]>}
      */
     getAccountRecords() {
-        return this.sendQuery(
+        return this.sendRequest(
             new AccountRecordsQuery().setAccountId(this.accountId)
-        );
-    }
-
-    /**
-     * @template {any} O
-     * @param {Query<O>} query
-     * @returns {Promise<O>}
-     */
-    sendQuery(query) {
-        return this.provider.sendQuery(
-            query._setOperatorWith(this.accountId, this.publicKey, this.signer)
         );
     }
 
@@ -169,17 +158,6 @@ export default class LocalWallet extends Wallet {
      */
     signTransaction(transaction) {
         return transaction.signWith(this.publicKey, this.signer);
-    }
-
-    /**
-     * @abstract
-     * @param {Transaction} transaction
-     * @returns {Promise<TransactionReceipt>}
-     */
-    async sendTransaction(transaction) {
-        return this.provider.waitForReceipt(
-            await this.provider.sendTransaction(transaction)
-        );
     }
 
     /**
@@ -238,7 +216,13 @@ export default class LocalWallet extends Wallet {
      * @param {Executable<RequestT, ResponseT, OutputT>} request
      * @returns {Promise<OutputT>}
      */
-    _executeRequest(request) {
-        return this.provider._executeRequest(request);
+    sendRequest(request) {
+        return this.provider.sendRequest(
+            request._setOperatorWith(
+                this.accountId,
+                this.publicKey,
+                this.signer
+            )
+        );
     }
 }

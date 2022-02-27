@@ -105,23 +105,6 @@ export default class LocalProvider extends Provider {
     }
 
     /**
-     * @template {any} O
-     * @param {Query<O>} query
-     * @returns {Promise<O>}
-     */
-    sendQuery(query) {
-        return query.execute(this._client);
-    }
-
-    /**
-     * @param {Transaction} transaction
-     * @returns {Promise<TransactionResponse>}
-     */
-    sendTransaction(transaction) {
-        return transaction.execute(this._client);
-    }
-
-    /**
      * @param {TransactionResponse} response
      * @returns {Promise<TransactionReceipt>}
      */
@@ -139,7 +122,7 @@ export default class LocalProvider extends Provider {
      * @param {Executable<RequestT, ResponseT, OutputT>} request
      * @returns {Promise<OutputT>}
      */
-    _executeRequest(request) {
+    sendRequest(request) {
         return request.execute(this._client);
     }
 }
