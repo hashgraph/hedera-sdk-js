@@ -119,6 +119,12 @@ export { default as TransactionRecordQuery } from "./transaction/TransactionReco
 export { default as TransactionResponse } from "./transaction/TransactionResponse.js";
 export { default as Transfer } from "./Transfer.js";
 export { default as TransferTransaction } from "./account/TransferTransaction.js";
+export { default as Wallet } from "./Wallet.js";
+export { default as Provider } from "./Provider.js";
+export { default as Signer } from "./Signer.js";
+export { default as SignerSignature } from "./SignerSignature.js";
+export { default as LocalProvider } from "./LocalProvider.js";
+export { default as LocalWallet } from "./LocalWallet.js";
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
