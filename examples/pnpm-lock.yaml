@@ -861,6 +861,7 @@ packages:
   /dotenv/14.3.0:
     resolution: {integrity: sha512-PCTcOQSXVo9FI1dB7AichJXMEvmiGCq0gnCpjfDUc8505uR+2MeLXWe+Ue4PN5UXa2isHSa78sr7L59fk+2mnQ==}
     engines: {node: '>=12'}
+    dev: false
 
   /dpdm/3.8.0:
     resolution: {integrity: sha512-irzNgThrdJEf61l5F3w8yMLjjZfw4c2LL//xZGZ3q7E6YhVBCiEApduRNtSw1Og6UCVub5GzwwZn3WT0tO8hSA==}

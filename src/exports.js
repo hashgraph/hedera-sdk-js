@@ -123,8 +123,6 @@ export { default as Wallet } from "./Wallet.js";
 export { default as Provider } from "./Provider.js";
 export { default as Signer } from "./Signer.js";
 export { default as SignerSignature } from "./SignerSignature.js";
-export { default as LocalProvider } from "./LocalProvider.js";
-export { default as LocalWallet } from "./LocalWallet.js";
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
