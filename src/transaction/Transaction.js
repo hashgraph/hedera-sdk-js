@@ -46,6 +46,7 @@ import Timestamp from "../Timestamp.js";
  * @typedef {import("../PrivateKey.js").default} PrivateKey
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../Signer.js").default} Signer
  */
 
 // 90 days (in seconds)
@@ -754,6 +755,25 @@ export default class Transaction extends Executable {
             this._buildSignedTransactions();
         }
 
+        return this;
+    }
+
+    /**
+     * @param {Signer} signer
+     * @returns {Promise<this>}
+     */
+    async signWithSigner(signer) {
+        await signer.signTransaction(this);
+        return this;
+    }
+
+    /**
+     * @param {Signer} signer
+     * @returns {Promise<this>}
+     */
+    async freezeWithSigner(signer) {
+        await signer.populateTransaction(this);
+        await this.signWithSigner(signer);
         return this;
     }
 

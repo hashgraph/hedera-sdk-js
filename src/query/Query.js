@@ -16,6 +16,7 @@ import Long from "long";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../PublicKey.js").default} PublicKey
  */
 
 /**
@@ -206,7 +207,8 @@ export default class Query extends Executable {
             );
         }
 
-        const operator = client._operator;
+        const operator =
+            this._operator != null ? this._operator : client._operator;
 
         if (this._paymentTransactionId == null) {
             if (this._isPaymentRequired()) {
