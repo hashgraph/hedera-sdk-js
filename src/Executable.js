@@ -7,6 +7,8 @@ import List from "./transaction/List.js";
  * @typedef {import("./channel/Channel.js").default} Channel
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  * @typedef {import("./client/Client.js").ClientOperator} ClientOperator
+ * @typedef {import("./Signer.js").default} Signer
+ * @typedef {import("./PublicKey.js").default} PublicKey
  */
 
 /**
@@ -293,6 +295,29 @@ export default class Executable {
             (error.status._code === GrpcStatus.Internal._code &&
                 RST_STREAM.test(error.message))
         );
+    }
+
+    /**
+     * @param {AccountId} accountId
+     * @param {PublicKey} publicKey
+     * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
+     * @returns {this}
+     */
+    _setOperatorWith(accountId, publicKey, transactionSigner) {
+        this._operator = {
+            transactionSigner,
+            accountId,
+            publicKey,
+        };
+        return this;
+    }
+
+    /**
+     * @param {Signer} signer
+     * @returns {Promise<OutputT>}
+     */
+    async executeWithSigner(signer) {
+        return signer.sendRequest(this);
     }
 
     /**
