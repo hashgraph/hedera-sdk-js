@@ -258,7 +258,8 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                 number: chunk + 1,
             };
 
-            this._transactionIds.list.push(nextTransactionId);
+            this._transactionIds.push(nextTransactionId);
+            this._transactionIds.advance();
 
             for (const nodeAccountId of this._nodeAccountIds.list) {
                 this._signedTransactions.push(
@@ -277,10 +278,9 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                     ).nanos.add(1)
                 )
             );
-
-            this._transactionIds.advance();
         }
 
+        this._transactionIds.advance();
         this._chunkInfo = null;
 
         return this;
@@ -340,7 +340,10 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         for (let i = 0; i < this._transactionIds.length; i++) {
             const startTimestamp = Date.now();
             responses.push(await super.execute(client, remainingTimeout));
-            remainingTimeout = Date.now() - startTimestamp;
+
+            if (remainingTimeout != null) {
+                remainingTimeout = Date.now() - startTimestamp;
+            }
         }
 
         return responses;

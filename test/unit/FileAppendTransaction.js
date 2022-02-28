@@ -4,7 +4,6 @@ import {
     FileAppendTransaction,
     AccountId,
     Timestamp,
-    Transaction,
     Hbar,
     TransactionId,
     FileId,
