@@ -76,7 +76,7 @@ describe("FileAppend", function () {
     });
 
     it("should be chunk contents", async function () {
-        this.timeout(120000);
+        this.timeout(120000 * 2);
 
         const env = await IntegrationTestEnv.new();
         const operatorKey = env.operatorKey.publicKey;

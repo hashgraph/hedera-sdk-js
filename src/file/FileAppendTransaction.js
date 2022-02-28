@@ -85,9 +85,6 @@ export default class FileAppendTransaction extends Transaction {
             this.setChunkSize(props.chunkSize);
         }
 
-        /** @type {number} */
-        this._startIndex = 0;
-
         /** @type {List<TransactionId>} */
         this._transactionIds = new List();
     }
@@ -313,13 +310,11 @@ export default class FileAppendTransaction extends Transaction {
         this._transactions.clear();
         this._transactionIds.clear();
         this._signedTransactions.clear();
-        super._nextTransactionIndex = 0;
 
         for (let chunk = 0; chunk < chunks; chunk++) {
-            this._startIndex = chunk * this._chunkSize;
-
-            this._transactionIds.list.push(nextTransactionId);
-
+            this._transactionIds.push(nextTransactionId);
+            this._transactionIds.advance();
+            
             for (const nodeAccountId of this._nodeAccountIds.list) {
                 this._signedTransactions.push(
                     this._makeSignedTransaction(nodeAccountId)
@@ -337,12 +332,10 @@ export default class FileAppendTransaction extends Transaction {
                     ).nanos.add(1)
                 )
             );
-
-            super._nextTransactionIndex = this._nextTransactionIndex + 1;
         }
 
-        this._startIndex = 0;
-        super._nextTransactionIndex = 0;
+        this._transactionIds.advance();
+        this._transactionIds.setLocked();
 
         return this;
     }
@@ -402,7 +395,10 @@ export default class FileAppendTransaction extends Transaction {
         for (let i = 0; i < this._transactionIds.length; i++) {
             const startTimestamp = Date.now();
             const response = await super.execute(client, remainingTimeout);
-            remainingTimeout = Date.now() - startTimestamp;
+
+            if (remainingTimeout != null) {
+                remainingTimeout = Date.now() - startTimestamp;
+            }
 
             await response.getReceipt(client);
             responses.push(response);
@@ -447,16 +443,14 @@ export default class FileAppendTransaction extends Transaction {
      */
     _makeTransactionData() {
         const length = this._contents != null ? this._contents.length : 0;
-        let endIndex = this._startIndex + this._chunkSize;
-        if (endIndex > length) {
-            endIndex = length;
-        }
+        const startIndex = this._transactionIds.index * this._chunkSize;
+        const endIndex = Math.min(startIndex + this._chunkSize, length);
 
         return {
             fileID: this._fileId != null ? this._fileId._toProtobuf() : null,
             contents:
                 this._contents != null
-                    ? this._contents.slice(this._startIndex, endIndex)
+                    ? this._contents.slice(startIndex, endIndex)
                     : null,
         };
     }

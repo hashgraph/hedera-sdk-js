@@ -51,6 +51,7 @@ export default class List {
         }
 
         this.list = [];
+        this.index = 0;
     }
 
     /**
@@ -71,7 +72,7 @@ export default class List {
             throw new Error("list is locked");
         }
 
-        if (index == this.length) {
+        if (index === this.length) {
             this.list.push(item);
         } else {
             this.list[index] = item;
@@ -104,12 +105,7 @@ export default class List {
      * @returns {T}
      */
     get current() {
-        let index = this.index - 1;
-        if (index < 0) {
-            index = this.length - 1;
-        }
-
-        return this.get(index);
+        return this.get(this.index);
     }
 
     /**
