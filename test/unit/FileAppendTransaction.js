@@ -29,6 +29,9 @@ describe("FileAppendTransaction", function () {
             .freeze();
 
         const transactionId = transaction.transactionId;
+        // TOOD: fix `FileAppendTransaction.fromBytes()` it seems the transaction IDs
+        // aren't be saved?
+        //
         // transaction = /** @type {FileAppendTransaction} */ (
         //     Transaction.fromBytes(transaction.toBytes())
         // ).setChunkSize(1000);
