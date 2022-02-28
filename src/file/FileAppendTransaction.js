@@ -314,7 +314,7 @@ export default class FileAppendTransaction extends Transaction {
         for (let chunk = 0; chunk < chunks; chunk++) {
             this._transactionIds.push(nextTransactionId);
             this._transactionIds.advance();
-            
+
             for (const nodeAccountId of this._nodeAccountIds.list) {
                 this._signedTransactions.push(
                     this._makeSignedTransaction(nodeAccountId)
