@@ -178,7 +178,7 @@ class GrpcServer {
     /**
      * Adds a service to the gRPC server
      *
-     * @param {Response[]} responses
+     * @param {?Response[]} responses
      * @returns {this}
      */
     addResponses(responses) {
@@ -248,10 +248,6 @@ class GrpcServer {
         );
     }
 
-    /**
-     * @param {boolean} force
-     * @param {() => void} callback
-     */
     close() {
         this.server.forceShutdown();
     }
@@ -261,8 +257,8 @@ export default class Mocker {
     /**
      * Creates a mock server and client with the given responses
      *
-     * @param {Response[][]} responses
-     * @returns {Proimse<{ server: GrpcServers; client: Client }>}
+     * @param {?Response[][]} responses
+     * @returns {Promise<{servers: GrpcServers, client: NodeClient}>}
      */
     static async withResponses(responses) {
         const servers = new GrpcServers();
@@ -278,7 +274,7 @@ export default class Mocker {
     }
 
     /**
-     * @param {proto.ISignedTransaction | null | undefined}
+     * @param {proto.ISignedTransaction | null | undefined} signedTransaction
      * @returns {boolean}
      */
     static verifySignatures(signedTransaction) {
@@ -354,9 +350,7 @@ class GrpcServers {
         for (let i = 0; i < this._servers.length; i++) {
             const server = this._servers[i];
             const address = this._addresses[i];
-            const nodeAccountId = this._nodeAccountIds[i];
-
-            network[address] = nodeAccountId;
+            network[address] = this._nodeAccountIds[i];
 
             await server.listen(address);
         }

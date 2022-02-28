@@ -112,12 +112,6 @@ export default class Transaction extends Executable {
         this._signerPublicKeys = new Set();
 
         /**
-         * @protected
-         * @type {number}
-         */
-        this._nextTransactionIndex = 0;
-
-        /**
          * @private
          * @type {number}
          */
@@ -322,7 +316,6 @@ export default class Transaction extends Executable {
         transaction._nodeAccountIds.setList(nodeIds).setLocked();
 
         transaction._nextNodeAccountIdIndex = 0;
-        transaction._nextTransactionIndex = 0;
         transaction._transactionValidDuration =
             body.transactionValidDuration != null &&
             body.transactionValidDuration.seconds != null
@@ -471,7 +464,7 @@ export default class Transaction extends Executable {
             );
         }
 
-        return this._transactionIds.next;
+        return this._transactionIds.current;
     }
 
     /**
@@ -922,7 +915,7 @@ export default class Transaction extends Executable {
      */
     async _makeRequestAsync() {
         const index =
-            this._nextTransactionIndex * this._nodeAccountIds.length +
+            this._transactionIds.index * this._nodeAccountIds.length +
             this._nodeAccountIds.index;
 
         if (!this._signOnDemand) {
@@ -985,7 +978,7 @@ export default class Transaction extends Executable {
             Timestamp.generate()
         );
 
-        this._transactionIds.set(this._nextTransactionIndex, transactionId);
+        this._transactionIds.set(this._transactionIds.index, transactionId);
     }
 
     _buildAllTransactions() {
@@ -1114,9 +1107,6 @@ export default class Transaction extends Executable {
         );
         const transactionId = this.transactionId;
 
-        this._nextTransactionIndex =
-            (this._nextTransactionIndex + 1) % this._transactionIds.length;
-
         this._transactionIds.advance();
 
         return new TransactionResponse({
@@ -1137,9 +1127,7 @@ export default class Transaction extends Executable {
             );
         }
 
-        return this._nodeAccountIds.list[
-            this._nextNodeAccountIdIndex % this._nodeAccountIds.length
-        ];
+        return this._nodeAccountIds.current;
     }
 
     /**

@@ -250,7 +250,6 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         this._transactions.clear();
         this._transactionIds.clear();
         this._signedTransactions.clear();
-        super._nextTransactionIndex = 0;
 
         for (let chunk = 0; chunk < chunks; chunk++) {
             this._chunkInfo = {
@@ -279,11 +278,10 @@ export default class TopicMessageSubmitTransaction extends Transaction {
                 )
             );
 
-            super._nextTransactionIndex = this._nextTransactionIndex + 1;
+            this._transactionIds.advance();
         }
 
         this._chunkInfo = null;
-        super._nextTransactionIndex = 0;
 
         return this;
     }

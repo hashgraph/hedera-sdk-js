@@ -5,9 +5,11 @@ import {
     AccountId,
     Timestamp,
     Transaction,
+    Hbar,
     TransactionId,
     FileId,
 } from "../../src/exports.js";
+import Long from "long";
 
 describe("FileAppendTransaction", function () {
     it("setChunkSize()", function () {
@@ -15,6 +17,7 @@ describe("FileAppendTransaction", function () {
         const fileId = new FileId(8);
         const nodeAccountId = new AccountId(10, 11, 12);
         const timestamp1 = new Timestamp(14, 15);
+        const fee = new Hbar(5);
 
         let transaction = new FileAppendTransaction()
             .setTransactionId(
@@ -22,52 +25,67 @@ describe("FileAppendTransaction", function () {
             )
             .setNodeAccountIds([nodeAccountId])
             .setFileId(fileId)
-            .setChunkSize(1)
-            .setContents("12345")
+            .setChunkSize(1000)
+            .setContents("1".repeat(1000) + "2".repeat(1000) + "3".repeat(1000))
             .freeze();
 
-        transaction = /** @type {FileAppendTransaction} */ (
-            Transaction.fromBytes(transaction.toBytes())
-        ).setChunkSize(1);
+        const transactionId = transaction.transactionId;
+        // transaction = /** @type {FileAppendTransaction} */ (
+        //     Transaction.fromBytes(transaction.toBytes())
+        // ).setChunkSize(1000);
 
-        let data = transaction._makeTransactionData();
-        transaction._startIndex++;
+        expect(transaction._transactionIds.list.length).to.be.equal(3);
+        expect(transaction._nodeAccountIds.list.length).to.be.equal(1);
 
-        expect(data).to.deep.equal({
-            contents: new Uint8Array([49]),
-            fileID: fileId._toProtobuf(),
+        let body = transaction._makeTransactionBody(nodeAccountId);
+
+        expect(body.transactionID).to.deep.equal(transactionId._toProtobuf());
+
+        expect(body.transactionFee).to.deep.equal(fee.toTinybars());
+        expect(body.memo).to.be.equal("");
+        expect(body.transactionID).to.deep.equal(
+            transaction._transactionIds.list[0]._toProtobuf()
+        );
+        expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
+        expect(body.transactionValidDuration).to.deep.equal({
+            seconds: Long.fromNumber(120),
         });
+        expect(body.fileAppend.fileID).to.deep.equal(fileId._toProtobuf());
+        expect(body.fileAppend.contents.length).to.be.equal(1000);
+        expect(body.fileAppend.contents[0]).to.be.equal(49);
 
-        data = transaction._makeTransactionData();
-        transaction._startIndex++;
+        transaction._nextTransactionIndex++;
+        transaction._transactionIds.advance();
+        body = transaction._makeTransactionBody(nodeAccountId);
 
-        expect(data).to.deep.equal({
-            contents: new Uint8Array([50]),
-            fileID: fileId._toProtobuf(),
+        expect(body.transactionFee).to.deep.equal(fee.toTinybars());
+        expect(body.memo).to.be.equal("");
+        expect(body.transactionID).to.deep.equal(
+            transaction._transactionIds.list[1]._toProtobuf()
+        );
+        expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
+        expect(body.transactionValidDuration).to.deep.equal({
+            seconds: Long.fromNumber(120),
         });
+        expect(body.fileAppend.fileID).to.deep.equal(fileId._toProtobuf());
+        expect(body.fileAppend.contents.length).to.be.equal(1000);
+        expect(body.fileAppend.contents[0]).to.be.equal(50);
 
-        data = transaction._makeTransactionData();
-        transaction._startIndex++;
+        transaction._nextTransactionIndex++;
+        transaction._transactionIds.advance();
+        body = transaction._makeTransactionBody(nodeAccountId);
 
-        expect(data).to.deep.equal({
-            contents: new Uint8Array([51]),
-            fileID: fileId._toProtobuf(),
+        expect(body.transactionFee).to.deep.equal(fee.toTinybars());
+        expect(body.memo).to.be.equal("");
+        expect(body.transactionID).to.deep.equal(
+            transaction._transactionIds.list[2]._toProtobuf()
+        );
+        expect(body.nodeAccountID).to.deep.equal(nodeAccountId._toProtobuf());
+        expect(body.transactionValidDuration).to.deep.equal({
+            seconds: Long.fromNumber(120),
         });
-
-        data = transaction._makeTransactionData();
-        transaction._startIndex++;
-
-        expect(data).to.deep.equal({
-            contents: new Uint8Array([52]),
-            fileID: fileId._toProtobuf(),
-        });
-
-        data = transaction._makeTransactionData();
-        transaction._startIndex++;
-
-        expect(data).to.deep.equal({
-            contents: new Uint8Array([53]),
-            fileID: fileId._toProtobuf(),
-        });
+        expect(body.fileAppend.fileID).to.deep.equal(fileId._toProtobuf());
+        expect(body.fileAppend.contents.length).to.be.equal(1000);
+        expect(body.fileAppend.contents[0]).to.be.equal(51);
     });
 });
