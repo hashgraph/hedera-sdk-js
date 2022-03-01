@@ -81,13 +81,27 @@ describe("FileAppendMocking", function () {
 
         const responses = await transaction.executeAll(client);
 
-        expect(responses[0].transactionId.toString()).to.be.equal(transaction._transactionIds.list[0].toString());
-        expect(responses[1].transactionId.toString()).to.be.equal(transaction._transactionIds.list[1].toString());
-        expect(responses[2].transactionId.toString()).to.be.equal(transaction._transactionIds.list[2].toString());
-        expect(responses[3].transactionId.toString()).to.be.equal(transaction._transactionIds.list[3].toString());
-        expect(responses[4].transactionId.toString()).to.be.equal(transaction._transactionIds.list[4].toString());
-        expect(responses[5].transactionId.toString()).to.be.equal(transaction._transactionIds.list[5].toString());
-        expect(responses[6].transactionId.toString()).to.be.equal(transaction._transactionIds.list[6].toString());
+        expect(responses[0].transactionId.toString()).to.be.equal(
+            transaction._transactionIds.list[0].toString()
+        );
+        expect(responses[1].transactionId.toString()).to.be.equal(
+            transaction._transactionIds.list[1].toString()
+        );
+        expect(responses[2].transactionId.toString()).to.be.equal(
+            transaction._transactionIds.list[2].toString()
+        );
+        expect(responses[3].transactionId.toString()).to.be.equal(
+            transaction._transactionIds.list[3].toString()
+        );
+        expect(responses[4].transactionId.toString()).to.be.equal(
+            transaction._transactionIds.list[4].toString()
+        );
+        expect(responses[5].transactionId.toString()).to.be.equal(
+            transaction._transactionIds.list[5].toString()
+        );
+        expect(responses[6].transactionId.toString()).to.be.equal(
+            transaction._transactionIds.list[6].toString()
+        );
 
         servers.close();
     });

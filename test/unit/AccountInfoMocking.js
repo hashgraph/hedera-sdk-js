@@ -41,7 +41,7 @@ const ACCOUNT_INFO_QUERY_RESPONSE = {
     },
 };
 
-describe("AccountInfo", function () {
+describe("AccountInfoMocking", function () {
     it("should retry on `UNAVAILABLE`", async function () {
         const { client, servers } = await Mocker.withResponses([
             [
