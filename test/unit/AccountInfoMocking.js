@@ -9,7 +9,6 @@ import Mocker, { UNAVAILABLE, INTERNAL, PRIVATE_KEY } from "./Mocker.js";
 import Long from "long";
 import * as proto from "@hashgraph/proto";
 import * as hex from "../../src/encoding/hex.js";
-import Logger from "js-logger";
 
 const ACCOUNT_INFO_QUERY_COST_RESPONSE = {
     cryptoGetInfo: {
@@ -41,8 +40,6 @@ const ACCOUNT_INFO_QUERY_RESPONSE = {
         },
     },
 };
-
-Logger.setLevel(Logger.TRACE);
 
 describe("AccountInfoMocking", function () {
     it("should retry on `UNAVAILABLE`", async function () {
