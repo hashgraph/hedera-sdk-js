@@ -29,7 +29,6 @@ describe("TokenMint", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
@@ -63,7 +62,6 @@ describe("TokenMint", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
@@ -125,7 +123,6 @@ describe("TokenMint", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
@@ -168,7 +165,6 @@ describe("TokenMint", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
             .setMaxSupply(10)
             .setSupplyType(TokenSupplyType.Finite)
             .execute(env.client);
