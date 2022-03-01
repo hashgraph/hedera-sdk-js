@@ -991,6 +991,11 @@ export default class Transaction extends Executable {
     }
 
     async _buildAllTransactionsAsync() {
+        if (!this._signOnDemand) {
+            this._buildAllTransactions();
+            return;
+        }
+
         this._buildSignedTransactions();
 
         if (this._transactions.locked) {
