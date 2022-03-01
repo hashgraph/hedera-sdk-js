@@ -84,6 +84,7 @@
         "bignumber.js": "^9.0.2",
         "crypto-js": "^4.1.1",
         "js-base64": "^3.7.2",
+        "js-logger": "^1.6.1",
         "long": "^4.0.0",
         "protobufjs": "^6.11.2",
         "utf8": "^3.0.0"

@@ -219,6 +219,13 @@ export default class AccountBalanceQuery extends Query {
             },
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        return `AccountBalanceQuery:${this._timestamp.toString()}`;
+    }
 }
 
 QUERY_REGISTRY.set(
