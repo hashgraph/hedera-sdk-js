@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/proto",
-    "version": "2.1.3",
+    "version": "2.1.4",
     "description": "Protobufs for the Hedera™ Hashgraph SDK",
     "main": "lib/index.js",
     "browser": "src/index.js",
@@ -50,7 +50,8 @@
         "prepare": "run-s compile cp:ts"
     },
     "dependencies": {
-        "protobufjs": "^6.11.2"
+        "protobufjs": "^6.11.2",
+        "long": "^4.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.16.8",

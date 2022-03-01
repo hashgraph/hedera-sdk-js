@@ -364,17 +364,19 @@ export default class FileAppendTransaction extends Transaction {
 
     /**
      * @param {import("../client/Client.js").default<Channel, *>} client
+     * @param {number=} requestTimeout
      * @returns {Promise<TransactionResponse>}
      */
-    async execute(client) {
-        return (await this.executeAll(client))[0];
+    async execute(client, requestTimeout) {
+        return (await this.executeAll(client, requestTimeout))[0];
     }
 
     /**
      * @param {import("../client/Client.js").default<Channel, *>} client
+     * @param {number=} requestTimeout
      * @returns {Promise<TransactionResponse[]>}
      */
-    async executeAll(client) {
+    async executeAll(client, requestTimeout) {
         if (!super._isFrozen()) {
             this.freezeWith(client);
         }
@@ -395,8 +397,13 @@ export default class FileAppendTransaction extends Transaction {
         }
 
         const responses = [];
+        let remainingTimeout = requestTimeout;
+
         for (let i = 0; i < this._transactionIds.length; i++) {
-            const response = await super.execute(client);
+            const startTimestamp = Date.now();
+            const response = await super.execute(client, remainingTimeout);
+            remainingTimeout = Date.now() - startTimestamp;
+
             await response.getReceipt(client);
             responses.push(response);
         }

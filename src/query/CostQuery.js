@@ -30,6 +30,8 @@ export default class CostQuery extends Executable {
         super();
 
         this._query = query;
+        this._grpcDeadline = query._grpcDeadline;
+        this._requestTimeout = query._requestTimeout;
         this._nodeAccountIds.setList(query._nodeAccountIds.list);
 
         /**

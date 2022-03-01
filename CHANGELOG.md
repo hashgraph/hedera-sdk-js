@@ -10,6 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * Mirror network incorrectly using `433` for TLS instead of `443`
 
+## v2.10.0-beta.1
+
+### Added
+
+ * `AddressBookQuery`
+ * Status codes
+ * `*[Transaction|Query].setGrpcDeadline()`
+ * `*Allowance.ownerAccountId`
+
+### Fixed
+
+ * Mirror network incorrectly using `433` for TLS instead of `443`
+ * `TransactionReceipt` protobuf encoding
+ * `ContractId.fromString()`
+
 ## v2.9.0
 
 ### Added
@@ -35,6 +50,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `[FileAppend|TopicMessageSubmit]Transaction.[set|get]ChunkSize()`, and changed default chunk size for `FileAppendTransaction` to 2048.
  * `AccountAllowance[Adjust|Approve]Transaction`
  * `TransactionRecord.tokenTransfersList`
+ * `AccountAllowance[Adjust|Approve]Transaction`
+ * `AccountInfo.[hbar|token|tokenNft]Allowances`
+ * `[Hbar|Token|TokenNft]Allowance`
+ * `[Hbar|Token|TokenNft]Allowance`
+ * `TransferTransaction.set[Hbar|Token|TokenNft]TransferApproval()`
 
 ## v2.8.0
 

@@ -1,5 +1,23 @@
 import * as $protobuf from "protobufjs/minimal.js";
 import { proto } from "./proto.js";
+import Long from "long";
+
+/**
+ * Patch protobuf race condition between loading protobuf and Long.js libraries.
+ */
+(() => {
+    var $util = $protobuf.util;
+
+    if ($util.Long == null) {
+        console.log(`Patching Protobuf Long.js instance...`);
+        $util.Long = Long;
+
+        if ($protobuf.Reader._configure != null) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            $protobuf.Reader._configure($protobuf.BufferReader);
+        }
+    }
+})();
 
 // re-export protobuf reader for usage by @hashgraph/sdk
 export const Reader = $protobuf.Reader;
@@ -206,3 +224,5 @@ export const TokenPauseTransactionBody = proto.TokenPauseTransactionBody;
 export const TokenUnpauseTransactionBody = proto.TokenUnpauseTransactionBody;
 export const TokenPauseStatus = proto.TokenPauseStatus;
 export const FreezeType = proto.FreezeType;
+export const AddressBookQuery = proto.AddressBookQuery;
+export const MirrorNetworkService = proto.MirrorNetworkService;
