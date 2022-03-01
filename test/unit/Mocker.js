@@ -355,7 +355,9 @@ class GrpcServers {
             await server.listen(address);
         }
 
-        return Client.forNetwork(network);
+        return Client.forNetwork(network)
+            .setNodeMinBackoff(1)
+            .setNodeMaxBackoff(1);
     }
 
     close() {

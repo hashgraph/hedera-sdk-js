@@ -200,25 +200,6 @@ export default class Network extends ManagedNetwork {
     }
 
     /**
-     * @returns {number}
-     */
-    get minBackoff() {
-        return this._minBackoff;
-    }
-
-    /**
-     * @param {number} minBackoff
-     * @returns {this}
-     */
-    setMinBackoff(minBackoff) {
-        this._minBackoff = minBackoff;
-        for (const node of this._nodes) {
-            node.setMinBackoff(minBackoff);
-        }
-        return this;
-    }
-
-    /**
      * @internal
      * @returns {number}
      */

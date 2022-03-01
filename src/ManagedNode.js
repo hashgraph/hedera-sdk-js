@@ -176,7 +176,7 @@ export default class ManagedNode {
      * @param {number} maxBackoff
      * @returns {this}
      */
-    setmaxBackoff(maxBackoff) {
+    setMaxBackoff(maxBackoff) {
         if (this._currentBackoff <= maxBackoff) {
             this._currentBackoff = maxBackoff;
         }
@@ -252,9 +252,7 @@ export default class ManagedNode {
      * @returns {number}
      */
     compare(node) {
-        let comparison =
-            this.getRemainingTime() -
-            node.getRemainingTime();
+        let comparison = this.getRemainingTime() - node.getRemainingTime();
         if (comparison != 0) {
             return comparison;
         }
