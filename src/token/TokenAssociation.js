@@ -1,5 +1,6 @@
 import AccountId from "../account/AccountId.js";
 import TokenId from "../token/TokenId.js";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
@@ -30,6 +31,8 @@ export default class TokenAssociation {
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);
         }
+
+        this._defaultMaxTransactionFee = new Hbar(5);
     }
 
     /**

@@ -901,6 +901,8 @@ export default class Transaction extends Executable {
             this._validateChecksums(client);
         }
 
+        this._operator = client != null ? client._operator : null;
+
         if (this._operator != null) {
             await this.signWith(
                 this._operator.publicKey,

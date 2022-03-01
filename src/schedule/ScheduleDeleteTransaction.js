@@ -2,6 +2,7 @@ import ScheduleId from "./ScheduleId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
@@ -44,6 +45,8 @@ export default class ScheduleDeleteTransaction extends Transaction {
         if (props.scheduleId != null) {
             this.setScheduleId(props.scheduleId);
         }
+
+        this._defaultMaxTransactionFee = new Hbar(5);
     }
 
     /**
