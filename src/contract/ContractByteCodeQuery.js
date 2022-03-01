@@ -155,11 +155,12 @@ export default class ContractByteCodeQuery extends Query {
      * @returns {string}
      */
     _getLogId() {
-        const timestamp = /** @type {import("../Timestamp.js").default} */ (
-            /** @type {import("../transaction/TransactionId.js").default} */ (
-                this._paymentTransactionId
-            ).validStart
-        );
+        const timestamp =
+            this._paymentTransactionId != null &&
+            this._paymentTransactionId.validStart != null
+                ? this._paymentTransactionId.validStart
+                : this._timestamp;
+
         return `ContractByteCodeQuery:${timestamp.toString()}`;
     }
 }
