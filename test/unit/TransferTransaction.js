@@ -164,7 +164,11 @@ describe("TransferTransaction", function () {
 
         const transaction = new TransferTransaction()
             // Insert in reverse order to confirm they get reordered
-            .addNftTransfer(tokenId4, serialNum1, accountId2, accountId4)
+            .addNftTransfer(
+                new NftId(tokenId4, serialNum1),
+                accountId2,
+                accountId4
+            )
             .addNftTransfer(tokenId4, serialNum1, accountId1, accountId3)
             .addNftTransfer(tokenId3, serialNum1, accountId1, accountId2)
             .addTokenTransferWithDecimals(tokenId2, accountId4, -1, 10)
