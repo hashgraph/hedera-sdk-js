@@ -9,7 +9,7 @@ import RLP from 'rlp';
 import {Buffer} from "buffer";
 import {bufToBigint} from 'bigint-conversion';
 import ForeignTransactionData from "../transaction/ForeignTransactionData.js";
-import {AccountId, HbarUnit } from "../exports.js";
+import { HbarUnit } from "../exports.js";
 import keccak256 from "keccak256";
 import PublicKey from "../PublicKey.js";
 const secp256k1 = require('secp256k1');
@@ -285,14 +285,8 @@ export default class ContractExecuteTransaction extends Transaction {
     populateFromEIP1559Tx(foreignTx) {
         var data = Buffer.from(foreignTx.substring(2), 'hex');
 
-        console.log("data");
-        console.log(data);
-
         var decoded =
             RLP.decode(Uint8Array.from(data));
-
-        console.log("decoded");
-        console.log(decoded);
 
         var chainId = ArrayBuffer.isView(decoded[0])
             ? Buffer.from(decoded[0]).readIntBE(0, decoded[0].length)
@@ -321,9 +315,6 @@ export default class ContractExecuteTransaction extends Transaction {
         var amount = ArrayBuffer.isView(decoded[6])
             ? bufToBigint(Buffer.from(decoded[6]))
             : null;
-
-        console.log("amount");
-        console.log(amount);
 
         var callData = ArrayBuffer.isView(decoded[7])
             ? Buffer.from(decoded[7])
@@ -392,12 +383,7 @@ export default class ContractExecuteTransaction extends Transaction {
 
         try {
             if (senderPubKey != null) {
-                console.log("senderPubKey");
-                console.log(Buffer.from(senderPubKey));
-                console.log(Buffer.from(senderPubKey).toString('hex'));
                 this._senderID = PublicKey.fromBytesECDSA(senderPubKey).toAccountId(0, 0);
-
-                console.log(this._senderID.toString());
             }
         } catch (e) {
             console.log(e);
@@ -422,15 +408,12 @@ export default class ContractExecuteTransaction extends Transaction {
 
         try {
             if (receiver != null) {
-                console.log(receiver);
                 this.setContractId(ContractId.fromSolidityAddress(receiver));
             }
         } catch (e) {
             console.log(e);
             throw e;
         }
-
-        console.log(this._contractId);
 
         if (gasLimit != null) {
             this.setGas(gasLimit);
@@ -493,22 +476,11 @@ export default class ContractExecuteTransaction extends Transaction {
 
         message = Buffer.concat([zeroTwo,Buffer.from(message)]);
 
-        console.log(Buffer.from(message).toString('hex'));
-
         const signature = Buffer.concat([r,s]);
-
-        console.log("signature");
-        console.log(signature);
 
         const hash = keccak256(Buffer.from(message));
 
-        console.log("hash");
-        console.log(hash);
-
         const newPubKey = secp256k1.ecdsaRecover(signature, recId, Buffer.from(hash), true);
-
-        console.log("newPubKey");
-        console.log(newPubKey);
 
         return newPubKey;
     }
@@ -530,12 +502,6 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {Promise<proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        console.log("hit _execute");
-        console.log(request);
-        if (request.signedTransactionBytes != null) {
-            console.log(Buffer.from(request.signedTransactionBytes).toString('hex'));
-            console.log(request.signedTransactionBytes.length);
-        }
         return channel.smartContract.contractCallMethod(request);
     }
 

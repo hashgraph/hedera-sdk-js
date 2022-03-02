@@ -1,6 +1,5 @@
 import * as proto from "@hashgraph/proto";
 import Long from "long";
-import {ForeignTransactionType} from "@hashgraph/proto";
 
 /**
  * The client-generated ID for a transaction.
