@@ -51,7 +51,7 @@
     },
     "dependencies": {
         "@babel/plugin-transform-modules-commonjs": "^7.16.8",
-        "protobufjs": "^6.11.2"
+        "protobufjs": "^6.11.2",
         "long": "^4.0.0"
     },
     "devDependencies": {
