@@ -74,7 +74,7 @@ export default class ExchangeRate {
             hbarEquiv: this.hbars,
             centEquiv: this.cents,
             expirationTime: {
-                seconds: Long.fromNumber(this.expirationTime.getSeconds()),
+                seconds: Long.fromNumber(Math.trunc(this.expirationTime.getTime() / 1000)),
             },
         };
     }
