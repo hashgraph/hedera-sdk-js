@@ -1,5 +1,4 @@
 import {
-    Hbar,
     Status,
     TokenCreateTransaction,
     TokenMintTransaction,
