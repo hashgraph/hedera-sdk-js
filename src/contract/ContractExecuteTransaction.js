@@ -5,14 +5,11 @@ import Transaction, {
 import ContractId from "./ContractId.js";
 import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import Long from "long";
-import RLP from 'rlp';
-import {Buffer} from "buffer";
-import {bufToBigint} from 'bigint-conversion';
+import { Buffer } from "buffer";
 import ForeignTransactionData from "../transaction/ForeignTransactionData.js";
 import { HbarUnit } from "../exports.js";
-import keccak256 from "keccak256";
 import PublicKey from "../PublicKey.js";
-const secp256k1 = require('secp256k1');
+import EthTxInfo from "./EthTxInfo.js";
 
 /**
  * @namespace proto
@@ -247,242 +244,58 @@ export default class ContractExecuteTransaction extends Transaction {
      * @returns {ContractExecuteTransaction}
      */
     populateFromForeignTransaction(foreignTx) {
-        if (foreignTx.startsWith("0x")) {
-            foreignTx = foreignTx.substring(2);
+        const txInfo = EthTxInfo.from(foreignTx);
+        console.log(txInfo)
+        console.log(foreignTx)
+        if (txInfo.senderPubKey != null) {
+            this._senderID = PublicKey.fromBytesECDSA(
+                txInfo.senderPubKey
+            ).toAccountId(0, 0);
         }
 
-        const uintArrayTxn = Buffer.from(foreignTx, 'hex');
-        switch (uintArrayTxn[0]) {
-            case 1:
-                return this.populateFromEIP2930Tx(foreignTx);
-            case 2:
-                return this.populateFromEIP1559Tx(foreignTx);
-            default:
-                return this.populateFromEthTx(foreignTx);
-        }
-    }
-
-    /**
-     * @param {string} foreignTx
-     * @returns {ContractExecuteTransaction}
-     */
-    populateFromEIP2930Tx(foreignTx) {
-        throw new Error("NIY");
-    }
-
-    /**
-     * @param {string} foreignTx
-     * @returns {ContractExecuteTransaction}
-     */
-    populateFromEthTx(foreignTx) {
-        throw new Error("NIY");
-    }
-
-    /**
-     * @param {string} foreignTx
-     * @returns {ContractExecuteTransaction}
-     */
-    populateFromEIP1559Tx(foreignTx) {
-        var data = Buffer.from(foreignTx.substring(2), 'hex');
-
-        var decoded =
-            RLP.decode(Uint8Array.from(data));
-
-        var chainId = ArrayBuffer.isView(decoded[0])
-            ? Buffer.from(decoded[0]).readIntBE(0, decoded[0].length)
-            : null;
-
-        var nonce = ArrayBuffer.isView(decoded[1])
-            ? Buffer.from(decoded[1]).readIntBE(0, decoded[1].length)
-            : null;
-
-        var maxPriorityFee = ArrayBuffer.isView(decoded[2])
-            ? bufToBigint(Buffer.from(decoded[2]))
-            : null;
-
-        var maxGasFee = ArrayBuffer.isView(decoded[3])
-            ? bufToBigint(Buffer.from(decoded[3]))
-            : null;
-
-        var gasLimit = ArrayBuffer.isView(decoded[4])
-            ? Buffer.from(decoded[4]).readIntBE(0, decoded[4].length)
-            : null;
-
-        var receiver = ArrayBuffer.isView(decoded[5])
-            ? Buffer.from(decoded[5]).toString('hex')
-            : null;
-
-        var amount = ArrayBuffer.isView(decoded[6])
-            ? bufToBigint(Buffer.from(decoded[6]))
-            : null;
-
-        var callData = ArrayBuffer.isView(decoded[7])
-            ? Buffer.from(decoded[7])
-            : null;
-
-        var callDataStart = callData != null
-            ? Buffer.from(foreignTx, 'hex').indexOf(callData)
-            : null;
-
-        var callDataLength = callData != null
-            ? callData.length
-            : null;
-
-        // fixme handle access list?
-        // var accessList = decoded[8];
-
-        var recId = null;
-        if (ArrayBuffer.isView(decoded[9])) {
-
-            if (Buffer.from(decoded[9]).length === 0) {
-                recId = 0;
-            }
-            else {
-                recId = Buffer.from(decoded[9]).readIntBE(0, decoded[9].length);
-            }
-        }
-
-
-        var r = ArrayBuffer.isView(decoded[10])
-            ? Buffer.from(decoded[10]).toString('hex')
-            : null;
-
-        var s = ArrayBuffer.isView(decoded[11])
-            ? Buffer.from(decoded[11]).toString('hex')
-            : null;
-
-        var senderPubKey = null;
-
-        if (chainId != null
-            && nonce != null
-            && maxPriorityFee != null
-            && maxGasFee != null
-            && gasLimit != null
-            && receiver != null
-            && amount != null
-            && callData != null
-            && recId != null
-            && r != null
-            && s != null
+        if (
+            txInfo.callDataStart != null &&
+            txInfo.callDataLength != null &&
+            txInfo.nonce != null
         ) {
-            senderPubKey =
-                this.recoverEcdsaSecp256k1Key(
-                    chainId,
-                    nonce,
-                    maxPriorityFee,
-                    maxGasFee,
-                    gasLimit,
-                    Buffer.from(receiver, 'hex'),
-                    amount,
-                    callData,
-                    recId,
-                    Buffer.from(r, 'hex'),
-                    Buffer.from(s, 'hex')
-                );
-        }
-
-        try {
-            if (senderPubKey != null) {
-                this._senderID = PublicKey.fromBytesECDSA(senderPubKey).toAccountId(0, 0);
-            }
-        } catch (e) {
-            console.log(e);
-            throw e;
-        }
-
-        if (callDataStart != null && callDataLength != null && nonce != null) {
+            const foreignTransactionData = new ForeignTransactionData({
+                foreignTransactionType: 2,
+                foreignTransactionBytes: Buffer.from(txInfo.transaction, "hex"),
+                payloadStart: txInfo.callDataStart,
+                payloadLength: txInfo.callDataLength,
+                nonce: txInfo.nonce,
+            });
+            console.log(txInfo)
+            console.log(foreignTx)
+            console.log(foreignTransactionData)
             this.setForeignTransactionData(
-                new ForeignTransactionData(
-                    {
-                        foreignTransactionType: 2,
-                        foreignTransactionBytes: Buffer.from(foreignTx, 'hex'),
-                        payloadStart: callDataStart,
-                        payloadLength: callDataLength,
-                        nonce: nonce
-                    }
+                foreignTransactionData
+            );
+        }
+
+        if (txInfo.receiver != null) {
+            this.setContractId(
+                ContractId.fromEvmAddress(
+                    0,
+                    0,
+                    Buffer.from(txInfo.receiver).toString("hex")
                 )
             );
-
         }
 
-
-        try {
-            if (receiver != null) {
-                this.setContractId(ContractId.fromSolidityAddress(receiver));
-            }
-        } catch (e) {
-            console.log(e);
-            throw e;
+        if (txInfo.gasLimit != null) {
+            this.setGas(txInfo.gasLimit);
         }
 
-        if (gasLimit != null) {
-            this.setGas(gasLimit);
-        }
-
-        if (amount != null) {
-            this.setPayableAmount(new Hbar(amount.toString(), HbarUnit.Tinybar));
+        if (txInfo.amount != null) {
+            this.setPayableAmount(
+                new Hbar(txInfo.amount.toString(), HbarUnit.Tinybar)
+            );
         }
 
         this._functionParameters = null;
 
         return this;
-    }
-
-    /**
-     *
-     * @param {number} chainId
-     * @param {number} nonce
-     * @param {BigInt} maxPriorityFee
-     * @param {BigInt} maxGasFee
-     * @param {number} gasLimit
-     * @param {Uint8Array} receiver
-     * @param {BigInt} amount
-     * @param {Uint8Array} callData
-     * @param {number} recId
-     * @param {Uint8Array} r
-     * @param {Uint8Array} s
-     * @reture {Uint8Array}
-     */
-    recoverEcdsaSecp256k1Key(
-        chainId,
-        nonce,
-        maxPriorityFee,
-        maxGasFee,
-        gasLimit,
-        receiver,
-        amount,
-        callData,
-        recId,
-        r,
-        s
-    ) {
-        var message =
-            RLP.encode(
-                [
-                    chainId,
-                    nonce,
-                    maxPriorityFee.valueOf(),
-                    maxGasFee.valueOf(),
-                    gasLimit,
-                    receiver,
-                    amount.valueOf(),
-                    callData,
-                    []
-                ]
-
-           );
-
-        const zeroTwo = new Uint8Array([2]);
-
-        message = Buffer.concat([zeroTwo,Buffer.from(message)]);
-
-        const signature = Buffer.concat([r,s]);
-
-        const hash = keccak256(Buffer.from(message));
-
-        const newPubKey = secp256k1.ecdsaRecover(signature, recId, Buffer.from(hash), true);
-
-        return newPubKey;
     }
 
     /**
@@ -522,9 +335,7 @@ export default class ContractExecuteTransaction extends Transaction {
     _makeTransactionData() {
         return {
             senderID:
-                this._senderID != null
-                    ? this._senderID._toProtobuf()
-                    : null,
+                this._senderID != null ? this._senderID._toProtobuf() : null,
             contractID:
                 this._contractId != null
                     ? this._contractId._toProtobuf()

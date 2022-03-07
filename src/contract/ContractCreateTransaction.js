@@ -9,6 +9,11 @@ import Transaction, {
 import Long from "long";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
+import { Buffer } from "buffer";
+import PublicKey from "../PublicKey.js";
+import ForeignTransactionData from "../transaction/ForeignTransactionData.js";
+import { HbarUnit } from "../exports.js";
+import EthTxInfo from "./EthTxInfo.js";
 
 /**
  * @namespace proto
@@ -24,6 +29,7 @@ import Key from "../Key.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
+ * @typedef {import("../account/AccountId.js").default} AccountIdType
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
@@ -40,6 +46,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {Uint8Array} [props.constructorParameters]
      * @param {string} [props.contractMemo]
+     * @param {AccountId | string} [props.senderId]
      */
     constructor(props = {}) {
         super();
@@ -92,6 +99,12 @@ export default class ContractCreateTransaction extends Transaction {
          */
         this._contractMemo = null;
 
+        /**
+         * @private
+         * @type {?AccountIdType}
+         */
+        this._senderId = null;
+
         this._defaultMaxTransactionFee = new Hbar(20);
 
         if (props.bytecodeFileId != null) {
@@ -124,6 +137,10 @@ export default class ContractCreateTransaction extends Transaction {
 
         if (props.contractMemo != null) {
             this.setContractMemo(props.contractMemo);
+        }
+
+        if (props.senderId != null) {
+            this.setSenderId(props.senderId);
         }
     }
 
@@ -184,6 +201,12 @@ export default class ContractCreateTransaction extends Transaction {
                         ? create.constructorParameters
                         : undefined,
                 contractMemo: create.memo != null ? create.memo : undefined,
+                senderId:
+                    create.senderID != null
+                        ? AccountId._fromProtobuf(
+                              /** @type {proto.IAccountID} */ (create.senderID)
+                          )
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -355,6 +378,79 @@ export default class ContractCreateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?AccountId}
+     */
+    get senderId() {
+        return this._senderId;
+    }
+
+    /**
+     * @param {AccountId | string} senderId
+     * @returns {this}
+     */
+    setSenderId(senderId) {
+        this._requireNotFrozen();
+        this._senderId =
+            senderId instanceof AccountId
+                ? senderId
+                : AccountId.fromString(senderId);
+
+        return this;
+    }
+
+    /**
+     * @param {string} foreignTx
+     * @returns {this}
+     */
+    populateFromForeignTransaction(foreignTx) {
+        const txInfo = EthTxInfo.from(foreignTx);
+        if (
+            txInfo.callDataStart != null &&
+            txInfo.callDataLength != null &&
+            txInfo.nonce != null
+        ) {
+            const fullTx = Buffer.from(foreignTx, "hex");
+            const firstHalfTx = fullTx.slice(0, txInfo.callDataStart);
+            const secondHalfTx = fullTx.slice(
+                txInfo.callDataStart + txInfo.callDataLength
+            );
+            const hollowTx = Buffer.concat([firstHalfTx, secondHalfTx]);
+            this.setForeignTransactionData(
+                new ForeignTransactionData({
+                    foreignTransactionType: 2,
+                    foreignTransactionBytes: hollowTx,
+                    payloadStart: txInfo.callDataStart,
+                    payloadLength: txInfo.callDataLength,
+                    nonce: txInfo.nonce,
+                })
+            );
+        }
+
+        try {
+            if (txInfo.senderPubKey != null) {
+                this._senderId = PublicKey.fromBytesECDSA(
+                    txInfo.senderPubKey
+                ).toAccountId(0, 0);
+            }
+        } catch (e) {
+            console.log(e);
+            throw e;
+        }
+
+        if (txInfo.gasLimit != null) {
+            this.setGas(txInfo.gasLimit);
+        }
+
+        if (txInfo.amount != null) {
+            this.setInitialBalance(
+                new Hbar(txInfo.amount.toString(), HbarUnit.Tinybar)
+            );
+        }
+
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -412,6 +508,8 @@ export default class ContractCreateTransaction extends Transaction {
             autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
             constructorParameters: this._constructorParameters,
             memo: this._contractMemo,
+            senderID:
+                this._senderId != null ? this._senderId._toProtobuf() : null,
         };
     }
 }

@@ -13,7 +13,7 @@ import {
     SignedTransaction as ProtoSignedTransaction,
     TransactionList as ProtoTransactionList,
     TransactionBody as ProtoTransactionBody,
-    ResponseCodeEnum
+    ResponseCodeEnum,
 } from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
@@ -339,8 +339,12 @@ export default class Transaction extends Executable {
                 ? Hbar.fromTinybars(body.transactionFee)
                 : new Hbar(0);
         transaction._transactionMemo = body.memo != null ? body.memo : "";
-        transaction._foreignTransactionData = body.foreignTransactionData != null ?
-            ForeignTransactionData._fromProtobuf(body.foreignTransactionData) : null;
+        transaction._foreignTransactionData =
+            body.foreignTransactionData != null
+                ? ForeignTransactionData._fromProtobuf(
+                      body.foreignTransactionData
+                  )
+                : null;
 
         for (let i = 0; i < nodeIds.length; i++) {
             const signedTransaction = signedTransactions[i];
@@ -1186,9 +1190,10 @@ export default class Transaction extends Executable {
             transactionValidDuration: {
                 seconds: Long.fromNumber(this._transactionValidDuration),
             },
-            foreignTransactionData: this._foreignTransactionData != null
-                ? this._foreignTransactionData._toProtobuf() :
-                null,
+            foreignTransactionData:
+                this._foreignTransactionData != null
+                    ? this._foreignTransactionData._toProtobuf()
+                    : null,
         };
     }
 

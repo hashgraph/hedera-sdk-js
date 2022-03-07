@@ -32,7 +32,6 @@ export default class ForeignTransactionData {
          */
         this._foreignTransactionType = null;
 
-
         if (props.foreignTransactionType != null) {
             this.setForeignTransactionType(props.foreignTransactionType);
         }
@@ -99,7 +98,8 @@ export default class ForeignTransactionData {
      * @returns {ForeignTransactionData}
      */
     setPayloadStart(payloadStart) {
-        this._payloadStart = typeof payloadStart === "number" ? payloadStart : null;
+        this._payloadStart =
+            typeof payloadStart === "number" ? payloadStart : null;
         return this;
     }
 
@@ -108,7 +108,8 @@ export default class ForeignTransactionData {
      * @returns {ForeignTransactionData}
      */
     setPayloadLength(payloadLength) {
-        this._payloadLength = typeof payloadLength === "number" ? payloadLength : null;
+        this._payloadLength =
+            typeof payloadLength === "number" ? payloadLength : null;
         return this;
     }
 
@@ -127,14 +128,21 @@ export default class ForeignTransactionData {
      * @returns {ForeignTransactionData}
      */
     static _fromProtobuf(foreignTransactionData) {
-        if (foreignTransactionData.foreignTransactionType != null
-            && foreignTransactionData.foreignTransactionBytes instanceof Uint8Array
-            && foreignTransactionData.nonce != null
-            && foreignTransactionData.payloadStart
-            && foreignTransactionData.payloadLength) {
+        if (
+            foreignTransactionData.foreignTransactionType != null &&
+            foreignTransactionData.foreignTransactionBytes instanceof
+                Uint8Array &&
+            foreignTransactionData.nonce != null &&
+            foreignTransactionData.payloadStart &&
+            foreignTransactionData.payloadLength
+        ) {
             return new ForeignTransactionData()
-                .setForeignTransactionType(foreignTransactionData.foreignTransactionType)
-                .setForeignTransactionBytes(foreignTransactionData.foreignTransactionBytes)
+                .setForeignTransactionType(
+                    foreignTransactionData.foreignTransactionType
+                )
+                .setForeignTransactionBytes(
+                    foreignTransactionData.foreignTransactionBytes
+                )
                 .setPayloadStart(foreignTransactionData.payloadStart)
                 .setPayloadLength(foreignTransactionData.payloadLength)
                 .setNonce(foreignTransactionData.nonce);
@@ -152,15 +160,18 @@ export default class ForeignTransactionData {
     _toProtobuf() {
         return {
             foreignTransactionType:
-                this._foreignTransactionType != null ? this._foreignTransactionType : null,
+                this._foreignTransactionType != null
+                    ? this._foreignTransactionType
+                    : null,
             foreignTransactionBytes:
-                this._foreignTransactionBytes != null ? this._foreignTransactionBytes : null,
+                this._foreignTransactionBytes != null
+                    ? this._foreignTransactionBytes
+                    : null,
             payloadStart:
                 this._payloadStart != null ? this._payloadStart : null,
             payloadLength:
                 this._payloadLength != null ? this._payloadLength : null,
-            nonce:
-                this._nonce != null ? Long.fromNumber(this._nonce) : null,
+            nonce: this._nonce != null ? Long.fromNumber(this._nonce) : null,
         };
     }
 
@@ -169,7 +180,9 @@ export default class ForeignTransactionData {
      * @returns {ForeignTransactionData}
      */
     static fromBytes(bytes) {
-        return ForeignTransactionData._fromProtobuf(proto.ForeignTransactionData.decode(bytes));
+        return ForeignTransactionData._fromProtobuf(
+            proto.ForeignTransactionData.decode(bytes)
+        );
     }
 
     /**
