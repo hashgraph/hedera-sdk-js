@@ -206,7 +206,7 @@ export default class LocalWallet extends Wallet {
             this.provider._client._network.getNodeAccountIdsForExecute()
         );
 
-        return Promise.resolve(transaction);
+        return Promise.resolve(transaction.freeze());
     }
 
     /**
