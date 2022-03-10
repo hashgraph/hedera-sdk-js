@@ -118,7 +118,10 @@ export default class ContractExecuteTransaction extends Transaction {
                           )
                         : undefined,
                 gas: call.gas != null ? call.gas : undefined,
-                amount: call.amount ? call.amount : undefined,
+                amount:
+                    call.amount != null
+                        ? Hbar.fromTinybars(call.amount)
+                        : undefined,
                 functionParameters:
                     call.functionParameters != null
                         ? call.functionParameters
