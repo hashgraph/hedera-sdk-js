@@ -56,7 +56,6 @@ describe("FileAppendTransaction", function () {
         expect(body.fileAppend.contents.length).to.be.equal(1000);
         expect(body.fileAppend.contents[0]).to.be.equal(49);
 
-        transaction._nextTransactionIndex++;
         transaction._transactionIds.advance();
         body = transaction._makeTransactionBody(nodeAccountId);
 
@@ -73,7 +72,6 @@ describe("FileAppendTransaction", function () {
         expect(body.fileAppend.contents.length).to.be.equal(1000);
         expect(body.fileAppend.contents[0]).to.be.equal(50);
 
-        transaction._nextTransactionIndex++;
         transaction._transactionIds.advance();
         body = transaction._makeTransactionBody(nodeAccountId);
 

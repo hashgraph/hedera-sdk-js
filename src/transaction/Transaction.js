@@ -316,7 +316,6 @@ export default class Transaction extends Executable {
         transaction._transactionIds.setList(transactionIds).setLocked();
         transaction._nodeAccountIds.setList(nodeIds).setLocked();
 
-        transaction._nextNodeAccountIdIndex = 0;
         transaction._transactionValidDuration =
             body.transactionValidDuration != null &&
             body.transactionValidDuration.seconds != null
@@ -531,6 +530,9 @@ export default class Transaction extends Executable {
             return this;
         }
 
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
+
         for (const signedTransaction of this._signedTransactions.list) {
             const bodyBytes = /** @type {Uint8Array} */ (
                 signedTransaction.bodyBytes
@@ -643,13 +645,8 @@ export default class Transaction extends Executable {
     async getSignaturesAsync() {
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
-        if (!this._transactionIds.isEmpty) {
-            this._transactionIds.setLocked();
-        }
-
-        if (!this._nodeAccountIds.isEmpty) {
-            this._nodeAccountIds.setLocked();
-        }
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
 
         await this._buildAllTransactionsAsync();
 
@@ -825,13 +822,8 @@ export default class Transaction extends Executable {
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
-        if (!this._transactionIds.isEmpty) {
-            this._transactionIds.setLocked();
-        }
-
-        if (!this._nodeAccountIds.isEmpty) {
-            this._nodeAccountIds.setLocked();
-        }
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
 
         await this._buildAllTransactionsAsync();
 
@@ -854,13 +846,8 @@ export default class Transaction extends Executable {
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
-        if (!this._transactionIds.isEmpty) {
-            this._transactionIds.setLocked();
-        }
-
-        if (!this._nodeAccountIds.isEmpty) {
-            this._nodeAccountIds.setLocked();
-        }
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
 
         await this._buildAllTransactionsAsync();
 
