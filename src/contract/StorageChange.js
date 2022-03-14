@@ -1,4 +1,6 @@
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
+
+const { proto } = HashgraphProto;
 
 export default class StorageChange {
     /**
@@ -16,7 +18,7 @@ export default class StorageChange {
 
     /**
      * @internal
-     * @param {proto.IStorageChange} change
+     * @param {HashgraphProto.proto.IStorageChange} change
      * @returns {StorageChange}
      */
     static _fromProtobuf(change) {
@@ -40,7 +42,7 @@ export default class StorageChange {
 
     /**
      * @internal
-     * @returns {proto.IStorageChange}
+     * @returns {HashgraphProto.proto.IStorageChange}
      */
     _toProtobuf() {
         return {

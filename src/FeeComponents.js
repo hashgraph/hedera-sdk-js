@@ -1,4 +1,6 @@
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
+
+const { proto } = HashgraphProto;
 
 export default class FeeComponents {
     /**
@@ -104,7 +106,7 @@ export default class FeeComponents {
 
     /**
      * @internal
-     * @param {proto.IFeeComponents} feeComponents
+     * @param {HashgraphProto.proto.IFeeComponents} feeComponents
      * @returns {FeeComponents}
      */
     static _fromProtobuf(feeComponents) {
@@ -136,7 +138,7 @@ export default class FeeComponents {
 
     /**
      * @internal
-     * @returns {proto.IFeeComponents}
+     * @returns {HashgraphProto.proto.IFeeComponents}
      */
     _toProtobuf() {
         return {

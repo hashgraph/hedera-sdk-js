@@ -1,6 +1,8 @@
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import RequestType from "./RequestType";
 import FeeData from "./FeeData";
+
+const { proto } = HashgraphProto;
 
 export default class TransactionFeeSchedule {
     /**
@@ -44,7 +46,7 @@ export default class TransactionFeeSchedule {
 
     /**
      * @internal
-     * @param {proto.ITransactionFeeSchedule} transactionFeeSchedule
+     * @param {HashgraphProto.proto.ITransactionFeeSchedule} transactionFeeSchedule
      * @returns {TransactionFeeSchedule}
      */
     static _fromProtobuf(transactionFeeSchedule) {
@@ -70,7 +72,7 @@ export default class TransactionFeeSchedule {
 
     /**
      * @internal
-     * @returns {proto.ITransactionFeeSchedule}
+     * @returns {HashgraphProto.proto.ITransactionFeeSchedule}
      */
     _toProtobuf() {
         return {

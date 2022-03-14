@@ -274,10 +274,7 @@ export default class Executable {
      * @returns {void}
      */
     _advanceRequest() {
-        // each time we move our cursor to the next transaction
-        // wrapping around to ensure we are cycling
-        this._nextNodeAccountIdIndex =
-            (this._nextNodeAccountIdIndex + 1) % this._nodeAccountIds.length;
+        this._nodeAccountIds.advance();
     }
 
     /**

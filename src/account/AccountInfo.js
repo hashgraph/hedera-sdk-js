@@ -4,7 +4,7 @@ import Hbar from "../Hbar.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
 import TokenRelationshipMap from "./TokenRelationshipMap.js";
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
@@ -12,6 +12,8 @@ import LedgerId from "../LedgerId.js";
 import HbarAllowance from "./HbarAllowance.js";
 import TokenAllowance from "./TokenAllowance.js";
 import TokenNftAllowance from "./TokenNftAllowance.js";
+
+const { proto } = HashgraphProto;
 
 /**
  * Current information about an account, including the balance.
@@ -170,7 +172,7 @@ export default class AccountInfo {
 
     /**
      * @internal
-     * @param {proto.CryptoGetInfoResponse.IAccountInfo} info
+     * @param {HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo} info
      * @returns {AccountInfo}
      */
     static _fromProtobuf(info) {
@@ -185,12 +187,14 @@ export default class AccountInfo {
 
         return new AccountInfo({
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (info.accountID)
+                /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID)
             ),
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : null,
             isDeleted: info.deleted != null ? info.deleted : false,
-            key: Key._fromProtobufKey(/** @type {proto.IKey} */ (info.key)),
+            key: Key._fromProtobufKey(
+                /** @type {HashgraphProto.proto.IKey} */ (info.key)
+            ),
             balance: Hbar.fromTinybars(info.balance != null ? info.balance : 0),
             sendRecordThreshold: Hbar.fromTinybars(
                 info.generateSendRecordThreshold != null
@@ -207,7 +211,9 @@ export default class AccountInfo {
                     ? info.receiverSigRequired
                     : false,
             expirationTime: Timestamp._fromProtobuf(
-                /** @type {proto.ITimestamp} */ (info.expirationTime)
+                /** @type {HashgraphProto.proto.ITimestamp} */ (
+                    info.expirationTime
+                )
             ),
             autoRenewPeriod:
                 info.autoRenewPeriod != null
@@ -270,7 +276,7 @@ export default class AccountInfo {
     }
 
     /**
-     * @returns {proto.CryptoGetInfoResponse.IAccountInfo}
+     * @returns {HashgraphProto.proto.CryptoGetInfoResponse.IAccountInfo}
      */
     _toProtobuf() {
         return {

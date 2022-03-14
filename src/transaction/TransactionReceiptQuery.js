@@ -6,7 +6,7 @@ import PrecheckStatusError from "../PrecheckStatusError.js";
 import ReceiptStatusError from "../ReceiptStatusError.js";
 import { ExecutionState } from "../Executable.js";
 import Logger from "js-logger";
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("../account/AccountId.js").default} AccountId
@@ -60,13 +60,14 @@ export default class TransactionReceiptQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {TransactionReceiptQuery}
      */
     static _fromProtobuf(query) {
-        const receipt = /** @type {proto.ITransactionGetReceiptQuery} */ (
-            query.transactionGetReceipt
-        );
+        const receipt =
+            /** @type {HashgraphProto.proto.ITransactionGetReceiptQuery} */ (
+                query.transactionGetReceipt
+            );
 
         return new TransactionReceiptQuery({
             transactionId: receipt.transactionID
@@ -151,8 +152,8 @@ export default class TransactionReceiptQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQuery} request
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IQuery} request
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {ExecutionState}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -163,7 +164,7 @@ export default class TransactionReceiptQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : proto.ResponseCodeEnum.OK
+                : HashgraphProto.proto.ResponseCodeEnum.OK
         );
 
         Logger.debug(
@@ -182,15 +183,17 @@ export default class TransactionReceiptQuery extends Query {
         }
 
         const transactionGetReceipt =
-            /** @type {proto.ITransactionGetReceiptResponse} */ (
+            /** @type {HashgraphProto.proto.ITransactionGetReceiptResponse} */ (
                 response.transactionGetReceipt
             );
-        const receipt = /** @type {proto.ITransactionReceipt} */ (
-            transactionGetReceipt.receipt
-        );
-        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (
-            receipt.status
-        );
+        const receipt =
+            /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
+                transactionGetReceipt.receipt
+            );
+        const receiptStatusCode =
+            /** @type {HashgraphProto.proto.ResponseCodeEnum} */ (
+                receipt.status
+            );
 
         status = Status._fromCode(receiptStatusCode);
 
@@ -213,8 +216,8 @@ export default class TransactionReceiptQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQuery} request
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IQuery} request
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -225,7 +228,7 @@ export default class TransactionReceiptQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : proto.ResponseCodeEnum.OK
+                : HashgraphProto.proto.ResponseCodeEnum.OK
         );
 
         switch (status) {
@@ -241,15 +244,17 @@ export default class TransactionReceiptQuery extends Query {
         }
 
         const transactionGetReceipt =
-            /** @type {proto.ITransactionGetReceiptResponse} */ (
+            /** @type {HashgraphProto.proto.ITransactionGetReceiptResponse} */ (
                 response.transactionGetReceipt
             );
-        const receipt = /** @type {proto.ITransactionReceipt} */ (
-            transactionGetReceipt.receipt
-        );
-        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (
-            receipt.status
-        );
+        const receipt =
+            /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
+                transactionGetReceipt.receipt
+            );
+        const receiptStatusCode =
+            /** @type {HashgraphProto.proto.ResponseCodeEnum} */ (
+                receipt.status
+            );
 
         status = Status._fromCode(receiptStatusCode);
 
@@ -278,8 +283,8 @@ export default class TransactionReceiptQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.crypto.getTransactionReceipts(request);
@@ -288,15 +293,15 @@ export default class TransactionReceiptQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
         const transactionGetReceipt =
-            /** @type {proto.ITransactionGetReceiptResponse} */ (
+            /** @type {HashgraphProto.proto.ITransactionGetReceiptResponse} */ (
                 response.transactionGetReceipt
             );
-        return /** @type {proto.IResponseHeader} */ (
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
             transactionGetReceipt.header
         );
     }
@@ -304,15 +309,15 @@ export default class TransactionReceiptQuery extends Query {
     /**
      * @protected
      * @override
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @param {AccountId} nodeAccountId
-     * @param {proto.IQuery} request
+     * @param {HashgraphProto.proto.IQuery} request
      * @returns {Promise<TransactionReceipt>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
         const transactionGetReceipt =
-            /** @type {proto.ITransactionGetReceiptResponse} */ (
+            /** @type {HashgraphProto.proto.ITransactionGetReceiptResponse} */ (
                 response.transactionGetReceipt
             );
 
@@ -324,8 +329,8 @@ export default class TransactionReceiptQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

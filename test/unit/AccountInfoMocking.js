@@ -7,8 +7,10 @@ import {
 } from "../../src/exports.js";
 import Mocker, { UNAVAILABLE, INTERNAL, PRIVATE_KEY } from "./Mocker.js";
 import Long from "long";
-import * as proto from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import * as hex from "../../src/encoding/hex.js";
+
+const { proto } = HashgraphProto;
 
 const ACCOUNT_INFO_QUERY_COST_RESPONSE = {
     cryptoGetInfo: {
@@ -42,24 +44,30 @@ const ACCOUNT_INFO_QUERY_RESPONSE = {
 };
 
 describe("AccountInfoMocking", function () {
+    let client;
+    let servers;
+
+    afterEach(function () {
+        client.close();
+        servers.close();
+    });
+
     it("should retry on `UNAVAILABLE`", async function () {
         this.timeout(10000);
 
-        const { client, servers } = await Mocker.withResponses([
+        ({ client, servers } = await Mocker.withResponses([
             [
                 { error: UNAVAILABLE },
                 { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
                 { response: ACCOUNT_INFO_QUERY_RESPONSE },
             ],
-        ]);
+        ]));
 
         const info = await new AccountInfoQuery()
             .setAccountId("0.0.3")
             .execute(client);
 
         expect(info.accountId.toString()).to.be.equal("0.0.10");
-
-        servers.close();
     });
 
     it("should retry on `INTERNAL` and retry multiple nodes", async function () {
@@ -78,10 +86,10 @@ describe("AccountInfoMocking", function () {
             { response: ACCOUNT_INFO_QUERY_RESPONSE },
         ];
 
-        const { client, servers } = await Mocker.withResponses([
+        ({ client, servers } = await Mocker.withResponses([
             responses1,
             responses2,
-        ]);
+        ]));
 
         const info = await new AccountInfoQuery()
             .setNodeAccountIds([new AccountId(3), new AccountId(4)])
@@ -98,7 +106,7 @@ describe("AccountInfoMocking", function () {
 
         const responses1 = [{ response: { nodeTransactionPrecheckCode: 0 } }];
 
-        const { client, servers } = await Mocker.withResponses([responses1]);
+        ({ client, servers } = await Mocker.withResponses([responses1]));
 
         client.setSignOnDemand(true);
 
@@ -124,7 +132,7 @@ describe("AccountInfoMocking", function () {
 
         const responses1 = [{ response: { nodeTransactionPrecheckCode: 0 } }];
 
-        const { client, servers } = await Mocker.withResponses([responses1]);
+        ({ client, servers } = await Mocker.withResponses([responses1]));
 
         const transaction = await new FileCreateTransaction()
             .setNodeAccountIds([new AccountId(3)])
@@ -186,7 +194,7 @@ describe("AccountInfoMocking", function () {
 
         const responses1 = [{ call }, { call }, { call }];
 
-        const { client, servers } = await Mocker.withResponses([responses1]);
+        ({ client, servers } = await Mocker.withResponses([responses1]));
 
         client.setSignOnDemand(true);
 
@@ -209,7 +217,7 @@ describe("AccountInfoMocking", function () {
             },
         ];
 
-        const { client, servers } = await Mocker.withResponses([responses1]);
+        ({ client, servers } = await Mocker.withResponses([responses1]));
 
         client.setSignOnDemand(true);
 
@@ -270,7 +278,7 @@ describe("AccountInfoMocking", function () {
 
         const responses1 = [{ call }, { call }, { call }];
 
-        const { client, servers } = await Mocker.withResponses([responses1]);
+        ({ client, servers } = await Mocker.withResponses([responses1]));
 
         client.setSignOnDemand(true);
         client.setDefaultRegenerateTransactionId(false);
@@ -284,7 +292,7 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should timeout if Client.setRequestTimeout is set", async function () {
-        const { client, servers } = await Mocker.withResponses([
+        ({ client, servers } = await Mocker.withResponses([
             [
                 { error: UNAVAILABLE },
                 { error: UNAVAILABLE },
@@ -293,7 +301,7 @@ describe("AccountInfoMocking", function () {
                 { error: UNAVAILABLE },
                 { error: UNAVAILABLE },
             ],
-        ]);
+        ]));
 
         client.setRequestTimeout(1);
 
@@ -313,7 +321,7 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should timeout if Executable.execute(client, requestTimeout) is set", async function () {
-        const { client, servers } = await Mocker.withResponses([
+        ({ client, servers } = await Mocker.withResponses([
             [
                 { error: UNAVAILABLE },
                 { error: UNAVAILABLE },
@@ -322,7 +330,7 @@ describe("AccountInfoMocking", function () {
                 { error: UNAVAILABLE },
                 { error: UNAVAILABLE },
             ],
-        ]);
+        ]));
 
         let err = false;
 
@@ -342,7 +350,7 @@ describe("AccountInfoMocking", function () {
     });
 
     it("should timeout if gRPC deadline is reached", async function () {
-        const { client, servers } = await Mocker.withResponses([
+        ({ client, servers } = await Mocker.withResponses([
             [
                 { error: UNAVAILABLE },
                 { error: UNAVAILABLE },
@@ -352,7 +360,7 @@ describe("AccountInfoMocking", function () {
                 { error: UNAVAILABLE },
                 { error: UNAVAILABLE },
             ],
-        ]);
+        ]));
 
         let err = false;
 

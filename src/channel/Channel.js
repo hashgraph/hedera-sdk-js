@@ -1,5 +1,7 @@
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import * as utf8 from "../encoding/utf8.js";
+
+const { proto } = HashgraphProto;
 
 /**
  * @internal
@@ -12,49 +14,49 @@ export default class Channel {
     constructor() {
         /**
          * @protected
-         * @type {?proto.CryptoService}
+         * @type {?HashgraphProto.proto.CryptoService}
          */
         this._crypto = null;
 
         /**
          * @protected
-         * @type {?proto.SmartContractService}
+         * @type {?HashgraphProto.proto.SmartContractService}
          */
         this._smartContract = null;
 
         /**
          * @protected
-         * @type {?proto.FileService}
+         * @type {?HashgraphProto.proto.FileService}
          */
         this._file = null;
 
         /**
          * @protected
-         * @type {?proto.ConsensusService}
+         * @type {?HashgraphProto.proto.ConsensusService}
          */
         this._consensus = null;
 
         /**
          * @protected
-         * @type {?proto.FreezeService}
+         * @type {?HashgraphProto.proto.FreezeService}
          */
         this._freeze = null;
 
         /**
          * @protected
-         * @type {?proto.NetworkService}
+         * @type {?HashgraphProto.proto.NetworkService}
          */
         this._network = null;
 
         /**
          * @protected
-         * @type {?proto.TokenService}
+         * @type {?HashgraphProto.proto.TokenService}
          */
         this._token = null;
 
         /**
          * @protected
-         * @type {?proto.ScheduleService}
+         * @type {?HashgraphProto.proto.ScheduleService}
          */
         this._schedule = null;
     }
@@ -68,7 +70,7 @@ export default class Channel {
     }
 
     /**
-     * @returns {proto.CryptoService}
+     * @returns {HashgraphProto.proto.CryptoService}
      */
     get crypto() {
         if (this._crypto != null) {
@@ -83,7 +85,7 @@ export default class Channel {
     }
 
     /**
-     * @returns {proto.SmartContractService}
+     * @returns {HashgraphProto.proto.SmartContractService}
      */
     get smartContract() {
         if (this._smartContract != null) {
@@ -98,7 +100,7 @@ export default class Channel {
     }
 
     /**
-     * @returns {proto.FileService}
+     * @returns {HashgraphProto.proto.FileService}
      */
     get file() {
         if (this._file != null) {
@@ -113,7 +115,7 @@ export default class Channel {
     }
 
     /**
-     * @returns {proto.ConsensusService}
+     * @returns {HashgraphProto.proto.ConsensusService}
      */
     get consensus() {
         if (this._consensus != null) {
@@ -128,7 +130,7 @@ export default class Channel {
     }
 
     /**
-     * @returns {proto.FreezeService}
+     * @returns {HashgraphProto.proto.FreezeService}
      */
     get freeze() {
         if (this._freeze != null) {
@@ -143,7 +145,7 @@ export default class Channel {
     }
 
     /**
-     * @returns {proto.NetworkService}
+     * @returns {HashgraphProto.proto.NetworkService}
      */
     get network() {
         if (this._network != null) {
@@ -158,7 +160,7 @@ export default class Channel {
     }
 
     /**
-     * @returns {proto.TokenService}
+     * @returns {HashgraphProto.proto.TokenService}
      */
     get token() {
         if (this._token != null) {
@@ -173,7 +175,7 @@ export default class Channel {
     }
 
     /**
-     * @returns {proto.ScheduleService}
+     * @returns {HashgraphProto.proto.ScheduleService}
      */
     get schedule() {
         if (this._schedule != null) {

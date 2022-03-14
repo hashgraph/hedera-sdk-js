@@ -1,5 +1,7 @@
 import SemanticVersion from "./SemanticVersion.js";
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
+
+const { proto } = HashgraphProto;
 
 /**
  * Response when the client sends the node CryptoGetVersionInfoQuery.
@@ -31,17 +33,17 @@ export default class NetworkVersionInfo {
 
     /**
      * @internal
-     * @param {proto.INetworkGetVersionInfoResponse} info
+     * @param {HashgraphProto.proto.INetworkGetVersionInfoResponse} info
      * @returns {NetworkVersionInfo}
      */
     static _fromProtobuf(info) {
         return new NetworkVersionInfo({
             protobufVersion: SemanticVersion._fromProtobuf(
-                /** @type {proto.ISemanticVersion} */
+                /** @type {HashgraphProto.proto.ISemanticVersion} */
                 (info.hapiProtoVersion)
             ),
             servicesVesion: SemanticVersion._fromProtobuf(
-                /** @type {proto.ISemanticVersion} */
+                /** @type {HashgraphProto.proto.ISemanticVersion} */
                 (info.hederaServicesVersion)
             ),
         });
@@ -49,7 +51,7 @@ export default class NetworkVersionInfo {
 
     /**
      * @internal
-     * @returns {proto.INetworkGetVersionInfoResponse}
+     * @returns {HashgraphProto.proto.INetworkGetVersionInfoResponse}
      */
     _toProtobuf() {
         return {

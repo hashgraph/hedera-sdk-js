@@ -3,9 +3,11 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
 import Duration from "../Duration.js";
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import Key from "../Key.js";
 import LedgerId from "../LedgerId.js";
+
+const { proto } = HashgraphProto;
 
 /**
  * Current state of a topic.
@@ -92,17 +94,19 @@ export default class TopicInfo {
 
     /**
      * @internal
-     * @param {proto.IConsensusGetTopicInfoResponse} infoResponse
+     * @param {HashgraphProto.proto.IConsensusGetTopicInfoResponse} infoResponse
      * @returns {TopicInfo}
      */
     static _fromProtobuf(infoResponse) {
-        const info = /** @type {proto.IConsensusTopicInfo} */ (
+        const info = /** @type {HashgraphProto.proto.IConsensusTopicInfo} */ (
             infoResponse.topicInfo
         );
 
         return new TopicInfo({
             topicId: TopicId._fromProtobuf(
-                /** @type {proto.ITopicID} */ (infoResponse.topicID)
+                /** @type {HashgraphProto.proto.ITopicID} */ (
+                    infoResponse.topicID
+                )
             ),
             topicMemo: info.memo != null ? info.memo : "",
             runningHash:
@@ -144,7 +148,7 @@ export default class TopicInfo {
 
     /**
      * @internal
-     * @returns {proto.IConsensusGetTopicInfoResponse}
+     * @returns {HashgraphProto.proto.IConsensusGetTopicInfoResponse}
      */
     _toProtobuf() {
         return {
@@ -191,8 +195,8 @@ export default class TopicInfo {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.ConsensusTopicInfo.encode(
-            /** @type {proto.IConsensusTopicInfo} */ (
+        return HashgraphProto.proto.ConsensusTopicInfo.encode(
+            /** @type {HashgraphProto.proto.IConsensusTopicInfo} */ (
                 this._toProtobuf().topicInfo
             )
         ).finish();

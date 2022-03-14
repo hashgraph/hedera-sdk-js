@@ -1,4 +1,6 @@
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
+
+const { proto } = HashgraphProto;
 
 export default class SemanticVersion {
     /**
@@ -21,7 +23,7 @@ export default class SemanticVersion {
 
     /**
      * @internal
-     * @param {proto.ISemanticVersion} version
+     * @param {HashgraphProto.proto.ISemanticVersion} version
      * @returns {SemanticVersion}
      */
     static _fromProtobuf(version) {
@@ -34,7 +36,7 @@ export default class SemanticVersion {
 
     /**
      * @internal
-     * @returns {proto.ISemanticVersion}
+     * @returns {HashgraphProto.proto.ISemanticVersion}
      */
     _toProtobuf() {
         return {

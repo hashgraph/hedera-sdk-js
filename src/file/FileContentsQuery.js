@@ -3,13 +3,13 @@ import FileId from "./FileId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").proto.IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").proto.IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").proto.IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").proto.IFileGetContentsQuery} proto.IFileGetContentsQuery
- * @typedef {import("@hashgraph/proto").proto.IFileGetContentsResponse} proto.IFileGetContentsResponse
- * @typedef {import("@hashgraph/proto").proto.FileGetContentsResponse.IFileContents} proto.FileGetContentsResponse.IFileContents
+ * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.IFileGetContentsQuery} HashgraphProto.proto.IFileGetContentsQuery
+ * @typedef {import("@hashgraph/proto").proto.IFileGetContentsResponse} HashgraphProto.proto.IFileGetContentsResponse
+ * @typedef {import("@hashgraph/proto").proto.FileGetContentsResponse.IFileContents} HashgraphProto.proto.FileGetContentsResponse.IFileContents
  */
 
 /**
@@ -41,13 +41,14 @@ export default class FileContentsQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {FileContentsQuery}
      */
     static _fromProtobuf(query) {
-        const contents = /** @type {proto.IFileGetContentsQuery} */ (
-            query.fileGetContents
-        );
+        const contents =
+            /** @type {HashgraphProto.proto.IFileGetContentsQuery} */ (
+                query.fileGetContents
+            );
 
         return new FileContentsQuery({
             fileId:
@@ -70,8 +71,8 @@ export default class FileContentsQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.file.getFileContent(request);
@@ -102,29 +103,32 @@ export default class FileContentsQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const fileGetContents = /** @type {proto.IFileGetContentsResponse} */ (
-            response.fileGetContents
+        const fileGetContents =
+            /** @type {HashgraphProto.proto.IFileGetContentsResponse} */ (
+                response.fileGetContents
+            );
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
+            fileGetContents.header
         );
-        return /** @type {proto.IResponseHeader} */ (fileGetContents.header);
     }
 
     /**
      * @protected
      * @override
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<Uint8Array>}
      */
     _mapResponse(response) {
         const fileContentsResponse =
-            /** @type {proto.IFileGetContentsResponse} */ (
+            /** @type {HashgraphProto.proto.IFileGetContentsResponse} */ (
                 response.fileGetContents
             );
         const fileConents =
-            /** @type {proto.FileGetContentsResponse.IFileContents} */ (
+            /** @type {HashgraphProto.proto.FileGetContentsResponse.IFileContents} */ (
                 fileContentsResponse.fileContents
             );
         const contents = /** @type {Uint8Array} */ (fileConents.contents);
@@ -135,8 +139,8 @@ export default class FileContentsQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

@@ -4,7 +4,7 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.ITimestamp} proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").proto.ITimestamp} HashgraphProto.proto.ITimestamp
  */
 
 /**
@@ -45,7 +45,7 @@ export default class TopicMessage {
     static _ofSingle(response) {
         return new TopicMessage({
             consensusTimestamp: Timestamp._fromProtobuf(
-                /** @type {proto.ITimestamp} */
+                /** @type {HashgraphProto.proto.ITimestamp} */
                 (response.consensusTimestamp)
             ),
             contents:
@@ -78,7 +78,7 @@ export default class TopicMessage {
             );
 
         const consensusTimestamp = Timestamp._fromProtobuf(
-            /** @type {proto.ITimestamp} */
+            /** @type {HashgraphProto.proto.ITimestamp} */
             (last.consensusTimestamp)
         );
 

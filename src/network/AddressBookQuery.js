@@ -1,8 +1,10 @@
 import NodeAddress from "../address_book/NodeAddress.js";
 import NodeAddressBook from "../address_book/NodeAddressBook.js";
-import { proto, com } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import FileId from "../file/FileId.js";
 import { RST_STREAM } from "../Executable.js";
+
+const { proto, com } = HashgraphProto;
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel

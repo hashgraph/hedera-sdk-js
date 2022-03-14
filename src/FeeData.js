@@ -1,6 +1,8 @@
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import FeeComponents from "./FeeComponents";
 import FeeDataType from "./FeeDataType";
+
+const { proto } = HashgraphProto;
 
 export default class FeeData {
     /**
@@ -50,7 +52,7 @@ export default class FeeData {
 
     /**
      * @internal
-     * @param {proto.IFeeData} feeData
+     * @param {HashgraphProto.proto.IFeeData} feeData
      * @returns {FeeData}
      */
     static _fromProtobuf(feeData) {
@@ -76,7 +78,7 @@ export default class FeeData {
 
     /**
      * @internal
-     * @returns {proto.IFeeData}
+     * @returns {HashgraphProto.proto.IFeeData}
      */
     _toProtobuf() {
         return {

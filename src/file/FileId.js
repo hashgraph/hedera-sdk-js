@@ -1,5 +1,7 @@
 import * as entity_id from "../EntityIdHelper.js";
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
+
+const { proto } = HashgraphProto;
 
 /**
  * @typedef {import("long").Long} Long
@@ -41,7 +43,7 @@ export default class FileId {
 
     /**
      * @internal
-     * @param {proto.IFileID} id
+     * @param {HashgraphProto.proto.IFileID} id
      * @returns {FileId}
      */
     static _fromProtobuf(id) {
@@ -109,7 +111,7 @@ export default class FileId {
 
     /**
      * @internal
-     * @returns {proto.IFileID}
+     * @returns {HashgraphProto.proto.IFileID}
      */
     _toProtobuf() {
         return {

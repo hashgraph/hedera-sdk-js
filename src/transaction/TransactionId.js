@@ -1,7 +1,9 @@
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import Long from "long";
+
+const { proto } = HashgraphProto;
 
 /**
  * The client-generated ID for a transaction.
@@ -143,7 +145,7 @@ export default class TransactionId {
 
     /**
      * @internal
-     * @param {proto.ITransactionID} id
+     * @param {HashgraphProto.proto.ITransactionID} id
      * @returns {TransactionId}
      */
     static _fromProtobuf(id) {
@@ -163,7 +165,7 @@ export default class TransactionId {
 
     /**
      * @internal
-     * @returns {proto.ITransactionID}
+     * @returns {HashgraphProto.proto.ITransactionID}
      */
     _toProtobuf() {
         return {

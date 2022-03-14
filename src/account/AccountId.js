@@ -1,9 +1,11 @@
 import Long from "long";
 import * as entity_id from "../EntityIdHelper.js";
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import CACHE from "../Cache.js";
+
+const { proto } = HashgraphProto;
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -58,7 +60,7 @@ export default class AccountId {
 
     /**
      * @internal
-     * @param {proto.IAccountID} id
+     * @param {HashgraphProto.proto.IAccountID} id
      * @returns {AccountId}
      */
     static _fromProtobuf(id) {
@@ -139,7 +141,7 @@ export default class AccountId {
 
     /**
      * @internal
-     * @returns {proto.IAccountID}
+     * @returns {HashgraphProto.proto.IAccountID}
      */
     _toProtobuf() {
         return {

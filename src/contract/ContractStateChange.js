@@ -1,6 +1,8 @@
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import ContractId from "./ContractId.js";
 import StorageChange from "./StorageChange.js";
+
+const { proto } = HashgraphProto;
 
 export default class ContractStateChange {
     /**
@@ -18,13 +20,15 @@ export default class ContractStateChange {
 
     /**
      * @internal
-     * @param {proto.IContractStateChange} change
+     * @param {HashgraphProto.proto.IContractStateChange} change
      * @returns {ContractStateChange}
      */
     static _fromProtobuf(change) {
         return new ContractStateChange({
             contractId: ContractId._fromProtobuf(
-                /** @type {proto.IContractID} */ (change.contractID)
+                /** @type {HashgraphProto.proto.IContractID} */ (
+                    change.contractID
+                )
             ),
             storageChanges: (change.storageChanges != null
                 ? change.storageChanges
@@ -45,7 +49,7 @@ export default class ContractStateChange {
 
     /**
      * @internal
-     * @returns {proto.IContractStateChange} change
+     * @returns {HashgraphProto.proto.IContractStateChange} change
      */
     _toProtobuf() {
         const storageChanges = this.storageChanges.map((storageChange) =>

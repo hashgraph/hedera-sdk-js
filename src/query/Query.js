@@ -3,11 +3,13 @@ import AccountId from "../account/AccountId.js";
 import Hbar from "../Hbar.js";
 import Executable, { ExecutionState } from "../Executable.js";
 import TransactionId from "../transaction/TransactionId.js";
-import { proto } from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
 import Logger from "js-logger";
+
+const { proto } = HashgraphProto;
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -20,7 +22,7 @@ import Logger from "js-logger";
  */
 
 /**
- * @type {Map<proto.Query["query"], (query: proto.IQuery) => Query<*>>}
+ * @type {Map<HashgraphProto.proto.Query["query"], (query: HashgraphProto.proto.IQuery) => Query<*>>}
  */
 export const QUERY_REGISTRY = new Map();
 
@@ -29,7 +31,7 @@ export const QUERY_REGISTRY = new Map();
  *
  * @abstract
  * @template OutputT
- * @augments {Executable<proto.IQuery, proto.IResponse, OutputT>}
+ * @augments {Executable<HashgraphProto.proto.IQuery, HashgraphProto.proto.IResponse, OutputT>}
  */
 export default class Query extends Executable {
     constructor() {
@@ -38,7 +40,7 @@ export default class Query extends Executable {
         /** @type {?TransactionId} */
         this._paymentTransactionId = null;
 
-        /** @type {proto.ITransaction[]} */
+        /** @type {HashgraphProto.proto.ITransaction[]} */
         this._paymentTransactions = [];
 
         /** @type {?Hbar} */
@@ -62,9 +64,10 @@ export default class Query extends Executable {
             throw new Error("(BUG) query.query was not set in the protobuf");
         }
 
-        const fromProtobuf = /** @type {(query: proto.IQuery) => Query<T>} */ (
-            QUERY_REGISTRY.get(query.query)
-        );
+        const fromProtobuf =
+            /** @type {(query: HashgraphProto.proto.IQuery) => Query<T>} */ (
+                QUERY_REGISTRY.get(query.query)
+            );
 
         if (fromProtobuf == null) {
             throw new Error(
@@ -258,8 +261,8 @@ export default class Query extends Executable {
     /**
      * @abstract
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponseHeader(response) {
@@ -268,15 +271,15 @@ export default class Query extends Executable {
 
     /**
      * @protected
-     * @returns {proto.IQueryHeader}
+     * @returns {HashgraphProto.proto.IQueryHeader}
      */
     _makeRequestHeader() {
-        /** @type {proto.IQueryHeader} */
+        /** @type {HashgraphProto.proto.IQueryHeader} */
         let header = {};
 
         if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             header = {
-                responseType: proto.ResponseType.ANSWER_ONLY,
+                responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
                 payment: this._paymentTransactions[this._nodeAccountIds.index],
             };
         }
@@ -287,8 +290,8 @@ export default class Query extends Executable {
     /**
      * @abstract
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _onMakeRequest(header) {
@@ -297,16 +300,16 @@ export default class Query extends Executable {
 
     /**
      * @internal
-     * @returns {proto.IQuery}
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _makeRequest() {
-        /** @type {proto.IQueryHeader} */
+        /** @type {HashgraphProto.proto.IQueryHeader} */
         let header = {};
 
         if (this._isPaymentRequired() && this._paymentTransactions != null) {
             header = {
                 payment: this._paymentTransactions[this._nodeAccountIds.index],
-                responseType: proto.ResponseType.ANSWER_ONLY,
+                responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
             };
         }
 
@@ -316,7 +319,7 @@ export default class Query extends Executable {
     /**
      * @override
      * @internal
-     * @returns {Promise<proto.IQuery>}
+     * @returns {Promise<HashgraphProto.proto.IQuery>}
      */
     _makeRequestAsync() {
         return Promise.resolve(this._makeRequest());
@@ -325,8 +328,8 @@ export default class Query extends Executable {
     /**
      * @override
      * @internal
-     * @param {proto.IQuery} request
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IQuery} request
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {ExecutionState}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -337,7 +340,7 @@ export default class Query extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : proto.ResponseCodeEnum.OK
+                : HashgraphProto.proto.ResponseCodeEnum.OK
         );
 
         Logger.debug(
@@ -359,8 +362,8 @@ export default class Query extends Executable {
     /**
      * @override
      * @internal
-     * @param {proto.IQuery} request
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IQuery} request
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -371,7 +374,7 @@ export default class Query extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : proto.ResponseCodeEnum.OK
+                : HashgraphProto.proto.ResponseCodeEnum.OK
         );
 
         return new PrecheckStatusError({
@@ -401,7 +404,7 @@ export default class Query extends Executable {
  * @param {AccountId} nodeId
  * @param {?ClientOperator} operator
  * @param {Hbar} paymentAmount
- * @returns {Promise<proto.ITransaction>}
+ * @returns {Promise<HashgraphProto.proto.ITransaction>}
  */
 export async function _makePaymentTransaction(
     paymentTransactionId,
@@ -431,7 +434,7 @@ export async function _makePaymentTransaction(
         });
     }
     /**
-     * @type {proto.ITransactionBody}
+     * @type {HashgraphProto.proto.ITransactionBody}
      */
     const body = {
         transactionID: paymentTransactionId._toProtobuf(),
@@ -447,9 +450,9 @@ export async function _makePaymentTransaction(
         },
     };
 
-    /** @type {proto.ISignedTransaction} */
+    /** @type {HashgraphProto.proto.ISignedTransaction} */
     const signedTransaction = {
-        bodyBytes: proto.TransactionBody.encode(body).finish(),
+        bodyBytes: HashgraphProto.proto.TransactionBody.encode(body).finish(),
     };
 
     if (operator != null) {
@@ -464,7 +467,9 @@ export async function _makePaymentTransaction(
 
     return {
         signedTransactionBytes:
-            proto.SignedTransaction.encode(signedTransaction).finish(),
+            HashgraphProto.proto.SignedTransaction.encode(
+                signedTransaction
+            ).finish(),
     };
 }
 
