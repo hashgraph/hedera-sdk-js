@@ -3,13 +3,13 @@ import FileId from "./FileId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").IFileGetContentsQuery} proto.IFileGetContentsQuery
- * @typedef {import("@hashgraph/proto").IFileGetContentsResponse} proto.IFileGetContentsResponse
- * @typedef {import("@hashgraph/proto").IFileContents} proto.IFileContents
+ * @typedef {import("@hashgraph/proto").proto.IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.IFileGetContentsQuery} proto.IFileGetContentsQuery
+ * @typedef {import("@hashgraph/proto").proto.IFileGetContentsResponse} proto.IFileGetContentsResponse
+ * @typedef {import("@hashgraph/proto").proto.FileGetContentsResponse.IFileContents} proto.FileGetContentsResponse.IFileContents
  */
 
 /**
@@ -123,9 +123,10 @@ export default class FileContentsQuery extends Query {
             /** @type {proto.IFileGetContentsResponse} */ (
                 response.fileGetContents
             );
-        const fileConents = /** @type {proto.IFileContents} */ (
-            fileContentsResponse.fileContents
-        );
+        const fileConents =
+            /** @type {proto.FileGetContentsResponse.IFileContents} */ (
+                fileContentsResponse.fileContents
+            );
         const contents = /** @type {Uint8Array} */ (fileConents.contents);
 
         return Promise.resolve(contents);

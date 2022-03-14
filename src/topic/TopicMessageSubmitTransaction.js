@@ -10,13 +10,13 @@ import * as util from "../util.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IConsensusSubmitMessageTransactionBody} proto.IConsensusSubmitMessageTransactionBody
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").IConsensusMessageChunkInfo} proto.IConsensusMessageChunkInfo
+ * @typedef {import("@hashgraph/proto").proto.IConsensusSubmitMessageTransactionBody} proto.IConsensusSubmitMessageTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.IConsensusMessageChunkInfo} proto.IConsensusMessageChunkInfo
  */
 
 /**

@@ -4,7 +4,7 @@ import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
 import Hbar from "../Hbar.js";
 import Long from "long";
-import * as proto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import TokenRelationshipMap from "../account/TokenRelationshipMap.js";
 import Key from "../Key.js";
 import LedgerId from "../LedgerId.js";
@@ -124,7 +124,7 @@ export default class ContractInfo {
 
     /**
      * @internal
-     * @param {proto.IContractInfo} info
+     * @param {proto.ContractGetInfoResponse.IContractInfo} info
      * @returns {ContractInfo}
      */
     static _fromProtobuf(info) {
@@ -170,7 +170,7 @@ export default class ContractInfo {
 
     /**
      * @internal
-     * @returns {proto.IContractInfo}
+     * @returns {proto.ContractGetInfoResponse.IContractInfo}
      */
     _toProtobuf() {
         return {

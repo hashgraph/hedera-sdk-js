@@ -3,7 +3,7 @@ import AccountId from "../account/AccountId.js";
 import Duration from "../Duration.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
-import * as proto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import TokenType from "./TokenType.js";
 import TokenSupplyType from "./TokenSupplyType.js";
 import CustomFixedFee from "./CustomFixedFee.js";

@@ -1,6 +1,6 @@
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").TokenSupplyType} proto.TokenSupplyType
+ * @typedef {import("@hashgraph/proto").proto.TokenSupplyType} proto.TokenSupplyType
  */
 
 export default class TokenSupplyType {

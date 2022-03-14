@@ -4,8 +4,8 @@ import * as hex from "../encoding/hex.js";
 
 /**
  * @namespace {proto}
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
+ * @typedef {import("@hashgraph/proto").proto.IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IKey} proto.IKey
  */
 
 /**

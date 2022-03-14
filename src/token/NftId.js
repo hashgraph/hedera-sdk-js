@@ -1,4 +1,4 @@
-import * as proto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import TokenId from "../token/TokenId.js";
 import Long from "long";
 

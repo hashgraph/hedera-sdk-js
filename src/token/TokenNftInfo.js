@@ -6,16 +6,16 @@ import LedgerId from "../LedgerId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").TokenFreezeStatus} proto.TokenFreezeStatus
- * @typedef {import("@hashgraph/proto").TokenKycStatus} proto.TokenKycStatus
- * @typedef {import("@hashgraph/proto").TokenPauseStatus} proto.TokenPauseStatus
- * @typedef {import("@hashgraph/proto").ITokenNftInfo} proto.ITokenNftInfo
- * @typedef {import("@hashgraph/proto").INftID} proto.INftID
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
- * @typedef {import("@hashgraph/proto").IDuration} proto.IDuration
+ * @typedef {import("@hashgraph/proto").proto.TokenFreezeStatus} proto.TokenFreezeStatus
+ * @typedef {import("@hashgraph/proto").proto.TokenKycStatus} proto.TokenKycStatus
+ * @typedef {import("@hashgraph/proto").proto.TokenPauseStatus} proto.TokenPauseStatus
+ * @typedef {import("@hashgraph/proto").proto.ITokenNftInfo} proto.ITokenNftInfo
+ * @typedef {import("@hashgraph/proto").proto.INftID} proto.INftID
+ * @typedef {import("@hashgraph/proto").proto.ITimestamp} proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IKey} proto.IKey
+ * @typedef {import("@hashgraph/proto").proto.IDuration} proto.IDuration
  */
 
 export default class TokenNftInfo {

@@ -1,6 +1,6 @@
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").SubType} proto.SubType
+ * @typedef {import("@hashgraph/proto").proto.SubType} proto.SubType
  */
 
 export default class FeeDataType {

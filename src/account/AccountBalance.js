@@ -6,12 +6,12 @@ import TokenDecimalMap from "./TokenDecimalMap.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").ICryptoGetAccountBalanceResponse} proto.ICryptoGetAccountBalanceResponse
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").ITokenBalance} proto.ITokenBalance
+ * @typedef {import("@hashgraph/proto").proto.ITimestamp} proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetAccountBalanceResponse} proto.ICryptoGetAccountBalanceResponse
+ * @typedef {import("@hashgraph/proto").proto.IKey} proto.IKey
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.ITokenBalance} proto.ITokenBalance
  */
 
 /**

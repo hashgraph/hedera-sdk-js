@@ -6,14 +6,14 @@ import ContractId from "../contract/ContractId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ISystemUndeleteTransactionBody} proto.ISystemUndeleteTransactionBody
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
- * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.ISystemUndeleteTransactionBody} proto.ISystemUndeleteTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IFileID} proto.IFileID
  */
 
 /**

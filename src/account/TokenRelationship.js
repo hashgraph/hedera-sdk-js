@@ -3,10 +3,10 @@ import TokenId from "../token/TokenId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITokenRelationship} proto.ITokenRelationship
- * @typedef {import("@hashgraph/proto").TokenKycStatus} proto.TokenKycStatus
- * @typedef {import("@hashgraph/proto").TokenFreezeStatus} proto.TokenFreezeStatus
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.ITokenRelationship} proto.ITokenRelationship
+ * @typedef {import("@hashgraph/proto").proto.TokenKycStatus} proto.TokenKycStatus
+ * @typedef {import("@hashgraph/proto").proto.TokenFreezeStatus} proto.TokenFreezeStatus
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} proto.ITokenID
  */
 
 /**

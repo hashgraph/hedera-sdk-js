@@ -3,7 +3,7 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
 import Duration from "../Duration.js";
-import * as proto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import Key from "../Key.js";
 import LedgerId from "../LedgerId.js";
 

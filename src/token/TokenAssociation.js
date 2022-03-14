@@ -4,7 +4,7 @@ import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITokenAssociation} proto.ITokenAssociation
+ * @typedef {import("@hashgraph/proto").proto.ITokenAssociation} proto.ITokenAssociation
  */
 
 export default class TokenAssociation {

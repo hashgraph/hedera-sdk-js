@@ -4,7 +4,7 @@ import Hbar from "../Hbar.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
 import TokenRelationshipMap from "./TokenRelationshipMap.js";
-import * as proto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
@@ -170,7 +170,7 @@ export default class AccountInfo {
 
     /**
      * @internal
-     * @param {proto.IAccountInfo} info
+     * @param {proto.CryptoGetInfoResponse.IAccountInfo} info
      * @returns {AccountInfo}
      */
     static _fromProtobuf(info) {
@@ -270,7 +270,7 @@ export default class AccountInfo {
     }
 
     /**
-     * @returns {proto.IAccountInfo}
+     * @returns {proto.CryptoGetInfoResponse.IAccountInfo}
      */
     _toProtobuf() {
         return {

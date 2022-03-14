@@ -2,8 +2,8 @@ import ContractId from "./ContractId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IContractLoginfo} proto.IContractLoginfo
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IContractLoginfo} proto.IContractLoginfo
+ * @typedef {import("@hashgraph/proto").proto.IContractID} proto.IContractID
  */
 
 /**

@@ -4,13 +4,13 @@ import LiveHash from "./LiveHash.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ICryptoGetLiveHashQuery} proto.ICryptoGetLiveHashQuery
- * @typedef {import("@hashgraph/proto").ICryptoGetLiveHashResponse} proto.ICryptoGetLiveHashResponse
- * @typedef {import("@hashgraph/proto").ILiveHash} proto.ILiveHash
+ * @typedef {import("@hashgraph/proto").proto.IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetLiveHashQuery} proto.ICryptoGetLiveHashQuery
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetLiveHashResponse} proto.ICryptoGetLiveHashResponse
+ * @typedef {import("@hashgraph/proto").proto.ILiveHash} proto.ILiveHash
  */
 
 /**

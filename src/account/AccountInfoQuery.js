@@ -5,13 +5,13 @@ import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").IAccountInfo} proto.IAccountInfo
- * @typedef {import("@hashgraph/proto").ICryptoGetInfoQuery} proto.ICryptoGetInfoQuery
- * @typedef {import("@hashgraph/proto").ICryptoGetInfoResponse} proto.ICryptoGetInfoResponse
+ * @typedef {import("@hashgraph/proto").proto.IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.CryptoGetInfoResponse.IAccountInfo} proto.CryptoGetInfoResponse.IAccountInfo
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetInfoQuery} proto.ICryptoGetInfoQuery
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetInfoResponse} proto.ICryptoGetInfoResponse
  */
 
 /**
@@ -144,7 +144,9 @@ export default class AccountInfoQuery extends Query {
 
         return Promise.resolve(
             AccountInfo._fromProtobuf(
-                /** @type {proto.IAccountInfo} */ (info.accountInfo)
+                /** @type {proto.CryptoGetInfoResponse.IAccountInfo} */ (
+                    info.accountInfo
+                )
             )
         );
     }

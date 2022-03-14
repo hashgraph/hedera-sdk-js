@@ -12,13 +12,13 @@ import TokenNftAllowance from "./TokenNftAllowance.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ICryptoApproveAllowanceTransactionBody} proto.ICryptoApproveAllowanceTransactionBody
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.ICryptoApproveAllowanceTransactionBody} proto.ICryptoApproveAllowanceTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} proto.IAccountID
  */
 
 /**

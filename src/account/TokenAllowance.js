@@ -4,10 +4,10 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITokenAllowance} proto.ITokenAllowance
- * @typedef {import("@hashgraph/proto").IGrantedTokenAllowance} proto.IGrantedTokenAllowance
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IGrantedTokenAllowance} proto.IGrantedTokenAllowance
+ * @typedef {import("@hashgraph/proto").proto.ITokenAllowance} proto.ITokenAllowance
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} proto.IAccountID
  */
 
 export default class TokenAllowance {

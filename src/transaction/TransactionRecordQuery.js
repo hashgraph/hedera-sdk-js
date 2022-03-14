@@ -6,21 +6,8 @@ import Status from "../Status.js";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import ReceiptStatusError from "../ReceiptStatusError.js";
 import { ExecutionState } from "../Executable.js";
-import { ResponseType, ResponseCodeEnum } from "@hashgraph/proto";
 import Logger from "js-logger";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").ITransactionRecord} proto.ITransactionRecord
- * @typedef {import("@hashgraph/proto").ITransactionReceipt} proto.ITransactionReceipt
- * @typedef {import("@hashgraph/proto").ITransactionGetRecordResponse} proto.ITransactionGetRecordResponse
- * @typedef {import("@hashgraph/proto").ITransactionGetRecordQuery} proto.ITransactionGetRecordQuery
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
- */
+import { proto } from "@hashgraph/proto";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -165,7 +152,7 @@ export default class TransactionRecordQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         Logger.debug(
@@ -194,7 +181,7 @@ export default class TransactionRecordQuery extends Query {
             transactionGetRecord.header
         );
 
-        if (header.responseType === ResponseType.COST_ANSWER) {
+        if (header.responseType === proto.ResponseType.COST_ANSWER) {
             return ExecutionState.Finished;
         }
 
@@ -244,7 +231,7 @@ export default class TransactionRecordQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         switch (status) {

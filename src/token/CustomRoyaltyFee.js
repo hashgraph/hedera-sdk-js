@@ -5,10 +5,10 @@ import CustomFixedFee from "./CustomFixedFee.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IFraction} proto.IFraction
- * @typedef {import("@hashgraph/proto").IRoyaltyFee} proto.IRoyaltyFee
- * @typedef {import("@hashgraph/proto").ICustomFee} proto.ICustomFee
- * @typedef {import("@hashgraph/proto").IFixedFee} proto.IFixedFee
+ * @typedef {import("@hashgraph/proto").proto.IFraction} proto.IFraction
+ * @typedef {import("@hashgraph/proto").proto.IRoyaltyFee} proto.IRoyaltyFee
+ * @typedef {import("@hashgraph/proto").proto.ICustomFee} proto.ICustomFee
+ * @typedef {import("@hashgraph/proto").proto.IFixedFee} proto.IFixedFee
  */
 
 export default class CustomRoyalyFee extends CustomFee {

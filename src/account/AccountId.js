@@ -1,6 +1,6 @@
 import Long from "long";
 import * as entity_id from "../EntityIdHelper.js";
-import * as proto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import CACHE from "../Cache.js";

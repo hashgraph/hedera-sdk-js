@@ -8,13 +8,7 @@ import Status from "../Status.js";
 import Long from "long";
 import * as sha384 from "../cryptography/sha384.js";
 import * as hex from "../encoding/hex.js";
-import {
-    Transaction as ProtoTransaction,
-    SignedTransaction as ProtoSignedTransaction,
-    TransactionList as ProtoTransactionList,
-    TransactionBody as ProtoTransactionBody,
-    ResponseCodeEnum,
-} from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
 import PublicKey from "../PublicKey.js";
@@ -24,22 +18,6 @@ import Logger from "js-logger";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
- */
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignatureMap} proto.ISignatureMap
- * @typedef {import("@hashgraph/proto").ISignaturePair} proto.ISignaturePair
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").ITransactionList} proto.ITransactionList
- * @typedef {import("@hashgraph/proto").ITransactionID} proto.ITransactionID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -184,16 +162,16 @@ export default class Transaction extends Executable {
 
         const bodies = [];
 
-        const list = ProtoTransactionList.decode(bytes).transactionList;
+        const list = proto.TransactionList.decode(bytes).transactionList;
 
         if (list.length === 0) {
-            const transaction = ProtoTransaction.decode(bytes);
+            const transaction = proto.Transaction.decode(bytes);
 
             if (transaction.signedTransactionBytes.length !== 0) {
                 list.push(transaction);
             } else {
                 list.push({
-                    signedTransactionBytes: ProtoSignedTransaction.encode({
+                    signedTransactionBytes: proto.SignedTransaction.encode({
                         bodyBytes: transaction.bodyBytes,
                         sigMap: transaction.sigMap,
                     }).finish(),
@@ -206,12 +184,12 @@ export default class Transaction extends Executable {
                 throw new Error("Transaction.signedTransactionBytes are null");
             }
 
-            const signedTransaction = ProtoSignedTransaction.decode(
+            const signedTransaction = proto.SignedTransaction.decode(
                 transaction.signedTransactionBytes
             );
             signedTransactions.push(signedTransaction);
 
-            const body = ProtoTransactionBody.decode(
+            const body = proto.TransactionBody.decode(
                 signedTransaction.bodyBytes
             );
 
@@ -316,7 +294,6 @@ export default class Transaction extends Executable {
         transaction._transactionIds.setList(transactionIds).setLocked();
         transaction._nodeAccountIds.setList(nodeIds).setLocked();
 
-        transaction._nextNodeAccountIdIndex = 0;
         transaction._transactionValidDuration =
             body.transactionValidDuration != null &&
             body.transactionValidDuration.seconds != null
@@ -787,7 +764,7 @@ export default class Transaction extends Executable {
 
         this._buildAllTransactions();
 
-        return ProtoTransactionList.encode({
+        return proto.TransactionList.encode({
             transactionList: /** @type {proto.ITransaction[]} */ (
                 this._transactions.list
             ),
@@ -810,7 +787,7 @@ export default class Transaction extends Executable {
         this._transactions.setLocked();
         this._signedTransactions.setLocked();
 
-        return ProtoTransactionList.encode({
+        return proto.TransactionList.encode({
             transactionList: /** @type {proto.ITransaction[]} */ (
                 this._transactions.list
             ),
@@ -1020,7 +997,7 @@ export default class Transaction extends Executable {
 
         this._transactions.setIfAbsent(index, () => {
             return {
-                signedTransactionBytes: ProtoSignedTransaction.encode(
+                signedTransactionBytes: proto.SignedTransaction.encode(
                     this._signedTransactions.get(index)
                 ).finish(),
             };
@@ -1033,7 +1010,7 @@ export default class Transaction extends Executable {
      */
     async _buildTransactionAsync() {
         return {
-            signedTransactionBytes: ProtoSignedTransaction.encode(
+            signedTransactionBytes: proto.SignedTransaction.encode(
                 await this._signTransaction()
             ).finish(),
         };
@@ -1053,7 +1030,7 @@ export default class Transaction extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         Logger.debug(
@@ -1096,7 +1073,7 @@ export default class Transaction extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         return new PrecheckStatusError({
@@ -1149,7 +1126,7 @@ export default class Transaction extends Executable {
      */
     _makeSignedTransaction(nodeId) {
         const body = this._makeTransactionBody(nodeId);
-        const bodyBytes = ProtoTransactionBody.encode(body).finish();
+        const bodyBytes = proto.TransactionBody.encode(body).finish();
 
         return {
             bodyBytes,

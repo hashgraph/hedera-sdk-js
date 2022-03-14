@@ -22,16 +22,16 @@ import NftId from "../token/NftId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ICryptoTransferTransactionBody} proto.ICryptoTransferTransactionBody
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
- * @typedef {import("@hashgraph/proto").ITokenTransferList} proto.ITokenTransferList
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.ICryptoTransferTransactionBody} proto.ICryptoTransferTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IAccountAmount} proto.IAccountAmount
+ * @typedef {import("@hashgraph/proto").proto.ITokenTransferList} proto.ITokenTransferList
  */
 
 /**

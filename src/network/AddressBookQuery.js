@@ -1,6 +1,6 @@
 import NodeAddress from "../address_book/NodeAddress.js";
 import NodeAddressBook from "../address_book/NodeAddressBook.js";
-import * as proto from "@hashgraph/proto";
+import { proto, com } from "@hashgraph/proto";
 import FileId from "../file/FileId.js";
 import { RST_STREAM } from "../Executable.js";
 
@@ -174,7 +174,7 @@ export default class AddresesBookQuery {
      * @param {number=} requestTimeout
      */
     _makeServerStreamRequest(client, resolve, reject, requestTimeout) {
-        const request = proto.AddressBookQuery.encode({
+        const request = com.hedera.mirror.api.proto.AddressBookQuery.encode({
             fileId: this._fileId != null ? this._fileId._toProtobuf() : null,
             limit: this._limit,
         }).finish();

@@ -3,13 +3,7 @@ import AccountId from "../account/AccountId.js";
 import Hbar from "../Hbar.js";
 import Executable, { ExecutionState } from "../Executable.js";
 import TransactionId from "../transaction/TransactionId.js";
-import {
-    Query as ProtoQuery,
-    TransactionBody as ProtoTransactionBody,
-    SignedTransaction as ProtoSignedTransaction,
-    ResponseType as ProtoResponseType,
-    ResponseCodeEnum,
-} from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
@@ -21,24 +15,12 @@ import Logger from "js-logger";
  */
 
 /**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
- */
-
-/**
  * @typedef {import("../client/Client.js").ClientOperator} ClientOperator
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 /**
- * @type {Map<ProtoQuery["query"], (query: proto.IQuery) => Query<*>>}
+ * @type {Map<proto.Query["query"], (query: proto.IQuery) => Query<*>>}
  */
 export const QUERY_REGISTRY = new Map();
 
@@ -74,7 +56,7 @@ export default class Query extends Executable {
      * @returns {Query<T>}
      */
     static fromBytes(bytes) {
-        const query = ProtoQuery.decode(bytes);
+        const query = proto.Query.decode(bytes);
 
         if (query.query == null) {
             throw new Error("(BUG) query.query was not set in the protobuf");
@@ -97,7 +79,7 @@ export default class Query extends Executable {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return ProtoQuery.encode(this._makeRequest()).finish();
+        return proto.Query.encode(this._makeRequest()).finish();
     }
 
     /**
@@ -294,9 +276,8 @@ export default class Query extends Executable {
 
         if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             header = {
-                responseType: ProtoResponseType.ANSWER_ONLY,
-                payment:
-                    this._paymentTransactions[this._nextNodeAccountIdIndex],
+                responseType: proto.ResponseType.ANSWER_ONLY,
+                payment: this._paymentTransactions[this._nodeAccountIds.index],
             };
         }
 
@@ -324,9 +305,8 @@ export default class Query extends Executable {
 
         if (this._isPaymentRequired() && this._paymentTransactions != null) {
             header = {
-                payment:
-                    this._paymentTransactions[this._nextNodeAccountIdIndex],
-                responseType: ProtoResponseType.ANSWER_ONLY,
+                payment: this._paymentTransactions[this._nodeAccountIds.index],
+                responseType: proto.ResponseType.ANSWER_ONLY,
             };
         }
 
@@ -357,7 +337,7 @@ export default class Query extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         Logger.debug(
@@ -391,7 +371,7 @@ export default class Query extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         return new PrecheckStatusError({
@@ -407,28 +387,11 @@ export default class Query extends Executable {
         if (!this._nodeAccountIds.isEmpty) {
             // if there are payment transactions,
             // we need to use the node of the current payment transaction
-            return this._nodeAccountIds.list[this._nextNodeAccountIdIndex];
+            return this._nodeAccountIds.current;
         } else {
             throw new Error(
                 "(BUG) nodeAccountIds were not set for query before executing"
             );
-        }
-    }
-
-    /**
-     * @override
-     * @protected
-     * @returns {void}
-     */
-    _advanceRequest() {
-        if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
-            // each time we move our cursor to the next transaction
-            // wrapping around to ensure we are cycling
-            super._nextNodeAccountIdIndex =
-                (this._nextNodeAccountIdIndex + 1) %
-                this._paymentTransactions.length;
-        } else {
-            super._advanceRequest();
         }
     }
 }
@@ -486,7 +449,7 @@ export async function _makePaymentTransaction(
 
     /** @type {proto.ISignedTransaction} */
     const signedTransaction = {
-        bodyBytes: ProtoTransactionBody.encode(body).finish(),
+        bodyBytes: proto.TransactionBody.encode(body).finish(),
     };
 
     if (operator != null) {
@@ -501,7 +464,7 @@ export async function _makePaymentTransaction(
 
     return {
         signedTransactionBytes:
-            ProtoSignedTransaction.encode(signedTransaction).finish(),
+            proto.SignedTransaction.encode(signedTransaction).finish(),
     };
 }
 

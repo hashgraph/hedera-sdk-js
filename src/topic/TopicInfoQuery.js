@@ -5,12 +5,17 @@ import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").IConsensusTopicQuery} proto.IConsensusTopicQuery
- * @typedef {import("@hashgraph/proto").IConsensusGetTopicInfoResponse} proto.IConsensusGetTopicInfoResponse
+ * @typedef {import("@hashgraph/proto").proto.IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.IConsensusGetTopicInfoResponse} proto.IConsensusGetTopicInfoResponse
+ * @typedef {import("@hashgraph/proto").proto.IConsensusGetTopicInfoQuery} proto.IConsensusGetTopicInfoQuery
+ */
+
+/**
+ * @namespace com
+ * @typedef {import("@hashgraph/proto").com.hedera.mirror.api.proto.IConsensusTopicResponse} com.hedera.mirror.api.proto.IConsensusTopicResponse
  */
 
 /**
@@ -49,7 +54,7 @@ export default class TopicInfoQuery extends Query {
      * @returns {TopicInfoQuery}
      */
     static _fromProtobuf(query) {
-        const info = /** @type {proto.IConsensusTopicQuery} */ (
+        const info = /** @type {proto.IConsensusGetTopicInfoQuery} */ (
             query.consensusGetTopicInfo
         );
 

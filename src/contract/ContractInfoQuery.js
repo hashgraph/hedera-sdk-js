@@ -5,13 +5,13 @@ import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").IContractGetInfoQuery} proto.IContractGetInfoQuery
- * @typedef {import("@hashgraph/proto").IContractGetInfoResponse} proto.IContractGetInfoResponse
- * @typedef {import("@hashgraph/proto").IContractInfo} proto.IContractInfo
+ * @typedef {import("@hashgraph/proto").proto.IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.IContractGetInfoQuery} proto.IContractGetInfoQuery
+ * @typedef {import("@hashgraph/proto").proto.IContractGetInfoResponse} proto.IContractGetInfoResponse
+ * @typedef {import("@hashgraph/proto").proto.ContractGetInfoResponse.IContractInfo} proto.ContractGetInfoResponse.IContractInfo
  */
 
 /**
@@ -145,7 +145,9 @@ export default class ContractInfoQuery extends Query {
 
         return Promise.resolve(
             ContractInfo._fromProtobuf(
-                /** @type {proto.IContractInfo} */ (info.contractInfo)
+                /** @type {proto.ContractGetInfoResponse.IContractInfo} */ (
+                    info.contractInfo
+                )
             )
         );
     }

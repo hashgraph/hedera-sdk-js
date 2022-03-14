@@ -8,10 +8,10 @@
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
- * @typedef {import("@hashgraph/proto").IKeyList} proto.IKeyList
- * @typedef {import("@hashgraph/proto").IThresholdKey} proto.IThresholdKey
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IKey} proto.IKey
+ * @typedef {import("@hashgraph/proto").proto.IKeyList} proto.IKeyList
+ * @typedef {import("@hashgraph/proto").proto.IThresholdKey} proto.IThresholdKey
+ * @typedef {import("@hashgraph/proto").proto.IContractID} proto.IContractID
  */
 
 /**

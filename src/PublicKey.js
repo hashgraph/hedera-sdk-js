@@ -10,10 +10,10 @@ import CACHE from "./Cache.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignaturePair} proto.ISignaturePair
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.IKey} proto.IKey
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignaturePair} proto.ISignaturePair
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} proto.ISignedTransaction
  */
 
 export default class PublicKey extends Key {

@@ -1,4 +1,4 @@
-import * as proto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import FeeComponents from "./FeeComponents";
 import FeeDataType from "./FeeDataType";
 

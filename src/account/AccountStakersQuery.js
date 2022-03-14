@@ -4,13 +4,13 @@ import ProxyStaker from "./ProxyStaker.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ICryptoGetStakersQuery} proto.ICryptoGetStakersQuery
- * @typedef {import("@hashgraph/proto").ICryptoGetStakersResponse} proto.ICryptoGetStakersResponse
- * @typedef {import("@hashgraph/proto").IAllProxyStakers} proto.IAllProxyStakers
+ * @typedef {import("@hashgraph/proto").proto.IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetStakersQuery} proto.ICryptoGetStakersQuery
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetStakersResponse} proto.ICryptoGetStakersResponse
+ * @typedef {import("@hashgraph/proto").proto.IAllProxyStakers} proto.IAllProxyStakers
  */
 
 /**

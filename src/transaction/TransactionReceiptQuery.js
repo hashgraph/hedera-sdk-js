@@ -5,20 +5,8 @@ import TransactionId from "./TransactionId.js";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import ReceiptStatusError from "../ReceiptStatusError.js";
 import { ExecutionState } from "../Executable.js";
-import { ResponseCodeEnum } from "@hashgraph/proto";
 import Logger from "js-logger";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ITransactionReceipt} proto.ITransactionReceipt
- * @typedef {import("@hashgraph/proto").ITransactionGetReceiptQuery} proto.ITransactionGetReceiptQuery
- * @typedef {import("@hashgraph/proto").ITransactionGetReceiptResponse} proto.ITransactionGetReceiptResponse
- * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
- */
+import { proto } from "@hashgraph/proto";
 
 /**
  * @typedef {import("../account/AccountId.js").default} AccountId
@@ -175,7 +163,7 @@ export default class TransactionReceiptQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         Logger.debug(
@@ -237,7 +225,7 @@ export default class TransactionReceiptQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         switch (status) {

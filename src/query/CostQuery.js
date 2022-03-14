@@ -3,14 +3,7 @@ import Hbar from "../Hbar.js";
 import Executable from "../Executable.js";
 import AccountId from "../account/AccountId.js";
 import { _makePaymentTransaction, COST_QUERY } from "./Query.js";
-import { ResponseType as ProtoResponseType } from "@hashgraph/proto";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- */
+import { proto } from "@hashgraph/proto";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -89,7 +82,7 @@ export default class CostQuery extends Executable {
                 operator,
                 new Hbar(0)
             ),
-            responseType: ProtoResponseType.COST_ANSWER,
+            responseType: proto.ResponseType.COST_ANSWER,
         };
     }
 
@@ -165,7 +158,7 @@ export default class CostQuery extends Executable {
         if (!this._nodeAccountIds.isEmpty) {
             // if there are payment transactions,
             // we need to use the node of the current payment transaction
-            return this._nodeAccountIds.list[this._nextNodeAccountIdIndex];
+            return this._nodeAccountIds.current;
         } else {
             throw new Error(
                 "(BUG) nodeAccountIds were not set for query before executing"

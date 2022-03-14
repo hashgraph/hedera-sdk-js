@@ -2,7 +2,7 @@ import CACHE from "./Cache.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
+ * @typedef {import("@hashgraph/proto").proto.IKey} proto.IKey
  */
 
 export default class Key {

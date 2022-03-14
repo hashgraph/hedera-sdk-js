@@ -1,5 +1,5 @@
 import SemanticVersion from "./SemanticVersion.js";
-import * as proto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 
 /**
  * Response when the client sends the node CryptoGetVersionInfoQuery.

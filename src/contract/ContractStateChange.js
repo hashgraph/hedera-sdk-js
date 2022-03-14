@@ -1,4 +1,4 @@
-import * as proto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import ContractId from "./ContractId.js";
 import StorageChange from "./StorageChange.js";
 

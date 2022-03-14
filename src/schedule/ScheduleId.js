@@ -1,5 +1,5 @@
 import * as entity_id from "../EntityIdHelper.js";
-import * as proto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 
 /**
  * @typedef {import("long").Long} Long

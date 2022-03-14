@@ -9,8 +9,8 @@ import ContractStateChange from "./ContractStateChange.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IContractFunctionResult} proto.IContractFunctionResult
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IContractFunctionResult} proto.IContractFunctionResult
+ * @typedef {import("@hashgraph/proto").proto.IContractID} proto.IContractID
  */
 /**
  * The result returned by a call to a smart contract function. This is part of the response to

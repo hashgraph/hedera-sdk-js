@@ -4,10 +4,10 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").INftAllowance} proto.INftAllowance
- * @typedef {import("@hashgraph/proto").IGrantedNftAllowance} proto.IGrantedNftAllowance
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IGrantedNftAllowance} proto.IGrantedNftAllowance
+ * @typedef {import("@hashgraph/proto").proto.INftAllowance} proto.INftAllowance
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} proto.IAccountID
  */
 
 export default class TokenNftAllowance {

@@ -1,6 +1,6 @@
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
+ * @typedef {import("@hashgraph/proto").proto.ResponseCodeEnum} proto.ResponseCodeEnum
  */
 
 export default class Status {

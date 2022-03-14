@@ -1,12 +1,19 @@
 import TransactionId from "../transaction/TransactionId.js";
 import SubscriptionHandle from "./SubscriptionHandle.js";
 import TopicMessage from "./TopicMessage.js";
-import * as proto from "@hashgraph/proto";
+import { com } from "@hashgraph/proto";
 import TopicId from "./TopicId.js";
 import Long from "long";
 import Timestamp from "../Timestamp.js";
 import { RST_STREAM } from "../Executable.js";
 import Logger from "js-logger";
+
+/**
+ * @namespace proto
+ * @typedef {import("@hashgraph/proto").proto.ITimestamp} proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").proto.ITransactionID} proto.ITransactionID
+ * @typedef {import("@hashgraph/proto").proto.IConsensusMessageChunkInfo} proto.IConsensusMessageChunkInfo
+ */
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -324,12 +331,12 @@ export default class TopicMessageQuery {
      * @returns {void}
      */
     _makeServerStreamRequest(client) {
-        /** @type {Map<string, proto.ConsensusTopicResponse[]>} */
+        /** @type {Map<string, com.hedera.mirror.api.proto.ConsensusTopicResponse[]>} */
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const list = new Map();
 
-        const request = proto.ConsensusTopicQuery.encode({
+        const request = com.hedera.mirror.api.proto.ConsensusTopicQuery.encode({
             topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
             consensusStartTime:
                 this._startTime != null ? this._startTime._toProtobuf() : null,
@@ -346,7 +353,10 @@ export default class TopicMessageQuery {
                 "subscribeTopic",
                 request,
                 (data) => {
-                    const message = proto.ConsensusTopicResponse.decode(data);
+                    const message =
+                        com.hedera.mirror.api.proto.ConsensusTopicResponse.decode(
+                            data
+                        );
 
                     if (this._limit != null && this._limit.gt(0)) {
                         this._limit = this._limit.sub(1);
@@ -379,7 +389,7 @@ export default class TopicMessageQuery {
                                 initialTransactionID
                             ).toString();
 
-                        /** @type {proto.ConsensusTopicResponse[]} */
+                        /** @type {com.hedera.mirror.api.proto.ConsensusTopicResponse[]} */
                         let responses = [];
 
                         const temp = list.get(transactionId);

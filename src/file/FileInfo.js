@@ -1,9 +1,9 @@
 import FileId from "./FileId.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
-import * as proto from "@hashgraph/proto";
 import KeyList from "../KeyList.js";
 import LedgerId from "../LedgerId.js";
+import { proto } from "@hashgraph/proto";
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -66,7 +66,7 @@ export default class FileInfo {
 
     /**
      * @internal
-     * @param {proto.IFileInfo} info
+     * @param {proto.FileGetInfoResponse.IFileInfo} info
      * @returns {FileInfo}
      */
     static _fromProtobuf(info) {
@@ -95,7 +95,7 @@ export default class FileInfo {
 
     /**
      * @internal
-     * @returns {proto.IFileInfo}
+     * @returns {proto.FileGetInfoResponse.IFileInfo}
      */
     _toProtobuf() {
         return {

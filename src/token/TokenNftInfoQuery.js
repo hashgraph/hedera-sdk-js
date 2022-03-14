@@ -8,17 +8,17 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").ITokenNftInfo} proto.ITokenNftInfo
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ITokenGetNftInfoQuery} proto.ITokenGetNftInfoQuery
- * @typedef {import("@hashgraph/proto").ITokenGetNftInfosQuery} proto.ITokenGetNftInfosQuery
- * @typedef {import("@hashgraph/proto").ITokenGetAccountNftInfosQuery} proto.ITokenGetAccountNftInfosQuery
- * @typedef {import("@hashgraph/proto").ITokenGetNftInfoResponse} proto.ITokenGetNftInfoResponse
- * @typedef {import("@hashgraph/proto").ITokenGetNftInfosResponse} proto.ITokenGetNftInfosResponse
- * @typedef {import("@hashgraph/proto").ITokenGetAccountNftInfosResponse} proto.ITokenGetAccountNftInfosResponse
+ * @typedef {import("@hashgraph/proto").proto.IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.ITokenNftInfo} proto.ITokenNftInfo
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfoQuery} proto.ITokenGetNftInfoQuery
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfosQuery} proto.ITokenGetNftInfosQuery
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetAccountNftInfosQuery} proto.ITokenGetAccountNftInfosQuery
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfoResponse} proto.ITokenGetNftInfoResponse
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfosResponse} proto.ITokenGetNftInfosResponse
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetAccountNftInfosResponse} proto.ITokenGetAccountNftInfosResponse
  */
 
 /**

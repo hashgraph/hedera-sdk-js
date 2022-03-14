@@ -4,13 +4,13 @@ import TransactionRecord from "../transaction/TransactionRecord.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ICryptoGetAccountRecordsQuery} proto.ICryptoGetAccountRecordsQuery
- * @typedef {import("@hashgraph/proto").ICryptoGetAccountRecordsResponse} proto.ICryptoGetAccountRecordsResponse
- * @typedef {import("@hashgraph/proto").ITransactionRecord} proto.ITransactionRecord
+ * @typedef {import("@hashgraph/proto").proto.IQuery} proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetAccountRecordsQuery} proto.ICryptoGetAccountRecordsQuery
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetAccountRecordsResponse} proto.ICryptoGetAccountRecordsResponse
+ * @typedef {import("@hashgraph/proto").proto.ITransactionRecord} proto.ITransactionRecord
  */
 
 /**

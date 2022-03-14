@@ -3,9 +3,9 @@ import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ICryptoAllowance} proto.ICryptoAllowance
- * @typedef {import("@hashgraph/proto").IGrantedCryptoAllowance} proto.IGrantedCryptoAllowance
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IGrantedCryptoAllowance} proto.IGrantedCryptoAllowance
+ * @typedef {import("@hashgraph/proto").proto.ICryptoAllowance} proto.ICryptoAllowance
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} proto.IAccountID
  */
 
 /**
