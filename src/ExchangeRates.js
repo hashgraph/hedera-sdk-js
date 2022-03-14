@@ -1,5 +1,5 @@
 import ExchangeRate from "./ExchangeRate.js";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 
 const { proto } = HashgraphProto;
 

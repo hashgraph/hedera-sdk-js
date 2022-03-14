@@ -1,9 +1,7 @@
 import { FileAppendTransaction } from "../../src/exports.js";
 import Mocker from "./Mocker.js";
 import { bigContents } from "../integration/contents.js";
-import HashgraphProto from "@hashgraph/proto";
-
-const { proto } = HashgraphProto;
+import { proto } from "@hashgraph/proto";
 
 const TRANSACTION_RECEIPT_SUCCESS_RESPONSE = {
     transactionGetReceipt: {

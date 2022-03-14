@@ -1,8 +1,6 @@
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import TokenId from "../token/TokenId.js";
 import Long from "long";
-
-const { proto } = HashgraphProto;
 
 /**
  * The ID for a crypto-currency token on Hedera.
@@ -63,7 +61,7 @@ export default class NftId {
      * @returns {NftId}
      */
     static fromBytes(bytes) {
-        return NftId._fromProtobuf(proto.NftID.decode(bytes));
+        return NftId._fromProtobuf(HashgraphProto.proto.NftID.decode(bytes));
     }
 
     /**
@@ -90,6 +88,6 @@ export default class NftId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.NftID.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.NftID.encode(this._toProtobuf()).finish();
     }
 }

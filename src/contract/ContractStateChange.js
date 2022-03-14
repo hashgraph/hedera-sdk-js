@@ -1,8 +1,6 @@
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import ContractId from "./ContractId.js";
 import StorageChange from "./StorageChange.js";
-
-const { proto } = HashgraphProto;
 
 export default class ContractStateChange {
     /**
@@ -43,7 +41,7 @@ export default class ContractStateChange {
      */
     static fromBytes(bytes) {
         return ContractStateChange._fromProtobuf(
-            proto.ContractStateChange.decode(bytes)
+            HashgraphProto.proto.ContractStateChange.decode(bytes)
         );
     }
 
@@ -65,6 +63,8 @@ export default class ContractStateChange {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.ContractStateChange.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.ContractStateChange.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

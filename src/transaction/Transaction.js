@@ -8,15 +8,13 @@ import Status from "../Status.js";
 import Long from "long";
 import * as sha384 from "../cryptography/sha384.js";
 import * as hex from "../encoding/hex.js";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
 import PublicKey from "../PublicKey.js";
 import List from "./List.js";
 import Timestamp from "../Timestamp.js";
 import Logger from "js-logger";
-
-const { proto } = HashgraphProto;
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -164,19 +162,21 @@ export default class Transaction extends Executable {
 
         const bodies = [];
 
-        const list = proto.TransactionList.decode(bytes).transactionList;
+        const list =
+            HashgraphProto.proto.TransactionList.decode(bytes).transactionList;
 
         if (list.length === 0) {
-            const transaction = proto.Transaction.decode(bytes);
+            const transaction = HashgraphProto.proto.Transaction.decode(bytes);
 
             if (transaction.signedTransactionBytes.length !== 0) {
                 list.push(transaction);
             } else {
                 list.push({
-                    signedTransactionBytes: proto.SignedTransaction.encode({
-                        bodyBytes: transaction.bodyBytes,
-                        sigMap: transaction.sigMap,
-                    }).finish(),
+                    signedTransactionBytes:
+                        HashgraphProto.proto.SignedTransaction.encode({
+                            bodyBytes: transaction.bodyBytes,
+                            sigMap: transaction.sigMap,
+                        }).finish(),
                 });
             }
         }
@@ -186,12 +186,13 @@ export default class Transaction extends Executable {
                 throw new Error("Transaction.signedTransactionBytes are null");
             }
 
-            const signedTransaction = proto.SignedTransaction.decode(
-                transaction.signedTransactionBytes
-            );
+            const signedTransaction =
+                HashgraphProto.proto.SignedTransaction.decode(
+                    transaction.signedTransactionBytes
+                );
             signedTransactions.push(signedTransaction);
 
-            const body = proto.TransactionBody.decode(
+            const body = HashgraphProto.proto.TransactionBody.decode(
                 signedTransaction.bodyBytes
             );
 
@@ -770,7 +771,7 @@ export default class Transaction extends Executable {
 
         this._buildAllTransactions();
 
-        return proto.TransactionList.encode({
+        return HashgraphProto.proto.TransactionList.encode({
             transactionList:
                 /** @type {HashgraphProto.proto.ITransaction[]} */ (
                     this._transactions.list
@@ -794,7 +795,7 @@ export default class Transaction extends Executable {
         this._transactions.setLocked();
         this._signedTransactions.setLocked();
 
-        return proto.TransactionList.encode({
+        return HashgraphProto.proto.TransactionList.encode({
             transactionList:
                 /** @type {HashgraphProto.proto.ITransaction[]} */ (
                     this._transactions.list
@@ -1006,9 +1007,10 @@ export default class Transaction extends Executable {
 
         this._transactions.setIfAbsent(index, () => {
             return {
-                signedTransactionBytes: proto.SignedTransaction.encode(
-                    this._signedTransactions.get(index)
-                ).finish(),
+                signedTransactionBytes:
+                    HashgraphProto.proto.SignedTransaction.encode(
+                        this._signedTransactions.get(index)
+                    ).finish(),
             };
         });
     }
@@ -1019,9 +1021,10 @@ export default class Transaction extends Executable {
      */
     async _buildTransactionAsync() {
         return {
-            signedTransactionBytes: proto.SignedTransaction.encode(
-                await this._signTransaction()
-            ).finish(),
+            signedTransactionBytes:
+                HashgraphProto.proto.SignedTransaction.encode(
+                    await this._signTransaction()
+                ).finish(),
         };
     }
 
@@ -1135,7 +1138,8 @@ export default class Transaction extends Executable {
      */
     _makeSignedTransaction(nodeId) {
         const body = this._makeTransactionBody(nodeId);
-        const bodyBytes = proto.TransactionBody.encode(body).finish();
+        const bodyBytes =
+            HashgraphProto.proto.TransactionBody.encode(body).finish();
 
         return {
             bodyBytes,

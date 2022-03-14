@@ -6,7 +6,9 @@ import PrecheckStatusError from "../PrecheckStatusError.js";
 import ReceiptStatusError from "../ReceiptStatusError.js";
 import { ExecutionState } from "../Executable.js";
 import Logger from "js-logger";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
+
+const { proto } = HashgraphProto;
 
 /**
  * @typedef {import("../account/AccountId.js").default} AccountId
@@ -164,7 +166,7 @@ export default class TransactionReceiptQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : HashgraphProto.proto.ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         Logger.debug(
@@ -228,7 +230,7 @@ export default class TransactionReceiptQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : HashgraphProto.proto.ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         switch (status) {

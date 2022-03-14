@@ -1,7 +1,5 @@
 import SemanticVersion from "./SemanticVersion.js";
-import HashgraphProto from "@hashgraph/proto";
-
-const { proto } = HashgraphProto;
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
  * Response when the client sends the node CryptoGetVersionInfoQuery.
@@ -66,7 +64,7 @@ export default class NetworkVersionInfo {
      */
     static fromBytes(bytes) {
         return NetworkVersionInfo._fromProtobuf(
-            proto.NetworkGetVersionInfoResponse.decode(bytes)
+            HashgraphProto.proto.NetworkGetVersionInfoResponse.decode(bytes)
         );
     }
 
@@ -74,7 +72,7 @@ export default class NetworkVersionInfo {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.NetworkGetVersionInfoResponse.encode(
+        return HashgraphProto.proto.NetworkGetVersionInfoResponse.encode(
             this._toProtobuf()
         ).finish();
     }

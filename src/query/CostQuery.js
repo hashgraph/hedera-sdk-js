@@ -3,7 +3,7 @@ import Hbar from "../Hbar.js";
 import Executable from "../Executable.js";
 import AccountId from "../account/AccountId.js";
 import { _makePaymentTransaction, COST_QUERY } from "./Query.js";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel

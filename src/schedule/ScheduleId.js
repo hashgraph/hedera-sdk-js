@@ -1,7 +1,5 @@
 import * as entity_id from "../EntityIdHelper.js";
-import HashgraphProto from "@hashgraph/proto";
-
-const { proto } = HashgraphProto;
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("long").Long} Long
@@ -92,7 +90,9 @@ export default class ScheduleId {
      * @returns {ScheduleId}
      */
     static fromBytes(bytes) {
-        return ScheduleId._fromProtobuf(proto.ScheduleID.decode(bytes));
+        return ScheduleId._fromProtobuf(
+            HashgraphProto.proto.ScheduleID.decode(bytes)
+        );
     }
 
     /**
@@ -141,7 +141,9 @@ export default class ScheduleId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.ScheduleID.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.ScheduleID.encode(
+            this._toProtobuf()
+        ).finish();
     }
 
     /**

@@ -4,7 +4,7 @@ import Hbar from "../Hbar.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
 import TokenRelationshipMap from "./TokenRelationshipMap.js";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
@@ -12,8 +12,6 @@ import LedgerId from "../LedgerId.js";
 import HbarAllowance from "./HbarAllowance.js";
 import TokenAllowance from "./TokenAllowance.js";
 import TokenNftAllowance from "./TokenNftAllowance.js";
-
-const { proto } = HashgraphProto;
 
 /**
  * Current information about an account, including the balance.
@@ -178,7 +176,9 @@ export default class AccountInfo {
     static _fromProtobuf(info) {
         let aliasKey =
             info.alias != null && info.alias.length > 0
-                ? Key._fromProtobufKey(proto.Key.decode(info.alias))
+                ? Key._fromProtobufKey(
+                      HashgraphProto.proto.Key.decode(info.alias)
+                  )
                 : null;
 
         if (!(aliasKey instanceof PublicKey)) {
@@ -307,7 +307,9 @@ export default class AccountInfo {
                 this.maxAutomaticTokenAssociations.toInt(),
             alias:
                 this.aliasKey != null
-                    ? proto.Key.encode(this.aliasKey._toProtobufKey()).finish()
+                    ? HashgraphProto.proto.Key.encode(
+                          this.aliasKey._toProtobufKey()
+                      ).finish()
                     : null,
             ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
         };
@@ -319,7 +321,7 @@ export default class AccountInfo {
      */
     static fromBytes(bytes) {
         return AccountInfo._fromProtobuf(
-            proto.CryptoGetInfoResponse.AccountInfo.decode(bytes)
+            HashgraphProto.proto.CryptoGetInfoResponse.AccountInfo.decode(bytes)
         );
     }
 
@@ -327,7 +329,7 @@ export default class AccountInfo {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.CryptoGetInfoResponse.AccountInfo.encode(
+        return HashgraphProto.proto.CryptoGetInfoResponse.AccountInfo.encode(
             this._toProtobuf()
         ).finish();
     }

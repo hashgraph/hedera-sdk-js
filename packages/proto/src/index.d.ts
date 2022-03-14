@@ -1,2 +1,7 @@
-export { Reader, Writer } from "protobufjs/minimal.js";
-export { proto, com, google } from "./proto.js";
+import * as $protobuf from "protobufjs/minimal.js";
+import { proto, com, google } from "./proto.js";
+
+import Reader = $protobuf.Reader;
+import Writer = $protobuf.Writer;
+
+export { Reader, Writer, proto, com, google };

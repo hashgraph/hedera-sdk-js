@@ -3,11 +3,9 @@ import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
 import Duration from "../Duration.js";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import Key from "../Key.js";
 import LedgerId from "../LedgerId.js";
-
-const { proto } = HashgraphProto;
 
 /**
  * Current state of a topic.
@@ -187,7 +185,7 @@ export default class TopicInfo {
      */
     static fromBytes(bytes) {
         return TopicInfo._fromProtobuf({
-            topicInfo: proto.ConsensusTopicInfo.decode(bytes),
+            topicInfo: HashgraphProto.proto.ConsensusTopicInfo.decode(bytes),
         });
     }
 

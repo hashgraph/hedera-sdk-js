@@ -1,6 +1,4 @@
-import HashgraphProto from "@hashgraph/proto";
-
-const { proto } = HashgraphProto;
+import * as HashgraphProto from "@hashgraph/proto";
 
 export default class FeeComponents {
     /**
@@ -101,7 +99,9 @@ export default class FeeComponents {
      * @returns {FeeComponents}
      */
     static fromBytes(bytes) {
-        return FeeComponents._fromProtobuf(proto.FeeComponents.decode(bytes));
+        return FeeComponents._fromProtobuf(
+            HashgraphProto.proto.FeeComponents.decode(bytes)
+        );
     }
 
     /**
@@ -184,6 +184,8 @@ export default class FeeComponents {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.FeeComponents.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.FeeComponents.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

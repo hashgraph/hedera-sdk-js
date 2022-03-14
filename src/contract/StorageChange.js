@@ -1,6 +1,4 @@
-import HashgraphProto from "@hashgraph/proto";
-
-const { proto } = HashgraphProto;
+import * as HashgraphProto from "@hashgraph/proto";
 
 export default class StorageChange {
     /**
@@ -37,7 +35,9 @@ export default class StorageChange {
      * @returns {StorageChange}
      */
     static fromBytes(bytes) {
-        return StorageChange._fromProtobuf(proto.StorageChange.decode(bytes));
+        return StorageChange._fromProtobuf(
+            HashgraphProto.proto.StorageChange.decode(bytes)
+        );
     }
 
     /**
@@ -57,6 +57,8 @@ export default class StorageChange {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.StorageChange.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.StorageChange.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

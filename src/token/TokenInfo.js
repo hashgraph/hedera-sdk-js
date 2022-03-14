@@ -3,7 +3,7 @@ import AccountId from "../account/AccountId.js";
 import Duration from "../Duration.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import TokenType from "./TokenType.js";
 import TokenSupplyType from "./TokenSupplyType.js";
 import CustomFixedFee from "./CustomFixedFee.js";
@@ -11,8 +11,6 @@ import CustomFractionalFee from "./CustomFractionalFee.js";
 import CustomRoyaltyFee from "./CustomRoyaltyFee.js";
 import Key from "../Key.js";
 import LedgerId from "../LedgerId.js";
-
-const { proto } = HashgraphProto;
 
 /**
  * @typedef {import("./CustomFee.js").default} CustomFee
@@ -416,13 +414,17 @@ export default class TokenInfo {
      * @returns {TokenInfo}
      */
     static fromBytes(bytes) {
-        return TokenInfo._fromProtobuf(proto.TokenInfo.decode(bytes));
+        return TokenInfo._fromProtobuf(
+            HashgraphProto.proto.TokenInfo.decode(bytes)
+        );
     }
 
     /**
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.TokenInfo.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.TokenInfo.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

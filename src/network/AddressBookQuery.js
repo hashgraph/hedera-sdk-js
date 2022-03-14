@@ -1,10 +1,8 @@
 import NodeAddress from "../address_book/NodeAddress.js";
 import NodeAddressBook from "../address_book/NodeAddressBook.js";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import FileId from "../file/FileId.js";
 import { RST_STREAM } from "../Executable.js";
-
-const { proto, com } = HashgraphProto;
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -176,10 +174,12 @@ export default class AddresesBookQuery {
      * @param {number=} requestTimeout
      */
     _makeServerStreamRequest(client, resolve, reject, requestTimeout) {
-        const request = com.hedera.mirror.api.proto.AddressBookQuery.encode({
-            fileId: this._fileId != null ? this._fileId._toProtobuf() : null,
-            limit: this._limit,
-        }).finish();
+        const request =
+            HashgraphProto.com.hedera.mirror.api.proto.AddressBookQuery.encode({
+                fileId:
+                    this._fileId != null ? this._fileId._toProtobuf() : null,
+                limit: this._limit,
+            }).finish();
 
         client._mirrorNetwork
             .getNextMirrorNode()
@@ -191,7 +191,7 @@ export default class AddresesBookQuery {
                 (data) => {
                     this._addresses.push(
                         NodeAddress._fromProtobuf(
-                            proto.NodeAddress.decode(data)
+                            HashgraphProto.proto.NodeAddress.decode(data)
                         )
                     );
 

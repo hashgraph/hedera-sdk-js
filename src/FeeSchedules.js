@@ -1,7 +1,5 @@
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import FeeSchedule from "./FeeSchedule";
-
-const { proto } = HashgraphProto;
 
 export default class FeeSchedules {
     /**
@@ -31,7 +29,7 @@ export default class FeeSchedules {
      */
     static fromBytes(bytes) {
         return FeeSchedules._fromProtobuf(
-            proto.CurrentAndNextFeeSchedule.decode(bytes)
+            HashgraphProto.proto.CurrentAndNextFeeSchedule.decode(bytes)
         );
     }
 
@@ -70,7 +68,7 @@ export default class FeeSchedules {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.CurrentAndNextFeeSchedule.encode(
+        return HashgraphProto.proto.CurrentAndNextFeeSchedule.encode(
             this._toProtobuf()
         ).finish();
     }

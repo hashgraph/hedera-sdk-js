@@ -1,10 +1,7 @@
 import * as $protobuf from "protobufjs/minimal.js";
 import Long from "long";
 
-export { proto, com, google } from "./proto.js";
-
-export const Reader = $protobuf.Reader;
-export const Writer = $protobuf.Writer;
+import * as $proto from "./proto.js";
 
 /**
  * Patch protobuf race condition between loading protobuf and Long.js libraries.
@@ -22,3 +19,10 @@ export const Writer = $protobuf.Writer;
         }
     }
 })();
+
+export const Reader = $protobuf.Reader;
+export const Writer = $protobuf.Writer;
+
+export const proto = $proto.proto;
+export const com = $proto.com;
+export const google = $proto.google;

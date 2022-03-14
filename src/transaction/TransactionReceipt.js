@@ -7,10 +7,8 @@ import ScheduleId from "../schedule/ScheduleId.js";
 import ExchangeRate from "../ExchangeRate.js";
 import Status from "../Status.js";
 import Long from "long";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import TransactionId from "../transaction/TransactionId.js";
-
-const { proto } = HashgraphProto;
 
 /**
  * The consensus result for a transaction, which might not be currently known,
@@ -310,7 +308,7 @@ export default class TransactionReceipt {
      */
     static fromBytes(bytes) {
         return TransactionReceipt._fromProtobuf(
-            proto.TransactionGetReceiptResponse.decode(bytes)
+            HashgraphProto.proto.TransactionGetReceiptResponse.decode(bytes)
         );
     }
 
@@ -318,7 +316,7 @@ export default class TransactionReceipt {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.TransactionGetReceiptResponse.encode(
+        return HashgraphProto.proto.TransactionGetReceiptResponse.encode(
             this._toProtobuf()
         ).finish();
     }

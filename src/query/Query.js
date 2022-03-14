@@ -3,13 +3,11 @@ import AccountId from "../account/AccountId.js";
 import Hbar from "../Hbar.js";
 import Executable, { ExecutionState } from "../Executable.js";
 import TransactionId from "../transaction/TransactionId.js";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
 import Logger from "js-logger";
-
-const { proto } = HashgraphProto;
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -58,7 +56,7 @@ export default class Query extends Executable {
      * @returns {Query<T>}
      */
     static fromBytes(bytes) {
-        const query = proto.Query.decode(bytes);
+        const query = HashgraphProto.proto.Query.decode(bytes);
 
         if (query.query == null) {
             throw new Error("(BUG) query.query was not set in the protobuf");
@@ -82,7 +80,7 @@ export default class Query extends Executable {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.Query.encode(this._makeRequest()).finish();
+        return HashgraphProto.proto.Query.encode(this._makeRequest()).finish();
     }
 
     /**

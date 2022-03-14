@@ -1,11 +1,9 @@
 import * as entity_id from "../EntityIdHelper.js";
 import Key from "../Key.js";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import CACHE from "../Cache.js";
 import * as hex from "../encoding/hex.js";
 import Long from "long";
-
-const { proto } = HashgraphProto;
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -120,7 +118,9 @@ export default class ContractId extends Key {
      * @returns {ContractId}
      */
     static fromBytes(bytes) {
-        return ContractId._fromProtobuf(proto.ContractID.decode(bytes));
+        return ContractId._fromProtobuf(
+            HashgraphProto.proto.ContractID.decode(bytes)
+        );
     }
 
     /**
@@ -188,7 +188,9 @@ export default class ContractId extends Key {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.ContractID.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.ContractID.encode(
+            this._toProtobuf()
+        ).finish();
     }
 
     /**
