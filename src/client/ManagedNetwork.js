@@ -86,7 +86,7 @@ export default class MangedNetwork {
                               .toSecure()
                               .setCert(
                                   this._ledgerId != null
-                                      ? this._ledgerId._toStringForChecksum()
+                                      ? this._ledgerId.toString()
                                       : ""
                               )
                         : node.toInsecure()
