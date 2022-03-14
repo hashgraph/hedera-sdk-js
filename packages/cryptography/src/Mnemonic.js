@@ -1,4 +1,4 @@
-import PrivateKey from "./PrivateKey.js";
+import CACHE from "./Cache.js";
 import Ed25519PrivateKey from "./Ed25519PrivateKey.js";
 import BadMnemonicError from "./BadMnemonicError.js";
 import BadMnemonicReason from "./BadMnemonicReason.js";
@@ -11,7 +11,10 @@ import * as hmac from "./primitive/hmac.js";
 import * as slip10 from "./primitive/slip10.js";
 import * as entropy from "./util/entropy.js";
 import * as random from "./primitive/random.js";
-// import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
+
+/**
+ * @typedef {import("./PrivateKey.js").default} PrivateKey
+ */
 
 /**
  * Multi-word mnemonic phrase (BIP-39).
@@ -308,7 +311,13 @@ export default class Mnemonic {
 
         const keyPair = nacl.sign.keyPair.fromSeed(keyData);
 
-        return new PrivateKey(new Ed25519PrivateKey(keyPair, chainCode));
+        if (CACHE.privateKeyConstructor == null) {
+            throw new Error("PrivateKey not found in cache");
+        }
+
+        return CACHE.privateKeyConstructor(
+            new Ed25519PrivateKey(keyPair, chainCode)
+        );
     }
 
     /**
@@ -322,7 +331,11 @@ export default class Mnemonic {
             seed = await entropy.legacy2(this.words, bip39Words);
         }
 
-        return PrivateKey.fromBytes(seed);
+        if (CACHE.privateKeyFromBytes == null) {
+            throw new Error("PrivateKey not found in cache");
+        }
+
+        return CACHE.privateKeyFromBytes(seed);
     }
 
     /**

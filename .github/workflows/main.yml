@@ -91,5 +91,5 @@ jobs:
           sleep 45
           cd ../hedera-sdk-js
           pnpm install
-          pnpm compile:js
+          pnpm compile
           pnpm test:integration:node

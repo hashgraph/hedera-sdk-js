@@ -29,6 +29,7 @@ export default class WebChannel extends Channel {
      * @returns {import("protobufjs").RPCImpl}
      */
     _createUnaryClient(serviceName) {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         return async (method, requestData, callback) => {
             const response = await fetch(
                 `${this._address}/HashgraphProto.proto.${serviceName}/${method.name}`,

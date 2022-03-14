@@ -30,6 +30,7 @@ export default class NativeChannel extends Channel {
      * @returns {import("protobufjs").RPCImpl}
      */
     _createUnaryClient(serviceName) {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         return async (method, requestData, callback) => {
             const data = base64.encode(
                 new Uint8Array(encodeRequest(requestData))

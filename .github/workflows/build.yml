@@ -50,12 +50,12 @@ jobs:
         run: |
           cd packages/proto
           pnpm install
-          pnpm compile:js
+          pnpm compile
 
       - name: Build @hashgraph/sdk
         run: |
           pnpm install
-          pnpm compile:js
+          pnpm compile
 
   lint:
     runs-on: ubuntu-latest
@@ -96,12 +96,12 @@ jobs:
         run: |
           cd packages/proto
           pnpm install
-          pnpm compile:js
+          pnpm compile
 
       - name: Lint @hashgraph/sdk
         run: |
           pnpm install
-          pnpm compile:js
+          pnpm compile
           pnpm lint 
              
   test-unit-node:
@@ -143,10 +143,10 @@ jobs:
         run: |
           cd packages/proto
           pnpm install
-          pnpm compile:js
+          pnpm compile
 
       - name: Unit Test @hashgraph/sdk
         run: |
           pnpm install
-          pnpm compile:js
+          pnpm compile
           pnpm test:unit:node

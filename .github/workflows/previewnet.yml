@@ -34,7 +34,7 @@ jobs:
       - name: Build
         run: |
           pnpm install
-          pnpm compile:js
+          pnpm compile
 
   lint:
     runs-on: ubuntu-latest
@@ -65,7 +65,7 @@ jobs:
       - name: Lint
         run: |
           pnpm install
-          pnpm compile:js
+          pnpm compile
           pnpm lint 
              
   test-unit-node:
@@ -97,7 +97,7 @@ jobs:
       - name: Run Unit Tests
         run: |
           pnpm install
-          pnpm compile:js
+          pnpm compile
           pnpm test:unit:node
 
   test-integration-node:
@@ -133,7 +133,7 @@ jobs:
           HEDERA_NETWORK: "previewnet"
         run: |
           pnpm install
-          pnpm compile:js
+          pnpm compile
           pnpm test:integration:node
 
   test-integration-browser-chrome:
@@ -169,5 +169,5 @@ jobs:
           HEDERA_NETWORK: "previewnet"
         run: |
           pnpm install
-          pnpm compile:js
+          pnpm compile
           pnpm test:integration:browser:chrome

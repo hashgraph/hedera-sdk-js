@@ -43,7 +43,7 @@ jobs:
       - name: Build SDK
         run: |
           pnpm install
-          pnpm compile:js
+          pnpm compile
 
       - name: Install yalc
         run: pnpm install -g yalc
