@@ -19,6 +19,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -39,16 +41,14 @@ jobs:
           version: 6.0.2
       
       - name: Build @hashgraph/cryptography
-        with:
-          path: packages/cryptography
-        run: 
+        run: |
+          cd packages/cryptography
           pnpm install
           pnpm compile
 
       - name: Build @hashgraph/proto
-        with:
-          path: packages/proto
-        run: 
+        run: |
+          cd packages/proto
           pnpm install
           pnpm compile:js
 
@@ -65,6 +65,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -84,7 +86,19 @@ jobs:
         with:
           version: 6.0.2
 
-      - name: Lint
+      - name: Build @hashgraph/cryptography
+        run: |
+          cd packages/cryptography
+          pnpm install
+          pnpm compile
+
+      - name: Build @hashgraph/proto
+        run: |
+          cd packages/proto
+          pnpm install
+          pnpm compile:js
+
+      - name: Lint @hashgraph/sdk
         run: |
           pnpm install
           pnpm compile:js
@@ -98,6 +112,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -117,7 +133,19 @@ jobs:
         with:
           version: 6.0.2
 
-      - name: Run Unit Tests
+      - name: Build @hashgraph/cryptography
+        run: |
+          cd packages/cryptography
+          pnpm install
+          pnpm compile
+
+      - name: Build @hashgraph/proto
+        run: |
+          cd packages/proto
+          pnpm install
+          pnpm compile:js
+
+      - name: Unit Test @hashgraph/sdk
         run: |
           pnpm install
           pnpm compile:js
