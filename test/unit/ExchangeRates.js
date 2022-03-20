@@ -1,7 +1,7 @@
 import "mocha";
 import { expect } from "chai";
-
-import { ExchangeRates } from "../../src/exports.js";
+import Long from "long";
+import { ExchangeRates, ExchangeRate } from "../../src/exports.js";
 
 const exchangeRateSetBytes = Buffer.from(
     "0a1008b0ea0110b6b4231a0608f0bade9006121008b0ea01108cef231a060880d7de9006",
@@ -35,5 +35,16 @@ describe("ExchangeRates", function () {
         expect(exchangeRate).to.equal(
             exchangeRateSet.nextRate.exchangeRateInCents
         );
+    });
+});
+
+describe("ExchangeRate", function () {
+    it("fromBytes", function () {
+         const expirationTime = new Date("February 24, 2022 15:00:00 UTC");
+         const props = {
+             expirationTime: expirationTime,
+           }
+         const exchangeRate = new ExchangeRate(props);
+         expect(exchangeRate._toProtobuf().expirationTime.seconds).to.deep.equal(Long.fromValue({ low: 1645714800, high: 0, unsigned: false }));
     });
 });
