@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.12.0-beta.1
 
+### Fixed
+
+ * `Transaction.fromBytes()` should validate all the transaction bodies are the same
+
 ### Added
 
  * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
