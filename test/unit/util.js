@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 import Long from "long";
 import * as util from "../../src/util.js";
 
-describe("util.js", function () {
+describe("util", function () {
     it("soft check: isNonNull should return false if null and true if non-null", function () {
         expect(util.isNonNull("")).to.eql(true);
 
@@ -324,5 +324,37 @@ describe("util.js", function () {
         expect(util.convertToNumber("1")).to.eql(1);
         expect(util.convertToNumber(new BigNumber(1))).to.eql(1);
         expect(util.convertToNumber(new Long(1))).to.eql(1);
+    });
+
+    it("compare", function () {
+        expect(util.compare(true, true)).to.be.true;
+        expect(util.compare(true, false)).to.be.false;
+        expect(util.compare("true", false)).to.be.false;
+        expect(util.compare("true", "false")).to.be.false;
+        expect(util.compare("true", "true")).to.be.true;
+        expect(util.compare("random string", "random string")).to.be.true;
+        expect(util.compare(0, 1)).to.be.false;
+        expect(util.compare(1, 1)).to.be.true;
+        expect(util.compare(Long.fromNumber(1), 1)).to.be.false;
+        expect(util.compare(Long.fromNumber(1), Long.fromNumber(1))).to.be.true;
+        expect(util.compare({}, { hello: true })).to.be.false;
+        expect(util.compare({ hello: false }, { hello: true })).to.be.false;
+        expect(util.compare({ hello: true }, { hello: true })).to.be.true;
+        expect(util.compare({ hello: { world: false } }, { hello: true })).to.be
+            .false;
+        expect(util.compare({ hello: { world: false } }, { hello: {} })).to.be
+            .false;
+        expect(
+            util.compare(
+                { hello: { world: false } },
+                { hello: { world: true } }
+            )
+        ).to.be.false;
+        expect(
+            util.compare(
+                { hello: { world: false } },
+                { hello: { world: false } }
+            )
+        ).to.be.true;
     });
 });

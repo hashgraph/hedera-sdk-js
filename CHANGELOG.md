@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
  * Ledger ID checksums
+ * `Transaction.fromBytes()` should validate all the transaction bodies are the same
+
+### Added
+
+ * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
 
 ## v2.11.0-beta.1
 
