@@ -19,6 +19,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -38,8 +40,22 @@ jobs:
         with:
           version: 6.0.2
 
-      - name: Build SDK
-        run: pnpm install --force 
+      - name: Build @hashgraph/cryptography
+        run: |
+          cd packages/cryptography
+          pnpm install
+          pnpm compile
+
+      - name: Build @hashgraph/proto
+        run: |
+          cd packages/proto
+          pnpm install
+          pnpm compile
+
+      - name: Build @hashgraph/sdk
+        run: |
+          pnpm install
+          pnpm compile
 
       - name: Install yalc
         run: pnpm install -g yalc
@@ -48,7 +64,7 @@ jobs:
         run: pnpm install -g detox-cli
 
       - name: Locally Publish
-        run: yalc publish
+        run: yalc publish --no-scripts
 
       - name: Install dependencies
         working-directory: common_js_test

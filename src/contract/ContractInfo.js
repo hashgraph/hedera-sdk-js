@@ -4,10 +4,12 @@ import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
 import Hbar from "../Hbar.js";
 import Long from "long";
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import TokenRelationshipMap from "../account/TokenRelationshipMap.js";
 import Key from "../Key.js";
 import LedgerId from "../LedgerId.js";
+
+const { proto } = HashgraphProto;
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -124,20 +126,23 @@ export default class ContractInfo {
 
     /**
      * @internal
-     * @param {proto.IContractInfo} info
+     * @param {HashgraphProto.proto.ContractGetInfoResponse.IContractInfo} info
      * @returns {ContractInfo}
      */
     static _fromProtobuf(info) {
         const autoRenewPeriod = /** @type {Long | number} */ (
-            /** @type {proto.IDuration} */ (info.autoRenewPeriod).seconds
+            /** @type {HashgraphProto.proto.IDuration} */ (info.autoRenewPeriod)
+                .seconds
         );
 
         return new ContractInfo({
             contractId: ContractId._fromProtobuf(
-                /** @type {proto.IContractID} */ (info.contractID)
+                /** @type {HashgraphProto.proto.IContractID} */ (
+                    info.contractID
+                )
             ),
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (info.accountID)
+                /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID)
             ),
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : "",
@@ -146,7 +151,9 @@ export default class ContractInfo {
                     ? Key._fromProtobufKey(info.adminKey)
                     : null,
             expirationTime: Timestamp._fromProtobuf(
-                /** @type {proto.ITimestamp} */ (info.expirationTime)
+                /** @type {HashgraphProto.proto.ITimestamp} */ (
+                    info.expirationTime
+                )
             ),
             autoRenewPeriod: new Duration(autoRenewPeriod),
             storage:
@@ -170,7 +177,7 @@ export default class ContractInfo {
 
     /**
      * @internal
-     * @returns {proto.IContractInfo}
+     * @returns {HashgraphProto.proto.ContractGetInfoResponse.IContractInfo}
      */
     _toProtobuf() {
         return {

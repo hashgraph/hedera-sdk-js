@@ -5,10 +5,10 @@ import ObjectMap from "../ObjectMap.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITokenTransferList} proto.ITokenTransferList
- * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ITokenTransferList} HashgraphProto.proto.ITokenTransferList
+ * @typedef {import("@hashgraph/proto").proto.IAccountAmount} HashgraphProto.proto.IAccountAmount
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
 
 /**
@@ -39,7 +39,7 @@ export default class TokenTransferMap extends ObjectMap {
     }
 
     /**
-     * @param {proto.ITokenTransferList[]} transfers
+     * @param {HashgraphProto.proto.ITokenTransferList[]} transfers
      * @returns {TokenTransferMap}
      */
     static _fromProtobuf(transfers) {
@@ -47,14 +47,16 @@ export default class TokenTransferMap extends ObjectMap {
 
         for (const transfer of transfers) {
             const token = TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (transfer.token)
+                /** @type {HashgraphProto.proto.ITokenID} */ (transfer.token)
             );
 
             for (const aa of transfer.transfers != null
                 ? transfer.transfers
                 : []) {
                 const account = AccountId._fromProtobuf(
-                    /** @type {proto.IAccountID} */ (aa.accountID)
+                    /** @type {HashgraphProto.proto.IAccountID} */ (
+                        aa.accountID
+                    )
                 );
 
                 tokenTransfersMap.__set(
@@ -69,14 +71,14 @@ export default class TokenTransferMap extends ObjectMap {
     }
 
     /**
-     * @returns {proto.ITokenTransferList[]}
+     * @returns {HashgraphProto.proto.ITokenTransferList[]}
      */
     _toProtobuf() {
-        /** @type {proto.ITokenTransferList[]} */
+        /** @type {HashgraphProto.proto.ITokenTransferList[]} */
         const tokenTransferList = [];
 
         for (const [tokenId, value] of this) {
-            /** @type {proto.IAccountAmount[]} */
+            /** @type {HashgraphProto.proto.IAccountAmount[]} */
             const transfers = [];
 
             for (const [accountId, amount] of value) {

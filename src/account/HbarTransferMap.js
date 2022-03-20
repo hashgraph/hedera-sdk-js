@@ -4,8 +4,8 @@ import ObjectMap from "../ObjectMap.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransferList} proto.ITransferList
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ITransferList} HashgraphProto.proto.ITransferList
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
 
 /**
@@ -22,7 +22,7 @@ export default class HbarTransferMap extends ObjectMap {
     }
 
     /**
-     * @param {proto.ITransferList} transfers
+     * @param {HashgraphProto.proto.ITransferList} transfers
      * @returns {HbarTransferMap}
      */
     static _fromProtobuf(transfers) {
@@ -32,7 +32,9 @@ export default class HbarTransferMap extends ObjectMap {
             ? transfers.accountAmounts
             : []) {
             const account = AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (transfer.accountID)
+                /** @type {HashgraphProto.proto.IAccountID} */ (
+                    transfer.accountID
+                )
             );
 
             accountTransfers._set(

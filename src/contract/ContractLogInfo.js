@@ -2,8 +2,8 @@ import ContractId from "./ContractId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IContractLoginfo} proto.IContractLoginfo
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IContractLoginfo} HashgraphProto.proto.IContractLoginfo
+ * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
  */
 
 /**
@@ -52,13 +52,15 @@ export default class ContractLogInfo {
 
     /**
      * @internal
-     * @param {proto.IContractLoginfo} info
+     * @param {HashgraphProto.proto.IContractLoginfo} info
      * @returns {ContractLogInfo}
      */
     static _fromProtobuf(info) {
         return new ContractLogInfo({
             contractId: ContractId._fromProtobuf(
-                /** @type {proto.IContractID} */ (info.contractID)
+                /** @type {HashgraphProto.proto.IContractID} */ (
+                    info.contractID
+                )
             ),
             bloom: info.bloom != null ? info.bloom : new Uint8Array(),
             topics: info.topic != null ? info.topic : [],
@@ -68,7 +70,7 @@ export default class ContractLogInfo {
 
     /**
      * @internal
-     * @returns {proto.IContractLoginfo}
+     * @returns {HashgraphProto.proto.IContractLoginfo}
      */
     _toProtobuf() {
         return {

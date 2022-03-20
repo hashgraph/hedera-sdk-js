@@ -3,10 +3,10 @@ import TokenId from "../token/TokenId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITokenRelationship} proto.ITokenRelationship
- * @typedef {import("@hashgraph/proto").TokenKycStatus} proto.TokenKycStatus
- * @typedef {import("@hashgraph/proto").TokenFreezeStatus} proto.TokenFreezeStatus
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.ITokenRelationship} HashgraphProto.proto.ITokenRelationship
+ * @typedef {import("@hashgraph/proto").proto.TokenKycStatus} HashgraphProto.proto.TokenKycStatus
+ * @typedef {import("@hashgraph/proto").proto.TokenFreezeStatus} HashgraphProto.proto.TokenFreezeStatus
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
  */
 
 /**
@@ -72,12 +72,12 @@ export default class TokenRelationship {
     }
 
     /**
-     * @param {proto.ITokenRelationship} relationship
+     * @param {HashgraphProto.proto.ITokenRelationship} relationship
      * @returns {TokenRelationship}
      */
     static _fromProtobuf(relationship) {
         const tokenId = TokenId._fromProtobuf(
-            /** @type {proto.ITokenID} */ (relationship.tokenId)
+            /** @type {HashgraphProto.proto.ITokenID} */ (relationship.tokenId)
         );
         const isKycGranted =
             relationship.kycStatus == null || relationship.kycStatus === 0
@@ -107,7 +107,7 @@ export default class TokenRelationship {
     }
 
     /**
-     * @returns {proto.ITokenRelationship}
+     * @returns {HashgraphProto.proto.ITokenRelationship}
      */
     _toProtobuf() {
         return {

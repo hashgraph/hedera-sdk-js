@@ -10,6 +10,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -30,13 +32,17 @@ jobs:
           version: 6.0.2
 
       - name: Build
-        run: pnpm install --force 
+        run: |
+          pnpm install
+          pnpm compile
 
   lint:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -58,7 +64,8 @@ jobs:
 
       - name: Lint
         run: |
-          pnpm install --force
+          pnpm install
+          pnpm compile
           pnpm lint 
              
   test-unit-node:
@@ -66,6 +73,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -87,7 +96,8 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          pnpm install --force
+          pnpm install
+          pnpm compile
           pnpm test:unit:node
 
   test-integration-node:
@@ -95,6 +105,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -120,7 +132,8 @@ jobs:
           OPERATOR_ID: ${{ secrets.PREVIEWNET_OPERATOR_ID }}
           HEDERA_NETWORK: "previewnet"
         run: |
-          pnpm install --force
+          pnpm install
+          pnpm compile
           pnpm test:integration:node
 
   test-integration-browser-chrome:
@@ -128,6 +141,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -153,5 +168,6 @@ jobs:
           VITE_OPERATOR_ID: ${{ secrets.PREVIEWNET_OPERATOR_ID }}
           HEDERA_NETWORK: "previewnet"
         run: |
-          pnpm install --force
+          pnpm install
+          pnpm compile
           pnpm test:integration:browser:chrome

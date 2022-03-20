@@ -4,10 +4,10 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IGrantedNftAllowance} proto.IGrantedNftAllowance
- * @typedef {import("@hashgraph/proto").INftAllowance} proto.INftAllowance
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IGrantedNftAllowance} HashgraphProto.proto.IGrantedNftAllowance
+ * @typedef {import("@hashgraph/proto").proto.INftAllowance} HashgraphProto.proto.INftAllowance
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
 
 export default class TokenNftAllowance {
@@ -61,7 +61,7 @@ export default class TokenNftAllowance {
 
     /**
      * @internal
-     * @param {proto.INftAllowance} allowance
+     * @param {HashgraphProto.proto.INftAllowance} allowance
      * @returns {TokenNftAllowance}
      */
     static _fromProtobuf(allowance) {
@@ -70,15 +70,19 @@ export default class TokenNftAllowance {
             allowance.approvedForAll.value == true;
         return new TokenNftAllowance({
             tokenId: TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (allowance.tokenId)
+                /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
             ),
             spenderAccountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (allowance.spender)
+                /** @type {HashgraphProto.proto.IAccountID} */ (
+                    allowance.spender
+                )
             ),
             ownerAccountId:
                 allowance.owner != null
                     ? AccountId._fromProtobuf(
-                          /**@type {proto.IAccountID}*/ (allowance.owner)
+                          /**@type {HashgraphProto.proto.IAccountID}*/ (
+                              allowance.owner
+                          )
                       )
                     : null,
             serialNumbers: allSerials
@@ -94,16 +98,18 @@ export default class TokenNftAllowance {
 
     /**
      * @internal
-     * @param {proto.IGrantedNftAllowance} allowance
+     * @param {HashgraphProto.proto.IGrantedNftAllowance} allowance
      * @returns {TokenNftAllowance}
      */
     static _fromGrantedProtobuf(allowance) {
         return new TokenNftAllowance({
             tokenId: TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (allowance.tokenId)
+                /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
             ),
             spenderAccountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (allowance.spender)
+                /** @type {HashgraphProto.proto.IAccountID} */ (
+                    allowance.spender
+                )
             ),
             ownerAccountId: null,
             serialNumbers:
@@ -121,7 +127,7 @@ export default class TokenNftAllowance {
 
     /**
      * @internal
-     * @returns {proto.INftAllowance}
+     * @returns {HashgraphProto.proto.INftAllowance}
      */
     _toProtobuf() {
         return {

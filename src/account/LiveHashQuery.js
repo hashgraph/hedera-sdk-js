@@ -4,13 +4,13 @@ import LiveHash from "./LiveHash.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ICryptoGetLiveHashQuery} proto.ICryptoGetLiveHashQuery
- * @typedef {import("@hashgraph/proto").ICryptoGetLiveHashResponse} proto.ICryptoGetLiveHashResponse
- * @typedef {import("@hashgraph/proto").ILiveHash} proto.ILiveHash
+ * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetLiveHashQuery} HashgraphProto.proto.ICryptoGetLiveHashQuery
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetLiveHashResponse} HashgraphProto.proto.ICryptoGetLiveHashResponse
+ * @typedef {import("@hashgraph/proto").proto.ILiveHash} HashgraphProto.proto.ILiveHash
  */
 
 /**
@@ -53,13 +53,14 @@ export default class LiveHashQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {LiveHashQuery}
      */
     static _fromProtobuf(query) {
-        const hash = /** @type {proto.ICryptoGetLiveHashQuery} */ (
-            query.cryptoGetLiveHash
-        );
+        const hash =
+            /** @type {HashgraphProto.proto.ICryptoGetLiveHashQuery} */ (
+                query.cryptoGetLiveHash
+            );
 
         return new LiveHashQuery({
             accountId:
@@ -124,8 +125,8 @@ export default class LiveHashQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.crypto.getLiveHash(request);
@@ -134,31 +135,34 @@ export default class LiveHashQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
         const cryptoGetLiveHash =
-            /** @type {proto.ICryptoGetLiveHashResponse} */ (
+            /** @type {HashgraphProto.proto.ICryptoGetLiveHashResponse} */ (
                 response.cryptoGetLiveHash
             );
-        return /** @type {proto.IResponseHeader} */ (cryptoGetLiveHash.header);
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
+            cryptoGetLiveHash.header
+        );
     }
 
     /**
      * @protected
      * @override
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<LiveHash>}
      */
     _mapResponse(response) {
-        const hashes = /** @type {proto.ICryptoGetLiveHashResponse} */ (
-            response.cryptoGetLiveHash
-        );
+        const hashes =
+            /** @type {HashgraphProto.proto.ICryptoGetLiveHashResponse} */ (
+                response.cryptoGetLiveHash
+            );
 
         return Promise.resolve(
             LiveHash._fromProtobuf(
-                /** @type {proto.ILiveHash} */ (hashes.liveHash)
+                /** @type {HashgraphProto.proto.ILiveHash} */ (hashes.liveHash)
             )
         );
     }
@@ -166,8 +170,8 @@ export default class LiveHashQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

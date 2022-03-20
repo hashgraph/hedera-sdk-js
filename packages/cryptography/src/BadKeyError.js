@@ -15,7 +15,7 @@ export default class BadKeyError extends Error {
         this.name = "BadKeyError";
 
         if (messageOrCause instanceof Error) {
-            /** @type {?Error} */
+            /** @type {Error=} */
             this.cause = messageOrCause;
             this.stack = messageOrCause.stack;
         }

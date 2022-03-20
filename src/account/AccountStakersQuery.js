@@ -4,13 +4,13 @@ import ProxyStaker from "./ProxyStaker.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ICryptoGetStakersQuery} proto.ICryptoGetStakersQuery
- * @typedef {import("@hashgraph/proto").ICryptoGetStakersResponse} proto.ICryptoGetStakersResponse
- * @typedef {import("@hashgraph/proto").IAllProxyStakers} proto.IAllProxyStakers
+ * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetStakersQuery} HashgraphProto.proto.ICryptoGetStakersQuery
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetStakersResponse} HashgraphProto.proto.ICryptoGetStakersResponse
+ * @typedef {import("@hashgraph/proto").proto.IAllProxyStakers} HashgraphProto.proto.IAllProxyStakers
  */
 
 /**
@@ -47,13 +47,14 @@ export default class AccountStakersQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {AccountStakersQuery}
      */
     static _fromProtobuf(query) {
-        const stakers = /** @type {proto.ICryptoGetStakersQuery} */ (
-            query.cryptoGetProxyStakers
-        );
+        const stakers =
+            /** @type {HashgraphProto.proto.ICryptoGetStakersQuery} */ (
+                query.cryptoGetProxyStakers
+            );
 
         return new AccountStakersQuery({
             accountId:
@@ -98,8 +99,8 @@ export default class AccountStakersQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.crypto.getStakersByAccountID(request);
@@ -108,15 +109,15 @@ export default class AccountStakersQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
         const cryptoGetProxyStakers =
-            /** @type {proto.ICryptoGetStakersResponse} */ (
+            /** @type {HashgraphProto.proto.ICryptoGetStakersResponse} */ (
                 response.cryptoGetProxyStakers
             );
-        return /** @type {proto.IResponseHeader} */ (
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
             cryptoGetProxyStakers.header
         );
     }
@@ -124,15 +125,15 @@ export default class AccountStakersQuery extends Query {
     /**
      * @protected
      * @override
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<ProxyStaker[]>}
      */
     _mapResponse(response) {
         const cryptoGetProxyStakers =
-            /** @type {proto.ICryptoGetStakersResponse} */ (
+            /** @type {HashgraphProto.proto.ICryptoGetStakersResponse} */ (
                 response.cryptoGetProxyStakers
             );
-        const stakers = /** @type {proto.IAllProxyStakers} */ (
+        const stakers = /** @type {HashgraphProto.proto.IAllProxyStakers} */ (
             cryptoGetProxyStakers.stakers
         );
 
@@ -146,8 +147,8 @@ export default class AccountStakersQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

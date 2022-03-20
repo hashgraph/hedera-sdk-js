@@ -7,13 +7,13 @@ import Transaction, {
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ITokenDissociateTransactionBody} proto.ITokenDissociateTransactionBody
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.ITokenDissociateTransactionBody} HashgraphProto.proto.ITokenDissociateTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
  */
 
 /**
@@ -59,11 +59,11 @@ export default class TokenDissociateTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenDissociateTransaction}
      */
     static _fromProtobuf(
@@ -75,7 +75,7 @@ export default class TokenDissociateTransaction extends Transaction {
     ) {
         const body = bodies[0];
         const dissociateToken =
-            /** @type {proto.ITokenDissociateTransactionBody} */ (
+            /** @type {HashgraphProto.proto.ITokenDissociateTransactionBody} */ (
                 body.tokenDissociate
             );
 
@@ -162,8 +162,8 @@ export default class TokenDissociateTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         return channel.token.dissociateTokens(request);
@@ -172,7 +172,7 @@ export default class TokenDissociateTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "tokenDissociate";
@@ -181,7 +181,7 @@ export default class TokenDissociateTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.ITokenDissociateTransactionBody}
+     * @returns {HashgraphProto.proto.ITokenDissociateTransactionBody}
      */
     _makeTransactionData() {
         return {

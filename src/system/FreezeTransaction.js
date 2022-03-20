@@ -8,12 +8,12 @@ import FreezeType from "../FreezeType.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").IFreezeTransactionBody} proto.IFreezeTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.IFreezeTransactionBody} HashgraphProto.proto.IFreezeTransactionBody
  */
 
 /**
@@ -112,11 +112,11 @@ export default class FreezeTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {FreezeTransaction}
      */
     static _fromProtobuf(
@@ -127,9 +127,10 @@ export default class FreezeTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const freeze = /** @type {proto.IFreezeTransactionBody} */ (
-            body.freeze
-        );
+        const freeze =
+            /** @type {HashgraphProto.proto.IFreezeTransactionBody} */ (
+                body.freeze
+            );
 
         return Transaction._fromProtobufTransactions(
             new FreezeTransaction({
@@ -327,7 +328,7 @@ export default class FreezeTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "freeze";
@@ -336,7 +337,7 @@ export default class FreezeTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.IFreezeTransactionBody}
+     * @returns {HashgraphProto.proto.IFreezeTransactionBody}
      */
     _makeTransactionData() {
         return {

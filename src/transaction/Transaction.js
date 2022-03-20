@@ -8,13 +8,7 @@ import Status from "../Status.js";
 import Long from "long";
 import * as sha384 from "../cryptography/sha384.js";
 import * as hex from "../encoding/hex.js";
-import {
-    Transaction as ProtoTransaction,
-    SignedTransaction as ProtoSignedTransaction,
-    TransactionList as ProtoTransactionList,
-    TransactionBody as ProtoTransactionBody,
-    ResponseCodeEnum,
-} from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import AccountId from "../account/AccountId.js";
 import PublicKey from "../PublicKey.js";
@@ -25,22 +19,6 @@ import * as util from "../util.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
- */
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignatureMap} proto.ISignatureMap
- * @typedef {import("@hashgraph/proto").ISignaturePair} proto.ISignaturePair
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").ITransactionList} proto.ITransactionList
- * @typedef {import("@hashgraph/proto").ITransactionID} proto.ITransactionID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
  */
 
 /**
@@ -65,7 +43,7 @@ const DEFAULT_TRANSACTION_VALID_DURATION = 120;
 export const CHUNK_SIZE = 1024;
 
 /**
- * @type {Map<NonNullable<proto.TransactionBody["data"]>, (transactions: proto.ITransaction[], signedTransactions: proto.ISignedTransaction[], transactionIds: TransactionId[], nodeIds: AccountId[], bodies: proto.TransactionBody[]) => Transaction>}
+ * @type {Map<NonNullable<HashgraphProto.proto.TransactionBody["data"]>, (transactions: HashgraphProto.proto.ITransaction[], signedTransactions: HashgraphProto.proto.ISignedTransaction[], transactionIds: TransactionId[], nodeIds: AccountId[], bodies: HashgraphProto.proto.TransactionBody[]) => Transaction>}
  */
 export const TRANSACTION_REGISTRY = new Map();
 
@@ -73,7 +51,7 @@ export const TRANSACTION_REGISTRY = new Map();
  * Base class for all transactions that may be submitted to Hedera.
  *
  * @abstract
- * @augments {Executable<proto.ITransaction, proto.ITransactionResponse, TransactionResponse>}
+ * @augments {Executable<HashgraphProto.proto.ITransaction, HashgraphProto.proto.ITransactionResponse, TransactionResponse>}
  */
 export default class Transaction extends Executable {
     // A SDK transaction is composed of multiple, raw protobuf transactions.
@@ -91,7 +69,7 @@ export default class Transaction extends Executable {
          * transaction. Each one should share the same transaction ID.
          *
          * @internal
-         * @type {List<proto.ITransaction | null>}
+         * @type {List<HashgraphProto.proto.ITransaction | null>}
          */
         this._transactions = new List();
 
@@ -100,7 +78,7 @@ export default class Transaction extends Executable {
          * transaction. Each one should share the same transaction ID.
          *
          * @internal
-         * @type {List<proto.ISignedTransaction>}
+         * @type {List<HashgraphProto.proto.ISignedTransaction>}
          */
         this._signedTransactions = new List();
 
@@ -185,19 +163,21 @@ export default class Transaction extends Executable {
 
         const bodies = [];
 
-        const list = ProtoTransactionList.decode(bytes).transactionList;
+        const list =
+            HashgraphProto.proto.TransactionList.decode(bytes).transactionList;
 
         if (list.length === 0) {
-            const transaction = ProtoTransaction.decode(bytes);
+            const transaction = HashgraphProto.proto.Transaction.decode(bytes);
 
             if (transaction.signedTransactionBytes.length !== 0) {
                 list.push(transaction);
             } else {
                 list.push({
-                    signedTransactionBytes: ProtoSignedTransaction.encode({
-                        bodyBytes: transaction.bodyBytes,
-                        sigMap: transaction.sigMap,
-                    }).finish(),
+                    signedTransactionBytes:
+                        HashgraphProto.proto.SignedTransaction.encode({
+                            bodyBytes: transaction.bodyBytes,
+                            sigMap: transaction.sigMap,
+                        }).finish(),
                 });
             }
         }
@@ -207,12 +187,13 @@ export default class Transaction extends Executable {
                 throw new Error("Transaction.signedTransactionBytes are null");
             }
 
-            const signedTransaction = ProtoSignedTransaction.decode(
-                transaction.signedTransactionBytes
-            );
+            const signedTransaction =
+                HashgraphProto.proto.SignedTransaction.decode(
+                    transaction.signedTransactionBytes
+                );
             signedTransactions.push(signedTransaction);
 
-            const body = ProtoTransactionBody.decode(
+            const body = HashgraphProto.proto.TransactionBody.decode(
                 signedTransaction.bodyBytes
             );
 
@@ -224,7 +205,9 @@ export default class Transaction extends Executable {
 
             if (body.transactionID != null) {
                 const transactionId = TransactionId._fromProtobuf(
-                    /** @type {proto.ITransactionID} */ (body.transactionID)
+                    /** @type {HashgraphProto.proto.ITransactionID} */ (
+                        body.transactionID
+                    )
                 );
 
                 if (!transactionIdStrings.includes(transactionId.toString())) {
@@ -235,7 +218,9 @@ export default class Transaction extends Executable {
 
             if (body.nodeAccountID != null) {
                 const nodeAccountId = AccountId._fromProtobuf(
-                    /** @type {proto.IAccountID} */ (body.nodeAccountID)
+                    /** @type {HashgraphProto.proto.IAccountID} */ (
+                        body.nodeAccountID
+                    )
                 );
 
                 if (!nodeIdStrings.includes(nodeAccountId.toString())) {
@@ -288,11 +273,11 @@ export default class Transaction extends Executable {
     /**
      * @template {Transaction} TransactionT
      * @param {TransactionT} transaction
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TransactionT}
      */
     static _fromProtobufTransactions(
@@ -800,10 +785,11 @@ export default class Transaction extends Executable {
 
         this._buildAllTransactions();
 
-        return ProtoTransactionList.encode({
-            transactionList: /** @type {proto.ITransaction[]} */ (
-                this._transactions.list
-            ),
+        return HashgraphProto.proto.TransactionList.encode({
+            transactionList:
+                /** @type {HashgraphProto.proto.ITransaction[]} */ (
+                    this._transactions.list
+                ),
         }).finish();
     }
 
@@ -823,10 +809,11 @@ export default class Transaction extends Executable {
         this._transactions.setLocked();
         this._signedTransactions.setLocked();
 
-        return ProtoTransactionList.encode({
-            transactionList: /** @type {proto.ITransaction[]} */ (
-                this._transactions.list
-            ),
+        return HashgraphProto.proto.TransactionList.encode({
+            transactionList:
+                /** @type {HashgraphProto.proto.ITransaction[]} */ (
+                    this._transactions.list
+                ),
         }).finish();
     }
 
@@ -848,8 +835,9 @@ export default class Transaction extends Executable {
 
         return sha384.digest(
             /** @type {Uint8Array} */ (
-                /** @type {proto.ITransaction} */ (this._transactions.get(0))
-                    .signedTransactionBytes
+                /** @type {HashgraphProto.proto.ITransaction} */ (
+                    this._transactions.get(0)
+                ).signedTransactionBytes
             )
         );
     }
@@ -917,7 +905,7 @@ export default class Transaction extends Executable {
     /**
      * @override
      * @internal
-     * @returns {Promise<proto.ITransaction>}
+     * @returns {Promise<HashgraphProto.proto.ITransaction>}
      */
     async _makeRequestAsync() {
         const index =
@@ -926,7 +914,7 @@ export default class Transaction extends Executable {
 
         if (!this._signOnDemand) {
             this._buildTransaction(index);
-            return /** @type {proto.ITransaction} */ (
+            return /** @type {HashgraphProto.proto.ITransaction} */ (
                 this._transactions.get(index)
             );
         }
@@ -937,7 +925,7 @@ export default class Transaction extends Executable {
 
     /**
      * @internal
-     * @returns {Promise<proto.ISignedTransaction>}
+     * @returns {Promise<HashgraphProto.proto.ISignedTransaction>}
      */
     async _signTransaction() {
         const signedTransaction = this._makeSignedTransaction(
@@ -1023,30 +1011,32 @@ export default class Transaction extends Executable {
 
         this._transactions.setIfAbsent(index, () => {
             return {
-                signedTransactionBytes: ProtoSignedTransaction.encode(
-                    this._signedTransactions.get(index)
-                ).finish(),
+                signedTransactionBytes:
+                    HashgraphProto.proto.SignedTransaction.encode(
+                        this._signedTransactions.get(index)
+                    ).finish(),
             };
         });
     }
 
     /**
      * @internal
-     * @returns {Promise<proto.ITransaction>}
+     * @returns {Promise<HashgraphProto.proto.ITransaction>}
      */
     async _buildTransactionAsync() {
         return {
-            signedTransactionBytes: ProtoSignedTransaction.encode(
-                await this._signTransaction()
-            ).finish(),
+            signedTransactionBytes:
+                HashgraphProto.proto.SignedTransaction.encode(
+                    await this._signTransaction()
+                ).finish(),
         };
     }
 
     /**
      * @override
      * @internal
-     * @param {proto.ITransaction} request
-     * @param {proto.ITransactionResponse} response
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @param {HashgraphProto.proto.ITransactionResponse} response
      * @returns {ExecutionState}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1056,7 +1046,7 @@ export default class Transaction extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : HashgraphProto.proto.ResponseCodeEnum.OK
         );
 
         Logger.debug(
@@ -1088,8 +1078,8 @@ export default class Transaction extends Executable {
     /**
      * @override
      * @internal
-     * @param {proto.ITransaction} request
-     * @param {proto.ITransactionResponse} response
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @param {HashgraphProto.proto.ITransactionResponse} response
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1099,7 +1089,7 @@ export default class Transaction extends Executable {
         const status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : HashgraphProto.proto.ResponseCodeEnum.OK
         );
 
         return new PrecheckStatusError({
@@ -1111,9 +1101,9 @@ export default class Transaction extends Executable {
     /**
      * @override
      * @protected
-     * @param {proto.ITransactionResponse} response
+     * @param {HashgraphProto.proto.ITransactionResponse} response
      * @param {AccountId} nodeId
-     * @param {proto.ITransaction} request
+     * @param {HashgraphProto.proto.ITransaction} request
      * @returns {Promise<TransactionResponse>}
      */
     async _mapResponse(response, nodeId, request) {
@@ -1148,11 +1138,12 @@ export default class Transaction extends Executable {
     /**
      * @internal
      * @param {?AccountId} nodeId
-     * @returns {proto.ISignedTransaction}
+     * @returns {HashgraphProto.proto.ISignedTransaction}
      */
     _makeSignedTransaction(nodeId) {
         const body = this._makeTransactionBody(nodeId);
-        const bodyBytes = ProtoTransactionBody.encode(body).finish();
+        const bodyBytes =
+            HashgraphProto.proto.TransactionBody.encode(body).finish();
 
         return {
             bodyBytes,
@@ -1165,7 +1156,7 @@ export default class Transaction extends Executable {
     /**
      * @private
      * @param {?AccountId} nodeId
-     * @returns {proto.ITransactionBody}
+     * @returns {HashgraphProto.proto.ITransactionBody}
      */
     _makeTransactionBody(nodeId) {
         return {
@@ -1186,7 +1177,7 @@ export default class Transaction extends Executable {
     /**
      * @abstract
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         throw new Error("not implemented");
@@ -1194,7 +1185,7 @@ export default class Transaction extends Executable {
 
     /**
      * @internal
-     * @returns {proto.ISchedulableTransactionBody}
+     * @returns {HashgraphProto.proto.ISchedulableTransactionBody}
      */
     _getScheduledTransactionBody() {
         return {

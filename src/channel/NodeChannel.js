@@ -4,12 +4,12 @@ import GrpcServicesError from "../grpc/GrpcServiceError.js";
 import GrpcStatus from "../grpc/GrpcStatus.js";
 
 /**
- * @property {?proto.CryptoService} _crypto
- * @property {?proto.SmartContractService} _smartContract
- * @property {?proto.FileService} _file
- * @property {?proto.FreezeService} _freeze
- * @property {?proto.ConsensusService} _consensus
- * @property {?proto.NetworkService} _network
+ * @property {?HashgraphProto.proto.CryptoService} _crypto
+ * @property {?HashgraphProto.proto.SmartContractService} _smartContract
+ * @property {?HashgraphProto.proto.FileService} _file
+ * @property {?HashgraphProto.proto.FreezeService} _freeze
+ * @property {?HashgraphProto.proto.ConsensusService} _consensus
+ * @property {?HashgraphProto.proto.NetworkService} _network
  */
 export default class NodeChannel extends Channel {
     /**

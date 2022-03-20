@@ -4,11 +4,11 @@ import TokenId from "./TokenId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITokenTransferList} proto.ITokenTransferList
- * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
- * @typedef {import("@hashgraph/proto").INftTransfer} proto.INftTransfer
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.ITokenTransferList} HashgraphProto.proto.ITokenTransferList
+ * @typedef {import("@hashgraph/proto").proto.IAccountAmount} HashgraphProto.proto.IAccountAmount
+ * @typedef {import("@hashgraph/proto").proto.INftTransfer} HashgraphProto.proto.INftTransfer
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
  */
 
 /**
@@ -59,7 +59,7 @@ export default class TokenNftTransfer {
 
     /**
      * @internal
-     * @param {proto.ITokenTransferList[]} tokenTransfers
+     * @param {HashgraphProto.proto.ITokenTransferList[]} tokenTransfers
      * @returns {TokenNftTransfer[]}
      */
     static _fromProtobuf(tokenTransfers) {
@@ -67,7 +67,9 @@ export default class TokenNftTransfer {
 
         for (const tokenTransfer of tokenTransfers) {
             const tokenId = TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (tokenTransfer.token)
+                /** @type {HashgraphProto.proto.ITokenID} */ (
+                    tokenTransfer.token
+                )
             );
 
             for (const transfer of tokenTransfer.nftTransfers != null
@@ -77,12 +79,12 @@ export default class TokenNftTransfer {
                     new TokenNftTransfer({
                         tokenId,
                         senderAccountId: AccountId._fromProtobuf(
-                            /** @type {proto.IAccountID} */ (
+                            /** @type {HashgraphProto.proto.IAccountID} */ (
                                 transfer.senderAccountID
                             )
                         ),
                         receiverAccountId: AccountId._fromProtobuf(
-                            /** @type {proto.IAccountID} */ (
+                            /** @type {HashgraphProto.proto.IAccountID} */ (
                                 transfer.receiverAccountID
                             )
                         ),
@@ -101,7 +103,7 @@ export default class TokenNftTransfer {
 
     /**
      * @internal
-     * @returns {proto.INftTransfer}
+     * @returns {HashgraphProto.proto.INftTransfer}
      */
     _toProtobuf() {
         return {

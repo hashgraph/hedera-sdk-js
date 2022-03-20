@@ -36,27 +36,26 @@
     "scripts": {
         "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
         "cp:ts": "copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/",
-        "compile": "run-s compile:proto compile:proto_ts compile:js",
+        "compile": "run-s compile:proto compile:js",
         "compile:js": "babel src -d lib",
-        "compile:proto": "pbjs -r hashgraph -t static-module -w es6 --force-long --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*.proto",
-        "test-compile:proto": "pbjs -r hashgraph -t static-module -w es6 --force-long --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*.proto",
-        "compile:proto_ts": "pbts -o src/proto.d.ts src/proto.js",
+        "compile:proto": "./generate_protos.sh",
         "lint": "run-s lint:*",
         "lint:types": "tsc",
-        "lint:format": "prettier src \"*.json\" \"src/*.js\" --check",
+        "lint:format": "prettier \"*.json\" \"src/*.js\" \"src/*.ts\" --check",
         "lint:js": "eslint --fix \"src/**/*.js\"",
-        "format": "prettier src \"*.json\" \"src/*.js\" --write",
+        "format": "prettier \"*.json\" \"src/*.js\" \"src/*.ts\" --write",
         "build": "run-s compile cp:ts lint",
         "prepare": "run-s compile cp:ts"
     },
     "dependencies": {
-        "protobufjs": "^6.11.2",
-        "long": "^4.0.0"
+        "long": "^4.0.0",
+        "protobufjs": "^6.11.2"
     },
     "devDependencies": {
         "@babel/cli": "^7.16.8",
         "@babel/core": "^7.16.12",
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+        "@babel/plugin-transform-modules-commonjs": "^7.16.8",
         "@typescript-eslint/eslint-plugin": "^5.10.1",
         "@typescript-eslint/parser": "^5.10.1",
         "babel-plugin-dynamic-import-node": "^2.3.3",

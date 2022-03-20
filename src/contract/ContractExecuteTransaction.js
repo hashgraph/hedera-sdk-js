@@ -8,15 +8,15 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").IContractCallTransactionBody} proto.IContractCallTransactionBody
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
- * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.IContractCallTransactionBody} HashgraphProto.proto.IContractCallTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IFileID} HashgraphProto.proto.IFileID
  */
 
 /**
@@ -90,11 +90,11 @@ export default class ContractExecuteTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {ContractExecuteTransaction}
      */
     static _fromProtobuf(
@@ -105,16 +105,19 @@ export default class ContractExecuteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const call = /** @type {proto.IContractCallTransactionBody} */ (
-            body.contractCall
-        );
+        const call =
+            /** @type {HashgraphProto.proto.IContractCallTransactionBody} */ (
+                body.contractCall
+            );
 
         return Transaction._fromProtobufTransactions(
             new ContractExecuteTransaction({
                 contractId:
                     call.contractID != null
                         ? ContractId._fromProtobuf(
-                              /** @type {proto.IContractID} */ (call.contractID)
+                              /** @type {HashgraphProto.proto.IContractID} */ (
+                                  call.contractID
+                              )
                           )
                         : undefined,
                 gas: call.gas != null ? call.gas : undefined,
@@ -244,8 +247,8 @@ export default class ContractExecuteTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         return channel.smartContract.contractCallMethod(request);
@@ -254,7 +257,7 @@ export default class ContractExecuteTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "contractCall";
@@ -263,7 +266,7 @@ export default class ContractExecuteTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.IContractCallTransactionBody}
+     * @returns {HashgraphProto.proto.IContractCallTransactionBody}
      */
     _makeTransactionData() {
         return {

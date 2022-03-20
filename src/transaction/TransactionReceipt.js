@@ -7,7 +7,7 @@ import ScheduleId from "../schedule/ScheduleId.js";
 import ExchangeRate from "../ExchangeRate.js";
 import Status from "../Status.js";
 import Long from "long";
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import TransactionId from "../transaction/TransactionId.js";
 
 /**
@@ -131,18 +131,18 @@ export default class TransactionReceipt {
 
     /**
      * @internal
-     * @returns {proto.ITransactionGetReceiptResponse}
+     * @returns {HashgraphProto.proto.ITransactionGetReceiptResponse}
      */
     _toProtobuf() {
         const duplicates = this.duplicates.map(
             (receipt) =>
-                /** @type {proto.ITransactionReceipt} */ (
+                /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
                     receipt._toProtobuf().receipt
                 )
         );
         const children = this.children.map(
             (receipt) =>
-                /** @type {proto.ITransactionReceipt} */ (
+                /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
                     receipt._toProtobuf().receipt
                 )
         );
@@ -199,17 +199,19 @@ export default class TransactionReceipt {
 
     /**
      * @internal
-     * @param {proto.ITransactionGetReceiptResponse} response
+     * @param {HashgraphProto.proto.ITransactionGetReceiptResponse} response
      * @returns {TransactionReceipt}
      */
     static _fromProtobuf(response) {
-        const receipt = /** @type {proto.ITransactionReceipt} */ (
-            response.receipt
-        );
+        const receipt =
+            /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
+                response.receipt
+            );
 
-        const exchangeRateSet = /** @type {proto.IExchangeRateSet} */ (
-            receipt.exchangeRate
-        );
+        const exchangeRateSet =
+            /** @type {HashgraphProto.proto.IExchangeRateSet} */ (
+                receipt.exchangeRate
+            );
 
         const children =
             response.childTransactionReceipts != null
@@ -263,7 +265,7 @@ export default class TransactionReceipt {
             exchangeRate:
                 receipt.exchangeRate != null
                     ? ExchangeRate._fromProtobuf(
-                          /** @type {proto.IExchangeRate} */
+                          /** @type {HashgraphProto.proto.IExchangeRate} */
                           (exchangeRateSet.currentRate)
                       )
                     : null,
@@ -306,7 +308,7 @@ export default class TransactionReceipt {
      */
     static fromBytes(bytes) {
         return TransactionReceipt._fromProtobuf(
-            proto.TransactionGetReceiptResponse.decode(bytes)
+            HashgraphProto.proto.TransactionGetReceiptResponse.decode(bytes)
         );
     }
 
@@ -314,7 +316,7 @@ export default class TransactionReceipt {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.TransactionGetReceiptResponse.encode(
+        return HashgraphProto.proto.TransactionGetReceiptResponse.encode(
             this._toProtobuf()
         ).finish();
     }

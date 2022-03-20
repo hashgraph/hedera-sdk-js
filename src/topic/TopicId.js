@@ -1,14 +1,9 @@
 import * as entity_id from "../EntityIdHelper.js";
-import { TopicID as ProtoTopicID } from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("long").Long} Long
  * @typedef {import("../client/Client.js").default<*, *>} Client
- */
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").ITopicID} proto.ITopicID
  */
 
 /**
@@ -46,7 +41,7 @@ export default class TopicId {
 
     /**
      * @internal
-     * @param {proto.ITopicID} id
+     * @param {HashgraphProto.proto.ITopicID} id
      * @returns {TopicId}
      */
     static _fromProtobuf(id) {
@@ -93,7 +88,9 @@ export default class TopicId {
      * @returns {TopicId}
      */
     static fromBytes(bytes) {
-        return TopicId._fromProtobuf(ProtoTopicID.decode(bytes));
+        return TopicId._fromProtobuf(
+            HashgraphProto.proto.TopicID.decode(bytes)
+        );
     }
 
     /**
@@ -113,7 +110,7 @@ export default class TopicId {
     }
 
     /**
-     * @returns {proto.ITopicID}
+     * @returns {HashgraphProto.proto.ITopicID}
      */
     _toProtobuf() {
         return {
@@ -142,7 +139,7 @@ export default class TopicId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return ProtoTopicID.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.TopicID.encode(this._toProtobuf()).finish();
     }
 
     /**

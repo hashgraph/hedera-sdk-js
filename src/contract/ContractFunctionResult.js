@@ -9,8 +9,8 @@ import ContractStateChange from "./ContractStateChange.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IContractFunctionResult} proto.IContractFunctionResult
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IContractFunctionResult} HashgraphProto.proto.IContractFunctionResult
+ * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
  */
 /**
  * The result returned by a call to a smart contract function. This is part of the response to
@@ -79,13 +79,14 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {proto.IContractFunctionResult} result
+     * @param {HashgraphProto.proto.IContractFunctionResult} result
      * @returns {ContractFunctionResult}
      */
     static _fromProtobuf(result) {
-        const contractId = /** @type {proto.IContractID | null} */ (
-            result.contractID
-        );
+        const contractId =
+            /** @type {HashgraphProto.proto.IContractID | null} */ (
+                result.contractID
+            );
         const gas = /** @type {Long | number} */ (result.gasUsed);
 
         return new ContractFunctionResult({

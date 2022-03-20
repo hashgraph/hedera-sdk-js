@@ -17,6 +17,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -36,7 +38,22 @@ jobs:
         with:
           version: 6.0.2
 
+      - uses: browser-actions/setup-chrome@latest
+
+      - name: Build @hashgraph/cryptography
+        run: |
+          cd packages/cryptography
+          pnpm install
+          pnpm compile
+
+      - name: Build @hashgraph/proto
+        run: |
+          cd packages/proto
+          pnpm install
+          pnpm compile
+
       - name: Run unit tests against Chrome
         run: |
           pnpm install
+          pnpm compile
           pnpm test:unit:browser:chrome

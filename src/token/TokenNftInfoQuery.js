@@ -8,17 +8,17 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").ITokenNftInfo} proto.ITokenNftInfo
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ITokenGetNftInfoQuery} proto.ITokenGetNftInfoQuery
- * @typedef {import("@hashgraph/proto").ITokenGetNftInfosQuery} proto.ITokenGetNftInfosQuery
- * @typedef {import("@hashgraph/proto").ITokenGetAccountNftInfosQuery} proto.ITokenGetAccountNftInfosQuery
- * @typedef {import("@hashgraph/proto").ITokenGetNftInfoResponse} proto.ITokenGetNftInfoResponse
- * @typedef {import("@hashgraph/proto").ITokenGetNftInfosResponse} proto.ITokenGetNftInfosResponse
- * @typedef {import("@hashgraph/proto").ITokenGetAccountNftInfosResponse} proto.ITokenGetAccountNftInfosResponse
+ * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.ITokenNftInfo} HashgraphProto.proto.ITokenNftInfo
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfoQuery} HashgraphProto.proto.ITokenGetNftInfoQuery
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfosQuery} HashgraphProto.proto.ITokenGetNftInfosQuery
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetAccountNftInfosQuery} HashgraphProto.proto.ITokenGetAccountNftInfosQuery
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfoResponse} HashgraphProto.proto.ITokenGetNftInfoResponse
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfosResponse} HashgraphProto.proto.ITokenGetNftInfosResponse
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetAccountNftInfosResponse} HashgraphProto.proto.ITokenGetAccountNftInfosResponse
  */
 
 /**
@@ -92,14 +92,15 @@ export default class TokenNftInfoQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {TokenNftInfoQuery}
      */
     static _fromProtobuf(query) {
         if (query.tokenGetNftInfo != null) {
-            const info = /** @type {proto.ITokenGetNftInfoQuery} */ (
-                query.tokenGetNftInfo
-            );
+            const info =
+                /** @type {HashgraphProto.proto.ITokenGetNftInfoQuery} */ (
+                    query.tokenGetNftInfo
+                );
 
             return new TokenNftInfoQuery({
                 nftId:
@@ -108,9 +109,10 @@ export default class TokenNftInfoQuery extends Query {
                         : undefined,
             });
         } else if (query.tokenGetAccountNftInfos != null) {
-            const info = /** @type {proto.ITokenGetAccountNftInfosQuery} */ (
-                query.tokenGetAccountNftInfos
-            );
+            const info =
+                /** @type {HashgraphProto.proto.ITokenGetAccountNftInfosQuery} */ (
+                    query.tokenGetAccountNftInfos
+                );
 
             return new TokenNftInfoQuery({
                 accountId:
@@ -121,9 +123,10 @@ export default class TokenNftInfoQuery extends Query {
                 end: info.end != null ? info.end : undefined,
             });
         } else {
-            const info = /** @type {proto.ITokenGetNftInfosQuery} */ (
-                query.tokenGetNftInfos
-            );
+            const info =
+                /** @type {HashgraphProto.proto.ITokenGetNftInfosQuery} */ (
+                    query.tokenGetNftInfos
+                );
 
             return new TokenNftInfoQuery({
                 tokenId:
@@ -288,8 +291,8 @@ export default class TokenNftInfoQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.token.getTokenNftInfo(request);
@@ -298,31 +301,34 @@ export default class TokenNftInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const infos = /** @type {proto.ITokenGetNftInfoResponse} */ (
-            response.tokenGetNftInfo
-        );
+        const infos =
+            /** @type {HashgraphProto.proto.ITokenGetNftInfoResponse} */ (
+                response.tokenGetNftInfo
+            );
 
-        return /** @type {proto.IResponseHeader} */ (infos.header);
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
+            infos.header
+        );
     }
 
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @param {AccountId} nodeAccountId
-     * @param {proto.IQuery} request
+     * @param {HashgraphProto.proto.IQuery} request
      * @returns {Promise<TokenNftInfo[]>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
         const nfts = [
-            /** @type {proto.ITokenNftInfo} */
+            /** @type {HashgraphProto.proto.ITokenNftInfo} */
             (
-                /** @type {proto.ITokenGetNftInfoResponse} */ (
+                /** @type {HashgraphProto.proto.ITokenGetNftInfoResponse} */ (
                     response.tokenGetNftInfo
                 ).nft
             ),
@@ -331,7 +337,7 @@ export default class TokenNftInfoQuery extends Query {
         return Promise.resolve(
             nfts.map((nft) =>
                 TokenNftInfo._fromProtobuf(
-                    /** @type {proto.ITokenNftInfo} */ (nft)
+                    /** @type {HashgraphProto.proto.ITokenNftInfo} */ (nft)
                 )
             )
         );
@@ -340,8 +346,8 @@ export default class TokenNftInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

@@ -13,13 +13,13 @@ import * as util from "../util.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ICryptoAdjustAllowanceTransactionBody} proto.ICryptoAdjustAllowanceTransactionBody
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.ICryptoAdjustAllowanceTransactionBody} HashgraphProto.proto.ICryptoAdjustAllowanceTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
 
 /**
@@ -67,11 +67,11 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {AccountAllowanceAdjustTransaction}
      */
     static _fromProtobuf(
@@ -83,7 +83,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     ) {
         const body = bodies[0];
         const allowanceAdjust =
-            /** @type {proto.ICryptoAdjustAllowanceTransactionBody} */ (
+            /** @type {HashgraphProto.proto.ICryptoAdjustAllowanceTransactionBody} */ (
                 body.cryptoAdjustAllowance
             );
 
@@ -487,8 +487,8 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         return channel.crypto.adjustAllowance(request);
@@ -497,7 +497,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "cryptoAdjustAllowance";
@@ -506,7 +506,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.ICryptoAdjustAllowanceTransactionBody}
+     * @returns {HashgraphProto.proto.ICryptoAdjustAllowanceTransactionBody}
      */
     _makeTransactionData() {
         return {

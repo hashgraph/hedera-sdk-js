@@ -1,7 +1,7 @@
 import TransactionId from "../transaction/TransactionId.js";
 import SubscriptionHandle from "./SubscriptionHandle.js";
 import TopicMessage from "./TopicMessage.js";
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import TopicId from "./TopicId.js";
 import Long from "long";
 import Timestamp from "../Timestamp.js";
@@ -324,19 +324,29 @@ export default class TopicMessageQuery {
      * @returns {void}
      */
     _makeServerStreamRequest(client) {
-        /** @type {Map<string, proto.ConsensusTopicResponse[]>} */
+        /** @type {Map<string, HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]>} */
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const list = new Map();
 
-        const request = proto.ConsensusTopicQuery.encode({
-            topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
-            consensusStartTime:
-                this._startTime != null ? this._startTime._toProtobuf() : null,
-            consensusEndTime:
-                this._endTime != null ? this._endTime._toProtobuf() : null,
-            limit: this._limit,
-        }).finish();
+        const request =
+            HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicQuery.encode(
+                {
+                    topicID:
+                        this._topicId != null
+                            ? this._topicId._toProtobuf()
+                            : null,
+                    consensusStartTime:
+                        this._startTime != null
+                            ? this._startTime._toProtobuf()
+                            : null,
+                    consensusEndTime:
+                        this._endTime != null
+                            ? this._endTime._toProtobuf()
+                            : null,
+                    limit: this._limit,
+                }
+            ).finish();
 
         const cancel = client._mirrorNetwork
             .getNextMirrorNode()
@@ -346,14 +356,17 @@ export default class TopicMessageQuery {
                 "subscribeTopic",
                 request,
                 (data) => {
-                    const message = proto.ConsensusTopicResponse.decode(data);
+                    const message =
+                        HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse.decode(
+                            data
+                        );
 
                     if (this._limit != null && this._limit.gt(0)) {
                         this._limit = this._limit.sub(1);
                     }
 
                     this._startTime = Timestamp._fromProtobuf(
-                        /** @type {proto.ITimestamp} */ (
+                        /** @type {HashgraphProto.proto.ITimestamp} */ (
                             message.consensusTimestamp
                         )
                     ).plusNanos(1);
@@ -366,11 +379,11 @@ export default class TopicMessageQuery {
                         this._passTopicMessage(TopicMessage._ofSingle(message));
                     } else {
                         const chunkInfo =
-                            /** @type {proto.IConsensusMessageChunkInfo} */ (
+                            /** @type {HashgraphProto.proto.IConsensusMessageChunkInfo} */ (
                                 message.chunkInfo
                             );
                         const initialTransactionID =
-                            /** @type {proto.ITransactionID} */ (
+                            /** @type {HashgraphProto.proto.ITransactionID} */ (
                                 chunkInfo.initialTransactionID
                             );
                         const total = /** @type {number} */ (chunkInfo.total);
@@ -379,7 +392,7 @@ export default class TopicMessageQuery {
                                 initialTransactionID
                             ).toString();
 
-                        /** @type {proto.ConsensusTopicResponse[]} */
+                        /** @type {HashgraphProto.com.hedera.mirror.api.proto.ConsensusTopicResponse[]} */
                         let responses = [];
 
                         const temp = list.get(transactionId);

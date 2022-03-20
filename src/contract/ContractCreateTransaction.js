@@ -12,14 +12,14 @@ import Key from "../Key.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").IContractCreateTransactionBody} proto.IContractCreateTransactionBody
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.IContractCreateTransactionBody} HashgraphProto.proto.IContractCreateTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IFileID} HashgraphProto.proto.IFileID
  */
 
 /**
@@ -129,11 +129,11 @@ export default class ContractCreateTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {ContractCreateTransaction}
      */
     static _fromProtobuf(
@@ -144,16 +144,19 @@ export default class ContractCreateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const create = /** @type {proto.IContractCreateTransactionBody} */ (
-            body.contractCreateInstance
-        );
+        const create =
+            /** @type {HashgraphProto.proto.IContractCreateTransactionBody} */ (
+                body.contractCreateInstance
+            );
 
         return Transaction._fromProtobufTransactions(
             new ContractCreateTransaction({
                 bytecodeFileId:
                     create.fileID != null
                         ? FileId._fromProtobuf(
-                              /** @type {proto.IFileID} */ (create.fileID)
+                              /** @type {HashgraphProto.proto.IFileID} */ (
+                                  create.fileID
+                              )
                           )
                         : undefined,
                 adminKey:
@@ -168,7 +171,7 @@ export default class ContractCreateTransaction extends Transaction {
                 proxyAccountId:
                     create.proxyAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (
+                              /** @type {HashgraphProto.proto.IAccountID} */ (
                                   create.proxyAccountID
                               )
                           )
@@ -371,8 +374,8 @@ export default class ContractCreateTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         return channel.smartContract.createContract(request);
@@ -381,7 +384,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "contractCreateInstance";
@@ -390,7 +393,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.IContractCreateTransactionBody}
+     * @returns {HashgraphProto.proto.IContractCreateTransactionBody}
      */
     _makeTransactionData() {
         return {

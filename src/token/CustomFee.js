@@ -2,7 +2,7 @@ import AccountId from "../account/AccountId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ICustomFee} proto.ICustomFee
+ * @typedef {import("@hashgraph/proto").proto.ICustomFee} HashgraphProto.proto.ICustomFee
  */
 
 export default class CustomFee {
@@ -43,7 +43,7 @@ export default class CustomFee {
     /**
      * @internal
      * @abstract
-     * @param {proto.ICustomFee} info
+     * @param {HashgraphProto.proto.ICustomFee} info
      * @returns {CustomFee}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -54,7 +54,7 @@ export default class CustomFee {
     /**
      * @internal
      * @abstract
-     * @returns {proto.ICustomFee}
+     * @returns {HashgraphProto.proto.ICustomFee}
      */
     _toProtobuf() {
         throw new Error("not implemented");

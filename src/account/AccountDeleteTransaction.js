@@ -5,13 +5,13 @@ import Transaction, {
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ICryptoDeleteTransactionBody} proto.ICryptoDeleteTransactionBody
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.ICryptoDeleteTransactionBody} HashgraphProto.proto.ICryptoDeleteTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
 
 /**
@@ -59,11 +59,11 @@ export default class AccountDeleteTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {AccountDeleteTransaction}
      */
     static _fromProtobuf(
@@ -75,7 +75,7 @@ export default class AccountDeleteTransaction extends Transaction {
     ) {
         const body = bodies[0];
         const accountDelete =
-            /** @type {proto.ICryptoDeleteTransactionBody} */ (
+            /** @type {HashgraphProto.proto.ICryptoDeleteTransactionBody} */ (
                 body.cryptoDelete
             );
 
@@ -84,7 +84,7 @@ export default class AccountDeleteTransaction extends Transaction {
                 accountId:
                     accountDelete.deleteAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (
+                              /** @type {HashgraphProto.proto.IAccountID} */ (
                                   accountDelete.deleteAccountID
                               )
                           )
@@ -92,7 +92,7 @@ export default class AccountDeleteTransaction extends Transaction {
                 transferAccountId:
                     accountDelete.transferAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (
+                              /** @type {HashgraphProto.proto.IAccountID} */ (
                                   accountDelete.transferAccountID
                               )
                           )
@@ -169,8 +169,8 @@ export default class AccountDeleteTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         return channel.crypto.cryptoDelete(request);
@@ -179,7 +179,7 @@ export default class AccountDeleteTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "cryptoDelete";
@@ -188,7 +188,7 @@ export default class AccountDeleteTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.ICryptoDeleteTransactionBody}
+     * @returns {HashgraphProto.proto.ICryptoDeleteTransactionBody}
      */
     _makeTransactionData() {
         return {

@@ -1,14 +1,7 @@
-import {
-    CryptoService,
-    SmartContractService,
-    FileService,
-    ConsensusService,
-    NetworkService,
-    FreezeService,
-    TokenService,
-    ScheduleService,
-} from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import * as utf8 from "../encoding/utf8.js";
+
+const { proto } = HashgraphProto;
 
 /**
  * @internal
@@ -21,49 +14,49 @@ export default class Channel {
     constructor() {
         /**
          * @protected
-         * @type {?CryptoService}
+         * @type {?HashgraphProto.proto.CryptoService}
          */
         this._crypto = null;
 
         /**
          * @protected
-         * @type {?SmartContractService}
+         * @type {?HashgraphProto.proto.SmartContractService}
          */
         this._smartContract = null;
 
         /**
          * @protected
-         * @type {?FileService}
+         * @type {?HashgraphProto.proto.FileService}
          */
         this._file = null;
 
         /**
          * @protected
-         * @type {?ConsensusService}
+         * @type {?HashgraphProto.proto.ConsensusService}
          */
         this._consensus = null;
 
         /**
          * @protected
-         * @type {?FreezeService}
+         * @type {?HashgraphProto.proto.FreezeService}
          */
         this._freeze = null;
 
         /**
          * @protected
-         * @type {?NetworkService}
+         * @type {?HashgraphProto.proto.NetworkService}
          */
         this._network = null;
 
         /**
          * @protected
-         * @type {?TokenService}
+         * @type {?HashgraphProto.proto.TokenService}
          */
         this._token = null;
 
         /**
          * @protected
-         * @type {?ScheduleService}
+         * @type {?HashgraphProto.proto.ScheduleService}
          */
         this._schedule = null;
     }
@@ -77,14 +70,14 @@ export default class Channel {
     }
 
     /**
-     * @returns {CryptoService}
+     * @returns {HashgraphProto.proto.CryptoService}
      */
     get crypto() {
         if (this._crypto != null) {
             return this._crypto;
         }
 
-        this._crypto = CryptoService.create(
+        this._crypto = proto.CryptoService.create(
             this._createUnaryClient("CryptoService")
         );
 
@@ -92,14 +85,14 @@ export default class Channel {
     }
 
     /**
-     * @returns {SmartContractService}
+     * @returns {HashgraphProto.proto.SmartContractService}
      */
     get smartContract() {
         if (this._smartContract != null) {
             return this._smartContract;
         }
 
-        this._smartContract = SmartContractService.create(
+        this._smartContract = proto.SmartContractService.create(
             this._createUnaryClient("SmartContractService")
         );
 
@@ -107,27 +100,29 @@ export default class Channel {
     }
 
     /**
-     * @returns {FileService}
+     * @returns {HashgraphProto.proto.FileService}
      */
     get file() {
         if (this._file != null) {
             return this._file;
         }
 
-        this._file = FileService.create(this._createUnaryClient("FileService"));
+        this._file = proto.FileService.create(
+            this._createUnaryClient("FileService")
+        );
 
         return this._file;
     }
 
     /**
-     * @returns {ConsensusService}
+     * @returns {HashgraphProto.proto.ConsensusService}
      */
     get consensus() {
         if (this._consensus != null) {
             return this._consensus;
         }
 
-        this._consensus = ConsensusService.create(
+        this._consensus = proto.ConsensusService.create(
             this._createUnaryClient("ConsensusService")
         );
 
@@ -135,14 +130,14 @@ export default class Channel {
     }
 
     /**
-     * @returns {FreezeService}
+     * @returns {HashgraphProto.proto.FreezeService}
      */
     get freeze() {
         if (this._freeze != null) {
             return this._freeze;
         }
 
-        this._freeze = FreezeService.create(
+        this._freeze = proto.FreezeService.create(
             this._createUnaryClient("FreezeService")
         );
 
@@ -150,14 +145,14 @@ export default class Channel {
     }
 
     /**
-     * @returns {NetworkService}
+     * @returns {HashgraphProto.proto.NetworkService}
      */
     get network() {
         if (this._network != null) {
             return this._network;
         }
 
-        this._network = NetworkService.create(
+        this._network = proto.NetworkService.create(
             this._createUnaryClient("NetworkService")
         );
 
@@ -165,14 +160,14 @@ export default class Channel {
     }
 
     /**
-     * @returns {TokenService}
+     * @returns {HashgraphProto.proto.TokenService}
      */
     get token() {
         if (this._token != null) {
             return this._token;
         }
 
-        this._token = TokenService.create(
+        this._token = proto.TokenService.create(
             this._createUnaryClient("TokenService")
         );
 
@@ -180,14 +175,14 @@ export default class Channel {
     }
 
     /**
-     * @returns {ScheduleService}
+     * @returns {HashgraphProto.proto.ScheduleService}
      */
     get schedule() {
         if (this._schedule != null) {
             return this._schedule;
         }
 
-        this._schedule = ScheduleService.create(
+        this._schedule = proto.ScheduleService.create(
             this._createUnaryClient("ScheduleService")
         );
 
