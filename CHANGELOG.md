@@ -12,6 +12,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * Support for using any node from the entire network upon execution
    if node account IDs have no been locked for the request.
  * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
+ * `AccountAllowanceApproveTransaction.approve[Hbar|Token|TokenNft]Allowance()`
+ * `AccountAllowanceApproveTransaction.get[Hbar|Token|TokenNft]Approvals()`
+ * `AccountAllowanceAdjustTransaction.[grant|revoke][Hbar|Token|TokenNft]Allowance()`
+ * `AccountAllowanceAdjustTransaction.[grant|revoke]TokenNftAllowanceAllSerials()`
+ * `TransactionRecord.[hbar|token|tokenNft]AllowanceAdjustments`
+ * `TransferTransaction.addApproved[Hbar|Token|Nft]Transfer()`
+
+### Deprecated
+
+ * `AccountAllowanceApproveTransaction.get[Hbar|Token|TokenNft]Allowances()`, use `get*Approvals()` instead.
+ * `AccountAllowanceApproveTransaction.add[Hbar|Token|TokenNft]Allowance[WithOwner]()`, use `approve*Allowance()` instead.
+ * `AccountAllowanceAdjustTransaction.add[Hbar|Token|TokenNft]Allowance[WithOwner]()`, use `[grant|revoke]*Allowance()` instead.
+ * `TransferTransaction.set[Hbar|Token|Nft]TransferApproval()`, use `addApproved*Transfer()` instead.
 
 ### Changed
 
