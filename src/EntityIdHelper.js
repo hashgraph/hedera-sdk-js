@@ -229,7 +229,7 @@ export function toSolidityAddress(address) {
  *   noChecksumFormat;   //the address in no-checksum format
  *   withChecksumFormat; //the address in with-checksum format
  *
- * @param {string} ledgerId
+ * @param {Uint8Array} ledgerId
  * @param {string} addr
  * @returns {ParseAddressResult}
  */
@@ -263,7 +263,7 @@ export function _parseAddress(ledgerId, addr) {
 /**
  * Given an address like "0.0.123", return a checksum like "laujm"
  *
- * @param {string} ledgerId
+ * @param {Uint8Array} ledgerId
  * @param {string} addr
  * @returns {string}
  */
@@ -281,11 +281,9 @@ export function _checksum(ledgerId, addr) {
     const m = 1000003; // Min prime greater than a million. Used for the final permutation.
     const w = 31; // Sum s of digit values weights them by powers of w. Should be coprime to p5.
 
-    let id = ledgerId + "000000000000";
-    let h = [];
-    for (var i = 0; i < id.length; i += 2) {
-        h.push(parseInt(id.substring(i, i + 2), 16));
-    }
+    let h = new Uint8Array(ledgerId.length + 6);
+    h.set(ledgerId, 0);
+    h.set([0, 0, 0, 0, 0, 0], ledgerId.length);
     for (let i = 0; i < addr.length; i++) {
         d.push(addr[i] === "." ? 10 : parseInt(addr[i], 10));
     }
@@ -324,7 +322,7 @@ export function validateChecksum(shard, realm, num, checksum, client) {
     }
 
     const expectedChecksum = _checksum(
-        client._network._ledgerId._toStringForChecksum(),
+        client._network._ledgerId._ledgerId,
         `${shard.toString()}.${realm.toString()}.${num.toString()}`
     );
 
@@ -351,10 +349,7 @@ export function toStringWithChecksum(string, client) {
         );
     }
 
-    const checksum = _checksum(
-        client._network._ledgerId._toStringForChecksum(),
-        string
-    );
+    const checksum = _checksum(client._network._ledgerId._ledgerId, string);
 
     return `${string}-${checksum}`;
 }
