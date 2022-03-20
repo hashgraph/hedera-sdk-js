@@ -17,11 +17,7 @@ pnpm format
 pnpm lint
 popd
 
-yalc publish --no-scripts
-
 pushd common_js_test
-yalc add @hashgraph/sdk
 pnpm i
 pnpm test
-rm yalc.lock
 popd
