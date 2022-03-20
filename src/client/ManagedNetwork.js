@@ -46,6 +46,14 @@ export default class MangedNetwork {
          */
         this._nodes = [];
 
+        /**
+         * List of node account IDs.
+         *
+         * @protected
+         * @type {NetworkNodeT[]}
+         */
+        this._healthyNodes = [];
+
         /** @type {(address: string, cert?: string) => ChannelT} */
         this._createNetworkChannel = createNetworkChannel;
 
@@ -59,6 +67,11 @@ export default class MangedNetwork {
         this._maxNodeAttempts = -1;
 
         this._transportSecurity = false;
+
+        this._nodeMinReadmitPeriod = this._minBackoff;
+        this._nodeMaxReadmitPeriod = this._maxBackoff;
+
+        this._earliestReadmitTime = Date.now() + this._nodeMinReadmitPeriod;
     }
 
     /**
@@ -180,27 +193,74 @@ export default class MangedNetwork {
         }
     }
 
+    _readmitNodes() {
+        const now = Date.now();
+
+        if (this._earliestReadmitTime <= now) {
+            let nextEarliestReadmitTime = Number.MAX_SAFE_INTEGER;
+            let searchForNextEarliestReadmitTime = true;
+
+            outer: for (let i = 0; i < this._nodes.length; i++) {
+                for (let j = 0; j < this._healthyNodes.length; j++) {
+                    if (
+                        searchForNextEarliestReadmitTime &&
+                        this._nodes[i]._readmitTime > now
+                    ) {
+                        nextEarliestReadmitTime = Math.min(
+                            this._nodes[i]._readmitTime,
+                            nextEarliestReadmitTime
+                        );
+                    }
+
+                    if (this._nodes[i] == this._healthyNodes[j]) {
+                        continue outer;
+                    }
+                }
+
+                searchForNextEarliestReadmitTime = false;
+
+                if (this._nodes[i]._readmitTime <= now) {
+                    this._healthyNodes.push(this._nodes[i]);
+                }
+            }
+
+            this._earliestReadmitTime = Math.min(
+                Math.max(nextEarliestReadmitTime, this._nodeMinReadmitPeriod),
+                this._nodeMaxReadmitPeriod
+            );
+        }
+    }
+
     /**
      * @param {number} count
      * @returns {NetworkNodeT[]}
      */
     _getNumberOfMostHealthyNodes(count) {
         this._removeDeadNodes();
-        this._nodes.sort((a, b) => a.compare(b));
-
-        for (const [, value] of this._network) {
-            // eslint-disable-next-line ie11/no-loop-func
-            value.sort((a, b) => a.compare(b));
-        }
 
         /** @type {NetworkNodeT[]} */
         const nodes = [];
         const keys = new Set();
 
-        for (const node of this._nodes) {
-            if (keys.size >= count) {
+        // `this.getNode()` uses `Math.random()` internally to fetch
+        // nodes, this means _techically_ `this.getNode()` can return
+        // the same exact node several times in a row, but we do not
+        // want that. We want to get a random node that hasn't been
+        // chosen before. We could use a while loop and just keep calling
+        // `this.getNode()` until we get a list of `count` different nodes,
+        // but a potential issue is if somehow the healthy list gets
+        // corrupted or count is too large then the while loop would
+        // run forever. To resolve this, instead of using a while, we use
+        // a for loop where we call `this.getNode()` a max of 
+        // `this._healthyNodes.length` times. This can result in a shorter
+        // list than `count`, but that is much better than running forever
+        for (let i = 0; i < this._healthyNodes.length; i++) {
+            if (nodes.length == count) {
                 break;
             }
+
+            // Get a random node
+            const node = this.getNode();
 
             if (!keys.has(node.getKey())) {
                 keys.add(node.getKey());
@@ -247,32 +307,63 @@ export default class MangedNetwork {
      * @returns {this}
      */
     _setNetwork(network) {
+        /** @type {NetworkNodeT[]} */
+        const newNodes = [];
+        const newNodeKeys = new Set();
+        const newNodeAddresses = new Set();
+
+        /** @type {NetworkNodeT[]} */
+        const newHealthyNodes = [];
+
+        /** @type {Map<string, NetworkNodeT[]>} */
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const newNetwork = new Map();
+
         // Remove nodes that are not in the new network
         for (const i of this._getNodesToRemove(network)) {
             this._closeNode(i);
         }
 
+        // Copy all the unclosed nodes
+        for (const node of this._nodes) {
+            newNodes.push(node);
+            newNodeKeys.add(node.getKey());
+            newNodeAddresses.add(node.address.toString());
+        }
+
         // Add new nodes
         for (const [key, value] of network) {
-            const node = this._createNodeFromNetworkEntry([key, value]);
+            if (
+                newNodeKeys.has(value.toString()) &&
+                newNodeAddresses.has(key)
+            ) {
+                continue;
+            }
+            newNodes.push(this._createNodeFromNetworkEntry([key, value]));
+        }
 
-            this._nodes.push(node);
+        // Shuffle the nodes so we don't immediately pick the first nodes
+        shuffle(newNodes);
 
-            const network = this._network.has(node.getKey())
-                ? /** @type {NetworkNodeT[]} */ (
-                      this._network.get(node.getKey())
-                  )
+        // Copy all the nodes into the healhty nodes list initially
+        // and push the nodes into the network; this maintains the
+        // shuffled state from `newNodes`
+        for (const node of newNodes) {
+            newHealthyNodes.push(node);
+
+            const newNetworkNodes = newNetwork.has(node.getKey())
+                ? /** @type {NetworkNodeT[]} */ (newNetwork.get(node.getKey()))
                 : [];
-            network.push(node);
-            this._network.set(node.getKey(), network);
+            newNetworkNodes.push(node);
+            newNetwork.set(node.getKey(), newNetworkNodes);
         }
 
-        shuffle(this._nodes);
-        for (const [, value] of this._network) {
-            shuffle(value);
-        }
-
+        // console.log(JSON.stringify(newNodes, null, 2));
+        this._nodes = newNodes;
+        this._healthyNodes = newHealthyNodes;
+        this._network = newNetwork;
         this._ledgerId = null;
+
         return this;
     }
 
@@ -331,13 +422,78 @@ export default class MangedNetwork {
     }
 
     /**
-     * @param {KeyT} key
+     * @returns {number}
+     */
+    get nodeMinReadmitPeriod() {
+        return this._nodeMinReadmitPeriod;
+    }
+
+    /**
+     * @param {number} nodeMinReadmitPeriod
+     * @returns {this}
+     */
+    setNodeMinReadmitPeriod(nodeMinReadmitPeriod) {
+        this._nodeMinReadmitPeriod = nodeMinReadmitPeriod;
+        this._earliestReadmitTime = Date.now() + this._nodeMinReadmitPeriod;
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get nodeMaxReadmitPeriod() {
+        return this._nodeMaxReadmitPeriod;
+    }
+
+    /**
+     * @param {number} nodeMaxReadmitPeriod
+     * @returns {this}
+     */
+    setNodeMaxReadmitPeriod(nodeMaxReadmitPeriod) {
+        this._nodeMaxReadmitPeriod = nodeMaxReadmitPeriod;
+        return this;
+    }
+
+    /**
+     * @param {KeyT=} key
      * @returns {NetworkNodeT}
      */
     getNode(key) {
-        return /** @type {NetworkNodeT[]} */ (
-            this._network.get(key.toString())
-        )[0];
+        this._readmitNodes();
+
+        if (key != null) {
+            return /** @type {NetworkNodeT[]} */ (
+                this._network.get(key.toString())
+            )[0];
+        } else {
+            if (this._healthyNodes.length == 0) {
+                throw new Error("failed to find a healthy working node");
+            }
+
+            return this._healthyNodes[
+                Math.floor(Math.random() * this._healthyNodes.length)
+            ];
+        }
+    }
+
+    /**
+     * @param {NetworkNodeT} node
+     */
+    increaseBackoff(node) {
+        node.increaseBackoff();
+
+        for (let i = 0; i < this._healthyNodes.length; i++) {
+            if (this._healthyNodes[i] == node) {
+                this._healthyNodes.splice(i, 1);
+            }
+        }
+    }
+
+    /**
+     * @param {NetworkNodeT} node
+     */
+    decreaseBackoff(node) {
+        node.decreaseBackoff();
     }
 
     close() {

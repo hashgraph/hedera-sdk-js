@@ -6,14 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.12.0-beta.1
 
+### Added
+
+ * `Client.[set|get]NodeMinReadmitPeriod()`
+ * Support for using any node from the entire network upon execution
+   if node account IDs have no been locked for the request.
+ * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
+
+### Changed
+
+ * Network behavior to follow a more standard approach (remove the sorting we
+   used to do).
+
 ### Fixed
 
  * Ledger ID checksums
  * `Transaction.fromBytes()` should validate all the transaction bodies are the same
-
-### Added
-
- * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
 
 ## v2.11.0-beta.1
 
