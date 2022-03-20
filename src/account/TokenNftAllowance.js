@@ -18,6 +18,7 @@ export default class TokenNftAllowance {
      * @param {AccountId} props.spenderAccountId
      * @param {AccountId | null} props.ownerAccountId
      * @param {Long[] | null} props.serialNumbers
+     * @param {boolean} props.allSerials
      */
     constructor(props) {
         /**
@@ -50,6 +51,11 @@ export default class TokenNftAllowance {
          */
         this.serialNumbers = props.serialNumbers;
 
+        /**
+         * @readonly
+         */
+        this.allSerials = props.allSerials;
+
         Object.freeze(this);
     }
 
@@ -81,6 +87,10 @@ export default class TokenNftAllowance {
                           Long.fromValue(serialNumber)
                       )
                     : [],
+            allSerials:
+                allowance.approvedForAll != null &&
+                allowance.approvedForAll != null &&
+                allowance.approvedForAll.value == true,
         });
     }
 
@@ -106,6 +116,8 @@ export default class TokenNftAllowance {
                           Long.fromValue(serialNumber)
                       )
                     : [],
+            allSerials:
+                allowance.approvedForAll != null && allowance.approvedForAll,
         });
     }
 
@@ -121,7 +133,8 @@ export default class TokenNftAllowance {
                 this.ownerAccountId != null
                     ? this.ownerAccountId._toProtobuf()
                     : null,
-            approvedForAll: this.serialNumbers == null ? { value: true } : null,
+            approvedForAll:
+                this.serialNumbers == null ? { value: this.allSerials } : null,
             serialNumbers: this.serialNumbers,
         };
     }

@@ -110,6 +110,13 @@ export default class Hbar {
     }
 
     /**
+     * @returns {boolean}
+     */
+    isNegative() {
+        return this._valueInTinybar.isNegative();
+    }
+
+    /**
      * @param {HbarUnit=} unit
      * @returns {string}
      */
