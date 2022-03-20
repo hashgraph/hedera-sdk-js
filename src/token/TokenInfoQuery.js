@@ -5,13 +5,13 @@ import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ITokenInfo} proto.ITokenInfo
- * @typedef {import("@hashgraph/proto").ITokenGetInfoQuery} proto.ITokenGetInfoQuery
- * @typedef {import("@hashgraph/proto").ITokenGetInfoResponse} proto.ITokenGetInfoResponse
+ * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.ITokenInfo} HashgraphProto.proto.ITokenInfo
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetInfoQuery} HashgraphProto.proto.ITokenGetInfoQuery
+ * @typedef {import("@hashgraph/proto").proto.ITokenGetInfoResponse} HashgraphProto.proto.ITokenGetInfoResponse
  */
 
 /**
@@ -43,11 +43,11 @@ export default class TokenInfoQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {TokenInfoQuery}
      */
     static _fromProtobuf(query) {
-        const info = /** @type {proto.ITokenGetInfoQuery} */ (
+        const info = /** @type {HashgraphProto.proto.ITokenGetInfoQuery} */ (
             query.tokenGetInfo
         );
 
@@ -109,8 +109,8 @@ export default class TokenInfoQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.token.getTokenInfo(request);
@@ -119,33 +119,36 @@ export default class TokenInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const tokenGetInfo = /** @type {proto.ITokenGetInfoResponse} */ (
-            response.tokenGetInfo
+        const tokenGetInfo =
+            /** @type {HashgraphProto.proto.ITokenGetInfoResponse} */ (
+                response.tokenGetInfo
+            );
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
+            tokenGetInfo.header
         );
-        return /** @type {proto.IResponseHeader} */ (tokenGetInfo.header);
     }
 
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @param {AccountId} nodeAccountId
-     * @param {proto.IQuery} request
+     * @param {HashgraphProto.proto.IQuery} request
      * @returns {Promise<TokenInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
-        const info = /** @type {proto.ITokenGetInfoResponse} */ (
+        const info = /** @type {HashgraphProto.proto.ITokenGetInfoResponse} */ (
             response.tokenGetInfo
         );
 
         return Promise.resolve(
             TokenInfo._fromProtobuf(
-                /** @type {proto.ITokenInfo} */ (info.tokenInfo)
+                /** @type {HashgraphProto.proto.ITokenInfo} */ (info.tokenInfo)
             )
         );
     }
@@ -153,8 +156,8 @@ export default class TokenInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

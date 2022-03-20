@@ -1,5 +1,5 @@
 import * as entity_id from "../EntityIdHelper.js";
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("long").Long} Long
@@ -8,7 +8,7 @@ import * as proto from "@hashgraph/proto";
 
 /**
  *
- * @augments {EntityId<proto.IScheduleID>}
+ * @augments {EntityId<HashgraphProto.proto.IScheduleID>}
  */
 
 export default class ScheduleId {
@@ -43,7 +43,7 @@ export default class ScheduleId {
 
     /**
      * @internal
-     * @param {proto.IScheduleID} id
+     * @param {HashgraphProto.proto.IScheduleID} id
      * @returns {ScheduleId}
      */
     static _fromProtobuf(id) {
@@ -90,7 +90,9 @@ export default class ScheduleId {
      * @returns {ScheduleId}
      */
     static fromBytes(bytes) {
-        return ScheduleId._fromProtobuf(proto.ScheduleID.decode(bytes));
+        return ScheduleId._fromProtobuf(
+            HashgraphProto.proto.ScheduleID.decode(bytes)
+        );
     }
 
     /**
@@ -110,7 +112,7 @@ export default class ScheduleId {
 
     /**
      * @internal
-     * @returns {proto.ScheduleID}
+     * @returns {HashgraphProto.proto.ScheduleID}
      */
     _toProtobuf() {
         return {
@@ -139,7 +141,9 @@ export default class ScheduleId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.ScheduleID.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.ScheduleID.encode(
+            this._toProtobuf()
+        ).finish();
     }
 
     /**

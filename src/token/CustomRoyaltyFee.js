@@ -5,10 +5,10 @@ import CustomFixedFee from "./CustomFixedFee.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IFraction} proto.IFraction
- * @typedef {import("@hashgraph/proto").IRoyaltyFee} proto.IRoyaltyFee
- * @typedef {import("@hashgraph/proto").ICustomFee} proto.ICustomFee
- * @typedef {import("@hashgraph/proto").IFixedFee} proto.IFixedFee
+ * @typedef {import("@hashgraph/proto").proto.IFraction} HashgraphProto.proto.IFraction
+ * @typedef {import("@hashgraph/proto").proto.IRoyaltyFee} HashgraphProto.proto.IRoyaltyFee
+ * @typedef {import("@hashgraph/proto").proto.ICustomFee} HashgraphProto.proto.ICustomFee
+ * @typedef {import("@hashgraph/proto").proto.IFixedFee} HashgraphProto.proto.IFixedFee
  */
 
 export default class CustomRoyalyFee extends CustomFee {
@@ -107,13 +107,15 @@ export default class CustomRoyalyFee extends CustomFee {
     /**
      * @internal
      * @override
-     * @param {proto.ICustomFee} info
+     * @param {HashgraphProto.proto.ICustomFee} info
      * @returns {CustomFee}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     static _fromProtobuf(info) {
-        const fee = /** @type {proto.IRoyaltyFee} */ (info.royaltyFee);
-        const fraction = /** @type {proto.IFraction} */ (
+        const fee = /** @type {HashgraphProto.proto.IRoyaltyFee} */ (
+            info.royaltyFee
+        );
+        const fraction = /** @type {HashgraphProto.proto.IFraction} */ (
             fee.exchangeValueFraction
         );
 
@@ -140,7 +142,7 @@ export default class CustomRoyalyFee extends CustomFee {
     /**
      * @internal
      * @abstract
-     * @returns {proto.ICustomFee}
+     * @returns {HashgraphProto.proto.ICustomFee}
      */
     _toProtobuf() {
         return {

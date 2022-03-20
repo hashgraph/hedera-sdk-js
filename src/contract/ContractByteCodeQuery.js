@@ -3,12 +3,12 @@ import ContractId from "./ContractId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").IContractGetBytecodeQuery} proto.IContractGetBytecodeQuery
- * @typedef {import("@hashgraph/proto").IContractGetBytecodeResponse} proto.IContractGetBytecodeResponse
+ * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.IContractGetBytecodeQuery} HashgraphProto.proto.IContractGetBytecodeQuery
+ * @typedef {import("@hashgraph/proto").proto.IContractGetBytecodeResponse} HashgraphProto.proto.IContractGetBytecodeResponse
  */
 
 /**
@@ -40,13 +40,14 @@ export default class ContractByteCodeQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {ContractByteCodeQuery}
      */
     static _fromProtobuf(query) {
-        const bytecode = /** @type {proto.IContractGetBytecodeQuery} */ (
-            query.contractGetBytecode
-        );
+        const bytecode =
+            /** @type {HashgraphProto.proto.IContractGetBytecodeQuery} */ (
+                query.contractGetBytecode
+            );
 
         return new ContractByteCodeQuery({
             contractId:
@@ -91,8 +92,8 @@ export default class ContractByteCodeQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.smartContract.contractGetBytecode(request);
@@ -101,15 +102,15 @@ export default class ContractByteCodeQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
         const contractGetBytecodeResponse =
-            /** @type {proto.IContractGetBytecodeResponse} */ (
+            /** @type {HashgraphProto.proto.IContractGetBytecodeResponse} */ (
                 response.contractGetBytecodeResponse
             );
-        return /** @type {proto.IResponseHeader} */ (
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
             contractGetBytecodeResponse.header
         );
     }
@@ -117,12 +118,12 @@ export default class ContractByteCodeQuery extends Query {
     /**
      * @protected
      * @override
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<Uint8Array>}
      */
     _mapResponse(response) {
         const contractGetBytecodeResponse =
-            /** @type {proto.IContractGetBytecodeResponse} */ (
+            /** @type {HashgraphProto.proto.IContractGetBytecodeResponse} */ (
                 response.contractGetBytecodeResponse
             );
 
@@ -136,8 +137,8 @@ export default class ContractByteCodeQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

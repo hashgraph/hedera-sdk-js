@@ -6,13 +6,13 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").IContractCallLocalQuery} proto.IContractCallLocalQuery
- * @typedef {import("@hashgraph/proto").IContractCallLocalResponse} proto.IContractCallLocalResponse
- * @typedef {import("@hashgraph/proto").IContractFunctionResult} proto.IContractFunctionResult
+ * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.IContractCallLocalQuery} HashgraphProto.proto.IContractCallLocalQuery
+ * @typedef {import("@hashgraph/proto").proto.IContractCallLocalResponse} HashgraphProto.proto.IContractCallLocalResponse
+ * @typedef {import("@hashgraph/proto").proto.IContractFunctionResult} HashgraphProto.proto.IContractFunctionResult
  */
 
 /**
@@ -87,13 +87,14 @@ export default class ContractCallQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {ContractCallQuery}
      */
     static _fromProtobuf(query) {
-        const call = /** @type {proto.IContractCallLocalQuery} */ (
-            query.contractCallLocal
-        );
+        const call =
+            /** @type {HashgraphProto.proto.IContractCallLocalQuery} */ (
+                query.contractCallLocal
+            );
 
         return new ContractCallQuery({
             contractId:
@@ -200,8 +201,8 @@ export default class ContractCallQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.smartContract.contractCallLocalMethod(request);
@@ -210,34 +211,36 @@ export default class ContractCallQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
         const contractCallLocal =
-            /** @type {proto.IContractCallLocalResponse} */ (
+            /** @type {HashgraphProto.proto.IContractCallLocalResponse} */ (
                 response.contractCallLocal
             );
-        return /** @type {proto.IResponseHeader} */ (contractCallLocal.header);
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
+            contractCallLocal.header
+        );
     }
 
     /**
      * @protected
      * @override
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<ContractFunctionResult>}
      */
     _mapResponse(response) {
         const call =
             /**
-             *@type {proto.IContractCallLocalResponse}
+             *@type {HashgraphProto.proto.IContractCallLocalResponse}
              */
             (response.contractCallLocal);
 
         return Promise.resolve(
             ContractFunctionResult._fromProtobuf(
                 /**
-                 * @type {proto.IContractFunctionResult}
+                 * @type {HashgraphProto.proto.IContractFunctionResult}
                  */
                 (call.functionResult)
             )
@@ -247,8 +250,8 @@ export default class ContractCallQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

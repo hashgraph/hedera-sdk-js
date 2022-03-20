@@ -4,9 +4,9 @@ import KeyList from "../KeyList.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").ILiveHash} proto.ILiveHash
- * @typedef {import("@hashgraph/proto").IDuration} proto.IDuration
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ILiveHash} HashgraphProto.proto.ILiveHash
+ * @typedef {import("@hashgraph/proto").proto.IDuration} HashgraphProto.proto.IDuration
  */
 
 /**
@@ -39,15 +39,19 @@ export default class LiveHash {
 
     /**
      * @internal
-     * @param {proto.ILiveHash} liveHash
+     * @param {HashgraphProto.proto.ILiveHash} liveHash
      * @returns {LiveHash}
      */
     static _fromProtobuf(liveHash) {
-        const liveHash_ = /** @type {proto.ILiveHash} */ (liveHash);
+        const liveHash_ = /** @type {HashgraphProto.proto.ILiveHash} */ (
+            liveHash
+        );
 
         return new LiveHash({
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (liveHash_.accountId)
+                /** @type {HashgraphProto.proto.IAccountID} */ (
+                    liveHash_.accountId
+                )
             ),
             hash: liveHash_.hash != null ? liveHash_.hash : new Uint8Array(),
             keys:
@@ -55,14 +59,16 @@ export default class LiveHash {
                     ? KeyList.__fromProtobufKeyList(liveHash_.keys)
                     : new KeyList(),
             duration: Duration._fromProtobuf(
-                /** @type {proto.IDuration} */ (liveHash_.duration)
+                /** @type {HashgraphProto.proto.IDuration} */ (
+                    liveHash_.duration
+                )
             ),
         });
     }
 
     /**
      * @internal
-     * @returns {proto.ILiveHash}
+     * @returns {HashgraphProto.proto.ILiveHash}
      */
     _toProtobuf() {
         return {

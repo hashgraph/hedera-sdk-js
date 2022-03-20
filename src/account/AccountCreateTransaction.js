@@ -11,13 +11,13 @@ import Key from "../Key.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ICryptoCreateTransactionBody} proto.ICryptoCreateTransactionBody
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.ICryptoCreateTransactionBody} HashgraphProto.proto.ICryptoCreateTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
 
 /**
@@ -132,11 +132,11 @@ export default class AccountCreateTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {AccountCreateTransaction}
      */
     static _fromProtobuf(
@@ -147,9 +147,10 @@ export default class AccountCreateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const create = /** @type {proto.ICryptoCreateTransactionBody} */ (
-            body.cryptoCreateAccount
-        );
+        const create =
+            /** @type {HashgraphProto.proto.ICryptoCreateTransactionBody} */ (
+                body.cryptoCreateAccount
+            );
 
         return Transaction._fromProtobufTransactions(
             new AccountCreateTransaction({
@@ -168,7 +169,7 @@ export default class AccountCreateTransaction extends Transaction {
                 proxyAccountId:
                     create.proxyAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (
+                              /** @type {HashgraphProto.proto.IAccountID} */ (
                                   create.proxyAccountID
                               )
                           )
@@ -357,8 +358,8 @@ export default class AccountCreateTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         return channel.crypto.createAccount(request);
@@ -367,7 +368,7 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "cryptoCreateAccount";
@@ -376,7 +377,7 @@ export default class AccountCreateTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.ICryptoCreateTransactionBody}
+     * @returns {HashgraphProto.proto.ICryptoCreateTransactionBody}
      */
     _makeTransactionData() {
         return {

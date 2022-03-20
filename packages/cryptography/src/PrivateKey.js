@@ -9,6 +9,7 @@ import { read as readPem } from "./encoding/pem.js";
 import * as hex from "./encoding/hex.js";
 import * as slip10 from "./primitive/slip10.js";
 import * as derive from "./util/derive.js";
+import CACHE from "./Cache.js";
 
 /**
  * @typedef {object} ProtoSignaturePair
@@ -465,3 +466,6 @@ export default class PrivateKey extends Key {
         return createKeystore(this.toBytesRaw(), passphrase);
     }
 }
+
+CACHE.privateKeyConstructor = (key) => new PrivateKey(key);
+CACHE.privateKeyFromBytes = (bytes) => PrivateKey.fromBytes(bytes);

@@ -3,8 +3,8 @@ import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IProxyStaker} proto.IProxyStaker
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IProxyStaker} HashgraphProto.proto.IProxyStaker
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
 
 /**
@@ -45,13 +45,15 @@ export default class ProxyStaker {
 
     /**
      * @internal
-     * @param {proto.IProxyStaker} transfer
+     * @param {HashgraphProto.proto.IProxyStaker} transfer
      * @returns {ProxyStaker}
      */
     static _fromProtobuf(transfer) {
         return new ProxyStaker({
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (transfer.accountID)
+                /** @type {HashgraphProto.proto.IAccountID} */ (
+                    transfer.accountID
+                )
             ),
             amount: Hbar.fromTinybars(
                 transfer.amount != null ? transfer.amount : 0
@@ -61,7 +63,7 @@ export default class ProxyStaker {
 
     /**
      * @internal
-     * @returns {proto.IProxyStaker}
+     * @returns {HashgraphProto.proto.IProxyStaker}
      */
     _toProtobuf() {
         return {

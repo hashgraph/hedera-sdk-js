@@ -77,6 +77,7 @@ jobs:
       - name: Fetch Hedera SDK
         uses: actions/checkout@v2
         with:
+          submodules: recursive
           path: hedera-sdk-js
 
       - name: Run Hedera SDK Tests
@@ -89,5 +90,6 @@ jobs:
           docker-compose up &
           sleep 45
           cd ../hedera-sdk-js
-          pnpm install --force
+          pnpm install
+          pnpm compile
           pnpm test:integration:node

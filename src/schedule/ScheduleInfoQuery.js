@@ -5,13 +5,13 @@ import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").IScheduleInfo} proto.IScheduleInfo
- * @typedef {import("@hashgraph/proto").IScheduleGetInfoQuery} proto.IScheduleGetInfoQuery
- * @typedef {import("@hashgraph/proto").IScheduleGetInfoResponse} proto.IScheduleGetInfoResponse
+ * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.IScheduleInfo} HashgraphProto.proto.IScheduleInfo
+ * @typedef {import("@hashgraph/proto").proto.IScheduleGetInfoQuery} HashgraphProto.proto.IScheduleGetInfoQuery
+ * @typedef {import("@hashgraph/proto").proto.IScheduleGetInfoResponse} HashgraphProto.proto.IScheduleGetInfoResponse
  */
 
 /**
@@ -44,11 +44,11 @@ export default class ScheduleInfoQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {ScheduleInfoQuery}
      */
     static _fromProtobuf(query) {
-        const info = /** @type {proto.IScheduleGetInfoQuery} */ (
+        const info = /** @type {HashgraphProto.proto.IScheduleGetInfoQuery} */ (
             query.scheduleGetInfo
         );
 
@@ -109,8 +109,8 @@ export default class ScheduleInfoQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.schedule.getScheduleInfo(request);
@@ -119,33 +119,39 @@ export default class ScheduleInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const scheduleGetInfo = /** @type {proto.IScheduleGetInfoResponse} */ (
-            response.scheduleGetInfo
+        const scheduleGetInfo =
+            /** @type {HashgraphProto.proto.IScheduleGetInfoResponse} */ (
+                response.scheduleGetInfo
+            );
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
+            scheduleGetInfo.header
         );
-        return /** @type {proto.IResponseHeader} */ (scheduleGetInfo.header);
     }
 
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @param {AccountId} nodeAccountId
-     * @param {proto.IQuery} request
+     * @param {HashgraphProto.proto.IQuery} request
      * @returns {Promise<ScheduleInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
-        const info = /** @type {proto.IScheduleGetInfoResponse} */ (
-            response.scheduleGetInfo
-        );
+        const info =
+            /** @type {HashgraphProto.proto.IScheduleGetInfoResponse} */ (
+                response.scheduleGetInfo
+            );
 
         return Promise.resolve(
             ScheduleInfo._fromProtobuf(
-                /** @type {proto.IScheduleInfo} */ (info.scheduleInfo)
+                /** @type {HashgraphProto.proto.IScheduleInfo} */ (
+                    info.scheduleInfo
+                )
             )
         );
     }
@@ -153,8 +159,8 @@ export default class ScheduleInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

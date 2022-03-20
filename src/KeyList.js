@@ -3,9 +3,9 @@ import CACHE from "./Cache.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
- * @typedef {import("@hashgraph/proto").IKeyList} proto.IKeyList
- * @typedef {import("@hashgraph/proto").IThresholdKey} proto.IThresholdKey
+ * @typedef {import("@hashgraph/proto").proto.IKey} HashgraphProto.proto.IKey
+ * @typedef {import("@hashgraph/proto").proto.IKeyList} HashgraphProto.proto.IKeyList
+ * @typedef {import("@hashgraph/proto").proto.IThresholdKey} HashgraphProto.proto.IThresholdKey
  */
 
 /**
@@ -125,7 +125,7 @@ export default class KeyList extends Key {
     }
 
     /**
-     * @returns {proto.IKey}
+     * @returns {HashgraphProto.proto.IKey}
      */
     _toProtobufKey() {
         const keys = this._keys.map((key) => key._toProtobufKey());
@@ -143,7 +143,7 @@ export default class KeyList extends Key {
     }
 
     /**
-     * @param {proto.IKeyList} key
+     * @param {HashgraphProto.proto.IKeyList} key
      * @returns {KeyList}
      */
     static __fromProtobufKeyList(key) {
@@ -154,7 +154,7 @@ export default class KeyList extends Key {
     }
 
     /**
-     * @param {proto.IThresholdKey} key
+     * @param {HashgraphProto.proto.IThresholdKey} key
      * @returns {KeyList}
      */
     static __fromProtobufThresoldKey(key) {

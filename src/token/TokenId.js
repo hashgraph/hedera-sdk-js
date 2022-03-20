@@ -1,5 +1,5 @@
 import * as entity_id from "../EntityIdHelper.js";
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("long").Long} Long
@@ -41,7 +41,7 @@ export default class TokenId {
 
     /**
      * @internal
-     * @param {proto.ITokenID} id
+     * @param {HashgraphProto.proto.ITokenID} id
      * @returns {TokenId}
      */
     static _fromProtobuf(id) {
@@ -88,7 +88,9 @@ export default class TokenId {
      * @returns {TokenId}
      */
     static fromBytes(bytes) {
-        return TokenId._fromProtobuf(proto.TokenID.decode(bytes));
+        return TokenId._fromProtobuf(
+            HashgraphProto.proto.TokenID.decode(bytes)
+        );
     }
 
     /**
@@ -108,7 +110,7 @@ export default class TokenId {
 
     /**
      * @internal
-     * @returns {proto.ITokenID}
+     * @returns {HashgraphProto.proto.ITokenID}
      */
     _toProtobuf() {
         return {
@@ -137,7 +139,7 @@ export default class TokenId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.TokenID.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.TokenID.encode(this._toProtobuf()).finish();
     }
 
     /**

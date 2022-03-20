@@ -6,7 +6,7 @@ if [ "$(git diff --name-only | wc -l)" -gt 0 ]; then
 fi
 
 pnpm i
-pnpm compile:js
+pnpm compile
 pnpm format
 pnpm lint
 pnpm test:unit:node

@@ -19,6 +19,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -37,9 +39,23 @@ jobs:
       - uses: pnpm/action-setup@v2.0.1
         with:
           version: 6.0.2
+      
+      - name: Build @hashgraph/cryptography
+        run: |
+          cd packages/cryptography
+          pnpm install
+          pnpm compile
 
-      - name: Build
-        run: pnpm install --force
+      - name: Build @hashgraph/proto
+        run: |
+          cd packages/proto
+          pnpm install
+          pnpm compile
+
+      - name: Build @hashgraph/sdk
+        run: |
+          pnpm install
+          pnpm compile
 
   lint:
     runs-on: ubuntu-latest
@@ -49,6 +65,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -68,9 +86,22 @@ jobs:
         with:
           version: 6.0.2
 
-      - name: Lint
+      - name: Build @hashgraph/cryptography
         run: |
-          pnpm install --force
+          cd packages/cryptography
+          pnpm install
+          pnpm compile
+
+      - name: Build @hashgraph/proto
+        run: |
+          cd packages/proto
+          pnpm install
+          pnpm compile
+
+      - name: Lint @hashgraph/sdk
+        run: |
+          pnpm install
+          pnpm compile
           pnpm lint 
              
   test-unit-node:
@@ -81,6 +112,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -100,7 +133,20 @@ jobs:
         with:
           version: 6.0.2
 
-      - name: Run Unit Tests
+      - name: Build @hashgraph/cryptography
         run: |
-          pnpm install --force
+          cd packages/cryptography
+          pnpm install
+          pnpm compile
+
+      - name: Build @hashgraph/proto
+        run: |
+          cd packages/proto
+          pnpm install
+          pnpm compile
+
+      - name: Unit Test @hashgraph/sdk
+        run: |
+          pnpm install
+          pnpm compile
           pnpm test:unit:node

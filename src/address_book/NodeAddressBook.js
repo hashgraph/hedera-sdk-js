@@ -2,7 +2,7 @@ import NodeAddress from "./NodeAddress.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").INodeAddressBook} proto.INodeAddressBook
+ * @typedef {import("@hashgraph/proto").proto.INodeAddressBook} HashgraphProto.proto.INodeAddressBook
  */
 
 /**
@@ -48,7 +48,7 @@ export default class NodeAddressBook {
 
     /**
      * @internal
-     * @param {proto.INodeAddressBook} nodeAddressBook
+     * @param {HashgraphProto.proto.INodeAddressBook} nodeAddressBook
      * @returns {NodeAddressBook}
      */
     static _fromProtobuf(nodeAddressBook) {
@@ -63,7 +63,7 @@ export default class NodeAddressBook {
     }
 
     /**
-     * @returns {proto.INodeAddressBook}
+     * @returns {HashgraphProto.proto.INodeAddressBook}
      */
     _toProtobuf() {
         return {

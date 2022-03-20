@@ -5,12 +5,12 @@ import AccountBalance from "./AccountBalance.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ICryptoGetAccountBalanceQuery} proto.ICryptoGetAccountBalanceQuery
- * @typedef {import("@hashgraph/proto").ICryptoGetAccountBalanceResponse} proto.ICryptoGetAccountBalanceResponse
+ * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetAccountBalanceQuery} HashgraphProto.proto.ICryptoGetAccountBalanceQuery
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetAccountBalanceResponse} HashgraphProto.proto.ICryptoGetAccountBalanceResponse
  */
 
 /**
@@ -60,13 +60,14 @@ export default class AccountBalanceQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {AccountBalanceQuery}
      */
     static _fromProtobuf(query) {
-        const balance = /** @type {proto.ICryptoGetAccountBalanceQuery} */ (
-            query.cryptogetAccountBalance
-        );
+        const balance =
+            /** @type {HashgraphProto.proto.ICryptoGetAccountBalanceQuery} */ (
+                query.cryptogetAccountBalance
+            );
 
         return new AccountBalanceQuery({
             accountId:
@@ -154,8 +155,8 @@ export default class AccountBalanceQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.crypto.cryptoGetBalance(request);
@@ -165,15 +166,15 @@ export default class AccountBalanceQuery extends Query {
      * @override
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
         const cryptogetAccountBalance =
-            /** @type {proto.ICryptoGetAccountBalanceResponse} */ (
+            /** @type {HashgraphProto.proto.ICryptoGetAccountBalanceResponse} */ (
                 response.cryptogetAccountBalance
             );
-        return /** @type {proto.IResponseHeader} */ (
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
             cryptogetAccountBalance.header
         );
     }
@@ -182,15 +183,15 @@ export default class AccountBalanceQuery extends Query {
      * @override
      * @override
      * @internal
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @param {AccountId} nodeAccountId
-     * @param {proto.IQuery} request
+     * @param {HashgraphProto.proto.IQuery} request
      * @returns {Promise<AccountBalance>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
         const cryptogetAccountBalance =
-            /** @type {proto.ICryptoGetAccountBalanceResponse} */ (
+            /** @type {HashgraphProto.proto.ICryptoGetAccountBalanceResponse} */ (
                 response.cryptogetAccountBalance
             );
         return Promise.resolve(
@@ -201,8 +202,8 @@ export default class AccountBalanceQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

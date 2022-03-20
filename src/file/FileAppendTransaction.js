@@ -10,13 +10,13 @@ import List from "../transaction/List.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").IFileAppendTransactionBody} proto.IFileAppendTransactionBody
- * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.IFileAppendTransactionBody} HashgraphProto.proto.IFileAppendTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IFileID} HashgraphProto.proto.IFileID
  */
 
 /**
@@ -91,11 +91,11 @@ export default class FileAppendTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {FileAppendTransaction}
      */
     static _fromProtobuf(
@@ -106,15 +106,17 @@ export default class FileAppendTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const append = /** @type {proto.IFileAppendTransactionBody} */ (
-            body.fileAppend
-        );
+        const append =
+            /** @type {HashgraphProto.proto.IFileAppendTransactionBody} */ (
+                body.fileAppend
+            );
 
         let contents;
         for (let i = 0; i < bodies.length; i += nodeIds.length) {
-            const fileAppend = /** @type {proto.IFileAppendTransactionBody} */ (
-                bodies[i].fileAppend
-            );
+            const fileAppend =
+                /** @type {HashgraphProto.proto.IFileAppendTransactionBody} */ (
+                    bodies[i].fileAppend
+                );
             if (fileAppend.contents == null) {
                 break;
             }
@@ -144,7 +146,9 @@ export default class FileAppendTransaction extends Transaction {
                 fileId:
                     append.fileID != null
                         ? FileId._fromProtobuf(
-                              /** @type {proto.IFileID} */ (append.fileID)
+                              /** @type {HashgraphProto.proto.IFileID} */ (
+                                  append.fileID
+                              )
                           )
                         : undefined,
                 contents: contents,
@@ -420,8 +424,8 @@ export default class FileAppendTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         return channel.file.appendContent(request);
@@ -430,7 +434,7 @@ export default class FileAppendTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "fileAppend";
@@ -439,7 +443,7 @@ export default class FileAppendTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.IFileAppendTransactionBody}
+     * @returns {HashgraphProto.proto.IFileAppendTransactionBody}
      */
     _makeTransactionData() {
         const length = this._contents != null ? this._contents.length : 0;

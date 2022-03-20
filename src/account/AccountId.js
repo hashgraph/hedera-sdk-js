@@ -1,6 +1,6 @@
 import Long from "long";
 import * as entity_id from "../EntityIdHelper.js";
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import CACHE from "../Cache.js";
@@ -58,13 +58,15 @@ export default class AccountId {
 
     /**
      * @internal
-     * @param {proto.IAccountID} id
+     * @param {HashgraphProto.proto.IAccountID} id
      * @returns {AccountId}
      */
     static _fromProtobuf(id) {
         let key =
             id.alias != null && id.alias.length > 0
-                ? Key._fromProtobufKey(proto.Key.decode(id.alias))
+                ? Key._fromProtobufKey(
+                      HashgraphProto.proto.Key.decode(id.alias)
+                  )
                 : undefined;
 
         if (!(key instanceof PublicKey)) {
@@ -119,7 +121,9 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static fromBytes(bytes) {
-        return AccountId._fromProtobuf(proto.AccountID.decode(bytes));
+        return AccountId._fromProtobuf(
+            HashgraphProto.proto.AccountID.decode(bytes)
+        );
     }
 
     /**
@@ -139,13 +143,15 @@ export default class AccountId {
 
     /**
      * @internal
-     * @returns {proto.IAccountID}
+     * @returns {HashgraphProto.proto.IAccountID}
      */
     _toProtobuf() {
         return {
             alias:
                 this.aliasKey != null
-                    ? proto.Key.encode(this.aliasKey._toProtobufKey()).finish()
+                    ? HashgraphProto.proto.Key.encode(
+                          this.aliasKey._toProtobufKey()
+                      ).finish()
                     : null,
             accountNum: this.num,
             shardNum: this.shard,
@@ -157,7 +163,9 @@ export default class AccountId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.AccountID.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.AccountID.encode(
+            this._toProtobuf()
+        ).finish();
     }
 
     /**

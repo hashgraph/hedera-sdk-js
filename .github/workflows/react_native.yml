@@ -43,7 +43,9 @@ jobs:
       - run: pnpm install -g yarn
 
       - name: Build SDK
-        run: pnpm install --force 
+        run: |
+          pnpm install
+          pnpm compile
 
       - name: Install yalc
         run: pnpm install -g yalc

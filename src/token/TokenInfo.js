@@ -3,7 +3,7 @@ import AccountId from "../account/AccountId.js";
 import Duration from "../Duration.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import TokenType from "./TokenType.js";
 import TokenSupplyType from "./TokenSupplyType.js";
 import CustomFixedFee from "./CustomFixedFee.js";
@@ -222,19 +222,22 @@ export default class TokenInfo {
 
     /**
      * @internal
-     * @param {proto.ITokenInfo} info
+     * @param {HashgraphProto.proto.ITokenInfo} info
      * @returns {TokenInfo}
      */
     static _fromProtobuf(info) {
-        const defaultFreezeStatus = /** @type {proto.TokenFreezeStatus} */ (
-            info.defaultFreezeStatus
-        );
-        const defaultKycStatus = /** @type {proto.TokenKycStatus} */ (
-            info.defaultKycStatus
-        );
-        const pauseStatus = /**@type {proto.TokenPauseStatus} */ (
-            info.pauseStatus
-        );
+        const defaultFreezeStatus =
+            /** @type {HashgraphProto.proto.TokenFreezeStatus} */ (
+                info.defaultFreezeStatus
+            );
+        const defaultKycStatus =
+            /** @type {HashgraphProto.proto.TokenKycStatus} */ (
+                info.defaultKycStatus
+            );
+        const pauseStatus =
+            /**@type {HashgraphProto.proto.TokenPauseStatus} */ (
+                info.pauseStatus
+            );
 
         const autoRenewAccountId =
             info.autoRenewAccount != null
@@ -243,7 +246,7 @@ export default class TokenInfo {
 
         return new TokenInfo({
             tokenId: TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (info.tokenId)
+                /** @type {HashgraphProto.proto.ITokenID} */ (info.tokenId)
             ),
             name: /** @type {string} */ (info.name),
             symbol: /** @type {string} */ (info.symbol),
@@ -252,7 +255,9 @@ export default class TokenInfo {
             treasuryAccountId:
                 info.treasury != null
                     ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (info.treasury)
+                          /** @type {HashgraphProto.proto.IAccountID} */ (
+                              info.treasury
+                          )
                       )
                     : null,
             adminKey:
@@ -297,13 +302,17 @@ export default class TokenInfo {
             autoRenewPeriod:
                 info.autoRenewPeriod != null
                     ? Duration._fromProtobuf(
-                          /** @type {proto.IDuration} */ (info.autoRenewPeriod)
+                          /** @type {HashgraphProto.proto.IDuration} */ (
+                              info.autoRenewPeriod
+                          )
                       )
                     : null,
             expirationTime:
                 info.expiry != null
                     ? Timestamp._fromProtobuf(
-                          /** @type {proto.ITimestamp} */ (info.expiry)
+                          /** @type {HashgraphProto.proto.ITimestamp} */ (
+                              info.expiry
+                          )
                       )
                     : null,
             tokenMemo: info.memo != null ? info.memo : "",
@@ -336,7 +345,7 @@ export default class TokenInfo {
     }
 
     /**
-     * @returns {proto.ITokenInfo}
+     * @returns {HashgraphProto.proto.ITokenInfo}
      */
     _toProtobuf() {
         return {
@@ -405,13 +414,17 @@ export default class TokenInfo {
      * @returns {TokenInfo}
      */
     static fromBytes(bytes) {
-        return TokenInfo._fromProtobuf(proto.TokenInfo.decode(bytes));
+        return TokenInfo._fromProtobuf(
+            HashgraphProto.proto.TokenInfo.decode(bytes)
+        );
     }
 
     /**
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.TokenInfo.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.TokenInfo.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

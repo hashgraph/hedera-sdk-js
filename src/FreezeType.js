@@ -1,6 +1,6 @@
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").FreezeType} proto.FreezeType
+ * @typedef {import("@hashgraph/proto").proto.FreezeType} HashgraphProto.proto.FreezeType
  */
 
 export default class FreezeType {
@@ -65,7 +65,7 @@ export default class FreezeType {
     }
 
     /**
-     * @returns {proto.FreezeType}
+     * @returns {HashgraphProto.proto.FreezeType}
      */
     valueOf() {
         return this._code;

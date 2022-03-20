@@ -1,4 +1,4 @@
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import FeeComponents from "./FeeComponents";
 import FeeDataType from "./FeeDataType";
 
@@ -45,12 +45,14 @@ export default class FeeData {
      * @returns {FeeData}
      */
     static fromBytes(bytes) {
-        return FeeData._fromProtobuf(proto.FeeData.decode(bytes));
+        return FeeData._fromProtobuf(
+            HashgraphProto.proto.FeeData.decode(bytes)
+        );
     }
 
     /**
      * @internal
-     * @param {proto.IFeeData} feeData
+     * @param {HashgraphProto.proto.IFeeData} feeData
      * @returns {FeeData}
      */
     static _fromProtobuf(feeData) {
@@ -76,7 +78,7 @@ export default class FeeData {
 
     /**
      * @internal
-     * @returns {proto.IFeeData}
+     * @returns {HashgraphProto.proto.IFeeData}
      */
     _toProtobuf() {
         return {
@@ -104,6 +106,6 @@ export default class FeeData {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.FeeData.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.FeeData.encode(this._toProtobuf()).finish();
     }
 }

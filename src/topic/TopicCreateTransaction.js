@@ -8,12 +8,12 @@ import Key from "../Key.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IConsensusCreateTopicTransactionBody} proto.IConsensusCreateTopicTransactionBody
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.IConsensusCreateTopicTransactionBody} HashgraphProto.proto.IConsensusCreateTopicTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
  */
 
 /**
@@ -90,11 +90,11 @@ export default class TopicCreateTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TopicCreateTransaction}
      */
     static _fromProtobuf(
@@ -106,7 +106,7 @@ export default class TopicCreateTransaction extends Transaction {
     ) {
         const body = bodies[0];
         const create =
-            /** @type {proto.IConsensusCreateTopicTransactionBody} */ (
+            /** @type {HashgraphProto.proto.IConsensusCreateTopicTransactionBody} */ (
                 body.consensusCreateTopic
             );
 
@@ -251,8 +251,8 @@ export default class TopicCreateTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         return channel.consensus.createTopic(request);
@@ -261,7 +261,7 @@ export default class TopicCreateTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "consensusCreateTopic";
@@ -270,7 +270,7 @@ export default class TopicCreateTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.IConsensusCreateTopicTransactionBody}
+     * @returns {HashgraphProto.proto.IConsensusCreateTopicTransactionBody}
      */
     _makeTransactionData() {
         return {

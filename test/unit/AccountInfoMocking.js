@@ -7,7 +7,7 @@ import {
 } from "../../src/exports.js";
 import Mocker, { UNAVAILABLE, INTERNAL, PRIVATE_KEY } from "./Mocker.js";
 import Long from "long";
-import * as proto from "@hashgraph/proto";
+import { proto } from "@hashgraph/proto";
 import * as hex from "../../src/encoding/hex.js";
 
 const ACCOUNT_INFO_QUERY_COST_RESPONSE = {

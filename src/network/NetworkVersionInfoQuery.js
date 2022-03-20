@@ -3,12 +3,12 @@ import NetworkVersionInfo from "./NetworkVersionInfo.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").INetworkGetVersionInfoQuery} proto.INetworkGetVersionInfoQuery
- * @typedef {import("@hashgraph/proto").INetworkGetVersionInfoResponse} proto.INetworkGetVersionInfoResponse
+ * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.INetworkGetVersionInfoQuery} HashgraphProto.proto.INetworkGetVersionInfoQuery
+ * @typedef {import("@hashgraph/proto").proto.INetworkGetVersionInfoResponse} HashgraphProto.proto.INetworkGetVersionInfoResponse
  */
 
 /**
@@ -24,7 +24,7 @@ export default class NetworkVersionInfoQuery extends Query {
     }
 
     /**
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {NetworkVersionInfoQuery}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -36,8 +36,8 @@ export default class NetworkVersionInfoQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.network.getVersionInfo(request);
@@ -46,15 +46,15 @@ export default class NetworkVersionInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
         const networkGetVersionInfo =
-            /** @type {proto.INetworkGetVersionInfoResponse} */ (
+            /** @type {HashgraphProto.proto.INetworkGetVersionInfoResponse} */ (
                 response.networkGetVersionInfo
             );
-        return /** @type {proto.IResponseHeader} */ (
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
             networkGetVersionInfo.header
         );
     }
@@ -62,21 +62,22 @@ export default class NetworkVersionInfoQuery extends Query {
     /**
      * @protected
      * @override
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {Promise<NetworkVersionInfo>}
      */
     _mapResponse(response) {
-        const info = /** @type {proto.INetworkGetVersionInfoResponse} */ (
-            response.networkGetVersionInfo
-        );
+        const info =
+            /** @type {HashgraphProto.proto.INetworkGetVersionInfoResponse} */ (
+                response.networkGetVersionInfo
+            );
         return Promise.resolve(NetworkVersionInfo._fromProtobuf(info));
     }
 
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

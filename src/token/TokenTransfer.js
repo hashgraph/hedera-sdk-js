@@ -4,10 +4,10 @@ import TokenId from "./TokenId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITokenTransferList} proto.ITokenTransferList
- * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.ITokenTransferList} HashgraphProto.proto.ITokenTransferList
+ * @typedef {import("@hashgraph/proto").proto.IAccountAmount} HashgraphProto.proto.IAccountAmount
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
  */
 
 /**
@@ -55,7 +55,7 @@ export default class TokenTransfer {
 
     /**
      * @internal
-     * @param {proto.ITokenTransferList[]} tokenTransfers
+     * @param {HashgraphProto.proto.ITokenTransferList[]} tokenTransfers
      * @returns {TokenTransfer[]}
      */
     static _fromProtobuf(tokenTransfers) {
@@ -63,7 +63,9 @@ export default class TokenTransfer {
 
         for (const tokenTransfer of tokenTransfers) {
             const tokenId = TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (tokenTransfer.token)
+                /** @type {HashgraphProto.proto.ITokenID} */ (
+                    tokenTransfer.token
+                )
             );
             const expectedDecimals =
                 tokenTransfer.expectedDecimals != null
@@ -79,7 +81,9 @@ export default class TokenTransfer {
                     new TokenTransfer({
                         tokenId,
                         accountId: AccountId._fromProtobuf(
-                            /** @type {proto.IAccountID} */ (transfer.accountID)
+                            /** @type {HashgraphProto.proto.IAccountID} */ (
+                                transfer.accountID
+                            )
                         ),
                         expectedDecimals,
                         amount:
@@ -97,7 +101,7 @@ export default class TokenTransfer {
 
     /**
      * @internal
-     * @returns {proto.IAccountAmount}
+     * @returns {HashgraphProto.proto.IAccountAmount}
      */
     _toProtobuf() {
         return {
