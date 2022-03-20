@@ -17,6 +17,7 @@ export { default as AccountCreateTransaction } from "./account/AccountCreateTran
 export { default as AccountDeleteTransaction } from "./account/AccountDeleteTransaction.js";
 export { default as AccountId } from "./account/AccountId.js";
 export { default as AccountInfo } from "./account/AccountInfo.js";
+export { default as AccountInfoFlow } from "./account/AccountInfoFlow.js";
 export { default as AccountInfoQuery } from "./account/AccountInfoQuery.js";
 export { default as AccountRecordsQuery } from "./account/AccountRecordsQuery.js";
 export { default as AccountStakersQuery } from "./account/AccountStakersQuery.js";
