@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.12.0-beta.1
+
+### Added
+
+ * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
+
 ## v2.11.0-beta.1
 
 ### Added
