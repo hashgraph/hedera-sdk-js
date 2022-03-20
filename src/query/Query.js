@@ -295,8 +295,7 @@ export default class Query extends Executable {
         if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
             header = {
                 responseType: ProtoResponseType.ANSWER_ONLY,
-                payment:
-                    this._paymentTransactions[this._nextNodeAccountIdIndex],
+                payment: this._paymentTransactions[this._nodeAccountIds.index],
             };
         }
 
@@ -324,8 +323,7 @@ export default class Query extends Executable {
 
         if (this._isPaymentRequired() && this._paymentTransactions != null) {
             header = {
-                payment:
-                    this._paymentTransactions[this._nextNodeAccountIdIndex],
+                payment: this._paymentTransactions[this._nodeAccountIds.index],
                 responseType: ProtoResponseType.ANSWER_ONLY,
             };
         }
@@ -407,28 +405,11 @@ export default class Query extends Executable {
         if (!this._nodeAccountIds.isEmpty) {
             // if there are payment transactions,
             // we need to use the node of the current payment transaction
-            return this._nodeAccountIds.list[this._nextNodeAccountIdIndex];
+            return this._nodeAccountIds.list[this._nodeAccountIds.index];
         } else {
             throw new Error(
                 "(BUG) nodeAccountIds were not set for query before executing"
             );
-        }
-    }
-
-    /**
-     * @override
-     * @protected
-     * @returns {void}
-     */
-    _advanceRequest() {
-        if (this._isPaymentRequired() && this._paymentTransactions.length > 0) {
-            // each time we move our cursor to the next transaction
-            // wrapping around to ensure we are cycling
-            super._nextNodeAccountIdIndex =
-                (this._nextNodeAccountIdIndex + 1) %
-                this._paymentTransactions.length;
-        } else {
-            super._advanceRequest();
         }
     }
 }

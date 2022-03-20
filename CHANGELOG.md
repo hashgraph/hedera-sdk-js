@@ -28,6 +28,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.12.0-beta.1
 
+### Added
+
+ * `Client.[set|get]NodeMinReadmitPeriod()`
+ * Support for using any node from the entire network upon execution
+   if node account IDs have no been locked for the request.
+ * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
+
+### Changed
+
+ * Network behavior to follow a more standard approach (remove the sorting we
+   used to do).
+
 ### Fixed
 
  * Ledger ID checksums
@@ -61,12 +73,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    use the correct transation ID per transaction
  * Transaction removing signatures when calling `Transaction.[toBytes|getTransactionHash]()`
 
-## v2.10.1
-
-### Fixes
-
- * `NativeClient` IPs should have a port
-
 ## v2.11.0-beta.1
 
 ### Added
@@ -90,6 +96,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * Chunked transactions (`FileAppendTransaction` and `TopicMessageSubmitTransaction`) should
    use the correct transation ID per transaction
  * Transaction removing signatures when calling `Transaction.[toBytes|getTransactionHash]()`
+
+## v2.10.1
+
+### Fixes
+
+ * `NativeClient` IPs should have a port
 
 ## v2.10.0
 

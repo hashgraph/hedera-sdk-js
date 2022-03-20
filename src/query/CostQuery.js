@@ -32,7 +32,7 @@ export default class CostQuery extends Executable {
         this._query = query;
         this._grpcDeadline = query._grpcDeadline;
         this._requestTimeout = query._requestTimeout;
-        this._nodeAccountIds.setList(query._nodeAccountIds.list);
+        this._nodeAccountIds.setList(query._nodeAccountIds.list).setLocked();
         this._operator = query._operator;
 
         /**
@@ -165,7 +165,7 @@ export default class CostQuery extends Executable {
         if (!this._nodeAccountIds.isEmpty) {
             // if there are payment transactions,
             // we need to use the node of the current payment transaction
-            return this._nodeAccountIds.list[this._nextNodeAccountIdIndex];
+            return this._nodeAccountIds.current;
         } else {
             throw new Error(
                 "(BUG) nodeAccountIds were not set for query before executing"
