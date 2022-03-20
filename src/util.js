@@ -2,6 +2,10 @@ import BigNumber from "bignumber.js";
 import Long from "long";
 
 /**
+ * @typedef {import("./Hbar.js").default} Hbar
+ */
+
+/**
  * Utility Error Messages
  */
 export const REQUIRE_NON_NULL_ERROR = "This value cannot be null | undefined.";
@@ -116,7 +120,20 @@ export function isStringOrUint8Array(variable) {
     );
 }
 
-//Requires
+/**
+ * Takes any param and returns false if null or undefined.
+ *
+ * @template {Long | Hbar} T
+ * @param {T} variable
+ * @returns {T}
+ */
+export function requireNotNegative(variable) {
+    if (variable.isNegative()) {
+        throw new Error("negative value not allowed");
+    }
+
+    return variable;
+}
 
 /**
  * Takes any param and throws custom error if null or undefined.

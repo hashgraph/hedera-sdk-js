@@ -9,6 +9,7 @@ import Hbar from "../Hbar.js";
 import HbarAllowance from "./HbarAllowance.js";
 import TokenAllowance from "./TokenAllowance.js";
 import TokenNftAllowance from "./TokenNftAllowance.js";
+import * as util from "../util.js";
 
 /**
  * @namespace proto
@@ -117,12 +118,21 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
-     * @internal
+     * @deprecated
      * @param {AccountId | string} spenderAccountId
      * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
      * @returns {AccountAllowanceAdjustTransaction}
      */
     addHbarAllowance(spenderAccountId, amount) {
+        return this.grantHbarAllowance(spenderAccountId, amount);
+    }
+
+    /**
+     * @param {AccountId | string} spenderAccountId
+     * @param {Hbar} amount
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    _adjustHbarAllowance(spenderAccountId, amount) {
         this._requireNotFrozen();
 
         this._hbarAllowances.push(
@@ -131,12 +141,38 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId,
-                amount: amount instanceof Hbar ? amount : new Hbar(amount),
+                amount: amount,
                 ownerAccountId: null,
             })
         );
 
         return this;
+    }
+
+    /**
+     * @param {AccountId | string} spenderAccountId
+     * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    grantHbarAllowance(spenderAccountId, amount) {
+        const value = amount instanceof Hbar ? amount : new Hbar(amount);
+        return this._adjustHbarAllowance(
+            spenderAccountId,
+            util.requireNotNegative(value)
+        );
+    }
+
+    /**
+     * @param {AccountId | string} spenderAccountId
+     * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    revokeHbarAllowance(spenderAccountId, amount) {
+        const value = amount instanceof Hbar ? amount : new Hbar(amount);
+        return this._adjustHbarAllowance(
+            spenderAccountId,
+            util.requireNotNegative(value).negated()
+        );
     }
 
     /**
@@ -147,13 +183,22 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
-     * @internal
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} spenderAccountId
      * @param {Long | number} amount
      * @returns {AccountAllowanceAdjustTransaction}
      */
     addTokenAllowance(tokenId, spenderAccountId, amount) {
+        return this.grantTokenAllowance(tokenId, spenderAccountId, amount);
+    }
+
+    /**
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string} spenderAccountId
+     * @param {Long | number} amount
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    _adjustTokenAllowance(tokenId, spenderAccountId, amount) {
         this._requireNotFrozen();
 
         this._tokenAllowances.push(
@@ -178,15 +223,51 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
-     * @internal
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string} spenderAccountId
+     * @param {Long | number} amount
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    grantTokenAllowance(tokenId, spenderAccountId, amount) {
+        return this._adjustTokenAllowance(
+            tokenId,
+            spenderAccountId,
+            util.requireNotNegative(Long.fromValue(amount))
+        );
+    }
+
+    /**
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string} spenderAccountId
+     * @param {Long | number} amount
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    revokeTokenAllowance(tokenId, spenderAccountId, amount) {
+        return this._adjustTokenAllowance(
+            tokenId,
+            spenderAccountId,
+            util.requireNotNegative(Long.fromValue(amount))
+        );
+    }
+
+    /**
+     * @deprecated
      * @param {NftId | string} nftId
      * @param {AccountId | string} spenderAccountId
      * @returns {AccountAllowanceAdjustTransaction}
      */
     addTokenNftAllowance(nftId, spenderAccountId) {
+        return this.grantTokenNftAllowance(nftId, spenderAccountId);
+    }
+
+    /**
+     * @param {NftId} nftId
+     * @param {AccountId | string} spenderAccountId
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    _adjustTokenNftAllowance(nftId, spenderAccountId) {
         this._requireNotFrozen();
 
-        const id = typeof nftId === "string" ? NftId.fromString(nftId) : nftId;
         const spender =
             typeof spenderAccountId === "string"
                 ? AccountId.fromString(spenderAccountId)
@@ -195,11 +276,11 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
 
         for (const allowance of this._nftAllowances) {
             if (
-                allowance.tokenId.compare(id.tokenId) === 0 &&
+                allowance.tokenId.compare(nftId.tokenId) === 0 &&
                 allowance.spenderAccountId.compare(spender) === 0
             ) {
                 if (allowance.serialNumbers != null) {
-                    allowance.serialNumbers.push(id.serial);
+                    allowance.serialNumbers.push(nftId.serial);
                 }
                 found = true;
                 break;
@@ -209,10 +290,11 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         if (!found) {
             this._nftAllowances.push(
                 new TokenNftAllowance({
-                    tokenId: id.tokenId,
+                    tokenId: nftId.tokenId,
                     spenderAccountId: spender,
-                    serialNumbers: [id.serial],
+                    serialNumbers: [nftId.serial],
                     ownerAccountId: null,
+                    allSerials: false,
                 })
             );
         }
@@ -221,12 +303,98 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
-     * @internal
+     * @param {NftId | string} nftId
+     * @param {AccountId | string} spenderAccountId
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    grantTokenNftAllowance(nftId, spenderAccountId) {
+        const id = typeof nftId === "string" ? NftId.fromString(nftId) : nftId;
+
+        util.requireNotNegative(id.serial);
+
+        return this._adjustTokenNftAllowance(id, spenderAccountId);
+    }
+
+    /**
+     * @param {NftId | string} nftId
+     * @param {AccountId | string} spenderAccountId
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    revokeTokenNftAllowance(nftId, spenderAccountId) {
+        const id = typeof nftId === "string" ? NftId.fromString(nftId) : nftId;
+
+        util.requireNotNegative(id.serial);
+        id.serial = id.serial.negate();
+
+        return this._adjustTokenNftAllowance(id, spenderAccountId);
+    }
+
+    /**
+     * @deprecated - use `grantTokenNftAllowanceAllSerials()` instead
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} spenderAccountId
      * @returns {AccountAllowanceAdjustTransaction}
      */
     addAllTokenNftAllowance(tokenId, spenderAccountId) {
+        return this._adjustTokenNftAllowanceAllSerials(
+            tokenId,
+            null,
+            spenderAccountId,
+            true
+        );
+    }
+
+    /**
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string} ownerAccountId
+     * @param {AccountId | string} spenderAccountId
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    grantTokenNftAllowanceAllSerials(
+        tokenId,
+        ownerAccountId,
+        spenderAccountId
+    ) {
+        return this._adjustTokenNftAllowanceAllSerials(
+            tokenId,
+            ownerAccountId,
+            spenderAccountId,
+            true
+        );
+    }
+
+    /**
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string} ownerAccountId
+     * @param {AccountId | string} spenderAccountId
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    revokeTokenNftAllowanceAllSerials(
+        tokenId,
+        ownerAccountId,
+        spenderAccountId
+    ) {
+        return this._adjustTokenNftAllowanceAllSerials(
+            tokenId,
+            ownerAccountId,
+            spenderAccountId,
+            false
+        );
+    }
+
+    /**
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string | null} ownerAccountId
+     * @param {AccountId | string} spenderAccountId
+     * @param {boolean} allSerials
+     * @returns {AccountAllowanceAdjustTransaction}
+     */
+    _adjustTokenNftAllowanceAllSerials(
+        tokenId,
+        ownerAccountId,
+        spenderAccountId,
+        allSerials
+    ) {
         this._requireNotFrozen();
 
         this._nftAllowances.push(
@@ -235,12 +403,18 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
                     typeof tokenId === "string"
                         ? TokenId.fromString(tokenId)
                         : tokenId,
+                ownerAccountId:
+                    ownerAccountId != null
+                        ? typeof ownerAccountId === "string"
+                            ? AccountId.fromString(ownerAccountId)
+                            : ownerAccountId
+                        : null,
                 spenderAccountId:
                     typeof spenderAccountId === "string"
                         ? AccountId.fromString(spenderAccountId)
                         : spenderAccountId,
                 serialNumbers: null,
-                ownerAccountId: null,
+                allSerials,
             })
         );
 
@@ -251,12 +425,20 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @param {Client} client
      */
     _validateChecksums(client) {
-        this._hbarAllowances.map((adjust) =>
-            adjust.spenderAccountId.validateChecksum(client)
+        this._hbarAllowances.map((allowance) =>
+            allowance.spenderAccountId.validateChecksum(client)
         );
-        this._tokenAllowances.map((adjust) => {
-            adjust.tokenId.validateChecksum(client);
-            adjust.spenderAccountId.validateChecksum(client);
+        this._tokenAllowances.map((allowance) => {
+            allowance.tokenId.validateChecksum(client);
+            allowance.spenderAccountId.validateChecksum(client);
+        });
+        this._nftAllowances.map((allowance) => {
+            allowance.tokenId.validateChecksum(client);
+            allowance.spenderAccountId.validateChecksum(client);
+
+            if (allowance.ownerAccountId != null) {
+                allowance.ownerAccountId.validateChecksum(client);
+            }
         });
     }
 

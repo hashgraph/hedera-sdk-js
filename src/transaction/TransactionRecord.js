@@ -13,6 +13,9 @@ import TokenAssocation from "../token/TokenAssociation.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
+import HbarAllowance from "../account/HbarAllowance.js";
+import TokenAllowance from "../account/TokenAllowance.js";
+import TokenNftAllowance from "../account/TokenNftAllowance.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
@@ -43,6 +46,9 @@ export default class TransactionRecord {
      * @param {PublicKey | null} props.aliasKey
      * @param {TransactionRecord[]} props.duplicates
      * @param {TransactionRecord[]} props.children
+     * @param {HbarAllowance[]} props.hbarAllowanceAdjustments
+     * @param {TokenAllowance[]} props.tokenAllowanceAdjustments
+     * @param {TokenNftAllowance[]} props.nftAllowanceAdjustments
      */
     constructor(props) {
         /**
@@ -167,6 +173,21 @@ export default class TransactionRecord {
          */
         this.children = props.children;
 
+        /**
+         * @readonly
+         */
+        this.hbarAllowanceAdjustments = props.hbarAllowanceAdjustments;
+
+        /**
+         * @readonly
+         */
+        this.tokenAllowanceAdjustments = props.tokenAllowanceAdjustments;
+
+        /**
+         * @readonly
+         */
+        this.nftAllowanceAdjustments = props.nftAllowanceAdjustments;
+
         Object.freeze(this);
     }
 
@@ -280,6 +301,23 @@ export default class TransactionRecord {
                               this.aliasKey._toProtobufKey()
                           ).finish()
                         : null,
+                cryptoAdjustments: this.hbarAllowanceAdjustments.map(
+                    (allowance) => {
+                        return allowance._toProtobuf();
+                    }
+                ),
+
+                tokenAdjustments: this.tokenAllowanceAdjustments.map(
+                    (allowance) => {
+                        return allowance._toProtobuf();
+                    }
+                ),
+
+                nftAdjustments: this.nftAllowanceAdjustments.map(
+                    (allowance) => {
+                        return allowance._toProtobuf();
+                    }
+                ),
             },
         };
     }
@@ -404,6 +442,24 @@ export default class TransactionRecord {
             aliasKey,
             duplicates,
             children,
+            hbarAllowanceAdjustments: (record.cryptoAdjustments != null
+                ? record.cryptoAdjustments
+                : []
+            ).map((allowance) => {
+                return HbarAllowance._fromProtobuf(allowance);
+            }),
+            tokenAllowanceAdjustments: (record.tokenAdjustments != null
+                ? record.tokenAdjustments
+                : []
+            ).map((allowance) => {
+                return TokenAllowance._fromProtobuf(allowance);
+            }),
+            nftAllowanceAdjustments: (record.nftAdjustments != null
+                ? record.nftAdjustments
+                : []
+            ).map((allowance) => {
+                return TokenNftAllowance._fromProtobuf(allowance);
+            }),
         });
     }
 
