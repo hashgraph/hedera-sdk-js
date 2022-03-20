@@ -28,6 +28,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    use the correct transation ID per transaction
  * Transaction removing signatures when calling `Transaction.[toBytes|getTransactionHash]()`
 
+## v2.10.1
+
+### Fixes
+
+ * `NativeClient` IPs should have a port
+
 ## v2.10.0
 
 ### Added
