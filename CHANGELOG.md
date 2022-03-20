@@ -26,6 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `AccountAllowanceAdjustTransaction.[grant|revoke][Hbar|Token|TokenNft]Allowance()`
  * `AccountAllowanceAdjustTransaction.[grant|revoke]TokenNftAllowanceAllSerials()`
 
+## v2.12.0-beta.1
+
+### Added
+
+ * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
+
 ## v2.11.0
 
 ### Added
