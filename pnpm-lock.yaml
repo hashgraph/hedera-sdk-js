@@ -9,8 +9,13 @@ specifiers:
   '@babel/register': ^7.17.0
   '@grpc/grpc-js': ^1.5.7
   '@grpc/proto-loader': ^0.6.9
+<<<<<<< HEAD
   '@hashgraph/cryptography': ^1.1.2
   '@hashgraph/proto': ^2.3.0
+=======
+  '@hashgraph/cryptography': 1.1.1
+  '@hashgraph/proto': 2.1.5
+>>>>>>> b6caff99 (Protobufs submodule (#963))
   '@types/chai': ^4.3.0
   '@types/crypto-js': ^4.1.1
   '@types/long': ^4.0.1
@@ -53,8 +58,13 @@ specifiers:
 
 dependencies:
   '@grpc/grpc-js': 1.5.7
+<<<<<<< HEAD
   '@hashgraph/cryptography': 1.1.2
   '@hashgraph/proto': 2.3.0
+=======
+  '@hashgraph/cryptography': 1.1.1
+  '@hashgraph/proto': 2.1.5
+>>>>>>> b6caff99 (Protobufs submodule (#963))
   bignumber.js: 9.0.2
   crypto-js: 4.1.1
   js-base64: 3.7.2
@@ -431,8 +441,13 @@ packages:
       protobufjs: 6.11.2
       yargs: 16.2.0
 
+<<<<<<< HEAD
   /@hashgraph/cryptography/1.1.2:
     resolution: {integrity: sha512-oSnDDs5foNq6Yni4kCwbA01NuVY2mewVr1jhkJG7yNDT6+xIBCztRWDeINb1JuShXe57Cuf88M1zmN5iFN7JgA==}
+=======
+  /@hashgraph/cryptography/1.1.1:
+    resolution: {integrity: sha512-/0G9p9W/m9M/dQY1W7p3osrDP5YQndHvgwbrruoMr5uBD1ZKBVmJjG4+iqbOgA/J+/dLiwPEor6IEEE6gofv2w==}
+>>>>>>> b6caff99 (Protobufs submodule (#963))
     engines: {node: '>=12.0.0'}
     peerDependencies:
       expo: ^44.0.5
@@ -447,8 +462,13 @@ packages:
       utf8: 3.0.0
     dev: false
 
+<<<<<<< HEAD
   /@hashgraph/proto/2.3.0:
     resolution: {integrity: sha512-zZAb/V4j9OersY/rXfPKqiNKyGnT2zPV1v2MA0uW+OKn8BAy9+GwVwANcfrs8VbAqP151iEA6sQSuOH216ytRg==}
+=======
+  /@hashgraph/proto/2.1.5:
+    resolution: {integrity: sha512-7iKO98T3iS+V+Ddy3Ew7+u8nzFT8MjRs6HczPE2scCjwKRhsodtYfGyOxVji+HN6WDqZmylr1VJwhNy5de/CRQ==}
+>>>>>>> b6caff99 (Protobufs submodule (#963))
     engines: {node: '>=10.0.0'}
     dependencies:
       long: 4.0.0
