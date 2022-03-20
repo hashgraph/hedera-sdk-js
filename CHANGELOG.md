@@ -75,6 +75,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `AccountAllowanceAdjustTransaction.[grant|revoke]TokenNftAllowanceAllSerials()`
  * `TransactionRecord.[hbar|token|tokenNft]AllowanceAdjustments`
  * `TransferTransaction.addApproved[Hbar|Token|Nft]Transfer()`
+ * Ledger ID checksums
+ * `Transaction.fromBytes()` should validate all the transaction bodies are the same
 
 ### Deprecated
 
