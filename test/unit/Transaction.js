@@ -10,7 +10,7 @@ import {
 } from "../../src/exports.js";
 import * as hex from "../../src/encoding/hex.js";
 import Client from "../../src/client/NodeClient.js";
-import * as proto from "@hashgraph/proto";
+import HashgraphProto from "@hashgraph/proto";
 import Long from "long";
 
 describe("Transaction", function () {
@@ -161,20 +161,24 @@ describe("Transaction", function () {
             },
         };
 
-        const bodyBytes1 = proto.TransactionBody.encode(body1).finish();
-        const bodyBytes2 = proto.TransactionBody.encode(body2).finish();
+        const bodyBytes1 =
+            HashgraphProto.proto.TransactionBody.encode(body1).finish();
+        const bodyBytes2 =
+            HashgraphProto.proto.TransactionBody.encode(body2).finish();
 
-        const signedTransaction1 = proto.SignedTransaction.encode({
-            bodyBytes: bodyBytes1,
-        }).finish();
-        const signedTransaction2 = proto.SignedTransaction.encode({
-            bodyBytes: bodyBytes2,
-        }).finish();
+        const signedTransaction1 =
+            HashgraphProto.proto.SignedTransaction.encode({
+                bodyBytes: bodyBytes1,
+            }).finish();
+        const signedTransaction2 =
+            HashgraphProto.proto.SignedTransaction.encode({
+                bodyBytes: bodyBytes2,
+            }).finish();
 
         const transaction1 = { signedTransactionBytes: signedTransaction1 };
         const transaction2 = { signedTransactionBytes: signedTransaction2 };
 
-        const list = proto.TransactionList.encode({
+        const list = HashgraphProto.proto.TransactionList.encode({
             transactionList: [transaction1, transaction2],
         }).finish();
 
