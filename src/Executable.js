@@ -41,14 +41,6 @@ export default class Executable {
         this._maxAttempts = 10;
 
         /**
-         * The index of the next transaction to be executed.
-         *
-         * @protected
-         * @type {number}
-         */
-        this._nextNodeAccountIdIndex = 0;
-
-        /**
          * List of node account IDs for each transaction that has been
          * built.
          *
@@ -80,6 +72,7 @@ export default class Executable {
      * @returns {?AccountId[]}
      */
     get nodeAccountIds() {
+        this._nodeAccountIds.setLocked();
         return this._nodeAccountIds.isEmpty ? null : this._nodeAccountIds.list;
     }
 
@@ -364,8 +357,19 @@ export default class Executable {
                 throw new Error("timeout exceeded");
             }
 
-            const nodeAccountId = this._getNodeAccountId();
-            const node = client._network.getNode(nodeAccountId);
+            let nodeAccountId;
+            let node;
+
+            // If node account IDs is locked then use the node account IDs
+            // from the list, otherwise build a new list of one node account ID
+            // using the entire network
+            if (this._nodeAccountIds.locked) {
+                nodeAccountId = this._getNodeAccountId();
+                node = client._network.getNode(nodeAccountId);
+            } else {
+                node = client._network.getNode();
+                nodeAccountId = node.accountId;
+            }
 
             if (node == null) {
                 throw new Error(
@@ -392,7 +396,7 @@ export default class Executable {
                 Logger.debug(
                     `[${logId}] node is not healthy, waiting ${node.getRemainingTime()}`
                 );
-                await node.wait();
+                await node.backoff();
             }
 
             try {
@@ -428,14 +432,14 @@ export default class Executable {
                     this._shouldRetryExceptionally(error) &&
                     attempt <= maxAttempts
                 ) {
-                    node.increaseDelay();
+                    client._network.increaseBackoff(node);
                     continue;
                 }
 
                 throw err;
             }
 
-            node.decreaseDelay();
+            client._network.decreaseBackoff(node);
 
             switch (this._shouldRetry(request, response)) {
                 case ExecutionState.Retry:

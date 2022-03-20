@@ -48,7 +48,7 @@ export default class ManagedNode {
             this._channelInitFunction = props.newNode.channelInitFunction;
 
             this._lastUsed = Date.now();
-            this._backoffUntil = Date.now();
+            this._readmitTime = Date.now();
             this._useCount = 0;
             this._badGrpcStatusCount = 0;
             this._minBackoff = 8000;
@@ -75,7 +75,7 @@ export default class ManagedNode {
             this._lastUsed = props.cloneNode.node._lastUsed;
 
             /** @type {number} */
-            this._backoffUntil = props.cloneNode.node._backoffUntil;
+            this._readmitTime = props.cloneNode.node._readmitTime;
 
             /** @type {number} */
             this._useCount = props.cloneNode.node._useCount;
@@ -209,18 +209,18 @@ export default class ManagedNode {
      * @returns {boolean}
      */
     isHealthy() {
-        return this._backoffUntil <= Date.now();
+        return this._readmitTime <= Date.now();
     }
 
-    increaseDelay() {
+    increaseBackoff() {
         this._currentBackoff = Math.min(
             this._currentBackoff * 2,
             this._maxBackoff
         );
-        this._backoffUntil = Date.now() + this._currentBackoff;
+        this._readmitTime = Date.now() + this._currentBackoff;
     }
 
-    decreaseDelay() {
+    decreaseBackoff() {
         this._currentBackoff = Math.max(
             this._currentBackoff / 2,
             this._minBackoff
@@ -231,7 +231,7 @@ export default class ManagedNode {
      * @returns {number}
      */
     getRemainingTime() {
-        return this._backoffUntil - this._lastUsed;
+        return this._readmitTime - this._lastUsed;
     }
 
     /**
@@ -241,7 +241,7 @@ export default class ManagedNode {
      *
      * @returns {Promise<void>}
      */
-    wait() {
+    backoff() {
         return new Promise((resolve) =>
             setTimeout(resolve, this.getRemainingTime())
         );

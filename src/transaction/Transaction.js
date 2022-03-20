@@ -15,6 +15,7 @@ import PublicKey from "../PublicKey.js";
 import List from "./List.js";
 import Timestamp from "../Timestamp.js";
 import Logger from "js-logger";
+import * as util from "../util.js";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -289,6 +290,21 @@ export default class Transaction extends Executable {
     ) {
         const body = bodies[0];
 
+        for (let i = 0; i < transactionIds.length; i++) {
+            for (let j = 0; j < nodeIds.length - 1; j++) {
+                if (
+                    !util.compare(
+                        bodies[i * nodeIds.length + j],
+                        bodies[i * nodeIds.length + j + 1],
+                        // eslint-disable-next-line ie11/no-collection-args
+                        new Set(["nodeAccountID"])
+                    )
+                ) {
+                    throw new Error("failed to validate transaction bodies");
+                }
+            }
+        }
+
         const zero = new AccountId(0);
         for (let i = 0; i < nodeIds.length; i++) {
             if (nodeIds[i].equals(zero)) {
@@ -515,6 +531,9 @@ export default class Transaction extends Executable {
             return this;
         }
 
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
+
         for (const signedTransaction of this._signedTransactions.list) {
             const bodyBytes = /** @type {Uint8Array} */ (
                 signedTransaction.bodyBytes
@@ -627,13 +646,8 @@ export default class Transaction extends Executable {
     async getSignaturesAsync() {
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
-        if (!this._transactionIds.isEmpty) {
-            this._transactionIds.setLocked();
-        }
-
-        if (!this._nodeAccountIds.isEmpty) {
-            this._nodeAccountIds.setLocked();
-        }
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
 
         await this._buildAllTransactionsAsync();
 
@@ -811,13 +825,8 @@ export default class Transaction extends Executable {
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
-        if (!this._transactionIds.isEmpty) {
-            this._transactionIds.setLocked();
-        }
-
-        if (!this._nodeAccountIds.isEmpty) {
-            this._nodeAccountIds.setLocked();
-        }
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
 
         await this._buildAllTransactionsAsync();
 
@@ -841,13 +850,8 @@ export default class Transaction extends Executable {
 
         // Locking the transaction IDs and node account IDs is necessary for consistency
         // between before and after execution
-        if (!this._transactionIds.isEmpty) {
-            this._transactionIds.setLocked();
-        }
-
-        if (!this._nodeAccountIds.isEmpty) {
-            this._nodeAccountIds.setLocked();
-        }
+        this._transactionIds.setLocked();
+        this._nodeAccountIds.setLocked();
 
         await this._buildAllTransactionsAsync();
 

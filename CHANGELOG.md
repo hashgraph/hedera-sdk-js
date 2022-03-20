@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.12.0-beta.1
+
+### Added
+
+ * `Client.[set|get]NodeMinReadmitPeriod()`
+ * Support for using any node from the entire network upon execution
+   if node account IDs have no been locked for the request.
+ * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
+
+### Changed
+
+ * Network behavior to follow a more standard approach (remove the sorting we
+   used to do).
+
+### Fixed
+
+ * Ledger ID checksums
+ * `Transaction.fromBytes()` should validate all the transaction bodies are the same
+
 ## v2.11.0-beta.1
 
 ### Added

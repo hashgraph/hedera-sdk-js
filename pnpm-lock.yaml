@@ -433,6 +433,31 @@ packages:
 
   /@humanwhocodes/config-array/0.9.5:
     resolution: {integrity: sha512-ObyMyWxZiCu/yTisA7uzx81s40xR2fD5Cg/2Kq7G02ajkNubJf6BopgDTmDyc3U7sXpNKM8cYOw7s7Tyr+DnCw==}
+||||||| 4316bf95
+  /@hashgraph/cryptography/1.1.0-beta.5:
+    resolution: {integrity: sha512-Z2JprApRwQceOSCE8tjrIqfVf8/ZzT6UTHM/YGjzjMHfPfOVW3GgT8QhpRTb4U82AQKUa4FbfPLhXwM0W5ZS4w==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      bignumber.js: 9.0.2
+      crypto-js: 4.1.1
+      elliptic: 6.5.4
+      expo-crypto: 9.2.0
+      expo-random: 11.2.0
+      js-base64: 3.7.2
+      tweetnacl: 1.0.3
+      utf8: 3.0.0
+    dev: false
+
+  /@hashgraph/proto/2.1.5:
+    resolution: {integrity: sha512-7iKO98T3iS+V+Ddy3Ew7+u8nzFT8MjRs6HczPE2scCjwKRhsodtYfGyOxVji+HN6WDqZmylr1VJwhNy5de/CRQ==}
+    engines: {node: '>=10.0.0'}
+    dependencies:
+      long: 4.0.0
+      protobufjs: 6.11.2
+    dev: false
+
+  /@humanwhocodes/config-array/0.9.3:
+    resolution: {integrity: sha512-3xSMlXHh03hCcCmFc0rbKp3Ivt2PFEJnQUJDDMTJQ2wkECZWdq4GePs2ctc5H8zV+cHPaq8k2vU8mrQjA6iHdQ==}
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 1.2.1

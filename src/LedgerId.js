@@ -67,27 +67,6 @@ export default class LedgerId {
     }
 
     /**
-     * @returns {string}
-     */
-    _toStringForChecksum() {
-        // legacy checksum logic from NetworkName
-        if (this._ledgerId.length == 1) {
-            switch (this._ledgerId[0]) {
-                case 0:
-                    return "0";
-                case 1:
-                    return "1";
-                case 2:
-                    return "2";
-                default:
-                    return hex.encode(this._ledgerId);
-            }
-        } else {
-            return hex.encode(this._ledgerId);
-        }
-    }
-
-    /**
      * Using the UTF-8 byte representation of "mainnet", "testnet",
      * or "previewnet" is NOT supported.
      *

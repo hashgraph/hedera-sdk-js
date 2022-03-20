@@ -50,7 +50,7 @@ describe("AccountInfoMocking", function () {
         servers.close();
     });
 
-    it("should retry on `UNAVAILABLE`", async function () {
+    it("should retry on UNAVAILABLE", async function () {
         this.timeout(10000);
 
         ({ client, servers } = await Mocker.withResponses([
@@ -95,8 +95,6 @@ describe("AccountInfoMocking", function () {
             .execute(client);
 
         expect(info.accountId.toString()).to.be.equal("0.0.10");
-
-        servers.close();
     });
 
     it("should be able to execute after getting transaction hashes", async function () {
@@ -109,7 +107,6 @@ describe("AccountInfoMocking", function () {
         client.setSignOnDemand(true);
 
         const transaction = await new FileCreateTransaction()
-            .setNodeAccountIds([new AccountId(3)])
             .setContents("hello 1")
             .freezeWith(client)
             .signWithOperator(client);
@@ -121,8 +118,6 @@ describe("AccountInfoMocking", function () {
         expect(hex.encode(hash)).to.be.equal(
             hex.encode(response.transactionHash)
         );
-
-        servers.close();
     });
 
     it("should be able to execute after getting transaction hashes with sign on demand disabled", async function () {
@@ -133,7 +128,6 @@ describe("AccountInfoMocking", function () {
         ({ client, servers } = await Mocker.withResponses([responses1]));
 
         const transaction = await new FileCreateTransaction()
-            .setNodeAccountIds([new AccountId(3)])
             .setContents("hello 1")
             .freezeWith(client)
             .signWithOperator(client);
@@ -145,8 +139,6 @@ describe("AccountInfoMocking", function () {
         expect(hex.encode(hash)).to.be.equal(
             hex.encode(response.transactionHash)
         );
-
-        servers.close();
     });
 
     it("should generate new transaction ID when TRANSACTION_EXPIRED is return", async function () {
@@ -199,8 +191,6 @@ describe("AccountInfoMocking", function () {
         await new FileCreateTransaction()
             .setContents("hello 1")
             .execute(client);
-
-        servers.close();
     });
 
     it("should error `TRANSACTION_EXPIRED` is return and client disabled transaction regeneration", async function () {
@@ -229,8 +219,6 @@ describe("AccountInfoMocking", function () {
                 throw error;
             }
         }
-
-        servers.close();
     });
 
     it("should still regenerate transaction IDs on `TRANSACTION_EXPIRED` when client disabled it, but transaction re-enabled it", async function () {
@@ -285,8 +273,6 @@ describe("AccountInfoMocking", function () {
             .setRegenerateTransactionId(true)
             .setContents("hello 1")
             .execute(client);
-
-        servers.close();
     });
 
     it("should timeout if Client.setRequestTimeout is set", async function () {
@@ -310,8 +296,6 @@ describe("AccountInfoMocking", function () {
         } catch (error) {
             err = error.message == "timeout exceeded";
         }
-
-        servers.close();
 
         if (!err) {
             throw new Error("request didn't timeout");
@@ -339,8 +323,6 @@ describe("AccountInfoMocking", function () {
         } catch (error) {
             err = error.message == "timeout exceeded";
         }
-
-        servers.close();
 
         if (!err) {
             throw new Error("request didn't timeout");
@@ -371,10 +353,30 @@ describe("AccountInfoMocking", function () {
             err = error.message == "grpc deadline exceeded";
         }
 
-        servers.close();
-
         if (!err) {
             throw new Error("request didn't timeout");
         }
+    });
+
+    it("should re-create a transaction if sign on demand is enabled and a random node is chosen which is not in the current list", async function () {
+        this.timeout(10000);
+
+        const responses1 = [{ response: { nodeTransactionPrecheckCode: 0 } }];
+
+        ({ client, servers } = await Mocker.withResponses([responses1]));
+
+        client.setSignOnDemand(true);
+
+        const transaction = new FileCreateTransaction()
+            .setContents("hello 1")
+            .freezeWith(client);
+
+        // Sets the nodeAccountIds to a different list, but doesn't lock the list
+        // this similates when `freezeWith()` sets the node account IDs to a list
+        // without locking it, but this list overwritten when executing.
+        transaction._nodeAccountIds.setList([new AccountId(4)]);
+
+        await transaction.signWithOperator(client);
+        await transaction.execute(client);
     });
 });

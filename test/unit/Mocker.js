@@ -356,8 +356,10 @@ class GrpcServers {
         }
 
         return Client.forNetwork(network)
-            .setNodeMinBackoff(1)
-            .setNodeMaxBackoff(1);
+            .setNodeMinBackoff(0)
+            .setNodeMaxBackoff(0)
+            .setNodeMinReadmitPeriod(0)
+            .setNodeMaxReadmitPeriod(0);
     }
 
     close() {
