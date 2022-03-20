@@ -310,7 +310,7 @@ export default class Transaction extends Executable {
                 if (
                     !util.compare(
                         bodies[i * nodeIds.length + j],
-                        bodies[(i * nodeIds.length + j) + 1],
+                        bodies[i * nodeIds.length + j + 1],
                         // eslint-disable-next-line ie11/no-collection-args
                         new Set(["nodeAccountID"])
                     )

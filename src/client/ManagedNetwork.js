@@ -251,7 +251,7 @@ export default class MangedNetwork {
         // but a potential issue is if somehow the healthy list gets
         // corrupted or count is too large then the while loop would
         // run forever. To resolve this, instead of using a while, we use
-        // a for loop where we call `this.getNode()` a max of 
+        // a for loop where we call `this.getNode()` a max of
         // `this._healthyNodes.length` times. This can result in a shorter
         // list than `count`, but that is much better than running forever
         for (let i = 0; i < this._healthyNodes.length; i++) {
