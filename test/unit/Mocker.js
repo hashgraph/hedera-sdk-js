@@ -10,9 +10,14 @@ import * as loader from "@grpc/proto-loader";
  */
 
 /**
- * @namespace {proto}
+ * @namespace proto
  * @typedef {import("@hashgraph/proto").Response} proto.Response
  * @typedef {import("@hashgraph/proto").Query} proto.Query
+ */
+
+/**
+ * @namespace com
+ * @typedef {import("@hashgraph/proto").com.hedera.mirror.api.proto.IConsensusTopicResponse} com.hedera.mirror.api.proto.IConsensusTopicResponse
  */
 
 export const PRIVATE_KEY = PrivateKey.fromString(
@@ -146,7 +151,7 @@ export const INTERNAL = {
 /**
  * @typedef {object} Response
  * @property {(request: proto.Transaction | proto.Query, index?: number) => proto.Response | proto.TransactionResponse} [call]
- * @property {proto.Response | proto.TransactionResponse} [response]
+ * @property {proto.Response | proto.TransactionResponse | com.hedera.mirror.api.proto.IConsensusTopicResponse} [response]
  * @property {grpc.ServiceError} [error]
  */
 
@@ -155,22 +160,41 @@ class GrpcServer {
      * @param {string | string[]} paths
      * @param {string} name
      */
-    constructor(paths, name) {
+    constructor(paths) {
         this.server = new grpc.Server();
 
-        const pkg = /** @type {grpc.GrpcObject} */ (
-            grpc.loadPackageDefinition(loader.loadSync(paths))[name]
+        const pkgs = /** @type {grpc.GrpcObject} */ (
+            grpc.loadPackageDefinition(loader.loadSync(paths))
         );
 
-        this.services = Object.entries(pkg)
-            .map(([key, value]) => {
-                return typeof value === "function"
-                    ? /** @type {grpc.ServiceDefinition<grpc.UntypedServiceImplementation>} */ (
-                          /** @type {grpc.GrpcObject} */ (pkg[key])["service"]
-                      )
-                    : null;
-            })
-            .filter((service) => service != null);
+        const proto = /** @type {grpc.GrpcObject} */ (pkgs.proto);
+        const mirror = /** @type {grpc.GrpcObject} */ (
+            pkgs.com.hedera.mirror.api.proto
+        );
+
+        this.services = [];
+
+        function addPackageServices(services, pkg) {
+            for (const [key, value] of Object.entries(pkg)) {
+                if (typeof value !== "function") {
+                    continue;
+                }
+
+                const service =
+                    /** @type {grpc.ServiceDefinition<grpc.UntypedServiceImplementation>} */ (
+                        /** @type {grpc.GrpcObject} */ (pkg[key])["service"]
+                    );
+
+                if (service == null) {
+                    continue;
+                }
+
+                services.push(service);
+            }
+        }
+
+        addPackageServices(this.services, mirror);
+        addPackageServices(this.services, proto);
 
         Object.freeze(this);
     }
@@ -189,38 +213,53 @@ class GrpcServer {
 
         for (const service of this.services) {
             for (const key of Object.keys(service)) {
-                router[key] = /** @type {grpc.handleUnaryCall<any, any>} */ (
-                    call,
-                    callback
-                ) => {
-                    const request = call.request;
-                    const response = responses[index];
+                router[key] =
+                    /** @type {grpc.handleUnaryCall<any, any> | grpc.handleServerStreamingCall<any, any>} */ (
+                        call,
+                        callback
+                    ) => {
+                        const request = call.request;
+                        const response = responses[index];
 
-                    if (response == null) {
-                        callback(ABORTED, null);
-                    }
+                        if (response == null) {
+                            if (callback != null) {
+                                callback(ABORTED, null);
+                            } else {
+                                call.end();
+                            }
 
-                    let value = null;
-                    let error = null;
+                            return;
+                        }
 
-                    if (response.response != null) {
-                        value = response.response;
-                    }
+                        let value = null;
+                        let error = null;
 
-                    if (response.call != null) {
-                        value = response.call(request, index);
-                    }
+                        if (response.response != null) {
+                            value = response.response;
+                        }
 
-                    if (response.error != null) {
-                        error = response.error;
-                    } else if (value == null) {
-                        error = ABORTED;
-                    }
+                        if (response.call != null) {
+                            value = response.call(request, index);
+                        }
 
-                    callback(error, value);
+                        if (response.error != null) {
+                            error = response.error;
+                        } else if (value == null) {
+                            error = ABORTED;
+                        }
 
-                    index += 1;
-                };
+                        if (callback != null) {
+                            callback(error, value);
+                        } else {
+                            call.write(value);
+                        }
+
+                        index += 1;
+
+                        if (index == responses.length && callback == null) {
+                            call.end();
+                        }
+                    };
             }
 
             this.server.addService(service, router);
@@ -330,7 +369,7 @@ class GrpcServers {
     addServer(responses) {
         const address = `0.0.0.0:${50213 + this._index}`;
         const nodeAccountId = `0.0.${3 + this._index}`;
-        const server = new GrpcServer(PROTOS, "proto").addResponses(responses);
+        const server = new GrpcServer(PROTOS).addResponses(responses);
 
         this._servers.push(server);
         this._addresses.push(address);
@@ -356,6 +395,7 @@ class GrpcServers {
         }
 
         return Client.forNetwork(network)
+            .setMirrorNetwork(Object.keys(network))
             .setNodeMinBackoff(0)
             .setNodeMaxBackoff(0)
             .setNodeMinReadmitPeriod(0)
