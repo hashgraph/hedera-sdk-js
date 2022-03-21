@@ -16,7 +16,8 @@ describe("ExchangeRates", function () {
         expect(exchangeRateSet.currentRate.hbars).to.equal(30000);
         const currentExpirationTime = new Date("January 20, 1970 01:08:34 UTC");
         currentExpirationTime.setMilliseconds(800);
-        expect(exchangeRateSet.currentRate.expirationTime.valueOf()).to.equal(
+        console.log("Value under test: ",exchangeRateSet.currentRate.expirationTime);
+        expect(exchangeRateSet.currentRate.expirationTime.getTime()).to.equal(
             currentExpirationTime.valueOf()
         );
         let exchangeRate = 19.338333333333335;

@@ -54,6 +54,8 @@ export default class ExchangeRates {
      * @returns {ExchangeRates}
      */
     static fromBytes(bytes) {
+        console.log("!!!LOOK HERE!!!");
+        console.log("Whaaat? ",proto.ExchangeRateSet.decode(bytes));
         return ExchangeRates._fromProtobuf(proto.ExchangeRateSet.decode(bytes));
     }
 }

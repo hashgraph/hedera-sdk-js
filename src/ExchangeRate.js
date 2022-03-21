@@ -50,18 +50,19 @@ export default class ExchangeRate {
      * @returns {ExchangeRate}
      */
     static _fromProtobuf(rate) {
+        let date = rate.expirationTime;
+        
+        if (date.seconds && date.seconds.low){
+            
+            date = date.seconds.low;
+
+        }
+        let expirationTime = new Date(date); 
+        console.log("Expiration time!!: ", expirationTime);
         return new ExchangeRate({
             hbars: /** @type {number} */ (rate.hbarEquiv),
             cents: /** @type {number} */ (rate.centEquiv),
-            expirationTime: new Date(
-                rate.expirationTime != null
-                    ? rate.expirationTime.seconds != null
-                        ? Long.isLong(rate.expirationTime.seconds)
-                            ? rate.expirationTime.seconds.toInt()
-                            : rate.expirationTime.seconds
-                        : 0 * 1000
-                    : 0 * 1000
-            ),
+            expirationTime: expirationTime,
         });
     }
 
