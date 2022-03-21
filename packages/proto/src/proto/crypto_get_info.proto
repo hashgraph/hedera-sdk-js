@@ -171,17 +171,17 @@ message CryptoGetInfoResponse {
         /**
          * All of the hbar allowances approved by the account owner.
          */
-        repeated CryptoAllowance crypto_allowances = 21;
+        repeated GrantedCryptoAllowance granted_crypto_allowances = 21;
 
         /**
          * All of the non-fungible token allowances approved by the account owner.
          */
-        repeated NftAllowance nft_allowances = 22;
+        repeated GrantedNftAllowance granted_nft_allowances = 22;
 
         /**
          * All of the fungible token allowances approved by the account owner.
          */
-        repeated TokenAllowance token_allowances = 23;
+        repeated GrantedTokenAllowance granted_token_allowances = 23;
     }
 
     /**

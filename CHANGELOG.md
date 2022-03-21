@@ -10,6 +10,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * `NativeClient` IPs should have a port
 
+## v2.11.0-beta.1
+
+### Added
+
+ * `LocalWallet`
+ * `LocalProvider`
+ * `Provider`
+ * `Signer`
+ * `Wallet`
+ * `SignerSignature`
+ * Verbose logging using `js-logger`
+ * `Client.setRequestTimeout()`
+
+### Fixed
+
+ * TLS for mirror nodes
+ * Transactions should have an appropriate default (copied from Java SDK)
+ * Min/max backoff for nodes should start at 8s to 60s
+ * The current backoff for nodes should be used when sorting inside of network
+   meaning nodes with a smaller current backoff will be prioritized
+ * Chunked transactions (`FileAppendTransaction` and `TopicMessageSubmitTransaction`) should
+   use the correct transation ID per transaction
+ * Transaction removing signatures when calling `Transaction.[toBytes|getTransactionHash]()`
+
 ## v2.10.0
 
 ### Added
@@ -25,11 +49,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `TransactionReceipt` protobuf encoding
  * `ContractId.fromString()`
 
+## v2.10.0-beta.1
+
+### Added
+
+ * `AddressBookQuery`
+ * Status codes
+ * `*[Transaction|Query].setGrpcDeadline()`
+ * `*Allowance.ownerAccountId`
+
 ## v2.9.1
 
 ### Fixed
 
  * Mirror network incorrectly using `433` for TLS instead of `443`
+ * `TransactionReceipt` protobuf encoding
+ * `ContractId.fromString()`
 
 ## v2.10.0-beta.1
 

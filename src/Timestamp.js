@@ -48,24 +48,21 @@ export default class Timestamp {
      * @returns {Timestamp}
      */
     static fromDate(date) {
-        let ms;
+        let nanos;
 
         if (typeof date === "number") {
-            ms = date;
+            nanos = Long.fromNumber(date);
         } else if (typeof date === "string") {
-            ms = Date.parse(date);
+            nanos = Long.fromNumber(Date.parse(date)).mul(1000000);
         } else if (date instanceof Date) {
-            ms = date.getTime();
+            nanos = Long.fromNumber(date.getTime()).mul(1000000);
         } else {
             throw new TypeError(
                 `invalid type '${typeof date}' for 'data', expected 'Date'`
             );
         }
 
-        const seconds = Math.floor(ms / 1000);
-        const nanos = Math.floor(ms % 1000) * 1000000;
-
-        return new Timestamp(seconds, nanos);
+        return new Timestamp(0, 0).plusNanos(nanos);
     }
 
     /**

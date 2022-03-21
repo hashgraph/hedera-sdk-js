@@ -26,7 +26,7 @@ import {
  * @typedef {import("@hashgraph/sdk").TransactionReceipt} TransactionReceipt
  */
 
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 
 dotenv.config();
 

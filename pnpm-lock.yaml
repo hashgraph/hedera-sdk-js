@@ -10,7 +10,7 @@ specifiers:
   '@grpc/grpc-js': ^1.5.3
   '@grpc/proto-loader': ^0.6.9
   '@hashgraph/cryptography': ^1.1.0-beta.5
-  '@hashgraph/proto': 2.1.4
+  '@hashgraph/proto': 2.1.5
   '@types/chai': ^4.3.0
   '@types/crypto-js': ^4.1.0
   '@types/long': ^4.0.1
@@ -38,6 +38,7 @@ specifiers:
   eslint-plugin-node: ^11.1.0
   geckodriver: ^3.0.1
   js-base64: ^3.7.2
+  js-logger: ^1.6.1
   long: ^4.0.0
   mocha: ^9.2.0
   mocha-webdriver-runner: ^0.6.3
@@ -53,10 +54,11 @@ specifiers:
 dependencies:
   '@grpc/grpc-js': 1.5.3
   '@hashgraph/cryptography': 1.1.0-beta.5
-  '@hashgraph/proto': 2.1.4
+  '@hashgraph/proto': 2.1.5
   bignumber.js: 9.0.2
   crypto-js: 4.1.1
   js-base64: 3.7.2
+  js-logger: 1.6.1
   long: 4.0.0
   protobufjs: 6.11.2
   utf8: 3.0.0
@@ -435,8 +437,8 @@ packages:
       utf8: 3.0.0
     dev: false
 
-  /@hashgraph/proto/2.1.4:
-    resolution: {integrity: sha512-gZP206s1SuWb4By8BIyAtRwXoO59ARfhShg4YIG+7Cp0rWXe0I1D+uQm4HRaPIWMU0S7xXUec/JPwnMefetTSg==}
+  /@hashgraph/proto/2.1.5:
+    resolution: {integrity: sha512-7iKO98T3iS+V+Ddy3Ew7+u8nzFT8MjRs6HczPE2scCjwKRhsodtYfGyOxVji+HN6WDqZmylr1VJwhNy5de/CRQ==}
     engines: {node: '>=10.0.0'}
     dependencies:
       long: 4.0.0
@@ -2699,6 +2701,10 @@ packages:
 
   /js-base64/3.7.2:
     resolution: {integrity: sha512-NnRs6dsyqUXejqk/yv2aiXlAvOs56sLkX6nUdeaNezI5LFFLlsZjOThmwnrcwh5ZZRwZlCMnVAY3CvhIhoVEKQ==}
+    dev: false
+
+  /js-logger/1.6.1:
+    resolution: {integrity: sha512-yTgMCPXVjhmg28CuUH8CKjU+cIKL/G+zTu4Fn4lQxs8mRFH/03QTNvEFngcxfg/gRDiQAOoyCKmMTOm9ayOzXA==}
     dev: false
 
   /js-tokens/4.0.0:

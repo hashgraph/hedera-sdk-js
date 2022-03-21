@@ -179,7 +179,6 @@ export default class ContractFunctionParameters {
      */
     addInt256Array(value) {
         this._selector.addInt256Array();
-        console.log("asdf");
         return this._addParam(util.convertToBigNumberArray(value), true);
     }
 

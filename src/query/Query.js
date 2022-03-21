@@ -13,9 +13,11 @@ import {
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import MaxQueryPaymentExceeded from "../MaxQueryPaymentExceeded.js";
 import Long from "long";
+import Logger from "js-logger";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
+ * @typedef {import("../PublicKey.js").default} PublicKey
  */
 
 /**
@@ -62,6 +64,8 @@ export default class Query extends Executable {
 
         /** @type {?Hbar} */
         this._maxQueryPayment = null;
+
+        this._timestamp = Date.now();
     }
 
     /**
@@ -138,6 +142,8 @@ export default class Query extends Executable {
             throw new Error("CostQuery has not been loaded yet");
         }
 
+        this._timestamp = Date.now();
+
         return COST_QUERY[0](this).execute(client);
     }
 
@@ -206,7 +212,8 @@ export default class Query extends Executable {
             );
         }
 
-        const operator = client._operator;
+        const operator =
+            this._operator != null ? this._operator : client._operator;
 
         if (this._paymentTransactionId == null) {
             if (this._isPaymentRequired()) {
@@ -262,6 +269,8 @@ export default class Query extends Executable {
                 )
             );
         }
+
+        this._timestamp = Date.now();
     }
 
     /**
@@ -349,6 +358,10 @@ export default class Query extends Executable {
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
                 : ResponseCodeEnum.OK
+        );
+
+        Logger.debug(
+            `[${this._getLogId()}] received status ${status.toString()}`
         );
 
         switch (status) {

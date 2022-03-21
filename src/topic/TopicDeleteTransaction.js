@@ -146,6 +146,16 @@ export default class TopicDeleteTransaction extends Transaction {
             topicID: this._topicId != null ? this._topicId._toProtobuf() : null,
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `TopicDeleteTransaction:${timestamp.toString()}`;
+    }
 }
 
 TRANSACTION_REGISTRY.set(

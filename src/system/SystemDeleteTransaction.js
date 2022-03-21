@@ -213,6 +213,16 @@ export default class SystemDeleteTransaction extends Transaction {
                     : null,
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `SystemDeleteTransaction:${timestamp.toString()}`;
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

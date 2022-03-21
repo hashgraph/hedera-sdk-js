@@ -33,6 +33,14 @@ export default class ExchangeRate {
          */
         this.expirationTime = props.expirationTime;
 
+        /**
+         * Calculated exchange rate
+         *
+         * @readonly
+         * @type {number}
+         */
+        this.exchangeRateInCents = props.cents / props.hbars;
+
         Object.freeze(this);
     }
 
@@ -48,7 +56,7 @@ export default class ExchangeRate {
             expirationTime: new Date(
                 rate.expirationTime != null
                     ? rate.expirationTime.seconds != null
-                        ? rate.expirationTime.seconds instanceof Long
+                        ? Long.isLong(rate.expirationTime.seconds)
                             ? rate.expirationTime.seconds.toInt()
                             : rate.expirationTime.seconds
                         : 0 * 1000

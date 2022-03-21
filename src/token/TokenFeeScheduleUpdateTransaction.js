@@ -177,6 +177,16 @@ export default class TokenFeeScheduleUpdateTransaction extends Transaction {
             customFees: this._customFees.map((fee) => fee._toProtobuf()),
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `TokenFeeScheduleUpdateTransaction:${timestamp.toString()}`;
+    }
 }
 
 TRANSACTION_REGISTRY.set(

@@ -207,6 +207,16 @@ export default class TokenBurnTransaction extends Transaction {
             token: this._tokenId != null ? this._tokenId._toProtobuf() : null,
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `TokenBurnTransaction:${timestamp.toString()}`;
+    }
 }
 
 TRANSACTION_REGISTRY.set(

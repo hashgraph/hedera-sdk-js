@@ -273,6 +273,16 @@ export default class ContractExecuteTransaction extends Transaction {
             functionParameters: this._functionParameters,
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `ContractExecuteTransaction:${timestamp.toString()}`;
+    }
 }
 
 TRANSACTION_REGISTRY.set(

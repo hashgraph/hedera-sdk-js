@@ -1,8 +1,68 @@
 import { expect } from "chai";
 
 import { TransactionId, AccountId, Timestamp } from "../../src/exports.js";
+import Long from "long";
 
 describe("TransactionId", function () {
+    it("[to|from]Bytes()", function () {
+        let transactionId = TransactionId.fromString("1.2.3@4.5/6");
+
+        expect(
+            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf()
+        ).to.deep.equal({
+            accountID: {
+                shardNum: Long.fromNumber(1),
+                realmNum: Long.fromNumber(2),
+                accountNum: Long.fromNumber(3),
+                alias: null,
+            },
+            transactionValidStart: {
+                seconds: Long.fromNumber(4),
+                nanos: 5,
+            },
+            scheduled: false,
+            nonce: 6,
+        });
+
+        transactionId = TransactionId.fromString("1.2.3@4.5?scheduled/6");
+
+        expect(
+            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf()
+        ).to.deep.equal({
+            accountID: {
+                shardNum: Long.fromNumber(1),
+                realmNum: Long.fromNumber(2),
+                accountNum: Long.fromNumber(3),
+                alias: null,
+            },
+            transactionValidStart: {
+                seconds: Long.fromNumber(4),
+                nanos: 5,
+            },
+            scheduled: true,
+            nonce: 6,
+        });
+
+        transactionId = TransactionId.fromString("1.2.3@4.5");
+
+        expect(
+            TransactionId.fromBytes(transactionId.toBytes())._toProtobuf()
+        ).to.deep.equal({
+            accountID: {
+                shardNum: Long.fromNumber(1),
+                realmNum: Long.fromNumber(2),
+                accountNum: Long.fromNumber(3),
+                alias: null,
+            },
+            transactionValidStart: {
+                seconds: Long.fromNumber(4),
+                nanos: 5,
+            },
+            scheduled: false,
+            nonce: null,
+        });
+    });
+
     it("should parse {shard}.{realm}.{num}@{seconds}.{nanos}", function () {
         const transactionId = TransactionId.fromString("1.2.3@4.5");
 

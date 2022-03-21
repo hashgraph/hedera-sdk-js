@@ -161,6 +161,19 @@ export default class AccountRecordsQuery extends Query {
             },
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp =
+            this._paymentTransactionId != null &&
+            this._paymentTransactionId.validStart != null
+                ? this._paymentTransactionId.validStart
+                : this._timestamp;
+
+        return `AccountRecordsQuery:${timestamp.toString()}`;
+    }
 }
 
 QUERY_REGISTRY.set(

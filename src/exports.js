@@ -25,6 +25,7 @@ export { default as AddressBookQuery } from "./network/AddressBookQuery.js";
 export { default as AssessedCustomFee } from "./token/AssessedCustomFee.js";
 export { default as ContractByteCodeQuery } from "./contract/ContractByteCodeQuery.js";
 export { default as ContractCallQuery } from "./contract/ContractCallQuery.js";
+export { default as ContractCreateFlow } from "./contract/ContractCreateFlow.js";
 export { default as ContractCreateTransaction } from "./contract/ContractCreateTransaction.js";
 export { default as ContractDeleteTransaction } from "./contract/ContractDeleteTransaction.js";
 export { default as ContractExecuteTransaction } from "./contract/ContractExecuteTransaction.js";
@@ -43,6 +44,7 @@ export { default as CustomRoyaltyFee } from "./token/CustomRoyaltyFee.js";
 export { default as DelegateContractId } from "./contract/DelegateContractId.js";
 export { default as ExchangeRate } from "./ExchangeRate.js";
 export { default as Executable } from "./Executable.js";
+export { default as ExchangeRates } from "./ExchangeRates.js";
 export { default as FileAppendTransaction } from "./file/FileAppendTransaction.js";
 export { default as FileContentsQuery } from "./file/FileContentsQuery.js";
 export { default as FileCreateTransaction } from "./file/FileCreateTransaction.js";
@@ -118,6 +120,10 @@ export { default as TransactionRecordQuery } from "./transaction/TransactionReco
 export { default as TransactionResponse } from "./transaction/TransactionResponse.js";
 export { default as Transfer } from "./Transfer.js";
 export { default as TransferTransaction } from "./account/TransferTransaction.js";
+export { default as Wallet } from "./Wallet.js";
+export { default as Provider } from "./Provider.js";
+export { default as Signer } from "./Signer.js";
+export { default as SignerSignature } from "./SignerSignature.js";
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";

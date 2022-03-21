@@ -92,10 +92,7 @@ export default class BaseIntegrationTestEnv {
         const originalOperatorKey = client.operatorAccountKey;
         const originalOperatorId = client.operatorAccountId;
 
-        await client
-            .setNodeWaitTime(8000)
-            .setMaxNodeAttempts(1)
-            .pingAll();
+        await client.setMaxNodeAttempts(1).pingAll();
 
         const network = {};
         const nodeAccountIds = options.nodeAccountIds != null ? options.nodeAccountIds : 1;
