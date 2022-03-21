@@ -15,6 +15,7 @@ describe("TokenNftAllowance", function () {
             tokenId,
             spenderAccountId,
             serialNumbers: [serial],
+            allSerials: false,
         });
 
         expect(allowance._toProtobuf()).to.deep.equal({
@@ -36,6 +37,7 @@ describe("TokenNftAllowance", function () {
             tokenId,
             spenderAccountId,
             serialNumbers: null,
+            allSerials: true,
         });
 
         expect(allowance._toProtobuf()).to.deep.equal({

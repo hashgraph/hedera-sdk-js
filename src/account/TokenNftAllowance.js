@@ -65,6 +65,9 @@ export default class TokenNftAllowance {
      * @returns {TokenNftAllowance}
      */
     static _fromProtobuf(allowance) {
+        const allSerials =
+            allowance.approvedForAll != null &&
+            allowance.approvedForAll.value == true;
         return new TokenNftAllowance({
             tokenId: TokenId._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
@@ -82,19 +85,14 @@ export default class TokenNftAllowance {
                           )
                       )
                     : null,
-            serialNumbers:
-                allowance.approvedForAll != null &&
-                allowance.approvedForAll.value
-                    ? null
-                    : allowance.serialNumbers != null
-                    ? allowance.serialNumbers.map((serialNumber) =>
-                          Long.fromValue(serialNumber)
-                      )
-                    : [],
-            allSerials:
-                allowance.approvedForAll != null &&
-                allowance.approvedForAll != null &&
-                allowance.approvedForAll.value == true,
+            serialNumbers: allSerials
+                ? null
+                : allowance.serialNumbers != null
+                ? allowance.serialNumbers.map((serialNumber) =>
+                      Long.fromValue(serialNumber)
+                  )
+                : [],
+            allSerials,
         });
     }
 
