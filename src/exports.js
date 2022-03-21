@@ -44,7 +44,6 @@ export { default as CustomFractionalFee } from "./token/CustomFractionalFee.js";
 export { default as CustomRoyaltyFee } from "./token/CustomRoyaltyFee.js";
 export { default as DelegateContractId } from "./contract/DelegateContractId.js";
 export { default as ExchangeRate } from "./ExchangeRate.js";
-export { default as Executable } from "./Executable.js";
 export { default as ExchangeRates } from "./ExchangeRates.js";
 export { default as Executable } from "./Executable.js";
 export { default as FileAppendTransaction } from "./file/FileAppendTransaction.js";
