@@ -59,10 +59,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `ExchangeRate._[from|to]Protobuf()` should correctly decode `expirationTime`
  * Mark `expo` as a optional peer dependency
 
-### Added
-
- * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
-
 ## v2.11.0
 
 ### Added
