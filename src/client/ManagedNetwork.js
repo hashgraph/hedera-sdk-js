@@ -349,6 +349,10 @@ export default class MangedNetwork {
         // and push the nodes into the network; this maintains the
         // shuffled state from `newNodes`
         for (const node of newNodes) {
+            if (!node.isHealthy()) {
+                continue;
+            }
+
             newHealthyNodes.push(node);
 
             const newNetworkNodes = newNetwork.has(node.getKey())
