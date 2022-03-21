@@ -95,7 +95,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `Transaction.fromBytes()` should validate all the transaction bodies are the same
  * `ExchangeRate._[from|to]Protobuf()` should correctly decode `expirationTime`
  * Mark `expo` as a optional peer dependency
- * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
+
+### Added
 
 ## v2.11.0
 
