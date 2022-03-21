@@ -131,8 +131,6 @@
         "vite": "^2.8.6"
     },
     "peerDependencies": {
-        "expo": {
-            "optional": true
-        }
+        "expo": "^44.0.5"
     }
 }
