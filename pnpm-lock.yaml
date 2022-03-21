@@ -23,7 +23,7 @@ specifiers:
   babel-plugin-module-rewrite: ^0.2.0
   bignumber.js: ^9.0.2
   chai: ^4.3.6
-  chromedriver: ^97.0.2
+  chromedriver: ^99.0.0
   crypto-js: ^4.1.1
   dotenv: ^14.3.2
   dpdm: ^3.8.0
@@ -82,7 +82,7 @@ devDependencies:
   babel-plugin-dynamic-import-node: 2.3.3
   babel-plugin-module-rewrite: 0.2.0
   chai: 4.3.6
-  chromedriver: 97.0.2
+  chromedriver: 99.0.0
   dotenv: 14.3.2
   dpdm: 3.8.0
   eslint: 8.8.0
@@ -1132,8 +1132,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /chromedriver/97.0.2:
-    resolution: {integrity: sha512-sOAfKCR3WsHvmKedZoWa+3tBVGdPtxq4zKxgKZCoJ2c924olBTW4Bnha6SHl93Yo7+QqsNn6ZpAC0ojhutacAg==}
+  /chromedriver/99.0.0:
+    resolution: {integrity: sha512-pyB+5LuyZdb7EBPL3i5D5yucZUD+SlkdiUtmpjaEnLd9zAXp+SvD/hP5xF4l/ZmWvUo/1ZLxAI1YBdhazGTpgA==}
     engines: {node: '>=10'}
     hasBin: true
     requiresBuild: true
