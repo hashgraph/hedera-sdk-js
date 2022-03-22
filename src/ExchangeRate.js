@@ -50,15 +50,10 @@ export default class ExchangeRate {
      * @returns {ExchangeRate}
      */
     static _fromProtobuf(rate) {
-        let date = rate.expirationTime;
-        
-        if (date.seconds && date.seconds.low){
-            
-            date = date.seconds.low;
-
-        }
+        let date = rate.expirationTime ? rate.expirationTime : new Date();
+        // depending on whether we are getting seconds, a long, or a date string, we want to get the right data
+        date = date?.seconds ? date?.seconds.low ? date.seconds.low :date.seconds : date;
         let expirationTime = new Date(date); 
-        console.log("Expiration time!!: ", expirationTime);
         return new ExchangeRate({
             hbars: /** @type {number} */ (rate.hbarEquiv),
             cents: /** @type {number} */ (rate.centEquiv),

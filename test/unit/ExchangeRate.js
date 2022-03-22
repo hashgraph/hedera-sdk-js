@@ -26,7 +26,6 @@ describe("ExchangeRate", function () {
             centEquiv: 0,
             expirationTime: "Thu, 24 Feb 2022 15:00:00 GMT"
         });
-        console.log("#####DATA###",ExchangeRate._fromProtobuf(rate2).expirationTime);
         expect(ExchangeRate._fromProtobuf(rate2).expirationTime.toUTCString()).to.equal("Thu, 24 Feb 2022 15:00:00 GMT");
     });
 });
