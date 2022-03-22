@@ -1196,10 +1196,9 @@ export default class Transaction extends Executable {
     _getScheduledTransactionBody() {
         return {
             memo: this.transactionMemo,
-            transactionFee:
-                this.maxTransactionFee != null
-                    ? this.maxTransactionFee.toTinybars()
-                    : null,
+            transactionFee: this._maxTransactionFee == null
+                ? this._defaultMaxTransactionFee.toTinybars()
+                : this._maxTransactionFee.toTinybars(),
             [this._getTransactionDataCase()]: this._makeTransactionData(),
         };
     }
