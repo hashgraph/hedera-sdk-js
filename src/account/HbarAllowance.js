@@ -74,16 +74,17 @@ export default class HbarAllowance {
     /**
      * @internal
      * @param {HashgraphProto.proto.IGrantedCryptoAllowance} approval
+     * @param {AccountId} ownerAccountId
      * @returns {HbarAllowance}
      */
-    static _fromGrantedProtobuf(approval) {
+    static _fromGrantedProtobuf(approval, ownerAccountId) {
         return new HbarAllowance({
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IAccountID} */ (
                     approval.spender
                 )
             ),
-            ownerAccountId: null,
+            ownerAccountId,
             amount: Hbar.fromTinybars(
                 approval.amount != null ? approval.amount : 0
             ),

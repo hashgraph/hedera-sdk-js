@@ -99,9 +99,10 @@ export default class TokenNftAllowance {
     /**
      * @internal
      * @param {HashgraphProto.proto.IGrantedNftAllowance} allowance
+     * @param {AccountId} ownerAccountId
      * @returns {TokenNftAllowance}
      */
-    static _fromGrantedProtobuf(allowance) {
+    static _fromGrantedProtobuf(allowance, ownerAccountId) {
         return new TokenNftAllowance({
             tokenId: TokenId._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
@@ -111,7 +112,7 @@ export default class TokenNftAllowance {
                     allowance.spender
                 )
             ),
-            ownerAccountId: null,
+            ownerAccountId,
             serialNumbers:
                 allowance.approvedForAll != null && allowance.approvedForAll
                     ? null
