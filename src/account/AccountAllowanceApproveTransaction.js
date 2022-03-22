@@ -370,7 +370,11 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
      * @param {AccountId | string} spenderAccountId
      * @returns {AccountAllowanceApproveTransaction}
      */
-    approveAllTokenNftAllowance(tokenId, ownerAccountId, spenderAccountId) {
+    approveTokenNftAllowanceAllSerials(
+        tokenId,
+        ownerAccountId,
+        spenderAccountId
+    ) {
         return this._approveAllTokenNftAllowance(
             tokenId,
             ownerAccountId,

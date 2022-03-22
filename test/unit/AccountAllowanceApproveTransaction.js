@@ -27,18 +27,28 @@ describe("AccountAllowanceApproveTransaction", function () {
         const timestamp1 = new Timestamp(14, 15);
         const hbarAmount = Hbar.fromTinybars(100);
         const tokenAmount = Long.fromNumber(101);
+        const ownerAccountId = new AccountId(20);
 
         let transaction = new AccountAllowanceApproveTransaction()
             .setTransactionId(
                 TransactionId.withValidStart(spenderAccountId1, timestamp1)
             )
             .setNodeAccountIds([nodeAccountId])
-            .addHbarAllowance(spenderAccountId1, hbarAmount)
-            .addTokenAllowance(tokenId1, spenderAccountId1, tokenAmount)
-            .addTokenNftAllowance(nftId1, spenderAccountId1)
-            .addTokenNftAllowance(nftId2, spenderAccountId1)
-            .addTokenNftAllowance(nftId2, spenderAccountId2)
-            .addAllTokenNftAllowance(tokenId1, spenderAccountId1)
+            .approveHbarAllowance(ownerAccountId, spenderAccountId1, hbarAmount)
+            .approveTokenAllowance(
+                tokenId1,
+                ownerAccountId,
+                spenderAccountId1,
+                tokenAmount
+            )
+            .approveTokenNftAllowance(nftId1, ownerAccountId, spenderAccountId1)
+            .approveTokenNftAllowance(nftId2, ownerAccountId, spenderAccountId1)
+            .approveTokenNftAllowance(nftId2, ownerAccountId, spenderAccountId2)
+            .approveTokenNftAllowanceAllSerials(
+                tokenId1,
+                ownerAccountId,
+                spenderAccountId1
+            )
             .freeze();
 
         transaction = Transaction.fromBytes(transaction.toBytes());
@@ -48,28 +58,28 @@ describe("AccountAllowanceApproveTransaction", function () {
         expect(data).to.deep.equal({
             cryptoAllowances: [
                 {
-                    owner: null,
+                    owner: ownerAccountId._toProtobuf(),
                     amount: hbarAmount.toTinybars(),
                     spender: spenderAccountId1._toProtobuf(),
                 },
             ],
             nftAllowances: [
                 {
-                    owner: null,
+                    owner: ownerAccountId._toProtobuf(),
                     serialNumbers: [serialNumber1, serialNumber2],
                     spender: spenderAccountId1._toProtobuf(),
                     tokenId: tokenId2._toProtobuf(),
                     approvedForAll: null,
                 },
                 {
-                    owner: null,
+                    owner: ownerAccountId._toProtobuf(),
                     serialNumbers: [serialNumber2],
                     spender: spenderAccountId2._toProtobuf(),
                     tokenId: tokenId2._toProtobuf(),
                     approvedForAll: null,
                 },
                 {
-                    owner: null,
+                    owner: ownerAccountId._toProtobuf(),
                     serialNumbers: null,
                     spender: spenderAccountId1._toProtobuf(),
                     tokenId: tokenId1._toProtobuf(),
@@ -78,7 +88,7 @@ describe("AccountAllowanceApproveTransaction", function () {
             ],
             tokenAllowances: [
                 {
-                    owner: null,
+                    owner: ownerAccountId._toProtobuf(),
                     amount: tokenAmount,
                     spender: spenderAccountId1._toProtobuf(),
                     tokenId: tokenId1._toProtobuf(),
