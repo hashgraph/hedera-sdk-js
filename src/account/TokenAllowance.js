@@ -86,9 +86,10 @@ export default class TokenAllowance {
     /**
      * @internal
      * @param {HashgraphProto.proto.IGrantedTokenAllowance} allowance
+     * @param {AccountId} ownerAccountId
      * @returns {TokenAllowance}
      */
-    static _fromGrantedProtobuf(allowance) {
+    static _fromGrantedProtobuf(allowance, ownerAccountId) {
         return new TokenAllowance({
             tokenId: TokenId._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
@@ -98,7 +99,7 @@ export default class TokenAllowance {
                     allowance.spender
                 )
             ),
-            ownerAccountId: null,
+            ownerAccountId,
             amount:
                 allowance.amount != null
                     ? Long.fromValue(/** @type {Long} */ (allowance.amount))

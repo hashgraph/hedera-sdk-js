@@ -185,10 +185,12 @@ export default class AccountInfo {
             aliasKey = null;
         }
 
+        const accountId = AccountId._fromProtobuf(
+            /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID)
+        );
+
         return new AccountInfo({
-            accountId: AccountId._fromProtobuf(
-                /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID)
-            ),
+            accountId,
             contractAccountId:
                 info.contractAccountID != null ? info.contractAccountID : null,
             isDeleted: info.deleted != null ? info.deleted : false,
@@ -259,18 +261,20 @@ export default class AccountInfo {
             hbarAllowances: (info.grantedCryptoAllowances != null
                 ? info.grantedCryptoAllowances
                 : []
-            ).map((allowance) => HbarAllowance._fromGrantedProtobuf(allowance)),
+            ).map((allowance) =>
+                HbarAllowance._fromGrantedProtobuf(allowance, accountId)
+            ),
             tokenAllowances: (info.grantedTokenAllowances != null
                 ? info.grantedTokenAllowances
                 : []
             ).map((allowance) =>
-                TokenAllowance._fromGrantedProtobuf(allowance)
+                TokenAllowance._fromGrantedProtobuf(allowance, accountId)
             ),
             nftAllowances: (info.grantedNftAllowances != null
                 ? info.grantedNftAllowances
                 : []
             ).map((allowance) =>
-                TokenNftAllowance._fromGrantedProtobuf(allowance)
+                TokenNftAllowance._fromGrantedProtobuf(allowance, accountId)
             ),
         });
     }
