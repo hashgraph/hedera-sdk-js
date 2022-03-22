@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+ * `TransactionRecord.[hbar|token|tokenNft]AllowanceAdjustments`
+ * `TransferTransaction.addApproved[Hbar|Token|Nft]Transfer()`
 
 ## v2.11.1
 
@@ -16,8 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `AccountAllowanceApproveTransaction.approve[Hbar|Token|TokenNft]Allowance()`
  * `AccountAllowanceAdjustTransaction.[grant|revoke][Hbar|Token|TokenNft]Allowance()`
  * `AccountAllowanceAdjustTransaction.[grant|revoke]TokenNftAllowanceAllSerials()`
- * `TransactionRecord.[hbar|token|tokenNft]AllowanceAdjustments`
- * `TransferTransaction.addApproved[Hbar|Token|Nft]Transfer()`
 
 ## v2.11.0
 
