@@ -260,6 +260,16 @@ export default class LiveHashAddTransaction extends Transaction {
             },
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `LiveHashAddTransaction:${timestamp.toString()}`;
+    }
 }
 
 TRANSACTION_REGISTRY.set(

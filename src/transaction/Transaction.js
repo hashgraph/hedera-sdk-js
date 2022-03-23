@@ -21,6 +21,8 @@ import PublicKey from "../PublicKey.js";
 import List from "./List.js";
 import Timestamp from "../Timestamp.js";
 import ForeignTransactionData from "./ForeignTransactionData.js";
+import Logger from "js-logger";
+
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -47,6 +49,7 @@ import ForeignTransactionData from "./ForeignTransactionData.js";
  * @typedef {import("../PrivateKey.js").default} PrivateKey
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
+ * @typedef {import("../Signer.js").default} Signer
  */
 
 // 90 days (in seconds)
@@ -110,12 +113,6 @@ export default class Transaction extends Executable {
          * @type {Set<string>}
          */
         this._signerPublicKeys = new Set();
-
-        /**
-         * @protected
-         * @type {number}
-         */
-        this._nextTransactionIndex = 0;
 
         /**
          * @private
@@ -328,7 +325,6 @@ export default class Transaction extends Executable {
         transaction._nodeAccountIds.setList(nodeIds).setLocked();
 
         transaction._nextNodeAccountIdIndex = 0;
-        transaction._nextTransactionIndex = 0;
         transaction._transactionValidDuration =
             body.transactionValidDuration != null &&
             body.transactionValidDuration.seconds != null
@@ -503,7 +499,7 @@ export default class Transaction extends Executable {
             );
         }
 
-        return this._transactionIds.next;
+        return this._transactionIds.current;
     }
 
     /**
@@ -791,6 +787,25 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * @param {Signer} signer
+     * @returns {Promise<this>}
+     */
+    async signWithSigner(signer) {
+        await signer.signTransaction(this);
+        return this;
+    }
+
+    /**
+     * @param {Signer} signer
+     * @returns {Promise<this>}
+     */
+    async freezeWithSigner(signer) {
+        await signer.populateTransaction(this);
+        await this.signWithSigner(signer);
+        return this;
+    }
+
+    /**
      * Will error if sign-on-demand is enabled
      *
      * @returns {Uint8Array}
@@ -920,6 +935,8 @@ export default class Transaction extends Executable {
             this._validateChecksums(client);
         }
 
+        this._operator = client != null ? client._operator : null;
+
         if (this._operator != null) {
             await this.signWith(
                 this._operator.publicKey,
@@ -935,7 +952,7 @@ export default class Transaction extends Executable {
      */
     async _makeRequestAsync() {
         const index =
-            this._nextTransactionIndex * this._nodeAccountIds.length +
+            this._transactionIds.index * this._nodeAccountIds.length +
             this._nodeAccountIds.index;
 
         if (!this._signOnDemand) {
@@ -998,7 +1015,7 @@ export default class Transaction extends Executable {
             Timestamp.generate()
         );
 
-        this._transactionIds.set(this._nextTransactionIndex, transactionId);
+        this._transactionIds.set(this._transactionIds.index, transactionId);
     }
 
     _buildAllTransactions() {
@@ -1008,6 +1025,11 @@ export default class Transaction extends Executable {
     }
 
     async _buildAllTransactionsAsync() {
+        if (!this._signOnDemand) {
+            this._buildAllTransactions();
+            return;
+        }
+
         this._buildSignedTransactions();
 
         if (this._transactions.locked) {
@@ -1066,6 +1088,10 @@ export default class Transaction extends Executable {
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
                 : ResponseCodeEnum.OK
+        );
+
+        Logger.debug(
+            `[${this._getLogId()}] received status ${status.toString()}`
         );
 
         switch (status) {
@@ -1127,9 +1153,6 @@ export default class Transaction extends Executable {
         );
         const transactionId = this.transactionId;
 
-        this._nextTransactionIndex =
-            (this._nextTransactionIndex + 1) % this._transactionIds.length;
-
         this._transactionIds.advance();
 
         return new TransactionResponse({
@@ -1150,9 +1173,7 @@ export default class Transaction extends Executable {
             );
         }
 
-        return this._nodeAccountIds.list[
-            this._nextNodeAccountIdIndex % this._nodeAccountIds.length
-        ];
+        return this._nodeAccountIds.current;
     }
 
     /**
@@ -1214,9 +1235,9 @@ export default class Transaction extends Executable {
         return {
             memo: this.transactionMemo,
             transactionFee:
-                this.maxTransactionFee != null
-                    ? this.maxTransactionFee.toTinybars()
-                    : null,
+                this._maxTransactionFee == null
+                    ? this._defaultMaxTransactionFee.toTinybars()
+                    : this._maxTransactionFee.toTinybars(),
             [this._getTransactionDataCase()]: this._makeTransactionData(),
         };
     }

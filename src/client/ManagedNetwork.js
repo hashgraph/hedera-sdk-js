@@ -52,8 +52,8 @@ export default class MangedNetwork {
         /** @type {LedgerId | null} */
         this._ledgerId = null;
 
-        /** @type {number} */
-        this._minBackoff = 250;
+        this._minBackoff = 8000;
+        this._maxBackoff = 1000 * 60 * 60;
 
         /** @type {number} */
         this._maxNodeAttempts = -1;
@@ -171,7 +171,7 @@ export default class MangedNetwork {
             for (let i = this._nodes.length - 1; i >= 0; i--) {
                 const node = this._nodes[i];
 
-                if (node._attempts < this._maxNodeAttempts) {
+                if (node._badGrpcStatusCount < this._maxNodeAttempts) {
                     continue;
                 }
 
@@ -203,6 +203,7 @@ export default class MangedNetwork {
             }
 
             if (!keys.has(node.getKey())) {
+                keys.add(node.getKey());
                 nodes.push(node);
             }
         }
@@ -306,6 +307,25 @@ export default class MangedNetwork {
         this._minBackoff = minBackoff;
         for (const node of this._nodes) {
             node.setMinBackoff(minBackoff);
+        }
+        return this;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get maxBackoff() {
+        return this._maxBackoff;
+    }
+
+    /**
+     * @param {number} maxBackoff
+     * @returns {this}
+     */
+    setMaxBackoff(maxBackoff) {
+        this._maxBackoff = maxBackoff;
+        for (const node of this._nodes) {
+            node.setMaxBackoff(maxBackoff);
         }
         return this;
     }

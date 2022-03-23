@@ -512,6 +512,16 @@ export default class ContractCreateTransaction extends Transaction {
                 this._senderId != null ? this._senderId._toProtobuf() : null,
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `ContractCreateTransaction:${timestamp.toString()}`;
+    }
 }
 
 TRANSACTION_REGISTRY.set(

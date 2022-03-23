@@ -351,6 +351,16 @@ export default class FreezeTransaction extends Transaction {
                 this._freezeType != null ? this._freezeType.valueOf() : null,
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `FreezeTransaction:${timestamp.toString()}`;
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

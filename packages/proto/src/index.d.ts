@@ -284,6 +284,12 @@ import ITokenAllowance = proto.ITokenAllowance;
 import TokenAllowance = proto.TokenAllowance;
 import INftAllowance = proto.INftAllowance;
 import NftAllowance = proto.NftAllowance;
+import IGrantedCryptoAllowance = proto.IGrantedCryptoAllowance;
+import GrantedCryptoAllowance = proto.GrantedCryptoAllowance;
+import IGrantedTokenAllowance = proto.IGrantedTokenAllowance;
+import GrantedTokenAllowance = proto.GrantedTokenAllowance;
+import IGrantedNftAllowance = proto.IGrantedNftAllowance;
+import GrantedNftAllowance = proto.GrantedNftAllowance;
 import ICryptoGetLiveHashQuery = proto.ICryptoGetLiveHashQuery;
 import CryptoGetLiveHashQuery = proto.CryptoGetLiveHashQuery;
 import ICryptoGetLiveHashResponse = proto.ICryptoGetLiveHashResponse;
@@ -682,6 +688,12 @@ export {
     TokenAllowance,
     INftAllowance,
     NftAllowance,
+    IGrantedCryptoAllowance,
+    GrantedCryptoAllowance,
+    IGrantedTokenAllowance,
+    GrantedTokenAllowance,
+    IGrantedNftAllowance,
+    GrantedNftAllowance,
     ICryptoGetLiveHashQuery,
     CryptoGetLiveHashQuery,
     ICryptoGetLiveHashResponse,

@@ -75,46 +75,8 @@ describe("CryptoTransfer", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.InvalidAccountAmounts);
-        }
-
-        if (!err) {
-            throw new Error("Crypto transfer did not error.");
-        }
-
-        await env.close();
-    });
-
-    it("should error when receiver and sender are the same accounts", async function () {
-        this.timeout(120000);
-
-        const env = await IntegrationTestEnv.new();
-        const key = PrivateKey.generateED25519();
-
-        const response = await new AccountCreateTransaction()
-            .setKey(key)
-            .setInitialBalance(new Hbar(1))
-            .execute(env.client);
-
-        const receipt = await response.getReceipt(env.client);
-
-        expect(receipt.accountId).to.not.be.null;
-        const account = receipt.accountId;
-
-        let err = false;
-
-        try {
-            await (
-                await new TransferTransaction()
-                    .addHbarTransfer(account, new Hbar(1))
-                    .addHbarTransfer(account, new Hbar(-1))
-                    .execute(env.client)
-            ).getReceipt(env.client);
-        } catch (error) {
             console.log(error);
-            err = error
-                .toString()
-                .includes(Status.AccountRepeatedInAccountAmounts);
+            err = error.toString().includes(Status.InvalidAccountAmounts);
         }
 
         if (!err) {

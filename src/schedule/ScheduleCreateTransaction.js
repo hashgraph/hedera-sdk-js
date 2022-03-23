@@ -4,6 +4,7 @@ import Transaction, {
     SCHEDULE_CREATE_TRANSACTION,
 } from "../transaction/Transaction.js";
 import Key from "../Key.js";
+import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
@@ -81,6 +82,8 @@ export default class ScheduleCreateTransaction extends Transaction {
         if (props.scheduleMemo != null) {
             this.setScheduleMemo(props.scheduleMemo);
         }
+
+        this._defaultMaxTransactionFee = new Hbar(5);
     }
 
     /**
@@ -263,6 +266,16 @@ export default class ScheduleCreateTransaction extends Transaction {
                     : null,
             memo: this._scheduleMemo,
         };
+    }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `ScheduleCreateTransaction:${timestamp.toString()}`;
     }
 }
 

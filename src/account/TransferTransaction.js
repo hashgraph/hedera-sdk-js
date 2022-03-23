@@ -208,9 +208,10 @@ export default class TransferTransaction extends Transaction {
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} accountId
      * @param {number | Long} amount
+     * @param {boolean} isApproved
      * @returns {this}
      */
-    addTokenTransfer(tokenId, accountId, amount) {
+    _addTokenTransfer(tokenId, accountId, amount, isApproved) {
         this._requireNotFrozen();
 
         const token =
@@ -238,11 +239,31 @@ export default class TransferTransaction extends Transaction {
                 accountId,
                 expectedDecimals: null,
                 amount,
-                isApproved: false,
+                isApproved,
             })
         );
 
         return this;
+    }
+
+    /**
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string} accountId
+     * @param {number | Long} amount
+     * @returns {this}
+     */
+    addTokenTransfer(tokenId, accountId, amount) {
+        return this._addTokenTransfer(tokenId, accountId, amount, false);
+    }
+
+    /**
+     * @param {TokenId | string} tokenId
+     * @param {AccountId | string} accountId
+     * @param {number | Long} amount
+     * @returns {this}
+     */
+    addApprovedTokenTransfer(tokenId, accountId, amount) {
+        return this._addTokenTransfer(tokenId, accountId, amount, true);
     }
 
     /**
@@ -331,9 +352,10 @@ export default class TransferTransaction extends Transaction {
      * @internal
      * @param {AccountId | string} accountId
      * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
+     * @param {boolean} isApproved
      * @returns {TransferTransaction}
      */
-    addHbarTransfer(accountId, amount) {
+    _addHbarTransfer(accountId, amount, isApproved) {
         this._requireNotFrozen();
 
         const account =
@@ -355,11 +377,31 @@ export default class TransferTransaction extends Transaction {
             new Transfer({
                 accountId: account,
                 amount: hbars,
-                isApproved: false,
+                isApproved,
             })
         );
 
         return this;
+    }
+
+    /**
+     * @internal
+     * @param {AccountId | string} accountId
+     * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
+     * @returns {TransferTransaction}
+     */
+    addHbarTransfer(accountId, amount) {
+        return this._addHbarTransfer(accountId, amount, false);
+    }
+
+    /**
+     * @internal
+     * @param {AccountId | string} accountId
+     * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
+     * @returns {TransferTransaction}
+     */
+    addApprovedHbarTransfer(accountId, amount) {
+        return this._addHbarTransfer(accountId, amount, true);
     }
 
     /**
@@ -410,13 +452,15 @@ export default class TransferTransaction extends Transaction {
     }
 
     /**
+     * @param {boolean} isApproved
      * @param {NftId | TokenId | string} tokenIdOrNftId
      * @param {AccountId | string | Long | number} senderAccountIdOrSerialNumber
      * @param {AccountId | string} receiverAccountIdOrSenderAccountId
      * @param {(AccountId | string)=} receiver
      * @returns {TransferTransaction}
      */
-    addNftTransfer(
+    _addNftTransfer(
+        isApproved,
         tokenIdOrNftId,
         senderAccountIdOrSerialNumber,
         receiverAccountIdOrSenderAccountId,
@@ -510,7 +554,7 @@ export default class TransferTransaction extends Transaction {
                 serialNumber: nftId.serial,
                 senderAccountId,
                 receiverAccountId,
-                isApproved: false,
+                isApproved,
             })
         );
 
@@ -518,6 +562,51 @@ export default class TransferTransaction extends Transaction {
     }
 
     /**
+     * @param {NftId | TokenId | string} tokenIdOrNftId
+     * @param {AccountId | string | Long | number} senderAccountIdOrSerialNumber
+     * @param {AccountId | string} receiverAccountIdOrSenderAccountId
+     * @param {(AccountId | string)=} receiver
+     * @returns {TransferTransaction}
+     */
+    addNftTransfer(
+        tokenIdOrNftId,
+        senderAccountIdOrSerialNumber,
+        receiverAccountIdOrSenderAccountId,
+        receiver
+    ) {
+        return this._addNftTransfer(
+            false,
+            tokenIdOrNftId,
+            senderAccountIdOrSerialNumber,
+            receiverAccountIdOrSenderAccountId,
+            receiver
+        );
+    }
+
+    /**
+     * @param {NftId | TokenId | string} tokenIdOrNftId
+     * @param {AccountId | string | Long | number} senderAccountIdOrSerialNumber
+     * @param {AccountId | string} receiverAccountIdOrSenderAccountId
+     * @param {(AccountId | string)=} receiver
+     * @returns {TransferTransaction}
+     */
+    addApprovedNftTransfer(
+        tokenIdOrNftId,
+        senderAccountIdOrSerialNumber,
+        receiverAccountIdOrSenderAccountId,
+        receiver
+    ) {
+        return this._addNftTransfer(
+            true,
+            tokenIdOrNftId,
+            senderAccountIdOrSerialNumber,
+            receiverAccountIdOrSenderAccountId,
+            receiver
+        );
+    }
+
+    /**
+     * @deprecated - Use `addApprovedHbarTransfer()` instead
      * @param {AccountId | string} accountId
      * @param {boolean} isApproved
      * @returns {TransferTransaction}
@@ -538,6 +627,7 @@ export default class TransferTransaction extends Transaction {
     }
 
     /**
+     * @deprecated - Use `addApprovedTokenTransfer()` instead
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} accountId
      * @param {boolean} isApproved
@@ -564,6 +654,7 @@ export default class TransferTransaction extends Transaction {
     }
 
     /**
+     * @deprecated - Use `addApprovedNftTransfer()` instead
      * @param {NftId | string} nftId
      * @param {boolean} isApproved
      * @returns {TransferTransaction}
@@ -782,6 +873,16 @@ export default class TransferTransaction extends Transaction {
                 };
             }),
         };
+    }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `TransferTransaction:${timestamp.toString()}`;
     }
 }
 

@@ -193,6 +193,16 @@ export default class TokenAssociateTransaction extends Transaction {
                 this._accountId != null ? this._accountId._toProtobuf() : null,
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+            this._transactionIds.current.validStart
+        );
+        return `TokenAssociateTransaction:${timestamp.toString()}`;
+    }
 }
 
 TRANSACTION_REGISTRY.set(

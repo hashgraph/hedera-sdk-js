@@ -34,7 +34,7 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(75000)
+            .setGas(100000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -53,7 +53,7 @@ describe("ContractExecute", function () {
         await (
             await new ContractExecuteTransaction()
                 .setContractId(contract)
-                .setGas(75000)
+                .setGas(100000)
                 .setFunction(
                     "setMessage",
                     new ContractFunctionParameters().addString("new message")
@@ -64,6 +64,7 @@ describe("ContractExecute", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -97,7 +98,7 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(75000)
+            .setGas(100000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -118,7 +119,7 @@ describe("ContractExecute", function () {
         try {
             await (
                 await new ContractExecuteTransaction()
-                    .setGas(75000)
+                    .setGas(100000)
                     .setFunction(
                         "setMessage",
                         new ContractFunctionParameters().addString(
@@ -134,6 +135,7 @@ describe("ContractExecute", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -171,7 +173,7 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(75000)
+            .setGas(100000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -193,7 +195,7 @@ describe("ContractExecute", function () {
             await (
                 await new ContractExecuteTransaction()
                     .setContractId(contract)
-                    .setGas(75000)
+                    .setGas(100000)
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
@@ -203,6 +205,7 @@ describe("ContractExecute", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -240,7 +243,7 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(75000)
+            .setGas(100000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -277,6 +280,7 @@ describe("ContractExecute", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -314,7 +318,7 @@ describe("ContractExecute", function () {
 
         response = await new ContractCreateTransaction()
             .setAdminKey(operatorKey)
-            .setGas(75000)
+            .setGas(100000)
             .setConstructorParameters(
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
@@ -336,7 +340,7 @@ describe("ContractExecute", function () {
             await (
                 await new ContractExecuteTransaction()
                     .setContractId(contract)
-                    .setGas(75000)
+                    .setGas(100000)
                     .setFunction("setMessage")
                     .execute(env.client)
             ).getReceipt(env.client);
@@ -347,6 +351,7 @@ describe("ContractExecute", function () {
         await (
             await new ContractDeleteTransaction()
                 .setContractId(contract)
+                .setTransferAccountId(env.client.operatorAccountId)
                 .execute(env.client)
         ).getReceipt(env.client);
 

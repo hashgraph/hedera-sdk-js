@@ -1,12 +1,15 @@
 import GrpcServiceError from "./grpc/GrpcServiceError.js";
 import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
+import Logger from "js-logger";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
  * @typedef {import("./channel/Channel.js").default} Channel
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  * @typedef {import("./client/Client.js").ClientOperator} ClientOperator
+ * @typedef {import("./Signer.js").default} Signer
+ * @typedef {import("./PublicKey.js").default} PublicKey
  */
 
 /**
@@ -259,6 +262,14 @@ export default class Executable {
     }
 
     /**
+     * @abstract
+     * @returns {string}
+     */
+    _getLogId() {
+        throw new Error("not implemented");
+    }
+
+    /**
      * @protected
      * @returns {void}
      */
@@ -293,6 +304,29 @@ export default class Executable {
             (error.status._code === GrpcStatus.Internal._code &&
                 RST_STREAM.test(error.message))
         );
+    }
+
+    /**
+     * @param {AccountId} accountId
+     * @param {PublicKey} publicKey
+     * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
+     * @returns {this}
+     */
+    _setOperatorWith(accountId, publicKey, transactionSigner) {
+        this._operator = {
+            transactionSigner,
+            accountId,
+            publicKey,
+        };
+        return this;
+    }
+
+    /**
+     * @param {Signer} signer
+     * @returns {Promise<OutputT>}
+     */
+    async executeWithSigner(signer) {
+        return signer.sendRequest(this);
     }
 
     /**
@@ -342,6 +376,11 @@ export default class Executable {
                 );
             }
 
+            const logId = this._getLogId();
+            Logger.debug(
+                `[${logId}] Node AccountID: ${node.accountId.toString()}, IP: ${node.address.toString()}`
+            );
+
             const channel = node.getChannel();
             const request = await this._makeRequestAsync();
 
@@ -353,6 +392,9 @@ export default class Executable {
             let response;
 
             if (!node.isHealthy()) {
+                Logger.debug(
+                    `[${logId}] node is not healthy, waiting ${node.getRemainingTime()}`
+                );
                 await node.wait();
             }
 
@@ -379,6 +421,9 @@ export default class Executable {
             } catch (err) {
                 const error = GrpcServiceError._fromResponse(
                     /** @type {Error} */ (err)
+                );
+                Logger.debug(
+                    `[${logId}] received gRPC error ${JSON.stringify(error)}`
                 );
 
                 if (

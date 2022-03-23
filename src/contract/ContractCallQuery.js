@@ -285,6 +285,19 @@ export default class ContractCallQuery extends Query {
             },
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp =
+            this._paymentTransactionId != null &&
+            this._paymentTransactionId.validStart != null
+                ? this._paymentTransactionId.validStart
+                : this._timestamp;
+
+        return `ContractCallQuery:${timestamp.toString()}`;
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

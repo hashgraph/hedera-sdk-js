@@ -3,15 +3,14 @@ import { Client } from "./client/NodeIntegrationTestEnv.js";
 
 describe("TopicMessageQuery", function () {
     it("should be executable", async function () {
-        this.timeout(10000);
+        this.timeout(20000);
 
         const client = Client.forNetwork({});
         client.setTransportSecurity(true);
         client.setMirrorNetwork(["mainnet-public.mirrornode.hedera.com:443"]);
-        client.mirroNetwork();
 
         let finished = false;
-        let endTime = Date.now() + 5000;
+        let endTime = Date.now() + 10000;
 
         new TopicMessageQuery()
             .setTopicId("0.0.120438")

@@ -160,6 +160,19 @@ export default class AccountStakersQuery extends Query {
             },
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    _getLogId() {
+        const timestamp =
+            this._paymentTransactionId != null &&
+            this._paymentTransactionId.validStart != null
+                ? this._paymentTransactionId.validStart
+                : this._timestamp;
+
+        return `AccountStakersQuery:${timestamp.toString()}`;
+    }
 }
 
 // @ts-ignore
