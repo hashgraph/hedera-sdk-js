@@ -245,8 +245,7 @@ export default class ContractExecuteTransaction extends Transaction {
      */
     populateFromForeignTransaction(foreignTx) {
         const txInfo = EthTxInfo.from(foreignTx);
-        console.log(txInfo)
-        console.log(foreignTx)
+
         if (txInfo.senderPubKey != null) {
             this._senderID = PublicKey.fromBytesECDSA(
                 txInfo.senderPubKey
@@ -258,16 +257,26 @@ export default class ContractExecuteTransaction extends Transaction {
             txInfo.callDataLength != null &&
             txInfo.nonce != null
         ) {
+            const prefix = Number("0x" + txInfo.transaction.substring(0,2));
+
+            var foreignTransactionType;
+
+            if (prefix == 0x2) {
+                foreignTransactionType = 2;
+            } else if (prefix > 0xc0) {
+                foreignTransactionType = 0;
+            } else {
+                throw new Error("Invalid Foreign Transaction Type");
+            }
+
             const foreignTransactionData = new ForeignTransactionData({
-                foreignTransactionType: 2,
+                foreignTransactionType: foreignTransactionType,
                 foreignTransactionBytes: Buffer.from(txInfo.transaction, "hex"),
                 payloadStart: txInfo.callDataStart,
                 payloadLength: txInfo.callDataLength,
                 nonce: txInfo.nonce,
             });
-            console.log(txInfo)
-            console.log(foreignTx)
-            console.log(foreignTransactionData)
+
             this.setForeignTransactionData(
                 foreignTransactionData
             );
