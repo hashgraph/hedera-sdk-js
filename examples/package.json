@@ -3,6 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "compile": "echo hello",
         "lint": "run-s lint:*",
         "lint:types": "tsc",
         "lint:format": "prettier '*.js' '*.json' --check",
