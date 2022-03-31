@@ -76,6 +76,7 @@ export default class CostQuery extends Executable {
 
         this._header = {
             payment: await _makePaymentTransaction(
+                this._getLogId(),
                 /** @type {import("../transaction/TransactionId.js").default} */
                 (TransactionId.generate(new AccountId(0))),
                 new AccountId(0),
