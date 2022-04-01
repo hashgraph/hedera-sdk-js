@@ -79,11 +79,20 @@ export default class ContractFunctionResult {
         this.evmAddress = result.evmAddress;
 
         this.stateChanges = result.stateChanges;
-        
+
+        /**
+         * The amount of gas available for the call, aka the gasLimit.
+         */
         this.gas = result.gas;
 
-        this.amount = result.amount; 
+        /**
+         * Number of tinybars sent (the function must be payable if this is nonzero).
+         */
+        this.amount = result.amount;
 
+        /**
+         * The parameters passed into the contract call.
+         */
         this.functionParameters = result.functionParameters;
     }
 
@@ -109,7 +118,8 @@ export default class ContractFunctionResult {
             errorMessage:
                 result.errorMessage != null ? result.errorMessage : null,
             bloom: /** @type {Uint8Array} */ (result.bloom),
-            gasUsed: gasUsed instanceof Long ? gasUsed : Long.fromValue(gasUsed),
+            gasUsed:
+                gasUsed instanceof Long ? gasUsed : Long.fromValue(gasUsed),
             logs: (result.logInfo != null ? result.logInfo : []).map((info) =>
                 ContractLogInfo._fromProtobuf(info)
             ),
@@ -127,7 +137,9 @@ export default class ContractFunctionResult {
             ).map((change) => ContractStateChange._fromProtobuf(change)),
             gas: gas instanceof Long ? gas : Long.fromValue(gas),
             amount: amount instanceof Long ? amount : Long.fromValue(amount),
-            functionParameters: /** @type {Uint8Array} */ (result.functionParameters),
+            functionParameters: /** @type {Uint8Array} */ (
+                result.functionParameters
+            ),
         });
     }
 
