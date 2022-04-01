@@ -32,6 +32,9 @@ export default class ContractFunctionResult {
      * @param {Uint8Array | null} result.evmAddress
      * @param {ContractStateChange[]} result.stateChanges
      * @param {Uint8Array} result.bytes
+     * @param {Long} result.gas
+     * @param {Long} result.amount
+     * @param {Uint8Array} result.functionParameters
      */
     constructor(result) {
         /**
@@ -76,6 +79,12 @@ export default class ContractFunctionResult {
         this.evmAddress = result.evmAddress;
 
         this.stateChanges = result.stateChanges;
+        
+        this.gas = result.gas;
+
+        this.amount = result.amount; 
+
+        this.functionParameters = result.functionParameters;
     }
 
     /**
@@ -87,7 +96,9 @@ export default class ContractFunctionResult {
             /** @type {HashgraphProto.proto.IContractID | null} */ (
                 result.contractID
             );
-        const gas = /** @type {Long | number} */ (result.gasUsed);
+        const gasUsed = /** @type {Long} */ (result.gasUsed);
+        const gas = /** @type {Long} */ (result.gas);
+        const amount = /** @type {Long} */ (result.amount);
 
         return new ContractFunctionResult({
             bytes: /** @type {Uint8Array} */ (result.contractCallResult),
@@ -98,7 +109,7 @@ export default class ContractFunctionResult {
             errorMessage:
                 result.errorMessage != null ? result.errorMessage : null,
             bloom: /** @type {Uint8Array} */ (result.bloom),
-            gasUsed: gas instanceof Long ? gas : Long.fromValue(gas),
+            gasUsed: gasUsed instanceof Long ? gasUsed : Long.fromValue(gasUsed),
             logs: (result.logInfo != null ? result.logInfo : []).map((info) =>
                 ContractLogInfo._fromProtobuf(info)
             ),
@@ -114,6 +125,9 @@ export default class ContractFunctionResult {
                 ? result.stateChanges
                 : []
             ).map((change) => ContractStateChange._fromProtobuf(change)),
+            gas: gas instanceof Long ? gas : Long.fromValue(gas),
+            amount: amount instanceof Long ? amount : Long.fromValue(amount),
+            functionParameters: /** @type {Uint8Array} */ (result.functionParameters),
         });
     }
 
