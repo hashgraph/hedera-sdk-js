@@ -237,10 +237,11 @@ export default class Query extends Executable {
                 }
 
                 cost = actualCost;
-                Logger.debug(`[${this._getLogId()}] received cost for query ${cost.toString()}`);
+                Logger.debug(
+                    `[${this._getLogId()}] received cost for query ${cost.toString()}`
+                );
             }
         }
-
 
         this._queryPayment = cost;
 
