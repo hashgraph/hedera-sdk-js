@@ -39,6 +39,7 @@
         "compile": "run-s compile:proto compile:js",
         "compile:js": "babel src -d lib",
         "compile:proto": "./generate_protos.sh",
+        "compile:proto:mac": "./generate_protos_mac.sh",
         "lint": "run-s lint:*",
         "lint:types": "tsc",
         "lint:format": "prettier \"*.json\" \"src/*.js\" \"src/*.ts\" --check",
