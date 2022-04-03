@@ -11,11 +11,15 @@ specifiers:
   '@grpc/proto-loader': ^0.6.9
 <<<<<<< HEAD
   '@hashgraph/cryptography': ^1.1.2
+<<<<<<< HEAD
   '@hashgraph/proto': ^2.3.0
 =======
   '@hashgraph/cryptography': 1.1.1
   '@hashgraph/proto': 2.1.5
 >>>>>>> b6caff99 (Protobufs submodule (#963))
+=======
+  '@hashgraph/proto': link:packages/proto
+>>>>>>> e06154b9 (feat HIP-206 (#1036))
   '@types/chai': ^4.3.0
   '@types/crypto-js': ^4.1.1
   '@types/long': ^4.0.1
@@ -60,11 +64,15 @@ dependencies:
   '@grpc/grpc-js': 1.5.7
 <<<<<<< HEAD
   '@hashgraph/cryptography': 1.1.2
+<<<<<<< HEAD
   '@hashgraph/proto': 2.3.0
 =======
   '@hashgraph/cryptography': 1.1.1
   '@hashgraph/proto': 2.1.5
 >>>>>>> b6caff99 (Protobufs submodule (#963))
+=======
+  '@hashgraph/proto': link:packages/proto
+>>>>>>> e06154b9 (feat HIP-206 (#1036))
   bignumber.js: 9.0.2
   crypto-js: 4.1.1
   js-base64: 3.7.2
@@ -463,6 +471,7 @@ packages:
     dev: false
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   /@hashgraph/proto/2.3.0:
     resolution: {integrity: sha512-zZAb/V4j9OersY/rXfPKqiNKyGnT2zPV1v2MA0uW+OKn8BAy9+GwVwANcfrs8VbAqP151iEA6sQSuOH216ytRg==}
 =======
@@ -475,6 +484,8 @@ packages:
       protobufjs: 6.11.2
     dev: false
 
+=======
+>>>>>>> e06154b9 (feat HIP-206 (#1036))
   /@humanwhocodes/config-array/0.9.5:
     resolution: {integrity: sha512-ObyMyWxZiCu/yTisA7uzx81s40xR2fD5Cg/2Kq7G02ajkNubJf6BopgDTmDyc3U7sXpNKM8cYOw7s7Tyr+DnCw==}
     engines: {node: '>=10.10.0'}
