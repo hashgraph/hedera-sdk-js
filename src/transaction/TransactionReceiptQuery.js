@@ -265,9 +265,13 @@ export default class TransactionReceiptQuery extends Query {
 
         status = Status._fromCode(receiptStatusCode);
 
+        if (this._transactionId == null) {
+            throw new Error("Failed to construct `ReceiptStatusError` because `transactionId` is `null`");
+        }
+
         return new ReceiptStatusError({
             status,
-            transactionId: this._getTransactionId(),
+            transactionId: this._transactionId,
             transactionReceipt: TransactionReceipt._fromProtobuf(
                 transactionGetReceipt
             ),
