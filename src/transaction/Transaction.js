@@ -252,7 +252,7 @@ export default class Transaction extends Executable {
             );
         }
 
-        const fromProtobuf = TRANSACTION_REGISTRY.get(body.data);
+        const fromProtobuf = TRANSACTION_REGISTRY.get(body.data); //NOSONAR
 
         if (fromProtobuf == null) {
             throw new Error(

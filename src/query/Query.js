@@ -81,7 +81,7 @@ export default class Query extends Executable {
         }
 
         const fromProtobuf = /** @type {(query: proto.IQuery) => Query<T>} */ (
-            QUERY_REGISTRY.get(query.query)
+            QUERY_REGISTRY.get(query.query) //NOSONAR
         );
 
         if (fromProtobuf == null) {

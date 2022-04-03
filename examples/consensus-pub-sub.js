@@ -41,7 +41,7 @@ async function main() {
             console.log(Buffer.from(message.contents).toString("utf8"))
         );
 
-    for (let i = 0; ; i += 1) {
+    for (let i = 0; ; i += 1) { //NOSONAR
         // eslint-disable-next-line no-await-in-loop
         await (
             await new TopicMessageSubmitTransaction()
