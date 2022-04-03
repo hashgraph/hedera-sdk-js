@@ -160,16 +160,6 @@ async function main() {
         `- Enabling token KYC for Bob's account: ${bobKyc.status.toString()}\n`
     );
 
-    // // DISABLE TOKEN KYC FOR ALICE
-    // let kycDisableTx = await new TokenRevokeKycTransaction()
-    // 	.setAccountId(aliceId)
-    // 	.setTokenId(tokenId)
-    // 	.freezeWith(client)
-    // 	.sign(kycKey);
-    // let kycDisableSubmitTx = await kycDisableTx.execute(client);
-    // let kycDisableRx = await kycDisableSubmitTx.getReceipt(client);
-    // console.log(`- Disabling token KYC for Alice's account: ${kycDisableRx.status} \n`);
-
     // QUERY TO CHECK INTIAL KYC KEY
     tokenInfo = await tQueryFcn();
     console.log(
@@ -357,8 +347,7 @@ async function main() {
             .freezeWith(client);
         let mintTxSign = await mintTx.sign(supplyKey);
         let mintTxSubmit = await mintTxSign.execute(client);
-        let mintRx = await mintTxSubmit.getReceipt(client);
-        return mintRx;
+        return mintTxSubmit.getReceipt(client);
     }
 
     /**
@@ -390,8 +379,7 @@ async function main() {
             .freezeWith(client)
             .sign(kycKey);
         let kycSubmitTx = await kycEnableTx.execute(client);
-        let kycRx = await kycSubmitTx.getReceipt(client);
-        return kycRx;
+        return kycSubmitTx.getReceipt(client);
     }
 
     /**
@@ -400,10 +388,9 @@ async function main() {
      * @returns {Promise<TokenInfo>}
      */
     async function tQueryFcn() {
-        const tokenInfo = await new TokenInfoQuery()
+        return new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(client);
-        return tokenInfo;
     }
 }
 

@@ -3,10 +3,6 @@ describe('Example', () => {
     await device.launchApp({ newInstance: true });
   });
 
-  beforeEach(async () => {
-    // await device.reloadReactNative();
-  });
-
   it('should be able to see transaction ID from TransferTransaction', async () => {
     await expect(element(by.id('transactionId'))).toBeVisible();
   });

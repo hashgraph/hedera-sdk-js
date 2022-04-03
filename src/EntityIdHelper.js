@@ -37,9 +37,8 @@ import * as util from "./util.js";
  * @property {string | null} checksum
  */
 
-const regex = RegExp(
-    "^(0|(?:[1-9]\\d*))\\.(0|(?:[1-9]\\d*))\\.(0|(?:[1-9]\\d*))(?:-([a-z]{5}))?$"
-);
+const regex =
+    /"^(0|(?:[1-9]\\d*))\\.(0|(?:[1-9]\\d*))\\.(0|(?:[1-9]\\d*))(?:-([a-z]{5}))?$/;
 
 /**
  * This regex supports entity IDs
@@ -57,6 +56,7 @@ const ENTITY_ID_REGEX = /^(\d+)(?:\.(\d+)\.([a-fA-F0-9]+))?(?:-([a-z]{5}))?$/;
  * @returns {IEntityIdResult}
  */
 export function constructor(props, realmOrNull, numOrNull) {
+    //NOSONAR
     if (
         (realmOrNull == null && numOrNull != null) ||
         (realmOrNull != null && numOrNull == null)
@@ -246,8 +246,8 @@ export function _parseAddress(ledgerId, addr) {
     ];
     let ad = `${a[0].toString()}.${a[1].toString()}.${a[2].toString()}`;
     let c = _checksum(ledgerId, ad);
-    let s = match[4] === undefined ? 2 : c == match[4] ? 3 : 1; //the status
-    let result = {
+    let s = match[4] === undefined ? 2 : c == match[4] ? 3 : 1; //NOSONAR
+    return {
         status: s,
         num1: a[0],
         num2: a[1],
@@ -257,7 +257,6 @@ export function _parseAddress(ledgerId, addr) {
         noChecksumFormat: ad,
         withChecksumFormat: `${ad}-${c}`,
     };
-    return result;
 }
 
 /**
@@ -287,6 +286,7 @@ export function _checksum(ledgerId, addr) {
         h.push(parseInt(id.substring(i, i + 2), 16));
     }
     for (let i = 0; i < addr.length; i++) {
+        //NOSONAR
         d.push(addr[i] === "." ? 10 : parseInt(addr[i], 10));
     }
     for (let i = 0; i < d.length; i++) {

@@ -39,7 +39,6 @@ const client = Client.forTestnet().setOperator(operatorId, operatorKey);
 
 const supplyKey = PrivateKey.generate();
 const adminKey = PrivateKey.generate();
-// const pauseKey = PrivateKey.generate();
 const freezeKey = PrivateKey.generate();
 const wipeKey = PrivateKey.generate();
 
@@ -223,8 +222,7 @@ async function main() {
             .freezeWith(client);
         let mintTxSign = await mintTx.sign(supplyKey);
         let mintTxSubmit = await mintTxSign.execute(client);
-        let mintRx = await mintTxSubmit.getReceipt(client);
-        return mintRx;
+        return mintTxSubmit.getReceipt(client);
     }
 
     // BALANCE CHECKER FUNCTION ==========================================

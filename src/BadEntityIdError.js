@@ -1,4 +1,4 @@
-export default class BadEntityIdException extends Error {
+export default class BadEntityIdError extends Error {
     /**
      * @param {Long} shard
      * @param {Long} realm

@@ -21,7 +21,8 @@ describe("TopicMessageQuery", function () {
                 finished = true;
             });
 
-        while (!finished && Date.now() < endTime) { //NOSONAR
+        while (!finished && Date.now() < endTime) {
+            //NOSONAR
             await new Promise((resolved) => setTimeout(resolved, 5000));
         }
 

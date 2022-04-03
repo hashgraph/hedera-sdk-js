@@ -16,7 +16,7 @@ const END_ENCRYPTED_PRIVATEKEY = "-----END ENCRYPTED PRIVATE KEY-----\n";
  * @param {string} [passphrase]
  * @returns {Promise<Ed25519PrivateKey | EcdsaPrivateKey | Uint8Array>}
  */
-export async function read(pem, passphrase) {
+export async function read(pem, passphrase) { //NOSONAR
     const beginTag = passphrase ? BEGIN_ENCRYPTED_PRIVATEKEY : BEGIN_PRIVATEKEY;
 
     const endTag = passphrase ? END_ENCRYPTED_PRIVATEKEY : END_PRIVATEKEY;

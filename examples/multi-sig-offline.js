@@ -85,8 +85,7 @@ async function main() {
  */
 function user1Signs(transactionBytes) {
     const transaction = Transaction.fromBytes(transactionBytes);
-    const signature = user1Key.signTransaction(transaction);
-    return signature;
+    return user1Key.signTransaction(transaction);
 }
 
 /**
@@ -95,8 +94,7 @@ function user1Signs(transactionBytes) {
  */
 function user2Signs(transactionBytes) {
     const transaction = Transaction.fromBytes(transactionBytes);
-    const signature = user2Key.signTransaction(transaction);
-    return signature;
+    return user2Key.signTransaction(transaction);
 }
 
 void main();

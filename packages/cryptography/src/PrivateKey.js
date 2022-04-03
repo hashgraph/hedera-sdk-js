@@ -263,7 +263,6 @@ export default class PrivateKey extends Key {
      * @throws If this key does not support derivation.
      */
     async derive(index) {
-        // return new PrivateKey(await this._key.derive(index));
         if (this._key._chainCode == null) {
             throw new Error("this private key does not support key derivation");
         }

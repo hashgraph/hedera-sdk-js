@@ -53,7 +53,8 @@ describe("TopicMessage", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        while (!finished && Date.now() < startTime + 45000) { //NOSONAR
+        while (!finished && Date.now() < startTime + 45000) {
+            //NOSONAR
             await new Promise((resolved) => setTimeout(resolved, 2000));
         }
 
@@ -116,7 +117,8 @@ describe("TopicMessage", function () {
                 .execute(env.client)
         ).getReceipt(env.client);
 
-        while (!finished && Date.now() < startTime + 45000) { //NOSONAR
+        while (!finished && Date.now() < startTime + 45000) {
+            //NOSONAR
             await new Promise((resolved) => setTimeout(resolved, 2000));
         }
 

@@ -491,8 +491,7 @@ async function main() {
             .freezeWith(client);
         let mintTxSign = await mintTx.sign(supplyKey);
         let mintTxSubmit = await mintTxSign.execute(client);
-        let mintRx = await mintTxSubmit.getReceipt(client);
-        return mintRx;
+        return mintTxSubmit.getReceipt(client);
     }
 
     /**
@@ -524,8 +523,7 @@ async function main() {
             .freezeWith(client)
             .sign(kycKey);
         let kycSubmitTx = await kycEnableTx.execute(client);
-        let kycRx = await kycSubmitTx.getReceipt(client);
-        return kycRx;
+        return kycSubmitTx.getReceipt(client);
     }
 
     /**
@@ -534,10 +532,9 @@ async function main() {
      * @returns {Promise<TokenInfo>}
      */
     async function tQueryFcn() {
-        const tokenInfo = await new TokenInfoQuery()
+        return new TokenInfoQuery()
             .setTokenId(tokenId)
             .execute(client);
-        return tokenInfo;
     }
 }
 
