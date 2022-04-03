@@ -15,10 +15,10 @@ import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
 import HbarAllowance from "../account/HbarAllowance.js";
 import TokenAllowance from "../account/TokenAllowance.js";
-import TokenNftAllowance from "../account/TokenNftAllowance.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
+ * @typedef {import("../account/TokenNftAllowance.js").default} TokenNftAllowance
  */
 
 /**
@@ -312,12 +312,6 @@ export default class TransactionRecord {
                         return allowance._toProtobuf();
                     }
                 ),
-
-                nftAdjustments: this.nftAllowanceAdjustments.map(
-                    (allowance) => {
-                        return allowance._toProtobuf();
-                    }
-                ),
             },
         };
     }
@@ -454,12 +448,7 @@ export default class TransactionRecord {
             ).map((allowance) => {
                 return TokenAllowance._fromProtobuf(allowance);
             }),
-            nftAllowanceAdjustments: (record.nftAdjustments != null
-                ? record.nftAdjustments
-                : []
-            ).map((allowance) => {
-                return TokenNftAllowance._fromProtobuf(allowance);
-            }),
+            nftAllowanceAdjustments: [],
         });
     }
 

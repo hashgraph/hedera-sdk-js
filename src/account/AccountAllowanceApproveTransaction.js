@@ -266,6 +266,7 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
         for (const allowance of this._nftApprovals) {
             if (
                 allowance.tokenId.compare(id.tokenId) === 0 &&
+                allowance.spenderAccountId != null &&
                 allowance.spenderAccountId.compare(spender) === 0
             ) {
                 if (allowance.serialNumbers != null) {
@@ -387,21 +388,15 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
      * @param {Client} client
      */
     _validateChecksums(client) {
-        this._hbarApprovals.forEach((approval) =>
-            approval.spenderAccountId.validateChecksum(client)
+        this._hbarApprovals.map((approval) =>
+            approval._validateChecksums(client)
         );
-        this._tokenApprovals.forEach((approval) => {
-            approval.tokenId.validateChecksum(client);
-            approval.spenderAccountId.validateChecksum(client);
-        });
-        this._nftApprovals.forEach((approval) => {
-            approval.tokenId.validateChecksum(client);
-            approval.spenderAccountId.validateChecksum(client);
-
-            if (approval.ownerAccountId != null) {
-                approval.ownerAccountId.validateChecksum(client);
-            }
-        });
+        this._tokenApprovals.map((approval) =>
+            approval._validateChecksums(client)
+        );
+        this._nftApprovals.map((approval) =>
+            approval._validateChecksums(client)
+        );
     }
 
     /**

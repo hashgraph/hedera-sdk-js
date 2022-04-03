@@ -5,9 +5,14 @@ import Long from "long";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.IGrantedNftAllowance} HashgraphProto.proto.IGrantedNftAllowance
+ * @typedef {import("@hashgraph/proto").proto.INftRemoveAllowance} HashgraphProto.proto.INftRemoveAllowance
  * @typedef {import("@hashgraph/proto").proto.INftAllowance} HashgraphProto.proto.INftAllowance
  * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
  * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ */
+
+/**
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 export default class TokenNftAllowance {
@@ -15,10 +20,10 @@ export default class TokenNftAllowance {
      * @internal
      * @param {object} props
      * @param {TokenId} props.tokenId
-     * @param {AccountId} props.spenderAccountId
+     * @param {AccountId | null} props.spenderAccountId
      * @param {AccountId | null} props.ownerAccountId
      * @param {Long[] | null} props.serialNumbers
-     * @param {boolean} props.allSerials
+     * @param {boolean | null} props.allSerials
      */
     constructor(props) {
         /**
@@ -113,16 +118,37 @@ export default class TokenNftAllowance {
                 )
             ),
             ownerAccountId,
+            serialNumbers: [],
+            allSerials: null,
+        });
+    }
+
+    /**
+     * @internal
+     * @param {HashgraphProto.proto.INftRemoveAllowance} allowance
+     * @returns {TokenNftAllowance}
+     */
+    static _fromRemoveProtobuf(allowance) {
+        return new TokenNftAllowance({
+            tokenId: TokenId._fromProtobuf(
+                /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
+            ),
+            spenderAccountId: null,
+            ownerAccountId:
+                allowance.owner != null
+                    ? AccountId._fromProtobuf(
+                          /**@type {HashgraphProto.proto.IAccountID}*/ (
+                              allowance.owner
+                          )
+                      )
+                    : null,
             serialNumbers:
-                allowance.approvedForAll != null && allowance.approvedForAll
-                    ? null
-                    : allowance.serialNumbers != null
+                allowance.serialNumbers != null
                     ? allowance.serialNumbers.map((serialNumber) =>
                           Long.fromValue(serialNumber)
                       )
                     : [],
-            allSerials:
-                allowance.approvedForAll != null && allowance.approvedForAll,
+            allSerials: null,
         });
     }
 
@@ -133,7 +159,10 @@ export default class TokenNftAllowance {
     _toProtobuf() {
         return {
             tokenId: this.tokenId._toProtobuf(),
-            spender: this.spenderAccountId._toProtobuf(),
+            spender:
+                this.spenderAccountId != null
+                    ? this.spenderAccountId._toProtobuf()
+                    : null,
             owner:
                 this.ownerAccountId != null
                     ? this.ownerAccountId._toProtobuf()
@@ -142,5 +171,20 @@ export default class TokenNftAllowance {
                 this.serialNumbers == null ? { value: this.allSerials } : null,
             serialNumbers: this.serialNumbers,
         };
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateChecksums(client) {
+        this.tokenId.validateChecksum(client);
+
+        if (this.ownerAccountId != null) {
+            this.ownerAccountId.validateChecksum(client);
+        }
+
+        if (this.spenderAccountId != null) {
+            this.spenderAccountId.validateChecksum(client);
+        }
     }
 }

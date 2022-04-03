@@ -4,6 +4,7 @@ import Hbar from "../Hbar.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.IGrantedCryptoAllowance} HashgraphProto.proto.IGrantedCryptoAllowance
+ * @typedef {import("@hashgraph/proto").proto.ICryptoRemoveAllowance} HashgraphProto.proto.ICryptoRemoveAllowance
  * @typedef {import("@hashgraph/proto").proto.ICryptoAllowance} HashgraphProto.proto.ICryptoAllowance
  * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
@@ -12,13 +13,17 @@ import Hbar from "../Hbar.js";
  * @typedef {import("long")} Long
  */
 
+/**
+ * @typedef {import("../client/Client.js").default<*, *>} Client
+ */
+
 export default class HbarAllowance {
     /**
      * @internal
      * @param {object} props
-     * @param {AccountId} props.spenderAccountId
+     * @param {AccountId | null} props.spenderAccountId
      * @param {AccountId | null} props.ownerAccountId
-     * @param {Hbar} props.amount
+     * @param {Hbar | null} props.amount
      */
     constructor(props) {
         /**
@@ -47,47 +52,67 @@ export default class HbarAllowance {
 
     /**
      * @internal
-     * @param {HashgraphProto.proto.ICryptoAllowance} approval
+     * @param {HashgraphProto.proto.ICryptoAllowance} allowance
      * @returns {HbarAllowance}
      */
-    static _fromProtobuf(approval) {
+    static _fromProtobuf(allowance) {
         return new HbarAllowance({
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IAccountID} */ (
-                    approval.spender
+                    allowance.spender
                 )
             ),
             ownerAccountId:
-                approval.owner != null
+                allowance.owner != null
                     ? AccountId._fromProtobuf(
                           /**@type {HashgraphProto.proto.IAccountID}*/ (
-                              approval.owner
+                              allowance.owner
                           )
                       )
                     : null,
             amount: Hbar.fromTinybars(
-                approval.amount != null ? approval.amount : 0
+                allowance.amount != null ? allowance.amount : 0
             ),
         });
     }
 
     /**
      * @internal
-     * @param {HashgraphProto.proto.IGrantedCryptoAllowance} approval
+     * @param {HashgraphProto.proto.IGrantedCryptoAllowance} allowance
      * @param {AccountId} ownerAccountId
      * @returns {HbarAllowance}
      */
-    static _fromGrantedProtobuf(approval, ownerAccountId) {
+    static _fromGrantedProtobuf(allowance, ownerAccountId) {
         return new HbarAllowance({
             spenderAccountId: AccountId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IAccountID} */ (
-                    approval.spender
+                    allowance.spender
                 )
             ),
             ownerAccountId,
             amount: Hbar.fromTinybars(
-                approval.amount != null ? approval.amount : 0
+                allowance.amount != null ? allowance.amount : 0
             ),
+        });
+    }
+
+    /**
+     * @internal
+     * @param {HashgraphProto.proto.ICryptoRemoveAllowance} allowance
+     * @returns {HbarAllowance}
+     */
+    static _fromRemoveProtobuf(allowance) {
+        return new HbarAllowance({
+            spenderAccountId: null,
+            ownerAccountId:
+                allowance.owner != null
+                    ? AccountId._fromProtobuf(
+                          /**@type {HashgraphProto.proto.IAccountID}*/ (
+                              allowance.owner
+                          )
+                      )
+                    : null,
+            amount: null,
         });
     }
 
@@ -97,12 +122,41 @@ export default class HbarAllowance {
      */
     _toProtobuf() {
         return {
-            spender: this.spenderAccountId._toProtobuf(),
+            spender:
+                this.spenderAccountId != null
+                    ? this.spenderAccountId._toProtobuf()
+                    : null,
             owner:
                 this.ownerAccountId != null
                     ? this.ownerAccountId._toProtobuf()
                     : null,
-            amount: this.amount.toTinybars(),
+            amount: this.amount != null ? this.amount.toTinybars() : null,
+        };
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateChecksums(client) {
+        if (this.spenderAccountId != null) {
+            this.spenderAccountId.validateChecksum(client);
+        }
+    }
+
+    /**
+     * @returns {object}
+     */
+    toJSON() {
+        return {
+            ownerAccountId:
+                this.ownerAccountId != null
+                    ? this.ownerAccountId.toString()
+                    : null,
+            spenderAccountId:
+                this.spenderAccountId != null
+                    ? this.spenderAccountId.toString()
+                    : null,
+            amount: this.amount != null ? this.amount.toString() : null,
         };
     }
 }
