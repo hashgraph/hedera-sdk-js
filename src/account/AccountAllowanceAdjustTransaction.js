@@ -362,10 +362,9 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         const id = typeof nftId === "string" ? NftId.fromString(nftId) : nftId;
 
         util.requireNotNegative(id.serial);
-        id.serial = id.serial.negate();
-
+        const newId = new NftId(id.tokenId, id.serial.negate());
         return this._adjustTokenNftAllowance(
-            id,
+            newId,
             ownerAccountId,
             spenderAccountId
         );
