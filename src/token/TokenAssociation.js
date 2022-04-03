@@ -17,7 +17,7 @@ export default class TokenAssociation {
         /**
          * @type {?AccountId}
          */
-        this._accountId;
+        this._accountId = null;
 
         if (props.accountId != null) {
             this.setAccountId(props.accountId);
@@ -26,7 +26,7 @@ export default class TokenAssociation {
         /**
          * @type {?TokenId}
          */
-        this._tokenId;
+        this._tokenId = null;
 
         if (props.tokenId != null) {
             this.setTokenId(props.tokenId);

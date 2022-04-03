@@ -98,16 +98,22 @@ describe("ManagedNodeAddress", function () {
     });
 
     it("Client parses it's own network", function () {
-        Object.keys(Network.MAINNET).map((address) =>
-            ManagedNodeAddress.fromString(address)
-        );
+        expect(() =>
+            Object.keys(Network.MAINNET).map((address) =>
+                ManagedNodeAddress.fromString(address)
+            )
+        ).to.not.throw();
 
-        Object.keys(Network.TESTNET).map((address) =>
-            ManagedNodeAddress.fromString(address)
-        );
+        expect(() =>
+            Object.keys(Network.TESTNET).map((address) =>
+                ManagedNodeAddress.fromString(address)
+            )
+        ).to.not.throw();
 
-        Object.keys(Network.PREVIEWNET).map((address) =>
-            ManagedNodeAddress.fromString(address)
-        );
+        expect(() =>
+            Object.keys(Network.PREVIEWNET).map((address) =>
+                ManagedNodeAddress.fromString(address)
+            )
+        ).to.not.throw();
     });
 });

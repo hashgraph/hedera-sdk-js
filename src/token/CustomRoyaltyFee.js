@@ -25,7 +25,7 @@ export default class CustomRoyalyFee extends CustomFee {
         /**
          * @type {?CustomFixedFee}
          */
-        this._fallbackFee;
+        this._fallbackFee = null;
 
         if (props.fallbackFee != null) {
             this.setFallbackFee(props.fallbackFee);
@@ -34,7 +34,7 @@ export default class CustomRoyalyFee extends CustomFee {
         /**
          * @type {?Long}
          */
-        this._numerator;
+        this._numerator = null;
 
         if (props.numerator != null) {
             this.setNumerator(props.numerator);
@@ -43,7 +43,7 @@ export default class CustomRoyalyFee extends CustomFee {
         /**
          * @type {?Long}
          */
-        this._denominator;
+        this._denominator = null;
 
         if (props.denominator != null) {
             this.setDenominator(props.denominator);

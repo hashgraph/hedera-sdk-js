@@ -466,14 +466,14 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @param {Client} client
      */
     _validateChecksums(client) {
-        this._hbarAllowances.map((allowance) =>
+        this._hbarAllowances.forEach((allowance) =>
             allowance.spenderAccountId.validateChecksum(client)
         );
-        this._tokenAllowances.map((allowance) => {
+        this._tokenAllowances.forEach((allowance) => {
             allowance.tokenId.validateChecksum(client);
             allowance.spenderAccountId.validateChecksum(client);
         });
-        this._nftAllowances.map((allowance) => {
+        this._nftAllowances.forEach((allowance) => {
             allowance.tokenId.validateChecksum(client);
             allowance.spenderAccountId.validateChecksum(client);
 

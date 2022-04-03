@@ -23,7 +23,7 @@ export default class CustomFixedFee extends CustomFee {
         /**
          * @type {?TokenId}
          */
-        this._denominatingTokenId;
+        this._denominatingTokenId = null;
 
         if (props.denominatingTokenId != null) {
             this.setDenominatingTokenId(props.denominatingTokenId);
@@ -32,7 +32,7 @@ export default class CustomFixedFee extends CustomFee {
         /**
          * @type {?Long}
          */
-        this._amount;
+        this._amount = null;
 
         if (props.amount != null) {
             this.setAmount(props.amount);

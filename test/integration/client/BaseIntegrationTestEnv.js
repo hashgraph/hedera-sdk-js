@@ -144,7 +144,7 @@ export default class BaseIntegrationTestEnv {
             }
         }
 
-        if (!this.throwaway && this.operatorKey.toString() !== this.originalOperatorId) {
+        if (!this.throwaway && this.operatorId.toString() !== this.originalOperatorId.toString()) {
             await (await new AccountDeleteTransaction()
                 .setAccountId(this.operatorId)
                 .setTransferAccountId(this.originalOperatorId)

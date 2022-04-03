@@ -14,7 +14,7 @@ export default class CustomFee {
         /**
          * @type {?AccountId}
          */
-        this._feeCollectorAccountId;
+        this._feeCollectorAccountId = null;
 
         if (props.feeCollectorAccountId != null) {
             this.setFeeCollectorAccountId(props.feeCollectorAccountId);

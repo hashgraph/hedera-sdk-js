@@ -407,7 +407,7 @@ const keccak = (/** @type {number} */ bits) => (/** @type {string} */ str) => {
         msg = str;
     }
     // @ts-ignore
-    return update(Keccak(bits, bits), msg);
+    return update(Keccak(bits), msg);
 };
 
 /**

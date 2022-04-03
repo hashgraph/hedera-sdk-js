@@ -29,7 +29,7 @@ export default class CustomFractionalFee extends CustomFee {
         /**
          * @type {?Long}
          */
-        this._numerator;
+        this._numerator = null;
 
         if (props.numerator != null) {
             this.setNumerator(props.numerator);
@@ -38,7 +38,7 @@ export default class CustomFractionalFee extends CustomFee {
         /**
          * @type {?Long}
          */
-        this._denominator;
+        this._denominator = null;
 
         if (props.denominator != null) {
             this.setDenominator(props.denominator);
@@ -47,7 +47,7 @@ export default class CustomFractionalFee extends CustomFee {
         /**
          * @type {?Long}
          */
-        this._min;
+        this._min = null;
 
         if (props.min != null) {
             this.setMin(props.min);
