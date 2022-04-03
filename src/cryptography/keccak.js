@@ -43,8 +43,8 @@ const Keccak = (bits) => ({
 });
 
 /** @type {(state: KeccakT, message: string | number[]) => string} */
+//NOSONAR
 const update = (state, /** @type {string | number[]} */ message) => {
-    //NOSONAR
     var length = message.length,
         blocks = state.blocks,
         byteCount = state.blockCount << 2,
