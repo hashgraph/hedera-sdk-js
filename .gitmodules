@@ -1,0 +1,3 @@
+[submodule "packages/proto/src/proto"]
+	path = packages/proto/src/proto
+	url = git@github.com:hashgraph/hedera-protobufs.git
