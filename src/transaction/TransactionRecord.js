@@ -6,7 +6,7 @@ import Transfer from "../Transfer.js";
 import ContractFunctionResult from "../contract/ContractFunctionResult.js";
 import TokenTransferMap from "../account/TokenTransferMap.js";
 import TokenNftTransferMap from "../account/TokenNftTransferMap.js";
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import ScheduleId from "../schedule/ScheduleId.js";
 import AssessedCustomFee from "../token/AssessedCustomFee.js";
 import TokenAssocation from "../token/TokenAssociation.js";
@@ -15,10 +15,10 @@ import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
 import HbarAllowance from "../account/HbarAllowance.js";
 import TokenAllowance from "../account/TokenAllowance.js";
-import TokenNftAllowance from "../account/TokenNftAllowance.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
+ * @typedef {import("../account/TokenNftAllowance.js").default} TokenNftAllowance
  */
 
 /**
@@ -193,7 +193,7 @@ export default class TransactionRecord {
 
     /**
      * @internal
-     * @returns {proto.ITransactionGetRecordResponse}
+     * @returns {HashgraphProto.proto.ITransactionGetRecordResponse}
      */
     _toProtobuf() {
         const tokenTransfers = this.tokenTransfers._toProtobuf();
@@ -226,13 +226,13 @@ export default class TransactionRecord {
 
         const duplicates = this.duplicates.map(
             (record) =>
-                /** @type {proto.ITransactionRecord} */ (
+                /** @type {HashgraphProto.proto.ITransactionRecord} */ (
                     record._toProtobuf().transactionRecord
                 )
         );
         const children = this.children.map(
             (record) =>
-                /** @type {proto.ITransactionRecord} */ (
+                /** @type {HashgraphProto.proto.ITransactionRecord} */ (
                     record._toProtobuf().transactionRecord
                 )
         );
@@ -297,7 +297,7 @@ export default class TransactionRecord {
                         : null,
                 alias:
                     this.aliasKey != null
-                        ? proto.Key.encode(
+                        ? HashgraphProto.proto.Key.encode(
                               this.aliasKey._toProtobufKey()
                           ).finish()
                         : null,
@@ -312,29 +312,25 @@ export default class TransactionRecord {
                         return allowance._toProtobuf();
                     }
                 ),
-
-                nftAdjustments: this.nftAllowanceAdjustments.map(
-                    (allowance) => {
-                        return allowance._toProtobuf();
-                    }
-                ),
             },
         };
     }
 
     /**
      * @internal
-     * @param {proto.ITransactionGetRecordResponse} response
+     * @param {HashgraphProto.proto.ITransactionGetRecordResponse} response
      * @returns {TransactionRecord}
      */
     static _fromProtobuf(response) {
-        const record = /** @type {proto.ITransactionRecord} */ (
+        const record = /** @type {HashgraphProto.proto.ITransactionRecord} */ (
             response.transactionRecord
         );
 
         let aliasKey =
             record.alias != null && record.alias.length > 0
-                ? Key._fromProtobufKey(proto.Key.decode(record.alias))
+                ? Key._fromProtobufKey(
+                      HashgraphProto.proto.Key.decode(record.alias)
+                  )
                 : null;
 
         if (!(aliasKey instanceof PublicKey)) {
@@ -372,20 +368,23 @@ export default class TransactionRecord {
 
         return new TransactionRecord({
             receipt: TransactionReceipt._fromProtobuf({
-                receipt: /** @type {proto.ITransactionReceipt} */ (
-                    record.receipt
-                ),
+                receipt:
+                    /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
+                        record.receipt
+                    ),
             }),
             transactionHash:
                 record.transactionHash != null
                     ? record.transactionHash
                     : new Uint8Array(),
             consensusTimestamp: Timestamp._fromProtobuf(
-                /** @type {proto.ITimestamp} */
+                /** @type {HashgraphProto.proto.ITimestamp} */
                 (record.consensusTimestamp)
             ),
             transactionId: TransactionId._fromProtobuf(
-                /** @type {proto.ITransactionID} */ (record.transactionID)
+                /** @type {HashgraphProto.proto.ITransactionID} */ (
+                    record.transactionID
+                )
             ),
             transactionMemo: record.memo != null ? record.memo : "",
             transactionFee: Hbar.fromTinybars(
@@ -449,12 +448,7 @@ export default class TransactionRecord {
             ).map((allowance) => {
                 return TokenAllowance._fromProtobuf(allowance);
             }),
-            nftAllowanceAdjustments: (record.nftAdjustments != null
-                ? record.nftAdjustments
-                : []
-            ).map((allowance) => {
-                return TokenNftAllowance._fromProtobuf(allowance);
-            }),
+            nftAllowanceAdjustments: [],
         });
     }
 
@@ -464,7 +458,7 @@ export default class TransactionRecord {
      */
     static fromBytes(bytes) {
         return TransactionRecord._fromProtobuf(
-            proto.TransactionGetRecordResponse.decode(bytes)
+            HashgraphProto.proto.TransactionGetRecordResponse.decode(bytes)
         );
     }
 
@@ -472,7 +466,7 @@ export default class TransactionRecord {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.TransactionGetRecordResponse.encode(
+        return HashgraphProto.proto.TransactionGetRecordResponse.encode(
             this._toProtobuf()
         ).finish();
     }

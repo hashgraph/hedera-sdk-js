@@ -1,11 +1,11 @@
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import TokenId from "../token/TokenId.js";
 import Long from "long";
 
 /**
  * The ID for a crypto-currency token on Hedera.
  *
- * @augments {EntityId<proto.INftID>}
+ * @augments {EntityId<HashgraphProto.proto.INftID>}
  */
 export default class NftId {
     /**
@@ -44,12 +44,14 @@ export default class NftId {
 
     /**
      * @internal
-     * @param {proto.INftID} id
+     * @param {HashgraphProto.proto.INftID} id
      * @returns {NftId}
      */
     static _fromProtobuf(id) {
         return new NftId(
-            TokenId._fromProtobuf(/** @type {proto.ITokenID} */ (id.tokenID)),
+            TokenId._fromProtobuf(
+                /** @type {HashgraphProto.proto.ITokenID} */ (id.tokenID)
+            ),
             id.serialNumber != null ? id.serialNumber : Long.ZERO
         );
     }
@@ -59,12 +61,12 @@ export default class NftId {
      * @returns {NftId}
      */
     static fromBytes(bytes) {
-        return NftId._fromProtobuf(proto.NftID.decode(bytes));
+        return NftId._fromProtobuf(HashgraphProto.proto.NftID.decode(bytes));
     }
 
     /**
      * @internal
-     * @returns {proto.INftID}
+     * @returns {HashgraphProto.proto.INftID}
      */
     _toProtobuf() {
         return {
@@ -86,6 +88,6 @@ export default class NftId {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.NftID.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.NftID.encode(this._toProtobuf()).finish();
     }
 }

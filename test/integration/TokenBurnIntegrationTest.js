@@ -1,5 +1,4 @@
 import {
-    Hbar,
     Status,
     TokenBurnTransaction,
     TokenCreateTransaction,
@@ -28,7 +27,6 @@ describe("TokenBurn", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;
@@ -84,7 +82,6 @@ describe("TokenBurn", function () {
             .setWipeKey(operatorKey)
             .setSupplyKey(operatorKey)
             .setFreezeDefault(false)
-            .setMaxTransactionFee(new Hbar(1000))
             .execute(env.client);
 
         const token = (await response.getReceipt(env.client)).tokenId;

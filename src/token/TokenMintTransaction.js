@@ -7,13 +7,13 @@ import * as hex from "../encoding/hex.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ITokenMintTransactionBody} proto.ITokenMintTransactionBody
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.ITokenMintTransactionBody} HashgraphProto.proto.ITokenMintTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
  */
 
 /**
@@ -69,11 +69,11 @@ export default class TokenMintTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TokenMintTransaction}
      */
     static _fromProtobuf(
@@ -84,9 +84,10 @@ export default class TokenMintTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const mintToken = /** @type {proto.ITokenMintTransactionBody} */ (
-            body.tokenMint
-        );
+        const mintToken =
+            /** @type {HashgraphProto.proto.ITokenMintTransactionBody} */ (
+                body.tokenMint
+            );
 
         return Transaction._fromProtobufTransactions(
             new TokenMintTransaction({
@@ -208,8 +209,8 @@ export default class TokenMintTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         return channel.token.mintToken(request);
@@ -218,7 +219,7 @@ export default class TokenMintTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "tokenMint";
@@ -227,7 +228,7 @@ export default class TokenMintTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.ITokenMintTransactionBody}
+     * @returns {HashgraphProto.proto.ITokenMintTransactionBody}
      */
     _makeTransactionData() {
         return {

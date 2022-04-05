@@ -4,8 +4,8 @@ import ObjectMap from "../ObjectMap.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITokenRelationship} proto.ITokenRelationship
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.ITokenRelationship} HashgraphProto.proto.ITokenRelationship
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
  */
 
 /**
@@ -21,7 +21,7 @@ export default class TokenRelationshipMap extends ObjectMap {
     }
 
     /**
-     * @param {proto.ITokenRelationship[]} relationships
+     * @param {HashgraphProto.proto.ITokenRelationship[]} relationships
      * @returns {TokenRelationshipMap}
      */
     static _fromProtobuf(relationships) {
@@ -29,7 +29,9 @@ export default class TokenRelationshipMap extends ObjectMap {
 
         for (const relationship of relationships) {
             const tokenId = TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (relationship.tokenId)
+                /** @type {HashgraphProto.proto.ITokenID} */ (
+                    relationship.tokenId
+                )
             );
 
             tokenRelationships._set(
@@ -42,7 +44,7 @@ export default class TokenRelationshipMap extends ObjectMap {
     }
 
     /**
-     * @returns {proto.ITokenRelationship[]}
+     * @returns {HashgraphProto.proto.ITokenRelationship[]}
      */
     _toProtobuf() {
         const list = [];

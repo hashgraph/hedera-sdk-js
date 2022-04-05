@@ -337,3 +337,47 @@ export function safeView(arr, offset = 0, length = arr.byteLength) {
         Math.min(length, arr.byteLength - offset)
     );
 }
+
+/**
+ * @param {any} a
+ * @param {any} b
+ * @param {Set<string>=} ignore
+ * @returns {boolean}
+ */
+export function compare(a, b, ignore = new Set()) {
+    if (typeof a === "object" && typeof b === "object") {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const aKeys = Object.keys(a);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const bKeys = Object.keys(b);
+
+        if (aKeys.length !== bKeys.length) {
+            return false;
+        }
+
+        for (let i = 0; i < aKeys.length; i++) {
+            if (aKeys[i] !== bKeys[i]) {
+                return false;
+            }
+
+            if (ignore.has(aKeys[i])) {
+                continue;
+            }
+
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            if (!compare(a[aKeys[i]], b[bKeys[i]], ignore)) {
+                return false;
+            }
+        }
+
+        return true;
+    } else if (typeof a === "number" && typeof b === "number") {
+        return a === b;
+    } else if (typeof a === "string" && typeof b === "string") {
+        return a === b;
+    } else if (typeof a === "boolean" && typeof b === "boolean") {
+        return a === b;
+    } else {
+        return false;
+    }
+}

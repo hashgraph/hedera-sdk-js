@@ -6,7 +6,7 @@ if [ "$(git diff --name-only | wc -l)" -gt 0 ]; then
 fi
 
 pnpm i
-pnpm compile:js
+pnpm compile
 pnpm format
 pnpm lint
 pnpm test:unit:node
@@ -17,11 +17,7 @@ pnpm format
 pnpm lint
 popd
 
-yalc publish --no-scripts
-
 pushd common_js_test
-yalc add @hashgraph/sdk
 pnpm i
 pnpm test
-rm yalc.lock
 popd

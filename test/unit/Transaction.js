@@ -10,6 +10,8 @@ import {
 } from "../../src/exports.js";
 import * as hex from "../../src/encoding/hex.js";
 import Client from "../../src/client/NodeClient.js";
+import HashgraphProto from "@hashgraph/proto";
+import Long from "long";
 
 describe("Transaction", function () {
     it("toBytes", async function () {
@@ -120,5 +122,80 @@ describe("Transaction", function () {
         expect(transaction.maxTransactionFee.toTinybars().toInt()).to.be.equal(
             1
         );
+    });
+
+    it("fromBytes fails when bodies differ", function () {
+        const key1 = PrivateKey.fromString(
+            "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511c"
+        );
+        const key2 = PrivateKey.fromString(
+            "302e020100300506032b657004220420a58d361e61756ee809686255fda09bacb846ea8aa589c67ac39cfbcf82dd511d"
+        );
+
+        const transactionID = TransactionId.withValidStart(
+            new AccountId(9),
+            new Timestamp(10, 11)
+        );
+        const nodeAccountID1 = new AccountId(3);
+        const nodeAccountID2 = new AccountId(4);
+
+        /** @type {proto.ITransactionBody} */
+        const body1 = {
+            transactionID: transactionID._toProtobuf(),
+            nodeAccountID: nodeAccountID1._toProtobuf(),
+            transactionFee: Long.fromNumber(1),
+            transactionValidDuration: { seconds: 120 },
+            cryptoCreateAccount: {
+                key: key1.publicKey._toProtobufKey(),
+            },
+        };
+
+        /** @type {proto.ITransactionBody} */
+        const body2 = {
+            transactionID: transactionID._toProtobuf(),
+            nodeAccountID: nodeAccountID2._toProtobuf(),
+            transactionFee: Long.fromNumber(1),
+            transactionValidDuration: { seconds: 120 },
+            cryptoCreateAccount: {
+                key: key2.publicKey._toProtobufKey(),
+            },
+        };
+
+        const bodyBytes1 =
+            HashgraphProto.proto.TransactionBody.encode(body1).finish();
+        const bodyBytes2 =
+            HashgraphProto.proto.TransactionBody.encode(body2).finish();
+
+        const signedTransaction1 =
+            HashgraphProto.proto.SignedTransaction.encode({
+                bodyBytes: bodyBytes1,
+            }).finish();
+        const signedTransaction2 =
+            HashgraphProto.proto.SignedTransaction.encode({
+                bodyBytes: bodyBytes2,
+            }).finish();
+
+        const transaction1 = { signedTransactionBytes: signedTransaction1 };
+        const transaction2 = { signedTransactionBytes: signedTransaction2 };
+
+        const list = HashgraphProto.proto.TransactionList.encode({
+            transactionList: [transaction1, transaction2],
+        }).finish();
+
+        let err = false;
+
+        try {
+            Transaction.fromBytes(list);
+        } catch (error) {
+            err =
+                error.toString() ===
+                "Error: failed to validate transaction bodies";
+        }
+
+        if (!err) {
+            throw new Error(
+                "transaction successfully built from invalid bytes"
+            );
+        }
     });
 });

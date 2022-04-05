@@ -3,8 +3,12 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IConsensusTopicResponse} proto.IConsensusTopicResponse
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").proto.ITimestamp} HashgraphProto.proto.ITimestamp
+ */
+
+/**
+ * @namespace com
+ * @typedef {import("@hashgraph/proto").com.hedera.mirror.api.proto.IConsensusTopicResponse} com.hedera.mirror.api.proto.IConsensusTopicResponse
  */
 
 export default class TopicMessageChunk {
@@ -31,13 +35,13 @@ export default class TopicMessageChunk {
 
     /**
      * @internal
-     * @param {proto.IConsensusTopicResponse} response
+     * @param {com.hedera.mirror.api.proto.IConsensusTopicResponse} response
      * @returns {TopicMessageChunk}
      */
     static _fromProtobuf(response) {
         return new TopicMessageChunk({
             consensusTimestamp: Timestamp._fromProtobuf(
-                /** @type {proto.ITimestamp} */
+                /** @type {HashgraphProto.proto.ITimestamp} */
                 (response.consensusTimestamp)
             ),
             contents:
@@ -57,7 +61,7 @@ export default class TopicMessageChunk {
 
     /**
      * @internal
-     * @returns {proto.IConsensusTopicResponse}
+     * @returns {com.hedera.mirror.api.proto.IConsensusTopicResponse}
      */
     _toProtobuf() {
         return {

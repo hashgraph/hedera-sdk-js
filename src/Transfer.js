@@ -3,8 +3,8 @@ import Hbar from "./Hbar.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IAccountAmount} proto.IAccountAmount
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IAccountAmount} HashgraphProto.proto.IAccountAmount
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
 
 /**
@@ -47,7 +47,7 @@ export default class Transfer {
 
     /**
      * @internal
-     * @param {proto.IAccountAmount[]} accountAmounts
+     * @param {HashgraphProto.proto.IAccountAmount[]} accountAmounts
      * @returns {Transfer[]}
      */
     static _fromProtobuf(accountAmounts) {
@@ -57,7 +57,9 @@ export default class Transfer {
             transfers.push(
                 new Transfer({
                     accountId: AccountId._fromProtobuf(
-                        /** @type {proto.IAccountID} */ (transfer.accountID)
+                        /** @type {HashgraphProto.proto.IAccountID} */ (
+                            transfer.accountID
+                        )
                     ),
                     amount: Hbar.fromTinybars(
                         transfer.amount != null ? transfer.amount : 0
@@ -72,7 +74,7 @@ export default class Transfer {
 
     /**
      * @internal
-     * @returns {proto.IAccountAmount}
+     * @returns {HashgraphProto.proto.IAccountAmount}
      */
     _toProtobuf() {
         return {

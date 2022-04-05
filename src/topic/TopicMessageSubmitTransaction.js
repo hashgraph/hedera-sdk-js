@@ -10,13 +10,13 @@ import * as util from "../util.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IConsensusSubmitMessageTransactionBody} proto.IConsensusSubmitMessageTransactionBody
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").IConsensusMessageChunkInfo} proto.IConsensusMessageChunkInfo
+ * @typedef {import("@hashgraph/proto").proto.IConsensusSubmitMessageTransactionBody} HashgraphProto.proto.IConsensusSubmitMessageTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.IConsensusMessageChunkInfo} HashgraphProto.proto.IConsensusMessageChunkInfo
  */
 
 /**
@@ -77,17 +77,17 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             this.setChunkSize(props.chunkSize);
         }
 
-        /** @type {proto.IConsensusMessageChunkInfo | null} */
+        /** @type {HashgraphProto.proto.IConsensusMessageChunkInfo | null} */
         this._chunkInfo = null;
     }
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {TopicMessageSubmitTransaction}
      */
     static _fromProtobuf(
@@ -99,7 +99,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     ) {
         const body = bodies[0];
         const message =
-            /** @type {proto.IConsensusSubmitMessageTransactionBody} */ (
+            /** @type {HashgraphProto.proto.IConsensusSubmitMessageTransactionBody} */ (
                 body.consensusSubmitMessage
             );
 
@@ -353,8 +353,8 @@ export default class TopicMessageSubmitTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         return channel.consensus.submitMessage(request);
@@ -363,7 +363,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "consensusSubmitMessage";
@@ -372,7 +372,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.IConsensusSubmitMessageTransactionBody}
+     * @returns {HashgraphProto.proto.IConsensusSubmitMessageTransactionBody}
      */
     _makeTransactionData() {
         if (this._chunkInfo != null && this._message != null) {

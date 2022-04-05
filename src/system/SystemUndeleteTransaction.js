@@ -6,14 +6,14 @@ import ContractId from "../contract/ContractId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ISystemUndeleteTransactionBody} proto.ISystemUndeleteTransactionBody
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
- * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.ISystemUndeleteTransactionBody} HashgraphProto.proto.ISystemUndeleteTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IFileID} HashgraphProto.proto.IFileID
  */
 
 /**
@@ -56,11 +56,11 @@ export default class SystemUndeleteTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {SystemUndeleteTransaction}
      */
     static _fromProtobuf(
@@ -72,7 +72,7 @@ export default class SystemUndeleteTransaction extends Transaction {
     ) {
         const body = bodies[0];
         const systemUndelete =
-            /** @type {proto.ISystemUndeleteTransactionBody} */ (
+            /** @type {HashgraphProto.proto.ISystemUndeleteTransactionBody} */ (
                 body.systemUndelete
             );
 
@@ -81,7 +81,7 @@ export default class SystemUndeleteTransaction extends Transaction {
                 fileId:
                     systemUndelete.fileID != null
                         ? FileId._fromProtobuf(
-                              /** @type {proto.IFileID} */ (
+                              /** @type {HashgraphProto.proto.IFileID} */ (
                                   systemUndelete.fileID
                               )
                           )
@@ -89,7 +89,7 @@ export default class SystemUndeleteTransaction extends Transaction {
                 contractId:
                     systemUndelete.contractID != null
                         ? ContractId._fromProtobuf(
-                              /** @type {proto.IContractID} */ (
+                              /** @type {HashgraphProto.proto.IContractID} */ (
                                   systemUndelete.contractID
                               )
                           )
@@ -147,8 +147,8 @@ export default class SystemUndeleteTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         if (this._fileId != null) {
@@ -161,7 +161,7 @@ export default class SystemUndeleteTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "systemUndelete";
@@ -170,7 +170,7 @@ export default class SystemUndeleteTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.ISystemUndeleteTransactionBody}
+     * @returns {HashgraphProto.proto.ISystemUndeleteTransactionBody}
      */
     _makeTransactionData() {
         return {

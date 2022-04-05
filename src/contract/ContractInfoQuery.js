@@ -5,13 +5,13 @@ import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").IContractGetInfoQuery} proto.IContractGetInfoQuery
- * @typedef {import("@hashgraph/proto").IContractGetInfoResponse} proto.IContractGetInfoResponse
- * @typedef {import("@hashgraph/proto").IContractInfo} proto.IContractInfo
+ * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
+ * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
+ * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
+ * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
+ * @typedef {import("@hashgraph/proto").proto.IContractGetInfoQuery} HashgraphProto.proto.IContractGetInfoQuery
+ * @typedef {import("@hashgraph/proto").proto.IContractGetInfoResponse} HashgraphProto.proto.IContractGetInfoResponse
+ * @typedef {import("@hashgraph/proto").proto.ContractGetInfoResponse.IContractInfo} HashgraphProto.proto.ContractGetInfoResponse.IContractInfo
  */
 
 /**
@@ -43,11 +43,11 @@ export default class ContractInfoQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {ContractInfoQuery}
      */
     static _fromProtobuf(query) {
-        const info = /** @type {proto.IContractGetInfoQuery} */ (
+        const info = /** @type {HashgraphProto.proto.IContractGetInfoQuery} */ (
             query.contractGetInfo
         );
 
@@ -94,8 +94,8 @@ export default class ContractInfoQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.smartContract.getContractInfo(request);
@@ -119,33 +119,39 @@ export default class ContractInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
-        const contractGetInfo = /** @type {proto.IContractGetInfoResponse} */ (
-            response.contractGetInfo
+        const contractGetInfo =
+            /** @type {HashgraphProto.proto.IContractGetInfoResponse} */ (
+                response.contractGetInfo
+            );
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
+            contractGetInfo.header
         );
-        return /** @type {proto.IResponseHeader} */ (contractGetInfo.header);
     }
 
     /**
      * @protected
      * @override
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @param {AccountId} nodeAccountId
-     * @param {proto.IQuery} request
+     * @param {HashgraphProto.proto.IQuery} request
      * @returns {Promise<ContractInfo>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
-        const info = /** @type {proto.IContractGetInfoResponse} */ (
-            response.contractGetInfo
-        );
+        const info =
+            /** @type {HashgraphProto.proto.IContractGetInfoResponse} */ (
+                response.contractGetInfo
+            );
 
         return Promise.resolve(
             ContractInfo._fromProtobuf(
-                /** @type {proto.IContractInfo} */ (info.contractInfo)
+                /** @type {HashgraphProto.proto.ContractGetInfoResponse.IContractInfo} */ (
+                    info.contractInfo
+                )
             )
         );
     }
@@ -153,8 +159,8 @@ export default class ContractInfoQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

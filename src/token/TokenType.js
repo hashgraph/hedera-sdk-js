@@ -1,6 +1,6 @@
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").TokenType} proto.TokenType
+ * @typedef {import("@hashgraph/proto").proto.TokenType} HashgraphProto.proto.TokenType
  */
 
 export default class TokenType {
@@ -49,7 +49,7 @@ export default class TokenType {
     }
 
     /**
-     * @returns {proto.TokenType}
+     * @returns {HashgraphProto.proto.TokenType}
      */
     valueOf() {
         return this._code;

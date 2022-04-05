@@ -2,7 +2,7 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").proto.ITimestamp} HashgraphProto.proto.ITimestamp
  */
 
 const MAX_NS = Long.fromNumber(1000000000);
@@ -87,7 +87,7 @@ export default class Timestamp {
 
     /**
      * @internal
-     * @returns {proto.ITimestamp}
+     * @returns {HashgraphProto.proto.ITimestamp}
      */
     _toProtobuf() {
         return {
@@ -98,7 +98,7 @@ export default class Timestamp {
 
     /**
      * @internal
-     * @param {proto.ITimestamp} timestamp
+     * @param {HashgraphProto.proto.ITimestamp} timestamp
      * @returns {Timestamp}
      */
     static _fromProtobuf(timestamp) {

@@ -1,9 +1,11 @@
 import FileId from "./FileId.js";
 import Timestamp from "../Timestamp.js";
 import Long from "long";
-import * as proto from "@hashgraph/proto";
 import KeyList from "../KeyList.js";
 import LedgerId from "../LedgerId.js";
+import * as HashgraphProto from "@hashgraph/proto";
+
+const { proto } = HashgraphProto;
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -66,7 +68,7 @@ export default class FileInfo {
 
     /**
      * @internal
-     * @param {proto.IFileInfo} info
+     * @param {HashgraphProto.proto.FileGetInfoResponse.IFileInfo} info
      * @returns {FileInfo}
      */
     static _fromProtobuf(info) {
@@ -74,11 +76,13 @@ export default class FileInfo {
 
         return new FileInfo({
             fileId: FileId._fromProtobuf(
-                /** @type {proto.IFileID} */ (info.fileID)
+                /** @type {HashgraphProto.proto.IFileID} */ (info.fileID)
             ),
             size: size instanceof Long ? size : Long.fromValue(size),
             expirationTime: Timestamp._fromProtobuf(
-                /** @type {proto.ITimestamp} */ (info.expirationTime)
+                /** @type {HashgraphProto.proto.ITimestamp} */ (
+                    info.expirationTime
+                )
             ),
             isDeleted: /** @type {boolean} */ (info.deleted),
             keys:
@@ -95,7 +99,7 @@ export default class FileInfo {
 
     /**
      * @internal
-     * @returns {proto.IFileInfo}
+     * @returns {HashgraphProto.proto.FileGetInfoResponse.IFileInfo}
      */
     _toProtobuf() {
         return {
@@ -115,7 +119,7 @@ export default class FileInfo {
      */
     static fromBytes(bytes) {
         return FileInfo._fromProtobuf(
-            proto.FileGetInfoResponse.FileInfo.decode(bytes)
+            HashgraphProto.proto.FileGetInfoResponse.FileInfo.decode(bytes)
         );
     }
 

@@ -1,6 +1,6 @@
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").SubType} proto.SubType
+ * @typedef {import("@hashgraph/proto").proto.SubType} HashgraphProto.proto.SubType
  */
 
 export default class FeeDataType {
@@ -61,7 +61,7 @@ export default class FeeDataType {
     }
 
     /**
-     * @returns {proto.SubType}
+     * @returns {HashgraphProto.proto.SubType}
      */
     valueOf() {
         return this._code;

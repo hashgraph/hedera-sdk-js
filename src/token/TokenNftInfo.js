@@ -6,16 +6,16 @@ import LedgerId from "../LedgerId.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").TokenFreezeStatus} proto.TokenFreezeStatus
- * @typedef {import("@hashgraph/proto").TokenKycStatus} proto.TokenKycStatus
- * @typedef {import("@hashgraph/proto").TokenPauseStatus} proto.TokenPauseStatus
- * @typedef {import("@hashgraph/proto").ITokenNftInfo} proto.ITokenNftInfo
- * @typedef {import("@hashgraph/proto").INftID} proto.INftID
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
- * @typedef {import("@hashgraph/proto").IDuration} proto.IDuration
+ * @typedef {import("@hashgraph/proto").proto.TokenFreezeStatus} HashgraphProto.proto.TokenFreezeStatus
+ * @typedef {import("@hashgraph/proto").proto.TokenKycStatus} HashgraphProto.proto.TokenKycStatus
+ * @typedef {import("@hashgraph/proto").proto.TokenPauseStatus} HashgraphProto.proto.TokenPauseStatus
+ * @typedef {import("@hashgraph/proto").proto.ITokenNftInfo} HashgraphProto.proto.ITokenNftInfo
+ * @typedef {import("@hashgraph/proto").proto.INftID} HashgraphProto.proto.INftID
+ * @typedef {import("@hashgraph/proto").proto.ITimestamp} HashgraphProto.proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IKey} HashgraphProto.proto.IKey
+ * @typedef {import("@hashgraph/proto").proto.IDuration} HashgraphProto.proto.IDuration
  */
 
 export default class TokenNftInfo {
@@ -58,19 +58,21 @@ export default class TokenNftInfo {
 
     /**
      * @internal
-     * @param {proto.ITokenNftInfo} info
+     * @param {HashgraphProto.proto.ITokenNftInfo} info
      * @returns {TokenNftInfo}
      */
     static _fromProtobuf(info) {
         return new TokenNftInfo({
             nftId: NftId._fromProtobuf(
-                /** @type {proto.INftID} */ (info.nftID)
+                /** @type {HashgraphProto.proto.INftID} */ (info.nftID)
             ),
             accountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (info.accountID)
+                /** @type {HashgraphProto.proto.IAccountID} */ (info.accountID)
             ),
             creationTime: Timestamp._fromProtobuf(
-                /** @type {proto.ITimestamp} */ (info.creationTime)
+                /** @type {HashgraphProto.proto.ITimestamp} */ (
+                    info.creationTime
+                )
             ),
             metadata: info.metadata !== undefined ? info.metadata : null,
             ledgerId:
@@ -81,7 +83,7 @@ export default class TokenNftInfo {
     }
 
     /**
-     * @returns {proto.ITokenNftInfo}
+     * @returns {HashgraphProto.proto.ITokenNftInfo}
      */
     _toProtobuf() {
         return {

@@ -10,15 +10,15 @@ import Key from "../Key.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").IContractUpdateTransactionBody} proto.IContractUpdateTransactionBody
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
- * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.IContractUpdateTransactionBody} HashgraphProto.proto.IContractUpdateTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IFileID} HashgraphProto.proto.IFileID
  */
 
 /**
@@ -114,11 +114,11 @@ export default class ContractUpdateTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {ContractUpdateTransaction}
      */
     static _fromProtobuf(
@@ -129,9 +129,10 @@ export default class ContractUpdateTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const update = /** @type {proto.IContractUpdateTransactionBody} */ (
-            body.contractUpdateInstance
-        );
+        const update =
+            /** @type {HashgraphProto.proto.IContractUpdateTransactionBody} */ (
+                body.contractUpdateInstance
+            );
 
         let autoRenewPeriod = undefined;
         if (
@@ -151,7 +152,7 @@ export default class ContractUpdateTransaction extends Transaction {
                 contractId:
                     update.contractID != null
                         ? ContractId._fromProtobuf(
-                              /** @type {proto.IContractID} */ (
+                              /** @type {HashgraphProto.proto.IContractID} */ (
                                   update.contractID
                               )
                           )
@@ -159,7 +160,9 @@ export default class ContractUpdateTransaction extends Transaction {
                 bytecodeFileId:
                     update.fileID != null
                         ? FileId._fromProtobuf(
-                              /** @type {proto.IFileID} */ (update.fileID)
+                              /** @type {HashgraphProto.proto.IFileID} */ (
+                                  update.fileID
+                              )
                           )
                         : undefined,
                 expirationTime:
@@ -173,7 +176,7 @@ export default class ContractUpdateTransaction extends Transaction {
                 proxyAccountId:
                     update.proxyAccountID != null
                         ? AccountId._fromProtobuf(
-                              /** @type {proto.IAccountID} */ (
+                              /** @type {HashgraphProto.proto.IAccountID} */ (
                                   update.proxyAccountID
                               )
                           )
@@ -366,8 +369,8 @@ export default class ContractUpdateTransaction extends Transaction {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
         return channel.smartContract.updateContract(request);
@@ -376,7 +379,7 @@ export default class ContractUpdateTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "contractUpdateInstance";
@@ -385,7 +388,7 @@ export default class ContractUpdateTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.IContractUpdateTransactionBody}
+     * @returns {HashgraphProto.proto.IContractUpdateTransactionBody}
      */
     _makeTransactionData() {
         return {

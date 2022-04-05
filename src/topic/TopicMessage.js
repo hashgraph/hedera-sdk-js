@@ -4,8 +4,12 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IConsensusTopicResponse} proto.IConsensusTopicResponse
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").proto.ITimestamp} HashgraphProto.proto.ITimestamp
+ */
+
+/**
+ * @namespace com
+ * @typedef {import("@hashgraph/proto").com.hedera.mirror.api.proto.IConsensusTopicResponse} com.hedera.mirror.api.proto.IConsensusTopicResponse
  */
 
 export default class TopicMessage {
@@ -35,13 +39,13 @@ export default class TopicMessage {
 
     /**
      * @internal
-     * @param {proto.IConsensusTopicResponse} response
+     * @param {com.hedera.mirror.api.proto.IConsensusTopicResponse} response
      * @returns {TopicMessage}
      */
     static _ofSingle(response) {
         return new TopicMessage({
             consensusTimestamp: Timestamp._fromProtobuf(
-                /** @type {proto.ITimestamp} */
+                /** @type {HashgraphProto.proto.ITimestamp} */
                 (response.consensusTimestamp)
             ),
             contents:
@@ -62,18 +66,19 @@ export default class TopicMessage {
 
     /**
      * @internal
-     * @param {proto.IConsensusTopicResponse[]} responses
+     * @param {com.hedera.mirror.api.proto.IConsensusTopicResponse[]} responses
      * @returns {TopicMessage}
      */
     static _ofMany(responses) {
         const length = responses.length;
 
-        const last = /** @type {proto.IConsensusTopicResponse} */ (
-            responses[length - 1]
-        );
+        const last =
+            /** @type {com.hedera.mirror.api.proto.IConsensusTopicResponse} */ (
+                responses[length - 1]
+            );
 
         const consensusTimestamp = Timestamp._fromProtobuf(
-            /** @type {proto.ITimestamp} */
+            /** @type {HashgraphProto.proto.ITimestamp} */
             (last.consensusTimestamp)
         );
 
@@ -113,7 +118,7 @@ export default class TopicMessage {
          */
         const chunks = responses.map(
             /**
-             * @type {proto.IConsensusTopicResponse}
+             * @type {com.hedera.mirror.api.proto.IConsensusTopicResponse}
              */ (m) => TopicMessageChunk._fromProtobuf(m)
         );
 

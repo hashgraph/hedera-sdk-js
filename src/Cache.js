@@ -8,10 +8,10 @@
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
- * @typedef {import("@hashgraph/proto").IKeyList} proto.IKeyList
- * @typedef {import("@hashgraph/proto").IThresholdKey} proto.IThresholdKey
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IKey} HashgraphProto.proto.IKey
+ * @typedef {import("@hashgraph/proto").proto.IKeyList} HashgraphProto.proto.IKeyList
+ * @typedef {import("@hashgraph/proto").proto.IThresholdKey} HashgraphProto.proto.IThresholdKey
+ * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
  */
 
 /**
@@ -26,13 +26,13 @@
  */
 
 const CACHE = {
-    /** @type {FromProtobufKeyFuncT<proto.IContractID, ContractId> | null} */
+    /** @type {FromProtobufKeyFuncT<HashgraphProto.proto.IContractID, ContractId> | null} */
     contractId: null,
 
-    /** @type {FromProtobufKeyFuncT<proto.IKeyList, KeyList> | null} */
+    /** @type {FromProtobufKeyFuncT<HashgraphProto.proto.IKeyList, KeyList> | null} */
     keyList: null,
 
-    /** @type {FromProtobufKeyFuncT<proto.IThresholdKey, KeyList> | null} */
+    /** @type {FromProtobufKeyFuncT<HashgraphProto.proto.IThresholdKey, KeyList> | null} */
     thresholdKey: null,
 
     /** @type {FromProtobufKeyFuncT<Uint8Array, PublicKey> | null} */
@@ -47,7 +47,7 @@ const CACHE = {
     /** @type {((shard: Long | number, realm: Long | number, key: PublicKey) => AccountId) | null} */
     accountIdConstructor: null,
 
-    /** @type {FromProtobufKeyFuncT<proto.IContractID, ContractId> | null} */
+    /** @type {FromProtobufKeyFuncT<HashgraphProto.proto.IContractID, ContractId> | null} */
     delegateContractId: null,
 };
 

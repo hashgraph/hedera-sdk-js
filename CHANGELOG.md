@@ -26,7 +26,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `AccountAllowanceAdjustTransaction.[grant|revoke][Hbar|Token|TokenNft]Allowance()`
  * `AccountAllowanceAdjustTransaction.[grant|revoke]TokenNftAllowanceAllSerials()`
 
+## v2.12.0-beta.1
+
+### Added
+
+ * `AccountInfoFlow.verify[Signature|Transaction]()`
+ * `Client.[set|get]NodeMinReadmitPeriod()`
+ * Support for using any node from the entire network upon execution
+   if node account IDs have no been locked for the request.
+ * Support for all integer widths for `ContractFunction[Result|Selector|Params]`
+ * `AccountAllowanceApproveTransaction.approve[Hbar|Token|TokenNft]Allowance()`
+ * `AccountAllowanceAdjustTransaction.[grant|revoke][Hbar|Token|TokenNft]Allowance()`
+ * `AccountAllowanceAdjustTransaction.[grant|revoke]TokenNftAllowanceAllSerials()`
+ * `TransactionRecord.[hbar|token|tokenNft]AllowanceAdjustments`
+ * `TransferTransaction.addApproved[Hbar|Token|Nft]Transfer()`
+
+### Deprecated
+
+ * `AccountAllowanceApproveTransaction.add[Hbar|Token|TokenNft]Allowance[WithOwner]()`, use `approve*Allowance()` instead.
+ * `AccountAllowanceAdjustTransaction.add[Hbar|Token|TokenNft]Allowance[WithOwner]()`, use `[grant|revoke]*Allowance()` instead.
+ * `TransferTransaction.set[Hbar|Token|Nft]TransferApproval()`, use `addApproved*Transfer()` instead.
+
+### Changed
+
+ * Network behavior to follow a more standard approach (remove the sorting we
+   used to do).
+
+### Fixed
+
+ * Ledger ID checksums
+ * `Transaction.fromBytes()` should validate all the transaction bodies are the same
+ * `ExchangeRate._[from|to]Protobuf()` should correctly decode `expirationTime`
+ * Mark `expo` as a optional peer dependency
+
 ## v2.11.0
+
+### Added
+
+ * `LocalWallet`
+ * `LocalProvider`
+ * `Provider`
+ * `Signer`
+ * `Wallet`
+ * `SignerSignature`
+ * Verbose logging using `js-logger`
+ * `Client.setRequestTimeout()`
+
+### Fixed
+
+ * TLS for mirror nodes
+ * Transactions should have an appropriate default (copied from Java SDK)
+ * Min/max backoff for nodes should start at 8s to 60s
+ * The current backoff for nodes should be used when sorting inside of network
+   meaning nodes with a smaller current backoff will be prioritized
+ * Chunked transactions (`FileAppendTransaction` and `TopicMessageSubmitTransaction`) should
+   use the correct transation ID per transaction
+ * Transaction removing signatures when calling `Transaction.[toBytes|getTransactionHash]()`
+
+## v2.11.0-beta.1
 
 ### Added
 
@@ -55,30 +112,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixes
 
  * `NativeClient` IPs should have a port
-
-## v2.11.0-beta.1
-
-### Added
-
- * `LocalWallet`
- * `LocalProvider`
- * `Provider`
- * `Signer`
- * `Wallet`
- * `SignerSignature`
- * Verbose logging using `js-logger`
- * `Client.setRequestTimeout()`
-
-### Fixed
-
- * TLS for mirror nodes
- * Transactions should have an appropriate default (copied from Java SDK)
- * Min/max backoff for nodes should start at 8s to 60s
- * The current backoff for nodes should be used when sorting inside of network
-   meaning nodes with a smaller current backoff will be prioritized
- * Chunked transactions (`FileAppendTransaction` and `TopicMessageSubmitTransaction`) should
-   use the correct transation ID per transaction
- * Transaction removing signatures when calling `Transaction.[toBytes|getTransactionHash]()`
 
 ## v2.10.0
 

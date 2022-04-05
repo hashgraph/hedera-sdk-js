@@ -1,5 +1,7 @@
 import ExchangeRate from "./ExchangeRate.js";
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
+
+const { proto } = HashgraphProto;
 
 export default class ExchangeRates {
     /**
@@ -24,23 +26,27 @@ export default class ExchangeRates {
 
     /**
      * @internal
-     * @param {proto.IExchangeRateSet} rateSet
+     * @param {HashgraphProto.proto.IExchangeRateSet} rateSet
      * @returns {ExchangeRates}
      */
     static _fromProtobuf(rateSet) {
         return new ExchangeRates({
             currentRate: ExchangeRate._fromProtobuf(
-                /** @type {proto.IExchangeRate} */ (rateSet.currentRate)
+                /** @type {HashgraphProto.proto.IExchangeRate} */ (
+                    rateSet.currentRate
+                )
             ),
             nextRate: ExchangeRate._fromProtobuf(
-                /** @type {proto.IExchangeRate} */ (rateSet.nextRate)
+                /** @type {HashgraphProto.proto.IExchangeRate} */ (
+                    rateSet.nextRate
+                )
             ),
         });
     }
 
     /**
      * @internal
-     * @returns {proto.IExchangeRateSet}
+     * @returns {HashgraphProto.proto.IExchangeRateSet}
      */
     _toProtobuf() {
         return {

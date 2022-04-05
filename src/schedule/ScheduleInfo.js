@@ -2,31 +2,12 @@ import ScheduleId from "./ScheduleId.js";
 import AccountId from "../account/AccountId.js";
 import Timestamp from "../Timestamp.js";
 import Transaction from "../transaction/Transaction.js";
-import {
-    TransactionList as ProtoTransactionList,
-    TransactionBody as ProtoTransactionBody,
-    SignedTransaction as ProtoSignedTransaction,
-    SchedulableTransactionBody as ProtoSchedulableTransactionBody,
-} from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import TransactionId from "../transaction/TransactionId.js";
 import Key from "../Key.js";
 import KeyList from "../KeyList.js";
 
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").IScheduleInfo} proto.IScheduleInfo
- * @typedef {import("@hashgraph/proto").IScheduleID} proto.IScheduleID
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").IScheduleID} proto.IScheduledID
- * @typedef {import("@hashgraph/proto").IFileID} proto.IFileID
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
- * @typedef {import("@hashgraph/proto").IDuration} proto.IDuration
- * @typedef {import("@hashgraph/proto").ISchedulableTransactionBody} proto.ISchedulableTransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- */
+const { proto } = HashgraphProto;
 
 /**
  * Response when the client sends the node ScheduleGetInfoQuery.
@@ -38,7 +19,7 @@ export default class ScheduleInfo {
      * @param {ScheduleId} props.scheduleId;
      * @param {?AccountId} props.creatorAccountID;
      * @param {?AccountId} props.payerAccountID;
-     * @param {?proto.ISchedulableTransactionBody} props.schedulableTransactionBody;
+     * @param {?HashgraphProto.proto.ISchedulableTransactionBody} props.schedulableTransactionBody;
      * @param {?Key} props.adminKey
      * @param {?KeyList} props.signers;
      * @param {?string} props.scheduleMemo;
@@ -115,18 +96,20 @@ export default class ScheduleInfo {
 
     /**
      * @internal
-     * @param {proto.IScheduleInfo} info
+     * @param {HashgraphProto.proto.IScheduleInfo} info
      * @returns {ScheduleInfo}
      */
     static _fromProtobuf(info) {
         return new ScheduleInfo({
             scheduleId: ScheduleId._fromProtobuf(
-                /** @type {proto.IScheduleID} */ (info.scheduleID)
+                /** @type {HashgraphProto.proto.IScheduleID} */ (
+                    info.scheduleID
+                )
             ),
             creatorAccountID:
                 info.creatorAccountID != null
                     ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (
+                          /** @type {HashgraphProto.proto.IAccountID} */ (
                               info.creatorAccountID
                           )
                       )
@@ -134,7 +117,9 @@ export default class ScheduleInfo {
             payerAccountID:
                 info.payerAccountID != null
                     ? AccountId._fromProtobuf(
-                          /** @type {proto.IAccountID} */ (info.payerAccountID)
+                          /** @type {HashgraphProto.proto.IAccountID} */ (
+                              info.payerAccountID
+                          )
                       )
                     : null,
             schedulableTransactionBody:
@@ -153,19 +138,25 @@ export default class ScheduleInfo {
             expirationTime:
                 info.expirationTime != null
                     ? Timestamp._fromProtobuf(
-                          /** @type {proto.ITimestamp} */ (info.expirationTime)
+                          /** @type {HashgraphProto.proto.ITimestamp} */ (
+                              info.expirationTime
+                          )
                       )
                     : null,
             executed:
                 info.executionTime != null
                     ? Timestamp._fromProtobuf(
-                          /** @type {proto.ITimestamp} */ (info.executionTime)
+                          /** @type {HashgraphProto.proto.ITimestamp} */ (
+                              info.executionTime
+                          )
                       )
                     : null,
             deleted:
                 info.deletionTime != null
                     ? Timestamp._fromProtobuf(
-                          /** @type {proto.ITimestamp} */ (info.deletionTime)
+                          /** @type {HashgraphProto.proto.ITimestamp} */ (
+                              info.deletionTime
+                          )
                       )
                     : null,
             scheduledTransactionId:
@@ -176,7 +167,7 @@ export default class ScheduleInfo {
     }
 
     /**
-     * @returns {proto.IScheduleInfo}
+     * @returns {HashgraphProto.proto.IScheduleInfo}
      */
     _toProtobuf() {
         return {
@@ -220,20 +211,20 @@ export default class ScheduleInfo {
             throw new Error("Scheduled transaction body is empty");
         }
 
-        const scheduled = new ProtoSchedulableTransactionBody(
+        const scheduled = new proto.SchedulableTransactionBody(
             this.schedulableTransactionBody
         );
         const data =
-            /** @type {NonNullable<ProtoSchedulableTransactionBody["data"]>} */ (
+            /** @type {NonNullable<HashgraphProto.proto.SchedulableTransactionBody["data"]>} */ (
                 scheduled.data
             );
 
         return Transaction.fromBytes(
-            ProtoTransactionList.encode({
+            proto.TransactionList.encode({
                 transactionList: [
                     {
-                        signedTransactionBytes: ProtoSignedTransaction.encode({
-                            bodyBytes: ProtoTransactionBody.encode({
+                        signedTransactionBytes: proto.SignedTransaction.encode({
+                            bodyBytes: proto.TransactionBody.encode({
                                 transactionFee:
                                     this.schedulableTransactionBody
                                         .transactionFee,

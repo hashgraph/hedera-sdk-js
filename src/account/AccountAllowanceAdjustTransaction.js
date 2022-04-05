@@ -13,13 +13,13 @@ import * as util from "../util.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITransaction} proto.ITransaction
- * @typedef {import("@hashgraph/proto").ISignedTransaction} proto.ISignedTransaction
- * @typedef {import("@hashgraph/proto").TransactionBody} proto.TransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionBody} proto.ITransactionBody
- * @typedef {import("@hashgraph/proto").ITransactionResponse} proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").ICryptoAdjustAllowanceTransactionBody} proto.ICryptoAdjustAllowanceTransactionBody
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ITransaction} HashgraphProto.proto.ITransaction
+ * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
+ * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
+ * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
+ * @typedef {import("@hashgraph/proto").proto.ICryptoAdjustAllowanceTransactionBody} HashgraphProto.proto.ICryptoAdjustAllowanceTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
 
 /**
@@ -67,11 +67,11 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
 
     /**
      * @internal
-     * @param {proto.ITransaction[]} transactions
-     * @param {proto.ISignedTransaction[]} signedTransactions
+     * @param {HashgraphProto.proto.ITransaction[]} transactions
+     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
-     * @param {proto.ITransactionBody[]} bodies
+     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
      * @returns {AccountAllowanceAdjustTransaction}
      */
     static _fromProtobuf(
@@ -83,7 +83,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     ) {
         const body = bodies[0];
         const allowanceAdjust =
-            /** @type {proto.ICryptoAdjustAllowanceTransactionBody} */ (
+            /** @type {HashgraphProto.proto.ICryptoAdjustAllowanceTransactionBody} */ (
                 body.cryptoAdjustAllowance
             );
 
@@ -309,6 +309,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         for (const allowance of this._nftAllowances) {
             if (
                 allowance.tokenId.compare(nftId.tokenId) === 0 &&
+                allowance.spenderAccountId != null &&
                 allowance.spenderAccountId.compare(spender) === 0
             ) {
                 if (allowance.serialNumbers != null) {
@@ -362,9 +363,8 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         const id = typeof nftId === "string" ? NftId.fromString(nftId) : nftId;
 
         util.requireNotNegative(id.serial);
-        const newId = new NftId(id.tokenId, id.serial.negate());
         return this._adjustTokenNftAllowance(
-            newId,
+            new NftId(id.tokenId, id.serial.negate()),
             ownerAccountId,
             spenderAccountId
         );
@@ -466,38 +466,32 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @param {Client} client
      */
     _validateChecksums(client) {
-        this._hbarAllowances.forEach((allowance) =>
-            allowance.spenderAccountId.validateChecksum(client)
+        this._hbarAllowances.map((allowance) =>
+            allowance._validateChecksums(client)
         );
-        this._tokenAllowances.forEach((allowance) => {
-            allowance.tokenId.validateChecksum(client);
-            allowance.spenderAccountId.validateChecksum(client);
-        });
-        this._nftAllowances.forEach((allowance) => {
-            allowance.tokenId.validateChecksum(client);
-            allowance.spenderAccountId.validateChecksum(client);
-
-            if (allowance.ownerAccountId != null) {
-                allowance.ownerAccountId.validateChecksum(client);
-            }
-        });
+        this._tokenAllowances.map((allowance) =>
+            allowance._validateChecksums(client)
+        );
+        this._nftAllowances.map((allowance) =>
+            allowance._validateChecksums(client)
+        );
     }
 
     /**
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.ITransaction} request
-     * @returns {Promise<proto.ITransactionResponse>}
+     * @param {HashgraphProto.proto.ITransaction} request
+     * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.crypto.adjustAllowance(request);
+        return channel.crypto.adjustAllowances(request);
     }
 
     /**
      * @override
      * @protected
-     * @returns {NonNullable<proto.TransactionBody["data"]>}
+     * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
         return "cryptoAdjustAllowance";
@@ -506,7 +500,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {proto.ICryptoAdjustAllowanceTransactionBody}
+     * @returns {HashgraphProto.proto.ICryptoAdjustAllowanceTransactionBody}
      */
     _makeTransactionData() {
         return {

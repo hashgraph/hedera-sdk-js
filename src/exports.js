@@ -17,6 +17,7 @@ export { default as AccountCreateTransaction } from "./account/AccountCreateTran
 export { default as AccountDeleteTransaction } from "./account/AccountDeleteTransaction.js";
 export { default as AccountId } from "./account/AccountId.js";
 export { default as AccountInfo } from "./account/AccountInfo.js";
+export { default as AccountInfoFlow } from "./account/AccountInfoFlow.js";
 export { default as AccountInfoQuery } from "./account/AccountInfoQuery.js";
 export { default as AccountRecordsQuery } from "./account/AccountRecordsQuery.js";
 export { default as AccountStakersQuery } from "./account/AccountStakersQuery.js";
@@ -43,8 +44,8 @@ export { default as CustomFractionalFee } from "./token/CustomFractionalFee.js";
 export { default as CustomRoyaltyFee } from "./token/CustomRoyaltyFee.js";
 export { default as DelegateContractId } from "./contract/DelegateContractId.js";
 export { default as ExchangeRate } from "./ExchangeRate.js";
-export { default as Executable } from "./Executable.js";
 export { default as ExchangeRates } from "./ExchangeRates.js";
+export { default as Executable } from "./Executable.js";
 export { default as FileAppendTransaction } from "./file/FileAppendTransaction.js";
 export { default as FileContentsQuery } from "./file/FileContentsQuery.js";
 export { default as FileCreateTransaction } from "./file/FileCreateTransaction.js";
@@ -151,3 +152,30 @@ export const NetworkName = {
 };
 
 import "./query/CostQuery.js";
+
+import Logger from "js-logger";
+
+if (
+    process != null &&
+    process.env != null &&
+    process.env.HEDERA_SDK_LOG_LEVEL != null
+) {
+    Logger.useDefaults();
+
+    switch (process.env.HEDERA_SDK_LOG_LEVEL) {
+        case "DEBUG":
+            Logger.setLevel(Logger.DEBUG);
+            break;
+        case "TRACE":
+            Logger.setLevel(Logger.TRACE);
+            break;
+        case "WARN":
+            Logger.setLevel(Logger.WARN);
+            break;
+        case "INFO":
+            Logger.setLevel(Logger.INFO);
+            break;
+    }
+}
+
+export { default as Logger } from "js-logger";

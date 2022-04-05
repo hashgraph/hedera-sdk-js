@@ -1,4 +1,4 @@
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import RequestType from "./RequestType";
 import FeeData from "./FeeData";
 
@@ -38,13 +38,13 @@ export default class TransactionFeeSchedule {
      */
     static fromBytes(bytes) {
         return TransactionFeeSchedule._fromProtobuf(
-            proto.TransactionFeeSchedule.decode(bytes)
+            HashgraphProto.proto.TransactionFeeSchedule.decode(bytes)
         );
     }
 
     /**
      * @internal
-     * @param {proto.ITransactionFeeSchedule} transactionFeeSchedule
+     * @param {HashgraphProto.proto.ITransactionFeeSchedule} transactionFeeSchedule
      * @returns {TransactionFeeSchedule}
      */
     static _fromProtobuf(transactionFeeSchedule) {
@@ -70,7 +70,7 @@ export default class TransactionFeeSchedule {
 
     /**
      * @internal
-     * @returns {proto.ITransactionFeeSchedule}
+     * @returns {HashgraphProto.proto.ITransactionFeeSchedule}
      */
     _toProtobuf() {
         return {
@@ -91,6 +91,8 @@ export default class TransactionFeeSchedule {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.TransactionFeeSchedule.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.TransactionFeeSchedule.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

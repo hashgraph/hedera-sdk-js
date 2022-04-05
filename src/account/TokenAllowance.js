@@ -4,10 +4,15 @@ import Long from "long";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITokenAllowance} proto.ITokenAllowance
- * @typedef {import("@hashgraph/proto").IGrantedTokenAllowance} proto.IGrantedTokenAllowance
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.IGrantedTokenAllowance} HashgraphProto.proto.IGrantedTokenAllowance
+ * @typedef {import("@hashgraph/proto").proto.ITokenRemoveAllowance} HashgraphProto.proto.ITokenRemoveAllowance
+ * @typedef {import("@hashgraph/proto").proto.ITokenAllowance} HashgraphProto.proto.ITokenAllowance
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ */
+
+/**
+ * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
 export default class TokenAllowance {
@@ -15,7 +20,7 @@ export default class TokenAllowance {
      * @internal
      * @param {object} props
      * @param {TokenId} props.tokenId
-     * @param {AccountId} props.spenderAccountId
+     * @param {AccountId | null} props.spenderAccountId
      * @param {AccountId | null} props.ownerAccountId
      * @param {Long | null} props.amount
      */
@@ -55,21 +60,25 @@ export default class TokenAllowance {
 
     /**
      * @internal
-     * @param {proto.ITokenAllowance} allowance
+     * @param {HashgraphProto.proto.ITokenAllowance} allowance
      * @returns {TokenAllowance}
      */
     static _fromProtobuf(allowance) {
         return new TokenAllowance({
             tokenId: TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (allowance.tokenId)
+                /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
             ),
             spenderAccountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (allowance.spender)
+                /** @type {HashgraphProto.proto.IAccountID} */ (
+                    allowance.spender
+                )
             ),
             ownerAccountId:
                 allowance.owner != null
                     ? AccountId._fromProtobuf(
-                          /**@type {proto.IAccountID}*/ (allowance.owner)
+                          /**@type {HashgraphProto.proto.IAccountID}*/ (
+                              allowance.owner
+                          )
                       )
                     : null,
             amount:
@@ -81,18 +90,21 @@ export default class TokenAllowance {
 
     /**
      * @internal
-     * @param {proto.IGrantedTokenAllowance} allowance
+     * @param {HashgraphProto.proto.IGrantedTokenAllowance} allowance
+     * @param {AccountId} ownerAccountId
      * @returns {TokenAllowance}
      */
-    static _fromGrantedProtobuf(allowance) {
+    static _fromGrantedProtobuf(allowance, ownerAccountId) {
         return new TokenAllowance({
             tokenId: TokenId._fromProtobuf(
-                /** @type {proto.ITokenID} */ (allowance.tokenId)
+                /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
             ),
             spenderAccountId: AccountId._fromProtobuf(
-                /** @type {proto.IAccountID} */ (allowance.spender)
+                /** @type {HashgraphProto.proto.IAccountID} */ (
+                    allowance.spender
+                )
             ),
-            ownerAccountId: null,
+            ownerAccountId,
             amount:
                 allowance.amount != null
                     ? Long.fromValue(/** @type {Long} */ (allowance.amount))
@@ -102,17 +114,58 @@ export default class TokenAllowance {
 
     /**
      * @internal
-     * @returns {proto.ITokenAllowance}
+     * @param {HashgraphProto.proto.ITokenRemoveAllowance} allowance
+     * @returns {TokenAllowance}
+     */
+    static _fromRemoveAllowance(allowance) {
+        return new TokenAllowance({
+            tokenId: TokenId._fromProtobuf(
+                /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
+            ),
+            spenderAccountId: null,
+            ownerAccountId:
+                allowance.owner != null
+                    ? AccountId._fromProtobuf(
+                          /**@type {HashgraphProto.proto.IAccountID}*/ (
+                              allowance.owner
+                          )
+                      )
+                    : null,
+            amount: null,
+        });
+    }
+
+    /**
+     * @internal
+     * @returns {HashgraphProto.proto.ITokenAllowance}
      */
     _toProtobuf() {
         return {
             tokenId: this.tokenId._toProtobuf(),
-            spender: this.spenderAccountId._toProtobuf(),
+            spender:
+                this.spenderAccountId != null
+                    ? this.spenderAccountId._toProtobuf()
+                    : null,
             owner:
                 this.ownerAccountId != null
                     ? this.ownerAccountId._toProtobuf()
                     : null,
             amount: this.amount,
         };
+    }
+
+    /**
+     * @param {Client} client
+     */
+    _validateChecksums(client) {
+        this.tokenId.validateChecksum(client);
+
+        if (this.ownerAccountId != null) {
+            this.ownerAccountId.validateChecksum(client);
+        }
+
+        if (this.spenderAccountId != null) {
+            this.spenderAccountId.validateChecksum(client);
+        }
     }
 }

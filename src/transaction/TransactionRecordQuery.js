@@ -6,21 +6,10 @@ import Status from "../Status.js";
 import PrecheckStatusError from "../PrecheckStatusError.js";
 import ReceiptStatusError from "../ReceiptStatusError.js";
 import { ExecutionState } from "../Executable.js";
-import { ResponseType, ResponseCodeEnum } from "@hashgraph/proto";
 import Logger from "js-logger";
+import * as HashgraphProto from "@hashgraph/proto";
 
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").IQuery} proto.IQuery
- * @typedef {import("@hashgraph/proto").IQueryHeader} proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").ITransactionRecord} proto.ITransactionRecord
- * @typedef {import("@hashgraph/proto").ITransactionReceipt} proto.ITransactionReceipt
- * @typedef {import("@hashgraph/proto").ITransactionGetRecordResponse} proto.ITransactionGetRecordResponse
- * @typedef {import("@hashgraph/proto").ITransactionGetRecordQuery} proto.ITransactionGetRecordQuery
- * @typedef {import("@hashgraph/proto").IResponse} proto.IResponse
- * @typedef {import("@hashgraph/proto").IResponseHeader} proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").ResponseCodeEnum} proto.ResponseCodeEnum
- */
+const { proto } = HashgraphProto;
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -81,13 +70,14 @@ export default class TransactionRecordQuery extends Query {
 
     /**
      * @internal
-     * @param {proto.IQuery} query
+     * @param {HashgraphProto.proto.IQuery} query
      * @returns {TransactionRecordQuery}
      */
     static _fromProtobuf(query) {
-        const record = /** @type {proto.ITransactionGetRecordQuery} */ (
-            query.transactionGetRecord
-        );
+        const record =
+            /** @type {HashgraphProto.proto.ITransactionGetRecordQuery} */ (
+                query.transactionGetRecord
+            );
 
         return new TransactionRecordQuery({
             transactionId: record.transactionID
@@ -154,8 +144,8 @@ export default class TransactionRecordQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQuery} request
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IQuery} request
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {ExecutionState}
      */
     _shouldRetry(request, response) {
@@ -165,7 +155,7 @@ export default class TransactionRecordQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         Logger.debug(
@@ -187,26 +177,31 @@ export default class TransactionRecordQuery extends Query {
         }
 
         const transactionGetRecord =
-            /** @type {proto.ITransactionGetRecordResponse} */ (
+            /** @type {HashgraphProto.proto.ITransactionGetRecordResponse} */ (
                 response.transactionGetRecord
             );
-        const header = /** @type {proto.IResponseHeader} */ (
+        const header = /** @type {HashgraphProto.proto.IResponseHeader} */ (
             transactionGetRecord.header
         );
 
-        if (header.responseType === ResponseType.COST_ANSWER) {
+        if (
+            header.responseType ===
+            HashgraphProto.proto.ResponseType.COST_ANSWER
+        ) {
             return ExecutionState.Finished;
         }
 
-        const record = /** @type {proto.ITransactionRecord} */ (
+        const record = /** @type {HashgraphProto.proto.ITransactionRecord} */ (
             transactionGetRecord.transactionRecord
         );
-        const receipt = /** @type {proto.ITransactionReceipt} */ (
-            record.receipt
-        );
-        const receiptStatusCode = /** @type {proto.ResponseCodeEnum} */ (
-            receipt.status
-        );
+        const receipt =
+            /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
+                record.receipt
+            );
+        const receiptStatusCode =
+            /** @type {HashgraphProto.proto.ResponseCodeEnum} */ (
+                receipt.status
+            );
         status = Status._fromCode(receiptStatusCode);
 
         Logger.debug(
@@ -232,8 +227,8 @@ export default class TransactionRecordQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQuery} request
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IQuery} request
+     * @param {HashgraphProto.proto.IResponse} response
      * @returns {Error}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -244,7 +239,7 @@ export default class TransactionRecordQuery extends Query {
         let status = Status._fromCode(
             nodeTransactionPrecheckCode != null
                 ? nodeTransactionPrecheckCode
-                : ResponseCodeEnum.OK
+                : proto.ResponseCodeEnum.OK
         );
 
         switch (status) {
@@ -260,18 +255,20 @@ export default class TransactionRecordQuery extends Query {
         }
 
         const transactionGetRecord =
-            /** @type {proto.ITransactionGetRecordResponse} */ (
+            /** @type {HashgraphProto.proto.ITransactionGetRecordResponse} */ (
                 response.transactionGetRecord
             );
-        const record = /** @type {proto.ITransactionRecord} */ (
+        const record = /** @type {HashgraphProto.proto.ITransactionRecord} */ (
             transactionGetRecord.transactionRecord
         );
-        const receipt = /** @type {proto.ITransactionReceipt} */ (
-            record.receipt
-        );
-        const receiptStatusError = /** @type {proto.ResponseCodeEnum} */ (
-            receipt.status
-        );
+        const receipt =
+            /** @type {HashgraphProto.proto.ITransactionReceipt} */ (
+                record.receipt
+            );
+        const receiptStatusError =
+            /** @type {HashgraphProto.proto.ResponseCodeEnum} */ (
+                receipt.status
+            );
 
         status = Status._fromCode(receiptStatusError);
 
@@ -298,8 +295,8 @@ export default class TransactionRecordQuery extends Query {
      * @override
      * @internal
      * @param {Channel} channel
-     * @param {proto.IQuery} request
-     * @returns {Promise<proto.IResponse>}
+     * @param {HashgraphProto.proto.IQuery} request
+     * @returns {Promise<HashgraphProto.proto.IResponse>}
      */
     _execute(channel, request) {
         return channel.crypto.getTxRecordByTxID(request);
@@ -309,15 +306,15 @@ export default class TransactionRecordQuery extends Query {
      * @override
      * @override
      * @internal
-     * @param {proto.IResponse} response
-     * @returns {proto.IResponseHeader}
+     * @param {HashgraphProto.proto.IResponse} response
+     * @returns {HashgraphProto.proto.IResponseHeader}
      */
     _mapResponseHeader(response) {
         const transactionGetRecord =
-            /** @type {proto.ITransactionGetRecordResponse} */ (
+            /** @type {HashgraphProto.proto.ITransactionGetRecordResponse} */ (
                 response.transactionGetRecord
             );
-        return /** @type {proto.IResponseHeader} */ (
+        return /** @type {HashgraphProto.proto.IResponseHeader} */ (
             transactionGetRecord.header
         );
     }
@@ -325,16 +322,17 @@ export default class TransactionRecordQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IResponse} response
+     * @param {HashgraphProto.proto.IResponse} response
      * @param {AccountId} nodeAccountId
-     * @param {proto.IQuery} request
+     * @param {HashgraphProto.proto.IQuery} request
      * @returns {Promise<TransactionRecord>}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _mapResponse(response, nodeAccountId, request) {
-        const record = /** @type {proto.ITransactionGetRecordResponse} */ (
-            response.transactionGetRecord
-        );
+        const record =
+            /** @type {HashgraphProto.proto.ITransactionGetRecordResponse} */ (
+                response.transactionGetRecord
+            );
 
         return Promise.resolve(TransactionRecord._fromProtobuf(record));
     }
@@ -342,8 +340,8 @@ export default class TransactionRecordQuery extends Query {
     /**
      * @override
      * @internal
-     * @param {proto.IQueryHeader} header
-     * @returns {proto.IQuery}
+     * @param {HashgraphProto.proto.IQueryHeader} header
+     * @returns {HashgraphProto.proto.IQuery}
      */
     _onMakeRequest(header) {
         return {

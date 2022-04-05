@@ -1,4 +1,4 @@
-import * as proto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 
 export default class SemanticVersion {
     /**
@@ -21,7 +21,7 @@ export default class SemanticVersion {
 
     /**
      * @internal
-     * @param {proto.ISemanticVersion} version
+     * @param {HashgraphProto.proto.ISemanticVersion} version
      * @returns {SemanticVersion}
      */
     static _fromProtobuf(version) {
@@ -34,7 +34,7 @@ export default class SemanticVersion {
 
     /**
      * @internal
-     * @returns {proto.ISemanticVersion}
+     * @returns {HashgraphProto.proto.ISemanticVersion}
      */
     _toProtobuf() {
         return {
@@ -50,7 +50,7 @@ export default class SemanticVersion {
      */
     static fromBytes(bytes) {
         return SemanticVersion._fromProtobuf(
-            proto.SemanticVersion.decode(bytes)
+            HashgraphProto.proto.SemanticVersion.decode(bytes)
         );
     }
 
@@ -58,6 +58,8 @@ export default class SemanticVersion {
      * @returns {Uint8Array}
      */
     toBytes() {
-        return proto.SemanticVersion.encode(this._toProtobuf()).finish();
+        return HashgraphProto.proto.SemanticVersion.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

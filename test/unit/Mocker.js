@@ -10,9 +10,14 @@ import * as loader from "@grpc/proto-loader";
  */
 
 /**
- * @namespace {proto}
+ * @namespace proto
  * @typedef {import("@hashgraph/proto").Response} proto.Response
  * @typedef {import("@hashgraph/proto").Query} proto.Query
+ */
+
+/**
+ * @namespace com
+ * @typedef {import("@hashgraph/proto").com.hedera.mirror.api.proto.IConsensusTopicResponse} com.hedera.mirror.api.proto.IConsensusTopicResponse
  */
 
 export const PRIVATE_KEY = PrivateKey.fromString(
@@ -20,103 +25,103 @@ export const PRIVATE_KEY = PrivateKey.fromString(
 );
 
 const PROTOS = [
-    "./packages/proto/src/proto/crypto_service.proto",
-    "./packages/proto/src/proto/basic_types.proto",
-    "./packages/proto/src/proto/account_balance_file.proto",
-    "./packages/proto/src/proto/basic_types.proto",
-    "./packages/proto/src/proto/consensus_create_topic.proto",
-    "./packages/proto/src/proto/consensus_delete_topic.proto",
-    "./packages/proto/src/proto/consensus_get_topic_info.proto",
-    "./packages/proto/src/proto/consensus_service.proto",
-    "./packages/proto/src/proto/consensus_submit_message.proto",
-    "./packages/proto/src/proto/consensus_topic_info.proto",
-    "./packages/proto/src/proto/consensus_update_topic.proto",
-    "./packages/proto/src/proto/contract_call.proto",
-    "./packages/proto/src/proto/contract_call_local.proto",
-    "./packages/proto/src/proto/contract_create.proto",
-    "./packages/proto/src/proto/contract_delete.proto",
-    "./packages/proto/src/proto/contract_get_bytecode.proto",
-    "./packages/proto/src/proto/contract_get_info.proto",
-    "./packages/proto/src/proto/contract_get_records.proto",
-    "./packages/proto/src/proto/contract_update.proto",
-    "./packages/proto/src/proto/crypto_add_live_hash.proto",
-    "./packages/proto/src/proto/crypto_create.proto",
-    "./packages/proto/src/proto/crypto_delete.proto",
-    "./packages/proto/src/proto/crypto_delete_live_hash.proto",
-    "./packages/proto/src/proto/crypto_get_account_balance.proto",
-    "./packages/proto/src/proto/crypto_get_account_records.proto",
-    "./packages/proto/src/proto/crypto_get_info.proto",
-    "./packages/proto/src/proto/crypto_get_live_hash.proto",
-    "./packages/proto/src/proto/crypto_get_stakers.proto",
-    "./packages/proto/src/proto/crypto_service.proto",
-    "./packages/proto/src/proto/crypto_transfer.proto",
-    "./packages/proto/src/proto/crypto_update.proto",
-    "./packages/proto/src/proto/custom_fees.proto",
-    "./packages/proto/src/proto/duration.proto",
-    "./packages/proto/src/proto/exchange_rate.proto",
-    "./packages/proto/src/proto/file_append.proto",
-    "./packages/proto/src/proto/file_create.proto",
-    "./packages/proto/src/proto/file_delete.proto",
-    "./packages/proto/src/proto/file_get_contents.proto",
-    "./packages/proto/src/proto/file_get_info.proto",
-    "./packages/proto/src/proto/file_service.proto",
-    "./packages/proto/src/proto/file_update.proto",
-    "./packages/proto/src/proto/freeze.proto",
-    "./packages/proto/src/proto/freeze_service.proto",
-    "./packages/proto/src/proto/freeze_type.proto",
-    "./packages/proto/src/proto/get_by_key.proto",
-    "./packages/proto/src/proto/get_by_solidity_id.proto",
-    "./packages/proto/src/proto/mirror_consensus_service.proto",
-    "./packages/proto/src/proto/network_get_version_info.proto",
-    "./packages/proto/src/proto/network_service.proto",
-    "./packages/proto/src/proto/query.proto",
-    "./packages/proto/src/proto/query_header.proto",
-    "./packages/proto/src/proto/response.proto",
-    "./packages/proto/src/proto/response_code.proto",
-    "./packages/proto/src/proto/response_header.proto",
-    "./packages/proto/src/proto/schedulable_transaction_body.proto",
-    "./packages/proto/src/proto/schedule_create.proto",
-    "./packages/proto/src/proto/schedule_delete.proto",
-    "./packages/proto/src/proto/schedule_get_info.proto",
-    "./packages/proto/src/proto/schedule_service.proto",
-    "./packages/proto/src/proto/schedule_sign.proto",
-    "./packages/proto/src/proto/smart_contract_service.proto",
-    "./packages/proto/src/proto/system_delete.proto",
-    "./packages/proto/src/proto/system_undelete.proto",
-    "./packages/proto/src/proto/throttle_definitions.proto",
-    "./packages/proto/src/proto/timestamp.proto",
-    "./packages/proto/src/proto/token_associate.proto",
-    "./packages/proto/src/proto/token_burn.proto",
-    "./packages/proto/src/proto/token_create.proto",
-    "./packages/proto/src/proto/token_delete.proto",
-    "./packages/proto/src/proto/token_dissociate.proto",
-    "./packages/proto/src/proto/token_fee_schedule_update.proto",
-    "./packages/proto/src/proto/token_freeze_account.proto",
-    "./packages/proto/src/proto/token_get_account_nft_infos.proto",
-    "./packages/proto/src/proto/token_get_info.proto",
-    "./packages/proto/src/proto/token_get_nft_info.proto",
-    "./packages/proto/src/proto/token_get_nft_infos.proto",
-    "./packages/proto/src/proto/token_grant_kyc.proto",
-    "./packages/proto/src/proto/token_mint.proto",
-    "./packages/proto/src/proto/token_pause.proto",
-    "./packages/proto/src/proto/token_revoke_kyc.proto",
-    "./packages/proto/src/proto/token_service.proto",
-    "./packages/proto/src/proto/token_unfreeze_account.proto",
-    "./packages/proto/src/proto/token_unpause.proto",
-    "./packages/proto/src/proto/token_update.proto",
-    "./packages/proto/src/proto/token_wipe_account.proto",
-    "./packages/proto/src/proto/transaction.proto",
-    "./packages/proto/src/proto/transaction_body.proto",
-    "./packages/proto/src/proto/transaction_contents.proto",
-    "./packages/proto/src/proto/transaction_get_fast_record.proto",
-    "./packages/proto/src/proto/transaction_get_receipt.proto",
-    "./packages/proto/src/proto/transaction_get_record.proto",
-    "./packages/proto/src/proto/transaction_list.proto",
-    "./packages/proto/src/proto/transaction_receipt.proto",
-    "./packages/proto/src/proto/transaction_record.proto",
-    "./packages/proto/src/proto/transaction_response.proto",
-    "./packages/proto/src/proto/unchecked_submit.proto",
-    "./packages/proto/src/proto/wrappers.proto",
+    "./packages/proto/src/proto/mirror/consensus_service.proto",
+    "./packages/proto/src/proto/mirror/mirror_network_service.proto",
+    "./packages/proto/src/proto/sdk/transaction_list.proto",
+    "./packages/proto/src/proto/services/basic_types.proto",
+    "./packages/proto/src/proto/services/consensus_create_topic.proto",
+    "./packages/proto/src/proto/services/consensus_delete_topic.proto",
+    "./packages/proto/src/proto/services/consensus_get_topic_info.proto",
+    "./packages/proto/src/proto/services/consensus_service.proto",
+    "./packages/proto/src/proto/services/consensus_submit_message.proto",
+    "./packages/proto/src/proto/services/consensus_topic_info.proto",
+    "./packages/proto/src/proto/services/consensus_update_topic.proto",
+    "./packages/proto/src/proto/services/contract_call.proto",
+    "./packages/proto/src/proto/services/contract_call_local.proto",
+    "./packages/proto/src/proto/services/contract_create.proto",
+    "./packages/proto/src/proto/services/contract_delete.proto",
+    "./packages/proto/src/proto/services/contract_get_bytecode.proto",
+    "./packages/proto/src/proto/services/contract_get_info.proto",
+    "./packages/proto/src/proto/services/contract_get_records.proto",
+    "./packages/proto/src/proto/services/contract_update.proto",
+    "./packages/proto/src/proto/services/crypto_add_live_hash.proto",
+    "./packages/proto/src/proto/services/crypto_adjust_allowance.proto",
+    "./packages/proto/src/proto/services/crypto_approve_allowance.proto",
+    "./packages/proto/src/proto/services/crypto_create.proto",
+    "./packages/proto/src/proto/services/crypto_delete.proto",
+    "./packages/proto/src/proto/services/crypto_delete_live_hash.proto",
+    "./packages/proto/src/proto/services/crypto_get_account_balance.proto",
+    "./packages/proto/src/proto/services/crypto_get_account_records.proto",
+    "./packages/proto/src/proto/services/crypto_get_info.proto",
+    "./packages/proto/src/proto/services/crypto_get_live_hash.proto",
+    "./packages/proto/src/proto/services/crypto_get_stakers.proto",
+    "./packages/proto/src/proto/services/crypto_service.proto",
+    "./packages/proto/src/proto/services/crypto_transfer.proto",
+    "./packages/proto/src/proto/services/crypto_update.proto",
+    "./packages/proto/src/proto/services/custom_fees.proto",
+    "./packages/proto/src/proto/services/duration.proto",
+    "./packages/proto/src/proto/services/exchange_rate.proto",
+    "./packages/proto/src/proto/services/file_append.proto",
+    "./packages/proto/src/proto/services/file_create.proto",
+    "./packages/proto/src/proto/services/file_delete.proto",
+    "./packages/proto/src/proto/services/file_get_contents.proto",
+    "./packages/proto/src/proto/services/file_get_info.proto",
+    "./packages/proto/src/proto/services/file_service.proto",
+    "./packages/proto/src/proto/services/file_update.proto",
+    "./packages/proto/src/proto/services/freeze.proto",
+    "./packages/proto/src/proto/services/freeze_service.proto",
+    "./packages/proto/src/proto/services/freeze_type.proto",
+    "./packages/proto/src/proto/services/get_by_key.proto",
+    "./packages/proto/src/proto/services/get_by_solidity_id.proto",
+    "./packages/proto/src/proto/services/network_get_execution_time.proto",
+    "./packages/proto/src/proto/services/network_get_version_info.proto",
+    "./packages/proto/src/proto/services/network_service.proto",
+    "./packages/proto/src/proto/services/query.proto",
+    "./packages/proto/src/proto/services/query_header.proto",
+    "./packages/proto/src/proto/services/response.proto",
+    "./packages/proto/src/proto/services/response_code.proto",
+    "./packages/proto/src/proto/services/response_header.proto",
+    "./packages/proto/src/proto/services/schedulable_transaction_body.proto",
+    "./packages/proto/src/proto/services/schedule_create.proto",
+    "./packages/proto/src/proto/services/schedule_delete.proto",
+    "./packages/proto/src/proto/services/schedule_get_info.proto",
+    "./packages/proto/src/proto/services/schedule_service.proto",
+    "./packages/proto/src/proto/services/schedule_sign.proto",
+    "./packages/proto/src/proto/services/smart_contract_service.proto",
+    "./packages/proto/src/proto/services/system_delete.proto",
+    "./packages/proto/src/proto/services/system_undelete.proto",
+    "./packages/proto/src/proto/services/throttle_definitions.proto",
+    "./packages/proto/src/proto/services/timestamp.proto",
+    "./packages/proto/src/proto/services/token_associate.proto",
+    "./packages/proto/src/proto/services/token_burn.proto",
+    "./packages/proto/src/proto/services/token_create.proto",
+    "./packages/proto/src/proto/services/token_delete.proto",
+    "./packages/proto/src/proto/services/token_dissociate.proto",
+    "./packages/proto/src/proto/services/token_fee_schedule_update.proto",
+    "./packages/proto/src/proto/services/token_freeze_account.proto",
+    "./packages/proto/src/proto/services/token_get_account_nft_infos.proto",
+    "./packages/proto/src/proto/services/token_get_info.proto",
+    "./packages/proto/src/proto/services/token_get_nft_info.proto",
+    "./packages/proto/src/proto/services/token_get_nft_infos.proto",
+    "./packages/proto/src/proto/services/token_grant_kyc.proto",
+    "./packages/proto/src/proto/services/token_mint.proto",
+    "./packages/proto/src/proto/services/token_pause.proto",
+    "./packages/proto/src/proto/services/token_revoke_kyc.proto",
+    "./packages/proto/src/proto/services/token_service.proto",
+    "./packages/proto/src/proto/services/token_unfreeze_account.proto",
+    "./packages/proto/src/proto/services/token_unpause.proto",
+    "./packages/proto/src/proto/services/token_update.proto",
+    "./packages/proto/src/proto/services/token_wipe_account.proto",
+    "./packages/proto/src/proto/services/transaction.proto",
+    "./packages/proto/src/proto/services/transaction_body.proto",
+    "./packages/proto/src/proto/services/transaction_contents.proto",
+    "./packages/proto/src/proto/services/transaction_get_fast_record.proto",
+    "./packages/proto/src/proto/services/transaction_get_receipt.proto",
+    "./packages/proto/src/proto/services/transaction_get_record.proto",
+    "./packages/proto/src/proto/services/transaction_receipt.proto",
+    "./packages/proto/src/proto/services/transaction_record.proto",
+    "./packages/proto/src/proto/services/transaction_response.proto",
+    "./packages/proto/src/proto/services/unchecked_submit.proto",
 ];
 
 export const ABORTED = {
@@ -146,7 +151,7 @@ export const INTERNAL = {
 /**
  * @typedef {object} Response
  * @property {(request: proto.Transaction | proto.Query, index?: number) => proto.Response | proto.TransactionResponse} [call]
- * @property {proto.Response | proto.TransactionResponse} [response]
+ * @property {proto.Response | proto.TransactionResponse | com.hedera.mirror.api.proto.IConsensusTopicResponse} [response]
  * @property {grpc.ServiceError} [error]
  */
 
@@ -155,22 +160,41 @@ class GrpcServer {
      * @param {string | string[]} paths
      * @param {string} name
      */
-    constructor(paths, name) {
+    constructor(paths) {
         this.server = new grpc.Server();
 
-        const pkg = /** @type {grpc.GrpcObject} */ (
-            grpc.loadPackageDefinition(loader.loadSync(paths))[name]
+        const pkgs = /** @type {grpc.GrpcObject} */ (
+            grpc.loadPackageDefinition(loader.loadSync(paths))
         );
 
-        this.services = Object.entries(pkg)
-            .map(([key, value]) => {
-                return typeof value === "function"
-                    ? /** @type {grpc.ServiceDefinition<grpc.UntypedServiceImplementation>} */ (
-                          /** @type {grpc.GrpcObject} */ (pkg[key])["service"]
-                      )
-                    : null;
-            })
-            .filter((service) => service != null);
+        const proto = /** @type {grpc.GrpcObject} */ (pkgs.proto);
+        const mirror = /** @type {grpc.GrpcObject} */ (
+            pkgs.com.hedera.mirror.api.proto
+        );
+
+        this.services = [];
+
+        function addPackageServices(services, pkg) {
+            for (const [key, value] of Object.entries(pkg)) {
+                if (typeof value !== "function") {
+                    continue;
+                }
+
+                const service =
+                    /** @type {grpc.ServiceDefinition<grpc.UntypedServiceImplementation>} */ (
+                        /** @type {grpc.GrpcObject} */ (pkg[key])["service"]
+                    );
+
+                if (service == null) {
+                    continue;
+                }
+
+                services.push(service);
+            }
+        }
+
+        addPackageServices(this.services, mirror);
+        addPackageServices(this.services, proto);
 
         Object.freeze(this);
     }
@@ -189,38 +213,53 @@ class GrpcServer {
 
         for (const service of this.services) {
             for (const key of Object.keys(service)) {
-                router[key] = /** @type {grpc.handleUnaryCall<any, any>} */ (
-                    call,
-                    callback
-                ) => {
-                    const request = call.request;
-                    const response = responses[index];
+                router[key] =
+                    /** @type {grpc.handleUnaryCall<any, any> | grpc.handleServerStreamingCall<any, any>} */ (
+                        call,
+                        callback
+                    ) => {
+                        const request = call.request;
+                        const response = responses[index];
 
-                    if (response == null) {
-                        callback(ABORTED, null);
-                    }
+                        if (response == null) {
+                            if (callback != null) {
+                                callback(ABORTED, null);
+                            } else {
+                                call.end();
+                            }
 
-                    let value = null;
-                    let error = null;
+                            return;
+                        }
 
-                    if (response.response != null) {
-                        value = response.response;
-                    }
+                        let value = null;
+                        let error = null;
 
-                    if (response.call != null) {
-                        value = response.call(request, index);
-                    }
+                        if (response.response != null) {
+                            value = response.response;
+                        }
 
-                    if (response.error != null) {
-                        error = response.error;
-                    } else if (value == null) {
-                        error = ABORTED;
-                    }
+                        if (response.call != null) {
+                            value = response.call(request, index);
+                        }
 
-                    callback(error, value);
+                        if (response.error != null) {
+                            error = response.error;
+                        } else if (value == null) {
+                            error = ABORTED;
+                        }
 
-                    index += 1;
-                };
+                        if (callback != null) {
+                            callback(error, value);
+                        } else {
+                            call.write(value);
+                        }
+
+                        index += 1;
+
+                        if (index == responses.length && callback == null) {
+                            call.end();
+                        }
+                    };
             }
 
             this.server.addService(service, router);
@@ -330,7 +369,7 @@ class GrpcServers {
     addServer(responses) {
         const address = `0.0.0.0:${50213 + this._index}`;
         const nodeAccountId = `0.0.${3 + this._index}`;
-        const server = new GrpcServer(PROTOS, "proto").addResponses(responses);
+        const server = new GrpcServer(PROTOS).addResponses(responses);
 
         this._servers.push(server);
         this._addresses.push(address);
@@ -356,8 +395,11 @@ class GrpcServers {
         }
 
         return Client.forNetwork(network)
-            .setNodeMinBackoff(1)
-            .setNodeMaxBackoff(1);
+            .setMirrorNetwork(Object.keys(network))
+            .setNodeMinBackoff(0)
+            .setNodeMaxBackoff(0)
+            .setNodeMinReadmitPeriod(0)
+            .setNodeMaxReadmitPeriod(0);
     }
 
     close() {

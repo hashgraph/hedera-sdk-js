@@ -6,12 +6,12 @@ import TokenDecimalMap from "./TokenDecimalMap.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").ITimestamp} proto.ITimestamp
- * @typedef {import("@hashgraph/proto").IAccountID} proto.IAccountID
- * @typedef {import("@hashgraph/proto").ICryptoGetAccountBalanceResponse} proto.ICryptoGetAccountBalanceResponse
- * @typedef {import("@hashgraph/proto").IKey} proto.IKey
- * @typedef {import("@hashgraph/proto").ITokenID} proto.ITokenID
- * @typedef {import("@hashgraph/proto").ITokenBalance} proto.ITokenBalance
+ * @typedef {import("@hashgraph/proto").proto.ITimestamp} HashgraphProto.proto.ITimestamp
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
+ * @typedef {import("@hashgraph/proto").proto.ICryptoGetAccountBalanceResponse} HashgraphProto.proto.ICryptoGetAccountBalanceResponse
+ * @typedef {import("@hashgraph/proto").proto.IKey} HashgraphProto.proto.IKey
+ * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
+ * @typedef {import("@hashgraph/proto").proto.ITokenBalance} HashgraphProto.proto.ITokenBalance
  */
 
 /**
@@ -54,7 +54,7 @@ export default class AccountBalance {
 
     /**
      * @internal
-     * @param {proto.ICryptoGetAccountBalanceResponse} accountBalance
+     * @param {HashgraphProto.proto.ICryptoGetAccountBalanceResponse} accountBalance
      * @returns {AccountBalance}
      */
     static _fromProtobuf(accountBalance) {
@@ -64,7 +64,9 @@ export default class AccountBalance {
         if (accountBalance.tokenBalances != null) {
             for (const balance of accountBalance.tokenBalances) {
                 const tokenId = TokenId._fromProtobuf(
-                    /** @type {proto.ITokenID} */ (balance.tokenId)
+                    /** @type {HashgraphProto.proto.ITokenID} */ (
+                        balance.tokenId
+                    )
                 );
 
                 tokenDecimals._set(
@@ -88,10 +90,10 @@ export default class AccountBalance {
     }
 
     /**
-     * @returns {proto.ICryptoGetAccountBalanceResponse}
+     * @returns {HashgraphProto.proto.ICryptoGetAccountBalanceResponse}
      */
     _toProtobuf() {
-        /** @type {proto.ITokenBalance[]} */
+        /** @type {HashgraphProto.proto.ITokenBalance[]} */
         const list = [];
 
         for (const [key, value] of this.tokens != null ? this.tokens : []) {

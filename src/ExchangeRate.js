@@ -46,7 +46,7 @@ export default class ExchangeRate {
 
     /**
      * @internal
-     * @param {import("@hashgraph/proto").IExchangeRate} rate
+     * @param {import("@hashgraph/proto").proto.IExchangeRate} rate
      * @returns {ExchangeRate}
      */
     static _fromProtobuf(rate) {
@@ -57,24 +57,26 @@ export default class ExchangeRate {
                 rate.expirationTime != null
                     ? rate.expirationTime.seconds != null
                         ? Long.isLong(rate.expirationTime.seconds)
-                            ? rate.expirationTime.seconds.toInt()
+                            ? rate.expirationTime.seconds.toInt() * 1000
                             : rate.expirationTime.seconds
-                        : 0 * 1000
-                    : 0 * 1000
+                        : 0
+                    : 0
             ),
         });
     }
 
     /**
      * @internal
-     * @returns {import("@hashgraph/proto").IExchangeRate}
+     * @returns {import("@hashgraph/proto").proto.IExchangeRate}
      */
     _toProtobuf() {
         return {
             hbarEquiv: this.hbars,
             centEquiv: this.cents,
             expirationTime: {
-                seconds: Long.fromNumber(this.expirationTime.getSeconds()),
+                seconds: Long.fromNumber(
+                    Math.trunc(this.expirationTime.getTime() / 1000)
+                ),
             },
         };
     }

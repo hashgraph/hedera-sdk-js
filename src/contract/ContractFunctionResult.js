@@ -9,8 +9,8 @@ import ContractStateChange from "./ContractStateChange.js";
 
 /**
  * @namespace proto
- * @typedef {import("@hashgraph/proto").IContractFunctionResult} proto.IContractFunctionResult
- * @typedef {import("@hashgraph/proto").IContractID} proto.IContractID
+ * @typedef {import("@hashgraph/proto").proto.IContractFunctionResult} HashgraphProto.proto.IContractFunctionResult
+ * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
  */
 /**
  * The result returned by a call to a smart contract function. This is part of the response to
@@ -79,13 +79,14 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {proto.IContractFunctionResult} result
+     * @param {HashgraphProto.proto.IContractFunctionResult} result
      * @returns {ContractFunctionResult}
      */
     static _fromProtobuf(result) {
-        const contractId = /** @type {proto.IContractID | null} */ (
-            result.contractID
-        );
+        const contractId =
+            /** @type {HashgraphProto.proto.IContractID | null} */ (
+                result.contractID
+            );
         const gas = /** @type {Long | number} */ (result.gasUsed);
 
         return new ContractFunctionResult({
@@ -179,12 +180,104 @@ export default class ContractFunctionResult {
      * @param {number} [index]
      * @returns {number}
      */
+    getUint8(index) {
+        return this.bytes[(index != null ? index : 0) * 32 + 31];
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {number}
+     */
     getInt32(index) {
         // .getInt32() interprets as big-endian
         // Using DataView instead of Uint32Array because the latter interprets
         // using platform endianness which is little-endian on x86
         const position = (index != null ? index : 0) * 32 + 28;
         return util.safeView(this.bytes).getInt32(position);
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {number}
+     */
+    getUint32(index) {
+        // .getUint32() interprets as big-endian
+        // Using DataView instead of Uint32Array because the latter interprets
+        // using platform endianness which is little-endian on x86
+        const position = (index != null ? index : 0) * 32 + 28;
+        return util.safeView(this.bytes).getUint32(position);
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt40(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(27, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint40(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(27, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt48(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(26, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint48(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(26, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt56(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(25, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint56(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(25, 32)),
+            16
+        );
     }
 
     /**
@@ -204,40 +297,572 @@ export default class ContractFunctionResult {
      * @param {number} [index]
      * @returns {BigNumber}
      */
-    getInt256(index) {
+    getUint64(index) {
         return new BigNumber(
-            hex.encode(this._getBytes32(index != null ? index : 0)),
+            hex.encode(this._getBytes32(index).subarray(24, 32)),
             16
         );
     }
 
     /**
      * @param {number} [index]
-     * @returns {number}
+     * @returns {BigNumber}
      */
-    getUint8(index) {
-        return this.bytes[(index != null ? index : 0) * 32 + 31];
-    }
-
-    /**
-     * @param {number} [index]
-     * @returns {number}
-     */
-    getUint32(index) {
-        // .getUint32() interprets as big-endian
-        // Using DataView instead of Uint32Array because the latter interprets
-        // using platform endianness which is little-endian on x86
-        const position = (index != null ? index : 0) * 32 + 28;
-        return util.safeView(this.bytes).getUint32(position);
+    getInt72(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(23, 32)
+            ),
+            16
+        );
     }
 
     /**
      * @param {number} [index]
      * @returns {BigNumber}
      */
-    getUint64(index) {
+    getUint72(index) {
         return new BigNumber(
-            hex.encode(this._getBytes32(index).subarray(24, 32)),
+            hex.encode(this._getBytes32(index).subarray(23, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt80(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(22, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint80(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(22, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt88(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(21, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint88(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(21, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt96(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(20, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint96(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(20, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt104(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(19, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint104(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(19, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt112(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(18, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint112(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(18, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt120(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(17, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint120(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(17, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt128(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(16, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint128(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(16, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt136(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(15, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint136(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(15, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt144(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(14, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint144(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(14, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt152(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(13, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint152(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(13, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt160(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(12, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint160(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(12, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt168(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(11, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint168(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(11, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt176(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(10, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint176(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(10, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt184(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(9, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint184(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(9, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt192(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(8, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint192(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(8, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt200(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(7, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint200(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(7, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt208(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(6, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint208(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(6, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt216(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(5, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint216(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(5, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt224(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(4, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint224(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(4, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt232(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(3, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint232(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(3, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt240(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(2, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint240(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(2, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt248(index) {
+        return new BigNumber(
+            hex.encode(
+                this._getBytes32(index != null ? index : 0).subarray(1, 32)
+            ),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getUint248(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index).subarray(1, 32)),
+            16
+        );
+    }
+
+    /**
+     * @param {number} [index]
+     * @returns {BigNumber}
+     */
+    getInt256(index) {
+        return new BigNumber(
+            hex.encode(this._getBytes32(index != null ? index : 0)),
             16
         );
     }
