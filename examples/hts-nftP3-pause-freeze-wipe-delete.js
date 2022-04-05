@@ -532,9 +532,7 @@ async function main() {
      * @returns {Promise<TokenInfo>}
      */
     async function tQueryFcn() {
-        return new TokenInfoQuery()
-            .setTokenId(tokenId)
-            .execute(client);
+        return new TokenInfoQuery().setTokenId(tokenId).execute(client);
     }
 }
 
