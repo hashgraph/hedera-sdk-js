@@ -65,6 +65,7 @@ export { default as LiveHashQuery } from "./account/LiveHashQuery.js";
 export { default as NetworkVersionInfo } from "./network/NetworkVersionInfo.js";
 export { default as NetworkVersionInfoQuery } from "./network/NetworkVersionInfoQuery.js";
 export { default as NftId } from "./token/NftId.js";
+export { default as Provider } from "./Provider.js";
 export { default as ProxyStaker } from "./account/ProxyStaker.js";
 export { default as Query } from "./query/Query.js";
 export { default as ScheduleCreateTransaction } from "./schedule/ScheduleCreateTransaction.js";
@@ -74,7 +75,10 @@ export { default as ScheduleInfo } from "./schedule/ScheduleInfo.js";
 export { default as ScheduleInfoQuery } from "./schedule/ScheduleInfoQuery.js";
 export { default as ScheduleSignTransaction } from "./schedule/ScheduleSignTransaction.js";
 export { default as SemanticVersion } from "./network/SemanticVersion.js";
+export { default as Signer } from "./Signer.js";
+export { default as SignerSignature } from "./SignerSignature.js";
 export { default as Status } from "./Status.js";
+export { default as SubscriptionHandle } from "./topic/SubscriptionHandle.js";
 export { default as SystemDeleteTransaction } from "./system/SystemDeleteTransaction.js";
 export { default as SystemUndeleteTransaction } from "./system/SystemUndeleteTransaction.js";
 export { default as Timestamp } from "./Timestamp.js";
@@ -122,9 +126,6 @@ export { default as TransactionResponse } from "./transaction/TransactionRespons
 export { default as Transfer } from "./Transfer.js";
 export { default as TransferTransaction } from "./account/TransferTransaction.js";
 export { default as Wallet } from "./Wallet.js";
-export { default as Provider } from "./Provider.js";
-export { default as Signer } from "./Signer.js";
-export { default as SignerSignature } from "./SignerSignature.js";
 
 export { default as StatusError } from "./StatusError.js";
 export { default as PrecheckStatusError } from "./PrecheckStatusError.js";

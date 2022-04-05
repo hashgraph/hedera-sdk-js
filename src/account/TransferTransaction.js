@@ -788,7 +788,7 @@ export default class TransferTransaction extends Transaction {
                     });
                 } else {
                     tokenTransferList.push({
-                        tokenId: iTokenId,
+                        tokenId: jTokenId,
                         expectedDecimals: null,
                         transfers: [],
                         nftTransfers: [this._nftTransfers[j++]],
