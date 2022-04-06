@@ -50,18 +50,19 @@ export default class ExchangeRate {
      * @returns {ExchangeRate}
      */
     static _fromProtobuf(rate) {
+        let rateResult = {}; 
+
+        // Verify rate expirationTime before submitting ExchangeRate
+        if (!!rate.expirationTime && !!rate.expirationTime.seconds) {
+            rateResult.seconds = Long.isLong(rate.expirationTime.seconds) ? rate.expirationTime.seconds.toInt() * 1000 : rate.expirationTime.seconds;
+        }
+
         return new ExchangeRate({
             hbars: /** @type {number} */ (rate.hbarEquiv),
             cents: /** @type {number} */ (rate.centEquiv),
-            expirationTime: new Date(
-                rate.expirationTime != null
-                    ? rate.expirationTime.seconds != null
-                        ? Long.isLong(rate.expirationTime.seconds)
-                            ? rate.expirationTime.seconds.toInt() * 1000
-                            : rate.expirationTime.seconds
-                        : 0
-                    : 0
-            ),
+            expirationTime: !!rateResult.seconds 
+                ? new Date(rateResult.seconds) 
+                : new Date(0),
         });
     }
 
