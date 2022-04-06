@@ -236,8 +236,8 @@ export function toSolidityAddress(address) {
 export function _parseAddress(ledgerId, addr) {
     let match = regex.exec(addr);
     if (match === null) {
-        let result = { status: 0 }; // When status == 0, the rest of the fields should be ignored
-        return result;
+        // When status == 0, the rest of the fields should be ignored
+        return { status: 0 };
     }
     let a = [
         Long.fromString(match[1]),
