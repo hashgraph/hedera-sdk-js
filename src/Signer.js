@@ -30,7 +30,9 @@ export default class Signer {
     /**
      * @protected
      */
-    constructor() {}
+    constructor() {
+        // this is intentional
+    }
 
     /**
      * @abstract

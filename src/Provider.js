@@ -29,7 +29,9 @@ export default class Provider {
     /**
      * @protected
      */
-    constructor() {}
+    constructor() {
+        // this is intentional
+    }
 
     /**
      * @abstract
