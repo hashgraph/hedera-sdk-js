@@ -24,7 +24,7 @@ module.exports = {
         sourceType: "module",
         warnOnUnsupportedTypeScriptVersion: false,
     },
-    plugins: ["@typescript-eslint", "deprecation", "ie11"],
+    plugins: ["@typescript-eslint", "deprecation", "ie11", "license-header"],
     rules: {
         // does not handle return types being annotated in a type comment
         "@typescript-eslint/explicit-function-return-type": "off",
@@ -65,6 +65,7 @@ module.exports = {
         "ie11/no-collection-args": "error",
         "ie11/no-for-in-const": "error",
         "ie11/no-loop-func": "warn",
-        "ie11/no-weak-collections": "error"
+        "ie11/no-weak-collections": "error",
+        "license-header/header": [ "error", "./resources/license-header.js" ],
     },
 };
