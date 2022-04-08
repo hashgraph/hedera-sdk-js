@@ -8,7 +8,7 @@ export { default as PublicKey } from "./PublicKey.js";
 export { default as KeyList } from "./KeyList.js";
 export { default as Key } from "./Key.js";
 export { default as Mnemonic } from "./Mnemonic.js";
-
+export { default as AccountAllowanceAdjustTransaction } from "./account/AccountAllowanceAdjustTransaction.js";
 export { default as AccountAllowanceApproveTransaction } from "./account/AccountAllowanceApproveTransaction.js";
 export { default as AccountAllowanceDeleteTransaction } from "./account/AccountAllowanceDeleteTransaction.js";
 export { default as AccountBalance } from "./account/AccountBalance.js";
