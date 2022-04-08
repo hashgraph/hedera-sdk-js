@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { LedgerId } from "../../src/exports.js";
+import { LedgerId } from "../../src/index.js";
 import * as hex from "../../src/encoding/hex.js";
 
 const MAINNET = "mainnet";

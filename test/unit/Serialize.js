@@ -8,7 +8,7 @@ import {
     Transaction,
     TransactionId,
     TransferTransaction,
-} from "../../src/exports.js";
+} from "../../src/index.js";
 
 import * as hex from "../../src/encoding/hex.js";
 

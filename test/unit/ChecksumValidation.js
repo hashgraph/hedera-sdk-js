@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { AccountId } from "../../src/exports.js";
+import { AccountId } from "../../src/index.js";
 
 import Client from "../../src/client/NodeClient.js";
 

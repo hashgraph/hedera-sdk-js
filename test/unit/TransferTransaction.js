@@ -10,7 +10,7 @@ import {
     TransactionId,
     Timestamp,
     NftId,
-} from "../../src/exports.js";
+} from "../../src/index.js";
 import Long from "long";
 
 describe("TransferTransaction", function () {

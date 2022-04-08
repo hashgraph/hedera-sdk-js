@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { PrivateKey } from "../../src/exports.js";
+import { PrivateKey } from "../../src/index.js";
 import * as hex from "../../src/encoding/hex.js";
 
 const RAW_KEY =

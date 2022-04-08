@@ -1,5 +1,5 @@
 import "mocha";
-import { ExchangeRate } from "../../src/exports.js";
+import { ExchangeRate } from "../../src/index.js";
 
 describe("ExchangeRate", function () {
     it("fromBytes", function () {

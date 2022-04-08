@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { HbarAllowance, AccountId, Hbar } from "../../src/exports.js";
+import { HbarAllowance, AccountId, Hbar } from "../../src/index.js";
 
 describe("HbarAllowance", function () {
     it("toProtobuf()", function () {

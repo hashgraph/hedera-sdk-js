@@ -1,4 +1,4 @@
-import { AccountId, Query, AccountInfoQuery } from "../../src/exports.js";
+import { AccountId, Query, AccountInfoQuery } from "../../src/index.js";
 
 describe("AccountInfo", function () {
     it("[to|from]Bytes()", async function () {

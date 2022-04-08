@@ -12,7 +12,7 @@ import {
     TopicId,
     TransactionId,
     TransactionReceipt,
-} from "../../src/exports.js";
+} from "../../src/index.js";
 import Long from "long";
 
 describe("TransactionReceipt", function () {

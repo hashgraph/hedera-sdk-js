@@ -4,7 +4,7 @@ import {
     TransactionId,
     TransferTransaction,
     Transaction,
-} from "../../src/exports.js";
+} from "../../src/index.js";
 
 describe("PublicKey", function () {
     it("`verifyTransaction` works", async function () {

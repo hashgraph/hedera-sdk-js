@@ -5,7 +5,7 @@ import {
     FileCreateTransaction,
     TransactionId,
     TransferTransaction,
-} from "../../src/exports.js";
+} from "../../src/index.js";
 import Mocker, { UNAVAILABLE, INTERNAL, PRIVATE_KEY } from "./Mocker.js";
 import Long from "long";
 import { proto } from "@hashgraph/proto";

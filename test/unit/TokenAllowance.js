@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { TokenAllowance, AccountId, TokenId } from "../../src/exports.js";
+import { TokenAllowance, AccountId, TokenId } from "../../src/index.js";
 import Long from "long";
 
 describe("TokenAllowance", function () {

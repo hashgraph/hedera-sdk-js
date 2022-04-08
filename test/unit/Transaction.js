@@ -7,10 +7,10 @@ import {
     Timestamp,
     Transaction,
     TransactionId,
-} from "../../src/exports.js";
+} from "../../src/index.js";
 import * as hex from "../../src/encoding/hex.js";
 import Client from "../../src/client/NodeClient.js";
-import HashgraphProto from "@hashgraph/proto";
+import * as HashgraphProto from "@hashgraph/proto";
 import Long from "long";
 
 describe("Transaction", function () {

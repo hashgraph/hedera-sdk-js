@@ -11,7 +11,7 @@ import {
     TokenId,
     Transaction,
     TransactionId,
-} from "../../src/exports.js";
+} from "../../src/index.js";
 
 describe("AccountAllowanceApproveTransaction", function () {
     it("should round trip from bytes and maintain order", function () {

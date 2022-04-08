@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { AccountId, PublicKey } from "../../src/exports.js";
+import { AccountId, PublicKey } from "../../src/index.js";
 
 import BigNumber from "bignumber.js";
 

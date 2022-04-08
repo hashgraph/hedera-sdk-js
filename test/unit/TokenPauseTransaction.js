@@ -3,7 +3,7 @@ import {
     TransactionId,
     AccountId,
     Timestamp,
-} from "../../src/exports.js";
+} from "../../src/index.js";
 import Long from "long";
 
 describe("TokenUnpauseTransaction", function () {

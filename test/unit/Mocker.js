@@ -1,4 +1,4 @@
-import { PrivateKey, PublicKey } from "../../src/exports.js";
+import { PrivateKey, PublicKey } from "../../src/index.js";
 import Client from "../../src/client/NodeClient.js";
 import * as grpc from "@grpc/grpc-js";
 import * as loader from "@grpc/proto-loader";

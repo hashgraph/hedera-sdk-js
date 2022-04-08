@@ -1,4 +1,4 @@
-import { FileAppendTransaction } from "../../src/exports.js";
+import { FileAppendTransaction } from "../../src/index.js";
 import Mocker from "./Mocker.js";
 import { bigContents } from "../integration/contents.js";
 import { proto } from "@hashgraph/proto";

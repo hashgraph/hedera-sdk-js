@@ -1,4 +1,4 @@
-import { ContractFunctionParameters } from "../../src/exports.js";
+import { ContractFunctionParameters } from "../../src/index.js";
 
 import BigNumber from "bignumber.js";
 

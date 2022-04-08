@@ -6,7 +6,7 @@ import {
     Timestamp,
     TransactionId,
     TopicId,
-} from "../../src/exports.js";
+} from "../../src/index.js";
 
 import * as utf8 from "../../src/encoding/utf8.js";
 import * as util from "../../src/util.js";

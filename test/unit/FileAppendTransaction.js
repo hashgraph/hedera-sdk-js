@@ -7,7 +7,7 @@ import {
     Hbar,
     TransactionId,
     FileId,
-} from "../../src/exports.js";
+} from "../../src/index.js";
 import Long from "long";
 
 describe("FileAppendTransaction", function () {
