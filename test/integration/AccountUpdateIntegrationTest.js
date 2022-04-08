@@ -200,7 +200,9 @@ describe("AccountUpdate", function () {
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
-            err = error.toString().includes(Status.AccountIdDoesNotExist.toString());
+            err = error
+                .toString()
+                .includes(Status.AccountIdDoesNotExist.toString());
         }
 
         if (!err) {
