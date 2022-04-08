@@ -1,9 +1,5 @@
 import LedgerId from "../LedgerId.js";
-// import {
-//     PREVIEWNET_ADDRESS_BOOK,
-//     TESTNET_ADDRESS_BOOK,
-//     MAINNET_ADDRESS_BOOK,
-// } from "../address_book/AddressBooks.js";
+import * as util from "../util.js";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -343,7 +339,7 @@ export default class MangedNetwork {
         }
 
         // Shuffle the nodes so we don't immediately pick the first nodes
-        shuffle(newNodes);
+        util.shuffle(newNodes);
 
         // Copy all the nodes into the healhty nodes list initially
         // and push the nodes into the network; this maintains the
@@ -507,29 +503,5 @@ export default class MangedNetwork {
 
         this._network.clear();
         this._nodes = [];
-    }
-}
-
-/**
- * https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
- *
- * @template T
- * @param {Array<T>} array
- */
-function shuffle(array) {
-    var currentIndex = array.length,
-        temporaryValue,
-        randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
     }
 }

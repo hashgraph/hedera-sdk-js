@@ -24,120 +24,19 @@
  */
 
 /**
- * @abstract
+ * @typedef {object} Signer
+ * @property {() => LedgerId?} getLedgerId
+ * @property {() => AccountId} getAccountId
+ * @property {() => {[key: string]: (string | AccountId)}} getNetwork
+ * @property {() => string[]} getMirrorNetwork
+ * @property {(messages: Uint8Array[]) => Promise<SignerSignature[]>} sign
+ * @property {() => Promise<AccountBalance>} getAccountBalance
+ * @property {() => Promise<AccountInfo>} getAccountInfo
+ * @property {() => Promise<TransactionRecord[]>} getAccountRecords
+ * @property {(transaction: Transaction) => Promise<Transaction>} signTransaction
+ * @property {(transaction: Transaction) => Promise<Transaction>} checkTransaction
+ * @property {(transaction: Transaction) => Promise<Transaction>} populateTransaction
+ * @property {<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>) => Promise<OutputT>} sendRequest
  */
-export default class Signer {
-    /**
-     * @protected
-     */
-    constructor() {}
 
-    /**
-     * @abstract
-     * @returns {LedgerId?}
-     */
-    getLedgerId() {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @returns {AccountId}
-     */
-    getAccountId() {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @returns {{[key: string]: (string | AccountId)}}
-     */
-    getNetwork() {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @returns {string[]}
-     */
-    getMirrorNetwork() {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @param {Uint8Array[]} messages
-     * @returns {Promise<SignerSignature[]>}
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    sign(messages) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @returns {Promise<AccountBalance>}
-     */
-    getAccountBalance() {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @returns {Promise<AccountInfo>}
-     */
-    getAccountInfo() {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @returns {Promise<TransactionRecord[]>}
-     */
-    getAccountRecords() {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    signTransaction(transaction) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    checkTransaction(transaction) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    populateTransaction(transaction) {
-        throw new Error("not implemented");
-    }
-
-    /**
-     * @abstract
-     * @template RequestT
-     * @template ResponseT
-     * @template OutputT
-     * @param {Executable<RequestT, ResponseT, OutputT>} request
-     * @returns {Promise<OutputT>}
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    sendRequest(request) {
-        throw new Error("not implemented");
-    }
-}
+export default {};

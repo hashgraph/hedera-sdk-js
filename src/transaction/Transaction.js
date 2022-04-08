@@ -26,7 +26,7 @@ import * as util from "../util.js";
  * @typedef {import("../PrivateKey.js").default} PrivateKey
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
- * @typedef {import("../Signer.js").default} Signer
+ * @typedef {import("../Signer.js").Signer} Signer
  */
 
 // 90 days (in seconds)

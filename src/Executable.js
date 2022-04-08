@@ -8,7 +8,7 @@ import Logger from "js-logger";
  * @typedef {import("./channel/Channel.js").default} Channel
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  * @typedef {import("./client/Client.js").ClientOperator} ClientOperator
- * @typedef {import("./Signer.js").default} Signer
+ * @typedef {import("./Signer.js").Signer} Signer
  * @typedef {import("./PublicKey.js").default} PublicKey
  */
 

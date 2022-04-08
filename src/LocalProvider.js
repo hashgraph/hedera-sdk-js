@@ -1,11 +1,11 @@
 import Client from "./client/NodeClient.js";
-import Provider from "./Provider.js";
 import AccountBalanceQuery from "./account/AccountBalanceQuery.js";
 import AccountInfoQuery from "./account/AccountInfoQuery.js";
 import AccountRecordsQuery from "./account/AccountRecordsQuery.js";
 import TransactionReceiptQuery from "./transaction/TransactionReceiptQuery.js";
 
 /**
+ * @typedef {import("./Provider.js").Provider} Provider
  * @typedef {import("./LedgerId.js").default} LedgerId
  * @typedef {import("./Key.js").default} Key
  * @typedef {import("./transaction/Transaction.js").default} Transaction
@@ -30,10 +30,11 @@ import TransactionReceiptQuery from "./transaction/TransactionReceiptQuery.js";
  * @typedef {import("./Executable.js").default<RequestT, ResponseT, OutputT>} Executable<RequestT, ResponseT, OutputT>
  */
 
-export default class LocalProvider extends Provider {
+/**
+ * @implements {Provider}
+ */
+export default class LocalProvider {
     constructor() {
-        super();
-
         if (process.env.HEDERA_NETWORK == null) {
             throw new Error(
                 "LocalProvider requires the `HEDERA_NETWORK` environment variable to be set"

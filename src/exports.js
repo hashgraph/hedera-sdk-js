@@ -136,6 +136,8 @@ export { default as Logger } from "js-logger";
 
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName
+ * @typedef {import("./Provider.js").Provider} Provider
+ * @typedef {import("./Signer.js").Signer} Signer
  */
 
 /**
