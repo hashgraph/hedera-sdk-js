@@ -239,7 +239,19 @@ class GrpcServer {
                         }
 
                         if (response.call != null) {
-                            value = response.call(request, index);
+                            try {
+                                value = response.call(request, index);
+                            } catch (err) {
+                                callback(
+                                    {
+                                        name: "ABORTED",
+                                        message: err.message,
+                                        code: 10,
+                                    },
+                                    null
+                                );
+                                return;
+                            }
                         }
 
                         if (response.error != null) {

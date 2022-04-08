@@ -132,6 +132,8 @@ export { default as PrecheckStatusError } from "./PrecheckStatusError.js";
 export { default as ReceiptStatusError } from "./ReceiptStatusError.js";
 export { default as LedgerId } from "./LedgerId.js";
 
+export { default as Logger } from "js-logger";
+
 /**
  * @typedef {import("./client/Client.js").NetworkName} ClientNetworkName
  */
@@ -142,7 +144,6 @@ export { default as LedgerId } from "./LedgerId.js";
  * @property {ClientNetworkName} Testnet
  * @property {ClientNetworkName} Previewnet
  */
-
 /**
  * @type {NetworkNameType}
  */
@@ -153,30 +154,3 @@ export const NetworkName = {
 };
 
 import "./query/CostQuery.js";
-
-import Logger from "js-logger";
-
-if (
-    process != null &&
-    process.env != null &&
-    process.env.HEDERA_SDK_LOG_LEVEL != null
-) {
-    Logger.useDefaults();
-
-    switch (process.env.HEDERA_SDK_LOG_LEVEL) {
-        case "DEBUG":
-            Logger.setLevel(Logger.DEBUG);
-            break;
-        case "TRACE":
-            Logger.setLevel(Logger.TRACE);
-            break;
-        case "WARN":
-            Logger.setLevel(Logger.WARN);
-            break;
-        case "INFO":
-            Logger.setLevel(Logger.INFO);
-            break;
-    }
-}
-
-export { default as Logger } from "js-logger";

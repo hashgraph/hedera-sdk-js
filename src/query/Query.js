@@ -195,14 +195,14 @@ export default class Query extends Executable {
             );
         }
 
-        const operator =
+        this._operator =
             this._operator != null ? this._operator : client._operator;
 
         if (this._paymentTransactionId == null) {
             if (this._isPaymentRequired()) {
-                if (operator != null) {
+                if (this._operator != null) {
                     this._paymentTransactionId = TransactionId.generate(
-                        operator.accountId
+                        this._operator.accountId
                     );
                 } else {
                     throw new Error(
@@ -237,20 +237,28 @@ export default class Query extends Executable {
                 }
 
                 cost = actualCost;
+                Logger.debug(
+                    `[${this._getLogId()}] received cost for query ${cost.toString()}`
+                );
             }
         }
 
-        for (const node of this._nodeAccountIds.list) {
-            this._paymentTransactions.push(
-                await _makePaymentTransaction(
-                    /** @type {import("../transaction/TransactionId.js").default} */ (
-                        this._paymentTransactionId
-                    ),
-                    node,
-                    this._isPaymentRequired() ? operator : null,
-                    /** @type {Hbar} */ (cost)
-                )
-            );
+        this._queryPayment = cost;
+
+        if (this._nodeAccountIds.locked) {
+            for (const node of this._nodeAccountIds.list) {
+                this._paymentTransactions.push(
+                    await _makePaymentTransaction(
+                        this._getLogId(),
+                        /** @type {import("../transaction/TransactionId.js").default} */ (
+                            this._paymentTransactionId
+                        ),
+                        node,
+                        this._isPaymentRequired() ? this._operator : null,
+                        /** @type {Hbar} */ (cost)
+                    )
+                );
+            }
         }
 
         this._timestamp = Date.now();
@@ -319,8 +327,34 @@ export default class Query extends Executable {
      * @internal
      * @returns {Promise<HashgraphProto.proto.IQuery>}
      */
-    _makeRequestAsync() {
-        return Promise.resolve(this._makeRequest());
+    async _makeRequestAsync() {
+        /** @type {HashgraphProto.proto.IQueryHeader} */
+        let header = {};
+
+        if (this._isPaymentRequired() && this._paymentTransactions != null) {
+            if (this._nodeAccountIds.locked) {
+                header = {
+                    payment:
+                        this._paymentTransactions[this._nodeAccountIds.index],
+                    responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
+                };
+            } else {
+                header = {
+                    payment: await _makePaymentTransaction(
+                        this._getLogId(),
+                        /** @type {import("../transaction/TransactionId.js").default} */ (
+                            this._paymentTransactionId
+                        ),
+                        this._nodeAccountIds.current,
+                        this._isPaymentRequired() ? this._operator : null,
+                        /** @type {Hbar} */ (this._queryPayment)
+                    ),
+                    responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
+                };
+            }
+        }
+
+        return this._onMakeRequest(header);
     }
 
     /**
@@ -398,6 +432,7 @@ export default class Query extends Executable {
 }
 
 /**
+ * @param {string} logId
  * @param {TransactionId} paymentTransactionId
  * @param {AccountId} nodeId
  * @param {?ClientOperator} operator
@@ -405,11 +440,15 @@ export default class Query extends Executable {
  * @returns {Promise<HashgraphProto.proto.ITransaction>}
  */
 export async function _makePaymentTransaction(
+    logId,
     paymentTransactionId,
     nodeId,
     operator,
     paymentAmount
 ) {
+    Logger.debug(
+        `[${logId}] making a payment transaction for node ${nodeId.toString()} and transaction ID ${paymentTransactionId.toString()} with amount ${paymentAmount.toString()}`
+    );
     const accountAmounts = [];
 
     if (operator != null) {

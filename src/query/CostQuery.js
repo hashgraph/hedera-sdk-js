@@ -25,7 +25,7 @@ export default class CostQuery extends Executable {
         this._query = query;
         this._grpcDeadline = query._grpcDeadline;
         this._requestTimeout = query._requestTimeout;
-        this._nodeAccountIds.setList(query._nodeAccountIds.list).setLocked();
+        this._nodeAccountIds = query._nodeAccountIds.clone();
         this._operator = query._operator;
 
         /**
@@ -76,6 +76,7 @@ export default class CostQuery extends Executable {
 
         this._header = {
             payment: await _makePaymentTransaction(
+                this._getLogId(),
                 /** @type {import("../transaction/TransactionId.js").default} */
                 (TransactionId.generate(new AccountId(0))),
                 new AccountId(0),

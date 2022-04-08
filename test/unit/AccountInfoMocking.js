@@ -4,6 +4,7 @@ import {
     AccountId,
     FileCreateTransaction,
     TransactionId,
+    TransferTransaction,
 } from "../../src/exports.js";
 import Mocker, { UNAVAILABLE, INTERNAL, PRIVATE_KEY } from "./Mocker.js";
 import Long from "long";
@@ -48,6 +49,50 @@ describe("AccountInfoMocking", function () {
     afterEach(function () {
         client.close();
         servers.close();
+    });
+
+    it("payment transaction is correctly constructed", async function () {
+        this.timeout(10000);
+
+        ({ client, servers } = await Mocker.withResponses([
+            [
+                {
+                    call: () => {
+                        return ACCOUNT_INFO_QUERY_COST_RESPONSE;
+                    },
+                },
+                {
+                    call: (request) => {
+                        const transaction = TransferTransaction.fromBytes(
+                            proto.Transaction.encode(
+                                request.cryptoGetInfo.header.payment
+                            ).finish()
+                        );
+                        const hbarTransfers = transaction.hbarTransfers;
+                        expect(hbarTransfers.size).to.be.equal(2);
+                        expect(
+                            hbarTransfers
+                                .get(client.operatorAccountId)
+                                .toTinybars()
+                                .toInt()
+                        ).to.be.lt(0);
+                        expect(
+                            hbarTransfers
+                                .get(Object.values(client.network)[0])
+                                .toTinybars()
+                                .toInt()
+                        ).to.be.gt(0);
+                        return ACCOUNT_INFO_QUERY_RESPONSE;
+                    },
+                },
+            ],
+        ]));
+
+        const info = await new AccountInfoQuery()
+            .setAccountId("0.0.3")
+            .execute(client);
+
+        expect(info.accountId.toString()).to.be.equal("0.0.10");
     });
 
     it("should retry on UNAVAILABLE", async function () {

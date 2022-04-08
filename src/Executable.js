@@ -369,6 +369,7 @@ export default class Executable {
             } else {
                 node = client._network.getNode();
                 nodeAccountId = node.accountId;
+                this._nodeAccountIds.setList([nodeAccountId]);
             }
 
             if (node == null) {

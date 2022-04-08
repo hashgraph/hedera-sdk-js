@@ -130,4 +130,15 @@ export default class List {
     get length() {
         return this.list.length;
     }
+
+    /**
+     * @returns {List<T>}
+     */
+    clone() {
+        /** @type {List<T>} */
+        const list = new List();
+        list.list = this.list;
+        list.locked = this.locked;
+        return list;
+    }
 }
