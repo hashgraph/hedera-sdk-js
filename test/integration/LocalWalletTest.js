@@ -1,4 +1,4 @@
-import { Wallet } from "../../src/index.js";
+import { Wallet, LocalProvider } from "../../src/index.js";
 
 describe("LocalWallet", function () {
     it("can fetch wallet's info", async function () {

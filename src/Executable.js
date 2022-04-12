@@ -349,7 +349,9 @@ export default class Executable {
 
         const startTime = Date.now();
 
-        for (let attempt = 1 /* loop forever */; ; attempt += 1) {
+        let peristentError = null;
+
+        for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
             if (
                 this._requestTimeout != null &&
                 startTime + this._requestTimeout <= Date.now()
@@ -424,6 +426,7 @@ export default class Executable {
                 const error = GrpcServiceError._fromResponse(
                     /** @type {Error} */ (err)
                 );
+                peristentError = error;
                 Logger.debug(
                     `[${logId}] received gRPC error ${JSON.stringify(error)}`
                 );
@@ -460,6 +463,12 @@ export default class Executable {
                     );
             }
         }
+
+        throw new Error(
+            `max attempts of ${maxAttempts.toString()} was reached for request with last error being: ${
+                peristentError != null ? peristentError.toString() : ""
+            }`
+        );
     }
 }
 
