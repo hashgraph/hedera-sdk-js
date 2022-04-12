@@ -32,7 +32,7 @@ export default class WebChannel extends Channel {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         return async (method, requestData, callback) => {
             const response = await fetch(
-                `${this._address}/HashgraphProto.proto.${serviceName}/${method.name}`,
+                `${this._address}/proto.${serviceName}/${method.name}`,
                 {
                     method: "POST",
                     headers: {
