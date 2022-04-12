@@ -1,5 +1,7 @@
 import { expect } from "chai";
 import {
+    Hbar,
+    MaxQueryPaymentExceeded,
     AccountInfoQuery,
     AccountId,
     FileCreateTransaction,
@@ -111,6 +113,79 @@ describe("AccountInfoMocking", function () {
             .execute(client);
 
         expect(info.accountId.toString()).to.be.equal("0.0.10");
+    });
+
+    it("should error when cost is greater than max cost set on client", async function () {
+        this.timeout(10000);
+
+        ({ client, servers } = await Mocker.withResponses([
+            [
+                { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
+                { response: ACCOUNT_INFO_QUERY_RESPONSE },
+            ],
+        ]));
+
+        client.setMaxQueryPayment(Hbar.fromTinybars(10));
+
+        let err = false;
+
+        try {
+            await new AccountInfoQuery()
+                .setAccountId("0.0.3")
+                .execute(client, 1);
+        } catch (error) {
+            err = error instanceof MaxQueryPaymentExceeded;
+        }
+
+        expect(err).to.be.true;
+    });
+
+    it("should error when cost is greater than max cost set on request", async function () {
+        this.timeout(10000);
+
+        ({ client, servers } = await Mocker.withResponses([
+            [
+                { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
+                { response: ACCOUNT_INFO_QUERY_RESPONSE },
+            ],
+        ]));
+
+        let err = false;
+
+        try {
+            await new AccountInfoQuery()
+                .setAccountId("0.0.3")
+                .setMaxQueryPayment(Hbar.fromTinybars(10))
+                .execute(client, 1);
+        } catch (error) {
+            err = error instanceof MaxQueryPaymentExceeded;
+        }
+
+        expect(err).to.be.true;
+    });
+
+    it("should not error when cost is less than max cost set on request", async function () {
+        this.timeout(10000);
+
+        ({ client, servers } = await Mocker.withResponses([
+            [
+                { response: ACCOUNT_INFO_QUERY_COST_RESPONSE },
+                { response: ACCOUNT_INFO_QUERY_RESPONSE },
+            ],
+        ]));
+
+        let err = false;
+
+        try {
+            await new AccountInfoQuery()
+                .setAccountId("0.0.3")
+                .setMaxQueryPayment(Hbar.fromTinybars(26))
+                .execute(client, 1);
+        } catch (error) {
+            err = error instanceof MaxQueryPaymentExceeded;
+        }
+
+        expect(err).to.be.false;
     });
 
     it("should retry on `INTERNAL` and retry multiple nodes", async function () {

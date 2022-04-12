@@ -1,7 +1,5 @@
 import { expect } from "chai";
-import {
-    TransactionReceiptQuery,
-} from "../../src/index.js";
+import { TransactionReceiptQuery } from "../../src/index.js";
 import Mocker from "./Mocker.js";
 
 const TRANSACTION_RECEIPT_QUERY_RECEIPT_NOT_FOUND_RESPONSE = {
@@ -24,8 +22,14 @@ describe("TransactionReceiptMocking", function () {
 
         ({ client, servers } = await Mocker.withResponses([
             [
-                { response: TRANSACTION_RECEIPT_QUERY_RECEIPT_NOT_FOUND_RESPONSE },
-                { response: TRANSACTION_RECEIPT_QUERY_RECEIPT_NOT_FOUND_RESPONSE },
+                {
+                    response:
+                        TRANSACTION_RECEIPT_QUERY_RECEIPT_NOT_FOUND_RESPONSE,
+                },
+                {
+                    response:
+                        TRANSACTION_RECEIPT_QUERY_RECEIPT_NOT_FOUND_RESPONSE,
+                },
             ],
         ]));
 
@@ -37,7 +41,11 @@ describe("TransactionReceiptMocking", function () {
                 .setMaxAttempts(2)
                 .execute(client);
         } catch (error) {
-            err = error.toString().startsWith("Error: max attempts of 2 was reached for request with last error being");
+            err = error
+                .toString()
+                .startsWith(
+                    "Error: max attempts of 2 was reached for request with last error being"
+                );
         }
 
         expect(err).to.be.true;

@@ -216,10 +216,13 @@ export default class Query extends Executable {
             }
         }
 
-        let cost =
-            this._queryPayment != null
-                ? this._queryPayment
-                : client.maxQueryPayment;
+        let cost = this._queryPayment;
+
+        if (cost == null && this._maxQueryPayment != null) {
+            cost = this._maxQueryPayment;
+        } else {
+            cost = client.maxQueryPayment;
+        }
 
         if (
             this._paymentTransactions.length !== 0 ||
