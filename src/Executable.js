@@ -352,7 +352,7 @@ export default class Executable {
         for (let attempt = 1 /* loop forever */; ; attempt += 1) {
             if (
                 this._requestTimeout != null &&
-                startTime + this._requestTimeout < Date.now()
+                startTime + this._requestTimeout <= Date.now()
             ) {
                 throw new Error("timeout exceeded");
             }
