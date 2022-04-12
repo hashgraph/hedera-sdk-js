@@ -62,7 +62,7 @@ export default class Wallet {
     /**
      * @returns {Promise<Wallet>}
      */
-    static createRandomEd25519() {
+    static createRandomED25519() {
         const privateKey = PrivateKey.generateED25519();
         const publicKey = privateKey.publicKey;
         const accountId = publicKey.toAccountId(0, 0);
