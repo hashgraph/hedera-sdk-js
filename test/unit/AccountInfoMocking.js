@@ -403,6 +403,60 @@ describe("AccountInfoMocking", function () {
         }
     });
 
+    it("should timeout immediately", async function () {
+        this.timeout(10000);
+
+        ({ client, servers } = await Mocker.withResponses([
+            [
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+            ],
+        ]));
+
+        let err = false;
+
+        try {
+            await new AccountInfoQuery()
+                .setAccountId("0.0.3")
+                .execute(client, 1);
+        } catch (error) {
+            err = error.message === "timeout exceeded";
+        }
+
+        expect(err).to.be.true;
+    });
+
+    it("should doesn't timeout immediately", async function () {
+        this.timeout(10000);
+
+        ({ client, servers } = await Mocker.withResponses([
+            [
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+                { error: UNAVAILABLE },
+            ],
+        ]));
+
+        let err = false;
+
+        try {
+            await new AccountInfoQuery()
+                .setAccountId("0.0.3")
+                .execute(client, 10000);
+        } catch (error) {
+            err = error.message === "timeout exceeded";
+        }
+
+        expect(err).to.be.false;
+    });
+
     it("should re-create a transaction if sign on demand is enabled and a random node is chosen which is not in the current list", async function () {
         this.timeout(10000);
 
