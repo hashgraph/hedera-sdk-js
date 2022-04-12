@@ -39,7 +39,7 @@ export default class Wallet {
     /**
      * @param {AccountId | string} accountId
      * @param {PrivateKey | string} privateKey
-     * @param {Provider} provider
+     * @param {Provider=} provider
      */
     constructor(accountId, privateKey, provider) {
         const key =
@@ -57,6 +57,26 @@ export default class Wallet {
             typeof accountId === "string"
                 ? AccountId.fromString(accountId)
                 : accountId;
+    }
+
+    /**
+     * @returns {Promise<Wallet>}
+     */
+    static createRandomEd25519() {
+        const privateKey = PrivateKey.generateED25519();
+        const publicKey = privateKey.publicKey;
+        const accountId = publicKey.toAccountId(0, 0);
+        return Promise.resolve(new Wallet(accountId, privateKey));
+    }
+
+    /**
+     * @returns {Promise<Wallet>}
+     */
+    static createRandomECDSA() {
+        const privateKey = PrivateKey.generateECDSA();
+        const publicKey = privateKey.publicKey;
+        const accountId = publicKey.toAccountId(0, 0);
+        return Promise.resolve(new Wallet(accountId, privateKey));
     }
 
     /**
@@ -85,7 +105,7 @@ export default class Wallet {
      * @returns {LedgerId?}
      */
     getLedgerId() {
-        return this.provider.getLedgerId();
+        return this.provider == null ? null : this.provider.getLedgerId();
     }
 
     /**
@@ -93,7 +113,7 @@ export default class Wallet {
      * @returns {{[key: string]: (string | AccountId)}}
      */
     getNetwork() {
-        return this.provider.getNetwork();
+        return this.provider == null ? {} : this.provider.getNetwork();
     }
 
     /**
@@ -101,7 +121,7 @@ export default class Wallet {
      * @returns {string[]}
      */
     getMirrorNetwork() {
-        return this.provider.getMirrorNetwork();
+        return this.provider == null ? [] : this.provider.getMirrorNetwork();
     }
 
     /**
@@ -176,6 +196,10 @@ export default class Wallet {
             );
         }
 
+        if (this.provider == null) {
+            return Promise.resolve(transaction);
+        }
+
         const nodeAccountIds = (
             transaction.nodeAccountIds != null ? transaction.nodeAccountIds : []
         ).map((nodeAccountId) => nodeAccountId.toString());
@@ -203,6 +227,11 @@ export default class Wallet {
      */
     populateTransaction(transaction) {
         transaction.setTransactionId(TransactionId.generate(this.accountId));
+
+        if (this.provider == null) {
+            return Promise.resolve(transaction);
+        }
+
         const nodeAccountIds = Object.values(this.provider.getNetwork()).map(
             (id) => (typeof id === "string" ? AccountId.fromString(id) : id)
         );
@@ -222,6 +251,12 @@ export default class Wallet {
      * @returns {Promise<OutputT>}
      */
     sendRequest(request) {
+        if (this.provider == null) {
+            throw new Error(
+                "cannot send request with an wallet that doesn't contain a provider"
+            );
+        }
+
         return this.provider.sendRequest(
             request._setOperatorWith(
                 this.accountId,
