@@ -37,7 +37,7 @@ export default class NativeChannel extends Channel {
             );
 
             const response = await fetch(
-                `${this._address}/HashgraphProto.proto.${serviceName}/${method.name}`,
+                `${this._address}/proto.${serviceName}/${method.name}`,
                 {
                     method: "POST",
                     headers: {
