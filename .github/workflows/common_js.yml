@@ -60,7 +60,6 @@ jobs:
       - name: Install dependencies
         working-directory: common_js_test
         run: |
-          pnpm add link:../
           pnpm i
           
       - name: Test
