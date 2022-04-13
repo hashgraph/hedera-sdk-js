@@ -447,26 +447,26 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.crypto.adjustAllowances(request);
+        throw new Error("This feature has been deprecated for this class.");
     }
 
     /**
+     * @deprecated
      * @override
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "cryptoAdjustAllowance";
+        throw new Error("This feature has been deprecated for this class.");
     }
 
     /**
      * @override
      * @protected
-     * @returns {void} void 
+     * @returns {Response} Error 
      */
     _makeTransactionData() {
-        throw new Error("This feature has been deprecated.")
-        return void
+        throw new Error("This feature has been deprecated.");
     }
 
     /**
