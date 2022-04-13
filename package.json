@@ -108,7 +108,7 @@
         "babel-plugin-dynamic-import-node": "^2.3.3",
         "babel-plugin-module-rewrite": "^0.2.0",
         "chai": "^4.3.6",
-        "chromedriver": "^99.0.0",
+        "chromedriver": "^100.0.0",
         "dotenv": "^14.3.2",
         "dpdm": "^3.9.0",
         "eslint": "^8.13.0",
