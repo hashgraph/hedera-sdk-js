@@ -57,19 +57,10 @@ jobs:
           pnpm install
           pnpm compile
 
-      - name: Install yalc
-        run: pnpm install -g yalc
-
-      - name: Install detox
-        run: pnpm install -g detox-cli
-
-      - name: Locally Publish
-        run: yalc publish --no-scripts
-
       - name: Install dependencies
         working-directory: common_js_test
         run: |
-          yalc add "@hashgraph/sdk"
+          pnpm add link:../
           pnpm i
           
       - name: Test

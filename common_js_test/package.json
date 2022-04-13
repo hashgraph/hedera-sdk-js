@@ -4,14 +4,14 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "nyc mocha -r @babel/register -r chai/register-expect 'src/test.js'"
+        "test": "nyc mocha -r @babel/register -r chai/register-expect.js 'src/test.js'"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
         "@hashgraph/sdk": "link:..",
-        "chai": "^4.3.4",
-        "mocha": "^9.1.3",
+        "chai": "^4.3.6",
+        "mocha": "^9.2.2",
         "nyc": "^15.1.0"
     }
 }
