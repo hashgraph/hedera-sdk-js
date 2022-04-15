@@ -120,18 +120,22 @@ export class LocalProvider {
         const body = JSON.stringify({
             request: Buffer.from(request.toBytes()).toString("hex"),
         });
-        /** @type {{ response: string } | TransactionResponseJson} */
+        /** @type {{ response: string } | TransactionResponseJSON} */
         const response = await axios.post("/request", { method: "POST", body });
 
-        if (response.response != null) {
-            const bytes = Buffer.from(response.response, "hex");
+        if (Object.prototype.hasOwnProperty.call(response, "response")) {
+            const inner = /** @type {{response: string}} */ (response).response;
+            const bytes = Buffer.from(inner, "hex");
 
             switch (request.constructor.name) {
                 case "AccountBalanceQuery":
+                    // @ts-ignore
                     return AccountBalance.fromBytes(bytes);
                 case "AccountInfoQuery":
+                    // @ts-ignore
                     return AccountInfo.fromBytes(bytes);
                 case "TransactionReceipt":
+                    // @ts-ignore
                     return TransactionReceipt.fromBytes(bytes);
                 default:
                     throw new Error(
@@ -139,6 +143,7 @@ export class LocalProvider {
                     );
             }
         } else {
+            // @ts-ignore
             return TransactionResponse.fromJSON(response);
         }
     }
@@ -165,11 +170,15 @@ export class LocalSigner {
      */
     static async connect(accountId) {
         /**
-         * @type {{ accountId: string, publicKey: string, ledgerId: string, network: {[key: string]: string}, mirrorNetwork: string[] }}
+         * @type {{ accountId: string, publicKey: string, ledgerId: string, network: {[key: string]: string}, mirrorNetwork: string[], error: string | undefined }}
          */
         const response = await axios.post("/login", {
             accountId: accountId != null ? accountId.toString() : null,
         });
+
+        if (response.error != null) {
+            throw new Error(response.error);
+        }
 
         const id = AccountId.fromString(response.accountId);
         const publicKey = PublicKey.fromString(response.publicKey);
@@ -232,7 +241,7 @@ export class LocalSigner {
      * @param {Uint8Array[]} messages
      * @returns {Promise<SignerSignature[]>}
      */
-    async sign(messages) {
+    sign(messages) {
         throw new Error("not implemented");
     }
 
