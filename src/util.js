@@ -37,11 +37,7 @@ export const FUNCTION_CONVERT_TO_NUMBER_PARSE_ERROR =
  * @returns {boolean}
  */
 export function isNonNull(variable) {
-    if (variable == null || variable == undefined) {
-        return false;
-    } else {
-        return true;
-    }
+    return !!variable;
 }
 
 /**

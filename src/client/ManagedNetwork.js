@@ -23,7 +23,7 @@ import LedgerId from "../LedgerId.js";
  * @template {ManagedNode<ChannelT>} NetworkNodeT
  * @template {{ toString: () => string }} KeyT
  */
-export default class MangedNetwork {
+export default class ManagedNetwork {
     /**
      * @param {(address: string) => ChannelT} createNetworkChannel
      */
