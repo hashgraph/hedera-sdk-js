@@ -216,6 +216,17 @@ export default class TransactionReceiptQuery extends Query {
     }
 
     /**
+     * @returns {TransactionId}
+     */
+    _getTransactionId() {
+        if (this._transactionId != null) {
+            return this._transactionId;
+        }
+
+        return super._getTransactionId();
+    }
+
+    /**
      * @override
      * @internal
      * @param {HashgraphProto.proto.IQuery} request

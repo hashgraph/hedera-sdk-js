@@ -1,10 +1,27 @@
 import { expect } from "chai";
 import { TransactionReceiptQuery } from "../../src/index.js";
 import Mocker from "./Mocker.js";
+import Long from "long";
+
+const ACCOUNT_ID = {
+    shardNum: Long.ZERO,
+    realmNum: Long.ZERO,
+    accountNum: Long.fromNumber(10),
+};
 
 const TRANSACTION_RECEIPT_QUERY_RECEIPT_NOT_FOUND_RESPONSE = {
     transactionGetReceipt: {
         header: { nodeTransactionPrecheckCode: 18 },
+    },
+};
+
+const TRANSACTION_RECEIPT_QUERY_RECEIPT_RESPONSE = {
+    transactionGetReceipt: {
+        header: { nodeTransactionPrecheckCode: 0 },
+        receipt: {
+            status: 7,
+            accountId: ACCOUNT_ID,
+        },
     },
 };
 
@@ -46,6 +63,32 @@ describe("TransactionReceiptMocking", function () {
                 .startsWith(
                     "Error: max attempts of 2 was reached for request with last error being"
                 );
+        }
+
+        expect(err).to.be.true;
+    });
+
+    it("should error with transaction ID in the message instead of payment transaction ID", async function () {
+        this.timeout(10000);
+
+        ({ client, servers } = await Mocker.withResponses([
+            [
+                {
+                    response: TRANSACTION_RECEIPT_QUERY_RECEIPT_RESPONSE,
+                },
+            ],
+        ]));
+
+        let err = false;
+
+        try {
+            await new TransactionReceiptQuery()
+                .setTransactionId("0.0.3@4.5")
+                .execute(client);
+        } catch (error) {
+            err =
+                error.message ===
+                "receipt for transaction 0.0.3@4.5 contained error status INVALID_SIGNATURE";
         }
 
         expect(err).to.be.true;
