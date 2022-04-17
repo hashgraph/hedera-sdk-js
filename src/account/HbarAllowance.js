@@ -4,7 +4,6 @@ import Hbar from "../Hbar.js";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.IGrantedCryptoAllowance} HashgraphProto.proto.IGrantedCryptoAllowance
- * @typedef {import("@hashgraph/proto").proto.ICryptoRemoveAllowance} HashgraphProto.proto.ICryptoRemoveAllowance
  * @typedef {import("@hashgraph/proto").proto.ICryptoAllowance} HashgraphProto.proto.ICryptoAllowance
  * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
@@ -93,26 +92,6 @@ export default class HbarAllowance {
             amount: Hbar.fromTinybars(
                 allowance.amount != null ? allowance.amount : 0
             ),
-        });
-    }
-
-    /**
-     * @internal
-     * @param {HashgraphProto.proto.ICryptoRemoveAllowance} allowance
-     * @returns {HbarAllowance}
-     */
-    static _fromRemoveProtobuf(allowance) {
-        return new HbarAllowance({
-            spenderAccountId: null,
-            ownerAccountId:
-                allowance.owner != null
-                    ? AccountId._fromProtobuf(
-                          /**@type {HashgraphProto.proto.IAccountID}*/ (
-                              allowance.owner
-                          )
-                      )
-                    : null,
-            amount: null,
         });
     }
 

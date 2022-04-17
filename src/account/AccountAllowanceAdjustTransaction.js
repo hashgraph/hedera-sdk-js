@@ -446,10 +446,14 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransaction} request
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _execute(channel, request) {
-        throw new Error("This feature has been deprecated for this class.");
+        return Promise.reject(
+            new Error("This feature has been deprecated for this class.")
+        );
     }
 
+    // eslint-disable-next-line jsdoc/require-returns-check
     /**
      * @deprecated
      * @override
@@ -460,10 +464,11 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         throw new Error("This feature has been deprecated for this class.");
     }
 
+    // eslint-disable-next-line jsdoc/require-returns-check
     /**
      * @override
      * @protected
-     * @returns {Response} Error 
+     * @returns {Response} Error
      */
     _makeTransactionData() {
         throw new Error("This feature has been deprecated.");
@@ -478,4 +483,4 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         );
         return `AccountAllowanceAdjustTransaction:${timestamp.toString()}`;
     }
-};
+}

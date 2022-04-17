@@ -5,7 +5,6 @@ import Long from "long";
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.IGrantedTokenAllowance} HashgraphProto.proto.IGrantedTokenAllowance
- * @typedef {import("@hashgraph/proto").proto.ITokenRemoveAllowance} HashgraphProto.proto.ITokenRemoveAllowance
  * @typedef {import("@hashgraph/proto").proto.ITokenAllowance} HashgraphProto.proto.ITokenAllowance
  * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
  * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
@@ -109,29 +108,6 @@ export default class TokenAllowance {
                 allowance.amount != null
                     ? Long.fromValue(/** @type {Long} */ (allowance.amount))
                     : null,
-        });
-    }
-
-    /**
-     * @internal
-     * @param {HashgraphProto.proto.ITokenRemoveAllowance} allowance
-     * @returns {TokenAllowance}
-     */
-    static _fromRemoveAllowance(allowance) {
-        return new TokenAllowance({
-            tokenId: TokenId._fromProtobuf(
-                /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
-            ),
-            spenderAccountId: null,
-            ownerAccountId:
-                allowance.owner != null
-                    ? AccountId._fromProtobuf(
-                          /**@type {HashgraphProto.proto.IAccountID}*/ (
-                              allowance.owner
-                          )
-                      )
-                    : null,
-            amount: null,
         });
     }
 
