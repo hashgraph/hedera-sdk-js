@@ -765,7 +765,7 @@ export default class Transaction extends Executable {
      */
     async freezeWithSigner(signer) {
         await signer.populateTransaction(this);
-        await this.signWithSigner(signer);
+        this.freeze();
         return this;
     }
 
