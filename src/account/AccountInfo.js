@@ -9,9 +9,12 @@ import Duration from "../Duration.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import LedgerId from "../LedgerId.js";
-import HbarAllowance from "./HbarAllowance.js";
-import TokenAllowance from "./TokenAllowance.js";
-import TokenNftAllowance from "./TokenNftAllowance.js";
+
+/**
+ * @typedef {import("./HbarAllowance.js").default} HbarAllowance
+ * @typedef {import("./TokenAllowance.js").default} TokenAllowance
+ * @typedef {import("./TokenNftAllowance.js").default} TokenNftAllowance
+ */
 
 /**
  * Current information about an account, including the balance.
@@ -258,24 +261,9 @@ export default class AccountInfo {
                     ? LedgerId.fromBytes(info.ledgerId)
                     : null,
 
-            hbarAllowances: (info.grantedCryptoAllowances != null
-                ? info.grantedCryptoAllowances
-                : []
-            ).map((allowance) =>
-                HbarAllowance._fromGrantedProtobuf(allowance, accountId)
-            ),
-            tokenAllowances: (info.grantedTokenAllowances != null
-                ? info.grantedTokenAllowances
-                : []
-            ).map((allowance) =>
-                TokenAllowance._fromGrantedProtobuf(allowance, accountId)
-            ),
-            nftAllowances: (info.grantedNftAllowances != null
-                ? info.grantedNftAllowances
-                : []
-            ).map((allowance) =>
-                TokenNftAllowance._fromGrantedProtobuf(allowance, accountId)
-            ),
+            hbarAllowances: [],
+            tokenAllowances: [],
+            nftAllowances: [],
         });
     }
 

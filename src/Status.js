@@ -549,6 +549,22 @@ export default class Status {
                 return "DELEGATING_SPENDER_CANNOT_GRANT_APPROVE_FOR_ALL";
             case Status.DelegatingSpenderDoesNotHaveApproveForAll:
                 return "DELEGATING_SPENDER_DOES_NOT_HAVE_APPROVE_FOR_ALL";
+            case Status.ScheduleExpirationTimeTooFarInFuture:
+                return "SCHEDULE_EXPIRATION_TIME_TOO_FAR_IN_FUTURE";
+            case Status.ScheduleExpirationTimeMustBeHigherThanConsensusTime:
+                return "SCHEDULE_EXPIRATION_TIME_MUST_BE_HIGHER_THAN_CONSENSUS_TIME";
+            case Status.ScheduleFutureThrottleExceeded:
+                return "SCHEDULE_FUTURE_THROTTLE_EXCEEDED";
+            case Status.ScheduleFutureGasLimitExceeded:
+                return "SCHEDULE_FUTURE_GAS_LIMIT_EXCEEDED";
+            case Status.InvalidEthereumTransaction:
+                return "INVALID_ETHEREUM_TRANSACTION";
+            case Status.WrongChainId:
+                return "WRONG_CHAIN_ID";
+            case Status.WrongNonce:
+                return "WRONG_NONCE";
+            case Status.AccessListUnsupported:
+                return "ACCESS_LIST_UNSUPPORTED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1089,6 +1105,22 @@ export default class Status {
                 return Status.DelegatingSpenderCannotGrantApproveForAll;
             case 305:
                 return Status.DelegatingSpenderDoesNotHaveApproveForAll;
+            case 306:
+                return Status.ScheduleExpirationTimeTooFarInFuture;
+            case 307:
+                return Status.ScheduleExpirationTimeMustBeHigherThanConsensusTime;
+            case 308:
+                return Status.ScheduleFutureThrottleExceeded;
+            case 309:
+                return Status.ScheduleFutureGasLimitExceeded;
+            case 310:
+                return Status.InvalidEthereumTransaction;
+            case 311:
+                return Status.WrongChainId;
+            case 312:
+                return Status.WrongNonce;
+            case 313:
+                return Status.AccessListUnsupported;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2459,3 +2491,43 @@ Status.DelegatingSpenderCannotGrantApproveForAll = new Status(304);
  * granted on token-owner.
  */
 Status.DelegatingSpenderDoesNotHaveApproveForAll = new Status(305);
+
+/**
+ * The scheduled transaction could not be created because it's expiration_time was too far in the future.
+ */
+Status.ScheduleExpirationTimeTooFarInFuture = new Status(306);
+
+/**
+ * The scheduled transaction could not be created because it's expiration_time was less than or equal to the consensus time.
+ */
+Status.ScheduleExpirationTimeMustBeHigherThanConsensusTime = new Status(307);
+
+/**
+ * The scheduled transaction could not be created because it would cause throttles to be violated on the specified expiration_time.
+ */
+Status.ScheduleFutureThrottleExceeded = new Status(308);
+
+/**
+ * The scheduled transaction could not be created because it would cause the gas limit to be violated on the specified expiration_time.
+ */
+Status.ScheduleFutureGasLimitExceeded = new Status(309);
+
+/**
+ * The ethereum transaction either failed parsing or failed signature validation, or some other EthereumTransaction error not covered by another response code.
+ */
+Status.InvalidEthereumTransaction = new Status(310);
+
+/**
+ * EthereumTransaction was signed against a chainId that this network does not support.
+ */
+Status.WrongChainId = new Status(311);
+
+/**
+ * This transaction specified an ethereumNonce that is not the current ethereumNonce of the account.
+ */
+Status.WrongNonce = new Status(312);
+
+/**
+ * The ethereum transaction specified an access list, which the network does not support.
+ */
+Status.AccessListUnsupported = new Status(313);

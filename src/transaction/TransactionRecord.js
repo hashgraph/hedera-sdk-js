@@ -13,11 +13,11 @@ import TokenAssocation from "../token/TokenAssociation.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
-import HbarAllowance from "../account/HbarAllowance.js";
-import TokenAllowance from "../account/TokenAllowance.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
+ * @typedef {import("../account/HbarAllowance.js").default} HbarAllowance
+ * @typedef {import("../account/TokenAllowance.js").default} TokenAllowance
  * @typedef {import("../account/TokenNftAllowance.js").default} TokenNftAllowance
  */
 
@@ -301,17 +301,6 @@ export default class TransactionRecord {
                               this.aliasKey._toProtobufKey()
                           ).finish()
                         : null,
-                cryptoAdjustments: this.hbarAllowanceAdjustments.map(
-                    (allowance) => {
-                        return allowance._toProtobuf();
-                    }
-                ),
-
-                tokenAdjustments: this.tokenAllowanceAdjustments.map(
-                    (allowance) => {
-                        return allowance._toProtobuf();
-                    }
-                ),
             },
         };
     }
@@ -436,18 +425,8 @@ export default class TransactionRecord {
             aliasKey,
             duplicates,
             children,
-            hbarAllowanceAdjustments: (record.cryptoAdjustments != null
-                ? record.cryptoAdjustments
-                : []
-            ).map((allowance) => {
-                return HbarAllowance._fromProtobuf(allowance);
-            }),
-            tokenAllowanceAdjustments: (record.tokenAdjustments != null
-                ? record.tokenAdjustments
-                : []
-            ).map((allowance) => {
-                return TokenAllowance._fromProtobuf(allowance);
-            }),
+            hbarAllowanceAdjustments: [],
+            tokenAllowanceAdjustments: [],
             nftAllowanceAdjustments: [],
         });
     }

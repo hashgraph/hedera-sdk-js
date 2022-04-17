@@ -1,6 +1,4 @@
-import Transaction, {
-    TRANSACTION_REGISTRY,
-} from "../transaction/Transaction.js";
+import Transaction from "../transaction/Transaction.js";
 import AccountId from "./AccountId.js";
 import TokenId from "../token/TokenId.js";
 import NftId from "../token/NftId.js";
@@ -18,7 +16,6 @@ import * as util from "../util.js";
  * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").proto.ICryptoAdjustAllowanceTransactionBody} HashgraphProto.proto.ICryptoAdjustAllowanceTransactionBody
  * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
 
@@ -31,6 +28,7 @@ import * as util from "../util.js";
  */
 
 /**
+ * @deprecated - No longer supported via Hedera Protobufs
  * Change properties for the given account.
  */
 export default class AccountAllowanceAdjustTransaction extends Transaction {
@@ -63,51 +61,6 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
          */
         this._nftAllowances =
             props.nftAllowances != null ? props.nftAllowances : [];
-    }
-
-    /**
-     * @internal
-     * @param {HashgraphProto.proto.ITransaction[]} transactions
-     * @param {HashgraphProto.proto.ISignedTransaction[]} signedTransactions
-     * @param {TransactionId[]} transactionIds
-     * @param {AccountId[]} nodeIds
-     * @param {HashgraphProto.proto.ITransactionBody[]} bodies
-     * @returns {AccountAllowanceAdjustTransaction}
-     */
-    static _fromProtobuf(
-        transactions,
-        signedTransactions,
-        transactionIds,
-        nodeIds,
-        bodies
-    ) {
-        const body = bodies[0];
-        const allowanceAdjust =
-            /** @type {HashgraphProto.proto.ICryptoAdjustAllowanceTransactionBody} */ (
-                body.cryptoAdjustAllowance
-            );
-
-        return Transaction._fromProtobufTransactions(
-            new AccountAllowanceAdjustTransaction({
-                hbarAllowances: (allowanceAdjust.cryptoAllowances != null
-                    ? allowanceAdjust.cryptoAllowances
-                    : []
-                ).map((adjust) => HbarAllowance._fromProtobuf(adjust)),
-                tokenAllowances: (allowanceAdjust.tokenAllowances != null
-                    ? allowanceAdjust.tokenAllowances
-                    : []
-                ).map((adjust) => TokenAllowance._fromProtobuf(adjust)),
-                nftAllowances: (allowanceAdjust.nftAllowances != null
-                    ? allowanceAdjust.nftAllowances
-                    : []
-                ).map((adjust) => TokenNftAllowance._fromProtobuf(adjust)),
-            }),
-            transactions,
-            signedTransactions,
-            transactionIds,
-            nodeIds,
-            bodies
-        );
     }
 
     /**
@@ -159,6 +112,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
+     * @deprecated
      * @param {AccountId | string} ownerAccountId
      * @param {AccountId | string} spenderAccountId
      * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
@@ -174,6 +128,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
+     * @deprecated
      * @param {AccountId | string} ownerAccountId
      * @param {AccountId | string} spenderAccountId
      * @param {number | string | Long | LongObject | BigNumber | Hbar} amount
@@ -196,6 +151,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
+     * @deprecated
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} spenderAccountId
      * @param {Long | number} amount
@@ -245,6 +201,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
+     * @deprecated
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} ownerAccountId
      * @param {AccountId | string} spenderAccountId
@@ -261,6 +218,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
+     * @deprecated
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} ownerAccountId
      * @param {AccountId | string} spenderAccountId
@@ -336,6 +294,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
+     * @deprecated
      * @param {NftId | string} nftId
      * @param {AccountId | string} ownerAccountId
      * @param {AccountId | string} spenderAccountId
@@ -354,6 +313,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
+     * @deprecated
      * @param {NftId | string} nftId
      * @param {AccountId | string} ownerAccountId
      * @param {AccountId | string} spenderAccountId
@@ -386,6 +346,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
+     * @deprecated
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} ownerAccountId
      * @param {AccountId | string} spenderAccountId
@@ -405,6 +366,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     }
 
     /**
+     * @deprecated
      * @param {TokenId | string} tokenId
      * @param {AccountId | string} ownerAccountId
      * @param {AccountId | string} spenderAccountId
@@ -484,36 +446,32 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
      * @param {HashgraphProto.proto.ITransaction} request
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _execute(channel, request) {
-        return channel.crypto.adjustAllowances(request);
+        return Promise.reject(
+            new Error("This feature has been deprecated for this class.")
+        );
     }
 
+    // eslint-disable-next-line jsdoc/require-returns-check
     /**
+     * @deprecated
      * @override
      * @protected
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "cryptoAdjustAllowance";
+        throw new Error("This feature has been deprecated for this class.");
     }
 
+    // eslint-disable-next-line jsdoc/require-returns-check
     /**
      * @override
      * @protected
-     * @returns {HashgraphProto.proto.ICryptoAdjustAllowanceTransactionBody}
+     * @returns {Response} Error
      */
     _makeTransactionData() {
-        return {
-            cryptoAllowances: this._hbarAllowances.map((adjust) =>
-                adjust._toProtobuf()
-            ),
-            tokenAllowances: this._tokenAllowances.map((adjust) =>
-                adjust._toProtobuf()
-            ),
-            nftAllowances: this._nftAllowances.map((adjust) =>
-                adjust._toProtobuf()
-            ),
-        };
+        throw new Error("This feature has been deprecated.");
     }
 
     /**
@@ -526,9 +484,3 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
         return `AccountAllowanceAdjustTransaction:${timestamp.toString()}`;
     }
 }
-
-TRANSACTION_REGISTRY.set(
-    "cryptoAdjustAllowance",
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    AccountAllowanceAdjustTransaction._fromProtobuf
-);

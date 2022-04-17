@@ -2,10 +2,7 @@ import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
 import AccountId from "./AccountId.js";
-import TokenId from "../token/TokenId.js";
 import NftId from "../token/NftId.js";
-import HbarAllowance from "./HbarAllowance.js";
-import TokenAllowance from "./TokenAllowance.js";
 import TokenNftAllowance from "./TokenNftAllowance.js";
 
 /**
@@ -20,6 +17,8 @@ import TokenNftAllowance from "./TokenNftAllowance.js";
  */
 
 /**
+ * @typedef {import("./HbarAllowance.js").default} HbarAllowance
+ * @typedef {import("./TokenAllowance.js").default} TokenAllowance
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
@@ -39,20 +38,6 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
      */
     constructor(props = {}) {
         super();
-
-        /**
-         * @private
-         * @type {HbarAllowance[]}
-         */
-        this._hbarAllowances =
-            props.hbarAllowances != null ? props.hbarAllowances : [];
-
-        /**
-         * @private
-         * @type {TokenAllowance[]}
-         */
-        this._tokenAllowances =
-            props.tokenAllowances != null ? props.tokenAllowances : [];
 
         /**
          * @private
@@ -86,14 +71,6 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
 
         return Transaction._fromProtobufTransactions(
             new AccountAllowanceDeleteTransaction({
-                hbarAllowances: (allowance.cryptoAllowances != null
-                    ? allowance.cryptoAllowances
-                    : []
-                ).map((allowance) => HbarAllowance._fromProtobuf(allowance)),
-                tokenAllowances: (allowance.tokenAllowances != null
-                    ? allowance.tokenAllowances
-                    : []
-                ).map((allowance) => TokenAllowance._fromProtobuf(allowance)),
                 nftAllowances: (allowance.nftAllowances != null
                     ? allowance.nftAllowances
                     : []
@@ -107,65 +84,6 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
             nodeIds,
             bodies
         );
-    }
-
-    /**
-     * @returns {HbarAllowance[]}
-     */
-    get hbarAllowances() {
-        return this._hbarAllowances;
-    }
-
-    /**
-     * @param {AccountId | string} ownerAccountId
-     * @returns {AccountAllowanceDeleteTransaction}
-     */
-    deleteAllHbarAllowances(ownerAccountId) {
-        this._hbarAllowances.push(
-            new HbarAllowance({
-                spenderAccountId: null,
-                ownerAccountId:
-                    typeof ownerAccountId === "string"
-                        ? AccountId.fromString(ownerAccountId)
-                        : ownerAccountId,
-                amount: null,
-            })
-        );
-
-        return this;
-    }
-
-    /**
-     * @returns {TokenAllowance[]}
-     */
-    get tokenAllowances() {
-        return this._tokenAllowances;
-    }
-
-    /**
-     * @param {TokenId | string} tokenId
-     * @param {AccountId | string} ownerAccountId
-     * @returns {AccountAllowanceDeleteTransaction}
-     */
-    deleteAllTokenAllowances(tokenId, ownerAccountId) {
-        this._requireNotFrozen();
-
-        this._tokenAllowances.push(
-            new TokenAllowance({
-                tokenId:
-                    typeof tokenId === "string"
-                        ? TokenId.fromString(tokenId)
-                        : tokenId,
-                spenderAccountId: null,
-                ownerAccountId:
-                    typeof ownerAccountId === "string"
-                        ? AccountId.fromString(ownerAccountId)
-                        : ownerAccountId,
-                amount: null,
-            })
-        );
-
-        return this;
     }
 
     /**
@@ -213,12 +131,6 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
      * @param {Client} client
      */
     _validateChecksums(client) {
-        this._hbarAllowances.map((allowance) =>
-            allowance._validateChecksums(client)
-        );
-        this._tokenAllowances.map((allowance) =>
-            allowance._validateChecksums(client)
-        );
         this._nftAllowances.map((allowance) =>
             allowance._validateChecksums(client)
         );
@@ -251,12 +163,6 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            cryptoAllowances: this._hbarAllowances.map((allowance) =>
-                allowance._toProtobuf()
-            ),
-            tokenAllowances: this._tokenAllowances.map((allowance) =>
-                allowance._toProtobuf()
-            ),
             nftAllowances: this._nftAllowances.map((allowance) =>
                 allowance._toProtobuf()
             ),
