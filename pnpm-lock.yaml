@@ -34,7 +34,6 @@ specifiers:
   eslint-plugin-ie11: ^1.0.0
   eslint-plugin-import: ^2.25.4
   eslint-plugin-jsdoc: ^37.9.7
-  eslint-plugin-license-header: ^0.4.0
   eslint-plugin-mocha: ^10.0.3
   eslint-plugin-node: ^11.1.0
   geckodriver: ^3.0.1
@@ -93,7 +92,6 @@ devDependencies:
   eslint-plugin-ie11: 1.0.0
   eslint-plugin-import: 2.25.4_eslint@8.11.0
   eslint-plugin-jsdoc: 37.9.7_eslint@8.11.0
-  eslint-plugin-license-header: 0.4.0
   eslint-plugin-mocha: 10.0.3_eslint@8.11.0
   eslint-plugin-node: 11.1.0_eslint@8.11.0
   geckodriver: 3.0.1
@@ -1883,12 +1881,6 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-license-header/0.4.0:
-    resolution: {integrity: sha512-KNpyxD+r8d9VoioyaHofUDsrYO+epVv/WjGZKugfO+qVN1KvHi/LwpXXY1618OCOYEaRNXZeRUtbOIb2YvJXTw==}
-    dependencies:
-      requireindex: 1.2.0
-    dev: true
-
   /eslint-plugin-mocha/10.0.3_eslint@8.11.0:
     resolution: {integrity: sha512-9mM7PZGxfejpjey+MrG0Cu3Lc8MyA5E2s7eUCdHXgS4SY/H9zLuwa7wVAjnEaoDjbBilA+0bPEB+iMO7lBUPcg==}
     engines: {node: '>=14.0.0'}
@@ -3663,11 +3655,6 @@ packages:
 
   /requireindex/1.1.0:
     resolution: {integrity: sha1-5UBLgVV+91225JxacgBIk/4D4WI=}
-    engines: {node: '>=0.10.5'}
-    dev: true
-
-  /requireindex/1.2.0:
-    resolution: {integrity: sha512-L9jEkOi3ASd9PYit2cwRfyppc9NoABujTP8/5gFcbERmo5jUoAKovIC3fsF17pkTnGsrByysqX+Kxd2OTNI1ww==}
     engines: {node: '>=0.10.5'}
     dev: true
 
