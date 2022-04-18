@@ -53,6 +53,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {FileId | string} [props.bytecodeFileId]
+     * @param {Uint8Array} [props.initcode]
      * @param {Key} [props.adminKey]
      * @param {number | Long} [props.gas]
      * @param {number | string | Long | BigNumber | Hbar} [props.initialBalance]
@@ -69,6 +70,12 @@ export default class ContractCreateTransaction extends Transaction {
          * @type {?FileId}
          */
         this._bytecodeFileId = null;
+
+        /**
+         * @private
+         * @type {?Uint8Array}
+         */
+        this._initcode = null;
 
         /**
          * @private
@@ -116,6 +123,10 @@ export default class ContractCreateTransaction extends Transaction {
 
         if (props.bytecodeFileId != null) {
             this.setBytecodeFileId(props.bytecodeFileId);
+        }
+
+        if (props.initcode != null) {
+            this.setInitcode(props.initcode);
         }
 
         if (props.adminKey != null) {
@@ -233,6 +244,24 @@ export default class ContractCreateTransaction extends Transaction {
             typeof bytecodeFileId === "string"
                 ? FileId.fromString(bytecodeFileId)
                 : bytecodeFileId.clone();
+
+        return this;
+    }
+
+    /**
+     * @returns {?Uint8Array}
+     */
+    get initcode() {
+        return this._initcode;
+    }
+
+    /**
+     * @param {Uint8Array} initcode
+     * @returns {this}
+     */
+    setInitcode(initcode) {
+        this._requireNotFrozen();
+        this._initcode = initcode;
 
         return this;
     }
@@ -421,6 +450,7 @@ export default class ContractCreateTransaction extends Transaction {
                 this._bytecodeFileId != null
                     ? this._bytecodeFileId._toProtobuf()
                     : null,
+            initcode: this._initcode,
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,
             gas: this._gas,

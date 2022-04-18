@@ -50,6 +50,7 @@ export { default as ContractCallQuery } from "./contract/ContractCallQuery.js";
 export { default as ContractCreateFlow } from "./contract/ContractCreateFlow.js";
 export { default as ContractCreateTransaction } from "./contract/ContractCreateTransaction.js";
 export { default as ContractDeleteTransaction } from "./contract/ContractDeleteTransaction.js";
+export { default as ContractEvmTransaction } from "./contract/ContractEvmTransaction.js";
 export { default as ContractExecuteTransaction } from "./contract/ContractExecuteTransaction.js";
 export { default as ContractFunctionParameters } from "./contract/ContractFunctionParameters.js";
 export { default as ContractFunctionResult } from "./contract/ContractFunctionResult.js";
