@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import PrivateKey from "./PrivateKey.js";
-import AccountId from "./account/AccountId.js";
-import SignerSignature from "./SignerSignature.js";
-import AccountBalanceQuery from "./account/AccountBalanceQuery.js";
-import AccountInfoQuery from "./account/AccountInfoQuery.js";
-import AccountRecordsQuery from "./account/AccountRecordsQuery.js";
-import TransactionId from "./transaction/TransactionId.js";
-import * as util from "./util.js";
-=======
 /*-
  * ‌
  * Hedera JavaScript SDK
@@ -28,8 +18,14 @@ import * as util from "./util.js";
  * ‍
  */
 
-import Signer from "./Signer.js";
->>>>>>> develop
+import PrivateKey from "./PrivateKey.js";
+import AccountId from "./account/AccountId.js";
+import SignerSignature from "./SignerSignature.js";
+import AccountBalanceQuery from "./account/AccountBalanceQuery.js";
+import AccountInfoQuery from "./account/AccountInfoQuery.js";
+import AccountRecordsQuery from "./account/AccountRecordsQuery.js";
+import TransactionId from "./transaction/TransactionId.js";
+import * as util from "./util.js";
 
 /**
  * @template RequestT
