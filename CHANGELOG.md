@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.13.0
+
+### Added 
+
+ * `ContractFunctionResult.[gas|amount|functionParameters]`
+ * `AccountAllowanceDeleteTransaction`
+ * `Wallet.createRandom[ED25519|ECDSA]()`
+
+### Fixed
+
+ * `WebChannel` and `NativeChannel` using `HashgraphProto.proto` instead of `proto` in the URL
+ * `TransactionReceiptQuery`'s error should contain the transaction set on the request instead
+   of the payment transaction ID
+ * `Query.maxQueryPayment` should be used before `Client.maxQueryPayment`
+ * request timeout check being reversed
+
+### Changed
+
+ * Updated `Signer` and `Provider` to be interfaces instead of classes
+
+### Deprecated
+
+ * `AccountAllowanceAdjustTransaction`
+
+### Removed
+
+ * `LocalWallet` - Use `Wallet` instead
+
 ## v2.13.0-beta.1
 
 ### Added 
