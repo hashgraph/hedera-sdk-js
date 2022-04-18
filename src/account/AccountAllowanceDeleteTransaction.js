@@ -18,11 +18,12 @@
  * ‍
  */
 
-import ScheduleId from "./ScheduleId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "../transaction/Transaction.js";
-import Hbar from "../Hbar.js";
+import AccountId from "./AccountId.js";
+import NftId from "../token/NftId.js";
+import TokenNftAllowance from "./TokenNftAllowance.js";
 
 /**
  * @namespace proto
@@ -31,42 +32,39 @@ import Hbar from "../Hbar.js";
  * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.ITransactionResponse
- * @typedef {import("@hashgraph/proto").proto.IScheduleDeleteTransactionBody} HashgraphProto.proto.IScheduleDeleteTransactionBody
- * @typedef {import("@hashgraph/proto").proto.IScheduleID} HashgraphProto.proto.IScheduleID
+ * @typedef {import("@hashgraph/proto").proto.ICryptoDeleteAllowanceTransactionBody} HashgraphProto.proto.ICryptoDeleteAllowanceTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
 
 /**
- * @typedef {import("bignumber.js").default} BigNumber
- * @typedef {import("@hashgraph/cryptography").Key} Key
+ * @typedef {import("./HbarAllowance.js").default} HbarAllowance
+ * @typedef {import("./TokenAllowance.js").default} TokenAllowance
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
- * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
- * @typedef {import("../account/AccountId.js").default} AccountId
+ * @typedef {import("bignumber.js").default} BigNumber
+ * @typedef {import("../long.js").LongObject} LongObject
  */
 
 /**
- * Create a new Hedera™ crypto-currency account.
+ * Change properties for the given account.
  */
-export default class ScheduleDeleteTransaction extends Transaction {
+export default class AccountAllowanceDeleteTransaction extends Transaction {
     /**
      * @param {object} [props]
-     * @param {ScheduleId | string} [props.scheduleId]
+     * @param {HbarAllowance[]} [props.hbarAllowances]
+     * @param {TokenAllowance[]} [props.tokenAllowances]
+     * @param {TokenNftAllowance[]} [props.nftAllowances]
      */
     constructor(props = {}) {
         super();
 
         /**
          * @private
-         * @type {?ScheduleId}
+         * @type {TokenNftAllowance[]}
          */
-        this._scheduleId = null;
-
-        if (props.scheduleId != null) {
-            this.setScheduleId(props.scheduleId);
-        }
-
-        this._defaultMaxTransactionFee = new Hbar(5);
+        this._nftAllowances =
+            props.nftAllowances != null ? props.nftAllowances : [];
     }
 
     /**
@@ -76,7 +74,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
-     * @returns {ScheduleDeleteTransaction}
+     * @returns {AccountAllowanceDeleteTransaction}
      */
     static _fromProtobuf(
         transactions,
@@ -86,21 +84,19 @@ export default class ScheduleDeleteTransaction extends Transaction {
         bodies
     ) {
         const body = bodies[0];
-        const scheduleDelete =
-            /** @type {HashgraphProto.proto.IScheduleDeleteTransactionBody} */ (
-                body.scheduleDelete
+        const allowance =
+            /** @type {HashgraphProto.proto.ICryptoDeleteAllowanceTransactionBody} */ (
+                body.cryptoDeleteAllowance
             );
 
         return Transaction._fromProtobufTransactions(
-            new ScheduleDeleteTransaction({
-                scheduleId:
-                    scheduleDelete.scheduleID != null
-                        ? ScheduleId._fromProtobuf(
-                              /** @type {HashgraphProto.proto.IScheduleID} */ (
-                                  scheduleDelete.scheduleID
-                              )
-                          )
-                        : undefined,
+            new AccountAllowanceDeleteTransaction({
+                nftAllowances: (allowance.nftAllowances != null
+                    ? allowance.nftAllowances
+                    : []
+                ).map((allowance) =>
+                    TokenNftAllowance._fromProtobuf(allowance)
+                ),
             }),
             transactions,
             signedTransactions,
@@ -111,22 +107,42 @@ export default class ScheduleDeleteTransaction extends Transaction {
     }
 
     /**
-     * @returns {?ScheduleId}
+     * @param {NftId | string} nftId
+     * @param {AccountId | string} ownerAccountId
+     * @returns {AccountAllowanceDeleteTransaction}
      */
-    get scheduleId() {
-        return this._scheduleId;
-    }
-
-    /**
-     * @param {ScheduleId | string} scheduleId
-     * @returns {this}
-     */
-    setScheduleId(scheduleId) {
+    deleteAllTokenNftAllowances(nftId, ownerAccountId) {
         this._requireNotFrozen();
-        this._scheduleId =
-            typeof scheduleId === "string"
-                ? ScheduleId.fromString(scheduleId)
-                : scheduleId.clone();
+
+        const id = typeof nftId === "string" ? NftId.fromString(nftId) : nftId;
+
+        const owner =
+            typeof ownerAccountId === "string"
+                ? AccountId.fromString(ownerAccountId)
+                : ownerAccountId;
+        let found = false;
+
+        for (const allowance of this._nftAllowances) {
+            if (allowance.tokenId.compare(id.tokenId) === 0) {
+                if (allowance.serialNumbers != null) {
+                    allowance.serialNumbers.push(id.serial);
+                }
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            this._nftAllowances.push(
+                new TokenNftAllowance({
+                    tokenId: id.tokenId,
+                    spenderAccountId: null,
+                    serialNumbers: [id.serial],
+                    ownerAccountId: owner,
+                    allSerials: false,
+                })
+            );
+        }
 
         return this;
     }
@@ -135,9 +151,9 @@ export default class ScheduleDeleteTransaction extends Transaction {
      * @param {Client} client
      */
     _validateChecksums(client) {
-        if (this._scheduleId != null) {
-            this._scheduleId.validateChecksum(client);
-        }
+        this._nftAllowances.map((allowance) =>
+            allowance._validateChecksums(client)
+        );
     }
 
     /**
@@ -148,7 +164,7 @@ export default class ScheduleDeleteTransaction extends Transaction {
      * @returns {Promise<HashgraphProto.proto.ITransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.schedule.deleteSchedule(request);
+        return channel.crypto.deleteAllowances(request);
     }
 
     /**
@@ -157,20 +173,19 @@ export default class ScheduleDeleteTransaction extends Transaction {
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "scheduleDelete";
+        return "cryptoDeleteAllowance";
     }
 
     /**
      * @override
      * @protected
-     * @returns {HashgraphProto.proto.IScheduleDeleteTransactionBody}
+     * @returns {HashgraphProto.proto.ICryptoDeleteAllowanceTransactionBody}
      */
     _makeTransactionData() {
         return {
-            scheduleID:
-                this._scheduleId != null
-                    ? this._scheduleId._toProtobuf()
-                    : null,
+            nftAllowances: this._nftAllowances.map((allowance) =>
+                allowance._toProtobuf()
+            ),
         };
     }
 
@@ -181,12 +196,12 @@ export default class ScheduleDeleteTransaction extends Transaction {
         const timestamp = /** @type {import("../Timestamp.js").default} */ (
             this._transactionIds.current.validStart
         );
-        return `ScheduleDeleteTransaction:${timestamp.toString()}`;
+        return `AccountAllowanceDeleteTransaction:${timestamp.toString()}`;
     }
 }
 
 TRANSACTION_REGISTRY.set(
-    "scheduleDelete",
+    "cryptoDeleteAllowance",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ScheduleDeleteTransaction._fromProtobuf
+    AccountAllowanceDeleteTransaction._fromProtobuf
 );

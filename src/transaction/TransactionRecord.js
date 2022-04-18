@@ -1,3 +1,23 @@
+/*-
+ * ‌
+ * Hedera JavaScript SDK
+ * ​
+ * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * ​
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ‍
+ */
+
 import TransactionReceipt from "./TransactionReceipt.js";
 import TransactionId from "./TransactionId.js";
 import Timestamp from "../Timestamp.js";
@@ -13,11 +33,11 @@ import TokenAssocation from "../token/TokenAssociation.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
-import HbarAllowance from "../account/HbarAllowance.js";
-import TokenAllowance from "../account/TokenAllowance.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
+ * @typedef {import("../account/HbarAllowance.js").default} HbarAllowance
+ * @typedef {import("../account/TokenAllowance.js").default} TokenAllowance
  * @typedef {import("../account/TokenNftAllowance.js").default} TokenNftAllowance
  */
 
@@ -301,17 +321,6 @@ export default class TransactionRecord {
                               this.aliasKey._toProtobufKey()
                           ).finish()
                         : null,
-                cryptoAdjustments: this.hbarAllowanceAdjustments.map(
-                    (allowance) => {
-                        return allowance._toProtobuf();
-                    }
-                ),
-
-                tokenAdjustments: this.tokenAllowanceAdjustments.map(
-                    (allowance) => {
-                        return allowance._toProtobuf();
-                    }
-                ),
             },
         };
     }
@@ -436,18 +445,8 @@ export default class TransactionRecord {
             aliasKey,
             duplicates,
             children,
-            hbarAllowanceAdjustments: (record.cryptoAdjustments != null
-                ? record.cryptoAdjustments
-                : []
-            ).map((allowance) => {
-                return HbarAllowance._fromProtobuf(allowance);
-            }),
-            tokenAllowanceAdjustments: (record.tokenAdjustments != null
-                ? record.tokenAdjustments
-                : []
-            ).map((allowance) => {
-                return TokenAllowance._fromProtobuf(allowance);
-            }),
+            hbarAllowanceAdjustments: [],
+            tokenAllowanceAdjustments: [],
             nftAllowanceAdjustments: [],
         });
     }

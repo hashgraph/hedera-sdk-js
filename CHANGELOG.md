@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.13.0-beta.1
+
+### Added 
+
+ * `ContractFunctionResult.[gas|amount|functionParameters]`
+ * `AccountAllowanceDeleteTransaction`
+
 ## v2.12.1
 
 ### Fixed
@@ -84,6 +91,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `AccountAllowanceAdjustTransaction.[grant|revoke]TokenNftAllowanceAllSerials()`
  * `TransactionRecord.[hbar|token|tokenNft]AllowanceAdjustments`
  * `TransferTransaction.addApproved[Hbar|Token|Nft]Transfer()`
+ * Ledger ID checksums
+ * `Transaction.fromBytes()` should validate all the transaction bodies are the same
 
 ### Deprecated
 
@@ -102,6 +111,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `Transaction.fromBytes()` should validate all the transaction bodies are the same
  * `ExchangeRate._[from|to]Protobuf()` should correctly decode `expirationTime`
  * Mark `expo` as a optional peer dependency
+
+### Added
 
 ## v2.11.0
 

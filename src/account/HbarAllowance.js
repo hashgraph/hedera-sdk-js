@@ -1,10 +1,29 @@
+/*-
+ * ‌
+ * Hedera JavaScript SDK
+ * ​
+ * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * ​
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ‍
+ */
+
 import AccountId from "./AccountId.js";
 import Hbar from "../Hbar.js";
 
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.IGrantedCryptoAllowance} HashgraphProto.proto.IGrantedCryptoAllowance
- * @typedef {import("@hashgraph/proto").proto.ICryptoRemoveAllowance} HashgraphProto.proto.ICryptoRemoveAllowance
  * @typedef {import("@hashgraph/proto").proto.ICryptoAllowance} HashgraphProto.proto.ICryptoAllowance
  * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
  */
@@ -93,26 +112,6 @@ export default class HbarAllowance {
             amount: Hbar.fromTinybars(
                 allowance.amount != null ? allowance.amount : 0
             ),
-        });
-    }
-
-    /**
-     * @internal
-     * @param {HashgraphProto.proto.ICryptoRemoveAllowance} allowance
-     * @returns {HbarAllowance}
-     */
-    static _fromRemoveProtobuf(allowance) {
-        return new HbarAllowance({
-            spenderAccountId: null,
-            ownerAccountId:
-                allowance.owner != null
-                    ? AccountId._fromProtobuf(
-                          /**@type {HashgraphProto.proto.IAccountID}*/ (
-                              allowance.owner
-                          )
-                      )
-                    : null,
-            amount: null,
         });
     }
 

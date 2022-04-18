@@ -1,3 +1,23 @@
+/*-
+ * ‌
+ * Hedera JavaScript SDK
+ * ​
+ * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * ​
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ‍
+ */
+
 import ContractLogInfo from "./ContractLogInfo.js";
 import ContractId from "./ContractId.js";
 import BigNumber from "bignumber.js";
@@ -32,6 +52,9 @@ export default class ContractFunctionResult {
      * @param {Uint8Array | null} result.evmAddress
      * @param {ContractStateChange[]} result.stateChanges
      * @param {Uint8Array} result.bytes
+     * @param {Long} result.gas
+     * @param {Long} result.amount
+     * @param {Uint8Array} result.functionParameters
      */
     constructor(result) {
         /**
@@ -76,6 +99,21 @@ export default class ContractFunctionResult {
         this.evmAddress = result.evmAddress;
 
         this.stateChanges = result.stateChanges;
+
+        /**
+         * The amount of gas available for the call, aka the gasLimit.
+         */
+        this.gas = result.gas;
+
+        /**
+         * Number of tinybars sent (the function must be payable if this is nonzero).
+         */
+        this.amount = result.amount;
+
+        /**
+         * The parameters passed into the contract call.
+         */
+        this.functionParameters = result.functionParameters;
     }
 
     /**
@@ -87,7 +125,9 @@ export default class ContractFunctionResult {
             /** @type {HashgraphProto.proto.IContractID | null} */ (
                 result.contractID
             );
-        const gas = /** @type {Long | number} */ (result.gasUsed);
+        const gasUsed = /** @type {Long} */ (result.gasUsed);
+        const gas = /** @type {Long} */ (result.gas);
+        const amount = /** @type {Long} */ (result.amount);
 
         return new ContractFunctionResult({
             bytes: /** @type {Uint8Array} */ (result.contractCallResult),
@@ -98,7 +138,8 @@ export default class ContractFunctionResult {
             errorMessage:
                 result.errorMessage != null ? result.errorMessage : null,
             bloom: /** @type {Uint8Array} */ (result.bloom),
-            gasUsed: gas instanceof Long ? gas : Long.fromValue(gas),
+            gasUsed:
+                gasUsed instanceof Long ? gasUsed : Long.fromValue(gasUsed),
             logs: (result.logInfo != null ? result.logInfo : []).map((info) =>
                 ContractLogInfo._fromProtobuf(info)
             ),
@@ -114,6 +155,11 @@ export default class ContractFunctionResult {
                 ? result.stateChanges
                 : []
             ).map((change) => ContractStateChange._fromProtobuf(change)),
+            gas: gas instanceof Long ? gas : Long.fromValue(gas),
+            amount: amount instanceof Long ? amount : Long.fromValue(amount),
+            functionParameters: /** @type {Uint8Array} */ (
+                result.functionParameters
+            ),
         });
     }
 

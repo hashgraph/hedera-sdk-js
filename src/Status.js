@@ -1,3 +1,23 @@
+/*-
+ * ‌
+ * Hedera JavaScript SDK
+ * ​
+ * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * ​
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ‍
+ */
+
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.ResponseCodeEnum} HashgraphProto.proto.ResponseCodeEnum
@@ -531,14 +551,40 @@ export default class Status {
                 return "EMPTY_ALLOWANCES";
             case Status.SpenderAccountRepeatedInAllowances:
                 return "SPENDER_ACCOUNT_REPEATED_IN_ALLOWANCES";
-            case Status.RepeatedSerialNumsInNFTAllowances:
+            case Status.RepeatedSerialNumsInNftAllowances:
                 return "REPEATED_SERIAL_NUMS_IN_NFT_ALLOWANCES";
-            case Status.FungibleTokenInNFTAllowances:
+            case Status.FungibleTokenInNftAllowances:
                 return "FUNGIBLE_TOKEN_IN_NFT_ALLOWANCES";
-            case Status.NFTInFungibleTokenAllowances:
-                return "NFT_IN_FUNGIBLE_PAYER_ALLOWANCES";
-            case Status.PayerAndOwnerNotEqual:
-                return "PAYER_AND_OWNER_NOT_EQUAL";
+            case Status.NftInFungibleTokenAllowances:
+                return "NFT_IN_FUNGIBLE_TOKEN_ALLOWANCES";
+            case Status.InvalidAllowanceOwnerId:
+                return "INVALID_ALLOWANCE_OWNER_ID";
+            case Status.InvalidAllowanceSpenderId:
+                return "INVALID_ALLOWANCE_SPENDER_ID";
+            case Status.RepeatedAllowancesToDelete:
+                return "REPEATED_ALLOWANCES_TO_DELETE";
+            case Status.InvalidDelegatingSpender:
+                return "INVALID_DELEGATING_SPENDER";
+            case Status.DelegatingSpenderCannotGrantApproveForAll:
+                return "DELEGATING_SPENDER_CANNOT_GRANT_APPROVE_FOR_ALL";
+            case Status.DelegatingSpenderDoesNotHaveApproveForAll:
+                return "DELEGATING_SPENDER_DOES_NOT_HAVE_APPROVE_FOR_ALL";
+            case Status.ScheduleExpirationTimeTooFarInFuture:
+                return "SCHEDULE_EXPIRATION_TIME_TOO_FAR_IN_FUTURE";
+            case Status.ScheduleExpirationTimeMustBeHigherThanConsensusTime:
+                return "SCHEDULE_EXPIRATION_TIME_MUST_BE_HIGHER_THAN_CONSENSUS_TIME";
+            case Status.ScheduleFutureThrottleExceeded:
+                return "SCHEDULE_FUTURE_THROTTLE_EXCEEDED";
+            case Status.ScheduleFutureGasLimitExceeded:
+                return "SCHEDULE_FUTURE_GAS_LIMIT_EXCEEDED";
+            case Status.InvalidEthereumTransaction:
+                return "INVALID_ETHEREUM_TRANSACTION";
+            case Status.WrongChainId:
+                return "WRONG_CHAIN_ID";
+            case Status.WrongNonce:
+                return "WRONG_NONCE";
+            case Status.AccessListUnsupported:
+                return "ACCESS_LIST_UNSUPPORTED";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1062,13 +1108,39 @@ export default class Status {
             case 296:
                 return Status.SpenderAccountRepeatedInAllowances;
             case 297:
-                return Status.RepeatedSerialNumsInNFTAllowances;
+                return Status.RepeatedSerialNumsInNftAllowances;
             case 298:
-                return Status.FungibleTokenInNFTAllowances;
+                return Status.FungibleTokenInNftAllowances;
             case 299:
-                return Status.NFTInFungibleTokenAllowances;
+                return Status.NftInFungibleTokenAllowances;
             case 300:
-                return Status.PayerAndOwnerNotEqual;
+                return Status.InvalidAllowanceOwnerId;
+            case 301:
+                return Status.InvalidAllowanceSpenderId;
+            case 302:
+                return Status.RepeatedAllowancesToDelete;
+            case 303:
+                return Status.InvalidDelegatingSpender;
+            case 304:
+                return Status.DelegatingSpenderCannotGrantApproveForAll;
+            case 305:
+                return Status.DelegatingSpenderDoesNotHaveApproveForAll;
+            case 306:
+                return Status.ScheduleExpirationTimeTooFarInFuture;
+            case 307:
+                return Status.ScheduleExpirationTimeMustBeHigherThanConsensusTime;
+            case 308:
+                return Status.ScheduleFutureThrottleExceeded;
+            case 309:
+                return Status.ScheduleFutureGasLimitExceeded;
+            case 310:
+                return Status.InvalidEthereumTransaction;
+            case 311:
+                return Status.WrongChainId;
+            case 312:
+                return Status.WrongNonce;
+            case 313:
+                return Status.AccessListUnsupported;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -1117,7 +1189,9 @@ Status.TransactionExpired = new Status(4);
 Status.InvalidTransactionStart = new Status(5);
 
 /**
- * valid transaction duration is a positive non zero number that does not exceed 120 seconds
+ * The given transactionValidDuration was either non-positive, or greater than the maximum
+ * valid duration of 180 secs.
+ *
  */
 Status.InvalidTransactionDuration = new Status(6);
 
@@ -1711,9 +1785,7 @@ Status.TopicExpired = new Status(162);
 Status.InvalidChunkNumber = new Status(163);
 
 /**
- * For every chunk, the payer account that is part of initialTransactionID must match the Payer
- * Account of this transaction. The entire initialTransactionID should match the transactionID of
- * the first chunk, but this is not checked or enforced by Hedera except when the chunk number is 1.
+ * For every chunk, the payer account that is part of initialTransactionID must match the Payer Account of this transaction. The entire initialTransactionID should match the transactionID of the first chunk, but this is not checked or enforced by Hedera except when the chunk number is 1.
  */
 Status.InvalidChunkTransactionId = new Status(164);
 
@@ -1723,8 +1795,7 @@ Status.InvalidChunkTransactionId = new Status(164);
 Status.AccountFrozenForToken = new Status(165);
 
 /**
- * An involved account already has more than <tt>tokens.maxPerAccount</tt> associations with
- * non-deleted tokens.
+ * An involved account already has more than <tt>tokens.maxPerAccount</tt> associations with non-deleted tokens.
  */
 Status.TokensPerAccountLimitExceeded = new Status(166);
 
@@ -1919,14 +1990,12 @@ Status.InvalidSchedulePayerId = new Status(203);
 Status.InvalidScheduleAccountId = new Status(204);
 
 /**
- * The provided sig map did not contain any new valid signatures from required signers of the
- * scheduled transaction
+ * The provided sig map did not contain any new valid signatures from required signers of the scheduled transaction
  */
 Status.NoNewValidSignatures = new Status(205);
 
 /**
- * The required signers for a scheduled transaction cannot be resolved, for example because they do
- * not exist or have been deleted
+ * The required signers for a scheduled transaction cannot be resolved, for example because they do not exist or have been deleted
  */
 Status.UnresolvableRequiredSigners = new Status(206);
 
@@ -1936,8 +2005,7 @@ Status.UnresolvableRequiredSigners = new Status(206);
 Status.ScheduledTransactionNotInWhitelist = new Status(207);
 
 /**
- * At least one of the signatures in the provided sig map did not represent a valid signature for
- * any required signer
+ * At least one of the signatures in the provided sig map did not represent a valid signature for any required signer
  */
 Status.SomeSignaturesWereInvalid = new Status(208);
 
@@ -1947,8 +2015,7 @@ Status.SomeSignaturesWereInvalid = new Status(208);
 Status.TransactionIdFieldNotAllowed = new Status(209);
 
 /**
- * A schedule already exists with the same identifying fields of an attempted ScheduleCreate (that
- * is, all fields other than scheduledPayerAccountID)
+ * A schedule already exists with the same identifying fields of an attempted ScheduleCreate (that is, all fields other than scheduledPayerAccountID)
  */
 Status.IdenticalScheduleAlreadyCreated = new Status(210);
 
@@ -1978,14 +2045,12 @@ Status.MessageSizeTooLarge = new Status(214);
 Status.OperationRepeatedInBucketGroups = new Status(215);
 
 /**
- * The capacity needed to satisfy all opsPerSec groups in a bucket overflowed a signed 8-byte
- * integral type
+ * The capacity needed to satisfy all opsPerSec groups in a bucket overflowed a signed 8-byte integral type
  */
 Status.BucketCapacityOverflow = new Status(216);
 
 /**
- * Given the network size in the address book, the node-level capacity for an operation would never
- * be enough to accept a single request; usually means a bucket burstPeriod should be increased
+ * Given the network size in the address book, the node-level capacity for an operation would never be enough to accept a single request; usually means a bucket burstPeriod should be increased
  */
 Status.NodeCapacityNotSufficientForOperation = new Status(217);
 
@@ -2000,8 +2065,7 @@ Status.BucketHasNoThrottleGroups = new Status(218);
 Status.ThrottleGroupHasZeroOpsPerSec = new Status(219);
 
 /**
- * The throttle definitions file was updated, but some supported operations were not assigned a
- * bucket
+ * The throttle definitions file was updated, but some supported operations were not assigned a bucket
  */
 Status.SuccessButMissingExpectedOperation = new Status(220);
 
@@ -2011,15 +2075,12 @@ Status.SuccessButMissingExpectedOperation = new Status(220);
 Status.UnparseableThrottleDefinitions = new Status(221);
 
 /**
- * The new throttle definitions system file were invalid, and no more specific error could be
- * divined
+ * The new throttle definitions system file were invalid, and no more specific error could be divined
  */
 Status.InvalidThrottleDefinitions = new Status(222);
 
 /**
- * The transaction references an account which has passed its expiration without renewal funds
- * available, and currently remains in the ledger only because of the grace period given to expired
- * entities
+ * The transaction references an account which has passed its expiration without renewal funds available, and currently remains in the ledger only because of the grace period given to expired entities
  */
 Status.AccountExpiredAndPendingRemoval = new Status(223);
 
@@ -2119,14 +2180,12 @@ Status.CustomFeeOutsideNumericRange = new Status(241);
 Status.RoyaltyFractionCannotExceedOne = new Status(242);
 
 /**
- * Each fractional custom fee must have its maximum_amount, if specified, at least its
- * minimum_amount
+ * Each fractional custom fee must have its maximum_amount, if specified, at least its minimum_amount
  */
 Status.FractionalFeeMaxAmountLessThanMinAmount = new Status(243);
 
 /**
- * A fee schedule update tried to clear the custom fees from a token whose fee schedule was already
- * empty
+ * A fee schedule update tried to clear the custom fees from a token whose fee schedule was already empty
  */
 Status.CustomScheduleAlreadyHasNoFees = new Status(244);
 
@@ -2196,8 +2255,7 @@ Status.PayerAccountDeleted = new Status(256);
 Status.CustomFeeChargingExceededMaxRecursionDepth = new Status(257);
 
 /**
- * More than 20 balance adjustments were to satisfy a CryptoTransfer and its implied custom fee
- * payments
+ * More than 20 balance adjustments were to satisfy a CryptoTransfer and its implied custom fee payments
  */
 Status.CustomFeeChargingExceededMaxAccountAmounts = new Status(258);
 
@@ -2227,8 +2285,8 @@ Status.NoRemainingAutomaticAssociations = new Status(262);
 Status.ExistingAutomaticAssociationsExceedGivenLimit = new Status(263);
 
 /**
- * Cannot set the number of automatic associations for an account more than the
- * maximum allowed token associations <tt>tokens.maxPerAccount</tt>
+ * Cannot set the number of automatic associations for an account more than the maximum allowed
+ * token associations <tt>tokens.maxPerAccount</tt>.
  */
 Status.RequestedNumAutomaticAssociationsExceedsAssociationLimit = new Status(
     264
@@ -2411,20 +2469,85 @@ Status.SpenderAccountRepeatedInAllowances = new Status(296);
 /**
  * Serial numbers are repeated in nft allowance for a single spender account
  */
-Status.RepeatedSerialNumsInNFTAllowances = new Status(297);
+Status.RepeatedSerialNumsInNftAllowances = new Status(297);
 
 /**
  * Fungible common token used in NFT allowances
  */
-Status.FungibleTokenInNFTAllowances = new Status(298);
+Status.FungibleTokenInNftAllowances = new Status(298);
 
 /**
  * Non fungible token used in fungible token allowances
  */
-Status.NFTInFungibleTokenAllowances = new Status(299);
+Status.NftInFungibleTokenAllowances = new Status(299);
 
 /**
- * An approval/adjustment transaction was submitted where the payer and owner account are
- * not the same. Currently only the owner is permitted to perform these operations.
+ * The account id specified as the owner is invalid or does not exist.
  */
-Status.PayerAndOwnerNotEqual = new Status(300);
+Status.InvalidAllowanceOwnerId = new Status(300);
+
+/**
+ * The account id specified as the spender is invalid or does not exist.
+ */
+Status.InvalidAllowanceSpenderId = new Status(301);
+
+/**
+ * If the CryptoDeleteAllowance transaction has repeated crypto or token or Nft allowances to delete.
+ */
+Status.RepeatedAllowancesToDelete = new Status(302);
+
+/**
+ * If the account Id specified as the delegating spender is invalid or does not exist.
+ */
+Status.InvalidDelegatingSpender = new Status(303);
+
+/**
+ * The delegating Spender cannot grant approveForAll allowance on a NFT token type for another spender.
+ */
+Status.DelegatingSpenderCannotGrantApproveForAll = new Status(304);
+
+/**
+ * The delegating Spender cannot grant allowance on a NFT serial for another spender as it doesnt not have approveForAll
+ * granted on token-owner.
+ */
+Status.DelegatingSpenderDoesNotHaveApproveForAll = new Status(305);
+
+/**
+ * The scheduled transaction could not be created because it's expiration_time was too far in the future.
+ */
+Status.ScheduleExpirationTimeTooFarInFuture = new Status(306);
+
+/**
+ * The scheduled transaction could not be created because it's expiration_time was less than or equal to the consensus time.
+ */
+Status.ScheduleExpirationTimeMustBeHigherThanConsensusTime = new Status(307);
+
+/**
+ * The scheduled transaction could not be created because it would cause throttles to be violated on the specified expiration_time.
+ */
+Status.ScheduleFutureThrottleExceeded = new Status(308);
+
+/**
+ * The scheduled transaction could not be created because it would cause the gas limit to be violated on the specified expiration_time.
+ */
+Status.ScheduleFutureGasLimitExceeded = new Status(309);
+
+/**
+ * The ethereum transaction either failed parsing or failed signature validation, or some other EthereumTransaction error not covered by another response code.
+ */
+Status.InvalidEthereumTransaction = new Status(310);
+
+/**
+ * EthereumTransaction was signed against a chainId that this network does not support.
+ */
+Status.WrongChainId = new Status(311);
+
+/**
+ * This transaction specified an ethereumNonce that is not the current ethereumNonce of the account.
+ */
+Status.WrongNonce = new Status(312);
+
+/**
+ * The ethereum transaction specified an access list, which the network does not support.
+ */
+Status.AccessListUnsupported = new Status(313);

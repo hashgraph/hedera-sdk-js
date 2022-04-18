@@ -1,3 +1,23 @@
+/*-
+ * ‌
+ * Hedera JavaScript SDK
+ * ​
+ * Copyright (C) 2020 - 2022 Hedera Hashgraph, LLC
+ * ​
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ‍
+ */
+
 import AccountId from "./AccountId.js";
 import LiveHash from "./LiveHash.js";
 import Hbar from "../Hbar.js";
@@ -9,9 +29,12 @@ import Duration from "../Duration.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import LedgerId from "../LedgerId.js";
-import HbarAllowance from "./HbarAllowance.js";
-import TokenAllowance from "./TokenAllowance.js";
-import TokenNftAllowance from "./TokenNftAllowance.js";
+
+/**
+ * @typedef {import("./HbarAllowance.js").default} HbarAllowance
+ * @typedef {import("./TokenAllowance.js").default} TokenAllowance
+ * @typedef {import("./TokenNftAllowance.js").default} TokenNftAllowance
+ */
 
 /**
  * Current information about an account, including the balance.
@@ -258,24 +281,9 @@ export default class AccountInfo {
                     ? LedgerId.fromBytes(info.ledgerId)
                     : null,
 
-            hbarAllowances: (info.grantedCryptoAllowances != null
-                ? info.grantedCryptoAllowances
-                : []
-            ).map((allowance) =>
-                HbarAllowance._fromGrantedProtobuf(allowance, accountId)
-            ),
-            tokenAllowances: (info.grantedTokenAllowances != null
-                ? info.grantedTokenAllowances
-                : []
-            ).map((allowance) =>
-                TokenAllowance._fromGrantedProtobuf(allowance, accountId)
-            ),
-            nftAllowances: (info.grantedNftAllowances != null
-                ? info.grantedNftAllowances
-                : []
-            ).map((allowance) =>
-                TokenNftAllowance._fromGrantedProtobuf(allowance, accountId)
-            ),
+            hbarAllowances: [],
+            tokenAllowances: [],
+            nftAllowances: [],
         });
     }
 
