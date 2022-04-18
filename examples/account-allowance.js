@@ -4,10 +4,8 @@ import {
     AccountBalanceQuery,
     AccountInfoQuery,
     AccountCreateTransaction,
-    AccountAllowanceDeleteTransaction,
     AccountDeleteTransaction,
     TransactionId,
-    AccountAllowanceAdjustTransaction,
     AccountAllowanceApproveTransaction,
     TransferTransaction,
     Hbar,
@@ -139,22 +137,6 @@ async function main() {
     }
 
     console.log(
-        "Adjusting Bob's allowance, increasing it by 2 Hbar.  After this, Bob's allowance should be 3 Hbar."
-    );
-
-    await (
-        await (
-            await new AccountAllowanceAdjustTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .grantHbarAllowance(aliceId, bobId, new Hbar(2))
-                .freezeWith(client)
-                .sign(aliceKey)
-        ).execute(client)
-    ).getReceipt(client);
-
-    await printBalances(client, response.nodeId, aliceId, bobId, charlieId);
-
-    console.log(
         "Attempting to transfer 2 new Hbar Alice to Charlie using Bob's allowance again."
     );
     console.log("This time it should succeed.");
@@ -172,20 +154,6 @@ async function main() {
     ).getReceipt(client);
 
     console.log("Transfer succeeded.");
-
-    await printBalances(client, response.nodeId, aliceId, bobId, charlieId);
-
-    console.log("Deleting all Hbar allowances owned by Alice");
-
-    await (
-        await (
-            await new AccountAllowanceDeleteTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .deleteAllHbarAllowances(aliceId)
-                .freezeWith(client)
-                .sign(aliceKey)
-        ).execute(client)
-    ).getReceipt(client);
 
     await printBalances(client, response.nodeId, aliceId, bobId, charlieId);
 
