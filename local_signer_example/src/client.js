@@ -46,7 +46,7 @@ const instance = axios.create({
 /**
  * @implements {Provider}
  */
-export class LocalProvider {
+export class SimpleRestProvider {
     /**
      * @param {LedgerId?} ledgerId
      * @param {{[key: string]: string}} network
@@ -178,7 +178,7 @@ export class LocalProvider {
 /**
  * @implements {Signer}
  */
-export class LocalSigner {
+export class SimpleRestSigner {
     /**
      * @param {AccountId} accountId
      * @param {PublicKey} publicKey
@@ -192,7 +192,7 @@ export class LocalSigner {
 
     /**
      * @param {(AccountId | string)=} accountId
-     * @returns {Promise<LocalSigner>}
+     * @returns {Promise<SimpleRestSigner>}
      */
     static async connect(accountId) {
         /**
@@ -212,13 +212,13 @@ export class LocalSigner {
         const id = AccountId.fromString(response.accountId);
         const publicKey = PublicKey.fromString(response.publicKey);
         const ledgerId = LedgerId.fromString(response.ledgerId);
-        const provider = new LocalProvider(
+        const provider = new SimpleRestProvider(
             ledgerId,
             response.network,
             response.mirrorNetwork
         );
 
-        return new LocalSigner(id, publicKey, provider);
+        return new SimpleRestSigner(id, publicKey, provider);
     }
 
     /**
@@ -402,7 +402,7 @@ export class LocalSigner {
  *
  */
 async function main() {
-    const signer = await LocalSigner.connect();
+    const signer = await SimpleRestSigner.connect();
 
     // Free query
     const balance = await signer.getAccountBalance();

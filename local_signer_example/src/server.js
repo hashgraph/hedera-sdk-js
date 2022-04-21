@@ -1,15 +1,15 @@
 import express from "express";
-// import readline from "readline";
+import readline from "readline";
 import { Wallet, LocalProvider, Transaction, Query } from "@hashgraph/sdk";
 
 if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
     throw new Error("`OPERATOR_KEY` and `OPERATOR_ID` required");
 }
 
-// const rl = readline.createInterface({
-//     input: process.stdin,
-//     output: process.stdout,
-// });
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+});
 
 const app = express();
 app.use(express.json());
@@ -40,25 +40,25 @@ app.post("/login", function (req, res) {
         return;
     }
 
-    // const accountId =
-    //     request.accountId == null ? wallet.accountId : request.accountId;
+    const accountId =
+        request.accountId == null ? wallet.accountId : request.accountId;
 
-    // rl.question(`Login as ${accountId.toString()}?\n`, name => {
-    //     switch (name) {
-    //     case "y":
-    //     case "yes":
-    res.json({
-        accountId: wallet.accountId.toString(),
-        publicKey: wallet.publicKey.toString(),
-        ledgerId: ledgerId != null ? ledgerId.toString() : null,
-        network,
-        mirrorNetwork,
+    rl.question(`Login as ${accountId.toString()}?\n`, name => {
+        switch (name) {
+        case "y":
+        case "yes":
+            res.json({
+                accountId: wallet.accountId.toString(),
+                publicKey: wallet.publicKey.toString(),
+                ledgerId: ledgerId != null ? ledgerId.toString() : null,
+                network,
+                mirrorNetwork,
+            });
+            break;
+        default:
+            res.json({ error: "request denied" });
+        }
     });
-    //         break;
-    //     default:
-    //         res.json({ error: "request denied" });
-    //     }
-    // });
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
