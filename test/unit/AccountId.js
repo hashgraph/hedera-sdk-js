@@ -37,11 +37,13 @@ describe("AccountId", function () {
         );
     });
 
-    it("clones with alias key", function() {
+    it("clones with alias key", function () {
         expect(
             AccountId.fromString(
                 "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
-            ).clone().toString()
+            )
+                .clone()
+                .toString()
         ).to.be.equal(
             "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
         );
