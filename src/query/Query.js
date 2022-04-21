@@ -352,28 +352,24 @@ export default class Query extends Executable {
      */
     async _makeRequestAsync() {
         /** @type {HashgraphProto.proto.IQueryHeader} */
-        let header = {};
+        let header = {
+            responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
+        };
 
         if (this._isPaymentRequired() && this._paymentTransactions != null) {
             if (this._nodeAccountIds.locked) {
-                header = {
-                    payment:
-                        this._paymentTransactions[this._nodeAccountIds.index],
-                    responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
-                };
+                header.payment =
+                    this._paymentTransactions[this._nodeAccountIds.index];
             } else {
-                header = {
-                    payment: await _makePaymentTransaction(
-                        this._getLogId(),
-                        /** @type {import("../transaction/TransactionId.js").default} */ (
-                            this._paymentTransactionId
-                        ),
-                        this._nodeAccountIds.current,
-                        this._isPaymentRequired() ? this._operator : null,
-                        /** @type {Hbar} */ (this._queryPayment)
+                header.payment = await _makePaymentTransaction(
+                    this._getLogId(),
+                    /** @type {import("../transaction/TransactionId.js").default} */ (
+                        this._paymentTransactionId
                     ),
-                    responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
-                };
+                    this._nodeAccountIds.current,
+                    this._isPaymentRequired() ? this._operator : null,
+                    /** @type {Hbar} */ (this._queryPayment)
+                );
             }
         }
 
