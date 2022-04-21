@@ -84,9 +84,7 @@ export class SimpleRestProvider {
      * @returns {Promise<AccountBalance>}
      */
     getAccountBalance(accountId) {
-        return this.sendRequest(
-            new AccountBalanceQuery().setAccountId(accountId)
-        );
+        return this.call(new AccountBalanceQuery().setAccountId(accountId));
     }
 
     /**
@@ -94,7 +92,7 @@ export class SimpleRestProvider {
      * @returns {Promise<AccountInfo>}
      */
     async getAccountInfo(accountId) {
-        return this.sendRequest(new AccountInfoQuery().setAccountId(accountId));
+        return this.call(new AccountInfoQuery().setAccountId(accountId));
     }
 
     /**
@@ -102,9 +100,7 @@ export class SimpleRestProvider {
      * @returns {Promise<TransactionRecord[]>}
      */
     getAccountRecords(accountId) {
-        return this.sendRequest(
-            new AccountRecordsQuery().setAccountId(accountId)
-        );
+        return this.call(new AccountRecordsQuery().setAccountId(accountId));
     }
 
     /**
@@ -112,7 +108,7 @@ export class SimpleRestProvider {
      * @returns {Promise<TransactionReceipt>}
      */
     getTransactionReceipt(transactionId) {
-        return this.sendRequest(
+        return this.call(
             new TransactionReceiptQuery().setTransactionId(transactionId)
         );
     }
@@ -122,7 +118,7 @@ export class SimpleRestProvider {
      * @returns {Promise<TransactionReceipt>}
      */
     waitForReceipt(response) {
-        return this.sendRequest(
+        return this.call(
             new TransactionReceiptQuery().setTransactionId(
                 response.transactionId
             )
@@ -136,7 +132,7 @@ export class SimpleRestProvider {
      * @param {Executable<RequestT, ResponseT, OutputT>} request
      * @returns {Promise<OutputT>}
      */
-    async sendRequest(request) {
+    async call(request) {
         /** @type {{ response: string, error: string | undefined} | TransactionResponseJSON} */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const response = (
@@ -279,7 +275,7 @@ export class SimpleRestSigner {
      * @returns {Promise<AccountBalance>}
      */
     getAccountBalance() {
-        return this.sendRequest(
+        return this.call(
             new AccountBalanceQuery().setAccountId(this.accountId)
         );
     }
@@ -289,9 +285,7 @@ export class SimpleRestSigner {
      * @returns {Promise<AccountInfo>}
      */
     getAccountInfo() {
-        return this.sendRequest(
-            new AccountInfoQuery().setAccountId(this.accountId)
-        );
+        return this.call(new AccountInfoQuery().setAccountId(this.accountId));
     }
 
     /**
@@ -299,7 +293,7 @@ export class SimpleRestSigner {
      * @returns {Promise<TransactionRecord[]>}
      */
     getAccountRecords() {
-        return this.sendRequest(
+        return this.call(
             new AccountRecordsQuery().setAccountId(this.accountId)
         );
     }
@@ -387,14 +381,14 @@ export class SimpleRestSigner {
      * @param {Executable<RequestT, ResponseT, OutputT>} request
      * @returns {Promise<OutputT>}
      */
-    sendRequest(request) {
+    call(request) {
         if (this.provider == null) {
             throw new Error(
                 "cannot send request with an wallet that doesn't contain a provider"
             );
         }
 
-        return this.provider.sendRequest(request);
+        return this.provider.call(request);
     }
 }
 

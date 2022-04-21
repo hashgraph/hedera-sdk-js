@@ -43,20 +43,20 @@ app.post("/login", function (req, res) {
     const accountId =
         request.accountId == null ? wallet.accountId : request.accountId;
 
-    rl.question(`Login as ${accountId.toString()}?\n`, name => {
+    rl.question(`Login as ${accountId.toString()}?\n`, (name) => {
         switch (name) {
-        case "y":
-        case "yes":
-            res.json({
-                accountId: wallet.accountId.toString(),
-                publicKey: wallet.publicKey.toString(),
-                ledgerId: ledgerId != null ? ledgerId.toString() : null,
-                network,
-                mirrorNetwork,
-            });
-            break;
-        default:
-            res.json({ error: "request denied" });
+            case "y":
+            case "yes":
+                res.json({
+                    accountId: wallet.accountId.toString(),
+                    publicKey: wallet.publicKey.toString(),
+                    ledgerId: ledgerId != null ? ledgerId.toString() : null,
+                    network,
+                    mirrorNetwork,
+                });
+                break;
+            default:
+                res.json({ error: "request denied" });
         }
     });
 });
@@ -75,14 +75,14 @@ app.post("/request", async function (req, res) {
     try {
         const transaction = Transaction.fromBytes(bytes);
         await transaction.signWithSigner(wallet);
-        const response = await wallet.sendRequest(transaction);
+        const response = await wallet.call(transaction);
         res.json(response);
         return;
     } catch (_) {
         try {
             const query = Query.fromBytes(bytes);
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            const response = await wallet.sendRequest(query);
+            const response = await wallet.call(query);
             res.json({
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-argument
                 response: Buffer.from(response.toBytes()).toString("hex"),

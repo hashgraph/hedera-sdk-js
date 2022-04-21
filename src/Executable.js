@@ -316,7 +316,7 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async executeWithSigner(signer) {
-        return signer.sendRequest(this);
+        return signer.call(this);
     }
 
     /**

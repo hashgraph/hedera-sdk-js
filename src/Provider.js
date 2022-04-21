@@ -32,7 +32,7 @@
  * @property {(accountId: AccountId | string) => Promise<TransactionRecord[]>} getAccountRecords
  * @property {(transactionId: TransactionId | string) => Promise<TransactionReceipt>} getTransactionReceipt
  * @property {(response: TransactionResponse) => Promise<TransactionReceipt>} waitForReceipt
- * @property {<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>) => Promise<OutputT>} sendRequest
+ * @property {<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>) => Promise<OutputT>} call
  */
 
 export default {};
