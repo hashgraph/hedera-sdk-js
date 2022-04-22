@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.13.0-beta.1
 
+### Fixed
+ 
+ * `TopicUpdateTransaction` should be able to call [get|set]ExpirationTime().
+ * `Status` should contain a return code for 314. 
+
 ### Added 
 
  * `ContractFunctionResult.[gas|amount|functionParameters]`
