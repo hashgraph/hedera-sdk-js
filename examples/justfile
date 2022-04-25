@@ -1,0 +1,23 @@
+export PATH := "./node_modules/.bin:" + env_var('PATH')
+
+default:
+    @just --choose
+
+install:
+    @pnpm i
+
+lint: lint-types lint-format lint-js
+
+lint-types:
+    tsc
+
+lint-format:
+    prettier "*.js" --check > /dev/null
+
+lint-js:
+    eslint --fix "*.js"
+
+format:
+    prettier "*.js" --write > /dev/null
+
+test: install format lint

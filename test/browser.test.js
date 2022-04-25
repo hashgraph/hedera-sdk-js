@@ -1,8 +1,6 @@
-import puppeteer from "puppeteer";
+import { test, expect } from "@playwright/test";
 
-(async () => {
-    const browser = await puppeteer.launch({ dupio: true, headless: true });
-    const page = await browser.newPage();
+test("can execute SDK within browser", async function ({ page }) {
     page.on("pageerror", async (message) => {
         await browser.close();
         throw new Error(message);
@@ -11,7 +9,7 @@ import puppeteer from "puppeteer";
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const tests = await page.evaluate(() => {
-        const tests = Array.from(document.querySelectorAll(".test"))
+        return Array.from(document.querySelectorAll(".test"))
             .map((test) => {
                 const error = test.querySelector(".error");
                 return {
@@ -19,24 +17,10 @@ import puppeteer from "puppeteer";
                     error: error != null ? error.innerText.trim() : null,
                 };
             });
-        return tests;
     });
 
-    let error = false;
-    
-    for (const test of tests) {
-        if (test.error != null) {
-            error = true;
-            console.log(`❌ ${test.name}`);
-            console.log(`${test.error}`);
-        // } else {
-        //     console.log(`✔ ${test.name}`);
-        }
+    for (const t of tests) {
+        expect(t.error).toBeNull();
     }
 
-    await browser.close();
-
-    if (error) {
-        process.exit(-1);
-    }
-})();
+});

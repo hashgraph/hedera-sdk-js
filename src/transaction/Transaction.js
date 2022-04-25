@@ -704,6 +704,9 @@ export default class Transaction extends Executable {
         );
     }
 
+    /**
+     * @internal
+     */
     _buildSignedTransactions() {
         if (this._signedTransactions.locked) {
             return;
@@ -883,6 +886,7 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * @protected
      * @returns {TransactionId}
      */
     _getTransactionId() {
@@ -982,6 +986,9 @@ export default class Transaction extends Executable {
         return signedTransaction;
     }
 
+    /**
+     * @internal
+     */
     _buildNewTransactionIdList() {
         if (this._transactionIds.locked || this._operator == null) {
             return;
@@ -995,12 +1002,18 @@ export default class Transaction extends Executable {
         this._transactionIds.set(this._transactionIds.index, transactionId);
     }
 
+    /**
+     * @internal
+     */
     _buildAllTransactions() {
         for (let i = 0; i < this._signedTransactions.length; i++) {
             this._buildTransaction(i);
         }
     }
 
+    /**
+     * @internal
+     */
     async _buildAllTransactionsAsync() {
         if (!this._signOnDemand) {
             this._buildAllTransactions();
@@ -1143,6 +1156,7 @@ export default class Transaction extends Executable {
 
     /**
      * @override
+     * @internal
      * @returns {AccountId}
      */
     _getNodeAccountId() {

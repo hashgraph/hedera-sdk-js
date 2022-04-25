@@ -69,22 +69,39 @@ export default class Executable {
          */
         this._nodeAccountIds = new List();
 
+        /**
+         * @internal
+         */
         this._signOnDemand = false;
 
-        /** @type {number | null} */
+        /**
+         * @internal
+         * @type {number | null}
+         */
         this._minBackoff = null;
 
-        /** @type {number | null} */
+        /**
+         * @internal
+         * @type {number | null}
+         */
         this._maxBackoff = null;
 
         /**
+         * @internal
          * @type {ClientOperator | null}
          */
         this._operator = null;
 
-        /** @type {number | null} */
+        /**
+         * @internal
+         * @type {number | null}
+         */
         this._requestTimeout = null;
 
+        /**
+         * @internal
+         * @type {number | null}
+         */
         this._grpcDeadline = null;
     }
 
@@ -276,6 +293,7 @@ export default class Executable {
 
     /**
      * @abstract
+     * @internal
      * @returns {string}
      */
     _getLogId() {
@@ -317,6 +335,7 @@ export default class Executable {
     }
 
     /**
+     * @internal
      * @param {AccountId} accountId
      * @param {PublicKey} publicKey
      * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner

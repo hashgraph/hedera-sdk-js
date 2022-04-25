@@ -33,20 +33,6 @@
         "last 1 Chrome versions",
         "last 1 Firefox versions"
     ],
-    "scripts": {
-        "docs": "typedoc --theme minimal --mode modules --excludeNotExported --excludePrivate --excludeProtected --out docs --listInvalidSymbolLinks",
-        "cp:ts": "copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/",
-        "compile": "run-s compile:proto compile:js",
-        "compile:js": "babel src -d lib",
-        "compile:proto": "./generate_protos.sh",
-        "lint": "run-s lint:*",
-        "lint:types": "tsc",
-        "lint:format": "prettier \"*.json\" \"src/*.js\" \"src/*.ts\" --check",
-        "lint:js": "eslint --fix \"src/**/*.js\"",
-        "format": "prettier \"*.json\" \"src/*.js\" \"src/*.ts\" --write",
-        "build": "run-s compile cp:ts lint",
-        "prepare": "run-s compile cp:ts"
-    },
     "dependencies": {
         "long": "^4.0.0",
         "protobufjs": "^6.11.2"
