@@ -117,7 +117,7 @@ export default class ContractCreateTransaction extends Transaction {
          * @private
          * @type {?AccountId}
          */
-        this._autoRenewAccountId;
+        this._autoRenewAccountId = null;
 
         this._defaultMaxTransactionFee = new Hbar(20);
 
