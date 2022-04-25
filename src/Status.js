@@ -585,6 +585,16 @@ export default class Status {
                 return "WRONG_NONCE";
             case Status.AccessListUnsupported:
                 return "ACCESS_LIST_UNSUPPORTED";
+            case Status.SchedulePendingExpiration:
+                return "SCHEDULE_PENDING_EXPIRATION";
+            case Status.ContractIsTokenTreasury:
+                return "CONTRACT_IS_TOKEN_TREASURY";
+            case Status.ContractExpiredAndPendingRemoval:
+                return "CONTRACT_EXPIRED_AND_PENDING_REMOVAL";
+            case Status.ContractHasNoAutoRenewAccount:
+                return "CONTRACT_HAS_NO_AUTO_RENEW_ACCOUNT";
+            case Status.PermanentRemovalRequiresSystemInitiation:
+                return "PERMANENT_REMOVAL_REQUIRES_SYSTEM_INITIATION";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1141,13 +1151,25 @@ export default class Status {
                 return Status.WrongNonce;
             case 313:
                 return Status.AccessListUnsupported;
+            case 314:   
+                return Status.SchedulePendingExpiration;
+            case 315:
+                return Status.ContractIsTokenTreasury;
+            case 316:
+                return Status.ContractHasNonZeroTokenBalances;
+            case 317:
+                return Status.ContractExpiredAndPendingRemoval;
+            case 318:
+                return Status.ContractHasNoAutoRenewAccount;
+            case 319:
+                 return Status.PermanentRemovalRequiresSystemInitiation;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
                 );
         }
     }
-
+     
     /**
      * @returns {HashgraphProto.proto.ResponseCodeEnum}
      */
@@ -2551,3 +2573,36 @@ Status.WrongNonce = new Status(312);
  * The ethereum transaction specified an access list, which the network does not support.
  */
 Status.AccessListUnsupported = new Status(313);
+
+/**
+ * A schedule being signed or deleted has passed it's expiration date
+ * and is pending execution if needed and then expiration.
+ */
+Status.SchedulePendingExpiration = new Status(314);
+
+/**
+ * A selfdestruct or ContractDelete targeted a contract that is a token treasury.
+ */
+Status.ContractIsTokenTreasury = new Status(315);
+
+/**
+ * A selfdestruct or ContractDelete targeted a contract with non-zero token balances.
+ */
+Status.ContractHasNonZeroTokenBalances = new Status(316);
+
+/**
+ * A contract referenced by a transaction is "detached"; that is, expired and lacking any
+ * hbar funds for auto-renewal payment---but still within its post-expiry grace period.
+ */
+Status.ContractExpiredAndPendingRemoval = new Status(317);
+
+/**
+ * A ContractUpdate requested removal of a contract's auto-renew account, but that contract has  
+ * no auto-renew account.
+ */
+Status.ContractHasNoAutoRenewAccount = new Status(318);
+
+/**
+ * A delete transaction submitted via HAPI set permanent_removal=true
+ */
+Status.PermanentRemovalRequiresSystemInitiation = new Status(319);
