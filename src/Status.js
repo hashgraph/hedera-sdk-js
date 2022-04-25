@@ -589,6 +589,8 @@ export default class Status {
                 return "SCHEDULE_PENDING_EXPIRATION";
             case Status.ContractIsTokenTreasury:
                 return "CONTRACT_IS_TOKEN_TREASURY";
+            case Status.ContractHasNonZeroTokenBalances:
+                return "CONTRACT_HAS_NON_ZERO_TOKEN_BALANCES";
             case Status.ContractExpiredAndPendingRemoval:
                 return "CONTRACT_EXPIRED_AND_PENDING_REMOVAL";
             case Status.ContractHasNoAutoRenewAccount:
