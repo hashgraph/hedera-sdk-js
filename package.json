@@ -80,12 +80,13 @@
     "dependencies": {
         "@grpc/grpc-js": "^1.6.3",
         "@hashgraph/cryptography": "^1.1.2",
-        "@hashgraph/proto": "2.4.0",
+        "@hashgraph/proto": "link:packages/proto",
         "bignumber.js": "^9.0.2",
         "crypto-js": "^4.1.1",
         "js-base64": "^3.7.2",
         "js-logger": "^1.6.1",
         "long": "^4.0.0",
+        "proto": "link:pacakges/proto",
         "protobufjs": "^6.11.2",
         "utf8": "^3.0.0"
     },
