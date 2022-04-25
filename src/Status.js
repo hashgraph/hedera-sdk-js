@@ -585,6 +585,8 @@ export default class Status {
                 return "WRONG_NONCE";
             case Status.AccessListUnsupported:
                 return "ACCESS_LIST_UNSUPPORTED";
+            case Status.SchedulePendingExpiration:
+                return "SCHEDULE_PENDING_EXPIRATION";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1141,6 +1143,8 @@ export default class Status {
                 return Status.WrongNonce;
             case 313:
                 return Status.AccessListUnsupported;
+            case 314:
+                return Status.SchedulePendingExpiration;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2551,3 +2555,8 @@ Status.WrongNonce = new Status(312);
  * The ethereum transaction specified an access list, which the network does not support.
  */
 Status.AccessListUnsupported = new Status(313);
+
+/**
+ * The scheduled transaction is pending expiration.
+ */
+Status.SchedulePendingExpiration = new Status(314);
