@@ -23,16 +23,7 @@ import Hbar from "../Hbar.js";
 import TokenId from "../token/TokenId.js";
 import TokenBalanceMap from "./TokenBalanceMap.js";
 import TokenDecimalMap from "./TokenDecimalMap.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.ITimestamp} HashgraphProto.proto.ITimestamp
- * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
- * @typedef {import("@hashgraph/proto").proto.ICryptoGetAccountBalanceResponse} HashgraphProto.proto.ICryptoGetAccountBalanceResponse
- * @typedef {import("@hashgraph/proto").proto.IKey} HashgraphProto.proto.IKey
- * @typedef {import("@hashgraph/proto").proto.ITokenID} HashgraphProto.proto.ITokenID
- * @typedef {import("@hashgraph/proto").proto.ITokenBalance} HashgraphProto.proto.ITokenBalance
- */
+import * as HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {object} TokenBalanceJson
@@ -70,6 +61,16 @@ export default class AccountBalance {
         this.tokenDecimals = props.tokenDecimals;
 
         Object.freeze(this);
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {AccountBalance}
+     */
+    static fromBytes(bytes) {
+        return AccountBalance._fromProtobuf(
+            HashgraphProto.proto.CryptoGetAccountBalanceResponse.decode(bytes)
+        );
     }
 
     /**
@@ -131,6 +132,15 @@ export default class AccountBalance {
             balance: this.hbars.toTinybars(),
             tokenBalances: list,
         };
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return HashgraphProto.proto.CryptoGetAccountBalanceResponse.encode(
+            this._toProtobuf()
+        ).finish();
     }
 
     /**

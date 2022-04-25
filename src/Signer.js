@@ -56,7 +56,7 @@
  * @property {(transaction: Transaction) => Promise<Transaction>} signTransaction
  * @property {(transaction: Transaction) => Promise<Transaction>} checkTransaction
  * @property {(transaction: Transaction) => Promise<Transaction>} populateTransaction
- * @property {<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>) => Promise<OutputT>} sendRequest
+ * @property {<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>) => Promise<OutputT>} call
  */
 
 export default {};
