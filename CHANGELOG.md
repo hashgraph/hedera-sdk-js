@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `ContractCreateTransaction.[autoRenewAccountId]`
  * `ContractUpdateTransaction.[permanentRemoval]`
  * `ContractDeleteTransaction.[autoRenewAccountId]`
+ * Status response codes for `314-319`
 ## v2.13.0
 
 ### Added 
