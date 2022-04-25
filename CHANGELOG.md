@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `ContractUpdateTransaction.[permanentRemoval]`
  * `ContractDeleteTransaction.[autoRenewAccountId]`
  * Status response codes for `314-319`
+
+## v2.13.1
+
+### Fixed
+
+ * `AccountId.clone()` should clone the `aliasKey`
+
 ## v2.13.0
 
 ### Added 
@@ -41,6 +48,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `LocalWallet` - Use `Wallet` instead
 
 ## v2.13.0-beta.1
+
+### Fixed
+ 
+ * `TopicUpdateTransaction` should be able to call [get|set]ExpirationTime().
+ * `Status` should contain a return code for 314. 
 
 ### Added 
 

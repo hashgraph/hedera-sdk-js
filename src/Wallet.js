@@ -168,7 +168,7 @@ export default class Wallet {
      * @returns {Promise<AccountBalance>}
      */
     getAccountBalance() {
-        return this.sendRequest(
+        return this.call(
             new AccountBalanceQuery().setAccountId(this.accountId)
         );
     }
@@ -178,9 +178,7 @@ export default class Wallet {
      * @returns {Promise<AccountInfo>}
      */
     getAccountInfo() {
-        return this.sendRequest(
-            new AccountInfoQuery().setAccountId(this.accountId)
-        );
+        return this.call(new AccountInfoQuery().setAccountId(this.accountId));
     }
 
     /**
@@ -188,7 +186,7 @@ export default class Wallet {
      * @returns {Promise<TransactionRecord[]>}
      */
     getAccountRecords() {
-        return this.sendRequest(
+        return this.call(
             new AccountRecordsQuery().setAccountId(this.accountId)
         );
     }
@@ -270,14 +268,14 @@ export default class Wallet {
      * @param {Executable<RequestT, ResponseT, OutputT>} request
      * @returns {Promise<OutputT>}
      */
-    sendRequest(request) {
+    call(request) {
         if (this.provider == null) {
             throw new Error(
                 "cannot send request with an wallet that doesn't contain a provider"
             );
         }
 
-        return this.provider.sendRequest(
+        return this.provider.call(
             request._setOperatorWith(
                 this.accountId,
                 this.publicKey,

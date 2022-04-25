@@ -143,7 +143,7 @@ export default class LocalProvider {
      * @param {Executable<RequestT, ResponseT, OutputT>} request
      * @returns {Promise<OutputT>}
      */
-    sendRequest(request) {
+    call(request) {
         return request.execute(this._client);
     }
 }

@@ -9,7 +9,7 @@ import {
     TransferTransaction,
 } from "@hashgraph/sdk";
 
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -86,20 +86,21 @@ async function main() {
     ).toAccountId(0, 0);
 
     console.log("Transferring some Hbar to the new account");
-    await (
-        await new TransferTransaction()
-            .addHbarTransfer(client.operatorAccountId, new Hbar(10).negated())
-            .addHbarTransfer(aliasAccountId, new Hbar(10))
-            .execute(client)
-    ).getReceipt(client);
+    const response = await new TransferTransaction()
+        .addHbarTransfer(client.operatorAccountId, new Hbar(10).negated())
+        .addHbarTransfer(aliasAccountId, new Hbar(10))
+        .execute(client);
+    await response.getReceipt(client);
 
     const balance = await new AccountBalanceQuery()
+        .setNodeAccountIds([response.nodeId])
         .setAccountId(aliasAccountId)
         .execute(client);
 
     console.log(`Balances of the new account: ${balance.toString()}`);
 
     const info = await new AccountInfoQuery()
+        .setNodeAccountIds([response.nodeId])
         .setAccountId(aliasAccountId)
         .execute(client);
 

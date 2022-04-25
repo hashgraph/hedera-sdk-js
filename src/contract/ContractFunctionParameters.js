@@ -1763,13 +1763,16 @@ function argumentToBytes(param, ty) {
                     : utf8.encode(/** @type {string} */ (param));
 
             // Resize value to a 32 byte boundary if needed
-            if (
-                Math.floor(par.length / 32) >= 0 &&
-                Math.floor(par.length % 32) !== 0
-            ) {
-                value = new Uint8Array(
-                    (Math.floor(par.length / 32) + 1) * 32 + 32
-                );
+            if (Math.floor(par.length / 32) >= 0) {
+                if (Math.floor(par.length % 32) !== 0) {
+                    value = new Uint8Array(
+                        (Math.floor(par.length / 32) + 1) * 32 + 32
+                    );
+                } else {
+                    value = new Uint8Array(
+                        Math.floor(par.length / 32) * 32 + 32
+                    );
+                }
             } else {
                 value = new Uint8Array(64);
             }

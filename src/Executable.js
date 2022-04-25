@@ -336,7 +336,7 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async executeWithSigner(signer) {
-        return signer.sendRequest(this);
+        return signer.call(this);
     }
 
     /**
@@ -489,6 +489,14 @@ export default class Executable {
                 peristentError != null ? peristentError.toString() : ""
             }`
         );
+    }
+
+    /**
+     * @abstract
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        throw new Error("not implemented");
     }
 }
 

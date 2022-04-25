@@ -173,7 +173,7 @@ export default class AccountId {
                           this.aliasKey._toProtobufKey()
                       ).finish()
                     : null,
-            accountNum: this.num,
+            accountNum: this.aliasKey != null ? null : this.num,
             shardNum: this.shard,
             realmNum: this.realm,
         };
@@ -238,6 +238,7 @@ export default class AccountId {
     clone() {
         const id = new AccountId(this);
         id._checksum = this._checksum;
+        id.aliasKey = this.aliasKey;
         return id;
     }
 
@@ -270,7 +271,7 @@ export default class AccountId {
         } else if (this.aliasKey == null && other.aliasKey == null) {
             return this.num.compare(other.num);
         } else {
-            return 0;
+            return 1;
         }
     }
 }
