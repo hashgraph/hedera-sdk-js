@@ -204,8 +204,9 @@ export default class Wallet {
      * @returns {Promise<Transaction>}
      */
     checkTransaction(transaction) {
-        const transactionId = transaction._getTransactionId();
+        const transactionId = transaction.transactionId;
         if (
+            transactionId != null &&
             transactionId.accountId != null &&
             transactionId.accountId.compare(this.accountId) != 0
         ) {
