@@ -99,6 +99,7 @@
         "babel-plugin-module-rewrite": "^0.2.0",
         "chai": "^4.3.6",
         "chromedriver": "^100.0.0",
+        "dpdm": "^3.9.0",
         "eslint": "^8.13.0",
         "eslint-plugin-chai-expect": "^3.0.0",
         "eslint-plugin-compat": "^4.0.2",
