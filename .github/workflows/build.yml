@@ -22,6 +22,10 @@ jobs:
         with:
           submodules: recursive
 
+      - uses: extractions/setup-just@v1
+        with:
+          just-version: 1.1.2
+
       - name: Cache pnpm modules
         uses: actions/cache@v2
         env:
@@ -41,21 +45,13 @@ jobs:
           version: 6.0.2
       
       - name: Build @hashgraph/cryptography
-        run: |
-          cd packages/cryptography
-          pnpm install
-          pnpm compile
+        run: just -f pacakges/cryptography build
 
       - name: Build @hashgraph/proto
-        run: |
-          cd packages/proto
-          pnpm install
-          pnpm compile
+        run: just -f pacakges/proto build
 
       - name: Build @hashgraph/sdk
-        run: |
-          pnpm install
-          pnpm compile
+        run: just build
 
   lint:
     runs-on: ubuntu-latest
@@ -87,22 +83,13 @@ jobs:
           version: 6.0.2
 
       - name: Build @hashgraph/cryptography
-        run: |
-          cd packages/cryptography
-          pnpm install
-          pnpm compile
+        run: just -f pacakges/cryptography build
 
       - name: Build @hashgraph/proto
-        run: |
-          cd packages/proto
-          pnpm install
-          pnpm compile
+        run: just -f packges/proto build
 
       - name: Lint @hashgraph/sdk
-        run: |
-          pnpm install
-          pnpm compile
-          pnpm lint 
+        run: just build
              
   test-unit-node:
     runs-on: ubuntu-latest
@@ -134,19 +121,10 @@ jobs:
           version: 6.0.2
 
       - name: Build @hashgraph/cryptography
-        run: |
-          cd packages/cryptography
-          pnpm install
-          pnpm compile
+        run: just -f packages/cryptography build
 
       - name: Build @hashgraph/proto
-        run: |
-          cd packages/proto
-          pnpm install
-          pnpm compile
+        run: just -f packages/proto build
 
       - name: Unit Test @hashgraph/sdk
-        run: |
-          pnpm install
-          pnpm compile
-          pnpm test:unit:node
+        run: just test-unit

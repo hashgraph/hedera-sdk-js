@@ -32,10 +32,12 @@ format:
 bundle-browser:
     vite -c vite.config.cjs build
 
-test-unit-node:
+test-unit: test-unit-node test-unit-browser
+
+test-unit-node: build
     mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js"
 
-test-integration-node:
+test-integration-node: build
     nyc mocha -r @babel/register -r chai/register-expect.js "test/integration/AccountCreate*.js"
 
 test-unit-browser:
