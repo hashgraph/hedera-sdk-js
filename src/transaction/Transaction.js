@@ -474,15 +474,13 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * @returns {TransactionId}
+     * @returns {?TransactionId}
      */
     get transactionId() {
         this._transactionIds.setLocked();
 
         if (this._transactionIds.isEmpty) {
-            throw new Error(
-                "transaction must have been frozen before getting the transaction ID, try calling `freeze`"
-            );
+            return null;
         }
 
         return this._transactionIds.current;
@@ -886,7 +884,13 @@ export default class Transaction extends Executable {
      * @returns {TransactionId}
      */
     _getTransactionId() {
-        return this.transactionId;
+        const transactionId = this.transactionId;
+        if (transactionId == null) {
+            throw new Error(
+                "transaction must have been frozen before getting the transaction ID, try calling `freeze`"
+            );
+        }
+        return transactionId;
     }
 
     /**
@@ -1130,7 +1134,7 @@ export default class Transaction extends Executable {
         const transactionHash = await sha384.digest(
             /** @type {Uint8Array} */ (request.signedTransactionBytes)
         );
-        const transactionId = this.transactionId;
+        const transactionId = this._getTransactionId();
 
         this._transactionIds.advance();
 
