@@ -1,7 +1,9 @@
-import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 
-const config: PlaywrightTestConfig = {
+/**
+ * @type {import("@playwright/test").PlaywrightTestConfig}
+ */
+const config = {
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   use: {
