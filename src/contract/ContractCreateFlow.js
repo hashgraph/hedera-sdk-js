@@ -182,6 +182,39 @@ export default class ContractCreateFlow {
     }
 
     /**
+     * @returns {?AccountId}
+     */
+    get autoRenewAccountId() {
+        return this._contractCreate.autoRenewAccountId;
+    }
+
+    /**
+     * @param {AccountId} autoRenewAccountId 
+     * @returns {this}
+     */
+    setAutoRenewAccountId(autoRenewAccountId) {
+        this._contractCreate.setAutoRenewAccountId(autoRenewAccountId);
+        return this;
+    }
+
+    /**
+     * @returns {?number}
+     */
+    get maxAutomaticTokenAssociation() {
+        return this._contractCreate.maxAutomaticTokenAssociation;
+    }
+
+    /**
+     * @param {number} maxAutomaticTokenAssociation 
+     * @returns {this}
+     */
+    setMaxAutomaticTokenAssociation(maxAutomaticTokenAssociation) {
+        this._contractCreate.setMaxAutomaticTokenAssociation(maxAutomaticTokenAssociation);
+        
+        return this;
+    }
+
+    /**
      * @template {Channel} ChannelT
      * @template MirrorChannelT
      * @param {import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
