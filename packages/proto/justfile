@@ -19,19 +19,19 @@ build: install
 update:
     cd src/proto && git pull origin main
 
-lint: lint-types lint-dpdm lint-format lint-js
+lint: lint-types lint-format lint-js
 
 lint-types:
     tsc
 
-lint-dpdm:
-    dpdm src/index.js --circular true --tree false --warning false > /dev/null
-
 lint-format:
-    prettier src "test/unit/*.js" "test/integration/*.js" "*.json" "src/*.js" --check > /dev/null
+    prettier "*.json" "src/*.js" --check > /dev/null
 
 lint-js:
-    eslint --fix "src/**/*.js" "test/integration/**/*.js" "test/unit/**/*.js"
+    eslint --fix "src/**/*.js"
 
 format:
-    prettier src "test/unit/*.js" "test/integration/*.js" "*.json" "src/*.js" --write > /dev/null
+    prettier "*.json" "src/*.js" --write > /dev/null
+
+publish: build format lint
+    pnpm publish
