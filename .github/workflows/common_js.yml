@@ -22,6 +22,10 @@ jobs:
         with:
           submodules: recursive
 
+      - uses: extractions/setup-just@v1
+        with:
+          just-version: 1.1.2
+
       - name: Cache pnpm modules
         uses: actions/cache@v2
         env:
@@ -41,38 +45,18 @@ jobs:
           version: 6.0.2
 
       - name: Build @hashgraph/cryptography
-        run: |
-          cd packages/cryptography
-          pnpm install
-          pnpm compile
+        run: just -f packages/cryptography/justfile build
 
       - name: Build @hashgraph/proto
-        run: |
-          cd packages/proto
-          pnpm install
-          pnpm compile
+        run: just -f packages/proto/justfile build
 
       - name: Build @hashgraph/sdk
-        run: |
-          pnpm install
-          pnpm compile
-
-      - name: Install yalc
-        run: pnpm install -g yalc
-
-      - name: Install detox
-        run: pnpm install -g detox-cli
-
-      - name: Locally Publish
-        run: yalc publish --no-scripts
+        run: just build
 
       - name: Install dependencies
         working-directory: common_js_test
-        run: |
-          yalc add "@hashgraph/sdk"
-          pnpm i
+        run: just install
           
       - name: Test
         working-directory: common_js_test
-        run: |
-          pnpm test
+        run: just test

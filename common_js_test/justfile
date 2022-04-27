@@ -1,0 +1,10 @@
+export PATH := "./node_modules/.bin:" + env_var('PATH')
+
+default:
+    @just --choose
+
+install:
+    @pnpm i
+
+test: install
+    mocha -r @babel/register -r chai/register-expect.js "src/test.js"
