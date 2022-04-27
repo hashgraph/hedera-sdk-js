@@ -1074,7 +1074,7 @@ export default class Transaction extends Executable {
      * @internal
      * @param {HashgraphProto.proto.ITransaction} request
      * @param {HashgraphProto.proto.ITransactionResponse} response
-     * @returns {ExecutionState}
+     * @returns {[Status, ExecutionState]}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _shouldRetry(request, response) {
@@ -1094,21 +1094,21 @@ export default class Transaction extends Executable {
             case Status.Busy:
             case Status.Unknown:
             case Status.PlatformTransactionNotCreated:
-                return ExecutionState.Retry;
+                return [status, ExecutionState.Retry];
             case Status.Ok:
-                return ExecutionState.Finished;
+                return [status, ExecutionState.Finished];
             case Status.TransactionExpired:
                 if (
                     this._regenerateTransactionId == null ||
                     this._regenerateTransactionId
                 ) {
                     this._buildNewTransactionIdList();
-                    return ExecutionState.Retry;
+                    return [status, ExecutionState.Retry];
                 } else {
-                    return ExecutionState.Error;
+                    return [status, ExecutionState.Error];
                 }
             default:
-                return ExecutionState.Error;
+                return [status, ExecutionState.Error];
         }
     }
 

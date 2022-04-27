@@ -34,10 +34,10 @@ bundle-browser:
 
 test-unit: test-unit-node test-unit-browser
 
-test-unit-node: build
+test-unit-node:
     mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js"
 
-test-integration-node: build
+test-integration-node:
     nyc mocha -r @babel/register -r chai/register-expect.js "test/integration/AccountCreate*.js"
 
 test-unit-browser:
