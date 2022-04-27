@@ -53,9 +53,9 @@
  * @property {() => Promise<AccountBalance>} getAccountBalance
  * @property {() => Promise<AccountInfo>} getAccountInfo
  * @property {() => Promise<TransactionRecord[]>} getAccountRecords
- * @property {(transaction: Transaction) => Promise<Transaction>} signTransaction
- * @property {(transaction: Transaction) => Promise<Transaction>} checkTransaction
- * @property {(transaction: Transaction) => Promise<Transaction>} populateTransaction
+ * @property {<T extends Transaction>(transaction: T) => Promise<T>} signTransaction
+ * @property {<T extends Transaction>(transaction: T) => Promise<T>} checkTransaction
+ * @property {<T extends Transaction>(transaction: T) => Promise<T>} populateTransaction
  * @property {<RequestT, ResponseT, OutputT>(request: Executable<RequestT, ResponseT, OutputT>) => Promise<OutputT>} call
  */
 

@@ -192,16 +192,18 @@ export default class Wallet {
     }
 
     /**
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
+     * @template {Transaction} T
+     * @param {T} transaction
+     * @returns {Promise<T>}
      */
     signTransaction(transaction) {
         return transaction.signWith(this.publicKey, this.signer);
     }
 
     /**
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
+     * @template {Transaction} T
+     * @param {T} transaction
+     * @returns {Promise<T>}
      */
     checkTransaction(transaction) {
         const transactionId = transaction.transactionId;
@@ -241,8 +243,9 @@ export default class Wallet {
     }
 
     /**
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
+     * @template {Transaction} T
+     * @param {T} transaction
+     * @returns {Promise<T>}
      */
     populateTransaction(transaction) {
         transaction.setTransactionId(TransactionId.generate(this.accountId));
