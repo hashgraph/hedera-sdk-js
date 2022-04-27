@@ -116,4 +116,11 @@ export default class TransactionResponse {
             transactionId: this.transactionId.toString(),
         };
     }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
+    }
 }

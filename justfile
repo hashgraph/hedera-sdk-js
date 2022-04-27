@@ -59,4 +59,5 @@ publish: release-test
     pnpm publish
 
 update-proto:
-    just -f packages/proto update
+    just -f packages/proto/justfile update
+    pnpm add link:packages/proto
