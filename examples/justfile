@@ -4,7 +4,9 @@ default:
     @just --choose
 
 install:
-    @pnpm i
+    pnpm i
+
+build: install format lint
 
 lint: lint-types lint-format lint-js
 

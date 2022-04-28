@@ -9,7 +9,7 @@ install:
 docs:
     typedoc --excludeInternal --excludePrivate --excludeProtected --out docs --validation.invalidLink --entryPoints src/index.js src/browser.js src/native.js
 
-build: install lint
+build: install format lint
     babel src -d lib --out-file-extension .cjs
 
 lint: install lint-types lint-dpdm lint-format lint-js
