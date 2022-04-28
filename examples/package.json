@@ -14,7 +14,7 @@
         "node": ">=10.17.0"
     },
     "dependencies": {
-        "@hashgraph/sdk": "link:..",
+        "@hashgraph/sdk": "2.13.0",
         "dotenv": "^14.3.2"
     },
     "devDependencies": {

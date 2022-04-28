@@ -7,10 +7,15 @@ import {
     Hbar,
     AccountBalanceQuery,
     TransferTransaction,
+    ScheduleCreateTransaction,
     ScheduleSignTransaction,
     ScheduleInfoQuery,
     TransactionRecordQuery,
 } from "@hashgraph/sdk";
+
+new ScheduleCreateTransaction().setScheduledTransaction(
+    new TransferTransaction()
+);
 
 import dotenv from "dotenv";
 
