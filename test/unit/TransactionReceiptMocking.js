@@ -58,7 +58,9 @@ describe("TransactionReceiptMocking", function () {
                 .setMaxAttempts(2)
                 .execute(client);
         } catch (error) {
-            err = error.message === "max attempts of 2 was reached for request with last error being: RECEIPT_NOT_FOUND";
+            err =
+                error.message ===
+                "max attempts of 2 was reached for request with last error being: RECEIPT_NOT_FOUND";
         }
 
         expect(err).to.be.true;
