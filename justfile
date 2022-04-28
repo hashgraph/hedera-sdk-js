@@ -56,8 +56,8 @@ release-test: install build format lint test-unit-node test-unit-browser
     just -f examples/simple_rest_signature_provider/justfile build
     just -f common_js_test/justfile build test
 
-publish: release-test
-    pnpm publish
+publish TAG="latest": release-test
+    pnpm publish --tag "{{TAG}}"
 
 update-proto:
     just -f packages/proto/justfile update
