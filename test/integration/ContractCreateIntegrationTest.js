@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import exp from "constants";
 import {
     AccountId,
     ContractCreateTransaction,

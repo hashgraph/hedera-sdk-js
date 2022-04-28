@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import {
+    AccountId,
     ContractCreateTransaction,
     ContractDeleteTransaction,
     ContractFunctionParameters,

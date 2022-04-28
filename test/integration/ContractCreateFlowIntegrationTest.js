@@ -1,4 +1,5 @@
 import {
+    AccountId,
     ContractCreateFlow,
     ContractFunctionParameters,
 } from "../../src/exports.js";
