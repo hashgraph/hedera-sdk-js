@@ -22,6 +22,8 @@ describe("ContractCreateFlow", function () {
                 new ContractFunctionParameters().addString("Hello from Hedera.")
             )
             .setContractMemo("[e2e::ContractCreateTransaction]")
+            .setAutoRenewAccountId(AccountId.fromString("0.0.6642"))
+            .setMaxAutomaticTokenAssociation(999)
             .execute(env.client);
     });
 });

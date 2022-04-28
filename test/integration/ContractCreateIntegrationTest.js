@@ -1,4 +1,7 @@
+import { expect } from "chai";
+import exp from "constants";
 import {
+    AccountId,
     ContractCreateTransaction,
     ContractDeleteTransaction,
     ContractFunctionParameters,
@@ -41,6 +44,8 @@ describe("ContractCreate", function () {
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
+            .setAutoRenewAccountId(AccountId(0,0,0))
+            .setMaxAutomaticTokenAssociations(1)
             .execute(env.client);
 
         receipt = await response.getReceipt(env.client);
@@ -69,6 +74,8 @@ describe("ContractCreate", function () {
         expect(info.contractMemo).to.be.equal(
             "[e2e::ContractCreateTransaction]"
         );
+        expect(info.autoRenewAccountId).to.be.equal((0,0,0));
+        expect(info.maxAutomaticTokenAssociations).to.be.equal(1);
 
         await (
             await new ContractDeleteTransaction()
@@ -112,6 +119,8 @@ describe("ContractCreate", function () {
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
+            .setAutoRenewAccountId(AccountId(0,0,0))
+            .setMaxAutomaticTokenAssociations(1)
             .execute(env.client);
 
         receipt = await response.getReceipt(env.client);
@@ -140,6 +149,8 @@ describe("ContractCreate", function () {
         expect(info.contractMemo).to.be.equal(
             "[e2e::ContractCreateTransaction]"
         );
+        expect(info.autoRenewAccountId).to.be.equal((0,0,0));
+        expect(info.maxAutomaticTokenAssociations).to.be.equal(1);
 
         let err = false;
 
@@ -192,6 +203,8 @@ describe("ContractCreate", function () {
                     )
                     .setBytecodeFileId(file)
                     .setContractMemo("[e2e::ContractCreateTransaction]")
+                    .setAutoRenewAccountId(AccountId(0,0,0))
+                    .setMaxAutomaticTokenAssociations(1)
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
@@ -233,6 +246,8 @@ describe("ContractCreate", function () {
                     .setGas(100000)
                     .setBytecodeFileId(file)
                     .setContractMemo("[e2e::ContractCreateTransaction]")
+                    .setAutoRenewAccountId(AccountId.fromString("0.0.6642"))
+                    .setMaxAutomaticTokenAssociations(999)
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
@@ -265,6 +280,8 @@ describe("ContractCreate", function () {
                         )
                     )
                     .setContractMemo("[e2e::ContractCreateTransaction]")
+                    .setAutoRenewAccountId(AccountId.fromString("0.0.6642"))
+                    .setMaxAutomaticTokenAssociations(999)
                     .execute(env.client)
             ).getReceipt(env.client);
         } catch (error) {
