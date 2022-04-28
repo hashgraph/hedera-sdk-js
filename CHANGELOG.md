@@ -8,9 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
- * `ContractCreateTransaction.[autoRenewAccountId]`
- * `ContractUpdateTransaction.[permanentRemoval]`
- * `ContractDeleteTransaction.[autoRenewAccountId]`
+ * ContractCreateTransaction.[get|set]maxAutomaticTokenAssociation
+ * ContractUpdateTransaction.[get|set]maxAutomaticTokenAssociation
+ * ContractCreateFlow.[get|set]maxAutomaticTokenAssociation
+ * ContractCreateFlow.[get|set]autoRenewAccountId
+ * ContractCreateFlowIntegrationTest
+ * ContractCreateTransactionIntegrationTest
+ * ContractUpdateTransactionIntegrationTest
  * Status response codes for `314-319`
 
 ## v2.13.1
