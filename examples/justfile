@@ -21,5 +21,3 @@ lint-js:
 
 format:
     prettier "*.js" --write > /dev/null
-
-test: install format lint

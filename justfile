@@ -34,8 +34,8 @@ bundle-browser:
 
 test-unit: test-unit-node test-unit-browser
 
-test-unit-node:
-    mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js"
+test-unit-node TEST=".*":
+    mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" -g "{{TEST}}"
 
 test-integration-node:
     nyc mocha -r @babel/register -r chai/register-expect.js "test/integration/AccountCreate*.js"
@@ -52,8 +52,9 @@ test-unit-browser:
     exit $PLAYWRIGHT_STATUS
 
 release-test: install build format lint test-unit-node test-unit-browser
-    just -f examples/justfile test
-    just -f common_js_test/justfile test
+    just -f examples/justfile build
+    just -f examples/simple_rest_signature_provider/justfile build
+    just -f common_js_test/justfile build test
 
 publish: release-test
     pnpm publish

@@ -325,6 +325,7 @@ export class SimpleRestSigner {
     checkTransaction(transaction) {
         const transactionId = transaction.transactionId;
         if (
+            transactionId != null &&
             transactionId.accountId != null &&
             transactionId.accountId.compare(this.accountId) != 0
         ) {
