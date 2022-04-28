@@ -119,7 +119,8 @@ export default class PublicKey extends Key {
      * @param {Transaction} transaction
      * @returns {boolean}
      */
-    verifyTransaction(transaction) { //NOSONAR
+    verifyTransaction(transaction) {
+        //NOSONAR
         console.log("Deprecated: use `@hashgraph/sdk`.PublicKey instead");
 
         transaction._requireFrozen();

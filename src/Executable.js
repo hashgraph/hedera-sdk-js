@@ -25,6 +25,7 @@ import Logger from "js-logger";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
+ * @typedef {import("./Status.js").default} Status
  * @typedef {import("./channel/Channel.js").default} Channel
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  * @typedef {import("./client/Client.js").ClientOperator} ClientOperator
@@ -69,22 +70,39 @@ export default class Executable {
          */
         this._nodeAccountIds = new List();
 
+        /**
+         * @internal
+         */
         this._signOnDemand = false;
 
-        /** @type {number | null} */
+        /**
+         * @internal
+         * @type {number | null}
+         */
         this._minBackoff = null;
 
-        /** @type {number | null} */
+        /**
+         * @internal
+         * @type {number | null}
+         */
         this._maxBackoff = null;
 
         /**
+         * @internal
          * @type {ClientOperator | null}
          */
         this._operator = null;
 
-        /** @type {number | null} */
+        /**
+         * @internal
+         * @type {number | null}
+         */
         this._requestTimeout = null;
 
+        /**
+         * @internal
+         * @type {number | null}
+         */
         this._grpcDeadline = null;
     }
 
@@ -276,6 +294,7 @@ export default class Executable {
 
     /**
      * @abstract
+     * @internal
      * @returns {string}
      */
     _getLogId() {
@@ -295,7 +314,7 @@ export default class Executable {
      * @protected
      * @param {RequestT} request
      * @param {ResponseT} response
-     * @returns {ExecutionState}
+     * @returns {[Status, ExecutionState]}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _shouldRetry(request, response) {
@@ -317,6 +336,7 @@ export default class Executable {
     }
 
     /**
+     * @internal
      * @param {AccountId} accountId
      * @param {PublicKey} publicKey
      * @param {(message: Uint8Array) => Promise<Uint8Array>} transactionSigner
@@ -336,7 +356,7 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async executeWithSigner(signer) {
-        return signer.sendRequest(this);
+        return signer.call(this);
     }
 
     /**
@@ -369,7 +389,7 @@ export default class Executable {
 
         const startTime = Date.now();
 
-        let peristentError = null;
+        let persistentError = null;
 
         for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
             if (
@@ -446,7 +466,7 @@ export default class Executable {
                 const error = GrpcServiceError._fromResponse(
                     /** @type {Error} */ (err)
                 );
-                peristentError = error;
+                persistentError = error;
                 Logger.debug(
                     `[${logId}] received gRPC error ${JSON.stringify(error)}`
                 );
@@ -465,7 +485,12 @@ export default class Executable {
 
             client._network.decreaseBackoff(node);
 
-            switch (this._shouldRetry(request, response)) {
+            const [err, shouldRetry] = this._shouldRetry(request, response);
+            if (err != null) {
+                persistentError = err;
+            }
+
+            switch (shouldRetry) {
                 case ExecutionState.Retry:
                     await delayForAttempt(
                         attempt,
@@ -486,9 +511,17 @@ export default class Executable {
 
         throw new Error(
             `max attempts of ${maxAttempts.toString()} was reached for request with last error being: ${
-                peristentError != null ? peristentError.toString() : ""
+                persistentError != null ? persistentError.toString() : ""
             }`
         );
+    }
+
+    /**
+     * @abstract
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        throw new Error("not implemented");
     }
 }
 

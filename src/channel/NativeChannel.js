@@ -52,68 +52,74 @@ export default class NativeChannel extends Channel {
     _createUnaryClient(serviceName) {
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         return async (method, requestData, callback) => {
-            const data = base64.encode(
-                new Uint8Array(encodeRequest(requestData))
-            );
+            try {
+                const data = base64.encode(
+                    new Uint8Array(encodeRequest(requestData))
+                );
 
-            const response = await fetch(
-                `${this._address}/proto.${serviceName}/${method.name}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "content-type": "application/grpc-web-text",
-                        "x-user-agent": "hedera-sdk-js/v2",
-                        "x-accept-content-transfer-encoding": "base64",
-                        "x-grpc-web": "1",
-                    },
-                    body: data,
-                }
-            );
+                const response = await fetch(
+                    `${this._address}/proto.${serviceName}/${method.name}`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "content-type": "application/grpc-web-text",
+                            "x-user-agent": "hedera-sdk-js/v2",
+                            "x-accept-content-transfer-encoding": "base64",
+                            "x-grpc-web": "1",
+                        },
+                        body: data,
+                    }
+                );
 
-            const blob = await response.blob();
+                const blob = await response.blob();
 
-            /** @type {string} */
-            const responseData = await new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(blob);
-                reader.onloadend = () => {
-                    resolve(/** @type {string} */ (reader.result));
-                };
-                reader.onerror = reject;
-            });
+                /** @type {string} */
+                const responseData = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    reader.onloadend = () => {
+                        resolve(/** @type {string} */ (reader.result));
+                    };
+                    reader.onerror = reject;
+                });
 
-            let responseBuffer;
-            if (
-                responseData.startsWith("data:application/octet-stream;base64,")
-            ) {
-                responseBuffer = base64.decode(
-                    responseData.split(
+                let responseBuffer;
+                if (
+                    responseData.startsWith(
                         "data:application/octet-stream;base64,"
-                    )[1]
-                );
-            } else if (
-                responseData.startsWith(
-                    "data:application/grpc-web+proto;base64,"
-                )
-            ) {
-                responseBuffer = base64.decode(
-                    responseData.split(
+                    )
+                ) {
+                    responseBuffer = base64.decode(
+                        responseData.split(
+                            "data:application/octet-stream;base64,"
+                        )[1]
+                    );
+                } else if (
+                    responseData.startsWith(
                         "data:application/grpc-web+proto;base64,"
-                    )[1]
+                    )
+                ) {
+                    responseBuffer = base64.decode(
+                        responseData.split(
+                            "data:application/grpc-web+proto;base64,"
+                        )[1]
+                    );
+                } else {
+                    throw new Error(
+                        `Expected response data to be base64 encode with a 'data:application/octet-stream;base64,' or 'data:application/grpc-web+proto;base64,' prefix, but found: ${responseData}`
+                    );
+                }
+
+                const unaryResponse = decodeUnaryResponse(
+                    responseBuffer.buffer,
+                    responseBuffer.byteOffset,
+                    responseBuffer.byteLength
                 );
-            } else {
-                throw new Error(
-                    `Expected response data to be base64 encode with a 'data:application/octet-stream;base64,' or 'data:application/grpc-web+proto;base64,' prefix, but found: ${responseData}`
-                );
+
+                callback(null, unaryResponse);
+            } catch (error) {
+                callback(/** @type {Error} */ (error), null);
             }
-
-            const unaryResponse = decodeUnaryResponse(
-                responseBuffer.buffer,
-                responseBuffer.byteOffset,
-                responseBuffer.byteLength
-            );
-
-            callback(null, unaryResponse);
         };
     }
 }

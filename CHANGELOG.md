@@ -4,11 +4,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v2.14.0-beta.1
+## v2.14.0-beta.2
 
 ### Added
 
  * `ContractEvmTransaction`
+
+## v2.14.0-beta.1
+
+### Added
+
+ * More status codes to `Status`
+
+### Changed
+
+ * `[Wallet|Signer|Provider].sendRequest()` -> `[Wallet|Signer|Provider].call()`
+ * `[Wallet|Signer].[sign|populate|check]Transaction()` are now generic over the parameter
+ * `Wallet.checkTransaction` should not error if the `Transaction.transactionId` is `null`
+
+### Fixed
+
+ * Bumped `@hashgraph/proto` version to correctly support account allowances
+ * `TransactionId.transactionId` accessor should not error if there is no transaction ID set and
+   instead should return a nullable `TransactionId`
+ * `ContractFunctionParameters.addBytes()` where the byte length is a factor of 32 and greater than 32
+ * `[Web|Native]Channel` should correctly propagate the error from `fetch()`
+
+## v2.13.1
+
+### Fixed
+
+ * `AccountId.clone()` should clone the `aliasKey`
 
 ## v2.13.0
 
@@ -39,6 +65,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `LocalWallet` - Use `Wallet` instead
 
 ## v2.13.0-beta.1
+
+### Fixed
+ 
+ * `TopicUpdateTransaction` should be able to call [get|set]ExpirationTime().
+ * `Status` should contain a return code for 314. 
 
 ### Added 
 

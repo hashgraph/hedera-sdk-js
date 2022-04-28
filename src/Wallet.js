@@ -168,7 +168,7 @@ export default class Wallet {
      * @returns {Promise<AccountBalance>}
      */
     getAccountBalance() {
-        return this.sendRequest(
+        return this.call(
             new AccountBalanceQuery().setAccountId(this.accountId)
         );
     }
@@ -178,9 +178,7 @@ export default class Wallet {
      * @returns {Promise<AccountInfo>}
      */
     getAccountInfo() {
-        return this.sendRequest(
-            new AccountInfoQuery().setAccountId(this.accountId)
-        );
+        return this.call(new AccountInfoQuery().setAccountId(this.accountId));
     }
 
     /**
@@ -188,26 +186,29 @@ export default class Wallet {
      * @returns {Promise<TransactionRecord[]>}
      */
     getAccountRecords() {
-        return this.sendRequest(
+        return this.call(
             new AccountRecordsQuery().setAccountId(this.accountId)
         );
     }
 
     /**
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
+     * @template {Transaction} T
+     * @param {T} transaction
+     * @returns {Promise<T>}
      */
     signTransaction(transaction) {
         return transaction.signWith(this.publicKey, this.signer);
     }
 
     /**
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
+     * @template {Transaction} T
+     * @param {T} transaction
+     * @returns {Promise<T>}
      */
     checkTransaction(transaction) {
         const transactionId = transaction.transactionId;
         if (
+            transactionId != null &&
             transactionId.accountId != null &&
             transactionId.accountId.compare(this.accountId) != 0
         ) {
@@ -242,8 +243,9 @@ export default class Wallet {
     }
 
     /**
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
+     * @template {Transaction} T
+     * @param {T} transaction
+     * @returns {Promise<T>}
      */
     populateTransaction(transaction) {
         transaction.setTransactionId(TransactionId.generate(this.accountId));
@@ -270,14 +272,14 @@ export default class Wallet {
      * @param {Executable<RequestT, ResponseT, OutputT>} request
      * @returns {Promise<OutputT>}
      */
-    sendRequest(request) {
+    call(request) {
         if (this.provider == null) {
             throw new Error(
                 "cannot send request with an wallet that doesn't contain a provider"
             );
         }
 
-        return this.provider.sendRequest(
+        return this.provider.call(
             request._setOperatorWith(
                 this.accountId,
                 this.publicKey,

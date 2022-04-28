@@ -380,7 +380,7 @@ export default class TransferTransaction extends Transaction {
 
         const account =
             accountId instanceof AccountId
-                ? accountId
+                ? accountId.clone()
                 : AccountId.fromString(accountId);
         const hbars = amount instanceof Hbar ? amount : new Hbar(amount);
 

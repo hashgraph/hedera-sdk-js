@@ -25,6 +25,7 @@ import AccountId from "../account/AccountId.js";
 import TopicId from "./TopicId.js";
 import Duration from "../Duration.js";
 import Key from "../Key.js";
+import Timestamp from "../Timestamp.js";
 
 /**
  * @namespace proto
@@ -61,6 +62,7 @@ export default class TopicUpdateTransaction extends Transaction {
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {AccountId | string} [props.autoRenewAccountId]
      * @param {string} [props.topicMemo]
+     * @param {Timestamp | Date} [props.expirationTime]
      */
     constructor(props = {}) {
         super();
@@ -124,6 +126,16 @@ export default class TopicUpdateTransaction extends Transaction {
         if (props.autoRenewPeriod != null) {
             this.setAutoRenewPeriod(props.autoRenewPeriod);
         }
+
+        /**
+         * @private
+         * @type {?Timestamp}
+         */
+        this._expirationTime = null;
+
+        if (props.expirationTime != null) {
+            this.setExpirationTime(props.expirationTime);
+        }
     }
 
     /**
@@ -178,6 +190,10 @@ export default class TopicUpdateTransaction extends Transaction {
                             ? update.memo.value
                             : undefined
                         : undefined,
+                expirationTime:
+                    update.expirationTime != null
+                        ? Timestamp._fromProtobuf(update.expirationTime)
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -185,6 +201,28 @@ export default class TopicUpdateTransaction extends Transaction {
             nodeIds,
             bodies
         );
+    }
+
+    /**
+     * @returns {?Timestamp}
+     */
+    get expirationTime() {
+        return this._expirationTime;
+    }
+
+    /**
+     * @param {Timestamp | Date | null} expirationTime
+     * @returns {TopicUpdateTransaction}
+     */
+    setExpirationTime(expirationTime) {
+        this._requireFrozen();
+
+        this._expirationTime =
+            expirationTime instanceof Date
+                ? Timestamp.fromDate(expirationTime)
+                : expirationTime;
+
+        return this;
     }
 
     /**
@@ -416,6 +454,10 @@ export default class TopicUpdateTransaction extends Transaction {
             autoRenewPeriod:
                 this._autoRenewPeriod != null
                     ? this._autoRenewPeriod._toProtobuf()
+                    : null,
+            expirationTime:
+                this._expirationTime != null
+                    ? this._expirationTime._toProtobuf()
                     : null,
         };
     }

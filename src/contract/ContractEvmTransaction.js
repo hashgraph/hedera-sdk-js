@@ -130,13 +130,13 @@ export default class ContractEvmTransaction extends Transaction {
     }
 
     /**
-     * The raw Ethereum transaction (RLP encoded type 0, 1, and 2). Complete 
+     * The raw Ethereum transaction (RLP encoded type 0, 1, and 2). Complete
      * unless the callData field is set.
      *
      * For large transactions (for example contract create) this is the callData
-     * of the ethereumData. The data in the ethereumData will be re-written with 
-     * the callData element as a zero length string with the original contents in 
-     * the referenced file at time of execution. The ethereumData will need to be 
+     * of the ethereumData. The data in the ethereumData will be re-written with
+     * the callData element as a zero length string with the original contents in
+     * the referenced file at time of execution. The ethereumData will need to be
      * "rehydrated" with the callData for signature validation to pass.
      *
      * @param {Uint8Array | FileId} ethereumData
@@ -156,17 +156,17 @@ export default class ContractEvmTransaction extends Transaction {
     }
 
     /**
-     * The maximum amount, in tinybars, that the payer of the hedera transaction 
+     * The maximum amount, in tinybars, that the payer of the hedera transaction
      * is willing to pay to complete the transaction.
      *
-     * Ordinarily the account with the ECDSA alias corresponding to the public 
+     * Ordinarily the account with the ECDSA alias corresponding to the public
      * key that is extracted from the ethereum_data signature is responsible for
      * fees that result from the execution of the transaction. If that amount of
      * authorized fees is not sufficient then the payer of the transaction can be
-     * charged, up to but not exceeding this amount. If the ethereum_data 
+     * charged, up to but not exceeding this amount. If the ethereum_data
      * transaction authorized an amount that was insufficient then the payer will
-     * only be charged the amount needed to make up the difference. If the gas 
-     * price in the transaction was set to zero then the payer will be assessed 
+     * only be charged the amount needed to make up the difference. If the gas
+     * price in the transaction was set to zero then the payer will be assessed
      * the entire fee.
      *
      * @param {Long | number} maxGas
@@ -174,7 +174,8 @@ export default class ContractEvmTransaction extends Transaction {
      */
     setMaxGas(maxGas) {
         this._requireNotFrozen();
-        this._maxGas = typeof maxGas === "number" ? Long.fromNumber(maxGas) : maxGas;
+        this._maxGas =
+            typeof maxGas === "number" ? Long.fromNumber(maxGas) : maxGas;
         return this;
     }
 

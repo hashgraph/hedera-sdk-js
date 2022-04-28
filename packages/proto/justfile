@@ -1,0 +1,37 @@
+export PATH := "./node_modules/.bin:" + env_var('PATH')
+
+default:
+    just --choose
+
+install:
+    pnpm i
+
+docs:
+    typedoc --excludeInternal --excludePrivate --excludeProtected --out docs --validation.invalidLink --entryPoints src/index.js src/browser.js src/native.js
+
+build: install
+    pbjs -r hashgraph -t static-module -w es6 --force-long --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*/**.proto
+    pbts -n hashgraph -o src/proto.d.ts src/proto.js
+    perl -pi -e "s#(?<!api\.)proto\.#hashgraph.proto.#g" src/proto.d.ts
+    babel src -d lib
+    copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/
+
+update:
+    cd src/proto && git pull origin main
+
+lint: lint-types lint-format lint-js
+
+lint-types:
+    tsc
+
+lint-format:
+    prettier "*.json" "src/*.js" --check > /dev/null
+
+lint-js:
+    eslint --fix "src/**/*.js"
+
+format:
+    prettier "*.json" "src/*.js" --write > /dev/null
+
+publish: build format lint
+    pnpm publish

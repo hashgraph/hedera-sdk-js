@@ -22,13 +22,21 @@ import ReceiptStatusError from "../ReceiptStatusError.js";
 import Status from "../Status.js";
 import TransactionReceiptQuery from "./TransactionReceiptQuery.js";
 import TransactionRecordQuery from "./TransactionRecordQuery.js";
+import AccountId from "../account/AccountId.js";
+import TransactionId from "./TransactionId.js";
+import * as hex from "../encoding/hex.js";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
- * @typedef {import("../account/AccountId.js").default} AccountId
- * @typedef {import("./TransactionId.js").default} TransactionId
  * @typedef {import("./TransactionReceipt.js").default} TransactionReceipt
  * @typedef {import("./TransactionRecord.js").default} TransactionRecord
+ */
+
+/**
+ * @typedef {object} TransactionResponseJSON
+ * @property {string} nodeId
+ * @property {string} transactionHash
+ * @property {string} transactionId
  */
 
 export default class TransactionResponse {
@@ -50,6 +58,18 @@ export default class TransactionResponse {
         this.transactionId = props.transactionId;
 
         Object.freeze(this);
+    }
+
+    /**
+     * @param {TransactionResponseJSON} json
+     * @returns {TransactionResponse}
+     */
+    static fromJSON(json) {
+        return new TransactionResponse({
+            nodeId: AccountId.fromString(json.nodeId),
+            transactionHash: hex.decode(json.transactionHash),
+            transactionId: TransactionId.fromString(json.transactionId),
+        });
     }
 
     /**
@@ -84,5 +104,23 @@ export default class TransactionResponse {
             .setTransactionId(this.transactionId)
             .setNodeAccountIds([this.nodeId])
             .execute(client);
+    }
+
+    /**
+     * @returns {TransactionResponseJSON}
+     */
+    toJSON() {
+        return {
+            nodeId: this.nodeId.toString(),
+            transactionHash: hex.encode(this.transactionHash),
+            transactionId: this.transactionId.toString(),
+        };
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
     }
 }

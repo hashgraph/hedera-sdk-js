@@ -121,13 +121,13 @@ export default class HbarAllowance {
      */
     _toProtobuf() {
         return {
-            spender:
-                this.spenderAccountId != null
-                    ? this.spenderAccountId._toProtobuf()
-                    : null,
             owner:
                 this.ownerAccountId != null
                     ? this.ownerAccountId._toProtobuf()
+                    : null,
+            spender:
+                this.spenderAccountId != null
+                    ? this.spenderAccountId._toProtobuf()
                     : null,
             amount: this.amount != null ? this.amount.toTinybars() : null,
         };
@@ -137,6 +137,10 @@ export default class HbarAllowance {
      * @param {Client} client
      */
     _validateChecksums(client) {
+        if (this.spenderAccountId != null) {
+            this.spenderAccountId.validateChecksum(client);
+        }
+
         if (this.spenderAccountId != null) {
             this.spenderAccountId.validateChecksum(client);
         }

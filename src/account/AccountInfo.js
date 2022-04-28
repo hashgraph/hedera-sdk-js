@@ -37,6 +37,27 @@ import LedgerId from "../LedgerId.js";
  */
 
 /**
+ * @typedef {object} AccountInfoJson
+ * @property {string} accountId
+ * @property {?string} contractAccountId
+ * @property {boolean} isDeleted
+ * @property {?string} proxyAccountId
+ * @property {string} proxyReceived
+ * @property {string} key
+ * @property {string} balance
+ * @property {string} sendRecordThreshold
+ * @property {string} receiveRecordThreshold
+ * @property {boolean} isReceiverSignatureRequired
+ * @property {string} expirationTime
+ * @property {string} autoRenewPeriod
+ * @property {string} accountMemo
+ * @property {string} ownedNfts
+ * @property {string} maxAutomaticTokenAssociations
+ * @property {?string} aliasKey
+ * @property {?string} ledgerId
+ */
+
+/**
  * Current information about an account, including the balance.
  */
 export default class AccountInfo {
@@ -344,5 +365,41 @@ export default class AccountInfo {
         return HashgraphProto.proto.CryptoGetInfoResponse.AccountInfo.encode(
             this._toProtobuf()
         ).finish();
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return JSON.stringify(this.toJSON());
+    }
+
+    /**
+     * @returns {AccountInfoJson}
+     */
+    toJSON() {
+        return {
+            balance: this.balance.toString(),
+            accountId: this.accountId.toString(),
+            contractAccountId: this.contractAccountId,
+            isDeleted: this.isDeleted,
+            proxyAccountId:
+                this.proxyAccountId != null
+                    ? this.proxyAccountId.toString()
+                    : null,
+            proxyReceived: this.proxyReceived.toString(),
+            key: this.key.toString(),
+            sendRecordThreshold: this.sendRecordThreshold.toString(),
+            receiveRecordThreshold: this.receiveRecordThreshold.toString(),
+            isReceiverSignatureRequired: this.isReceiverSignatureRequired,
+            expirationTime: this.expirationTime.toString(),
+            autoRenewPeriod: this.autoRenewPeriod.toString(),
+            accountMemo: this.accountMemo,
+            ownedNfts: this.ownedNfts.toString(),
+            maxAutomaticTokenAssociations:
+                this.maxAutomaticTokenAssociations.toString(),
+            aliasKey: this.aliasKey != null ? this.aliasKey.toString() : null,
+            ledgerId: this.ledgerId != null ? this.ledgerId.toString() : null,
+        };
     }
 }

@@ -261,8 +261,8 @@ export default class TopicMessageSubmitTransaction extends Transaction {
             );
         }
 
-        const initialTransactionId = this.transactionId._toProtobuf();
-        let nextTransactionId = this.transactionId;
+        const initialTransactionId = this._getTransactionId()._toProtobuf();
+        let nextTransactionId = this._getTransactionId();
 
         // Hack around the locked list. Should refactor a bit to remove such code
         this._transactionIds.locked = false;
@@ -343,7 +343,7 @@ export default class TopicMessageSubmitTransaction extends Transaction {
         // on execute, sign each transaction with the operator, if present
         // and we are signing a transaction that used the default transaction ID
 
-        const transactionId = this.transactionId;
+        const transactionId = this._getTransactionId();
         const operatorAccountId = client.operatorAccountId;
 
         if (

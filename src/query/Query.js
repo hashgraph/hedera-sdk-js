@@ -352,28 +352,24 @@ export default class Query extends Executable {
      */
     async _makeRequestAsync() {
         /** @type {HashgraphProto.proto.IQueryHeader} */
-        let header = {};
+        let header = {
+            responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
+        };
 
         if (this._isPaymentRequired() && this._paymentTransactions != null) {
             if (this._nodeAccountIds.locked) {
-                header = {
-                    payment:
-                        this._paymentTransactions[this._nodeAccountIds.index],
-                    responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
-                };
+                header.payment =
+                    this._paymentTransactions[this._nodeAccountIds.index];
             } else {
-                header = {
-                    payment: await _makePaymentTransaction(
-                        this._getLogId(),
-                        /** @type {import("../transaction/TransactionId.js").default} */ (
-                            this._paymentTransactionId
-                        ),
-                        this._nodeAccountIds.current,
-                        this._isPaymentRequired() ? this._operator : null,
-                        /** @type {Hbar} */ (this._queryPayment)
+                header.payment = await _makePaymentTransaction(
+                    this._getLogId(),
+                    /** @type {import("../transaction/TransactionId.js").default} */ (
+                        this._paymentTransactionId
                     ),
-                    responseType: HashgraphProto.proto.ResponseType.ANSWER_ONLY,
-                };
+                    this._nodeAccountIds.current,
+                    this._isPaymentRequired() ? this._operator : null,
+                    /** @type {Hbar} */ (this._queryPayment)
+                );
             }
         }
 
@@ -385,7 +381,7 @@ export default class Query extends Executable {
      * @internal
      * @param {HashgraphProto.proto.IQuery} request
      * @param {HashgraphProto.proto.IResponse} response
-     * @returns {ExecutionState}
+     * @returns {[Status, ExecutionState]}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _shouldRetry(request, response) {
@@ -406,11 +402,11 @@ export default class Query extends Executable {
             case Status.Busy:
             case Status.Unknown:
             case Status.PlatformTransactionNotCreated:
-                return ExecutionState.Retry;
+                return [status, ExecutionState.Retry];
             case Status.Ok:
-                return ExecutionState.Finished;
+                return [status, ExecutionState.Finished];
             default:
-                return ExecutionState.Error;
+                return [status, ExecutionState.Error];
         }
     }
 
