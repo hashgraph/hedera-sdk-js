@@ -1153,7 +1153,7 @@ export default class Status {
                 return Status.WrongNonce;
             case 313:
                 return Status.AccessListUnsupported;
-            case 314:   
+            case 314:
                 return Status.SchedulePendingExpiration;
             case 315:
                 return Status.ContractIsTokenTreasury;
@@ -1164,14 +1164,14 @@ export default class Status {
             case 318:
                 return Status.ContractHasNoAutoRenewAccount;
             case 319:
-                 return Status.PermanentRemovalRequiresSystemInitiation;
+                return Status.PermanentRemovalRequiresSystemInitiation;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
                 );
         }
     }
-     
+
     /**
      * @returns {HashgraphProto.proto.ResponseCodeEnum}
      */
@@ -2599,7 +2599,7 @@ Status.ContractHasNonZeroTokenBalances = new Status(316);
 Status.ContractExpiredAndPendingRemoval = new Status(317);
 
 /**
- * A ContractUpdate requested removal of a contract's auto-renew account, but that contract has  
+ * A ContractUpdate requested removal of a contract's auto-renew account, but that contract has
  * no auto-renew account.
  */
 Status.ContractHasNoAutoRenewAccount = new Status(318);

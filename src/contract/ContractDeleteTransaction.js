@@ -142,7 +142,7 @@ export default class ContractDeleteTransaction extends Transaction {
                               )
                           )
                         : undefined,
-                permanentRemoval: 
+                permanentRemoval:
                     contractDelete.permanentRemoval != null
                         ? contractDelete.permanentRemoval
                         : null,
@@ -297,7 +297,7 @@ export default class ContractDeleteTransaction extends Transaction {
                 this._transferContractId != null
                     ? this._transferContractId._toProtobuf()
                     : null,
-            permanentRemoval: this._permanentRemoval
+            permanentRemoval: this._permanentRemoval,
         };
     }
 

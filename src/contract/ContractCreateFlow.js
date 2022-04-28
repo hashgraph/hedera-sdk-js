@@ -189,7 +189,7 @@ export default class ContractCreateFlow {
     }
 
     /**
-     * @param {AccountId} autoRenewAccountId 
+     * @param {AccountId} autoRenewAccountId
      * @returns {this}
      */
     setAutoRenewAccountId(autoRenewAccountId) {
@@ -205,12 +205,14 @@ export default class ContractCreateFlow {
     }
 
     /**
-     * @param {number} maxAutomaticTokenAssociation 
+     * @param {number} maxAutomaticTokenAssociation
      * @returns {this}
      */
     setMaxAutomaticTokenAssociation(maxAutomaticTokenAssociation) {
-        this._contractCreate.setMaxAutomaticTokenAssociation(maxAutomaticTokenAssociation);
-        
+        this._contractCreate.setMaxAutomaticTokenAssociation(
+            maxAutomaticTokenAssociation
+        );
+
         return this;
     }
 
