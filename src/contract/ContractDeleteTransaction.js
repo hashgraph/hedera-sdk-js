@@ -48,6 +48,7 @@ export default class ContractDeleteTransaction extends Transaction {
      * @param {ContractId | string} [props.contractId]
      * @param {ContractId | string} [props.transferContractId]
      * @param {AccountId | string} [props.transferAccountId]
+     * @param {boolean | null} [props.permanentRemoval]
      */
     constructor(props = {}) {
         super();
@@ -70,6 +71,12 @@ export default class ContractDeleteTransaction extends Transaction {
          */
         this._transferContractId = null;
 
+        /**
+         * @private
+         * @type {boolean | null}
+         */
+        this._permanentRemoval = false;
+
         if (props.contractId != null) {
             this.setContractId(props.contractId);
         }
@@ -80,6 +87,10 @@ export default class ContractDeleteTransaction extends Transaction {
 
         if (props.transferContractId != null) {
             this.setTransferContractId(props.transferContractId);
+        }
+
+        if (props.permanentRemoval != null) {
+            this.setPermanentRemoval(props.permanentRemoval);
         }
     }
 
@@ -131,6 +142,10 @@ export default class ContractDeleteTransaction extends Transaction {
                               )
                           )
                         : undefined,
+                permanentRemoval:
+                    contractDelete.permanentRemoval != null
+                        ? contractDelete.permanentRemoval
+                        : null,
             }),
             transactions,
             signedTransactions,
@@ -210,6 +225,24 @@ export default class ContractDeleteTransaction extends Transaction {
     }
 
     /**
+     * @returns {boolean | null}
+     */
+    get permanentRemoval() {
+        return this._permanentRemoval;
+    }
+
+    /**
+     * @param {boolean | null} permanentRemoval
+     * @returns {this}
+     */
+    setPermanentRemoval(permanentRemoval) {
+        this._requireNotFrozen();
+        this._permanentRemoval = permanentRemoval;
+
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -264,6 +297,7 @@ export default class ContractDeleteTransaction extends Transaction {
                 this._transferContractId != null
                     ? this._transferContractId._toProtobuf()
                     : null,
+            permanentRemoval: this._permanentRemoval,
         };
     }
 

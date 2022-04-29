@@ -2577,7 +2577,8 @@ Status.WrongNonce = new Status(312);
 Status.AccessListUnsupported = new Status(313);
 
 /**
- * The scheduled transaction is pending expiration.
+ * A schedule being signed or deleted has passed it's expiration date
+ * and is pending execution if needed and then expiration.
  */
 Status.SchedulePendingExpiration = new Status(314);
 

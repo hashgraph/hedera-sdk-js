@@ -57,6 +57,8 @@ export default class ContractUpdateTransaction extends Transaction {
      * @param {AccountId | string} [props.proxyAccountId]
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {string} [props.contractMemo]
+     * @param {AccountId} [props.autoRenewAccountId]
+     * @param {number} [props.maxAutomaticTokenAssociations]
      */
     constructor(props = {}) {
         super();
@@ -103,6 +105,18 @@ export default class ContractUpdateTransaction extends Transaction {
          */
         this._contractMemo = null;
 
+        /**
+         * @private
+         * @type {?AccountId}
+         */
+        this._autoRenewAccountId = null;
+
+        /**
+         * @private
+         * @type {?number}
+         */
+        this._maxAutomaticTokenAssociations = 0;
+
         if (props.contractId != null) {
             this.setContractId(props.contractId);
         }
@@ -129,6 +143,16 @@ export default class ContractUpdateTransaction extends Transaction {
 
         if (props.contractMemo != null) {
             this.setContractMemo(props.contractMemo);
+        }
+
+        if (props.autoRenewAccountId != null) {
+            this.setAutoRenewAccountId(props.autoRenewAccountId);
+        }
+
+        if (props.maxAutomaticTokenAssociations != null) {
+            this.setMaxAutomaticTokenAssociations(
+                props.maxAutomaticTokenAssociations
+            );
         }
     }
 
@@ -167,6 +191,15 @@ export default class ContractUpdateTransaction extends Transaction {
             contractMemo = update.memoWrapper.value;
         }
 
+        let maxAutomaticTokenAssociations = undefined;
+        if (
+            update.maxAutomaticTokenAssociations != null &&
+            update.maxAutomaticTokenAssociations.value != null
+        ) {
+            maxAutomaticTokenAssociations =
+                update.maxAutomaticTokenAssociations.value;
+        }
+
         return Transaction._fromProtobufTransactions(
             new ContractUpdateTransaction({
                 contractId:
@@ -203,6 +236,15 @@ export default class ContractUpdateTransaction extends Transaction {
                         : undefined,
                 autoRenewPeriod,
                 contractMemo,
+                autoRenewAccountId:
+                    update.autoRenewAccountId != null
+                        ? AccountId._fromProtobuf(
+                              /** @type {HashgraphProto.proto.IAccountID} */ (
+                                  update.autoRenewAccountId
+                              )
+                          )
+                        : undefined,
+                maxAutomaticTokenAssociations,
             }),
             transactions,
             signedTransactions,
@@ -369,6 +411,42 @@ export default class ContractUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {AccountId | null}
+     */
+    get autoRenewAccountId() {
+        return this._autoRenewAccountId;
+    }
+
+    /**
+     * @param {AccountId} autoRenewAccountId
+     * @returns {this}
+     */
+    setAutoRenewAccountId(autoRenewAccountId) {
+        this._requireNotFrozen();
+        this._autoRenewAccountId = autoRenewAccountId;
+
+        return this;
+    }
+
+    /**
+     * @returns {number | null}
+     */
+    get maxAutomaticTokenAssociations() {
+        return this._maxAutomaticTokenAssociations;
+    }
+
+    /**
+     * @param {number} maxAutomaticTokenAssociations
+     * @returns {this}
+     */
+    setMaxAutomaticTokenAssociations(maxAutomaticTokenAssociations) {
+        this._requireNotFrozen();
+        this._maxAutomaticTokenAssociations = maxAutomaticTokenAssociations;
+
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -382,6 +460,10 @@ export default class ContractUpdateTransaction extends Transaction {
 
         if (this._proxyAccountId != null) {
             this._proxyAccountId.validateChecksum(client);
+        }
+
+        if (this._autoRenewAccountId != null) {
+            this._autoRenewAccountId.validateChecksum(client);
         }
     }
 
@@ -437,6 +519,16 @@ export default class ContractUpdateTransaction extends Transaction {
                 this._contractMemo != null
                     ? {
                           value: this._contractMemo,
+                      }
+                    : null,
+            autoRenewAccountId:
+                this._autoRenewAccountId != null
+                    ? this._autoRenewAccountId._toProtobuf()
+                    : null,
+            maxAutomaticTokenAssociations:
+                this._maxAutomaticTokenAssociations != null
+                    ? {
+                          value: this._maxAutomaticTokenAssociations,
                       }
                     : null,
         };

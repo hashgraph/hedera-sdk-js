@@ -59,6 +59,7 @@
         "js-base64": "^3.7.2",
         "js-logger": "^1.6.1",
         "long": "^4.0.0",
+        "proto": "link:pacakges/proto",
         "protobufjs": "^6.11.2",
         "utf8": "^3.0.0"
     },

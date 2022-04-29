@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+ * ContractCreateTransaction.[get|set]maxAutomaticTokenAssociation
+ * ContractUpdateTransaction.[get|set]maxAutomaticTokenAssociation
+ * ContractCreateFlow.[get|set]maxAutomaticTokenAssociation
+ * ContractCreateFlow.[get|set]autoRenewAccountId
+ * ContractCreateFlowIntegrationTest
+ * ContractCreateTransactionIntegrationTest
+ * ContractUpdateTransactionIntegrationTest
+ * Status response codes for `314-319`
  * `ContractEvmTransaction`
 
 ## v2.14.0-beta.1
