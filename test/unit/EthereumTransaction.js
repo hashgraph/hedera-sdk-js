@@ -4,7 +4,7 @@ import Long from "long";
 
 import * as hex from "../../src/encoding/hex.js";
 import {
-    ContractEvmTransaction,
+    EthereumTransaction,
     AccountId,
     Timestamp,
     FileId,
@@ -12,7 +12,7 @@ import {
     TransactionId,
 } from "../../src/index.js";
 
-describe("ContractEvmTransaction", function () {
+describe("EthereumTransaction", function () {
     it("toProtobuf with FileId", function () {
         const ethereumData = new FileId(1);
         const maxGas = Long.fromNumber(10);
@@ -20,7 +20,7 @@ describe("ContractEvmTransaction", function () {
         const nodeAccountId = new AccountId(10, 11, 12);
         const timestamp1 = new Timestamp(14, 15);
 
-        let transaction = new ContractEvmTransaction()
+        let transaction = new EthereumTransaction()
             .setTransactionId(
                 TransactionId.withValidStart(accountId1, timestamp1)
             )
@@ -47,7 +47,7 @@ describe("ContractEvmTransaction", function () {
         const nodeAccountId = new AccountId(10, 11, 12);
         const timestamp1 = new Timestamp(14, 15);
 
-        let transaction = new ContractEvmTransaction()
+        let transaction = new EthereumTransaction()
             .setTransactionId(
                 TransactionId.withValidStart(accountId1, timestamp1)
             )

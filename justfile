@@ -36,6 +36,7 @@ bundle-browser:
 test-unit: test-unit-node test-unit-browser
 
 test-unit-node TEST=".*":
+    echo $PATH
     mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" -g "{{TEST}}"
 
 test-integration-node:
