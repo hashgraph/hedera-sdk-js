@@ -18,6 +18,7 @@
  * ‍
  */
 
+import Hbar from "./Hbar.js";
 import FileId from "./file/FileId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
@@ -51,7 +52,7 @@ export default class ContractEvmTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {Uint8Array | FileId} [props.ethereumData]
-     * @param {Long | number} [props.maxGas]
+     * @param {Long | number} [props.maxGasAllowance]
      */
     constructor(props = {}) {
         super();
@@ -72,8 +73,8 @@ export default class ContractEvmTransaction extends Transaction {
             this.setEthereumData(props.ethereumData);
         }
 
-        if (props.maxGas != null) {
-            this.setMaxGas(props.maxGas);
+        if (props.maxGasAllowance != null) {
+            this.setMaxGasAllowance(props.maxGasAllowance);
         }
     }
 
@@ -109,7 +110,7 @@ export default class ContractEvmTransaction extends Transaction {
         return Transaction._fromProtobufTransactions(
             new ContractEvmTransaction({
                 ethereumData,
-                maxGas:
+                maxGasAllowance:
                     transaction.maxGasAllowance != null
                         ? Long.fromValue(transaction.maxGasAllowance)
                         : undefined,
@@ -151,7 +152,7 @@ export default class ContractEvmTransaction extends Transaction {
     /**
      * @returns {?Long}
      */
-    get maxGas() {
+    get maxGasAllowance() {
         return this._maxGas;
     }
 
@@ -169,13 +170,14 @@ export default class ContractEvmTransaction extends Transaction {
      * price in the transaction was set to zero then the payer will be assessed
      * the entire fee.
      *
-     * @param {Long | number} maxGas
+     * @param {number | string | Long | BigNumber | Hbar} maxGasAllowance
      * @returns {this}
      */
-    setMaxGas(maxGas) {
+    setMaxGasAllowance(maxGasAllowance) {
         this._requireNotFrozen();
-        this._maxGas =
-            typeof maxGas === "number" ? Long.fromNumber(maxGas) : maxGas;
+        this._maxGasAllowance = maxGasAllowance instanceof Hbar
+                ? maxGasAllowance
+                : new Hbar(maxGasAllowance);
         return this;
     }
 
