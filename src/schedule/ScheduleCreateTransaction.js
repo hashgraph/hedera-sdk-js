@@ -57,6 +57,8 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @param {Key} [props.adminKey]
      * @param {AccountId} [props.payerAccountID]
      * @param {string} [props.scheduleMemo]
+     * @param {Timestamp} [props.expirationTime]
+     * @param {boolean} [props.waitForQuery]
      */
     constructor(props = {}) {
         super();
@@ -90,6 +92,18 @@ export default class ScheduleCreateTransaction extends Transaction {
          * @type {Set<string>}
          */
         this._scheduledSignerPublicKeys = new Set();
+
+        /**
+         * @private
+         * @type {?Timestamp}
+         */
+        this._expirationTime = null;
+
+        /**
+         * @private
+         * @type {?boolean}
+         */
+        this._waitForQuery = null;
 
         if (props.adminKey != null) {
             this.setAdminKey(props.adminKey);
@@ -297,6 +311,41 @@ export default class ScheduleCreateTransaction extends Transaction {
             this._transactionIds.current.validStart
         );
         return `ScheduleCreateTransaction:${timestamp.toString()}`;
+    }
+
+    /**
+     * @param {?Timestamp} expirationTime
+     * @returns {this}
+     */
+    _setExpirationTime(expirationTime) {
+        this._expirationTime = expirationTime;
+        return this;
+    }
+
+    /**
+     * @returns {?Timestamp}
+     */
+    get expirationTime() {
+        this._requireNotFrozen();
+        return this._expirationTime;
+    }
+
+    /**
+     * @param {boolean} waitForQuery
+     * @returns {this}
+     */
+    _setWaitForQuery(waitForQuery) {
+        this._waitForQuery = waitForQuery;
+
+        return this;
+    }
+
+    /**
+     * @returns {?boolean}
+     */
+    get waitForQuery() {
+        this._requireNotFrozen();
+        return this._waitForQuery;
     }
 }
 

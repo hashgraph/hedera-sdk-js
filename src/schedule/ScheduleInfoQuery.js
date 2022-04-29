@@ -57,6 +57,12 @@ export default class ScheduleInfoQuery extends Query {
          */
         this._scheduleId = null;
 
+        /**
+         * @private
+         * @type {boolean}
+         */
+        this._waitForQuery = null;
+
         if (properties.scheduleId != null) {
             this.setScheduleId(properties.scheduleId);
         }
@@ -205,6 +211,23 @@ export default class ScheduleInfoQuery extends Query {
                 : this._timestamp;
 
         return `ScheduleInfoQuery:${timestamp.toString()}`;
+    }
+
+    /**
+     * @param {boolean} waitForQuery
+     * @returns {this}
+     */
+    _setWaitForQuery(waitForQuery) {
+        this._waitForQuery = waitForQuery;
+
+        return this;
+    }
+
+    /**
+     * @returns {?boolean}
+     */
+    get waitForQuery() {
+        return this._waitForQuery;
     }
 }
 
