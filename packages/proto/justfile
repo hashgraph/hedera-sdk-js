@@ -16,8 +16,10 @@ build: install
     babel src -d lib
     copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/
 
-update:
+update-proto:
     cd src/proto && git pull origin main
+
+update: update-proto build
 
 lint: lint-types lint-format lint-js
 

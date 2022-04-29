@@ -18,10 +18,10 @@
  * ‍
  */
 
-import FileId from "../file/FileId.js";
+import FileId from "./file/FileId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
-} from "../transaction/Transaction.js";
+} from "./transaction/Transaction.js";
 import Long from "long";
 
 /**
@@ -37,11 +37,11 @@ import Long from "long";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
- * @typedef {import("../account/AccountId.js").default} AccountId
- * @typedef {import("../channel/Channel.js").default} Channel
- * @typedef {import("../client/Client.js").default<*, *>} Client
- * @typedef {import("../Timestamp.js").default} Timestamp
- * @typedef {import("../transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("./account/AccountId.js").default} AccountId
+ * @typedef {import("./channel/Channel.js").default} Channel
+ * @typedef {import("./client/Client.js").default<*, *>} Client
+ * @typedef {import("./Timestamp.js").default} Timestamp
+ * @typedef {import("./transaction/TransactionId.js").default} TransactionId
  */
 
 /**
@@ -234,7 +234,7 @@ export default class ContractEvmTransaction extends Transaction {
      * @returns {string}
      */
     _getLogId() {
-        const timestamp = /** @type {import("../Timestamp.js").default} */ (
+        const timestamp = /** @type {import("./Timestamp.js").default} */ (
             this._transactionIds.current.validStart
         );
         return `ContractEvmTransaction:${timestamp.toString()}`;
