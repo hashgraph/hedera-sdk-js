@@ -488,7 +488,7 @@ export default class AccountAllowanceAdjustTransaction extends Transaction {
     /**
      * @override
      * @protected
-     * @returns {Response} Error
+     * @returns {object}
      */
     _makeTransactionData() {
         throw new Error("This feature has been deprecated.");
