@@ -73,13 +73,23 @@ export default class Key {
         }
 
         if (key.ECDSASecp256k1 != null && key.ECDSASecp256k1.byteLength > 0) {
-            if (CACHE.publicKeyECDSA == null) {
-                throw new Error(
-                    "`PublicKey` was not loaded before decoding `Key`"
-                );
-            }
+            if (key.ECDSASecp256k1.byteLength == 20) {
+                if (CACHE.evmAddress == null) {
+                    throw new Error(
+                        "`PublicKey` was not loaded before decoding `Key`"
+                    );
+                }
 
-            return CACHE.publicKeyECDSA(key.ECDSASecp256k1);
+                return CACHE.evmAddress(key.ECDSASecp256k1);
+            } else {
+                if (CACHE.publicKeyECDSA == null) {
+                    throw new Error(
+                        "`PublicKey` was not loaded before decoding `Key`"
+                    );
+                }
+
+                return CACHE.publicKeyECDSA(key.ECDSASecp256k1);
+            }
         }
 
         if (key.thresholdKey != null && key.thresholdKey.threshold != null) {
@@ -100,16 +110,6 @@ export default class Key {
             }
 
             return CACHE.keyList(key.keyList);
-        }
-
-        if (key.ECDSASecp256k1 != null) {
-            if (CACHE.evmAddress == null) {
-                throw new Error(
-                    "`PublicKey` was not loaded before decoding `Key`"
-                );
-            }
-
-            return CACHE.evmAddress(key.ECDSASecp256k1);
         }
 
         throw new Error(
