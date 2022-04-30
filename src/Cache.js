@@ -24,6 +24,7 @@
  * @typedef {import("./KeyList.js").default} KeyList
  * @typedef {import("./PublicKey.js").default} PublicKey
  * @typedef {import("./PrivateKey.js").default} PrivateKey
+ * @typedef {import("./EvmAddress.js").default} EvmAddress
  */
 
 /**
@@ -69,6 +70,9 @@ const CACHE = {
 
     /** @type {FromProtobufKeyFuncT<HashgraphProto.proto.IContractID, ContractId> | null} */
     delegateContractId: null,
+
+    /** @type {FromProtobufKeyFuncT<Uint8Array, EvmAddress> | null} */
+    evmAddress: null,
 };
 
 export default CACHE;
