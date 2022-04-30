@@ -102,6 +102,16 @@ export default class Key {
             return CACHE.keyList(key.keyList);
         }
 
+        if (key.ECDSASecp256k1 != null) {
+            if (CACHE.evmAddress == null) {
+                throw new Error(
+                    "`PublicKey` was not loaded before decoding `Key`"
+                );
+            }
+
+            return CACHE.evmAddress(key.ECDSASecp256k1);
+        }
+
         throw new Error(
             `(BUG) keyFromProtobuf: not implemented key case: ${JSON.stringify(
                 key

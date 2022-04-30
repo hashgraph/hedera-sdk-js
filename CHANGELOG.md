@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * ContractCreateTransactionIntegrationTest
  * ContractUpdateTransactionIntegrationTest
  * Status response codes for `314-319`
- * `ContractEvmTransaction`
+ * `EthereumTransaction`
 
 ## v2.14.0-beta.1
 

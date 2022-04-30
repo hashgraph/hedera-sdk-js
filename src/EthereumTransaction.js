@@ -18,11 +18,11 @@
  * ‍
  */
 
+import Hbar from "./Hbar.js";
 import FileId from "./file/FileId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "./transaction/Transaction.js";
-import Long from "long";
 
 /**
  * @namespace proto
@@ -42,16 +42,17 @@ import Long from "long";
  * @typedef {import("./client/Client.js").default<*, *>} Client
  * @typedef {import("./Timestamp.js").default} Timestamp
  * @typedef {import("./transaction/TransactionId.js").default} TransactionId
+ * @typedef {import("long").Long} Long
  */
 
 /**
  * Create a new Hedera™ crypto-currency account.
  */
-export default class ContractEvmTransaction extends Transaction {
+export default class EthereumTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {Uint8Array | FileId} [props.ethereumData]
-     * @param {Long | number} [props.maxGas]
+     * @param {number | string | Long | BigNumber | Hbar} [props.maxGasAllowance]
      */
     constructor(props = {}) {
         super();
@@ -64,16 +65,16 @@ export default class ContractEvmTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Long}
+         * @type {?Hbar}
          */
-        this._maxGas = null;
+        this._maxGasAllowance = null;
 
         if (props.ethereumData != null) {
             this.setEthereumData(props.ethereumData);
         }
 
-        if (props.maxGas != null) {
-            this.setMaxGas(props.maxGas);
+        if (props.maxGasAllowance != null) {
+            this.setMaxGasAllowance(props.maxGasAllowance);
         }
     }
 
@@ -84,7 +85,7 @@ export default class ContractEvmTransaction extends Transaction {
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
-     * @returns {ContractEvmTransaction}
+     * @returns {EthereumTransaction}
      */
     static _fromProtobuf(
         transactions,
@@ -107,11 +108,11 @@ export default class ContractEvmTransaction extends Transaction {
         }
 
         return Transaction._fromProtobufTransactions(
-            new ContractEvmTransaction({
+            new EthereumTransaction({
                 ethereumData,
-                maxGas:
+                maxGasAllowance:
                     transaction.maxGasAllowance != null
-                        ? Long.fromValue(transaction.maxGasAllowance)
+                        ? Hbar.fromTinybars(transaction.maxGasAllowance)
                         : undefined,
             }),
             transactions,
@@ -149,10 +150,10 @@ export default class ContractEvmTransaction extends Transaction {
     }
 
     /**
-     * @returns {?Long}
+     * @returns {?Hbar}
      */
-    get maxGas() {
-        return this._maxGas;
+    get maxGasAllowance() {
+        return this._maxGasAllowance;
     }
 
     /**
@@ -169,13 +170,15 @@ export default class ContractEvmTransaction extends Transaction {
      * price in the transaction was set to zero then the payer will be assessed
      * the entire fee.
      *
-     * @param {Long | number} maxGas
+     * @param {number | string | Long | BigNumber | Hbar} maxGasAllowance
      * @returns {this}
      */
-    setMaxGas(maxGas) {
+    setMaxGasAllowance(maxGasAllowance) {
         this._requireNotFrozen();
-        this._maxGas =
-            typeof maxGas === "number" ? Long.fromNumber(maxGas) : maxGas;
+        this._maxGasAllowance =
+            maxGasAllowance instanceof Hbar
+                ? maxGasAllowance
+                : new Hbar(maxGasAllowance);
         return this;
     }
 
@@ -226,7 +229,10 @@ export default class ContractEvmTransaction extends Transaction {
                 this._ethereumData instanceof FileId
                     ? this._ethereumData._toProtobuf()
                     : null,
-            maxGasAllowance: this._maxGas,
+            maxGasAllowance:
+                this._maxGasAllowance != null
+                    ? this._maxGasAllowance.toTinybars()
+                    : null,
         };
     }
 
@@ -237,12 +243,12 @@ export default class ContractEvmTransaction extends Transaction {
         const timestamp = /** @type {import("./Timestamp.js").default} */ (
             this._transactionIds.current.validStart
         );
-        return `ContractEvmTransaction:${timestamp.toString()}`;
+        return `EthereumTransaction:${timestamp.toString()}`;
     }
 }
 
 TRANSACTION_REGISTRY.set(
     "ethereumTransaction",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    ContractEvmTransaction._fromProtobuf
+    EthereumTransaction._fromProtobuf
 );
