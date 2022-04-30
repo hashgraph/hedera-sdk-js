@@ -381,7 +381,7 @@ export default class Query extends Executable {
      * @internal
      * @param {HashgraphProto.proto.IQuery} request
      * @param {HashgraphProto.proto.IResponse} response
-     * @returns {ExecutionState}
+     * @returns {[Status, ExecutionState]}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _shouldRetry(request, response) {
@@ -402,11 +402,11 @@ export default class Query extends Executable {
             case Status.Busy:
             case Status.Unknown:
             case Status.PlatformTransactionNotCreated:
-                return ExecutionState.Retry;
+                return [status, ExecutionState.Retry];
             case Status.Ok:
-                return ExecutionState.Finished;
+                return [status, ExecutionState.Finished];
             default:
-                return ExecutionState.Error;
+                return [status, ExecutionState.Error];
         }
     }
 

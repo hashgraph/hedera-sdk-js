@@ -5,16 +5,11 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "compile": "babel src -d lib --out-file-extension .cjs",
         "lint": "run-s lint:*",
         "lint:types": "tsc",
         "lint:format": "prettier src \"*.json\" \"src/*.js\" --check",
         "lint:js": "eslint --fix \"src/**/*.js\"",
-        "format": "prettier src \"*.json\" \"src/*.js\" --write",
-        "test": "run-s test:node test:browser",
-        "test:node": "env HEDERA_SDK_TEST=\"\" run-s test:unit:node test:integration:node",
-        "test:unit:node": "nyc mocha --inline-diffs -r @babel/register -r chai/register-expect.js \"test/unit/*.js\"",
-        "test:integration:node": "nyc mocha -r @babel/register -r chai/register-expect.js \"test/integration/**.js\""
+        "format": "prettier src \"*.json\" \"src/*.js\" --write"
     },
     "keywords": [],
     "author": "",

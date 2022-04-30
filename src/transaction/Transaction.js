@@ -474,15 +474,13 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * @returns {TransactionId}
+     * @returns {?TransactionId}
      */
     get transactionId() {
         this._transactionIds.setLocked();
 
         if (this._transactionIds.isEmpty) {
-            throw new Error(
-                "transaction must have been frozen before getting the transaction ID, try calling `freeze`"
-            );
+            return null;
         }
 
         return this._transactionIds.current;
@@ -704,6 +702,9 @@ export default class Transaction extends Executable {
         );
     }
 
+    /**
+     * @internal
+     */
     _buildSignedTransactions() {
         if (this._signedTransactions.locked) {
             return;
@@ -883,10 +884,17 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * @protected
      * @returns {TransactionId}
      */
     _getTransactionId() {
-        return this.transactionId;
+        const transactionId = this.transactionId;
+        if (transactionId == null) {
+            throw new Error(
+                "transaction must have been frozen before getting the transaction ID, try calling `freeze`"
+            );
+        }
+        return transactionId;
     }
 
     /**
@@ -982,6 +990,9 @@ export default class Transaction extends Executable {
         return signedTransaction;
     }
 
+    /**
+     * @internal
+     */
     _buildNewTransactionIdList() {
         if (this._transactionIds.locked || this._operator == null) {
             return;
@@ -995,12 +1006,18 @@ export default class Transaction extends Executable {
         this._transactionIds.set(this._transactionIds.index, transactionId);
     }
 
+    /**
+     * @internal
+     */
     _buildAllTransactions() {
         for (let i = 0; i < this._signedTransactions.length; i++) {
             this._buildTransaction(i);
         }
     }
 
+    /**
+     * @internal
+     */
     async _buildAllTransactionsAsync() {
         if (!this._signOnDemand) {
             this._buildAllTransactions();
@@ -1057,7 +1074,7 @@ export default class Transaction extends Executable {
      * @internal
      * @param {HashgraphProto.proto.ITransaction} request
      * @param {HashgraphProto.proto.ITransactionResponse} response
-     * @returns {ExecutionState}
+     * @returns {[Status, ExecutionState]}
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _shouldRetry(request, response) {
@@ -1077,21 +1094,21 @@ export default class Transaction extends Executable {
             case Status.Busy:
             case Status.Unknown:
             case Status.PlatformTransactionNotCreated:
-                return ExecutionState.Retry;
+                return [status, ExecutionState.Retry];
             case Status.Ok:
-                return ExecutionState.Finished;
+                return [status, ExecutionState.Finished];
             case Status.TransactionExpired:
                 if (
                     this._regenerateTransactionId == null ||
                     this._regenerateTransactionId
                 ) {
                     this._buildNewTransactionIdList();
-                    return ExecutionState.Retry;
+                    return [status, ExecutionState.Retry];
                 } else {
-                    return ExecutionState.Error;
+                    return [status, ExecutionState.Error];
                 }
             default:
-                return ExecutionState.Error;
+                return [status, ExecutionState.Error];
         }
     }
 
@@ -1130,7 +1147,7 @@ export default class Transaction extends Executable {
         const transactionHash = await sha384.digest(
             /** @type {Uint8Array} */ (request.signedTransactionBytes)
         );
-        const transactionId = this.transactionId;
+        const transactionId = this._getTransactionId();
 
         this._transactionIds.advance();
 
@@ -1143,6 +1160,7 @@ export default class Transaction extends Executable {
 
     /**
      * @override
+     * @internal
      * @returns {AccountId}
      */
     _getNodeAccountId() {

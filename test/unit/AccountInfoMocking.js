@@ -331,11 +331,17 @@ describe("AccountInfoMocking", function () {
 
         try {
             await new FileCreateTransaction()
+                .setTransactionId(
+                    TransactionId.fromString("0.0.1854@1651168054.29348185")
+                )
                 .setContents("hello 1")
                 .setRegenerateTransactionId(false)
                 .execute(client);
         } catch (error) {
-            if (!/^.*TRANSACTION_EXPIRED$/.test(error)) {
+            if (
+                error.message !==
+                "transaction 0.0.1854@1651168054.29348185 failed precheck with status TRANSACTION_EXPIRED"
+            ) {
                 throw error;
             }
         }

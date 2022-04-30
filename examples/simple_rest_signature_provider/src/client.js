@@ -299,8 +299,9 @@ export class SimpleRestSigner {
     }
 
     /**
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
+     * @template {Transaction} T
+     * @param {T} transaction
+     * @returns {Promise<T>}
      */
     async signTransaction(transaction) {
         /** @type {LocalProviderResponse} */
@@ -315,16 +316,20 @@ export class SimpleRestSigner {
             throw new Error(/** @type {{ error: string }} */ (response).error);
         }
 
-        return Transaction.fromBytes(Buffer.from(response.response, "hex"));
+        return /** @type {T} */ (
+            Transaction.fromBytes(Buffer.from(response.response, "hex"))
+        );
     }
 
     /**
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
+     * @template {Transaction} T
+     * @param {T} transaction
+     * @returns {Promise<T>}
      */
     checkTransaction(transaction) {
         const transactionId = transaction.transactionId;
         if (
+            transactionId != null &&
             transactionId.accountId != null &&
             transactionId.accountId.compare(this.accountId) != 0
         ) {
@@ -359,8 +364,9 @@ export class SimpleRestSigner {
     }
 
     /**
-     * @param {Transaction} transaction
-     * @returns {Promise<Transaction>}
+     * @template {Transaction} T
+     * @param {T} transaction
+     * @returns {Promise<T>}
      */
     populateTransaction(transaction) {
         transaction.setTransactionId(TransactionId.generate(this.accountId));

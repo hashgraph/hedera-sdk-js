@@ -193,7 +193,7 @@ export default class TopicUpdateTransaction extends Transaction {
                 expirationTime:
                     update.expirationTime != null
                         ? Timestamp._fromProtobuf(update.expirationTime)
-                        : undefined
+                        : undefined,
             }),
             transactions,
             signedTransactions,

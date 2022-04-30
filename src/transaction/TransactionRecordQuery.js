@@ -166,7 +166,7 @@ export default class TransactionRecordQuery extends Query {
      * @internal
      * @param {HashgraphProto.proto.IQuery} request
      * @param {HashgraphProto.proto.IResponse} response
-     * @returns {ExecutionState}
+     * @returns {[Status, ExecutionState]}
      */
     _shouldRetry(request, response) {
         const { nodeTransactionPrecheckCode } =
@@ -187,13 +187,13 @@ export default class TransactionRecordQuery extends Query {
             case Status.Unknown:
             case Status.ReceiptNotFound:
             case Status.RecordNotFound:
-                return ExecutionState.Retry;
+                return [status, ExecutionState.Retry];
 
             case Status.Ok:
                 break;
 
             default:
-                return ExecutionState.Error;
+                return [status, ExecutionState.Error];
         }
 
         const transactionGetRecord =
@@ -208,7 +208,7 @@ export default class TransactionRecordQuery extends Query {
             header.responseType ===
             HashgraphProto.proto.ResponseType.COST_ANSWER
         ) {
-            return ExecutionState.Finished;
+            return [status, ExecutionState.Finished];
         }
 
         const record = /** @type {HashgraphProto.proto.ITransactionRecord} */ (
@@ -234,13 +234,13 @@ export default class TransactionRecordQuery extends Query {
             case Status.Unknown:
             case Status.ReceiptNotFound:
             case Status.RecordNotFound:
-                return ExecutionState.Retry;
+                return [status, ExecutionState.Retry];
 
             case Status.Success:
-                return ExecutionState.Finished;
+                return [status, ExecutionState.Finished];
 
             default:
-                return ExecutionState.Error;
+                return [status, ExecutionState.Error];
         }
     }
 
