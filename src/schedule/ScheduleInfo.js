@@ -47,69 +47,69 @@ export default class ScheduleInfo {
      * @param {?Timestamp} props.executed;
      * @param {?Timestamp} props.deleted;
      * @param {?TransactionId} props.scheduledTransactionId;
+     * @param {boolean} props.waitForExpiry;
      */
     constructor(props) {
         /**
-         *
          * @readonly
          */
         this.scheduleId = props.scheduleId;
 
         /**
-         *
          * @readonly
          */
         this.creatorAccountId = props.creatorAccountID;
 
         /**
-         *
          * @readonly
          */
         this.payerAccountId = props.payerAccountID;
 
         /**
-         *
          * @readonly
          */
         this.schedulableTransactionBody = props.schedulableTransactionBody;
 
         /**
-         *
          * @readonly
          */
         this.signers = props.signers;
 
         /**
-         *
          * @readonly
          */
         this.scheduleMemo = props.scheduleMemo;
 
         /**
-         *
          * @readonly
          */
         this.adminKey = props.adminKey != null ? props.adminKey : null;
 
         /**
-         *
          * @readonly
          */
         this.expirationTime = props.expirationTime;
 
         /**
-         *
          * @readonly
          */
         this.executed = props.executed;
 
         /**
-         *
          * @readonly
          */
         this.deleted = props.deleted;
 
+        /**
+         * @readonly
+         */
         this.scheduledTransactionId = props.scheduledTransactionId;
+
+        /**
+         *
+         * @readonly
+         */
+        this.waitForExpiry = props.waitForExpiry;
 
         Object.freeze(this);
     }
@@ -183,6 +183,8 @@ export default class ScheduleInfo {
                 info.scheduledTransactionID != null
                     ? TransactionId._fromProtobuf(info.scheduledTransactionID)
                     : null,
+            waitForExpiry:
+                info.waitForExpiry != null ? info.waitForExpiry : false,
         });
     }
 
@@ -220,6 +222,7 @@ export default class ScheduleInfo {
                 this.scheduledTransactionId != null
                     ? this.scheduledTransactionId._toProtobuf()
                     : null,
+            waitForExpiry: this.waitForExpiry,
         };
     }
 
