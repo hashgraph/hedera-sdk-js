@@ -57,12 +57,6 @@ export default class ScheduleInfoQuery extends Query {
          */
         this._scheduleId = null;
 
-        /**
-         * @private
-         * @type {boolean}
-         */
-        this.waitForQuery = null;
-
         if (properties.scheduleId != null) {
             this.setScheduleId(properties.scheduleId);
         }
@@ -176,8 +170,7 @@ export default class ScheduleInfoQuery extends Query {
         return Promise.resolve(
             ScheduleInfo._fromProtobuf(
                 /** @type {HashgraphProto.proto.IScheduleInfo} */ (
-                    info.scheduleInfo,
-                    info.waitForQuery
+                    info.scheduleInfo
                 )
             )
         );
@@ -212,23 +205,6 @@ export default class ScheduleInfoQuery extends Query {
                 : this._timestamp;
 
         return `ScheduleInfoQuery:${timestamp.toString()}`;
-    }
-
-    /**
-     * @param {boolean} waitForQuery
-     * @returns {this}
-     */
-    _setWaitForQuery(waitForQuery) {
-        this.waitForQuery = waitForQuery;
-
-        return this;
-    }
-
-    /**
-     * @returns {?boolean}
-     */
-    get waitForQuery() {
-        return this.waitForQuery;
     }
 }
 

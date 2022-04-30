@@ -18,6 +18,7 @@
  * ‍
  */
 
+import Timestamp from "../Timestamp.js";
 import AccountId from "../account/AccountId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
@@ -42,7 +43,6 @@ import Hbar from "../Hbar.js";
  * @typedef {import("bignumber.js").default} BigNumber
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
- * @typedef {import("../Timestamp.js").default} Timestamp
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  * @typedef {import("../PublicKey.js").default} PublicKey
  * @typedef {import("../PrivateKey.js").default} PrivateKey
@@ -58,7 +58,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @param {AccountId} [props.payerAccountID]
      * @param {string} [props.scheduleMemo]
      * @param {Timestamp} [props.expirationTime]
-     * @param {boolean} [props.waitForQuery]
+     * @param {boolean} [props.waitForExpiry]
      */
     constructor(props = {}) {
         super();
@@ -103,7 +103,7 @@ export default class ScheduleCreateTransaction extends Transaction {
          * @private
          * @type {?boolean}
          */
-        this._waitForQuery = null;
+        this._waitForExpiry = null;
 
         if (props.adminKey != null) {
             this.setAdminKey(props.adminKey);
@@ -157,6 +157,14 @@ export default class ScheduleCreateTransaction extends Transaction {
                           )
                         : undefined,
                 scheduleMemo: create.memo != null ? create.memo : undefined,
+                waitForExpiry:
+                    create.waitForExpiry != null
+                        ? create.waitForExpiry
+                        : undefined,
+                expirationTime:
+                    create.expirationTime != null
+                        ? Timestamp._fromProtobuf(create.expirationTime)
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -300,6 +308,11 @@ export default class ScheduleCreateTransaction extends Transaction {
                     ? this._scheduledTransaction._getScheduledTransactionBody()
                     : null,
             memo: this._scheduleMemo,
+            waitForExpiry: this._waitForExpiry,
+            expirationTime:
+                this._expirationTime != null
+                    ? this._expirationTime._toProtobuf()
+                    : null,
         };
     }
 
@@ -317,7 +330,7 @@ export default class ScheduleCreateTransaction extends Transaction {
      * @param {?Timestamp} expirationTime
      * @returns {this}
      */
-    _setExpirationTime(expirationTime) {
+    setExpirationTime(expirationTime) {
         this._expirationTime = expirationTime;
         return this;
     }
@@ -331,11 +344,11 @@ export default class ScheduleCreateTransaction extends Transaction {
     }
 
     /**
-     * @param {boolean} waitForQuery
+     * @param {boolean} waitForExpiry
      * @returns {this}
      */
-    _setWaitForQuery(waitForQuery) {
-        this._waitForQuery = waitForQuery;
+    setWaitForExpiry(waitForExpiry) {
+        this._waitForExpiry = waitForExpiry;
 
         return this;
     }
@@ -343,9 +356,9 @@ export default class ScheduleCreateTransaction extends Transaction {
     /**
      * @returns {?boolean}
      */
-    get waitForQuery() {
+    get waitForExpiry() {
         this._requireNotFrozen();
-        return this._waitForQuery;
+        return this._waitForExpiry;
     }
 }
 
