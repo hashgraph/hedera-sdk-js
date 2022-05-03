@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - develop
+      - release/*
   pull_request:
     branches:
       - main
-      - develop
+      - release/*
 
 jobs:
   build:
@@ -133,6 +133,9 @@ jobs:
 
       - name: Build @hashgraph/proto
         run: just -f packages/proto/justfile build
+
+      - name: Build @hashgraph/sdk
+        run: just build
 
       - name: Unit Test @hashgraph/sdk
         run: just test-unit

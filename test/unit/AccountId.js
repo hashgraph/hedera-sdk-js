@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { AccountId, PublicKey } from "../../src/index.js";
 
 import BigNumber from "bignumber.js";
+import EvmAddress from "../../src/EvmAddress.js";
 
 describe("AccountId", function () {
     it("constructors", function () {
@@ -35,6 +36,17 @@ describe("AccountId", function () {
         ).to.be.equal(
             "1.2.302a300506032b657003210008d5a4eebdb9b8451b64d8ad1ff502b493590e513e5e9c9f810dd3258f298542"
         );
+        expect(
+            new AccountId(
+                1,
+                2,
+                0,
+                undefined,
+                EvmAddress.fromString(
+                    "0011223344556677889900112233445566778899"
+                )
+            ).toString()
+        ).to.be.equal("1.2.0011223344556677889900112233445566778899");
     });
 
     it("clones with alias key", function () {
