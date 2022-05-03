@@ -504,7 +504,7 @@ export default class Executable {
                     throw this._mapStatusError(request, response);
                 default:
                     throw new Error(
-                        "(BUG) non-exhuastive switch statement for `ExecutionState`"
+                        "(BUG) non-exhaustive switch statement for `ExecutionState`"
                     );
             }
         }

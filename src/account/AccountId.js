@@ -30,14 +30,34 @@ import CACHE from "../Cache.js";
  */
 
 /**
- * The ID for a crypto-currency account on Hedera.
+ * The ID for an account on Hedera.
+ *
+ * All accounts on Hedera have a canonical three-long format of shard.realm.num.
+ * An AccountId can be created by supplying these three longs to the Account ID constructor.
+ *
+ * "Solidity" addresses are 20-byte addresses. Hedera supports two forms. The first
+ * is a simple encoding of shard, realm, and num as a packed 20-byte address. The
+ * first 4 bytes are the shard (and thus are limited to 32 bits instead of the full 64-bit
+ * address range). The next 8 bytes are the realm and the final 8 bytes are the num.
+ *
+ * In addition, accounts may have an alias. There are restrictions on what can be set as an
+ * alias, that may change in the future. But an alias looks like a sequence of bytes. An
+ * alias is scoped to a specific shard and realm, so both the shard and realm must be specified
+ * but instead of specifying a num, an alias can be used instead.
+ *
+ * If the account has an alias, and the alias is an ECDSA(secp256k1) public key, then an alternative
+ * Ethereum address can be used which is a hash of the public key trimmed to the last 20
+ * bytes. This is the address scheme used by Ethereum.
+ *
+ * The Hedera network understands all these address schemes. The AccountId supports all
+ * four models.
  */
 export default class AccountId {
     /**
      * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
-     * @param {(PublicKey)=} aliasKey
+     * @param {(PublicKey | string)=} aliasKey
      */
     constructor(props, realm, num, aliasKey) {
         const result = entity_id.constructor(props, realm, num);
@@ -82,16 +102,10 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static _fromProtobuf(id) {
-        let key =
+        const key =
             id.alias != null && id.alias.length > 0
-                ? Key._fromProtobufKey(
-                      HashgraphProto.proto.Key.decode(id.alias)
-                  )
+                ? this.parseAlias(id.alias)
                 : undefined;
-
-        if (!(key instanceof PublicKey)) {
-            key = undefined;
-        }
 
         return new AccountId(
             id.shardNum != null ? id.shardNum : 0,
@@ -99,6 +113,23 @@ export default class AccountId {
             id.accountNum != null ? id.accountNum : 0,
             key
         );
+    }
+
+    /**
+     * @internal
+     * @param {Uint8Array} bytes
+     * @returns {PublicKey | string | undefined}
+     */
+    static parseAlias(bytes) {
+        try {
+            const key = Key._fromProtobufKey(
+                HashgraphProto.proto.Key.decode(bytes)
+            );
+            return key instanceof PublicKey ? key : undefined;
+        } catch (e) {
+            console.log(e);
+            return Buffer.from(bytes.buffer).toString();
+        }
     }
 
     /**
@@ -123,7 +154,7 @@ export default class AccountId {
     validateChecksum(client) {
         if (this.aliasKey != null) {
             throw new Error(
-                "cannot calculate checksum with an account ID that has a aliasKey"
+                "cannot calculate checksum with an account ID that has an aliasKey"
             );
         }
 
@@ -169,14 +200,23 @@ export default class AccountId {
         return {
             alias:
                 this.aliasKey != null
-                    ? HashgraphProto.proto.Key.encode(
-                          this.aliasKey._toProtobufKey()
-                      ).finish()
+                    ? AccountId.encodeAlias(this.aliasKey)
                     : null,
             accountNum: this.aliasKey != null ? null : this.num,
             shardNum: this.shard,
             realmNum: this.realm,
         };
+    }
+
+    /**
+     * @internal
+     * @param {PublicKey | string} alias
+     * @returns {Uint8Array}
+     */
+    static encodeAlias(alias) {
+        return alias instanceof PublicKey
+            ? HashgraphProto.proto.Key.encode(alias._toProtobufKey()).finish()
+            : new Uint8Array(Buffer.from(alias, "hex"));
     }
 
     /**
@@ -222,7 +262,7 @@ export default class AccountId {
         let account = false;
 
         if (this.aliasKey != null && other.aliasKey != null) {
-            account = this.aliasKey.equals(other.aliasKey);
+            account = this.aliasKey.toString() === other.aliasKey.toString();
         } else if (this.aliasKey == null && other.aliasKey == null) {
             account = this.num.eq(other.num);
         }

@@ -51,6 +51,7 @@ export default class TransactionRecord {
      * @param {ContractFunctionResult} [props.contractFunctionResult]
      * @param {TransactionReceipt} props.receipt
      * @param {Uint8Array} props.transactionHash
+     * @param {Uint8Array} props.ethereumHash
      * @param {Timestamp} props.consensusTimestamp
      * @param {TransactionId} props.transactionId
      * @param {string} props.transactionMemo
@@ -86,6 +87,8 @@ export default class TransactionRecord {
          * @readonly
          */
         this.transactionHash = props.transactionHash;
+
+        this.ethereumHash = props.ethereumHash;
 
         /**
          * The consensus timestamp (or null if didn't reach consensus yet).
@@ -265,6 +268,8 @@ export default class TransactionRecord {
 
                 transactionHash:
                     this.transactionHash != null ? this.transactionHash : null,
+                ethereumHash:
+                    this.ethereumHash != null ? this.ethereumHash : null,
                 consensusTimestamp:
                     this.consensusTimestamp != null
                         ? this.consensusTimestamp._toProtobuf()
@@ -385,6 +390,10 @@ export default class TransactionRecord {
             transactionHash:
                 record.transactionHash != null
                     ? record.transactionHash
+                    : new Uint8Array(),
+            ethereumHash:
+                record.ethereumHash != null
+                    ? record.ethereumHash
                     : new Uint8Array(),
             consensusTimestamp: Timestamp._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITimestamp} */
