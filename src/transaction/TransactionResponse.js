@@ -107,6 +107,24 @@ export default class TransactionResponse {
     }
 
     /**
+     * @returns {TransactionReceiptQuery}
+     */
+    getReceiptQuery() {
+        return new TransactionReceiptQuery()
+            .setTransactionId(this.transactionId)
+            .setNodeAccountIds([this.nodeId]);
+    }
+
+    /**
+     * @returns {TransactionRecordQuery}
+     */
+    getRecordQuery() {
+        return new TransactionRecordQuery()
+            .setTransactionId(this.transactionId)
+            .setNodeAccountIds([this.nodeId]);
+    }
+
+    /**
      * @returns {TransactionResponseJSON}
      */
     toJSON() {
