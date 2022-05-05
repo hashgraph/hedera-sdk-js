@@ -58,17 +58,16 @@ export default class AccountId {
      * @param {number | Long | import("../EntityIdHelper").IEntityId} props
      * @param {(number | Long)=} realm
      * @param {(number | Long)=} num
-     * @param {(PublicKey)=} aliasKey
-     * @param {(EvmAddress)=} aliasEvmAddress
+     * @param {(PublicKey | string)=} aliasKey
      */
-    constructor(props, realm, num, aliasKey, aliasEvmAddress) {
+    constructor(props, realm, num, aliasKey) {
         const result = entity_id.constructor(props, realm, num);
 
         this.shard = result.shard;
         this.realm = result.realm;
         this.num = result.num;
         this.aliasKey = aliasKey != null ? aliasKey : null;
-        this.aliasEvmAddress = aliasEvmAddress != null ? aliasEvmAddress : null;
+        // this.aliasEvmAddress = aliasEvmAddress != null ? aliasEvmAddress : null;
 
         /**
          * @type {string | null}
@@ -91,39 +90,44 @@ export default class AccountId {
             result.shard != null ? Long.fromString(result.shard) : Long.ZERO;
         const realm =
             result.realm != null ? Long.fromString(result.realm) : Long.ZERO;
+        const [num, publicKey] =
+            result.numOrHex.length < 20
+                ? [Long.fromString(result.numOrHex), undefined]
+                : [Long.ZERO, PublicKey.fromString(result.numOrHex)];
 
-        let num = Long.ZERO;
-        let aliasKey = undefined;
-        let aliasEvmAddress = undefined;
+        // let num = Long.ZERO;
+        // let aliasKey = undefined;
+        // let aliasEvmAddress = undefined;
+        //
+        // if (result.numOrHex.length < 20) {
+        //     num = Long.fromString(result.numOrHex);
+        // } else if (result.numOrHex.length == 40) {
+        //     aliasEvmAddress = EvmAddress.fromString(result.numOrHex);
+        // } else {
+        //     aliasKey = PublicKey.fromString(result.numOrHex);
 
-        if (result.numOrHex.length < 20) {
-            num = Long.fromString(result.numOrHex);
-        } else if (result.numOrHex.length == 40) {
-            aliasEvmAddress = EvmAddress.fromString(result.numOrHex);
-        } else {
-            aliasKey = PublicKey.fromString(result.numOrHex);
-        }
 
-        return new AccountId(shard, realm, num, aliasKey, aliasEvmAddress);
+        return new AccountId(shard, realm, num, publicKey);
+        // return new AccountId(shard, realm, num, aliasKey, aliasEvmAddress);
     }
 
-    /**
-     * @param {Long | number} shard
-     * @param {Long | number} realm
-     * @param {EvmAddress | string} evmAddress
-     * @returns {AccountId}
-     */
-    static fromEvmAddress(shard, realm, evmAddress) {
-        return new AccountId(
-            shard,
-            realm,
-            0,
-            undefined,
-            typeof evmAddress === "string"
-                ? EvmAddress.fromString(evmAddress)
-                : evmAddress
-        );
-    }
+    // /**
+    //  * @param {Long | number} shard
+    //  * @param {Long | number} realm
+    //  * @param {EvmAddress | string} evmAddress
+    //  * @returns {AccountId}
+    //  */
+    // static fromEvmAddress(shard, realm, evmAddress) {
+    //     return new AccountId(
+    //         shard,
+    //         realm,
+    //         0,
+    //         undefined,
+    //         typeof evmAddress === "string"
+    //             ? EvmAddress.fromString(evmAddress)
+    //             : evmAddress
+    //     );
+    // }
 
     /**
      * @internal
@@ -230,19 +234,22 @@ export default class AccountId {
      * @returns {HashgraphProto.proto.IAccountID}
      */
     _toProtobuf() {
-        let aliasVal = null;
-        if (this.aliasKey != null) {
-            aliasVal = HashgraphProto.proto.Key.encode(
-                this.aliasKey._toProtobufKey()
-            ).finish();
-        } else if (this.aliasEvmAddress != null) {
-            aliasVal = HashgraphProto.proto.Key.encode(
-                this.aliasEvmAddress._toProtobufKey()
-            ).finish();
-        }
+        // let aliasVal = null;
+        // if (this.aliasKey != null) {
+        //     aliasVal = HashgraphProto.proto.Key.encode(
+        //         this.aliasKey._toProtobufKey()
+        //     ).finish();
+        // } else if (this.aliasEvmAddress != null) {
+        //     aliasVal = HashgraphProto.proto.Key.encode(
+        //         this.aliasEvmAddress._toProtobufKey()
+        //     ).finish();
+        // }
 
         return {
-            alias: aliasVal,
+            alias:
+                this.aliasKey != null
+                    ? AccountId.encodeAlias(this.aliasKey)
+                    : null,
             accountNum: this.aliasKey != null ? null : this.num,
             shardNum: this.shard,
             realmNum: this.realm,
@@ -273,13 +280,10 @@ export default class AccountId {
      * @returns {string}
      */
     toString() {
-        let account = this.num.toString();
-
-        if (this.aliasKey != null) {
-            account = this.aliasKey.toString();
-        } else if (this.aliasEvmAddress != null) {
-            account = this.aliasEvmAddress.toString();
-        }
+        const account =
+            this.aliasKey != null
+                ? this.aliasKey.toString()
+                : this.num.toString();
 
         return `${this.shard.toString()}.${this.realm.toString()}.${account}`;
     }
