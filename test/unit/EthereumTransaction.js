@@ -15,7 +15,8 @@ import {
 
 describe("EthereumTransaction", function () {
     it("toProtobuf with FileId", function () {
-        const ethereumData = new FileId(1);
+        const ethereumData = hex.decode("00112233445566778899");
+        const callData = new FileId(1);
         const maxGasAllowance = Hbar.fromTinybars(Long.fromNumber(10));
         const accountId1 = new AccountId(7);
         const nodeAccountId = new AccountId(10, 11, 12);
@@ -27,6 +28,7 @@ describe("EthereumTransaction", function () {
             )
             .setNodeAccountIds([nodeAccountId])
             .setEthereumData(ethereumData)
+            .setCallData(callData)
             .setMaxGasAllowance(maxGasAllowance)
             .freeze();
 
@@ -35,8 +37,8 @@ describe("EthereumTransaction", function () {
         const data = transaction._makeTransactionData();
 
         expect(data).to.deep.equal({
-            ethereumData: null,
-            callData: ethereumData._toProtobuf(),
+            ethereumData,
+            callData: callData._toProtobuf(),
             maxGasAllowance: maxGasAllowance.toTinybars(),
         });
     });
