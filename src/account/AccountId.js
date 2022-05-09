@@ -201,9 +201,7 @@ export default class AccountId {
                 this.aliasKey._toProtobufKey()
             ).finish();
         } else if (this.aliasEvmAddress != null) {
-            alias = HashgraphProto.proto.Key.encode(
-                this.aliasEvmAddress._toProtobufKey()
-            ).finish();
+            alias = this.aliasEvmAddress._bytes;
         }
 
         return {
