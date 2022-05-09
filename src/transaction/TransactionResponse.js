@@ -98,7 +98,7 @@ export default class TransactionResponse {
     async getRecord(client) {
         await this.getReceipt(client);
 
-        return await this.getRecordQuery()
+        return this.getRecordQuery()
             .execute(client);
     }
 
