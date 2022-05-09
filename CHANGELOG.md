@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+<<<<<<< HEAD
  * ContractCreateTransaction.[get|set]maxAutomaticTokenAssociation
  * ContractUpdateTransaction.[get|set]maxAutomaticTokenAssociation
  * ContractCreateFlow.[get|set]maxAutomaticTokenAssociation
