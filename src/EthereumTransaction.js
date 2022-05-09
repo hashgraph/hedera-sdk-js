@@ -46,7 +46,7 @@ import Transaction, {
  */
 
 /**
- * Create a new Hedera™ crypto-currency account.
+ * Create a new Hedera™ transaction wrapped ethereum transaction.
  */
 export default class EthereumTransaction extends Transaction {
     /**
