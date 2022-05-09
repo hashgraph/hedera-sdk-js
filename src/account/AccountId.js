@@ -111,22 +111,25 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static _fromProtobuf(id) {
-        let key =
+        let aliasKey =
             id.alias != null && id.alias.length > 0
                 ? Key._fromProtobufKey(
                       HashgraphProto.proto.Key.decode(id.alias)
                   )
                 : undefined;
 
-        if (!(key instanceof PublicKey) || !(key instanceof EvmAddress)) {
-            key = undefined;
+        if (!(aliasKey instanceof PublicKey)) {
+            aliasKey = undefined;
         }
 
         return new AccountId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
             id.accountNum != null ? id.accountNum : 0,
-            key
+            aliasKey,
+            aliasKey == null && id.alias != null
+                ? EvmAddress.fromBytes(id.alias)
+                : undefined
         );
     }
 

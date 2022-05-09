@@ -73,23 +73,13 @@ export default class Key {
         }
 
         if (key.ECDSASecp256k1 != null && key.ECDSASecp256k1.byteLength > 0) {
-            if (key.ECDSASecp256k1.byteLength == 20) {
-                if (CACHE.evmAddress == null) {
-                    throw new Error(
-                        "`PublicKey` was not loaded before decoding `Key`"
-                    );
-                }
-
-                return CACHE.evmAddress(key.ECDSASecp256k1);
-            } else {
-                if (CACHE.publicKeyECDSA == null) {
-                    throw new Error(
-                        "`PublicKey` was not loaded before decoding `Key`"
-                    );
-                }
-
-                return CACHE.publicKeyECDSA(key.ECDSASecp256k1);
+            if (CACHE.publicKeyECDSA == null) {
+                throw new Error(
+                    "`PublicKey` was not loaded before decoding `Key`"
+                );
             }
+
+            return CACHE.publicKeyECDSA(key.ECDSASecp256k1);
         }
 
         if (key.thresholdKey != null && key.thresholdKey.threshold != null) {
