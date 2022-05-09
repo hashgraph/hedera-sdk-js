@@ -284,6 +284,7 @@ export default class AccountId {
         const id = new AccountId(this);
         id._checksum = this._checksum;
         id.aliasKey = this.aliasKey;
+        id.aliasEvmAddress = this.aliasEvmAddress;
         return id;
     }
 
