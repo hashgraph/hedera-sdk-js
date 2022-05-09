@@ -212,7 +212,10 @@ export default class AccountId {
 
         return {
             alias,
-            accountNum: this.aliasKey != null ? null : this.num,
+            accountNum:
+                this.aliasKey != null || this.aliasEvmAddress != null
+                    ? null
+                    : this.num,
             shardNum: this.shard,
             realmNum: this.realm,
         };
