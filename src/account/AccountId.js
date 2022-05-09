@@ -111,12 +111,17 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static _fromProtobuf(id) {
-        let aliasKey =
-            id.alias != null && id.alias.length > 0
-                ? Key._fromProtobufKey(
-                      HashgraphProto.proto.Key.decode(id.alias)
-                  )
-                : undefined;
+        let aliasKey = undefined;
+        let aliasEvmAddress = undefined;
+        if (id.alias != null) {
+            if (id.alias.length === 20) {
+                aliasEvmAddress = EvmAddress.fromBytes(id.alias);
+            } else {
+                aliasKey = Key._fromProtobufKey(
+                    HashgraphProto.proto.Key.decode(id.alias)
+                );
+            }
+        }
 
         if (!(aliasKey instanceof PublicKey)) {
             aliasKey = undefined;
@@ -127,9 +132,7 @@ export default class AccountId {
             id.realmNum != null ? id.realmNum : 0,
             id.accountNum != null ? id.accountNum : 0,
             aliasKey,
-            aliasKey == null && id.alias != null
-                ? EvmAddress.fromBytes(id.alias)
-                : undefined
+            aliasEvmAddress
         );
     }
 
