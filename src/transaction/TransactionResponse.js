@@ -77,9 +77,7 @@ export default class TransactionResponse {
      * @returns {Promise<TransactionReceipt>}
      */
     async getReceipt(client) {
-        const receipt = await new TransactionReceiptQuery()
-            .setTransactionId(this.transactionId)
-            .setNodeAccountIds([this.nodeId])
+        const receipt = await this.getReceiptQuery()
             .execute(client);
 
         if (receipt.status !== Status.Success) {
@@ -100,9 +98,7 @@ export default class TransactionResponse {
     async getRecord(client) {
         await this.getReceipt(client);
 
-        return new TransactionRecordQuery()
-            .setTransactionId(this.transactionId)
-            .setNodeAccountIds([this.nodeId])
+        return await this.getRecordQuery()
             .execute(client);
     }
 
