@@ -55,6 +55,7 @@ import LedgerId from "../LedgerId.js";
  * @property {string} maxAutomaticTokenAssociations
  * @property {?string} aliasKey
  * @property {?string} ledgerId
+ * @property {number} ethereumNonce
  */
 
 /**
@@ -86,6 +87,7 @@ export default class AccountInfo {
      * @param {HbarAllowance[]} props.hbarAllowances
      * @param {TokenAllowance[]} props.tokenAllowances
      * @param {TokenNftAllowance[]} props.nftAllowances
+     * @param {number} props.ethereumNonce
      */
     constructor(props) {
         /**
@@ -209,6 +211,8 @@ export default class AccountInfo {
 
         this.nftAllowances = props.nftAllowances;
 
+        this.ethereumNonce = props.ethereumNonce;
+
         Object.freeze(this);
     }
 
@@ -305,6 +309,7 @@ export default class AccountInfo {
             hbarAllowances: [],
             tokenAllowances: [],
             nftAllowances: [],
+            ethereumNonce: info.ethereumNonce != null ? info.ethereumNonce : undefined,
         });
     }
 
@@ -345,6 +350,7 @@ export default class AccountInfo {
                       ).finish()
                     : null,
             ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
+            ethereumNonce: this.ethereumNonce,
         };
     }
 
@@ -400,6 +406,7 @@ export default class AccountInfo {
                 this.maxAutomaticTokenAssociations.toString(),
             aliasKey: this.aliasKey != null ? this.aliasKey.toString() : null,
             ledgerId: this.ledgerId != null ? this.ledgerId.toString() : null,
+            ethereumNonce: this.ethereumNonce,
         };
     }
 }
