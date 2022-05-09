@@ -111,22 +111,28 @@ export default class AccountId {
      * @returns {AccountId}
      */
     static _fromProtobuf(id) {
-        let key =
-            id.alias != null && id.alias.length > 0
-                ? Key._fromProtobufKey(
-                      HashgraphProto.proto.Key.decode(id.alias)
-                  )
-                : undefined;
+        let aliasKey = undefined;
+        let aliasEvmAddress = undefined;
+        if (id.alias != null) {
+            if (id.alias.length === 20) {
+                aliasEvmAddress = EvmAddress.fromBytes(id.alias);
+            } else {
+                aliasKey = Key._fromProtobufKey(
+                    HashgraphProto.proto.Key.decode(id.alias)
+                );
+            }
+        }
 
-        if (!(key instanceof PublicKey) || !(key instanceof EvmAddress)) {
-            key = undefined;
+        if (!(aliasKey instanceof PublicKey)) {
+            aliasKey = undefined;
         }
 
         return new AccountId(
             id.shardNum != null ? id.shardNum : 0,
             id.realmNum != null ? id.realmNum : 0,
             id.accountNum != null ? id.accountNum : 0,
-            key
+            aliasKey,
+            aliasEvmAddress
         );
     }
 
@@ -201,14 +207,15 @@ export default class AccountId {
                 this.aliasKey._toProtobufKey()
             ).finish();
         } else if (this.aliasEvmAddress != null) {
-            alias = HashgraphProto.proto.Key.encode(
-                this.aliasEvmAddress._toProtobufKey()
-            ).finish();
+            alias = this.aliasEvmAddress._bytes;
         }
 
         return {
             alias,
-            accountNum: this.aliasKey != null ? null : this.num,
+            accountNum:
+                this.aliasKey != null || this.aliasEvmAddress != null
+                    ? null
+                    : this.num,
             shardNum: this.shard,
             realmNum: this.realm,
         };
@@ -277,6 +284,7 @@ export default class AccountId {
         const id = new AccountId(this);
         id._checksum = this._checksum;
         id.aliasKey = this.aliasKey;
+        id.aliasEvmAddress = this.aliasEvmAddress;
         return id;
     }
 

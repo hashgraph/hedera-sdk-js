@@ -46,12 +46,13 @@ import Transaction, {
  */
 
 /**
- * Create a new Hedera™ crypto-currency account.
+ * Create a new Hedera™ transaction wrapped ethereum transaction.
  */
 export default class EthereumTransaction extends Transaction {
     /**
      * @param {object} [props]
-     * @param {Uint8Array | FileId} [props.ethereumData]
+     * @param {Uint8Array} [props.ethereumData]
+     * @param {FileId} [props.callData]
      * @param {number | string | Long | BigNumber | Hbar} [props.maxGasAllowance]
      */
     constructor(props = {}) {
@@ -59,9 +60,15 @@ export default class EthereumTransaction extends Transaction {
 
         /**
          * @private
-         * @type {?Uint8Array | FileId}
+         * @type {?Uint8Array}
          */
         this._ethereumData = null;
+
+        /**
+         * @private
+         * @type {?FileId}
+         */
+        this._callData = null;
 
         /**
          * @private
@@ -71,6 +78,10 @@ export default class EthereumTransaction extends Transaction {
 
         if (props.ethereumData != null) {
             this.setEthereumData(props.ethereumData);
+        }
+
+        if (props.callData != null) {
+            this.setCallData(props.callData);
         }
 
         if (props.maxGasAllowance != null) {
@@ -100,16 +111,16 @@ export default class EthereumTransaction extends Transaction {
                 body.ethereumTransaction
             );
 
-        let ethereumData = undefined;
-        if (transaction.callData != null) {
-            ethereumData = FileId._fromProtobuf(transaction.callData);
-        } else if (transaction.ethereumData != null) {
-            ethereumData = transaction.ethereumData;
-        }
-
         return Transaction._fromProtobufTransactions(
             new EthereumTransaction({
-                ethereumData,
+                ethereumData:
+                    transaction.ethereumData != null
+                        ? transaction.ethereumData
+                        : undefined,
+                callData:
+                    transaction.callData != null
+                        ? FileId._fromProtobuf(transaction.callData)
+                        : undefined,
                 maxGasAllowance:
                     transaction.maxGasAllowance != null
                         ? Hbar.fromTinybars(transaction.maxGasAllowance)
@@ -134,18 +145,35 @@ export default class EthereumTransaction extends Transaction {
      * The raw Ethereum transaction (RLP encoded type 0, 1, and 2). Complete
      * unless the callData field is set.
      *
-     * For large transactions (for example contract create) this is the callData
-     * of the ethereumData. The data in the ethereumData will be re-written with
-     * the callData element as a zero length string with the original contents in
-     * the referenced file at time of execution. The ethereumData will need to be
-     * "rehydrated" with the callData for signature validation to pass.
-     *
-     * @param {Uint8Array | FileId} ethereumData
+     * @param {Uint8Array} ethereumData
      * @returns {this}
      */
     setEthereumData(ethereumData) {
         this._requireNotFrozen();
         this._ethereumData = ethereumData;
+        return this;
+    }
+
+    /**
+     * @returns {?FileId}
+     */
+    get callData() {
+        return this._callData;
+    }
+
+    /**
+     * For large transactions (for example contract create) this is the callData
+     * of the callData. The data in the callData will be re-written with
+     * the callData element as a zero length string with the original contents in
+     * the referenced file at time of execution. The callData will need to be
+     * "rehydrated" with the callData for signature validation to pass.
+     *
+     * @param {FileId} callData
+     * @returns {this}
+     */
+    setCallData(callData) {
+        this._requireNotFrozen();
+        this._callData = callData;
         return this;
     }
 
@@ -221,14 +249,9 @@ export default class EthereumTransaction extends Transaction {
      */
     _makeTransactionData() {
         return {
-            ethereumData:
-                this._ethereumData instanceof FileId
-                    ? null
-                    : this._ethereumData,
+            ethereumData: this._ethereumData,
             callData:
-                this._ethereumData instanceof FileId
-                    ? this._ethereumData._toProtobuf()
-                    : null,
+                this._callData != null ? this._callData._toProtobuf() : null,
             maxGasAllowance:
                 this._maxGasAllowance != null
                     ? this._maxGasAllowance.toTinybars()

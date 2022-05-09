@@ -53,7 +53,7 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @param {object} [props]
      * @param {FileId | string} [props.bytecodeFileId]
-     * @param {Uint8Array} [props.initcode]
+     * @param {Uint8Array} [props.bytecode]
      * @param {Key} [props.adminKey]
      * @param {number | Long} [props.gas]
      * @param {number | string | Long | BigNumber | Hbar} [props.initialBalance]
@@ -77,7 +77,7 @@ export default class ContractCreateTransaction extends Transaction {
          * @private
          * @type {?Uint8Array}
          */
-        this._initcode = null;
+        this._bytecode = null;
 
         /**
          * @private
@@ -139,8 +139,8 @@ export default class ContractCreateTransaction extends Transaction {
             this.setBytecodeFileId(props.bytecodeFileId);
         }
 
-        if (props.initcode != null) {
-            this.setInitcode(props.initcode);
+        if (props.bytecode != null) {
+            this.setBytecode(props.bytecode);
         }
 
         if (props.adminKey != null) {
@@ -280,6 +280,7 @@ export default class ContractCreateTransaction extends Transaction {
             typeof bytecodeFileId === "string"
                 ? FileId.fromString(bytecodeFileId)
                 : bytecodeFileId.clone();
+        this._bytecode = null;
 
         return this;
     }
@@ -287,17 +288,18 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @returns {?Uint8Array}
      */
-    get initcode() {
-        return this._initcode;
+    get bytecode() {
+        return this._bytecode;
     }
 
     /**
-     * @param {Uint8Array} initcode
+     * @param {Uint8Array} bytecode
      * @returns {this}
      */
-    setInitcode(initcode) {
+    setBytecode(bytecode) {
         this._requireNotFrozen();
-        this._initcode = initcode;
+        this._bytecode = bytecode;
+        this._bytecodeFileId = null;
 
         return this;
     }
@@ -527,7 +529,7 @@ export default class ContractCreateTransaction extends Transaction {
                 this._bytecodeFileId != null
                     ? this._bytecodeFileId._toProtobuf()
                     : null,
-            initcode: this._initcode,
+            initcode: this._bytecode,
             adminKey:
                 this._adminKey != null ? this._adminKey._toProtobufKey() : null,
             gas: this._gas,

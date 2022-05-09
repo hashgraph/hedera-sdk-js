@@ -57,16 +57,6 @@ export default class EvmAddress extends Key {
     }
 
     /**
-     * @internal
-     * @returns {HashgraphProto.proto.IKey}
-     */
-    _toProtobufKey() {
-        return {
-            ECDSASecp256k1: this._bytes,
-        };
-    }
-
-    /**
      * @returns {Uint8Array}
      */
     toBytes() {
