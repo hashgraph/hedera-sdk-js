@@ -18,6 +18,9 @@
                 "major",
                 "lockFileMaintenance"
             ],
+            "postUpgradeTasks": {
+                "commands": [ "just build" ]
+            },
             "dependencyDashboardApproval": false,
             "stabilityDays": 0
         }
