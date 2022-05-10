@@ -1,6 +1,5 @@
 {
-    "branchPrefix": "test-renovate/",
-    "dryRun": true,
+    "branchPrefix": "renovate/",
     "username": "renovate-release",
     "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
     "onboarding": false,
@@ -18,9 +17,6 @@
                 "major",
                 "lockFileMaintenance"
             ],
-            "postUpgradeTasks": {
-                "commands": [ "just build" ]
-            },
             "dependencyDashboardApproval": false,
             "stabilityDays": 0
         }

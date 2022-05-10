@@ -1,12 +1,9 @@
 name: Renovate
 on:
-  push:
-    branches:
-      - main
-  # schedule:
-  #   # The "*" (#42, asterisk) character has special semantics in YAML, so this
-  #   # string has to be quoted.
-  #   - cron: '0/15 * * * 0'
+  schedule:
+    # The "*" (#42, asterisk) character has special semantics in YAML, so this
+    # string has to be quoted.
+    - cron: '0/15 * * * 0'
 
 jobs:
   renovate:
@@ -16,28 +13,6 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: extractions/setup-just@v1
-        with:
-          just-version: 1.1.2
-
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.0.2
-      
       - name: Self-hosted Renovate
         uses: renovatebot/github-action@v32.0.1
         with:
