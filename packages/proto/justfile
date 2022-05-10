@@ -35,3 +35,6 @@ format:
 
 publish: build format lint
     pnpm publish
+
+clean:
+    rm -rf node_modules

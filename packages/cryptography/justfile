@@ -50,3 +50,6 @@ test-unit-browser:
 
 publish:
     pnpm publish
+
+clean:
+    rm -rf node_modules
