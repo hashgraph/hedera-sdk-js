@@ -4,6 +4,7 @@ default:
     just --choose
 
 install:
+    git submodule update --init
     pnpm i
 
 docs:
