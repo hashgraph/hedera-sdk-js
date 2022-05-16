@@ -10,3 +10,6 @@ build: install
 
 test: install
     mocha -r @babel/register -r chai/register-expect.js "src/test.js"
+
+clean:
+    rm -rf node_modules

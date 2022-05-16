@@ -30,6 +30,12 @@ lint-js:
 format:
     prettier src "test/unit/*.js" "test/integration/*.js" "*.json" "src/*.js" --write > /dev/null
 
+clean:
+    rm -rf node_modules
+    just -f examples/justfile clean
+    just -f examples/simple_rest_signature_provider/justfile clean
+    just -f common_js_test/justfile build clean
+
 bundle-browser:
     vite -c vite.config.cjs build
 

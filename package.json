@@ -94,6 +94,7 @@
         "eslint-plugin-jsdoc": "^37.9.7",
         "eslint-plugin-mocha": "^10.0.4",
         "eslint-plugin-node": "^11.1.0",
+        "expo": "^45.0.3",
         "geckodriver": "^3.0.1",
         "mocha": "^9.2.2",
         "npm-run-all": "^4.1.5",
@@ -105,6 +106,6 @@
         "vite": "^2.9.5"
     },
     "peerDependencies": {
-        "expo": "^44.0.5"
+        "expo": "^45.0.3"
     }
 }

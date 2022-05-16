@@ -8,20 +8,13 @@ on:
 jobs:
   renovate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     steps:
-      - name: Checkout
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
-      - name: Setup node
-        uses: actions/setup-node@56337c425554a6be30cdef71bf441f15be286854 # tag=v3.1.1
+      - uses: actions/checkout@v2
         with:
-          node-version: 14
-      - name: Install project
-        run: npm ci --ignore-scripts
-      - name: Build
-        run: npm run build
-      - name: Renovate
-        uses: renovatebot/github-action@6030949931ad2285e5e0fbe5101c2052c540262c # tag=v26.21.7
+          submodules: recursive
+
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@v32.0.1
         with:
-          configurationFile: renovate-config.js
+          configurationFile: .github/renovate.json
           token: ${{ secrets.RENOVATE_TOKEN }}

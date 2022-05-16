@@ -16,6 +16,13 @@ Bug reports are accepted through the [Issues][issues] page.
 
 The [bug][label-bug] label is used to track bugs.
 
+## Requirements
+
+- `just:latest`https://github.com/casey/just
+- `bash:latest`
+- `pnpm:latest` https://github.com/pnpm/pnpm
+- `node:16` https://nodejs.org/
+
 ### Before Submitting a Bug Report
 
 Before submitting a bug report, please do the following:
@@ -78,7 +85,7 @@ Before submitting your pull request, refer to the pull request readiness checkli
 
 * [ ] Includes tests to exercise the new behaviour
 * [ ] Code is documented, especially public and user-facing constructs
-* [ ] Local run of `mvn checkstyle:check` and `mvn spotbugs:check` succeed
+* [ ] Local run of `just build` and `just test-unit` succeed
 * [ ] Git commit message is detailed and includes context behind the change
 * [ ] If the change is related to an existing Bug Report or Feature Request, please include its issue number
 

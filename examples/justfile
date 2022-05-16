@@ -21,3 +21,6 @@ lint-js:
 
 format:
     prettier "*.js" --write > /dev/null
+
+clean:
+    rm -rf node_modules

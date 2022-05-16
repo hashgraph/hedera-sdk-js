@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
+      - develop
       - release/*
   pull_request:
     branches:
       - main
+      - develop
       - release/*
 
 jobs:
@@ -139,13 +141,16 @@ jobs:
       - name: Build
         working-directory: examples/react-native
         run: |
-          brew tap wix/brew
-          brew install applesimutils
-          yalc add "@hashgraph/sdk"
-          yarn
-          detox build --configuration ios
+          # Uncomment when detox and expo work well together
+          # brew tap wix/brew
+          # brew install applesimutils
+          # yalc add "@hashgraph/sdk"
+          # yarn
+          # detox build --configuration ios
+          cd android && ./gradlew build
 
-      - name: Test
-        working-directory: examples/react-native
-        run: |
-          detox test --configuration ios
+      # Uncomment when detox and expo work well together
+      # - name: Test
+      #   working-directory: examples/react-native
+      #   run: |
+      #     detox test --configuration ios
