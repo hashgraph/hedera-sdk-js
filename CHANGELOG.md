@@ -8,9 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+ * Exported `FeeComponents`
  * Exported `FeeData`
+ * Exported `FeeDataType`
  * Exported `FeeSchedule`
  * Exported `FeeSchedules`
+ * Exported `TransactionFeeSchedule`
 
 ## v2.14.0
 

@@ -19,7 +19,7 @@
  */
 
 import * as HashgraphProto from "@hashgraph/proto";
-import FeeSchedule from "./FeeSchedule";
+import FeeSchedule from "./FeeSchedule.js";
 
 export default class FeeSchedules {
     /**

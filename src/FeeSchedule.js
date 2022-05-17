@@ -19,8 +19,8 @@
  */
 
 import * as HashgraphProto from "@hashgraph/proto";
-import TransactionFeeSchedule from "./TransactionFeeSchedule";
-import Timestamp from "./Timestamp";
+import TransactionFeeSchedule from "./TransactionFeeSchedule.js";
+import Timestamp from "./Timestamp.js";
 
 export default class FeeSchedule {
     /**

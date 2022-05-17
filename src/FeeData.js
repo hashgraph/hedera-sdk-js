@@ -19,8 +19,8 @@
  */
 
 import * as HashgraphProto from "@hashgraph/proto";
-import FeeComponents from "./FeeComponents";
-import FeeDataType from "./FeeDataType";
+import FeeComponents from "./FeeComponents.js";
+import FeeDataType from "./FeeDataType.js";
 
 export default class FeeData {
     /**
