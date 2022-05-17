@@ -17,6 +17,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * ContractUpdateTransactionIntegrationTest
  * Status response codes for `314-319`
 
+## v2.14.0
+
+### Added
+
+ * `AccountId.aliasEvmAddress`
+ * `ContractCreateTransaction.[get|set]MaxAutomaticTokenAssociations()`
+ * `ContractCreateTransaction.[get|set]Bytecode()`
+ * `ContractUpdateTransaction.[get|set]MaxAutomaticTokenAssociations()`
+ * `ContractCreateFlow.[get|set]MaxAutomaticTokenAssociations()`
+ * `AccountInfo.ethereumNonce`
+ * `ContractCallResult.senderAccountId`
+ * `ContractCallQuery.[get|set]SenderAccountId()`
+ * `TransactionRecord.ethereumHash`
+ * `EthereumTransaction`
+ * `TransactionResponse.get[Receipt|Record]Query()`
+ * `[Wallet|Signer|Provider].sendRequest()` -> `[Wallet|Signer|Provider].call()`
+ * `[Wallet|Signer].[sign|populate|check]Transaction()` are now generic over the parameter
+ * `Wallet.checkTransaction` should not error if the `Transaction.transactionId` is `null`
+ * More status codes to `Status`
+
+### Fixed
+
+ * Bumped `@hashgraph/proto` version to correctly support account allowances
+ * `TransactionId.transactionId` accessor should not error if there is no transaction ID set and
+   instead should return a nullable `TransactionId`
+ * `ContractFunctionParameters.addBytes()` where the byte length is a factor of 32 and greater than 32
+ * `[Web|Native]Channel` should correctly propagate the error from `fetch()`
+
 ## v2.14.0-beta.2
 
 ### Added

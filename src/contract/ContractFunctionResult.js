@@ -20,6 +20,7 @@
 
 import ContractLogInfo from "./ContractLogInfo.js";
 import ContractId from "./ContractId.js";
+import AccountId from "../account/AccountId.js";
 import BigNumber from "bignumber.js";
 import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
@@ -55,6 +56,7 @@ export default class ContractFunctionResult {
      * @param {Long} result.gas
      * @param {Long} result.amount
      * @param {Uint8Array} result.functionParameters
+     * @param {?AccountId} result.senderAccountId
      */
     constructor(result) {
         /**
@@ -160,6 +162,10 @@ export default class ContractFunctionResult {
             functionParameters: /** @type {Uint8Array} */ (
                 result.functionParameters
             ),
+            senderAccountId:
+                result.senderId != null
+                    ? AccountId._fromProtobuf(result.senderId)
+                    : null,
         });
     }
 

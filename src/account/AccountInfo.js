@@ -204,11 +204,17 @@ export default class AccountInfo {
         this.aliasKey = props.aliasKey;
 
         this.ledgerId = props.ledgerId;
-
+        /*
+         * @deprecated - no longer supported
+         */
         this.hbarAllowances = props.hbarAllowances;
-
+        /*
+         * @deprecated - no longer supported
+         */
         this.tokenAllowances = props.tokenAllowances;
-
+        /*
+         * @deprecated - no longer supported
+         */
         this.nftAllowances = props.nftAllowances;
 
         this.ethereumNonce = props.ethereumNonce;
@@ -305,7 +311,6 @@ export default class AccountInfo {
                 info.ledgerId != null
                     ? LedgerId.fromBytes(info.ledgerId)
                     : null,
-
             hbarAllowances: [],
             tokenAllowances: [],
             nftAllowances: [],
