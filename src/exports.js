@@ -96,6 +96,7 @@ export { default as NftId } from "./token/NftId.js";
 export { default as Provider } from "./Provider.js";
 export { default as ProxyStaker } from "./account/ProxyStaker.js";
 export { default as Query } from "./query/Query.js";
+export { default as RequestType } from "./RequestType.js";
 export { default as ScheduleCreateTransaction } from "./schedule/ScheduleCreateTransaction.js";
 export { default as ScheduleDeleteTransaction } from "./schedule/ScheduleDeleteTransaction.js";
 export { default as ScheduleId } from "./schedule/ScheduleId.js";

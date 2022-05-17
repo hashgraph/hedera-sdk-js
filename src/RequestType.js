@@ -44,127 +44,145 @@ export default class RequestType {
             case RequestType.None:
                 return "NONE";
             case RequestType.CryptoTransfer:
-                return "CRYPTO_TRANSFER";
+                return "CryptoTransfer";
             case RequestType.CryptoUpdate:
-                return "CRYPTO_UPDATE";
+                return "CryptoUpdate";
             case RequestType.CryptoDelete:
-                return "CRYPTO_DELETE";
+                return "CryptoDelete";
             case RequestType.CryptoAddLiveHash:
-                return "CRYPTO_ADD_LIVE_HASH";
+                return "CryptoAddLiveHash";
             case RequestType.CryptoDeleteLiveHash:
-                return "CRYPTO_DELETE_LIVE_HASH";
+                return "CryptoDeleteLiveHash";
             case RequestType.ContractCall:
-                return "CONTRACT_CALL";
+                return "ContractCall";
             case RequestType.ContractCreate:
-                return "CONTRACT_CREATE";
+                return "ContractCreate";
             case RequestType.ContractUpdate:
-                return "CONTRACT_UPDATE";
+                return "ContractUpdate";
             case RequestType.FileCreate:
-                return "FILE_CREATE";
+                return "FileCreate";
             case RequestType.FileAppend:
-                return "FILE_APPEND";
+                return "FileAppend";
             case RequestType.FileUpdate:
-                return "FILE_UPDATE";
+                return "FileUpdate";
             case RequestType.FileDelete:
-                return "FILE_DELETE";
+                return "FileDelete";
             case RequestType.CryptoGetAccountBalance:
-                return "CRYPTO_GET_ACCOUNT_BALANCE";
+                return "CryptoGetAccountBalance";
             case RequestType.CryptoGetAccountRecords:
-                return "CRYPTO_GET_ACCOUNT_RECORDS";
+                return "CryptoGetAccountRecords";
             case RequestType.CryptoGetInfo:
-                return "CRYPTO_GET_INFO";
+                return "CryptoGetInfo";
             case RequestType.ContractCallLocal:
-                return "CONTRACT_CALL_LOCAL";
+                return "ContractCallLocal";
             case RequestType.ContractGetInfo:
-                return "CONTRACT_GET_INFO";
+                return "ContractGetInfo";
             case RequestType.ContractGetBytecode:
-                return "CONTRACT_GET_BYTECODE";
+                return "ContractGetBytecode";
             case RequestType.GetBySolidityID:
-                return "GET_BY_SOLIDITY_ID";
+                return "GetBySolidityID";
             case RequestType.GetByKey:
-                return "GET_BY_KEY";
+                return "GetByKey";
             case RequestType.CryptoGetLiveHash:
-                return "CRYPTO_GET_LIVE_HASH";
+                return "CryptoGetLiveHash";
             case RequestType.CryptoGetStakers:
-                return "CRYPTO_GET_STAKERS";
+                return "CryptoGetStakers";
             case RequestType.FileGetContents:
-                return "FILE_GET_CONTENTS";
+                return "FileGetContents";
             case RequestType.FileGetInfo:
-                return "FILE_GET_INFO";
+                return "FileGetInfo";
             case RequestType.TransactionGetRecord:
-                return "TRANSACTION_GET_RECORD";
+                return "TransactionGetRecord";
             case RequestType.ContractGetRecords:
-                return "CONTRACT_GET_RECORDS";
+                return "ContractGetRecords";
             case RequestType.CryptoCreate:
-                return "CRYPTO_CREATE";
+                return "CryptoCreate";
             case RequestType.SystemDelete:
-                return "SYSTEM_DELETE";
+                return "SystemDelete";
             case RequestType.SystemUndelete:
-                return "SYSTEM_UNDELETE";
+                return "SystemUndelete";
             case RequestType.ContractDelete:
-                return "CONTRACT_DELETE";
+                return "ContractDelete";
             case RequestType.Freeze:
-                return "FREEZE";
+                return "Freeze";
             case RequestType.CreateTransactionRecord:
-                return "CREATE_TRANSACTION_RECORD";
+                return "CreateTransactionRecord";
             case RequestType.CryptoAccountAutoRenew:
-                return "CRYPTO_ACCOUNT_AUTO_RENEW";
+                return "CryptoAccountAutoRenew";
             case RequestType.ContractAutoRenew:
-                return "CONTRACT_AUTO_RENEW";
+                return "ContractAutoRenew";
             case RequestType.GetVersionInfo:
-                return "GET_VERSION_INFO";
+                return "GetVersionInfo";
             case RequestType.TransactionGetReceipt:
-                return "TRANSACTION_GET_RECEIPT";
+                return "TransactionGetReceipt";
             case RequestType.ConsensusCreateTopic:
-                return "CONSENSUS_CREATE_TOPIC";
+                return "ConsensusCreateTopic";
             case RequestType.ConsensusUpdateTopic:
-                return "CONSENSUS_UPDATE_TOPIC";
+                return "ConsensusUpdateTopic";
             case RequestType.ConsensusDeleteTopic:
-                return "CONSENSUS_DELETE_TOPIC";
+                return "ConsensusDeleteTopic";
             case RequestType.ConsensusGetTopicInfo:
-                return "CONSENSUS_GET_TOPIC_INFO";
+                return "ConsensusGetTopicInfo";
             case RequestType.ConsensusSubmitMessage:
-                return "CONSENSUS_SUBMIT_MESSAGE";
+                return "ConsensusSubmitMessage";
             case RequestType.UncheckedSubmit:
-                return "UNCHECKED_SUBMIT";
+                return "UncheckedSubmit";
             case RequestType.TokenCreate:
-                return "TOKEN_CREATE";
+                return "TokenCreate";
             case RequestType.TokenGetInfo:
-                return "TOKEN_GET_INFO";
+                return "TokenGetInfo";
             case RequestType.TokenFreezeAccount:
-                return "TOKEN_FREEZE_ACCOUNT";
+                return "TokenFreezeAccount";
             case RequestType.TokenUnfreezeAccount:
-                return "TOKEN_UNFREEZE_ACCOUNT";
+                return "TokenUnfreezeAccount";
             case RequestType.TokenGrantKycToAccount:
-                return "TOKEN_GRANT_KYC_TO_ACCOUNT";
+                return "TokenGrantKycToAccount";
             case RequestType.TokenRevokeKycFromAccount:
-                return "TOKEN_REVOKE_KYC_FROM_ACCOUNT";
+                return "TokenRevokeKycFromAccount";
             case RequestType.TokenDelete:
-                return "TOKEN_DELETE";
+                return "TokenDelete";
             case RequestType.TokenUpdate:
-                return "TOKEN_UPDATE";
+                return "TokenUpdate";
             case RequestType.TokenMint:
-                return "TOKEN_MINT";
+                return "TokenMint";
             case RequestType.TokenBurn:
-                return "TOKEN_BURN";
+                return "TokenBurn";
             case RequestType.TokenAccountWipe:
-                return "TOKEN_ACCOUNT_WIPE";
+                return "TokenAccountWipe";
             case RequestType.TokenAssociateToAccount:
-                return "TOKEN_ASSOCIATE_TO_ACCOUNT";
+                return "TokenAssociateToAccount";
             case RequestType.TokenDissociateFromAccount:
-                return "TOKEN_DISSOCIATE_FROM_ACCOUNT";
+                return "TokenDissociateFromAccount";
             case RequestType.ScheduleCreate:
-                return "SCHEDULE_CREATE";
+                return "ScheduleCreate";
             case RequestType.ScheduleDelete:
-                return "SCHEDULE_DELETE";
+                return "ScheduleDelete";
             case RequestType.ScheduleSign:
-                return "SCHEDULE_SIGN";
+                return "ScheduleSign";
             case RequestType.ScheduleGetInfo:
-                return "SCHEDULE_GET_INFO";
+                return "ScheduleGetInfo";
+            case RequestType.TokenGetAccountNftInfos:
+                return "TokenGetAccountNftInfos";
+            case RequestType.TokenGetNftInfo:
+                return "TokenGetNftInfo";
+            case RequestType.TokenGetNftInfos:
+                return "TokenGetNftInfos";
+            case RequestType.TokenFeeScheduleUpdate:
+                return "TokenFeeScheduleUpdate";
+            case RequestType.NetworkGetExecutionTime:
+                return "NetworkGetExecutionTime";
             case RequestType.TokenPause:
-                return "TOKEN_PAUSE";
+                return "TokenPause";
             case RequestType.TokenUnpause:
-                return "TOKEN_UNPAUSE";
+                return "TokenUnpause";
+            case RequestType.CryptoApproveAllowance:
+                return "CryptoApproveAllowance";
+            case RequestType.CryptoDeleteAllowance:
+                return "CryptoDeleteAllowance";
+            case RequestType.GetAccountDetails:
+                return "GetAccountDetails";
+            case RequestType.EthereumTransaction:
+                return "EthereumTransaction";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -297,10 +315,28 @@ export default class RequestType {
                 return RequestType.ScheduleSign;
             case 73:
                 return RequestType.ScheduleGetInfo;
+            case 74:
+                return RequestType.TokenGetAccountNftInfos;
+            case 75:
+                return RequestType.TokenGetNftInfo;
+            case 76:
+                return RequestType.TokenGetNftInfos;
+            case 77:
+                return RequestType.TokenFeeScheduleUpdate;
+            case 78:
+                return RequestType.NetworkGetExecutionTime;
             case 79:
                 return RequestType.TokenPause;
             case 80:
                 return RequestType.TokenUnpause;
+            case 81:
+                return RequestType.CryptoApproveAllowance;
+            case 82:
+                return RequestType.CryptoDeleteAllowance;
+            case 83:
+                return RequestType.GetAccountDetails;
+            case 84:
+                return RequestType.EthereumTransaction;
         }
 
         throw new Error(
@@ -317,22 +353,23 @@ export default class RequestType {
 }
 
 /**
- * UNSPECIFIED - RESERVED
+ * UNSPECIFIED - Need to keep first value as unspecified because first element is ignored and
+ * not parsed (0 is ignored by parser)
  */
 RequestType.None = new RequestType(0);
 
 /**
- * Crypto transfer
+ * crypto transfer
  */
 RequestType.CryptoTransfer = new RequestType(1);
 
 /**
- * Crypto update account
+ * crypto update account
  */
 RequestType.CryptoUpdate = new RequestType(2);
 
 /**
- * Crypto delete account
+ * crypto delete account
  */
 RequestType.CryptoDelete = new RequestType(3);
 
@@ -382,12 +419,12 @@ RequestType.FileUpdate = new RequestType(11);
 RequestType.FileDelete = new RequestType(12);
 
 /**
- * Crypto get account balance
+ * crypto get account balance
  */
 RequestType.CryptoGetAccountBalance = new RequestType(13);
 
 /**
- * Crypto get account record
+ * crypto get account record
  */
 RequestType.CryptoGetAccountRecords = new RequestType(14);
 
@@ -407,7 +444,7 @@ RequestType.ContractCallLocal = new RequestType(16);
 RequestType.ContractGetInfo = new RequestType(17);
 
 /**
- * Smart Contract, get the byte code
+ * Smart Contract, get the runtime code
  */
 RequestType.ContractGetBytecode = new RequestType(18);
 
@@ -452,27 +489,27 @@ RequestType.TransactionGetRecord = new RequestType(25);
 RequestType.ContractGetRecords = new RequestType(26);
 
 /**
- * Crypto create account
+ * crypto create account
  */
 RequestType.CryptoCreate = new RequestType(27);
 
 /**
- * System delete file
+ * system delete file
  */
 RequestType.SystemDelete = new RequestType(28);
 
 /**
- * System undelete file
+ * system undelete file
  */
 RequestType.SystemUndelete = new RequestType(29);
 
 /**
- * Delete contract
+ * delete contract
  */
 RequestType.ContractDelete = new RequestType(30);
 
 /**
- * Freeze
+ * freeze
  */
 RequestType.Freeze = new RequestType(31);
 
@@ -526,11 +563,7 @@ RequestType.ConsensusGetTopicInfo = new RequestType(53);
  */
 RequestType.ConsensusSubmitMessage = new RequestType(54);
 
-/**
- *
- */
 RequestType.UncheckedSubmit = new RequestType(55);
-
 /**
  * Create Token
  */
@@ -617,6 +650,31 @@ RequestType.ScheduleSign = new RequestType(72);
 RequestType.ScheduleGetInfo = new RequestType(73);
 
 /**
+ * Get Token Account Nft Information
+ */
+RequestType.TokenGetAccountNftInfos = new RequestType(74);
+
+/**
+ * Get Token Nft Information
+ */
+RequestType.TokenGetNftInfo = new RequestType(75);
+
+/**
+ * Get Token Nft List Information
+ */
+RequestType.TokenGetNftInfos = new RequestType(76);
+
+/**
+ * Update a token's custom fee schedule, if permissible
+ */
+RequestType.TokenFeeScheduleUpdate = new RequestType(77);
+
+/**
+ * Get execution time(s) by TransactionID, if available
+ */
+RequestType.NetworkGetExecutionTime = new RequestType(78);
+
+/**
  * Pause the Token
  */
 RequestType.TokenPause = new RequestType(79);
@@ -625,3 +683,24 @@ RequestType.TokenPause = new RequestType(79);
  * Unpause the Token
  */
 RequestType.TokenUnpause = new RequestType(80);
+
+/**
+ * Approve allowance for a spender relative to the owner account
+ */
+RequestType.CryptoApproveAllowance = new RequestType(81);
+
+/**
+ * Deletes granted allowances on owner account
+ */
+RequestType.CryptoDeleteAllowance = new RequestType(82);
+
+/**
+ * Gets all the information about an account, including balance and allowances. This does not get the list of
+ * account records.
+ */
+RequestType.GetAccountDetails = new RequestType(83);
+
+/**
+ * Ethereum Transaction
+ */
+RequestType.EthereumTransaction = new RequestType(84);
