@@ -20,6 +20,7 @@
 
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import ContractId from "./ContractId.js";
+import AccountId from "../account/AccountId.js";
 import ContractFunctionParameters from "./ContractFunctionParameters.js";
 import ContractFunctionResult from "./ContractFunctionResult.js";
 import Long from "long";
@@ -38,7 +39,6 @@ import Long from "long";
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../client/Client.js").default<*, *>} Client
- * @typedef {import("../account/AccountId.js").default} AccountId
  */
 
 /**
@@ -57,6 +57,7 @@ export default class ContractCallQuery extends Query {
      * @param {number | Long} [props.gas]
      * @param {FunctionParameters | Uint8Array} [props.functionParameters]
      * @param {number | Long} [props.maxResultSize]
+     * @param {AccountId | string} [props.senderAccountId]
      */
     constructor(props = {}) {
         super();
@@ -102,6 +103,15 @@ export default class ContractCallQuery extends Query {
         this._maxResultSize = null;
         if (props.maxResultSize != null) {
             this.setMaxResultSize(props.maxResultSize);
+        }
+
+        /**
+         * @private
+         * @type {?AccountId}
+         */
+        this._senderAccountId = null;
+        if (props.senderAccountId != null) {
+            this.setSenderAccountId(props.senderAccountId);
         }
     }
 
@@ -166,6 +176,25 @@ export default class ContractCallQuery extends Query {
      */
     setGas(gas) {
         this._gas = gas instanceof Long ? gas : Long.fromValue(gas);
+        return this;
+    }
+
+    /**
+     * @returns {?AccountId}
+     */
+    get senderAccountId() {
+        return this._senderAccountId;
+    }
+
+    /**
+     * @param {AccountId | string} senderAccountId
+     * @returns {ContractCallQuery}
+     */
+    setSenderAccountId(senderAccountId) {
+        this._senderAccountId =
+            typeof senderAccountId === "string"
+                ? AccountId.fromString(senderAccountId)
+                : senderAccountId;
         return this;
     }
 
@@ -284,6 +313,10 @@ export default class ContractCallQuery extends Query {
                 gas: this._gas,
                 maxResultSize: this._maxResultSize,
                 functionParameters: this._functionParameters,
+                senderId:
+                    this._senderAccountId != null
+                        ? this._senderAccountId._toProtobuf()
+                        : null,
             },
         };
     }

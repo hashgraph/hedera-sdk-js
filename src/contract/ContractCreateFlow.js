@@ -182,6 +182,25 @@ export default class ContractCreateFlow {
     }
 
     /**
+     * @returns {?number}
+     */
+    get maxAutomaticTokenAssociation() {
+        return this._contractCreate.maxAutomaticTokenAssociations;
+    }
+
+    /**
+     * @param {number} maxAutomaticTokenAssociation
+     * @returns {this}
+     */
+    setMaxAutomaticTokenAssociation(maxAutomaticTokenAssociation) {
+        this._contractCreate.setMaxAutomaticTokenAssociations(
+            maxAutomaticTokenAssociation
+        );
+
+        return this;
+    }
+
+    /**
      * @template {Channel} ChannelT
      * @template MirrorChannelT
      * @param {import("../client/Client.js").default<ChannelT, MirrorChannelT>} client

@@ -42,7 +42,7 @@ describe("TransactionResponse", function () {
         await env.close();
     });
 
-    it("should make a transaction receipt query available", async function() {
+    it("should make a transaction receipt query available", async function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
@@ -74,9 +74,9 @@ describe("TransactionResponse", function () {
         ).getReceipt(env.client);
 
         await env.close();
-    })
+    });
 
-    it("should make a transaction record query available", async function() {
+    it("should make a transaction record query available", async function () {
         this.timeout(120000);
 
         const env = await IntegrationTestEnv.new();
@@ -108,5 +108,5 @@ describe("TransactionResponse", function () {
         ).getReceipt(env.client);
 
         await env.close();
-    })
+    });
 });
