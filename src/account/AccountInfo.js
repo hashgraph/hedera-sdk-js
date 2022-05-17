@@ -31,11 +31,8 @@ import PublicKey from "../PublicKey.js";
 import LedgerId from "../LedgerId.js";
 
 /**
- * @deprecated - no longer supported 
  * @typedef {import("./HbarAllowance.js").default} HbarAllowance
- * @deprecated - no longer supported
  * @typedef {import("./TokenAllowance.js").default} TokenAllowance
- * @deprecated - no longer supported
  * @typedef {import("./TokenNftAllowance.js").default} TokenNftAllowance
  */
 
@@ -86,11 +83,8 @@ export default class AccountInfo {
      * @param {Long} props.maxAutomaticTokenAssociations
      * @param {PublicKey | null} props.aliasKey
      * @param {LedgerId | null} props.ledgerId
-     * @deprecated - no longer supported
      * @param {HbarAllowance[]} props.hbarAllowances
-     * @deprecated - no longer supported
      * @param {TokenAllowance[]} props.tokenAllowances
-     * @deprecated - no longer supported
      * @param {TokenNftAllowance[]} props.nftAllowances
      */
     constructor(props) {
@@ -209,17 +203,17 @@ export default class AccountInfo {
 
         this.ledgerId = props.ledgerId;
         /*
-        *@deprecated - no longer supported
-        */
+         * @deprecated - no longer supported
+         */
         this.hbarAllowances = props.hbarAllowances;
         /*
-        *@deprecated - no longer supported
-        */
+         * @deprecated - no longer supported
+         */
         this.tokenAllowances = props.tokenAllowances;
         /*
-        *@deprecated - no longer supported
-        */
-       this.nftAllowances = props.nftAllowances;
+         * @deprecated - no longer supported
+         */
+        this.nftAllowances = props.nftAllowances;
 
         Object.freeze(this);
     }
@@ -314,16 +308,16 @@ export default class AccountInfo {
                     ? LedgerId.fromBytes(info.ledgerId)
                     : null,
             /*
-            *@deprecated - no longer supported
-            */
+             * @deprecated - no longer supported
+             */
             hbarAllowances: [],
             /*
-            *@deprecated - no longer supported
-            */
+             * @deprecated - no longer supported
+             */
             tokenAllowances: [],
             /*
-            *@deprecated - no longer supported
-            */
+             * @deprecated - no longer supported
+             */
             nftAllowances: [],
         });
     }
