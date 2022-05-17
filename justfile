@@ -63,7 +63,15 @@ release-test: install build format lint test-unit-node test-unit-browser
     just -f examples/simple_rest_signature_provider/justfile build
     just -f common_js_test/justfile build test
 
-publish TAG="latest": release-test
+_link-check:
+    #!/usr/bin/env bash
+    grep '".*": "link:.*"' package.json > /dev/null
+    if [ $? -eq 0 ]; then
+        echo "Found use of 'link:' within 'package.json'"
+        exit 1
+    fi
+
+publish TAG="latest": _link-check release-test
     pnpm publish --tag "{{TAG}}"
 
 update-proto:
