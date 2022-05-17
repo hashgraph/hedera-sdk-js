@@ -307,17 +307,8 @@ export default class AccountInfo {
                 info.ledgerId != null
                     ? LedgerId.fromBytes(info.ledgerId)
                     : null,
-            /*
-             * @deprecated - no longer supported
-             */
             hbarAllowances: [],
-            /*
-             * @deprecated - no longer supported
-             */
             tokenAllowances: [],
-            /*
-             * @deprecated - no longer supported
-             */
             nftAllowances: [],
         });
     }
