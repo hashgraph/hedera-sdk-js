@@ -69,6 +69,7 @@ export default class TransactionRecord {
      * @param {HbarAllowance[]} props.hbarAllowanceAdjustments
      * @param {TokenAllowance[]} props.tokenAllowanceAdjustments
      * @param {TokenNftAllowance[]} props.nftAllowanceAdjustments
+     * @param {?Uint8Array} props.ethereumHash
      */
     constructor(props) {
         /**
@@ -208,6 +209,11 @@ export default class TransactionRecord {
          */
         this.nftAllowanceAdjustments = props.nftAllowanceAdjustments;
 
+        /**
+         * @readonly
+         */
+        this.ethereumHash = props.ethereumHash;
+
         Object.freeze(this);
     }
 
@@ -321,6 +327,7 @@ export default class TransactionRecord {
                               this.aliasKey._toProtobufKey()
                           ).finish()
                         : null,
+                ethereumHash: this.ethereumHash,
             },
         };
     }
@@ -448,6 +455,8 @@ export default class TransactionRecord {
             hbarAllowanceAdjustments: [],
             tokenAllowanceAdjustments: [],
             nftAllowanceAdjustments: [],
+            ethereumHash:
+                record.ethereumHash != null ? record.ethereumHash : null,
         });
     }
 

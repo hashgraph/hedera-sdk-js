@@ -10,7 +10,7 @@ specifiers:
   '@grpc/grpc-js': ^1.6.7
   '@grpc/proto-loader': ^0.6.9
   '@hashgraph/cryptography': ^1.1.2
-  '@hashgraph/proto': ^2.4.1
+  '@hashgraph/proto': 2.4.1
   '@playwright/test': ^1.21.1
   '@types/chai': ^4.3.1
   '@types/crypto-js': ^4.1.1

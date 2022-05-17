@@ -69,3 +69,7 @@ publish TAG="latest": release-test
 update-proto:
     just -f packages/proto/justfile update
     pnpm add link:packages/proto
+    # Yes doing this twice does seem necessary :shrug:
+    pnpm add link:packages/proto
+
+update: update-proto build
