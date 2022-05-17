@@ -1378,7 +1378,6 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.17.9
-      '@babel/helper-module-transforms': 7.17.7
       '@babel/helper-plugin-utils': 7.16.7
     transitivePeerDependencies:
       - supports-color
