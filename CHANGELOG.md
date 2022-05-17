@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+ * ContractCreateTransaction.[get|set]maxAutomaticTokenAssociation
+ * ContractUpdateTransaction.[get|set]maxAutomaticTokenAssociation
+ * ContractCreateFlow.[get|set]maxAutomaticTokenAssociation
+ * ContractCreateFlow.[get|set]autoRenewAccountId
+ * ContractCreateFlowIntegrationTest
+ * ContractCreateTransactionIntegrationTest
+ * ContractUpdateTransactionIntegrationTest
+ * Status response codes for `314-319`
+
 ## v2.14.0-beta.2
 
 ### Added

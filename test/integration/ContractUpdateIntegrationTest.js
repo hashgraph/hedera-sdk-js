@@ -1,4 +1,6 @@
+import { expect } from "chai";
 import {
+    AccountId,
     ContractCreateTransaction,
     ContractDeleteTransaction,
     ContractFunctionParameters,
@@ -42,6 +44,8 @@ describe("ContractUpdate", function () {
             )
             .setBytecodeFileId(file)
             .setContractMemo("[e2e::ContractCreateTransaction]")
+            .setAutoRenewAccountId(AccountId.fromString("0.0.6642"))
+            .setMaxAutomaticTokenAssociations(999)
             .execute(env.client);
 
         receipt = await response.getReceipt(env.client);
@@ -70,11 +74,14 @@ describe("ContractUpdate", function () {
         expect(info.contractMemo).to.be.equal(
             "[e2e::ContractCreateTransaction]"
         );
+        expect(info.autoRenewAccountId).to.be.equal("0.0.6642");
+        expect(info.maxAutomaticTokenAssociations).to.be.equal(999);
 
         await (
             await new ContractUpdateTransaction()
                 .setContractId(contract)
                 .setContractMemo("[e2e::ContractUpdateTransaction]")
+                .setMaxAutomaticTokenAssociations(998)
                 .execute(env.client)
         ).getReceipt(env.client);
 
@@ -96,6 +103,7 @@ describe("ContractUpdate", function () {
         expect(info.contractMemo).to.be.equal(
             "[e2e::ContractUpdateTransaction]"
         );
+        expect(info.maxAutomaticTokenAssociations).to.be.equal(998);
 
         await (
             await new ContractDeleteTransaction()

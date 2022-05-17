@@ -61,6 +61,8 @@ export default class ContractCreateTransaction extends Transaction {
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {Uint8Array} [props.constructorParameters]
      * @param {string} [props.contractMemo]
+     * @param {AccountId} [props.autoRenewAccountId]
+     * @param {number} [props.maxAutomaticTokenAssociations]
      */
     constructor(props = {}) {
         super();
@@ -119,6 +121,18 @@ export default class ContractCreateTransaction extends Transaction {
          */
         this._contractMemo = null;
 
+        /**
+         * @private
+         * @type {?AccountId}
+         */
+        this._autoRenewAccountId = null;
+
+        /**
+         * @private
+         * @type {number}
+         */
+        this._maxAutomaticTokenAssociations = 0;
+
         this._defaultMaxTransactionFee = new Hbar(20);
 
         if (props.bytecodeFileId != null) {
@@ -155,6 +169,16 @@ export default class ContractCreateTransaction extends Transaction {
 
         if (props.contractMemo != null) {
             this.setContractMemo(props.contractMemo);
+        }
+
+        if (props.autoRenewAccountId != null) {
+            this.setAutoRenewAccountId(props.autoRenewAccountId);
+        }
+
+        if (props.maxAutomaticTokenAssociations != null) {
+            this.setMaxAutomaticTokenAssociations(
+                props.maxAutomaticTokenAssociations
+            );
         }
     }
 
@@ -218,6 +242,18 @@ export default class ContractCreateTransaction extends Transaction {
                         ? create.constructorParameters
                         : undefined,
                 contractMemo: create.memo != null ? create.memo : undefined,
+                autoRenewAccountId:
+                    create.autoRenewAccountId != null
+                        ? AccountId._fromProtobuf(
+                              /** @type {HashgraphProto.proto.IAccountID} */ (
+                                  create.autoRenewAccountId
+                              )
+                          )
+                        : undefined,
+                maxAutomaticTokenAssociations:
+                    create.maxAutomaticTokenAssociations != null
+                        ? create.maxAutomaticTokenAssociations
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -409,6 +445,43 @@ export default class ContractCreateTransaction extends Transaction {
     }
 
     /**
+     *
+     * @returns {?AccountId}
+     */
+    get autoRenewAccountId() {
+        return this._autoRenewAccountId;
+    }
+
+    /**
+     *
+     * @param {AccountId | null} autoRenewAccountId
+     * @returns {this}
+     */
+    setAutoRenewAccountId(autoRenewAccountId) {
+        this._requireNotFrozen();
+        this._autoRenewAccountId = autoRenewAccountId;
+
+        return this;
+    }
+
+    /**
+     * @returns {?number}
+     */
+    get maxAutomaticTokenAssociations() {
+        return this._maxAutomaticTokenAssociations;
+    }
+
+    /**
+     * @param {number} maxAutomaticTokenAssociations
+     * @returns {this}
+     */
+    setMaxAutomaticTokenAssociations(maxAutomaticTokenAssociations) {
+        this._maxAutomaticTokenAssociations = maxAutomaticTokenAssociations;
+
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -418,6 +491,10 @@ export default class ContractCreateTransaction extends Transaction {
 
         if (this._proxyAccountId != null) {
             this._proxyAccountId.validateChecksum(client);
+        }
+
+        if (this._autoRenewAccountId != null) {
+            this._autoRenewAccountId.validateChecksum(client);
         }
     }
 
@@ -467,6 +544,11 @@ export default class ContractCreateTransaction extends Transaction {
             autoRenewPeriod: this._autoRenewPeriod._toProtobuf(),
             constructorParameters: this._constructorParameters,
             memo: this._contractMemo,
+            autoRenewAccountId:
+                this._autoRenewAccountId != null
+                    ? this._autoRenewAccountId._toProtobuf()
+                    : null,
+            maxAutomaticTokenAssociations: this._maxAutomaticTokenAssociations,
         };
     }
 

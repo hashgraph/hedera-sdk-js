@@ -77,8 +77,7 @@ export default class TransactionResponse {
      * @returns {Promise<TransactionReceipt>}
      */
     async getReceipt(client) {
-        const receipt = await this.getReceiptQuery()
-            .execute(client);
+        const receipt = await this.getReceiptQuery().execute(client);
 
         if (receipt.status !== Status.Success) {
             throw new ReceiptStatusError({
@@ -98,8 +97,7 @@ export default class TransactionResponse {
     async getRecord(client) {
         await this.getReceipt(client);
 
-        return this.getRecordQuery()
-            .execute(client);
+        return this.getRecordQuery().execute(client);
     }
 
     /**
