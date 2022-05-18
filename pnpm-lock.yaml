@@ -7,6 +7,7 @@ specifiers:
   '@babel/plugin-syntax-dynamic-import': ^7.8.3
   '@babel/plugin-transform-modules-commonjs': ^7.17.9
   '@babel/register': ^7.17.7
+  '@ethersproject/rlp': ^5.6.0
   '@grpc/grpc-js': ^1.6.7
   '@grpc/proto-loader': ^0.6.9
   '@hashgraph/cryptography': ^1.1.2
@@ -54,6 +55,7 @@ specifiers:
   vite: ^2.9.5
 
 dependencies:
+  '@ethersproject/rlp': 5.6.0
   '@grpc/grpc-js': 1.6.7
   '@hashgraph/cryptography': 1.1.2_expo@45.0.3
   '@hashgraph/proto': 2.4.1
@@ -1829,6 +1831,23 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@ethersproject/bytes/5.6.1:
+    resolution: {integrity: sha512-NwQt7cKn5+ZE4uDn+X5RAXLp46E1chXoaMmrxAyA0rblpxz8t58lVkrHXoRIn0lz1joQElQ8410GqhTqMOwc6g==}
+    dependencies:
+      '@ethersproject/logger': 5.6.0
+    dev: false
+
+  /@ethersproject/logger/5.6.0:
+    resolution: {integrity: sha512-BiBWllUROH9w+P21RzoxJKzqoqpkyM1pRnEKG69bulE9TSQD8SAIvTQqIMZmmCO8pUNkgLP1wndX1gKghSpBmg==}
+    dev: false
+
+  /@ethersproject/rlp/5.6.0:
+    resolution: {integrity: sha512-dz9WR1xpcTL+9DtOT/aDO+YyxSSdO8YIS0jyZwHHSlAmnxA6cKU3TrTd4Xc/bHayctxTgGLYNuVVoiXE4tTq1g==}
+    dependencies:
+      '@ethersproject/bytes': 5.6.1
+      '@ethersproject/logger': 5.6.0
+    dev: false
 
   /@expo/bunyan/4.0.0:
     resolution: {integrity: sha512-Ydf4LidRB/EBI+YrB+cVLqIseiRfjUI/AeHBgjGMtq3GroraDu81OV7zqophRgupngoL3iS3JUMDMnxO7g39qA==}

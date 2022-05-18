@@ -3,6 +3,7 @@ import { expect } from "chai";
 import Long from "long";
 
 import * as hex from "../../src/encoding/hex.js";
+import * as rlp from "@ethersproject/rlp";
 import {
     EthereumTransaction,
     AccountId,
@@ -14,6 +15,13 @@ import {
 } from "../../src/index.js";
 
 describe("EthereumTransaction", function () {
+    it("rlp decoded", function () {
+        const bytes = hex.decode(
+            "f864012f83018000947e3a9eaf9bcc39e2ffa38eb30bf7a93feacbc18180827653820277a0f9fbff985d374be4a55f296915002eec11ac96f1ce2df183adf992baa9390b2fa00c1e867cc960d9c74ec2e6a662b7908ec4c8cc9f3091e886bcefbeb2290fb792"
+        );
+        console.log(JSON.stringify(rlp.decode(bytes)));
+    });
+
     it("toProtobuf with FileId", function () {
         const ethereumData = hex.decode("00112233445566778899");
         const callData = new FileId(1);
