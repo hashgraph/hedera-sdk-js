@@ -20,10 +20,9 @@
 
 import Hbar from "./Hbar.js";
 import EthereumTransaction from "./EthereumTransaction.js";
+import EthereumTransactionData from "./EthereumTransactionData.js";
 import FileCreateTransaction from "./file/FileCreateTransaction.js";
 import FileAppendTransaction from "./file/FileAppendTransaction.js";
-import * as rlp from "@ethersproject/rlp";
-import * as hex from "./encoding/hex.js";
 
 /**
  * @namespace proto
@@ -61,7 +60,7 @@ export default class EthereumFlow {
     constructor(props = {}) {
         /**
          * @private
-         * @type {?Uint8Array}
+         * @type {?EthereumTransactionData}
          */
         this._ethereumData = null;
 
@@ -91,7 +90,7 @@ export default class EthereumFlow {
     }
 
     /**
-     * @returns {?(Uint8Array | FileId)}
+     * @returns {?EthereumTransactionData}
      */
     get ethereumData() {
         return this._ethereumData;
@@ -101,11 +100,14 @@ export default class EthereumFlow {
      * The raw Ethereum transaction (RLP encoded type 0, 1, and 2). Complete
      * unless the callData field is set.
      *
-     * @param {Uint8Array} ethereumData
+     * @param {EthereumTransactionData | Uint8Array} ethereumData
      * @returns {this}
      */
     setEthereumData(ethereumData) {
-        this._ethereumData = ethereumData;
+        this._ethereumData =
+            ethereumData instanceof Uint8Array
+                ? EthereumTransactionData.fromBytes(ethereumData)
+                : ethereumData;
         return this;
     }
 
@@ -170,44 +172,41 @@ export default class EthereumFlow {
      * @returns {Promise<TransactionResponse>}
      */
     async execute(client) {
-        if (this._ethereumData == null || this._ethereumData.length === 0) {
+        if (this._ethereumData == null) {
             throw new Error(
                 "cannot submit ethereum transaction with no ethereum data"
             );
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const decoded = /** @type {string[]} */ (
-            rlp.decode(this._ethereumData)
-        );
-
         const ethereumTransaction = new EthereumTransaction();
+        const ethereumTransactionDataBytes = this._ethereumData.toBytes();
 
         if (this._maxGasAllowance != null) {
             ethereumTransaction.setMaxGasAllowance(this._maxGasAllowance);
         }
 
         if (this._callData != null) {
-            if (decoded[5] !== "0x" && decoded[5] !== "") {
+            if (this._ethereumData.callData.length === 0) {
                 throw new Error(
                     "call data file ID provided, but ethereum data already contains call data"
                 );
             }
 
             ethereumTransaction
-                .setEthereumData(this._ethereumData)
+                .setEthereumData(this._ethereumData.toBytes())
                 .setCallData(this._callData);
-        } else if (this._ethereumData.length <= 5120) {
-            ethereumTransaction.setEthereumData(
-                hex.decode(rlp.encode(decoded))
-            );
+        } else if (ethereumTransactionDataBytes.length <= 5120) {
+            ethereumTransaction.setEthereumData(ethereumTransactionDataBytes);
         } else {
-            const fileId = await createFile(hex.decode(decoded[5]), client);
+            const fileId = await createFile(
+                this._ethereumData.callData,
+                client
+            );
 
-            decoded[5] = "0x";
+            this._ethereumData.setCallData(new Uint8Array());
 
             ethereumTransaction
-                .setEthereumData(hex.decode(rlp.encode(decoded)))
+                .setEthereumData(this._ethereumData.toBytes())
                 .setCallData(fileId);
         }
 
