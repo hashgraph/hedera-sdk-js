@@ -1,5 +1,5 @@
 import { FileAppendTransaction } from "../../src/index.js";
-import Mocker from "./Mocker.js";
+import Mocker, { UNAVAILABLE } from "./Mocker.js";
 import { bigContents } from "../integration/contents.js";
 import { proto } from "@hashgraph/proto";
 
@@ -131,6 +131,52 @@ describe("FileAppendMocking", function () {
 
         if (!err) {
             throw new Error("did not error");
+        }
+
+        servers.close();
+    });
+
+    it("errors with max retries in case of BUSY precheck", async function() {
+        const { client, servers } = await Mocker.withResponses([
+            [
+                {
+                    response: {
+                        nodeTransactionPrecheckCode: proto.ResponseCodeEnum.BUSY,
+                    },
+                },
+            ],
+        ]);
+
+        try {
+            await new FileAppendTransaction()
+                .setContents("a")
+                .setMaxAttempts(1)
+                .execute(client);
+        } catch (error) {
+            if (error.message !== "max attempts of 1 was reached for request with last error being: BUSY") {
+                throw error;
+            }
+        }
+
+        servers.close();
+    });
+
+    it("errors with max retries in case of UNAVAILABLE grpc status", async function() {
+        const { client, servers } = await Mocker.withResponses([
+            [
+                { error: UNAVAILABLE },
+            ],
+        ]);
+
+        try {
+            await new FileAppendTransaction()
+                .setContents("a")
+                .setMaxAttempts(1)
+                .execute(client);
+        } catch (error) {
+            if (error.message !== "max attempts of 1 was reached for request with last error being: GrpcServiceError: node is UNAVAILABLE") {
+                throw err;
+            }
         }
 
         servers.close();
