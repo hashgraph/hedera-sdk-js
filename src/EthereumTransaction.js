@@ -81,7 +81,7 @@ export default class EthereumTransaction extends Transaction {
         }
 
         if (props.callData != null) {
-            this.setCallData(props.callData);
+            this.setCallDataFileId(props.callData);
         }
 
         if (props.maxGasAllowance != null) {
@@ -171,7 +171,7 @@ export default class EthereumTransaction extends Transaction {
      * @param {FileId} callData
      * @returns {this}
      */
-    setCallData(callData) {
+    setCallDataFileId(callData) {
         this._requireNotFrozen();
         this._callData = callData;
         return this;
