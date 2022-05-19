@@ -203,7 +203,7 @@ export default class EthereumFlow {
                 client
             );
 
-            this._ethereumData.setCallData(new Uint8Array());
+            this._ethereumData.callData = new Uint8Array();
 
             ethereumTransaction
                 .setEthereumData(this._ethereumData.toBytes())
