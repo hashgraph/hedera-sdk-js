@@ -68,7 +68,7 @@ export default class EthereumFlow {
          * @private
          * @type {?FileId}
          */
-        this._callData = null;
+        this._callDataFileId = null;
 
         /**
          * @private
@@ -78,10 +78,6 @@ export default class EthereumFlow {
 
         if (props.ethereumData != null) {
             this.setEthereumData(props.ethereumData);
-        }
-
-        if (props.callData != null) {
-            this.setCallData(props.callData);
         }
 
         if (props.maxGasAllowance != null) {
@@ -108,28 +104,6 @@ export default class EthereumFlow {
             ethereumData instanceof Uint8Array
                 ? EthereumTransactionData.fromBytes(ethereumData)
                 : ethereumData;
-        return this;
-    }
-
-    /**
-     * @returns {?FileId}
-     */
-    get callData() {
-        return this._callData;
-    }
-
-    /**
-     * For large transactions (for example contract create) this is the callData
-     * of the callData. The data in the callData will be re-written with
-     * the callData element as a zero length string with the original contents in
-     * the referenced file at time of execution. The callData will need to be
-     * "rehydrated" with the callData for signature validation to pass.
-     *
-     * @param {FileId} callData
-     * @returns {this}
-     */
-    setCallData(callData) {
-        this._callData = callData;
         return this;
     }
 
@@ -185,7 +159,7 @@ export default class EthereumFlow {
             ethereumTransaction.setMaxGasAllowance(this._maxGasAllowance);
         }
 
-        if (this._callData != null) {
+        if (this._callDataFileId != null) {
             if (this._ethereumData.callData.length === 0) {
                 throw new Error(
                     "call data file ID provided, but ethereum data already contains call data"
@@ -194,7 +168,7 @@ export default class EthereumFlow {
 
             ethereumTransaction
                 .setEthereumData(this._ethereumData.toBytes())
-                .setCallData(this._callData);
+                .setCallData(this._callDataFileId);
         } else if (ethereumTransactionDataBytes.length <= 5120) {
             ethereumTransaction.setEthereumData(ethereumTransactionDataBytes);
         } else {
