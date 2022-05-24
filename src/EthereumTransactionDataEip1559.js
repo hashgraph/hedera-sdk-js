@@ -141,4 +141,5 @@ export default class EthereumTransactionDataEip1559 extends EthereumTransactionD
     }
 }
 
-CACHE.ethereumTransactionDataEip1559FromBytes = (bytes) => EthereumTransactionDataEip1559.fromBytes(bytes);
+CACHE.ethereumTransactionDataEip1559FromBytes = (bytes) =>
+    EthereumTransactionDataEip1559.fromBytes(bytes);

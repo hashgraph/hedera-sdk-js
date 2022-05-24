@@ -65,48 +65,6 @@ describe("EthereumFlowMocking", function () {
         ).getReceipt(client);
     });
 
-    it("makes sure ethereum data has no call data if a call data file ID is provided", async function () {
-        this.timeout(10000);
-
-        ({ client, servers } = await Mocker.withResponses([
-            [
-                {
-                    call: (request) => {
-                        const transactionBody = proto.TransactionBody.decode(
-                            proto.SignedTransaction.decode(
-                                request.signedTransactionBytes
-                            ).bodyBytes
-                        );
-
-                        expect(
-                            transactionBody.ethereumTransaction.ethereumData
-                        ).to.deep.equal(bytes);
-
-                        return { response: TRANSACTION_RESPONSE_SUCCESS };
-                    },
-                },
-                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
-            ],
-        ]));
-
-        try {
-            await (
-                await new EthereumFlow()
-                    .setEthereumData(bytes)
-                    .setCallData(callData)
-                    .execute(client)
-            ).getReceipt(client);
-        } catch (error) {
-            if (
-                !error.message.startsWith(
-                    "call data file ID provided, but ethereum data already contains call data"
-                )
-            ) {
-                throw error;
-            }
-        }
-    });
-
     it("errors if ethereum data is not provided", async function () {
         this.timeout(10000);
 
@@ -132,11 +90,8 @@ describe("EthereumFlowMocking", function () {
         ]));
 
         try {
-            await (
-                await new EthereumFlow().setCallData(callData).execute(client)
-            ).getReceipt(client);
+            await new EthereumFlow().execute(client)
         } catch (error) {
-            console.log(error.message);
             if (
                 !error.message.startsWith(
                     "cannot submit ethereum transaction with no ethereum data"

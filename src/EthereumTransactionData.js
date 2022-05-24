@@ -38,26 +38,26 @@ export default class EthereumTransactionData {
         }
     }
 
+    // eslint-disable-next-line jsdoc/require-returns-check
     /**
      * @returns {Uint8Array}
      */
-    // eslint-disable-next-line jsdoc/require-returns-check
     toBytes() {
         throw new Error("not implemented");
     }
 
+    // eslint-disable-next-line jsdoc/require-returns-check
     /**
      * @returns {string}
      */
-    // eslint-disable-next-line jsdoc/require-returns-check
     toString() {
         throw new Error("not implemented");
     }
 
+    // eslint-disable-next-line jsdoc/require-returns-check
     /**
      * @returns {{[key: string]: any}}
      */
-    // eslint-disable-next-line jsdoc/require-returns-check
     toJSON() {
         throw new Error("not implemented");
     }
