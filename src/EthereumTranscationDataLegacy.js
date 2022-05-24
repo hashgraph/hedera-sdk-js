@@ -1,6 +1,7 @@
 import * as rlp from "@ethersproject/rlp";
 import * as hex from "./encoding/hex.js";
 import EthereumTransactionData from "./EthereumTransactionData.js";
+import CACHE from "./Cache.js";
 
 /**
  * @typedef {object} EthereumTransactionDataLegacyJSON
@@ -114,3 +115,5 @@ export default class EthereumTransactionDataLegacy extends EthereumTransactionDa
         };
     }
 }
+
+CACHE.ethereumTransactionDataLegacyFromBytes = (bytes) => EthereumTransactionDataLegacy.fromBytes(bytes);

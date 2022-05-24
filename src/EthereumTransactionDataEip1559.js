@@ -1,6 +1,7 @@
 import * as rlp from "@ethersproject/rlp";
 import * as hex from "./encoding/hex.js";
 import EthereumTransactionData from "./EthereumTransactionData.js";
+import CACHE from "./Cache.js";
 
 /**
  * @typedef {object} EthereumTransactionDataEip1559JSON
@@ -139,3 +140,5 @@ export default class EthereumTransactionDataEip1559 extends EthereumTransactionD
         };
     }
 }
+
+CACHE.ethereumTransactionDataEip1559FromBytes = (bytes) => EthereumTransactionDataEip1559.fromBytes(bytes);
