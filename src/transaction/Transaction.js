@@ -676,7 +676,7 @@ export default class Transaction extends Executable {
     }
 
     _setTransactionId() {
-        if (this._operator == null && this._transactionIds.isEmpty) {
+        if (this._operatorAccountId == null && this._transactionIds.isEmpty) {
             throw new Error(
                 "`transactionId` must be set or `client` must be provided with `freezeWith`"
             );
@@ -728,6 +728,13 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * @param {?AccountId} accountId
+     */
+    _freezeWithAccountId(accountId) {
+        this._operatorAccountId = accountId;
+    }
+
+    /**
      * Freeze this transaction from further modification to prepare for
      * signing or serialization.
      *
@@ -740,6 +747,9 @@ export default class Transaction extends Executable {
     freezeWith(client) {
         this._signOnDemand = client != null ? client._signOnDemand : false;
         this._operator = client != null ? client._operator : null;
+        this._freezeWithAccountId(
+            client != null ? client.operatorAccountId : null
+        );
         this._maxTransactionFee =
             this._maxTransactionFee == null
                 ? client != null && client.defaultMaxTransactionFee != null
@@ -921,6 +931,10 @@ export default class Transaction extends Executable {
         }
 
         this._operator = client != null ? client._operator : null;
+        this._operatorAccountId =
+            client != null && client._operator != null
+                ? client._operator.accountId
+                : null;
 
         if (this._operator != null) {
             await this.signWith(
@@ -994,12 +1008,12 @@ export default class Transaction extends Executable {
      * @internal
      */
     _buildNewTransactionIdList() {
-        if (this._transactionIds.locked || this._operator == null) {
+        if (this._transactionIds.locked || this._operatorAccountId == null) {
             return;
         }
 
         const transactionId = TransactionId.withValidStart(
-            this._operator.accountId,
+            this._operatorAccountId,
             Timestamp.generate()
         );
 
