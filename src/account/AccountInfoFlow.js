@@ -26,6 +26,7 @@ import KeyList from "../KeyList.js";
  * @typedef {import("../transaction/Transaction.js").default} Transaction
  * @typedef {import("../PublicKey.js").default} PublicKey
  * @typedef {import("./AccountId.js").default} AccountId
+ * @typedef {import("../Signer.js").Signer} Signer
  */
 
 export default class AccountInfoFlow {
@@ -58,6 +59,50 @@ export default class AccountInfoFlow {
         const info = await new AccountInfoQuery()
             .setAccountId(accountId)
             .execute(client);
+
+        if (info.key instanceof KeyList) {
+            return false;
+        }
+
+        return /** @type {PublicKey} */ (info.key).verifyTransaction(
+            transaction
+        );
+    }
+
+    /**
+     * @param {Signer} signer
+     * @param {AccountId | string} accountId
+     * @param {Uint8Array} message
+     * @param {Uint8Array} signature
+     * @returns {Promise<boolean>}
+     */
+    static async verifySignatureWithSigner(
+        signer,
+        accountId,
+        message,
+        signature
+    ) {
+        const info = await new AccountInfoQuery()
+            .setAccountId(accountId)
+            .executeWithSigner(signer);
+
+        if (info.key instanceof KeyList) {
+            return false;
+        }
+
+        return /** @type {PublicKey} */ (info.key).verify(message, signature);
+    }
+
+    /**
+     * @param {Signer} signer
+     * @param {AccountId | string} accountId
+     * @param {Transaction} transaction
+     * @returns {Promise<boolean>}
+     */
+    static async verifyTransactionWithSigner(signer, accountId, transaction) {
+        const info = await new AccountInfoQuery()
+            .setAccountId(accountId)
+            .executeWithSigner(signer);
 
         if (info.key instanceof KeyList) {
             return false;

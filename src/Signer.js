@@ -29,6 +29,7 @@
  * @typedef {import("./account/AccountId.js").default} AccountId
  * @typedef {import("./account/AccountBalance.js").default} AccountBalance
  * @typedef {import("./account/AccountInfo.js").default} AccountInfo
+ * @typedef {import("./Key.js").default} Key
  */
 
 /**
@@ -47,6 +48,7 @@
  * @typedef {object} Signer
  * @property {() => LedgerId?} getLedgerId
  * @property {() => AccountId} getAccountId
+ * @property {() => Key} [getAccountKey]
  * @property {() => {[key: string]: (string | AccountId)}} getNetwork
  * @property {() => string[]} getMirrorNetwork
  * @property {(messages: Uint8Array[]) => Promise<SignerSignature[]>} sign

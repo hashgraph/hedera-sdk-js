@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+ * `Signer.getAccountKey()` - Signature providers _should_ be implementing this method, but
+   it was added in a none-breaking change way so old signer provider implementations won't
+   break when updating to the latest JS SDK version
+ * `ContractCreateFlow.executeWithSigner()` - Execute a flow using a signer
+ * `AccountInfoFlow.verify[Signature|Transaction]WithSigner()` - Execute a flow using a signer
+
 ## v2.14.2
 
 ### Added

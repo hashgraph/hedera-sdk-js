@@ -22,6 +22,8 @@ import FileCreateTransaction from "../file/FileCreateTransaction.js";
 import FileAppendTransaction from "../file/FileAppendTransaction.js";
 import FileDeleteTransaction from "../file/FileDeleteTransaction.js";
 import ContractCreateTransaction from "./ContractCreateTransaction.js";
+import Status from "../Status.js";
+import ReceiptStatusError from "../ReceiptStatusError.js";
 import * as utf8 from "../encoding/utf8.js";
 
 /**
@@ -34,7 +36,9 @@ import * as utf8 from "../encoding/utf8.js";
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
+ * @typedef {import("../transaction/TransactionReceipt.js").default} TransactionReceipt
  * @typedef {import("../client/Client.js").ClientOperator} ClientOperator
+ * @typedef {import("../Signer.js").Signer} Signer
  */
 
 /**
@@ -254,4 +258,80 @@ export default class ContractCreateFlow {
 
         return response;
     }
+
+    /**
+     * @param {Signer} signer
+     * @returns {Promise<TransactionResponse>}
+     */
+    async executeWithSigner(signer) {
+        if (this._bytecode == null) {
+            throw new Error("cannot create contract with no bytecode");
+        }
+
+        if (signer.getAccountKey == null) {
+            throw new Error(
+                "`Signer.getAccountKey()` is not implemented, but is requried for `ContractCreateFlow`"
+            );
+        }
+
+        const key = signer.getAccountKey();
+
+        let response = await new FileCreateTransaction()
+            .setKeys(key != null ? [key] : [])
+            .setContents(
+                this._bytecode.subarray(
+                    0,
+                    Math.min(this._bytecode.length, 2048)
+                )
+            )
+            .executeWithSigner(signer);
+
+        const receipt = await getReceiptWithSigner(response, signer);
+
+        const fileId = /** @type {FileId} */ (receipt.fileId);
+
+        if (this._bytecode.length > 2048) {
+            await new FileAppendTransaction()
+                .setFileId(fileId)
+                .setContents(this._bytecode.subarray(2048))
+                .executeWithSigner(signer);
+        }
+
+        response = await this._contractCreate
+            .setBytecodeFileId(fileId)
+            .executeWithSigner(signer);
+
+        await getReceiptWithSigner(response, signer);
+
+        if (key != null) {
+            const fileDeleteResponse = await new FileDeleteTransaction()
+                .setFileId(fileId)
+                .executeWithSigner(signer);
+
+            await getReceiptWithSigner(fileDeleteResponse, signer);
+        }
+
+        return response;
+    }
+}
+
+/**
+ * Perhaps we should implement this on `TransactionResponse`?
+ *
+ * @param {TransactionResponse} response
+ * @param {Signer} signer
+ * @returns {Promise<TransactionReceipt>}
+ */
+async function getReceiptWithSigner(response, signer) {
+    const receipt = await response.getReceiptQuery().executeWithSigner(signer);
+
+    if (receipt.status !== Status.Success) {
+        throw new ReceiptStatusError({
+            transactionReceipt: receipt,
+            status: receipt.status,
+            transactionId: response.transactionId,
+        });
+    }
+
+    return receipt;
 }
