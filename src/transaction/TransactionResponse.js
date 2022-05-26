@@ -30,6 +30,7 @@ import * as hex from "../encoding/hex.js";
  * @typedef {import("../client/Client.js").default<*, *>} Client
  * @typedef {import("./TransactionReceipt.js").default} TransactionReceipt
  * @typedef {import("./TransactionRecord.js").default} TransactionRecord
+ * @typedef {import("../Signer.js").Signer} Signer
  */
 
 /**
@@ -98,6 +99,34 @@ export default class TransactionResponse {
         await this.getReceipt(client);
 
         return this.getRecordQuery().execute(client);
+    }
+
+    /**
+     * @param {Signer} signer
+     * @returns {Promise<TransactionReceipt>}
+     */
+    async getReceiptWithSigner(signer) {
+        const receipt = await this.getReceiptQuery().executeWithSigner(signer);
+
+        if (receipt.status !== Status.Success) {
+            throw new ReceiptStatusError({
+                transactionReceipt: receipt,
+                status: receipt.status,
+                transactionId: this.transactionId,
+            });
+        }
+
+        return receipt;
+    }
+
+    /**
+     * @param {Signer} signer
+     * @returns {Promise<TransactionRecord>}
+     */
+    async getRecordWithSigner(signer) {
+        await this.getReceiptWithSigner(signer);
+
+        return this.getRecordQuery().executeWithSigner(signer);
     }
 
     /**

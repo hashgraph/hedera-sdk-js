@@ -136,12 +136,13 @@ describe("FileAppendMocking", function () {
         servers.close();
     });
 
-    it("errors with max retries in case of BUSY precheck", async function() {
+    it("errors with max retries in case of BUSY precheck", async function () {
         const { client, servers } = await Mocker.withResponses([
             [
                 {
                     response: {
-                        nodeTransactionPrecheckCode: proto.ResponseCodeEnum.BUSY,
+                        nodeTransactionPrecheckCode:
+                            proto.ResponseCodeEnum.BUSY,
                     },
                 },
             ],
@@ -153,7 +154,10 @@ describe("FileAppendMocking", function () {
                 .setMaxAttempts(1)
                 .execute(client);
         } catch (error) {
-            if (error.message !== "max attempts of 1 was reached for request with last error being: BUSY") {
+            if (
+                error.message !==
+                "max attempts of 1 was reached for request with last error being: BUSY"
+            ) {
                 throw error;
             }
         }
@@ -161,11 +165,9 @@ describe("FileAppendMocking", function () {
         servers.close();
     });
 
-    it("errors with max retries in case of UNAVAILABLE grpc status", async function() {
+    it("errors with max retries in case of UNAVAILABLE grpc status", async function () {
         const { client, servers } = await Mocker.withResponses([
-            [
-                { error: UNAVAILABLE },
-            ],
+            [{ error: UNAVAILABLE }],
         ]);
 
         try {
@@ -174,7 +176,10 @@ describe("FileAppendMocking", function () {
                 .setMaxAttempts(1)
                 .execute(client);
         } catch (error) {
-            if (error.message !== "max attempts of 1 was reached for request with last error being: GrpcServiceError: node is UNAVAILABLE") {
+            if (
+                error.message !==
+                "max attempts of 1 was reached for request with last error being: GrpcServiceError: node is UNAVAILABLE"
+            ) {
                 throw error;
             }
         }
