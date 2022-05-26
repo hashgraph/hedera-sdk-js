@@ -22,8 +22,6 @@ import FileCreateTransaction from "../file/FileCreateTransaction.js";
 import FileAppendTransaction from "../file/FileAppendTransaction.js";
 import FileDeleteTransaction from "../file/FileDeleteTransaction.js";
 import ContractCreateTransaction from "./ContractCreateTransaction.js";
-import Status from "../Status.js";
-import ReceiptStatusError from "../ReceiptStatusError.js";
 import * as utf8 from "../encoding/utf8.js";
 
 /**
@@ -270,7 +268,7 @@ export default class ContractCreateFlow {
 
         if (signer.getAccountKey == null) {
             throw new Error(
-                "`Signer.getAccountKey()` is not implemented, but is requried for `ContractCreateFlow`"
+                "`Signer.getAccountKey()` is not implemented, but is required for `ContractCreateFlow`"
             );
         }
 
@@ -286,7 +284,7 @@ export default class ContractCreateFlow {
             )
             .executeWithSigner(signer);
 
-        const receipt = await getReceiptWithSigner(response, signer);
+        const receipt = await response.getReceiptWithSigner(signer);
 
         const fileId = /** @type {FileId} */ (receipt.fileId);
 
@@ -301,37 +299,16 @@ export default class ContractCreateFlow {
             .setBytecodeFileId(fileId)
             .executeWithSigner(signer);
 
-        await getReceiptWithSigner(response, signer);
+        await response.getReceiptWithSigner(signer);
 
         if (key != null) {
-            const fileDeleteResponse = await new FileDeleteTransaction()
-                .setFileId(fileId)
-                .executeWithSigner(signer);
-
-            await getReceiptWithSigner(fileDeleteResponse, signer);
+            await (
+                await new FileDeleteTransaction()
+                    .setFileId(fileId)
+                    .executeWithSigner(signer)
+            ).getReceiptWithSigner(signer);
         }
 
         return response;
     }
-}
-
-/**
- * Perhaps we should implement this on `TransactionResponse`?
- *
- * @param {TransactionResponse} response
- * @param {Signer} signer
- * @returns {Promise<TransactionReceipt>}
- */
-async function getReceiptWithSigner(response, signer) {
-    const receipt = await response.getReceiptQuery().executeWithSigner(signer);
-
-    if (receipt.status !== Status.Success) {
-        throw new ReceiptStatusError({
-            transactionReceipt: receipt,
-            status: receipt.status,
-            transactionId: response.transactionId,
-        });
-    }
-
-    return receipt;
 }
