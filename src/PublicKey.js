@@ -174,6 +174,13 @@ export default class PublicKey extends Key {
     /**
      * @returns {string}
      */
+    toEthereumAddress() {
+        return this._key.toEthereumAddress();
+    }
+
+    /**
+     * @returns {string}
+     */
     toString() {
         return this._key.toString();
     }
