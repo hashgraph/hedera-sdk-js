@@ -19,6 +19,7 @@
  */
 
 import Long from "long";
+import Cache from "./Cache.js";
 
 /**
  * @namespace proto
@@ -55,7 +56,7 @@ export default class Timestamp {
     static generate() {
         const jitter = Math.floor(Math.random() * 5000) + 8000;
         const now = Date.now() - jitter;
-        const seconds = Math.floor(now / 1000);
+        const seconds = Math.floor(now / 1000) + Cache.timeDrift;
         const nanos =
             Math.floor(now % 1000) * 1000000 +
             Math.floor(Math.random() * 1000000);

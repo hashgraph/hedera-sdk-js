@@ -90,7 +90,7 @@ describe("EthereumFlowMocking", function () {
         ]));
 
         try {
-            await new EthereumFlow().execute(client)
+            await new EthereumFlow().execute(client);
         } catch (error) {
             if (
                 !error.message.startsWith(

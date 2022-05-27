@@ -195,7 +195,7 @@ export default class Transaction extends Executable {
     }
 
     /**
-     * Deserialize a transaction from bytes. The bytes can either be a `proto.Transaction` or 
+     * Deserialize a transaction from bytes. The bytes can either be a `proto.Transaction` or
      * `proto.TransactionList`.
      *
      * @param {Uint8Array} bytes
@@ -217,7 +217,7 @@ export default class Transaction extends Executable {
         const list =
             HashgraphProto.proto.TransactionList.decode(bytes).transactionList;
 
-        // If the list is of length 0, then teh bytes provided were not a 
+        // If the list is of length 0, then teh bytes provided were not a
         // `proto.TransactionList`
         //
         // FIXME: We should also check to make sure the bytes length is greater than
@@ -225,7 +225,7 @@ export default class Transaction extends Executable {
         if (list.length === 0) {
             const transaction = HashgraphProto.proto.Transaction.decode(bytes);
 
-            // We support `Transaction.signedTransactionBytes` and 
+            // We support `Transaction.signedTransactionBytes` and
             // `Transaction.bodyBytes` + `Transaction.sigMap`. If the bytes represent the
             // latter, convert them into `signedTransactionBytes`
             if (transaction.signedTransactionBytes.length !== 0) {
@@ -388,7 +388,7 @@ export default class Transaction extends Executable {
         }
 
         // Remove node account IDs of 0
-        // _IIRC_ this was initial due to some funny behavior with `ScheduleCreateTransaction` 
+        // _IIRC_ this was initial due to some funny behavior with `ScheduleCreateTransaction`
         // We may be able to remove this.
         const zero = new AccountId(0);
         for (let i = 0; i < nodeIds.length; i++) {
@@ -410,7 +410,7 @@ export default class Transaction extends Executable {
         // be regenerated if we're deserializing a request from bytes
         transaction._transactionIds.setList(transactionIds).setLocked();
 
-        // Set the node account IDs accordingly, and lock the list. Node account IDs should 
+        // Set the node account IDs accordingly, and lock the list. Node account IDs should
         // never be changed if we're deserializing a request from bytes
         transaction._nodeAccountIds.setList(nodeIds).setLocked();
 
@@ -427,7 +427,7 @@ export default class Transaction extends Executable {
         transaction._transactionMemo = body.memo != null ? body.memo : "";
 
         // Loop over a single row of `signedTransactions` and add all the public
-        // keys to the `signerPublicKeys` set, and `publicKeys` list with 
+        // keys to the `signerPublicKeys` set, and `publicKeys` list with
         // `null` in the `transactionSigners` at the same index.
         for (let i = 0; i < nodeIds.length; i++) {
             const signedTransaction = signedTransactions[i];
@@ -921,7 +921,7 @@ export default class Transaction extends Executable {
         // Save the operator
         this._operator = client != null ? client._operator : null;
 
-        // Set max transaction fee to either `this._maxTransactionFee`, 
+        // Set max transaction fee to either `this._maxTransactionFee`,
         // `client._defaultMaxTransactionFee`, or `this._defaultMaxTransactionFee`
         // in that priority order depending on if `this._maxTransactionFee` has
         // been set or if `client._defaultMaxTransactionFee` has been set.
@@ -996,7 +996,7 @@ export default class Transaction extends Executable {
     /**
      * Serialize the request into bytes. This will encode all the transactions
      * into a `proto.TransactionList` and return the encoded protobuf.
-     * 
+     *
      * **NOTE**: Does not support sign on demand
      *
      * @returns {Uint8Array}
@@ -1106,7 +1106,15 @@ export default class Transaction extends Executable {
     }
 
     /**
+<<<<<<< Updated upstream
      * Is transaction frozen 
+||||||| constructed merge base
+     * Is transaction frozen
+=======
+     * Is transaction frozen
+     *
+     * @returns {boolean}
+>>>>>>> Stashed changes
      */
     isFrozen() {
         return this._signedTransactions.length > 0;
@@ -1266,7 +1274,7 @@ export default class Transaction extends Executable {
     /**
      * Build and and sign each transaction in a loop
      *
-     * This method is primary used in the exist condition methods 
+     * This method is primary used in the exist condition methods
      * which are not `execute()`, e.g. `toBytesAsync()` and `getSignaturesAsync()`
      *
      * @internal
@@ -1444,6 +1452,7 @@ export default class Transaction extends Executable {
 
     /**
      * Make a signed tranaction given a node account ID
+     *
      * @internal
      * @param {?AccountId} nodeId
      * @returns {HashgraphProto.proto.ISignedTransaction}
@@ -1594,6 +1603,7 @@ export default class Transaction extends Executable {
 
 /**
  * This is essentially a registry/cache for a callback that creates a `ScheduleCreateTransaction`
+ *
  * @type {(() => ScheduleCreateTransaction)[]}
  */
 export const SCHEDULE_CREATE_TRANSACTION = [];

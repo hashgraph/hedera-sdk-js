@@ -48,6 +48,9 @@
  */
 
 const CACHE = {
+    /** @type {number} */
+    timeDrift: 0,
+
     /** @type {FromProtobufKeyFuncT<HashgraphProto.proto.IContractID, ContractId> | null} */
     contractId: null,
 
