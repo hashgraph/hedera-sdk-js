@@ -25,6 +25,11 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").proto.IDuration} HashgraphProto.proto.IDuration
  */
 
+/**
+ * A duration type.
+ *
+ * The main point of this tyope is for encapsulating the `[to|from]Protobuf()` implementations
+ */
 export default class Duration {
     /**
      * @param {Long | number} seconds

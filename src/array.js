@@ -19,6 +19,8 @@
  */
 
 /**
+ * A simple efficient function for comparing byte arrays
+ *
  * @param {Uint8Array} array1
  * @param {Uint8Array} array2
  * @returns {boolean}
