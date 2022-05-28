@@ -54,7 +54,7 @@
         "@ethersproject/rlp": "^5.6.0",
         "@grpc/grpc-js": "^1.6.7",
         "@hashgraph/cryptography": "link:packages/cryptography",
-        "@hashgraph/proto": "2.4.1",
+        "@hashgraph/proto": "link:packages/proto",
         "bignumber.js": "^9.0.2",
         "crypto-js": "^4.1.1",
         "js-base64": "^3.7.2",

@@ -19,6 +19,7 @@
  */
 
 import AccountId from "./AccountId.js";
+import StakingInfo from "../StakingInfo.js";
 import LiveHash from "./LiveHash.js";
 import Hbar from "../Hbar.js";
 import Timestamp from "../Timestamp.js";
@@ -34,6 +35,7 @@ import LedgerId from "../LedgerId.js";
  * @typedef {import("./HbarAllowance.js").default} HbarAllowance
  * @typedef {import("./TokenAllowance.js").default} TokenAllowance
  * @typedef {import("./TokenNftAllowance.js").default} TokenNftAllowance
+ * @typedef {import("../StakingInfo.js").StakingInfoJson} StakingInfoJson
  */
 
 /**
@@ -56,6 +58,7 @@ import LedgerId from "../LedgerId.js";
  * @property {?string} aliasKey
  * @property {?string} ledgerId
  * @property {?string} ethereumNonce
+ * @property {?StakingInfoJson} stakingInfo
  */
 
 /**
@@ -88,6 +91,7 @@ export default class AccountInfo {
      * @param {TokenAllowance[]} props.tokenAllowances
      * @param {TokenNftAllowance[]} props.nftAllowances
      * @param {?Long} props.ethereumNonce
+     * @param {?StakingInfo} props.stakingInfo
      */
     constructor(props) {
         /**
@@ -114,14 +118,16 @@ export default class AccountInfo {
         this.isDeleted = props.isDeleted;
 
         /**
+         * @deprecated
+         *
          * The Account ID of the account to which this is proxy staked. If proxyAccountID is null,
          * or is an invalid account, or is an account that isn't a node, then this account is
          * automatically proxy staked to a node chosen by the network, but without earning payments.
          * If the proxyAccountID account refuses to accept proxy staking , or if it is not currently
          * running a node, then it will behave as if proxyAccountID was null.
-         *
          * @readonly
          */
+        // eslint-disable-next-line deprecation/deprecation
         this.proxyAccountId = props.proxyAccountId;
 
         /**
@@ -217,7 +223,15 @@ export default class AccountInfo {
          */
         this.nftAllowances = props.nftAllowances;
 
+        /**
+         * The ethereum transaction nonce associated with this account.
+         */
         this.ethereumNonce = props.ethereumNonce;
+
+        /**
+         * Staking metadata for this account.
+         */
+        this.stakingInfo = props.stakingInfo;
 
         Object.freeze(this);
     }
@@ -316,6 +330,10 @@ export default class AccountInfo {
             nftAllowances: [],
             ethereumNonce:
                 info.ethereumNonce != null ? info.ethereumNonce : null,
+            stakingInfo:
+                info.stakingInfo != null
+                    ? StakingInfo._fromProtobuf(info.stakingInfo)
+                    : null,
         });
     }
 
@@ -328,8 +346,10 @@ export default class AccountInfo {
             contractAccountID: this.contractAccountId,
             deleted: this.isDeleted,
             proxyAccountID:
+                // eslint-disable-next-line deprecation/deprecation
                 this.proxyAccountId != null
-                    ? this.proxyAccountId._toProtobuf()
+                    ? // eslint-disable-next-line deprecation/deprecation
+                      this.proxyAccountId._toProtobuf()
                     : null,
             proxyReceived: this.proxyReceived.toTinybars(),
             key: this.key._toProtobufKey(),
@@ -357,6 +377,10 @@ export default class AccountInfo {
                     : null,
             ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
             ethereumNonce: this.ethereumNonce,
+            stakingInfo:
+                this.stakingInfo != null
+                    ? this.stakingInfo._toProtobuf()
+                    : null,
         };
     }
 
@@ -396,8 +420,10 @@ export default class AccountInfo {
             contractAccountId: this.contractAccountId,
             isDeleted: this.isDeleted,
             proxyAccountId:
+                // eslint-disable-next-line deprecation/deprecation
                 this.proxyAccountId != null
-                    ? this.proxyAccountId.toString()
+                    ? // eslint-disable-next-line deprecation/deprecation
+                      this.proxyAccountId.toString()
                     : null,
             proxyReceived: this.proxyReceived.toString(),
             key: this.key.toString(),
@@ -416,6 +442,8 @@ export default class AccountInfo {
                 this.ethereumNonce != null
                     ? this.ethereumNonce.toString()
                     : null,
+            stakingInfo:
+                this.stakingInfo != null ? this.stakingInfo.toJSON() : null,
         };
     }
 }

@@ -20,6 +20,7 @@
 
 import ContractId from "./ContractId.js";
 import AccountId from "../account/AccountId.js";
+import StakingInfo from "../StakingInfo.js";
 import Timestamp from "../Timestamp.js";
 import Duration from "../Duration.js";
 import Hbar from "../Hbar.js";
@@ -30,6 +31,10 @@ import Key from "../Key.js";
 import LedgerId from "../LedgerId.js";
 
 const { proto } = HashgraphProto;
+
+/**
+ * @typedef {import("../StakingInfo.js").StakingInfoJson} StakingInfoJson
+ */
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -50,6 +55,7 @@ export default class ContractInfo {
      * @param {boolean} props.isDeleted
      * @param {TokenRelationshipMap} props.tokenRelationships
      * @param {LedgerId|null} props.ledgerId
+     * @param {?StakingInfo} props.stakingInfo
      */
     constructor(props) {
         /**
@@ -139,7 +145,15 @@ export default class ContractInfo {
          */
         this.tokenRelationships = props.tokenRelationships;
 
+        /**
+         * The ledger ID the response was returned from; please see <a href="https://github.com/hashgraph/hedera-improvement-proposal/blob/master/HIP/hip-198.md">HIP-198</a> for the network-specific IDs.
+         */
         this.ledgerId = props.ledgerId;
+
+        /**
+         * Staking metadata for this account.
+         */
+        this.stakingInfo = props.stakingInfo;
 
         Object.freeze(this);
     }
@@ -192,6 +206,10 @@ export default class ContractInfo {
                 info.ledgerId != null
                     ? LedgerId.fromBytes(info.ledgerId)
                     : null,
+            stakingInfo:
+                info.stakingInfo != null
+                    ? StakingInfo._fromProtobuf(info.stakingInfo)
+                    : null,
         });
     }
 
@@ -220,6 +238,10 @@ export default class ContractInfo {
                     ? this.tokenRelationships._toProtobuf()
                     : null,
             ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
+            stakingInfo:
+                this.stakingInfo != null
+                    ? this.stakingInfo._toProtobuf()
+                    : null,
         };
     }
 

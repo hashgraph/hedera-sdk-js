@@ -168,7 +168,7 @@ export default class EthereumFlow {
 
             ethereumTransaction
                 .setEthereumData(this._ethereumData.toBytes())
-                .setCallData(this._callDataFileId);
+                .setCallDataFileId(this._callDataFileId);
         } else if (ethereumTransactionDataBytes.length <= 5120) {
             ethereumTransaction.setEthereumData(ethereumTransactionDataBytes);
         } else {
@@ -181,7 +181,7 @@ export default class EthereumFlow {
 
             ethereumTransaction
                 .setEthereumData(this._ethereumData.toBytes())
-                .setCallData(fileId);
+                .setCallDataFileId(fileId);
         }
 
         return ethereumTransaction.execute(client);

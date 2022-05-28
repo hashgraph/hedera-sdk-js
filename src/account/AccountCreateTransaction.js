@@ -61,6 +61,9 @@ export default class AccountCreateTransaction extends Transaction {
      * @param {Duration | Long | number} [props.autoRenewPeriod]
      * @param {string} [props.accountMemo]
      * @param {Long | number} [props.maxAutomaticTokenAssociations]
+     * @param {AccountId | string} [props.stakedNodeAccountId]
+     * @param {Long | number} [props.stakedNodeId]
+     * @param {boolean} [props.declineStakingReward]
      */
     constructor(props = {}) {
         super();
@@ -119,6 +122,24 @@ export default class AccountCreateTransaction extends Transaction {
          */
         this._maxAutomaticTokenAssociations = null;
 
+        /**
+         * @private
+         * @type {?AccountId}
+         */
+        this._stakedNodeAccountId = null;
+
+        /**
+         * @private
+         * @type {?Long}
+         */
+        this._stakedNodeId = null;
+
+        /**
+         * @private
+         * @type {boolean}
+         */
+        this._declineStakingReward = false;
+
         if (props.key != null) {
             this.setKey(props.key);
         }
@@ -132,6 +153,7 @@ export default class AccountCreateTransaction extends Transaction {
         }
 
         if (props.proxyAccountId != null) {
+            // eslint-disable-next-line deprecation/deprecation
             this.setProxyAccountId(props.proxyAccountId);
         }
 
@@ -147,6 +169,18 @@ export default class AccountCreateTransaction extends Transaction {
             this.setMaxAutomaticTokenAssociations(
                 props.maxAutomaticTokenAssociations
             );
+        }
+
+        if (props.stakedNodeAccountId != null) {
+            this.setStakedNodeAccountId(props.stakedNodeAccountId);
+        }
+
+        if (props.stakedNodeId != null) {
+            this.setStakedNodeId(props.stakedNodeId);
+        }
+
+        if (props.declineStakingReward != null) {
+            this.setDeclineStakingReward(props.declineStakingReward);
         }
     }
 
@@ -205,6 +239,15 @@ export default class AccountCreateTransaction extends Transaction {
                     create.maxAutomaticTokenAssociations != null
                         ? create.maxAutomaticTokenAssociations
                         : undefined,
+                stakedNodeAccountId:
+                    create.stakedAccountId != null
+                        ? AccountId._fromProtobuf(create.stakedAccountId)
+                        : undefined,
+                stakedNodeId:
+                    create.stakedNodeId != null
+                        ? create.stakedNodeId
+                        : undefined,
+                declineStakingReward: create.declineReward == true,
             }),
             transactions,
             signedTransactions,
@@ -284,6 +327,7 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * @deprecated
      * @returns {?AccountId}
      */
     get proxyAccountId() {
@@ -291,8 +335,9 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
-     * Set the ID of the account to which this account is proxy staked.
+     * @deprecated
      *
+     * Set the ID of the account to which this account is proxy staked.
      * @param {AccountId} proxyAccountId
      * @returns {this}
      */
@@ -366,6 +411,63 @@ export default class AccountCreateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?AccountId}
+     */
+    get stakedNodeAccountId() {
+        return this._stakedNodeAccountId;
+    }
+
+    /**
+     * @param {AccountId | string} stakedNodeAccountId
+     * @returns {this}
+     */
+    setStakedNodeAccountId(stakedNodeAccountId) {
+        this._requireNotFrozen();
+        this._stakedNodeAccountId =
+            typeof stakedNodeAccountId === "string"
+                ? AccountId.fromString(stakedNodeAccountId)
+                : stakedNodeAccountId;
+
+        return this;
+    }
+
+    /**
+     * @returns {?Long}
+     */
+    get stakedNodeId() {
+        return this._stakedNodeId;
+    }
+
+    /**
+     * @param {Long | number} stakedNodeId
+     * @returns {this}
+     */
+    setStakedNodeId(stakedNodeId) {
+        this._requireNotFrozen();
+        this._stakedNodeId = Long.fromValue(stakedNodeId);
+
+        return this;
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    get declineStakingRewards() {
+        return this._declineStakingReward;
+    }
+
+    /**
+     * @param {boolean} declineStakingReward
+     * @returns {this}
+     */
+    setDeclineStakingReward(declineStakingReward) {
+        this._requireNotFrozen();
+        this._declineStakingReward = declineStakingReward;
+
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -419,6 +521,12 @@ export default class AccountCreateTransaction extends Transaction {
                 this._maxAutomaticTokenAssociations != null
                     ? this._maxAutomaticTokenAssociations.toInt()
                     : null,
+            stakedAccountId:
+                this.stakedNodeAccountId != null
+                    ? this.stakedNodeAccountId._toProtobuf()
+                    : null,
+            stakedNodeId: this.stakedNodeId,
+            declineReward: this.declineStakingRewards,
         };
     }
 
