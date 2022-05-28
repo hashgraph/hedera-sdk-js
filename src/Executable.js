@@ -169,6 +169,7 @@ export default class Executable {
 
     /**
      * Get the max attempts on the request
+     *
      * @returns {number}
      */
     get maxAttempts() {
@@ -189,6 +190,7 @@ export default class Executable {
 
     /**
      * Get the grpc deadline
+     *
      * @returns {?number}
      */
     get grpcDeadline() {
@@ -387,9 +389,10 @@ export default class Executable {
     /**
      * Advance the request to the next node
      *
-     * FIXME: This method used to perform different code depending on if we're 
-     * executing a query or transaction, but that is no longer the case 
+     * FIXME: This method used to perform different code depending on if we're
+     * executing a query or transaction, but that is no longer the case
      * and hence could be removed.
+     *
      * @protected
      * @returns {void}
      */
@@ -474,7 +477,7 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async execute(client, requestTimeout) {
-        // If the request timeout is set on the request we'll prioritize that instead 
+        // If the request timeout is set on the request we'll prioritize that instead
         // of the parameter provided, and if the parameter isn't provided we'll
         // use the default request timeout on client
         if (this._requestTimeout == null) {

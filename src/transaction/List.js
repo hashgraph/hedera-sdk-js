@@ -19,6 +19,9 @@
  */
 
 /**
+ * A custom list type which round robins, supports locking, and as additional
+ * QoL improvements.
+ *
  * @template {any} T
  */
 export default class List {
@@ -30,6 +33,9 @@ export default class List {
     }
 
     /**
+     * Overwrite the entire list.
+     *
+     * @throws if the list is locked
      * @param {T[]} list
      * @returns {this}
      */
@@ -45,6 +51,9 @@ export default class List {
     }
 
     /**
+     * Push items to the end of the list.
+     *
+     * @throws if the list is locked
      * @param {T[]} items
      * @returns {this}
      */
@@ -58,6 +67,8 @@ export default class List {
     }
 
     /**
+     * Locks the list.
+     *
      * @returns {this}
      */
     setLocked() {
@@ -65,6 +76,11 @@ export default class List {
         return this;
     }
 
+    /**
+     * Clear the list
+     *
+     * @throws if the list is locked
+     */
     clear() {
         if (this.locked) {
             throw new Error("list is locked");
@@ -75,6 +91,8 @@ export default class List {
     }
 
     /**
+     * The get value at a particular index.
+     *
      * @param {number} index
      * @returns {T}
      */
@@ -83,6 +101,9 @@ export default class List {
     }
 
     /**
+     * Set value at index
+     *
+     * @throws if the list is locked
      * @param {number} index
      * @param {T} item
      * @returns {this}
@@ -92,6 +113,7 @@ export default class List {
             throw new Error("list is locked");
         }
 
+        // QoL: If the index is at the end simply push the element to the end
         if (index === this.length) {
             this.list.push(item);
         } else {
@@ -102,6 +124,9 @@ export default class List {
     }
 
     /**
+     * Set value at index if it's not already set
+     *
+     * @throws if the list is locked
      * @param {number} index
      * @param {() => T} lambda
      * @returns {this}
@@ -115,6 +140,8 @@ export default class List {
     }
 
     /**
+     * Get the current value, and advance the index
+     *
      * @returns {T}
      */
     get next() {
@@ -122,6 +149,8 @@ export default class List {
     }
 
     /**
+     * Get the current value.
+     *
      * @returns {T}
      */
     get current() {
@@ -129,6 +158,8 @@ export default class List {
     }
 
     /**
+     * Advance the index to the next element in a round robin fashion
+     *
      * @returns {number}
      */
     advance() {
@@ -138,6 +169,8 @@ export default class List {
     }
 
     /**
+     * Is the list empty
+     *
      * @returns {boolean}
      */
     get isEmpty() {
@@ -145,6 +178,8 @@ export default class List {
     }
 
     /**
+     * Get the length of the list
+     *
      * @returns {number}
      */
     get length() {
@@ -152,6 +187,10 @@ export default class List {
     }
 
     /**
+     * Shallow clone this list.
+     * Perhaps we should explicitly call this `shallowClone()` since it doesn't
+     * clone the list inside?
+     *
      * @returns {List<T>}
      */
     clone() {
