@@ -28,7 +28,7 @@ describe("EthereumTransaction", function () {
             )
             .setNodeAccountIds([nodeAccountId])
             .setEthereumData(ethereumData)
-            .setCallData(callData)
+            .setCallDataFileId(callData)
             .setMaxGasAllowance(maxGasAllowance)
             .freeze();
 
