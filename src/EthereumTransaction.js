@@ -155,9 +155,34 @@ export default class EthereumTransaction extends Transaction {
     }
 
     /**
+     * @deprecated - Use `callDataFileId` instead
+     *
      * @returns {?FileId}
      */
     get callData() {
+        return this.callDataFileId;
+    }
+
+    /**
+     * @deprecated - Use `setCallDataFileId()` instead
+     *
+     * For large transactions (for example contract create) this is the callData
+     * of the callData. The data in the callData will be re-written with
+     * the callData element as a zero length string with the original contents in
+     * the referenced file at time of execution. The callData will need to be
+     * "rehydrated" with the callData for signature validation to pass.
+     *
+     * @param {FileId} callDataFileId
+     * @returns {this}
+     */
+    setCallData(callDataFileId) {
+        return this.setCallDataFileId(callDataFileId);
+    }
+
+    /**
+     * @returns {?FileId}
+     */
+    get callDataFileId() {
         return this._callData;
     }
 
