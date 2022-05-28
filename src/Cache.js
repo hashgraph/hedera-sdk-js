@@ -47,6 +47,9 @@
  * @typedef {{ (proto: ProtobufT): SdkT }} FromProtobufKeyFuncT
  */
 
+/**
+ * This variable is strictly designed to prevent cyclic dependencies.
+ */
 const CACHE = {
     /** @type {number} */
     timeDrift: 0,

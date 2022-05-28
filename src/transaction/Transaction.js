@@ -1106,15 +1106,9 @@ export default class Transaction extends Executable {
     }
 
     /**
-<<<<<<< Updated upstream
-     * Is transaction frozen 
-||||||| constructed merge base
-     * Is transaction frozen
-=======
      * Is transaction frozen
      *
      * @returns {boolean}
->>>>>>> Stashed changes
      */
     isFrozen() {
         return this._signedTransactions.length > 0;

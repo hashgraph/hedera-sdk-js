@@ -18,6 +18,10 @@
  * ‍
  */
 
+/**
+ * The entry point for NodeJS applications
+ */
+
 import Logger from "js-logger";
 
 export * from "./exports.js";

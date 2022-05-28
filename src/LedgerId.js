@@ -20,6 +20,9 @@
 
 import * as hex from "./encoding/hex.js";
 
+/**
+ * Represents the ID of a network.
+ */
 export default class LedgerId {
     /**
      * @hideconstructor

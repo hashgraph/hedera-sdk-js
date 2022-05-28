@@ -40,6 +40,10 @@ import Logger from "js-logger";
  */
 
 /**
+ * This registry holds a bunch of callbacks for `fromProtobuf()` implementations
+ * Since this is essentially aa cache, perhaps we should move this variable into the `Cache`
+ * type for consistency?
+ *
  * @type {Map<HashgraphProto.proto.Query["query"], (query: HashgraphProto.proto.IQuery) => Query<*>>}
  */
 export const QUERY_REGISTRY = new Map();
@@ -55,22 +59,51 @@ export default class Query extends Executable {
     constructor() {
         super();
 
-        /** @type {?TransactionId} */
+        /**
+         * The payment transaction ID
+         *
+         * @type {?TransactionId}
+         */
         this._paymentTransactionId = null;
 
-        /** @type {HashgraphProto.proto.ITransaction[]} */
+        /**
+         * The payment transactions list where each index points to a different node
+         *
+         * @type {HashgraphProto.proto.ITransaction[]}
+         */
         this._paymentTransactions = [];
 
-        /** @type {?Hbar} */
+        /**
+         * The amount being paid to the node for this query.
+         * A user can set this field explicitly, or we'll query the value during execution.
+         *
+         * @type {?Hbar}
+         */
         this._queryPayment = null;
 
-        /** @type {?Hbar} */
+        /**
+         * The maximum query payment a user is willing to pay. Unlike `Transaction.maxTransactionFee`
+         * this field only exists in the SDK; there is no protobuf field equivalent. If and when
+         * we query the actual cost of the query and the cost is greater than the max query payment
+         * we'll throw a `MaxQueryPaymentExceeded` error.
+         *
+         * @type {?Hbar}
+         */
         this._maxQueryPayment = null;
 
+        /**
+         * This is strictly used for `_getLogId()` which requires a timestamp. The timestamp it typically
+         * uses comes from the payment transaction ID, but that field is not set if this query is free.
+         * For those occasions we use this timestamp field generated at query construction instead.
+         *
+         * @type {number}
+         */
         this._timestamp = Date.now();
     }
 
     /**
+     * Deserialize a query from bytes. The bytes should be a `proto.Query`.
+     *
      * @template T
      * @param {Uint8Array} bytes
      * @returns {Query<T>}
@@ -97,6 +130,10 @@ export default class Query extends Executable {
     }
 
     /**
+     * Serialize the query into bytes.
+     *
+     * **NOTE**: Does not preserve payment transactions
+     *
      * @returns {Uint8Array}
      */
     toBytes() {
@@ -131,10 +168,13 @@ export default class Query extends Executable {
     }
 
     /**
+     * Fetch the cost of this query from a consensus node
+     *
      * @param {import("../client/Client.js").default<Channel, *>} client
      * @returns {Promise<Hbar>}
      */
     getCost(client) {
+        // The node account IDs must be set to execute a cost query
         if (this._nodeAccountIds.isEmpty) {
             this._nodeAccountIds.setList(
                 client._network.getNodeAccountIdsForExecute()
@@ -145,12 +185,15 @@ export default class Query extends Executable {
             throw new Error("CostQuery has not been loaded yet");
         }
 
+        // Change the timestamp. Should we be doing this?
         this._timestamp = Date.now();
 
         return COST_QUERY[0](this).execute(client);
     }
 
     /**
+     * Set he payment transaction explicitly
+     *
      * @param {TransactionId} paymentTransactionId
      * @returns {this}
      */
@@ -160,6 +203,8 @@ export default class Query extends Executable {
     }
 
     /**
+     * Get the payment transaction ID
+     *
      * @returns {?TransactionId}
      */
     get paymentTransactionId() {
@@ -167,6 +212,8 @@ export default class Query extends Executable {
     }
 
     /**
+     * Get the current transaction ID, and make sure it's not null
+     *
      * @returns {TransactionId}
      */
     _getTransactionId() {
@@ -180,6 +227,9 @@ export default class Query extends Executable {
     }
 
     /**
+     * Is payment required for this query. By default most queries require payment
+     * so the default implementation returns true.
+     *
      * @protected
      * @returns {boolean}
      */
@@ -188,71 +238,127 @@ export default class Query extends Executable {
     }
 
     /**
+     * Validate checksums of the query.
+     *
      * @param {Client} client
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-empty-function
     _validateChecksums(client) {
+        // Shouldn't we be checking `paymentTransactionId` here sine it contains an `accountId`?
         // Do nothing
     }
 
     /**
+     * Before we proceed exeuction, we need to do a couple checks
+     *
      * @template MirrorChannelT
      * @param {import("../client/Client.js").default<Channel, MirrorChannelT>} client
      * @returns {Promise<void>}
      */
     async _beforeExecute(client) {
+        // If we're executing this query multiple times the the payment transaction ID list
+        // will already be set
         if (this._paymentTransactions.length > 0) {
             return;
         }
 
+        // Check checksums if enabled
         if (client.isAutoValidateChecksumsEnabled()) {
             this._validateChecksums(client);
         }
 
+        // If the nodes aren't set, set them.
         if (this._nodeAccountIds.isEmpty) {
             this._nodeAccountIds.setList(
                 client._network.getNodeAccountIdsForExecute()
             );
         }
 
+        // Save the operator
         this._operator =
             this._operator != null ? this._operator : client._operator;
 
+        // If the payment transaction ID is not set
         if (this._paymentTransactionId == null) {
+            // And payment is required
             if (this._isPaymentRequired()) {
+                // And the client has an operator
                 if (this._operator != null) {
+                    // Generate the payment transaction ID
                     this._paymentTransactionId = TransactionId.generate(
                         this._operator.accountId
                     );
                 } else {
+                    // If payment is required, but an operator did not exist, throw an error
                     throw new Error(
                         "`client` must have an `operator` or an explicit payment transaction must be provided"
                     );
                 }
             } else {
+                // If the payment transaction ID is not set, but this query doesn't require a payment
+                // set the payment transaction ID to an empty transaction ID.
+                // FIXME: Should use `TransactionId.withValidStart()` instead
                 this._paymentTransactionId = TransactionId.generate(
                     new AccountId(0)
                 );
             }
         }
 
+        // The cost of the query.
+        //
+        // FIXME: Not sure why we're setting it to `queryPayment` when this value gets
+        // overwritten immediately afterwards? Looking more closely at the rest of the
+        // code this definitely looks like a bug. We're treating `cost` as both
+        // `queryPayment` and `maxQueryPayment`. To start we should really change
+        // the name of this variable.
+        //
+        // Here is how it should work:
+        // Legend:
+        //  X = Set by user
+        //  O = Not set by user (null)
+        //   | queryPayment | maxQueryPayment | client.maxQueryPayment |
+        // a |      O       |        O        |           O            |
+        // b |      O       |        O        |           X            |
+        // c |      O       |        X        |           O            |
+        // d |      O       |        X        |           X            |
+        // e |      X       |        O        |           O            |
+        // f |      X       |        O        |           X            |
+        // g |      X       |        X        |           O            |
+        // h |      X       |        X        |           X            |
+        //
+        // e, f, g, h:
+        // - Do not query the cost, use the query payment explicity
+        //
+        // c, d:
+        // - Query the cost, and compare it to `maxQueryPayment`
+        //
+        // a, b:
+        // - Query the cost, and compare it to `client.maxQueryPayment`
+        //
+        // TODO: Create a test that matches this table
         let cost = this._queryPayment;
 
+        // Set cost to either the current max query payment, or the default on
+        // client.
         if (cost == null && this._maxQueryPayment != null) {
             cost = this._maxQueryPayment;
         } else {
             cost = client.maxQueryPayment;
         }
 
+        // If payment transactions are already created or this is a free query
+        // set the cost to 0.
         if (
             this._paymentTransactions.length !== 0 ||
             !this._isPaymentRequired()
         ) {
             cost = new Hbar(0);
         } else {
+            // If the query payment was not explictly set, fetch the actual cost.
             if (this._queryPayment == null) {
                 const actualCost = await this.getCost(client);
 
+                // Confirm it's less than max query payment
                 if (
                     cost.toTinybars().toInt() < actualCost.toTinybars().toInt()
                 ) {
@@ -268,7 +374,9 @@ export default class Query extends Executable {
 
         this._queryPayment = cost;
 
+        // FIXME: Shouldn't this be `!this._nodeAccountIds.locked`?
         if (this._nodeAccountIds.locked) {
+            // Generate the payment transactions
             for (const node of this._nodeAccountIds.list) {
                 this._paymentTransactions.push(
                     await _makePaymentTransaction(
@@ -284,6 +392,7 @@ export default class Query extends Executable {
             }
         }
 
+        // Not sure if we should be overwritting this field tbh.
         this._timestamp = Date.now();
     }
 
@@ -451,6 +560,8 @@ export default class Query extends Executable {
 }
 
 /**
+ * Generate a payment transaction given, aka. `TransferTransaction`
+ *
  * @param {string} logId
  * @param {TransactionId} paymentTransactionId
  * @param {AccountId} nodeId
@@ -470,6 +581,10 @@ export async function _makePaymentTransaction(
     );
     const accountAmounts = [];
 
+    // If an operator is provided then we should make sure we transfer
+    // from the operator to the node.
+    // If an operator is not provided we simply create an effectively
+    // empty account amounts
     if (operator != null) {
         accountAmounts.push({
             accountID: operator.accountId._toProtobuf(),
@@ -482,6 +597,8 @@ export async function _makePaymentTransaction(
     } else {
         accountAmounts.push({
             accountID: new AccountId(0)._toProtobuf(),
+            // If the account ID is 0, shouldn't we just hard
+            // code this value to 0? Same for the latter.
             amount: paymentAmount.negated().toTinybars(),
         });
         accountAmounts.push({
@@ -511,6 +628,10 @@ export async function _makePaymentTransaction(
         bodyBytes: HashgraphProto.proto.TransactionBody.encode(body).finish(),
     };
 
+    // Sign the transaction if an operator is provided
+    //
+    // We have _several_ places where we build the transactions, maybe this is
+    // something we can deduplicate?
     if (operator != null) {
         const signature = await operator.transactionSigner(
             /** @type {Uint8Array} */ (signedTransaction.bodyBytes)
@@ -521,6 +642,7 @@ export async function _makePaymentTransaction(
         };
     }
 
+    // Create and return a `proto.Transaction`
     return {
         signedTransactionBytes:
             HashgraphProto.proto.SignedTransaction.encode(
@@ -530,6 +652,8 @@ export async function _makePaymentTransaction(
 }
 
 /**
+ * Cache for the cost query constructor. This prevents cyclic dependencies.
+ *
  * @type {((query: Query<*>) => import("./CostQuery.js").default<*>)[]}
  */
 export const COST_QUERY = [];
