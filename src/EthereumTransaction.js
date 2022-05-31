@@ -85,7 +85,7 @@ export default class EthereumTransaction extends Transaction {
         }
 
         if (props.maxGasAllowance != null) {
-            this.setMaxGasAllowance(props.maxGasAllowance);
+            this.setMaxGasAllowanceHbar(props.maxGasAllowance);
         }
     }
 
@@ -156,7 +156,6 @@ export default class EthereumTransaction extends Transaction {
 
     /**
      * @deprecated - Use `callDataFileId` instead
-     *
      * @returns {?FileId}
      */
     get callData() {
@@ -171,7 +170,6 @@ export default class EthereumTransaction extends Transaction {
      * the callData element as a zero length string with the original contents in
      * the referenced file at time of execution. The callData will need to be
      * "rehydrated" with the callData for signature validation to pass.
-     *
      * @param {FileId} callDataFileId
      * @returns {this}
      */
@@ -210,6 +208,15 @@ export default class EthereumTransaction extends Transaction {
     }
 
     /**
+     * @deprecated -- use setMaxGasAllowanceHbar instead
+     * @param {number | string | Long | BigNumber | Hbar} maxGasAllowance
+     * @returns {this}
+     */
+         setMaxGasAllowance(maxGasAllowance) {
+            return this.setMaxGasAllowanceHbar(maxGasAllowance);
+        }
+
+    /**
      * The maximum amount, in tinybars, that the payer of the hedera transaction
      * is willing to pay to complete the transaction.
      *
@@ -226,7 +233,7 @@ export default class EthereumTransaction extends Transaction {
      * @param {number | string | Long | BigNumber | Hbar} maxGasAllowance
      * @returns {this}
      */
-    setMaxGasAllowance(maxGasAllowance) {
+    setMaxGasAllowanceHbar(maxGasAllowance) {
         this._requireNotFrozen();
         this._maxGasAllowance =
             maxGasAllowance instanceof Hbar
