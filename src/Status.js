@@ -597,6 +597,12 @@ export default class Status {
                 return "CONTRACT_HAS_NO_AUTO_RENEW_ACCOUNT";
             case Status.PermanentRemovalRequiresSystemInitiation:
                 return "PERMANENT_REMOVAL_REQUIRES_SYSTEM_INITIATION";
+            case Status.ProxyAccountIdFieldIsDeprecated:
+                return "PROXY_ACCOUNT_ID_FIELD_IS_DEPRECATED";
+            case Status.SelfStakingIsNotAllowed:
+                return "SELF_STAKING_IS_NOT_ALLOWED";
+            case Status.InvalidStakingId:
+                return "INVALID_STAKING_ID";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1165,6 +1171,12 @@ export default class Status {
                 return Status.ContractHasNoAutoRenewAccount;
             case 319:
                 return Status.PermanentRemovalRequiresSystemInitiation;
+            case 320:
+                return Status.ProxyAccountIdFieldIsDeprecated;
+            case 321:
+                return Status.SelfStakingIsNotAllowed;
+            case 322:
+                return Status.InvalidStakingId;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2607,3 +2619,18 @@ Status.ContractHasNoAutoRenewAccount = new Status(318);
  * A delete transaction submitted via HAPI set permanent_removal=true
  */
 Status.PermanentRemovalRequiresSystemInitiation = new Status(319);
+
+/*
+ * A CryptoCreate or ContractCreate used the deprecated proxyAccountID field.
+ */
+Status.ProxyAccountIdFieldIsDeprecated = new Status(320);
+
+/**
+ * An account set the staked_account_id to itself in CryptoUpdate or ContractUpdate transactions.
+ */
+Status.SelfStakingIsNotAllowed = new Status(321);
+
+/**
+ * The staking account id or staking node id given is invalid or does not exist.
+ */
+Status.InvalidStakingId = new Status(322);

@@ -11,7 +11,7 @@ specifiers:
   '@grpc/grpc-js': ^1.6.7
   '@grpc/proto-loader': ^0.6.9
   '@hashgraph/cryptography': link:packages/cryptography
-  '@hashgraph/proto': 2.4.1
+  '@hashgraph/proto': link:packages/proto
   '@playwright/test': ^1.21.1
   '@types/chai': ^4.3.1
   '@types/crypto-js': ^4.1.1
@@ -59,7 +59,7 @@ dependencies:
   '@ethersproject/rlp': 5.6.0
   '@grpc/grpc-js': 1.6.7
   '@hashgraph/cryptography': link:packages/cryptography
-  '@hashgraph/proto': 2.4.1
+  '@hashgraph/proto': link:packages/proto
   axios: 0.27.2
   bignumber.js: 9.0.2
   crypto-js: 4.1.1
@@ -2179,14 +2179,6 @@ packages:
       long: 4.0.0
       protobufjs: 6.11.2
       yargs: 16.2.0
-
-  /@hashgraph/proto/2.4.1:
-    resolution: {integrity: sha512-tVuflDwQDbYzlXJWFGayF+cHzRV8zaBI5XdaZbkF45THyoSw2QcSSopGLr1sdCj2M2LQfxX4WDKGb2uqbOjxZA==}
-    engines: {node: '>=10.0.0'}
-    dependencies:
-      long: 4.0.0
-      protobufjs: 6.11.2
-    dev: false
 
   /@humanwhocodes/config-array/0.9.5:
     resolution: {integrity: sha512-ObyMyWxZiCu/yTisA7uzx81s40xR2fD5Cg/2Kq7G02ajkNubJf6BopgDTmDyc3U7sXpNKM8cYOw7s7Tyr+DnCw==}
@@ -6071,7 +6063,7 @@ packages:
     dev: true
 
   /mv/2.1.1:
-    resolution: {integrity: sha1-rmzg1vbV4KT32JN5jQPB6pVZtqI=}
+    resolution: {integrity: sha512-at/ZndSy3xEGJ8i0ygALh8ru9qy7gWW1cmkaqBN29JmMlIvM//MEO9y1sk/avxuwnPcfhkejkLsuPxH81BrkSg==}
     engines: {node: '>=0.8.0'}
     requiresBuild: true
     dependencies:
