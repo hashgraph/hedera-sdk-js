@@ -60,7 +60,6 @@ dependencies:
   '@grpc/grpc-js': 1.6.7
   '@hashgraph/cryptography': link:packages/cryptography
   '@hashgraph/proto': link:packages/proto
-  '@hashgraph/proto': 2.4.1
   axios: 0.27.2
   bignumber.js: 9.0.2
   crypto-js: 4.1.1
@@ -6064,7 +6063,7 @@ packages:
     dev: true
 
   /mv/2.1.1:
-    resolution: {integrity: sha1-rmzg1vbV4KT32JN5jQPB6pVZtqI=}
+    resolution: {integrity: sha512-at/ZndSy3xEGJ8i0ygALh8ru9qy7gWW1cmkaqBN29JmMlIvM//MEO9y1sk/avxuwnPcfhkejkLsuPxH81BrkSg==}
     engines: {node: '>=0.8.0'}
     requiresBuild: true
     dependencies:
