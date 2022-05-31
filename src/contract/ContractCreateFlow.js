@@ -120,6 +120,7 @@ export default class ContractCreateFlow {
     }
 
     /**
+     * @deprecated
      * @returns {?AccountId}
      */
     get proxyAccountId() {
@@ -128,6 +129,7 @@ export default class ContractCreateFlow {
     }
 
     /**
+     * @deprecated
      * @param {AccountId | string} proxyAccountId
      * @returns {this}
      */
@@ -201,6 +203,38 @@ export default class ContractCreateFlow {
             maxAutomaticTokenAssociation
         );
 
+        return this;
+    }
+
+    /**
+     * @returns {?AccountId}
+     */
+    get stakedAccountId() {
+        return this._contractCreate.stakedAccountId;
+    }
+
+    /**
+     * @param {AccountId | string} stakedAccountId
+     * @returns {this}
+     */
+    setStakedAccountId(stakedAccountId) {
+        this._contractCreate.setStakedAccountId(stakedAccountId);
+        return this;
+    }
+
+    /**
+     * @returns {?Long}
+     */
+    get stakedNodeId() {
+        return this._contractCreate.stakedNodeId;
+    }
+
+    /**
+     * @param {Long | number} stakedNodeId
+     * @returns {this}
+     */
+    setStakedNodeId(stakedNodeId) {
+        this._contractCreate.setStakedNodeId(stakedNodeId);
         return this;
     }
 
