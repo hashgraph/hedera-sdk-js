@@ -22,6 +22,7 @@ import GrpcServiceError from "./grpc/GrpcServiceError.js";
 import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import Logger from "js-logger";
+import sync from "./sync.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -378,6 +379,8 @@ export default class Executable {
      * execution even when mulitple requests are executing in parallel. Typically, this
      * method returns the format of `[<request type>.<timestamp of the transaction ID>]`
      *
+     * Maybe we should deduplicate this using ${this.consturtor.name}
+     *
      * @abstract
      * @internal
      * @returns {string}
@@ -477,6 +480,9 @@ export default class Executable {
      * @returns {Promise<OutputT>}
      */
     async execute(client, requestTimeout) {
+        // Wait for the time sync to finish
+        await sync;
+
         // If the request timeout is set on the request we'll prioritize that instead
         // of the parameter provided, and if the parameter isn't provided we'll
         // use the default request timeout on client
