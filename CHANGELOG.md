@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  * `AccountInfoFlow.verify[Signature|Transaction]WithSigner()` - Execute a flow using a signer
  * A third party time source will be used for transaction ID generation when possible.
 
+### Deprecated
+
+ * `EthereumTransaction.[set|get]CallData()` - Use `EthereumTransaction.[set|get]CallDataFileId()` instead
+ * `EthereumTransaction.[set|get]MaxGasAllowance()` - Use `EthereumTransaction.[set|get]MaxGasAllowanceHbar()` instead
+
 ## v2.14.2
 
 ### Added
