@@ -8,7 +8,7 @@ const sync = (async () => {
     try {
         const response = await axios.get("http://time.google.com", {
             maxRedirects: 0,
-            
+
             // By default a status of 302 is considered an erring status
             validateStatus: function (status) {
                 return status < 500;

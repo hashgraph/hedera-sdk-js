@@ -156,7 +156,6 @@ export default class EthereumTransaction extends Transaction {
 
     /**
      * @deprecated - Use `callDataFileId` instead
-     *
      * @returns {?FileId}
      */
     get callData() {
@@ -171,7 +170,6 @@ export default class EthereumTransaction extends Transaction {
      * the callData element as a zero length string with the original contents in
      * the referenced file at time of execution. The callData will need to be
      * "rehydrated" with the callData for signature validation to pass.
-     *
      * @param {FileId} callDataFileId
      * @returns {this}
      */
