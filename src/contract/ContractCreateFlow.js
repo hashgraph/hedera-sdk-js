@@ -34,7 +34,9 @@ import * as utf8 from "../encoding/utf8.js";
  * @typedef {import("../channel/Channel.js").default} Channel
  * @typedef {import("../transaction/TransactionId.js").default} TransactionId
  * @typedef {import("../transaction/TransactionResponse.js").default} TransactionResponse
+ * @typedef {import("../transaction/TransactionReceipt.js").default} TransactionReceipt
  * @typedef {import("../client/Client.js").ClientOperator} ClientOperator
+ * @typedef {import("../Signer.js").Signer} Signer
  */
 
 /**
@@ -250,6 +252,61 @@ export default class ContractCreateFlow {
                     .setFileId(fileId)
                     .execute(client, requestTimeout)
             ).getReceipt(client);
+        }
+
+        return response;
+    }
+
+    /**
+     * @param {Signer} signer
+     * @returns {Promise<TransactionResponse>}
+     */
+    async executeWithSigner(signer) {
+        if (this._bytecode == null) {
+            throw new Error("cannot create contract with no bytecode");
+        }
+
+        if (signer.getAccountKey == null) {
+            throw new Error(
+                "`Signer.getAccountKey()` is not implemented, but is required for `ContractCreateFlow`"
+            );
+        }
+
+        const key = signer.getAccountKey();
+
+        let response = await new FileCreateTransaction()
+            .setKeys(key != null ? [key] : [])
+            .setContents(
+                this._bytecode.subarray(
+                    0,
+                    Math.min(this._bytecode.length, 2048)
+                )
+            )
+            .executeWithSigner(signer);
+
+        const receipt = await response.getReceiptWithSigner(signer);
+
+        const fileId = /** @type {FileId} */ (receipt.fileId);
+
+        if (this._bytecode.length > 2048) {
+            await new FileAppendTransaction()
+                .setFileId(fileId)
+                .setContents(this._bytecode.subarray(2048))
+                .executeWithSigner(signer);
+        }
+
+        response = await this._contractCreate
+            .setBytecodeFileId(fileId)
+            .executeWithSigner(signer);
+
+        await response.getReceiptWithSigner(signer);
+
+        if (key != null) {
+            await (
+                await new FileDeleteTransaction()
+                    .setFileId(fileId)
+                    .executeWithSigner(signer)
+            ).getReceiptWithSigner(signer);
         }
 
         return response;

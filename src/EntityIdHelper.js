@@ -70,12 +70,18 @@ const regex =
 const ENTITY_ID_REGEX = /^(\d+)(?:\.(\d+)\.([a-fA-F0-9]+))?(?:-([a-z]{5}))?$/;
 
 /**
+ * This method is called by most entity ID constructors. It's purpose is to
+ * deduplicate the constuctors.
+ *
  * @param {number | Long | IEntityId} props
  * @param {(number | null | Long)=} realmOrNull
  * @param {(number | null | Long)=} numOrNull
  * @returns {IEntityIdResult}
  */
 export function constructor(props, realmOrNull, numOrNull) {
+    // Make sure either both the second and third parameter are
+    // set or not set; we shouldn't have one set, but the other not set.
+    //
     //NOSONAR
     if (
         (realmOrNull == null && numOrNull != null) ||
@@ -84,6 +90,10 @@ export function constructor(props, realmOrNull, numOrNull) {
         throw new Error("invalid entity ID");
     }
 
+    // If the first parameter is a nubmer then we need to conver the
+    // first, second, and third parameters into numbers. Otherwise,
+    // we should look at the fields `shard`, `realm`, and `num` on
+    // `props`
     const [shard, realm, num] =
         typeof props === "number" || Long.isLong(props)
             ? [
@@ -101,6 +111,7 @@ export function constructor(props, realmOrNull, numOrNull) {
                   Long.fromValue(props.num),
               ];
 
+    // Make sure none of the numbers are negative
     if (shard.isNegative() || realm.isNegative() || num.isNegative()) {
         throw new Error("negative numbers are not allowed in IDs");
     }
@@ -113,6 +124,8 @@ export function constructor(props, realmOrNull, numOrNull) {
 }
 
 /**
+ * A simple comparison function for comparing entity IDs
+ *
  * @param {[Long, Long, Long]} a
  * @param {[Long, Long, Long]} b
  * @returns {number}
@@ -132,6 +145,10 @@ export function compare(a, b) {
 }
 
 /**
+ * This type is part of the entity ID checksums feature which
+ * is responsible for checking if an entity ID was created on
+ * the same ledger ID as the client is currently using.
+ *
  * @typedef {object} ParseAddressResult
  * @property {number} status
  * @property {Long} [num1]
@@ -195,6 +212,12 @@ export function fromString(text) {
 }
 
 /**
+ * Return the shard, realm, and num from a solidity address.
+ *
+ * Solidity addresses are 20 bytes long and hex encoded, where the first 4
+ * bytes represent the shard, the next 8 bytes represent the realm, and
+ * the last 8 bytes represent the num. All in Big Endian format
+ *
  * @param {string} address
  * @returns {[Long, Long, Long]}
  */
@@ -216,6 +239,10 @@ export function fromSolidityAddress(address) {
 }
 
 /**
+ * Convert shard, realm, and num into a solidity address.
+ *
+ * See `fromSolidityAddress()` for more documentation.
+ *
  * @param {[Long,Long,Long] | [number,number,number]} address
  * @returns {string}
  */
@@ -330,6 +357,8 @@ export function _checksum(ledgerId, addr) {
 }
 
 /**
+ * Validate an entity ID checksum against a client
+ *
  * @param {Long} shard
  * @param {Long} realm
  * @param {Long} num
@@ -358,6 +387,8 @@ export function validateChecksum(shard, realm, num, checksum, client) {
 }
 
 /**
+ * Stringify the entity ID with a checksum.
+ *
  * @param {string} string
  * @param {Client} client
  * @returns {string}

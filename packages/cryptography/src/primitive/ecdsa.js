@@ -43,6 +43,17 @@ export function fromBytes(data) {
 }
 
 /**
+ * @param {Uint8Array} data
+ * @returns {Uint8Array}
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function getFullPublicKey(data) {
+    const keypair = secp256k1.keyFromPublic(data);
+
+    return hex.decode(keypair.getPublic(false, "hex"));
+}
+
+/**
  * @param {Uint8Array} keydata
  * @param {Uint8Array} message
  * @returns {Uint8Array}

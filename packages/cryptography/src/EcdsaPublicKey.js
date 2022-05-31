@@ -3,6 +3,7 @@ import BadKeyError from "./BadKeyError.js";
 import { arrayEqual, arrayStartsWith } from "./util/array.js";
 import * as hex from "./encoding/hex.js";
 import * as ecdsa from "./primitive/ecdsa.js";
+import { keccak256 } from "./primitive/keccak.js";
 
 const derPrefix = "302d300706052b8104000a032200";
 const derPrefixBytes = hex.decode(derPrefix);
@@ -122,6 +123,20 @@ export default class EcdsaPublicKey extends Key {
      */
     toBytesRaw() {
         return new Uint8Array(this._keyData.subarray());
+    }
+
+    /**
+     * @returns {string}
+     */
+    toEthereumAddress() {
+        const hash = hex.decode(
+            keccak256(
+                `0x${hex.encode(
+                    ecdsa.getFullPublicKey(this.toBytesRaw()).subarray(1)
+                )}`
+            )
+        );
+        return hex.encode(hash.subarray(12));
     }
 
     /**

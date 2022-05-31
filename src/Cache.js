@@ -25,6 +25,7 @@
  * @typedef {import("./PublicKey.js").default} PublicKey
  * @typedef {import("./PrivateKey.js").default} PrivateKey
  * @typedef {import("./EvmAddress.js").default} EvmAddress
+ * @typedef {import("./EthereumTransactionData.js").default} EthereumTransactionData
  */
 
 /**
@@ -46,7 +47,13 @@
  * @typedef {{ (proto: ProtobufT): SdkT }} FromProtobufKeyFuncT
  */
 
+/**
+ * This variable is strictly designed to prevent cyclic dependencies.
+ */
 const CACHE = {
+    /** @type {number} */
+    timeDrift: 0,
+
     /** @type {FromProtobufKeyFuncT<HashgraphProto.proto.IContractID, ContractId> | null} */
     contractId: null,
 
@@ -73,6 +80,12 @@ const CACHE = {
 
     /** @type {FromProtobufKeyFuncT<Uint8Array, EvmAddress> | null} */
     evmAddress: null,
+
+    /** @type {((bytes: Uint8Array) => EthereumTransactionData) | null} */
+    ethereumTransactionDataLegacyFromBytes: null,
+
+    /** @type {((bytes: Uint8Array) => EthereumTransactionData) | null} */
+    ethereumTransactionDataEip1559FromBytes: null,
 };
 
 export default CACHE;

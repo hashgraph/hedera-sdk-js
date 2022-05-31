@@ -212,6 +212,17 @@ export default class PublicKey extends Key {
     }
 
     /**
+     * @returns {string}
+     */
+    toEthereumAddress() {
+        if (this._key instanceof EcdsaPublicKey) {
+            return this._key.toEthereumAddress();
+        } else {
+            throw new Error("unsupported operation on Ed25519PublicKey");
+        }
+    }
+
+    /**
      * @param {PublicKey} other
      * @returns {boolean}
      */

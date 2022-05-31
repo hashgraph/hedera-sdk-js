@@ -218,18 +218,28 @@ class GrpcServer {
                         call,
                         callback
                     ) => {
-                        const request = call.request;
-                        const response = responses[index];
-
-                        if (response == null) {
+                        if (
+                            index >= responses.length ||
+                            responses[index] == null
+                        ) {
                             if (callback != null) {
-                                callback(ABORTED, null);
+                                callback(
+                                    {
+                                        name: "ABORTED",
+                                        message: `no response found for index ${index}`,
+                                        code: 10,
+                                    },
+                                    null
+                                );
                             } else {
                                 call.end();
                             }
 
                             return;
                         }
+
+                        const request = call.request;
+                        const response = responses[index];
 
                         let value = null;
                         let error = null;
@@ -245,7 +255,7 @@ class GrpcServer {
                                 callback(
                                     {
                                         name: "ABORTED",
-                                        message: err.message,
+                                        message: `responses[${index}].call failed with message: ${err.message}`,
                                         code: 10,
                                     },
                                     null
