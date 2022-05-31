@@ -33,7 +33,7 @@ import * as HashgraphProto from "@hashgraph/proto";
  * @property {?string} stakePeriodStart
  * @property {?string} pendingReward
  * @property {?string} stakedToMe
- * @property {?string} stakedNodeAccountId
+ * @property {?string} stakedAccountId
  * @property {?string} stakedNodeId
  */
 
@@ -48,7 +48,7 @@ export default class StakingInfo {
      * @param {?Timestamp} props.stakePeriodStart
      * @param {?Hbar} props.pendingReward
      * @param {?Hbar} props.stakedToMe
-     * @param {?AccountId} props.stakedNodeAccountId
+     * @param {?AccountId} props.stakedAccountId
      * @param {?Long} props.stakedNodeId
      */
     constructor(props) {
@@ -90,7 +90,7 @@ export default class StakingInfo {
          *
          * @readonly
          */
-        this.stakedNodeAccountId = props.stakedNodeAccountId;
+        this.stakedAccountId = props.stakedAccountId;
 
         /**
          * The ID of the node this account or contract is staked to.
@@ -122,7 +122,7 @@ export default class StakingInfo {
                 info.stakedToMe != null
                     ? Hbar.fromTinybars(info.stakedToMe)
                     : null,
-            stakedNodeAccountId:
+            stakedAccountId:
                 info.stakedAccountId != null
                     ? AccountId._fromProtobuf(info.stakedAccountId)
                     : null,
@@ -147,8 +147,8 @@ export default class StakingInfo {
             stakedToMe:
                 this.stakedToMe != null ? this.stakedToMe.toTinybars() : null,
             stakedAccountId:
-                this.stakedNodeAccountId != null
-                    ? this.stakedNodeAccountId._toProtobuf()
+                this.stakedAccountId != null
+                    ? this.stakedAccountId._toProtobuf()
                     : null,
             stakedNodeId: this.stakedNodeId,
         };
@@ -196,9 +196,9 @@ export default class StakingInfo {
                     : null,
             stakedToMe:
                 this.stakedToMe != null ? this.stakedToMe.toString() : null,
-            stakedNodeAccountId:
-                this.stakedNodeAccountId != null
-                    ? this.stakedNodeAccountId.toString()
+            stakedAccountId:
+                this.stakedAccountId != null
+                    ? this.stakedAccountId.toString()
                     : null,
             stakedNodeId:
                 this.stakedNodeId != null ? this.stakedNodeId.toString() : null,

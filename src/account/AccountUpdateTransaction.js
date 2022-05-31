@@ -59,7 +59,7 @@ export default class AccountUpdateTransaction extends Transaction {
      * @param {string} [props.accountMemo]
      * @param {Long | number} [props.maxAutomaticTokenAssociations]
      * @param {Key} [props.aliasKey]
-     * @param {AccountId | string} [props.stakedNodeAccountId]
+     * @param {AccountId | string} [props.stakedAccountId]
      * @param {Long | number} [props.stakedNodeId]
      * @param {boolean} [props.declineStakingReward]
      */
@@ -124,7 +124,7 @@ export default class AccountUpdateTransaction extends Transaction {
          * @private
          * @type {?AccountId}
          */
-        this._stakedNodeAccountId = null;
+        this._stakedAccountId = null;
 
         /**
          * @private
@@ -173,8 +173,8 @@ export default class AccountUpdateTransaction extends Transaction {
             );
         }
 
-        if (props.stakedNodeAccountId != null) {
-            this.setStakedNodeAccountId(props.stakedNodeAccountId);
+        if (props.stakedAccountId != null) {
+            this.setStakedAccountId(props.stakedAccountId);
         }
 
         if (props.stakedNodeId != null) {
@@ -257,7 +257,7 @@ export default class AccountUpdateTransaction extends Transaction {
                               update.maxAutomaticTokenAssociations.value
                           )
                         : undefined,
-                stakedNodeAccountId:
+                stakedAccountId:
                     update.stakedAccountId != null
                         ? AccountId._fromProtobuf(update.stakedAccountId)
                         : undefined,
@@ -468,20 +468,20 @@ export default class AccountUpdateTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    get stakedNodeAccountId() {
-        return this._stakedNodeAccountId;
+    get stakedAccountId() {
+        return this._stakedAccountId;
     }
 
     /**
-     * @param {AccountId | string} stakedNodeAccountId
+     * @param {AccountId | string} stakedAccountId
      * @returns {this}
      */
-    setStakedNodeAccountId(stakedNodeAccountId) {
+    setStakedAccountId(stakedAccountId) {
         this._requireNotFrozen();
-        this._stakedNodeAccountId =
-            typeof stakedNodeAccountId === "string"
-                ? AccountId.fromString(stakedNodeAccountId)
-                : stakedNodeAccountId;
+        this._stakedAccountId =
+            typeof stakedAccountId === "string"
+                ? AccountId.fromString(stakedAccountId)
+                : stakedAccountId;
 
         return this;
     }
@@ -594,8 +594,8 @@ export default class AccountUpdateTransaction extends Transaction {
                     ? { value: this._maxAutomaticTokenAssociations.toInt() }
                     : null,
             stakedAccountId:
-                this.stakedNodeAccountId != null
-                    ? this.stakedNodeAccountId._toProtobuf()
+                this.stakedAccountId != null
+                    ? this.stakedAccountId._toProtobuf()
                     : null,
             stakedNodeId: this.stakedNodeId,
             declineReward:

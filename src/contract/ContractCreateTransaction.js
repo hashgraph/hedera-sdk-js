@@ -62,7 +62,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @param {Uint8Array} [props.constructorParameters]
      * @param {string} [props.contractMemo]
      * @param {number} [props.maxAutomaticTokenAssociations]
-     * @param {AccountId | string} [props.stakedNodeAccountId]
+     * @param {AccountId | string} [props.stakedAccountId]
      * @param {Long | number} [props.stakedNodeId]
      * @param {boolean} [props.declineStakingReward]
      */
@@ -135,7 +135,7 @@ export default class ContractCreateTransaction extends Transaction {
          * @private
          * @type {?AccountId}
          */
-        this._stakedNodeAccountId = null;
+        this._stakedAccountId = null;
 
         /**
          * @private
@@ -192,8 +192,8 @@ export default class ContractCreateTransaction extends Transaction {
             );
         }
 
-        if (props.stakedNodeAccountId != null) {
-            this.setStakedNodeAccountId(props.stakedNodeAccountId);
+        if (props.stakedAccountId != null) {
+            this.setStakedAccountId(props.stakedAccountId);
         }
 
         if (props.stakedNodeId != null) {
@@ -269,7 +269,7 @@ export default class ContractCreateTransaction extends Transaction {
                     create.maxAutomaticTokenAssociations != null
                         ? create.maxAutomaticTokenAssociations
                         : undefined,
-                stakedNodeAccountId:
+                stakedAccountId:
                     create.stakedAccountId != null
                         ? AccountId._fromProtobuf(create.stakedAccountId)
                         : undefined,
@@ -490,20 +490,20 @@ export default class ContractCreateTransaction extends Transaction {
     /**
      * @returns {?AccountId}
      */
-    get stakedNodeAccountId() {
-        return this._stakedNodeAccountId;
+    get stakedAccountId() {
+        return this._stakedAccountId;
     }
 
     /**
-     * @param {AccountId | string} stakedNodeAccountId
+     * @param {AccountId | string} stakedAccountId
      * @returns {this}
      */
-    setStakedNodeAccountId(stakedNodeAccountId) {
+    setStakedAccountId(stakedAccountId) {
         this._requireNotFrozen();
-        this._stakedNodeAccountId =
-            typeof stakedNodeAccountId === "string"
-                ? AccountId.fromString(stakedNodeAccountId)
-                : stakedNodeAccountId;
+        this._stakedAccountId =
+            typeof stakedAccountId === "string"
+                ? AccountId.fromString(stakedAccountId)
+                : stakedAccountId;
 
         return this;
     }
@@ -605,8 +605,8 @@ export default class ContractCreateTransaction extends Transaction {
             memo: this._contractMemo,
             maxAutomaticTokenAssociations: this._maxAutomaticTokenAssociations,
             stakedAccountId:
-                this.stakedNodeAccountId != null
-                    ? this.stakedNodeAccountId._toProtobuf()
+                this.stakedAccountId != null
+                    ? this.stakedAccountId._toProtobuf()
                     : null,
             stakedNodeId: this.stakedNodeId,
             declineReward: this.declineStakingRewards,
