@@ -8,6 +8,7 @@
     "react-native": {
         "./lib/index.cjs": "./src/native.js",
         "./src/encoding/hex.js": "./src/encoding/hex.native.js",
+        "./src/sync.js": "./src/encoding/sync.native.js",
         "./src/encoding/utf8.js": "./src/encoding/utf8.native.js",
         "./src/cryptography/sha384.js": "./src/cryptography/sha384.native.js"
     },
@@ -55,6 +56,7 @@
         "@grpc/grpc-js": "^1.6.7",
         "@hashgraph/cryptography": "link:packages/cryptography",
         "@hashgraph/proto": "2.4.1",
+        "axios": "^0.27.2",
         "bignumber.js": "^9.0.2",
         "crypto-js": "^4.1.1",
         "js-base64": "^3.7.2",

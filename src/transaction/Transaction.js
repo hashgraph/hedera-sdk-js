@@ -1107,6 +1107,8 @@ export default class Transaction extends Executable {
 
     /**
      * Is transaction frozen
+     *
+     * @returns {boolean}
      */
     isFrozen() {
         return this._signedTransactions.length > 0;
