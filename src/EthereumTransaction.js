@@ -85,7 +85,7 @@ export default class EthereumTransaction extends Transaction {
         }
 
         if (props.maxGasAllowance != null) {
-            this.setMaxGasAllowance(props.maxGasAllowance);
+            this.setMaxGasAllowanceHbar(props.maxGasAllowance);
         }
     }
 
@@ -208,6 +208,15 @@ export default class EthereumTransaction extends Transaction {
     }
 
     /**
+     * @deprecated -- use setMaxGasAllowanceHbar instead
+     * @param {number | string | Long | BigNumber | Hbar} maxGasAllowance
+     * @returns {this}
+     */
+    setMaxGasAllowance(maxGasAllowance) {
+        return this.setMaxGasAllowanceHbar(maxGasAllowance);
+    }
+
+    /**
      * The maximum amount, in tinybars, that the payer of the hedera transaction
      * is willing to pay to complete the transaction.
      *
@@ -224,7 +233,7 @@ export default class EthereumTransaction extends Transaction {
      * @param {number | string | Long | BigNumber | Hbar} maxGasAllowance
      * @returns {this}
      */
-    setMaxGasAllowance(maxGasAllowance) {
+    setMaxGasAllowanceHbar(maxGasAllowance) {
         this._requireNotFrozen();
         this._maxGasAllowance =
             maxGasAllowance instanceof Hbar

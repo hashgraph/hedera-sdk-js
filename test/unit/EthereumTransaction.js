@@ -29,7 +29,7 @@ describe("EthereumTransaction", function () {
             .setNodeAccountIds([nodeAccountId])
             .setEthereumData(ethereumData)
             .setCallDataFileId(callData)
-            .setMaxGasAllowance(maxGasAllowance)
+            .setMaxGasAllowanceHbar(maxGasAllowance)
             .freeze();
 
         transaction = Transaction.fromBytes(transaction.toBytes());
@@ -56,7 +56,7 @@ describe("EthereumTransaction", function () {
             )
             .setNodeAccountIds([nodeAccountId])
             .setEthereumData(ethereumData)
-            .setMaxGasAllowance(maxGasAllowance)
+            .setMaxGasAllowanceHbar(maxGasAllowance)
             .freeze();
 
         transaction = Transaction.fromBytes(transaction.toBytes());
