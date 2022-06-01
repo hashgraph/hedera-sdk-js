@@ -53,6 +53,7 @@ export default class EthereumTransaction extends Transaction {
      * @param {object} [props]
      * @param {Uint8Array} [props.ethereumData]
      * @param {FileId} [props.callData]
+     * @param {FileId} [props.callDataFileId]
      * @param {number | string | Long | BigNumber | Hbar} [props.maxGasAllowance]
      */
     constructor(props = {}) {
@@ -68,7 +69,7 @@ export default class EthereumTransaction extends Transaction {
          * @private
          * @type {?FileId}
          */
-        this._callData = null;
+        this._callDataFileId = null;
 
         /**
          * @private
@@ -82,6 +83,10 @@ export default class EthereumTransaction extends Transaction {
 
         if (props.callData != null) {
             this.setCallDataFileId(props.callData);
+        }
+
+        if (props.callDataFileId != null) {
+            this.setCallDataFileId(props.callDataFileId);
         }
 
         if (props.maxGasAllowance != null) {
@@ -181,7 +186,7 @@ export default class EthereumTransaction extends Transaction {
      * @returns {?FileId}
      */
     get callDataFileId() {
-        return this._callData;
+        return this._callDataFileId;
     }
 
     /**
@@ -191,12 +196,12 @@ export default class EthereumTransaction extends Transaction {
      * the referenced file at time of execution. The callData will need to be
      * "rehydrated" with the callData for signature validation to pass.
      *
-     * @param {FileId} callData
+     * @param {FileId} callDataFileId
      * @returns {this}
      */
-    setCallDataFileId(callData) {
+    setCallDataFileId(callDataFileId) {
         this._requireNotFrozen();
-        this._callData = callData;
+        this._callDataFileId = callDataFileId;
         return this;
     }
 
@@ -274,7 +279,9 @@ export default class EthereumTransaction extends Transaction {
         return {
             ethereumData: this._ethereumData,
             callData:
-                this._callData != null ? this._callData._toProtobuf() : null,
+                this._callDataFileId != null
+                    ? this._callDataFileId._toProtobuf()
+                    : null,
             maxGasAllowance:
                 this._maxGasAllowance != null
                     ? this._maxGasAllowance.toTinybars()
