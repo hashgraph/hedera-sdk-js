@@ -123,23 +123,24 @@ export default class EthereumFlow {
         return this.setMaxGasAllowanceHbar(maxGasAllowance);
     }
 
-    /** 
-    * The maximum amount, in tinybars, that the payer of the hedera transaction
-    * is willing to pay to complete the transaction.
-    *
-    * Ordinarily the account with the ECDSA alias corresponding to the public
-    * key that is extracted from the ethereum_data signature is responsible for
-    * fees that result from the execution of the transaction. If that amount of
-    * authorized fees is not sufficient then the payer of the transaction can be
-    * charged, up to but not exceeding this amount. If the ethereum_data
-    * transaction authorized an amount that was insufficient then the payer will
-    * only be charged the amount needed to make up the difference. If the gas
-    * price in the transaction was set to zero then the payer will be assessed
-    * the entire fee.
-    * @param {number | string | Long | BigNumber | Hbar} maxGasAllowance
-    * @returns {this}
-    */
-    setMaxGasAllowanceHbar(maxGasAllowance){
+    /**
+     * The maximum amount, in tinybars, that the payer of the hedera transaction
+     * is willing to pay to complete the transaction.
+     *
+     * Ordinarily the account with the ECDSA alias corresponding to the public
+     * key that is extracted from the ethereum_data signature is responsible for
+     * fees that result from the execution of the transaction. If that amount of
+     * authorized fees is not sufficient then the payer of the transaction can be
+     * charged, up to but not exceeding this amount. If the ethereum_data
+     * transaction authorized an amount that was insufficient then the payer will
+     * only be charged the amount needed to make up the difference. If the gas
+     * price in the transaction was set to zero then the payer will be assessed
+     * the entire fee.
+     *
+     * @param {number | string | Long | BigNumber | Hbar} maxGasAllowance
+     * @returns {this}
+     */
+    setMaxGasAllowanceHbar(maxGasAllowance) {
         this._maxGasAllowance =
             maxGasAllowance instanceof Hbar
                 ? maxGasAllowance
@@ -176,7 +177,7 @@ export default class EthereumFlow {
 
             ethereumTransaction
                 .setEthereumData(this._ethereumData.toBytes())
-                .setCallData(this._callDataFileId);
+                .setCallDataFileId(this._callDataFileId);
         } else if (ethereumTransactionDataBytes.length <= 5120) {
             ethereumTransaction.setEthereumData(ethereumTransactionDataBytes);
         } else {
@@ -189,7 +190,7 @@ export default class EthereumFlow {
 
             ethereumTransaction
                 .setEthereumData(this._ethereumData.toBytes())
-                .setCallData(fileId);
+                .setCallDataFileId(fileId);
         }
 
         return ethereumTransaction.execute(client);

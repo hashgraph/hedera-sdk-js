@@ -212,9 +212,9 @@ export default class EthereumTransaction extends Transaction {
      * @param {number | string | Long | BigNumber | Hbar} maxGasAllowance
      * @returns {this}
      */
-         setMaxGasAllowance(maxGasAllowance) {
-            return this.setMaxGasAllowanceHbar(maxGasAllowance);
-        }
+    setMaxGasAllowance(maxGasAllowance) {
+        return this.setMaxGasAllowanceHbar(maxGasAllowance);
+    }
 
     /**
      * The maximum amount, in tinybars, that the payer of the hedera transaction
