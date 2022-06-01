@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+ * `EthereumFlow`
+ * `EthereumTransactionData`
+ * `EthereumTransactionDataLegacy`
+ * `EthereumTransactionDataEip1559`
  * `Signer.getAccountKey()` - Signature providers _should_ be implementing this method, but
    it was added in a none-breaking change way so old signer provider implementations won't
    break when updating to the latest JS SDK version
