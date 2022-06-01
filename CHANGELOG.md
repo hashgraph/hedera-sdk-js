@@ -8,7 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
- * Staking support
+ * `StakingInfo`
+ * `AccountCreateTransaction.stakedNodeAccountId`
+ * `AccountCreateTransaction.stakedNodeId`
+ * `AccountCreateTransaction.declineStakingReward`
+ * `ContractCreateTransaction.stakedNodeContractId`
+ * `ContractCreateTransaction.stakedNodeId`
+ * `ContractCreateTransaction.declineStakingReward`
+ * `AccountUpdateTransaction.stakedNodeAccountId`
+ * `AccountUpdateTransaction.stakedNodeId`
+ * `AccountUpdateTransaction.declineStakingReward`
+ * `ContractUpdateTransaction.stakedNodeContractId`
+ * `ContractUpdateTransaction.stakedNodeId`
+ * `ContractUpdateTransaction.declineStakingReward`
+ * `TransactionRecord.paidStakingRewards`
+ * `ScheduleCreateTransaction.expirationTime`
+ * `ScheduleCreateTransaction.waitForExpiry`
 
 ## v2.15.0
 
