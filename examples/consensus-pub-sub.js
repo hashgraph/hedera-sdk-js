@@ -26,7 +26,7 @@ async function main() {
     }
 
     const response = await new TopicCreateTransaction()
-        .setTopicMemo("sdk example create_pub_sub.js")
+        .setTopicMemo("js sdk example create_pub_sub.js")
         .execute(client);
 
     const receipt = await response.getReceipt(client);

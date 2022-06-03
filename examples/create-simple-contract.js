@@ -2,19 +2,18 @@ import {
     Client,
     PrivateKey,
     ContractCreateTransaction,
+    TransferTransaction,
     FileCreateTransaction,
     ContractDeleteTransaction,
     ContractCallQuery,
     Hbar,
     AccountId,
 } from "@hashgraph/sdk";
-
 import dotenv from "dotenv";
 
 dotenv.config();
 
-// Import the compiled contract
-import helloWorld from "./hello_world.json";
+import helloWorld from "./hello_world.json" assert {type: "json"};
 
 async function main() {
     let client;
@@ -31,8 +30,8 @@ async function main() {
     }
 
     // The contract bytecode is located on the `object` field
+    //@type string
     const contractByteCode = helloWorld.object;
-
     // Create a file on Hedera which contains the contact bytecode.
     // Note: The contract bytecode **must** be hex encoded, it should not
     // be the actual data the hex represents
@@ -52,7 +51,7 @@ async function main() {
     // Create the contract
     const contractTransactionResponse = await new ContractCreateTransaction()
         // Set gas to create the contract
-        .setGas(75000)
+        .setGas(500000)
         // The contract bytecode must be set to the file ID containing the contract bytecode
         .setBytecodeFileId(fileId)
         // Set the admin key on the contract in case the contract should be deleted or
@@ -75,7 +74,7 @@ async function main() {
     // of the contract
     const contractCallResult = await new ContractCallQuery()
         // Set the gas to execute a contract call
-        .setGas(75000)
+        .setGas(500000)
         // Set which contract
         .setContractId(contractId)
         // Set the function to call on the contract
@@ -106,6 +105,7 @@ async function main() {
 
     const contractDeleteResult = await new ContractDeleteTransaction()
         .setContractId(contractId)
+        .setTransferAccountId(client.operatorAccountId)
         .execute(client);
 
     // Delete the contract
