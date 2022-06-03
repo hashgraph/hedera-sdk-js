@@ -59,7 +59,7 @@ async function main() {
             new ContractFunctionParameters().addString("hello from hedera!")
         )
         // Set gas to create the contract
-        .setGas(75000)
+        .setGas(500000)
         // The contract bytecode must be set to the file ID containing the contract bytecode
         .setBytecodeFileId(fileId)
         // Set the admin key on the contract in case the contract should be deleted or
@@ -82,7 +82,7 @@ async function main() {
     // of the contract
     const contractCallResult = await new ContractCallQuery()
         // Set the gas to execute a contract call
-        .setGas(75000)
+        .setGas(500000)
         // Set which contract
         .setContractId(contractId)
         // Set the function to call on the contract
