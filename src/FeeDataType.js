@@ -52,7 +52,7 @@ export default class FeeDataType {
             case FeeDataType.TokenNonFungibleUniqueWithCustomFees:
                 return "TOKEN_NON_FUNGIBLE_UNIQUE_WITH_CUSTOM_FEES";
             case FeeDataType.ScheduleCreateContractCall:
-                return  "SCHEDULE_CREATE_CONTRACT_CALL";
+                return "SCHEDULE_CREATE_CONTRACT_CALL";
             default:
                 return `UNKNOWN (${this._code})`;
         }
