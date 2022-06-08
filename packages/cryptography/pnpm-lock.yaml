@@ -35,6 +35,7 @@ specifiers:
   js-base64: ^3.7.2
   mocha: ^9.2.2
   npm-run-all: ^4.1.5
+  npx: ^10.2.2
   prettier: ^2.6.2
   serve: ^13.0.2
   tweetnacl: ^1.0.3
@@ -81,6 +82,7 @@ devDependencies:
   geckodriver: 3.0.1
   mocha: 9.2.2
   npm-run-all: 4.1.5
+  npx: 10.2.2
   prettier: 2.6.2
   serve: 13.0.2
   typescript: 4.6.3
@@ -5339,7 +5341,7 @@ packages:
     dev: true
 
   /mv/2.1.1:
-    resolution: {integrity: sha1-rmzg1vbV4KT32JN5jQPB6pVZtqI=}
+    resolution: {integrity: sha512-at/ZndSy3xEGJ8i0ygALh8ru9qy7gWW1cmkaqBN29JmMlIvM//MEO9y1sk/avxuwnPcfhkejkLsuPxH81BrkSg==}
     engines: {node: '>=0.8.0'}
     requiresBuild: true
     dependencies:
@@ -5463,6 +5465,14 @@ packages:
     dependencies:
       path-key: 2.0.1
     dev: true
+
+  /npx/10.2.2:
+    resolution: {integrity: sha512-eImmySusyeWphzs5iNh791XbZnZG0FSNvM4KSah34pdQQIDsdTDhIwg1sjN3AIVcjGLpbQ/YcfqHPshKZQK1fA==}
+    hasBin: true
+    dev: true
+    bundledDependencies:
+      - npm
+      - libnpx
 
   /nullthrows/1.1.1:
     resolution: {integrity: sha512-2vPPEi+Z7WqML2jZYddDIfy5Dqb0r2fze2zTxNNknZaFpVHU3mFB3R+DWeJWGVx0ecvttSGlJTI+WG+8Z4cDWw==}

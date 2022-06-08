@@ -1,0 +1,147 @@
+version: "3"
+
+silent: true
+
+includes:
+    examples:
+        taskfile: ./examples/Taskfile.yml
+        dir: ./examples
+
+    common_js_test:
+        taskfile: ./common_js_test/Taskfile.yml
+        dir: ./common_js_test
+
+    simple_rest_signature_provider:
+        taskfile: ./examples/simple_rest_signature_provider/Taskfile.yml
+        dir: ./examples/simple_rest_signature_provider
+
+    proto:
+        taskfile: ./packages/proto/Taskfile.yml
+        dir: ./packages/proto
+
+    cryptography:
+        taskfile: ./packages/cryptography/Taskfile.yml
+        dir: ./packages/cryptography
+
+tasks:
+    default:
+        deps:
+            - build
+
+    docs:
+        cmds:
+            - ./node_modules/.bin/typedoc
+                --excludeInternal 
+                --excludePrivate 
+                --excludeProtected 
+                --out docs 
+                --validation.invalidLink 
+                --entryPoints src/index.js src/browser.js src/native.js
+
+    install:
+        cmds:
+            - git submodule update --init
+            - pnpm i
+
+    build:
+        deps:
+            - install
+            - format
+            - lint
+
+    clean:
+        deps:
+            - "examples:clean"
+            - "simple_rest_signature_provider:clean"
+            - "common_js_test:clean"
+        cmds:
+            - rm -rf node_modules
+
+    format:
+        cmds:
+            - ./node_modules/.bin/prettier src "test/unit/*.js" "test/integration/*.js" "*.json" "src/*.js" --write > /dev/null
+
+    lint:
+        deps:
+            - "lint:types"
+            - "lint:dpdm"
+            - "lint:format"
+            - "lint:js"
+
+    "lint:types":
+        cmds:
+            - tsc
+
+    "lint:dpdm":
+        cmds:
+            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null
+
+    "lint:format":
+        cmds:
+            - ./node_modules/.bin/prettier src "test/unit/*.js" "test/integration/*.js" "*.json" "src/*.js" --check > /dev/null
+
+    "lint:js":
+        cmds:
+            - ./node_modules/.bin/eslint --fix "src/**/*.js" "test/integration/**/*.js" "test/unit/**/*.js"
+
+    package:
+        cmds:
+            - babel src -d lib --out-file-extension .cjs
+
+    "test:release":
+        deps:
+            - install
+            - build
+            - format
+            - lint
+            - "test:unit"
+            - "examples:build"
+            - "simple_rest_signature_provider:build"
+            - "common_js_test:build"
+
+    test:
+        deps:
+            - "test:unit"
+            - "test:integration"
+
+    "test:unit":
+        deps:
+            - "test:unit:node"
+            - "test:unit:browser"
+
+    "test:unit:node":
+        cmds:
+            - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/unit/*.js" {{.CLI_ARGS}}
+
+    "test:unit:browser":
+        cmds:
+            - ./scripts/browser_test.sh
+
+    "test:integration":
+        deps:
+            - "test:inetgration:node"
+
+    "test:integration:node":
+        cmds:
+            - ./node_modules/.bin/nyc mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js"
+
+    "update:proto":
+        deps:
+            - "proto:update"
+        cmds:
+            # Yes doing this twice does seem necessary :shrug:
+            - pnpm add link:packages/proto
+            - pnpm add link:packages/proto
+
+    update:
+        deps:
+            - "update:proto"
+            - build
+
+    publish:
+        preconditions:
+            - "! grep '\".*\": \"link:.*\"' package.json > /dev/null"
+        deps:
+            - "test:release"
+        cmds:
+            - pnpm publish {{.CLI_ARGS}}
