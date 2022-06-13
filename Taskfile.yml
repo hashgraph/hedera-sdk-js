@@ -29,9 +29,8 @@ tasks:
             - build
 
     docs:
-        cmds:
-            - ./node_modules/.bin/typedoc
-                --excludeInternal 
+        cmds: 
+            - ./node_modules/.bin/typedoc --excludeInternal 
                 --excludePrivate 
                 --excludeProtected 
                 --out docs 

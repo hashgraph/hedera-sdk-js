@@ -1,0 +1,77 @@
+version: "3"
+
+silent: true
+
+tasks:
+    default:
+        deps:
+            - build
+
+    docs:
+        cmds: 
+            - ./node_modules/.bin/typedoc --excludeInternal 
+                --excludePrivate 
+                --excludeProtected 
+                --out docs 
+                --validation.invalidLink 
+                --entryPoints src/index.js src/browser.js src/native.js
+
+    install:
+        cmds:
+            - pnpm i
+
+    build:
+        deps:
+            - install
+            - format
+            - lint
+
+    clean:
+        cmds:
+            - rm -rf node_modules
+
+    format:
+        cmds:
+            - ./node_modules/.bin/prettier "*.json" "src/*.js" --write > /dev/null
+
+    lint:
+        deps:
+            - "lint:types"
+            - "lint:dpdm"
+            - "lint:format"
+            - "lint:js"
+
+    "lint:types":
+        cmds:
+            - ./node_modules/.bin/tsc
+
+    "lint:dpdm":
+        cmds:
+            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null
+
+    "lint:format":
+        cmds:
+            - ./node_modules/.bin/prettier "*.json" "src/*.js" --check > /dev/null
+
+    "lint:js":
+        cmds:
+            - ./node_modules/.bin/eslint --fix "src/*.js"
+
+    package:
+        cmds:
+            - babel src -d lib --out-file-extension .cjs
+
+    "test:release":
+        deps:
+            - install
+            - build
+            - format
+            - lint
+
+    publish:
+        preconditions:
+            - "! grep '\".*\": \"link:.*\"' package.json > /dev/null"
+        deps:
+            - "test:release"
+        cmds:
+            - pnpm publish {{.CLI_ARGS}}
