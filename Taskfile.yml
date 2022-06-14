@@ -28,15 +28,6 @@ tasks:
         deps:
             - build
 
-    docs:
-        cmds: 
-            - ./node_modules/.bin/typedoc --excludeInternal 
-                --excludePrivate 
-                --excludeProtected 
-                --out docs 
-                --validation.invalidLink 
-                --entryPoints src/index.js src/browser.js src/native.js
-
     install:
         cmds:
             - git submodule update --init
@@ -69,7 +60,7 @@ tasks:
 
     "lint:types":
         cmds:
-            - tsc
+            - ./node_modules/.bin/tsc
 
     "lint:dpdm":
         cmds:
@@ -84,6 +75,8 @@ tasks:
             - ./node_modules/.bin/eslint --fix "src/**/*.js" "test/integration/**/*.js" "test/unit/**/*.js"
 
     package:
+        deps:
+            - build
         cmds:
             - babel src -d lib --out-file-extension .cjs
 

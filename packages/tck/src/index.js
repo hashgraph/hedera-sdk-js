@@ -86,18 +86,20 @@ const REQUESTS = [...TRANSACTIONS, ...QUERIES];
  * @param {hashgraph.Signer} signer
  * @param {hashgraph.Transaction[]} transactions
  * @param {ExpectClause[]} expects
+ * @param {() => void} callback
  */
-async function testFreezeWithSigner(signer, transactions, expects) {
-    const frozenTransactions = [];
-    for (const transaction of transactions) {
-        frozenTransactions.push(await transaction.freezeWithSigner(signer));
+async function testFreezeWithSigner(signer, transactions, expects, callback) {
+    for (let i = 0; i < transactions.length; i++) {
+        const promise = transactions[i].freezeWithSigner(signer);
+        callback();
+        transactions[i] = await promise;
     }
 
-    for (const transaction of frozenTransactions) {
+    for (const transaction of transactions) {
         /** @type {boolean} */
         let condition =
-            transaction.nodeAccountIds == null ||
-            transaction.nodeAccountIds.length === 0;
+            transaction.nodeAccountIds != null &&
+            transaction.nodeAccountIds.length !== 0;
 
         const nodeAccountIds = (
             transaction.nodeAccountIds != null ? transaction.nodeAccountIds : []
@@ -133,7 +135,7 @@ async function testFreezeWithSigner(signer, transactions, expects) {
             continue;
         }
 
-        condition = transaction.transactionId.accountId == null;
+        condition = transaction.transactionId.accountId != null;
         expects.push({
             name: `${transaction.constructor.name}.transactionId.accountId should be set`,
             condition,
@@ -156,20 +158,16 @@ async function testFreezeWithSigner(signer, transactions, expects) {
  * @param {hashgraph.Signer} signer
  * @param {hashgraph.Transaction[]} transactions
  * @param {ExpectClause[]} expects
+ * @param {() => void} callback
  */
-async function testSignWithSigner(signer, transactions, expects) {
-    const frozenTransactions = [];
-    for (const transaction of transactions) {
-        frozenTransactions.push(await transaction.freezeWithSigner(signer));
+async function testSignWithSigner(signer, transactions, expects, callback) {
+    for (let i = 0; i < transactions.length; i++) {
+        const promise = transactions[i].signWithSigner(signer);
+        callback();
+        transactions[i] = await promise;
     }
 
-    const signedTransactions = [];
-
-    for (const transaction of transactions) {
-        signedTransactions.push(await transaction.signWithSigner(signer));
-    }
-
-    outer: for (const transaction of signedTransactions) {
+    outer: for (const transaction of transactions) {
         const signatures = await transaction.getSignaturesAsync();
         for (const [, nodeSignatures] of signatures) {
             let condition = true;
@@ -195,33 +193,46 @@ async function testSignWithSigner(signer, transactions, expects) {
  * @param {hashgraph.Signer} signer
  * @param {hashgraph.Executable<RequestT, ResponseT, OutputT>[]} requests
  * @param {ExpectClause[]} expects
+ * @param {() => void} callback
  */
-async function testExecuteWithSigner(signer, requests, expects) {
+async function testExecuteWithSigner(signer, requests, expects, callback) {
     for (const request of requests) {
+        let condition = true;
         try {
-            await request.executeWithSigner(signer);
+            const promise = request.executeWithSigner(signer);
+            callback();
+            await promise;
         } catch (error) {
-            if (!(error instanceof hashgraph.PrecheckStatusError)) {
-                expects.push({
-                    name: `${request.constructor.name}: can execute request`,
-                    condition: false,
-                });
-            }
+            // A status error indicates we've hit an actual network
+            condition = /** @type {Error} */ (error).name === "StatusError";
         }
+
+        expects.push({
+            name: `${request.constructor.name}: can execute request`,
+            condition,
+        });
     }
 }
 
 /**
  * @param {hashgraph.Signer} signer
+ * @param {() => void} callback
  * @returns {Promise<ExpectClause[]>}
  */
-export async function test(signer) {
+export async function test(signer, callback) {
     /** @type {ExpectClause[]} */
     const expects = [];
 
-    await testFreezeWithSigner(signer, TRANSACTIONS, expects);
-    await testSignWithSigner(signer, TRANSACTIONS, expects);
-    await testExecuteWithSigner(signer, REQUESTS, expects);
+    try {
+        await testFreezeWithSigner(signer, TRANSACTIONS, expects, callback);
+        await testSignWithSigner(signer, TRANSACTIONS, expects, callback);
+        await testExecuteWithSigner(signer, REQUESTS, expects, callback);
+    } catch (error) {
+        expects.push({
+            name: /** @type {Error} */ (error).toString(),
+            condition: false,
+        });
+    }
 
     return expects;
 }

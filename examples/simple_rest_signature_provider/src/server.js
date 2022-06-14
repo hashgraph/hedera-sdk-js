@@ -6,6 +6,7 @@ if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
     throw new Error("`OPERATOR_KEY` and `OPERATOR_ID` required");
 }
 
+// @ts-ignore
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -30,34 +31,34 @@ Object.entries(network).map(([key, value]) => {
 const mirrorNetwork = provider.getMirrorNetwork();
 
 app.post("/login", function (req, res) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const request = /** @type {{ accountId: string | undefined }} */ (req.body);
-    if (
-        request.accountId != null &&
-        request.accountId != wallet.accountId.toString()
-    ) {
-        res.json({ error: "invalid account ID" });
-        return;
-    }
-
-    const accountId =
-        request.accountId == null ? wallet.accountId : request.accountId;
-
-    rl.question(`Login as ${accountId.toString()}?\n`, (name) => {
-        switch (name) {
-            case "y":
-            case "yes":
-                res.json({
-                    accountId: wallet.accountId.toString(),
-                    publicKey: wallet.publicKey.toString(),
-                    ledgerId: ledgerId != null ? ledgerId.toString() : null,
-                    network,
-                    mirrorNetwork,
-                });
-                break;
-            default:
-                res.json({ error: "request denied" });
-        }
+    // // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // const request = /** @type {{ accountId: string | undefined }} */ (req.body);
+    // if (
+    //     request.accountId != null &&
+    //     request.accountId != wallet.accountId.toString()
+    // ) {
+    //     res.json({ error: "invalid account ID" });
+    //     return;
+    // }
+    //
+    // const accountId =
+    //     request.accountId == null ? wallet.accountId : request.accountId;
+    //
+    // rl.question(`Login as ${accountId.toString()}?\n`, (name) => {
+    //     switch (name) {
+    //         case "y":
+    //         case "yes":
+    res.json({
+        accountId: wallet.accountId.toString(),
+        publicKey: wallet.publicKey.toString(),
+        ledgerId: ledgerId != null ? ledgerId.toString() : null,
+        network,
+        mirrorNetwork,
+        //             });
+        //             break;
+        //         default:
+        //             res.json({ error: "request denied" });
+        //     }
     });
 });
 

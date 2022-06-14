@@ -28,12 +28,17 @@ tasks:
     lint:
         deps:
             - "lint:types"
+            - "lint:dpdm"
             - "lint:format"
             - "lint:js"
 
     "lint:types":
         cmds:
             - ./node_modules/.bin/tsc
+
+    "lint:dpdm":
+        cmds:
+            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null
 
     "lint:format":
         cmds:
@@ -47,17 +52,19 @@ tasks:
         deps:
             - build
         cmds:
-            - babel src -d lib --out-file-extension .cjs
+            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
 
-    test:
+    "test:release":
         deps:
-            - "test:unit"
+            - install
+            - build
+            - format
+            - lint
 
-    "test:unit":
+    publish:
+        preconditions:
+            - "! grep '\".*\": \"link:.*\"' package.json > /dev/null"
         deps:
-            - "test:unit:node"
-
-    "test:unit:node":
+            - "test:release"
         cmds:
-            - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/*.js" {{.CLI_ARGS}}
-
+            - pnpm publish {{.CLI_ARGS}}
