@@ -24,9 +24,10 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: extractions/setup-just@v1
+      - name: Install Task
+        uses: arduino/setup-task@v1
         with:
-          just-version: 1.1.2
+            version: 3.7.0
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -47,18 +48,18 @@ jobs:
           version: 6.0.2
 
       - name: Build @hashgraph/cryptography
-        run: just -f packages/cryptography/justfile build
+        run: task cryptography:build
 
       - name: Build @hashgraph/proto
-        run: just -f packages/proto/justfile build
+        run: task proto:build
 
       - name: Build @hashgraph/sdk
-        run: just build
+        run: task build
 
       - name: Install dependencies
         working-directory: common_js_test
-        run: just install
+        run: task install
           
       - name: Test
         working-directory: common_js_test
-        run: just test
+        run: task test
