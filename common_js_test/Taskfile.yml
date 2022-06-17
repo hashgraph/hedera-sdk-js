@@ -1,0 +1,26 @@
+version: "3"
+
+silent: true
+
+tasks:
+    default:
+        deps:
+            - build
+
+    install:
+        cmds:
+            - pnpm i
+
+    build:
+        deps:
+            - install
+
+    clean:
+        cmds:
+            - rm -rf node_modules
+
+    test:
+        deps:
+            - install
+        cmds:
+            - ./node_modules/.bin/mocha -r @babel/register -r chai/register-expect.js "src/test.js"

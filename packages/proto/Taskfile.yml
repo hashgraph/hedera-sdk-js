@@ -1,0 +1,81 @@
+version: "3"
+
+silent: true
+
+tasks:
+    default:
+        deps:
+            - build
+
+    docs:
+        cmds:
+            - ./node_modules/.bin/typedoc
+                --excludeInternal 
+                --excludePrivate 
+                --excludeProtected 
+                --out docs 
+                --validation.invalidLink 
+                --entryPoints src/index.js src/browser.js src/native.js
+
+    install:
+        cmds:
+            - pnpm i
+
+    build:
+        deps:
+            - install
+        cmds:
+            - pbjs -r hashgraph -t static-module -w es6 --force-long --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*/**.proto
+            - pbts -n hashgraph -o src/proto.d.ts src/proto.js
+            - perl -pi -e "s#(?<!api\.)proto\.#hashgraph.proto.#g" src/proto.d.ts
+            - ./node_modules/.bin/babel src -d lib
+            - ./node_modules/.bin/copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/
+            - task: format
+            - task: lint
+
+    clean:
+        cmds:
+            - rm -rf node_modules
+
+    format:
+        cmds:
+            - ./node_modules/.bin/prettier "*.json" "src/*.js" --write > /dev/null
+
+    lint:
+        deps:
+            - "lint:types"
+            - "lint:format"
+            - "lint:js"
+
+    "lint:types":
+        cmds:
+            - tsc
+
+    "lint:format":
+        cmds:
+            - ./node_modules/.bin/prettier "*.json" "src/*.js" --check > /dev/null
+
+    "lint:js":
+        cmds:
+            - ./node_modules/.bin/eslint --fix "src/*.js"
+
+    package:
+        deps:
+          - build
+
+    "test:release":
+        deps:
+            - build
+
+    update:
+        cmds:
+            - cd src/proto && git pull origin main
+            - task: build
+
+    publish:
+        preconditions:
+            - "! grep '\".*\": \"link:.*\"' package.json > /dev/null"
+        deps:
+            - "test:release"
+        cmds:
+            - pnpm publish {{.CLI_ARGS}}

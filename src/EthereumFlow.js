@@ -81,7 +81,7 @@ export default class EthereumFlow {
         }
 
         if (props.maxGasAllowance != null) {
-            this.setMaxGasAllowance(props.maxGasAllowance);
+            this.setMaxGasAllowanceHbar(props.maxGasAllowance);
         }
     }
 
@@ -115,6 +115,15 @@ export default class EthereumFlow {
     }
 
     /**
+     * @deprecated - use masGasAllowanceHbar instead.
+     * @param {number | string | Long | BigNumber | Hbar} maxGasAllowance
+     * @returns {this}
+     */
+    setMaxGasAllowance(maxGasAllowance) {
+        return this.setMaxGasAllowanceHbar(maxGasAllowance);
+    }
+
+    /**
      * The maximum amount, in tinybars, that the payer of the hedera transaction
      * is willing to pay to complete the transaction.
      *
@@ -131,7 +140,7 @@ export default class EthereumFlow {
      * @param {number | string | Long | BigNumber | Hbar} maxGasAllowance
      * @returns {this}
      */
-    setMaxGasAllowance(maxGasAllowance) {
+    setMaxGasAllowanceHbar(maxGasAllowance) {
         this._maxGasAllowance =
             maxGasAllowance instanceof Hbar
                 ? maxGasAllowance
@@ -156,7 +165,7 @@ export default class EthereumFlow {
         const ethereumTransactionDataBytes = this._ethereumData.toBytes();
 
         if (this._maxGasAllowance != null) {
-            ethereumTransaction.setMaxGasAllowance(this._maxGasAllowance);
+            ethereumTransaction.setMaxGasAllowanceHbar(this._maxGasAllowance);
         }
 
         if (this._callDataFileId != null) {

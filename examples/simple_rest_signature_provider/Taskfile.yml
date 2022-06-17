@@ -1,0 +1,49 @@
+version: "3"
+
+silent: true
+
+tasks:
+    default:
+        deps:
+            - build
+
+    install:
+        cmds:
+            - pnpm i
+
+    build:
+        deps:
+            - install
+            - format
+            - lint
+
+    clean:
+        cmds:
+            - rm -rf node_modules
+
+    format:
+        cmds:
+            - ./node_modules/.bin/prettier "*.json" "*.js" --write > /dev/null
+
+    lint:
+        deps:
+            - "lint:types"
+            - "lint:dpdm"
+            - "lint:format"
+            - "lint:js"
+
+    "lint:types":
+        cmds:
+            - tsc
+
+    "lint:dpdm":
+        cmds:
+            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null
+
+    "lint:format":
+        cmds:
+            - ./node_modules/.bin/prettier "*.json" "*.js" --check > /dev/null
+
+    "lint:js":
+        cmds:
+            - ./node_modules/.bin/eslint --fix "*.json" "*.js"

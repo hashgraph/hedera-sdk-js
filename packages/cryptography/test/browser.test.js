@@ -1,10 +1,11 @@
 import { test, expect } from "@playwright/test";
 
-test("can execute SDK within browser", async function ({ page }) {
+test("can execute @hashgraph/cryptography within browser", async function ({ page }) {
     page.on("pageerror", async (message) => {
         await browser.close();
         throw new Error(message);
     });
+
     await page.goto("http://localhost:9001/");
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
