@@ -48,13 +48,13 @@ jobs:
           version: 6.0.2
 
       - name: Build @hashgraph/cryptography
-        run: task cryptography:build
+        run: task cryptography:package
 
       - name: Build @hashgraph/proto
-        run: task proto:build
+        run: task proto:package
 
       - name: Build @hashgraph/sdk
-        run: task build
+        run: task package
 
       - name: Install dependencies
         working-directory: common_js_test
