@@ -1,13 +1,12 @@
 import {
-    Client,
-    PrivateKey,
+    Wallet,
+    LocalProvider,
     ContractCreateTransaction,
     ContractExecuteTransaction,
     FileCreateTransaction,
     ContractFunctionParameters,
     ContractCallQuery,
     Hbar,
-    AccountId,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -18,18 +17,17 @@ dotenv.config();
 import stateful from "./stateful.json";
 
 async function main() {
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
+
+    const wallet = new Wallet(
+        process.env.OPERATOR_ID,
+        process.env.OPERATOR_KEY,
+        new LocalProvider()
+    );
 
     // The contract bytecode is located on the `object` field
     const contractByteCode = /** @type {string} */ (stateful.object);
@@ -38,12 +36,14 @@ async function main() {
     // Note: The contract bytecode **must** be hex encoded, it should not
     // be the actual data the hex represents
     const fileTransactionResponse = await new FileCreateTransaction()
-        .setKeys([client.operatorPublicKey])
+        .setKeys([wallet.getAccountKey()])
         .setContents(contractByteCode)
-        .execute(client);
+        .executeWithSigner(wallet);
 
     // Fetch the receipt for transaction that created the file
-    const fileReceipt = await fileTransactionResponse.getReceipt(client);
+    const fileReceipt = await fileTransactionResponse.getReceiptWithSigner(
+        wallet
+    );
 
     // The file ID is located on the transaction receipt
     const fileId = fileReceipt.fileId;
@@ -64,13 +64,12 @@ async function main() {
         .setBytecodeFileId(fileId)
         // Set the admin key on the contract in case the contract should be deleted or
         // updated in the future
-        .setAdminKey(client.operatorPublicKey)
-        .execute(client);
+        .setAdminKey(wallet.getAccountKey())
+        .executeWithSigner(wallet);
 
     // Fetch the receipt for the transaction that created the contract
-    const contractReceipt = await contractTransactionResponse.getReceipt(
-        client
-    );
+    const contractReceipt =
+        await contractTransactionResponse.getReceiptWithSigner(wallet);
 
     // The conract ID is located on the transaction receipt
     const contractId = contractReceipt.contractId;
@@ -88,7 +87,7 @@ async function main() {
         // Set the function to call on the contract
         .setFunction("get_message")
         .setQueryPayment(new Hbar(1))
-        .execute(client);
+        .executeWithSigner(wallet);
 
     // Check if an error was returned
     if (
@@ -134,9 +133,9 @@ async function main() {
                     "hello from hedera again!"
                 )
             )
-            .execute(client);
+            .executeWithSigner(wallet);
 
-    await contractExecTransactionResponse.getReceipt(client);
+    await contractExecTransactionResponse.getReceiptWithSigner(wallet);
 
     // Call a method on a contract that exists on Hedera
     const contractUpdateResult = await new ContractCallQuery()
@@ -149,7 +148,7 @@ async function main() {
         // Set the query payment explicitly since sometimes automatic payment calculated
         // is too low
         .setQueryPayment(new Hbar(3))
-        .execute(client);
+        .executeWithSigner(wallet);
 
     // Check if there were any errors
     if (

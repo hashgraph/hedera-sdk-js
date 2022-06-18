@@ -2,8 +2,8 @@ import {
     AccountBalanceQuery,
     AccountCreateTransaction,
     AccountDeleteTransaction,
-    AccountId,
-    Client,
+    Wallet,
+    LocalProvider,
     PrivateKey,
     Hbar,
     TokenAssociateTransaction,
@@ -20,18 +20,17 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
+
+    const wallet = new Wallet(
+        process.env.OPERATOR_ID,
+        process.env.OPERATOR_KEY,
+        new LocalProvider()
+    );
 
     const newKey = PrivateKey.generate();
 
@@ -41,9 +40,9 @@ async function main() {
     let resp = await new AccountCreateTransaction()
         .setKey(newKey.publicKey)
         .setInitialBalance(new Hbar(2))
-        .execute(client);
+        .executeWithSigner(wallet);
 
-    const transactionReceipt = await resp.getReceipt(client);
+    const transactionReceipt = await resp.getReceiptWithSigner(wallet);
     const newAccountId = transactionReceipt.accountId;
 
     console.log(`account id = ${newAccountId.toString()}`);
@@ -54,28 +53,28 @@ async function main() {
         .setTokenSymbol("F")
         .setDecimals(3)
         .setInitialSupply(100)
-        .setTreasuryAccountId(client.operatorAccountId)
-        .setAdminKey(client.operatorPublicKey)
-        .setFreezeKey(client.operatorPublicKey)
-        .setWipeKey(client.operatorPublicKey)
-        .setKycKey(client.operatorPublicKey)
-        .setSupplyKey(client.operatorPublicKey)
+        .setTreasuryAccountId(wallet.getAccountId())
+        .setAdminKey(wallet.getAccountKey())
+        .setFreezeKey(wallet.getAccountKey())
+        .setWipeKey(wallet.getAccountKey())
+        .setKycKey(wallet.getAccountKey())
+        .setSupplyKey(wallet.getAccountKey())
         .setFreezeDefault(false)
-        .execute(client);
+        .executeWithSigner(wallet);
 
-    const tokenId = (await resp.getReceipt(client)).tokenId;
+    const tokenId = (await resp.getReceiptWithSigner(wallet)).tokenId;
     console.log(`token id = ${tokenId.toString()}`);
 
     await (
         await (
-            await new TokenAssociateTransaction()
+            await (await new TokenAssociateTransaction()
                 .setNodeAccountIds([resp.nodeId])
                 .setAccountId(newAccountId)
                 .setTokenIds([tokenId])
-                .freezeWith(client)
+                .freezeWithSigner(wallet))
                 .sign(newKey)
-        ).execute(client)
-    ).getReceipt(client);
+        ).executeWithSigner(wallet)
+    ).getReceiptWithSigner(wallet);
 
     console.log(
         `Associated account ${newAccountId.toString()} with token ${tokenId.toString()}`
@@ -86,8 +85,8 @@ async function main() {
             .setNodeAccountIds([resp.nodeId])
             .setAccountId(newAccountId)
             .setTokenId(tokenId)
-            .execute(client)
-    ).getReceipt(client);
+            .executeWithSigner(wallet)
+    ).getReceiptWithSigner(wallet);
 
     console.log(
         `Granted KYC for account ${newAccountId.toString()} on token ${tokenId.toString()}`
@@ -96,21 +95,21 @@ async function main() {
     await (
         await new TransferTransaction()
             .setNodeAccountIds([resp.nodeId])
-            .addTokenTransfer(tokenId, client.operatorAccountId, -10)
+            .addTokenTransfer(tokenId, wallet.getAccountId(), -10)
             .addTokenTransfer(tokenId, newAccountId, 10)
-            .execute(client)
-    ).getReceipt(client);
+            .executeWithSigner(wallet)
+    ).getReceiptWithSigner(wallet);
 
     console.log(
-        `Sent 10 tokens from account ${client.operatorAccountId.toString()} to account ${newAccountId.toString()} on token ${tokenId.toString()}`
+        `Sent 10 tokens from account ${wallet.getAccountId().toString()} to account ${newAccountId.toString()} on token ${tokenId.toString()}`
     );
 
     const balances = await new AccountBalanceQuery()
-        .setAccountId(client.operatorAccountId)
-        .execute(client);
+        .setAccountId(wallet.getAccountId())
+        .executeWithSigner(wallet);
 
     console.log(
-        `Token balances for ${client.operatorAccountId.toString()} are ${balances.tokens
+        `Token balances for ${wallet.getAccountId().toString()} are ${balances.tokens
             .toString()
             .toString()}`
     );
@@ -121,8 +120,8 @@ async function main() {
             .setTokenId(tokenId)
             .setAccountId(newAccountId)
             .setAmount(10)
-            .execute(client)
-    ).getReceipt(client);
+            .executeWithSigner(wallet)
+    ).getReceiptWithSigner(wallet);
 
     console.log(`Wiped balance of account ${newAccountId.toString()}`);
 
@@ -130,23 +129,23 @@ async function main() {
         await new TokenDeleteTransaction()
             .setNodeAccountIds([resp.nodeId])
             .setTokenId(tokenId)
-            .execute(client)
-    ).getReceipt(client);
+            .executeWithSigner(wallet)
+    ).getReceiptWithSigner(wallet);
 
     console.log(`Deleted token ${tokenId.toString()}`);
 
     await (
         await (
-            await new AccountDeleteTransaction()
+            await (await new AccountDeleteTransaction()
                 .setNodeAccountIds([resp.nodeId])
                 .setAccountId(newAccountId)
-                .setTransferAccountId(client.operatorAccountId)
+                .setTransferAccountId(wallet.getAccountId())
                 .setTransactionId(TransactionId.generate(newAccountId))
                 .setMaxTransactionFee(new Hbar(1))
-                .freezeWith(client)
+                .freezeWithSigner(wallet))
                 .sign(newKey)
-        ).execute(client)
-    ).getReceipt(client);
+        ).executeWithSigner(wallet)
+    ).getReceiptWithSigner(wallet);
 
     console.log(`Deleted account ${newAccountId.toString()}`);
 }
