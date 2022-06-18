@@ -1,12 +1,11 @@
 import {
-    Client,
-    PrivateKey,
+    Wallet,
+    LocalProvider,
     ContractCreateTransaction,
     FileCreateTransaction,
     ContractDeleteTransaction,
     ContractCallQuery,
     Hbar,
-    AccountId,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -17,18 +16,17 @@ dotenv.config();
 import helloWorld from "./hello_world.json";
 
 async function main() {
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
+
+    const wallet = new Wallet(
+        process.env.OPERATOR_ID,
+        process.env.OPERATOR_KEY,
+        new LocalProvider()
+    );
 
     // The contract bytecode is located on the `object` field
     const contractByteCode = helloWorld.object;
@@ -37,12 +35,14 @@ async function main() {
     // Note: The contract bytecode **must** be hex encoded, it should not
     // be the actual data the hex represents
     const fileTransactionResponse = await new FileCreateTransaction()
-        .setKeys([client.operatorPublicKey])
+        .setKeys([wallet.getAccountKey()])
         .setContents(contractByteCode)
-        .execute(client);
+        .executeWithSigner(wallet);
 
     // Fetch the receipt for transaction that created the file
-    const fileReceipt = await fileTransactionResponse.getReceipt(client);
+    const fileReceipt = await fileTransactionResponse.getReceiptWithSigner(
+        wallet
+    );
 
     // The file ID is located on the transaction receipt
     const fileId = fileReceipt.fileId;
@@ -57,13 +57,12 @@ async function main() {
         .setBytecodeFileId(fileId)
         // Set the admin key on the contract in case the contract should be deleted or
         // updated in the future
-        .setAdminKey(client.operatorPublicKey)
-        .execute(client);
+        .setAdminKey(wallet.getAccountKey())
+        .executeWithSigner(wallet);
 
     // Fetch the receipt for the transaction that created the contract
-    const contractReceipt = await contractTransactionResponse.getReceipt(
-        client
-    );
+    const contractReceipt =
+        await contractTransactionResponse.getReceiptWithSigner(wallet);
 
     // The conract ID is located on the transaction receipt
     const contractId = contractReceipt.contractId;
@@ -81,7 +80,7 @@ async function main() {
         // Set the function to call on the contract
         .setFunction("greet")
         .setQueryPayment(new Hbar(1))
-        .execute(client);
+        .executeWithSigner(wallet);
 
     if (
         contractCallResult.errorMessage != null &&
@@ -106,13 +105,13 @@ async function main() {
 
     const contractDeleteResult = await new ContractDeleteTransaction()
         .setContractId(contractId)
-        .execute(client);
+        .executeWithSigner(wallet);
 
     // Delete the contract
     // Note: The admin key of the contract needs to sign the transaction
     // In this case the client operator is the same as the admin key so the
     // automatic signing takes care of this for you
-    await contractDeleteResult.getReceipt(client);
+    await contractDeleteResult.getReceiptWithSigner(wallet);
 
     console.log("contract successfully deleted");
 }

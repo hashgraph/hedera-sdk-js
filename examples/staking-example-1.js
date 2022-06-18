@@ -3,7 +3,8 @@ import {
     AccountUpdateTransaction,
     AccountId,
     AccountInfoQuery,
-    Client,
+    Wallet,
+    LocalProvider,
     PrivateKey,
 } from "@hashgraph/sdk";
 
@@ -12,18 +13,17 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
+
+    const wallet = new Wallet(
+        process.env.OPERATOR_ID,
+        process.env.OPERATOR_KEY,
+        new LocalProvider()
+    );
 
     const newKey = PrivateKey.generate();
 
@@ -39,11 +39,11 @@ async function main() {
         .setKey(newKey.publicKey)
         .setInitialBalance(20)
         .setStakedAccountId("0.0.3")
-        .execute(client);
+        .executeWithSigner(wallet);
 
     // If we get here we have successfully created an account that
     // is staked to account ID 0.0.3
-    const transactionReceipt = await resp.getReceipt(client);
+    const transactionReceipt = await resp.getReceiptWithSigner(wallet);
 
     // The new account ID
     const newAccountId = transactionReceipt.accountId;
@@ -57,14 +57,14 @@ async function main() {
         `key required to update staking information: ${newKey.publicKey.toString()}`
     );
     console.log(
-        `fee payer aka operator key: ${client.operatorPublicKey.toString()}`
+        `fee payer aka operator key: ${wallet.getAccountKey().toString()}`
     );
 
     // Query the account info, it should show the staked account ID
     // to be 0.0.3 just like what we set it to
     let info = await new AccountInfoQuery()
         .setAccountId(newAccountId)
-        .execute(client);
+        .executeWithSigner(wallet);
 
     console.log(`Staking info: ${info.stakingInfo.toString()}`);
 
@@ -73,20 +73,20 @@ async function main() {
     // If this succeeds then we should no longer have a staked account ID
     await (
         await (
-            await new AccountUpdateTransaction()
+            await (await new AccountUpdateTransaction()
                 .setAccountId(newAccountId)
                 .clearStakedAccountId()
-                .freezeWith(client)
+                .freezeWithSigner(wallet))
                 // Sign the transaction with the account key
                 .sign(newKey)
-        ).execute(client)
-    ).getReceipt(client);
+        ).executeWithSigner(wallet)
+    ).getReceiptWithSigner(wallet);
 
     // Query the account info, it should show the staked account ID
     // to be 0.0.3 just like what we set it to
     info = await new AccountInfoQuery()
         .setAccountId(newAccountId)
-        .execute(client);
+        .executeWithSigner(wallet);
 
     console.log(`Staking info: ${info.stakingInfo.toString()}`);
 }

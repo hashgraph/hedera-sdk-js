@@ -1,5 +1,6 @@
 import {
-    Client,
+    Wallet,
+    LocalProvider,
     PrivateKey,
     AccountCreateTransaction,
     Hbar,
@@ -16,18 +17,17 @@ let user1Key;
 let user2Key;
 
 async function main() {
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment; variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
+
+    const wallet = new Wallet(
+        process.env.OPERATOR_ID,
+        process.env.OPERATOR_KEY,
+        new LocalProvider()
+    );
 
     user1Key = PrivateKey.generate();
     user2Key = PrivateKey.generate();
@@ -39,25 +39,24 @@ async function main() {
         .setInitialBalance(new Hbar(2)) // 5 h
         .setKey(keyList);
 
-    const response = await createAccountTransaction.execute(client);
+    const response = await createAccountTransaction.executeWithSigner(wallet);
 
-    let receipt = await response.getReceipt(client);
+    let receipt = await response.getReceiptWithSigner(wallet);
 
     console.log(`account id = ${receipt.accountId.toString()}`);
 
     // create a transfer from new account to 0.0.3
-    const transferTransaction = new TransferTransaction()
+    const transferTransaction = await new TransferTransaction()
         .setNodeAccountIds([new AccountId(3)])
         .addHbarTransfer(receipt.accountId, -1)
         .addHbarTransfer("0.0.3", 1)
-        .freezeWith(client);
+        .freezeWithSigner(wallet);
 
-    await transferTransaction.signWithOperator(client);
     user1Key.signTransaction(transferTransaction);
     user2Key.signTransaction(transferTransaction);
 
-    const result = await transferTransaction.execute(client);
-    receipt = await result.getReceipt(client);
+    const result = await transferTransaction.executeWithSigner(wallet);
+    receipt = await result.getReceiptWithSigner(wallet);
 
     console.log(receipt.status.toString());
 }

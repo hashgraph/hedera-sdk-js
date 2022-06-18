@@ -1,9 +1,8 @@
 import {
-    Client,
+    Wallet,
+    LocalProvider,
     TopicCreateTransaction,
     TopicMessageSubmitTransaction,
-    PrivateKey,
-    AccountId,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -11,22 +10,23 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
 
+    const wallet = new Wallet(
+        process.env.OPERATOR_ID,
+        process.env.OPERATOR_KEY,
+        new LocalProvider()
+    );
+
     // create topic
-    const createResponse = await new TopicCreateTransaction().execute(client);
-    const createReceipt = await createResponse.getReceipt(client);
+    const createResponse = await new TopicCreateTransaction().executeWithSigner(
+        wallet
+    );
+    const createReceipt = await createResponse.getReceiptWithSigner(wallet);
 
     console.log(`topic id = ${createReceipt.topicId.toString()}`);
 
@@ -34,9 +34,9 @@ async function main() {
     const sendResponse = await new TopicMessageSubmitTransaction({
         topicId: createReceipt.topicId,
         message: "Hello World",
-    }).execute(client);
+    }).executeWithSigner(wallet);
 
-    const sendReceipt = await sendResponse.getReceipt(client);
+    const sendReceipt = await sendResponse.getReceiptWithSigner(wallet);
 
     console.log(
         `topic sequence number = ${sendReceipt.topicSequenceNumber.toString()}`

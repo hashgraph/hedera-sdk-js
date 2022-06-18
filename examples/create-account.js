@@ -1,9 +1,9 @@
 import {
-    Client,
+    Wallet,
+    LocalProvider,
     PrivateKey,
     AccountCreateTransaction,
     Hbar,
-    AccountId,
 } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
@@ -11,18 +11,17 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
+
+    const wallet = new Wallet(
+        process.env.OPERATOR_ID,
+        process.env.OPERATOR_KEY,
+        new LocalProvider()
+    );
 
     const newKey = PrivateKey.generate();
 
@@ -32,13 +31,13 @@ async function main() {
     const response = await new AccountCreateTransaction()
         .setInitialBalance(new Hbar(10)) // 10 h
         .setKey(newKey.publicKey)
-        .execute(client);
+        .executeWithSigner(wallet);
 
-    const receipt = await response.getReceipt(client);
+    const receipt = await response.getReceiptWithSigner(wallet);
 
     console.log(`account id = ${receipt.accountId.toString()}`);
 
-    const record = await response.getRecord(client);
+    const record = await response.getRecordWithSigner(wallet);
     console.log(Buffer.from(record.toBytes()).toString("hex"));
 }
 

@@ -1,5 +1,6 @@
 import {
-    Client,
+    Wallet,
+    LocalProvider,
     PrivateKey,
     AccountId,
     KeyList,
@@ -21,19 +22,18 @@ dotenv.config();
  */
 
 async function main() {
-    // set up client
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    // set up wallet
+    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
+
+    const wallet = new Wallet(
+        process.env.OPERATOR_ID,
+        process.env.OPERATOR_KEY,
+        new LocalProvider()
+    );
 
     // generate keys
     const privateKeyList = [];
@@ -53,27 +53,27 @@ async function main() {
         .setKey(thresholdKey)
         .setInitialBalance(Hbar.fromTinybars(1))
         .setAccountMemo("3-of-4 multi-sig account")
-        .execute(client);
+        .executeWithSigner(wallet);
 
-    const txAccountCreateReceipt = await txAccountCreate.getReceipt(client);
+    const txAccountCreateReceipt = await txAccountCreate.getReceiptWithSigner(wallet);
     const multiSigAccountId = txAccountCreateReceipt.accountId;
     console.log(
         `3-of-4 multi-sig account ID:  ${multiSigAccountId.toString()}`
     );
-    await queryBalance(multiSigAccountId, client);
+    await queryBalance(multiSigAccountId, wallet);
 
     // schedule crypto transfer from multi-sig account to operator account
     const txSchedule = await (
-        await new TransferTransaction()
+        await (await new TransferTransaction()
             .addHbarTransfer(multiSigAccountId, Hbar.fromTinybars(-1))
-            .addHbarTransfer(client.operatorAccountId, Hbar.fromTinybars(1))
+            .addHbarTransfer(wallet.getAccountId(), Hbar.fromTinybars(1))
             .schedule() // create schedule
-            .freezeWith(client)
+            .freezeWithSigner(wallet))
             .sign(privateKeyList[0])
     ) // add 1. signature
-        .execute(client);
+        .executeWithSigner(wallet);
 
-    const txScheduleReceipt = await txSchedule.getReceipt(client);
+    const txScheduleReceipt = await txSchedule.getReceiptWithSigner(wallet);
     console.log("Schedule status: " + txScheduleReceipt.status.toString());
     const scheduleId = txScheduleReceipt.scheduleId;
     console.log(`Schedule ID:  ${scheduleId.toString()}`);
@@ -82,56 +82,56 @@ async function main() {
 
     // add 2. signature
     const txScheduleSign1 = await (
-        await new ScheduleSignTransaction()
+        await (await new ScheduleSignTransaction()
             .setScheduleId(scheduleId)
-            .freezeWith(client)
+            .freezeWithSigner(wallet))
             .sign(privateKeyList[1])
-    ).execute(client);
+    ).executeWithSigner(wallet);
 
-    const txScheduleSign1Receipt = await txScheduleSign1.getReceipt(client);
+    const txScheduleSign1Receipt = await txScheduleSign1.getReceiptWithSigner(wallet);
     console.log(
         "1. ScheduleSignTransaction status: " +
             txScheduleSign1Receipt.status.toString()
     );
-    await queryBalance(multiSigAccountId, client);
+    await queryBalance(multiSigAccountId, wallet);
 
     // add 3. signature to trigger scheduled tx
     const txScheduleSign2 = await (
-        await new ScheduleSignTransaction()
+        await (await new ScheduleSignTransaction()
             .setScheduleId(scheduleId)
-            .freezeWith(client)
+            .freezeWithSigner(wallet))
             .sign(privateKeyList[2])
-    ).execute(client);
+    ).executeWithSigner(wallet);
 
-    const txScheduleSign2Receipt = await txScheduleSign2.getReceipt(client);
+    const txScheduleSign2Receipt = await txScheduleSign2.getReceiptWithSigner(wallet);
     console.log(
         "2. ScheduleSignTransaction status: " +
             txScheduleSign2Receipt.status.toString()
     );
-    await queryBalance(multiSigAccountId, client);
+    await queryBalance(multiSigAccountId, wallet);
 
     // query schedule
     const scheduleInfo = await new ScheduleInfoQuery()
         .setScheduleId(scheduleId)
-        .execute(client);
+        .executeWithSigner(wallet);
     console.log(scheduleInfo);
 
     // query triggered scheduled tx
     const recordScheduledTx = await new TransactionRecordQuery()
         .setTransactionId(scheduledTxId)
-        .execute(client);
+        .executeWithSigner(wallet);
     console.log(recordScheduledTx);
 }
 
 /**
  * @param {AccountId} accountId
- * @param {Client} client
+ * @param {Wallet} wallet
  * @returns {Promise<AccountBalance>}
  */
-async function queryBalance(accountId, client) {
+async function queryBalance(accountId, wallet) {
     const accountBalance = await new AccountBalanceQuery()
         .setAccountId(accountId)
-        .execute(client);
+        .executeWithSigner(wallet);
     console.log(
         `Balance of account ${accountId.toString()}: ${accountBalance.hbars
             .toTinybars()

@@ -1,5 +1,6 @@
 import {
-    Client,
+    Wallet,
+    LocalProvider,
     PrivateKey,
     PublicKey,
     Hbar,
@@ -14,20 +15,17 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
-    let client;
-
-    try {
-        // Defaults the operator account ID and key such that all generated transactions will be paid for
-        // by this account and be signed by this key
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
+
+    const wallet = new Wallet(
+        process.env.OPERATOR_ID,
+        process.env.OPERATOR_KEY,
+        new LocalProvider()
+    );
 
     /*
      * Hedera supports a form of lazy account creation.
@@ -87,22 +85,22 @@ async function main() {
 
     console.log("Transferring some Hbar to the new account");
     const response = await new TransferTransaction()
-        .addHbarTransfer(client.operatorAccountId, new Hbar(10).negated())
+        .addHbarTransfer(wallet.getAccountId(), new Hbar(10).negated())
         .addHbarTransfer(aliasAccountId, new Hbar(10))
-        .execute(client);
-    await response.getReceipt(client);
+        .executeWithSigner(wallet);
+    await response.getReceiptWithSigner(wallet);
 
     const balance = await new AccountBalanceQuery()
         .setNodeAccountIds([response.nodeId])
         .setAccountId(aliasAccountId)
-        .execute(client);
+        .executeWithSigner(wallet);
 
     console.log(`Balances of the new account: ${balance.toString()}`);
 
     const info = await new AccountInfoQuery()
         .setNodeAccountIds([response.nodeId])
         .setAccountId(aliasAccountId)
-        .execute(client);
+        .executeWithSigner(wallet);
 
     console.log(`Info about the new account: ${info.toString()}`);
 
@@ -118,7 +116,6 @@ async function main() {
     console.log(`The alias key: ${info.aliasKey.toString()}`);
 
     console.log("Example complete!");
-    client.close();
 }
 
 void main();

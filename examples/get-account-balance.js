@@ -1,34 +1,30 @@
-import {
-    Client,
-    AccountBalanceQuery,
-    PrivateKey,
-    AccountId,
-} from "@hashgraph/sdk";
+import { Wallet, LocalProvider, AccountBalanceQuery } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
 
 dotenv.config();
 
 async function main() {
-    let client;
-
-    try {
-        client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-            AccountId.fromString(process.env.OPERATOR_ID),
-            PrivateKey.fromString(process.env.OPERATOR_KEY)
-        );
-    } catch (error) {
+    if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
         throw new Error(
-            "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
+            "Environment variables OPERATOR_ID, and OPERATOR_KEY are required."
         );
     }
 
+    const wallet = new Wallet(
+        process.env.OPERATOR_ID,
+        process.env.OPERATOR_KEY,
+        new LocalProvider()
+    );
+
     const balance = await new AccountBalanceQuery()
-        .setAccountId(client.operatorAccountId)
-        .execute(client);
+        .setAccountId(wallet.getAccountId())
+        .executeWithSigner(wallet);
 
     console.log(
-        `${client.operatorAccountId.toString()} balance = ${balance.hbars.toString()}`
+        `${wallet
+            .getAccountId()
+            .toString()} balance = ${balance.hbars.toString()}`
     );
 }
 
