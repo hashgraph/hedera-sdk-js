@@ -849,7 +849,7 @@ export default class Transaction extends Executable {
      * FIXME: Remove this?
      */
     _setTransactionId() {
-        if (this._operator == null && this._transactionIds.isEmpty) {
+        if (this._operatorAccountId == null && this._transactionIds.isEmpty) {
             throw new Error(
                 "`transactionId` must be set or `client` must be provided with `freezeWith`"
             );
@@ -905,6 +905,13 @@ export default class Transaction extends Executable {
     }
 
     /**
+     * @param {?AccountId} accountId
+     */
+    _freezeWithAccountId(accountId) {
+        this._operatorAccountId = accountId;
+    }
+
+    /**
      * Freeze this transaction from further modification to prepare for
      * signing or serialization.
      *
@@ -920,6 +927,9 @@ export default class Transaction extends Executable {
 
         // Save the operator
         this._operator = client != null ? client._operator : null;
+        this._freezeWithAccountId(
+            client != null ? client.operatorAccountId : null
+        );
 
         // Set max transaction fee to either `this._maxTransactionFee`,
         // `client._defaultMaxTransactionFee`, or `this._defaultMaxTransactionFee`
@@ -1159,6 +1169,10 @@ export default class Transaction extends Executable {
 
         // Set the operator if the client has one
         this._operator = client != null ? client._operator : null;
+        this._operatorAccountId =
+            client != null && client._operator != null
+                ? client._operator.accountId
+                : null;
 
         // If the client has an operaator, sign this request with the operator
         if (this._operator != null) {
@@ -1242,12 +1256,12 @@ export default class Transaction extends Executable {
      * @internal
      */
     _buildNewTransactionIdList() {
-        if (this._transactionIds.locked || this._operator == null) {
+        if (this._transactionIds.locked || this._operatorAccountId == null) {
             return;
         }
 
         const transactionId = TransactionId.withValidStart(
-            this._operator.accountId,
+            this._operatorAccountId,
             Timestamp.generate()
         );
 
