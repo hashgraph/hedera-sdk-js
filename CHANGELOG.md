@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * Staking support
 
+### Fixed
+
+ * `TransactionRecord.[to|from]Bytes()` should round trip correclty
+
 ## v2.15.0
 
 ### Added

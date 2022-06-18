@@ -320,16 +320,17 @@ export default class TransactionRecord {
                         ? this.transactionFee.toTinybars()
                         : null,
 
-                // TODO: Implement `ContractFunctionResult._toProtobuf()`
-                //                 contractCallResult:
-                //                     this.contractFunctionResult != null
-                //                         ? this.contractFunctionResult
-                //                         : null,
-                //
-                //                 contractCreateResult:
-                //                     this.contractFunctionResult != null
-                //                         ? this.contractFunctionResult
-                //                         : null,
+                contractCallResult:
+                    this.contractFunctionResult != null &&
+                    !this.contractFunctionResult._createResult
+                        ? this.contractFunctionResult._toProtobuf()
+                        : null,
+
+                contractCreateResult:
+                    this.contractFunctionResult != null &&
+                    this.contractFunctionResult._createResult
+                        ? this.contractFunctionResult._toProtobuf()
+                        : null,
 
                 transferList:
                     this.transfers != null
@@ -411,11 +412,13 @@ export default class TransactionRecord {
         const contractFunctionResult =
             record.contractCallResult != null
                 ? ContractFunctionResult._fromProtobuf(
-                      record.contractCallResult
+                      record.contractCallResult,
+                      false
                   )
                 : record.contractCreateResult != null
                 ? ContractFunctionResult._fromProtobuf(
-                      record.contractCreateResult
+                      record.contractCreateResult,
+                      true
                   )
                 : undefined;
 
