@@ -44,6 +44,7 @@ export default class ContractFunctionResult {
      * Constructor isn't part of the stable API
      *
      * @param {object} result
+     * @param {boolean} result._createResult
      * @param {?ContractId} result.contractId
      * @param {?string} result.errorMessage
      * @param {Uint8Array} result.bloom
@@ -59,6 +60,12 @@ export default class ContractFunctionResult {
      * @param {?AccountId} result.senderAccountId
      */
     constructor(result) {
+        /**
+         * Determines if this result came from `record.contractCreateResult` if true
+         * or `record.contractCallResult` if false
+         */
+        this._createResult = result._createResult;
+
         /**
          * The smart contract instance whose function was called.
          */
@@ -116,13 +123,22 @@ export default class ContractFunctionResult {
          * The parameters passed into the contract call.
          */
         this.functionParameters = result.functionParameters;
+
+        /**
+         * The account that is the "sender." If not present it is the accountId from the transactionId.
+         *
+         * This field should only be populated when the paired TransactionBody in the record stream is not a
+         * ContractCreateTransactionBody or a ContractCallTransactionBody.
+         */
+        this.senderAccountId = result.senderAccountId;
     }
 
     /**
      * @param {HashgraphProto.proto.IContractFunctionResult} result
+     * @param {boolean} _createResult
      * @returns {ContractFunctionResult}
      */
-    static _fromProtobuf(result) {
+    static _fromProtobuf(result, _createResult) {
         const contractId =
             /** @type {HashgraphProto.proto.IContractID | null} */ (
                 result.contractID
@@ -132,6 +148,7 @@ export default class ContractFunctionResult {
         const amount = /** @type {Long} */ (result.amount);
 
         return new ContractFunctionResult({
+            _createResult,
             bytes: /** @type {Uint8Array} */ (result.contractCallResult),
             contractId:
                 contractId != null
@@ -949,5 +966,40 @@ export default class ContractFunctionResult {
             (index != null ? index : 0) * 32,
             (index != null ? index : 0) * 32 + 32
         );
+    }
+
+    /**
+     * @returns {HashgraphProto.proto.IContractFunctionResult}
+     */
+    _toProtobuf() {
+        return {
+            contractID:
+                this.contractId != null ? this.contractId._toProtobuf() : null,
+            contractCallResult: this.bytes,
+            errorMessage: this.errorMessage,
+            bloom: this.bloom,
+            gasUsed: this.gasUsed,
+            logInfo: this.logs.map((log) => log._toProtobuf()),
+            // eslint-disable-next-line deprecation/deprecation
+            createdContractIDs: this.createdContractIds.map((id) =>
+                id._toProtobuf()
+            ),
+            stateChanges: this.stateChanges.map((change) =>
+                change._toProtobuf()
+            ),
+            evmAddress:
+                this.evmAddress != null
+                    ? {
+                          value: this.evmAddress,
+                      }
+                    : null,
+            gas: this.gas,
+            amount: this.amount,
+            functionParameters: this.functionParameters,
+            senderId:
+                this.senderAccountId != null
+                    ? this.senderAccountId._toProtobuf()
+                    : null,
+        };
     }
 }
