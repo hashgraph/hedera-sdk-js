@@ -21,6 +21,7 @@
 import Timestamp from "../Timestamp.js";
 import TopicMessageChunk from "./TopicMessageChunk.js";
 import Long from "long";
+import TransactionId from "../transaction/TransactionId.js";
 
 /**
  * @namespace proto
@@ -40,6 +41,7 @@ export default class TopicMessage {
      * @param {Uint8Array} props.contents
      * @param {Uint8Array} props.runningHash
      * @param {Long} props.sequenceNumber
+     * @param {?TransactionId} props.initialTransactionId
      * @param {TopicMessageChunk[]} props.chunks
      */
     constructor(props) {
@@ -53,6 +55,8 @@ export default class TopicMessage {
         this.sequenceNumber = props.sequenceNumber;
         /** @readonly */
         this.chunks = props.chunks;
+        /** @readonly */
+        this.initialTransactionId = props.initialTransactionId;
 
         Object.freeze(this);
     }
@@ -80,6 +84,13 @@ export default class TopicMessage {
                         ? response.sequenceNumber
                         : Long.fromNumber(response.sequenceNumber)
                     : Long.ZERO,
+            initialTransactionId:
+                response.chunkInfo != null &&
+                response.chunkInfo.initialTransactionID != null
+                    ? TransactionId._fromProtobuf(
+                          response.chunkInfo.initialTransactionID
+                      )
+                    : null,
             chunks: [TopicMessageChunk._fromProtobuf(response)],
         });
     }
@@ -154,12 +165,24 @@ export default class TopicMessage {
             offset += /** @type {Uint8Array} */ (value.message).length;
         });
 
+        let initialTransactionId = null;
+        if (
+            responses.length > 0 &&
+            responses[0].chunkInfo != null &&
+            responses[0].chunkInfo.initialTransactionID != null
+        ) {
+            initialTransactionId = TransactionId._fromProtobuf(
+                responses[0].chunkInfo.initialTransactionID
+            );
+        }
+
         return new TopicMessage({
             consensusTimestamp,
             contents,
             runningHash,
             sequenceNumber,
             chunks,
+            initialTransactionId,
         });
     }
 }
