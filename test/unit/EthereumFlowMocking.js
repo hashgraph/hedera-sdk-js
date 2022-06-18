@@ -25,7 +25,7 @@ const bytes = hex.decode(
     "f864012f83018000947e3a9eaf9bcc39e2ffa38eb30bf7a93feacbc18180827653820277a0f9fbff985d374be4a55f296915002eec11ac96f1ce2df183adf992baa9390b2fa00c1e867cc960d9c74ec2e6a662b7908ec4c8cc9f3091e886bcefbeb2290fb792"
 );
 
-const callData = FileId.fromString("0.0.1");
+const callDataFileId = FileId.fromString("0.0.1");
 
 describe("EthereumFlowMocking", function () {
     let client;
@@ -139,7 +139,7 @@ describe("EthereumFlowMocking", function () {
                             },
                             receipt: {
                                 status: proto.ResponseCodeEnum.SUCCESS,
-                                fileID: callData._toProtobuf(),
+                                fileID: callDataFileId._toProtobuf(),
                             },
                         },
                     },
@@ -178,9 +178,11 @@ describe("EthereumFlowMocking", function () {
                         expect(ethereumTransaction.ethereumData).to.deep.equal(
                             encodedWithoutCallData
                         );
-                        expect(ethereumTransaction.callData).to.deep.equal(
-                            callData._toProtobuf()
-                        );
+                        expect(
+                            FileId._fromProtobuf(
+                                ethereumTransaction.callData
+                            ).toString()
+                        ).to.equal(callDataFileId.toString());
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
                     },

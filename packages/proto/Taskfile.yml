@@ -25,11 +25,9 @@ tasks:
         deps:
             - install
         cmds:
-            - pbjs -r hashgraph -t static-module -w es6 --force-long --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*/**.proto
-            - pbts -n hashgraph -o src/proto.d.ts src/proto.js
+            - ./node_modules/.bin/pbjs -r hashgraph -t static-module -w es6 --force-long --no-beautify --no-convert --no-delimited --no-verify -o src/proto.js src/proto/*/**.proto
+            - ./node_modules/.bin/pbts -n hashgraph -o src/proto.d.ts src/proto.js
             - perl -pi -e "s#(?<!api\.)proto\.#hashgraph.proto.#g" src/proto.d.ts
-            - ./node_modules/.bin/babel src -d lib
-            - ./node_modules/.bin/copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/
             - task: format
             - task: lint
 
@@ -49,7 +47,7 @@ tasks:
 
     "lint:types":
         cmds:
-            - tsc
+            - ./node_modules/.bin/tsc
 
     "lint:format":
         cmds:
@@ -61,7 +59,10 @@ tasks:
 
     package:
         deps:
-          - build
+            - build
+        cmds:
+            - ./node_modules/.bin/babel src -d lib
+            - ./node_modules/.bin/copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/
 
     "test:release":
         deps:
