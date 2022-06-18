@@ -37,6 +37,9 @@ async function main() {
     const receipt = await response.getReceipt(client);
 
     console.log(`account id = ${receipt.accountId.toString()}`);
+
+    const record = await response.getRecord(client);
+    console.log(Buffer.from(record.toBytes()).toString("hex"));
 }
 
 void main();
