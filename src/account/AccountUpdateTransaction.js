@@ -487,6 +487,16 @@ export default class AccountUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {this}
+     */
+    clearStakedAccountId() {
+        this._requireNotFrozen();
+        this._stakedAccountId = new AccountId(0, 0, 0);
+
+        return this;
+    }
+
+    /**
      * @returns {?Long}
      */
     get stakedNodeId() {
@@ -500,6 +510,16 @@ export default class AccountUpdateTransaction extends Transaction {
     setStakedNodeId(stakedNodeId) {
         this._requireNotFrozen();
         this._stakedNodeId = Long.fromValue(stakedNodeId);
+
+        return this;
+    }
+
+    /**
+     * @returns {this}
+     */
+    clearStakedNodeId() {
+        this._requireNotFrozen();
+        this._stakedNodeId = Long.fromNumber(-1);
 
         return this;
     }
