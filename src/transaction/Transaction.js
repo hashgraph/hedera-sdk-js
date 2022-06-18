@@ -1607,6 +1607,24 @@ export default class Transaction extends Executable {
             throw "transaction did not have exactly one node ID set";
         }
     }
+
+    /**
+     * @param {HashgraphProto.proto.Transaction} request
+     * @returns {Uint8Array}
+     */
+    _requestToBytes(request) {
+        return HashgraphProto.proto.Transaction.encode(request).finish();
+    }
+
+    /**
+     * @param {HashgraphProto.proto.TransactionResponse} response
+     * @returns {Uint8Array}
+     */
+    _responseToBytes(response) {
+        return HashgraphProto.proto.TransactionResponse.encode(
+            response
+        ).finish();
+    }
 }
 
 /**

@@ -23,6 +23,7 @@ import GrpcStatus from "./grpc/GrpcStatus.js";
 import List from "./transaction/List.js";
 import Logger from "js-logger";
 import sync from "./sync.js";
+import * as hex from "./encoding/hex.js";
 
 /**
  * @typedef {import("./account/AccountId.js").default} AccountId
@@ -390,6 +391,30 @@ export default class Executable {
     }
 
     /**
+     * Serialize the request into bytes
+     *
+     * @abstract
+     * @param {RequestT} request
+     * @returns {Uint8Array}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _requestToBytes(request) {
+        throw new Error("not implemented");
+    }
+
+    /**
+     * Serialize the response into bytes
+     *
+     * @abstract
+     * @param {ResponseT} response
+     * @returns {Uint8Array}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _responseToBytes(response) {
+        throw new Error("not implemented");
+    }
+
+    /**
      * Advance the request to the next node
      *
      * FIXME: This method used to perform different code depending on if we're
@@ -601,6 +626,11 @@ export default class Executable {
                         )
                     );
                 }
+                Logger.trace(
+                    `[${this._getLogId()}] sending protobuf ${hex.encode(
+                        this._requestToBytes(request)
+                    )}`
+                );
                 promises.push(this._execute(channel, request));
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 response = /** @type {ResponseT} */ (
@@ -632,6 +662,12 @@ export default class Executable {
 
                 throw err;
             }
+
+            Logger.trace(
+                `[${this._getLogId()}] sending protobuf ${hex.encode(
+                    this._responseToBytes(response)
+                )}`
+            );
 
             // If we didn't receive an error we should decrease the current nodes backoff
             // in case it is a recovering node
