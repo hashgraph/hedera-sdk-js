@@ -67,12 +67,13 @@ async function main() {
 
     await (
         await (
-            await (await new TokenAssociateTransaction()
-                .setNodeAccountIds([resp.nodeId])
-                .setAccountId(newAccountId)
-                .setTokenIds([tokenId])
-                .freezeWithSigner(wallet))
-                .sign(newKey)
+            await (
+                await new TokenAssociateTransaction()
+                    .setNodeAccountIds([resp.nodeId])
+                    .setAccountId(newAccountId)
+                    .setTokenIds([tokenId])
+                    .freezeWithSigner(wallet)
+            ).sign(newKey)
         ).executeWithSigner(wallet)
     ).getReceiptWithSigner(wallet);
 
@@ -101,7 +102,9 @@ async function main() {
     ).getReceiptWithSigner(wallet);
 
     console.log(
-        `Sent 10 tokens from account ${wallet.getAccountId().toString()} to account ${newAccountId.toString()} on token ${tokenId.toString()}`
+        `Sent 10 tokens from account ${wallet
+            .getAccountId()
+            .toString()} to account ${newAccountId.toString()} on token ${tokenId.toString()}`
     );
 
     const balances = await new AccountBalanceQuery()
@@ -109,9 +112,9 @@ async function main() {
         .executeWithSigner(wallet);
 
     console.log(
-        `Token balances for ${wallet.getAccountId().toString()} are ${balances.tokens
-            .toString()
-            .toString()}`
+        `Token balances for ${wallet
+            .getAccountId()
+            .toString()} are ${balances.tokens.toString().toString()}`
     );
 
     await (
@@ -136,14 +139,15 @@ async function main() {
 
     await (
         await (
-            await (await new AccountDeleteTransaction()
-                .setNodeAccountIds([resp.nodeId])
-                .setAccountId(newAccountId)
-                .setTransferAccountId(wallet.getAccountId())
-                .setTransactionId(TransactionId.generate(newAccountId))
-                .setMaxTransactionFee(new Hbar(1))
-                .freezeWithSigner(wallet))
-                .sign(newKey)
+            await (
+                await new AccountDeleteTransaction()
+                    .setNodeAccountIds([resp.nodeId])
+                    .setAccountId(newAccountId)
+                    .setTransferAccountId(wallet.getAccountId())
+                    .setTransactionId(TransactionId.generate(newAccountId))
+                    .setMaxTransactionFee(new Hbar(1))
+                    .freezeWithSigner(wallet)
+            ).sign(newKey)
         ).executeWithSigner(wallet)
     ).getReceiptWithSigner(wallet);
 

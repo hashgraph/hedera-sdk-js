@@ -1,7 +1,6 @@
 import {
     AccountCreateTransaction,
     AccountUpdateTransaction,
-    AccountId,
     AccountInfoQuery,
     Wallet,
     LocalProvider,
@@ -73,10 +72,12 @@ async function main() {
     // If this succeeds then we should no longer have a staked account ID
     await (
         await (
-            await (await new AccountUpdateTransaction()
-                .setAccountId(newAccountId)
-                .clearStakedAccountId()
-                .freezeWithSigner(wallet))
+            await (
+                await new AccountUpdateTransaction()
+                    .setAccountId(newAccountId)
+                    .clearStakedAccountId()
+                    .freezeWithSigner(wallet)
+            )
                 // Sign the transaction with the account key
                 .sign(newKey)
         ).executeWithSigner(wallet)

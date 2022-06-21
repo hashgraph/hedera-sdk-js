@@ -1,6 +1,5 @@
 import {
     AccountCreateTransaction,
-    AccountId,
     AccountInfoQuery,
     Wallet,
     LocalProvider,
