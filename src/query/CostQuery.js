@@ -186,6 +186,22 @@ export default class CostQuery extends Executable {
             );
         }
     }
+
+    /**
+     * @param {HashgraphProto.proto.Query} request
+     * @returns {Uint8Array}
+     */
+    _requestToBytes(request) {
+        return this._query._requestToBytes(request);
+    }
+
+    /**
+     * @param {HashgraphProto.proto.Response} response
+     * @returns {Uint8Array}
+     */
+    _responseToBytes(response) {
+        return this._query._responseToBytes(response);
+    }
 }
 
 COST_QUERY.push((query) => new CostQuery(query));
