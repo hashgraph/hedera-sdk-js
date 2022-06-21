@@ -28,7 +28,6 @@ tasks:
     lint:
         deps:
             - "lint:types"
-            - "lint:dpdm"
             - "lint:format"
             - "lint:js"
 
@@ -36,14 +35,10 @@ tasks:
         cmds:
             - ./node_modules/.bin/tsc
 
-    "lint:dpdm":
-        cmds:
-            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null
-
     "lint:format":
         cmds:
             - ./node_modules/.bin/prettier "*.json" "src/*.js" --check > /dev/null
 
     "lint:js":
         cmds:
-            - ./node_modules/.bin/eslint --fix "*.json" "src/*.js"
+            - ./node_modules/.bin/eslint --fix "src/*.js"
