@@ -67,6 +67,7 @@ tasks:
     "test:release":
         deps:
             - build
+            - package
 
     update:
         cmds:
