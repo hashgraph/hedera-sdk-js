@@ -9,16 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
  * `StakingInfo`
- * `AccountCreateTransaction.stakedNodeAccountId`
+ * `AccountCreateTransaction.stakedAccountId`
  * `AccountCreateTransaction.stakedNodeId`
  * `AccountCreateTransaction.declineStakingReward`
- * `ContractCreateTransaction.stakedNodeContractId`
+ * `ContractCreateTransaction.stakedAccountId`
  * `ContractCreateTransaction.stakedNodeId`
  * `ContractCreateTransaction.declineStakingReward`
- * `AccountUpdateTransaction.stakedNodeAccountId`
+ * `AccountUpdateTransaction.stakedAccountId`
  * `AccountUpdateTransaction.stakedNodeId`
  * `AccountUpdateTransaction.declineStakingReward`
- * `ContractUpdateTransaction.stakedNodeContractId`
+ * `ContractUpdateTransaction.stakedAccountId`
  * `ContractUpdateTransaction.stakedNodeId`
  * `ContractUpdateTransaction.declineStakingReward`
  * `TransactionRecord.paidStakingRewards`
@@ -36,16 +36,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
  * `StakingInfo`
- * `AccountCreateTransaction.stakedNodeAccountId`
+ * `AccountCreateTransaction.stakedAccountId`
  * `AccountCreateTransaction.stakedNodeId`
  * `AccountCreateTransaction.declineStakingReward`
- * `ContractCreateTransaction.stakedNodeContractId`
+ * `ContractCreateTransaction.stakedAccountId`
  * `ContractCreateTransaction.stakedNodeId`
  * `ContractCreateTransaction.declineStakingReward`
- * `AccountUpdateTransaction.stakedNodeAccountId`
+ * `AccountUpdateTransaction.stakedAccountId`
  * `AccountUpdateTransaction.stakedNodeId`
  * `AccountUpdateTransaction.declineStakingReward`
- * `ContractUpdateTransaction.stakedNodeContractId`
+ * `ContractUpdateTransaction.stakedAccountId`
  * `ContractUpdateTransaction.stakedNodeId`
  * `ContractUpdateTransaction.declineStakingReward`
  * `TransactionRecord.paidStakingRewards`
