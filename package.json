@@ -8,13 +8,14 @@
     "react-native": {
         "./lib/index.cjs": "./src/native.js",
         "./src/encoding/hex.js": "./src/encoding/hex.native.js",
-        "./src/sync.js": "./src/encoding/sync.native.js",
+        "./src/sync.js": "./src/sync.native.js",
         "./src/encoding/utf8.js": "./src/encoding/utf8.native.js",
         "./src/cryptography/sha384.js": "./src/cryptography/sha384.native.js"
     },
     "browser": {
         "./src/index.js": "./src/browser.js",
         "./src/encoding/hex.js": "./src/encoding/hex.browser.js",
+        "./src/sync.js": "./src/sync.js",
         "./src/encoding/utf8.js": "./src/encoding/utf8.browser.js",
         "./src/cryptography/sha384.js": "./src/cryptography/sha384.browser.js",
         "crypto": false
