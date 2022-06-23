@@ -16,7 +16,7 @@ import {
     AccountCreateTransaction,
     AccountUpdateTransaction,
     TokenAssociateTransaction,
-    AccountDeleteTransaction
+    AccountDeleteTransaction,
 } from "@hashgraph/sdk";
 
 /**
@@ -31,19 +31,19 @@ dotenv.config();
 const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 const operatorKey = PrivateKey.fromString(process.env.OPERATOR_PVKEY);
 const client = Client.forTestnet().setOperator(operatorId, operatorKey);
-async function createTestAccount(){
+async function createTestAccount() {
     console.log("Creating test accounts.");
     const newKey = PrivateKey.generate();
-    
+
     let user = await new AccountCreateTransaction()
         .setInitialBalance(new Hbar(10)) // 10 h
         .setKey(newKey.publicKey)
         .execute(client);
     return {
-            "id": await (await user.getReceipt(client)).accountId, 
-            "pk": newKey,
-            "user": user
-        };
+        id: await (await user.getReceipt(client)).accountId,
+        pk: newKey,
+        user: user,
+    };
 }
 
 let alice = await createTestAccount();
@@ -265,13 +265,13 @@ async function main() {
 
     // DELETE TEST ACCOUNTS
 
-    async function deleteTestAccount(testAccount){
+    async function deleteTestAccount(testAccount) {
         new AccountDeleteTransaction()
-        .setNodeAccountIds([testAccount.nodeId])
-        .setAccountId(testAccount.accountId)
-        .setTransferAccountId(client.operatorAccountId)
-        .freezeWith(client);
-    };
+            .setNodeAccountIds([testAccount.nodeId])
+            .setAccountId(testAccount.accountId)
+            .setTransferAccountId(client.operatorAccountId)
+            .freezeWith(client);
+    }
 
     console.log("Deleting temporary user accounts.");
 

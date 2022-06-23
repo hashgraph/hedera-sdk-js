@@ -15,7 +15,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Import the compiled contract
-import stateful from "./stateful.json" assert {type: "json"};
+import stateful from "./stateful.json" assert { type: "json" };
 
 async function main() {
     let client;

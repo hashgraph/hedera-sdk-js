@@ -16,6 +16,8 @@ dotenv.config();
 async function main() {
     let client;
 
+    // Defaults the operator account ID and key such that all generated transactions will be paid for
+    // by this account and be signed by this key
     try {
         client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
             AccountId.fromString(process.env.OPERATOR_ID),
@@ -27,67 +29,130 @@ async function main() {
         );
     }
 
-    const response = await new TopicCreateTransaction()
-        .setTopicMemo("js sdk example create_pub_sub.js")
+    let submitKey = PrivateKey.generateED25519();
+
+    const transactionResponse = await new TopicCreateTransaction()
+        .setTopicMemo("js sdk example concensus-pub-sub-chunked.js")
+        .setSubmitKey(submitKey)
         .execute(client);
 
-    const receipt = await response.getReceipt(client);
+    const receipt = await transactionResponse.getReceipt(client);
     const topicId = receipt.topicId;
-    console.log(`topicId = ${topicId.toString()}`);
+    console.log(`For topic ${topicId.toString()}\n`);
 
-    let myQuery = new TopicMessageQuery()
-        .setTopicId(topicId)
-        .setStartTime(0)
-        .subscribe(client, null, (message) =>
-            console.log(Buffer.from(message.contents).toString("utf8"))
-        );
+    let wait = true;
 
-    const startTime = Date.now();
-    let i = 0;
-    while ((Date.now() - startTime) / 1000 < 60) {
-        //NOSONAR
-        // eslint-disable-next-line no-await-in-loop
-        await (
-            await new TopicMessageSubmitTransaction()
-                .setNodeAccountIds([response.nodeId])
-                .setTopicId(topicId)
-                .setMessage(bigContents)
-                .execute(client)
-        ).getReceipt(client);
-
-        console.log(`Sent message ${i}`);
-        i++;
-
-        // eslint-disable-next-line no-await-in-loop
-        await sleep(2000);
-    }
-    await sleep(2000);
-    console.log("Finished, deleting topic");
-    let results;
+    let myQuery = new TopicMessageQuery();
     try {
-        myQuery.unsubscribe();
-        await (
-            await new TopicDeleteTransaction()
-                .setTopicId(topicId)
-                .setNodeAccountIds([response.nodeId])
-                //.setMaxTransactionFee(new Hbar(5))
-                .execute(client)
-        ).getReceipt(client);
+        myQuery
+            .setTopicId(topicId)
+            .setStartTime(0)
+            .subscribe(client, null, (message) => {
+                if (message.contents.toString() == bigContents) {
+                    wait = false;
+                }
+                console.log(
+                    message.consensusTimestamp.toString() +
+                        " received topic message:" +
+                        message.contents.toString()
+                );
+            });
     } catch (error) {
-        console.log(error, ": error getting receipt for topic deletion.");
+        throw new Error(
+            /** @type {Error} */ (error).message + ": error subscribing"
+        );
     }
-    console.log("Deleted topic. ", results);
-}
-/**
- * @param {number} ms
- * @returns {Promise<void>}
- */
-function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+
+    let transaction = new TopicMessageSubmitTransaction();
+    try {
+        transaction
+            .setNodeAccountIds([transactionResponse.nodeId])
+            .setMessage(bigContents)
+            .setMaxChunks(15)
+            .setTopicId(topicId)
+            .signWithOperator(client);
+    } catch (error) {
+        throw new Error(
+            /** @type {Error} */ (error).message +
+                ": error signing with operator"
+        );
+    }
+
+    let transactionBytes;
+    try {
+        transactionBytes = transaction.toBytes();
+    } catch (error) {
+        throw new Error(
+            /** @type {Error} */ (error).message +
+                ": error deserializing topic submit transaction to bytes"
+        );
+    }
+
+    let transactionFromBytes;
+    try {
+        transactionFromBytes =
+            TopicMessageSubmitTransaction.fromBytes(transactionBytes);
+    } catch (error) {
+        throw new Error(
+            /** @type {Error} */ (error).message +
+                ": error deserializing topic submit transaction from bytes"
+        );
+    }
+
+    if (typeof transactionFromBytes == typeof TopicMessageSubmitTransaction) {
+        transactionFromBytes.sign(submitKey);
+    }
+
+    let transactionFromBytesResponse = await transaction.execute(client);
+
+    let receiptFromBytes;
+
+    await setTimeout(function () {
+        try {
+            receiptFromBytes = transactionFromBytesResponse.getReceipt(client);
+        } catch (error) {
+            throw new Error(
+                /** @type {Error} */ (error).message +
+                    ": error retrieving topic submit transaction receipt"
+            );
+        }
+    }, 30000);
+
+    let deleteResponse;
+    try {
+        deleteResponse = await new TopicDeleteTransaction()
+            .setTopicId(topicId)
+            .setNodeAccountIds([transactionFromBytesResponse.nodeId])
+            .setMaxTransactionFee(new Hbar(5))
+            .execute(client);
+    } catch (error) {
+        throw new Error(
+            /** @type {Error} */ (error).message + ": error deleting topic"
+        );
+    }
+
+    try {
+        let deletionReceipt = deleteResponse.getReceipt(client);
+        console.log("Receipt obtained: ", deletionReceipt);
+    } catch (error) {
+        throw new Error(
+            /** @type {Error} */ (error).message +
+                ": error retrieving topic delete transaction receipt"
+        );
+    }
+
+    await setTimeout(function () {
+        if (wait) {
+            throw new Error(
+                /** @type {Error} */ "Message was not received within 30 seconds"
+            );
+        }
+    }, 30000);
 }
 
-void main();
+main();
 
+// 14k+ stuff to upload
 const bigContents = `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquam augue sem, ut mattis dui laoreet a. Curabitur consequat est euismod, scelerisque metus et, tristique dui. Nulla commodo mauris ut faucibus ultricies. Quisque venenatis nisl nec augue tempus, at efficitur elit eleifend. Duis pharetra felis metus, sed dapibus urna vehicula id. Duis non venenatis turpis, sit amet ornare orci. Donec non interdum quam. Sed finibus nunc et risus finibus, non sagittis lorem cursus. Proin pellentesque tempor aliquam. Sed congue nisl in enim bibendum, condimentum vehicula nisi feugiat.
 

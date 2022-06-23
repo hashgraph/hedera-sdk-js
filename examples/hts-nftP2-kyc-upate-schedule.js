@@ -1,5 +1,6 @@
 import {
     AccountBalanceQuery,
+    AccountCreateTransaction,
     AccountId,
     Client,
     CustomFixedFee,
@@ -20,6 +21,7 @@ import {
     TokenUpdateTransaction,
     TransferTransaction,
 } from "@hashgraph/sdk";
+import { create } from "domain";
 
 /**
  * @typedef {import("@hashgraph/sdk").TokenInfo} TokenInfo
@@ -30,16 +32,37 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// Configure accounts and client, and generate needed keys
 const operatorId = AccountId.fromString(process.env.OPERATOR_ID);
 const operatorKey = PrivateKey.fromString(process.env.OPERATOR_PVKEY);
-const treasuryId = AccountId.fromString(process.env.TREASURY_ID);
-const treasuryKey = PrivateKey.fromString(process.env.TREASURY_PVKEY);
-const aliceId = AccountId.fromString(process.env.ALICE_ID);
-const aliceKey = PrivateKey.fromString(process.env.ALICE_PVKEY);
-const bobId = AccountId.fromString(process.env.BOB_ID);
-const bobKey = PrivateKey.fromString(process.env.BOB_PVKEY);
 const client = Client.forTestnet().setOperator(operatorId, operatorKey);
+
+async function createTestAccount() {
+    console.log("Creating test accounts.");
+    const newKey = PrivateKey.generate();
+
+    let user = await new AccountCreateTransaction()
+        .setInitialBalance(new Hbar(10)) // 10 h
+        .setKey(newKey.publicKey)
+        .execute(client);
+    return {
+        id: await (await user.getReceipt(client)).accountId,
+        pk: newKey,
+        user: user,
+    };
+}
+
+let alice = await createTestAccount();
+let bob = await createTestAccount();
+let treasury = await createTestAccount();
+
+// Configure accounts and client, and generate needed keys
+
+const treasuryId = treasury.id;
+const treasuryKey = treasury.pk;
+const aliceId = alice.id;
+const aliceKey = alice.pk;
+const bobId = bob.id;
+const bobKey = bob.pk;
 
 const supplyKey = PrivateKey.generate();
 const adminKey = PrivateKey.generate();
@@ -390,6 +413,24 @@ async function main() {
     async function tQueryFcn() {
         return new TokenInfoQuery().setTokenId(tokenId).execute(client);
     }
+
+    // DELETE TEST ACCOUNTS
+
+    async function deleteTestAccount(testAccount) {
+        new AccountDeleteTransaction()
+            .setNodeAccountIds([testAccount.nodeId])
+            .setAccountId(testAccount.accountId)
+            .setTransferAccountId(client.operatorAccountId)
+            .freezeWith(client);
+    }
+
+    console.log("Deleting temporary user accounts.");
+
+    await deleteTestAccount(alice);
+    await deleteTestAccount(bob);
+    await deleteTestAccount(treasury);
+
+    console.log("Done!");
 }
 
 void main();

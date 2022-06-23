@@ -13,7 +13,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-import helloWorld from "./hello_world.json" assert {type: "json"};
+import helloWorld from "./hello_world.json" assert { type: "json" };
 
 async function main() {
     let client;
