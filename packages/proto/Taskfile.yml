@@ -73,6 +73,7 @@ tasks:
         cmds:
             - cd src/proto && git pull origin main
             - task: build
+            - task: package
 
     publish:
         preconditions:
