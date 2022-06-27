@@ -212,7 +212,11 @@ async function createFile(callData, client) {
                     .setContents(
                         callData.subarray(0, Math.min(callData.length, 4096))
                     )
-                    .setKeys(client.operatorPublicKey ? [client.operatorPublicKey] : [])
+                    .setKeys(
+                        client.operatorPublicKey
+                            ? [client.operatorPublicKey]
+                            : []
+                    )
                     .execute(client)
             ).getReceipt(client)
         ).fileId
