@@ -35,6 +35,7 @@
     ],
     "dependencies": {
         "long": "^4.0.0",
+        "proto": "link:packages/proto",
         "protobufjs": "^6.11.2"
     },
     "devDependencies": {

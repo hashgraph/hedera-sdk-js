@@ -21,12 +21,11 @@ export async function syncFunction() {
                     "x-grpc-web": "1",
                 },
 
-                // By default a status of 302 is considered an erring status
-                validateStatus: function (status) {
-                    return status < 500;
-                },
-            }
-        );
+            // By default a status of 302 is considered an erring status
+            validateStatus: function (status) {
+                return status < 500;
+            },
+        });
 
         if (
             response == null ||

@@ -79,6 +79,12 @@ export default class Channel {
          * @type {?HashgraphProto.proto.ScheduleService}
          */
         this._schedule = null;
+
+        /**
+         * @protected
+         * @type {?HashgraphProto.proto.UtilService}
+         */
+        this._util = null;
     }
 
     /**
@@ -207,6 +213,21 @@ export default class Channel {
         );
 
         return this._schedule;
+    }
+
+    /**
+     * @returns {HashgraphProto.proto.UtilService}
+     */
+    get util() {
+        if (this._util != null) {
+            return this._util;
+        }
+
+        this._util = proto.UtilService.create(
+            this._createUnaryClient("UtilService")
+        );
+
+        return this._util;
     }
 
     /**
