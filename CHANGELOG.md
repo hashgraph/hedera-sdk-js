@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.16.4-beta.1
+
+### Fixed
+
+ * Time drift should use a HEAD request to avoid issues with content type
+
 ## v2.16.3
 
 ### Fixed
