@@ -3,7 +3,7 @@ import Cache from "./Cache.js";
 import Logger from "js-logger";
 
 /**
- *
+ * @returns {Promise<void>}
  */
 export async function syncFunction() {
     // http://time.google.com:80 doesn't actually give us an NTP response, instead it returns
@@ -27,6 +27,15 @@ export async function syncFunction() {
                 },
             }
         );
+
+        if (
+            response == null ||
+            response.headers == null ||
+            response.headers.date == null ||
+            Number.isNaN(response.headers.date)
+        ) {
+            return;
+        }
 
         const currentTime = Math.round(Date.now() / 1000);
 
