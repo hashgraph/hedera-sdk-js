@@ -113,7 +113,6 @@ export default class AccountAllowanceDeleteTransaction extends Transaction {
         return this._nftAllowances;
     }
 
-
     /**
      * @param {NftId | string} nftId
      * @param {AccountId | string} ownerAccountId

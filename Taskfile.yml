@@ -92,7 +92,7 @@ tasks:
 
     "test:release":
         cmds:
-            - task: build
+            - task: package
             - task: test:unit
             - task: examples:build
             - task: simple_rest_signature_provider:build
