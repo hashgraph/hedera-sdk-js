@@ -2,12 +2,12 @@ import axios from "axios";
 import Cache from "./Cache.js";
 import Logger from "js-logger";
 
-const sync = (async () => {
+export async function syncFunction() {
     // http://time.google.com:80 doesn't actually give us an NTP response, instead it returns
     // a 302 redirected response. However, it does contain a `date` header which we can use.
     try {
-        const response = await axios.get(
-            "https://grpc-web.myhbarwallet.com:443",
+        const response = await axios.head(
+            "https://myhbarwallet.com:443",
             {
                 maxRedirects: 0,
 
@@ -35,6 +35,10 @@ const sync = (async () => {
             }`
         );
     }
+}
+
+const sync = (async () => {
+    await syncFunction();
 })();
 
 export default sync;
