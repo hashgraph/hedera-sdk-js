@@ -1,9 +1,7 @@
-import {
-    syncFunction
-} from "../../src/sync.js";
+import { syncFunction } from "../../src/sync.js";
 
-describe("sync", async function() {
-    it("is able to fetch HEAD", async function() {
+describe("sync", function () {
+    it("is able to fetch HEAD", async function () {
         await syncFunction();
     });
 });

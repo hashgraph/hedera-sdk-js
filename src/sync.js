@@ -2,21 +2,21 @@ import axios from "axios";
 import Cache from "./Cache.js";
 import Logger from "js-logger";
 
+/**
+ *
+ */
 export async function syncFunction() {
     // http://time.google.com:80 doesn't actually give us an NTP response, instead it returns
     // a 302 redirected response. However, it does contain a `date` header which we can use.
     try {
-        const response = await axios.head(
-            "https://myhbarwallet.com:443",
-            {
-                maxRedirects: 0,
+        const response = await axios.head("https://myhbarwallet.com:443", {
+            maxRedirects: 0,
 
-                // By default a status of 302 is considered an erring status
-                validateStatus: function (status) {
-                    return status < 500;
-                },
-            }
-        );
+            // By default a status of 302 is considered an erring status
+            validateStatus: function (status) {
+                return status < 500;
+            },
+        });
 
         const currentTime = Math.round(Date.now() / 1000);
 
