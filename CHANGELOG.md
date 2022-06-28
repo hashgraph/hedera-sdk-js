@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
  * `TokenNftAllowance` to/from protobuf should not assume `spenderAccountId` is set
+ * Time drift sync should use myhbarwallet to prevent CORS issues
 
 ## v2.16.1
 
