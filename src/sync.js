@@ -25,8 +25,7 @@ export async function syncFunction() {
                 validateStatus: function (status) {
                     return status < 500;
                 },
-            },
-            
+            }
         );
 
         const currentTime = Math.round(Date.now() / 1000);
