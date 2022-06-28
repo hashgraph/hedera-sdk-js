@@ -9,8 +9,10 @@ export async function syncFunction() {
     // http://time.google.com:80 doesn't actually give us an NTP response, instead it returns
     // a 302 redirected response. However, it does contain a `date` header which we can use.
     try {
-        const response = await axios.head(
-            "https://grpc-web.myhbarwallet.com:443",
+        const response = await axios.post(
+            // "https://myhbarwallet.com:443",
+            "https://grpc-web.myhbarwallet.com:443/proto.CryptoService/cryptoGetBalance",
+            {},
             {
                 maxRedirects: 0,
                 headers: {
@@ -23,7 +25,8 @@ export async function syncFunction() {
                 validateStatus: function (status) {
                     return status < 500;
                 },
-            }
+            },
+            
         );
 
         const currentTime = Math.round(Date.now() / 1000);
