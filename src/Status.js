@@ -603,6 +603,10 @@ export default class Status {
                 return "SELF_STAKING_IS_NOT_ALLOWED";
             case Status.InvalidStakingId:
                 return "INVALID_STAKING_ID";
+            case Status.StakingNotEnabled:
+                return "STAKING_NOT_ENABLED";
+            case Status.InvalidRandomGenerateRange:
+                return "INVALID_RANDOM_GENERATE_RANGE";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1177,6 +1181,10 @@ export default class Status {
                 return Status.SelfStakingIsNotAllowed;
             case 322:
                 return Status.InvalidStakingId;
+            case 323:
+                return Status.StakingNotEnabled;
+            case 324:
+                return Status.InvalidRandomGenerateRange;
             default:
                 throw new Error(
                     `(BUG) Status.fromCode() does not handle code: ${code}`
@@ -2634,3 +2642,13 @@ Status.SelfStakingIsNotAllowed = new Status(321);
  * The staking account id or staking node id given is invalid or does not exist.
  */
 Status.InvalidStakingId = new Status(322);
+
+/**
+ * Staking is not enabled.
+ */
+Status.StakingNotEnabled = new Status(323);
+
+/**
+ * The range provided for a random number to generate is not supported.
+ */
+Status.InvalidRandomGenerateRange = new Status(324);
