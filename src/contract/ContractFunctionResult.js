@@ -26,7 +26,7 @@ import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
 import Long from "long";
-import ContractStateChange from "./ContractStateChange.js";
+//import ContractStateChange from "./ContractStateChange.js";
 
 /**
  * @namespace proto
@@ -52,12 +52,12 @@ export default class ContractFunctionResult {
      * @param {ContractLogInfo[]} result.logs
      * @param {ContractId[]} result.createdContractIds
      * @param {Uint8Array | null} result.evmAddress
-     * @param {ContractStateChange[]} result.stateChanges
      * @param {Uint8Array} result.bytes
      * @param {Long} result.gas
      * @param {Long} result.amount
      * @param {Uint8Array} result.functionParameters
      * @param {?AccountId} result.senderAccountId
+     * @deprecated param {ContractStateChange[]} result.stateChanges
      */
     constructor(result) {
         /**
@@ -107,7 +107,7 @@ export default class ContractFunctionResult {
 
         this.evmAddress = result.evmAddress;
 
-        this.stateChanges = result.stateChanges;
+        //this.stateChanges = result.stateChanges;
 
         /**
          * The amount of gas available for the call, aka the gasLimit.
@@ -170,10 +170,10 @@ export default class ContractFunctionResult {
                 result.evmAddress != null && result.evmAddress.value != null
                     ? result.evmAddress.value
                     : null,
-            stateChanges: (result.stateChanges != null
-                ? result.stateChanges
-                : []
-            ).map((change) => ContractStateChange._fromProtobuf(change)),
+            // stateChanges: ([result.stateChanges] != null
+            //     ? result.stateChanges
+            //     : []
+            // ).map((change) => ContractStateChange._fromProtobuf(change)),
             gas: gas instanceof Long ? gas : Long.fromValue(gas),
             amount: amount instanceof Long ? amount : Long.fromValue(amount),
             functionParameters: /** @type {Uint8Array} */ (
@@ -984,9 +984,9 @@ export default class ContractFunctionResult {
             createdContractIDs: this.createdContractIds.map((id) =>
                 id._toProtobuf()
             ),
-            stateChanges: this.stateChanges.map((change) =>
-                change._toProtobuf()
-            ),
+            //stateChanges: this.stateChanges.map((change) =>
+            //    change._toProtobuf()
+            //),
             evmAddress:
                 this.evmAddress != null
                     ? {
