@@ -205,13 +205,13 @@ export default class EthereumFlow {
  * @returns {Promise<FileId>}
  */
 async function createFile(callData, client) {
+    const hexedCallData = callData.toString('hex');
+
     const fileId = /** @type {FileId} */ (
         (
             await (
                 await new FileCreateTransaction()
-                    .setContents(
-                        callData.subarray(0, Math.min(callData.length, 4096))
-                    )
+                    .setContents(hexedCallData.substring(0, 4096))
                     .setKeys(
                         client.operatorPublicKey
                             ? [client.operatorPublicKey]
@@ -226,7 +226,7 @@ async function createFile(callData, client) {
         await (
             await new FileAppendTransaction()
                 .setFileId(fileId)
-                .setContents(callData.subarray(4096))
+                .setContents(hexedCallData.substring(4096, hexedCallData.length))
                 .execute(client)
         ).getReceipt(client);
     }
