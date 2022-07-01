@@ -205,6 +205,7 @@ export default class EthereumFlow {
  * @returns {Promise<FileId>}
  */
 async function createFile(callData, client) {
+    // @ts-ignore
     const hexedCallData = callData.toString('hex');
 
     const fileId = /** @type {FileId} */ (
