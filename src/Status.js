@@ -605,12 +605,12 @@ export default class Status {
                 return "INVALID_STAKING_ID";
             case Status.StakingNotEnabled:
                 return "STAKING_NOT_ENABLED";
-            case Status.InvalidRandomGenerateRange:
-                return "INVALID_RANDOM_GENERATE_RANGE";
+            case Status.InvalidPrngGenerateRange:
+                return "INVALID_PSEUDORANDOM_GENERATE_RANGE";
             case Status.MaxEntitiesInPriceRegimeHaveBeenCreated:
-                return "MAX_ENTITIES_IN_PRICE_REGIME_HAVE_BEEN_CREATED"
+                return "MAX_ENTITIES_IN_PRICE_REGIME_HAVE_BEEN_CREATED";
             case Status.InvalidFullPrefixSignatureForPrecompile:
-                return "INVALID_FULL_PREFIX_SIGNATURE_FOR_PRECOMPILE"
+                return "INVALID_FULL_PREFIX_SIGNATURE_FOR_PRECOMPILE";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -1188,7 +1188,7 @@ export default class Status {
             case 323:
                 return Status.StakingNotEnabled;
             case 324:
-                return Status.InvalidRandomGenerateRange;
+                return Status.InvalidPrngGenerateRange;
             case 325:
                 return Status.MaxEntitiesInPriceRegimeHaveBeenCreated;
             case 326:
@@ -2659,7 +2659,7 @@ Status.StakingNotEnabled = new Status(323);
 /**
  * The range provided for a random number to generate is not supported.
  */
-Status.InvalidRandomGenerateRange = new Status(324);
+Status.InvalidPrngGenerateRange = new Status(324);
 
 /**
  * No more entities can be created in this price regime.
@@ -2669,4 +2669,4 @@ Status.MaxEntitiesInPriceRegimeHaveBeenCreated = new Status(325);
 /**
  * Precompile cannot continue because the full prefix signature is invalid
  */
- Status.InvalidFullPrefixSignatureForPrecompile = new Status(326);
+Status.InvalidFullPrefixSignatureForPrecompile = new Status(326);

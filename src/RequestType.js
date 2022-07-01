@@ -185,8 +185,8 @@ export default class RequestType {
                 return "EthereumTransaction";
             case RequestType.NodeStakeUpdate:
                 return "NodeStakeUpdate";
-            case RequestType.RandomGenerateTransaction:
-                return "RandomGenerate";
+            case RequestType.PrngGenerateTransaction:
+                return "PrngGenerate";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -344,7 +344,7 @@ export default class RequestType {
             case 85:
                 return RequestType.NodeStakeUpdate;
             case 86:
-                return RequestType.RandomGenerateTransaction;
+                return RequestType.PrngGenerateTransaction;
         }
 
         throw new Error(
@@ -721,4 +721,4 @@ RequestType.NodeStakeUpdate = new RequestType(85);
 /**
  * Gets a pseudorandom 32-bit number. Not cryptographically secure. See HIP-351 https://hips.hedera.com/hip/hip-351
  */
-RequestType.RandomGenerateTransaction = new RequestType(86);
+RequestType.PrngGenerateTransaction = new RequestType(86);

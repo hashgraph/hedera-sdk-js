@@ -34,8 +34,8 @@ import { isNumber } from "./util.js";
  * @typedef {import("@hashgraph/proto").proto.Transaction} HashgraphProto.proto.Transaction
  * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").proto.SignedTransaction} HashgraphProto.proto.SignedTransaction
- * @typedef {import("@hashgraph/proto").proto.IRandomGenerateTransactionBody} HashgraphProto.proto.IRandomGenerateTransactionBody
- * @typedef {import("@hashgraph/proto").proto.RandomGenerateTransactionBody} HashgraphProto.proto.RandomGenerateTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IPrngGenerateTransactionBody } HashgraphProto.proto.IPrngGenerateTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.PrngGenerateTransactionBody} HashgraphProto.proto.PrngGenerateTransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.TransactionResponse
  * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
@@ -51,7 +51,7 @@ import { isNumber } from "./util.js";
 /**
  * Gets a pseudorandom 32-bit number. Not cryptographically secure. See HIP-351 https://hips.hedera.com/hip/hip-351
  */
-export default class RNGTransaction extends Transaction {
+export default class PRNGTransaction extends Transaction {
     /**
      * @param {object} props
      * @param {?number } [props.range]
@@ -98,7 +98,7 @@ export default class RNGTransaction extends Transaction {
      * @returns {Promise<HashgraphProto.proto.TransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.util.randomGenerate(request);
+        return channel.util.prngGenerate(request);
     }
 
     /**
@@ -108,7 +108,7 @@ export default class RNGTransaction extends Transaction {
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
-     * @returns {RNGTransaction}
+     * @returns {PRNGTransaction}
      */
     static _fromProtobuf(
         transactions,
@@ -118,14 +118,14 @@ export default class RNGTransaction extends Transaction {
         bodies
     ) {
         const body =
-            /** @type {HashgraphProto.proto.RandomGenerateTransactionBody} */ (
+            /** @type {HashgraphProto.proto.PrngGenerateTransactionBody} */ (
                 bodies[0]
             );
 
         const transactionRange = body.range;
 
         return Transaction._fromProtobufTransactions(
-            new RNGTransaction({
+            new PRNGTransaction({
                 range: transactionRange,
             }),
             transactions,
@@ -142,13 +142,13 @@ export default class RNGTransaction extends Transaction {
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "randomGenerate";
+        return "prngGenerate";
     }
 
     /**
      * @override
      * @protected
-     * @returns {HashgraphProto.proto.IRandomGenerateTransactionBody}
+     * @returns {HashgraphProto.proto.IPrngGenerateTransactionBody}
      */
     _makeTransactionData() {
         return {
@@ -168,7 +168,7 @@ export default class RNGTransaction extends Transaction {
 }
 
 TRANSACTION_REGISTRY.set(
-    "randomGenerate",
+    "prngGenerate",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    RNGTransaction._fromProtobuf
+    PRNGTransaction._fromProtobuf
 );
