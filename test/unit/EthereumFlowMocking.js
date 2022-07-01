@@ -27,7 +27,7 @@ const bytes = hex.decode(
 
 const callDataFileId = FileId.fromString("0.0.1");
 
-describe.only("EthereumFlowMocking", function () {
+describe("EthereumFlowMocking", function () {
     let client;
     let servers;
 
