@@ -228,6 +228,7 @@ async function createFile(callData, client) {
             await new FileAppendTransaction()
                 .setFileId(fileId)
                 .setContents(hexedCallData.substring(4096, hexedCallData.length))
+                .setChunkSize(4096)
                 .execute(client)
         ).getReceipt(client);
     }
