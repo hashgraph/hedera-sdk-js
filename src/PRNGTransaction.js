@@ -34,8 +34,8 @@ import { isNumber } from "./util.js";
  * @typedef {import("@hashgraph/proto").proto.Transaction} HashgraphProto.proto.Transaction
  * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").proto.SignedTransaction} HashgraphProto.proto.SignedTransaction
- * @typedef {import("@hashgraph/proto").proto.IPrngGenerateTransactionBody } HashgraphProto.proto.IPrngGenerateTransactionBody
- * @typedef {import("@hashgraph/proto").proto.PrngGenerateTransactionBody} HashgraphProto.proto.PrngGenerateTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IPrngTransactionBody } HashgraphProto.proto.IPrngGenerateTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.PrngTransactionBody} HashgraphProto.proto.PrngGenerateTransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.TransactionResponse
  * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
@@ -72,9 +72,11 @@ export default class PRNGTransaction extends Transaction {
 
     /**
      * @param {number} newRange
+     * @returns {this}
      */
     setRange(newRange) {
         this._range = newRange;
+        return this;
     }
 
     get range() {
@@ -98,7 +100,7 @@ export default class PRNGTransaction extends Transaction {
      * @returns {Promise<HashgraphProto.proto.TransactionResponse>}
      */
     _execute(channel, request) {
-        return channel.util.prngGenerate(request);
+        return channel.util.prng(request);
     }
 
     /**
@@ -142,7 +144,7 @@ export default class PRNGTransaction extends Transaction {
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "prngGenerate";
+        return "prng";
     }
 
     /**
@@ -168,7 +170,7 @@ export default class PRNGTransaction extends Transaction {
 }
 
 TRANSACTION_REGISTRY.set(
-    "prngGenerate",
+    "prng",
     // eslint-disable-next-line @typescript-eslint/unbound-method
     PRNGTransaction._fromProtobuf
 );

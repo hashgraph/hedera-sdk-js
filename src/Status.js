@@ -605,8 +605,8 @@ export default class Status {
                 return "INVALID_STAKING_ID";
             case Status.StakingNotEnabled:
                 return "STAKING_NOT_ENABLED";
-            case Status.InvalidPrngGenerateRange:
-                return "INVALID_PSEUDORANDOM_GENERATE_RANGE";
+            case Status.InvalidPrngRange:
+                return "INVALID_PRNG_RANGE";
             case Status.MaxEntitiesInPriceRegimeHaveBeenCreated:
                 return "MAX_ENTITIES_IN_PRICE_REGIME_HAVE_BEEN_CREATED";
             case Status.InvalidFullPrefixSignatureForPrecompile:
@@ -1188,7 +1188,7 @@ export default class Status {
             case 323:
                 return Status.StakingNotEnabled;
             case 324:
-                return Status.InvalidPrngGenerateRange;
+                return Status.InvalidPrngRange;
             case 325:
                 return Status.MaxEntitiesInPriceRegimeHaveBeenCreated;
             case 326:
@@ -2659,7 +2659,7 @@ Status.StakingNotEnabled = new Status(323);
 /**
  * The range provided for a random number to generate is not supported.
  */
-Status.InvalidPrngGenerateRange = new Status(324);
+Status.InvalidPrngRange = new Status(324);
 
 /**
  * No more entities can be created in this price regime.

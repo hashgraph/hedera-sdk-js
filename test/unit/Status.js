@@ -6,10 +6,6 @@ describe("Status", function () {
         for (const [s, code] of Object.entries(
             HashgraphProto.proto.ResponseCodeEnum
         )) {
-            console.log(
-                "responseCode: " + HashgraphProto.proto.ResponseCodeEnum[s]
-            );
-            console.log("");
             expect(Status._fromCode(code).toString()).to.be.equal(s);
         }
     });

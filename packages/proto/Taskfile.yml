@@ -71,7 +71,7 @@ tasks:
 
     update:
         cmds:
-            - cd src/proto && git pull origin main
+            - cd src/proto && git pull origin main && git checkout main
             - task: build
             - task: package
 
