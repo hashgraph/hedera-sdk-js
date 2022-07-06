@@ -1,11 +1,4 @@
-import {
-    Wallet,
-    LocalProvider,
-    PrivateKey,
-    AccountCreateTransaction,
-    Hbar,
-    PRNGTransaction,
-} from "@hashgraph/sdk";
+import { Wallet, LocalProvider, PrngTransaction } from "@hashgraph/sdk";
 
 import dotenv from "dotenv";
 
@@ -24,9 +17,9 @@ async function main() {
         new LocalProvider()
     );
 
-    const response = await new PRNGTransaction()
+    const response = await new PrngTransaction()
         .setRange(100)
-        .executeWithSigner(wallet)
+        .executeWithSigner(wallet);
 
     const record = await response.getRecordWithSigner(wallet);
     console.log(`The random number generated is: ${record.prngNumber}`);
