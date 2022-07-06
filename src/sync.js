@@ -6,8 +6,7 @@ import Logger from "js-logger";
  * @returns {Promise<void>}
  */
 export async function syncFunction() {
-    // http://time.google.com:80 doesn't actually give us an NTP response, instead it returns
-    // a 302 redirected response. However, it does contain a `date` header which we can use.
+    // Make a "fake" account balance query and extract the date header from the response
     try {
         const response = await axios.post(
             // "https://myhbarwallet.com:443",

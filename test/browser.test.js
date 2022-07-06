@@ -7,7 +7,7 @@ test("can execute @hashgraph/sdk within browser", async function ({ page }) {
 
     await page.goto("http://localhost:9001/");
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     const tests = await page.evaluate(() => {
         return Array.from(document.querySelectorAll(".test"))
             .map((test) => {

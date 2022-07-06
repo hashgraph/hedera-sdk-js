@@ -123,8 +123,11 @@ describe("EthereumFlowMocking", function () {
                         );
 
                         const fileCreate = transactionBody.fileCreate;
-                        expect(fileCreate.contents).to.deep.equal(
-                            hex.decode(longCallData).subarray(0, 4096)
+                        expect(
+                            `0x${fileCreate.contents.toString()}`
+                        ).to.deep.equal(
+                            // includes 0x prefix
+                            longCallData.substring(0, 4098)
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -153,16 +156,18 @@ describe("EthereumFlowMocking", function () {
                         );
 
                         const fileAppend = transactionBody.fileAppend;
-                        expect(fileAppend.contents).to.deep.equal(
-                            hex.decode(longCallData).subarray(4096)
+                        expect(fileAppend.contents.toString()).to.deep.equal(
+                            longCallData.substring(4098, 8194)
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
                     },
                 },
-                // Yes, you need 2 receipt responses here. One happens in
+                // Yes, you need 4 receipt responses here. One happens in
                 // `FileAppendTransaction.executeAll()` in a loop, and the next
                 // is for `TransactionResponse.getReceipt()`
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
                 { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
                 { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
                 {
