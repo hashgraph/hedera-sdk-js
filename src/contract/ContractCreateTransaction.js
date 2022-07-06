@@ -432,6 +432,10 @@ export default class ContractCreateTransaction extends Transaction {
     }
 
     /**
+     * An account to charge for auto-renewal of this contract. If not set, or set to an
+     * account with zero hbar balance, the contract's own hbar balance will be used to
+     * cover auto-renewal fees.
+     *
      * @param {Duration | Long | number} autoRenewPeriod
      * @returns {this}
      */

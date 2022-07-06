@@ -536,6 +536,9 @@ export default class ContractUpdateTransaction extends Transaction {
     }
 
     /**
+     * If set to the sentinel <tt>0.0.0</tt> AccountID, this field removes the contract's auto-renew 
+     * account. Otherwise it updates the contract's auto-renew account to the referenced account.
+     *
      * @param {string | AccountId} autoRenewAccountId
      * @returns {this}
      */
