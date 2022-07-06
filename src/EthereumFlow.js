@@ -23,6 +23,7 @@ import EthereumTransaction from "./EthereumTransaction.js";
 import EthereumTransactionData from "./EthereumTransactionData.js";
 import FileCreateTransaction from "./file/FileCreateTransaction.js";
 import FileAppendTransaction from "./file/FileAppendTransaction.js";
+import * as hex from "./encoding/hex.js";
 
 /**
  * @namespace proto
@@ -205,8 +206,7 @@ export default class EthereumFlow {
  * @returns {Promise<FileId>}
  */
 async function createFile(callData, client) {
-    // @ts-ignore
-    const hexedCallData = callData.toString('hex');
+    const hexedCallData = hex.encode(callData);
 
     const fileId = /** @type {FileId} */ (
         (
@@ -227,7 +227,9 @@ async function createFile(callData, client) {
         await (
             await new FileAppendTransaction()
                 .setFileId(fileId)
-                .setContents(hexedCallData.substring(4096, hexedCallData.length))
+                .setContents(
+                    hexedCallData.substring(4096, hexedCallData.length)
+                )
                 .setChunkSize(4096)
                 .execute(client)
         ).getReceipt(client);

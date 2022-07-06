@@ -123,7 +123,9 @@ describe("EthereumFlowMocking", function () {
                         );
 
                         const fileCreate = transactionBody.fileCreate;
-                        expect('0x'+fileCreate.contents.toString()).to.deep.equal(
+                        expect(
+                            `0x${fileCreate.contents.toString()}`
+                        ).to.deep.equal(
                             // includes 0x prefix
                             longCallData.substring(0, 4098)
                         );
