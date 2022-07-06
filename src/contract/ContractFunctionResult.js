@@ -26,13 +26,17 @@ import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
 import Long from "long";
-//import ContractStateChange from "./ContractStateChange.js";
 
 /**
  * @namespace proto
  * @typedef {import("@hashgraph/proto").proto.IContractFunctionResult} HashgraphProto.proto.IContractFunctionResult
  * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
  */
+
+/**
+ * @typedef {import("./ContractStateChange.js").default} ContractStateChange
+ */
+
 /**
  * The result returned by a call to a smart contract function. This is part of the response to
  * a ContractCallLocal query, and is in the record for a ContractCall or ContractCreateInstance
@@ -57,7 +61,7 @@ export default class ContractFunctionResult {
      * @param {Long} result.amount
      * @param {Uint8Array} result.functionParameters
      * @param {?AccountId} result.senderAccountId
-     * @deprecated param {ContractStateChange[]} result.stateChanges
+     * @param {ContractStateChange[]} result.stateChanges
      */
     constructor(result) {
         /**
@@ -107,7 +111,7 @@ export default class ContractFunctionResult {
 
         this.evmAddress = result.evmAddress;
 
-        //this.stateChanges = result.stateChanges;
+        this.stateChanges = result.stateChanges;
 
         /**
          * The amount of gas available for the call, aka the gasLimit.
@@ -170,10 +174,7 @@ export default class ContractFunctionResult {
                 result.evmAddress != null && result.evmAddress.value != null
                     ? result.evmAddress.value
                     : null,
-            // stateChanges: ([result.stateChanges] != null
-            //     ? result.stateChanges
-            //     : []
-            // ).map((change) => ContractStateChange._fromProtobuf(change)),
+            stateChanges: [],
             gas: gas instanceof Long ? gas : Long.fromValue(gas),
             amount: amount instanceof Long ? amount : Long.fromValue(amount),
             functionParameters: /** @type {Uint8Array} */ (

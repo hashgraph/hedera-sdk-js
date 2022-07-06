@@ -33,7 +33,6 @@ import TokenAssocation from "../token/TokenAssociation.js";
 import Key from "../Key.js";
 import PublicKey from "../PublicKey.js";
 import TokenTransfer from "../token/TokenTransfer.js";
-import BigNumber from "bignumber.js";
 
 /**
  * @typedef {import("../token/TokenId.js").default} TokenId
@@ -252,12 +251,14 @@ export default class TransactionRecord {
 
         /**
          * In the record of a PRNG transaction with no output range, a pseudorandom 384-bit string.
+         *
          * @readonly
          */
         this.prngBytes = props.prngBytes;
 
         /**
          * In the record of a PRNG transaction with an output range, the output of a PRNG whose input was a 384-bit string.
+         *
          * @readonly
          */
         this.prngNumber = props.prngNumber;
@@ -383,7 +384,7 @@ export default class TransactionRecord {
                 ),
 
                 prngBytes: this.prngBytes,
-                prngNumber: this.prngNumber != null ? this.prngNumber : null
+                prngNumber: this.prngNumber != null ? this.prngNumber : null,
             },
         };
     }
@@ -520,7 +521,7 @@ export default class TransactionRecord {
                     ? Transfer._fromProtobuf(record.paidStakingRewards)
                     : [],
             prngBytes: record.prngBytes != null ? record.prngBytes : null,
-            prngNumber: record.prngNumber != null ? record.prngNumber : null
+            prngNumber: record.prngNumber != null ? record.prngNumber : null,
         });
     }
 
