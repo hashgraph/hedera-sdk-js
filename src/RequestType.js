@@ -185,6 +185,8 @@ export default class RequestType {
                 return "EthereumTransaction";
             case RequestType.NodeStakeUpdate:
                 return "NodeStakeUpdate";
+            case RequestType.Prng:
+                return "PRNG";
             default:
                 return `UNKNOWN (${this._code})`;
         }
@@ -341,6 +343,8 @@ export default class RequestType {
                 return RequestType.EthereumTransaction;
             case 85:
                 return RequestType.NodeStakeUpdate;
+            case 86:
+                return RequestType.Prng;
         }
 
         throw new Error(
@@ -712,4 +716,9 @@ RequestType.EthereumTransaction = new RequestType(84);
 /**
  * Updates the staking info at the end of staking period to indicate new staking period has started.
  */
-RequestType.NodeStakeUpdate = new RequestType(84);
+RequestType.NodeStakeUpdate = new RequestType(85);
+
+/**
+ * Gets a pseudorandom 32-bit number. Not cryptographically secure. See HIP-351 https://hips.hedera.com/hip/hip-351
+ */
+RequestType.Prng = new RequestType(86);

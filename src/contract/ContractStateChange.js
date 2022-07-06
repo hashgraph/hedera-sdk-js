@@ -45,7 +45,7 @@ export default class ContractStateChange {
         return new ContractStateChange({
             contractId: ContractId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IContractID} */ (
-                    change.contractID
+                    change.contractId
                 )
             ),
             storageChanges: (change.storageChanges != null
@@ -74,7 +74,7 @@ export default class ContractStateChange {
             storageChange._toProtobuf()
         );
         return {
-            contractID: this.contractId._toProtobuf(),
+            contractId: this.contractId._toProtobuf(),
             storageChanges,
         };
     }
