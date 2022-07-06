@@ -65,6 +65,7 @@ export default class ContractCreateTransaction extends Transaction {
      * @param {AccountId | string} [props.stakedAccountId]
      * @param {Long | number} [props.stakedNodeId]
      * @param {boolean} [props.declineStakingReward]
+     * @param {AccountId} [props.autoRenewAccountId]
      */
     constructor(props = {}) {
         super();
@@ -149,6 +150,11 @@ export default class ContractCreateTransaction extends Transaction {
          */
         this._declineStakingReward = false;
 
+        /**
+         * @type {?AccountId}
+         */
+        this._autoRenewAccountId = null;
+
         if (props.bytecodeFileId != null) {
             this.setBytecodeFileId(props.bytecodeFileId);
         }
@@ -202,6 +208,10 @@ export default class ContractCreateTransaction extends Transaction {
 
         if (props.declineStakingReward != null) {
             this.setDeclineStakingReward(props.declineStakingReward);
+        }
+
+        if (props.autoRenewAccountId != null) {
+            this.setAutoRenewAccountId(props.autoRenewAccountId);
         }
     }
 
@@ -278,6 +288,10 @@ export default class ContractCreateTransaction extends Transaction {
                         ? create.stakedNodeId
                         : undefined,
                 declineStakingReward: create.declineReward == true,
+                autoRenewAccountId:
+                    create.autoRenewAccountId != null
+                        ? AccountId._fromProtobuf(create.autoRenewAccountId)
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -545,6 +559,27 @@ export default class ContractCreateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?AccountId}
+     */
+    get autoRenewAccountId() {
+        return this._autoRenewAccountId;
+    }
+
+    /**
+     * @param {string | AccountId} autoRenewAccountId
+     * @returns {this}
+     */
+    setAutoRenewAccountId(autoRenewAccountId) {
+        this._requireNotFrozen();
+        this._autoRenewAccountId =
+            typeof autoRenewAccountId === "string"
+                ? AccountId.fromString(autoRenewAccountId)
+                : autoRenewAccountId;
+
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -610,6 +645,10 @@ export default class ContractCreateTransaction extends Transaction {
                     : null,
             stakedNodeId: this.stakedNodeId,
             declineReward: this.declineStakingRewards,
+            autoRenewAccountId:
+                this._autoRenewAccountId != null
+                    ? this._autoRenewAccountId._toProtobuf()
+                    : null,
         };
     }
 
