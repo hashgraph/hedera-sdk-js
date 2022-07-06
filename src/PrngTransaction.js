@@ -51,7 +51,7 @@ import { isNumber } from "./util.js";
 /**
  * Gets a pseudorandom 32-bit number. Not cryptographically secure. See HIP-351 https://hips.hedera.com/hip/hip-351
  */
-export default class PRNGTransaction extends Transaction {
+export default class PrngTransaction extends Transaction {
     /**
      * @param {object} props
      * @param {?number } [props.range]
@@ -110,7 +110,7 @@ export default class PRNGTransaction extends Transaction {
      * @param {TransactionId[]} transactionIds
      * @param {AccountId[]} nodeIds
      * @param {HashgraphProto.proto.ITransactionBody[]} bodies
-     * @returns {PRNGTransaction}
+     * @returns {PrngTransaction}
      */
     static _fromProtobuf(
         transactions,
@@ -127,7 +127,7 @@ export default class PRNGTransaction extends Transaction {
         const transactionRange = body.range;
 
         return Transaction._fromProtobufTransactions(
-            new PRNGTransaction({
+            new PrngTransaction({
                 range: transactionRange,
             }),
             transactions,
@@ -172,5 +172,5 @@ export default class PRNGTransaction extends Transaction {
 TRANSACTION_REGISTRY.set(
     "prng",
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    PRNGTransaction._fromProtobuf
+    PrngTransaction._fromProtobuf
 );
