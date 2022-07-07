@@ -10,6 +10,8 @@ cd ../..
 pnpm add link:packages/proto 
 pnpm add link:packages/proto 
 pnpm i 
+
+
 pnpm compile 
 pnpm format 
 pnpm lint

@@ -16,7 +16,8 @@
     "dependencies": {
         "@hashgraph/sdk": "link:..",
         "axios": "^0.27.2",
-        "dotenv": "^14.3.2"
+        "dotenv": "^14.3.2",
+        "proto": "link:packages/proto"
     },
     "devDependencies": {
         "@types/node": "^17.0.23",
