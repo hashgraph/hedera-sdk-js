@@ -43,12 +43,6 @@ tasks:
         cmds:
             - ./node_modules/.bin/eslint --fix "src/*.js"
 
-    package:
-        deps:
-            - build
-        cmds:
-            - babel src -d lib --out-file-extension .cjs
-
     test:
         deps:
             - "test:unit"
@@ -60,4 +54,3 @@ tasks:
     "test:unit:node":
         cmds:
             - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/*.js" {{.CLI_ARGS}}
-

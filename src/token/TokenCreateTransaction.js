@@ -792,16 +792,24 @@ export default class TokenCreateTransaction extends Transaction {
     }
 
     /**
+     * @override
+     * @param {AccountId} accountId
+     */
+    _freezeWithAccountId(accountId) {
+        super._freezeWithAccountId(accountId);
+
+        if (this._autoRenewPeriod != null) {
+            this._autoRenewAccountId = accountId;
+        }
+    }
+
+    /**
      * @param {?import("../client/Client.js").default<Channel, *>} client
      * @returns {this}
      */
     freezeWith(client) {
-        if (
-            this._autoRenewPeriod != null &&
-            client != null &&
-            client.operatorAccountId
-        ) {
-            this._autoRenewAccountId = client.operatorAccountId;
+        if (client != null && client.operatorAccountId != null) {
+            this._freezeWithAccountId(client.operatorAccountId);
         }
 
         return super.freezeWith(client);

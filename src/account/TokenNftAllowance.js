@@ -97,11 +97,14 @@ export default class TokenNftAllowance {
             tokenId: TokenId._fromProtobuf(
                 /** @type {HashgraphProto.proto.ITokenID} */ (allowance.tokenId)
             ),
-            spenderAccountId: AccountId._fromProtobuf(
-                /** @type {HashgraphProto.proto.IAccountID} */ (
-                    allowance.spender
-                )
-            ),
+            spenderAccountId:
+                allowance.spender != null
+                    ? AccountId._fromProtobuf(
+                          /** @type {HashgraphProto.proto.IAccountID} */ (
+                              allowance.spender
+                          )
+                      )
+                    : null,
             ownerAccountId:
                 allowance.owner != null
                     ? AccountId._fromProtobuf(

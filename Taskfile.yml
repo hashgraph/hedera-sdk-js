@@ -34,10 +34,11 @@ tasks:
             - pnpm i
 
     build:
-        deps:
-            - install
-            - format
-            - lint
+        cmds:
+            - task: install
+            - task: format
+            - task: lint
+            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
 
     clean:
         deps:
@@ -74,22 +75,13 @@ tasks:
         cmds:
             - ./node_modules/.bin/eslint --fix "src/**/*.js" "test/integration/**/*.js" "test/unit/**/*.js"
 
-    package:
-        deps:
-            - build
-        cmds:
-            - babel src -d lib --out-file-extension .cjs
-
     "test:release":
-        deps:
-            - install
-            - build
-            - format
-            - lint
-            - "test:unit"
-            - "examples:build"
-            - "simple_rest_signature_provider:build"
-            - "common_js_test:build"
+        cmds:
+            - task: build
+            - task: test:unit
+            - task: examples:build
+            - task: simple_rest_signature_provider:build
+            - task: common_js_test:build
 
     test:
         deps:
@@ -111,7 +103,7 @@ tasks:
 
     "test:integration":
         deps:
-            - "test:inetgration:node"
+            - "test:integration:node"
 
     "test:integration:node":
         cmds:
@@ -126,9 +118,9 @@ tasks:
             - pnpm add link:packages/proto
 
     update:
-        deps:
-            - "update:proto"
-            - build
+        cmds:
+            - task: update:proto
+            - task: build
 
     publish:
         preconditions:

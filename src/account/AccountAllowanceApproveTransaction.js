@@ -268,6 +268,13 @@ export default class AccountAllowanceApproveTransaction extends Transaction {
     }
 
     /**
+     * @returns {TokenNftAllowance[]}
+     */
+    get tokenNftApprovals() {
+        return this._nftApprovals;
+    }
+
+    /**
      * @param {NftId | string} nftId
      * @param {AccountId | string | null} ownerAccountId
      * @param {AccountId | string} spenderAccountId

@@ -27,7 +27,7 @@ $ pnpm add @hashgraph/sdk
 
 The Hedera JavaScript SDK supports the following:
 
-* React Native with Expo on Android devices and Android emulators
+* React Native with Expo
 
 The Hedera JavaScript SDK does not currently support the following:
 

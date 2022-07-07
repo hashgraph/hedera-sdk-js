@@ -25,7 +25,7 @@ const bytes = hex.decode(
     "f864012f83018000947e3a9eaf9bcc39e2ffa38eb30bf7a93feacbc18180827653820277a0f9fbff985d374be4a55f296915002eec11ac96f1ce2df183adf992baa9390b2fa00c1e867cc960d9c74ec2e6a662b7908ec4c8cc9f3091e886bcefbeb2290fb792"
 );
 
-const callData = FileId.fromString("0.0.1");
+const callDataFileId = FileId.fromString("0.0.1");
 
 describe("EthereumFlowMocking", function () {
     let client;
@@ -123,8 +123,11 @@ describe("EthereumFlowMocking", function () {
                         );
 
                         const fileCreate = transactionBody.fileCreate;
-                        expect(fileCreate.contents).to.deep.equal(
-                            hex.decode(longCallData).subarray(0, 4096)
+                        expect(
+                            `0x${fileCreate.contents.toString()}`
+                        ).to.deep.equal(
+                            // includes 0x prefix
+                            longCallData.substring(0, 4098)
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
@@ -139,7 +142,7 @@ describe("EthereumFlowMocking", function () {
                             },
                             receipt: {
                                 status: proto.ResponseCodeEnum.SUCCESS,
-                                fileID: callData._toProtobuf(),
+                                fileID: callDataFileId._toProtobuf(),
                             },
                         },
                     },
@@ -153,16 +156,18 @@ describe("EthereumFlowMocking", function () {
                         );
 
                         const fileAppend = transactionBody.fileAppend;
-                        expect(fileAppend.contents).to.deep.equal(
-                            hex.decode(longCallData).subarray(4096)
+                        expect(fileAppend.contents.toString()).to.deep.equal(
+                            longCallData.substring(4098, 8194)
                         );
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
                     },
                 },
-                // Yes, you need 2 receipt responses here. One happens in
+                // Yes, you need 4 receipt responses here. One happens in
                 // `FileAppendTransaction.executeAll()` in a loop, and the next
                 // is for `TransactionResponse.getReceipt()`
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
+                { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
                 { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
                 { response: TRANSACTION_RECEIPT_SUCCESS_RESPONSE },
                 {
@@ -178,9 +183,11 @@ describe("EthereumFlowMocking", function () {
                         expect(ethereumTransaction.ethereumData).to.deep.equal(
                             encodedWithoutCallData
                         );
-                        expect(ethereumTransaction.callData).to.deep.equal(
-                            callData._toProtobuf()
-                        );
+                        expect(
+                            FileId._fromProtobuf(
+                                ethereumTransaction.callData
+                            ).toString()
+                        ).to.equal(callDataFileId.toString());
 
                         return { response: TRANSACTION_RESPONSE_SUCCESS };
                     },

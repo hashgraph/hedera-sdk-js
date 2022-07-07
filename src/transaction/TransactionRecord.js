@@ -42,7 +42,10 @@ import TokenTransfer from "../token/TokenTransfer.js";
  */
 
 /**
- * Response when the client sends the node TransactionGetRecordResponse.
+ * Either the record of processing the first consensus transaction with the given id whose
+ * status was neither <tt>INVALID_NODE_ACCOUNT</tt> nor <tt>INVALID_PAYER_SIGNATURE</tt>;
+ * <b>or</b>, if no such record exists, the record of processing the first transaction to reach
+ * consensus with the given transaction id.
  */
 export default class TransactionRecord {
     /**
@@ -70,6 +73,7 @@ export default class TransactionRecord {
      * @param {TokenAllowance[]} props.tokenAllowanceAdjustments
      * @param {TokenNftAllowance[]} props.nftAllowanceAdjustments
      * @param {?Uint8Array} props.ethereumHash
+     * @param {Transfer[]} props.paidStakingRewards
      */
     constructor(props) {
         /**
@@ -176,43 +180,72 @@ export default class TransactionRecord {
         this.automaticTokenAssociations = props.automaticTokenAssociations;
 
         /**
-         * The parent consensus timestamp
+         * In the record of an internal transaction, the consensus timestamp of the user
+         * transaction that spawned it.
          *
          * @readonly
          */
         this.parentConsensusTimestamp = props.parentConsensusTimestamp;
 
+        /**
+         * In the record of an internal CryptoCreate transaction triggered by a user
+         * transaction with a (previously unused) alias, the new account's alias.
+         *
+         * @readonly
+         */
         this.aliasKey = props.aliasKey;
 
         /**
+         * The records of processing all consensus transaction with the same id as the distinguished
+         * record above, in chronological order.
+         *
          * @readonly
          */
         this.duplicates = props.duplicates;
 
         /**
+         * The records of processing all child transaction spawned by the transaction with the given
+         * top-level id, in consensus order. Always empty if the top-level status is UNKNOWN.
+         *
          * @readonly
          */
         this.children = props.children;
 
         /**
+         * @deprecated
          * @readonly
          */
+        // eslint-disable-next-line deprecation/deprecation
         this.hbarAllowanceAdjustments = props.hbarAllowanceAdjustments;
 
         /**
+         * @deprecated
          * @readonly
          */
+        // eslint-disable-next-line deprecation/deprecation
         this.tokenAllowanceAdjustments = props.tokenAllowanceAdjustments;
 
         /**
+         * @deprecated
          * @readonly
          */
+        // eslint-disable-next-line deprecation/deprecation
         this.nftAllowanceAdjustments = props.nftAllowanceAdjustments;
 
         /**
+         * The keccak256 hash of the ethereumData. This field will only be populated for
+         * EthereumTransaction.
+         *
          * @readonly
          */
         this.ethereumHash = props.ethereumHash;
+
+        /**
+         * List of accounts with the corresponding staking rewards paid as a result of a transaction.
+         *
+         * @readonly
+         */
+        this.paidStakingRewards = props.paidStakingRewards;
 
         Object.freeze(this);
     }
@@ -287,16 +320,17 @@ export default class TransactionRecord {
                         ? this.transactionFee.toTinybars()
                         : null,
 
-                // TODO: Implement `ContractFunctionResult._toProtobuf()`
-                //                 contractCallResult:
-                //                     this.contractFunctionResult != null
-                //                         ? this.contractFunctionResult
-                //                         : null,
-                //
-                //                 contractCreateResult:
-                //                     this.contractFunctionResult != null
-                //                         ? this.contractFunctionResult
-                //                         : null,
+                contractCallResult:
+                    this.contractFunctionResult != null &&
+                    !this.contractFunctionResult._createResult
+                        ? this.contractFunctionResult._toProtobuf()
+                        : null,
+
+                contractCreateResult:
+                    this.contractFunctionResult != null &&
+                    this.contractFunctionResult._createResult
+                        ? this.contractFunctionResult._toProtobuf()
+                        : null,
 
                 transferList:
                     this.transfers != null
@@ -328,6 +362,10 @@ export default class TransactionRecord {
                           ).finish()
                         : null,
                 ethereumHash: this.ethereumHash,
+
+                paidStakingRewards: this.paidStakingRewards.map((transfer) =>
+                    transfer._toProtobuf()
+                ),
             },
         };
     }
@@ -374,11 +412,13 @@ export default class TransactionRecord {
         const contractFunctionResult =
             record.contractCallResult != null
                 ? ContractFunctionResult._fromProtobuf(
-                      record.contractCallResult
+                      record.contractCallResult,
+                      false
                   )
                 : record.contractCreateResult != null
                 ? ContractFunctionResult._fromProtobuf(
-                      record.contractCreateResult
+                      record.contractCreateResult,
+                      true
                   )
                 : undefined;
 
@@ -457,6 +497,10 @@ export default class TransactionRecord {
             nftAllowanceAdjustments: [],
             ethereumHash:
                 record.ethereumHash != null ? record.ethereumHash : null,
+            paidStakingRewards:
+                record.paidStakingRewards != null
+                    ? Transfer._fromProtobuf(record.paidStakingRewards)
+                    : [],
         });
     }
 

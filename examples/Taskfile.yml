@@ -12,10 +12,10 @@ tasks:
             - pnpm i
 
     build:
-        deps:
-            - install
-            - format
-            - lint
+        cmds:
+            - task: install
+            - task: format
+            - task: lint
 
     clean:
         cmds:
@@ -34,7 +34,7 @@ tasks:
 
     "lint:types":
         cmds:
-            - tsc
+            - ./node_modules/.bin/tsc
 
     "lint:dpdm":
         cmds:

@@ -37,9 +37,10 @@ jobs:
         with:
           node-version: '12'
 
-      - uses: extractions/setup-just@v1
+      - name: Install Task
+        uses: arduino/setup-task@v1
         with:
-          just-version: 1.1.2
+            version: 3.7.0
 
       - uses: pnpm/action-setup@v2.0.1
         with:
@@ -94,7 +95,7 @@ jobs:
           docker-compose up &
           sleep 45
           cd ../hedera-sdk-js
-          cd packages/cryptography && just build && cd ../..
-          cd packages/proto && just build && cd ../..
-          just build
-          just test-integration-node
+          task cryptography:build
+          task proto:build
+          task build
+          task test:integration:node

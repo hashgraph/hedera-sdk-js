@@ -22,10 +22,11 @@ tasks:
             - pnpm i
 
     build:
-        deps:
-            - install
-            - format
-            - lint
+        cmds:
+            - task: install
+            - task: format
+            - task: lint
+            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
 
     clean:
         cmds:
@@ -44,7 +45,7 @@ tasks:
 
     "lint:types":
         cmds:
-            - tsc
+            - ./node_modules/.bin/tsc
 
     "lint:dpdm":
         cmds:
@@ -58,17 +59,10 @@ tasks:
         cmds:
             - ./node_modules/.bin/eslint --fix "src/**/*.js" "test/unit/**/*.js"
 
-    package:
-        cmds:
-            - babel src -d lib --out-file-extension .cjs
-
     "test:release":
-        deps:
-            - install
-            - build
-            - format
-            - lint
-            - "test:unit"
+        cmds:
+            - task: build
+            - task: test:unit
 
     test:
         deps:
@@ -88,14 +82,13 @@ tasks:
             - ../../scripts/browser_test.sh
 
     update:
-        deps:
-            - "update:proto"
-            - build
+        cmds:
+            - task: build
 
-    # publish:
-    #     preconditions:
-    #         - "! grep '\".*\": \"link:.*\"' package.json > /dev/null"
-    #     deps:
-    #         - "test:release"
-    #     cmds:
-    #         - pnpm publish {{.CLI_ARGS}}
+    publish:
+        preconditions:
+            - "! grep '\".*\": \"link:.*\"' package.json > /dev/null"
+        deps:
+            - "test:release"
+        cmds:
+            - pnpm publish {{.CLI_ARGS}}

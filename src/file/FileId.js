@@ -20,9 +20,9 @@
 
 import * as entity_id from "../EntityIdHelper.js";
 import * as HashgraphProto from "@hashgraph/proto";
+import Long from "long";
 
 /**
- * @typedef {import("long").Long} Long
  * @typedef {import("../client/Client.js").default<*, *>} Client
  */
 
@@ -66,9 +66,9 @@ export default class FileId {
      */
     static _fromProtobuf(id) {
         const fileId = new FileId(
-            id.shardNum != null ? id.shardNum : 0,
-            id.realmNum != null ? id.realmNum : 0,
-            id.fileNum != null ? id.fileNum : 0
+            id.shardNum != null ? Long.fromString(id.shardNum.toString()) : 0,
+            id.realmNum != null ? Long.fromString(id.realmNum.toString()) : 0,
+            id.fileNum != null ? Long.fromString(id.fileNum.toString()) : 0
         );
 
         return fileId;

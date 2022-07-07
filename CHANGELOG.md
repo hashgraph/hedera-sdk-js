@@ -4,6 +4,113 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.16.6
+
+### Added
+
+ * `ContractCreateTransaction.autoRenewAccountId`
+ * `ContractUpdateTransaction.autoRenewAccountId`
+
+## v2.16.5
+
+### Fixed
+
+ * `EthereumFlow` contract creation should hex encode bytes
+
+## v2.16.4
+
+### Fixed
+
+ * Time syncing should not continue if `response.headers.date` is NaN
+ * Time drift should use a POST request with content type set correctly
+ * Transaction ID generation should no longer fail in browsers
+
+## v2.16.4-beta.3
+
+### Fixed
+
+ * Time syncing should not continue if `response.headers.date` is NaN
+
+## v2.16.4-beta.2
+
+### Fixed
+
+ * Time drift should use a POST request with content type set correctly
+
+## v2.16.4-beta.1
+
+### Fixed
+
+ * Time drift should use a HEAD request to avoid issues with content type
+
+## v2.16.3
+
+### Fixed
+
+ * Implement `AccountAllowanceApproveTransaction.tokenNftApprovals`
+ * Implement `AccountAllowanceDeleteTransaction.tokenNftAllowanceDeletions`
+
+## v2.16.2
+
+### Fixed
+
+ * `TokenNftAllowance` to/from protobuf should not assume `spenderAccountId` is set
+ * Time drift sync should use myhbarwallet to prevent CORS issues
+
+## v2.16.1
+
+### Fixed
+
+ * Syncing time drift should use https://google.com
+
+## v2.16.0
+
+### Added
+
+ * `StakingInfo`
+ * `AccountCreateTransaction.stakedAccountId`
+ * `AccountCreateTransaction.stakedNodeId`
+ * `AccountCreateTransaction.declineStakingReward`
+ * `ContractCreateTransaction.stakedAccountId`
+ * `ContractCreateTransaction.stakedNodeId`
+ * `ContractCreateTransaction.declineStakingReward`
+ * `AccountUpdateTransaction.stakedAccountId`
+ * `AccountUpdateTransaction.stakedNodeId`
+ * `AccountUpdateTransaction.declineStakingReward`
+ * `ContractUpdateTransaction.stakedAccountId`
+ * `ContractUpdateTransaction.stakedNodeId`
+ * `ContractUpdateTransaction.declineStakingReward`
+ * `TransactionRecord.paidStakingRewards`
+ * `ScheduleCreateTransaction.expirationTime`
+ * `ScheduleCreateTransaction.waitForExpiry`
+ * Variants to `FeeDataType`
+ * `TopicMessage.initialTransactionId`
+
+### Fixed
+
+ * `TransactionRecord.[to|from]Bytes()` should round trip correclty
+
+## v2.16.0-beta.1
+
+### Added
+
+ * `StakingInfo`
+ * `AccountCreateTransaction.stakedAccountId`
+ * `AccountCreateTransaction.stakedNodeId`
+ * `AccountCreateTransaction.declineStakingReward`
+ * `ContractCreateTransaction.stakedAccountId`
+ * `ContractCreateTransaction.stakedNodeId`
+ * `ContractCreateTransaction.declineStakingReward`
+ * `AccountUpdateTransaction.stakedAccountId`
+ * `AccountUpdateTransaction.stakedNodeId`
+ * `AccountUpdateTransaction.declineStakingReward`
+ * `ContractUpdateTransaction.stakedAccountId`
+ * `ContractUpdateTransaction.stakedNodeId`
+ * `ContractUpdateTransaction.declineStakingReward`
+ * `TransactionRecord.paidStakingRewards`
+ * `ScheduleCreateTransaction.expirationTime`
+ * `ScheduleCreateTransaction.waitForExpiry`
+
 ## v2.15.0
 
 ### Added

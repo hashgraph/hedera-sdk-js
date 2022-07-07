@@ -291,7 +291,8 @@ export default class ContractCallQuery extends Query {
                 /**
                  * @type {HashgraphProto.proto.IContractFunctionResult}
                  */
-                (call.functionResult)
+                (call.functionResult),
+                false
             )
         );
     }

@@ -557,6 +557,22 @@ export default class Query extends Executable {
             );
         }
     }
+
+    /**
+     * @param {HashgraphProto.proto.Query} request
+     * @returns {Uint8Array}
+     */
+    _requestToBytes(request) {
+        return HashgraphProto.proto.Query.encode(request).finish();
+    }
+
+    /**
+     * @param {HashgraphProto.proto.Response} response
+     * @returns {Uint8Array}
+     */
+    _responseToBytes(response) {
+        return HashgraphProto.proto.Response.encode(response).finish();
+    }
 }
 
 /**

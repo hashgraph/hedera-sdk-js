@@ -255,7 +255,9 @@ class GrpcServer {
                                 callback(
                                     {
                                         name: "ABORTED",
-                                        message: `responses[${index}].call failed with message: ${err.message}`,
+                                        message: `responses[${index}].call failed with error: ${err.toString()} and stack trace: ${
+                                            err.stack
+                                        }`,
                                         code: 10,
                                     },
                                     null
