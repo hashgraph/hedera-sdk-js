@@ -62,6 +62,7 @@ export default class ContractUpdateTransaction extends Transaction {
      * @param {AccountId | string} [props.stakedAccountId]
      * @param {Long | number} [props.stakedNodeId]
      * @param {boolean} [props.declineStakingReward]
+     * @param {AccountId} [props.autoRenewAccountId]
      */
     constructor(props = {}) {
         super();
@@ -132,6 +133,11 @@ export default class ContractUpdateTransaction extends Transaction {
          */
         this._declineStakingReward = null;
 
+        /**
+         * @type {?AccountId}
+         */
+        this._autoRenewAccountId = null;
+
         if (props.contractId != null) {
             this.setContractId(props.contractId);
         }
@@ -177,6 +183,10 @@ export default class ContractUpdateTransaction extends Transaction {
 
         if (props.declineStakingReward != null) {
             this.setDeclineStakingReward(props.declineStakingReward);
+        }
+
+        if (props.autoRenewAccountId != null) {
+            this.setAutoRenewAccountId(props.autoRenewAccountId);
         }
     }
 
@@ -272,6 +282,10 @@ export default class ContractUpdateTransaction extends Transaction {
                 declineStakingReward:
                     update.declineReward != null &&
                     update.declineReward == true,
+                autoRenewAccountId:
+                    update.autoRenewAccountId != null
+                        ? AccountId._fromProtobuf(update.autoRenewAccountId)
+                        : undefined,
             }),
             transactions,
             signedTransactions,
@@ -515,6 +529,38 @@ export default class ContractUpdateTransaction extends Transaction {
     }
 
     /**
+     * @returns {?AccountId}
+     */
+    get autoRenewAccountId() {
+        return this._autoRenewAccountId;
+    }
+
+    /**
+     * If set to the sentinel <tt>0.0.0</tt> AccountID, this field removes the contract's auto-renew 
+     * account. Otherwise it updates the contract's auto-renew account to the referenced account.
+     *
+     * @param {string | AccountId} autoRenewAccountId
+     * @returns {this}
+     */
+    setAutoRenewAccountId(autoRenewAccountId) {
+        this._requireNotFrozen();
+        this._autoRenewAccountId =
+            typeof autoRenewAccountId === "string"
+                ? AccountId.fromString(autoRenewAccountId)
+                : autoRenewAccountId;
+
+        return this;
+    }
+
+    /**
+     * @returns {this}
+     */
+    clearAutoRenewAccountId() {
+        this._autoRenewAccountId = new AccountId(0);
+        return this;
+    }
+
+    /**
      * @param {Client} client
      */
     _validateChecksums(client) {
@@ -599,6 +645,10 @@ export default class ContractUpdateTransaction extends Transaction {
             declineReward:
                 this.declineStakingRewards != null
                     ? { value: this.declineStakingRewards }
+                    : null,
+            autoRenewAccountId:
+                this._autoRenewAccountId != null
+                    ? this._autoRenewAccountId._toProtobuf()
                     : null,
         };
     }

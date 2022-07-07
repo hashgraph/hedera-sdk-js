@@ -26,6 +26,7 @@ tasks:
             - task: install
             - task: format
             - task: lint
+            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
 
     clean:
         cmds:
@@ -58,15 +59,9 @@ tasks:
         cmds:
             - ./node_modules/.bin/eslint --fix "src/**/*.js" "test/unit/**/*.js"
 
-    package:
-        deps:
-            - build
-        cmds:
-            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
-
     "test:release":
         cmds:
-            - task: package
+            - task: build
             - task: test:unit
 
     test:

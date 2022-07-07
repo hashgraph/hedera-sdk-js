@@ -48,6 +48,7 @@ tasks:
             - task: install
             - task: format
             - task: lint
+            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
 
     clean:
         deps:
@@ -84,15 +85,9 @@ tasks:
         cmds:
             - ./node_modules/.bin/eslint --fix "src/**/*.js" "test/integration/**/*.js" "test/unit/**/*.js"
 
-    package:
-        deps:
-            - build
-        cmds:
-            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
-
     "test:release":
         cmds:
-            - task: package
+            - task: build
             - task: test:unit
             - task: examples:build
             - task: simple_rest_signature_provider:build
