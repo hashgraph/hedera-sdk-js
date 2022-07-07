@@ -95,7 +95,7 @@ jobs:
           docker-compose up &
           sleep 45
           cd ../hedera-sdk-js
-          task cryptography:package
-          task proto:package
-          task package
+          task cryptography:build
+          task proto:build
+          task build
           task test:integration:node

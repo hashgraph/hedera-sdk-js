@@ -50,13 +50,13 @@ jobs:
       - run: pnpm install -g yarn
 
       - name: Build @hashgraph/cryptography
-        run: task cryptography:package
+        run: task cryptography:build
 
       - name: Build @hashgraph/proto
-        run: task proto:package
+        run: task proto:build
 
       - name: Build @hashgraph/sdk
-        run: task package
+        run: task build
 
       - name: Install yalc
         run: pnpm install -g yalc
@@ -123,13 +123,13 @@ jobs:
       - run: pnpm install -g yarn
 
       - name: Build @hashgraph/cryptography
-        run: task cryptography:package
+        run: task cryptography:build
 
       - name: Build @hashgraph/proto
-        run: task proto:package
+        run: task proto:build
 
       - name: Build @hashgraph/sdk
-        run: task package
+        run: task build
 
       - name: Install yalc
         run: pnpm install -g yalc
