@@ -202,7 +202,7 @@ describe("TransactionId", function () {
     it("should be able to update nonce with a number or date", function () {
         let stringId = "1.1.1@5.4";
         const transactionId = TransactionId.fromString(stringId);
-        let nonceToSet = new Number(1657293681585);
+        let nonceToSet = Number(1657293681585);
         let secondNonceToSet = new Date(1657293681585);
 
         try {
@@ -212,11 +212,11 @@ describe("TransactionId", function () {
                 "Unable to set nonce for number: "+err
             )
         }
-        
-        expect(transactionId.nonce).equals(nonceToSet);
 
+        expect(parseInt(transactionId.nonce)).equals(nonceToSet);
+        
         try {
-            transactionId.setNonce(nonceToSet);
+            transactionId.setNonce(secondNonceToSet);
         } catch(err) {
             throw new Error(
                 "Unable to set nonce for number: "+err
