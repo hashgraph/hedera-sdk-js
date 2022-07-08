@@ -52,16 +52,15 @@ def getStrippedText(startText, stopText, fileName):
 status_lines = getStrippedText("enum HederaFunctionality {", "}", STATUS_JS)
 
 #take an array of arrays of lines and split them and get the first and third fields to make a dict
-def status_lines_to_dict(lines):
-    statusDict = {}
+def status_lines_to_arr(lines):
+    statusArr = []
+    index = 0
     for line in lines:
-        lineArr = line.split()
-        key = lineArr[2]
-        val = lineArr[0]
-        statusDict[key] = val
-    return statusDict
+        val = line.split()[0]
+        statusArr.append(val)
+    return statusArr
 
-statusCodes = status_lines_to_dict(status_lines)
+statusCodes = status_lines_to_arr(status_lines)
 
 def getProtoNamesAndComments():
     copy = False
@@ -95,7 +94,18 @@ def getProtoNamesAndComments():
 statusNamesAndComments = getProtoNamesAndComments()
 
 def assembleStatuses():
-    
+    # now that we have the fields the step is to get the bits we need and map them to a switch statement
+    switchTemplate = """
+            case Status.$statusName:
+                return \"$return\"
+    """
+    result = ""
+    index = 0
+    for item in statusNamesAndComments:
+        #result = result+Template(switchTemplate).substitute({'statusName': 'OK', 'return': 'Ok'})+"\n"
+        print(statusCodes[index],index,statusNamesAndComments[item])
+print("##########################")
+print(assembleStatuses())
 
 fileTemplate = """
 /*-
