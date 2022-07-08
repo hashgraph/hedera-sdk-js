@@ -1,4 +1,9 @@
-STATUSCODES = "packages/proto/src/proto.d.ts"
+import os 
+import fnmatch
+
+PROTOBASE = "packages/proto/"
+PROTODIR = PROTOBASE + "src/proto/services/"
+STATUSCODES = PROTOBASE + "src/proto.d.ts"
 
 firstPart="""/*-
  * ‌
@@ -55,7 +60,7 @@ switchStr="""            default:
      * @param \{number\} code
      * @returns {Status}
      */
-    static _fromCode(code) {code) {
+    static _fromCode(code) {
     """
 
 switchTailStr = """default:
@@ -65,53 +70,96 @@ switchTailStr = """default:
         }
     }
 """
+contents = [f for f in os.listdir("./packages/proto/src/proto/services") if fnmatch.fnmatch(f, '*.proto')]
+copy = False
+buff = []
+commentsAndNames = {}
+for protofile in contents:
+    with open(PROTODIR+protofile) as pfile:
+        currentIndex = 0
+        for line in pfile:
+            currentIndex += 1
+            stripped = line.strip()
+            if stripped.__contains__("/**"):
+                copy = True
+                continue
+            elif stripped == "*/":
+                copy = False
+                fncHeader = pfile.readline(currentIndex).strip()
+                if (fncHeader.__contains__("message")):
+                    currentKey = fncHeader.split()[1]
+                    currentVal = buff
+                    commentsAndNames[currentKey] = currentVal
+                buff = []
+                continue
+            elif copy:
+                buff.append(stripped)
+                continue
+        currentIndex = 0
 
-with open(STATUSCODES) as infile, open('StatusCodes', 'w') as outfile:
+# get status code names from proto.d.ts
+statusCodeNames = {}
+with open(STATUSCODES) as infile:
     copy = False
-    outfile.write(firstPart)
-    outfile.write("########################!!!\n")      
     for line in infile:
         stripped = line.strip()
-        if stripped.__contains__("ResponseCodeEnum"):
-            print("case Start")
+        if stripped.__contains__("enum HederaFunctionality {"):
             copy = True
             continue
         elif stripped == "}":
-            print("case End")
             copy = False
             continue
         elif copy:
-            print("case middle")
-            currentLine = stripped.split()
-            outfile.write("case Status."+currentLine[0]+":\n");
-            outfile.write("test\n")
+            lineWords=stripped.split()
+            statusKey = lineWords[2][:-1]
+            statusVal = lineWords[0]
+            statusCodeNames[statusKey] = statusVal
+            continue
+print(statusCodeNames)
+
+# Get status codes from proto.d.ts and make code out of them
+with open(STATUSCODES) as infile, open('StatusCodes', 'w') as outfile:
+    copy = False
+    outfile.write(firstPart)
+    for line in infile:
+        stripped = line.strip()
+        if stripped.__contains__("enum ResponseCodeEnum {"):
             copy = True
             continue
-    outfile.write("########################!!!\n")      
+        elif stripped == "}":
+            copy = False
+            continue
+        elif copy:
+            currentLine = stripped.split()
+            outfile.write("\t\t\tcase Status."+currentLine[0]+":\n");
+            outfile.write("\t\t\t\treturn "+currentLine[0]+"\n")
+            copy = True
+            continue
     outfile.write(switchStr)
-    outfile.write("########################!!!\n")
-#    infile.close()
-#    outfile.close()
-# print("whaaat is happening....")
-# with open('yourfile.js') as infile2, open('StatusCodes', 'a+') as outfile2:
-#     copy = False
-#     for line in infile2:
-#         stripped = line.strip()
-#         if stripped.__contains__("ResponseCodeEnum"):
-#             print("case Start2")
-#             copy = True
-#             continue
-#         elif stripped == "}":
-#             print("case End2")
-#             copy = False
-#             continue
-#         elif copy:
-#             print("case middle")
-#             currentLine = stripped.split()
-#             outfile2.write("\t\t\t\t\tcase "+currentLine[2][:-1]+":\n\t\t\t\t\t\treturn Status."+currentLine[0]+"\n")
-#             continue
-#     outfile2.write("########################!!!\n")            
-#     outfile2.write("\t\t\t\t\t"+switchTailStr)
-#     outfile2.close()
-#     infile2.close()
+    infile.close()
+    outfile.close()
+
+#make next codeblock     
+with open(STATUSCODES) as infile2, open('StatusCodes', 'a+') as outfile2:
+    copy = False
+    first = True
+    for line in infile2:
+        stripped = line.strip()
+        if stripped.__contains__("enum ResponseCodeEnum {"):
+            copy = True
+            continue
+        elif stripped == "}":
+            copy = False
+            continue
+        elif copy:
+            currentLine = stripped.split()
+            notFirst = ""
+            if (first):
+                notFirst = "\t"
+            first = False
+            outfile2.write(notFirst+"\t\t\t\tcase "+currentLine[2][:-1]+":\n\t\t\t\t\t\treturn Status."+currentLine[0]+"\n")
+            continue
+    outfile2.write("\t\t\t\t\t"+switchTailStr)
+    outfile2.close()
+    infile2.close()
       
