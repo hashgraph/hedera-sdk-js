@@ -101,11 +101,16 @@ def assembleStatuses():
     """
     result = ""
     index = 0
+    if (len(statusNamesAndComments.keys()) != len(statusCodes)):
+        print("Number of status codes does not match number of messages. You may need to update protos");
     for item in statusNamesAndComments:
         #result = result+Template(switchTemplate).substitute({'statusName': 'OK', 'return': 'Ok'})+"\n"
-        print(statusCodes[index],index,statusNamesAndComments[item])
+        print(statusCodes[index],index, item, statusNamesAndComments[item])
+        index += 1
+        if (index > len(statusCodes)) return
+    return
 print("##########################")
-print(assembleStatuses())
+assembleStatuses()
 
 fileTemplate = """
 /*-
