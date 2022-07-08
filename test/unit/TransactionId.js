@@ -199,12 +199,12 @@ describe("TransactionId", function () {
         expect(transactionId).to.eql(stringId);
     });
 
-    it("should be able to update noncet with a number or date", function () {
+    it("should be able to update nonce with a number or date", function () {
         let stringId = "1.1.1@5.4";
         const transactionId = TransactionId.fromString(stringId);
         let nonceToSet = new Number(1657293681585);
         let secondNonceToSet = new Date(1657293681585);
-        
+
         try {
             transactionId.setNonce(nonceToSet);
         } catch(err) {
