@@ -291,8 +291,7 @@ export default class ContractCallQuery extends Query {
                 /**
                  * @type {HashgraphProto.proto.IContractFunctionResult}
                  */
-                (call.functionResult),
-                false
+                (call.functionResult)
             )
         );
     }
@@ -333,6 +332,22 @@ export default class ContractCallQuery extends Query {
                 : this._timestamp;
 
         return `ContractCallQuery:${timestamp.toString()}`;
+    }
+
+    /**
+     * @param {ContractFunctionResult} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return response.toBytes();
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {ContractFunctionResult}
+     */
+    _deserializeResponse(bytes) {
+        return ContractFunctionResult.fromBytes(bytes);
     }
 }
 

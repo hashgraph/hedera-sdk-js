@@ -184,6 +184,22 @@ export default class FileContentsQuery extends Query {
 
         return `FileContentsQuery:${timestamp.toString()}`;
     }
+
+    /**
+     * @param {Uint8Array} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return response;
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {Uint8Array}
+     */
+    _deserializeResponse(bytes) {
+        return bytes;
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

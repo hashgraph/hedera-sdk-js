@@ -201,6 +201,22 @@ export default class FileInfoQuery extends Query {
 
         return `FileInfoQuery:${timestamp.toString()}`;
     }
+
+    /**
+     * @param {FileInfo} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return response.toBytes();
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {FileInfo}
+     */
+    _deserializeResponse(bytes) {
+        return FileInfo.fromBytes(bytes);
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

@@ -9,7 +9,7 @@ specifiers:
   '@babel/register': ^7.17.7
   '@grpc/proto-loader': ^0.6.9
   '@hashgraph/hedera-local': ^1.0.2
-  '@hashgraph/sdk': ^2.15.0
+  '@hashgraph/sdk': file:.yalc/@hashgraph/sdk
   '@hashgraph/tck-chai': link:../../packages/tck-chai
   '@playwright/test': ^1.21.1
   '@types/chai': ^4.3.1
@@ -21,6 +21,8 @@ specifiers:
   '@types/utf8': ^3.0.1
   '@typescript-eslint/eslint-plugin': ^5.21.0
   '@typescript-eslint/parser': ^5.21.0
+  ajv: ^8.11.0
+  ajv-formats: ^2.1.1
   axios: ^0.26.1
   babel-plugin-dynamic-import-node: ^2.3.3
   babel-plugin-module-rewrite: ^0.2.0
@@ -42,8 +44,10 @@ specifiers:
   typescript: ^4.6.3
 
 dependencies:
-  '@hashgraph/sdk': 2.16.6
+  '@hashgraph/sdk': file:.yalc/@hashgraph/sdk
   '@hashgraph/tck-chai': link:../../packages/tck-chai
+  ajv: 8.11.0
+  ajv-formats: 2.1.1
   axios: 0.26.1
   express: 4.18.1
 
@@ -799,30 +803,6 @@ packages:
       - expo-random
     dev: true
 
-  /@hashgraph/sdk/2.16.6:
-    resolution: {integrity: sha512-cfIGOTf9cReP3l+w3P/cinnlmlGTyCt5TdmNpeWXJc5zrWimK2TJra6WDcfC8hzMFKOV0qI2Ka1YJk54hR8Yfg==}
-    engines: {node: '>=10.17.0'}
-    peerDependencies:
-      expo: ^45.0.3
-    dependencies:
-      '@ethersproject/rlp': 5.6.1
-      '@grpc/grpc-js': 1.6.7
-      '@hashgraph/cryptography': 1.3.0
-      '@hashgraph/proto': 2.5.0
-      axios: 0.27.2
-      bignumber.js: 9.0.2
-      crypto-js: 4.1.1
-      js-base64: 3.7.2
-      js-logger: 1.6.1
-      long: 4.0.0
-      protobufjs: 6.11.3
-      utf8: 3.0.0
-    transitivePeerDependencies:
-      - debug
-      - expo-crypto
-      - expo-random
-    dev: false
-
   /@hethers/abstract-provider/1.1.1_@hashgraph+sdk@2.16.0:
     resolution: {integrity: sha512-s3u4Cu2qpdWgLh7oYf/evCFk7sgZYlaaIhje6BMXFN+jOKgWWQA6MSECqHSc6h9p9eNEsKt1HmM7yWClikrzyQ==}
     dependencies:
@@ -1546,6 +1526,15 @@ packages:
     resolution: {integrity: sha512-H7wUZRn8WpTq9jocdxQ2c8x2sKo9ZVmzfRE13GiNJXfp7NcKYEdvl3vspKjXox6RIG2VtaRe4JFvxG4rqp2Zuw==}
     dev: true
 
+  /ajv-formats/2.1.1:
+    resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
+    dependencies:
+      ajv: 8.11.0
+    dev: false
+
   /ajv/6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
     dependencies:
@@ -1554,6 +1543,15 @@ packages:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
     dev: true
+
+  /ajv/8.11.0:
+    resolution: {integrity: sha512-wGgprdCvMalC0BztXvitD2hC04YffAvtsUn93JbGXYLAtCUO4xd17mCCZQxUOItiBwZvJScWo8NIvQMQ71rdpg==}
+    dependencies:
+      fast-deep-equal: 3.1.3
+      json-schema-traverse: 1.0.0
+      require-from-string: 2.0.2
+      uri-js: 4.4.1
+    dev: false
 
   /ansi-colors/4.1.1:
     resolution: {integrity: sha512-JoX0apGbHaUJBNl6yF+p6JAFYZ666/hhCGKN5t9QFjbJQKUU/g8MNbFDbvfrgKXvI1QpZplPOnwIo99lX/AAmA==}
@@ -2529,7 +2527,6 @@ packages:
 
   /fast-deep-equal/3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
-    dev: true
 
   /fast-glob/3.2.11:
     resolution: {integrity: sha512-xrO3+1bxSo3ZVHAnqzyuewYT6aMFHRAd4Kcs92MAonjwQZLsK9d0SF1IyQ3k5PoirxTW0Oe/RqFgMQ6TcNE5Ew==}
@@ -3111,6 +3108,10 @@ packages:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==}
     dev: true
 
+  /json-schema-traverse/1.0.0:
+    resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
+    dev: false
+
   /json-stable-stringify-without-jsonify/1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
     dev: true
@@ -3620,7 +3621,6 @@ packages:
   /punycode/2.1.1:
     resolution: {integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==}
     engines: {node: '>=6'}
-    dev: true
 
   /qs/6.10.3:
     resolution: {integrity: sha512-wr7M2E0OFRfIfJZjKGieI8lBKb7fRCH4Fv5KNPEs7gJ8jadvotdsS08PzOKR7opXhZ/Xkjtt3WF9g38drmyRqQ==}
@@ -3703,6 +3703,11 @@ packages:
   /require-directory/2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
+
+  /require-from-string/2.0.2:
+    resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
+    engines: {node: '>=0.10.0'}
+    dev: false
 
   /resolve-from/4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
@@ -4121,7 +4126,6 @@ packages:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
     dependencies:
       punycode: 2.1.1
-    dev: true
 
   /utf8/3.0.0:
     resolution: {integrity: sha512-E8VjFIQ/TyQgp+TZfS6l8yp/xWppSAHzidGiRrqe4bK4XP9pTRyKFgGJpO3SN7zdX4DeomTrwaseCHovfpFcqQ==}
@@ -4271,3 +4275,31 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  file:.yalc/@hashgraph/sdk:
+    resolution: {directory: .yalc/@hashgraph/sdk, type: directory}
+    name: '@hashgraph/sdk'
+    version: 2.16.6
+    engines: {node: '>=10.17.0'}
+    peerDependencies:
+      expo: ^45.0.3
+    dependencies:
+      '@ethersproject/rlp': 5.6.1
+      '@grpc/grpc-js': 1.6.7
+      '@hashgraph/cryptography': 1.3.0
+      '@hashgraph/proto': 2.5.0
+      ajv: 8.11.0
+      ajv-formats: 2.1.1
+      axios: 0.27.2
+      bignumber.js: 9.0.2
+      crypto-js: 4.1.1
+      js-base64: 3.7.2
+      js-logger: 1.6.1
+      long: 4.0.0
+      protobufjs: 6.11.3
+      utf8: 3.0.0
+    transitivePeerDependencies:
+      - debug
+      - expo-crypto
+      - expo-random
+    dev: false

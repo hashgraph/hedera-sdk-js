@@ -218,6 +218,22 @@ export default class LiveHashQuery extends Query {
 
         return `LiveHashQuery:${timestamp.toString()}`;
     }
+
+    /**
+     * @param {LiveHash} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return response.toBytes();
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {LiveHash}
+     */
+    _deserializeResponse(bytes) {
+        return LiveHash.fromBytes(bytes);
+    }
 }
 
 // @ts-ignore

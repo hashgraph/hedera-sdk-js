@@ -1,3 +1,7 @@
+import Status from "./Status.js";
+import TransactionId from "./transaction/TransactionId.js";
+import ajv from "./Ajv.js";
+
 /*-
  * ‌
  * Hedera JavaScript SDK
@@ -19,17 +23,24 @@
  */
 
 /**
- * @typedef {import("./Status.js").default} Status
- * @typedef {import("./transaction/TransactionId.js").default} TransactionId
- */
-
-/**
  * @typedef {object} StatusErrorJSON
  * @property {string} name
  * @property {string} status
  * @property {string} transactionId
  * @property {string} message
  */
+
+const validate = ajv.compile({
+    type: "object",
+    properties: {
+        name: { type: "string", format: "StatusErrorName" },
+        status: { type: "string", format: "Status" },
+        transactionId: { type: "string", format: "TransactionId" },
+        message: { type: "string" },
+    },
+    required: ["name", "status", "transactionId", "message"],
+    additionalProperties: false,
+});
 
 export default class StatusError extends Error {
     /**
@@ -52,6 +63,28 @@ export default class StatusError extends Error {
         if (typeof Error.captureStackTrace !== "undefined") {
             Error.captureStackTrace(this, StatusError);
         }
+    }
+
+    /**
+     * @param {any} obj
+     * @returns {obj is StatusErrorJSON}
+     */
+    static isStatusErrorJSON(obj) {
+        return validate(obj);
+    }
+
+    /**
+     * @param {StatusErrorJSON} json
+     * @returns {StatusError}
+     */
+    static fromJSON(json) {
+        return new StatusError(
+            {
+                status: Status.fromString(json.status),
+                transactionId: TransactionId.fromString(json.transactionId),
+            },
+            json.message
+        );
     }
 
     /**

@@ -247,6 +247,22 @@ export default class AccountBalanceQuery extends Query {
     _getLogId() {
         return `AccountBalanceQuery:${this._timestamp.toString()}`;
     }
+
+    /**
+     * @param {AccountBalance} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return response.toBytes();
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {AccountBalance}
+     */
+    _deserializeResponse(bytes) {
+        return AccountBalance.fromBytes(bytes);
+    }
 }
 
 QUERY_REGISTRY.set(

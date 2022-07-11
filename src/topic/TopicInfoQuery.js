@@ -207,6 +207,22 @@ export default class TopicInfoQuery extends Query {
 
         return `TopicInfoQuery:${timestamp.toString()}`;
     }
+
+    /**
+     * @param {TopicInfo} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return response.toBytes();
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {TopicInfo}
+     */
+    _deserializeResponse(bytes) {
+        return TopicInfo.fromBytes(bytes);
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

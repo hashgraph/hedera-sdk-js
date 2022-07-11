@@ -21,17 +21,7 @@
 import Query, { QUERY_REGISTRY } from "../query/Query.js";
 import AccountId from "./AccountId.js";
 import TransactionRecord from "../transaction/TransactionRecord.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
- * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
- * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").proto.ICryptoGetAccountRecordsQuery} HashgraphProto.proto.ICryptoGetAccountRecordsQuery
- * @typedef {import("@hashgraph/proto").proto.ICryptoGetAccountRecordsResponse} HashgraphProto.proto.ICryptoGetAccountRecordsResponse
- * @typedef {import("@hashgraph/proto").proto.ITransactionRecord} HashgraphProto.proto.ITransactionRecord
- */
+import HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -61,6 +51,8 @@ export default class AccountRecordsQuery extends Query {
         if (props.accountId != null) {
             this.setAccountId(props.accountId);
         }
+
+        this._output = TransactionRecord;
     }
 
     /**
@@ -195,6 +187,36 @@ export default class AccountRecordsQuery extends Query {
                 : this._timestamp;
 
         return `AccountRecordsQuery:${timestamp.toString()}`;
+    }
+
+    /**
+     * @param {TransactionRecord[]} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return HashgraphProto.proto.CryptoGetAccountRecordsResponse.encode({
+            records: response.map(
+                (record) =>
+                    /** @type {HashgraphProto.proto.ITransactionRecord} */ (
+                        record._toProtobuf().transactionRecord
+                    )
+            ),
+        }).finish();
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {TransactionRecord[]}
+     */
+    _deserializeResponse(bytes) {
+        const response =
+            HashgraphProto.proto.CryptoGetAccountRecordsResponse.decode(bytes);
+        return (response.records != null ? response.records : []).map(
+            (transactionRecord) =>
+                TransactionRecord._fromProtobuf({
+                    transactionRecord,
+                })
+        );
     }
 }
 

@@ -201,6 +201,22 @@ export default class TokenInfoQuery extends Query {
 
         return `TokenInfoQuery:${timestamp.toString()}`;
     }
+
+    /**
+     * @param {TokenInfo} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return response.toBytes();
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {TokenInfo}
+     */
+    _deserializeResponse(bytes) {
+        return TokenInfo.fromBytes(bytes);
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

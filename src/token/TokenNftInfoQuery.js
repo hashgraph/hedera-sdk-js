@@ -25,21 +25,7 @@ import TokenId from "../token/TokenId.js";
 import TokenNftInfo from "./TokenNftInfo.js";
 import Hbar from "../Hbar.js";
 import Long from "long";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.IQuery} HashgraphProto.proto.IQuery
- * @typedef {import("@hashgraph/proto").proto.IQueryHeader} HashgraphProto.proto.IQueryHeader
- * @typedef {import("@hashgraph/proto").proto.IResponse} HashgraphProto.proto.IResponse
- * @typedef {import("@hashgraph/proto").proto.ITokenNftInfo} HashgraphProto.proto.ITokenNftInfo
- * @typedef {import("@hashgraph/proto").proto.IResponseHeader} HashgraphProto.proto.IResponseHeader
- * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfoQuery} HashgraphProto.proto.ITokenGetNftInfoQuery
- * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfosQuery} HashgraphProto.proto.ITokenGetNftInfosQuery
- * @typedef {import("@hashgraph/proto").proto.ITokenGetAccountNftInfosQuery} HashgraphProto.proto.ITokenGetAccountNftInfosQuery
- * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfoResponse} HashgraphProto.proto.ITokenGetNftInfoResponse
- * @typedef {import("@hashgraph/proto").proto.ITokenGetNftInfosResponse} HashgraphProto.proto.ITokenGetNftInfosResponse
- * @typedef {import("@hashgraph/proto").proto.ITokenGetAccountNftInfosResponse} HashgraphProto.proto.ITokenGetAccountNftInfosResponse
- */
+import HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("../channel/Channel.js").default} Channel
@@ -389,6 +375,36 @@ export default class TokenNftInfoQuery extends Query {
                 : this._timestamp;
 
         return `TokenNftInfoQuery:${timestamp.toString()}`;
+    }
+
+    /**
+     * @param {TokenNftInfo[]} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return HashgraphProto.proto.Response.encode({
+            tokenGetNftInfo: {
+                nft: response[0]._toProtobuf(),
+            },
+        }).finish();
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {TokenNftInfo[]}
+     */
+    _deserializeResponse(bytes) {
+        const response = HashgraphProto.proto.Response.decode(bytes);
+        return [
+            TokenNftInfo._fromProtobuf(
+                /** @type {HashgraphProto.proto.ITokenNftInfo} */
+                (
+                    /** @type {HashgraphProto.proto.ITokenGetNftInfoResponse} */ (
+                        response.tokenGetNftInfo
+                    ).nft
+                )
+            ),
+        ];
     }
 }
 

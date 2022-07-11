@@ -204,6 +204,22 @@ export default class AccountInfoQuery extends Query {
                 : this._timestamp;
         return `AccountInfoQuery:${timestamp.toString()}`;
     }
+
+    /**
+     * @param {AccountInfo} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return response.toBytes();
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {AccountInfo}
+     */
+    _deserializeResponse(bytes) {
+        return AccountInfo.fromBytes(bytes);
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

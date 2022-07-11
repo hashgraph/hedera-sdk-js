@@ -1,21 +1,37 @@
 import axios from "axios";
-import {
-    AccountBalance,
-    AccountBalanceQuery,
-    TransactionReceiptQuery,
-    AccountId,
-    AccountInfo,
-    AccountInfoQuery,
-    AccountRecordsQuery,
-    // Hbar,
-    LedgerId,
-    PublicKey,
-    Transaction,
-    TransactionId,
-    TransactionReceipt,
-    TransactionResponse,
-    // TransferTransaction,
-} from "@hashgraph/sdk";
+import * as hashgraph from "@hashgraph/sdk";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
+
+const ajv = new Ajv();
+addFormats(ajv);
+
+ajv.addFormat("TransactionResponseJSON", {
+    validate: (/** @type {string} */ data) =>
+        typeof data !== "string" ||
+        !hashgraph.TransactionResponse.isTransactionResponseJSON(data),
+});
+
+ajv.addFormat("Hex", {
+    validate: (/** @type {string} */ data) =>
+        typeof data !== "string" || Buffer.from(data, "hex").length !== 0,
+});
+
+ajv.addFormat("Error", {
+    validate: (/** @type {string} */ data) =>
+        typeof data === "string" ||
+        (typeof data === "string" &&
+            hashgraph.StatusError.isStatusErrorJSON(data)),
+});
+
+const validateResponse = ajv.compile({
+    type: "object",
+    properties: {
+        response: { type: "string" },
+        error: { type: "string", format: "Error" },
+    },
+    additionalProperties: false,
+});
 
 const instance = axios.create({
     baseURL: "http://127.0.0.1:3000/",
@@ -35,6 +51,7 @@ const instance = axios.create({
  * @typedef {import("@hashgraph/sdk").Key} Key
  * @typedef {import("@hashgraph/sdk").SignerSignature} SignerSignature
  * @typedef {import("@hashgraph/sdk").TransactionRecord} TransactionRecord
+ * @typedef {import("@hashgraph/sdk").StatusErrorJSON} StatusErrorJSON
  */
 
 /**
@@ -44,11 +61,17 @@ const instance = axios.create({
  */
 
 /**
+ * @typedef {object} CallResponse
+ * @property {(string | StatusErrorJSON)=} error
+ * @property {string=} response
+ */
+
+/**
  * @implements {Provider}
  */
 export class SimpleRestProvider {
     /**
-     * @param {LedgerId?} ledgerId
+     * @param {hashgraph.LedgerId?} ledgerId
      * @param {{[key: string]: string}} network
      * @param {string[]} mirrorNetwork
      */
@@ -59,7 +82,7 @@ export class SimpleRestProvider {
     }
 
     /**
-     * @returns {LedgerId?}
+     * @returns {hashgraph.LedgerId?}
      */
     getLedgerId() {
         return this.ledgerId;
@@ -80,46 +103,54 @@ export class SimpleRestProvider {
     }
 
     /**
-     * @param {AccountId | string} accountId
-     * @returns {Promise<AccountBalance>}
+     * @param {hashgraph.AccountId | string} accountId
+     * @returns {Promise<hashgraph.AccountBalance>}
      */
     getAccountBalance(accountId) {
-        return this.call(new AccountBalanceQuery().setAccountId(accountId));
-    }
-
-    /**
-     * @param {AccountId | string} accountId
-     * @returns {Promise<AccountInfo>}
-     */
-    async getAccountInfo(accountId) {
-        return this.call(new AccountInfoQuery().setAccountId(accountId));
-    }
-
-    /**
-     * @param {AccountId | string} accountId
-     * @returns {Promise<TransactionRecord[]>}
-     */
-    getAccountRecords(accountId) {
-        return this.call(new AccountRecordsQuery().setAccountId(accountId));
-    }
-
-    /**
-     * @param {TransactionId | string} transactionId
-     * @returns {Promise<TransactionReceipt>}
-     */
-    getTransactionReceipt(transactionId) {
         return this.call(
-            new TransactionReceiptQuery().setTransactionId(transactionId)
+            new hashgraph.AccountBalanceQuery().setAccountId(accountId)
         );
     }
 
     /**
-     * @param {TransactionResponse} response
-     * @returns {Promise<TransactionReceipt>}
+     * @param {hashgraph.AccountId | string} accountId
+     * @returns {Promise<hashgraph.AccountInfo>}
+     */
+    async getAccountInfo(accountId) {
+        return this.call(
+            new hashgraph.AccountInfoQuery().setAccountId(accountId)
+        );
+    }
+
+    /**
+     * @param {hashgraph.AccountId | string} accountId
+     * @returns {Promise<hashgraph.TransactionRecord[]>}
+     */
+    getAccountRecords(accountId) {
+        return this.call(
+            new hashgraph.AccountRecordsQuery().setAccountId(accountId)
+        );
+    }
+
+    /**
+     * @param {hashgraph.TransactionId | string} transactionId
+     * @returns {Promise<hashgraph.TransactionReceipt>}
+     */
+    getTransactionReceipt(transactionId) {
+        return this.call(
+            new hashgraph.TransactionReceiptQuery().setTransactionId(
+                transactionId
+            )
+        );
+    }
+
+    /**
+     * @param {hashgraph.TransactionResponse} response
+     * @returns {Promise<hashgraph.TransactionReceipt>}
      */
     waitForReceipt(response) {
         return this.call(
-            new TransactionReceiptQuery().setTransactionId(
+            new hashgraph.TransactionReceiptQuery().setTransactionId(
                 response.transactionId
             )
         );
@@ -133,41 +164,36 @@ export class SimpleRestProvider {
      * @returns {Promise<OutputT>}
      */
     async call(request) {
-        /** @type {{ response: string, error: string | undefined} | TransactionResponseJSON} */
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const response = (
+        const bytes = Buffer.from(request.toBytes()).toString("hex");
+
+        let response = (
             await instance.post("/request", {
-                request: Buffer.from(request.toBytes()).toString("hex"),
+                type: request instanceof hashgraph.Transaction ? "Transaction" : "Query",
+                transaction: request instanceof hashgraph.Transaction ? bytes : undefined,
+                query: request instanceof hashgraph.Transaction ? undefined : bytes,
             })
         ).data;
 
-        if (Object.prototype.hasOwnProperty.call(response, "error")) {
-            throw new Error(/** @type {{ error: string }} */ (response).error);
+        if (!validateResponse(response)) {
+            throw new Error(
+                `Failed to validate response: ${JSON.stringify(
+                    validateResponse.errors
+                )}`
+            );
         }
 
-        if (Object.prototype.hasOwnProperty.call(response, "response")) {
-            const inner = /** @type {{response: string}} */ (response).response;
-            const bytes = Buffer.from(inner, "hex");
+        const callResponse = /** @type {CallResponse} */ (response);
 
-            switch (request.constructor.name) {
-                case "AccountBalanceQuery":
-                    // @ts-ignore
-                    return AccountBalance.fromBytes(bytes);
-                case "AccountInfoQuery":
-                    // @ts-ignore
-                    return AccountInfo.fromBytes(bytes);
-                case "TransactionReceipt":
-                    // @ts-ignore
-                    return TransactionReceipt.fromBytes(bytes);
-                default:
-                    throw new Error(
-                        `unrecognzied request time ${request.constructor.name}`
-                    );
-            }
-        } else {
-            // @ts-ignore
-            return TransactionResponse.fromJSON(response);
+        if (callResponse.error != null) {
+            throw hashgraph.StatusError.isStatusErrorJSON(callResponse.error)
+                ? hashgraph.StatusError.fromJSON(callResponse.error)
+                : new Error(callResponse.error);
         }
+
+        return request._deserializeResponse(
+            Buffer.from(/** @type {string} */ (callResponse.response), "hex")
+        );
     }
 }
 
@@ -176,8 +202,8 @@ export class SimpleRestProvider {
  */
 export class SimpleRestSigner {
     /**
-     * @param {AccountId} accountId
-     * @param {PublicKey} publicKey
+     * @param {hashgraph.AccountId} accountId
+     * @param {hashgraph.PublicKey} publicKey
      * @param {Provider} provider
      */
     constructor(accountId, publicKey, provider) {
@@ -187,7 +213,7 @@ export class SimpleRestSigner {
     }
 
     /**
-     * @param {(AccountId | string)=} accountId
+     * @param {(hashgraph.AccountId | string)=} accountId
      * @returns {Promise<SimpleRestSigner>}
      */
     static async connect(accountId) {
@@ -205,9 +231,9 @@ export class SimpleRestSigner {
             throw new Error(response.error);
         }
 
-        const id = AccountId.fromString(response.accountId);
-        const publicKey = PublicKey.fromString(response.publicKey);
-        const ledgerId = LedgerId.fromString(response.ledgerId);
+        const id = hashgraph.AccountId.fromString(response.accountId);
+        const publicKey = hashgraph.PublicKey.fromString(response.publicKey);
+        const ledgerId = hashgraph.LedgerId.fromString(response.ledgerId);
         const provider = new SimpleRestProvider(
             ledgerId,
             response.network,
@@ -226,7 +252,7 @@ export class SimpleRestSigner {
 
     /**
      * @abstract
-     * @returns {AccountId}
+     * @returns {hashgraph.AccountId}
      */
     getAccountId() {
         return this.accountId;
@@ -240,7 +266,7 @@ export class SimpleRestSigner {
     }
 
     /**
-     * @returns {LedgerId?}
+     * @returns {hashgraph.LedgerId?}
      */
     getLedgerId() {
         return this.provider == null ? null : this.provider.getLedgerId();
@@ -248,7 +274,7 @@ export class SimpleRestSigner {
 
     /**
      * @abstract
-     * @returns {{[key: string]: (string | AccountId)}}
+     * @returns {{[key: string]: (string | hashgraph.AccountId)}}
      */
     getNetwork() {
         return this.provider == null ? {} : this.provider.getNetwork();
@@ -272,20 +298,22 @@ export class SimpleRestSigner {
     }
 
     /**
-     * @returns {Promise<AccountBalance>}
+     * @returns {Promise<hashgraph.AccountBalance>}
      */
     getAccountBalance() {
         return this.call(
-            new AccountBalanceQuery().setAccountId(this.accountId)
+            new hashgraph.AccountBalanceQuery().setAccountId(this.accountId)
         );
     }
 
     /**
      * @abstract
-     * @returns {Promise<AccountInfo>}
+     * @returns {Promise<hashgraph.AccountInfo>}
      */
     getAccountInfo() {
-        return this.call(new AccountInfoQuery().setAccountId(this.accountId));
+        return this.call(
+            new hashgraph.AccountInfoQuery().setAccountId(this.accountId)
+        );
     }
 
     /**
@@ -294,12 +322,12 @@ export class SimpleRestSigner {
      */
     getAccountRecords() {
         return this.call(
-            new AccountRecordsQuery().setAccountId(this.accountId)
+            new hashgraph.AccountRecordsQuery().setAccountId(this.accountId)
         );
     }
 
     /**
-     * @template {Transaction} T
+     * @template {hashgraph.Transaction} T
      * @param {T} transaction
      * @returns {Promise<T>}
      */
@@ -317,12 +345,14 @@ export class SimpleRestSigner {
         }
 
         return /** @type {T} */ (
-            Transaction.fromBytes(Buffer.from(response.response, "hex"))
+            hashgraph.Transaction.fromBytes(
+                Buffer.from(response.response, "hex")
+            )
         );
     }
 
     /**
-     * @template {Transaction} T
+     * @template {hashgraph.Transaction} T
      * @param {T} transaction
      * @returns {Promise<T>}
      */
@@ -364,17 +394,19 @@ export class SimpleRestSigner {
     }
 
     /**
-     * @template {Transaction} T
+     * @template {hashgraph.Transaction} T
      * @param {T} transaction
      * @returns {Promise<T>}
      */
     populateTransaction(transaction) {
-        transaction.setTransactionId(TransactionId.generate(this.accountId));
+        transaction.setTransactionId(
+            hashgraph.TransactionId.generate(this.accountId)
+        );
         const network = Object.values(this.provider.getNetwork()).map(
             (nodeAccountId) =>
                 typeof nodeAccountId === "string"
-                    ? AccountId.fromString(nodeAccountId)
-                    : new AccountId(nodeAccountId)
+                    ? hashgraph.AccountId.fromString(nodeAccountId)
+                    : new hashgraph.AccountId(nodeAccountId)
         );
         transaction.setNodeAccountIds(network);
         return Promise.resolve(transaction);
@@ -398,28 +430,28 @@ export class SimpleRestSigner {
     }
 }
 
-// /**
-//  *
-//  */
-// async function main() {
-//     const signer = await SimpleRestSigner.connect();
-//
-//     // Free query
-//     const balance = await signer.getAccountBalance();
-//     console.log(`balance: ${balance.hbars.toString()}`);
-//
-//     // Paid query
-//     const info = await signer.getAccountInfo();
-//     console.log(`key: ${info.key.toString()}`);
-//
-//     // Transaction
-//     const transaction = await new TransferTransaction()
-//         .addHbarTransfer("0.0.3", Hbar.fromTinybars(1))
-//         .addHbarTransfer(signer.accountId, Hbar.fromTinybars(1).negated())
-//         .freezeWithSigner(signer);
-//     const response = await transaction.executeWithSigner(signer);
-//     const hash = Buffer.from(response.transactionHash).toString("hex");
-//     console.log(`hash: ${hash}`);
-// }
-//
-// void main();
+/**
+ *
+ */
+async function main() {
+    const signer = await SimpleRestSigner.connect();
+
+    // Free query
+    const balance = await signer.getAccountBalance();
+    console.log(`balance: ${balance.hbars.toString()}`);
+
+    // Paid query
+    const info = await signer.getAccountInfo();
+    console.log(`key: ${info.key.toString()}`);
+
+    // Transaction
+    const transaction = await new hashgraph.TransferTransaction()
+        .addHbarTransfer("0.0.3", hashgraph.Hbar.fromTinybars(1))
+        .addHbarTransfer(signer.accountId, hashgraph.Hbar.fromTinybars(1).negated())
+        .freezeWithSigner(signer);
+    const response = await transaction.executeWithSigner(signer);
+    const hash = Buffer.from(response.transactionHash).toString("hex");
+    console.log(`hash: ${hash}`);
+}
+
+void main();

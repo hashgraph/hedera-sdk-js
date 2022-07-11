@@ -21,13 +21,7 @@
 import AccountId from "./AccountId.js";
 import Duration from "../Duration.js";
 import KeyList from "../KeyList.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
- * @typedef {import("@hashgraph/proto").proto.ILiveHash} HashgraphProto.proto.ILiveHash
- * @typedef {import("@hashgraph/proto").proto.IDuration} HashgraphProto.proto.IDuration
- */
+import HashgraphProto from "@hashgraph/proto";
 
 /**
  * Response when the client sends the node CryptoGetInfoQuery.
@@ -55,6 +49,16 @@ export default class LiveHash {
         this.duration = props.duration;
 
         Object.freeze(this);
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {LiveHash}
+     */
+    static fromBytes(bytes) {
+        return LiveHash._fromProtobuf(
+            HashgraphProto.proto.LiveHash.decode(bytes)
+        );
     }
 
     /**
@@ -97,5 +101,14 @@ export default class LiveHash {
             keys: this.keys._toProtobufKey().keyList,
             duration: this.duration._toProtobuf(),
         };
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return HashgraphProto.proto.LiveHash.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

@@ -25,6 +25,7 @@ import TransactionRecordQuery from "./TransactionRecordQuery.js";
 import AccountId from "../account/AccountId.js";
 import TransactionId from "./TransactionId.js";
 import * as hex from "../encoding/hex.js";
+import ajv from "../Ajv.js";
 
 /**
  * @typedef {import("../client/Client.js").default<*, *>} Client
@@ -39,6 +40,18 @@ import * as hex from "../encoding/hex.js";
  * @property {string} transactionHash
  * @property {string} transactionId
  */
+
+const validate = ajv.compile({
+    type: "object",
+    properties: {
+        name: { type: "string", format: "AccountId" },
+        status: { type: "string", format: "TransactionHash" },
+        transactionId: { type: "string", format: "TransactionId" },
+        message: { type: "string" },
+    },
+    required: ["name", "status", "transactionId"],
+    additionalProperties: false,
+});
 
 export default class TransactionResponse {
     /**
@@ -59,6 +72,14 @@ export default class TransactionResponse {
         this.transactionId = props.transactionId;
 
         Object.freeze(this);
+    }
+
+    /**
+     * @param {any} obj
+     * @returns {obj is TransactionResponseJSON}
+     */
+    static isTransactionResponseJSON(obj) {
+        return validate(obj);
     }
 
     /**

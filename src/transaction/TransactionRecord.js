@@ -51,6 +51,7 @@ export default class TransactionRecord {
     /**
      * @private
      * @param {object} props
+     * @param {boolean} [props._createResult]
      * @param {ContractFunctionResult} [props.contractFunctionResult]
      * @param {TransactionReceipt} props.receipt
      * @param {Uint8Array} props.transactionHash
@@ -76,6 +77,8 @@ export default class TransactionRecord {
      * @param {Transfer[]} props.paidStakingRewards
      */
     constructor(props) {
+        this._createResult = props._createResult;
+
         /**
          * The status (reach consensus, or failed, or is unknown) and the ID of
          * any new account/file/instance created.
@@ -321,14 +324,12 @@ export default class TransactionRecord {
                         : null,
 
                 contractCallResult:
-                    this.contractFunctionResult != null &&
-                    !this.contractFunctionResult._createResult
+                    this.contractFunctionResult != null && !this._createResult
                         ? this.contractFunctionResult._toProtobuf()
                         : null,
 
                 contractCreateResult:
-                    this.contractFunctionResult != null &&
-                    this.contractFunctionResult._createResult
+                    this.contractFunctionResult != null && this._createResult
                         ? this.contractFunctionResult._toProtobuf()
                         : null,
 
@@ -412,17 +413,18 @@ export default class TransactionRecord {
         const contractFunctionResult =
             record.contractCallResult != null
                 ? ContractFunctionResult._fromProtobuf(
-                      record.contractCallResult,
-                      false
+                      record.contractCallResult
                   )
                 : record.contractCreateResult != null
                 ? ContractFunctionResult._fromProtobuf(
-                      record.contractCreateResult,
-                      true
+                      record.contractCreateResult
                   )
                 : undefined;
 
         return new TransactionRecord({
+            _createResult:
+                record.contractCallResult == null &&
+                record.contractCreateResult != null,
             receipt: TransactionReceipt._fromProtobuf({
                 receipt:
                     /** @type {HashgraphProto.proto.ITransactionReceipt} */ (

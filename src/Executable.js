@@ -325,6 +325,14 @@ export default class Executable {
     }
 
     /**
+     * @abstract
+     * @returns {OutputT}
+     */
+    get _responseT() {
+        throw new Error("not implemetned");
+    }
+
+    /**
      * Perform a single grpc call with the given request. Each request has it's own
      * required service so we just pass in channel, and it'$ the request's responsiblity
      * to use the right service and call the right grpc method.
@@ -720,6 +728,26 @@ export default class Executable {
      * @returns {Uint8Array}
      */
     toBytes() {
+        throw new Error("not implemented");
+    }
+
+    /**
+     * @abstract
+     * @param {OutputT} response
+     * @returns {Uint8Array}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _serializeResponse(response) {
+        throw new Error("not implemented");
+    }
+
+    /**
+     * @abstract
+     * @param {Uint8Array} bytes
+     * @returns {OutputT}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _deserializeResponse(bytes) {
         throw new Error("not implemented");
     }
 }

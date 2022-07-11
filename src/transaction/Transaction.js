@@ -27,6 +27,7 @@ import Executable, { ExecutionState } from "../Executable.js";
 import Status from "../Status.js";
 import Long from "long";
 import * as sha384 from "../cryptography/sha384.js";
+import * as utf8 from "../encoding/utf8.js";
 import * as hex from "../encoding/hex.js";
 import * as HashgraphProto from "@hashgraph/proto";
 import PrecheckStatusError from "../PrecheckStatusError.js";
@@ -1624,6 +1625,27 @@ export default class Transaction extends Executable {
         return HashgraphProto.proto.TransactionResponse.encode(
             response
         ).finish();
+    }
+
+    /**
+     * @param {TransactionResponse} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return utf8.encode(JSON.stringify(response.toJSON()));
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {TransactionResponse}
+     */
+    _deserializeResponse(bytes) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const obj = JSON.parse(utf8.decode(bytes));
+        if (!TransactionResponse.isTransactionResponseJSON(obj)) {
+            throw new Error("failed to deserialize response");
+        }
+        return TransactionResponse.fromJSON(obj);
     }
 }
 

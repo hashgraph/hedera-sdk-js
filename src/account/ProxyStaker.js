@@ -20,12 +20,7 @@
 
 import AccountId from "./AccountId.js";
 import Hbar from "../Hbar.js";
-
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.IProxyStaker} HashgraphProto.proto.IProxyStaker
- * @typedef {import("@hashgraph/proto").proto.IAccountID} HashgraphProto.proto.IAccountID
- */
+import HashgraphProto from "@hashgraph/proto";
 
 /**
  * @typedef {import("bignumber.js").default} BigNumber
@@ -64,6 +59,16 @@ export default class ProxyStaker {
     }
 
     /**
+     * @param {Uint8Array} bytes
+     * @returns {ProxyStaker}
+     */
+    static fromBytes(bytes) {
+        return ProxyStaker._fromProtobuf(
+            HashgraphProto.proto.ProxyStaker.decode(bytes)
+        );
+    }
+
+    /**
      * @internal
      * @param {HashgraphProto.proto.IProxyStaker} transfer
      * @returns {ProxyStaker}
@@ -90,5 +95,14 @@ export default class ProxyStaker {
             accountID: this.accountId._toProtobuf(),
             amount: this.amount.toTinybars(),
         };
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return HashgraphProto.proto.ProxyStaker.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

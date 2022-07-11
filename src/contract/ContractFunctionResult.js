@@ -27,12 +27,8 @@ import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
 import Long from "long";
 import ContractStateChange from "./ContractStateChange.js";
+import HashgraphProto from "@hashgraph/proto";
 
-/**
- * @namespace proto
- * @typedef {import("@hashgraph/proto").proto.IContractFunctionResult} HashgraphProto.proto.IContractFunctionResult
- * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
- */
 /**
  * The result returned by a call to a smart contract function. This is part of the response to
  * a ContractCallLocal query, and is in the record for a ContractCall or ContractCreateInstance
@@ -60,12 +56,6 @@ export default class ContractFunctionResult {
      * @param {?AccountId} result.senderAccountId
      */
     constructor(result) {
-        /**
-         * Determines if this result came from `record.contractCreateResult` if true
-         * or `record.contractCallResult` if false
-         */
-        this._createResult = result._createResult;
-
         /**
          * The smart contract instance whose function was called.
          */
@@ -134,11 +124,20 @@ export default class ContractFunctionResult {
     }
 
     /**
-     * @param {HashgraphProto.proto.IContractFunctionResult} result
-     * @param {boolean} _createResult
+     * @param {Uint8Array} bytes
      * @returns {ContractFunctionResult}
      */
-    static _fromProtobuf(result, _createResult) {
+    static fromBytes(bytes) {
+        return ContractFunctionResult._fromProtobuf(
+            HashgraphProto.proto.ContractFunctionResult.decode(bytes)
+        );
+    }
+
+    /**
+     * @param {HashgraphProto.proto.IContractFunctionResult} result
+     * @returns {ContractFunctionResult}
+     */
+    static _fromProtobuf(result) {
         const contractId =
             /** @type {HashgraphProto.proto.IContractID | null} */ (
                 result.contractID
@@ -148,7 +147,7 @@ export default class ContractFunctionResult {
         const amount = /** @type {Long} */ (result.amount);
 
         return new ContractFunctionResult({
-            _createResult,
+            _createResult: false,
             bytes: /** @type {Uint8Array} */ (result.contractCallResult),
             contractId:
                 contractId != null
@@ -1001,5 +1000,14 @@ export default class ContractFunctionResult {
                     ? this.senderAccountId._toProtobuf()
                     : null,
         };
+    }
+
+    /**
+     * @returns {Uint8Array}
+     */
+    toBytes() {
+        return HashgraphProto.proto.ContractFunctionResult.encode(
+            this._toProtobuf()
+        ).finish();
     }
 }

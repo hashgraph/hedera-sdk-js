@@ -391,6 +391,26 @@ export default class TransactionReceiptQuery extends Query {
     _getLogId() {
         return `TransactionReceiptQuery:${this._timestamp.toString()}`;
     }
+
+    /**
+     * @param {TransactionReceipt} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return HashgraphProto.proto.TransactionGetReceiptResponse.encode(
+            response._toProtobuf()
+        ).finish();
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {TransactionReceipt}
+     */
+    _deserializeResponse(bytes) {
+        return TransactionReceipt._fromProtobuf(
+            HashgraphProto.proto.TransactionGetReceiptResponse.decode(bytes)
+        );
+    }
 }
 
 QUERY_REGISTRY.set(

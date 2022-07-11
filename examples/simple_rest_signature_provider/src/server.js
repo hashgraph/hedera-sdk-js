@@ -1,6 +1,73 @@
 import express from "express";
 import readline from "readline";
 import { Wallet, LocalProvider, Transaction, Query } from "@hashgraph/sdk";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
+
+const ajv = new Ajv();
+
+addFormats(ajv);
+
+ajv.addFormat(
+    "TransactionHex",
+    /** @type {ajv.ForamtValidator<string>} */ {
+        validate: (/** @type {string} */ data) => {
+            if (typeof data !== "string" || data === "") {
+                return false;
+            }
+
+            Transaction.fromBytes(Buffer.from(data, "hex"));
+            return true;
+        },
+    }
+);
+
+ajv.addFormat(
+    "RequestType",
+    /** @type {ajv.ForamtValidator<string>} */ {
+        validate: (/** @type {string} */ data) => {
+            if (typeof data !== "string") {
+                return false;
+            }
+
+            return data === "Query" || data === "Transaction";
+        },
+    }
+);
+
+ajv.addFormat(
+    "QueryHex",
+    /** @type {ajv.ForamtValidator<string>} */ {
+        validate: (/** @type {string} */ data) => {
+            if (typeof data !== "string" || data === "") {
+                return false;
+            }
+
+            Query.fromBytes(Buffer.from(data, "hex"));
+            return true;
+        },
+    }
+);
+
+const validateCall = ajv.compile({
+    type: "object",
+    properties: {
+        type: { type: "string", format: "RequestType" },
+        transaction: { type: "string", format: "TransactionHex" },
+        query: { type: "string", format: "QueryHex" },
+    },
+    required: ["type"],
+    additionalProperties: false,
+});
+
+const validateSign = ajv.compile({
+    type: "object",
+    properties: {
+        transaction: { type: "string", format: "TransactionHex" },
+    },
+    required: ["type"],
+    additionalProperties: false,
+});
 
 if (process.env.OPERATOR_KEY == null || process.env.OPERATOR_ID == null) {
     throw new Error("`OPERATOR_KEY` and `OPERATOR_ID` required");
@@ -64,59 +131,67 @@ app.post("/login", function (req, res) {
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.post("/request", async function (req, res) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const request = /** @type {{ request: string | undefined }} */ (req.body);
-    if (request.request == null || request.request === "") {
-        res.json({ error: "no request provided" });
-        return;
+    if (!validateCall(req.body)) {
+        return res.json({ error: JSON.stringify(validateCall.errors) });
     }
 
-    const bytes = Buffer.from(request.request, "hex");
-
     try {
-        const transaction = Transaction.fromBytes(bytes);
-        await transaction.signWithSigner(wallet);
-        const response = await wallet.call(transaction);
-        res.json(response);
-        return;
-    } catch (_) {
-        try {
-            const query = Query.fromBytes(bytes);
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            const response = await wallet.call(query);
-            res.json({
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-argument
-                response: Buffer.from(response.toBytes()).toString("hex"),
-            });
-            return;
-        } catch (error) {
-            res.json({ error: /** @type {Error} */ (error).toString() });
-            return;
+        switch (req.body.type) {
+            case "Query": {
+                /**
+                 * @template T
+                 * @type {Query<T>}
+                 */
+                const query = Query.fromBytes(
+                    Buffer.from(req.body.query, "hex")
+                );
+                /**
+                 * @template {{ toBytes: () => Uint8Array }} T
+                 * @type T
+                 */
+                const queryResponse = await wallet.call(query);
+                return res.json({
+                    response: Buffer.from(query._serializeResponse(queryResponse)).toString("hex"),
+                });
+            }
+            case "Transaction": {
+                const transaction = Transaction.fromBytes(
+                    Buffer.from(req.body.transaction, "hex")
+                );
+                await transaction.signWithSigner(wallet);
+                const transactionResponse = await wallet.call(transaction);
+                return res.json({ response: Buffer.from(transaction._serializeResponse(transactionResponse)).toString("hex") });
+            }
+            default:
+                throw new Error(
+                    "(BUG) req.body.type was neither Query or Transaction yet passed validation"
+                );
         }
+    } catch (error) {
+        return res.json({
+            error: /** @type {Error} */ (error).toString(),
+        });
     }
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 app.post("/sign", async function (req, res) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const request = /** @type {{ request: string | undefined }} */ (req.body);
-    if (request.request == null || request.request === "") {
-        res.json({ error: "no request provided" });
-        return;
+    if (!validateSign(req.body)) {
+        return res.json({ error: "failed to validate request" });
     }
 
-    const bytes = Buffer.from(request.request, "hex");
-
     try {
-        const transaction = Transaction.fromBytes(bytes);
+        const transaction = Transaction.fromBytes(
+            Buffer.from(req.body.transaction, "hex")
+        );
         await transaction.signWithSigner(wallet);
-        res.json({
+        return res.json({
             response: Buffer.from(transaction.toBytes()).toString("hex"),
         });
-        return;
     } catch (error) {
-        res.json({ error: /** @type {Error} */ (error).toString() });
-        return;
+        return res.json({
+            error: /** @type {Error} */ (error).toString(),
+        });
     }
 });
 

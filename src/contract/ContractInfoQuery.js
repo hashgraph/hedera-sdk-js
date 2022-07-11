@@ -206,6 +206,22 @@ export default class ContractInfoQuery extends Query {
 
         return `ContractInfoQuery:${timestamp.toString()}`;
     }
+
+    /**
+     * @param {ContractInfo} response
+     * @returns {Uint8Array}
+     */
+    _serializeResponse(response) {
+        return response.toBytes();
+    }
+
+    /**
+     * @param {Uint8Array} bytes
+     * @returns {ContractInfo}
+     */
+    _deserializeResponse(bytes) {
+        return ContractInfo.fromBytes(bytes);
+    }
 }
 
 // eslint-disable-next-line @typescript-eslint/unbound-method

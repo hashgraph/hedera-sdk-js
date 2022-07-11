@@ -10,8 +10,10 @@
     "author": "Launchbadge <contact@launchbadge.com>",
     "license": "Apache-2.0",
     "dependencies": {
-        "@hashgraph/sdk": "^2.15.0",
+        "@hashgraph/sdk": "file:.yalc/@hashgraph/sdk",
         "@hashgraph/tck-chai": "link:../../packages/tck-chai",
+        "ajv": "^8.11.0",
+        "ajv-formats": "^2.1.1",
         "axios": "^0.26.1",
         "express": "^4.17.3"
     },

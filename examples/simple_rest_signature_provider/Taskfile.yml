@@ -2,6 +2,15 @@ version: "3"
 
 silent: true
 
+includes:
+    tck:
+        taskfile: ../../packages/tck/Taskfile.yml
+        dir: ../../packages/tck
+
+    tck-chai:
+        taskfile: ../../packages/tck-chai/Taskfile.yml
+        dir: ../../packages/tck-chai
+
 tasks:
     default:
         deps:
@@ -16,6 +25,7 @@ tasks:
             - task: install
             - task: format
             - task: lint
+            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
 
     clean:
         cmds:
@@ -54,3 +64,9 @@ tasks:
     "test:unit:node":
         cmds:
             - ./node_modules/.bin/mocha --inline-diffs -r @babel/register -r chai/register-expect.js "test/*.js" {{.CLI_ARGS}}
+
+    update:
+        cmds:
+            - task: tck:build
+            - task: tck-chai:build
+            - task: build
