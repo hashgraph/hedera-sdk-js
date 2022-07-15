@@ -49,6 +49,7 @@ export default class ContractInfo {
      * @param {?Key} props.adminKey
      * @param {Timestamp} props.expirationTime
      * @param {Duration} props.autoRenewPeriod
+     * @param {?AccountId} props.autoRenewAccountId
      * @param {Long} props.storage
      * @param {string} props.contractMemo
      * @param {Hbar} props.balance
@@ -108,6 +109,15 @@ export default class ContractInfo {
          * @readonly
          */
         this.autoRenewPeriod = props.autoRenewPeriod;
+
+        /**
+         * ID of the an account to charge for auto-renewal of this contract. If not set, or set
+         * to an account with zero hbar balance, the contract's own hbar balance will be used
+         * to cover auto-renewal fees.
+         *
+         * @readonly
+         */
+        this.autoRenewAccountId = props.autoRenewAccountId;
 
         /**
          * Number of bytes of storage being used by this instance (which affects the cost to
@@ -190,6 +200,10 @@ export default class ContractInfo {
                 )
             ),
             autoRenewPeriod: new Duration(autoRenewPeriod),
+            autoRenewAccountId:
+                info.autoRenewAccountId != null
+                    ? AccountId._fromProtobuf(info.autoRenewAccountId)
+                    : null,
             storage:
                 info.storage != null
                     ? info.storage instanceof Long
@@ -228,6 +242,10 @@ export default class ContractInfo {
             autoRenewPeriod:
                 this.autoRenewPeriod != null
                     ? this.autoRenewPeriod._toProtobuf()
+                    : null,
+            autoRenewAccountId:
+                this.autoRenewAccountId != null
+                    ? this.autoRenewAccountId._toProtobuf()
                     : null,
             storage: this.storage,
             memo: this.contractMemo,
