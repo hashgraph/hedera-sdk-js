@@ -207,22 +207,20 @@ describe("TransactionId", function () {
 
         try {
             transactionId.setNonce(nonceToSet);
-        } catch(err) {
-            throw new Error(
-                "Unable to set nonce for number: "+err
-            )
+        } catch (err) {
+            throw new Error("Unable to set nonce for number: " + err);
         }
 
         expect(parseInt(transactionId.nonce)).equals(nonceToSet);
-        
+
         try {
             transactionId.setNonce(secondNonceToSet);
-        } catch(err) {
-            throw new Error(
-                "Unable to set nonce for number: "+err
-            )
+        } catch (err) {
+            throw new Error("Unable to set nonce for number: " + err);
         }
 
-        expect(new Date(transactionId.nonce).getTime()).equals(secondNonceToSet.getTime());
+        expect(new Date(transactionId.nonce).getTime()).equals(
+            secondNonceToSet.getTime()
+        );
     });
 });

@@ -43,6 +43,7 @@ export default class StorageChange {
      * @returns {StorageChange}
      */
     static _fromProtobuf(change) {
+        // eslint-disable-next-line deprecation/deprecation
         return new StorageChange({
             slot: /** @type {Uint8Array} */ (change.slot),
             valueRead: /** @type {Uint8Array} */ (change.valueRead),
@@ -58,6 +59,7 @@ export default class StorageChange {
      * @returns {StorageChange}
      */
     static fromBytes(bytes) {
+        // eslint-disable-next-line deprecation/deprecation
         return StorageChange._fromProtobuf(
             HashgraphProto.proto.StorageChange.decode(bytes)
         );

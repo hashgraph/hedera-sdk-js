@@ -26,7 +26,10 @@ import * as hex from "../encoding/hex.js";
 import * as utf8 from "../encoding/utf8.js";
 import * as util from "../util.js";
 import Long from "long";
-import ContractStateChange from "./ContractStateChange.js";
+
+/**
+ * @typedef {import("./ContractStateChange.js").default} ContractStateChange
+ */
 
 /**
  * @namespace proto
@@ -110,6 +113,7 @@ export default class ContractFunctionResult {
         /**
          * @deprecated - Use mirror node for contract traceability instead
          */
+        // eslint-disable-next-line deprecation/deprecation
         this.stateChanges = result.stateChanges;
 
         /**
@@ -173,10 +177,7 @@ export default class ContractFunctionResult {
                 result.evmAddress != null && result.evmAddress.value != null
                     ? result.evmAddress.value
                     : null,
-            stateChanges: (result.stateChanges != null
-                ? result.stateChanges
-                : []
-            ).map((change) => ContractStateChange._fromProtobuf(change)),
+            stateChanges: [],
             gas: gas instanceof Long ? gas : Long.fromValue(gas),
             amount: amount instanceof Long ? amount : Long.fromValue(amount),
             functionParameters: /** @type {Uint8Array} */ (
@@ -986,9 +987,6 @@ export default class ContractFunctionResult {
             // eslint-disable-next-line deprecation/deprecation
             createdContractIDs: this.createdContractIds.map((id) =>
                 id._toProtobuf()
-            ),
-            stateChanges: this.stateChanges.map((change) =>
-                change._toProtobuf()
             ),
             evmAddress:
                 this.evmAddress != null

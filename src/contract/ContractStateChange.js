@@ -45,16 +45,19 @@ export default class ContractStateChange {
      * @returns {ContractStateChange}
      */
     static _fromProtobuf(change) {
+        // eslint-disable-next-line deprecation/deprecation
         return new ContractStateChange({
             contractId: ContractId._fromProtobuf(
                 /** @type {HashgraphProto.proto.IContractID} */ (
-                    change.contractID
+                    change.contractId
                 )
             ),
             storageChanges: (change.storageChanges != null
                 ? change.storageChanges
                 : []
-            ).map((change) => StorageChange._fromProtobuf(change)),
+            )
+                // eslint-disable-next-line deprecation/deprecation
+                .map((change) => StorageChange._fromProtobuf(change)),
         });
     }
 
@@ -63,6 +66,7 @@ export default class ContractStateChange {
      * @returns {ContractStateChange}
      */
     static fromBytes(bytes) {
+        // eslint-disable-next-line deprecation/deprecation
         return ContractStateChange._fromProtobuf(
             HashgraphProto.proto.ContractStateChange.decode(bytes)
         );
@@ -73,12 +77,11 @@ export default class ContractStateChange {
      * @returns {HashgraphProto.proto.IContractStateChange} change
      */
     _toProtobuf() {
-        const storageChanges = this.storageChanges.map((storageChange) =>
-            storageChange._toProtobuf()
-        );
         return {
-            contractID: this.contractId._toProtobuf(),
-            storageChanges,
+            contractId: this.contractId._toProtobuf(),
+            storageChanges: this.storageChanges.map((storageChange) =>
+                storageChange._toProtobuf()
+            ),
         };
     }
 
@@ -86,6 +89,7 @@ export default class ContractStateChange {
      * @returns {Uint8Array}
      */
     toBytes() {
+        // eslint-disable-next-line deprecation/deprecation
         return HashgraphProto.proto.ContractStateChange.encode(
             this._toProtobuf()
         ).finish();
