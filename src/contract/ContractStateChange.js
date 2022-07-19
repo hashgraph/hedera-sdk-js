@@ -22,6 +22,9 @@ import * as HashgraphProto from "@hashgraph/proto";
 import ContractId from "./ContractId.js";
 import StorageChange from "./StorageChange.js";
 
+/**
+ * @deprecated - Use mirror node for contract traceability instead
+ */
 export default class ContractStateChange {
     /**
      * @private
