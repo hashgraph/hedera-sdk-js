@@ -14,9 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 
- - `ContractFunctionResult.stateChanges` - Use mirror node for contract traceability instead
- - `ContractStateChanges`
- - `StorageChange`
+ * `ContractFunctionResult.stateChanges` - Use mirror node for contract traceability instead
+ * `ContractStateChanges`
+ * `StorageChange`
 
 ## v2.16.6
 
