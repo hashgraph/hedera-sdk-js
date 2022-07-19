@@ -20,6 +20,9 @@
 
 import * as HashgraphProto from "@hashgraph/proto";
 
+/**
+ * @deprecated - Use mirror node for contract traceability instead
+ */
 export default class StorageChange {
     /**
      * @private

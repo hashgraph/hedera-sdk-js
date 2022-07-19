@@ -107,6 +107,9 @@ export default class ContractFunctionResult {
 
         this.evmAddress = result.evmAddress;
 
+        /**
+         * @deprecated - Use mirror node for contract traceability instead
+         */
         this.stateChanges = result.stateChanges;
 
         /**
