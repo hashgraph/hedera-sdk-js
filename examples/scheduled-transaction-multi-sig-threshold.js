@@ -2,7 +2,6 @@ import {
     Wallet,
     LocalProvider,
     PrivateKey,
-    AccountId,
     KeyList,
     AccountCreateTransaction,
     Hbar,
@@ -19,6 +18,7 @@ dotenv.config();
 
 /**
  * @typedef {import("@hashgraph/sdk").AccountBalance} AccountBalance
+ * @typedef {import("@hashgraph/sdk").AccountId} AccountId
  */
 
 async function main() {

@@ -99,6 +99,7 @@ export { default as NetworkVersionInfo } from "./network/NetworkVersionInfo.js";
 export { default as NetworkVersionInfoQuery } from "./network/NetworkVersionInfoQuery.js";
 export { default as NftId } from "./token/NftId.js";
 export { default as Provider } from "./Provider.js";
+export { default as PrngTransaction } from "./PrngTransaction.js";
 export { default as ProxyStaker } from "./account/ProxyStaker.js";
 export { default as Query } from "./query/Query.js";
 export { default as RequestType } from "./RequestType.js";

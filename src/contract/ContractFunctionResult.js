@@ -36,6 +36,7 @@ import Long from "long";
  * @typedef {import("@hashgraph/proto").proto.IContractFunctionResult} HashgraphProto.proto.IContractFunctionResult
  * @typedef {import("@hashgraph/proto").proto.IContractID} HashgraphProto.proto.IContractID
  */
+
 /**
  * The result returned by a call to a smart contract function. This is part of the response to
  * a ContractCallLocal query, and is in the record for a ContractCall or ContractCreateInstance
@@ -55,12 +56,12 @@ export default class ContractFunctionResult {
      * @param {ContractLogInfo[]} result.logs
      * @param {ContractId[]} result.createdContractIds
      * @param {Uint8Array | null} result.evmAddress
-     * @param {ContractStateChange[]} result.stateChanges
      * @param {Uint8Array} result.bytes
      * @param {Long} result.gas
      * @param {Long} result.amount
      * @param {Uint8Array} result.functionParameters
      * @param {?AccountId} result.senderAccountId
+     * @param {ContractStateChange[]} result.stateChanges
      */
     constructor(result) {
         /**
