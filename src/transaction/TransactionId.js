@@ -65,7 +65,7 @@ export default class TransactionId {
             this.setNonce(nonce);
         }
 
-        Object.freeze(this);
+        Object.seal(this);
     }
 
     /**
