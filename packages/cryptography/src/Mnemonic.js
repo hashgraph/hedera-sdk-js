@@ -9,8 +9,11 @@ import * as sha256 from "./primitive/sha256.js";
 import * as pbkdf2 from "./primitive/pbkdf2.js";
 import * as hmac from "./primitive/hmac.js";
 import * as slip10 from "./primitive/slip10.js";
+import * as bip32 from "./primitive/bip32.js";
 import * as entropy from "./util/entropy.js";
 import * as random from "./primitive/random.js";
+import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
+import * as ecdsa from "./primitive/ecdsa.js";
 
 /**
  * @typedef {import("./PrivateKey.js").default} PrivateKey
@@ -112,9 +115,10 @@ export default class Mnemonic {
      * optional passphrase.
      *
      * @param {string} [passphrase]
+     * @param {"Ed25519" | "ECDSA" } [type]
      * @returns {Promise<PrivateKey>}
      */
-    toPrivateKey(passphrase = "") {
+    toPrivateKey(passphrase = "", type = "Ed25519") {
         if (this._isLegacy) {
             if (passphrase.length > 0) {
                 throw new Error(
@@ -125,7 +129,7 @@ export default class Mnemonic {
             return this.toLegacyPrivateKey();
         }
 
-        return this._toPrivateKey(passphrase);
+        return this._toPrivateKey(passphrase, type);
     }
 
     /**
@@ -258,9 +262,10 @@ export default class Mnemonic {
     /**
      * @private
      * @param {string} passphrase
+     * @param {"Ed25519" | "ECDSA" } type
      * @returns {Promise<PrivateKey>}
      */
-    async _toPrivateKey(passphrase = "") {
+    async _toPrivateKey(passphrase = "", type) {
         const input = this.words.join(" ");
         const salt = `mnemonic${passphrase}`;
 
@@ -274,26 +279,40 @@ export default class Mnemonic {
 
         const digest = await hmac.hash(
             hmac.HashAlgorithm.Sha512,
-            "ed25519 seed",
+            type === "ECDSA" ? "Bitcoin seed" : "ed25519 seed",
             seed
         );
 
         let keyData = digest.subarray(0, 32);
         let chainCode = digest.subarray(32);
 
-        for (const index of [44, 3030, 0, 0]) {
-            ({ keyData, chainCode } = await slip10.derive(
-                keyData,
-                chainCode,
-                index
-            ));
-        }
-
-        const keyPair = nacl.sign.keyPair.fromSeed(keyData);
-
         if (CACHE.privateKeyConstructor == null) {
             throw new Error("PrivateKey not found in cache");
         }
+
+        if (type === "ECDSA") {
+            return CACHE.privateKeyConstructor(
+                new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode)
+            );
+        }
+
+        for (const index of [44, 3030, 0, 0]) {
+            if (type === "Ed25519") {
+                ({ keyData, chainCode } = await slip10.derive(
+                    keyData,
+                    chainCode,
+                    index
+                ));
+            } else {
+                ({ keyData, chainCode } = await bip32.derive(
+                    keyData,
+                    chainCode,
+                    index
+                ));
+            }
+        }
+
+        const keyPair = nacl.sign.keyPair.fromSeed(keyData);
 
         return CACHE.privateKeyConstructor(
             new Ed25519PrivateKey(keyPair, chainCode)
