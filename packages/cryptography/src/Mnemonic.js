@@ -111,14 +111,25 @@ export default class Mnemonic {
     }
 
     /**
+     * @deprecated - Use `toEd25519PrivateKey()` or `toEcdsaPrivateKey()` instead
      * Recover a private key from this mnemonic phrase, with an
      * optional passphrase.
      *
      * @param {string} [passphrase]
-     * @param {"Ed25519" | "ECDSA" } [type]
      * @returns {Promise<PrivateKey>}
      */
-    toPrivateKey(passphrase = "", type = "Ed25519") {
+    toPrivateKey(passphrase = "") {
+        return this.toEd25519PrivateKey(passphrase);
+    }
+
+    /**
+     * Recover an Ed25519 private key from this mnemonic phrase, with an
+     * optional passphrase.
+     *
+     * @param {string} [passphrase]
+     * @returns {Promise<PrivateKey>}
+     */
+    toEd25519PrivateKey(passphrase = "") {
         if (this._isLegacy) {
             if (passphrase.length > 0) {
                 throw new Error(
@@ -129,7 +140,18 @@ export default class Mnemonic {
             return this.toLegacyPrivateKey();
         }
 
-        return this._toPrivateKey(passphrase, type);
+        return this._toPrivateKey(passphrase, "Ed25519");
+    }
+
+    /**
+     * Recover an ECDSA private key from this mnemonic phrase, with an
+     * optional passphrase.
+     *
+     * @param {string} [passphrase]
+     * @returns {Promise<PrivateKey>}
+     */
+    toEcdsaPrivateKey(passphrase = "") {
+        return this._toPrivateKey(passphrase, "ECDSA");
     }
 
     /**

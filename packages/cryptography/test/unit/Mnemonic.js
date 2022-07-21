@@ -53,7 +53,7 @@ describe("Mnemonic", function () {
         const expectedKey =
             "302e020100300506032b657004220420853f15aecd22706b105da1d709b4ac05b4906170c2b9c7495dff9af49e1391da";
 
-        const key = await mnemonic.toPrivateKey();
+        const key = await mnemonic.toEd25519PrivateKey();
 
         expect(key.toString()).to.eql(expectedKey);
     });
@@ -67,7 +67,7 @@ describe("Mnemonic", function () {
         const expectedKey =
             "3030020100300706052b8104000a04220420a4b1ce33db247d0c447ded7b3f4830a77cecacd8de76d774b50a6f8fe2b68da1";
 
-        const key = await mnemonic.toPrivateKey("", "ECDSA");
+        const key = await mnemonic.toEcdsaPrivateKey();
 
         expect(key.toString()).to.eql(expectedKey);
     });
