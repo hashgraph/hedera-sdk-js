@@ -186,7 +186,7 @@ export default class RequestType {
             case RequestType.NodeStakeUpdate:
                 return "NodeStakeUpdate";
             case RequestType.Prng:
-                return "PRNG";
+                return "UtilPrng";
             default:
                 return `UNKNOWN (${this._code})`;
         }

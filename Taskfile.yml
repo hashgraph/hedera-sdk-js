@@ -38,9 +38,17 @@ tasks:
                 --validation.invalidLink 
                 --entryPoints src/index.js src/browser.js src/native.js
 
-    install:
+    "install:submodules":
         cmds:
             - git submodule update --init
+        status:
+            - test -d packages/proto/src/proto
+          
+
+    install:
+        deps:
+            - "install:submodules"
+        cmds:
             - pnpm i
 
     build:
