@@ -54,10 +54,18 @@ export default class AccountBalance {
          */
         this.hbars = props.hbars;
 
-        /** @readonly */
+        /**
+         * @deprecated - Use the mirror node API https://docs.hedera.com/guides/docs/mirror-node-api/rest-api#api-v1-accounts instead
+         * @readonly
+         */
+        // eslint-disable-next-line deprecation/deprecation
         this.tokens = props.tokens;
 
-        /** @readonly */
+        /**
+         * @deprecated - Use the mirror node API https://docs.hedera.com/guides/docs/mirror-node-api/rest-api#api-v1-accounts instead
+         * @readonly
+         */
+        // eslint-disable-next-line deprecation/deprecation
         this.tokenDecimals = props.tokenDecimals;
 
         Object.freeze(this);
@@ -117,13 +125,16 @@ export default class AccountBalance {
         /** @type {HashgraphProto.proto.ITokenBalance[]} */
         const list = [];
 
+        // eslint-disable-next-line deprecation/deprecation
         for (const [key, value] of this.tokens != null ? this.tokens : []) {
             list.push({
                 tokenId: key._toProtobuf(),
                 balance: value,
                 decimals:
+                    // eslint-disable-next-line deprecation/deprecation
                     this.tokenDecimals != null
-                        ? this.tokenDecimals.get(key)
+                        ? // eslint-disable-next-line deprecation/deprecation
+                          this.tokenDecimals.get(key)
                         : null,
             });
         }
@@ -155,8 +166,10 @@ export default class AccountBalance {
      */
     toJSON() {
         const tokens = [];
+        // eslint-disable-next-line deprecation/deprecation
         for (const [key, value] of this.tokens != null ? this.tokens : []) {
             const decimals =
+                // eslint-disable-next-line deprecation/deprecation
                 this.tokenDecimals != null ? this.tokenDecimals.get(key) : null;
 
             tokens.push({
