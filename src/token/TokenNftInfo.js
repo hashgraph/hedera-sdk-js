@@ -47,6 +47,7 @@ export default class TokenNftInfo {
      * @param {Timestamp} props.creationTime
      * @param {Uint8Array | null} props.metadata
      * @param {LedgerId|null} props.ledgerId
+     * @param {AccountId|null} props.spenderId
      */
     constructor(props) {
         /**
@@ -72,6 +73,8 @@ export default class TokenNftInfo {
         this.metadata = props.metadata;
 
         this.ledgerId = props.ledgerId;
+
+        this.spenderId = props.spenderId;
 
         Object.freeze(this);
     }
@@ -99,6 +102,10 @@ export default class TokenNftInfo {
                 info.ledgerId != null
                     ? LedgerId.fromBytes(info.ledgerId)
                     : null,
+            spenderId:
+                info.spenderId != null
+                    ? AccountId._fromProtobuf(info.spenderId)
+                    : null,
         });
     }
 
@@ -112,6 +119,8 @@ export default class TokenNftInfo {
             creationTime: this.creationTime._toProtobuf(),
             metadata: this.metadata,
             ledgerId: this.ledgerId != null ? this.ledgerId.toBytes() : null,
+            spenderId:
+                this.spenderId != null ? this.spenderId._toProtobuf() : null,
         };
     }
 
@@ -122,6 +131,7 @@ export default class TokenNftInfo {
      * @property {string} creationTime
      * @property {string | null} metadata
      * @property {string | null} ledgerId
+     * @property {string | null} spenderId
      * @returns {TokenNftInfoJson}
      */
     toJson() {
@@ -131,6 +141,8 @@ export default class TokenNftInfo {
             creationTime: this.creationTime.toString(),
             metadata: this.metadata != null ? hex.encode(this.metadata) : null,
             ledgerId: this.ledgerId != null ? this.ledgerId.toString() : null,
+            spenderId:
+                this.spenderId != null ? this.spenderId.toString() : null,
         };
     }
 
