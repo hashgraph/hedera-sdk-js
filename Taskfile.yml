@@ -117,7 +117,7 @@ tasks:
 
     "test:integration:node":
         cmds:
-            - ./node_modules/.bin/nyc mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js"
+            - ./node_modules/.bin/nyc ./node_modules/.bin/mocha -r @babel/register -r chai/register-expect.js "test/integration/*.js" {{.CLI_ARGS}}
 
     "update:proto":
         deps:
