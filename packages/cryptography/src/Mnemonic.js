@@ -14,6 +14,7 @@ import * as entropy from "./util/entropy.js";
 import * as random from "./primitive/random.js";
 import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
 import * as ecdsa from "./primitive/ecdsa.js";
+import * as hex from "./encoding/hex.js";
 
 /**
  * @typedef {import("./PrivateKey.js").default} PrivateKey
@@ -312,13 +313,9 @@ export default class Mnemonic {
             throw new Error("PrivateKey not found in cache");
         }
 
-        if (type === "ECDSA") {
-            return CACHE.privateKeyConstructor(
-                new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode)
-            );
-        }
+        const path = type === "Ed25519" ? [44, 3030, 0, 0] : [44, 60, 0, 0];
 
-        for (const index of [44, 3030, 0, 0]) {
+        for (const index of path) {
             if (type === "Ed25519") {
                 ({ keyData, chainCode } = await slip10.derive(
                     keyData,
@@ -334,6 +331,12 @@ export default class Mnemonic {
             }
         }
 
+        if (type === "ECDSA") {
+            return CACHE.privateKeyConstructor(
+                new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode)
+            );
+        }
+        
         const keyPair = nacl.sign.keyPair.fromSeed(keyData);
 
         return CACHE.privateKeyConstructor(
