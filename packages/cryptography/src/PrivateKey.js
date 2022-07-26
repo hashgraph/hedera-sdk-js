@@ -285,7 +285,9 @@ export default class PrivateKey extends Key {
                 index
             );
 
-            return new PrivateKey(new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode));
+            return new PrivateKey(
+                new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode)
+            );
         }
     }
 

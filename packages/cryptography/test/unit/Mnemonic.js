@@ -62,15 +62,15 @@ describe("Mnemonic", function () {
         const mnemonic = await Mnemonic.fromString(
             "help please spend actor steel pottery increase rookie trash naive soldier siren"
         );
-    
+
         const expectedKey =
             "f9c31c38697c5bf26645d5521b576ca0369be0dbfec6156ef3c74d0130022dc7";
-    
+
         let key = await mnemonic.toEcdsaPrivateKey();
         console.log((await key.derive(-1)).toStringRaw());
         console.log((await key.derive(0)).toStringRaw());
         console.log((await key.derive(1)).toStringRaw());
-    
+
         expect(key.toStringRaw()).to.eql(expectedKey);
     });
 

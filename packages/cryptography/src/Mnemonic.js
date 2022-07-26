@@ -14,7 +14,7 @@ import * as entropy from "./util/entropy.js";
 import * as random from "./primitive/random.js";
 import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
 import * as ecdsa from "./primitive/ecdsa.js";
-import * as hex from "./encoding/hex.js";
+// import * as hex from "./encoding/hex.js";
 
 /**
  * @typedef {import("./PrivateKey.js").default} PrivateKey
@@ -115,7 +115,6 @@ export default class Mnemonic {
      * @deprecated - Use `toEd25519PrivateKey()` or `toEcdsaPrivateKey()` instead
      * Recover a private key from this mnemonic phrase, with an
      * optional passphrase.
-     *
      * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
      */
@@ -336,7 +335,7 @@ export default class Mnemonic {
                 new EcdsaPrivateKey(ecdsa.fromBytes(keyData), chainCode)
             );
         }
-        
+
         const keyPair = nacl.sign.keyPair.fromSeed(keyData);
 
         return CACHE.privateKeyConstructor(
