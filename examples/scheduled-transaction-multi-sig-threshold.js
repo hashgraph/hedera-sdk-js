@@ -49,11 +49,13 @@ async function main() {
     const thresholdKey = new KeyList(publicKeyList, 3);
 
     // create multi-sig account
-    const txAccountCreate = await new AccountCreateTransaction()
+    let transaction = await new AccountCreateTransaction()
         .setKey(thresholdKey)
         .setInitialBalance(Hbar.fromTinybars(1))
         .setAccountMemo("3-of-4 multi-sig account")
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const txAccountCreate = await transaction.executeWithSigner(wallet);
 
     const txAccountCreateReceipt = await txAccountCreate.getReceiptWithSigner(
         wallet
@@ -67,11 +69,16 @@ async function main() {
     // schedule crypto transfer from multi-sig account to operator account
     const txSchedule = await (
         await (
-            await new TransferTransaction()
-                .addHbarTransfer(multiSigAccountId, Hbar.fromTinybars(-1))
-                .addHbarTransfer(wallet.getAccountId(), Hbar.fromTinybars(1))
-                .schedule() // create schedule
-                .freezeWithSigner(wallet)
+            await (
+                await new TransferTransaction()
+                    .addHbarTransfer(multiSigAccountId, Hbar.fromTinybars(-1))
+                    .addHbarTransfer(
+                        wallet.getAccountId(),
+                        Hbar.fromTinybars(1)
+                    )
+                    .schedule() // create schedule
+                    .freezeWithSigner(wallet)
+            ).signWithSigner(wallet)
         ).sign(privateKeyList[0])
     ) // add 1. signature
         .executeWithSigner(wallet);
@@ -86,9 +93,11 @@ async function main() {
     // add 2. signature
     const txScheduleSign1 = await (
         await (
-            await new ScheduleSignTransaction()
-                .setScheduleId(scheduleId)
-                .freezeWithSigner(wallet)
+            await (
+                await new ScheduleSignTransaction()
+                    .setScheduleId(scheduleId)
+                    .freezeWithSigner(wallet)
+            ).signWithSigner(wallet)
         ).sign(privateKeyList[1])
     ).executeWithSigner(wallet);
 
@@ -104,9 +113,11 @@ async function main() {
     // add 3. signature to trigger scheduled tx
     const txScheduleSign2 = await (
         await (
-            await new ScheduleSignTransaction()
-                .setScheduleId(scheduleId)
-                .freezeWithSigner(wallet)
+            await (
+                await new ScheduleSignTransaction()
+                    .setScheduleId(scheduleId)
+                    .freezeWithSigner(wallet)
+            ).signWithSigner(wallet)
         ).sign(privateKeyList[2])
     ).executeWithSigner(wallet);
 

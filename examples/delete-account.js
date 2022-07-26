@@ -29,20 +29,23 @@ async function main() {
     console.log(`private key = ${newKey.toString()}`);
     console.log(`public key = ${newKey.publicKey.toString()}`);
 
-    const response = await new AccountCreateTransaction()
+    let transaction = await new AccountCreateTransaction()
         .setInitialBalance(new Hbar(10)) // 10 h
         .setKey(newKey.publicKey)
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const response = await transaction.executeWithSigner(wallet);
 
     const receipt = await response.getReceiptWithSigner(wallet);
 
     console.log(`created account id = ${receipt.accountId.toString()}`);
 
-    const transaction = await new AccountDeleteTransaction()
+    transaction = await new AccountDeleteTransaction()
         .setNodeAccountIds([response.nodeId])
         .setAccountId(receipt.accountId)
         .setTransferAccountId(wallet.getAccountId())
         .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
 
     newKey.signTransaction(transaction);
 
