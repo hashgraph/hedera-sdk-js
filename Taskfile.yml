@@ -131,9 +131,9 @@ tasks:
         deps:
             - "proto:update"
         cmds:
-            # Yes doing this twice does seem necessary :shrug:
-            - pnpm add link:packages/proto
-            - pnpm add link:packages/proto
+            - ./node_modules/.bin/yalc add @hashgraph/proto
+            # Remove proto so on `task build` we fix the link
+            - rm -rf ./node_modules/@hashgraph/proto
 
     update:
         cmds:
