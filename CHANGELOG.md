@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v2.17.1
 
+### Added
+
+ * `TokenNftInfo.allowanceSpenderAccountId`
+
 ### Deprecated
 
  * `AccountBalance.tokens` - Use the mirror node API https://docs.hedera.com/guides/docs/mirror-node-api/rest-api#api-v1-accounts instead
