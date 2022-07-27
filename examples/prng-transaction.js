@@ -17,9 +17,11 @@ async function main() {
         new LocalProvider()
     );
 
-    const response = await new PrngTransaction()
+    let transaction = await new PrngTransaction()
         .setRange(100)
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const response = await transaction.executeWithSigner(wallet);
 
     const record = await response.getRecordWithSigner(wallet);
     console.log(`The random number generated is: ${record.prngNumber}`);

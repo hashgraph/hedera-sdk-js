@@ -574,6 +574,10 @@ export default class Transaction extends Executable {
      * @returns {?TransactionId}
      */
     get transactionId() {
+        if (this._transactionIds.isEmpty) {
+            return null;
+        }
+
         // If a user calls `.transactionId` that means we need to use that transaction ID
         // and **not** regenerate it. To do this, we simply lock the transaction ID list.
         //
@@ -581,10 +585,6 @@ export default class Transaction extends Executable {
         // explicity, but if they call `.transactionId` then we will not regenerate transaction
         // IDs.
         this._transactionIds.setLocked();
-
-        if (this._transactionIds.isEmpty) {
-            return null;
-        }
 
         return this._transactionIds.current;
     }
@@ -908,7 +908,9 @@ export default class Transaction extends Executable {
      * @param {?AccountId} accountId
      */
     _freezeWithAccountId(accountId) {
-        this._operatorAccountId = accountId;
+        if (this._operatorAccountId == null) {
+            this._operatorAccountId = accountId;
+        }
     }
 
     /**

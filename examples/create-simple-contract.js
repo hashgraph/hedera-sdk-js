@@ -13,7 +13,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Import the compiled contract
-import helloWorld from "./hello_world.json";
+import helloWorld from "./hello_world.json" assert { type: "json" };
 
 async function main() {
     if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
@@ -34,10 +34,13 @@ async function main() {
     // Create a file on Hedera which contains the contact bytecode.
     // Note: The contract bytecode **must** be hex encoded, it should not
     // be the actual data the hex represents
-    const fileTransactionResponse = await new FileCreateTransaction()
+    let transaction = await new FileCreateTransaction()
         .setKeys([wallet.getAccountKey()])
         .setContents(contractByteCode)
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+
+    let fileTransactionResponse = await transaction.executeWithSigner(wallet);
 
     // Fetch the receipt for transaction that created the file
     const fileReceipt = await fileTransactionResponse.getReceiptWithSigner(
@@ -50,15 +53,20 @@ async function main() {
     console.log(`contract bytecode file: ${fileId.toString()}`);
 
     // Create the contract
-    const contractTransactionResponse = await new ContractCreateTransaction()
+    transaction = await new ContractCreateTransaction()
         // Set gas to create the contract
-        .setGas(75000)
+        .setGas(100000)
         // The contract bytecode must be set to the file ID containing the contract bytecode
         .setBytecodeFileId(fileId)
         // Set the admin key on the contract in case the contract should be deleted or
         // updated in the future
         .setAdminKey(wallet.getAccountKey())
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+
+    const contractTransactionResponse = await transaction.executeWithSigner(
+        wallet
+    );
 
     // Fetch the receipt for the transaction that created the contract
     const contractReceipt =
@@ -103,9 +111,12 @@ async function main() {
     const message = contractCallResult.getString(0);
     console.log(`contract message: ${message}`);
 
-    const contractDeleteResult = await new ContractDeleteTransaction()
+    transaction = await new ContractDeleteTransaction()
         .setContractId(contractId)
-        .executeWithSigner(wallet);
+        .setTransferAccountId(wallet.accountId)
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const contractDeleteResult = await transaction.executeWithSigner(wallet);
 
     // Delete the contract
     // Note: The admin key of the contract needs to sign the transaction

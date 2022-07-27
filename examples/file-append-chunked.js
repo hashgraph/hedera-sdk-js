@@ -72,11 +72,13 @@ async function main() {
         new LocalProvider()
     );
 
-    const resp = await new FileCreateTransaction()
+    let transaction = await new FileCreateTransaction()
         .setKeys([wallet.getAccountKey()])
         .setContents("[e2e::FileCreateTransaction]")
         .setMaxTransactionFee(new Hbar(5))
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const resp = await transaction.executeWithSigner(wallet);
 
     const receipt = await resp.getReceiptWithSigner(wallet);
     const fileId = receipt.fileId;
@@ -84,12 +86,16 @@ async function main() {
     console.log(`file ID = ${fileId.toString()}`);
 
     await (
-        await new FileAppendTransaction()
-            .setNodeAccountIds([resp.nodeId])
-            .setFileId(fileId)
-            .setContents(bigContents)
-            .setMaxTransactionFee(new Hbar(5))
-            .executeWithSigner(wallet)
+        await (
+            await (
+                await new FileAppendTransaction()
+                    .setNodeAccountIds([resp.nodeId])
+                    .setFileId(fileId)
+                    .setContents(bigContents)
+                    .setMaxTransactionFee(new Hbar(5))
+                    .freezeWithSigner(wallet)
+            ).signWithSigner(wallet)
+        ).executeWithSigner(wallet)
     ).getReceiptWithSigner(wallet);
 
     const contents = await new FileContentsQuery()

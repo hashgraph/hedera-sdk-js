@@ -14,7 +14,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Import the compiled contract
-import stateful from "./stateful.json";
+import stateful from "./stateful.json" assert { type: "json" };
 
 async function main() {
     if (process.env.OPERATOR_ID == null || process.env.OPERATOR_KEY == null) {
@@ -35,10 +35,13 @@ async function main() {
     // Create a file on Hedera which contains the contact bytecode.
     // Note: The contract bytecode **must** be hex encoded, it should not
     // be the actual data the hex represents
-    const fileTransactionResponse = await new FileCreateTransaction()
+
+    let transaction = await new FileCreateTransaction()
         .setKeys([wallet.getAccountKey()])
         .setContents(contractByteCode)
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const fileTransactionResponse = await transaction.executeWithSigner(wallet);
 
     // Fetch the receipt for transaction that created the file
     const fileReceipt = await fileTransactionResponse.getReceiptWithSigner(
@@ -51,7 +54,7 @@ async function main() {
     console.log(`contract bytecode file: ${fileId.toString()}`);
 
     // Create the contract
-    const contractTransactionResponse = await new ContractCreateTransaction()
+    transaction = await new ContractCreateTransaction()
         // Set the parameters that should be passed to the contract constructor
         // In this case we are passing in a string with the value "hello from hedera!"
         // as the only parameter that is passed to the contract
@@ -59,13 +62,17 @@ async function main() {
             new ContractFunctionParameters().addString("hello from hedera!")
         )
         // Set gas to create the contract
-        .setGas(75000)
+        .setGas(100000)
         // The contract bytecode must be set to the file ID containing the contract bytecode
         .setBytecodeFileId(fileId)
         // Set the admin key on the contract in case the contract should be deleted or
         // updated in the future
         .setAdminKey(wallet.getAccountKey())
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const contractTransactionResponse = await transaction.executeWithSigner(
+        wallet
+    );
 
     // Fetch the receipt for the transaction that created the contract
     const contractReceipt =
@@ -112,28 +119,31 @@ async function main() {
     console.log(`contract message: ${message}`);
 
     // Call a method on a contract exists on Hedera, but is allowed to mutate the contract state
-    const contractExecTransactionResponse =
-        await new ContractExecuteTransaction()
-            // Set which contract
-            .setContractId(contractId)
-            // Set the gas to execute the contract call
-            .setGas(75000)
-            // Set the function to call and the parameters to send
-            // in this case we're calling function "set_message" with a single
-            // string paramater of value "hello from hedera again!"
-            // If instead the "set_message" method were to require "string[], uint32, string"
-            // parameters then you must do:
-            //      new ContractFunctionParameters()
-            //          .addStringArray(["string 1", "string 2"])
-            //          .addUint32(1)
-            //          .addString("string 3")
-            .setFunction(
-                "set_message",
-                new ContractFunctionParameters().addString(
-                    "hello from hedera again!"
-                )
+    transaction = await new ContractExecuteTransaction()
+        // Set which contract
+        .setContractId(contractId)
+        // Set the gas to execute the contract call
+        .setGas(75000)
+        // Set the function to call and the parameters to send
+        // in this case we're calling function "set_message" with a single
+        // string paramater of value "hello from hedera again!"
+        // If instead the "set_message" method were to require "string[], uint32, string"
+        // parameters then you must do:
+        //      new ContractFunctionParameters()
+        //          .addStringArray(["string 1", "string 2"])
+        //          .addUint32(1)
+        //          .addString("string 3")
+        .setFunction(
+            "set_message",
+            new ContractFunctionParameters().addString(
+                "hello from hedera again!"
             )
-            .executeWithSigner(wallet);
+        )
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const contractExecTransactionResponse = await transaction.executeWithSigner(
+        wallet
+    );
 
     await contractExecTransactionResponse.getReceiptWithSigner(wallet);
 

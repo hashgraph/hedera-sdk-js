@@ -28,17 +28,18 @@ async function main() {
     console.log(`private key = ${newKey.toString()}`);
     console.log(`public key = ${newKey.publicKey.toString()}`);
 
-    const response = await new AccountCreateTransaction()
+    let transaction = await new AccountCreateTransaction()
         .setInitialBalance(new Hbar(10)) // 10 h
         .setKey(newKey.publicKey)
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+
+    transaction = await transaction.signWithSigner(wallet);
+
+    const response = await transaction.executeWithSigner(wallet);
 
     const receipt = await response.getReceiptWithSigner(wallet);
 
     console.log(`account id = ${receipt.accountId.toString()}`);
-
-    const record = await response.getRecordWithSigner(wallet);
-    console.log(Buffer.from(record.toBytes()).toString("hex"));
 }
 
 void main();

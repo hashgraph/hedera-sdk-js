@@ -84,10 +84,13 @@ async function main() {
     ).toAccountId(0, 0);
 
     console.log("Transferring some Hbar to the new account");
-    const response = await new TransferTransaction()
+    let transaction = await new TransferTransaction()
         .addHbarTransfer(wallet.getAccountId(), new Hbar(10).negated())
         .addHbarTransfer(aliasAccountId, new Hbar(10))
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+
+    const response = await transaction.executeWithSigner(wallet);
     await response.getReceiptWithSigner(wallet);
 
     const balance = await new AccountBalanceQuery()
