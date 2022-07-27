@@ -34,11 +34,13 @@ async function main() {
     // the account ID of node 0, we're only doing this as an example.
     // If you really want to stake to node 0, you should use
     // `.setStakedNodeId()` instead
-    const resp = await new AccountCreateTransaction()
+    let transaction = await new AccountCreateTransaction()
         .setKey(newKey.publicKey)
         .setInitialBalance(20)
         .setStakedAccountId("0.0.3")
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const resp = await transaction.executeWithSigner(wallet);
 
     // If we get here we have successfully created an account that
     // is staked to account ID 0.0.3
@@ -73,13 +75,15 @@ async function main() {
     await (
         await (
             await (
-                await new AccountUpdateTransaction()
-                    .setAccountId(newAccountId)
-                    .clearStakedAccountId()
-                    .freezeWithSigner(wallet)
-            )
-                // Sign the transaction with the account key
-                .sign(newKey)
+                await (
+                    await new AccountUpdateTransaction()
+                        .setAccountId(newAccountId)
+                        .clearStakedAccountId()
+                        .freezeWithSigner(wallet)
+                )
+                    // Sign the transaction with the account key
+                    .sign(newKey)
+            ).signWithSigner(wallet)
         ).executeWithSigner(wallet)
     ).getReceiptWithSigner(wallet);
 

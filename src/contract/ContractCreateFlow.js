@@ -239,6 +239,38 @@ export default class ContractCreateFlow {
     }
 
     /**
+     * @returns {boolean}
+     */
+    get declineStakingRewards() {
+        return this._contractCreate.declineStakingRewards;
+    }
+
+    /**
+     * @param {boolean} declineStakingReward
+     * @returns {this}
+     */
+    setDeclineStakingReward(declineStakingReward) {
+        this._contractCreate.setDeclineStakingReward(declineStakingReward);
+        return this;
+    }
+
+    /**
+     * @returns {?AccountId}
+     */
+    get autoRenewAccountId() {
+        return this._contractCreate.autoRenewAccountId;
+    }
+
+    /**
+     * @param {string | AccountId} autoRenewAccountId
+     * @returns {this}
+     */
+    setAutoRenewAccountId(autoRenewAccountId) {
+        this._contractCreate.setAutoRenewAccountId(autoRenewAccountId);
+        return this;
+    }
+
+    /**
      * @template {Channel} ChannelT
      * @template MirrorChannelT
      * @param {import("../client/Client.js").default<ChannelT, MirrorChannelT>} client
