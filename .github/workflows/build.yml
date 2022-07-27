@@ -45,7 +45,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 6.0.2
+          version: 7.6.0
       
       - name: Build @hashgraph/cryptography
         run: task cryptography:build
@@ -88,7 +88,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 6.0.2
+          version: 7.6.0
 
       - name: Build @hashgraph/cryptography
         run: task cryptography:build
@@ -131,7 +131,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2.0.1
         with:
-          version: 6.0.2
+          version: 7.6.0
 
       - name: Build @hashgraph/cryptography
         run: task cryptography:build
