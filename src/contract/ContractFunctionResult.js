@@ -152,8 +152,8 @@ export default class ContractFunctionResult {
                 result.contractID
             );
         const gasUsed = /** @type {Long} */ (result.gasUsed);
-        const gas = /** @type {Long|null} */ (result.gas);
-        const amount = /** @type {Long|null} */ (result.amount);
+        const gas = /** @type {Long|null} */ (result.gas ? result.gas : -1);
+        const amount = /** @type {Long|null} */ (result.amount ? result.amount : -1);
 
         return new ContractFunctionResult({
             _createResult,
