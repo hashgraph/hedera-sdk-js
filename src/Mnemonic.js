@@ -101,15 +101,16 @@ export default class Mnemonic {
      * optional passphrase.
      *
      * @param {string} [passphrase]
+     * @param {number[]} [path]
      * @returns {Promise<PrivateKey>}
      */
-    async toEd25519PrivateKey(passphrase = "") {
+    async toEd25519PrivateKey(passphrase = "", path) {
         if (CACHE.privateKeyConstructor == null) {
             throw new Error("`PrivateKey` has not been loaded");
         }
 
         return CACHE.privateKeyConstructor(
-            await this._mnemonic.toEd25519PrivateKey(passphrase)
+            await this._mnemonic.toEd25519PrivateKey(passphrase, path)
         );
     }
 
@@ -118,15 +119,16 @@ export default class Mnemonic {
      * optional passphrase.
      *
      * @param {string} [passphrase]
+     * @param {number[]} [path]
      * @returns {Promise<PrivateKey>}
      */
-    async toEcdsaPrivateKey(passphrase = "") {
+    async toEcdsaPrivateKey(passphrase = "", path) {
         if (CACHE.privateKeyConstructor == null) {
             throw new Error("`PrivateKey` has not been loaded");
         }
 
         return CACHE.privateKeyConstructor(
-            await this._mnemonic.toEcdsaPrivateKey(passphrase)
+            await this._mnemonic.toEcdsaPrivateKey(passphrase, path)
         );
     }
 
