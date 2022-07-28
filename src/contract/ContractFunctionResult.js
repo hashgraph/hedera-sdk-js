@@ -57,8 +57,8 @@ export default class ContractFunctionResult {
      * @param {ContractId[]} result.createdContractIds
      * @param {Uint8Array | null} result.evmAddress
      * @param {Uint8Array} result.bytes
-     * @param {Long|null} result.gas
-     * @param {Long|null} result.amount
+     * @param {Long} result.gas
+     * @param {Long} result.amount
      * @param {Uint8Array} result.functionParameters
      * @param {?AccountId} result.senderAccountId
      * @param {ContractStateChange[]} result.stateChanges
@@ -152,8 +152,8 @@ export default class ContractFunctionResult {
                 result.contractID
             );
         const gasUsed = /** @type {Long} */ (result.gasUsed);
-        const gas = /** @type {Long|null} */ (result.gas ? result.gas : -1);
-        const amount = /** @type {Long|null} */ (result.amount ? result.amount : -1);
+        const gas = /** @type {Long} */ (result.gas ? result.gas : -1);
+        const amount = /** @type {Long} */ (result.amount ? result.amount : -1);
 
         return new ContractFunctionResult({
             _createResult,
@@ -179,8 +179,8 @@ export default class ContractFunctionResult {
                     ? result.evmAddress.value
                     : null,
             stateChanges: [],
-            gas: gas instanceof Long ? gas : gas ? Long.fromValue(gas) : null,
-            amount: amount instanceof Long ? amount : amount ? Long.fromValue(amount) : null,
+            gas: gas instanceof Long ? gas : Long.fromValue(gas),
+            amount: amount instanceof Long ? amount : Long.fromValue(amount),
             functionParameters: /** @type {Uint8Array} */ (
                 result.functionParameters
             ),
