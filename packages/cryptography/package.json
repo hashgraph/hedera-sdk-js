@@ -59,8 +59,8 @@
     "dependencies": {
         "bignumber.js": "^9.0.2",
         "crypto-js": "^4.1.1",
-        "elliptic": "^6.5.4",
         "js-base64": "^3.7.2",
+        "tiny-secp256k1": "^2.2.1",
         "tweetnacl": "^1.0.3",
         "utf8": "^3.0.0"
     },

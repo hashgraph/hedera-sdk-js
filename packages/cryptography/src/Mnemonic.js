@@ -16,7 +16,6 @@ import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 
 const HEDERA_PATH = [44, 3030, 0, 0];
-const ECDSA_ETH_PATH = [44, 60, 0, 0];
 
 const ED25519_SEED_TEXT = "ed25519 seed";
 const ECDSA_SEED_TEXT = "Bitcoin seed";
@@ -135,7 +134,7 @@ export default class Mnemonic {
      * @param {number[]} [path]
      * @returns {Promise<PrivateKey>}
      */
-    async toEd25519PrivateKey(passphrase = "", path = ED25519_HEDERA_PATH) {
+    async toEd25519PrivateKey(passphrase = "", path = HEDERA_PATH) {
         if (this._isLegacy) {
             if (passphrase.length > 0) {
                 throw new Error(
@@ -178,7 +177,7 @@ export default class Mnemonic {
      * @param {number[]} [path]
      * @returns {Promise<PrivateKey>}
      */
-    async toEcdsaPrivateKey(passphrase = "", path = ECDSA_ETH_PATH) {
+    async toEcdsaPrivateKey(passphrase = "", path = HEDERA_PATH) {
         let { keyData, chainCode } = await this._toKeyData(
             passphrase,
             ECDSA_SEED_TEXT
@@ -204,6 +203,7 @@ export default class Mnemonic {
     /**
      * @param {string} passphrase
      * @param {string} seedText
+     * @returns {Promise<{ keyData: Uint8Array; chainCode: Uint8Array }>} seedText
      */
     async _toKeyData(passphrase, seedText) {
         const seed = await bip39.toSeed(this.words, passphrase);

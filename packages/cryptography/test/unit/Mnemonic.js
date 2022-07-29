@@ -59,19 +59,30 @@ describe("Mnemonic", function () {
     });
 
     it("should produce the expected private key with ecdsa", async function () {
+        const path = [44, 60, 0, 0];
         const mnemonic = await Mnemonic.fromString(
-            "help please spend actor steel pottery increase rookie trash naive soldier siren"
+            "radar blur cabbage chef fix engine embark joy scheme fiction master release"
         );
 
         const expectedKey =
-            "f9c31c38697c5bf26645d5521b576ca0369be0dbfec6156ef3c74d0130022dc7";
+            "63acc08319cbe2bc18e8805f568e6868f791831539bf6163e133d567458b0bd7";
 
-        let key = await mnemonic.toEcdsaPrivateKey();
-        console.log((await key.derive(-1)).toStringRaw());
-        console.log((await key.derive(0)).toStringRaw());
-        console.log((await key.derive(1)).toStringRaw());
+        const expectedChild0 =
+            "9310812ddcda97f7a330ef3e552badc2f026f07f67aee602ec774aa91bb89044";
+        const expectedChild1 =
+            "7ac0197f691348e7bfd65bee84ef291d333b5865be40c6edacd8efa12a4b059c";
+        const expectedChildNeg1 =
+            "2622aff530f69a18c3911eb65f7a2b90d2153f8c57cabd4564bf475670bc14c6";
 
-        expect(key.toStringRaw()).to.eql(expectedKey);
+        const rootKey = await mnemonic.toEcdsaPrivateKey("", path);
+        const child0 = await rootKey.derive(0);
+        const child1 = await rootKey.derive(1);
+        const childNeg1 = await rootKey.derive(-1);
+
+        expect(rootKey.toStringRaw()).to.eql(expectedKey);
+        expect(child0.toStringRaw()).to.eql(expectedChild0);
+        expect(child1.toStringRaw()).to.eql(expectedChild1);
+        expect(childNeg1.toStringRaw()).to.eql(expectedChildNeg1);
     });
 
     it("should produce the expected legacy private key", async function () {

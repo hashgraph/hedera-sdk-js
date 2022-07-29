@@ -170,6 +170,8 @@ export default class PrivateKey extends Key {
     }
 
     /**
+     * @deprecated - Use `Mnemonic.from[Words|String]().to[Ed25519|Ecdsa]PrivateKey()` instead
+     *
      * Recover a private key from a mnemonic phrase (and optionally a password).
      *
      * @param {Mnemonic | cryptography.Mnemonic | string} mnemonic

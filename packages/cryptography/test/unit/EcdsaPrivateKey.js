@@ -31,7 +31,7 @@ describe("EcdsaPrivateKey", function () {
 
         expect(signature.length).to.be.equal(64);
         expect(hex.encode(signature)).to.be.equal(
-            "f3a13a555f1f8cd6532716b8f388bd4e9d8ed0b252743e923114c0c6cbfe414cf791c8e859afd3c12009ecf2cb20dacf01636d80823bcdbd9ec1ce59afe008f0"
+            "f3a13a555f1f8cd6532716b8f388bd4e9d8ed0b252743e923114c0c6cbfe414c086e3717a6502c3edff6130d34df252fb94b6f662d0cd27e2110903320563851"
         );
         expect(key.publicKey.verify(message, signature)).to.be.true;
         expect(key.publicKey.toBytesRaw().length).to.be.equal(33);
@@ -46,7 +46,7 @@ describe("EcdsaPrivateKey", function () {
 
         expect(signature.length).to.be.equal(64);
         expect(hex.encode(signature)).to.be.equal(
-            "63201532040178a60e2738bdaaa00d628004b15d109162fa42e066fcb6720190bc7b8c440eaa028009404d56bebeea7f9c94d4dc07042c63cb0bcf0cab0ee737"
+            "63201532040178a60e2738bdaaa00d628004b15d109162fa42e066fcb6720190438473bbf155fd7ff6bfb2a94141157f1e1a080aa84473d7f4c68f8025275a0a"
         );
         expect(key.publicKey.verify(message, signature)).to.be.true;
         expect(key.publicKey.toBytesRaw().length).to.be.equal(33);

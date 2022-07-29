@@ -199,8 +199,9 @@ export default class PrivateKey extends Key {
     }
 
     /**
-     * Recover a private key from a mnemonic phrase (and optionally a password).
+     * @deprecated - Use `Mnemonic.from[Words|String]().to[Ed25519|Ecdsa]PrivateKey()` instead
      *
+     * Recover a private key from a mnemonic phrase (and optionally a password).
      * @param {Mnemonic | string} mnemonic
      * @param {string} [passphrase]
      * @returns {Promise<PrivateKey>}
@@ -210,7 +211,7 @@ export default class PrivateKey extends Key {
             typeof mnemonic === "string"
                 ? await Mnemonic.fromString(mnemonic)
                 : mnemonic
-        ).toPrivateKey(passphrase);
+        ).toEd25519PrivateKey(passphrase);
     }
 
     /**
