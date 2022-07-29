@@ -15,7 +15,7 @@ import * as random from "./primitive/random.js";
 import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 
-const ED25519_HEDERA_PATH = [44, 3030, 0, 0];
+const HEDERA_PATH = [44, 3030, 0, 0];
 const ECDSA_ETH_PATH = [44, 60, 0, 0];
 
 const ED25519_SEED_TEXT = "ed25519 seed";
