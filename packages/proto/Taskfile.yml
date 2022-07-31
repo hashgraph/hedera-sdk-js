@@ -80,7 +80,7 @@ tasks:
 
     publish:
         preconditions:
-            - "! grep '\".*\": \"\(link\|file\):.*\"' package.json > /dev/null"
+            - "! grep '\".*\": \"\\(link\\|file\\):.*\"' package.json > /dev/null"
         deps:
             - "test:release"
         cmds:
