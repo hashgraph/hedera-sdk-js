@@ -75,6 +75,8 @@ describe("FileAppendMocking", function () {
         ]);
 
         const transaction = new FileAppendTransaction()
+            // Default changed to 4096
+            .setChunkSize(2048)
             .setFileId("0.0.3")
             .setContents(bigContents)
             .freezeWith(client);
@@ -122,6 +124,8 @@ describe("FileAppendMocking", function () {
 
         try {
             await new FileAppendTransaction()
+                // Default changed to 4096
+                .setChunkSize(2048)
                 .setFileId("0.0.3")
                 .setContents(bigContents)
                 .execute(client);
@@ -150,6 +154,8 @@ describe("FileAppendMocking", function () {
 
         try {
             await new FileAppendTransaction()
+                // Default changed to 4096
+                .setChunkSize(2048)
                 .setContents("a")
                 .setMaxAttempts(1)
                 .execute(client);
@@ -172,6 +178,8 @@ describe("FileAppendMocking", function () {
 
         try {
             await new FileAppendTransaction()
+                // Default changed to 4096
+                .setChunkSize(2048)
                 .setContents("a")
                 .setMaxAttempts(1)
                 .execute(client);
