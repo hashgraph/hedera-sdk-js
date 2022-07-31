@@ -40,7 +40,10 @@ tasks:
 
     install:
         cmds:
-            - git submodule update --init
+            # We can't use `./node_modules/.bin/yalc` because that'd require us
+            # to run `pnpm i` first. However, `pnpm i` would fail _if_ we have
+            # `@hashgraph/proto` file dep. So it's a circular dep :(
+            - ./packages/proto/node_modules/.bin/yalc add @hashgraph/proto
             - pnpm i
 
     build:
@@ -123,9 +126,9 @@ tasks:
         deps:
             - "proto:update"
         cmds:
-            # Yes doing this twice does seem necessary :shrug:
-            - pnpm add link:packages/proto
-            - pnpm add link:packages/proto
+            - ./node_modules/.bin/yalc add @hashgraph/proto
+            # Remove proto so on `task build` we fix the link
+            - rm -rf ./node_modules/@hashgraph/proto
 
     update:
         cmds:
