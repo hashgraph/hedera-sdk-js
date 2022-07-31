@@ -65,16 +65,18 @@ describe("Mnemonic", function () {
         );
 
         const expectedKey =
-            "63acc08319cbe2bc18e8805f568e6868f791831539bf6163e133d567458b0bd7";
+            "9310812ddcda97f7a330ef3e552badc2f026f07f67aee602ec774aa91bb89044";
 
         const expectedChild0 =
-            "9310812ddcda97f7a330ef3e552badc2f026f07f67aee602ec774aa91bb89044";
+            "74aa917f3a6aa76535758724ba176a548706f6ebfcfd00c5d9192bd4a1c0cf9e";
         const expectedChild1 =
-            "7ac0197f691348e7bfd65bee84ef291d333b5865be40c6edacd8efa12a4b059c";
+            "ed8e9a1cd87ebefd21f91f22d8117b29c44eff1ef831caadf56978b021cbc155";
         const expectedChildNeg1 =
-            "2622aff530f69a18c3911eb65f7a2b90d2153f8c57cabd4564bf475670bc14c6";
+            "13539a48f03d3628feb495249db4d16024c8aa42ad77c39fd452eef47cb613e5";
 
-        const rootKey = await mnemonic.toEcdsaPrivateKey("", path);
+        const rootKey = await (
+            await mnemonic.toEcdsaPrivateKey("", path)
+        ).derive(0);
         const child0 = await rootKey.derive(0);
         const child1 = await rootKey.derive(1);
         const childNeg1 = await rootKey.derive(-1);
