@@ -64,7 +64,6 @@ async function main() {
         .setFreezeDefault(false)
         .freezeWithSigner(wallet);
     transaction = await transaction.signWithSigner(wallet);
-    console.log(JSON.stringify(transaction._makeTransactionData()));
     resp = await transaction.executeWithSigner(wallet);
 
     const tokenId = (await resp.getReceiptWithSigner(wallet)).tokenId;
