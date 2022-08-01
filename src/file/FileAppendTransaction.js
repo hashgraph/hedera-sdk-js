@@ -182,27 +182,6 @@ export default class FileAppendTransaction extends Transaction {
     }
 
     /**
-     * @param {TransactionId} transactionId
-     * @returns {this}
-     */
-    setTransactionId(transactionId) {
-        this._requireNotFrozen();
-
-        if (
-            transactionId.accountId == null ||
-            transactionId.validStart == null
-        ) {
-            throw new Error(
-                "`FileAppendTransaction` does not support `TransactionId` built from `nonce`"
-            );
-        }
-
-        this._transactionIds.setList([transactionId]);
-
-        return this;
-    }
-
-    /**
      * @returns {?FileId}
      */
     get fileId() {
