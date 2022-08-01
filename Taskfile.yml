@@ -43,7 +43,7 @@ tasks:
             # We can't use `./node_modules/.bin/yalc` because that'd require us
             # to run `pnpm i` first. However, `pnpm i` would fail _if_ we have
             # `@hashgraph/proto` file dep. So it's a circular dep :(
-            - ./packages/proto/node_modules/.bin/yalc add @hashgraph/proto
+            # - ./packages/proto/node_modules/.bin/yalc add @hashgraph/proto
             - pnpm i
 
     build:
