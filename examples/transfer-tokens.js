@@ -1,5 +1,4 @@
 import {
-    AccountBalanceQuery,
     AccountCreateTransaction,
     AccountDeleteTransaction,
     Wallet,
@@ -119,16 +118,6 @@ async function main() {
         `Sent 10 tokens from account ${wallet
             .getAccountId()
             .toString()} to account ${newAccountId.toString()} on token ${tokenId.toString()}`
-    );
-
-    const balances = await new AccountBalanceQuery()
-        .setAccountId(wallet.getAccountId())
-        .executeWithSigner(wallet);
-
-    console.log(
-        `Token balances for ${wallet
-            .getAccountId()
-            .toString()} are ${balances.tokens.toString().toString()}`
     );
 
     await (
