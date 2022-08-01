@@ -15,9 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
  * `FileAppendTransaction` chunk size should default to 4096
  * `ContractFunctionResult.gas` can bet `-1` when `null` in protobufs: #1208
-
-### Fixed
-
  * `FileAppendTransaction.setTransactionId()` not locking the transaction ID list
  * `TopicMessageSubmitTransaction.setTransactionId()` not locking the transaction ID list
 
