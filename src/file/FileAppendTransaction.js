@@ -85,7 +85,7 @@ export default class FileAppendTransaction extends Transaction {
          * @private
          * @type {number}
          */
-        this._chunkSize = 2048;
+        this._chunkSize = 4096;
 
         this._defaultMaxTransactionFee = new Hbar(5);
 
