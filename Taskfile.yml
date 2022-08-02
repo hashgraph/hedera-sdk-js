@@ -38,12 +38,31 @@ tasks:
                 --validation.invalidLink 
                 --entryPoints src/index.js src/browser.js src/native.js
 
+    "install:cryptography":
+        deps:
+            - "cryptography:install" 
+        cmd:
+            - yalc add @hashgraph/cryptography
+        status:
+            - "grep '\"@hashgraph/cryptography\": \"file:.yalc/@hashgraph/cryptography\"' package.json > /dev/null"
+
+    "install:proto":
+        deps:
+            - "proto:install" 
+        cmd:
+            - yalc add @hashgraph/proto
+        status:
+            - "grep '\"@hashgraph/proto\": \"file:.yalc/@hashgraph/proto\"' package.json > /dev/null"
+
+
     install:
+        deps:
+          - "install:cryptography"
+          - "install:proto"
         cmds:
             # We can't use `./node_modules/.bin/yalc` because that'd require us
             # to run `pnpm i` first. However, `pnpm i` would fail _if_ we have
             # `@hashgraph/proto` file dep. So it's a circular dep :(
-            # - ./packages/proto/node_modules/.bin/yalc add @hashgraph/proto
             - pnpm i
 
     build:

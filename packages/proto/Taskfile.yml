@@ -41,7 +41,7 @@ tasks:
             - ./node_modules/.bin/babel src -d lib
             - ./node_modules/.bin/copyfiles -u 1 src/index.d.ts src/proto.d.ts lib/
             # This is necessary to correctly run browser tests with an unpublished proto package
-            - ./node_modules/.bin/yalc publish
+            - yalc publish
 
     clean:
         cmds:

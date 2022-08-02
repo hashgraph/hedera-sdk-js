@@ -15,10 +15,30 @@ import * as random from "./primitive/random.js";
 import EcdsaPrivateKey from "./EcdsaPrivateKey.js";
 import * as ecdsa from "./primitive/ecdsa.js";
 
-const HEDERA_PATH = [44, 3030, 0, 0];
-
 const ED25519_SEED_TEXT = "ed25519 seed";
 const ECDSA_SEED_TEXT = "Bitcoin seed";
+
+export const HARDEDED = 0x80000000;
+
+/// m/44'/3030'/0'/0' - All paths in EdDSA derivation are implicitly hardened.
+export const HEDERA_PATH = [44, 3030, 0, 0];
+
+/// m/44'/3030'/0'/0
+export const SLIP44_ECDSA_HEDERA_PATH = [
+    44 | HARDEDED,
+    3030 | HARDEDED,
+    0 | HARDEDED,
+    0,
+];
+
+/// m/44'/60'/0'/0
+export const SLIP44_ECDSA_ETH_PATH = [
+    44 | HARDEDED,
+    60 | HARDEDED,
+    0 | HARDEDED,
+    0,
+    0,
+];
 
 /**
  * @typedef {import("./PrivateKey.js").default} PrivateKey

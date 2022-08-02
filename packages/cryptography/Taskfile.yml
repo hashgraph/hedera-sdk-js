@@ -27,6 +27,7 @@ tasks:
             - task: format
             - task: lint
             - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
+            - yalc publish
 
     clean:
         cmds:

@@ -55,7 +55,7 @@
     "dependencies": {
         "@ethersproject/rlp": "^5.6.1",
         "@grpc/grpc-js": "^1.6.7",
-        "@hashgraph/cryptography": "link:packages/cryptography",
+        "@hashgraph/cryptography": "file:.yalc/@hashgraph/cryptography",
         "@hashgraph/proto": "2.9.0",
         "axios": "^0.27.2",
         "bignumber.js": "^9.0.2",
@@ -107,8 +107,7 @@
         "prettier": "^2.7.1",
         "typedoc": "^0.22.18",
         "typescript": "^4.7.4",
-        "vite": "^2.9.14",
-        "yalc": "1.0.0-pre.53"
+        "vite": "^2.9.14"
     },
     "peerDependencies": {
         "expo": "^45.0.3"
