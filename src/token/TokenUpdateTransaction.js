@@ -666,6 +666,8 @@ export default class TokenUpdateTransaction extends Transaction {
                 this._freezeKey != null
                     ? this._freezeKey._toProtobufKey()
                     : null,
+            pauseKey:
+                this._pauseKey != null ? this._pauseKey._toProtobufKey() : null,
             wipeKey:
                 this._wipeKey != null ? this._wipeKey._toProtobufKey() : null,
             supplyKey:
