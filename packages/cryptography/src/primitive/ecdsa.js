@@ -74,13 +74,10 @@ export function fromBytes(data) {
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getFullPublicKey(data) {
-    const publicKey = secp256k1.pointFromScalar(data, true);
-
-    if (!secp256k1.isPrivate(data) || publicKey == null) {
-        throw new Error("failed to decode private key from bytes");
+    if (!secp256k1.isPoint(data)) {
+        throw new Error("invalid public key");
     }
-
-    return publicKey;
+    return secp256k1.pointCompress(data, false);
 }
 
 /**

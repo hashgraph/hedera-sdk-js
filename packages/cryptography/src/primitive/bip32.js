@@ -14,7 +14,7 @@ const HIGHEST_BIT = 0x80000000;
  * @returns {Promise<{ keyData: Uint8Array; chainCode: Uint8Array }>}
  */
 export async function derive(parentKey, chainCode, index) {
-    const isHardened = index >= HIGHEST_BIT;
+    const isHardened = (index & HIGHEST_BIT) !== 0;
     const data = new Uint8Array(37);
 
     const publicKey = secp256k1.pointFromScalar(parentKey);

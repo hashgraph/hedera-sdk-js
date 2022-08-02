@@ -59,32 +59,36 @@ describe("Mnemonic", function () {
     });
 
     it("should produce the expected private key with ecdsa", async function () {
-        const path = [44, 60, 0, 0];
         const mnemonic = await Mnemonic.fromString(
-            "radar blur cabbage chef fix engine embark joy scheme fiction master release"
+            "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat"
         );
 
-        const expectedKey =
-            "9310812ddcda97f7a330ef3e552badc2f026f07f67aee602ec774aa91bb89044";
+        // test vector from https://gist.github.com/poma/6b503eead48628a03088fd270a68e369
+        const path = [44 | 0x80000000, 60 | 0x80000000, 0 | 0x80000000, 0];
 
-        const expectedChild0 =
-            "74aa917f3a6aa76535758724ba176a548706f6ebfcfd00c5d9192bd4a1c0cf9e";
-        const expectedChild1 =
-            "ed8e9a1cd87ebefd21f91f22d8117b29c44eff1ef831caadf56978b021cbc155";
-        const expectedChildNeg1 =
-            "13539a48f03d3628feb495249db4d16024c8aa42ad77c39fd452eef47cb613e5";
+        const rootKey = await mnemonic.toEcdsaPrivateKey("", path);
 
-        const rootKey = await (
-            await mnemonic.toEcdsaPrivateKey("", path)
-        ).derive(0);
-        const child0 = await rootKey.derive(0);
-        const child1 = await rootKey.derive(1);
-        const childNeg1 = await rootKey.derive(-1);
+        expect(rootKey.toStringRaw()).to.eql(
+            "c4d1decb7eb3679f1adafa9795ee019f2480626554b80f058f063dfb84acb227"
+        );
+        const childKeys = [
+            "c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3",
+            "ae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f",
+            "0dbbe8e4ae425a6d2687f1a7e3ba17bc98c673636790f1b8ad91193c05875ef1",
+            "c88b703fb08cbea894b6aeff5a544fb92e78a18e19814cd85da83b71f772aa6c",
+            "388c684f0ba1ef5017716adb5d21a053ea8e90277d0868337519f97bede61418",
+            "659cbb0e2411a44db63778987b1e22153c086a95eb6b18bdf89de078917abc63",
+            "82d052c865f5763aad42add438569276c00d3d88a2d062d36b2bae914d58b8c8",
+            "aa3680d5d48a8283413f7a108367c7299ca73f553735860a87b08f39395618b7",
+            "0f62d96d6675f32685bbdb8ac13cda7c23436f63efbb9d07700d8669ff12b7c4",
+            "8d5366123cb560bb606379f90a0bfd4769eecc0557f1b362dcae9012b548b1e5",
+        ];
 
-        expect(rootKey.toStringRaw()).to.eql(expectedKey);
-        expect(child0.toStringRaw()).to.eql(expectedChild0);
-        expect(child1.toStringRaw()).to.eql(expectedChild1);
-        expect(childNeg1.toStringRaw()).to.eql(expectedChildNeg1);
+        for (const i in childKeys) {
+            expect((await rootKey.derive(i)).toStringRaw()).to.eql(
+                childKeys[i]
+            );
+        }
     });
 
     it("should produce the expected legacy private key", async function () {
