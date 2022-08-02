@@ -47,25 +47,13 @@ jobs:
         with:
           version: 7.6.0
 
-      - run: pnpm install -g yarn
-
-      - name: Build @hashgraph/cryptography
-        run: task cryptography:build
-
-      - name: Build @hashgraph/proto
-        run: task proto:build
+      - run: npm install -g yarn
 
       - name: Build @hashgraph/sdk
         run: task build
 
-      - name: Install yalc
-        run: pnpm install -g yalc
-
       - name: Install detox
-        run: pnpm install -g detox-cli
-
-      - name: Locally Publish
-        run: yalc publish --no-scripts
+        run: npm install -g detox-cli
 
       - name: AVD
         run: |
@@ -78,7 +66,7 @@ jobs:
       - name: Build
         working-directory: examples/react-native
         run: |
-          yalc add "@hashgraph/sdk"
+          ../../node_modules/.bin/yalc add "@hashgraph/sdk"
           yarn
           detox build --configuration android
 
@@ -120,26 +108,14 @@ jobs:
         with:
           version: 7.6.0
 
-      - run: pnpm install -g yarn
-
-      - name: Build @hashgraph/cryptography
-        run: task cryptography:build
-
-      - name: Build @hashgraph/proto
-        run: task proto:build
+      - run: npm install -g yarn
 
       - name: Build @hashgraph/sdk
         run: task build
 
-      - name: Install yalc
-        run: pnpm install -g yalc
-
       - name: Install detox
-        run: pnpm install -g detox-cli
+        run: npm install -g detox-cli
 
-      - name: Locally Publish
-        run: yalc publish --no-scripts
-      
       - name: Build
         working-directory: examples/react-native
         run: |

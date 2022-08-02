@@ -38,43 +38,48 @@ tasks:
                 --validation.invalidLink 
                 --entryPoints src/index.js src/browser.js src/native.js
 
-    "install:cryptography":
-        deps:
-            - "cryptography:install" 
-        cmd:
-            - yalc add @hashgraph/cryptography
-        status:
-            - "grep '\"@hashgraph/cryptography\": \"file:.yalc/@hashgraph/cryptography\"' package.json > /dev/null"
+    "install:deps":
+        run: once
+        cmds:
+            - pnpm i --dev > /dev/null
 
-    "install:proto":
-        deps:
-            - "proto:install" 
-        cmd:
-            - yalc add @hashgraph/proto
+    "install:cryptography:local":
+        cmds:
+          - task: "install:deps"
+          - task: "cryptography:build"
+          - ./node_modules/.bin/yalc add @hashgraph/cryptography > /dev/null
         status:
-            - "grep '\"@hashgraph/proto\": \"file:.yalc/@hashgraph/proto\"' package.json > /dev/null"
+          - ./check_yalc_dep.sh @hashgraph/cryptography
+
+    "install:proto:local":
+        cmds:
+          - task: "install:deps"
+          - task: "proto:build"
+          - ./node_modules/.bin/yalc add @hashgraph/proto > /dev/null
+        status:
+          - ./check_yalc_dep.sh @hashgraph/proto
 
 
     install:
         deps:
-          - "install:cryptography"
-          - "install:proto"
+          - "install:cryptography:local"
+          - "install:proto:local"
         cmds:
-            # We can't use `./node_modules/.bin/yalc` because that'd require us
-            # to run `pnpm i` first. However, `pnpm i` would fail _if_ we have
-            # `@hashgraph/proto` file dep. So it's a circular dep :(
-            - pnpm i
+            - pnpm i > /dev/null
 
     build:
         cmds:
             - task: install
             - task: format
             - task: lint
-            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs
+            - ./node_modules/.bin/babel src -d lib --out-file-extension .cjs > /dev/null
+            - ./node_modules/.bin/yalc publish > /dev/null
 
     clean:
         deps:
             - "examples:clean"
+            - "cryptography:clean"
+            - "proto:clean"
             - "simple_rest_signature_provider:clean"
             - "common_js_test:clean"
         cmds:
@@ -97,7 +102,8 @@ tasks:
 
     "lint:dpdm":
         cmds:
-            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null
+           # It's really annoying seeing [X/X] Analyze done. If a circular dep is found remove `2>&1`
+            - ./node_modules/.bin/dpdm src/index.js --circular true --tree false --warning false > /dev/null 2>&1
 
     "lint:format":
         cmds:
