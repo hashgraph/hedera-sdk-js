@@ -85,7 +85,7 @@ export default class FileAppendTransaction extends Transaction {
          * @private
          * @type {number}
          */
-        this._chunkSize = 2048;
+        this._chunkSize = 4096;
 
         this._defaultMaxTransactionFee = new Hbar(5);
 
@@ -179,27 +179,6 @@ export default class FileAppendTransaction extends Transaction {
             nodeIds,
             bodies
         );
-    }
-
-    /**
-     * @param {TransactionId} transactionId
-     * @returns {this}
-     */
-    setTransactionId(transactionId) {
-        this._requireNotFrozen();
-
-        if (
-            transactionId.accountId == null ||
-            transactionId.validStart == null
-        ) {
-            throw new Error(
-                "`FileAppendTransaction` does not support `TransactionId` built from `nonce`"
-            );
-        }
-
-        this._transactionIds.setList([transactionId]);
-
-        return this;
     }
 
     /**

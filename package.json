@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/sdk",
-    "version": "2.17.0",
+    "version": "2.17.1",
     "description": "Hedera™ Hashgraph SDK",
     "types": "./lib/index.d.ts",
     "main": "./lib/index.cjs",
@@ -56,7 +56,7 @@
         "@ethersproject/rlp": "^5.6.1",
         "@grpc/grpc-js": "^1.6.7",
         "@hashgraph/cryptography": "link:packages/cryptography",
-        "@hashgraph/proto": "2.8.0",
+        "@hashgraph/proto": "2.9.0",
         "axios": "^0.27.2",
         "bignumber.js": "^9.0.2",
         "crypto-js": "^4.1.1",
@@ -107,7 +107,8 @@
         "prettier": "^2.7.1",
         "typedoc": "^0.22.18",
         "typescript": "^4.7.4",
-        "vite": "^2.9.14"
+        "vite": "^2.9.14",
+        "yalc": "1.0.0-pre.53"
     },
     "peerDependencies": {
         "expo": "^45.0.3"

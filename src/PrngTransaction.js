@@ -18,12 +18,6 @@
  * ‍
  */
 
-/**
- * @namespace hashgraphproto
- */
-
-// import Hbar from "./Hbar.js";
-// import FileId from "./file/FileId.js";
 import Transaction, {
     TRANSACTION_REGISTRY,
 } from "./transaction/Transaction.js";
@@ -34,8 +28,8 @@ import { isNumber } from "./util.js";
  * @typedef {import("@hashgraph/proto").proto.Transaction} HashgraphProto.proto.Transaction
  * @typedef {import("@hashgraph/proto").proto.ISignedTransaction} HashgraphProto.proto.ISignedTransaction
  * @typedef {import("@hashgraph/proto").proto.SignedTransaction} HashgraphProto.proto.SignedTransaction
- * @typedef {import("@hashgraph/proto").proto.IPrngTransactionBody } HashgraphProto.proto.IPrngGenerateTransactionBody
- * @typedef {import("@hashgraph/proto").proto.PrngTransactionBody} HashgraphProto.proto.PrngGenerateTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.IUtilPrngTransactionBody } HashgraphProto.proto.IUtilPrngTransactionBody
+ * @typedef {import("@hashgraph/proto").proto.UtilPrngTransactionBody} HashgraphProto.proto.UtilPrngTransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionResponse} HashgraphProto.proto.TransactionResponse
  * @typedef {import("@hashgraph/proto").proto.TransactionBody} HashgraphProto.proto.TransactionBody
  * @typedef {import("@hashgraph/proto").proto.ITransactionBody} HashgraphProto.proto.ITransactionBody
@@ -120,7 +114,7 @@ export default class PrngTransaction extends Transaction {
         bodies
     ) {
         const body =
-            /** @type {HashgraphProto.proto.PrngGenerateTransactionBody} */ (
+            /** @type {HashgraphProto.proto.UtilPrngTransactionBody} */ (
                 bodies[0]
             );
 
@@ -144,13 +138,13 @@ export default class PrngTransaction extends Transaction {
      * @returns {NonNullable<HashgraphProto.proto.TransactionBody["data"]>}
      */
     _getTransactionDataCase() {
-        return "prng";
+        return "utilPrng";
     }
 
     /**
      * @override
      * @protected
-     * @returns {HashgraphProto.proto.IPrngGenerateTransactionBody}
+     * @returns {HashgraphProto.proto.IUtilPrngTransactionBody}
      */
     _makeTransactionData() {
         return {
@@ -170,7 +164,7 @@ export default class PrngTransaction extends Transaction {
 }
 
 TRANSACTION_REGISTRY.set(
-    "prng",
+    "utilPrng",
     // eslint-disable-next-line @typescript-eslint/unbound-method
     PrngTransaction._fromProtobuf
 );

@@ -23,18 +23,22 @@ async function main() {
     );
 
     // create topic
-    const createResponse = await new TopicCreateTransaction().executeWithSigner(
+    let transaction = await new TopicCreateTransaction().freezeWithSigner(
         wallet
     );
+    transaction = await transaction.signWithSigner(wallet);
+    const createResponse = await transaction.executeWithSigner(wallet);
     const createReceipt = await createResponse.getReceiptWithSigner(wallet);
 
     console.log(`topic id = ${createReceipt.topicId.toString()}`);
 
     // send one message
-    const sendResponse = await new TopicMessageSubmitTransaction({
+    transaction = await new TopicMessageSubmitTransaction({
         topicId: createReceipt.topicId,
         message: "Hello World",
-    }).executeWithSigner(wallet);
+    }).freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const sendResponse = await transaction.executeWithSigner(wallet);
 
     const sendReceipt = await sendResponse.getReceiptWithSigner(wallet);
 

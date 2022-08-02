@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.17.1
+
+### Added
+
+ * `TokenNftInfo.allowanceSpenderAccountId`
+ * `ContractCreateFlow.sign[With]()`
+
+### Fixed
+
+ * `FileAppendTransaction` chunk size should default to 4096
+ * `ContractFunctionResult.gas` can be `-1` when `null` in protobufs: #1208
+ * `FileAppendTransaction.setTransactionId()` not locking the transaction ID list
+ * `TopicMessageSubmitTransaction.setTransactionId()` not locking the transaction ID list
+
+### Deprecated
+
+ * `AccountBalance.tokens` - Use the mirror node API https://docs.hedera.com/guides/docs/mirror-node-api/rest-api#api-v1-accounts instead
+ * `AccountBalance.tokenDecimals` - Use same API as above
+
 ## v2.17.0
 
 ### Added

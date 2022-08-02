@@ -574,6 +574,10 @@ export default class Transaction extends Executable {
      * @returns {?TransactionId}
      */
     get transactionId() {
+        if (this._transactionIds.isEmpty) {
+            return null;
+        }
+
         // If a user calls `.transactionId` that means we need to use that transaction ID
         // and **not** regenerate it. To do this, we simply lock the transaction ID list.
         //
@@ -581,10 +585,6 @@ export default class Transaction extends Executable {
         // explicity, but if they call `.transactionId` then we will not regenerate transaction
         // IDs.
         this._transactionIds.setLocked();
-
-        if (this._transactionIds.isEmpty) {
-            return null;
-        }
 
         return this._transactionIds.current;
     }
@@ -880,7 +880,7 @@ export default class Transaction extends Executable {
     /**
      * Build all the signed transactions from the node account IDs
      *
-     * @internal
+     * @private
      */
     _buildSignedTransactions() {
         if (this._signedTransactions.locked) {
@@ -908,7 +908,9 @@ export default class Transaction extends Executable {
      * @param {?AccountId} accountId
      */
     _freezeWithAccountId(accountId) {
-        this._operatorAccountId = accountId;
+        if (this._operatorAccountId == null) {
+            this._operatorAccountId = accountId;
+        }
     }
 
     /**
@@ -1212,7 +1214,7 @@ export default class Transaction extends Executable {
     /**
      * Sign a `proto.SignedTransaction` with all the keys
      *
-     * @internal
+     * @private
      * @returns {Promise<HashgraphProto.proto.ISignedTransaction>}
      */
     async _signTransaction() {
@@ -1253,7 +1255,7 @@ export default class Transaction extends Executable {
     /**
      * Construct a new transaction ID at the current index
      *
-     * @internal
+     * @private
      */
     _buildNewTransactionIdList() {
         if (this._transactionIds.locked || this._operatorAccountId == null) {
@@ -1271,7 +1273,7 @@ export default class Transaction extends Executable {
     /**
      * Build each transaction in a loop
      *
-     * @internal
+     * @private
      */
     _buildAllTransactions() {
         for (let i = 0; i < this._signedTransactions.length; i++) {
@@ -1285,7 +1287,7 @@ export default class Transaction extends Executable {
      * This method is primary used in the exist condition methods
      * which are not `execute()`, e.g. `toBytesAsync()` and `getSignaturesAsync()`
      *
-     * @internal
+     * @private
      */
     async _buildAllTransactionsAsync() {
         if (!this._signOnDemand) {
@@ -1307,7 +1309,7 @@ export default class Transaction extends Executable {
     /**
      * Build a transaction at a particular index
      *
-     * @internal
+     * @private
      * @param {number} index
      */
     _buildTransaction(index) {
@@ -1332,7 +1334,7 @@ export default class Transaction extends Executable {
      * index is determined by `this._nodeAccountIds.index` and
      * `this._transactionIds.index`
      *
-     * @internal
+     * @private
      * @returns {Promise<HashgraphProto.proto.ITransaction>}
      */
     async _buildTransactionAsync() {

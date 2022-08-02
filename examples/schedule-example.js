@@ -35,11 +35,13 @@ async function main() {
     console.log(`private key 2 = ${key2.toString()}`);
     console.log(`public key 2 = ${key2.publicKey.toString()}`);
 
-    const resp = await new AccountCreateTransaction()
+    let transaction = await new AccountCreateTransaction()
         .setKey(KeyList.of(key1.publicKey, key2.publicKey))
         .setInitialBalance(20)
         .setStakedAccountId("0.0.3")
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const resp = await transaction.executeWithSigner(wallet);
 
     const transactionReceipt = await resp.getReceiptWithSigner(wallet);
 
@@ -48,7 +50,7 @@ async function main() {
 
     console.log(`account id = ${newAccountId.toString()}`);
 
-    const response = await new TransferTransaction()
+    transaction = await new TransferTransaction()
         .addHbarTransfer(newAccountId, -1)
         .addHbarTransfer(wallet.getAccountId(), 1)
         .schedule()
@@ -58,7 +60,9 @@ async function main() {
         )
         // Set wait for expiry to true
         .setWaitForExpiry(true)
-        .executeWithSigner(wallet);
+        .freezeWithSigner(wallet);
+    transaction = await transaction.signWithSigner(wallet);
+    const response = await transaction.executeWithSigner(wallet);
 
     console.log(
         `scheduled transaction ID = ${response.transactionId.toString()}`
@@ -73,10 +77,12 @@ async function main() {
     await (
         await (
             await (
-                await new ScheduleSignTransaction()
-                    .setScheduleId(scheduleId)
-                    .freezeWithSigner(wallet)
-            ).sign(key1)
+                await (
+                    await new ScheduleSignTransaction()
+                        .setScheduleId(scheduleId)
+                        .freezeWithSigner(wallet)
+                ).sign(key1)
+            ).signWithSigner(wallet)
         ).executeWithSigner(wallet)
     ).getReceiptWithSigner(wallet);
 
@@ -89,10 +95,12 @@ async function main() {
     await (
         await (
             await (
-                await new ScheduleSignTransaction()
-                    .setScheduleId(scheduleId)
-                    .freezeWithSigner(wallet)
-            ).sign(key2)
+                await (
+                    await new ScheduleSignTransaction()
+                        .setScheduleId(scheduleId)
+                        .freezeWithSigner(wallet)
+                ).sign(key2)
+            ).signWithSigner(wallet)
         ).executeWithSigner(wallet)
     ).getReceiptWithSigner(wallet);
 

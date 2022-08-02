@@ -134,8 +134,12 @@ export default class Executable {
      * @returns {?AccountId[]}
      */
     get nodeAccountIds() {
-        this._nodeAccountIds.setLocked();
-        return this._nodeAccountIds.isEmpty ? null : this._nodeAccountIds.list;
+        if (this._nodeAccountIds.isEmpty) {
+            return null;
+        } else {
+            this._nodeAccountIds.setLocked();
+            return this._nodeAccountIds.list;
+        }
     }
 
     /**
