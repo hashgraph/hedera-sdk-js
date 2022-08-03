@@ -176,6 +176,8 @@ export default class EcdsaPrivateKey {
      * @returns {Uint8Array}
      */
     toBytesRaw() {
-        return this._keyPair.privateKey.slice(0, 32);
+        const bytes = new Uint8Array(32);
+        bytes.set(this._keyPair.privateKey.slice(0, 32), 0)
+        return bytes;
     }
 }
