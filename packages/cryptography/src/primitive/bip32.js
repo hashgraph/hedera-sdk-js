@@ -1,5 +1,8 @@
 import * as hmac from "./hmac.js";
-import * as secp256k1 from "tiny-secp256k1";
+import * as hex from "../encoding/hex.js";
+import elliptic from "elliptic";
+
+const secp256k1 = new elliptic.ec("secp256k1");
 
 const HIGHEST_BIT = 0x80000000;
 
@@ -17,10 +20,9 @@ export async function derive(parentKey, chainCode, index) {
     const isHardened = (index & HIGHEST_BIT) !== 0;
     const data = new Uint8Array(37);
 
-    const publicKey = secp256k1.pointFromScalar(parentKey);
-    if (publicKey == null) {
-        throw new Error("Failed to extract public key from key data");
-    }
+    const publicKey = hex.decode(
+        secp256k1.keyFromPrivate(parentKey).getPublic(true, "hex")
+    );
 
     // Hardened child
     if (isHardened) {
@@ -46,21 +48,26 @@ export async function derive(parentKey, chainCode, index) {
     const IR = I.subarray(32);
 
     // if parse256(IL) >= n, proceed with the next value for i
-    if (!secp256k1.isPrivate(IL)) {
+    try {
+        // ki = parse256(IL) + kpar (mod n)
+        const ki = secp256k1
+            .keyFromPrivate(parentKey)
+            .getPrivate()
+            .add(secp256k1.keyFromPrivate(IL).getPrivate());
+        // const ki = Buffer.from(ecc.privateAdd(this.privateKey!, IL)!);
+
+        // In case ki == 0, proceed with the next value for i
+        if (ki.eqn(0)) {
+            return derive(parentKey, chainCode, index + 1);
+        }
+
+        return {
+            keyData: hex.decode(
+                secp256k1.keyFromPrivate(ki.toArray()).getPrivate("hex")
+            ),
+            chainCode: IR,
+        };
+    } catch {
         return derive(parentKey, chainCode, index + 1);
     }
-
-    // ki = parse256(IL) + kpar (mod n)
-    const ki = secp256k1.privateAdd(parentKey, IL);
-    // const ki = Buffer.from(ecc.privateAdd(this.privateKey!, IL)!);
-
-    // In case ki == 0, proceed with the next value for i
-    if (ki == null) {
-        return derive(parentKey, chainCode, index + 1);
-    }
-
-    return {
-        keyData: ki,
-        chainCode: IR,
-    };
 }

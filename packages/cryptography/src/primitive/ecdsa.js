@@ -1,7 +1,8 @@
 import { keccak256 } from "./keccak.js";
 import * as hex from "../encoding/hex.js";
-import * as random from "../primitive/random.js";
-import * as secp256k1 from "tiny-secp256k1";
+import elliptic from "elliptic";
+
+const secp256k1 = new elliptic.ec("secp256k1");
 
 /**
  * @typedef {import("../EcdsaPrivateKey.js").KeyPair} KeyPair
@@ -11,21 +12,12 @@ import * as secp256k1 from "tiny-secp256k1";
  * @returns {KeyPair}
  */
 export function generate() {
-    for (let attempt = 0; attempt < 30; attempt++) {
-        const privateKey = random.bytes(32);
-        const publicKey = secp256k1.pointFromScalar(privateKey, true);
+    const keypair = secp256k1.genKeyPair();
 
-        if (!secp256k1.isPrivate(privateKey) || publicKey == null) {
-            continue;
-        }
-
-        return {
-            privateKey,
-            publicKey,
-        };
-    }
-
-    throw new Error(`Couldn't generate valid data.`);
+    return {
+        privateKey: hex.decode(keypair.getPrivate("hex")),
+        publicKey: hex.decode(keypair.getPublic(true, "hex")),
+    };
 }
 
 /**
@@ -33,21 +25,7 @@ export function generate() {
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function generateAsync() {
-    for (let attempt = 0; attempt < 30; attempt++) {
-        const privateKey = await random.bytesAsync(32);
-        const publicKey = secp256k1.pointFromScalar(privateKey, true);
-
-        if (!secp256k1.isPrivate(privateKey) || publicKey == null) {
-            continue;
-        }
-
-        return {
-            privateKey,
-            publicKey,
-        };
-    }
-
-    throw new Error(`Couldn't generate valid data.`);
+    return Promise.resolve(generate());
 }
 
 /**
@@ -56,15 +34,11 @@ export async function generateAsync() {
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function fromBytes(data) {
-    const publicKey = secp256k1.pointFromScalar(data, true);
-
-    if (!secp256k1.isPrivate(data) || publicKey == null) {
-        throw new Error("failed to decode private key from bytes");
-    }
+    const keypair = secp256k1.keyFromPrivate(data);
 
     return {
-        privateKey: data,
-        publicKey,
+        privateKey: hex.decode(keypair.getPrivate("hex")),
+        publicKey: hex.decode(keypair.getPublic(true, "hex")),
     };
 }
 
@@ -74,10 +48,9 @@ export function fromBytes(data) {
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getFullPublicKey(data) {
-    if (!secp256k1.isPoint(data)) {
-        throw new Error("invalid public key");
-    }
-    return secp256k1.pointCompress(data, false);
+    const keypair = secp256k1.keyFromPublic(data);
+
+    return hex.decode(keypair.getPublic(false, "hex"));
 }
 
 /**
@@ -89,12 +62,16 @@ export function getFullPublicKey(data) {
 export function sign(keydata, message) {
     const msg = hex.encode(message);
     const data = hex.decode(keccak256(`0x${msg}`));
+    const keypair = secp256k1.keyFromPrivate(keydata);
+    const signature = keypair.sign(data);
 
-    if (!secp256k1.isPrivate(keydata)) {
-        throw new Error("failed to decode private key from bytes");
-    }
+    const r = signature.r.toArray("be", 32);
+    const s = signature.s.toArray("be", 32);
 
-    return secp256k1.sign(data, keydata);
+    const result = new Uint8Array(64);
+    result.set(r, 0);
+    result.set(s, 32);
+    return result;
 }
 
 /**
@@ -107,5 +84,10 @@ export function sign(keydata, message) {
 export function verify(keydata, message, signature) {
     const msg = hex.encode(message);
     const data = hex.decode(keccak256(`0x${msg}`));
-    return secp256k1.verify(data, keydata, signature);
+    const keypair = secp256k1.keyFromPublic(keydata);
+
+    return keypair.verify(data, {
+        r: signature.subarray(0, 32),
+        s: signature.subarray(32, 64),
+    });
 }

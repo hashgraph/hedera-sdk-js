@@ -83,7 +83,7 @@ tasks:
             - "simple_rest_signature_provider:clean"
             - "common_js_test:clean"
         cmds:
-            - rm -rf node_modules
+            - rm -rf node_modules .yalc
 
     format:
         cmds:
