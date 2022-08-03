@@ -41,7 +41,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '16'
 
       - uses: pnpm/action-setup@v2.0.1
         with:
@@ -64,17 +64,18 @@ jobs:
           adb start-server
 
       - name: Build
-        working-directory: examples/react-native
+        working-directory: examples/react-native-example
         run: |
           ../../node_modules/.bin/yalc add "@hashgraph/sdk"
           yarn
           detox build --configuration android
 
       - name: Test
-        working-directory: examples/react-native
+        working-directory: examples/react-native-example
         run: detox test --configuration android
 
   ios:
+    if: ${{ false }}  # disable for now
     runs-on: macos-latest
 
     steps:
@@ -102,7 +103,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: '16'
 
       - uses: pnpm/action-setup@v2.0.1
         with:
@@ -117,18 +118,15 @@ jobs:
         run: npm install -g detox-cli
 
       - name: Build
+        working-directory: examples/react-native-example
+        run: |
+          brew tap wix/brew
+          brew install applesimutils
+          yalc add "@hashgraph/sdk"
+          yarn
+          detox build --configuration ios
+
+      - name: Test
         working-directory: examples/react-native
         run: |
-          # Uncomment when detox and expo work well together
-          # brew tap wix/brew
-          # brew install applesimutils
-          # yalc add "@hashgraph/sdk"
-          # yarn
-          # detox build --configuration ios
-          cd android && ./gradlew build
-
-      # Uncomment when detox and expo work well together
-      # - name: Test
-      #   working-directory: examples/react-native
-      #   run: |
-      #     detox test --configuration ios
+          detox test --configuration ios
